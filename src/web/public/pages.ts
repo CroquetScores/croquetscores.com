@@ -3,18 +3,24 @@
 import { createHash } from "node:crypto";
 import type { FastifyInstance } from "fastify";
 
+import type { Assets } from "../common/assets.js";
+
 export interface Page {
   readonly path: string;
-  render(): string;
+  render(assets: Assets): string;
 }
 
-const layout = (title: string, body: string): string => `<!doctype html>
+const layout = (
+  assets: Assets,
+  title: string,
+  body: string,
+): string => `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${title}</title>
-    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="stylesheet" href="${assets.url("site.css")}" />
   </head>
   <body>
 ${body}
@@ -24,8 +30,9 @@ ${body}
 
 const home: Page = {
   path: "/",
-  render: () =>
+  render: (assets) =>
     layout(
+      assets,
       "Croquet Scores",
       `    <h1>Croquet Scores</h1>
     <p>Scores and commentary as events unfold.</p>`,
@@ -43,10 +50,13 @@ const matches = (header: string | undefined, etag: string): boolean =>
     .map((candidate) => candidate.trim().replace(/^W\//, ""))
     .some((candidate) => candidate === "*" || candidate === etag);
 
-export const registerPublicPages = (server: FastifyInstance): void => {
+export const registerPublicPages = (
+  server: FastifyInstance,
+  assets: Assets,
+): void => {
   for (const page of pages) {
     server.get(page.path, (request, reply) => {
-      const html = page.render();
+      const html = page.render(assets);
       const etag = `"${createHash("sha256").update(html).digest("base64url").slice(0, 27)}"`;
 
       reply.header("cache-control", "public, max-age=60").header("etag", etag);

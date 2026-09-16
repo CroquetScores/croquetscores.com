@@ -3,18 +3,20 @@
 import type { FastifyError, FastifyInstance, FastifyRequest } from "fastify";
 import { randomUUID } from "node:crypto";
 
+import type { Assets } from "./assets.js";
+
 // The API answers JSON and the public pages answer HTML, including when they
 // fail. A browser should not be handed a JSON body for a page it asked for.
 const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
 
-const page = (heading: string, detail?: string): string =>
+const page = (assets: Assets, heading: string, detail?: string): string =>
   `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>${heading}</title>
-    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="stylesheet" href="${assets.url("site.css")}" />
   </head>
   <body>
     <h1>${heading}</h1>${detail === undefined ? "" : `\n    <p>${detail}</p>`}
@@ -22,13 +24,16 @@ const page = (heading: string, detail?: string): string =>
 </html>
 `;
 
-export const registerErrorMapping = (server: FastifyInstance): void => {
+export const registerErrorMapping = (
+  server: FastifyInstance,
+  assets: Assets,
+): void => {
   server.setNotFoundHandler((request, reply) => {
     if (wantsJson(request)) return reply.code(404).send({ error: "NotFound" });
     return reply
       .code(404)
       .type("text/html; charset=utf-8")
-      .send(page("Not found"));
+      .send(page(assets, "Not found"));
   });
 
   server.setErrorHandler((error: FastifyError, request, reply) => {
@@ -44,7 +49,7 @@ export const registerErrorMapping = (server: FastifyInstance): void => {
       return reply
         .code(error.statusCode)
         .type("text/html; charset=utf-8")
-        .send(page("Sorry", error.message));
+        .send(page(assets, "Sorry", error.message));
     }
 
     // Everything else is ours and stays ours. The correlation id goes to the
@@ -57,6 +62,8 @@ export const registerErrorMapping = (server: FastifyInstance): void => {
     return reply
       .code(500)
       .type("text/html; charset=utf-8")
-      .send(page("Something went wrong", `Reference ${correlationId}.`));
+      .send(
+        page(assets, "Something went wrong", `Reference ${correlationId}.`),
+      );
   });
 };

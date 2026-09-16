@@ -4,7 +4,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
-import { existsSync } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
@@ -15,6 +15,7 @@ import {
 } from "../infrastructure/config/Config.js";
 import { createPool } from "../infrastructure/database/pool.js";
 import { apiV1 } from "./api/v1/index.js";
+import { readAssets, type Assets } from "./common/assets.js";
 import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerPublicPages } from "./public/pages.js";
@@ -26,6 +27,30 @@ export interface Application {
   readonly pool: Pool;
   readonly config: Config;
 }
+
+const year = 60 * 60 * 24 * 365;
+
+const registerAssets = (server: FastifyInstance, assets: Assets): void => {
+  server.get<{ Params: { "*": string } }>("/assets/*", (request, reply) => {
+    const asset = assets.resolve(request.params["*"]);
+    if (asset === undefined) return reply.callNotFound();
+
+    // A name carrying the current hash cannot come to mean a different file, so
+    // it may be kept for as long as anyone likes. A name without one — an old
+    // hash from a deploy ago, or none at all — still serves the file, so a page
+    // held in a browser's cache is not left unstyled, but it is not promised to
+    // stay put.
+    return reply
+      .header(
+        "cache-control",
+        asset.current
+          ? `public, max-age=${year}, immutable`
+          : "public, max-age=60",
+      )
+      .type(asset.contentType)
+      .send(createReadStream(asset.path));
+  });
+};
 
 const registerAdmin = async (
   server: FastifyInstance,
@@ -62,11 +87,12 @@ export const buildApplication = async (
 ): Promise<Application> => {
   const server = Fastify({ logger: true });
   const pool = createPool(config.databaseUrl);
+  const assets = readAssets(join(repositoryRoot, "assets"));
 
   await server.register(cookie, { secret: config.sessionCookieSecret });
   await server.register(formbody);
 
-  registerErrorMapping(server);
+  registerErrorMapping(server, assets);
 
   await server.register(apiV1, { prefix: "/api/v1" });
   await server.register(
@@ -77,20 +103,11 @@ export const buildApplication = async (
     { prefix: "/auth" },
   );
 
-  // Hashed filenames, so these may be cached for as long as anyone likes.
-  // decorateReply: false because only one static mount may decorate, and the
-  // admin one needs sendFile.
-  await server.register(fastifyStatic, {
-    root: join(repositoryRoot, "assets"),
-    prefix: "/assets/",
-    maxAge: "365d",
-    immutable: true,
-    decorateReply: false,
-  });
+  registerAssets(server, assets);
 
   await registerAdmin(server, join(repositoryRoot, "dist", "admin"));
 
-  registerPublicPages(server);
+  registerPublicPages(server, assets);
 
   return { server, pool, config };
 };
