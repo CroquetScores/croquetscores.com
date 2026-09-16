@@ -1,0 +1,92 @@
+# STYLE.md — Style Foundation Specification
+
+One vocabulary for how this site looks, shared by the server-rendered public pages and the admin SPA. It is a foundation and not a design: it settles what things are called, what the scales are, and how the page is put together, so that the screens arriving later argue about themselves rather than about spacing.
+
+`SETUP.md` says how the repository is built. This says how it looks, and is held to the same rule: it does not specify behaviour. Where a thing has behaviour worth stating — a menu that opens — the behaviour belongs to the markup that provides it, and is named here only where it constrains the CSS.
+
+---
+
+## 1. Decisions
+
+| Decision                                                 | Why                                                                                                                                                              |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No CSS framework and no preprocessor                     | Grid, flexbox, custom properties and `clamp()` cover a site of this shape. A framework would have to be learnt, updated and worked around                        |
+| One stylesheet, `assets/site.css`                        | Both halves of the site load the same file, so they cannot drift apart. One file also means no build step and no second request                                  |
+| Tokens are custom properties with semantic names         | `--ink` and `--surface` survive a change of palette. `--grey-700` does not                                                                                       |
+| Dark mode from `color-scheme` and `prefers-color-scheme` | The browser is already told what the page supports, and the reader has already told the browser what they want. Neither needs asking twice                       |
+| Fluid type through `clamp()`                             | A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them                                                |
+| The public navigation is a `<details>` element           | `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all |
+| Breakpoints are written out, not tokenised               | `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice                     |
+
+---
+
+## 2. One stylesheet, two consumers
+
+`assets/site.css` is the whole foundation. The public pages link it under the hashed name the asset manifest gives them (`SETUP.md` §7.8). The admin SPA imports it from `main.tsx`, so Vite bundles and hashes it the same way it does everything else. Neither side has a stylesheet of its own at this stage; when the SPA grows screens that need styles nobody else does, those go in files beside their components and are still written in the vocabulary below.
+
+The file is in sections, in this order, because CSS cascades and the order is the argument: **tokens → reset → base elements → layout primitives → components → utilities**. A rule that has to come later than it reads has been put in the wrong section.
+
+---
+
+## 3. The tokens
+
+The vocabulary, declared on `:root`.
+
+**Space.** A single scale, `--space-1` through `--space-8`, geometric from `0.25rem`. Every margin, padding and gap comes from it. A value that is not on the scale is a decision that has to be argued for, which is the point.
+
+**Type.** `--text-sm` through `--text-3xl`, each a `clamp()` of a minimum, a viewport-relative middle and a maximum, so the scale grows with the screen and stops at both ends. `--leading-tight` for headings, `--leading-body` for prose. One family, `--font-body`, resolving to the reader's own system font: it is already installed, already legible to them, and costs no request.
+
+**Measure.** `--measure`, the width beyond which a line of prose is tiring to read, and `--page-max`, the width of the page itself. Prose is held to the first; layout is held to the second.
+
+**Colour.** Named for the job, never the hue: `--surface` and `--surface-raised` for backgrounds, `--ink` and `--ink-muted` for text, `--accent` with `--accent-ink` for the thing a reader is meant to press, `--border` for lines, `--focus` for the ring. Every pairing that can carry text meets WCAG AA at body size — that is a property of the palette and is checked when the palette changes, not hoped for.
+
+**Shape.** `--radius-1` and `--radius-2`, and nothing else. Two radii is a house style; five is an accident.
+
+---
+
+## 4. Base and layout
+
+The reset is the small modern one: `box-sizing: border-box` everywhere, margins off the elements that carry them by default, `text-wrap: balance` on headings and `pretty` on paragraphs, images and media capped at `max-width: 100%`.
+
+Three layout primitives carry nearly everything, and are classes rather than element rules because they apply to whatever needs them:
+
+- `.page` — the centred column, `--page-max` wide, with a gutter from the space scale that never collapses to nothing on a phone.
+- `.stack` — vertical rhythm, applied as a gap so that it cannot double up against a neighbour's margin.
+- `.cluster` — a horizontal group that wraps, for navigation, button rows and anything else that runs out of room.
+
+A grid of cards uses `repeat(auto-fit, minmax(…, 1fr))` and needs no breakpoint. Reach for `@media` only when the arrangement itself must change, not when something merely has to be narrower.
+
+---
+
+## 5. The header and its navigation
+
+The public header holds the site name, which is a link home, and the primary navigation. Below `40rem` the navigation is collapsed behind a disclosure; above it, it is laid out inline and the disclosure control is not rendered at all.
+
+That disclosure is `<details>` with a `<summary>`. It is keyboard-reachable, announced as a disclosure by a screen reader, and opens without a line of JavaScript, which is what the public side requires. The `<nav>` inside it carries an accessible name, so a reader arriving by landmark knows which navigation they have found.
+
+The navigation is generated from the list of public pages, so a page that exists is a page that can be reached, and no second list has to be kept true beside the first.
+
+The admin SPA has JavaScript by definition, so its own navigation is under no such constraint. It uses the same tokens, the same header proportions and the same focus treatment, so the two sides look like one site.
+
+---
+
+## 6. What is required of every screen
+
+These hold everywhere and are not a matter of taste:
+
+- **Focus is always visible.** A `:focus-visible` ring drawn in `--focus`, with an offset so it is legible against whatever it surrounds. Nothing removes an outline without putting something better in its place.
+- **Motion is optional.** Everything that animates is wrapped in `prefers-reduced-motion: no-preference`, so a reader who asked for stillness gets it.
+- **Targets are reachable.** Anything meant to be pressed is at least 44px in both directions, which mostly means padding rather than size.
+- **The page survives its content.** Long words break rather than overflow, and a layout is tested by putting too much in it.
+- **A skip link comes first.** The first focusable thing on a public page jumps to the main content, past the navigation.
+
+---
+
+## 7. Done when
+
+- `assets/site.css` holds the tokens, the base, the primitives and the header, in that order, and nothing hard-codes a value the scale already names.
+- The public pages render a header, a main region and a footer, and reach their stylesheet through the asset manifest.
+- The navigation opens and closes with JavaScript switched off, and is inline above `40rem`.
+- The admin SPA imports the same stylesheet and renders in the same vocabulary.
+- Light and dark both read correctly, and neither is an inversion of the other done badly.
+- `npm run lint`, `npm run typecheck`, `npm run build` and `npm test` are all clean.
