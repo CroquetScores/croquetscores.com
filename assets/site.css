@@ -45,8 +45,12 @@
   --panel: #ffffff;
   --ink: #16181c;
   --ink-muted: #5b6069;
-  --accent: #46a546;
-  --accent-strong: #078600;
+  /* The current site's greens, each taken down a shade. #46a546 could not
+     carry white text at body size — 3.12:1 where WCAG AA wants 4.5:1 — and
+     darkening it alone would have flattened the two bars into one mass, so the
+     section bar goes with it and the step between them survives. */
+  --accent: #398639;
+  --accent-strong: #066b00;
   --accent-ink: #ffffff;
   --current: #000000;
   --current-ink: #ffffff;
