@@ -1,0 +1,12 @@
+{
+  "default": {
+    "import": [
+      "specs/**/*.steps.ts",
+      "specs/support/**/*.ts",
+      "specs/infrastructure/support/**/*.ts"
+    ],
+    "paths": ["specs/**/*.feature"],
+    "format": ["progress-bar", "html:reports/cucumber.html"],
+    "formatOptions": { "snippetInterface": "async-await" }
+  }
+}
