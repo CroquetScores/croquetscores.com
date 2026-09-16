@@ -1,24 +1,62 @@
 // Errors map in one place, so no route decides for itself what a failure looks
 // like to a caller.
-import type { FastifyInstance } from "fastify";
+import type { FastifyError, FastifyInstance, FastifyRequest } from "fastify";
 import { randomUUID } from "node:crypto";
+
+// The API answers JSON and the public pages answer HTML, including when they
+// fail. A browser should not be handed a JSON body for a page it asked for.
+const wantsJson = (request: FastifyRequest): boolean =>
+  request.url.startsWith("/api/");
+
+const page = (heading: string, detail?: string): string =>
+  `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>${heading}</title>
+    <link rel="stylesheet" href="/assets/site.css" />
+  </head>
+  <body>
+    <h1>${heading}</h1>${detail === undefined ? "" : `\n    <p>${detail}</p>`}
+  </body>
+</html>
+`;
 
 export const registerErrorMapping = (server: FastifyInstance): void => {
   server.setNotFoundHandler((request, reply) => {
-    if (request.url.startsWith("/api/")) {
-      return reply.code(404).send({ error: "NotFound" });
-    }
+    if (wantsJson(request)) return reply.code(404).send({ error: "NotFound" });
     return reply
       .code(404)
       .type("text/html; charset=utf-8")
-      .send("<!doctype html><title>Not found</title><h1>Not found</h1>");
+      .send(page("Not found"));
   });
 
-  server.setErrorHandler((error, request, reply) => {
-    // The correlation id goes to the log with the cause, and to the caller
-    // without it. What went wrong is ours to know and not theirs to read.
+  server.setErrorHandler((error: FastifyError, request, reply) => {
+    // A status on the error means something chose it — a route, or Fastify
+    // rejecting the request itself — and its message was written to be read.
+    if (typeof error.statusCode === "number") {
+      request.log.warn({ err: error }, "Request failed");
+      if (wantsJson(request)) {
+        return reply
+          .code(error.statusCode)
+          .send({ error: error.code ?? "Error", message: error.message });
+      }
+      return reply
+        .code(error.statusCode)
+        .type("text/html; charset=utf-8")
+        .send(page("Sorry", error.message));
+    }
+
+    // Everything else is ours and stays ours. The correlation id goes to the
+    // log with the cause, and to the caller without it.
     const correlationId = randomUUID();
     request.log.error({ err: error, correlationId }, "Unhandled error");
-    return reply.code(500).send({ error: "Internal", correlationId });
+    if (wantsJson(request)) {
+      return reply.code(500).send({ error: "Internal", correlationId });
+    }
+    return reply
+      .code(500)
+      .type("text/html; charset=utf-8")
+      .send(page("Something went wrong", `Reference ${correlationId}.`));
   });
 };

@@ -34,16 +34,30 @@ const home: Page = {
 
 export const pages: readonly Page[] = [home];
 
+// An If-None-Match may carry several tags, and a weak validator's W/ prefix
+// says only how the tag was derived, not which entity it names.
+const matches = (header: string | undefined, etag: string): boolean =>
+  header !== undefined &&
+  header
+    .split(",")
+    .map((candidate) => candidate.trim().replace(/^W\//, ""))
+    .some((candidate) => candidate === "*" || candidate === etag);
+
 export const registerPublicPages = (server: FastifyInstance): void => {
   for (const page of pages) {
-    server.get(page.path, (_request, reply) => {
+    server.get(page.path, (request, reply) => {
       const html = page.render();
       const etag = `"${createHash("sha256").update(html).digest("base64url").slice(0, 27)}"`;
-      return reply
-        .header("cache-control", "public, max-age=60")
-        .header("etag", etag)
-        .type("text/html; charset=utf-8")
-        .send(html);
+
+      reply.header("cache-control", "public, max-age=60").header("etag", etag);
+
+      // Without this the ETag costs a hash on every request and saves nothing:
+      // Fastify does no conditional-request handling of its own.
+      if (matches(request.headers["if-none-match"], etag)) {
+        return reply.code(304).send();
+      }
+
+      return reply.type("text/html; charset=utf-8").send(html);
     });
   }
 };

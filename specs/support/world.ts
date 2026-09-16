@@ -8,6 +8,11 @@ export class SpecWorld extends World {
   public databaseName: string | undefined;
   public pool: Pool | undefined;
 
+  // What the last call to the migration runner reported. Typed by its shape
+  // rather than by importing AppliedMigration: this file is loaded by every
+  // spec in the repository and so may name nothing from src/infrastructure.
+  public appliedMigrations: readonly { readonly name: string }[] | undefined;
+
   public get database(): Pool {
     if (this.pool === undefined) {
       throw new Error(

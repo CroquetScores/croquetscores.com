@@ -1,13 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  migrate,
-  type AppliedMigration,
-} from "../../../../src/infrastructure/database/migrate.js";
+import { migrate } from "../../../../src/infrastructure/database/migrate.js";
 import type { SpecWorld } from "../../../support/world.js";
-
-let applied: AppliedMigration[] = [];
 
 Given("a migrated database", function (this: SpecWorld) {
   // The @postgres hook made it and migrated it. This step says out loud what
@@ -16,7 +11,7 @@ Given("a migrated database", function (this: SpecWorld) {
 });
 
 When("the migrations are applied", async function (this: SpecWorld) {
-  applied = await migrate(this.database);
+  this.appliedMigrations = await migrate(this.database);
 });
 
 Then(
@@ -45,6 +40,6 @@ Then(
   },
 );
 
-Then("no migration is applied", function () {
-  assert.deepEqual(applied, []);
+Then("no migration is applied", function (this: SpecWorld) {
+  assert.deepEqual(this.appliedMigrations, []);
 });

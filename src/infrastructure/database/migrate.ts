@@ -23,7 +23,26 @@ const ensureMigrationsTable = async (pool: Pool): Promise<void> => {
   `);
 };
 
+// Any constant will do, so long as nothing else in this database picks the
+// same one. Postgres advisory locks share a single namespace.
+const migrationLock = 8_246_113;
+
 export const migrate = async (pool: Pool): Promise<AppliedMigration[]> => {
+  // Reading what has been applied and applying the rest is two steps, and
+  // another migrator can arrive between them. It matters for CI and for a
+  // deployment that starts more than one instance; it never bites the developer
+  // who finds it. The lock is held on a session of its own for the whole run.
+  const lock = await pool.connect();
+  try {
+    await lock.query("select pg_advisory_lock($1)", [migrationLock]);
+    return await applyPending(pool);
+  } finally {
+    await lock.query("select pg_advisory_unlock($1)", [migrationLock]);
+    lock.release();
+  }
+};
+
+const applyPending = async (pool: Pool): Promise<AppliedMigration[]> => {
   await ensureMigrationsTable(pool);
 
   const files = (await readdir(migrationsDirectory))
@@ -49,8 +68,20 @@ export const migrate = async (pool: Pool): Promise<AppliedMigration[]> => {
       ]);
       await client.query("commit");
     } catch (cause) {
-      await client.query("rollback");
-      throw new Error(`Migration ${name} failed.`, { cause });
+      // A rollback can fail too, usually because the connection has gone. Its
+      // failure says nothing about which migration broke, so it rides along as
+      // a property rather than replacing what did.
+      let rollbackFailure: unknown;
+      try {
+        await client.query("rollback");
+      } catch (failure) {
+        rollbackFailure = failure;
+      }
+
+      const failed = new Error(`Migration ${name} failed.`, { cause });
+      throw rollbackFailure === undefined
+        ? failed
+        : Object.assign(failed, { rollbackFailure });
     } finally {
       client.release();
     }

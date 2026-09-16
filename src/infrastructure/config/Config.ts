@@ -19,9 +19,9 @@ export interface Config {
 }
 
 export class ConfigError extends Error {
-  constructor(missing: readonly string[]) {
+  constructor(problems: readonly string[]) {
     super(
-      `Configuration is incomplete. Missing: ${missing.join(", ")}. ` +
+      `Configuration is unusable. ${problems.join(" ")} ` +
         `Run "npm run dev:setup" for a development .env, or set these in the environment.`,
     );
     this.name = "ConfigError";
@@ -39,17 +39,43 @@ const optional = (
   return { clientId, clientSecret };
 };
 
+const defaultPort = 3000;
+
+// A blank value is what .env holds for a key nobody has filled in, so it means
+// absent rather than zero. Left to Number(), "" is 0, which binds an arbitrary
+// port and leaves a process that looks healthy and answers nothing.
+const readPort = (env: NodeJS.ProcessEnv, problems: string[]): number => {
+  const raw = env["PORT"]?.trim() ?? "";
+  if (raw === "") return defaultPort;
+
+  const port = Number(raw);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    problems.push(
+      `PORT must be a whole number between 1 and 65535, not ${JSON.stringify(raw)}.`,
+    );
+    return defaultPort;
+  }
+  return port;
+};
+
 export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
+  const problems: string[] = [];
+
   const required = [
     "DATABASE_URL",
     "SESSION_COOKIE_SECRET",
     "TOKEN_SIGNING_KEY",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
-  if (missing.length > 0) throw new ConfigError(missing);
+  if (missing.length > 0) problems.push(`Missing: ${missing.join(", ")}.`);
+
+  // Every problem at once. Fixing one thing only to be told about the next is
+  // a worse morning than being told about both.
+  const port = readPort(env, problems);
+  if (problems.length > 0) throw new ConfigError(problems);
 
   return {
-    port: Number(env["PORT"] ?? 3000),
+    port,
     databaseUrl: env["DATABASE_URL"]!,
     sessionCookieSecret: env["SESSION_COOKIE_SECRET"]!,
     tokenSigningKey: env["TOKEN_SIGNING_KEY"]!,
