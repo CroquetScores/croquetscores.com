@@ -647,6 +647,9 @@ coverage/
 *.tsbuildinfo
 .env
 .vscode/settings.json
+
+# Review output, written here to be read and acted on rather than kept.
+code-review.md
 ```
 
 `.gitattributes`, so `.feature` files keep LF endings on Windows:
