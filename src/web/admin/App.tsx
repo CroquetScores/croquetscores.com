@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
 // The shell. Screens arrive with the features that specify them; what this
-// proves for now is that the SPA is built, served under /admin, and can reach
-// the API it shares with the mobile apps.
+// proves for now is that the SPA is built, served under /admin, reaches the API
+// it shares with the mobile apps, and speaks the same vocabulary as the public
+// pages.
 export const App = (): React.JSX.Element => {
   const [status, setStatus] = useState("checking…");
 
@@ -22,9 +23,27 @@ export const App = (): React.JSX.Element => {
   }, []);
 
   return (
-    <main>
-      <h1>Croquet Scores — Admin</h1>
-      <p>API: {status}</p>
-    </main>
+    <>
+      <header className="site-header">
+        <div className="page">
+          <a className="site-name" href="/admin/">
+            Croquet Scores — Admin
+          </a>
+          <nav className="menu-links" aria-label="Primary">
+            <ul>
+              <li>
+                <a href="/">Public site</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <main id="content">
+        <div className="page stack stack-loose">
+          <h1>Admin</h1>
+          <p className="lead">API: {status}</p>
+        </div>
+      </main>
+    </>
   );
 };

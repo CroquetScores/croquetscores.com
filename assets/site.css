@@ -1,11 +1,405 @@
+/* =========================================================================
+   site.css — the style foundation, shared by the public pages and the admin
+   SPA. Sections are in cascade order: tokens, reset, base, layout, components,
+   utilities. A rule that has to come later than it reads is in the wrong
+   section. See STYLE.md.
+   ========================================================================= */
+
+/* --- Tokens -------------------------------------------------------------- */
+
 :root {
   color-scheme: light dark;
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
+
+  /* Space. One geometric scale. A value not on it is a decision to argue for. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Type. Each size interpolates with the viewport and stops at both ends, so
+     the scale needs no breakpoint and is never unreadable between two. */
+  --font-body:
+    system-ui, -apple-system, "Segoe UI", roboto, helvetica, arial, sans-serif;
+  --text-sm: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  --text-lg: clamp(1.2rem, 1.13rem + 0.35vw, 1.4rem);
+  --text-xl: clamp(1.45rem, 1.33rem + 0.6vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.55rem + 1vw, 2.2rem);
+  --text-3xl: clamp(2.1rem, 1.78rem + 1.6vw, 2.8rem);
+  --leading-tight: 1.2;
+  --leading-body: 1.6;
+
+  /* Measure. Prose is held to the first, layout to the second. */
+  --measure: 65ch;
+  --page-max: 68rem;
+
+  /* Colour, named for the job it does and never for the hue it happens to be.
+     Every pairing that carries text meets WCAG AA at body size. */
+  --surface: #fdfdfc;
+  --surface-raised: #ffffff;
+  --ink: #16181c;
+  --ink-muted: #5b6069;
+  --accent: #1c5d3a;
+  --accent-ink: #ffffff;
+  --accent-quiet: #e6f0ea;
+  --border: #d9dbd8;
+  --focus: #1c5d3a;
+
+  /* Shape. Two radii is a house style; five is an accident. */
+  --radius-1: 0.25rem;
+  --radius-2: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #14161a;
+    --surface-raised: #1c1f24;
+    --ink: #eceef0;
+    --ink-muted: #a3a9b2;
+    --accent: #6fcf97;
+    --accent-ink: #10231a;
+    --accent-quiet: #1d2f25;
+    --border: #2f343c;
+    --focus: #6fcf97;
+  }
+}
+
+/* --- Reset --------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* --- Base ---------------------------------------------------------------- */
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  margin: 0 auto;
-  max-width: 48rem;
-  padding: 2rem 1rem;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-3xl);
+}
+
+h2 {
+  font-size: var(--text-2xl);
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+p,
+li {
+  /* Long words break rather than push the layout sideways. */
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+p {
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: max(1px, 0.06em);
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-thickness: max(2px, 0.1em);
+}
+
+/* Nothing removes an outline without putting something better in its place. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-1);
+}
+
+/* A reader who asked for stillness gets it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Layout primitives --------------------------------------------------- */
+
+/* The centred column, with a gutter that never collapses to nothing. */
+.page {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* Vertical rhythm as a gap, so it cannot double against a neighbour's margin. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stack-loose {
+  gap: var(--space-6);
+}
+
+/* A horizontal group that wraps when it runs out of room. */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Needs no breakpoint: the columns decide for themselves. */
+.grid {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
+/* --- Components ---------------------------------------------------------- */
+
+/* The first focusable thing on the page, past the navigation. */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  z-index: 10;
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+
+.site-header > .page {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+}
+
+.site-name {
+  color: var(--ink);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  text-decoration: none;
+  /* At least 44px tall, reached by padding rather than by size. */
+  padding-block: var(--space-2);
+}
+
+/* The primary navigation. Below 40rem it is collapsed behind the disclosure;
+   above it, the disclosure control is not rendered and the links sit inline.
+   <details> opens, closes, takes focus and announces itself without script,
+   which is what the public side requires of it. */
+.menu {
+  position: relative;
+}
+
+.menu > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  cursor: pointer;
+  list-style: none;
+}
+
+.menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.menu > summary::before {
+  content: "";
+  width: 1.1em;
+  height: 2px;
+  background: currentcolor;
+  box-shadow:
+    0 -6px currentcolor,
+    0 6px currentcolor;
+}
+
+.menu[open] > summary::before {
+  box-shadow: none;
+  transform: rotate(45deg);
+}
+
+.menu-links {
+  position: absolute;
+  right: 0;
+  z-index: 5;
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  min-width: 12rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+}
+
+.menu-links ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.menu-links a {
+  display: block;
+  padding: var(--space-3);
+  min-height: 44px;
+  border-radius: var(--radius-1);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.menu-links a:hover,
+.menu-links a:focus-visible {
+  background: var(--accent-quiet);
+}
+
+.menu-links a[aria-current="page"] {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Above the one breakpoint this foundation has, the links are the navigation
+   and the disclosure has nothing to disclose. @media cannot read a custom
+   property, which is why 40rem is written out rather than tokenised. */
+@media (min-width: 40rem) {
+  .menu > summary {
+    display: none;
+  }
+
+  .menu-links {
+    position: static;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    background: none;
+    border: 0;
+  }
+
+  .menu-links ul {
+    flex-direction: row;
+    gap: var(--space-2);
+  }
+
+  .menu-links a {
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    align-items: center;
+  }
+}
+
+main {
+  flex: 1;
+  padding-block: var(--space-7);
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  padding-block: var(--space-5);
+}
+
+/* --- Utilities ----------------------------------------------------------- */
+
+.lead {
+  font-size: var(--text-lg);
+  color: var(--ink-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

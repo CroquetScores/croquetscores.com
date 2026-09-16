@@ -10,16 +10,24 @@ import type { Assets } from "./assets.js";
 const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
 
+// An error page is still a page of this site: the same stylesheet, the same
+// column, and a viewport that lets a phone render it at a readable size.
 const page = (assets: Assets, heading: string, detail?: string): string =>
   `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${heading}</title>
     <link rel="stylesheet" href="${assets.url("site.css")}" />
   </head>
   <body>
-    <h1>${heading}</h1>${detail === undefined ? "" : `\n    <p>${detail}</p>`}
+    <main id="content">
+      <div class="page stack">
+        <h1>${heading}</h1>${detail === undefined ? "" : `\n        <p>${detail}</p>`}
+        <p><a href="/">Back to Croquet Scores</a></p>
+      </div>
+    </main>
   </body>
 </html>
 `;
