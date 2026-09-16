@@ -82,10 +82,16 @@ const registerAdmin = async (
   );
 };
 
+export interface ApplicationOptions {
+  /** Off for the specs, whose output is the scenario list and not a request log. */
+  readonly logger?: boolean;
+}
+
 export const buildApplication = async (
   config: Config,
+  options: ApplicationOptions = {},
 ): Promise<Application> => {
-  const server = Fastify({ logger: true });
+  const server = Fastify({ logger: options.logger ?? true });
   const pool = createPool(config.databaseUrl);
   const assets = readAssets(join(repositoryRoot, "assets"));
 

@@ -3,10 +3,13 @@
     "import": [
       "specs/**/*.steps.ts",
       "specs/support/**/*.ts",
-      "specs/infrastructure/support/**/*.ts"
+      "specs/infrastructure/support/**/*.ts",
+      "specs/web/support/**/*.ts"
     ],
     "paths": ["specs/**/*.feature"],
     "format": ["progress-bar", "html:reports/cucumber.html"],
-    "formatOptions": { "snippetInterface": "async-await" }
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    }
   }
 }

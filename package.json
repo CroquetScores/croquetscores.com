@@ -16,7 +16,8 @@
     "db:down": "docker compose down -v",
     "db:migrate": "tsx src/infrastructure/database/migrate-cli.ts",
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\"",
-    "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\""
+    "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\"",
+    "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\""
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "eslint": "^10.10.0",
+    "playwright": "^1.63.0",
     "prettier": "^3.9.6",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

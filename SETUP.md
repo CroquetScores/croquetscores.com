@@ -8,23 +8,24 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 
 ## 1. Requirements, and the decisions they force
 
-| Requirement                                      | Decision                                                                                |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| TypeScript                                       | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                  |
-| Postgres in Docker                               | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI        |
-| Auth: email address + password                   | argon2id hashing, opaque session cookie for browsers                                    |
-| Auth: Google and Facebook                        | Google over OIDC, Facebook over OAuth 2.0 + Graph                                       |
-| Auth: an API for mobile apps                     | Bearer JWT access token + rotating refresh token, same endpoints as the web API         |
-| Web: an API                                      | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                     |
-| Web: static pages for the public side            | Server-rendered HTML, no client framework, works without JavaScript                     |
-| Web: a SPA at `/admin`                           | React built by Vite, served as static files with a history fallback                     |
-| Gherkin                                          | Cucumber.js, the only test runner                                                       |
-| CI via GitHub                                    | Actions: lint, typecheck, build, then the whole spec suite against the compose database |
-| Roll its own mediator, CQRS, event store         | Written in `src/application` and `src/infrastructure`; no framework decides their shape |
-| Layers: web, infrastructure, application, domain | Enforced by ESLint, not by good intentions                                              |
-| `/src` for source, `/specs` for `.feature` files | Steps live beside their feature                                                         |
-| No `/tests` folder                               | Stated as a rule below so nobody adds one back                                          |
-| No ambient clock                                 | Every command carries `requestedAt`; the domain is told the time, never asks for it     |
+| Requirement                                       | Decision                                                                                        |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| TypeScript                                        | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                          |
+| Postgres in Docker                                | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI                |
+| Auth: email address + password                    | argon2id hashing, opaque session cookie for browsers                                            |
+| Auth: Google and Facebook                         | Google over OIDC, Facebook over OAuth 2.0 + Graph                                               |
+| Auth: an API for mobile apps                      | Bearer JWT access token + rotating refresh token, same endpoints as the web API                 |
+| Web: an API                                       | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                             |
+| Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                             |
+| Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                             |
+| Gherkin                                           | Cucumber.js, the only test runner                                                               |
+| CI via GitHub                                     | Actions: lint, typecheck, build, then the whole spec suite against the compose database         |
+| Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape         |
+| Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                      |
+| `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                 |
+| No `/tests` folder                                | Stated as a rule below so nobody adds one back                                                  |
+| No ambient clock                                  | Every command carries `requestedAt`; the domain is told the time, never asks for it             |
+| A real browser for what only a browser can answer | Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one |
 
 **Two decisions confirmed, and recorded here so they are not reopened by accident:**
 
@@ -130,12 +131,19 @@ Development:
 ```bash
 npm install --save-dev \
   typescript@^5 @types/node @types/pg tsx \
-  @cucumber/cucumber \
+  @cucumber/cucumber playwright \
   eslint typescript-eslint @eslint/js prettier \
   vite @vitejs/plugin-react react react-dom @types/react @types/react-dom
 ```
 
+The browser binaries are not in the package, and are fetched once:
+
+```bash
+npx playwright install chromium
+```
+
 - `@node-rs/argon2` ships prebuilt binaries, so a fresh clone needs no compiler.
+- `playwright` is the library, not `@playwright/test`. The runner here is Cucumber and stays Cucumber; what Playwright adds is a browser for step definitions to drive.
 - `jose` signs and verifies the mobile JWTs and validates Google's `id_token` against its JWKS. Facebook needs nothing beyond `fetch`.
 - `typescript` is pinned to `^5`; TypeScript 6 stops auto-including everything under `node_modules/@types`, which is why the configs below name `types` explicitly.
 
@@ -430,7 +438,19 @@ Each `@postgres` scenario gets a database of its own, created and migrated in a 
 
 That harness lives in `specs/infrastructure/support/`, not `specs/support/`, because it reads the configuration and reaches infrastructure, and `specs/support/` is loaded by every spec in the repository and may not.
 
-### 8.2 Gherkin conventions
+### 8.2 Scenarios that need a browser
+
+Some claims cannot be checked by reading the thing that makes them. Whether a menu opens with JavaScript switched off, whether a control is on the page at one width and gone at another, whether something meant for a thumb is big enough for one — a browser answers these and nothing else does. Those scenarios are tagged `@browser`, and like `@postgres` they are the exception rather than the rule.
+
+A `@browser` scenario gets a browser context of its own and a page in it, and **scripting is switched off** unless the scenario asks for it back. That is not caution, it is the subject: the public pages are required to work without JavaScript, and a browser that has been given none is what turns that requirement into a test rather than an intention.
+
+The application starts once, on the first such scenario, listening on whatever port is free. A fixed port would collide with a development server, and the first person to run both at once would find out the hard way. The browser starts on the same occasion. Neither starts in `BeforeAll`, because Cucumber runs `BeforeAll` ahead of tag filtering, and a run that wants neither should pay for neither.
+
+That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
+
+CI installs Chromium and only Chromium. A second engine is a second download on every run, and wants a reason.
+
+### 8.3 Gherkin conventions
 
 - A `.feature` file describes behaviour. Method names, signatures and encodings belong in the step definitions and in the `/src` types, where a reviewer sees them.
 - Steps are written to be reused: one value to a step, and a set asserted by naming each member.
@@ -551,6 +571,7 @@ npm pkg set scripts.test="npm run test:features"
 npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js"
 npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\""
 npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\""
+npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\""
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
@@ -683,6 +704,7 @@ jobs:
           node-version: 22.13.0
           cache: npm
       - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
