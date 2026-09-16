@@ -1,0 +1,7 @@
+node_modules/
+dist/
+reports/
+coverage/
+*.tsbuildinfo
+.env
+.vscode/settings.json
