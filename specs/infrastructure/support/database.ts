@@ -65,6 +65,11 @@ Before({ tags: "@postgres" }, async function (this: SpecWorld) {
 });
 
 After({ tags: "@postgres" }, async function (this: SpecWorld) {
+  // Silence errors that arrive on still-closing connections when the database
+  // is dropped with (force) below. pg-pool leaves the idle error listener
+  // attached during end(), so without a pool error handler those errors become
+  // unhandled exceptions.
+  this.pool?.on("error", () => {});
   await this.pool?.end();
   this.pool = undefined;
 
