@@ -295,16 +295,19 @@ a:hover {
 
 .menu > summary::before {
   content: "";
-  width: 1.1em;
-  height: 2px;
-  background: currentcolor;
-  box-shadow:
-    0 -6px currentcolor,
-    0 6px currentcolor;
+  width: 1.25em;
+  height: 1em;
+  background:
+    linear-gradient(currentcolor, currentcolor) 0 0 / 100% 2px no-repeat,
+    linear-gradient(currentcolor, currentcolor) 0 50% / 100% 2px no-repeat,
+    linear-gradient(currentcolor, currentcolor) 0 100% / 100% 2px no-repeat;
 }
 
+/* Three bars become a cross: a plus sign turned through 45 degrees. */
 .menu[open] > summary::before {
-  box-shadow: none;
+  background:
+    linear-gradient(currentcolor, currentcolor) 50% 50% / 100% 2px no-repeat,
+    linear-gradient(currentcolor, currentcolor) 50% 50% / 2px 100% no-repeat;
   transform: rotate(45deg);
 }
 
@@ -324,6 +327,9 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .menu-links a {
@@ -353,7 +359,19 @@ a:hover {
     display: none;
   }
 
+  /* A closed <details> hides everything but its summary, so hiding the summary
+     is not enough: the navigation has to be let out too. Browsers do the hiding
+     through ::details-content now and did it through the child's own display
+     before, which is why both are set. Verified in a browser, because the first
+     version of this rule left the navigation invisible at every width above the
+     breakpoint and read perfectly well on the page. */
+  .menu::details-content {
+    content-visibility: visible;
+    display: contents;
+  }
+
   .menu-links {
+    display: block;
     position: static;
     margin: 0;
     padding: 0;
