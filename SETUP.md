@@ -384,10 +384,14 @@ What happens when a Google sign-in arrives carrying the email address of an exis
 
 ### 7.7 Two ways of holding a session
 
-- **Browser:** an opaque session id in an `HttpOnly`, `Secure`, `SameSite=Lax` cookie, stored hashed in a `sessions` table. State-changing requests carry a CSRF token.
+- **Browser:** an opaque session id in an `HttpOnly`, `Secure`, `SameSite=Lax` cookie, stored hashed in a `sessions` table.
 - **Mobile:** `POST /api/v1/auth/token` returns a signed JWT access token (short-lived, EdDSA via `jose`) and an opaque refresh token, stored hashed and **rotated on every use**. A refresh token presented twice means it leaked, so the whole family is revoked.
 
 Both arrive at one `RequestContext` carrying the account id and its permissions. Nothing below the web layer knows which door was used.
+
+**A change asked for by another site is refused, and no token is needed to tell.** A page elsewhere can make a reader's browser post here, and the browser sends everything it holds for this site when it does — which is what a CSRF token exists to guard against. But browsers now say where a request came from: `Sec-Fetch-Site` on every current one, and `Origin` on the ones too old for that. So every `POST`, `PUT`, `PATCH` and `DELETE` is refused with `403 Request.CrossSite` unless `Sec-Fetch-Site` is `same-origin` or `none`, or, failing that header, `Origin` names this host. A request carrying neither is not a browser — a mobile app, a script, another server — so nobody's browser is being made to act for somebody else, and it is let through.
+
+That is one hook on the server, in front of every route, rather than a token threaded through every form and checked in every handler. It holds whether or not there is a session to hang a token on, which is why the first form that needed it — the theme choice — could have it before sessions exist. `SameSite=Lax` does not do this job: it governs whether a cookie is sent with a cross-site request, not whether the response to one may set a cookie, and a hostile page was shown setting the theme cookie through it before this was added.
 
 ### 7.8 The web tier
 

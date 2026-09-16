@@ -113,6 +113,8 @@ Those pairs sit behind `@supports (color: light-dark(#000, #fff))`, and the plai
 
 The cookie is `HttpOnly`, `SameSite=Lax`, a year long, and **always `Secure`**. It is not worked out from the request: behind whatever terminates HTTPS in front of the application, the connection that reaches it is plain HTTP, so `request.protocol` would say `http` on every request and the cookie would never be `Secure` where it most needs to be — and reading `X-Forwarded-Proto` instead means trusting a header any client can send. Chromium and Firefox treat `localhost` and `127.0.0.1` as secure contexts, so development over plain HTTP loses nothing there. Safari has historically not, so a developer checking the theme choice in Safari against `http://localhost` should expect it not to stick.
 
+**Another site cannot make the choice.** A page elsewhere could otherwise put a button in front of a reader that posts to `/theme`, and the reader's browser would carry the result back and keep it for a year. Such a post is refused with `403`, by the same guard that stands in front of every change on this site (`SETUP.md` §7.7).
+
 **A page that depends on a cookie is not a page anyone else may cache.** The public pages were `public, max-age=60`; they are now `private, no-cache` with `Vary: Cookie`. The `ETag` still does the work — a revalidation that finds nothing changed costs a `304` and no body — but a shared cache can no longer hand one reader's theme to another.
 
 The admin SPA is served as a static file, so the server cannot render an attribute into it. It follows the machine's preference and ignores the choice. That is a gap, not a decision, and it closes when the SPA has somewhere of its own to keep settings.

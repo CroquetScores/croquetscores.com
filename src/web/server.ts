@@ -16,6 +16,7 @@ import {
 import { createPool } from "../infrastructure/database/pool.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
+import { refuseCrossSite } from "./common/crossSite.js";
 import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerPublicPages } from "./public/pages.js";
@@ -100,6 +101,10 @@ export const buildApplication = async (
   await server.register(formbody);
 
   registerErrorMapping(server, assets);
+
+  // Before any route, so nothing that changes something can be reached from
+  // another site by forgetting to ask.
+  refuseCrossSite(server);
 
   await server.register(apiV1, { prefix: "/api/v1" });
   await server.register(

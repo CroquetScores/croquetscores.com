@@ -111,3 +111,36 @@ Then(
     );
   },
 );
+
+// Served into the browser by the scenario rather than by a second server: the
+// address is made up, and the browser treats it as the separate site it names.
+const elsewhere = "http://elsewhere.example/";
+
+Given(
+  "a page on another site with a button that posts {string} here",
+  async function (this: SpecWorld, theme: string) {
+    const target = `${this.baseUrl!}/theme`;
+    await this.browserPage.route(elsewhere, (route) =>
+      route.fulfill({
+        contentType: "text/html",
+        body: `<!doctype html>
+<title>Something else entirely</title>
+<form method="post" action="${target}">
+  <input type="hidden" name="theme" value="${theme}" />
+  <input type="hidden" name="return" value="/" />
+  <button type="submit">Claim your prize</button>
+</form>`,
+      }),
+    );
+    this.elsewhere = elsewhere;
+  },
+);
+
+When(
+  "the reader presses the button on that page",
+  async function (this: SpecWorld) {
+    await this.browserPage.goto(this.elsewhere!);
+    await this.browserPage.click("button");
+    await this.browserPage.waitForLoadState();
+  },
+);

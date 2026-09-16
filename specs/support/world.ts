@@ -12,6 +12,21 @@ export class SpecWorld extends World {
   // What the last call to the migration runner reported. Typed by its shape
   // rather than by importing AppliedMigration: this file is loaded by every
   // spec in the repository and so may name nothing from src/infrastructure.
+  // A request being judged for where it came from. Typed by shape rather than by
+  // importing Provenance, for the same reason as appliedMigrations below.
+  public provenance:
+    | {
+        method: string;
+        secFetchSite: string | undefined;
+        origin: string | undefined;
+        host: string | undefined;
+      }
+    | undefined;
+  public refused: boolean | undefined;
+
+  // A page on some other site, served into the browser by the scenario.
+  public elsewhere: string | undefined;
+
   // Where a reader asking to return somewhere was actually sent.
   public returnPath: string | undefined;
 
