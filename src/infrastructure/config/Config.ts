@@ -12,6 +12,11 @@ export interface Config {
   readonly databaseUrl: string;
   readonly sessionCookieSecret: string;
   readonly tokenSigningKey: string;
+  // The host this site answers to, as a browser would name it: "croquetscores.com",
+  // or "localhost:3000" in development. Absent means fall back to the Host header
+  // of each request, which is right on a machine nothing sits in front of and
+  // wrong behind a proxy that rewrites it.
+  readonly canonicalHost: string | undefined;
   // Absent until somebody pastes real credentials in. The sign-in routes that
   // need them refuse to register rather than half-working at runtime.
   readonly google: OAuthCredentials | undefined;
@@ -37,6 +42,22 @@ const optional = (
   const clientSecret = env[secretKey]?.trim() ?? "";
   if (clientId === "" || clientSecret === "") return undefined;
   return { clientId, clientSecret };
+};
+
+// Written as a host, but a whole address is what people reach for, so one is
+// accepted and reduced to its host and port.
+const readCanonicalHost = (env: NodeJS.ProcessEnv): string | undefined => {
+  const raw = env["CANONICAL_HOST"]?.trim() ?? "";
+  if (raw === "") return undefined;
+  // "localhost:3000" parses as a URL with a scheme and no host, so a host is
+  // only taken when there is one.
+  try {
+    const host = new URL(raw).host;
+    if (host !== "") return host.toLowerCase();
+  } catch {
+    // Not an address. It is a host, then.
+  }
+  return raw.replace(/\/+$/, "").toLowerCase();
 };
 
 const defaultPort = 3000;
@@ -79,6 +100,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     databaseUrl: env["DATABASE_URL"]!,
     sessionCookieSecret: env["SESSION_COOKIE_SECRET"]!,
     tokenSigningKey: env["TOKEN_SIGNING_KEY"]!,
+    canonicalHost: readCanonicalHost(env),
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
   };

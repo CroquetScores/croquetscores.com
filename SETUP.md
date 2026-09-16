@@ -258,11 +258,16 @@ Settings are read once, at startup, by `src/infrastructure/config/`, which valid
 DATABASE_URL=postgres://croquet_scores:croquet_scores@localhost:5432/croquet_scores
 SESSION_COOKIE_SECRET=
 TOKEN_SIGNING_KEY=
+CANONICAL_HOST=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET=
 ```
+
+`CANONICAL_HOST` is the host this site answers to, exactly as a browser's address bar spells it — `croquetscores.com`, with a port only where readers see one. It is what an `Origin` is judged against (§7.7). Anything deployed sets it, because left blank each request's own `Host` is used instead, which is the truth on a machine nothing sits in front of and a lie behind a proxy that rewrites it.
+
+In development it stays blank, and deliberately. `npm run dev` serves `localhost:3000`, the `@browser` scenarios serve `127.0.0.1` on whatever port was free (§8.2), and `npm run dev:admin` is a Vite server on a fourth address proxying to the third: one value would be wrong for three of them, and every one of those origins sends a `Host` that is already correct.
 
 `.env.example` is committed with the keys and no values. `npm run dev:setup` copies it if absent and fills the two local secrets with fresh random bytes, leaving anything already present untouched — regenerating a signing key would invalidate every token signed with it. OAuth credentials stay blank until real ones are pasted in, and the config loader fails at startup, loudly, if something it needs is missing.
 
@@ -389,7 +394,9 @@ What happens when a Google sign-in arrives carrying the email address of an exis
 
 Both arrive at one `RequestContext` carrying the account id and its permissions. Nothing below the web layer knows which door was used.
 
-**A change asked for by another site is refused, and no token is needed to tell.** A page elsewhere can make a reader's browser post here, and the browser sends everything it holds for this site when it does — which is what a CSRF token exists to guard against. But browsers now say where a request came from: `Sec-Fetch-Site` on every current one, and `Origin` on the ones too old for that. So every `POST`, `PUT`, `PATCH` and `DELETE` is refused with `403 Request.CrossSite` unless `Sec-Fetch-Site` is `same-origin` or `none`, or, failing that header, `Origin` names this host. A request carrying neither is not a browser — a mobile app, a script, another server — so nobody's browser is being made to act for somebody else, and it is let through.
+**A change asked for by another site is refused, and no token is needed to tell.** A page elsewhere can make a reader's browser post here, and the browser sends everything it holds for this site when it does — which is what a CSRF token exists to guard against. But browsers now say where a request came from: `Sec-Fetch-Site` on every current one, and `Origin` on the ones too old for that. So every `POST`, `PUT`, `PATCH` and `DELETE` is refused with `403 Request.CrossSite` unless `Sec-Fetch-Site` is `same-origin` or `none`, or, failing that header, `Origin` names `CANONICAL_HOST` (§6.1). A request carrying neither header is taken to be no browser at all — a mobile app, a script, another server — with no cookies of a reader's to be spent, and it is let through.
+
+That last step is a judgement, not a proof: a browser old enough to send neither header exists (Firefox sent no `Origin` on form posts before 70, and `Sec-Fetch-Site` arrived in 90), and a proxy or an extension can strip `Origin` from a current one. A forgery from one of those is not caught. For readers on browsers of this decade that is a risk worth carrying rather than threading a token through every form, and it is recorded here so it is carried knowingly; if it ever stops being worth carrying, the place to change is the one hook.
 
 That is one hook on the server, in front of every route, rather than a token threaded through every form and checked in every handler. It holds whether or not there is a session to hang a token on, which is why the first form that needed it — the theme choice — could have it before sessions exist. `SameSite=Lax` does not do this job: it governs whether a cookie is sent with a cross-site request, not whether the response to one may set a cookie, and a hostile page was shown setting the theme cookie through it before this was added.
 

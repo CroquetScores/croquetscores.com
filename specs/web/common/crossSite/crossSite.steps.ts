@@ -6,11 +6,11 @@ import type { SpecWorld } from "../../../support/world.js";
 
 const judged = (world: SpecWorld): boolean => {
   assert.ok(world.provenance !== undefined, "No request has been described.");
-  return isRefused(world.provenance);
+  return isRefused(world.provenance, world.canonicalHost);
 };
 
 Given(
-  "a {word} request to {string}",
+  "a {word} request addressed to {string}",
   function (this: SpecWorld, method: string, host: string) {
     this.provenance = {
       method,
@@ -35,12 +35,23 @@ Given(
   },
 );
 
+Given(
+  "the site is configured to answer to {string}",
+  function (this: SpecWorld, host: string) {
+    this.canonicalHost = host;
+  },
+);
+
 Given("its origin is {string}", function (this: SpecWorld, origin: string) {
   this.provenance = { ...this.provenance!, origin };
 });
 
 Given("it has no origin", function (this: SpecWorld) {
   this.provenance = { ...this.provenance!, origin: undefined };
+});
+
+Given("it is not addressed to anywhere", function (this: SpecWorld) {
+  this.provenance = { ...this.provenance!, host: undefined };
 });
 
 Then("it is let through", function (this: SpecWorld) {

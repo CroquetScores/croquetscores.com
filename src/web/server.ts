@@ -104,7 +104,7 @@ export const buildApplication = async (
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
-  refuseCrossSite(server);
+  refuseCrossSite(server, config.canonicalHost);
 
   await server.register(apiV1, { prefix: "/api/v1" });
   await server.register(
