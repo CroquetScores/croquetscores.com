@@ -9,12 +9,29 @@ export class SpecWorld extends World {
   public databaseName: string | undefined;
   public pool: Pool | undefined;
 
-  // What the last call to the migration runner reported. Typed by its shape
-  // rather than by importing AppliedMigration: this file is loaded by every
-  // spec in the repository and so may name nothing from src/infrastructure.
+  // A request being judged for where it came from. Typed by its shape rather
+  // than by importing Provenance: this file is loaded by every spec in the
+  // repository and so may name nothing from src/infrastructure or src/web.
+  public provenance:
+    | {
+        method: string;
+        secFetchSite: string | undefined;
+        origin: string | undefined;
+        host: string | undefined;
+      }
+    | undefined;
+
+  // The host the site is configured to answer to, when a scenario sets one.
+  public canonicalHost: string | undefined;
+
+  // A page on some other site, served into the browser by the scenario.
+  public elsewhere: string | undefined;
+
   // Where a reader asking to return somewhere was actually sent.
   public returnPath: string | undefined;
 
+  // What the last call to the migration runner reported. Typed by its shape
+  // rather than by importing AppliedMigration, for the same reason.
   public appliedMigrations: readonly { readonly name: string }[] | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.

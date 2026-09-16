@@ -84,3 +84,17 @@ Feature: Choosing a theme
       When the home page is opened
       Then the theme button "Light" is at least 44 pixels tall
       And the theme button "Light" is at least 44 pixels wide
+
+  Rule: Another site cannot make the choice
+
+    A page elsewhere can put a button in front of a reader that posts to this
+    site. The reader's browser would carry the result straight back here and
+    keep it for a year.
+
+    Scenario: A button on another site does not change the theme
+      Given a viewport 1200 pixels wide
+      And a machine that prefers light
+      And a page on another site with a button that posts "dark" here
+      When the reader presses the button on that page
+      And the home page is opened
+      Then the page is light
