@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: croquet_scores
+      POSTGRES_USER: croquet_scores
+      POSTGRES_PASSWORD: croquet_scores
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U croquet_scores"]
+      interval: 2s
+      timeout: 3s
+      retries: 30

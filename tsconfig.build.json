@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // The build emits only src/, so src/ is its root: dist/web/server.js rather
+    // than dist/src/web/server.js. The server finds the repository root by
+    // walking up from its own directory, and that walk has to be the same
+    // whether it is running from source through tsx or from dist through node.
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/web/admin"]
+}

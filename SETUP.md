@@ -186,10 +186,15 @@ Three configs, because the SPA compiles for a browser and the rest for Node.
 ```json
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
   "include": ["src/**/*.ts"],
   "exclude": ["src/web/admin"]
 }
 ```
+
+The build emits only `src/`, so `src/` is its root and the output is `dist/web/server.js` rather than `dist/src/web/server.js`. That matters because the server finds the repository root — and with it `assets/` and `dist/admin/` — by walking up from its own directory, and the walk has to be the same length whether it is running from source through tsx or from `dist` through node.
 
 `src/web/admin/tsconfig.json` — the SPA:
 
@@ -205,11 +210,12 @@ Three configs, because the SPA compiles for a browser and the rest for Node.
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": []
 }
 ```
 
-The admin app is excluded from the root config so browser globals never reach server code and Node globals never reach the browser.
+The admin app is excluded from the root config so browser globals never reach server code and Node globals never reach the browser. `"exclude": []` is what stops that exclusion being inherited here, where it would otherwise leave the SPA's own config with nothing to compile.
 
 ---
 
@@ -441,6 +447,11 @@ That harness lives in `specs/infrastructure/support/`, not `specs/support/`, bec
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 
+/**
+ * @param {string} message
+ * @param {...string} groups
+ * @returns {import("eslint").Linter.RulesRecord}
+ */
 const forbid = (message, ...groups) => ({
   "no-restricted-imports": [
     "error",
@@ -455,7 +466,30 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: { allowDefaultProject: ["*.js", "*.ts", "*.mjs"] },
+        projectService: {
+          allowDefaultProject: ["*.js", "*.ts", "*.mjs", "scripts/*.mjs"],
+        },
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  // Configuration and tooling are plain JavaScript with no project of their
+  // own, so there are no types to check them against.
+  {
+    files: ["**/*.js", "**/*.mjs"],
+    ...tseslint.configs.disableTypeChecked,
+    languageOptions: {
+      // Named rather than pulled from a globals package: this is the whole list
+      // these files use, and a short list that is true beats a long one.
+      globals: { console: "readonly", process: "readonly" },
+    },
+  },
+  // The admin SPA has its own tsconfig, which the project service finds.
+  {
+    files: ["src/web/admin/**/*.tsx", "src/web/admin/**/*.ts"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -492,6 +526,8 @@ export default tseslint.config(
 );
 ```
 
+Three things beyond the layer rules earn their place. `disableTypeChecked` covers the plain JavaScript — this file and the scripts — because there is no `tsconfig.json` that includes them and so no types to check them against; the handful of Node globals they use are named there rather than pulled in from a `globals` package, on the grounds that a short list that is true beats a long one. `scripts/*.mjs` joins `allowDefaultProject`, whose patterns match only at the root. And the admin SPA gets a block naming its own `tsconfig.json`, since the root one excludes it.
+
 `.prettierrc.json`:
 
 ```json
@@ -517,7 +553,7 @@ npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumbe
 npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\""
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
-npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate.ts"
+npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
 ```
 
 Working on one feature:
