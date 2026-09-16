@@ -8,9 +8,9 @@
 /* --- Tokens -------------------------------------------------------------- */
 
 :root {
-  /* Light only, deliberately. Dark comes back once light is settled, as a
-     second :root block and nothing else. See LAYOUT.md §6. */
-  color-scheme: light;
+  /* Both, so the browser paints its own furniture — scrollbars, form controls,
+     the flash before the first paint — to match whichever one is in use. */
+  color-scheme: light dark;
 
   /* Space. One geometric scale. A value not on it is a decision to argue for. */
   --space-1: 0.25rem;
@@ -49,6 +49,8 @@
   --accent-strong: #078600;
   --accent-ink: #ffffff;
   --current: #000000;
+  --current-ink: #ffffff;
+  --link: #078600;
   --border: #cfe0cf;
   --focus: #0b2e17;
 
@@ -60,6 +62,31 @@
   /* Shape. Two radii is a house style; five is an accident. */
   --radius-1: 0.3125rem;
   --radius-2: 0.5rem;
+}
+
+/* Dark is not light inverted. The bars keep the brand's hue and lose the
+   lightness that makes a full-width band of it glare at night; the tile marking
+   the current section turns pale, because black on a dark bar reads as a hole
+   rather than as a selection; and links take a colour of their own, since the
+   dark green that works on white disappears on a dark panel.
+
+   Every pairing here has been measured: see STYLE.md for what is required and
+   the ratios each one reaches. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #10140f;
+    --panel: #191e18;
+    --ink: #e7ece5;
+    --ink-muted: #a6b0a3;
+    --accent: #2f6b37;
+    --accent-strong: #1e4f26;
+    --accent-ink: #f3f7f1;
+    --current: #e7ece5;
+    --current-ink: #10140f;
+    --link: #7fd08d;
+    --border: #2c332b;
+    --focus: #8fd99b;
+  }
 }
 
 /* --- Reset --------------------------------------------------------------- */
@@ -152,12 +179,8 @@ li {
   text-wrap: pretty;
 }
 
-p {
-  max-width: var(--measure);
-}
-
 a {
-  color: var(--accent-strong);
+  color: var(--link);
   text-decoration-thickness: max(1px, 0.06em);
   text-underline-offset: 0.15em;
 }
@@ -459,11 +482,12 @@ a:hover {
   background: var(--accent);
 }
 
-/* The section being read is black, not a lighter green: the current site makes
-   it unmistakable rather than merely different. */
+/* The section being read is unmistakable rather than merely different: black in
+   light, pale in dark. Either way it is the one tile that is not the colour of
+   the bar. */
 .site-sections a[aria-current="page"] {
   background: var(--current);
-  color: var(--accent-ink);
+  color: var(--current-ink);
 }
 
 /* What anything is actually read against. The page behind it is tinted; this
@@ -529,6 +553,13 @@ main {
 .lead {
   font-size: var(--text-lg);
   color: var(--ink-muted);
+}
+
+/* Prose that asks to be held to a comfortable line length. Not applied to every
+   paragraph, because the panel runs the width of the window and most of what
+   goes in it — scores, tables, lists — wants that width. */
+.prose {
+  max-width: var(--measure);
 }
 
 .visually-hidden {

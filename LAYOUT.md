@@ -97,11 +97,15 @@ As the window narrows, the bars stay and their contents wrap. The current site w
 
 ---
 
-## 6. Light only, for now
+## 6. Dark
 
-Dark is deferred until light is settled. That is not simply "stop writing dark rules": the stylesheet already has a `prefers-color-scheme: dark` block and declares `color-scheme: light dark`, so a reader whose machine is set to dark **gets dark today**. Leaving it in place while light is being worked on means half the changes are checked against a theme nobody is looking at, and the other half quietly break it.
+Light was settled first, so that every change was checked against the theme somebody was actually looking at. It is settled, so dark is here: a second `:root` block under `prefers-color-scheme: dark`, and `color-scheme: light dark` so the browser paints its own furniture to match.
 
-So: `color-scheme: light`, and the dark block comes out. Deleting it beats commenting it out, because a commented block rots while a deleted one gets rewritten against the palette that by then exists. Tokens stay named for their job, so reinstating dark is a second `:root` block and nothing else.
+Dark is not light inverted. Three things change beyond lightness. The bars keep the brand's hue and lose the lightness that makes a full-width band of green glare at night. The tile marking the current section turns pale — black on a dark bar reads as a hole rather than as a selection. And links take a colour of their own, because the dark green that works on white disappears on a dark panel.
+
+Nothing outside the two palettes knows which one is in use. That was the point of naming tokens for their job, and it held: adding dark touched the token blocks, two rules that had been reaching for the wrong token, and nothing else.
+
+`STYLE.md` records what each pairing measures. Dark passes every one of them; light does not, and that is written down there rather than left to be found.
 
 ---
 
@@ -133,5 +137,5 @@ So: `color-scheme: light`, and the dark block comes out. Deleting it beats comme
 - The header holds the site name and four links, and they are reachable at `390px`: shown plainly above `40rem`, behind the disclosure below it.
 - A page with sections renders the dark green secondary navigation beneath the header, the current section on black, wrapping rather than collapsing as the screen narrows.
 - Nothing outside the token block names a colour.
-- Nothing renders dark: `prefers-color-scheme: dark` has no effect, because there is nothing left for it to do.
+- A reader whose machine is set to dark gets dark, and every measured pairing in it meets WCAG AA.
 - `npm run lint`, `npm run typecheck`, `npm run build` and `npm test` are clean, and the browser scenarios covering the navigation still pass.
