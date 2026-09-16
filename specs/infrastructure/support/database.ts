@@ -118,7 +118,15 @@ Before({ tags: "@postgres" }, async function (this: SpecWorld) {
 });
 
 After({ tags: "@postgres" }, async function (this: SpecWorld) {
-  await this.pool?.end();
+  // The database is about to be dropped, so a connection that failed on its way
+  // out has nothing left to tell anyone, and the scenario's own verdict is not
+  // the teardown's to overturn. The pool's error listener covers an idle client
+  // failing; this covers end() itself refusing, which is a different thing.
+  try {
+    await this.pool?.end();
+  } catch {
+    // Nothing to say, and nothing that saying it would improve.
+  }
   this.pool = undefined;
 
   if (this.databaseName !== undefined && maintenance !== undefined) {
