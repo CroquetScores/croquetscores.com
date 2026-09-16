@@ -40,15 +40,15 @@
 
   /* Colour, named for the job it does and never for the hue it happens to be.
      --surface is what the page is laid on; --panel is what anything is read
-     against. That distinction is what lets the page be tinted at all. */
+     against. That distinction is what lets the page be tinted at all.
+
+     These are the light values, and they are the whole palette for a browser
+     that has never heard of light-dark(). The block after :root pairs each with
+     its dark value for every browser that has. */
   --surface: #e6f2e6;
   --panel: #ffffff;
   --ink: #16181c;
   --ink-muted: #5b6069;
-  /* The current site's greens, each taken down a shade. #46a546 could not
-     carry white text at body size — 3.12:1 where WCAG AA wants 4.5:1 — and
-     darkening it alone would have flattened the two bars into one mass, so the
-     section bar goes with it and the step between them survives. */
   --accent: #398639;
   --accent-strong: #066b00;
   --accent-ink: #ffffff;
@@ -68,29 +68,50 @@
   --radius-2: 0.5rem;
 }
 
-/* Dark is not light inverted. The bars keep the brand's hue and lose the
-   lightness that makes a full-width band of it glare at night; the tile marking
-   the current section turns pale, because black on a dark bar reads as a hole
-   rather than as a selection; and links take a colour of their own, since the
-   dark green that works on white disappears on a dark panel.
+/* Light paired with dark, and which one applies follows color-scheme — so
+   choosing a theme is one property on <html> rather than a second palette kept
+   in step with the first.
 
-   Every pairing here has been measured: see STYLE.md for what is required and
-   the ratios each one reaches. */
-@media (prefers-color-scheme: dark) {
+   It sits behind @supports rather than as a second declaration beside each
+   light value, because a custom property is not checked when it is declared.
+   Written twice, "--surface: light-dark(...)" is accepted by a browser that
+   cannot evaluate it and replaces the light value; the failure only arrives
+   when background: var(--surface) is worked out, and a property that is
+   invalid at that point falls back to transparent. The page would have lost its
+   colours rather than landed on light. A browser that cannot answer this query
+   skips the whole block and keeps the light values instead.
+
+   Dark is not light inverted: the bars keep the brand's hue and lose the
+   lightness that makes a full-width band of it glare at night, the tile marking
+   the current section turns pale because black on a dark bar reads as a hole,
+   and links take a colour of their own because the dark green that works on
+   white disappears on a dark panel. */
+@supports (color: light-dark(#000, #fff)) {
   :root {
-    --surface: #10140f;
-    --panel: #191e18;
-    --ink: #e7ece5;
-    --ink-muted: #a6b0a3;
-    --accent: #2f6b37;
-    --accent-strong: #1e4f26;
-    --accent-ink: #f3f7f1;
-    --current: #e7ece5;
-    --current-ink: #10140f;
-    --link: #7fd08d;
-    --border: #2c332b;
-    --focus: #8fd99b;
+    --surface: light-dark(#e6f2e6, #10140f);
+    --panel: light-dark(#ffffff, #191e18);
+    --ink: light-dark(#16181c, #e7ece5);
+    --ink-muted: light-dark(#5b6069, #a6b0a3);
+    --accent: light-dark(#398639, #2f6b37);
+    --accent-strong: light-dark(#066b00, #1e4f26);
+    --accent-ink: light-dark(#ffffff, #f3f7f1);
+    --current: light-dark(#000000, #e7ece5);
+    --current-ink: light-dark(#ffffff, #10140f);
+    --link: light-dark(#078600, #7fd08d);
+    --border: light-dark(#cfe0cf, #2c332b);
+    --focus: light-dark(#0b2e17, #8fd99b);
   }
+}
+
+/* What a reader has asked for, when they have asked. Without either attribute
+   the browser's own preference decides, which is what color-scheme: light dark
+   on :root already says. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 /* --- Reset --------------------------------------------------------------- */
@@ -535,6 +556,52 @@ main {
 .site-footer .copyright {
   margin-inline-start: auto;
   text-align: end;
+}
+
+/* A row of its own beneath the footer proper. The theme is a setting rather
+   than something to read, so it sits apart from the donation and the copyright
+   instead of competing with them for the same line. */
+.site-footer-theme {
+  display: flex;
+  justify-content: flex-end;
+  padding-inline: var(--panel-inset);
+  padding-bottom: var(--space-4);
+}
+
+.theme {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.theme-options {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* 44px at every width. These are on screen on a phone and pressed with a thumb;
+   the 36px the inline navigation is allowed is for links pointed at with a
+   mouse above the breakpoint, and does not reach down here. */
+.theme button {
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--accent-ink);
+  border-radius: var(--radius-1);
+  background: none;
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.theme button:hover {
+  background: var(--accent-strong);
+}
+
+/* The one in force is filled rather than outlined, so it is told apart by more
+   than a shade of green. */
+.theme button[aria-current="true"] {
+  background: var(--accent-ink);
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .donate button {

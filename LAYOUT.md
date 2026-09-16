@@ -97,15 +97,25 @@ As the window narrows, the bars stay and their contents wrap. The current site w
 
 ---
 
-## 6. Dark
+## 6. Dark, and choosing it
 
-Light was settled first, so that every change was checked against the theme somebody was actually looking at. It is settled, so dark is here: a second `:root` block under `prefers-color-scheme: dark`, and `color-scheme: light dark` so the browser paints its own furniture to match.
+Light was settled first, so that every change was checked against the theme somebody was actually looking at. It is settled, so dark is here, and so is a way to ask for it.
 
 Dark is not light inverted. Three things change beyond lightness. The bars keep the brand's hue and lose the lightness that makes a full-width band of green glare at night. The tile marking the current section turns pale — black on a dark bar reads as a hole rather than as a selection. And links take a colour of their own, because the dark green that works on white disappears on a dark panel.
 
-Nothing outside the two palettes knows which one is in use. That was the point of naming tokens for their job, and it held: adding dark touched the token blocks, two rules that had been reaching for the wrong token, and nothing else.
+**The two palettes are one block.** Each token pairs its light and dark value in a single `light-dark()` declaration, and which one applies follows `color-scheme`. A second palette kept in step with the first is a thing that goes out of step, so there is not one.
 
-`STYLE.md` records what each pairing measures. Dark passes every one of them; light does not, and that is written down there rather than left to be found.
+Those pairs sit behind `@supports (color: light-dark(#000, #fff))`, and the plain light values on `:root` in front of them are the whole palette for a browser that cannot answer that query. It is written that way because the obvious alternative does not work. Writing each token twice — the plain value, then the `light-dark()` one — looks like a fallback and is not: a custom property is not checked when it is declared, so a browser that cannot evaluate `light-dark()` accepts the second line all the same and throws the plain value away. The failure only surfaces when `background: var(--surface)` is worked out, and a property that is invalid at that point falls back to transparent. The page would have lost its colours rather than landed on light. That was reproduced, not reasoned: written twice, an unknown colour function leaves the background transparent; behind `@supports`, the light value is kept.
+
+**Choosing a theme is therefore one property.** `color-scheme: light` or `color-scheme: dark` on `<html>`, set from a `data-theme` attribute the server renders. No rule below the palette knows a choice was made.
+
+**The choice is made without JavaScript**, because the public side has none. The control is a form of three submit buttons in the footer — Light, Dark, System — which posts to `/theme`. That records the choice in a cookie and answers `303` back to the page the reader was on, so the back button does not offer to post it again. System is not a third theme: it clears the cookie, because choosing it is choosing not to have chosen.
+
+The cookie is `HttpOnly`, `SameSite=Lax`, a year long, and **always `Secure`**. It is not worked out from the request: behind whatever terminates HTTPS in front of the application, the connection that reaches it is plain HTTP, so `request.protocol` would say `http` on every request and the cookie would never be `Secure` where it most needs to be — and reading `X-Forwarded-Proto` instead means trusting a header any client can send. Chromium and Firefox treat `localhost` and `127.0.0.1` as secure contexts, so development over plain HTTP loses nothing there. Safari has historically not, so a developer checking the theme choice in Safari against `http://localhost` should expect it not to stick.
+
+**A page that depends on a cookie is not a page anyone else may cache.** The public pages were `public, max-age=60`; they are now `private, no-cache` with `Vary: Cookie`. The `ETag` still does the work — a revalidation that finds nothing changed costs a `304` and no body — but a shared cache can no longer hand one reader's theme to another.
+
+The admin SPA is served as a static file, so the server cannot render an attribute into it. It follows the machine's preference and ignores the choice. That is a gap, not a decision, and it closes when the SPA has somewhere of its own to keep settings.
 
 ---
 
@@ -122,7 +132,7 @@ Nothing outside the two palettes knows which one is in use. That was the point o
 - **The content green is `C #e6f2e6`.**
 - **Panel text is the foundation's near-black `--ink`** (`#16181c`) rather than pure `#000`: black to look at, slightly kinder to read.
 - **A long tournament name wraps** onto as many lines as it needs, as the current site's does. The name is the page, and truncating it would lose the one thing the reader came for.
-- **The bars are tight.** The pinned bar is `44px` and the section bar `45px`. Inline navigation items are `36px` at least, while the ones inside the disclosure keep `44px`: those are pressed with a thumb, these are pointed at with a mouse. `36px` still clears the `24px` that WCAG 2.2 asks for.
+- **The bars are tight.** The pinned bar is `44px` and the section bar `45px`. Inline navigation items are `36px` at least, while the ones inside the disclosure keep `44px`: those are pressed with a thumb, these are pointed at with a mouse. `36px` still clears the `24px` that WCAG 2.2 asks for. That exception is for the inline navigation and nothing else: the theme buttons in the footer are on screen on a phone and pressed with a thumb, so they are `44px` at every width, like the Donate button beside them.
 - **The active tab fills its bar.** No block padding and no row gap on the section list, so the black runs edge to edge and between wrapped rows.
 - **Bar contents align with panel text**, through `--panel-inset`.
 
@@ -138,4 +148,5 @@ Nothing outside the two palettes knows which one is in use. That was the point o
 - A page with sections renders the dark green secondary navigation beneath the header, the current section on black, wrapping rather than collapsing as the screen narrows.
 - Nothing outside the token block names a colour.
 - A reader whose machine is set to dark gets dark, and every measured pairing in it meets WCAG AA.
+- A reader can choose Light, Dark or System in the footer with JavaScript switched off, is taken at their word on every other page, and is still taken at their word on the next visit.
 - `npm run lint`, `npm run typecheck`, `npm run build` and `npm test` are clean, and the browser scenarios covering the navigation still pass.

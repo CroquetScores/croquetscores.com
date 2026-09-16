@@ -19,6 +19,7 @@ import { readAssets, type Assets } from "./common/assets.js";
 import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerPublicPages } from "./public/pages.js";
+import { registerThemeRoute } from "./public/theme.js";
 
 const repositoryRoot = join(import.meta.dirname, "..", "..");
 
@@ -113,6 +114,7 @@ export const buildApplication = async (
 
   await registerAdmin(server, join(repositoryRoot, "dist", "admin"));
 
+  registerThemeRoute(server);
   registerPublicPages(server, assets);
 
   return { server, pool, config };

@@ -2,6 +2,7 @@
 // section bar, content in a white panel, green footer. Error pages use it too,
 // because a page that cannot be found is still a page of this site.
 import type { Assets } from "./assets.js";
+import { themes, type Theme } from "./theme.js";
 
 export interface NavigationLink {
   readonly href: string;
@@ -24,6 +25,10 @@ export interface Shell {
   readonly currentSection?: string | undefined;
   /** Where in the primary navigation the reader is, if anywhere. */
   readonly currentPath?: string | undefined;
+  /** Which theme the reader has asked for, if they have asked. */
+  readonly theme: Theme;
+  /** The path the theme form returns to, so a choice keeps you where you were. */
+  readonly path: string;
   /** The contents of the panel, already escaped. */
   readonly body: string;
 }
@@ -110,8 +115,33 @@ const titleBar = (title: string | undefined): string =>
       </div>
     </div>`;
 
+const label: Record<Theme, string> = {
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+};
+
+// Three submit buttons rather than a select and a Go: one press, no scripting,
+// and the choice that is in force is announced rather than only shaded.
+const themeChoice = (chosen: Theme, path: string): string => {
+  const buttons = themes
+    .map((theme) => {
+      const current = theme === chosen ? ' aria-current="true"' : "";
+      return `            <button type="submit" name="theme" value="${theme}"${current}>${label[theme]}</button>`;
+    })
+    .join("\n");
+
+  return `          <form class="theme" method="post" action="/theme">
+            <span id="theme-label">Theme</span>
+            <input type="hidden" name="return" value="${escape(path)}" />
+            <span class="theme-options" role="group" aria-labelledby="theme-label">
+${buttons}
+            </span>
+          </form>`;
+};
+
 export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
-<html lang="en">
+<html lang="en"${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -153,6 +183,9 @@ ${shell.body}
           development.
         </p>
           <p class="copyright">${copyright}</p>
+        </div>
+        <div class="site-footer-theme">
+${themeChoice(shell.theme, shell.path)}
         </div>
       </div>
     </footer>

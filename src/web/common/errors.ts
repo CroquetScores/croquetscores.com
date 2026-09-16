@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 
 import type { Assets } from "./assets.js";
 import { escape, render } from "./layout.js";
+import { themeOf } from "./theme.js";
 
 // The API answers JSON and the public pages answer HTML, including when they
 // fail. A browser should not be handed a JSON body for a page it asked for.
@@ -12,9 +13,16 @@ const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
 
 // An error page is still a page of this site, so it wears the same shell.
-const page = (assets: Assets, heading: string, detail?: string): string =>
+const page = (
+  assets: Assets,
+  request: FastifyRequest,
+  heading: string,
+  detail?: string,
+): string =>
   render(assets, {
     title: heading,
+    theme: themeOf(request),
+    path: request.url,
     body: `          <h1>${escape(heading)}</h1>${
       detail === undefined ? "" : `\n          <p>${escape(detail)}</p>`
     }
@@ -30,7 +38,7 @@ export const registerErrorMapping = (
     return reply
       .code(404)
       .type("text/html; charset=utf-8")
-      .send(page(assets, "Not found"));
+      .send(page(assets, request, "Not found"));
   });
 
   server.setErrorHandler((error: FastifyError, request, reply) => {
@@ -46,7 +54,7 @@ export const registerErrorMapping = (
       return reply
         .code(error.statusCode)
         .type("text/html; charset=utf-8")
-        .send(page(assets, "Sorry", error.message));
+        .send(page(assets, request, "Sorry", error.message));
     }
 
     // Everything else is ours and stays ours. The correlation id goes to the
@@ -60,7 +68,12 @@ export const registerErrorMapping = (
       .code(500)
       .type("text/html; charset=utf-8")
       .send(
-        page(assets, "Something went wrong", `Reference ${correlationId}.`),
+        page(
+          assets,
+          request,
+          "Something went wrong",
+          `Reference ${correlationId}.`,
+        ),
       );
   });
 };

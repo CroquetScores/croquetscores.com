@@ -12,6 +12,9 @@ export class SpecWorld extends World {
   // What the last call to the migration runner reported. Typed by its shape
   // rather than by importing AppliedMigration: this file is loaded by every
   // spec in the repository and so may name nothing from src/infrastructure.
+  // Where a reader asking to return somewhere was actually sent.
+  public returnPath: string | undefined;
+
   public appliedMigrations: readonly { readonly name: string }[] | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
