@@ -6,6 +6,7 @@ import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { render, type Section } from "../common/layout.js";
+import { themeOf } from "../common/theme.js";
 
 export interface Page {
   readonly path: string;
@@ -116,11 +117,16 @@ export const registerPublicPages = (
         sections: page.sections,
         currentSection: page.currentSection,
         currentPath: page.path,
+        theme: themeOf(request),
+        path: page.path,
         body: page.body(),
       });
       const etag = `"${createHash("sha256").update(html).digest("base64url").slice(0, 27)}"`;
 
-      reply.header("cache-control", "public, max-age=60").header("etag", etag);
+      reply
+        .header("cache-control", "private, no-cache")
+        .header("vary", "Cookie")
+        .header("etag", etag);
 
       // Without this the ETag costs a hash on every request and saves nothing:
       // Fastify does no conditional-request handling of its own.
