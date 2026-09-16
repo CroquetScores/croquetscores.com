@@ -4,33 +4,22 @@ import type { FastifyError, FastifyInstance, FastifyRequest } from "fastify";
 import { randomUUID } from "node:crypto";
 
 import type { Assets } from "./assets.js";
+import { escape, render } from "./layout.js";
 
 // The API answers JSON and the public pages answer HTML, including when they
 // fail. A browser should not be handed a JSON body for a page it asked for.
 const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
 
-// An error page is still a page of this site: the same stylesheet, the same
-// column, and a viewport that lets a phone render it at a readable size.
+// An error page is still a page of this site, so it wears the same shell.
 const page = (assets: Assets, heading: string, detail?: string): string =>
-  `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${heading}</title>
-    <link rel="stylesheet" href="${assets.url("site.css")}" />
-  </head>
-  <body>
-    <main id="content">
-      <div class="page stack">
-        <h1>${heading}</h1>${detail === undefined ? "" : `\n        <p>${detail}</p>`}
-        <p><a href="/">Back to Croquet Scores</a></p>
-      </div>
-    </main>
-  </body>
-</html>
-`;
+  render(assets, {
+    title: heading,
+    body: `          <h1>${escape(heading)}</h1>${
+      detail === undefined ? "" : `\n          <p>${escape(detail)}</p>`
+    }
+          <p><a href="/">Back to Croquet Scores</a></p>`,
+  });
 
 export const registerErrorMapping = (
   server: FastifyInstance,

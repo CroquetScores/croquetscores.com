@@ -8,15 +8,15 @@ One vocabulary for how this site looks, shared by the server-rendered public pag
 
 ## 1. Decisions
 
-| Decision                                                 | Why                                                                                                                                                              |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No CSS framework and no preprocessor                     | Grid, flexbox, custom properties and `clamp()` cover a site of this shape. A framework would have to be learnt, updated and worked around                        |
-| One stylesheet, `assets/site.css`                        | Both halves of the site load the same file, so they cannot drift apart. One file also means no build step and no second request                                  |
-| Tokens are custom properties with semantic names         | `--ink` and `--surface` survive a change of palette. `--grey-700` does not                                                                                       |
-| Dark mode from `color-scheme` and `prefers-color-scheme` | The browser is already told what the page supports, and the reader has already told the browser what they want. Neither needs asking twice                       |
-| Fluid type through `clamp()`                             | A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them                                                |
-| The public navigation is a `<details>` element           | `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all |
-| Breakpoints are written out, not tokenised               | `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice                     |
+| Decision                                         | Why                                                                                                                                                                                                      |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No CSS framework and no preprocessor             | Grid, flexbox, custom properties and `clamp()` cover a site of this shape. A framework would have to be learnt, updated and worked around                                                                |
+| One stylesheet, `assets/site.css`                | Both halves of the site load the same file, so they cannot drift apart. One file also means no build step and no second request                                                                          |
+| Tokens are custom properties with semantic names | `--ink` and `--surface` survive a change of palette. `--grey-700` does not                                                                                                                               |
+| Light only, for now                              | Dark is deferred until light is settled, so that every change is checked against the theme somebody is actually looking at. `LAYOUT.md` §6 records the intent to bring it back as a second `:root` block |
+| Fluid type through `clamp()`                     | A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them                                                                                        |
+| The public navigation is a `<details>` element   | `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all                                         |
+| Breakpoints are written out, not tokenised       | `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice                                                             |
 
 ---
 
@@ -36,9 +36,9 @@ The vocabulary, declared on `:root`.
 
 **Type.** `--text-sm` through `--text-3xl`, each a `clamp()` of a minimum, a viewport-relative middle and a maximum, so the scale grows with the screen and stops at both ends. `--leading-tight` for headings, `--leading-body` for prose. One family, `--font-body`, resolving to the reader's own system font: it is already installed, already legible to them, and costs no request.
 
-**Measure.** `--measure`, the width beyond which a line of prose is tiring to read, and `--page-max`, the width of the page itself. Prose is held to the first; layout is held to the second.
+**Measure.** `--measure`, the width beyond which a line of prose is tiring to read. There is no page width: the bars run the full width of the window (`LAYOUT.md` §3), so what holds content off the window edge is a gutter rather than a column. Prose stays held to `--measure` however wide the bars run, because a line spanning a desktop window is tiring whatever is behind it.
 
-**Colour.** Named for the job, never the hue: `--surface` and `--surface-raised` for backgrounds, `--ink` and `--ink-muted` for text, `--accent` with `--accent-ink` for the thing a reader is meant to press, `--border` for lines, `--focus` for the ring. Every pairing that can carry text meets WCAG AA at body size — that is a property of the palette and is checked when the palette changes, not hoped for.
+**Colour.** Named for the job, never the hue. `--surface` is what the page is laid on and `--panel` is what anything is read against, with `--ink` and `--ink-muted` for text on it: that distinction is what lets the page be tinted green while the reading stays on white. `--accent` carries the header and footer, `--accent-strong` the section bar, `--accent-ink` whatever sits on either, and `--current` the black marking the section being read. `--border` for lines, `--focus` for the ring — which turns white inside the green bars, because a dark ring disappears there. Every pairing that can carry text meets WCAG AA at body size: a property of the palette, checked when the palette changes rather than hoped for.
 
 **Shape.** `--radius-1` and `--radius-2`, and nothing else. Two radii is a house style; five is an accident.
 
@@ -50,7 +50,7 @@ The reset is the small modern one: `box-sizing: border-box` everywhere, margins 
 
 Three layout primitives carry nearly everything, and are classes rather than element rules because they apply to whatever needs them:
 
-- `.page` — the centred column, `--page-max` wide, with a gutter from the space scale that never collapses to nothing on a phone.
+- `.page` — the gutter. The bars run edge to edge; this holds their contents off the window edge and never collapses to nothing on a phone.
 - `.stack` — vertical rhythm, applied as a gap so that it cannot double up against a neighbour's margin.
 - `.cluster` — a horizontal group that wraps, for navigation, button rows and anything else that runs out of room.
 
@@ -67,6 +67,12 @@ That disclosure is `<details>` with a `<summary>`. It is keyboard-reachable, ann
 The navigation is generated from the list of public pages, so a page that exists is a page that can be reached, and no second list has to be kept true beside the first.
 
 The admin SPA has JavaScript by definition, so its own navigation is under no such constraint. It uses the same tokens, the same header proportions and the same focus treatment, so the two sides look like one site.
+
+---
+
+## 5a. The pinned bar
+
+The site bar is `position: sticky; top: 0`. A sticky element only sticks within its own containing block, so the bar is a sibling of the page's other bands rather than a child of any of them: nested inside a header, it would scroll away the moment that header did. Anything else that is ever meant to pin is subject to the same rule, and the fix is always the same — move it out, not up the z-index.
 
 ---
 

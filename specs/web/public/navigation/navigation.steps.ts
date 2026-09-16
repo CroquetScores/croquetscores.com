@@ -5,6 +5,8 @@ import type { SpecWorld } from "../../../support/world.js";
 
 const menuButton = "header summary";
 const link = (label: string): string => `header a:text-is("${label}")`;
+const section = (label: string): string =>
+  `.site-sections a:text-is("${label}")`;
 
 Given(
   "a viewport {int} pixels wide",
@@ -61,20 +63,27 @@ Then(
 );
 
 Then(
-  "the link {string} is marked as the current page",
+  "the section {string} is visible",
+  async function (this: SpecWorld, label: string) {
+    assert.equal(await this.browserPage.isVisible(section(label)), true);
+  },
+);
+
+Then(
+  "the section {string} is marked as current",
   async function (this: SpecWorld, label: string) {
     assert.equal(
-      await this.browserPage.getAttribute(link(label), "aria-current"),
+      await this.browserPage.getAttribute(section(label), "aria-current"),
       "page",
     );
   },
 );
 
 Then(
-  "the link {string} is not marked as the current page",
+  "the section {string} is not marked as current",
   async function (this: SpecWorld, label: string) {
     assert.equal(
-      await this.browserPage.getAttribute(link(label), "aria-current"),
+      await this.browserPage.getAttribute(section(label), "aria-current"),
       null,
     );
   },

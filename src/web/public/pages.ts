@@ -1,96 +1,108 @@
-// A public page is a module naming what it needs and returning HTML. No client
-// framework: these pages work with JavaScript switched off, which is what
-// decides the shape of the navigation below.
+// A public page names what it needs and returns the contents of the panel. The
+// shell around it — header, section bar, footer — is in common/layout.ts, which
+// the error pages share.
 import { createHash } from "node:crypto";
 import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
+import { render, type Section } from "../common/layout.js";
 
 export interface Page {
   readonly path: string;
-  /** The <title>, and the heading the page leads with. */
   readonly title: string;
-  /** How the page names itself in the navigation, which has less room. */
-  readonly navLabel: string;
+  readonly headerTitle?: string | undefined;
+  readonly sections?: readonly Section[] | undefined;
+  readonly currentSection?: string | undefined;
   body(): string;
 }
 
-const escape = (text: string): string =>
-  text.replace(
-    /[&<>"']/g,
-    (character) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[character] ?? character,
-  );
-
-// Generated from the pages themselves, so a page that exists is a page that can
-// be reached and there is no second list to keep true beside the first. /admin
-// is the one entry that is not a public page; it is still part of this site.
-const navigation = (current: Page): string => {
-  const links = [
-    ...pages.map((page) => ({ href: page.path, label: page.navLabel })),
-    { href: "/admin", label: "Admin" },
-  ];
-
-  const items = links
-    .map(({ href, label }) => {
-      const here = href === current.path ? ' aria-current="page"' : "";
-      return `          <li><a href="${href}"${here}>${escape(label)}</a></li>`;
-    })
-    .join("\n");
-
-  return `      <details class="menu">
-        <summary><span class="visually-hidden">Menu</span></summary>
-        <nav class="menu-links" aria-label="Primary">
-          <ul>
-${items}
-          </ul>
-        </nav>
-      </details>`;
-};
-
-const layout = (assets: Assets, page: Page): string => `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escape(page.title)}</title>
-    <link rel="stylesheet" href="${assets.url("site.css")}" />
-  </head>
-  <body>
-    <a class="skip-link" href="#content">Skip to content</a>
-    <header class="site-header">
-      <div class="page">
-        <a class="site-name" href="/">Croquet Scores</a>
-${navigation(page)}
-      </div>
-    </header>
-    <main id="content">
-      <div class="page stack stack-loose">
-${page.body()}
-      </div>
-    </main>
-    <footer class="site-footer">
-      <div class="page">Croquet Scores</div>
-    </footer>
-  </body>
-</html>
-`;
+// Placeholders, so that the dark green section bar can be seen and tested
+// before any page has real sections. They come out with the first feature that
+// brings its own.
+const filters: readonly Section[] = [
+  { href: "/", label: "All" },
+  { href: "/ac", label: "AC" },
+  { href: "/gc", label: "GC" },
+  { href: "/a6w", label: "A6W" },
+  { href: "/rc", label: "RC" },
+];
 
 const home: Page = {
   path: "/",
   title: "Croquet Scores",
-  navLabel: "Scores",
-  body: () => `        <h1>Croquet Scores</h1>
-        <p class="lead">Scores and commentary as events unfold.</p>`,
+  sections: filters,
+  currentSection: "All",
+  // Placeholder prose, here so there is something to scroll past while the
+  // pinned bar is being looked at. It goes when the tournament list arrives.
+  body: () => `          <h1>Latest Tournaments</h1>
+          <p class="lead">Scores and commentary as events unfold.</p>
+          <p>
+            Croquet Scores gives tournament managers the tools to record match
+            scores as they happen, and lets anyone at the event publish
+            commentary alongside them. Followers see the action unfold without
+            waiting for a result sheet to be typed up at the end of the day.
+          </p>
+          <p>
+            A tournament is organised into blocks and knockouts. Each carries
+            its own games, and each game its own scores, so a manager records
+            what happened once and every view of it — the block table, the
+            player's record, the running commentary — follows from that.
+          </p>
+          <p>
+            Scores are published as they are entered. There is no separate step
+            to make them public and nothing to remember to press at the end of a
+            round, because a score that has been recorded is a score somebody
+            somewhere is waiting to read.
+          </p>
+          <p>
+            Anyone can follow a tournament without an account. An account is for
+            the people doing the recording: tournament managers, scorers, and
+            whoever is writing the commentary.
+          </p>
+          <h2>Recording a tournament</h2>
+          <p>
+            A manager records a game once. The block table, the player's record
+            and the running commentary are all views of that one recording, so
+            there is nothing to enter twice and nothing to keep in step by hand.
+          </p>
+          <p>
+            Blocks and knockouts each carry their own games. A game carries its
+            own scores. Nothing above that layer has to know how a particular
+            format counts, which is what lets association croquet, golf croquet
+            and the shorter formats share one set of screens.
+          </p>
+          <h2>Following along</h2>
+          <p>
+            No account is needed to watch. A tournament's page is a public page:
+            it can be linked to, sent to somebody, and read on a phone at the
+            side of a lawn without signing into anything.
+          </p>
+          <p>
+            Commentary sits alongside the scores rather than in a separate feed,
+            because the two are read together. A score without the context of
+            what happened is a number, and a report without the score is a
+            story with the end missing.
+          </p>
+          <h2>What is here yet</h2>
+          <p>
+            This page is a placeholder. The list of tournaments, the filters
+            above it and everything else that belongs here arrive with the
+            features that specify them. What it is standing in for at the moment
+            is length: enough of it to scroll past, so that the pinned bar at
+            the top of the window can be seen doing its job.
+          </p>`,
 };
 
 export const pages: readonly Page[] = [home];
+
+// An If-None-Match may carry several tags, and a weak validator's W/ prefix
+// says only how the tag was derived, not which entity it names.
+const matches = (header: string | undefined, etag: string): boolean =>
+  header !== undefined &&
+  header
+    .split(",")
+    .map((candidate) => candidate.trim().replace(/^W\//, ""))
+    .some((candidate) => candidate === "*" || candidate === etag);
 
 export const registerPublicPages = (
   server: FastifyInstance,
@@ -98,7 +110,14 @@ export const registerPublicPages = (
 ): void => {
   for (const page of pages) {
     server.get(page.path, (request, reply) => {
-      const html = layout(assets, page);
+      const html = render(assets, {
+        title: page.title,
+        headerTitle: page.headerTitle,
+        sections: page.sections,
+        currentSection: page.currentSection,
+        currentPath: page.path,
+        body: page.body(),
+      });
       const etag = `"${createHash("sha256").update(html).digest("base64url").slice(0, 27)}"`;
 
       reply.header("cache-control", "public, max-age=60").header("etag", etag);
@@ -113,12 +132,3 @@ export const registerPublicPages = (
     });
   }
 };
-
-// An If-None-Match may carry several tags, and a weak validator's W/ prefix
-// says only how the tag was derived, not which entity it names.
-const matches = (header: string | undefined, etag: string): boolean =>
-  header !== undefined &&
-  header
-    .split(",")
-    .map((candidate) => candidate.trim().replace(/^W\//, ""))
-    .some((candidate) => candidate === "*" || candidate === etag);
