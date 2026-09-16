@@ -438,6 +438,8 @@ Each `@postgres` scenario gets a database of its own, created and migrated in a 
 
 That harness lives in `specs/infrastructure/support/`, not `specs/support/`, because it reads the configuration and reaches infrastructure, and `specs/support/` is loaded by every spec in the repository and may not.
 
+A database that is not running is the ordinary way for these to fail, and it is not a fault in any of this. The harness says so in those words and names `npm run db:up`, rather than letting a connection refusal surface as a stack trace through the Postgres client that reads like a bug in the harness and never mentions that a container is involved.
+
 ### 8.2 Scenarios that need a browser
 
 Some claims cannot be checked by reading the thing that makes them. Whether a menu opens with JavaScript switched off, whether a control is on the page at one width and gone at another, whether something meant for a thumb is big enough for one — a browser answers these and nothing else does. Those scenarios are tagged `@browser`, and like `@postgres` they are the exception rather than the rule.
