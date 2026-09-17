@@ -10,7 +10,7 @@ A `.feature` file comes first and is accepted before anything else is done. Then
 
 There is no `/tests` folder and nothing else that tests. If something is worth testing it is worth stating as behaviour, and if it cannot be stated as behaviour it is worth asking whether it is worth having.
 
-A feature and its step definitions share a folder, and both are named after the source file they describe, casing included: `Mediator.feature` and `Mediator.steps.ts` for `Mediator.ts`, `crossSite.feature` for `crossSite.ts`. So the case says the same thing it says in `/src` — a class here, a module of functions there — and the two are found together by eye. Directories stay lowercase, as they are in `/src`. Where a feature describes no one file, such as navigation across pages, it is named for the behaviour instead.
+A feature and its step definitions share a folder, and both are named after the source file they describe, casing included: `Mediator.feature` and `Mediator.steps.ts` for `Mediator.ts`, `crossSite.feature` for `crossSite.ts`. So the case says the same thing it says in `/src` — a class here, a module of functions there — and the two are found together by eye. Directories are lower case, hyphenated where they run to more than one word, as `value-objects` is in `/src`, so a capital letter in a path always means a file. Where a feature describes no one file, such as navigation across pages, it is named for the behaviour instead.
 
 Land a large feature one `Rule:` at a time, so that review stays something a person can actually do.
 
