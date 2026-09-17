@@ -73,7 +73,7 @@ Developer writes short form spec here for AI to formalise.
 
 ### Validation
 
-I've undone your last block of work.
+I've undone your last block of work. I didn't explain myself correctly.
 
 On this occassion you may read outside the repo.
 
@@ -81,7 +81,13 @@ Read the following and related files to write the required feature files.
 Wait for approval before implementations.
 
 - D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\validation\Validator.ts
+
 - D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\validation\ValidationError.ts
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\value-objects\NameValidator.ts
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\aggregates\accounts\value-objects\EmailAddressValidator.ts
+
+See the following files for reference only, no feature file.
+
 - D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\application\operations\accounts\CreateAccountCommandValidator.ts
+
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\value-objects\NameValidator.ts
+
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\aggregates\accounts\value-objects\EmailAddressValidator.ts
