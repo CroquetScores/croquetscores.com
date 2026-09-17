@@ -5,6 +5,7 @@
 // Commands and queries share this and nothing else. They come in through
 // separate doors, have separate handlers and run separate behaviours, because a
 // command is run inside a transaction and a query never is.
+import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Behaviour } from "./Behaviour.js";
 import type { Command } from "./Command.js";
 import type { CommandHandler, QueryHandler } from "./Handler.js";
@@ -82,19 +83,13 @@ export class Mediator {
         : unhandled(command);
     }
 
-    // A missing time and an unreadable one are different mistakes: a command
-    // built without one, and — usually — one built from input that did not
-    // parse. Each has its own code so whoever is looking knows which.
-    if (!(command.requestedAt instanceof Date)) {
+    // Only a missing time is looked for. A time that cannot be read never
+    // gets this far: it is refused where the read-only date is made, at the
+    // edge, which is also where whoever is looking for the fault should look.
+    if (!(command.requestedAt instanceof ReadOnlyDate)) {
       throw new RequestRefused(
         "Command.RequestedAtMissing",
         `${nameOf(command)} does not say when it was asked for.`,
-      );
-    }
-    if (Number.isNaN(command.requestedAt.getTime())) {
-      throw new RequestRefused(
-        "Command.RequestedAtUnreadable",
-        `${nameOf(command)} says it was asked for at a time that cannot be read.`,
       );
     }
 
