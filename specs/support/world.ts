@@ -4,9 +4,10 @@ import { setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Pool } from "pg";
 import type { BrowserContext, Page } from "playwright";
 
-// The application layer, which this file may name: the rule it keeps is only
-// that it names nothing from infrastructure or the web.
+// The application and domain layers, which this file may name: the rule it
+// keeps is only that it names nothing from infrastructure or the web.
 import type { Mediator } from "../../src/application/common/Mediator.js";
+import type { Id } from "../../src/domain/common/Id.js";
 
 export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
@@ -61,6 +62,12 @@ export class SpecWorld extends World {
     | undefined;
   public brokenRules: readonly string[] | undefined;
   public brokenRulesChecked = 0;
+
+  // Which kind of id a scenario is about, the ids it has minted or read in
+  // order, and the writing of the last one written down.
+  public idKind: { mint(): Id; read(written: string): Id } | undefined;
+  public ids: Id[] = [];
+  public writtenId: string | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
