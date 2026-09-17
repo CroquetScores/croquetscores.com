@@ -44,6 +44,20 @@ Feature: A moment that cannot be moved once it is known
       When the date it hands back is moved to "2027-01-01T00:00:00Z"
       Then the read-only date still says "2026-09-17T09:00:00.000Z"
 
+  Rule: A moment written out as data is still the moment
+
+    The instant is held where nothing outside can reach it, which is what stops
+    it being moved and would also stop it being written: anything writing one
+    out as data would keep an empty object where a moment was, and nothing
+    would say so until something tried to read it back. So it says what to
+    write, as the language's own date does.
+
+    Scenario: A moment written as data is the moment in UTC
+      Given the moment "2026-09-17T19:00:00+10:00"
+      And a read-only date made from it
+      When the read-only date is written down as data
+      Then what was written as data is "2026-09-17T09:00:00.000Z"
+
   Rule: Two read-only dates of the same moment are the same
 
     Scenario: Two read-only dates of one moment are the same
