@@ -50,6 +50,18 @@ export class SpecWorld extends World {
   // A failure a handler was made to throw, so it can be recognised coming out.
   public plantedFailure: Error | undefined;
 
+  // The candidate a scenario puts to a validator, and every rule it was found
+  // to break, of which the scenario has named this many so far.
+  public range:
+    | {
+        start: number | undefined;
+        end: number | undefined;
+        step: number | undefined;
+      }
+    | undefined;
+  public brokenRules: readonly string[] | undefined;
+  public brokenRulesChecked = 0;
+
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
   public page: Page | undefined;
