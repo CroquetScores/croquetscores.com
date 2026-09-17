@@ -67,27 +67,3 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 **What to do.** Nothing in the code: making `Secure` depend on the request is what PR #9's review removed, because behind a proxy terminating HTTPS the request always looks like plain HTTP and the cookie would never be `Secure` where it matters. If Safari development becomes routine, serve development over HTTPS instead — a locally trusted certificate from `mkcert` and Fastify's `https` option, behind a setting that is off by default — and note it in `SETUP.md` §6. Until then, check the theme choice in Chromium or Firefox, or confirm in Safari's own Web Inspector that the cookie was refused before treating it as a defect.
 
-## Next Spec
-
-Developer writes short form spec here for AI to formalise.
-
-### Validation
-
-I've undone your last block of work. I didn't explain myself correctly.
-
-On this occassion you may read outside the repo.
-
-Read the following and related files to write the required feature files.
-Wait for approval before implementations.
-
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\validation\Validator.ts
-
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\validation\ValidationError.ts
-
-See the following files for reference only, no feature file.
-
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\application\operations\accounts\CreateAccountCommandValidator.ts
-
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\value-objects\NameValidator.ts
-
-- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\aggregates\accounts\value-objects\EmailAddressValidator.ts

@@ -86,9 +86,25 @@ export class Validator<T, TCode extends string = string> {
     return codes;
   }
 
-  /** Throws {@link ValidationError} naming the first rule the candidate breaks. */
+  /**
+   * Throws {@link ValidationError} naming the first rule the candidate breaks.
+   *
+   * It stops at that rule rather than asking {@link check} for the whole list
+   * and keeping one of it. This is what every value made from a candidate goes
+   * through, almost always with a candidate that breaks nothing, and the list
+   * and the record of broken fields were being built each time to be thrown
+   * away. The answer is the same: the first code checking reports is the first
+   * field rule broken, and when no field rule is broken nothing keeps a rule
+   * reading several fields quiet, so the first of those broken is next.
+   */
   ensureValid(candidate: T): void {
-    const [first] = this.check(candidate);
-    if (first !== undefined) throw new ValidationError<TCode>(first);
+    for (const rule of this.#fields) {
+      if (rule.isBrokenBy(candidate))
+        throw new ValidationError<TCode>(rule.code);
+    }
+    for (const rule of this.#spanning) {
+      if (rule.isBrokenBy(candidate))
+        throw new ValidationError<TCode>(rule.code);
+    }
   }
 }
