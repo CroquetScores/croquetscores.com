@@ -4,36 +4,17 @@ import { inspect } from "node:util";
 
 import type { Behaviour } from "../../../../src/application/common/Behaviour.js";
 import type { Command } from "../../../../src/application/common/Command.js";
+import { RequestRefused } from "../../../../src/application/common/Mediator.js";
+import type { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import {
-  Mediator,
-  RequestRefused,
-} from "../../../../src/application/common/Mediator.js";
-import type { Query } from "../../../../src/application/common/Query.js";
-import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
+  askedAt,
+  attempt,
+  ExampleCommand,
+  ExampleQuery,
+  mediatorOf,
+  OtherCommand,
+} from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
-
-// Requests that exist only to exercise the mediator. They mean nothing, which
-// is the point: what is being specified is how any request is handed on.
-class ExampleCommand implements Command<string> {
-  declare readonly _result?: string;
-  constructor(readonly requestedAt: ReadOnlyDate) {}
-}
-
-class OtherCommand implements Command<string> {
-  declare readonly _result?: string;
-  constructor(readonly requestedAt: ReadOnlyDate) {}
-}
-
-class ExampleQuery implements Query<string> {
-  declare readonly _result?: string;
-}
-
-// A fixed moment. Nothing here reads a clock, any more than the application
-// does.
-const askedAt = ReadOnlyDate.from(new Date("2026-09-17T09:00:00Z"));
-
-const mediatorOf = (world: SpecWorld): Mediator =>
-  (world.mediator ??= new Mediator());
 
 // A handler that records that it was called, and answers or fails as told.
 const handler = (
@@ -68,19 +49,6 @@ const behaviour = (world: SpecWorld, name: string): Behaviour => ({
     }
   },
 });
-
-// What came of handing a request in: the answer, or whatever it was refused or
-// failed with.
-const attempt = async (
-  world: SpecWorld,
-  handing: () => Promise<unknown>,
-): Promise<void> => {
-  try {
-    world.answer = await handing();
-  } catch (failure) {
-    world.failure = failure;
-  }
-};
 
 const refusal = (world: SpecWorld): RequestRefused => {
   assert.ok(
