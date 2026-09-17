@@ -120,6 +120,13 @@ Feature: Holding the rules for a kind of value in one place
       When the example range is required to be valid
       Then it is refused for breaking "Range.EndMissing"
 
+    Scenario: A candidate that breaks only a rule reading several fields is refused for it
+      Given an example range
+      And it starts at 5
+      And it ends at 3
+      When the example range is required to be valid
+      Then it is refused for breaking "Range.EndBeforeStart"
+
   Rule: A refusal names the rule broken and nothing else
 
     A refusal is a defect in the calling code, and is likely to be logged. It
