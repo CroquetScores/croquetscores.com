@@ -29,6 +29,10 @@ export interface Shell {
   readonly theme: Theme;
   /** The path the theme form returns to, so a choice keeps you where you were. */
   readonly path: string;
+  /** "panel", the default, sets the body in the white panel. "bare" leaves it
+      on the page's own background, for a body that brings its own frame — a
+      dialog does. */
+  readonly frame?: "panel" | "bare" | undefined;
   /** The contents of the panel, already escaped. */
   readonly body: string;
 }
@@ -160,9 +164,13 @@ ${menu(shell.currentPath)}
     </header>${titleBar(shell.headerTitle)}${sectionBar(shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
-        <div class="panel stack">
+${
+  shell.frame === "bare"
+    ? shell.body
+    : `        <div class="panel stack">
 ${shell.body}
-        </div>
+        </div>`
+}
       </div>
     </main>
     <footer class="site-footer">

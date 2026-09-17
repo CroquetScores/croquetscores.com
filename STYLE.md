@@ -40,7 +40,7 @@ The vocabulary, declared on `:root`.
 
 The measure is not applied to every paragraph. The panel runs the width of the window, and most of what will go in it — scores, tables, standings — wants that width; prose held to `65ch` inside it left the right half of the panel empty and read as unfinished. So `.prose` asks for the measure where a block of text wants it, and nothing gets it by default. The cost is honest: a paragraph at `1280px` runs to about 134 characters a line, and at `1920px` to about 205, both beyond what is comfortable. Text that is meant to be read at length should carry `.prose`.
 
-**Colour.** Named for the job, never the hue. `--surface` is what the page is laid on and `--panel` is what anything is read against, with `--ink` and `--ink-muted` for text on it: that distinction is what lets the page be tinted green while the reading stays on white. `--accent` carries the header and footer, `--accent-strong` the section bar, `--accent-ink` whatever sits on either, and `--current` the black marking the section being read. `--border` for lines, `--focus` for the ring — which turns white inside the green bars, because a dark ring disappears there. Every pairing that can carry text meets WCAG AA at body size: a property of the palette, checked when the palette changes rather than hoped for.
+**Colour.** Named for the job, never the hue. `--surface` is what the page is laid on and `--panel` is what anything is read against, with `--ink` and `--ink-muted` for text on it: that distinction is what lets the page be tinted green while the reading stays on white. `--accent` carries the header and footer, `--accent-strong` the section bar, `--accent-ink` whatever sits on either, and `--current` the black marking the section being read. `--action` and `--action-ink` carry the button that does what a form is for: the section bar's green in light, and pale in dark, because the section bar's dark green on a dark dialog stands out at 1.78:1 and reads as a hole rather than the thing to press. `--danger` is for what needs the reader's attention — red in both themes, at 6.54:1 on the content in light and 7.42:1 in dark. `--border` for lines, `--focus` for the ring — which turns white inside the green bars, because a dark ring disappears there. Every pairing that can carry text meets WCAG AA at body size: a property of the palette, checked when the palette changes rather than hoped for.
 
 Dark is not light inverted. The bars keep the brand's hue and lose the lightness that makes a full-width band of it glare at night. The tile marking the current section turns pale, because black on a dark bar reads as a hole rather than as a selection. Links take a colour of their own — `--link`, rather than borrowing `--accent-strong` — because the dark green that works on white disappears on a dark panel. Every token is named for its job in both palettes, so nothing below them knows which is in use.
 
@@ -83,6 +83,22 @@ The admin SPA has JavaScript by definition, so its own navigation is under no su
 ## 5a. The pinned bar
 
 The site bar is `position: sticky; top: 0`. A sticky element only sticks within its own containing block, so the bar is a sibling of the page's other bands rather than a child of any of them: nested inside a header, it would scroll away the moment that header did. Anything else that is ever meant to pin is subject to the same rule, and the fix is always the same — move it out, not up the z-index.
+
+---
+
+## 5b. Forms
+
+Every form that is a page's purpose is a `.dialog`: a title bar in the section bar's colour, the fields beneath it on `--panel`, and a row of buttons with the one that does the work furthest right and last in reading order. It stands on the page's own background in place of the panel, centred, `32rem` at most and the full width inside the gutter on a phone. It is a page region named by its title, not an ARIA dialog: it does not sit over the page, take focus or need dismissing, so claiming the role would describe something it is not.
+
+A field's label sits inside its border, above whatever is typed, and is still a `<label>`: what a screen reader announces for the field and what a click on it focuses. It is never placeholder text, which disappears the moment anyone types. The border and the focus ring belong to the box around the label and input together, because that box is what the reader sees as the field — and the box _is_ the `<label>`, so a press anywhere inside the border reaches the input, with no scripting asked for.
+
+A message about a field sits beneath it in bold `--danger`, and is tied to the input by `aria-describedby`, so it is read out with the field rather than left for someone to find by looking. `aria-invalid` is a separate statement and is said only where the field is actually wrong: a message can ask for something before anyone has got it wrong, and a field nobody has touched is not in error. A form shows a message only when its field needs attention. The stand-in register form is the exception, for testing only: it shows every message all the time so there is always one whose look can be checked, and that goes with the stand-in.
+
+A notice at the top of a dialog is not a live region. It arrives with the page, and a live region only announces what changes after it exists, so whatever redirects to the page sends the reader to the notice's id: the browser moves focus there and it is read out on arrival.
+
+`.button` is anything to press, whether a `<button>` or a link that behaves like one, and is `44px` tall. `.button-submit` is the only one painted with `--action`, so there is never a second thing that looks like the way forward.
+
+Each part of the dialog carries its own background and the radius of its own corners, rather than the dialog clipping them with `overflow: hidden`, which would also clip the focus ring of any control near its edge.
 
 ---
 
