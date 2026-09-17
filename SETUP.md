@@ -275,32 +275,7 @@ In development it stays blank, and deliberately. `npm run dev` serves `localhost
 
 Numbered SQL files in `src/infrastructure/database/migrations/`, applied in filename order by a runner of ours that records each applied name in a `schema_migrations` table within the same transaction as the migration itself. A migration framework would be more machinery than this needs.
 
-`0001-event-store.sql`:
-
-```sql
-create table events (
-    global_position bigserial   primary key,
-    stream_id       text        not null,
-    version         integer     not null,
-    event_type      text        not null,
-    event_version   integer     not null default 1,
-    data            jsonb       not null,
-    metadata        jsonb       not null,
-    occurred_at     timestamptz not null,
-    constraint events_stream_version unique (stream_id, version)
-);
-
-create index events_stream on events (stream_id, version);
-create index events_by_type on events (event_type, global_position);
-```
-
-A stream id is `{aggregate}/{uuid}` — the aggregate's name, a slash, then the uuid in a form that needs no quoting or escaping. It says what it identifies, so there is no `stream_type` column: a second copy of the same fact is a second thing to keep true. The exact encoding of the uuid is behaviour and gets its own feature.
-
-`unique (stream_id, version)` **is** the optimistic concurrency check: a second writer appending at the same expected version gets a unique violation, which the store turns into a concurrency error for the caller to retry.
-
-`occurred_at` takes no default. The time is carried in on the command's `requestedAt` and written from there, so one request produces one time whatever it touches, and a replay cannot quietly stamp today's date on a five-year-old event.
-
-Read-model tables arrive in their own migrations.
+There are none yet. A migration arrives with whatever needs it, and what is in it is decided there rather than here: this document says how migrations are run, not what any of them contains.
 
 ---
 
@@ -314,7 +289,7 @@ Each step is finished when its `.feature` files pass. Write the feature first, h
 
 ### 7.2 Event sourcing in the domain
 
-`DomainEvent`; an `AggregateRoot` that records uncommitted events and rebuilds itself by replaying a stream; and the registry mapping a stored `event_type` string to the type that reads it. That registry is what keeps a five-year-old event readable: a name is never reused, and a shape only ever gains optional fields or takes a new `event_version`.
+`DomainEvent`; an `AggregateRoot` that records uncommitted events and rebuilds itself by replaying a stream; and the registry mapping the name an event was stored under to the type that reads it. That registry is what keeps a five-year-old event readable, and the rules that make it work — a name is never reused, a shape only ever gains optional fields — are specified with it.
 
 ### 7.3 The mediator
 
@@ -368,18 +343,13 @@ Every command carries `requestedAt`: the moment the request was made, decided on
 
 ### 7.5 The event store
 
-`EventStore` is an interface in `src/application/services/`, saying what the application wants:
+`EventStore` is an interface in `src/application/services/`, saying what the application wants of the place events are kept: append to a stream, and read one back. It cannot read across streams, because no command or query has any business doing so. `PostgresEventStore` in `src/infrastructure/event-store/` implements it.
 
-```ts
-appendToStream(streamId, expectedVersion, events, occurredAt, metadata): Promise<void>;
-readStream(streamId): Promise<StoredEvent[]>;
-```
-
-`PostgresEventStore` in `src/infrastructure/event-store/` implements it. A stream id is the `{aggregate}/{uuid}` of §6.2 and needs nothing beside it to say what it is, so there is no stream type to pass. The interface names the two things the application does and no more: append to a stream, and read one back. It cannot read the whole log, because no command or query has any business doing so.
+What the store must do is specified in `specs/application/services/eventStore/`, and both the interface and every implementation are held to those scenarios. Nothing about either — the shape of a call, what is refused and when, or what any of it looks like in a table — is written down here, because a second description is a second thing to keep true and this one cannot go red when it stops being.
 
 Projections are not checkpointed and do not chase the log. A projection runs **in the same transaction as the append that produced the events**, so a command either records what happened and updates every read model it touches, or does neither. That trades throughput for two things worth more here: a read model is never stale, and there is no half-applied middle state to reason about, no catch-up worker to supervise, and no checkpoint to drift.
 
-Rebuilding a read model is therefore a deliberate act rather than a background one, and an infrastructure task rather than an application one: a maintenance script under `/scripts` reads the `events` table in `global_position` order and puts each event through the projections, having truncated their tables first. Projections stay idempotent so a rebuild can be run twice without harm.
+Rebuilding a read model is therefore a deliberate act rather than a background one, and an infrastructure task rather than an application one: a maintenance script under `/scripts` replays what has been stored, in the order it was stored, through the projections, having truncated their tables first. Projections stay idempotent so a rebuild can be run twice without harm.
 
 ### 7.6 Accounts and the three ways in
 

@@ -5,13 +5,15 @@ Feature: Migrating the database
   recorded as it is applied, in the same transaction that applies it, so that
   it is never applied a second time.
 
+  There are no migrations yet. The first one arrives with the Postgres event
+  store, and brings with it the scenarios saying what it made. What is here is
+  what is true of the runner whether there is anything to run or not.
+
   Background:
     Given a migrated database
 
-  Scenario: The event store is there
-    Then the table "events" exists
-    And the table "schema_migrations" exists
-    And "0001-event-store.sql" is recorded as applied
+  Scenario: What has been applied is written down
+    Then the table "schema_migrations" exists
 
   Scenario: Migrating again applies nothing
     When the migrations are applied
