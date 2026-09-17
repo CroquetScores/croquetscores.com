@@ -171,6 +171,12 @@ Feature: Forms are shown in a dialog
       When the register page is opened
       Then every label in the dialog is inside its field
 
+    Scenario: Pressing the field's border reaches the field it names
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the field's border is pressed where nothing can be typed
+      Then the field it names is focused
+
     Scenario: The labels stay once something has been typed
       Given a viewport 1200 pixels wide
       And the register page is open
@@ -183,6 +189,15 @@ Feature: Forms are shown in a dialog
     check where a message sits, how it looks and how it is announced. They are
     run against the stand-in register form because it shows every message all
     the time for testing — not because a form ever should.
+
+    Saying what is wanted is not the same as saying something is wrong, so a
+    message does not by itself make its field invalid. A field nobody has typed
+    in is not in error, and a screen reader should not be told it is.
+
+    Scenario: Nothing is said to be wrong before anything has been typed
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then no field in the dialog is marked as wrong
 
     Scenario: A message sits beneath its field
       Given a viewport 1200 pixels wide
@@ -246,6 +261,13 @@ Feature: Forms are shown in a dialog
       And the register page is open
       When the dialog is submitted
       Then the reader is told registering is not open yet
+
+    Scenario: Choosing a theme afterwards does not take the answer away
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the dialog is submitted
+      And the theme "Dark" is chosen
+      Then the page still says registering is not open yet
 
     Scenario: Cancelling returns the reader to the home page
       Given a viewport 1200 pixels wide

@@ -340,13 +340,42 @@ When("the dialog is submitted", async function (this: SpecWorld) {
 Then(
   "the reader is told registering is not open yet",
   async function (this: SpecWorld) {
-    const status = this.browserPage.getByRole("status");
-    assert.equal(
-      await status.count(),
-      1,
-      "Nothing on the page is announced to the reader.",
+    // Told, rather than merely shown: the browser has taken the reader to the
+    // notice, so a screen reader reads it on arrival. Checking the page merely
+    // contains the words would pass for a page nobody is ever taken to — the
+    // body's own text contains everything on it.
+    const focused = await this.browserPage.evaluate<{
+      tag: string;
+      text: string;
+    }>(
+      `(() => {
+        const active = document.activeElement;
+        if (!active) return { tag: "", text: "" };
+        return { tag: active.tagName.toLowerCase(), text: (active.textContent || "").trim() };
+      })()`,
     );
-    assert.match((await status.textContent()) ?? "", /not open yet/i);
+    assert.ok(
+      !["", "body", "html"].includes(focused.tag),
+      "The reader was left where they landed rather than taken to the notice.",
+    );
+    assert.match(
+      focused.text,
+      /not open yet/i,
+      `The reader was taken to "${focused.text}" rather than to the notice.`,
+    );
+  },
+);
+
+Then(
+  "the page still says registering is not open yet",
+  async function (this: SpecWorld) {
+    const notice = this.browserPage.locator("section.dialog .notice");
+    assert.equal(
+      await notice.count(),
+      1,
+      "The dialog carries no notice any more.",
+    );
+    assert.match((await notice.textContent()) ?? "", /not open yet/i);
   },
 );
 
@@ -377,6 +406,8 @@ interface FieldSeen {
   // as the field.
   box: Rect | null;
   label: { text: string; rect: Rect } | null;
+  // Whether the input says what is in it is wrong.
+  invalid: boolean;
   message: {
     text: string;
     rect: Rect;
@@ -402,6 +433,10 @@ const fieldsOf = async (world: SpecWorld): Promise<FieldSeen[]> => {
       let box = input;
       while (box && parseFloat(getComputedStyle(box).borderTopWidth) === 0) box = box.parentElement;
       const label = input.labels && input.labels[0];
+      // The label is the box around the field, so what is measured is the
+      // element holding its text — found by structure rather than by class, so
+      // that text moved out of the border still fails.
+      const labelText = label && (label.firstElementChild || label);
       const field = input.closest(".field");
       const message = field && field.querySelector(".field-message");
       let back = message;
@@ -415,7 +450,8 @@ const fieldsOf = async (world: SpecWorld): Promise<FieldSeen[]> => {
       return {
         name: input.name,
         box: box ? rect(box) : null,
-        label: label ? { text: label.textContent.trim(), rect: rect(label) } : null,
+        label: labelText ? { text: labelText.textContent.trim(), rect: rect(labelText) } : null,
+        invalid: input.getAttribute("aria-invalid") === "true",
         message: message
           ? {
               text: message.textContent.trim(),
@@ -452,6 +488,58 @@ Then(
       assert.ok(
         within(field.label.rect, field.box),
         `The label "${field.label.text}" is not inside its field's border.`,
+      );
+    }
+  },
+);
+
+When(
+  "the field's border is pressed where nothing can be typed",
+  async function (this: SpecWorld) {
+    // The corner of whatever draws the border — found the same way a reader
+    // finds the field, by what is drawn, not by what it is called. Inside the
+    // border, and outside both the label's text and the input.
+    const corner = await this.browserPage.evaluate<{ x: number; y: number }>(
+      `(() => {
+        const input = document.querySelector("section.dialog input");
+        let box = input;
+        while (box && parseFloat(getComputedStyle(box).borderTopWidth) === 0) box = box.parentElement;
+        const r = box.getBoundingClientRect();
+        return { x: r.left + 2, y: r.top + 2 };
+      })()`,
+    );
+    await this.browserPage.mouse.click(corner.x, corner.y);
+  },
+);
+
+Then("the field it names is focused", async function (this: SpecWorld) {
+  const focused = await this.browserPage.evaluate<string>(
+    `(() => {
+      const active = document.activeElement;
+      if (!active) return "";
+      return active.tagName.toLowerCase() + ":" + (active.getAttribute("name") || "");
+    })()`,
+  );
+  const first =
+    (await this.browserPage
+      .locator("section.dialog input")
+      .first()
+      .getAttribute("name")) ?? "";
+  assert.equal(
+    focused,
+    `input:${first}`,
+    `Pressing the field's border focused ${focused || "nothing"}.`,
+  );
+});
+
+Then(
+  "no field in the dialog is marked as wrong",
+  async function (this: SpecWorld) {
+    for (const field of await fieldsOf(this)) {
+      assert.equal(
+        field.invalid,
+        false,
+        `The ${field.name} field says what is in it is wrong before anything has been typed.`,
       );
     }
   },

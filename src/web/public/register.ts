@@ -5,7 +5,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { Assets } from "../common/assets.js";
-import { renderDialog } from "../common/dialog.js";
+import { noticeId, renderDialog } from "../common/dialog.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
 
@@ -22,7 +22,10 @@ const show = (
   const html = render(assets, {
     title: "Register",
     theme: themeOf(request),
-    path,
+    // The whole of what was asked for, query and all, so that choosing a theme
+    // comes back to this page as it was rather than to a bare copy of it with
+    // the notice dropped.
+    path: request.url,
     currentPath: path,
     frame: "bare",
     body: renderDialog({
@@ -37,7 +40,9 @@ const show = (
           autocomplete: "email",
           // For testing only: the stand-in shows every message all the time so
           // there is always one whose look can be checked. A real form shows a
-          // message only when its field needs attention.
+          // message only when its field needs attention. Nothing is marked
+          // invalid, because nobody has typed anything yet and saying otherwise
+          // would have a screen reader announce a fault that is not there.
           message: "Enter an email address.",
         },
         {
@@ -78,7 +83,9 @@ export const registerRegisterPage = (
   // shown by a GET and refreshing it does not offer to post the form again.
   // What was typed is not sent back: there is nowhere for it to go yet, and a
   // password is never something to echo into a page.
+  // The fragment is what takes the reader to the notice on arrival: it moves
+  // focus there, so a screen reader reads it rather than leaving it to be seen.
   server.post(path, (_request, reply) =>
-    reply.redirect(`${path}?notice=not-open`, 303),
+    reply.redirect(`${path}?notice=not-open#${noticeId}`, 303),
   );
 };

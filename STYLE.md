@@ -80,23 +80,25 @@ The admin SPA has JavaScript by definition, so its own navigation is under no su
 
 ---
 
+## 5a. The pinned bar
+
+The site bar is `position: sticky; top: 0`. A sticky element only sticks within its own containing block, so the bar is a sibling of the page's other bands rather than a child of any of them: nested inside a header, it would scroll away the moment that header did. Anything else that is ever meant to pin is subject to the same rule, and the fix is always the same — move it out, not up the z-index.
+
+---
+
 ## 5b. Forms
 
 Every form that is a page's purpose is a `.dialog`: a title bar in the section bar's colour, the fields beneath it on `--panel`, and a row of buttons with the one that does the work furthest right and last in reading order. It stands on the page's own background in place of the panel, centred, `32rem` at most and the full width inside the gutter on a phone. It is a page region named by its title, not an ARIA dialog: it does not sit over the page, take focus or need dismissing, so claiming the role would describe something it is not.
 
-A field's label sits inside its border, above whatever is typed, and is still a `<label>`: what a screen reader announces for the field and what a click on it focuses. It is never placeholder text, which disappears the moment anyone types. The border and the focus ring belong to the box around the label and input together, because that box is what the reader sees as the field.
+A field's label sits inside its border, above whatever is typed, and is still a `<label>`: what a screen reader announces for the field and what a click on it focuses. It is never placeholder text, which disappears the moment anyone types. The border and the focus ring belong to the box around the label and input together, because that box is what the reader sees as the field — and the box _is_ the `<label>`, so a press anywhere inside the border reaches the input, with no scripting asked for.
 
-A message about a field sits beneath it in bold `--danger`, and is tied to the input by `aria-describedby`, so it is read out with the field rather than left for someone to find by looking. A form shows a message only when its field needs attention. The stand-in register form is the exception, for testing only: it shows every message all the time so there is always one whose look can be checked, and that goes with the stand-in.
+A message about a field sits beneath it in bold `--danger`, and is tied to the input by `aria-describedby`, so it is read out with the field rather than left for someone to find by looking. `aria-invalid` is a separate statement and is said only where the field is actually wrong: a message can ask for something before anyone has got it wrong, and a field nobody has touched is not in error. A form shows a message only when its field needs attention. The stand-in register form is the exception, for testing only: it shows every message all the time so there is always one whose look can be checked, and that goes with the stand-in.
+
+A notice at the top of a dialog is not a live region. It arrives with the page, and a live region only announces what changes after it exists, so whatever redirects to the page sends the reader to the notice's id: the browser moves focus there and it is read out on arrival.
 
 `.button` is anything to press, whether a `<button>` or a link that behaves like one, and is `44px` tall. `.button-submit` is the only one painted with `--action`, so there is never a second thing that looks like the way forward.
 
 Each part of the dialog carries its own background and the radius of its own corners, rather than the dialog clipping them with `overflow: hidden`, which would also clip the focus ring of any control near its edge.
-
----
-
-## 5a. The pinned bar
-
-The site bar is `position: sticky; top: 0`. A sticky element only sticks within its own containing block, so the bar is a sibling of the page's other bands rather than a child of any of them: nested inside a header, it would scroll away the moment that header did. Anything else that is ever meant to pin is subject to the same rule, and the fix is always the same — move it out, not up the z-index.
 
 ---
 

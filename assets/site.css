@@ -680,7 +680,9 @@ main {
 
 /* The field's border, with its label inside it above whatever is typed. The
    ring for the field is drawn here rather than on the input, because the box is
-   what the reader sees as the field. */
+   what the reader sees as the field. The box is itself the <label>, so the text
+   cursor over it is the truth: pressing anywhere inside the border, padding
+   included, reaches the input. */
 .field-box {
   display: flex;
   flex-direction: column;
@@ -698,7 +700,7 @@ main {
   outline-offset: 2px;
 }
 
-.field-box label {
+.field-box .field-label {
   color: var(--ink-muted);
   font-size: var(--text-sm);
   font-weight: 600;
