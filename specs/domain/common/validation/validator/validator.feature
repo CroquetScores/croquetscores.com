@@ -21,11 +21,17 @@ Feature: Holding the rules for a kind of value in one place
     Range.EndMissing       the end is missing
     Range.StartNegative    the start is below zero
     Range.StepNotPositive  a step is given and is not above zero
+    Range.StepNotRound     a step is given and is not a multiple of 5
     Range.EndBeforeStart   the end is below the start
 
   The last reads two fields, the start and the end. The others read one each.
 
   Rule: Checking reports every rule broken, in the order the rules are declared
+
+    Every rule is asked about every candidate, including the rest of a field's
+    rules once one of them is broken, so that a field wrong in two ways is told
+    both at once. A rule is therefore handed whatever the candidate holds, and
+    must answer for anything it might hold — a field that is missing included.
 
     Scenario: A candidate that breaks no rule is valid
       Given an example range
@@ -47,6 +53,16 @@ Feature: Holding the rules for a kind of value in one place
       When the example range is checked
       Then the first rule broken is "Range.EndMissing"
       And the next rule broken is "Range.StartNegative"
+      And no other rule is broken
+
+    Scenario: A field that breaks one rule is still judged by the rest of its rules
+      Given an example range
+      And it starts at 1
+      And it ends at 5
+      And it steps by -1
+      When the example range is checked
+      Then the first rule broken is "Range.StepNotPositive"
+      And the next rule broken is "Range.StepNotRound"
       And no other rule is broken
 
   Rule: A rule that reads several fields says nothing while any of them is broken
