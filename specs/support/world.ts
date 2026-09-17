@@ -4,6 +4,10 @@ import { setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Pool } from "pg";
 import type { BrowserContext, Page } from "playwright";
 
+// The application layer, which this file may name: the rule it keeps is only
+// that it names nothing from infrastructure or the web.
+import type { Mediator } from "../../src/application/common/Mediator.js";
+
 export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
   public databaseName: string | undefined;
@@ -33,6 +37,18 @@ export class SpecWorld extends World {
   // What the last call to the migration runner reported. Typed by its shape
   // rather than by importing AppliedMigration, for the same reason.
   public appliedMigrations: readonly { readonly name: string }[] | undefined;
+
+  // The mediator a scenario puts together, and what came of using it: the
+  // answer or the failure, which handlers were called, and everything its
+  // behaviours and handlers did, in the order they did it.
+  public mediator: Mediator | undefined;
+  public answer: unknown;
+  public failure: unknown;
+  public handled: string[] = [];
+  public happened: string[] = [];
+  public happenedChecked = 0;
+  // A failure a handler was made to throw, so it can be recognised coming out.
+  public plantedFailure: Error | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
