@@ -27,7 +27,7 @@ export class AppendRefused extends Error {
  * holding every event that ever happened to it in the order it happened.
  *
  * This is what the application wants of a store, and every implementation is
- * held to the scenarios in specs/application/services/eventStore/. It cannot
+ * held to the scenarios in specs/application/services/event-store/. It cannot
  * read across streams, because no command or query has any business doing so.
  */
 export interface EventStore {

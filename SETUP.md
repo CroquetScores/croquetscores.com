@@ -101,7 +101,7 @@ ESLint enforces all of this (§9); breaking it fails CI.
 
 Rules across the tree:
 
-- A feature and its step definitions share a folder named for the feature. The code they drive sits under the matching path in `/src`.
+- A feature and its step definitions share a folder, and both are named after the source file they describe, casing and all: `Mediator.feature` and `Mediator.steps.ts` for `Mediator.ts`. The folder is named for the same thing in lower case, hyphenated where it runs to more than one word — `specs/domain/common/read-only-date/ReadOnlyDate.feature` — so a capital letter in a path always means a file, and a file with one holds a type. The code they drive sits under the matching path in `/src`.
 - `specs/support/` is the exception: it holds what every feature shares, so it is loaded everywhere and may not reach into `src/infrastructure/`.
 - A spec obeys the import rule of the layer it describes. `specs/domain/` may reach `src/domain/` and no further out. `specs/infrastructure/` is the one place a spec touches a concrete implementation, because that is precisely what it is describing.
 - Where a feature describes an interface, the fake that satisfies it sits beside that feature, so the fake and the scenarios defining it stay together.
@@ -327,7 +327,7 @@ Handlers register against a command or query constructor. `send` and `query` eac
 
 A second handler for a request is refused when it is registered. A request with **no** handler cannot be caught the same way: the mediator learns that a request exists only when something registers a handler for it, so it has no way to know about one nobody registered. That is refused when the request is sent instead. Catching it at startup would take the composition root declaring every request the web layer can send and checking each against the registrations — which is not built, and would be its own feature.
 
-Which door a request came through is settled before anything else is asked of it, so a query handed to `send` is refused as the wrong door rather than as a command missing its time. A command that does not say when it was asked for is refused before any behaviour sees it, because every event it records is stamped with that time (§7.4). Behaviours wrap the handler like layers: the first registered is the outermost, the first to see a request going in and the last to see its answer, or its failure, coming out. The codes each refusal carries, and the rest of this as scenarios, are in `specs/application/common/mediator/mediator.feature`.
+Which door a request came through is settled before anything else is asked of it, so a query handed to `send` is refused as the wrong door rather than as a command missing its time. A command that does not say when it was asked for is refused before any behaviour sees it, because every event it records is stamped with that time (§7.4). Behaviours wrap the handler like layers: the first registered is the outermost, the first to see a request going in and the last to see its answer, or its failure, coming out. The codes each refusal carries, and the rest of this as scenarios, are in `specs/application/common/mediator/Mediator.feature`.
 
 There are two pipelines because the two sides need different things of them. A command runs **logging → validation → transaction → handler**: validation rejects it before a transaction is opened, and the transaction behaviour commits the unit of work, appends the events the aggregates recorded together with the projections those events drive, and publishes only after the commit succeeds. A query runs **logging → validation → handler** and opens no transaction, because a query writes nothing — and a `query` that needed one would be a command wearing the wrong name.
 
@@ -345,7 +345,7 @@ Every command carries `requestedAt`: the moment the request was made, decided on
 
 `EventStore` is an interface in `src/application/services/`, saying what the application wants of the place events are kept: append to a stream, and read one back. It cannot read across streams, because no command or query has any business doing so. `PostgresEventStore` in `src/infrastructure/event-store/` implements it.
 
-What the store must do is specified in `specs/application/services/eventStore/`, and both the interface and every implementation are held to those scenarios. Nothing about either — the shape of a call, what is refused and when, or what any of it looks like in a table — is written down here, because a second description is a second thing to keep true and this one cannot go red when it stops being.
+What the store must do is specified in `specs/application/services/event-store/`, and both the interface and every implementation are held to those scenarios. Nothing about either — the shape of a call, what is refused and when, or what any of it looks like in a table — is written down here, because a second description is a second thing to keep true and this one cannot go red when it stops being.
 
 Projections are not checkpointed and do not chase the log. A projection runs **in the same transaction as the append that produced the events**, so a command either records what happened and updates every read model it touches, or does neither. That trades throughput for two things worth more here: a read model is never stale, and there is no half-applied middle state to reason about, no catch-up worker to supervise, and no checkpoint to drift.
 
@@ -582,40 +582,7 @@ Written for whoever arrives at the repository knowing nothing: what this is, how
 
 It is short on purpose. Anything that has to be kept in step with the code — the list of operations, the shape of an endpoint — belongs in a `.feature` file, which cannot go stale without the build going red.
 
-````markdown
-# next.croquetscores.com
-
-Croquet Scores provides tournament managers with tools to record match scores and enables individuals to publish commentary to the public site. Croquet tragics can follow along with the action as events unfold.
-
-## Running it
-
-```bash
-npm ci
-npm run db:up    # Postgres in Docker, and a .env if there is not one
-npm run dev      # the server on http://localhost:3000
-npm run dev:admin # the admin SPA, proxying to it
-```
-
-## The specifications
-
-Behaviour is specified in Gherkin under `/specs`, and those specifications are
-the tests. A feature and its step definitions share a folder.
-
-```bash
-npm test         # everything
-npm run test:nodb # everything that needs no database
-```
-
-## How it is put together
-
-Four layers — web, infrastructure, application, domain — with a mediator, CQRS
-and an event store written here rather than installed. `SETUP.md` explains the
-arrangement and the reasons for it.
-
-## Licence
-
-Copyright © 2026 Tim Murphy. All rights reserved. See `LICENSE`.
-````
+It says what this is, how to get it running — including the browser the scenarios drive, which `npm ci` does not fetch — what the checks are, and which document to read for what. `README.md` is the copy that counts; repeating it here would be a second one to keep true, and it drifted within a day of being written.
 
 ### LICENSE
 
