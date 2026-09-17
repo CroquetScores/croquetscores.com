@@ -57,6 +57,39 @@ export default tseslint.config(
       "**/web/**",
     ),
   },
+  // What every aggregate shares names no aggregate, or it stops being shared.
+  // The one exception is who did it: every event says which account caused it,
+  // so the account's id is named here by everything. It is excepted by name so
+  // that a second such import fails the build rather than following the first.
+  // A later block replaces an earlier one's rule outright, so the domain's own
+  // restrictions are said again.
+  {
+    files: ["src/domain/common/**/*.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            ...["**/application/**", "**/infrastructure/**", "**/web/**"].map(
+              (group) => ({
+                group: [group],
+                message:
+                  "domain does not know that application, infrastructure or web exist.",
+              }),
+            ),
+            {
+              // A regex rather than a group: a group is read as gitignore
+              // would read it, and a file cannot be let back in from under a
+              // directory that has been shut out.
+              regex: "/aggregates/(?!accounts/value-objects/AccountId\\.js$)",
+              message:
+                "domain/common is shared by every aggregate and names none of them, except the id of the account that caused an event.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   {
     files: [
       "src/application/**/*.ts",
