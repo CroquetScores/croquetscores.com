@@ -7,6 +7,9 @@ import type { BrowserContext, Page } from "playwright";
 // The application and domain layers, which this file may name: the rule it
 // keeps is only that it names nothing from infrastructure or the web.
 import type { Mediator } from "../../src/application/common/Mediator.js";
+import type { EventStore } from "../../src/application/services/EventStore.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type { Id } from "../../src/domain/common/Id.js";
 import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 
@@ -72,6 +75,21 @@ export class SpecWorld extends World {
   // A moment a scenario gives, and the read-only dates made from it in order.
   public moment: Date | undefined;
   public readOnlyDates: ReadOnlyDate[] = [];
+
+  // The account a scenario names, the example event it creates, and that
+  // event written out as data.
+  public account: AccountId | undefined;
+  public event: DomainEvent | undefined;
+  public writtenEvent: Record<string, unknown> | undefined;
+
+  // An event store, the streams a scenario has named in order, the events
+  // waiting to be appended, what reading a stream back gave, and how many of
+  // those the scenario has named so far.
+  public eventStore: EventStore | undefined;
+  public streams: Id[] = [];
+  public pendingEvents: DomainEvent[] = [];
+  public readBack: readonly DomainEvent[] | undefined;
+  public readBackChecked = 0;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
