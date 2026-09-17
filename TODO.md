@@ -73,10 +73,15 @@ Developer writes short form spec here for AI to formalise.
 
 ### Validation
 
-As a general rule validation will be handled at the domain layer.
+I've undone your last block of work.
 
-To support localisation broken validations show a code, not text.
+On this occassion you may read outside the repo.
 
-A broken validation returns the field name and the error code.
+Read the following and related files to write the required feature files.
+Wait for approval before implementations.
 
-A domain aggregate, entity, value object, etc will throw on the first validation error. The application layer will collect all validation errors.
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\validation\Validator.ts
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\validation\ValidationError.ts
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\common\value-objects\NameValidator.ts
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\domain\aggregates\accounts\value-objects\EmailAddressValidator.ts
+- D:\source\repos\CroquetScores\CroquetScores.TypeScript\src\application\operations\accounts\CreateAccountCommandValidator.ts
