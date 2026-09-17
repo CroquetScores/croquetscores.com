@@ -89,12 +89,25 @@ Feature: Handing a request to the one thing that deals with it
     The time is decided once, at the edge, and handed down with the command.
     Nothing below the web layer reads a clock, and every event a command records
     is stamped with that time. A command that arrives without one has nothing to
-    stamp them with, so it is refused before anything else happens to it.
+    stamp them with, so it is refused before anything else happens to it — and so
+    is one carrying a time that cannot be read, which says no more about when it
+    was asked for than no time at all.
+
+    The two are refused with different codes because they are different
+    mistakes. A missing time is a command built without one; an unreadable time
+    is usually one built from input that did not parse, and whoever is looking
+    for the fault needs to know which to look for.
 
     Scenario: A command that does not say when it was asked for is refused
       Given a handler registered for the example command
       When the example command is sent without saying when it was asked for
       Then it is refused with "Command.RequestedAtMissing"
+      And the example command's handler has not been called
+
+    Scenario: A command whose time cannot be read is refused
+      Given a handler registered for the example command
+      When the example command is sent with a time that cannot be read
+      Then it is refused with "Command.RequestedAtUnreadable"
       And the example command's handler has not been called
 
   Rule: A request passes through its side's behaviours in order, going in and coming out

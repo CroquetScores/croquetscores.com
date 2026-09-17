@@ -245,6 +245,14 @@ When(
   },
 );
 
+When(
+  "the example command is sent with a time that cannot be read",
+  async function (this: SpecWorld) {
+    const command = new ExampleCommand(new Date("not a time"));
+    await attempt(this, () => mediatorOf(this).send(command));
+  },
+);
+
 // What came of it --------------------------------------------------------
 
 Then(

@@ -82,13 +82,19 @@ export class Mediator {
         : unhandled(command);
     }
 
-    if (
-      !(command.requestedAt instanceof Date) ||
-      Number.isNaN(command.requestedAt.getTime())
-    ) {
+    // A missing time and an unreadable one are different mistakes: a command
+    // built without one, and — usually — one built from input that did not
+    // parse. Each has its own code so whoever is looking knows which.
+    if (!(command.requestedAt instanceof Date)) {
       throw new RequestRefused(
         "Command.RequestedAtMissing",
         `${nameOf(command)} does not say when it was asked for.`,
+      );
+    }
+    if (Number.isNaN(command.requestedAt.getTime())) {
+      throw new RequestRefused(
+        "Command.RequestedAtUnreadable",
+        `${nameOf(command)} says it was asked for at a time that cannot be read.`,
       );
     }
 
