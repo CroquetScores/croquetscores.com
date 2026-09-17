@@ -348,7 +348,11 @@ export class Mediator {
 }
 ```
 
-Handlers register against a command or query constructor. `send` and `query` each find the one handler registered for what they were given, wrap it in that side's behaviour pipeline and run it. Two handlers for one request, or none, is an error at registration rather than a surprise at runtime.
+Handlers register against a command or query constructor. `send` and `query` each find the one handler registered for what they were given, wrap it in that side's behaviour pipeline and run it.
+
+A second handler for a request is refused when it is registered. A request with **no** handler cannot be caught the same way: the mediator learns that a request exists only when something registers a handler for it, so it has no way to know about one nobody registered. That is refused when the request is sent instead. Catching it at startup would take the composition root declaring every request the web layer can send and checking each against the registrations — which is not built, and would be its own feature.
+
+Which door a request came through is settled before anything else is asked of it, so a query handed to `send` is refused as the wrong door rather than as a command missing its time. A command that does not say when it was asked for is refused before any behaviour sees it, because every event it records is stamped with that time (§7.4). Behaviours wrap the handler like layers: the first registered is the outermost, the first to see a request going in and the last to see its answer, or its failure, coming out. The codes each refusal carries, and the rest of this as scenarios, are in `specs/application/common/mediator/mediator.feature`.
 
 There are two pipelines because the two sides need different things of them. A command runs **logging → validation → transaction → handler**: validation rejects it before a transaction is opened, and the transaction behaviour commits the unit of work, appends the events the aggregates recorded together with the projections those events drive, and publishes only after the commit succeeds. A query runs **logging → validation → handler** and opens no transaction, because a query writes nothing — and a `query` that needed one would be a command wearing the wrong name.
 
