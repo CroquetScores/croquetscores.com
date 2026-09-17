@@ -70,3 +70,13 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 ## Next Spec
 
 Developer writes short form spec here for AI to formalise.
+
+### Validation
+
+As a general rule validation will be handled at the domain layer.
+
+To support localisation broken validations show a code, not text.
+
+A broken validation returns the field name and the error code.
+
+A domain aggregate, entity, value object, etc will throw on the first validation error. The application layer will collect all validation errors.
