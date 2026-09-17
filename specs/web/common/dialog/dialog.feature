@@ -17,6 +17,11 @@ Feature: Forms are shown in a dialog
   register anyone. It is here so that the dialog has a real page to be shown on,
   and it is replaced by the real thing when accounts arrive.
 
+  For testing only, the stand-in also shows every field's message all the time,
+  so that there is always a message whose look can be checked. That is not how a
+  form behaves. A real form shows a message only when its field needs attention,
+  and the rules deciding when arrive with each form's own feature.
+
   Rule: A form takes the place of the panel
 
     Scenario: There is no panel on a page with a form
@@ -155,7 +160,76 @@ Feature: Forms are shown in a dialog
         | light |
         | dark  |
 
+  Rule: A field names itself from inside its own border
+
+    A label inside the field's border is still a label: it is what a screen
+    reader announces for the field, and what a click on it focuses. It is not
+    placeholder text, which disappears the moment anyone types.
+
+    Scenario: Every label is inside its field
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then every label in the dialog is inside its field
+
+    Scenario: The labels stay once something has been typed
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When something is typed into every field in the dialog
+      Then every label in the dialog is inside its field
+
+  Rule: A field that needs attention says so beneath itself
+
+    A message is shown only when its field needs attention. These scenarios
+    check where a message sits, how it looks and how it is announced. They are
+    run against the stand-in register form because it shows every message all
+    the time for testing — not because a form ever should.
+
+    Scenario: A message sits beneath its field
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then every field in the dialog has a message beneath it
+
+    Scenario: The messages are bold
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then every message in the dialog is bold
+
+    Scenario: A message is announced with its field
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then every message in the dialog is announced with its field
+
+    Scenario Outline: The messages are red
+      Given a viewport 1200 pixels wide
+      And a machine that prefers <theme>
+      When the register page is opened
+      Then every message in the dialog is red
+
+      Examples:
+        | theme |
+        | light |
+        | dark  |
+
+    Scenario Outline: The messages can be read
+      Given a viewport 1200 pixels wide
+      And a machine that prefers <theme>
+      When the register page is opened
+      Then every message in the dialog reads against its content at no less than 4.5 to 1
+
+      Examples:
+        | theme |
+        | light |
+        | dark  |
+
   Rule: Until there are accounts, the register form is a stand-in
+
+    Everything in this rule is true of the stand-in only, and goes when the real
+    register form replaces it.
+
+    Scenario: For testing only, it shows every field's message before anything is submitted
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then every field in the dialog has a message beneath it
 
     Scenario: It asks for an email address
       Given a viewport 1200 pixels wide

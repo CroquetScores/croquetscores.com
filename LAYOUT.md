@@ -70,6 +70,8 @@ The section bar appears only on pages with sections to move between, and is abse
 
 Content sits in a **white panel with near-black text** on the light green page. That is what makes the tint work: the green is the surface the page is laid on, not the surface anything is read against.
 
+A page whose purpose is a form has no panel. The form is a dialog standing on the light green page instead, centred, with its own title bar, content and buttons (`STYLE.md` §5b).
+
 Everything in a bar lines up with the text inside that panel — the site name, the tabs, the donate button — rather than with the panel's edge. One token carries the offset, so the alignment is a fact stated once instead of a number copied into four rules.
 
 As the window narrows, the bars stay and their contents wrap. The current site wraps its secondary tabs onto two and three rows at `390px` and collapses nothing, which is the behaviour to keep: those tabs are the page's own sections, and hiding them would hide the page.

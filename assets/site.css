@@ -57,6 +57,9 @@
   --link: #078600;
   --border: #cfe0cf;
   --focus: #0b2e17;
+  --action: #066b00;
+  --action-ink: #ffffff;
+  --danger: #b3261e;
 
   /* What a bar's contents are inset by, so that the site name lines up with the
      text in the panel below it rather than with the panel's edge. The panel's
@@ -100,6 +103,14 @@
     --link: light-dark(#078600, #7fd08d);
     --border: light-dark(#cfe0cf, #2c332b);
     --focus: light-dark(#0b2e17, #8fd99b);
+    /* The button that does what a form is for. The section navigation's colour
+       in light; pale in dark, because the section navigation's dark green on a
+       dark dialog reads as a hole rather than as the thing to press. */
+    --action: light-dark(#066b00, #7fd08d);
+    --action-ink: light-dark(#ffffff, #10140f);
+    /* What needs the reader's attention. Red in both, and never below 4.5:1 on
+       the content it sits on: 6.54:1 in light, 7.42:1 in dark. */
+    --danger: light-dark(#b3261e, #ff8a80);
   }
 }
 
@@ -617,6 +628,128 @@ main {
 
 .donate button:hover {
   background: var(--surface);
+}
+
+/* A form that is a page's purpose. It stands on the page's own background in
+   place of the panel, centred across the page, and reads from its title, to its
+   content, to its buttons. It is a page region rather than an overlay, so
+   nothing here dims, traps focus or needs dismissing. */
+.dialog {
+  max-width: 32rem;
+  margin-inline: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+}
+
+/* Each part carries its own background and the radius of the corner it sits in,
+   rather than the dialog clipping them with overflow: hidden — which would also
+   clip the focus ring of any control near its edge. */
+.dialog-title {
+  margin: 0;
+  max-width: none;
+  padding: var(--space-3) var(--space-5);
+  border-radius: calc(var(--radius-2) - 1px) calc(var(--radius-2) - 1px) 0 0;
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+}
+
+.dialog-content {
+  padding: var(--space-5);
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.dialog-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 calc(var(--radius-2) - 1px) calc(var(--radius-2) - 1px);
+  background: var(--panel);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* The field's border, with its label inside it above whatever is typed. The
+   ring for the field is drawn here rather than on the input, because the box is
+   what the reader sees as the field. */
+.field-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--ink-muted);
+  border-radius: var(--radius-1);
+  background: var(--panel);
+  cursor: text;
+}
+
+.field-box:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.field-box label {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.field-box input {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+}
+
+/* The box draws the ring, so the input does not draw a second one inside it. */
+.field-box input:focus-visible {
+  outline: none;
+}
+
+.field-message {
+  color: var(--danger);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+/* A thing to press, whether it is a button or a link that behaves like one. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--ink-muted);
+  border-radius: var(--radius-1);
+  background: none;
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The one that does what the form is for, and the only one that looks like it. */
+.button-submit {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--action-ink);
+}
+
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-inline-start: 4px solid var(--accent-strong);
+  background: var(--surface);
+  color: var(--ink);
 }
 
 /* --- Utilities ----------------------------------------------------------- */
