@@ -9,18 +9,19 @@ import {
   RequestRefused,
 } from "../../../../src/application/common/Mediator.js";
 import type { Query } from "../../../../src/application/common/Query.js";
+import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 // Requests that exist only to exercise the mediator. They mean nothing, which
 // is the point: what is being specified is how any request is handed on.
 class ExampleCommand implements Command<string> {
   declare readonly _result?: string;
-  constructor(readonly requestedAt: Date) {}
+  constructor(readonly requestedAt: ReadOnlyDate) {}
 }
 
 class OtherCommand implements Command<string> {
   declare readonly _result?: string;
-  constructor(readonly requestedAt: Date) {}
+  constructor(readonly requestedAt: ReadOnlyDate) {}
 }
 
 class ExampleQuery implements Query<string> {
@@ -29,7 +30,7 @@ class ExampleQuery implements Query<string> {
 
 // A fixed moment. Nothing here reads a clock, any more than the application
 // does.
-const askedAt = new Date("2026-09-17T09:00:00Z");
+const askedAt = ReadOnlyDate.from(new Date("2026-09-17T09:00:00Z"));
 
 const mediatorOf = (world: SpecWorld): Mediator =>
   (world.mediator ??= new Mediator());
@@ -240,15 +241,20 @@ When(
 When(
   "the example command is sent without saying when it was asked for",
   async function (this: SpecWorld) {
-    const command = new ExampleCommand(undefined as unknown as Date);
+    const command = new ExampleCommand(undefined as unknown as ReadOnlyDate);
     await attempt(this, () => mediatorOf(this).send(command));
   },
 );
 
+// The cast is the mistake being made: a command written the way commands used
+// to be written, with the language's own date, which the compiler catches and
+// a call from untyped input would not.
 When(
-  "the example command is sent with a time that cannot be read",
+  "the example command is sent carrying a plain date",
   async function (this: SpecWorld) {
-    const command = new ExampleCommand(new Date("not a time"));
+    const command = new ExampleCommand(
+      new Date("2026-09-17T09:00:00Z") as unknown as ReadOnlyDate,
+    );
     await attempt(this, () => mediatorOf(this).send(command));
   },
 );

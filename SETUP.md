@@ -297,7 +297,7 @@ In `src/application/common/`, and small:
 
 ```ts
 export interface Command<TResult> {
-  readonly requestedAt: Date;
+  readonly requestedAt: ReadOnlyDate;
   readonly _result?: TResult;
 }
 

@@ -89,14 +89,18 @@ Feature: Handing a request to the one thing that deals with it
     The time is decided once, at the edge, and handed down with the command.
     Nothing below the web layer reads a clock, and every event a command records
     is stamped with that time. A command that arrives without one has nothing to
-    stamp them with, so it is refused before anything else happens to it — and so
-    is one carrying a time that cannot be read, which says no more about when it
-    was asked for than no time at all.
+    stamp them with, so it is refused before anything else happens to it.
 
-    The two are refused with different codes because they are different
-    mistakes. A missing time is a command built without one; an unreadable time
-    is usually one built from input that did not parse, and whoever is looking
-    for the fault needs to know which to look for.
+    The time a command carries is a read-only date, which cannot be made from a
+    time that cannot be read. So an unreadable time is refused where the date
+    is made, before there is a command to send, and that is specified with the
+    read-only date. What is left for the mediator to refuse is a command built
+    without a time at all.
+
+    A plain date is refused the same way. It is the mistake this invites, from
+    anyone writing a command the way commands used to be written, and one that
+    anything holding the command could move afterwards — so it says no more
+    about when the request was made than no time at all does.
 
     Scenario: A command that does not say when it was asked for is refused
       Given a handler registered for the example command
@@ -104,10 +108,10 @@ Feature: Handing a request to the one thing that deals with it
       Then it is refused with "Command.RequestedAtMissing"
       And the example command's handler has not been called
 
-    Scenario: A command whose time cannot be read is refused
+    Scenario: A command carrying a plain date rather than a moment is refused
       Given a handler registered for the example command
-      When the example command is sent with a time that cannot be read
-      Then it is refused with "Command.RequestedAtUnreadable"
+      When the example command is sent carrying a plain date
+      Then it is refused with "Command.RequestedAtMissing"
       And the example command's handler has not been called
 
   Rule: A request passes through its side's behaviours in order, going in and coming out
