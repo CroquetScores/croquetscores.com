@@ -81,6 +81,20 @@ When(
 
 // What it says -----------------------------------------------------------
 
+// What a store or a log would keep, rather than what the value says when it is
+// asked: a private field is invisible to JSON, so this is the part that would
+// quietly go missing.
+When("the read-only date is written down as data", function (this: SpecWorld) {
+  this.writtenMoment = JSON.parse(JSON.stringify(lastDateOf(this))) as unknown;
+});
+
+Then(
+  "what was written as data is {string}",
+  function (this: SpecWorld, written: string) {
+    assert.equal(this.writtenMoment, written);
+  },
+);
+
 Then(
   "the read-only date( still) says {string}",
   function (this: SpecWorld, written: string) {

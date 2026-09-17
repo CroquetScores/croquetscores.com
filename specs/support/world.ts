@@ -72,9 +72,11 @@ export class SpecWorld extends World {
   public idKind: { mint(): Id; read(written: string): Id } | undefined;
   public ids: Id[] = [];
   public writtenId: string | undefined;
-  // A moment a scenario gives, and the read-only dates made from it in order.
+  // A moment a scenario gives, the read-only dates made from it in order, and
+  // the last of those written out as data.
   public moment: Date | undefined;
   public readOnlyDates: ReadOnlyDate[] = [];
+  public writtenMoment: unknown;
 
   // The account a scenario names, the example event it creates, and that
   // event written out as data.
