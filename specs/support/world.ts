@@ -4,9 +4,10 @@ import { setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Pool } from "pg";
 import type { BrowserContext, Page } from "playwright";
 
-// The application layer, which this file may name: the rule it keeps is only
-// that it names nothing from infrastructure or the web.
+// The application and domain layers, which this file may name: the rule it
+// keeps is only that it names nothing from infrastructure or the web.
 import type { Mediator } from "../../src/application/common/Mediator.js";
+import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 
 export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
@@ -61,6 +62,10 @@ export class SpecWorld extends World {
     | undefined;
   public brokenRules: readonly string[] | undefined;
   public brokenRulesChecked = 0;
+
+  // A moment a scenario gives, and the read-only dates made from it in order.
+  public moment: Date | undefined;
+  public readOnlyDates: ReadOnlyDate[] = [];
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
