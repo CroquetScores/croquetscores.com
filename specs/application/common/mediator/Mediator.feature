@@ -13,9 +13,11 @@ Feature: Handing a request to the one thing that deals with it
   share one line of them.
 
   What each behaviour does — what is logged, how a request is validated, what a
-  transaction commits — is specified with that behaviour. This feature is how the
-  mediator runs them, and it is written with example requests and behaviours that
-  exist only to exercise it.
+  transaction commits — is specified with that behaviour. What every command
+  says about itself — when it was asked for, and who asked if anybody did — is
+  specified with the command: one that cannot say when is refused where it is
+  made, and never reaches the mediator. This feature is how the mediator runs them, and it is
+  written with example requests and behaviours that exist only to exercise it.
 
   Rule: A request is answered by the handler registered for it
 
@@ -70,8 +72,8 @@ Feature: Handing a request to the one thing that deals with it
   Rule: A query cannot be sent as a command, nor a command asked as a query
 
     Which door a request came through is settled before anything else is asked
-    of it. A query handed in as a command is the wrong door, not a command that
-    has forgotten when it was asked for.
+    of it, so a query handed in as a command is told it came in the wrong way
+    rather than anything else about it.
 
     Scenario: A query handed in as a command is refused
       Given a handler registered for the example query
@@ -83,36 +85,6 @@ Feature: Handing a request to the one thing that deals with it
       Given a handler registered for the example command
       When the example command is asked as though it were a query
       Then it is refused with "Mediator.WrongDoor"
-      And the example command's handler has not been called
-
-  Rule: A command says when it was asked for
-
-    The time is decided once, at the edge, and handed down with the command.
-    Nothing below the web layer reads a clock, and every event a command records
-    is stamped with that time. A command that arrives without one has nothing to
-    stamp them with, so it is refused before anything else happens to it.
-
-    The time a command carries is a read-only date, which cannot be made from a
-    time that cannot be read. So an unreadable time is refused where the date
-    is made, before there is a command to send, and that is specified with the
-    read-only date. What is left for the mediator to refuse is a command built
-    without a time at all.
-
-    A plain date is refused the same way. It is the mistake this invites, from
-    anyone writing a command the way commands used to be written, and one that
-    anything holding the command could move afterwards — so it says no more
-    about when the request was made than no time at all does.
-
-    Scenario: A command that does not say when it was asked for is refused
-      Given a handler registered for the example command
-      When the example command is sent without saying when it was asked for
-      Then it is refused with "Command.RequestedAtMissing"
-      And the example command's handler has not been called
-
-    Scenario: A command carrying a plain date rather than a moment is refused
-      Given a handler registered for the example command
-      When the example command is sent carrying a plain date
-      Then it is refused with "Command.RequestedAtMissing"
       And the example command's handler has not been called
 
   Rule: A request passes through its side's behaviours in order, going in and coming out

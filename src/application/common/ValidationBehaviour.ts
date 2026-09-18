@@ -25,9 +25,6 @@ export interface RequestRules<TRequest> {
  * A request refused for breaking its rules, naming every rule it broke —
  * whoever typed it is owed the whole list at once, not one fault per attempt.
  *
- * It names nothing of the request itself. A refusal is likely to be logged, and
- * a request can carry a password as easily as a range.
- *
  * It is thrown, like the mediator's other refusals, rather than returned as a
  * failed result. A command's handler answers with a result, but a query's
  * answers with whatever shape its caller wants, and a request refused before

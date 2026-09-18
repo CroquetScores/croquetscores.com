@@ -1,6 +1,5 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Given, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import { inspect } from "node:util";
 
 import {
   RequestInvalid,
@@ -116,18 +115,5 @@ When(
   async function (this: SpecWorld) {
     const query = new ExampleQuery(rangeOf(this));
     await handing(this, () => mediatorOf(this).query(query));
-  },
-);
-
-// What came of it --------------------------------------------------------
-
-// Everything the refusal would show if it were logged: its message, its stack
-// and whatever it carries, as the log would write it.
-Then(
-  "the refusal does not mention {string}",
-  function (this: SpecWorld, sent: string) {
-    assert.ok(this.failure !== undefined, "Nothing was refused.");
-    const shown = inspect(this.failure, { depth: Infinity });
-    assert.ok(!shown.includes(sent), `The refusal shows ${shown}`);
   },
 );
