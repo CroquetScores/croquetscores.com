@@ -3,65 +3,8 @@ import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
 import { ValidationError } from "../../../../../src/domain/common/validation/ValidationError.js";
-import { Validator } from "../../../../../src/domain/common/validation/Validator.js";
+import { type Range, ranges } from "../../../../support/exampleRange.js";
 import type { SpecWorld } from "../../../../support/world.js";
-
-// A range exists only to exercise the validator. Its rules mean nothing beyond
-// what they show: several rules on one field, a field whose rule is optional,
-// and a rule reading two fields.
-interface Range {
-  readonly start: number | undefined;
-  readonly end: number | undefined;
-  readonly step: number | undefined;
-}
-
-type RangeErrorCode =
-  | "Range.StartMissing"
-  | "Range.EndMissing"
-  | "Range.StartNegative"
-  | "Range.StepNotPositive"
-  | "Range.StepNotRound"
-  | "Range.EndBeforeStart";
-
-const ranges = new Validator<Range, RangeErrorCode>({
-  fields: [
-    {
-      field: "start",
-      code: "Range.StartMissing",
-      isBrokenBy: (range) => range.start === undefined,
-    },
-    {
-      field: "end",
-      code: "Range.EndMissing",
-      isBrokenBy: (range) => range.end === undefined,
-    },
-    {
-      field: "start",
-      code: "Range.StartNegative",
-      isBrokenBy: (range) => range.start !== undefined && range.start < 0,
-    },
-    {
-      field: "step",
-      code: "Range.StepNotPositive",
-      isBrokenBy: (range) => range.step !== undefined && range.step <= 0,
-    },
-    {
-      field: "step",
-      code: "Range.StepNotRound",
-      isBrokenBy: (range) => range.step !== undefined && range.step % 5 !== 0,
-    },
-  ],
-  spanning: [
-    {
-      reads: ["start", "end"],
-      code: "Range.EndBeforeStart",
-      // Anything it cannot compare counts against it, so that when it says
-      // nothing about a missing field it is the validator keeping it quiet.
-      isBrokenBy: ({ start, end }) =>
-        start === undefined || end === undefined || end < start,
-    },
-  ],
-});
 
 const rangeOf = (world: SpecWorld): Range => {
   assert.ok(world.range !== undefined, "No example range has been given.");
