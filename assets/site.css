@@ -731,7 +731,11 @@ main {
    box being asked with :has(): a browser without :has() would never lift the
    label, and it would lie over whatever was typed. The three are inside :is()
    because :is() drops a selector the browser does not know and keeps the rest,
-   where a plain list would be thrown away whole. */
+   where a plain list would be thrown away whole.
+
+   Where it sits on the border, top: -3px, was judged by eye and is on no
+   scale: it is where the words looked centred on a 1px border at today's
+   --text-sm. Look again if either changes. */
 .field-box
   input:is(:focus, :not(:placeholder-shown), :autofill)
   ~ .field-label {
