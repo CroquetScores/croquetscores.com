@@ -138,3 +138,30 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 **Why it has not yet.** The assets are a stylesheet and little else, and all 271 scenarios run in about nineteen seconds. The cross-site guard lets a request with neither header through.
 
 **What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
+
+---
+
+## /accounts/register
+
+_Web_
+
+- Nothing turns a refused command's error codes into the messages under each field. `SETUP.md` §7.8 says JSON gets a `422` with the codes; a form needs the dialog shown again with each field's message instead. The stand-in's "show every message all the time" goes at this point.
+
+_Application_
+
+- `src/application/operations/accounts/` does not exist yet. It would hold the register command, its validator, its handler and its result.
+- There is no way yet to load or save an aggregate through the event store.
+- Projections do not exist. The transaction scenarios mention one, but there is no mechanism, no read-model table and no migration. Refusing an email address that is already registered needs a read model of accounts by email address, so the first page is also the first projection.
+- Password hashing needs an interface in `src/application/services/`, with an argon2 implementation in infrastructure. `@node-rs/argon2` is already a dependency.
+
+_Domain_
+
+- The `Account` aggregate, an `AccountRegistered` event, and an `EmailAddress` value object.
+
+**Decisions to make before the feature is written**
+
+1. **What happens after registering?** Signing the reader in straight away needs sessions (`SETUP.md` §7.7). Asking them to confirm their email address needs a way to send email. Neither exists. The suggestion is to make the first slice record the account and tell the reader it is done, then make sign-in the next page, where sessions arrive.
+2. **Is an email address that is already registered disclosed?** Saying "already registered" tells anyone which addresses have accounts. `SETUP.md` §7.6 already hides that at sign-in, where a wrong password and an unknown address fail the same way, so register would be consistent to hide it too. Hiding it usually means sending an email, which brings back the problem in the first decision.
+3. **What are the password rules?** The suggestion is a minimum length only (current guidance is at least 8 characters) and no rules about which kinds of character it must contain.
+
+With those decided, the first thing to write is `register.feature` in the web layer. It is limited to what a reader sees, and its scenarios say what the command and domain features need to cover.

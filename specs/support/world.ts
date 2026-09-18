@@ -74,6 +74,8 @@ export class SpecWorld extends World {
   public answer: unknown;
   public failure: unknown;
   public handled: string[] = [];
+  // Every request a handler was given, in the order it was given them.
+  public handledRequests: unknown[] = [];
   public happened: string[] = [];
   public happenedChecked = 0;
   // A failure a handler was made to throw, so it can be recognised coming out.

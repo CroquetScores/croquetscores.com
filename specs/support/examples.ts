@@ -122,9 +122,10 @@ export const exampleHandler = (
   name: string,
   answer: string,
   fails = false,
-): { handle: () => Promise<string> } => ({
-  handle: async (): Promise<string> => {
+): { handle: (request?: unknown) => Promise<string> } => ({
+  handle: async (request?: unknown): Promise<string> => {
     world.handled.push(name);
+    world.handledRequests.push(request);
     world.happened.push("the handler");
     for (const also of world.whatTheExampleHandlerAlsoDoes) await also();
     if (fails) {
@@ -141,16 +142,22 @@ export const exampleHandler = (
  */
 export const exampleCommandHandler = <TCommand extends Command<string>>(
   handles: RequestType<TCommand>,
-  handler: { handle: () => Promise<string> },
-): { handles: RequestType<TCommand>; handle: () => Promise<string> } => ({
+  handler: { handle: (request?: unknown) => Promise<string> },
+): {
+  handles: RequestType<TCommand>;
+  handle: (request?: unknown) => Promise<string>;
+} => ({
   handles,
   handle: handler.handle,
 });
 
 export const exampleQueryHandler = <TQuery extends Query<string>>(
   handles: RequestType<TQuery>,
-  handler: { handle: () => Promise<string> },
-): { handles: RequestType<TQuery>; handle: () => Promise<string> } => ({
+  handler: { handle: (request?: unknown) => Promise<string> },
+): {
+  handles: RequestType<TQuery>;
+  handle: (request?: unknown) => Promise<string>;
+} => ({
   handles,
   handle: handler.handle,
 });

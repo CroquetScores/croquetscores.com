@@ -17,6 +17,10 @@ Feature: A request is stamped with the moment it arrived
   happens to be in has no bearing on it: a server in Auckland and one in London,
   reading their clocks at the same instant, stamp a request with the same moment.
 
+  Every scenario here names the zone the server is in, and runs in UTC unless
+  it says otherwise, so that none of them passes or fails according to where
+  the machine running it happens to be.
+
   These scenarios run the application against Postgres, because a command sent
   by a route runs in the application's transaction. They use the server's
   clock, set to whatever each scenario needs, the mediator's example command,
@@ -24,6 +28,7 @@ Feature: A request is stamped with the moment it arrived
 
   Background:
     Given the application is built
+    And the server is in the time zone "UTC"
 
   Rule: A command a route sends says when the request arrived
 
