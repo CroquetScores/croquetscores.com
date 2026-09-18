@@ -49,6 +49,12 @@ export interface Dialog {
 // the stylesheet knows the field is empty — the one thing CSS cannot otherwise
 // ask of an input — and so when the label comes back down, with no scripting.
 //
+// The input comes before the label's words, because the stylesheet can only
+// ask about an input on behalf of what follows it. Asking on behalf of the box
+// around it needs :has(), and a browser without :has() would leave the label
+// lying over whatever was typed. The words are placed by the stylesheet, so
+// where they come in the markup changes nothing a reader sees or hears.
+//
 // The box around the label and the input is itself that label, so a press
 // anywhere inside the border — the padding included — reaches the input. A div
 // with a text cursor drawn on it would promise the same thing and, without
@@ -82,8 +88,8 @@ const field = ({
 
   return `              <div class="field">
                 <label class="field-box" for="${id}">
-                  <span class="field-label">${escape(label)}</span>
                   <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}" placeholder=" "${described}${wrong} />
+                  <span class="field-label">${escape(label)}</span>
                 </label>${beneath}
               </div>`;
 };

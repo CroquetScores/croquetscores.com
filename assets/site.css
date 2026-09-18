@@ -702,27 +702,42 @@ main {
 }
 
 /* At rest the label lies on the line the typing will go on, at the size of the
-   typing, so the field needs no second line to name itself. */
+   typing, so the field needs no second line to name itself. The box does not
+   grow to hold it, so a label too long for the box is cut short inside the
+   box's padding rather than wrapping out of it over whatever is beside it. */
 .field-box .field-label {
   position: absolute;
   top: 50%;
   left: var(--space-3);
+  max-width: calc(100% - 2 * var(--space-3));
+  overflow: hidden;
   transform: translateY(-50%);
   color: var(--ink-muted);
   font-size: var(--text-base);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* In use — focused, or holding something — it lifts onto the top border, small,
    with the panel behind it so the border does not run through the words. It
    lifts for something typed as well as for focus, or it would fall back over
    the text when the reader moved on. Empty is known by the blank placeholder
-   the input carries for the purpose. The move is in one step, with nothing
-   sliding between the two places. */
-.field-box:focus-within .field-label,
-.field-box:has(input:not(:placeholder-shown)) .field-label {
+   the input carries for the purpose. A field the browser filled in before
+   anyone touched it can still count as showing its placeholder, so that is
+   asked about by name. The move is in one step, with nothing sliding between
+   the two places.
+
+   The input is asked, and the label follows it in the markup, rather than the
+   box being asked with :has(): a browser without :has() would never lift the
+   label, and it would lie over whatever was typed. The three are inside :is()
+   because :is() drops a selector the browser does not know and keeps the rest,
+   where a plain list would be thrown away whole. */
+.field-box
+  input:is(:focus, :not(:placeholder-shown), :autofill)
+  ~ .field-label {
   top: -3px;
-  margin-inline-start: -0.25rem;
-  padding-inline: 0.25rem;
+  margin-inline-start: calc(-1 * var(--space-1));
+  padding-inline: var(--space-1);
   background: var(--panel);
   font-size: var(--text-sm);
   font-weight: 600;

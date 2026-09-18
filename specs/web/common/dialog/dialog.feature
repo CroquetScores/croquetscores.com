@@ -176,10 +176,9 @@ Feature: Forms are shown in a dialog
     the field without competing with what has been typed. It moves in one step.
     It does not slide or fade between its two places.
 
-    A field keeps its background once it has something in it, however that got
-    there. A browser that fills a field in for the reader tints it by default,
-    and a tinted field under a label on the panel's colour reads as a patch
-    rather than a field.
+    Wherever the label is, it stays between its field's sides. The field no
+    longer grows to hold its label, so a label that ran past a side would lie
+    over whatever is beside the field.
 
     A label that moves is still a label: it is what a screen reader announces
     for the field, and what a press on it focuses. It is not placeholder text,
@@ -226,12 +225,16 @@ Feature: Forms are shown in a dialog
       And the password field is focused
       Then the email address field's label is on the field's top edge
 
-    Scenario: A field keeps its background once something is in it
-      Given a viewport 1200 pixels wide
+    Scenario: A resting label stays between its field's sides
+      Given a viewport 320 pixels wide
+      When the register page is opened
+      Then every label in the dialog is between its field's sides
+
+    Scenario: A lifted label stays between its field's sides
+      Given a viewport 320 pixels wide
       And the register page is open
-      When something is typed into the email address field
-      And the password field is focused
-      Then the email address field is the colour of the dialog's content
+      When the email address field is focused
+      Then the email address field's label is between its field's sides
 
     Scenario: A label comes back down when its field is left empty
       Given a viewport 1200 pixels wide
@@ -251,7 +254,7 @@ Feature: Forms are shown in a dialog
       And a machine that prefers <theme>
       And the register page is open
       When the email address field is focused
-      Then the email address field's label reads against the dialog's content at no less than 4.5 to 1
+      Then the email address field's label reads against what is behind it at no less than 4.5 to 1
 
       Examples:
         | theme |
