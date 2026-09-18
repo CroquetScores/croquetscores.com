@@ -10,7 +10,10 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-- `top: -3px` on a dialog field's lifted label (`assets/site.css`, from PR #28) was judged by eye and is on no scale. It wants a comment saying so, and saying to look again if the border's width or `--text-sm` changes.
+- The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
+- What a form shows for a rule the catalogue has no words for — `form.otherwise`, above the fields — is covered by no scenario (from PR #32).
+- Only the "not found" page is checked in the test locale. The words on the pages for a refused request and for the server failing come from the catalogue too, but no scenario looks (from PR #32).
+- The register stand-in answers a post with the page itself, so refreshing it offers to send the form again. Harmless while it records nothing; decide between showing the form again and redirecting after success when registering is real (from PR #32).
 
 ---
 
@@ -93,18 +96,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## A request refused for breaking its rules will be answered as though the server had failed
-
-**Where:** `src/web/common/errors.ts`, where an error becomes a response — from the review of PR #30.
-
-**What will go wrong.** The error mapping answers with an error's own status when it carries one, and treats everything else as the site's own fault: `500`, `{ error: "Internal" }` and a reference, or the "Something went wrong" page. A request that breaks its rules is refused with `RequestInvalid`, which carries the code `Request.Invalid` and the list of rules broken, and no status — rightly, because a status is the web's business and nothing under `src/application` should know one. So a route that sends a command breaking its rules through `request.server.mediator` tells the caller the server failed, where it should say the request was wrong and which rules it broke. Whoever typed it is owed the whole list, which is the reason `RequestInvalid` carries one, and gets a reference number instead. It is also logged as an unhandled error, so a mistyped form reads in the log like a fault.
-
-**Why it has not yet.** No real route sends through the mediator. The only ones that do are the example routes in `specs/web/server/server.feature`, and its Rule about routes covers only a command and a query that succeed.
-
-**What to do.** Whoever writes the first route that sends a command or asks a query: decide, in the error mapping and nowhere else, what a refusal looks like to a caller, so that no route decides for itself. That is a decision about behaviour, so it starts as a Rule, written before the code — which status `Request.Invalid` is answered with, what the body says of the rules broken, and what a public page shows where the API answers JSON. The mediator's other refusals want deciding at the same time: `Mediator.Unhandled`, `Mediator.AlreadyHandled` and `Mediator.WrongDoor` are mistakes in how the application was put together rather than in what was sent, and are probably right to stay a `500`, but that should be said rather than fallen into. Add a scenario with an example route that sends a command breaking a rule, and expect the refusal by its code, never by its wording.
-
----
-
 ## The application hands out its mediator's parts, and nothing in production asks for them
 
 **Where:** the `Application` interface in `src/web/server.ts` — from PR #30.
@@ -130,10 +121,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 ---
 
 ## /accounts/register
-
-_Web_
-
-- Nothing turns a refused command's error codes into the messages under each field. `SETUP.md` §7.8 says JSON gets a `422` with the codes; a form needs the dialog shown again with each field's message instead. The stand-in's "show every message all the time" goes at this point.
 
 _Application_
 

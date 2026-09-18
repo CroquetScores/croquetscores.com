@@ -6,6 +6,7 @@ import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { render, type Section } from "../common/layout.js";
+import { speakingOf } from "../common/language.js";
 import { themeOf } from "../common/theme.js";
 
 export interface Page {
@@ -118,6 +119,7 @@ export const registerPublicPages = (
         currentSection: page.currentSection,
         currentPath: page.path,
         theme: themeOf(request),
+        speaking: speakingOf(request),
         path: page.path,
         body: page.body(),
       });
@@ -125,7 +127,7 @@ export const registerPublicPages = (
 
       reply
         .header("cache-control", "private, no-cache")
-        .header("vary", "Cookie")
+        .header("vary", "Cookie, Accept-Language")
         .header("etag", etag);
 
       // Without this the ETag costs a hash on every request and saves nothing:

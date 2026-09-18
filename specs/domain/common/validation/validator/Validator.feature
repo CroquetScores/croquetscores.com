@@ -13,6 +13,12 @@ Feature: Holding the rules for a kind of value in one place
   are the caller's business. Which codes there are belongs to whoever declares
   the rules, not to the validator.
 
+  A rule broken is reported with the fields it reads, as well as its code,
+  because which field a rule is about is part of the rule. Whoever shows it to
+  somebody — beneath the field they typed in, or above them all when it is
+  about more than one — takes that from here, rather than writing it down a
+  second time where it could come to disagree.
+
   This feature is written with an example range, which exists only to exercise
   the validator. A range has a start, an end and a step, any of which may be
   missing. Its rules, in the order they are declared:
@@ -64,6 +70,35 @@ Feature: Holding the rules for a kind of value in one place
       Then the first rule broken is "Range.StepNotPositive"
       And the next rule broken is "Range.StepNotRound"
       And no other rule is broken
+
+  Rule: Checking says which fields each rule broken reads
+
+    Scenario: A rule reading one field says which
+      Given an example range
+      And it starts at 1
+      When the example range is checked
+      Then the first rule broken is "Range.EndMissing"
+      And it reads the field "end"
+      And it reads no other field
+
+    Scenario: A rule reading several fields says each of them
+      Given an example range
+      And it starts at 5
+      And it ends at 3
+      When the example range is checked
+      Then the first rule broken is "Range.EndBeforeStart"
+      And it reads the field "start"
+      And it reads the field "end"
+      And it reads no other field
+
+    Scenario: Each rule broken says its own fields
+      Given an example range
+      And it starts at -1
+      When the example range is checked
+      Then the first rule broken is "Range.EndMissing"
+      And it reads the field "end"
+      And the next rule broken is "Range.StartNegative"
+      And it reads the field "start"
 
   Rule: A rule that reads several fields says nothing while any of them is broken
 

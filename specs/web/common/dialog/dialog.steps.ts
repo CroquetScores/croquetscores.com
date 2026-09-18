@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { closes, opens, unmarked } from "../../support/languages.js";
 
 const register = "/accounts/register";
 
@@ -418,7 +419,8 @@ interface FieldSeen {
 }
 
 // How a field is found in the page, written once for every step that looks: by
-// what is drawn and by the input's own label rather than by class names, so
+// what is drawn and by the input's own label rather than by class names, and
+// never a hidden input, which is not a field a reader sees or types into; so
 // that steps cannot come to disagree about what the field is, and so that a
 // field drawn some other way fails however tidy the markup around it looks.
 const looking = `
@@ -453,7 +455,7 @@ const looking = `
 const fieldsOf = async (world: SpecWorld): Promise<FieldSeen[]> => {
   const seen = await world.browserPage.evaluate<FieldSeen[]>(`(() => {
     ${looking}
-    return [...document.querySelectorAll("section.dialog input")].map((input) => {
+    return [...document.querySelectorAll("section.dialog input:not([type=hidden])")].map((input) => {
       const box = boxOf(input);
       const field = input.closest(".field");
       const message = field && field.querySelector(".field-message");
@@ -534,14 +536,33 @@ Then(
   },
 );
 
+type WithMessage = FieldSeen & { message: NonNullable<FieldSeen["message"]> };
+
+// The fields that have a message, which a form shows only where something
+// needs attention. A dialog showing none has nothing for these steps to judge,
+// and says so rather than passing over an empty list.
+const messagesOf = async (world: SpecWorld): Promise<WithMessage[]> => {
+  const shown = (await fieldsOf(world)).filter(
+    (field): field is WithMessage => field.message !== null,
+  );
+  assert.ok(shown.length > 0, "No field in the dialog has a message.");
+  return shown;
+};
+
+Then("no field in the dialog has a message", async function (this: SpecWorld) {
+  for (const field of await fieldsOf(this)) {
+    assert.equal(
+      field.message,
+      null,
+      `The ${field.name} field says "${field.message?.text}".`,
+    );
+  }
+});
+
 Then(
-  "every field in the dialog has a message beneath it",
+  "every message in the dialog sits beneath its field",
   async function (this: SpecWorld) {
-    for (const field of await fieldsOf(this)) {
-      assert.ok(
-        field.message !== null,
-        `The ${field.name} field has no message.`,
-      );
+    for (const field of await messagesOf(this)) {
       assert.ok(
         field.message.text !== "",
         `The ${field.name} field's message says nothing.`,
@@ -560,11 +581,7 @@ Then(
 );
 
 Then("every message in the dialog is bold", async function (this: SpecWorld) {
-  for (const field of await fieldsOf(this)) {
-    assert.ok(
-      field.message !== null,
-      `The ${field.name} field has no message.`,
-    );
+  for (const field of await messagesOf(this)) {
     assert.ok(
       Number(field.message.weight) >= 700,
       `The ${field.name} field's message has a weight of ${field.message.weight}.`,
@@ -575,11 +592,7 @@ Then("every message in the dialog is bold", async function (this: SpecWorld) {
 Then(
   "every message in the dialog is announced with its field",
   async function (this: SpecWorld) {
-    for (const field of await fieldsOf(this)) {
-      assert.ok(
-        field.message !== null,
-        `The ${field.name} field has no message.`,
-      );
+    for (const field of await messagesOf(this)) {
       assert.ok(
         field.describedBy.includes(field.message.text),
         `The ${field.name} field does not announce "${field.message.text}".`,
@@ -590,11 +603,7 @@ Then(
 
 // Red is the red channel well ahead of both others, whichever theme's red it is.
 Then("every message in the dialog is red", async function (this: SpecWorld) {
-  for (const field of await fieldsOf(this)) {
-    assert.ok(
-      field.message !== null,
-      `The ${field.name} field has no message.`,
-    );
+  for (const field of await messagesOf(this)) {
     const [red = 0, green = 0, blue = 0] =
       field.message.colour.match(/[\d.]+/g)?.map(Number) ?? [];
     assert.ok(
@@ -607,11 +616,7 @@ Then("every message in the dialog is red", async function (this: SpecWorld) {
 Then(
   "every message in the dialog reads against its content at no less than {float} to 1",
   async function (this: SpecWorld, least: number) {
-    for (const field of await fieldsOf(this)) {
-      assert.ok(
-        field.message !== null,
-        `The ${field.name} field has no message.`,
-      );
+    for (const field of await messagesOf(this)) {
       assert.ok(
         field.message.background !== null,
         `Nothing behind the ${field.name} field's message.`,
@@ -649,7 +654,7 @@ const labelsOf = async (world: SpecWorld): Promise<LabelSeen[]> => {
     { name: string; box: Rect | null; label: Omit<LabelSeen, "box"> | null }[]
   >(`(() => {
     ${looking}
-    return [...document.querySelectorAll("section.dialog input")].map((input) => {
+    return [...document.querySelectorAll("section.dialog input:not([type=hidden])")].map((input) => {
       const box = boxOf(input);
       const text = labelTextOf(input);
       const style = text && getComputedStyle(text);
@@ -680,9 +685,11 @@ const labelsOf = async (world: SpecWorld): Promise<LabelSeen[]> => {
 };
 
 // "the email address field" is the field whose label reads "Email address".
+// Found by its words with the test locale's marks taken off, so that a field is
+// named the same way in a scenario whatever language the page is in.
 const labelOf = async (world: SpecWorld, field: string): Promise<LabelSeen> => {
   const found = (await labelsOf(world)).find(
-    (seen) => seen.text.toLowerCase() === field.toLowerCase(),
+    (seen) => unmarked(seen.text).toLowerCase() === field.toLowerCase(),
   );
   assert.ok(found !== undefined, `The dialog has no ${field} field.`);
   return found;
@@ -827,5 +834,100 @@ Then(
       ratio >= Number(least),
       `The label "${seen.text}" reads at ${ratio.toFixed(2)} to 1, and wanted ${least}.`,
     );
+  },
+);
+
+// What a reader types, and what a field then holds and says ---------------
+
+When(
+  /^"([^"]*)" is typed into the (.+) field$/,
+  async function (this: SpecWorld, text: string, field: string) {
+    await (await inputOf(this, field)).fill(text);
+  },
+);
+
+Then(
+  /^the (.+) field is marked as wrong$/,
+  async function (this: SpecWorld, field: string) {
+    assert.equal(
+      await (await inputOf(this, field)).getAttribute("aria-invalid"),
+      "true",
+      `The ${field} field is not marked as wrong.`,
+    );
+  },
+);
+
+Then(
+  /^the (.+) field is not marked as wrong$/,
+  async function (this: SpecWorld, field: string) {
+    assert.notEqual(
+      await (await inputOf(this, field)).getAttribute("aria-invalid"),
+      "true",
+      `The ${field} field is marked as wrong.`,
+    );
+  },
+);
+
+// The input a reader knows by `field`, found in the page by its label's words
+// as the page spells them, for steps that ask the page about it directly.
+const inputByLabel = (field: string): string => `
+  [...document.querySelectorAll("section.dialog input")].find(
+    (input) => [...(input.labels?.[0]?.children ?? [])]
+      .some((child) => !child.contains(input) && child.textContent.split(${JSON.stringify(opens)}).join("").split(${JSON.stringify(closes)}).join("").trim().toLowerCase() === ${JSON.stringify(field.toLowerCase())}),
+  )`;
+
+// No message beneath it, and none announced with it: either would be the
+// reader told something about the field.
+Then(
+  /^the (.+) field has no message$/,
+  async function (this: SpecWorld, field: string) {
+    const said = await this.browserPage.evaluate<{
+      beneath: string | null;
+      announced: string | null;
+    } | null>(`(() => {
+      const input = ${inputByLabel(field)};
+      if (!input) return null;
+      return {
+        beneath: input.closest(".field")?.querySelector(".field-message")?.textContent.trim() ?? null,
+        announced: input.getAttribute("aria-describedby"),
+      };
+    })()`);
+    assert.ok(said !== null, `The dialog has no ${field} field.`);
+    assert.equal(
+      said.beneath,
+      null,
+      `The ${field} field says "${said.beneath}".`,
+    );
+    assert.equal(
+      said.announced,
+      null,
+      `The ${field} field announces ${said.announced}.`,
+    );
+  },
+);
+
+Then(
+  /^the (.+) field holds "([^"]*)"$/,
+  async function (this: SpecWorld, field: string, text: string) {
+    assert.equal(await (await inputOf(this, field)).inputValue(), text);
+  },
+);
+
+Then(
+  /^the (.+) field is empty$/,
+  async function (this: SpecWorld, field: string) {
+    assert.equal(await (await inputOf(this, field)).inputValue(), "");
+  },
+);
+
+Then(
+  /^the reader is taken to the (.+) field$/,
+  async function (this: SpecWorld, field: string) {
+    const focused = await this.browserPage.evaluate<boolean | null>(`(() => {
+      const input = ${inputByLabel(field)};
+      return input ? input === document.activeElement : null;
+    })()`);
+    assert.ok(focused !== null, `The dialog has no ${field} field.`);
+    assert.ok(focused, `The reader was not taken to the ${field} field.`);
   },
 );

@@ -1,0 +1,204 @@
+import { Given, Then, When } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
+import type { LightMyRequestResponse } from "fastify";
+
+import type { Range } from "../../../support/exampleRange.js";
+import { ExampleCommand, ExampleQuery } from "../../../support/examples.js";
+import type { SpecWorld } from "../../../support/world.js";
+import { builtFor } from "../../support/application.js";
+
+// The API answers anything under /api/ as JSON, and anything else as a page,
+// so which of the two a route is decides only where it is mounted.
+const apiRoute = "/api/example";
+const pageRoute = "/example";
+
+// A range as a caller sends it: whatever the scenario gave, and nothing for
+// what it did not.
+const rangeFrom = (body: unknown): Range => {
+  const sent = (body ?? {}) as Partial<Range>;
+  return { start: sent.start, end: sent.end, step: sent.step };
+};
+
+Given(
+  "an example API route that sends the example command for the range it is given",
+  function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    scenario.application.server.post(apiRoute, (request) =>
+      request.server.mediator.send(
+        new ExampleCommand(request.requestedAt, rangeFrom(request.body)),
+      ),
+    );
+    scenario.route = { method: "POST", url: apiRoute };
+  },
+);
+
+Given(
+  "an example API route that asks the example query for the range it is given",
+  function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    scenario.application.server.post(apiRoute, (request) =>
+      request.server.mediator.query(new ExampleQuery(rangeFrom(request.body))),
+    );
+    scenario.route = { method: "POST", url: apiRoute };
+  },
+);
+
+Given(
+  "an example page that sends the example command for the range it is given",
+  function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    scenario.application.server.post(pageRoute, (request) =>
+      request.server.mediator.send(
+        new ExampleCommand(request.requestedAt, rangeFrom(request.body)),
+      ),
+    );
+    scenario.route = { method: "POST", url: pageRoute };
+  },
+);
+
+When(
+  "the example range is sent to the example route",
+  async function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    assert.ok(scenario.route !== undefined, "There is no example route.");
+    assert.ok(this.range !== undefined, "There is no example range.");
+    scenario.response = await scenario.application.server.inject({
+      ...scenario.route,
+      payload: this.range,
+    });
+  },
+);
+
+const answered = (world: SpecWorld): LightMyRequestResponse => {
+  const response = builtFor(world).response;
+  assert.ok(response !== undefined, "The example route was not requested.");
+  return response;
+};
+
+// The API's answer, read as the JSON it is sent as.
+const refusalOf = (
+  world: SpecWorld,
+): { error?: unknown; broken?: unknown; correlationId?: unknown } =>
+  answered(world).json();
+
+// 422: understood, and refused for what it said. Not 400, which says it could
+// not be understood, and not 500, which says the server failed.
+Then(
+  "the route refuses it as the caller's mistake",
+  function (this: SpecWorld) {
+    const response = answered(this);
+    assert.equal(
+      response.statusCode,
+      422,
+      `The route answered ${response.statusCode}: ${response.body}`,
+    );
+  },
+);
+
+Then("the refusal is {string}", function (this: SpecWorld, code: string) {
+  assert.equal(refusalOf(this).error, code);
+});
+
+// The rules the refusal names, as the API sends them: each rule's code and
+// the fields it reads.
+interface Named {
+  readonly code: string;
+  readonly fields: readonly string[];
+}
+
+// How many rules the scenario has named so far, so that "no other rule" knows
+// how many there should be; and the fields it has said the last of them reads.
+const named = new WeakMap<SpecWorld, { rules: number; fields: string[] }>();
+
+const brokenOf = (world: SpecWorld): Named[] => {
+  const broken = refusalOf(world).broken;
+  assert.ok(Array.isArray(broken), "The refusal names no rules.");
+  return broken as Named[];
+};
+
+Then(
+  /^the (first|second|third) rule the refusal names is "([^"]*)"$/,
+  function (this: SpecWorld, which: string, code: string) {
+    const index = ["first", "second", "third"].indexOf(which);
+    assert.equal(brokenOf(this)[index]?.code, code);
+    named.set(this, { rules: index + 1, fields: [] });
+  },
+);
+
+Then("the refusal names no other rule", function (this: SpecWorld) {
+  const broken = brokenOf(this);
+  assert.equal(
+    broken.length,
+    named.get(this)?.rules ?? 0,
+    `The refusal names ${JSON.stringify(broken)}.`,
+  );
+});
+
+// "That rule" is the one the scenario named last.
+const thatRule = (world: SpecWorld): { rule: Named; fields: string[] } => {
+  const sofar = named.get(world);
+  const rule = sofar && brokenOf(world)[sofar.rules - 1];
+  assert.ok(sofar && rule, "No rule the refusal names has been named yet.");
+  return { rule, fields: sofar.fields };
+};
+
+Then(
+  "the refusal says that rule reads the field {string}",
+  function (this: SpecWorld, field: string) {
+    const { rule, fields } = thatRule(this);
+    assert.ok(
+      rule.fields.includes(field),
+      `${rule.code} is said to read ${JSON.stringify(rule.fields)}.`,
+    );
+    fields.push(field);
+  },
+);
+
+Then(
+  "the refusal says that rule reads no other field",
+  function (this: SpecWorld) {
+    const { rule, fields } = thatRule(this);
+    assert.deepEqual(
+      rule.fields.filter((field) => !fields.includes(field)),
+      [],
+      `${rule.code} is said to read ${JSON.stringify(rule.fields)}.`,
+    );
+  },
+);
+
+// A page, and not the one that says the server failed.
+Then("the page does not say the server failed", function (this: SpecWorld) {
+  const response = answered(this);
+  assert.match(
+    String(response.headers["content-type"]),
+    /^text\/html/,
+    "The route did not answer with a page.",
+  );
+  assert.doesNotMatch(response.body, /Something went wrong/);
+});
+
+Then("the route answers that the server failed", function (this: SpecWorld) {
+  const response = answered(this);
+  assert.equal(
+    response.statusCode,
+    500,
+    `The route answered ${response.statusCode}: ${response.body}`,
+  );
+});
+
+Then("the answer gives a reference to find it by", function (this: SpecWorld) {
+  assert.match(
+    String(refusalOf(this).correlationId),
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+  );
+});
+
+Then(
+  "the answer does not name {string}",
+  function (this: SpecWorld, code: string) {
+    assert.ok(
+      !answered(this).body.includes(code),
+      `The answer names ${code}: ${answered(this).body}`,
+    );
+  },
+);

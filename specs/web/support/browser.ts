@@ -11,6 +11,8 @@ import {
 } from "../../../src/infrastructure/config/Config.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
+import { addExampleForm } from "./exampleForm.js";
+import { scenarioLanguages } from "./languages.js";
 
 let browser: Browser | undefined;
 let application: Application | undefined;
@@ -21,7 +23,11 @@ const start = async (): Promise<{ browser: Browser; baseUrl: string }> => {
 
   if (application === undefined) {
     loadEnvFile();
-    application = await buildApplication(loadConfig(), { logger: false });
+    application = await buildApplication(loadConfig(), {
+      logger: false,
+      languages: scenarioLanguages,
+    });
+    addExampleForm(application);
 
     // Port 0 is whatever is free. A fixed one would collide with a development
     // server, and the first person to run both at once would find out the hard

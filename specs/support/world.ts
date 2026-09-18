@@ -24,6 +24,7 @@ import type {
 } from "../../src/domain/common/EventRegistry.js";
 import type { Id } from "../../src/domain/common/Id.js";
 import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
+import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 
 export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
@@ -101,8 +102,10 @@ export class SpecWorld extends World {
         step: number | undefined;
       }
     | undefined;
-  public brokenRules: readonly string[] | undefined;
+  public brokenRules: readonly BrokenRule[] | undefined;
   public brokenRulesChecked = 0;
+  // The fields the scenario has said the rule it last named reads.
+  public fieldsNamed: string[] = [];
 
   // Which kind of id a scenario is about, the ids it has minted or read in
   // order, and the writing of the last one written down.

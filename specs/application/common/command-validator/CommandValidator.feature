@@ -1,10 +1,16 @@
 Feature: A command's validator names the command it validates
 
   A command validator holds the rules for what one kind of command may carry,
-  and answers with every rule a command breaks. Which rules those are, and the
-  order the broken ones come back in, are the command's own, written with the
-  domain's rules for whatever it carries; what the validation behaviour does
-  with the answer is specified with the behaviour.
+  and answers with every rule a command breaks, each with the fields of the
+  command it reads. Which rules those are, and the order the broken ones come
+  back in, are the command's own, written with the domain's rules for whatever
+  it carries; what the validation behaviour does with the answer is specified
+  with the behaviour.
+
+  The fields are the command's own even where a rule was written for something
+  smaller that the command carries in one of them — an email address, a name —
+  so that whoever shows a rule knows which of the command's fields it is about
+  without being told a second time.
 
   What every validator shares is that it names the kind of command it is for,
   so registering it needs nothing but the validator, and it is never asked

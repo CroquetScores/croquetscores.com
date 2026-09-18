@@ -65,6 +65,18 @@ Feature: Refusing a request that breaks its rules before anything acts on it
       And the next rule broken is "Range.StartNegative"
       And no other rule is broken
 
+    Scenario: A refusal says which fields each rule broken reads
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example range
+      And it starts at 5
+      And it ends at 3
+      When the example command is sent for the example range
+      Then the first rule broken is "Range.EndBeforeStart"
+      And it reads the field "start"
+      And it reads the field "end"
+      And it reads no other field
+
     Scenario: A query that breaks a rule is refused with every rule it breaks
       Given a validator registered for the example query
       And a handler registered for the example query

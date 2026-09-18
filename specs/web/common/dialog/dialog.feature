@@ -17,10 +17,10 @@ Feature: Forms are shown in a dialog
   register anyone. It is here so that the dialog has a real page to be shown on,
   and it is replaced by the real thing when accounts arrive.
 
-  For testing only, the stand-in also shows every field's message all the time,
-  so that there is always a message whose look can be checked. That is not how a
-  form behaves. A real form shows a message only when its field needs attention,
-  and the rules deciding when arrive with each form's own feature.
+  A form shows a message only when its field needs attention, which is
+  specified with the form. How a message looks is specified here, against an
+  example form that has been refused, because the stand-in has nothing that
+  could refuse it.
 
   Rule: A form takes the place of the panel
 
@@ -264,13 +264,12 @@ Feature: Forms are shown in a dialog
   Rule: A field that needs attention says so beneath itself
 
     A message is shown only when its field needs attention. These scenarios
-    check where a message sits, how it looks and how it is announced. They are
-    run against the stand-in register form because it shows every message all
-    the time for testing — not because a form ever should.
+    check where a message sits, how it looks and how it is announced, on the
+    example form once it has been sent a start below zero, no end and no
+    passphrase, so that several fields have a message to look at.
 
-    Saying what is wanted is not the same as saying something is wrong, so a
-    message does not by itself make its field invalid. A field nobody has typed
-    in is not in error, and a screen reader should not be told it is.
+    A field nobody has typed in is not in error, and a screen reader should not
+    be told it is.
 
     Scenario: Nothing is said to be wrong before anything has been typed
       Given a viewport 1200 pixels wide
@@ -279,23 +278,31 @@ Feature: Forms are shown in a dialog
 
     Scenario: A message sits beneath its field
       Given a viewport 1200 pixels wide
-      When the register page is opened
-      Then every field in the dialog has a message beneath it
+      And the example form is open
+      And "-1" is typed into the start field
+      And the dialog is submitted
+      Then every message in the dialog sits beneath its field
 
     Scenario: The messages are bold
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      And the example form is open
+      And "-1" is typed into the start field
+      And the dialog is submitted
       Then every message in the dialog is bold
 
     Scenario: A message is announced with its field
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      And the example form is open
+      And "-1" is typed into the start field
+      And the dialog is submitted
       Then every message in the dialog is announced with its field
 
     Scenario Outline: The messages are red
       Given a viewport 1200 pixels wide
       And a machine that prefers <theme>
-      When the register page is opened
+      And the example form is open
+      And "-1" is typed into the start field
+      And the dialog is submitted
       Then every message in the dialog is red
 
       Examples:
@@ -306,7 +313,9 @@ Feature: Forms are shown in a dialog
     Scenario Outline: The messages can be read
       Given a viewport 1200 pixels wide
       And a machine that prefers <theme>
-      When the register page is opened
+      And the example form is open
+      And "-1" is typed into the start field
+      And the dialog is submitted
       Then every message in the dialog reads against its content at no less than 4.5 to 1
 
       Examples:
@@ -318,11 +327,6 @@ Feature: Forms are shown in a dialog
 
     Everything in this rule is true of the stand-in only, and goes when the real
     register form replaces it.
-
-    Scenario: For testing only, it shows every field's message before anything is submitted
-      Given a viewport 1200 pixels wide
-      When the register page is opened
-      Then every field in the dialog has a message beneath it
 
     Scenario: It asks for an email address
       Given a viewport 1200 pixels wide
@@ -339,6 +343,20 @@ Feature: Forms are shown in a dialog
       And the register page is open
       When the dialog is submitted
       Then the reader is told registering is not open yet
+
+    Scenario: The email address is still there once it has been submitted
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      And "someone@example.com" is typed into the email address field
+      When the dialog is submitted
+      Then the email address field holds "someone@example.com"
+
+    Scenario: The password is not put back once it has been submitted
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      And "open sesame" is typed into the password field
+      When the dialog is submitted
+      Then the password field is empty
 
     Scenario: Choosing a theme afterwards does not take the answer away
       Given a viewport 1200 pixels wide
