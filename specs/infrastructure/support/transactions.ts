@@ -87,7 +87,7 @@ export const state = (world: SpecWorld): Watched => {
   const found = watched.get(world);
   assert.ok(
     found !== undefined,
-    "This scenario has no unit of work. It starts with a mediator whose commands, or whose queries, run in a transaction, or with an event store.",
+    "This scenario has no unit of work. It starts with a mediator whose commands, or whose queries, run in a transaction, with an event store, or with the application being built.",
   );
   return found;
 };

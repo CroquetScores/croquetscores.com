@@ -38,6 +38,14 @@ const builtFor = (world: SpecWorld): Built => {
 // handed the application's: so "the example command is sent" goes through what
 // the composition root put together, and nothing a step assembled for itself.
 Given("the application is built", async function (this: SpecWorld) {
+  // A step that came first would have made the scenario a mediator of its own
+  // and registered with that, and handing over the application's here would
+  // quietly leave what it registered behind.
+  assert.ok(
+    this.mediator === undefined && this.validation === undefined,
+    "This scenario already has a mediator. The application is built before anything is registered.",
+  );
+
   const databaseUrl = this.database.options.connectionString;
   assert.ok(databaseUrl !== undefined, "The scenario's database has no URL.");
 
@@ -107,15 +115,13 @@ Then("the route answers {string}", function (this: SpecWorld, answer: string) {
 
 // By the time this runs the scenario's database may already have been dropped
 // from under the pool, so a connection failing on its way out says nothing
-// about the scenario, whose verdict is not the teardown's to overturn.
+// about the scenario, whose verdict is not the teardown's to overturn. Each is
+// closed on its own, so that the server failing to close does not leave the
+// pool open, holding the run up until its idle connections time out.
 After({ tags: "@postgres" }, async function (this: SpecWorld) {
   const scenario = built.get(this);
   if (scenario === undefined) return;
-  built.delete(this);
-  try {
-    await scenario.application.server.close();
-    await scenario.application.pool.end();
-  } catch {
-    // Nothing to say, and nothing that saying it would improve.
-  }
+  const { server, pool } = scenario.application;
+  await Promise.allSettled([server.close()]);
+  await Promise.allSettled([pool.end()]);
 });
