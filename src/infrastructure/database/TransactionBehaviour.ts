@@ -3,15 +3,10 @@
 // rolled back when it fails. Everything a command changes stands or falls
 // together.
 //
-// What holds this up so far is the rule in
-// specs/infrastructure/database/read-only-transaction-behaviour/, where four
-// scenarios need a command underway to ask a query inside: they hold it to
-// opening one transaction, to a handler seeing what it has written, and to a
-// failed command leaving nothing behind. Its own scenarios, in
-// specs/infrastructure/database/transaction-behaviour/, cover the edges those
-// do not reach — a commit that fails, a rollback that fails, and a command
-// sent from inside a command, which is refused rather than joined. They are
-// written and not yet running, and that refusal is not built here yet.
+// A command sent while a request is already being served is refused rather
+// than joined — the unit of work says why, since it is what knows whether
+// anything is underway. A query asked inside a command is the other way round,
+// and joins it: see ReadOnlyTransactionBehaviour.
 import type { Behaviour } from "../../application/common/Behaviour.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 

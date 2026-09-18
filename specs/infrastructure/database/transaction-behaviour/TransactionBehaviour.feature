@@ -95,11 +95,16 @@ Feature: Running a command inside one transaction
 
   Rule: A command whose commit fails did not happen
 
-    A commit can fail on its own account — a connection lost, or a constraint
-    held back until the end — and when it does, nothing the command wrote is
-    there. So the sender is told it failed rather than given the answer the
-    handler gave, because an answer would say the change was recorded when
-    nothing was.
+    A commit can fail on its own account, after the handler has answered — a
+    constraint held back until the end is the usual way. When it does, Postgres
+    undoes the transaction itself, so nothing the command wrote stands. That is
+    true of any transaction rather than something this behaviour could get
+    wrong, and a command run without one is caught by the scenarios on rolling
+    back, so it is not asserted again here.
+
+    What this behaviour does decide is what the sender is told. It is told the
+    command failed, rather than given the answer the handler gave, because an
+    answer would say the change was recorded when nothing was.
 
     Scenario: A commit that fails reaches the sender
       Given a handler registered for the example command that answers "recorded"
@@ -107,19 +112,17 @@ Feature: Running a command inside one transaction
       When the example command is sent
       Then sending it fails with the commit's own failure
 
-    Scenario: Nothing the command wrote is there when the commit failed
-      Given a place to keep notes
-      And a handler registered for the example command that writes the note "opened"
-      And the commit will fail
-      When the example command is sent
-      Then no notes are there
-
   Rule: The connection is given back however the command ends
 
     A connection still held after the command that borrowed it has finished is
     one the next request cannot have, and enough of them is a site that has
     stopped answering. It is given back whether the command answered, failed,
     or failed on the way out.
+
+    And it is given back with no transaction open on it. A connection handed on
+    mid-transaction is worse than one never handed on at all: the next request
+    to borrow it carries on inside the failed command's transaction, and its
+    commit makes what the failed command wrote stand.
 
     Scenario: The connection is given back when the command answers
       Given a handler registered for the example command
@@ -136,6 +139,13 @@ Feature: Running a command inside one transaction
       And the commit will fail
       When the example command is sent
       Then every connection has been given back
+
+    Scenario: No transaction is left open on a connection given back after a failure
+      Given a place to keep notes
+      And a handler registered for the example command that writes the note "opened"
+      And the handler fails after writing the note
+      When the example command is sent
+      Then no connection is left in a transaction
 
   Rule: A connection belongs to the request being served, and there is none outside one
 

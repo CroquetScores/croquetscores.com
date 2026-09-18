@@ -58,11 +58,24 @@ export class UnitOfWork {
 
   /**
    * Runs `serve` inside a transaction it may write in, committed when it
-   * answers and rolled back when it fails.
+   * answers and rolled back when it fails. Refused with
+   * `UnitOfWork.AlreadyUnderway` when a request is already being served here.
    */
   async inTransaction<TResult>(
     serve: () => Promise<TResult>,
   ): Promise<TResult> {
+    // One command is one unit of work. Joining the transaction underway would
+    // have an outer rollback undo work the inner command's sender was told was
+    // recorded; a transaction of its own would let the outer one fail and leave
+    // the inner one's work standing alone. Neither is worth having, so it is
+    // refused here, where it is attempted, rather than found later in what the
+    // two of them left behind.
+    if (this.isUnderway) {
+      throw new UnitOfWorkRefused(
+        "UnitOfWork.AlreadyUnderway",
+        "A command was sent while another request was being served, and one request is one unit of work.",
+      );
+    }
     return this.around("begin", serve);
   }
 
@@ -97,6 +110,7 @@ export class UnitOfWork {
     serve: () => Promise<TResult>,
   ): Promise<TResult> {
     const connection = await this.pool.connect();
+    listenForItsLoss(connection);
     try {
       await connection.query(begin);
       const answer = await this.underway.run(connection, serve);
@@ -118,3 +132,24 @@ export class UnitOfWork {
     }
   }
 }
+
+// Connections that have been given a listener for their loss, so that each is
+// given one for its whole life rather than another every time it is borrowed.
+const listening = new WeakSet<PoolClient>();
+
+// A connection lost while it is held — a backend restarted, a failover, an
+// administrator ending it — is reported on the connection itself when no
+// statement is running to report it on instead. An EventEmitter with nobody
+// listening for `error` throws, which here would take the whole process down
+// over one request's connection. The pool listens to the connections it holds
+// idle (see pool.ts), and nothing listened to the ones held by a request.
+//
+// Nothing needs doing when it happens. The next statement on the connection
+// fails in the ordinary way, and that failure goes wherever the request's
+// failures go; the pool discards a connection that can no longer be used when
+// it is given back.
+const listenForItsLoss = (connection: PoolClient): void => {
+  if (listening.has(connection)) return;
+  connection.on("error", () => {});
+  listening.add(connection);
+};

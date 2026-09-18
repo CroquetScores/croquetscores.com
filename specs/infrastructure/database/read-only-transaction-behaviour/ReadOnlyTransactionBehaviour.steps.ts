@@ -1,90 +1,25 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
-import { Client, type Pool, type PoolClient } from "pg";
 
 import { ReadOnlyTransactionBehaviour } from "../../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../../src/infrastructure/database/TransactionBehaviour.js";
-import {
-  UnitOfWork,
-  UnitOfWorkRefused,
-} from "../../../../src/infrastructure/database/UnitOfWork.js";
+import { UnitOfWork } from "../../../../src/infrastructure/database/UnitOfWork.js";
 import {
   attempt,
-  ExampleCommand,
   exampleHandler,
   ExampleQuery,
   mediatorOf,
 } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
-
-// What the scenario set up, and what came of it. Kept here rather than on the
-// world because the world is loaded by every spec in the repository and so may
-// not name anything from src/infrastructure/, which all of this is.
-interface Watched {
-  readonly unitOfWork: UnitOfWork;
-  // The connection each request found itself running on, in the order the
-  // requests asked for it. Comparing connections is how a scenario says two
-  // things ran inside the same transaction, or that they did not.
-  readonly queryConnections: PoolClient[];
-  commandConnection?: PoolClient;
-  readerConnection?: PoolClient;
-  // What the example command's handler does when it is called, in the order the
-  // scenario asked for it.
-  commandDoes?: (() => Promise<void>)[];
-  noteTheCommandWrote?: string;
-  // The second of two reads by a query that reads twice, and whatever the
-  // scenario arranged to happen in between them.
-  secondRead?: string[];
-  betweenReads?: () => Promise<void>;
-  whatTheQueryFound?: string[];
-  askingFailure?: unknown;
-}
-
-const watched = new WeakMap<SpecWorld, Watched>();
-
-const state = (world: SpecWorld): Watched => {
-  const found = watched.get(world);
-  assert.ok(
-    found !== undefined,
-    "This scenario has no mediator whose queries run in a read-only transaction.",
-  );
-  return found;
-};
-
-const readNotes = async (connection: PoolClient | Pool): Promise<string[]> => {
-  const { rows } = await connection.query<{ note: string }>(
-    "select note from notes order by note",
-  );
-  return rows.map((row) => row.note);
-};
-
-const writeNote = async (
-  connection: PoolClient | Pool,
-  note: string,
-): Promise<void> => {
-  await connection.query("insert into notes (note) values ($1)", [note]);
-};
-
-// The example command's handler, made on first mention and added to by each
-// step that says something more about what it does.
-const commandDoes = (world: SpecWorld): (() => Promise<void>)[] => {
-  const scenario = state(world);
-  const existing = scenario.commandDoes;
-  if (existing !== undefined) return existing;
-
-  const does: (() => Promise<void>)[] = [];
-  scenario.commandDoes = does;
-  mediatorOf(world).handleCommand(ExampleCommand, {
-    handle: async (): Promise<string> => {
-      world.handled.push("example command");
-      scenario.commandConnection = scenario.unitOfWork.connection();
-      for (const step of does) await step();
-      return "recorded";
-    },
-  });
-  return does;
-};
+import {
+  commandDoes,
+  meetingOfTwo,
+  readNotes,
+  state,
+  watch,
+  writeNote,
+} from "../../support/transactions.js";
 
 // Putting the mediator together -----------------------------------------
 
@@ -92,7 +27,7 @@ Given(
   "a mediator whose queries run in a read-only transaction",
   function (this: SpecWorld) {
     const unitOfWork = new UnitOfWork(this.database);
-    watched.set(this, { unitOfWork, queryConnections: [] });
+    const scenario = watch(this, unitOfWork);
     mediatorOf(this).addQueryBehaviour(
       new ReadOnlyTransactionBehaviour(unitOfWork),
     );
@@ -101,7 +36,7 @@ Given(
     // the shared handler serves a scenario about connections without being
     // written for one.
     this.whatTheExampleHandlerAlsoDoes.push(() => {
-      state(this).queryConnections.push(unitOfWork.connection());
+      scenario.queryConnections.push(unitOfWork.connection());
       return Promise.resolve();
     });
   },
@@ -115,10 +50,6 @@ Given(
     );
   },
 );
-
-Given("a place to keep notes", async function (this: SpecWorld) {
-  await this.database.query("create table notes (note text not null)");
-});
 
 // What the handlers do ---------------------------------------------------
 
@@ -206,18 +137,12 @@ Given(
   "a handler registered for the example query that waits until both queries have a connection",
   function (this: SpecWorld) {
     const scenario = state(this);
-    let arrived = 0;
-    let bothHaveOne = (): void => {};
-    const both = new Promise<void>((resolve) => {
-      bothHaveOne = resolve;
-    });
+    const meet = meetingOfTwo();
 
     mediatorOf(this).handleQuery(ExampleQuery, {
       handle: async (): Promise<string> => {
         // Reaching here is having one: the behaviour opened it on the way in.
-        arrived += 1;
-        if (arrived === 2) bothHaveOne();
-        await both;
+        await meet();
 
         // Asked for only once both are underway, which is the whole point. Were
         // the connection kept in a field rather than followed along with the
@@ -229,17 +154,6 @@ Given(
         return "found";
       },
     });
-  },
-);
-
-Given(
-  "a handler registered for the example command that writes the note {string}",
-  function (this: SpecWorld, note: string) {
-    const scenario = state(this);
-    scenario.noteTheCommandWrote = note;
-    commandDoes(this).push(() =>
-      writeNote(scenario.unitOfWork.connection(), note),
-    );
   },
 );
 
@@ -296,16 +210,6 @@ When(
     );
   },
 );
-
-When("the connection is asked for", function (this: SpecWorld) {
-  const scenario = state(this);
-  try {
-    scenario.unitOfWork.connection();
-    scenario.askingFailure = undefined;
-  } catch (failure) {
-    scenario.askingFailure = failure;
-  }
-});
 
 // What came of it --------------------------------------------------------
 
@@ -380,17 +284,6 @@ Then("the query found the note", function (this: SpecWorld) {
   );
 });
 
-Then(
-  "the note {string} is there",
-  async function (this: SpecWorld, note: string) {
-    assert.ok((await readNotes(this.database)).includes(note));
-  },
-);
-
-Then("no notes are there", async function (this: SpecWorld) {
-  assert.deepEqual(await readNotes(this.database), []);
-});
-
 // 25006 is read_only_sql_transaction: Postgres refusing the write, which is
 // the point. The code rather than the sentence, because the sentence is for
 // whoever reads the log.
@@ -406,54 +299,5 @@ Then(
       "25006",
       `Asking failed with ${inspect(this.failure)}.`,
     );
-  },
-);
-
-Then(
-  "asking is refused with {string}",
-  function (this: SpecWorld, code: string) {
-    const failure = state(this).askingFailure;
-    assert.ok(
-      failure instanceof UnitOfWorkRefused,
-      `Expected a refusal, and got ${failure === undefined ? "a connection" : inspect(failure)}.`,
-    );
-    assert.equal(failure.code, code);
-  },
-);
-
-Then("every connection has been given back", function (this: SpecWorld) {
-  const pool = this.database;
-  assert.equal(pool.waitingCount, 0, "Something is still waiting for one.");
-  assert.equal(
-    pool.totalCount - pool.idleCount,
-    0,
-    `${pool.totalCount - pool.idleCount} connection(s) never came back.`,
-  );
-});
-
-// Asked on a connection of its own rather than through the pool being checked.
-// The pool would hand back one of the connections in question — quite possibly
-// the very one — and a connection busy running this query reads as "active"
-// rather than the "idle in transaction" it is being caught at, so the check
-// would clear the culprit by asking it.
-Then(
-  "no connection is left in a transaction",
-  async function (this: SpecWorld) {
-    const outside = new Client({
-      connectionString: this.database.options.connectionString,
-    });
-    await outside.connect();
-    try {
-      const { rows } = await outside.query<{ left: number }>(
-        `select count(*)::int as "left"
-           from pg_stat_activity
-          where datname = current_database()
-            and pid <> pg_backend_pid()
-            and state in ('idle in transaction', 'idle in transaction (aborted)')`,
-      );
-      assert.equal(rows[0]?.left, 0, "A connection went back mid-transaction.");
-    } finally {
-      await outside.end();
-    }
   },
 );
