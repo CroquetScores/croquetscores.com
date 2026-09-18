@@ -11,7 +11,7 @@ import { inspect } from "node:util";
 import { Client, type Pool, type PoolClient } from "pg";
 
 import {
-  type UnitOfWork,
+  UnitOfWork,
   UnitOfWorkRefused,
 } from "../../../src/infrastructure/database/UnitOfWork.js";
 import {
@@ -49,22 +49,30 @@ export interface Watched {
 
 const watched = new WeakMap<SpecWorld, Watched>();
 
-/** Begins a scenario's record of the unit of work it put together. */
-export const watch = (world: SpecWorld, unitOfWork: UnitOfWork): Watched => {
+/**
+ * The scenario's unit of work, made over its database the first time anything
+ * asks. One scenario has one, whichever step names it first: a store and a
+ * mediator that each made their own would be serving two different requests,
+ * and nothing the store appended would be part of the command that asked it to.
+ */
+export const unitOfWorkOf = (world: SpecWorld): UnitOfWork => {
+  const existing = watched.get(world);
+  if (existing !== undefined) return existing.unitOfWork;
+
   const scenario: Watched = {
-    unitOfWork,
+    unitOfWork: new UnitOfWork(world.database),
     commandConnections: [],
     queryConnections: [],
   };
   watched.set(world, scenario);
-  return scenario;
+  return scenario.unitOfWork;
 };
 
 export const state = (world: SpecWorld): Watched => {
   const found = watched.get(world);
   assert.ok(
     found !== undefined,
-    "This scenario has no unit of work. It starts with a mediator whose commands, or whose queries, run in a transaction.",
+    "This scenario has no unit of work. It starts with a mediator whose commands, or whose queries, run in a transaction, or with an event store.",
   );
   return found;
 };

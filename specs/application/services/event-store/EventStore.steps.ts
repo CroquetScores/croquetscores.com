@@ -2,83 +2,24 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
-import {
-  AppendRefused,
-  type EventStore,
-} from "../../../../src/application/services/EventStore.js";
+import type { EventStore } from "../../../../src/application/services/EventStore.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
-import { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
+import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import type { Id } from "../../../../src/domain/common/Id.js";
-import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
+import {
+  causedBy,
+  ExampleEvent,
+  exampleEvent,
+  happenedAt,
+  OtherEvent,
+  otherEvent,
+} from "../../../support/exampleEvents.js";
 import type { SpecWorld } from "../../../support/world.js";
 
-// An event that exists only to exercise the store. It is called something so
-// that a scenario can tell which came back where.
-class ExampleEvent extends DomainEvent {
-  constructor(
-    readonly called: string,
-    createdBy: AccountId,
-    occurredAt: ReadOnlyDate,
-  ) {
-    super(createdBy, occurredAt);
-  }
-}
-
-// Every example event is caused by one account at one moment. Nothing here
-// reads a clock, any more than the application does.
-const causedBy = AccountId.from("account/123e4567-e89b-42d3-a456-426614174000");
-const happenedAt = ReadOnlyDate.from(new Date("2026-09-17T09:00:00Z"));
-
-const exampleEvent = (called: string): ExampleEvent =>
-  new ExampleEvent(called, causedBy, happenedAt);
-
-// A store that keeps its streams in memory. It is what stands behind these
-// scenarios until there is a store that keeps them somewhere, and it is here
-// rather than under src because nothing but these scenarios uses it.
-class InMemoryEventStore implements EventStore {
-  readonly #streams = new Map<string, DomainEvent[]>();
-
-  appendEvents(
-    streamId: Id,
-    expectedVersion: number,
-    events: readonly DomainEvent[],
-  ): Promise<void> {
-    if (!Number.isInteger(expectedVersion) || expectedVersion < 0) {
-      return Promise.reject(
-        new AppendRefused(
-          "EventStore.VersionNotACount",
-          `${String(expectedVersion)} is not a version a stream could be at.`,
-        ),
-      );
-    }
-
-    if (events.length === 0) {
-      return Promise.reject(
-        new AppendRefused(
-          "EventStore.NothingToAppend",
-          `Nothing was given to append to ${streamId.value}.`,
-        ),
-      );
-    }
-
-    const stream = this.#streams.get(streamId.value) ?? [];
-    if (stream.length !== expectedVersion) {
-      return Promise.reject(
-        new AppendRefused(
-          "EventStore.Concurrency",
-          `${streamId.value} is at version ${stream.length}, and the append expected ${expectedVersion}.`,
-        ),
-      );
-    }
-
-    this.#streams.set(streamId.value, [...stream, ...events]);
-    return Promise.resolve();
-  }
-
-  getEvents(streamId: Id): Promise<readonly DomainEvent[]> {
-    return Promise.resolve([...(this.#streams.get(streamId.value) ?? [])]);
-  }
-}
+// What stands behind "an event store" is decided by the steps of whatever
+// implements one, which name it, and this file may not: it describes the
+// interface, and is held to the rule of the layer it describes. Those steps
+// also say what a request is, and every call made here is made as one.
 
 const storeOf = (world: SpecWorld): EventStore => {
   assert.ok(world.eventStore !== undefined, "No event store has been given.");
@@ -113,7 +54,9 @@ const append = async (
   // again names what it appends again.
   world.pendingEvents = [];
   try {
-    await storeOf(world).appendEvents(stream, expectedVersion, events);
+    await world.asARequest(() =>
+      storeOf(world).appendEvents(stream, expectedVersion, events),
+    );
   } catch (failure) {
     world.failure = failure;
   }
@@ -124,7 +67,7 @@ const append = async (
 const eventAt = (world: SpecWorld, position: number, called: string): void => {
   const event = readBackOf(world)[position];
   assert.ok(
-    event instanceof ExampleEvent,
+    event instanceof ExampleEvent || event instanceof OtherEvent,
     `There is no event ${position + 1}.`,
   );
   assert.equal(event.called, called);
@@ -132,14 +75,6 @@ const eventAt = (world: SpecWorld, position: number, called: string): void => {
 };
 
 // The store and its streams --------------------------------------------
-
-// The store behind these scenarios is whatever a hook has put in the world,
-// and this one when nothing has. That is what lets a store that keeps events
-// somewhere be held to the same scenarios, by a hook and a tag, without a
-// copy of them.
-Given("an event store", function (this: SpecWorld) {
-  this.eventStore ??= new InMemoryEventStore();
-});
 
 Given("a stream nobody has written to", function (this: SpecWorld) {
   this.streams.push(AccountId.create());
@@ -158,13 +93,20 @@ Given(
     const already = Array.from({ length: count }, (_, index) =>
       exampleEvent(`already there ${index + 1}`),
     );
-    await storeOf(this).appendEvents(stream, 0, already);
+    await this.asARequest(() => storeOf(this).appendEvents(stream, 0, already));
   },
 );
 
 Given("an event called {string}", function (this: SpecWorld, called: string) {
   this.pendingEvents.push(exampleEvent(called));
 });
+
+Given(
+  "an event of the other kind called {string}",
+  function (this: SpecWorld, called: string) {
+    this.pendingEvents.push(otherEvent(called));
+  },
+);
 
 // Appending and reading back ---------------------------------------------
 
@@ -205,7 +147,9 @@ When(
 );
 
 When("the stream is read back", async function (this: SpecWorld) {
-  this.readBack = await storeOf(this).getEvents(streamOf(this, 0));
+  this.readBack = await this.asARequest(() =>
+    storeOf(this).getEvents(streamOf(this, 0)),
+  );
 });
 
 // A caller doing as it likes with what it was given. A store that handed back
@@ -215,7 +159,9 @@ When("what was read back is added to", function (this: SpecWorld) {
 });
 
 When("the other stream is read back", async function (this: SpecWorld) {
-  this.readBack = await storeOf(this).getEvents(streamOf(this, 1));
+  this.readBack = await this.asARequest(() =>
+    storeOf(this).getEvents(streamOf(this, 1)),
+  );
 });
 
 // What came of it --------------------------------------------------------
@@ -272,10 +218,15 @@ Then("appending is accepted", function (this: SpecWorld) {
 Then(
   "appending is refused with {string}",
   function (this: SpecWorld, code: string) {
+    const failure = this.failure as { code?: unknown } | undefined;
     assert.ok(
-      this.failure instanceof AppendRefused,
-      `Expected a refusal, and got ${this.failure === undefined ? "an accepted append" : inspect(this.failure)}.`,
+      failure !== undefined,
+      "Expected a refusal, and the append was accepted.",
     );
-    assert.equal(this.failure.code, code);
+    assert.equal(
+      failure.code,
+      code,
+      `It was refused with ${inspect(failure)}.`,
+    );
   },
 );

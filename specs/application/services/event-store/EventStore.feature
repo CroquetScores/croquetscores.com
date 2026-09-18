@@ -1,3 +1,4 @@
+@postgres
 Feature: Keeping what happened, in the order it happened
 
   Everything that changes is recorded as events, and the event store is where
