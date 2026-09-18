@@ -28,16 +28,23 @@ Feature: A query's handler names the query it handles
       Then it is refused with "Mediator.Unhandled"
       And the example query's handler has not been called
 
-  Rule: A handler naming a command cannot be registered as a query's
+  Rule: A handler naming anything but a query cannot be registered as a query's
 
     Which door a request comes in by is settled before anything else is asked
     of it: a command is sent and a query is asked. A handler naming a command,
     registered among the queries', would let that command in by the query's
     door — where it would pass the command's validation by and run in a
     transaction that cannot write. So it is refused when it is registered,
-    rather than found when the command comes through the wrong way.
+    rather than found when the command comes through the wrong way. So is one
+    naming something that is no request at all: what a query's handler names
+    has to be a query, not merely something other than a command.
 
     Scenario: A handler naming a command rather than a query is refused
       Given a handler that handles the example command rather than a query
+      When the handler is registered
+      Then registering it is refused with "Mediator.WrongDoor"
+
+    Scenario: A handler naming something that is not a request at all is refused
+      Given a handler for queries that handles something that is not a request
       When the handler is registered
       Then registering it is refused with "Mediator.WrongDoor"

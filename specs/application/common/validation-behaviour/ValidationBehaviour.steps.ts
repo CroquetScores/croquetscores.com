@@ -5,28 +5,18 @@ import {
   RequestInvalid,
   ValidationBehaviour,
 } from "../../../../src/application/common/ValidationBehaviour.js";
-import { type Range, ranges } from "../../../support/exampleRange.js";
+import type { Range } from "../../../support/exampleRange.js";
 import {
   askedAt,
   attempt,
   ExampleCommand,
+  ExampleCommandValidator,
   ExampleQuery,
+  ExampleQueryValidator,
   mediatorOf,
+  validationOf,
 } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
-
-// The behaviour a scenario put in the mediator's lines. Kept here rather than
-// on the world, which names nothing a single feature alone has any use for.
-const behaviours = new WeakMap<SpecWorld, ValidationBehaviour>();
-
-const behaviourOf = (world: SpecWorld): ValidationBehaviour => {
-  const behaviour = behaviours.get(world);
-  assert.ok(
-    behaviour !== undefined,
-    "This scenario's requests are not validated.",
-  );
-  return behaviour;
-};
 
 const rangeOf = (world: SpecWorld): Range => {
   assert.ok(world.range !== undefined, "No example range has been given.");
@@ -61,24 +51,22 @@ const registeringAnother = (world: SpecWorld, register: () => void): void => {
 // The one behaviour stands in both lines, as it does in the application.
 Given("a mediator whose requests are validated", function (this: SpecWorld) {
   const behaviour = new ValidationBehaviour();
-  behaviours.set(this, behaviour);
+  this.validation = behaviour;
   mediatorOf(this).addCommandBehaviour(behaviour);
   mediatorOf(this).addQueryBehaviour(behaviour);
 });
 
-// The example requests are ranges in their own right, so the validator's
-// example rules are the requests' rules, as they stand.
 Given(
   "a validator registered for the example command",
   function (this: SpecWorld) {
-    behaviourOf(this).validate(ExampleCommand, ranges);
+    validationOf(this).register(new ExampleCommandValidator());
   },
 );
 
 Given(
   "a validator registered for the example query",
   function (this: SpecWorld) {
-    behaviourOf(this).validate(ExampleQuery, ranges);
+    validationOf(this).register(new ExampleQueryValidator());
   },
 );
 
@@ -86,7 +74,7 @@ When(
   "another validator is registered for the example command",
   function (this: SpecWorld) {
     registeringAnother(this, () =>
-      behaviourOf(this).validate(ExampleCommand, ranges),
+      validationOf(this).register(new ExampleCommandValidator()),
     );
   },
 );
@@ -95,7 +83,7 @@ When(
   "another validator is registered for the example query",
   function (this: SpecWorld) {
     registeringAnother(this, () =>
-      behaviourOf(this).validate(ExampleQuery, ranges),
+      validationOf(this).register(new ExampleQueryValidator()),
     );
   },
 );

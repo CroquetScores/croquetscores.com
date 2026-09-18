@@ -300,21 +300,34 @@ Each step is finished when its `.feature` files pass. Write the feature first, h
 In `src/application/common/`, and small:
 
 ```ts
-export interface Command<TResult> {
-  readonly requestedAt: ReadOnlyDate;
-  readonly _result?: TResult;
+export abstract class Command<TResult> {
+  get requestedAt(): ReadOnlyDate;
+  get requestedBy(): AccountId | undefined;
 }
 
-export interface Query<TResult> {
-  readonly _result?: TResult;
+export abstract class Query<TResult> {}
+
+export abstract class CommandHandler<
+  TCommand extends Command<TResult>,
+  TResult,
+> {
+  abstract readonly handles: RequestType<TCommand>;
+  abstract handle(command: TCommand): Promise<TResult>;
 }
 
-export interface CommandHandler<TCommand extends Command<TResult>, TResult> {
-  handle(command: TCommand): Promise<TResult>;
+export abstract class CommandValidator<TCommand extends Command<unknown>> {
+  abstract readonly validates: RequestType<TCommand>;
+  abstract validate(command: TCommand): readonly string[];
 }
 
-export interface QueryHandler<TQuery extends Query<TResult>, TResult> {
-  handle(query: TQuery): Promise<TResult>;
+export abstract class QueryHandler<TQuery extends Query<TResult>, TResult> {
+  abstract readonly handles: RequestType<TQuery>;
+  abstract handle(query: TQuery): Promise<TResult>;
+}
+
+export abstract class QueryValidator<TQuery extends Query<unknown>> {
+  abstract readonly validates: RequestType<TQuery>;
+  abstract validate(query: TQuery): readonly string[];
 }
 
 export interface Behaviour {
@@ -322,16 +335,18 @@ export interface Behaviour {
 }
 
 export class Mediator {
+  handleCommand(handler: CommandHandler<TCommand, TResult>): void;
+  handleQuery(handler: QueryHandler<TQuery, TResult>): void;
   send<TResult>(command: Command<TResult>): Promise<TResult>;
   query<TResult>(query: Query<TResult>): Promise<TResult>;
 }
 ```
 
-Handlers register against a command or query constructor. `send` and `query` each find the one handler registered for what they were given, wrap it in that side's behaviour pipeline and run it.
+A command says when it was asked for, and who asked if anybody signed in did; it is refused where it is made if it cannot say when. A query says nothing about itself, and is a class so that it can be told from a command: asking a command as a query does not compile, as sending a query as a command does not. Every handler and validator names the request it is for, so registering one takes nothing else, and a handler naming the other side's request is refused as the wrong door. `send` and `query` each find the one handler registered for what they were given, wrap it in that side's behaviour pipeline and run it. What every command, handler and validator shares is specified in `specs/application/common/`: `command/`, `command-handler/`, `command-validator/`, `query-handler/` and `query-validator/`.
 
 A second handler for a request is refused when it is registered. A request with **no** handler cannot be caught the same way: the mediator learns that a request exists only when something registers a handler for it, so it has no way to know about one nobody registered. That is refused when the request is sent instead. Catching it at startup would take the composition root declaring every request the web layer can send and checking each against the registrations — which is not built, and would be its own feature.
 
-Which door a request came through is settled before anything else is asked of it, so a query handed to `send` is refused as the wrong door rather than as a command missing its time. A command that does not say when it was asked for is refused before any behaviour sees it, because every event it records is stamped with that time (§7.4). Behaviours wrap the handler like layers: the first registered is the outermost, the first to see a request going in and the last to see its answer, or its failure, coming out. The codes each refusal carries, and the rest of this as scenarios, are in `specs/application/common/mediator/Mediator.feature`.
+Which door a request came through is settled before anything else is asked of it, so a query handed to `send` is refused as the wrong door rather than anything else about it. A command that does not say when it was asked for never gets as far as the mediator, because every event it records is stamped with that time (§7.4) and it is refused where it is made. Behaviours wrap the handler like layers: the first registered is the outermost, the first to see a request going in and the last to see its answer, or its failure, coming out. The codes each refusal carries, and the rest of this as scenarios, are in `specs/application/common/mediator/Mediator.feature`.
 
 There are two pipelines because the two sides need different things of them. A command runs **logging → validation → transaction → handler**: validation rejects it before a transaction is opened, and the transaction behaviour commits the unit of work, appends the events the aggregates recorded together with the projections those events drive, and publishes only after the commit succeeds. A query runs **logging → validation → read-only transaction → handler**: a transaction so that everything answering one query reads the database as of one moment, and read-only so that a write on the read side is refused by Postgres rather than by a rule somebody has to remember. One moment takes repeatable read rather than the read committed a transaction gets by default, because read committed takes a fresh snapshot for every statement: a query reading twice inside one of those still reads two moments, and the transaction would be buying nothing a query wants. A command keeps read committed, because repeatable read would have it fail over anything another command touched while it ran. Both pipelines are specified in `specs/infrastructure/database/`, against Postgres, because what is worth knowing about a commit is whether anything was written.
 

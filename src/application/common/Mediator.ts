@@ -6,11 +6,11 @@
 // separate doors, have separate handlers and run separate behaviours, because a
 // command is run inside a transaction it writes in and has to commit, and a
 // query inside a read-only one.
-import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Behaviour } from "./Behaviour.js";
-import type { Command } from "./Command.js";
-import type { CommandHandler, QueryHandler } from "./Handler.js";
-import type { Query } from "./Query.js";
+import { Command } from "./Command.js";
+import type { CommandHandler } from "./CommandHandler.js";
+import { Query } from "./Query.js";
+import type { QueryHandler } from "./QueryHandler.js";
 
 /** A class whose instances are requests of one kind. */
 export type RequestType<TRequest> = abstract new (
@@ -49,18 +49,41 @@ export class Mediator {
   private readonly commandBehaviours: Behaviour[] = [];
   private readonly queryBehaviours: Behaviour[] = [];
 
+  /**
+   * Registers `handler` for the command it names. A handler naming anything
+   * but a command is refused as the wrong door: registered here, it would let
+   * that request in by the command's.
+   */
   handleCommand<TCommand extends Command<TResult>, TResult>(
-    type: RequestType<TCommand>,
     handler: CommandHandler<TCommand, TResult>,
   ): void {
+    const type = handler.handles;
+    if (!(type.prototype instanceof Command)) {
+      throw new RequestRefused(
+        "Mediator.WrongDoor",
+        `${type.name || "What that handler names"} is not a command, so its handler cannot be registered as a command's.`,
+      );
+    }
     if (this.commandHandlers.has(type)) throw alreadyHandled(type);
     this.commandHandlers.set(type, handler);
   }
 
+  /**
+   * Registers `handler` for the query it names. A handler naming anything but
+   * a query is refused as the wrong door: registered here, a command's would
+   * let the command in by the query's, past the command's own validation and
+   * into a transaction that cannot write.
+   */
   handleQuery<TQuery extends Query<TResult>, TResult>(
-    type: RequestType<TQuery>,
     handler: QueryHandler<TQuery, TResult>,
   ): void {
+    const type = handler.handles;
+    if (!(type.prototype instanceof Query)) {
+      throw new RequestRefused(
+        "Mediator.WrongDoor",
+        `${type.name || "What that handler names"} is not a query, so its handler cannot be registered as a query's.`,
+      );
+    }
     if (this.queryHandlers.has(type)) throw alreadyHandled(type);
     this.queryHandlers.set(type, handler);
   }
@@ -75,23 +98,15 @@ export class Mediator {
   }
 
   async send<TResult>(command: Command<TResult>): Promise<TResult> {
-    // Which door comes first. A query handed in here is the wrong door, and
-    // should be told so rather than told it has forgotten a time it never had.
+    // Which door comes first, so that a query handed in here is told it came
+    // the wrong way rather than anything else about it. A command that cannot
+    // say when it was asked for never gets this far: it is refused where it is
+    // made, which is also where whoever is looking for the fault should look.
     const handler = this.commandHandlers.get(command.constructor);
     if (handler === undefined) {
       throw this.queryHandlers.has(command.constructor)
         ? wrongDoor(command, "a query", "asked")
         : unhandled(command);
-    }
-
-    // Only a missing time is looked for. A time that cannot be read never
-    // gets this far: it is refused where the read-only date is made, at the
-    // edge, which is also where whoever is looking for the fault should look.
-    if (!(command.requestedAt instanceof ReadOnlyDate)) {
-      throw new RequestRefused(
-        "Command.RequestedAtMissing",
-        `${nameOf(command)} does not say when it was asked for.`,
-      );
     }
 
     return run(

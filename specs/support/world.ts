@@ -6,7 +6,15 @@ import type { BrowserContext, Page } from "playwright";
 
 // The application and domain layers, which this file may name: the rule it
 // keeps is only that it names nothing from infrastructure or the web.
+import type { Command } from "../../src/application/common/Command.js";
+import type { CommandHandler } from "../../src/application/common/CommandHandler.js";
 import type { Mediator } from "../../src/application/common/Mediator.js";
+import type { Query } from "../../src/application/common/Query.js";
+import type { QueryHandler } from "../../src/application/common/QueryHandler.js";
+import type {
+  RequestValidator,
+  ValidationBehaviour,
+} from "../../src/application/common/ValidationBehaviour.js";
 import type { EventStore } from "../../src/application/services/EventStore.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
@@ -51,6 +59,18 @@ export class SpecWorld extends World {
   // answer or the failure, which handlers were called, and everything its
   // behaviours and handlers did, in the order they did it.
   public mediator: Mediator | undefined;
+  // The validation behaviour in the mediator's lines, when a scenario puts one
+  // there, so that more than one feature's steps can register with it.
+  public validation: ValidationBehaviour | undefined;
+  // A handler or validator a scenario has made and not yet registered. A
+  // handler says which side's it is, because registering one is a different
+  // question on each side; a validator is registered the same way on both.
+  public unregisteredHandler:
+    | { side: "command"; handler: CommandHandler<Command<string>, string> }
+    | { side: "query"; handler: QueryHandler<Query<string>, string> }
+    | undefined;
+  public unregisteredValidator:
+    RequestValidator<Command<unknown> | Query<unknown>> | undefined;
   public answer: unknown;
   public failure: unknown;
   public handled: string[] = [];

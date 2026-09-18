@@ -7,6 +7,7 @@ import { TransactionBehaviour } from "../../../../src/infrastructure/database/Tr
 import {
   attempt,
   exampleHandler,
+  exampleQueryHandler,
   ExampleQuery,
   mediatorOf,
 } from "../../../support/examples.js";
@@ -67,7 +68,8 @@ Given(
   "a handler registered for the example query that reads the notes twice",
   function (this: SpecWorld) {
     const scenario = state(this);
-    mediatorOf(this).handleQuery(ExampleQuery, {
+    mediatorOf(this).handleQuery({
+      handles: ExampleQuery,
       handle: async (): Promise<string> => {
         const connection = scenario.unitOfWork.connection();
         scenario.queryConnections.push(connection);
@@ -98,7 +100,8 @@ Given(
   "a handler registered for the example query that writes the note {string}",
   function (this: SpecWorld, note: string) {
     const scenario = state(this);
-    mediatorOf(this).handleQuery(ExampleQuery, {
+    mediatorOf(this).handleQuery({
+      handles: ExampleQuery,
       handle: async (): Promise<string> => {
         const connection = scenario.unitOfWork.connection();
         scenario.queryConnections.push(connection);
@@ -113,7 +116,8 @@ Given(
   "a handler registered for the example query that looks for the note",
   function (this: SpecWorld) {
     const scenario = state(this);
-    mediatorOf(this).handleQuery(ExampleQuery, {
+    mediatorOf(this).handleQuery({
+      handles: ExampleQuery,
       handle: async (): Promise<string> => {
         const connection = scenario.unitOfWork.connection();
         scenario.queryConnections.push(connection);
@@ -128,8 +132,10 @@ Given(
   "a handler registered for the example query that fails",
   function (this: SpecWorld) {
     mediatorOf(this).handleQuery(
-      ExampleQuery,
-      exampleHandler(this, "example query", "never answered", true),
+      exampleQueryHandler(
+        ExampleQuery,
+        exampleHandler(this, "example query", "never answered", true),
+      ),
     );
   },
 );
@@ -140,7 +146,8 @@ Given(
     const scenario = state(this);
     const meet = meetingOfTwo();
 
-    mediatorOf(this).handleQuery(ExampleQuery, {
+    mediatorOf(this).handleQuery({
+      handles: ExampleQuery,
       handle: async (): Promise<string> => {
         // Reaching here is having one: the behaviour opened it on the way in.
         await meet();
