@@ -58,21 +58,36 @@ const watched = new WeakMap<SpecWorld, Watched>();
 export const unitOfWorkOf = (world: SpecWorld): UnitOfWork => {
   const existing = watched.get(world);
   if (existing !== undefined) return existing.unitOfWork;
+  return useUnitOfWork(world, new UnitOfWork(world.database));
+};
 
-  const scenario: Watched = {
-    unitOfWork: new UnitOfWork(world.database),
+/**
+ * Makes `unitOfWork` the scenario's, for a scenario about something that was
+ * put together with one of its own — the application, say — so that the
+ * handlers the steps register ask the connection of the unit of work the
+ * requests are actually running in.
+ */
+export const useUnitOfWork = (
+  world: SpecWorld,
+  unitOfWork: UnitOfWork,
+): UnitOfWork => {
+  assert.ok(
+    !watched.has(world),
+    "This scenario already has a unit of work, so another cannot be its.",
+  );
+  watched.set(world, {
+    unitOfWork,
     commandConnections: [],
     queryConnections: [],
-  };
-  watched.set(world, scenario);
-  return scenario.unitOfWork;
+  });
+  return unitOfWork;
 };
 
 export const state = (world: SpecWorld): Watched => {
   const found = watched.get(world);
   assert.ok(
     found !== undefined,
-    "This scenario has no unit of work. It starts with a mediator whose commands, or whose queries, run in a transaction, or with an event store.",
+    "This scenario has no unit of work. It starts with a mediator whose commands, or whose queries, run in a transaction, with an event store, or with the application being built.",
   );
   return found;
 };

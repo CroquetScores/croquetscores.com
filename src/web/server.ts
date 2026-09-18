@@ -8,12 +8,17 @@ import { createReadStream, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
+import { Mediator } from "../application/common/Mediator.js";
+import { ValidationBehaviour } from "../application/common/ValidationBehaviour.js";
 import {
   loadConfig,
   loadEnvFile,
   type Config,
 } from "../infrastructure/config/Config.js";
 import { createPool } from "../infrastructure/database/pool.js";
+import { ReadOnlyTransactionBehaviour } from "../infrastructure/database/ReadOnlyTransactionBehaviour.js";
+import { TransactionBehaviour } from "../infrastructure/database/TransactionBehaviour.js";
+import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
 import { refuseCrossSite } from "./common/crossSite.js";
@@ -25,11 +30,44 @@ import { registerThemeRoute } from "./public/theme.js";
 
 const repositoryRoot = join(import.meta.dirname, "..", "..");
 
+// A route reaches the mediator as request.server.mediator, and nothing else of
+// the application. Declared here, beside the one place that puts it there.
+declare module "fastify" {
+  interface FastifyInstance {
+    readonly mediator: Mediator;
+  }
+}
+
 export interface Application {
   readonly server: FastifyInstance;
   readonly pool: Pool;
   readonly config: Config;
+  readonly mediator: Mediator;
+  /** Where a request's validator is registered, alongside its handler. */
+  readonly validation: ValidationBehaviour;
+  /** What a repository, the event store or a projection asks for its connection. */
+  readonly unitOfWork: UnitOfWork;
 }
+
+// The one mediator, and the order its behaviours run in. Validation stands
+// first in both lines and is the same behaviour in each, so that a request that
+// was never going to be carried out is refused before it costs a connection, and
+// a validator is registered once whichever side its request comes in on. Behind
+// it a command gets a transaction it can write in, and a query one it cannot.
+const putTogether = (
+  unitOfWork: UnitOfWork,
+): { mediator: Mediator; validation: ValidationBehaviour } => {
+  const mediator = new Mediator();
+  const validation = new ValidationBehaviour();
+
+  mediator.addCommandBehaviour(validation);
+  mediator.addCommandBehaviour(new TransactionBehaviour(unitOfWork));
+
+  mediator.addQueryBehaviour(validation);
+  mediator.addQueryBehaviour(new ReadOnlyTransactionBehaviour(unitOfWork));
+
+  return { mediator, validation };
+};
 
 const year = 60 * 60 * 24 * 365;
 
@@ -97,6 +135,11 @@ export const buildApplication = async (
   const server = Fastify({ logger: options.logger ?? true });
   const pool = createPool(config.databaseUrl);
   const assets = readAssets(join(repositoryRoot, "assets"));
+  const unitOfWork = new UnitOfWork(pool);
+  const { mediator, validation } = putTogether(unitOfWork);
+
+  // Before any route is added, so that every one of them finds it there.
+  server.decorate("mediator", mediator);
 
   await server.register(cookie, { secret: config.sessionCookieSecret });
   await server.register(formbody);
@@ -124,7 +167,7 @@ export const buildApplication = async (
   registerRegisterPage(server, assets);
   registerPublicPages(server, assets);
 
-  return { server, pool, config };
+  return { server, pool, config, mediator, validation, unitOfWork };
 };
 
 const startedDirectly =
