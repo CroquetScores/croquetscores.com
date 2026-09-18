@@ -10,7 +10,7 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-- nothing yet
+- `top: -3px` on a dialog field's lifted label (`assets/site.css`, from PR #28) was judged by eye and is on no scale. It wants a comment saying so, and saying to look again if the border's width or `--text-sm` changes.
 
 ---
 
@@ -78,3 +78,51 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 **Why it has not yet.** There are no commands yet, only the example ones the scenarios use. The window is narrow as well: the connection has to go after the commit is sent and before its answer comes back.
 
 **What to do.** Nothing in the unit of work can find out, so the answer is in the commands: one that matters has to be safe to send twice. The event store already catches part of this. A retry appending to a stream the first attempt wrote to expects the version the first attempt moved past, and is refused with `EventStore.Concurrency`. What it does not catch is a command that mints a new id each time it is sent — opening a tournament, registering an account — because the retry mints a second id and writes a second stream nobody else is using. For those, the caller gives the request an id it keeps across retries, carried on the command the way `requestedAt` is, and the command records it in the same transaction as its events and refuses one it has seen before. Decide which commands need it when the first real ones are written, and specify the refusal with them.
+
+---
+
+## A request refused for breaking its rules will be answered as though the server had failed
+
+**Where:** `src/web/common/errors.ts`, where an error becomes a response — from the review of PR #30.
+
+**What will go wrong.** The error mapping answers with an error's own status when it carries one, and treats everything else as the site's own fault: `500`, `{ error: "Internal" }` and a reference, or the "Something went wrong" page. A request that breaks its rules is refused with `RequestInvalid`, which carries the code `Request.Invalid` and the list of rules broken, and no status — rightly, because a status is the web's business and nothing under `src/application` should know one. So a route that sends a command breaking its rules through `request.server.mediator` tells the caller the server failed, where it should say the request was wrong and which rules it broke. Whoever typed it is owed the whole list, which is the reason `RequestInvalid` carries one, and gets a reference number instead. It is also logged as an unhandled error, so a mistyped form reads in the log like a fault.
+
+**Why it has not yet.** No real route sends through the mediator. The only ones that do are the example routes in `specs/web/server/server.feature`, and its Rule about routes covers only a command and a query that succeed.
+
+**What to do.** Whoever writes the first route that sends a command or asks a query: decide, in the error mapping and nowhere else, what a refusal looks like to a caller, so that no route decides for itself. That is a decision about behaviour, so it starts as a Rule, written before the code — which status `Request.Invalid` is answered with, what the body says of the rules broken, and what a public page shows where the API answers JSON. The mediator's other refusals want deciding at the same time: `Mediator.Unhandled`, `Mediator.AlreadyHandled` and `Mediator.WrongDoor` are mistakes in how the application was put together rather than in what was sent, and are probably right to stay a `500`, but that should be said rather than fallen into. Add a scenario with an example route that sends a command breaking a rule, and expect the refusal by its code, never by its wording.
+
+---
+
+## A scenario's database is dropped before the application built over it is closed
+
+**Where:** the `After` hook in `specs/web/server/server.steps.ts`, against the one in `specs/infrastructure/support/database.ts`, in the order `cucumber.json` loads them — from the review of PR #30.
+
+**What will go wrong.** Cucumber runs `After` hooks in the reverse of the order they were defined, and `cucumber.json` imports `specs/**/*.steps.ts` before `specs/infrastructure/support/**`. So the database's hook runs first and drops the scenario's database, and only then is the application's pool ended, while it may still hold idle connections to a database that has gone. Nothing says that order anywhere; it falls out of which glob is written first. Reorder the globs, or take `with (force)` off the drop, and the drop fails with "database is being accessed by other users", in every scenario that builds the application, for a reason nowhere near the scenario.
+
+**Why it has not yet.** Three things cover for it. The drop is `with (force)`, which ends the pool's connections for it. `createPool` attaches an `error` listener, so a connection lost that way is not an unhandled error. And the hook in `server.steps.ts` closes the server and the pool without minding whether either fails, because a teardown has no business overturning a scenario's verdict.
+
+**What to do.** Moving the application's hook into `specs/web/support/`, which is imported last, looks like the answer and is not: the steps file would import it, so it would still be defined when the steps file is loaded, which is first. What would do it is the database's own hook closing whatever a scenario has asked to be closed before it drops anything — a list of things to close kept on the world, as plain functions, so that `specs/support/` still names nothing from infrastructure or web. "the application is built" adds the server and the pool to it and needs no hook of its own, and the order is then written down where the drop is rather than left to a glob. It changes support that every `@postgres` feature shares, so it is a change of its own, and worth making when a second thing needs closing before the drop.
+
+---
+
+## The application hands out its mediator's parts, and nothing in production asks for them
+
+**Where:** the `Application` interface in `src/web/server.ts` — from PR #30.
+
+**What will go wrong.** `Application` carries `mediator`, `validation` and `unitOfWork`, and nothing under `src` reads any of them: they are there so that the scenarios can register example handlers and validators from outside. `application.mediator` is a second way to what `server.mediator` already is, so a mediator later wrapped or decorated for some routes would leave the two disagreeing, and the scenarios testing one no route uses. And anything holding the application can take `unitOfWork` and go round the mediator — the very thing `server.feature` says must not happen, since a route that reaches past the mediator can leave out the validation or the transaction and nothing notices until a half-written command is found in the database.
+
+**Why it has not yet.** There are no real handlers, so nothing registers one, and nothing holds an `Application` but `server.ts` itself and the scenarios.
+
+**What to do.** Decide where real handlers are registered before the first one is written, because that decides this. If they are registered inside `buildApplication`, the scenarios are the only outside caller, and a registration seam serves both: `buildApplication(config, { register })`, with `register` handed `{ mediator, validation, unitOfWork }` once, while the application is being put together. Production passes what registers the real handlers, the scenarios pass what registers the example ones, and `Application` goes back to `{ server, pool, config }`. The steps would then take the mediator from `server.mediator`, which is the way the feature says a route reaches it. If instead handlers are to be registered from outside after the application is built, the fields stay, and this section should say why.
+
+---
+
+## The whole application is built for every scenario about its mediator
+
+**Where:** "the application is built" in `specs/web/server/server.steps.ts`, the Background of `server.feature` — from PR #30.
+
+**What will go wrong.** Each of the feature's ten scenarios builds the application entire: it reads and hashes every file under `assets/`, registers the cookie, form and static plugins and every route, and makes a second pool, in order to exercise a mediator and one added route. The cost grows with the assets folder and with every scenario added to the feature, and the hashing is synchronous, so it holds everything else up while it runs. Separately, the step builds with the whole of `.env`, `CANONICAL_HOST` included. The example `POST` sends neither `Sec-Fetch-Site` nor `Origin` and is let through as things stand; a cross-site guard tightened to insist on an `Origin` would turn "A route can send a command" red for a reason that has nothing to do with it.
+
+**Why it has not yet.** The assets are a stylesheet and little else, and all 271 scenarios run in about nineteen seconds. The cross-site guard lets a request with neither header through.
+
+**What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
