@@ -160,16 +160,85 @@ Feature: Forms are shown in a dialog
         | light |
         | dark  |
 
-  Rule: A field names itself from inside its own border
+  Rule: A field holds its label until it is used, then lifts it to its top edge
 
-    A label inside the field's border is still a label: it is what a screen
-    reader announces for the field, and what a click on it focuses. It is not
-    placeholder text, which disappears the moment anyone types.
+    A field is one line tall. While nobody is using it, its label rests on that
+    line, where the typing will go, so the field needs no second line to name
+    itself. Once the field is focused, or has something in it, the label lifts
+    to sit on the field's top edge: out of the way of what is typed, and still
+    there to say what the field is.
 
-    Scenario: Every label is inside its field
+    The label lifts for something typed as well as for focus, so that it does
+    not fall back over the text when the reader moves on to the next field. It
+    comes back down only when the field is left empty.
+
+    On the top edge the label is smaller than it is at rest, so that it names
+    the field without competing with what has been typed. It moves in one step.
+    It does not slide or fade between its two places.
+
+    A field keeps its background once it has something in it, however that got
+    there. A browser that fills a field in for the reader tints it by default,
+    and a tinted field under a label on the panel's colour reads as a patch
+    rather than a field.
+
+    A label that moves is still a label: it is what a screen reader announces
+    for the field, and what a press on it focuses. It is not placeholder text,
+    which disappears the moment anyone types.
+
+    Scenario: A field is no taller than the submit button
       Given a viewport 1200 pixels wide
       When the register page is opened
-      Then every label in the dialog is inside its field
+      Then every field in the dialog is as tall as the submit button
+
+    Scenario: A label rests where the typing will go
+      Given a viewport 1200 pixels wide
+      When the register page is opened
+      Then every label in the dialog rests where its field is typed in
+
+    Scenario: Focusing a field lifts its label
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the email address field is focused
+      Then the email address field's label is on the field's top edge
+
+    Scenario: A lifted label is smaller than a resting one
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the email address field is focused
+      Then the email address field's label is smaller than the password field's label
+
+    Scenario: A label lifts without animating
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the email address field is focused
+      Then the email address field's label is not animated
+
+    Scenario: Focusing one field leaves the others' labels resting
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the email address field is focused
+      Then the password field's label rests where its field is typed in
+
+    Scenario: A label stays lifted over what has been typed
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When something is typed into the email address field
+      And the password field is focused
+      Then the email address field's label is on the field's top edge
+
+    Scenario: A field keeps its background once something is in it
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When something is typed into the email address field
+      And the password field is focused
+      Then the email address field is the colour of the dialog's content
+
+    Scenario: A label comes back down when its field is left empty
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      When the email address field is focused
+      And the password field is focused
+      Then the email address field's label rests where its field is typed in
 
     Scenario: Pressing the field's border reaches the field it names
       Given a viewport 1200 pixels wide
@@ -177,11 +246,17 @@ Feature: Forms are shown in a dialog
       When the field's border is pressed where nothing can be typed
       Then the field it names is focused
 
-    Scenario: The labels stay once something has been typed
+    Scenario Outline: A lifted label can be read
       Given a viewport 1200 pixels wide
+      And a machine that prefers <theme>
       And the register page is open
-      When something is typed into every field in the dialog
-      Then every label in the dialog is inside its field
+      When the email address field is focused
+      Then the email address field's label reads against the dialog's content at no less than 4.5 to 1
+
+      Examples:
+        | theme |
+        | light |
+        | dark  |
 
   Rule: A field that needs attention says so beneath itself
 

@@ -469,30 +469,6 @@ const fieldsOf = async (world: SpecWorld): Promise<FieldSeen[]> => {
   return seen;
 };
 
-const within = (inner: Rect, outer: Rect): boolean =>
-  inner.left >= outer.left - 0.5 &&
-  inner.right <= outer.right + 0.5 &&
-  inner.top >= outer.top - 0.5 &&
-  inner.bottom <= outer.bottom + 0.5;
-
-Then(
-  "every label in the dialog is inside its field",
-  async function (this: SpecWorld) {
-    for (const field of await fieldsOf(this)) {
-      assert.ok(field.label !== null, `The ${field.name} field has no label.`);
-      assert.ok(field.box !== null, `The ${field.name} field draws no border.`);
-      assert.ok(
-        field.label.rect.width > 0 && field.label.rect.height > 0,
-        `The label "${field.label.text}" is not shown.`,
-      );
-      assert.ok(
-        within(field.label.rect, field.box),
-        `The label "${field.label.text}" is not inside its field's border.`,
-      );
-    }
-  },
-);
-
 When(
   "the field's border is pressed where nothing can be typed",
   async function (this: SpecWorld) {
@@ -541,17 +517,6 @@ Then(
         false,
         `The ${field.name} field says what is in it is wrong before anything has been typed.`,
       );
-    }
-  },
-);
-
-When(
-  "something is typed into every field in the dialog",
-  async function (this: SpecWorld) {
-    const inputs = this.browserPage.locator("section.dialog input");
-    const count = await inputs.count();
-    for (let index = 0; index < count; index += 1) {
-      await inputs.nth(index).fill("someone@example.com");
     }
   },
 );
@@ -644,5 +609,199 @@ Then(
         `The ${field.name} field's message reads at ${ratio.toFixed(2)} to 1, and wanted ${least}.`,
       );
     }
+  },
+);
+
+interface LabelSeen {
+  text: string;
+  // What a reader sees as the field: the nearest thing around the input that
+  // draws a border.
+  box: Rect;
+  input: Rect;
+  label: Rect;
+  fontSize: number;
+  colour: string;
+  transitions: string[];
+  animation: string;
+}
+
+// Each field's label as it is drawn, found from the input and the input's own
+// label rather than from class names, so that a label drawn somewhere else
+// fails however tidy the markup around it looks.
+const labelsOf = async (world: SpecWorld): Promise<LabelSeen[]> => {
+  const seen = await world.browserPage.evaluate<LabelSeen[]>(`(() => {
+    const rect = (element) => {
+      const r = element.getBoundingClientRect();
+      return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
+    };
+    return [...document.querySelectorAll("section.dialog input")].map((input) => {
+      let box = input;
+      while (box && parseFloat(getComputedStyle(box).borderTopWidth) === 0) box = box.parentElement;
+      const label = input.labels && input.labels[0];
+      const text = label && (label.firstElementChild || label);
+      const style = getComputedStyle(text);
+      return {
+        text: text.textContent.trim(),
+        box: rect(box),
+        input: rect(input),
+        label: rect(text),
+        fontSize: parseFloat(style.fontSize),
+        colour: style.color,
+        transitions: style.transitionDuration.split(",").map((value) => value.trim()),
+        animation: style.animationName,
+      };
+    });
+  })()`);
+  assert.ok(seen.length > 0, "The dialog has no fields.");
+  return seen;
+};
+
+// "the email address field" is the field whose label reads "Email address".
+const labelOf = async (world: SpecWorld, field: string): Promise<LabelSeen> => {
+  const found = (await labelsOf(world)).find(
+    (seen) => seen.text.toLowerCase() === field.toLowerCase(),
+  );
+  assert.ok(found !== undefined, `The dialog has no ${field} field.`);
+  return found;
+};
+
+// Found by the label a reader sees, spelled as the dialog spells it, as
+// assistive technology finds a field.
+const inputOf = async (world: SpecWorld, field: string) =>
+  world.browserPage
+    .locator(dialog)
+    .getByLabel((await labelOf(world, field)).text, { exact: true });
+
+// Resting is lying across the middle of the line the input takes, starting no
+// further left than the input does: where whatever is typed would be.
+const assertResting = (seen: LabelSeen): void => {
+  const middle = seen.input.top + seen.input.height / 2;
+  assert.ok(
+    seen.label.top <= middle && seen.label.bottom >= middle,
+    `The label "${seen.text}" is not on the line where the field is typed in.`,
+  );
+  assert.ok(
+    seen.label.left >= seen.input.left - 0.5,
+    `The label "${seen.text}" starts to the left of where the field is typed in.`,
+  );
+};
+
+Then(
+  "every field in the dialog is as tall as the submit button",
+  async function (this: SpecWorld) {
+    const pressed = await box(this, submit);
+    for (const seen of await labelsOf(this)) {
+      assert.ok(
+        Math.abs(seen.box.height - pressed.height) <= 1,
+        `The ${seen.text} field is ${Math.round(seen.box.height)} pixels tall, and the submit button ${Math.round(pressed.height)}.`,
+      );
+    }
+  },
+);
+
+Then(
+  "every label in the dialog rests where its field is typed in",
+  async function (this: SpecWorld) {
+    for (const seen of await labelsOf(this)) assertResting(seen);
+  },
+);
+
+Then(
+  /^the (.+) field's label rests where its field is typed in$/,
+  async function (this: SpecWorld, field: string) {
+    assertResting(await labelOf(this, field));
+  },
+);
+
+When(
+  /^the (.+) field is focused$/,
+  async function (this: SpecWorld, field: string) {
+    await (await inputOf(this, field)).focus();
+  },
+);
+
+When(
+  /^something is typed into the (.+) field$/,
+  async function (this: SpecWorld, field: string) {
+    await (await inputOf(this, field)).fill("someone@example.com");
+  },
+);
+
+Then(
+  /^the (.+) field's label is on the field's top edge$/,
+  async function (this: SpecWorld, field: string) {
+    const seen = await labelOf(this, field);
+    assert.ok(
+      seen.label.top < seen.box.top && seen.label.bottom > seen.box.top,
+      `The label "${seen.text}" does not sit across its field's top edge.`,
+    );
+  },
+);
+
+Then(
+  /^the (.+) field's label is smaller than the (.+) field's label$/,
+  async function (this: SpecWorld, field: string, other: string) {
+    const seen = await labelOf(this, field);
+    const compared = await labelOf(this, other);
+    assert.ok(
+      seen.fontSize < compared.fontSize,
+      `The label "${seen.text}" is ${seen.fontSize} pixels, and "${compared.text}" ${compared.fontSize}.`,
+    );
+  },
+);
+
+Then(
+  /^the (.+) field's label is not animated$/,
+  async function (this: SpecWorld, field: string) {
+    const seen = await labelOf(this, field);
+    for (const duration of seen.transitions) {
+      assert.equal(
+        Number.parseFloat(duration),
+        0,
+        `The label "${seen.text}" moves over ${duration}.`,
+      );
+    }
+    assert.equal(
+      seen.animation,
+      "none",
+      `The label "${seen.text}" runs the animation ${seen.animation}.`,
+    );
+  },
+);
+
+Then(
+  /^the (.+) field's label reads against the dialog's content at no less than ([\d.]+) to 1$/,
+  async function (this: SpecWorld, field: string, least: string) {
+    const seen = await labelOf(this, field);
+    const ratio = contrast(
+      seen.colour,
+      await styleOf(this, content, "background-color"),
+    );
+    assert.ok(
+      ratio >= Number(least),
+      `The label "${seen.text}" reads at ${ratio.toFixed(2)} to 1, and wanted ${least}.`,
+    );
+  },
+);
+
+// What is painted behind whatever is typed: the input's own background, or,
+// where it has none, the first thing around it that has one.
+Then(
+  /^the (.+) field is the colour of the dialog's content$/,
+  async function (this: SpecWorld, field: string) {
+    const name = (await labelOf(this, field)).text;
+    const painted = await this.browserPage.evaluate<string>(`(() => {
+      const input = [...document.querySelectorAll("section.dialog input")].find(
+        (element) => element.labels[0].textContent.trim() === ${JSON.stringify(name)},
+      );
+      let back = input;
+      while (back && ["rgba(0, 0, 0, 0)", "transparent"].includes(getComputedStyle(back).backgroundColor)) back = back.parentElement;
+      return back ? getComputedStyle(back).backgroundColor : "";
+    })()`);
+    assert.equal(
+      painted,
+      await styleOf(this, content, "background-color"),
+      `The ${name} field is painted ${painted}.`,
+    );
   },
 );
