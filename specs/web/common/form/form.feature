@@ -11,9 +11,15 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
   twice. A password does not: it is never written into a page, and the reader
   types it again.
 
-  A rule about more than one field at once — a range that ends before it
-  starts — is about no one of them, so it is said above the fields rather than
-  beneath any.
+  Which field a rule is about is not the form's to say. The domain declares
+  it with the rule, and the refusal carries it, so a form's fields are named
+  for the request's and a rule goes beneath whichever field it reads. A rule
+  reading more than one field at once — a range that ends before it starts — is
+  about no one of them, so it is said above the fields rather than beneath any.
+  All a form supplies is the words, in the reader's language.
+
+  A field that broke more than one rule says each of them: whoever typed it is
+  owed every rule at once, including two about the same field.
 
   Only a field that broke a rule is marked as wrong, and only then. A form
   opened fresh says nothing: nobody has got anything wrong yet.
@@ -24,8 +30,9 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
 
   These scenarios use an example form, which asks for the validator's example
   range — a start, an end and a step — and a passphrase that no rule is about,
-  and sends the example command. The messages it shows for each rule are its
-  own, and are named here by the rule's code, never by their wording.
+  and sends the example command. The words it shows for each rule are its
+  own, in the reader's language, and are named here by the rule's code, never
+  by their wording.
 
   Background:
     Given a viewport 1200 pixels wide
@@ -51,13 +58,21 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
       Given "-1" is typed into the start field
       And "5" is typed into the end field
       When the dialog is submitted
-      Then the start field's message is the one for "Range.StartNegative"
+      Then the start field says the message for "Range.StartNegative"
 
     Scenario: Every field that broke a rule says so
       Given "-1" is typed into the start field
       When the dialog is submitted
-      Then the start field's message is the one for "Range.StartNegative"
-      And the end field's message is the one for "Range.EndMissing"
+      Then the start field says the message for "Range.StartNegative"
+      And the end field says the message for "Range.EndMissing"
+
+    Scenario: A field that broke two rules says both
+      Given "1" is typed into the start field
+      And "5" is typed into the end field
+      And "-3" is typed into the step field
+      When the dialog is submitted
+      Then the step field says the message for "Range.StepNotPositive"
+      And the step field says the message for "Range.StepNotRound"
 
     Scenario: A field that broke a rule is marked as wrong
       Given "-1" is typed into the start field

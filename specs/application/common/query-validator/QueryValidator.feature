@@ -1,10 +1,16 @@
 Feature: A query's validator names the query it validates
 
   A query validator holds the rules for what one kind of query may carry, and
-  answers with every rule a query breaks. Which rules those are, and the order
-  the broken ones come back in, are the query's own, written with the domain's
-  rules for whatever it carries; what the validation behaviour does with the
-  answer is specified with the behaviour.
+  answers with every rule a query breaks, each with the fields of the query it
+  reads. Which rules those are, and the order the broken ones come back in, are
+  the query's own, written with the domain's rules for whatever it carries;
+  what the validation behaviour does with the answer is specified with the
+  behaviour.
+
+  The fields are the query's own even where a rule was written for something
+  smaller that the query carries in one of them, so that whoever shows a rule
+  knows which of the query's fields it is about without being told a second
+  time.
 
   What every validator shares is that it names the kind of query it is for, so
   registering it needs nothing but the validator, and it is never asked about

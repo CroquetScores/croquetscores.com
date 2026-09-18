@@ -8,8 +8,10 @@ Feature: What a failed request is answered with is decided in one place
   There are two kinds of failure, and they are told apart by whose mistake it
   was. A request that breaks its rules — a range that ends before it starts, an
   email address with no @ in it — is the caller's mistake. The caller is owed
-  every rule it broke, at once, by code, so that it can say so to whoever typed
-  it; and it is not the server failing, so it is not answered or logged as one.
+  every rule it broke, at once, by code and with the fields each reads, so that
+  it can say so to whoever typed it, beside what they typed; and it is not the
+  server failing, so it is not answered or logged as one. Which fields a rule
+  reads is the domain's to say, and is passed on as the domain says it.
 
   A request the application was not put together to take — one nobody
   registered a handler for, or one that came in by the wrong door — is the
@@ -53,6 +55,19 @@ Feature: What a failed request is answered with is decided in one place
       Then the first rule the refusal names is "Range.EndMissing"
       And the second rule the refusal names is "Range.StartNegative"
       And the refusal names no other rule
+
+    Scenario: The refusal says which fields each rule reads
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example API route that sends the example command for the range it is given
+      And an example range
+      And it starts at 5
+      And it ends at 3
+      When the example range is sent to the example route
+      Then the first rule the refusal names is "Range.EndBeforeStart"
+      And the refusal says that rule reads the field "start"
+      And the refusal says that rule reads the field "end"
+      And the refusal says that rule reads no other field
 
     Scenario: A query that breaks a rule is refused the same way
       Given a validator registered for the example query
