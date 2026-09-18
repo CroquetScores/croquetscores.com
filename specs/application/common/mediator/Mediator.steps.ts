@@ -262,8 +262,16 @@ Then(
   },
 );
 
+// Any refusal that says why by a code, rather than only the mediator's: the
+// same words are used of whatever else refuses, and a code is the contract
+// wherever it comes from.
 Then("it is refused with {string}", function (this: SpecWorld, code: string) {
-  assert.equal(refusal(this).code, code);
+  const said = (this.failure as { code?: unknown } | undefined)?.code;
+  assert.ok(
+    this.failure instanceof Error && typeof said === "string",
+    `Expected a refusal, and got ${this.failure === undefined ? "an answer" : inspect(this.failure)}.`,
+  );
+  assert.equal(said, code);
 });
 
 Then(

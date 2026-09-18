@@ -21,6 +21,11 @@ export interface Config {
   // need them refuse to register rather than half-working at runtime.
   readonly google: OAuthCredentials | undefined;
   readonly facebook: OAuthCredentials | undefined;
+  // The salt the old site added to every password before hashing it. Absent
+  // until whoever runs the site sets it, and optional, because the site runs
+  // without it: only checking a password against a hash imported from the old
+  // site needs it, and without it those match nothing and importing is refused.
+  readonly oldSitePasswordSalt: string | undefined;
 }
 
 export class ConfigError extends Error {
@@ -103,6 +108,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     canonicalHost: readCanonicalHost(env),
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
+    oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
   };
 };
 
