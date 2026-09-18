@@ -5,7 +5,7 @@
 // Here rather than in specs/support/ because it builds the whole application,
 // infrastructure and all, and specs/support/ is loaded by every spec in the
 // repository and so may not.
-import { After, Given } from "@cucumber/cucumber";
+import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { LightMyRequestResponse } from "fastify";
 
@@ -66,21 +66,19 @@ Given("the application is built", async function (this: SpecWorld) {
   Object.assign(scenario, { application });
   built.set(this, scenario);
 
+  // Closed with the scenario's database, before it is dropped, rather than by
+  // a hook of its own that might run either side of the drop. The server and
+  // the pool each on their own, so that the server failing to close does not
+  // leave the pool open, holding the run up until its idle connections time out.
+  this.closeBeforeDropping.push(
+    () => {
+      built.delete(this);
+      return application.server.close();
+    },
+    () => application.pool.end(),
+  );
+
   this.mediator = application.mediator;
   this.validation = application.validation;
   useUnitOfWork(this, application.unitOfWork);
-});
-
-// By the time this runs the scenario's database may already have been dropped
-// from under the pool, so a connection failing on its way out says nothing
-// about the scenario, whose verdict is not the teardown's to overturn. Each is
-// closed on its own, so that the server failing to close does not leave the
-// pool open, holding the run up until its idle connections time out.
-After({ tags: "@postgres" }, async function (this: SpecWorld) {
-  const scenario = built.get(this);
-  if (scenario === undefined) return;
-  built.delete(this);
-  const { server, pool } = scenario.application;
-  await Promise.allSettled([server.close()]);
-  await Promise.allSettled([pool.end()]);
 });

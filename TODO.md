@@ -105,18 +105,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## A scenario's database is dropped before the application built over it is closed
-
-**Where:** the `After` hook in `specs/web/server/server.steps.ts`, against the one in `specs/infrastructure/support/database.ts`, in the order `cucumber.json` loads them — from the review of PR #30.
-
-**What will go wrong.** Cucumber runs `After` hooks in the reverse of the order they were defined, and `cucumber.json` imports `specs/**/*.steps.ts` before `specs/infrastructure/support/**`. So the database's hook runs first and drops the scenario's database, and only then is the application's pool ended, while it may still hold idle connections to a database that has gone. Nothing says that order anywhere; it falls out of which glob is written first. Reorder the globs, or take `with (force)` off the drop, and the drop fails with "database is being accessed by other users", in every scenario that builds the application, for a reason nowhere near the scenario.
-
-**Why it has not yet.** Three things cover for it. The drop is `with (force)`, which ends the pool's connections for it. `createPool` attaches an `error` listener, so a connection lost that way is not an unhandled error. And the hook in `server.steps.ts` closes the server and the pool without minding whether either fails, because a teardown has no business overturning a scenario's verdict.
-
-**What to do.** Moving the application's hook into `specs/web/support/`, which is imported last, looks like the answer and is not: the steps file would import it, so it would still be defined when the steps file is loaded, which is first. What would do it is the database's own hook closing whatever a scenario has asked to be closed before it drops anything — a list of things to close kept on the world, as plain functions, so that `specs/support/` still names nothing from infrastructure or web. "the application is built" adds the server and the pool to it and needs no hook of its own, and the order is then written down where the drop is rather than left to a glob. It changes support that every `@postgres` feature shares, so it is a change of its own, and worth making when a second thing needs closing before the drop.
-
----
-
 ## The application hands out its mediator's parts, and nothing in production asks for them
 
 **Where:** the `Application` interface in `src/web/server.ts` — from PR #30.
@@ -131,7 +119,7 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ## The whole application is built for every scenario about its mediator
 
-**Where:** "the application is built" in `specs/web/server/server.steps.ts`, the Background of `server.feature` — from PR #30.
+**Where:** "the application is built" in `specs/web/support/application.ts`, the Background of `server.feature` and of `requestedAt.feature` — from PR #30.
 
 **What will go wrong.** Each of the feature's ten scenarios builds the application entire: it reads and hashes every file under `assets/`, registers the cookie, form and static plugins and every route, and makes a second pool, in order to exercise a mediator and one added route. The cost grows with the assets folder and with every scenario added to the feature, and the hashing is synchronous, so it holds everything else up while it runs. Separately, the step builds with the whole of `.env`, `CANONICAL_HOST` included. The example `POST` sends neither `Sec-Fetch-Site` nor `Origin` and is let through as things stand; a cross-site guard tightened to insist on an `Origin` would turn "A route can send a command" red for a reason that has nothing to do with it.
 

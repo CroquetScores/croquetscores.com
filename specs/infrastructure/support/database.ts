@@ -122,11 +122,14 @@ After({ tags: "@postgres" }, async function (this: SpecWorld) {
   // out has nothing left to tell anyone, and the scenario's own verdict is not
   // the teardown's to overturn. The pool's error listener covers an idle client
   // failing; this covers end() itself refusing, which is a different thing.
-  try {
-    await this.pool?.end();
-  } catch {
-    // Nothing to say, and nothing that saying it would improve.
+  for (const close of [...this.closeBeforeDropping, () => this.pool?.end()]) {
+    try {
+      await close();
+    } catch {
+      // Nothing to say, and nothing that saying it would improve.
+    }
   }
+  this.closeBeforeDropping = [];
   this.pool = undefined;
 
   if (this.databaseName !== undefined && maintenance !== undefined) {
