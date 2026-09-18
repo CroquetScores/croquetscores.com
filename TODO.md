@@ -10,7 +10,7 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-- `top: -3px` on a dialog field's lifted label (`assets/site.css`, from PR #28) was judged by eye and is on no scale. It wants a comment saying so, and saying to look again if the border's width or `--text-sm` changes.
+SETUP.md §7.8 says "a failed result becomes 422 carrying its codes", but Request.Invalid is thrown rather than returned. Once this is accepted, that sentence needs updating
 
 ---
 
@@ -130,10 +130,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 ---
 
 ## /accounts/register
-
-_Web_
-
-- Nothing turns a refused command's error codes into the messages under each field. `SETUP.md` §7.8 says JSON gets a `422` with the codes; a form needs the dialog shown again with each field's message instead. The stand-in's "show every message all the time" goes at this point.
 
 _Application_
 
