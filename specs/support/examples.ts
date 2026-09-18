@@ -14,11 +14,31 @@ import type { Command } from "../../src/application/common/Command.js";
 import { Mediator } from "../../src/application/common/Mediator.js";
 import type { Query } from "../../src/application/common/Query.js";
 import { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
+import type { Range } from "./exampleRange.js";
 import type { SpecWorld } from "./world.js";
 
-export class ExampleCommand implements Command<string> {
+// The example command and query each ask for a range, when a scenario gives
+// them one, and are ranges in their own right: the fields are the request's own,
+// so the validator's example rules can be asked about the request itself rather
+// than about a copy of those rules rewritten to reach inside it.
+const nothingAskedFor: Range = {
+  start: undefined,
+  end: undefined,
+  step: undefined,
+};
+
+export class ExampleCommand implements Command<string>, Range {
   declare readonly _result?: string;
-  constructor(readonly requestedAt: ReadOnlyDate) {}
+  readonly start: number | undefined;
+  readonly end: number | undefined;
+  readonly step: number | undefined;
+
+  constructor(
+    readonly requestedAt: ReadOnlyDate,
+    askingFor: Range = nothingAskedFor,
+  ) {
+    ({ start: this.start, end: this.end, step: this.step } = askingFor);
+  }
 }
 
 export class OtherCommand implements Command<string> {
@@ -26,8 +46,15 @@ export class OtherCommand implements Command<string> {
   constructor(readonly requestedAt: ReadOnlyDate) {}
 }
 
-export class ExampleQuery implements Query<string> {
+export class ExampleQuery implements Query<string>, Range {
   declare readonly _result?: string;
+  readonly start: number | undefined;
+  readonly end: number | undefined;
+  readonly step: number | undefined;
+
+  constructor(askingFor: Range = nothingAskedFor) {
+    ({ start: this.start, end: this.end, step: this.step } = askingFor);
+  }
 }
 
 /** A fixed moment. Nothing here reads a clock, any more than the application does. */
