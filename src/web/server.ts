@@ -22,6 +22,11 @@ import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
 import { refuseCrossSite } from "./common/crossSite.js";
+import {
+  machineClock,
+  stampRequests,
+  type Clock,
+} from "./common/requestedAt.js";
 import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerPublicPages } from "./public/pages.js";
@@ -126,6 +131,8 @@ const registerAdmin = async (
 export interface ApplicationOptions {
   /** Off for the specs, whose output is the scenario list and not a request log. */
   readonly logger?: boolean;
+  /** Where the time comes from. The machine's clock, unless a scenario sets one. */
+  readonly clock?: Clock;
 }
 
 export const buildApplication = async (
@@ -145,6 +152,8 @@ export const buildApplication = async (
   await server.register(formbody);
 
   registerErrorMapping(server, assets);
+
+  stampRequests(server, options.clock ?? machineClock);
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.

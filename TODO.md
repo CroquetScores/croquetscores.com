@@ -105,18 +105,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## A scenario's database is dropped before the application built over it is closed
-
-**Where:** the `After` hook in `specs/web/server/server.steps.ts`, against the one in `specs/infrastructure/support/database.ts`, in the order `cucumber.json` loads them — from the review of PR #30.
-
-**What will go wrong.** Cucumber runs `After` hooks in the reverse of the order they were defined, and `cucumber.json` imports `specs/**/*.steps.ts` before `specs/infrastructure/support/**`. So the database's hook runs first and drops the scenario's database, and only then is the application's pool ended, while it may still hold idle connections to a database that has gone. Nothing says that order anywhere; it falls out of which glob is written first. Reorder the globs, or take `with (force)` off the drop, and the drop fails with "database is being accessed by other users", in every scenario that builds the application, for a reason nowhere near the scenario.
-
-**Why it has not yet.** Three things cover for it. The drop is `with (force)`, which ends the pool's connections for it. `createPool` attaches an `error` listener, so a connection lost that way is not an unhandled error. And the hook in `server.steps.ts` closes the server and the pool without minding whether either fails, because a teardown has no business overturning a scenario's verdict.
-
-**What to do.** Moving the application's hook into `specs/web/support/`, which is imported last, looks like the answer and is not: the steps file would import it, so it would still be defined when the steps file is loaded, which is first. What would do it is the database's own hook closing whatever a scenario has asked to be closed before it drops anything — a list of things to close kept on the world, as plain functions, so that `specs/support/` still names nothing from infrastructure or web. "the application is built" adds the server and the pool to it and needs no hook of its own, and the order is then written down where the drop is rather than left to a glob. It changes support that every `@postgres` feature shares, so it is a change of its own, and worth making when a second thing needs closing before the drop.
-
----
-
 ## The application hands out its mediator's parts, and nothing in production asks for them
 
 **Where:** the `Application` interface in `src/web/server.ts` — from PR #30.
@@ -131,10 +119,37 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ## The whole application is built for every scenario about its mediator
 
-**Where:** "the application is built" in `specs/web/server/server.steps.ts`, the Background of `server.feature` — from PR #30.
+**Where:** "the application is built" in `specs/web/support/application.ts`, the Background of `server.feature` and of `requestedAt.feature` — from PR #30.
 
 **What will go wrong.** Each of the feature's ten scenarios builds the application entire: it reads and hashes every file under `assets/`, registers the cookie, form and static plugins and every route, and makes a second pool, in order to exercise a mediator and one added route. The cost grows with the assets folder and with every scenario added to the feature, and the hashing is synchronous, so it holds everything else up while it runs. Separately, the step builds with the whole of `.env`, `CANONICAL_HOST` included. The example `POST` sends neither `Sec-Fetch-Site` nor `Origin` and is let through as things stand; a cross-site guard tightened to insist on an `Origin` would turn "A route can send a command" red for a reason that has nothing to do with it.
 
 **Why it has not yet.** The assets are a stylesheet and little else, and all 271 scenarios run in about nineteen seconds. The cross-site guard lets a request with neither header through.
 
 **What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
+
+---
+
+## /accounts/register
+
+_Web_
+
+- Nothing turns a refused command's error codes into the messages under each field. `SETUP.md` §7.8 says JSON gets a `422` with the codes; a form needs the dialog shown again with each field's message instead. The stand-in's "show every message all the time" goes at this point.
+
+_Application_
+
+- `src/application/operations/accounts/` does not exist yet. It would hold the register command, its validator, its handler and its result.
+- There is no way yet to load or save an aggregate through the event store.
+- Projections do not exist. The transaction scenarios mention one, but there is no mechanism, no read-model table and no migration. Refusing an email address that is already registered needs a read model of accounts by email address, so the first page is also the first projection.
+- Password hashing needs an interface in `src/application/services/`, with an argon2 implementation in infrastructure. `@node-rs/argon2` is already a dependency.
+
+_Domain_
+
+- The `Account` aggregate, an `AccountRegistered` event, and an `EmailAddress` value object.
+
+**Decisions to make before the feature is written**
+
+1. **What happens after registering?** Signing the reader in straight away needs sessions (`SETUP.md` §7.7). Asking them to confirm their email address needs a way to send email. Neither exists. The suggestion is to make the first slice record the account and tell the reader it is done, then make sign-in the next page, where sessions arrive.
+2. **Is an email address that is already registered disclosed?** Saying "already registered" tells anyone which addresses have accounts. `SETUP.md` §7.6 already hides that at sign-in, where a wrong password and an unknown address fail the same way, so register would be consistent to hide it too. Hiding it usually means sending an email, which brings back the problem in the first decision.
+3. **What are the password rules?** The suggestion is a minimum length only (current guidance is at least 8 characters) and no rules about which kinds of character it must contain.
+
+With those decided, the first thing to write is `register.feature` in the web layer. It is limited to what a reader sees, and its scenarios say what the command and domain features need to cover.

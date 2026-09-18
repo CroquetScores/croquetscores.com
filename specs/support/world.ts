@@ -29,6 +29,12 @@ export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
   public databaseName: string | undefined;
   public pool: Pool | undefined;
+  // Whatever a scenario opened on its database besides the pool — an
+  // application, say — closed by the @postgres teardown before the database is
+  // dropped. Cucumber runs After hooks in an order set by which file it happened
+  // to load first, so a hook of their own would be closing them either side of
+  // the drop by accident.
+  public closeBeforeDropping: (() => Promise<void>)[] = [];
 
   // A request being judged for where it came from. Typed by its shape rather
   // than by importing Provenance: this file is loaded by every spec in the
@@ -74,6 +80,8 @@ export class SpecWorld extends World {
   public answer: unknown;
   public failure: unknown;
   public handled: string[] = [];
+  // Every request a handler was given, in the order it was given them.
+  public handledRequests: unknown[] = [];
   public happened: string[] = [];
   public happenedChecked = 0;
   // A failure a handler was made to throw, so it can be recognised coming out.
