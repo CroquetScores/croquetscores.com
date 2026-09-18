@@ -43,6 +43,9 @@ Feature: Keeping the old site's password hashes safe until their passwords are k
   How the old site's hasher works is specified with it. These scenarios use
   hashes it made.
 
+  Background:
+    Given a password hasher
+
   Rule: An old hash is imported by hashing it again, never kept as it is
 
     Scenario: An imported hash is marked as imported
@@ -69,15 +72,13 @@ Feature: Keeping the old site's password hashes safe until their passwords are k
   Rule: An imported hash matches the password the old hash was made from
 
     Scenario: The password the old hash was made from matches
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And "correct horse battery staple" is checked against the imported hash
       Then it matches
 
     Scenario: A different password does not match
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And "wrong horse battery staple" is checked against the imported hash
       Then it does not match
@@ -85,8 +86,7 @@ Feature: Keeping the old site's password hashes safe until their passwords are k
   Rule: The old hash is not a password
 
     Scenario: The old hash typed in as a password does not match
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And the old hash is checked, as a password, against the imported hash
       Then it does not match
@@ -94,22 +94,19 @@ Feature: Keeping the old site's password hashes safe until their passwords are k
   Rule: A hash is checked one way only, the way its mark says
 
     Scenario: A wrong password against an imported hash costs one check
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And "wrong horse battery staple" is checked against the imported hash
       Then argon2id was asked once
 
     Scenario: A wrong password against a hash made today costs one check
-      Given a password hasher
-      And the password "correct horse battery staple"
+      Given the password "correct horse battery staple"
       When the password is hashed
       And "wrong horse battery staple" is checked against the hash
       Then argon2id was asked once
 
     Scenario: A hash made today is never checked the old way
-      Given a password hasher
-      And the password "correct horse battery staple"
+      Given the password "correct horse battery staple"
       When the password is hashed
       And "wrong horse battery staple" is checked against the hash
       Then the old hasher was not asked
@@ -117,24 +114,21 @@ Feature: Keeping the old site's password hashes safe until their passwords are k
   Rule: An imported hash whose password matches should be made again
 
     Scenario: A matching password says the imported hash should be made again
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And "correct horse battery staple" is checked against the imported hash
       Then it matches
       And the hash should be made again
 
     Scenario: The hash made again is an ordinary one
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And "correct horse battery staple" is checked against the imported hash
       And the hash is made again from "correct horse battery staple"
       Then the hash made again does not say it was imported
 
     Scenario: The hash made again matches the same password
-      Given a password hasher
-      And the old site's hash of "correct horse battery staple"
+      Given the old site's hash of "correct horse battery staple"
       When the old hash is imported
       And "correct horse battery staple" is checked against the imported hash
       And the hash is made again from "correct horse battery staple"
@@ -145,8 +139,7 @@ Feature: Keeping the old site's password hashes safe until their passwords are k
   Rule: The old hasher is given the password as the old site was given it
 
     Scenario: An accented password matches when typed as it was on the old site
-      Given a password hasher
-      And the old site's hash of "café au lait" with its accent typed after the letter
+      Given the old site's hash of "café au lait" with its accent typed after the letter
       When the old hash is imported
       And "café au lait" with its accent typed after the letter is checked against the imported hash
       Then it matches

@@ -16,6 +16,10 @@ import type {
   ValidationBehaviour,
 } from "../../src/application/common/ValidationBehaviour.js";
 import type { EventStore } from "../../src/application/services/EventStore.js";
+import type {
+  PasswordCheck,
+  PasswordHasher,
+} from "../../src/application/services/PasswordHasher.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
@@ -146,6 +150,14 @@ export class SpecWorld extends World {
   public registry: EventRegistry | undefined;
   public kept: KeptEvent | undefined;
   public readBackEvent: DomainEvent | undefined;
+
+  // A password hasher, the password a scenario gives it, the hashes made of it
+  // in order, what the last check found, and how long the checks took.
+  public passwordHasher: PasswordHasher | undefined;
+  public password: string | undefined;
+  public passwordHashes: string[] = [];
+  public passwordCheck: PasswordCheck | undefined;
+  public checkTook: { againstHash?: number; againstNone?: number } = {};
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
