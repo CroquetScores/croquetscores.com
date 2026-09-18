@@ -41,6 +41,33 @@ export const askedAt = ReadOnlyDate.from(new Date("2026-09-17T09:00:00Z"));
 export const mediatorOf = (world: SpecWorld): Mediator =>
   (world.mediator ??= new Mediator());
 
+/**
+ * A handler that records it was called, does whatever else the scenario has
+ * asked of it, and then answers or fails as told.
+ *
+ * The extra things are how a feature about what wraps a handler gets the
+ * handler to do something inside the wrapping — ask for the connection it is
+ * running on, say — without every such feature needing an example handler of
+ * its own, which would collide with this one on the same words.
+ */
+export const exampleHandler = (
+  world: SpecWorld,
+  name: string,
+  answer: string,
+  fails = false,
+): { handle: () => Promise<string> } => ({
+  handle: async (): Promise<string> => {
+    world.handled.push(name);
+    world.happened.push("the handler");
+    for (const also of world.whatTheExampleHandlerAlsoDoes) await also();
+    if (fails) {
+      world.plantedFailure = new Error(`${name} failed`);
+      throw world.plantedFailure;
+    }
+    return answer;
+  },
+});
+
 /** What came of handing a request in: the answer, or the failure. */
 export const attempt = async (
   world: SpecWorld,

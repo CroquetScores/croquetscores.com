@@ -55,6 +55,11 @@ export class SpecWorld extends World {
   // A failure a handler was made to throw, so it can be recognised coming out.
   public plantedFailure: Error | undefined;
 
+  // What the example handler does when it is called, besides answering, in the
+  // order the scenario asked for it. A feature specifying something wrapped
+  // around a handler puts what it needs the handler to do in here.
+  public whatTheExampleHandlerAlsoDoes: (() => Promise<void>)[] = [];
+
   // The candidate a scenario puts to a validator, and every rule it was found
   // to break, of which the scenario has named this many so far.
   public range:

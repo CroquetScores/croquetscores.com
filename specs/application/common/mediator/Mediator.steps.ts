@@ -10,29 +10,12 @@ import {
   askedAt,
   attempt,
   ExampleCommand,
+  exampleHandler,
   ExampleQuery,
   mediatorOf,
   OtherCommand,
 } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
-
-// A handler that records that it was called, and answers or fails as told.
-const handler = (
-  world: SpecWorld,
-  name: string,
-  answer: string,
-  fails = false,
-) => ({
-  handle: (): Promise<string> => {
-    world.handled.push(name);
-    world.happened.push("the handler");
-    if (fails) {
-      world.plantedFailure = new Error(`${name} failed`);
-      return Promise.reject(world.plantedFailure);
-    }
-    return Promise.resolve(answer);
-  },
-});
 
 // A behaviour that records passing a request in, the answer back out, and a
 // failure back out.
@@ -65,7 +48,7 @@ Given(
   function (this: SpecWorld) {
     mediatorOf(this).handleCommand(
       ExampleCommand,
-      handler(this, "example command", "handled"),
+      exampleHandler(this, "example command", "handled"),
     );
   },
 );
@@ -75,7 +58,7 @@ Given(
   function (this: SpecWorld, answer: string) {
     mediatorOf(this).handleCommand(
       ExampleCommand,
-      handler(this, "example command", answer),
+      exampleHandler(this, "example command", answer),
     );
   },
 );
@@ -85,7 +68,7 @@ Given(
   function (this: SpecWorld) {
     mediatorOf(this).handleCommand(
       ExampleCommand,
-      handler(this, "example command", "never answered", true),
+      exampleHandler(this, "example command", "never answered", true),
     );
   },
 );
@@ -93,14 +76,14 @@ Given(
 Given("a handler registered for the other command", function (this: SpecWorld) {
   mediatorOf(this).handleCommand(
     OtherCommand,
-    handler(this, "other command", "handled"),
+    exampleHandler(this, "other command", "handled"),
   );
 });
 
 Given("a handler registered for the example query", function (this: SpecWorld) {
   mediatorOf(this).handleQuery(
     ExampleQuery,
-    handler(this, "example query", "found"),
+    exampleHandler(this, "example query", "found"),
   );
 });
 
@@ -109,7 +92,7 @@ Given(
   function (this: SpecWorld, answer: string) {
     mediatorOf(this).handleQuery(
       ExampleQuery,
-      handler(this, "example query", answer),
+      exampleHandler(this, "example query", answer),
     );
   },
 );
@@ -134,7 +117,7 @@ When(
     try {
       mediatorOf(this).handleCommand(
         ExampleCommand,
-        handler(this, "second handler", "handled"),
+        exampleHandler(this, "second handler", "handled"),
       );
     } catch (failure) {
       this.failure = failure;
@@ -148,7 +131,7 @@ When(
     try {
       mediatorOf(this).handleQuery(
         ExampleQuery,
-        handler(this, "second handler", "found"),
+        exampleHandler(this, "second handler", "found"),
       );
     } catch (failure) {
       this.failure = failure;
