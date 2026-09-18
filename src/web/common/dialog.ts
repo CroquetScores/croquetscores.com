@@ -39,9 +39,21 @@ export interface Dialog {
   readonly notice?: string | undefined;
 }
 
-// The label sits inside the field's border and is still a <label>: what a
-// screen reader announces for the field, and what a click on it focuses. It is
-// not a placeholder, which would vanish the moment anyone typed.
+// The label rests inside the field's border, where the typing will go, and
+// lifts to the border's top edge once the field is in use. It is still a
+// <label>: what a screen reader announces for the field, and what a click on it
+// focuses. It is not a placeholder, which would vanish the moment anyone typed.
+//
+// The input does carry a placeholder, of a single space, which nobody sees and
+// nothing announces. It is there because whether a placeholder is shown is how
+// the stylesheet knows the field is empty — the one thing CSS cannot otherwise
+// ask of an input — and so when the label comes back down, with no scripting.
+//
+// The input comes before the label's words, because the stylesheet can only
+// ask about an input on behalf of what follows it. Asking on behalf of the box
+// around it needs :has(), and a browser without :has() would leave the label
+// lying over whatever was typed. The words are placed by the stylesheet, so
+// where they come in the markup changes nothing a reader sees or hears.
 //
 // The box around the label and the input is itself that label, so a press
 // anywhere inside the border — the padding included — reaches the input. A div
@@ -76,8 +88,8 @@ const field = ({
 
   return `              <div class="field">
                 <label class="field-box" for="${id}">
+                  <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}" placeholder=" "${described}${wrong} />
                   <span class="field-label">${escape(label)}</span>
-                  <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}"${described}${wrong} />
                 </label>${beneath}
               </div>`;
 };

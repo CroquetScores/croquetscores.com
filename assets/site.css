@@ -678,15 +678,16 @@ main {
   gap: var(--space-1);
 }
 
-/* The field's border, with its label inside it above whatever is typed. The
-   ring for the field is drawn here rather than on the input, because the box is
-   what the reader sees as the field. The box is itself the <label>, so the text
-   cursor over it is the truth: pressing anywhere inside the border, padding
-   included, reaches the input. */
+/* The field's border, one line tall: the same padding and border as a button,
+   so that a field and the button beneath it are the same height. The ring for
+   the field is drawn here rather than on the input, because the box is what the
+   reader sees as the field. The box is itself the <label>, so the text cursor
+   over it is the truth: pressing anywhere inside the border, padding included,
+   reaches the input. */
 .field-box {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
+  align-items: center;
   min-height: 44px;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--ink-muted);
@@ -700,17 +701,67 @@ main {
   outline-offset: 2px;
 }
 
+/* At rest the label lies on the line the typing will go on, at the size of the
+   typing, so the field needs no second line to name itself. The box does not
+   grow to hold it, so a label too long for the box is cut short inside the
+   box's padding rather than wrapping out of it over whatever is beside it. */
 .field-box .field-label {
+  position: absolute;
+  top: 50%;
+  left: var(--space-3);
+  max-width: calc(100% - 2 * var(--space-3));
+  overflow: hidden;
+  transform: translateY(-50%);
   color: var(--ink-muted);
+  font-size: var(--text-base);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* In use — focused, or holding something — it lifts onto the top border, small,
+   with the panel behind it so the border does not run through the words. It
+   lifts for something typed as well as for focus, or it would fall back over
+   the text when the reader moved on. Empty is known by the blank placeholder
+   the input carries for the purpose. A field the browser filled in before
+   anyone touched it can still count as showing its placeholder, so that is
+   asked about by name. The move is in one step, with nothing sliding between
+   the two places.
+
+   The input is asked, and the label follows it in the markup, rather than the
+   box being asked with :has(): a browser without :has() would never lift the
+   label, and it would lie over whatever was typed. The three are inside :is()
+   because :is() drops a selector the browser does not know and keeps the rest,
+   where a plain list would be thrown away whole.
+
+   Where it sits on the border, top: -3px, was judged by eye and is on no
+   scale: it is where the words looked centred on a 1px border at today's
+   --text-sm. Look again if either changes. */
+.field-box
+  input:is(:focus, :not(:placeholder-shown), :autofill)
+  ~ .field-label {
+  top: -3px;
+  margin-inline-start: calc(-1 * var(--space-1));
+  padding-inline: var(--space-1);
+  background: var(--panel);
   font-size: var(--text-sm);
   font-weight: 600;
+  line-height: var(--leading-tight);
 }
 
 .field-box input {
+  width: 100%;
   padding: 0;
   border: 0;
   background: none;
   color: var(--ink);
+}
+
+/* A browser that fills the field in paints it its own tint, and paints that
+   over background-color, so the panel is laid over it as an inset shadow
+   instead. A tinted field under a label on the panel reads as a patch. */
+.field-box input:autofill {
+  box-shadow: inset 0 0 0 100vmax var(--panel);
+  -webkit-text-fill-color: var(--ink);
 }
 
 /* The box draws the ring, so the input does not draw a second one inside it. */
