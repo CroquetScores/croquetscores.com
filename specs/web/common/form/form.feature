@@ -29,10 +29,15 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
   public pages work without scripting, and so does this.
 
   These scenarios use an example form, which asks for the validator's example
-  range — a start, an end and a step — and a passphrase that no rule is about,
-  and sends the example command. The words it shows for each rule are its
-  own, in the reader's language, and are named here by the rule's code, never
-  by their wording.
+  range — a start, an end and a step — and a passphrase, and sends them in an
+  example request of its own. The passphrase has rules of its own, written for
+  a passphrase alone rather than for the request that carries it:
+
+    Passphrase.Missing    nothing is given
+    Passphrase.TooShort   something is given, and it is under 12 characters
+
+  The words the example form shows for each rule are in the reader's language,
+  and are named here by the rule's code, never by their wording.
 
   Background:
     Given a viewport 1200 pixels wide
@@ -112,6 +117,28 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
       Then the start field has no message
       And the end field has no message
 
+  Rule: A rule written for something the request carries goes beneath the field that carries it
+
+    Scenario: A passphrase left empty says so
+      Given "1" is typed into the start field
+      And "5" is typed into the end field
+      When the dialog is submitted
+      Then the passphrase field says the message for "Passphrase.Missing"
+
+    Scenario: A passphrase that is too short says so
+      Given "1" is typed into the start field
+      And "5" is typed into the end field
+      And "open sesame" is typed into the passphrase field
+      When the dialog is submitted
+      Then the passphrase field says the message for "Passphrase.TooShort"
+
+    Scenario: A passphrase long enough says nothing
+      Given "1" is typed into the start field
+      And "-3" is typed into the step field
+      And "correct horse battery" is typed into the passphrase field
+      When the dialog is submitted
+      Then the passphrase field has no message
+
   Rule: What was typed is kept, except a password
 
     Scenario: What was typed is back in its field
@@ -138,5 +165,6 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
     Scenario: A rule about more than one field is where the reader is taken when it is the only one
       Given "5" is typed into the start field
       And "1" is typed into the end field
+      And "correct horse battery" is typed into the passphrase field
       When the dialog is submitted
       Then the reader is taken to the message above the fields

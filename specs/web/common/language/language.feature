@@ -10,10 +10,13 @@ Feature: A reader is spoken to in their own language
   browser says which languages its reader reads, best first, and the reader
   gets the first of them the site has — a regional form such as Australian
   English counting as the language it is a form of. Where the site has none of
-  them, the reader gets English. A reader can also choose a language in the
-  footer, and is taken at their word on every page afterwards and on every
-  visit after that, as with the theme. The choice is a form that gets posted
-  and a cookie that comes back, and needs no scripting.
+  them, the reader gets English. A reader can also choose a language from a
+  list in the footer, and is taken at their word on every page afterwards and
+  on every visit after that, as with the theme. The list opens on the language
+  in force. The choice is a form that gets posted, by a button beside the list,
+  and a cookie that comes back, and needs no scripting: a list that sent itself
+  the moment it changed would need scripting to do it, and would leave a
+  keyboard reader choosing whatever they passed on the way down.
 
   A page says which language it is in, so that a screen reader reads it in the
   right voice and a browser offers to translate only what it should.
@@ -48,13 +51,13 @@ Feature: A reader is spoken to in their own language
 
     Scenario: The first language the browser asks for that the site has is the one given
       Given a viewport 1200 pixels wide
-      And a browser that asks for "fr, en-XA;q=0.8, en;q=0.5"
+      And a browser that asks for "fr, en;q=0.5, en-XA;q=0.8"
       When the home page is opened
       Then the page is in "en-XA"
 
     Scenario: A regional form of a language the site has gets that language
       Given a viewport 1200 pixels wide
-      And a browser that asks for "en-AU"
+      And a browser that asks for "en-AU, en-XA;q=0.5"
       When the home page is opened
       Then the page is in "en"
 
@@ -72,6 +75,13 @@ Feature: A reader is spoken to in their own language
       And the home page is open
       When the language "en-XA" is chosen
       Then the page is in "en-XA"
+
+    Scenario: The list opens on the language in force
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en"
+      And the home page is open
+      When the language "en-XA" is chosen
+      Then the language "en-XA" is the one in force
 
     Scenario: The choice outlasts the page it was made on
       Given a viewport 1200 pixels wide

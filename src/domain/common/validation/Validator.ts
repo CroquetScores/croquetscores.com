@@ -38,6 +38,17 @@ export interface SpanningRule<T, TCode extends string = string> {
   isBrokenBy(candidate: T): boolean;
 }
 
+/**
+ * A rule a candidate broke: its code, and the fields it reads. Which field a
+ * rule is about is part of the rule, so it is said here, with the rule, and
+ * whoever shows it to somebody takes it from here rather than writing it down
+ * a second time where it could come to disagree.
+ */
+export interface BrokenRule<TCode extends string = string> {
+  readonly code: TCode;
+  readonly fields: readonly string[];
+}
+
 export interface Rules<T, TCode extends string = string> {
   readonly fields: readonly FieldRule<T, TCode>[];
   readonly spanning?: readonly SpanningRule<T, TCode>[] | undefined;
@@ -64,14 +75,17 @@ export class Validator<T, TCode extends string = string> {
     this.#spanning = rules.spanning ?? [];
   }
 
-  /** Every code the candidate breaks, in rule order. Empty means it is valid. */
-  check(candidate: T): TCode[] {
-    const codes: TCode[] = [];
+  /**
+   * Every rule the candidate breaks, in rule order, each with the fields it
+   * reads. Empty means it is valid.
+   */
+  check(candidate: T): BrokenRule<TCode>[] {
+    const broken: BrokenRule<TCode>[] = [];
     const brokenFields = new Set<FieldName<T>>();
 
     for (const rule of this.#fields) {
       if (rule.isBrokenBy(candidate)) {
-        codes.push(rule.code);
+        broken.push({ code: rule.code, fields: [rule.field] });
         brokenFields.add(rule.field);
       }
     }
@@ -80,10 +94,12 @@ export class Validator<T, TCode extends string = string> {
       // Comparing a field that is already wrong can only complain a second time
       // about the same mistake, and point whoever reads it at the wrong field.
       if (rule.reads.some((field) => brokenFields.has(field))) continue;
-      if (rule.isBrokenBy(candidate)) codes.push(rule.code);
+      if (rule.isBrokenBy(candidate)) {
+        broken.push({ code: rule.code, fields: [...rule.reads] });
+      }
     }
 
-    return codes;
+    return broken;
   }
 
   /**
@@ -93,7 +109,7 @@ export class Validator<T, TCode extends string = string> {
    * and keeping one of it. This is what every value made from a candidate goes
    * through, almost always with a candidate that breaks nothing, and the list
    * and the record of broken fields were being built each time to be thrown
-   * away. The answer is the same: the first code checking reports is the first
+   * away. The answer is the same: the first rule checking reports is the first
    * field rule broken, and when no field rule is broken nothing keeps a rule
    * reading several fields quiet, so the first of those broken is next.
    */

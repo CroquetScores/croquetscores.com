@@ -5,6 +5,7 @@
 //
 // One behaviour stands in both lines, the command's and the query's, and holds
 // the rules for requests of either kind.
+import type { BrokenRule } from "../../domain/common/validation/Validator.js";
 import type { Behaviour } from "./Behaviour.js";
 import type { Command } from "./Command.js";
 import { RequestRefused, type RequestType } from "./Mediator.js";
@@ -19,12 +20,13 @@ type Request = Command<unknown> | Query<unknown>;
  */
 export interface RequestValidator<TRequest> {
   readonly validates: RequestType<TRequest>;
-  validate(request: TRequest): readonly string[];
+  validate(request: TRequest): readonly BrokenRule[];
 }
 
 /**
- * A request refused for breaking its rules, naming every rule it broke —
- * whoever typed it is owed the whole list at once, not one fault per attempt.
+ * A request refused for breaking its rules, naming every rule it broke, each
+ * with the fields it reads — whoever typed it is owed the whole list at once,
+ * not one fault per attempt, and beside what they typed.
  *
  * It is thrown, like the mediator's other refusals, rather than returned as a
  * failed result. A command's handler answers with a result, but a query's
@@ -32,12 +34,12 @@ export interface RequestValidator<TRequest> {
  * any handler sees it should read the same whichever side it came in on.
  */
 export class RequestInvalid extends RequestRefused {
-  readonly broken: readonly string[];
+  readonly broken: readonly BrokenRule[];
 
-  constructor(request: object, broken: readonly string[]) {
+  constructor(request: object, broken: readonly BrokenRule[]) {
     super(
       "Request.Invalid",
-      `${request.constructor.name || "A request"} breaks ${broken.join(", ")}.`,
+      `${request.constructor.name || "A request"} breaks ${broken.map((rule) => rule.code).join(", ")}.`,
     );
     this.name = "RequestInvalid";
     this.broken = broken;

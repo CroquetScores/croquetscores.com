@@ -265,8 +265,8 @@ Feature: Forms are shown in a dialog
 
     A message is shown only when its field needs attention. These scenarios
     check where a message sits, how it looks and how it is announced, on the
-    example form once it has been sent a start below zero and no end, so that
-    two fields have a message to look at.
+    example form once it has been sent a start below zero, no end and no
+    passphrase, so that several fields have a message to look at.
 
     A field nobody has typed in is not in error, and a screen reader should not
     be told it is.
@@ -343,6 +343,20 @@ Feature: Forms are shown in a dialog
       And the register page is open
       When the dialog is submitted
       Then the reader is told registering is not open yet
+
+    Scenario: The email address is still there once it has been submitted
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      And "someone@example.com" is typed into the email address field
+      When the dialog is submitted
+      Then the email address field holds "someone@example.com"
+
+    Scenario: The password is not put back once it has been submitted
+      Given a viewport 1200 pixels wide
+      And the register page is open
+      And "open sesame" is typed into the password field
+      When the dialog is submitted
+      Then the password field is empty
 
     Scenario: Choosing a theme afterwards does not take the answer away
       Given a viewport 1200 pixels wide

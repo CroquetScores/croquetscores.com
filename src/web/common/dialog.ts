@@ -15,14 +15,32 @@ export interface Field {
   readonly type: "email" | "password" | "text";
   /** What a browser or password manager should offer to fill in. */
   readonly autocomplete: string;
-  /** What needs the reader's attention about this field, if anything. */
-  readonly message?: string | undefined;
+  /**
+   * What needs the reader's attention about this field, if anything: one
+   * sentence for each rule it broke, since a field wrong in two ways is told
+   * both at once.
+   */
+  readonly messages?: readonly string[] | undefined;
   /**
    * Whether what is in the field is wrong. Separate from the message, because a
    * message can say what is wanted before anyone has got it wrong, and a field
    * nobody has touched yet is not invalid.
    */
   readonly invalid?: boolean | undefined;
+  /**
+   * What is already in the field, such as what was typed before the form was
+   * refused. Never written for a password, whatever is given.
+   */
+  readonly value?: string | undefined;
+  /** Whether the reader is taken here when the page arrives. */
+  readonly autofocus?: boolean | undefined;
+}
+
+/** What needs saying above the fields, about no one of them. */
+export interface Problems {
+  readonly messages: readonly string[];
+  /** Whether the reader is taken here when the page arrives. */
+  readonly autofocus?: boolean | undefined;
 }
 
 export interface Dialog {
@@ -37,6 +55,8 @@ export interface Dialog {
     { readonly label: string; readonly href: string } | undefined;
   /** Something the reader needs telling before anything else, if anything. */
   readonly notice?: string | undefined;
+  /** What is wrong with the form as a whole, when it has been refused. */
+  readonly problems?: Problems | undefined;
 }
 
 // The label rests inside the field's border, where the typing will go, and
@@ -65,13 +85,24 @@ export interface Dialog {
 // aria-invalid only when the field is actually wrong: a form that announces
 // "invalid entry" on a field nobody has typed in yet has cried wolf before the
 // reader has done anything.
+//
+// What was typed is written back, so a refused form need not be typed twice —
+// except a password, which is never written into a page, whoever asks. The
+// check is here rather than left to each form, because forgetting it once would
+// put somebody's password in a page and in whatever caches it.
+//
+// Autofocus takes the reader to the field when the page arrives, which works
+// with scripting switched off, and is how a refused form starts a screen reader
+// at the first thing that needs attention.
 const field = ({
   name,
   label,
   type,
   autocomplete,
-  message,
+  messages = [],
   invalid,
+  value,
+  autofocus,
 }: Field): string => {
   // Escaped, because these are attribute values like any other and a field name
   // is the caller's string. The same escaping on both ends of a reference keeps
@@ -79,16 +110,25 @@ const field = ({
   const id = `field-${escape(name)}`;
   const messageId = `${id}-message`;
   const described =
-    message === undefined ? "" : ` aria-describedby="${messageId}"`;
+    messages.length === 0 ? "" : ` aria-describedby="${messageId}"`;
   const wrong = invalid === true ? ` aria-invalid="true"` : "";
-  const beneath =
-    message === undefined
+  const kept =
+    value === undefined || type === "password"
       ? ""
-      : `\n                <p class="field-message" id="${messageId}">${escape(message)}</p>`;
+      : ` value="${escape(value)}"`;
+  const focused = autofocus === true ? " autofocus" : "";
+  // One element beneath the field, holding a line for each rule, so that the
+  // field is described by it once and a screen reader reads every rule with it.
+  const beneath =
+    messages.length === 0
+      ? ""
+      : `\n                <p class="field-message" id="${messageId}">${messages
+          .map((text) => `<span>${escape(text)}</span>`)
+          .join(" ")}</p>`;
 
   return `              <div class="field">
                 <label class="field-box" for="${id}">
-                  <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}" placeholder=" "${described}${wrong} />
+                  <input id="${id}" name="${escape(name)}" type="${type}" autocomplete="${escape(autocomplete)}" placeholder=" "${kept}${described}${wrong}${focused} />
                   <span class="field-label">${escape(label)}</span>
                 </label>${beneath}
               </div>`;
@@ -96,15 +136,31 @@ const field = ({
 
 // A notice arrives with the page rather than appearing on one already being
 // read, and a live region only announces what changes after it exists — so
-// role="status" here would say nothing to anyone. It is given an id and made
-// focusable instead, and whatever redirects here sends the reader to that id:
-// the browser moves focus to it, and a screen reader reads it out on arrival.
+// role="status" here would say nothing to anyone. It is made focusable instead,
+// and autofocus takes the reader to it on arrival, so a screen reader reads it
+// out; it is what the reader needs telling before anything else.
 export const noticeId = "dialog-notice";
 
 const notice = (text: string | undefined): string =>
   text === undefined
     ? ""
-    : `              <p class="notice" id="${noticeId}" tabindex="-1">${escape(text)}</p>\n`;
+    : `              <p class="notice" id="${noticeId}" tabindex="-1" autofocus>${escape(text)}</p>\n`;
+
+// Above the fields, because it is about more than one of them. Like the
+// notice, it arrives with the page, so it is made focusable and the reader is
+// taken to it by autofocus rather than announced by a live region that would
+// say nothing.
+export const problemsId = "dialog-problems";
+
+const problems = (said: Problems | undefined): string =>
+  said === undefined || said.messages.length === 0
+    ? ""
+    : `              <div class="dialog-problems" id="${problemsId}" tabindex="-1"${
+        said.autofocus === true ? " autofocus" : ""
+      }>
+${said.messages.map((text) => `                <p>${escape(text)}</p>`).join("\n")}
+              </div>
+`;
 
 // Cancel comes first in the markup so that it comes first in reading order and
 // in tab order, and the submit button is last in both — which is also what puts
@@ -120,7 +176,7 @@ export const renderDialog = (
           <h1 class="dialog-title" id="dialog-title">${escape(dialog.title)}</h1>
           <form class="dialog-form" method="post" action="${escape(dialog.action)}">
             <div class="dialog-content stack">
-${notice(dialog.notice)}${dialog.fields.map(field).join("\n")}
+${notice(dialog.notice)}${problems(dialog.problems)}${dialog.fields.map(field).join("\n")}
             </div>
             <div class="dialog-buttons">
 ${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>

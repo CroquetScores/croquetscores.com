@@ -22,15 +22,18 @@ import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
 import { refuseCrossSite } from "./common/crossSite.js";
+import { speakToRequests, type Language } from "./common/language.js";
 import {
   machineClock,
   stampRequests,
   type Clock,
 } from "./common/requestedAt.js";
+import { english } from "./languages/english.js";
 import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerPublicPages } from "./public/pages.js";
 import { registerRegisterPage } from "./public/register.js";
+import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
 
 const repositoryRoot = join(import.meta.dirname, "..", "..");
@@ -133,6 +136,11 @@ export interface ApplicationOptions {
   readonly logger?: boolean;
   /** Where the time comes from. The machine's clock, unless a scenario sets one. */
   readonly clock?: Clock;
+  /**
+   * The languages the site offers, the first being the one it falls back to.
+   * English alone, unless a scenario offers more.
+   */
+  readonly languages?: readonly Language[];
 }
 
 export const buildApplication = async (
@@ -154,6 +162,7 @@ export const buildApplication = async (
   registerErrorMapping(server, assets);
 
   stampRequests(server, options.clock ?? machineClock);
+  speakToRequests(server, options.languages ?? [english]);
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
@@ -173,6 +182,7 @@ export const buildApplication = async (
   await registerAdmin(server, join(repositoryRoot, "dist", "admin"));
 
   registerThemeRoute(server);
+  registerLanguageRoute(server);
   registerRegisterPage(server, assets);
   registerPublicPages(server, assets);
 

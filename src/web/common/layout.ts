@@ -2,6 +2,7 @@
 // section bar, content in a white panel, green footer. Error pages use it too,
 // because a page that cannot be found is still a page of this site.
 import type { Assets } from "./assets.js";
+import type { Speaking } from "./language.js";
 import { themes, type Theme } from "./theme.js";
 
 export interface NavigationLink {
@@ -27,7 +28,10 @@ export interface Shell {
   readonly currentPath?: string | undefined;
   /** Which theme the reader has asked for, if they have asked. */
   readonly theme: Theme;
-  /** The path the theme form returns to, so a choice keeps you where you were. */
+  /** The language the page is in, and the others it could be in. */
+  readonly speaking: Speaking;
+  /** The path the theme and language forms return to, so a choice keeps you
+      where you were. */
   readonly path: string;
   /** "panel", the default, sets the body in the white panel. "bare" leaves it
       on the page's own background, for a body that brings its own frame — a
@@ -144,8 +148,37 @@ ${buttons}
           </form>`;
 };
 
+// A list in the footer, and a button beside it that makes the choice. Without
+// scripting a list cannot send itself when it changes, and one that did would
+// leave a keyboard reader choosing whatever they passed on the way down.
+//
+// Each language is listed by its own name, in its own language, because that
+// is how a reader looks for theirs; the lang on each says so to a screen
+// reader. The list opens on the language in force. Only where there is a
+// choice to make: a site in one language offers nothing.
+const languageChoice = (speaking: Speaking, path: string): string => {
+  if (speaking.offered.length < 2) return "";
+
+  const options = speaking.offered
+    .map((language) => {
+      const current = language.tag === speaking.language.tag ? " selected" : "";
+      return `              <option value="${escape(language.tag)}" lang="${escape(language.tag)}"${current}>${escape(language.name)}</option>`;
+    })
+    .join("\n");
+
+  return `
+          <form class="language" method="post" action="/language">
+            <label for="language-choice">${escape(speaking.say("language.label"))}</label>
+            <input type="hidden" name="return" value="${escape(path)}" />
+            <select id="language-choice" name="language">
+${options}
+            </select>
+            <button type="submit">${escape(speaking.say("language.choose"))}</button>
+          </form>`;
+};
+
 export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
-<html lang="en"${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
+<html lang="${escape(shell.speaking.language.tag)}"${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -193,7 +226,7 @@ ${shell.body}
           <p class="copyright">${copyright}</p>
         </div>
         <div class="site-footer-theme">
-${themeChoice(shell.theme, shell.path)}
+${themeChoice(shell.theme, shell.path)}${languageChoice(shell.speaking, shell.path)}
         </div>
       </div>
     </footer>

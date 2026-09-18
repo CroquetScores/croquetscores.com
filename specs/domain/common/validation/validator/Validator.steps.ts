@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
 import { ValidationError } from "../../../../../src/domain/common/validation/ValidationError.js";
+import type { BrokenRule } from "../../../../../src/domain/common/validation/Validator.js";
 import { type Range, ranges } from "../../../../support/exampleRange.js";
 import type { SpecWorld } from "../../../../support/world.js";
 
@@ -11,7 +12,7 @@ const rangeOf = (world: SpecWorld): Range => {
   return world.range;
 };
 
-const brokenRulesOf = (world: SpecWorld): readonly string[] => {
+const brokenRulesOf = (world: SpecWorld): readonly BrokenRule[] => {
   assert.ok(
     world.brokenRules !== undefined,
     "The example range has not been checked.",
@@ -70,21 +71,53 @@ Then("no rule is broken", function (this: SpecWorld) {
 Then(
   "the first rule broken is {string}",
   function (this: SpecWorld, code: string) {
-    assert.equal(brokenRulesOf(this)[0], code);
+    assert.equal(brokenRulesOf(this)[0]?.code, code);
     this.brokenRulesChecked = 1;
+    this.fieldsNamed = [];
   },
 );
 
 Then(
   "the next rule broken is {string}",
   function (this: SpecWorld, code: string) {
-    assert.equal(brokenRulesOf(this)[this.brokenRulesChecked], code);
+    assert.equal(brokenRulesOf(this)[this.brokenRulesChecked]?.code, code);
     this.brokenRulesChecked += 1;
+    this.fieldsNamed = [];
   },
 );
 
 Then("no other rule is broken", function (this: SpecWorld) {
-  assert.deepEqual(brokenRulesOf(this).slice(this.brokenRulesChecked), []);
+  assert.deepEqual(
+    brokenRulesOf(this)
+      .slice(this.brokenRulesChecked)
+      .map((rule) => rule.code),
+    [],
+  );
+});
+
+// "It" is the rule the scenario named last, first or next.
+const lastNamed = (world: SpecWorld): BrokenRule => {
+  const rule = brokenRulesOf(world)[world.brokenRulesChecked - 1];
+  assert.ok(rule !== undefined, "No rule broken has been named yet.");
+  return rule;
+};
+
+Then("it reads the field {string}", function (this: SpecWorld, field: string) {
+  const rule = lastNamed(this);
+  assert.ok(
+    rule.fields.includes(field),
+    `${rule.code} reads ${inspect(rule.fields)}.`,
+  );
+  this.fieldsNamed.push(field);
+});
+
+Then("it reads no other field", function (this: SpecWorld) {
+  const rule = lastNamed(this);
+  assert.deepEqual(
+    rule.fields.filter((field) => !this.fieldsNamed.includes(field)),
+    [],
+    `${rule.code} reads ${inspect(rule.fields)}.`,
+  );
 });
 
 Then("it is not refused", function (this: SpecWorld) {

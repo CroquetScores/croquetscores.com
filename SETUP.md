@@ -409,7 +409,7 @@ That is one hook on the server, in front of every route, rather than a token thr
 
 A public page is a module exporting the query it needs and a function returning HTML. It sets `ETag` and `Cache-Control` and works with JavaScript switched off. The admin SPA builds from `src/web/admin/` into `dist/admin/`; in development Vite's dev server proxies `/api` and `/auth` to Fastify.
 
-Errors map in one place: a failed result becomes `422` carrying its codes, an unknown route `404`, and anything unhandled `500` with a correlation id written to the log and nothing else said to the caller.
+Errors map in one place. A request refused for breaking its rules is thrown as `Request.Invalid` rather than returned, and becomes `422` carrying every rule it broke, by code — except from a form, which shows itself again with each rule beneath its field (`src/web/common/form.ts`). An unknown route becomes `404`, and anything else unhandled, the mediator's other refusals included, `500` with a correlation id written to the log and nothing else said to the caller.
 
 ---
 

@@ -21,6 +21,7 @@ import { Query } from "../../src/application/common/Query.js";
 import { QueryValidator } from "../../src/application/common/QueryValidator.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
+import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 import { type Range, ranges } from "./exampleRange.js";
 import type { SpecWorld } from "./world.js";
 
@@ -76,7 +77,7 @@ export class NotARequest {}
 export class ExampleCommandValidator extends CommandValidator<ExampleCommand> {
   readonly validates = ExampleCommand;
 
-  validate(command: ExampleCommand): readonly string[] {
+  validate(command: ExampleCommand): readonly BrokenRule[] {
     return ranges.check(command);
   }
 }
@@ -84,7 +85,7 @@ export class ExampleCommandValidator extends CommandValidator<ExampleCommand> {
 export class ExampleQueryValidator extends QueryValidator<ExampleQuery> {
   readonly validates = ExampleQuery;
 
-  validate(query: ExampleQuery): readonly string[] {
+  validate(query: ExampleQuery): readonly BrokenRule[] {
     return ranges.check(query);
   }
 }
