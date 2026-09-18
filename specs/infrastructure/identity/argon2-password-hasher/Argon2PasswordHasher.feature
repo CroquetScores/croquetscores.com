@@ -12,7 +12,9 @@ Feature: Hashing passwords with argon2id
   it was made with, so raising the cost later leaves every hash already kept
   still able to be checked, each at the cost it was made with; and a hash made
   at less than today's cost says, when its password matches, that it should be
-  made again.
+  made again. So does one made with a different number of lanes: more lanes
+  are not more cost, and fewer are not less, so a hash not made with today's
+  is made again with them.
 
   Rule: A hash is argon2id, at no less than the recommended cost
 
@@ -47,5 +49,12 @@ Feature: Hashing passwords with argon2id
       Given the argon2 password hasher
       And the password "correct horse battery staple"
       And a hash of it made at 8192 KiB of memory and 1 pass
+      When "correct horse battery staple" is checked against that hash
+      Then the hash should be made again
+
+    Scenario: A hash made with a different number of lanes should be made again
+      Given the argon2 password hasher
+      And the password "correct horse battery staple"
+      And a hash of it made with 2 lanes
       When "correct horse battery staple" is checked against that hash
       Then the hash should be made again

@@ -42,14 +42,19 @@ export const costOf = (hashed: string): Cost | undefined => {
   };
 };
 
-/** Whether `hashed` was made some way short of today's. */
+/**
+ * Whether `hashed` was made some way short of today's. Lanes are compared for
+ * difference rather than for less: more of them are not more cost and fewer are
+ * not less, so a hash not made with today's is made again with them.
+ */
 export const belowToday = (hashed: string): boolean => {
   const cost = costOf(hashed);
   return (
     cost === undefined ||
     cost.algorithm !== "argon2id" ||
     cost.memoryCost < todaysCost.memoryCost ||
-    cost.timeCost < todaysCost.timeCost
+    cost.timeCost < todaysCost.timeCost ||
+    cost.parallelism !== todaysCost.parallelism
   );
 };
 
@@ -79,7 +84,18 @@ export class Argon2id {
 
   /** Takes as long as checking `input` against a real hash, and matches nothing. */
   async spend(input: string): Promise<false> {
-    this.#decoy ??= this.hash(randomBytes(32).toString("base64"));
+    if (this.#decoy === undefined) {
+      const making = this.hash(randomBytes(32).toString("base64"));
+      this.#decoy = making;
+      // Kept only once made. A making that failed — the library refusing under
+      // memory pressure, say — is let go of, so that the next check makes it
+      // again rather than every check until the process restarts failing on
+      // the one that did. Whoever awaited it is told of the failure by the
+      // await below; this only forgets it.
+      void making.catch(() => {
+        if (this.#decoy === making) this.#decoy = undefined;
+      });
+    }
     await verify(await this.#decoy, input);
     return false;
   }

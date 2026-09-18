@@ -2,7 +2,10 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { hash, type Algorithm } from "@node-rs/argon2";
 import { strict as assert } from "node:assert";
 
-import { costOf } from "../../../../src/infrastructure/identity/Argon2id.js";
+import {
+  costOf,
+  todaysCost,
+} from "../../../../src/infrastructure/identity/Argon2id.js";
 import { Argon2PasswordHasher } from "../../../../src/infrastructure/identity/Argon2PasswordHasher.js";
 import { checked } from "../../../application/services/password-hasher/PasswordHasher.steps.js";
 import type { SpecWorld } from "../../../support/world.js";
@@ -47,19 +50,32 @@ Then(
 
 // Made by the library directly, as a hash kept from before today's cost was
 // raised would have been made.
+const madeOtherwise = async (
+  world: SpecWorld,
+  cost: { memoryCost: number; timeCost: number; parallelism: number },
+): Promise<void> => {
+  assert.ok(world.password !== undefined, "No password has been given.");
+  olderHashes.set(
+    world,
+    await hash(world.password.normalize("NFC"), {
+      ...cost,
+      algorithm: argon2id,
+    }),
+  );
+};
+
 Given(
   "a hash of it made at {int} KiB of memory and {int} pass",
   async function (this: SpecWorld, memoryCost: number, timeCost: number) {
-    assert.ok(this.password !== undefined, "No password has been given.");
-    olderHashes.set(
-      this,
-      await hash(this.password.normalize("NFC"), {
-        memoryCost,
-        timeCost,
-        parallelism: 1,
-        algorithm: argon2id,
-      }),
-    );
+    await madeOtherwise(this, { memoryCost, timeCost, parallelism: 1 });
+  },
+);
+
+// At today's memory and passes, so that the lanes are the only difference.
+Given(
+  "a hash of it made with {int} lanes",
+  async function (this: SpecWorld, parallelism: number) {
+    await madeOtherwise(this, { ...todaysCost, parallelism });
   },
 );
 
