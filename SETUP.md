@@ -71,15 +71,17 @@ ESLint enforces all of this (§9); breaking it fails CI.
         /value-objects
     /services              interfaces the domain names
   /application
-    /common                Mediator, Command, Query, Handler, pipeline behaviours
+    /common                Mediator, Command, Query, Handler, Behaviour, and the
+                           behaviours that need nothing outside the application
     /operations            one folder per area, holding commands, queries,
                            validators, handlers and result types together
     /projections           read-model builders: events in, rows out
     /services              interfaces the application names — repositories,
-                           EventStore, UnitOfWork, IdentityProvider
+                           EventStore, IdentityProvider
   /infrastructure
     /config                settings and secret loading
-    /database              connection pool, migration runner, /migrations/*.sql
+    /database              connection pool, migration runner, /migrations/*.sql,
+                           the unit of work and the two transaction behaviours
     /event-store           the Postgres event store, append and replay
     /read-models           query implementations over projected tables
     /identity              argon2id hashing, token issuing, Google, Facebook
@@ -93,7 +95,7 @@ ESLint enforces all of this (§9); breaking it fails CI.
     /admin                 the React SPA, its own tsconfig, built by Vite
     /common                request context, error mapping, cookies, CSRF
 /specs                     mirrors /src; each .feature sits with its .steps.ts
-  /support                 World, hooks, shared step helpers
+  /support                 World, hooks, the example requests, shared step helpers
   /domain /application /infrastructure /web
 /scripts                   one-off development tooling
 /assets                    css and images served as static files
@@ -329,7 +331,9 @@ A second handler for a request is refused when it is registered. A request with 
 
 Which door a request came through is settled before anything else is asked of it, so a query handed to `send` is refused as the wrong door rather than as a command missing its time. A command that does not say when it was asked for is refused before any behaviour sees it, because every event it records is stamped with that time (§7.4). Behaviours wrap the handler like layers: the first registered is the outermost, the first to see a request going in and the last to see its answer, or its failure, coming out. The codes each refusal carries, and the rest of this as scenarios, are in `specs/application/common/mediator/Mediator.feature`.
 
-There are two pipelines because the two sides need different things of them. A command runs **logging → validation → transaction → handler**: validation rejects it before a transaction is opened, and the transaction behaviour commits the unit of work, appends the events the aggregates recorded together with the projections those events drive, and publishes only after the commit succeeds. A query runs **logging → validation → handler** and opens no transaction, because a query writes nothing — and a `query` that needed one would be a command wearing the wrong name.
+There are two pipelines because the two sides need different things of them. A command runs **logging → validation → transaction → handler**: validation rejects it before a transaction is opened, and the transaction behaviour commits the unit of work, appends the events the aggregates recorded together with the projections those events drive, and publishes only after the commit succeeds. A query runs **logging → validation → read-only transaction → handler**: a transaction so that everything answering one query reads the database as of one moment, and read-only so that a write on the read side is refused by Postgres rather than by a rule somebody has to remember. One moment takes repeatable read rather than the read committed a transaction gets by default, because read committed takes a fresh snapshot for every statement: a query reading twice inside one of those still reads two moments, and the transaction would be buying nothing a query wants. A command keeps read committed, because repeatable read would have it fail over anything another command touched while it ran. Both pipelines are specified in `specs/infrastructure/database/`, against Postgres, because what is worth knowing about a commit is whether anything was written.
+
+The unit of work holding the connection a request is running on, and the two behaviours that open and finish its transaction, are in `src/infrastructure/database/`. An earlier draft of this document had the unit of work among the interfaces the application names, and it does not belong there: everything that asks for a connection is an adapter, and what it gets back is a Postgres client. An interface in the application would either name a Postgres type, which is the layering broken, or hide it behind an opaque one that every adapter casts its way back out of.
 
 Keeping both on one mediator is what lets the web layer hold a single dependency and lets a behaviour be written once. Keeping them as two methods is what stops a caller writing through the read side by accident.
 
@@ -402,11 +406,14 @@ Errors map in one place: a failed result becomes `422` carrying its codes, an un
     "import": [
       "specs/**/*.steps.ts",
       "specs/support/**/*.ts",
-      "specs/infrastructure/support/**/*.ts"
+      "specs/infrastructure/support/**/*.ts",
+      "specs/web/support/**/*.ts"
     ],
     "paths": ["specs/**/*.feature"],
     "format": ["progress-bar", "html:reports/cucumber.html"],
-    "formatOptions": { "snippetInterface": "async-await" }
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    }
   }
 }
 ```
@@ -510,6 +517,39 @@ export default tseslint.config(
       "**/web/**",
     ),
   },
+  // What every aggregate shares names no aggregate, or it stops being shared.
+  // The one exception is who did it: every event says which account caused it,
+  // so the account's id is named here by everything. It is excepted by name so
+  // that a second such import fails the build rather than following the first.
+  // A later block replaces an earlier one's rule outright, so the domain's own
+  // restrictions are said again.
+  {
+    files: ["src/domain/common/**/*.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            ...["**/application/**", "**/infrastructure/**", "**/web/**"].map(
+              (group) => ({
+                group: [group],
+                message:
+                  "domain does not know that application, infrastructure or web exist.",
+              }),
+            ),
+            {
+              // A regex rather than a group: a group is read as gitignore
+              // would read it, and a file cannot be let back in from under a
+              // directory that has been shut out.
+              regex: "/aggregates/(?!accounts/value-objects/AccountId\\.js$)",
+              message:
+                "domain/common is shared by every aggregate and names none of them, except the id of the account that caused an event.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   {
     files: [
       "src/application/**/*.ts",
@@ -532,6 +572,8 @@ export default tseslint.config(
   },
 );
 ```
+
+The one exception written into the layer rules is `src/domain/common/`, which is shared by every aggregate and so names none of them — except the id of the account that caused an event, which every event carries. That is excepted by name, so a second import of an aggregate fails the build rather than following the first through a door left open. It takes a regex rather than a group, because a group is read the way `.gitignore` reads one and will not let a file back in from under a directory that has been shut out.
 
 Three things beyond the layer rules earn their place. `disableTypeChecked` covers the plain JavaScript — this file and the scripts — because there is no `tsconfig.json` that includes them and so no types to check them against; the handful of Node globals they use are named there rather than pulled in from a `globals` package, on the grounds that a short list that is true beats a long one. `scripts/*.mjs` joins `allowDefaultProject`, whose patterns match only at the root. And the admin SPA gets a block naming its own `tsconfig.json`, since the root one excludes it.
 

@@ -4,7 +4,8 @@
 //
 // Commands and queries share this and nothing else. They come in through
 // separate doors, have separate handlers and run separate behaviours, because a
-// command is run inside a transaction and a query never is.
+// command is run inside a transaction it writes in and has to commit, and a
+// query inside a read-only one.
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Behaviour } from "./Behaviour.js";
 import type { Command } from "./Command.js";

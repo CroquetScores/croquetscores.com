@@ -8,8 +8,9 @@ Feature: Handing a request to the one thing that deals with it
 
   Commands and queries share the mediator and nothing else. They are handed in
   through separate doors, so that nothing reaches the read side by mistake, and
-  each side has its own behaviours: a command is run inside a transaction and a
-  query never is, so the two cannot share one line of them.
+  each side has its own behaviours: a command is run inside a transaction it
+  writes in and has to commit, a query inside a read-only one, so the two cannot
+  share one line of them.
 
   What each behaviour does — what is logged, how a request is validated, what a
   transaction commits — is specified with that behaviour. This feature is how the
