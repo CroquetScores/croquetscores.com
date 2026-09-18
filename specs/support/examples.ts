@@ -10,11 +10,18 @@
 //
 // Loaded by every spec in the repository, so it names nothing from
 // infrastructure or the web, for the reason world.ts gives.
-import type { Command } from "../../src/application/common/Command.js";
-import { Mediator } from "../../src/application/common/Mediator.js";
-import type { Query } from "../../src/application/common/Query.js";
+import { Command } from "../../src/application/common/Command.js";
+import { CommandValidator } from "../../src/application/common/CommandValidator.js";
+import type { ValidationBehaviour } from "../../src/application/common/ValidationBehaviour.js";
+import {
+  Mediator,
+  type RequestType,
+} from "../../src/application/common/Mediator.js";
+import { Query } from "../../src/application/common/Query.js";
+import { QueryValidator } from "../../src/application/common/QueryValidator.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
-import type { Range } from "./exampleRange.js";
+import { type Range, ranges } from "./exampleRange.js";
 import type { SpecWorld } from "./world.js";
 
 // The example command and query each ask for a range, when a scenario gives
@@ -27,33 +34,58 @@ const nothingAskedFor: Range = {
   step: undefined,
 };
 
-export class ExampleCommand implements Command<string>, Range {
-  declare readonly _result?: string;
+export class ExampleCommand extends Command<string> implements Range {
   readonly start: number | undefined;
   readonly end: number | undefined;
   readonly step: number | undefined;
 
   constructor(
-    readonly requestedAt: ReadOnlyDate,
+    requestedAt: ReadOnlyDate,
     askingFor: Range = nothingAskedFor,
+    requestedBy?: AccountId,
   ) {
+    super(requestedAt, requestedBy);
     ({ start: this.start, end: this.end, step: this.step } = askingFor);
   }
 }
 
-export class OtherCommand implements Command<string> {
-  declare readonly _result?: string;
-  constructor(readonly requestedAt: ReadOnlyDate) {}
+export class OtherCommand extends Command<string> {
+  constructor(requestedAt: ReadOnlyDate) {
+    super(requestedAt);
+  }
 }
 
-export class ExampleQuery implements Query<string>, Range {
-  declare readonly _result?: string;
+export class ExampleQuery extends Query<string> implements Range {
   readonly start: number | undefined;
   readonly end: number | undefined;
   readonly step: number | undefined;
 
   constructor(askingFor: Range = nothingAskedFor) {
+    super();
     ({ start: this.start, end: this.end, step: this.step } = askingFor);
+  }
+}
+
+export class OtherQuery extends Query<string> {}
+
+/** Neither a command nor a query, for a handler to name by mistake. */
+export class NotARequest {}
+
+// Their validators: the example range's rules, since each request is a range
+// in its own right.
+export class ExampleCommandValidator extends CommandValidator<ExampleCommand> {
+  readonly validates = ExampleCommand;
+
+  validate(command: ExampleCommand): readonly string[] {
+    return ranges.check(command);
+  }
+}
+
+export class ExampleQueryValidator extends QueryValidator<ExampleQuery> {
+  readonly validates = ExampleQuery;
+
+  validate(query: ExampleQuery): readonly string[] {
+    return ranges.check(query);
   }
 }
 
@@ -67,6 +99,14 @@ export const askedAt = ReadOnlyDate.from(new Date("2026-09-17T09:00:00Z"));
  */
 export const mediatorOf = (world: SpecWorld): Mediator =>
   (world.mediator ??= new Mediator());
+
+/** The validation behaviour the scenario put in the mediator's lines. */
+export const validationOf = (world: SpecWorld): ValidationBehaviour => {
+  if (world.validation === undefined) {
+    throw new Error("This scenario's requests are not validated.");
+  }
+  return world.validation;
+};
 
 /**
  * A handler that records it was called, does whatever else the scenario has
@@ -93,6 +133,26 @@ export const exampleHandler = (
     }
     return answer;
   },
+});
+
+/**
+ * The example handler as a command's or a query's, naming the request it
+ * handles, which is all registering one takes.
+ */
+export const exampleCommandHandler = <TCommand extends Command<string>>(
+  handles: RequestType<TCommand>,
+  handler: { handle: () => Promise<string> },
+): { handles: RequestType<TCommand>; handle: () => Promise<string> } => ({
+  handles,
+  handle: handler.handle,
+});
+
+export const exampleQueryHandler = <TQuery extends Query<string>>(
+  handles: RequestType<TQuery>,
+  handler: { handle: () => Promise<string> },
+): { handles: RequestType<TQuery>; handle: () => Promise<string> } => ({
+  handles,
+  handle: handler.handle,
 });
 
 /** What came of handing a request in: the answer, or the failure. */

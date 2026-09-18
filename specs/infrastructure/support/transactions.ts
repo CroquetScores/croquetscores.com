@@ -130,7 +130,8 @@ export const commandDoes = (world: SpecWorld): (() => Promise<void>)[] => {
 
   const does: (() => Promise<void>)[] = [];
   scenario.commandDoes = does;
-  mediatorOf(world).handleCommand(ExampleCommand, {
+  mediatorOf(world).handleCommand({
+    handles: ExampleCommand,
     handle: async (): Promise<string> => {
       world.handled.push("example command");
       scenario.commandConnection = scenario.unitOfWork.connection();

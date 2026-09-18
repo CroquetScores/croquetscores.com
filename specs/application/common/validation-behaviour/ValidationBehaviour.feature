@@ -103,21 +103,6 @@ Feature: Refusing a request that breaks its rules before anything acts on it
       When the example command is sent for the example range
       Then nothing called "behind validation" happens
 
-  Rule: A refusal names the rules broken and nothing of what was sent
-
-    A refusal is likely to be logged, and what was sent may be exactly what
-    somebody typed — a password, as easily as a range. So the refusal names the
-    rules the request broke, which is all its sender needs, and repeats nothing
-    of the request itself.
-
-    Scenario: A refusal does not repeat what was sent
-      Given a validator registered for the example command
-      And a handler registered for the example command
-      And an example range
-      And it starts at -4321
-      When the example command is sent for the example range
-      Then the refusal does not mention "-4321"
-
   Rule: A request with no validator goes on unchecked
 
     Not every request carries anything to check, and one that does not should

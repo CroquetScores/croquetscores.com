@@ -102,7 +102,8 @@ Given(
     const scenario = state(this);
     const meet = meetingOfTwo();
 
-    mediatorOf(this).handleCommand(ExampleCommand, {
+    mediatorOf(this).handleCommand({
+      handles: ExampleCommand,
       handle: async (): Promise<string> => {
         // Reaching here is having one: the behaviour opened it on the way in.
         await meet();

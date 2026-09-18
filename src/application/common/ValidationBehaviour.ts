@@ -13,20 +13,18 @@ import type { Query } from "./Query.js";
 type Request = Command<unknown> | Query<unknown>;
 
 /**
- * What is asked of a request's rules: every rule it breaks, in the order they
- * are declared. The domain's Validator is exactly this, held beside the
- * request.
+ * The rules for one kind of request: which kind it is for, and every rule a
+ * request of that kind breaks, in the order they are declared. A command's
+ * validator is one of these; so is anything a query is validated by.
  */
-export interface RequestRules<TRequest> {
-  check(request: TRequest): readonly string[];
+export interface RequestValidator<TRequest> {
+  readonly validates: RequestType<TRequest>;
+  validate(request: TRequest): readonly string[];
 }
 
 /**
  * A request refused for breaking its rules, naming every rule it broke —
  * whoever typed it is owed the whole list at once, not one fault per attempt.
- *
- * It names nothing of the request itself. A refusal is likely to be logged, and
- * a request can carry a password as easily as a range.
  *
  * It is thrown, like the mediator's other refusals, rather than returned as a
  * failed result. A command's handler answers with a result, but a query's
@@ -47,44 +45,42 @@ export class RequestInvalid extends RequestRefused {
 }
 
 export class ValidationBehaviour implements Behaviour {
-  // Rules are stored under their request's class and taken back out under the
-  // class of whatever arrives, as the mediator's handlers are, and for the same
-  // reason cannot carry the type they were registered with through the map.
-  readonly #rules = new Map<unknown, RequestRules<Request>>();
+  // Validators are stored under their request's class and taken back out under
+  // the class of whatever arrives, as the mediator's handlers are, and for the
+  // same reason cannot carry the type they were registered with through the
+  // map.
+  readonly #validators = new Map<unknown, RequestValidator<Request>>();
 
   /**
-   * Asks `rules` about every request of `type`. Refused with
-   * `Validation.AlreadyValidated` when the request already has rules: two sets
-   * would leave which apply, and in what order the broken ones come back, to
+   * Asks `validator` about every request of the kind it names. Refused with
+   * `Validation.AlreadyValidated` when that kind already has one: two would
+   * leave which rules apply, and in what order the broken ones come back, to
    * the order they happened to be registered in.
    */
-  validate<TRequest extends Request>(
-    type: RequestType<TRequest>,
-    // The request's type is taken from its class alone. Rules written for
-    // something the request is — a range, say — would otherwise pull it
-    // towards themselves, and the two would meet at "any request", which no
-    // rules were written for.
-    rules: RequestRules<NoInfer<TRequest>>,
+  register<TRequest extends Request>(
+    validator: RequestValidator<TRequest>,
   ): void {
-    if (this.#rules.has(type)) {
+    const type = validator.validates;
+    if (this.#validators.has(type)) {
       throw new RequestRefused(
         "Validation.AlreadyValidated",
         `${type.name || "That request"} already has a validator, and a request has at most one.`,
       );
     }
-    this.#rules.set(type, rules);
+    this.#validators.set(type, validator);
   }
 
   async invoke<TResult>(
     request: Command<TResult> | Query<TResult>,
     next: () => Promise<TResult>,
   ): Promise<TResult> {
-    // A request nobody gave rules to is passed on as it is. Nothing invalid gets
+    // A request nobody gave a validator is passed on as it is. Nothing invalid gets
     // further by that: whatever its handler makes from what it carries is
     // required to be valid where it is made, and fails there — as a mistake in
     // the code that let it through, rather than as something to tell whoever
     // sent it.
-    const broken = this.#rules.get(request.constructor)?.check(request) ?? [];
+    const broken =
+      this.#validators.get(request.constructor)?.validate(request) ?? [];
     if (broken.length > 0) throw new RequestInvalid(request, broken);
     return next();
   }

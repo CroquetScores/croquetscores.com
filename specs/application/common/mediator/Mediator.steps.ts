@@ -4,16 +4,19 @@ import { inspect } from "node:util";
 
 import type { Behaviour } from "../../../../src/application/common/Behaviour.js";
 import type { Command } from "../../../../src/application/common/Command.js";
+import type { Query } from "../../../../src/application/common/Query.js";
 import { RequestRefused } from "../../../../src/application/common/Mediator.js";
-import type { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import {
   askedAt,
   attempt,
   ExampleCommand,
+  exampleCommandHandler,
   exampleHandler,
+  exampleQueryHandler,
   ExampleQuery,
   mediatorOf,
   OtherCommand,
+  OtherQuery,
 } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
 
@@ -47,8 +50,10 @@ Given(
   "a handler registered for the example command",
   function (this: SpecWorld) {
     mediatorOf(this).handleCommand(
-      ExampleCommand,
-      exampleHandler(this, "example command", "handled"),
+      exampleCommandHandler(
+        ExampleCommand,
+        exampleHandler(this, "example command", "handled"),
+      ),
     );
   },
 );
@@ -57,8 +62,10 @@ Given(
   "a handler registered for the example command that answers {string}",
   function (this: SpecWorld, answer: string) {
     mediatorOf(this).handleCommand(
-      ExampleCommand,
-      exampleHandler(this, "example command", answer),
+      exampleCommandHandler(
+        ExampleCommand,
+        exampleHandler(this, "example command", answer),
+      ),
     );
   },
 );
@@ -67,23 +74,38 @@ Given(
   "a handler registered for the example command that fails",
   function (this: SpecWorld) {
     mediatorOf(this).handleCommand(
-      ExampleCommand,
-      exampleHandler(this, "example command", "never answered", true),
+      exampleCommandHandler(
+        ExampleCommand,
+        exampleHandler(this, "example command", "never answered", true),
+      ),
     );
   },
 );
 
 Given("a handler registered for the other command", function (this: SpecWorld) {
   mediatorOf(this).handleCommand(
-    OtherCommand,
-    exampleHandler(this, "other command", "handled"),
+    exampleCommandHandler(
+      OtherCommand,
+      exampleHandler(this, "other command", "handled"),
+    ),
+  );
+});
+
+Given("a handler registered for the other query", function (this: SpecWorld) {
+  mediatorOf(this).handleQuery(
+    exampleQueryHandler(
+      OtherQuery,
+      exampleHandler(this, "other query", "found"),
+    ),
   );
 });
 
 Given("a handler registered for the example query", function (this: SpecWorld) {
   mediatorOf(this).handleQuery(
-    ExampleQuery,
-    exampleHandler(this, "example query", "found"),
+    exampleQueryHandler(
+      ExampleQuery,
+      exampleHandler(this, "example query", "found"),
+    ),
   );
 });
 
@@ -91,8 +113,10 @@ Given(
   "a handler registered for the example query that answers {string}",
   function (this: SpecWorld, answer: string) {
     mediatorOf(this).handleQuery(
-      ExampleQuery,
-      exampleHandler(this, "example query", answer),
+      exampleQueryHandler(
+        ExampleQuery,
+        exampleHandler(this, "example query", answer),
+      ),
     );
   },
 );
@@ -116,8 +140,10 @@ When(
   function (this: SpecWorld) {
     try {
       mediatorOf(this).handleCommand(
-        ExampleCommand,
-        exampleHandler(this, "second handler", "handled"),
+        exampleCommandHandler(
+          ExampleCommand,
+          exampleHandler(this, "second handler", "handled"),
+        ),
       );
     } catch (failure) {
       this.failure = failure;
@@ -130,8 +156,10 @@ When(
   function (this: SpecWorld) {
     try {
       mediatorOf(this).handleQuery(
-        ExampleQuery,
-        exampleHandler(this, "second handler", "found"),
+        exampleQueryHandler(
+          ExampleQuery,
+          exampleHandler(this, "second handler", "found"),
+        ),
       );
     } catch (failure) {
       this.failure = failure;
@@ -183,30 +211,8 @@ When(
 When(
   "the example command is asked as though it were a query",
   async function (this: SpecWorld) {
-    await attempt(this, () =>
-      mediatorOf(this).query(new ExampleCommand(askedAt)),
-    );
-  },
-);
-
-When(
-  "the example command is sent without saying when it was asked for",
-  async function (this: SpecWorld) {
-    const command = new ExampleCommand(undefined as unknown as ReadOnlyDate);
-    await attempt(this, () => mediatorOf(this).send(command));
-  },
-);
-
-// The cast is the mistake being made: a command written the way commands used
-// to be written, with the language's own date, which the compiler catches and
-// a call from untyped input would not.
-When(
-  "the example command is sent carrying a plain date",
-  async function (this: SpecWorld) {
-    const command = new ExampleCommand(
-      new Date("2026-09-17T09:00:00Z") as unknown as ReadOnlyDate,
-    );
-    await attempt(this, () => mediatorOf(this).send(command));
+    const command = new ExampleCommand(askedAt) as unknown as Query<string>;
+    await attempt(this, () => mediatorOf(this).query(command));
   },
 );
 
