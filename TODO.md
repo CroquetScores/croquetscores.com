@@ -10,7 +10,10 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-SETUP.md §7.8 says "a failed result becomes 422 carrying its codes", but Request.Invalid is thrown rather than returned. Once this is accepted, that sentence needs updating
+- The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
+- What a form shows for a rule the catalogue has no words for — `form.otherwise`, above the fields — is covered by no scenario (from PR #32).
+- Only the "not found" page is checked in the test locale. The words on the pages for a refused request and for the server failing come from the catalogue too, but no scenario looks (from PR #32).
+- The register stand-in answers a post with the page itself, so refreshing it offers to send the form again. Harmless while it records nothing; decide between showing the form again and redirecting after success when registering is real (from PR #32).
 
 ---
 
@@ -90,18 +93,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 **Why it has not yet.** There are no commands yet, only the example ones the scenarios use. The window is narrow as well: the connection has to go after the commit is sent and before its answer comes back.
 
 **What to do.** Nothing in the unit of work can find out, so the answer is in the commands: one that matters has to be safe to send twice. The event store already catches part of this. A retry appending to a stream the first attempt wrote to expects the version the first attempt moved past, and is refused with `EventStore.Concurrency`. What it does not catch is a command that mints a new id each time it is sent — opening a tournament, registering an account — because the retry mints a second id and writes a second stream nobody else is using. For those, the caller gives the request an id it keeps across retries, carried on the command the way `requestedAt` is, and the command records it in the same transaction as its events and refuses one it has seen before. Decide which commands need it when the first real ones are written, and specify the refusal with them.
-
----
-
-## A request refused for breaking its rules will be answered as though the server had failed
-
-**Where:** `src/web/common/errors.ts`, where an error becomes a response — from the review of PR #30.
-
-**What will go wrong.** The error mapping answers with an error's own status when it carries one, and treats everything else as the site's own fault: `500`, `{ error: "Internal" }` and a reference, or the "Something went wrong" page. A request that breaks its rules is refused with `RequestInvalid`, which carries the code `Request.Invalid` and the list of rules broken, and no status — rightly, because a status is the web's business and nothing under `src/application` should know one. So a route that sends a command breaking its rules through `request.server.mediator` tells the caller the server failed, where it should say the request was wrong and which rules it broke. Whoever typed it is owed the whole list, which is the reason `RequestInvalid` carries one, and gets a reference number instead. It is also logged as an unhandled error, so a mistyped form reads in the log like a fault.
-
-**Why it has not yet.** No real route sends through the mediator. The only ones that do are the example routes in `specs/web/server/server.feature`, and its Rule about routes covers only a command and a query that succeed.
-
-**What to do.** Whoever writes the first route that sends a command or asks a query: decide, in the error mapping and nowhere else, what a refusal looks like to a caller, so that no route decides for itself. That is a decision about behaviour, so it starts as a Rule, written before the code — which status `Request.Invalid` is answered with, what the body says of the rules broken, and what a public page shows where the API answers JSON. The mediator's other refusals want deciding at the same time: `Mediator.Unhandled`, `Mediator.AlreadyHandled` and `Mediator.WrongDoor` are mistakes in how the application was put together rather than in what was sent, and are probably right to stay a `500`, but that should be said rather than fallen into. Add a scenario with an example route that sends a command breaking a rule, and expect the refusal by its code, never by its wording.
 
 ---
 
