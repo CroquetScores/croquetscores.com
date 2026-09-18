@@ -8,6 +8,10 @@
 // beneath the field the domain says it reads, and every word it shows comes
 // from the reader's language (languages.ts).
 //
+// Opened with ?notice=example, it carries a notice, for the scenario about where
+// a reader is taken when a form with a notice is refused; the form posts back
+// to the same address, so the notice is still there once it has been.
+//
 // Added to the application the @browser scenarios share, before it listens.
 // The scenarios only ever send it something that breaks a rule, so nothing it
 // sends gets as far as a transaction, and no database is needed.
@@ -16,7 +20,7 @@ import { join } from "node:path";
 
 import { readAssets } from "../../../src/web/common/assets.js";
 import { renderDialog, type Dialog } from "../../../src/web/common/dialog.js";
-import { submitForm, type Typed } from "../../../src/web/common/form.js";
+import { submitForm, typedFrom } from "../../../src/web/common/form.js";
 import { speakingOf } from "../../../src/web/common/language.js";
 import { render } from "../../../src/web/common/layout.js";
 import { themeOf } from "../../../src/web/common/theme.js";
@@ -29,6 +33,15 @@ import { passphrases } from "../../support/examplePassphrase.js";
 import { type Range, ranges } from "../../support/exampleRange.js";
 
 export const exampleFormPath = "/example-form";
+export const exampleFormWithNoticePath = `${exampleFormPath}?notice=example`;
+
+interface Opened {
+  readonly notice?: string;
+}
+
+const withNotice = (
+  request: FastifyRequest<{ Querystring: Opened }>,
+): boolean => request.query.notice === "example";
 
 /**
  * What the example form sends: a range, which is its own fields, and a
@@ -69,7 +82,9 @@ class ExampleFormCommandValidator extends CommandValidator<ExampleFormCommand> {
   }
 }
 
-const dialogFor = (request: FastifyRequest): Dialog => {
+const dialogFor = (
+  request: FastifyRequest<{ Querystring: Opened }>,
+): Dialog => {
   const { say } = speakingOf(request);
   const field = (name: string, type: "text" | "password" = "text") => ({
     name,
@@ -79,7 +94,8 @@ const dialogFor = (request: FastifyRequest): Dialog => {
   });
   return {
     title: say("example.title"),
-    action: exampleFormPath,
+    action: withNotice(request) ? exampleFormWithNoticePath : exampleFormPath,
+    notice: withNotice(request) ? say("example.notice") : undefined,
     fields: [
       field("start"),
       field("end"),
@@ -119,32 +135,35 @@ export const addExampleForm = (application: Application): void => {
 
   const { server } = application;
 
-  server.get(exampleFormPath, (request, reply) =>
+  server.get<{ Querystring: Opened }>(exampleFormPath, (request, reply) =>
     reply
       .type("text/html; charset=utf-8")
       .send(show(request)(dialogFor(request))),
   );
 
-  server.post<{ Body: Typed }>(exampleFormPath, async (request, reply) => {
-    const typed = request.body;
-    const outcome = await submitForm(
-      request,
-      reply,
-      { dialog: dialogFor(request), typed, show: show(request) },
-      () =>
-        request.server.mediator.send(
-          new ExampleFormCommand(
-            request.requestedAt,
-            {
-              start: numberOf(typed.start),
-              end: numberOf(typed.end),
-              step: numberOf(typed.step),
-            },
-            typed.passphrase,
+  server.post<{ Querystring: Opened }>(
+    exampleFormPath,
+    async (request, reply) => {
+      const typed = typedFrom(request.body);
+      const outcome = await submitForm(
+        request,
+        reply,
+        { dialog: dialogFor(request), typed, show: show(request) },
+        () =>
+          request.server.mediator.send(
+            new ExampleFormCommand(
+              request.requestedAt,
+              {
+                start: numberOf(typed.start),
+                end: numberOf(typed.end),
+                step: numberOf(typed.step),
+              },
+              typed.passphrase,
+            ),
           ),
-        ),
-    );
-    if (outcome.refused) return reply;
-    return reply.redirect(exampleFormPath, 303);
-  });
+      );
+      if (outcome.refused) return reply;
+      return reply.redirect(exampleFormPath, 303);
+    },
+  );
 };

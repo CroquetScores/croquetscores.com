@@ -138,13 +138,21 @@ const field = ({
 // read, and a live region only announces what changes after it exists — so
 // role="status" here would say nothing to anyone. It is made focusable instead,
 // and autofocus takes the reader to it on arrival, so a screen reader reads it
-// out; it is what the reader needs telling before anything else.
+// out; it is what the reader needs telling before anything else — unless
+// something on the form needs attention, which is what the reader is taken to
+// instead. A browser honours only the first autofocus on a page, and the notice
+// comes first, so it does not ask when something further down does.
 export const noticeId = "dialog-notice";
 
-const notice = (text: string | undefined): string =>
+const notice = (
+  text: string | undefined,
+  attentionElsewhere: boolean,
+): string =>
   text === undefined
     ? ""
-    : `              <p class="notice" id="${noticeId}" tabindex="-1" autofocus>${escape(text)}</p>\n`;
+    : `              <p class="notice" id="${noticeId}" tabindex="-1"${
+        attentionElsewhere ? "" : " autofocus"
+      }>${escape(text)}</p>\n`;
 
 // Above the fields, because it is about more than one of them. Like the
 // notice, it arrives with the page, so it is made focusable and the reader is
@@ -170,13 +178,18 @@ const cancel = (link: Dialog["cancel"]): string =>
     ? ""
     : `              <a class="button" href="${escape(link.href)}">${escape(link.label)}</a>\n`;
 
+// Whether the reader is being taken to something that needs attention.
+const attentionAskedFor = (dialog: Dialog): boolean =>
+  dialog.problems?.autofocus === true ||
+  dialog.fields.some((field) => field.autofocus === true);
+
 export const renderDialog = (
   dialog: Dialog,
 ): string => `        <section class="dialog" aria-labelledby="dialog-title">
           <h1 class="dialog-title" id="dialog-title">${escape(dialog.title)}</h1>
           <form class="dialog-form" method="post" action="${escape(dialog.action)}">
             <div class="dialog-content stack">
-${notice(dialog.notice)}${problems(dialog.problems)}${dialog.fields.map(field).join("\n")}
+${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${dialog.fields.map(field).join("\n")}
             </div>
             <div class="dialog-buttons">
 ${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>

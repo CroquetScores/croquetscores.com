@@ -419,7 +419,8 @@ interface FieldSeen {
 }
 
 // How a field is found in the page, written once for every step that looks: by
-// what is drawn and by the input's own label rather than by class names, so
+// what is drawn and by the input's own label rather than by class names, and
+// never a hidden input, which is not a field a reader sees or types into; so
 // that steps cannot come to disagree about what the field is, and so that a
 // field drawn some other way fails however tidy the markup around it looks.
 const looking = `
@@ -454,7 +455,7 @@ const looking = `
 const fieldsOf = async (world: SpecWorld): Promise<FieldSeen[]> => {
   const seen = await world.browserPage.evaluate<FieldSeen[]>(`(() => {
     ${looking}
-    return [...document.querySelectorAll("section.dialog input")].map((input) => {
+    return [...document.querySelectorAll("section.dialog input:not([type=hidden])")].map((input) => {
       const box = boxOf(input);
       const field = input.closest(".field");
       const message = field && field.querySelector(".field-message");
@@ -653,7 +654,7 @@ const labelsOf = async (world: SpecWorld): Promise<LabelSeen[]> => {
     { name: string; box: Rect | null; label: Omit<LabelSeen, "box"> | null }[]
   >(`(() => {
     ${looking}
-    return [...document.querySelectorAll("section.dialog input")].map((input) => {
+    return [...document.querySelectorAll("section.dialog input:not([type=hidden])")].map((input) => {
       const box = boxOf(input);
       const text = labelTextOf(input);
       const style = text && getComputedStyle(text);

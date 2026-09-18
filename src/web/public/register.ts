@@ -6,7 +6,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { renderDialog } from "../common/dialog.js";
-import type { Typed } from "../common/form.js";
+import { typedFrom, type Typed } from "../common/form.js";
 import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
@@ -86,7 +86,7 @@ export const registerRegisterPage = (
   // carried in a redirect's address instead, because an email address in a
   // URL ends up in logs and in the browser's history. The password is never
   // written back.
-  server.post<{ Body: Typed }>(path, (request, reply) =>
-    show(assets, request, reply, true, request.body ?? {}),
+  server.post(path, (request, reply) =>
+    show(assets, request, reply, true, typedFrom(request.body)),
   );
 };

@@ -24,6 +24,24 @@ import { speakingOf, type Speaking } from "./language.js";
 /** What was typed into each field, by the field's name. */
 export type Typed = Readonly<Record<string, string | undefined>>;
 
+/**
+ * What was typed, from whatever arrived as the form's body. A browser sends
+ * what was typed in each field as text, once. Anything else under a field's
+ * name — the field sent twice, which arrives as a list, or a body that is not a
+ * form's at all — was not typed into the form, and counts as nothing typed
+ * there rather than as something for the form to fail on when writing it back.
+ */
+export const typedFrom = (body: unknown): Typed => {
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(body).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
+};
+
 const saidOnce = (list: string[], text: string): void => {
   if (!list.includes(text)) list.push(text);
 };

@@ -31,6 +31,7 @@ export const englishForScenarios: Language = {
     "example.step": "Step",
     "example.passphrase": "Passphrase",
     "example.submit": "Send",
+    "example.notice": "This is an example notice.",
 
     "Range.StartMissing": "Enter a start.",
     "Range.StartNegative": "The start cannot be below zero.",

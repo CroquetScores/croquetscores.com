@@ -154,7 +154,36 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
       When the dialog is submitted
       Then the passphrase field is empty
 
+  Rule: Only text that was typed is put back
+
+    A browser sends what was typed in each field as text, once. Anything else
+    that arrives under a field's name — the field sent twice, or a body that is
+    not a form's at all — was not typed into the form. It is not put back, and
+    the form is not made to fail on it: the form is shown again as though
+    nothing had been typed there.
+
+    Scenario: A field sent twice is shown empty
+      Given the form sends the start field twice
+      And "-1" is typed into the start field
+      When the dialog is submitted
+      Then the start field is empty
+
+    Scenario: A field sent twice does not make the form fail
+      Given the form sends the start field twice
+      And "-1" is typed into the start field
+      When the dialog is submitted
+      Then the form is shown again as refused
+
+    Scenario: A body that is not a form's is answered with the form
+      When a body that is not a form's is sent to the example form
+      Then the sender is answered with the form, refused
+
   Rule: The reader is taken to the first thing that needs attention
+
+    A form can carry a notice, something the reader needs telling before
+    anything else, and a reader arriving at one is ordinarily taken to it. Once
+    something on the form needs attention, that comes first: the reader is
+    taken to it, and the notice is still there to read.
 
     Scenario: The first field that broke a rule is where the reader is taken
       Given "1" is typed into the start field
@@ -168,3 +197,10 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
       And "correct horse battery" is typed into the passphrase field
       When the dialog is submitted
       Then the reader is taken to the message above the fields
+
+    Scenario: A notice does not take the reader from the field that needs attention
+      Given the example form is open with a notice
+      And "1" is typed into the start field
+      And "3" is typed into the step field
+      When the dialog is submitted
+      Then the reader is taken to the end field
