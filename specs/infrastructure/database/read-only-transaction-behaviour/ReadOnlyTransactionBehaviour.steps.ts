@@ -13,12 +13,14 @@ import {
 } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
 import {
-  commandDoes,
+  asksTheExampleQuery,
+  fails,
   meetingOfTwo,
   readNotes,
   state,
   watch,
   writeNote,
+  writesTheNote,
 } from "../../support/transactions.js";
 
 // Putting the mediator together -----------------------------------------
@@ -160,39 +162,28 @@ Given(
 Given(
   "a handler registered for the example command that asks the example query",
   function (this: SpecWorld) {
-    commandDoes(this).push(async () => {
-      await mediatorOf(this).query(new ExampleQuery());
-    });
+    asksTheExampleQuery(this);
   },
 );
 
 Given(
   "the command's handler asks the example query once it has written the note",
   function (this: SpecWorld) {
-    commandDoes(this).push(async () => {
-      await mediatorOf(this).query(new ExampleQuery());
-    });
+    asksTheExampleQuery(this);
   },
 );
 
 Given(
   "the command's handler writes the note {string} once the query has answered",
   function (this: SpecWorld, note: string) {
-    const scenario = state(this);
-    scenario.noteTheCommandWrote = note;
-    commandDoes(this).push(() =>
-      writeNote(scenario.unitOfWork.connection(), note),
-    );
+    writesTheNote(this, note);
   },
 );
 
 Given(
   "the command's handler fails once the query has answered",
   function (this: SpecWorld) {
-    commandDoes(this).push(() => {
-      this.plantedFailure = new Error("the example command's handler failed");
-      return Promise.reject(this.plantedFailure);
-    });
+    fails(this);
   },
 );
 

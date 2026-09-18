@@ -14,7 +14,11 @@ import {
   type UnitOfWork,
   UnitOfWorkRefused,
 } from "../../../src/infrastructure/database/UnitOfWork.js";
-import { ExampleCommand, mediatorOf } from "../../support/examples.js";
+import {
+  ExampleCommand,
+  ExampleQuery,
+  mediatorOf,
+} from "../../support/examples.js";
 import type { SpecWorld } from "../../support/world.js";
 
 export interface Watched {
@@ -129,6 +133,37 @@ export const commandDoes = (world: SpecWorld): (() => Promise<void>)[] => {
   return does;
 };
 
+// What the example command's handler can be told to do next. Each is written
+// once, and called from every step that says it in whatever words suit where
+// the step sits in its scenario.
+
+/** Writes `note` on the connection the command is running on. */
+export const writesTheNote = (world: SpecWorld, note: string): void => {
+  const scenario = state(world);
+  scenario.noteTheCommandWrote = note;
+  commandDoes(world).push(() =>
+    writeNote(scenario.unitOfWork.connection(), note),
+  );
+};
+
+/** Asks the example query, from inside the command. */
+export const asksTheExampleQuery = (world: SpecWorld): void => {
+  commandDoes(world).push(async () => {
+    await mediatorOf(world).query(new ExampleQuery());
+  });
+};
+
+/**
+ * Fails, with the same failure however it comes to, so that "sending it fails
+ * with the handler's own failure" can recognise it coming out.
+ */
+export const fails = (world: SpecWorld): void => {
+  commandDoes(world).push(() => {
+    world.plantedFailure = new Error("the example command's handler failed");
+    return Promise.reject(world.plantedFailure);
+  });
+};
+
 /**
  * Somewhere two requests wait for each other, so that they are underway at
  * the same time rather than politely taking turns.
@@ -155,11 +190,7 @@ Given("a place to keep notes", async function (this: SpecWorld) {
 Given(
   "a handler registered for the example command that writes the note {string}",
   function (this: SpecWorld, note: string) {
-    const scenario = state(this);
-    scenario.noteTheCommandWrote = note;
-    commandDoes(this).push(() =>
-      writeNote(scenario.unitOfWork.connection(), note),
-    );
+    writesTheNote(this, note);
   },
 );
 

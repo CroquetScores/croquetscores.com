@@ -18,19 +18,13 @@ import {
 import type { SpecWorld } from "../../../support/world.js";
 import {
   commandDoes,
+  fails,
   meetingOfTwo,
   readNotes,
   state,
   watch,
   writeNote,
 } from "../../support/transactions.js";
-
-// The same failure however the handler comes to fail, so that it can be
-// recognised coming out.
-const failing = (world: SpecWorld) => (): Promise<void> => {
-  world.plantedFailure = new Error("the example command's handler failed");
-  return Promise.reject(world.plantedFailure);
-};
 
 const sendingTheOtherCommand =
   (world: SpecWorld) => async (): Promise<void> => {
@@ -51,13 +45,13 @@ Given(
 // What the handler does --------------------------------------------------
 
 Given("the handler fails after writing the note", function (this: SpecWorld) {
-  commandDoes(this).push(failing(this));
+  fails(this);
 });
 
 Given(
   "the handler fails once the projection has run",
   function (this: SpecWorld) {
-    commandDoes(this).push(failing(this));
+    fails(this);
   },
 );
 
