@@ -3,9 +3,9 @@ Feature: Loading a thing by its id, and saving what happened to it
 
   A command acts on things that last — an account, a tournament. It loads the
   thing it acts on by its id, has something done to it, and saves it, and what
-  was done is kept as the events the thing recorded. A aggregate repository does both,
-  over the event store, for every kind of thing alike: each kind says only how
-  it is rebuilt from its events, and everything else is shared.
+  was done is kept as the events the thing recorded. An aggregate repository
+  does both, over the event store, for every kind of thing alike: each kind
+  says only how it is rebuilt from its events, and everything else is shared.
 
   Loading reads the thing's stream and rebuilds the thing from it. A thing
   nobody has saved has no stream, and is not found; what that means — an
@@ -26,11 +26,11 @@ Feature: Loading a thing by its id, and saving what happened to it
 
   These scenarios run against Postgres, because the event store the
   application keeps its events in is there. They use an example thing, which
-  can be opened and renamed and exists only to exercise what every aggregate repository
-  shares.
+  can be opened and renamed and exists only to exercise what every aggregate
+  repository shares.
 
   Background:
-    Given a aggregate repository of example things
+    Given an aggregate repository of example things
     And the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-18T10:00:00Z"
 
