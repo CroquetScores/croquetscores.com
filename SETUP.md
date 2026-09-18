@@ -64,7 +64,8 @@ ESLint enforces all of this (§9); breaking it fails CI.
 ```
 /src
   /domain
-    /common                Uuid, Result, DomainEvent, validation primitives
+    /common                Uuid, Result, DomainEvent, AggregateRoot, the event
+                           registry, validation primitives
     /aggregates            one folder per aggregate root
       /{aggregate}
         /events            concrete domain events
@@ -95,7 +96,8 @@ ESLint enforces all of this (§9); breaking it fails CI.
     /admin                 the React SPA, its own tsconfig, built by Vite
     /common                request context, error mapping, cookies, CSRF
 /specs                     mirrors /src; each .feature sits with its .steps.ts
-  /support                 World, hooks, the example requests, shared step helpers
+  /support                 World, hooks, the example requests and events, shared
+                           step helpers
   /domain /application /infrastructure /web
 /scripts                   one-off development tooling
 /assets                    css and images served as static files
@@ -277,7 +279,7 @@ In development it stays blank, and deliberately. `npm run dev` serves `localhost
 
 Numbered SQL files in `src/infrastructure/database/migrations/`, applied in filename order by a runner of ours that records each applied name in a `schema_migrations` table within the same transaction as the migration itself. A migration framework would be more machinery than this needs.
 
-There are none yet. A migration arrives with whatever needs it, and what is in it is decided there rather than here: this document says how migrations are run, not what any of them contains.
+A migration arrives with whatever needs it — the first came with the Postgres event store — and what is in it is decided there rather than here: this document says how migrations are run, not what any of them contains.
 
 ---
 
@@ -349,7 +351,7 @@ Every command carries `requestedAt`: the moment the request was made, decided on
 
 `EventStore` is an interface in `src/application/services/`, saying what the application wants of the place events are kept: append to a stream, and read one back. It cannot read across streams, because no command or query has any business doing so. `PostgresEventStore` in `src/infrastructure/event-store/` implements it.
 
-What the store must do is specified in `specs/application/services/event-store/`, and both the interface and every implementation are held to those scenarios. Nothing about either — the shape of a call, what is refused and when, or what any of it looks like in a table — is written down here, because a second description is a second thing to keep true and this one cannot go red when it stops being.
+What the store must do is specified in `specs/application/services/event-store/`, and both the interface and every implementation are held to those scenarios. So those scenarios run against Postgres, and need a database, because that is the store the application keeps its events in. What keeping them in Postgres adds is specified beside the store, in `specs/infrastructure/event-store/`. Nothing about either — the shape of a call, what is refused and when, or what any of it looks like in a table — is written down here, because a second description is a second thing to keep true and this one cannot go red when it stops being.
 
 Projections are not checkpointed and do not chase the log. A projection runs **in the same transaction as the append that produced the events**, so a command either records what happened and updates every read model it touches, or does neither. That trades throughput for two things worth more here: a read model is never stale, and there is no half-applied middle state to reason about, no catch-up worker to supervise, and no checkpoint to drift.
 

@@ -10,6 +10,10 @@ import type { Mediator } from "../../src/application/common/Mediator.js";
 import type { EventStore } from "../../src/application/services/EventStore.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
+import type {
+  EventRegistry,
+  KeptEvent,
+} from "../../src/domain/common/EventRegistry.js";
 import type { Id } from "../../src/domain/common/Id.js";
 import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 
@@ -97,6 +101,20 @@ export class SpecWorld extends World {
   public pendingEvents: DomainEvent[] = [];
   public readBack: readonly DomainEvent[] | undefined;
   public readBackChecked = 0;
+
+  // How a scenario's calls to an event store are made: as a request being
+  // served would make them. Typed by its shape rather than by naming the unit
+  // of work, for the reason at the top of this file. Whatever puts a store
+  // behind "an event store" says what a request is; a store that needs none
+  // would leave this calling straight through.
+  public asARequest: <T>(work: () => Promise<T>) => Promise<T> = (work) =>
+    work();
+
+  // The registry a scenario puts together, what was kept of an event written
+  // down through it, and the event read back from what was kept.
+  public registry: EventRegistry | undefined;
+  public kept: KeptEvent | undefined;
+  public readBackEvent: DomainEvent | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;

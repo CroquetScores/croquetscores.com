@@ -4,10 +4,7 @@ import { inspect } from "node:util";
 
 import type { Behaviour } from "../../../../src/application/common/Behaviour.js";
 import { TransactionBehaviour } from "../../../../src/infrastructure/database/TransactionBehaviour.js";
-import {
-  UnitOfWork,
-  UnitOfWorkRefused,
-} from "../../../../src/infrastructure/database/UnitOfWork.js";
+import { UnitOfWorkRefused } from "../../../../src/infrastructure/database/UnitOfWork.js";
 import {
   askedAt,
   attempt,
@@ -22,7 +19,7 @@ import {
   meetingOfTwo,
   readNotes,
   state,
-  watch,
+  unitOfWorkOf,
   writeNote,
 } from "../../support/transactions.js";
 
@@ -36,9 +33,9 @@ const sendingTheOtherCommand =
 Given(
   "a mediator whose commands run in a transaction",
   function (this: SpecWorld) {
-    const unitOfWork = new UnitOfWork(this.database);
-    watch(this, unitOfWork);
-    mediatorOf(this).addCommandBehaviour(new TransactionBehaviour(unitOfWork));
+    mediatorOf(this).addCommandBehaviour(
+      new TransactionBehaviour(unitOfWorkOf(this)),
+    );
   },
 );
 

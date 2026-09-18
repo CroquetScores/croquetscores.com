@@ -64,11 +64,32 @@ Feature: Keeping events in Postgres
       Then the first event is "opened"
       And it happened at the moment the event was created with
 
+  Rule: A stream is read back in the order it happened, however the database holds it
+
+    A table holds its rows in whatever order suits it. Rows written one after
+    another usually come back the way they went in, which is how a store that
+    forgot to ask for them in order would pass every other scenario here. But
+    a restore, maintenance or a table grown large can hold them in any order at
+    all, so a stream is read back by its versions — and that is checked against
+    rows kept out of order, going around the store, where luck cannot help.
+
+    Scenario: Events kept out of order are read back in the order they happened
+      Given an event store in Postgres
+      And a stream nobody has written to
+      And the event "later" is kept as the stream's second, going around the store
+      And the event "earlier" is kept as the stream's first, going around the store
+      When the stream is read back
+      Then the first event is "earlier"
+      And the second event is "later"
+
   Rule: An event the store cannot read back is refused, before it is written and when it is read
 
     An event is kept for good, so one the store would not know how to read back
     is refused before it is written, rather than found years later by whatever
-    needs it. An append holding such an event appends none of it.
+    needs it. An append holding such an event appends none of it — and not by
+    leaving the transaction to undo whatever it got as far as. A command can be
+    told its append was refused and carry on, and would then commit a stream
+    with part of the append in it.
 
     A stream holding an event of a kind the store no longer knows is refused
     whole when it is read. A stream is read to rebuild the thing it belongs to,
@@ -83,10 +104,13 @@ Feature: Keeping events in Postgres
 
     Scenario: An append holding one event the store cannot read back appends none of them
       Given an event store in Postgres that does not know the other kind
+      And a mediator whose commands run in a transaction
       And a stream nobody has written to
       And an event called "opened"
       And an event of the other kind called "moved"
-      When the events are appended expecting version 0
+      And a handler registered for the example command that appends the events expecting version 0
+      And the handler carries on when the append is refused
+      When the example command is sent
       And the stream is read back
       Then it holds no events
 

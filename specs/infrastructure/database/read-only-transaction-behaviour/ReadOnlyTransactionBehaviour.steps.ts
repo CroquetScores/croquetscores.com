@@ -4,7 +4,6 @@ import { inspect } from "node:util";
 
 import { ReadOnlyTransactionBehaviour } from "../../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../../src/infrastructure/database/TransactionBehaviour.js";
-import { UnitOfWork } from "../../../../src/infrastructure/database/UnitOfWork.js";
 import {
   attempt,
   exampleHandler,
@@ -18,7 +17,7 @@ import {
   meetingOfTwo,
   readNotes,
   state,
-  watch,
+  unitOfWorkOf,
   writeNote,
   writesTheNote,
 } from "../../support/transactions.js";
@@ -28,8 +27,8 @@ import {
 Given(
   "a mediator whose queries run in a read-only transaction",
   function (this: SpecWorld) {
-    const unitOfWork = new UnitOfWork(this.database);
-    const scenario = watch(this, unitOfWork);
+    const unitOfWork = unitOfWorkOf(this);
+    const scenario = state(this);
     mediatorOf(this).addQueryBehaviour(
       new ReadOnlyTransactionBehaviour(unitOfWork),
     );

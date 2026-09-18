@@ -5,9 +5,9 @@ Feature: Migrating the database
   recorded as it is applied, in the same transaction that applies it, so that
   it is never applied a second time.
 
-  There are no migrations yet. The first one arrives with the Postgres event
-  store, and brings with it the scenarios saying what it made. What is here is
-  what is true of the runner whether there is anything to run or not.
+  What any one migration makes is specified by whatever uses it — the first,
+  which keeps events, by the Postgres event store's scenarios — rather than
+  here. What is here is what is true of the runner whatever there is to run.
 
   Background:
     Given a migrated database
