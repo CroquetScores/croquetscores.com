@@ -3,79 +3,19 @@ import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
 import { AccountId } from "../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
-import { AggregateRoot } from "../../../../src/domain/common/AggregateRoot.js";
-import { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
+import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import { causedBy, happenedAt } from "../../../support/exampleEvents.js";
+import {
+  ExampleThing,
+  ExampleThingId,
+  Opened,
+  Renamed,
+  thingScenarioOf,
+} from "../../../support/exampleThing.js";
 import type { SpecWorld } from "../../../support/world.js";
 
-// A thing that exists only to exercise what every thing shares. It can be
-// opened with a name and renamed, and that is all.
-
-class Opened extends DomainEvent {
-  constructor(
-    readonly name: string,
-    createdBy: AccountId,
-    occurredAt: ReadOnlyDate,
-  ) {
-    super(createdBy, occurredAt);
-  }
-}
-
-class Renamed extends DomainEvent {
-  constructor(
-    readonly name: string,
-    createdBy: AccountId,
-    occurredAt: ReadOnlyDate,
-  ) {
-    super(createdBy, occurredAt);
-  }
-}
-
-class ExampleThing extends AggregateRoot {
-  name = "";
-
-  static open(name: string, by: AccountId, at: ReadOnlyDate): ExampleThing {
-    const thing = new ExampleThing();
-    thing.record(new Opened(name, by, at));
-    return thing;
-  }
-
-  static rebuiltFrom(events: readonly DomainEvent[]): ExampleThing {
-    const thing = new ExampleThing();
-    thing.replay(events);
-    return thing;
-  }
-
-  rename(name: string, by: AccountId, at: ReadOnlyDate): void {
-    this.record(new Renamed(name, by, at));
-  }
-
-  protected apply(event: DomainEvent): void {
-    if (event instanceof Opened || event instanceof Renamed) {
-      this.name = event.name;
-    }
-  }
-}
-
-// What a scenario has: the stream a thing is rebuilt from, and the thing.
-// Kept here rather than on the world, which has no business knowing that an
-// example thing exists.
-interface Scenario {
-  stream: DomainEvent[];
-  thing?: ExampleThing;
-}
-
-const scenarios = new WeakMap<SpecWorld, Scenario>();
-
-const scenarioOf = (world: SpecWorld): Scenario => {
-  let scenario = scenarios.get(world);
-  if (scenario === undefined) {
-    scenario = { stream: [] };
-    scenarios.set(world, scenario);
-  }
-  return scenario;
-};
+const scenarioOf = thingScenarioOf;
 
 const thingOf = (world: SpecWorld): ExampleThing => {
   const thing = scenarioOf(world).thing;
@@ -125,10 +65,29 @@ Given(
 
 // What is done to it ----------------------------------------------------
 
+// A thing opened without an id being named is given one of its own, as
+// whatever makes a thing would give it.
 When(
   "a new example thing is opened as {string}",
   function (this: SpecWorld, name: string) {
-    scenarioOf(this).thing = ExampleThing.open(name, who(this), when(this));
+    scenarioOf(this).thing = ExampleThing.open(
+      ExampleThingId.create(),
+      name,
+      who(this),
+      when(this),
+    );
+  },
+);
+
+When(
+  "a new example thing is opened as {string} with the id {string}",
+  function (this: SpecWorld, name: string, id: string) {
+    scenarioOf(this).thing = ExampleThing.open(
+      ExampleThingId.from(id),
+      name,
+      who(this),
+      when(this),
+    );
   },
 );
 
@@ -136,7 +95,21 @@ When(
   "the example thing is rebuilt from the stream",
   function (this: SpecWorld) {
     const scenario = scenarioOf(this);
-    scenario.thing = ExampleThing.rebuiltFrom(scenario.stream);
+    scenario.thing = ExampleThing.rebuiltFrom(
+      ExampleThingId.create(),
+      scenario.stream,
+    );
+  },
+);
+
+When(
+  "the example thing is rebuilt from the stream {string}",
+  function (this: SpecWorld, id: string) {
+    const scenario = scenarioOf(this);
+    scenario.thing = ExampleThing.rebuiltFrom(
+      ExampleThingId.from(id),
+      scenario.stream,
+    );
   },
 );
 
@@ -149,6 +122,10 @@ When("what it recorded is handed over", function (this: SpecWorld) {
 });
 
 // What came of it --------------------------------------------------------
+
+Then("it is known by {string}", function (this: SpecWorld, id: string) {
+  assert.equal(thingOf(this).id.value, id);
+});
 
 Then("it is called {string}", function (this: SpecWorld, name: string) {
   assert.equal(thingOf(this).name, name);

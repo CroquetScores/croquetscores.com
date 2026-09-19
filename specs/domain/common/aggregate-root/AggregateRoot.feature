@@ -6,9 +6,10 @@ Feature: Rebuilding a thing from everything that happened to it
   happens to it next is recorded the same way: as new events, which change it as
   they are recorded and are kept once the command that caused them is done.
 
-  The aggregate root is what every such thing shares: being made new, being
-  rebuilt, recording what happens next, handing over what it recorded to be
-  kept, and knowing which version of its stream it expects to add to. What each
+  The aggregate root is what every such thing shares: being known by an id,
+  which is also the name of its stream, being made new, being rebuilt,
+  recording what happens next, handing over what it recorded to be kept, and
+  knowing which version of its stream it expects to add to. What each
   thing can have done to it, and the events that records, are specified with
   the thing.
 
@@ -29,6 +30,23 @@ Feature: Rebuilding a thing from everything that happened to it
       And the moment "2026-09-18T10:00:00Z"
       When a new example thing is opened as "Lawn One"
       Then it expects its stream to be at version 0
+
+  Rule: A thing is known by its id, which names its stream
+
+    A thing is given its id when it is made, by whatever makes it, and keeps it
+    for good. Its stream is named by that id, so whatever keeps the thing knows
+    where to put what happens to it without being told a second time.
+
+    Scenario: A new thing is known by the id it was opened with
+      Given the account "account/123e4567-e89b-42d3-a456-426614174000"
+      And the moment "2026-09-18T10:00:00Z"
+      When a new example thing is opened as "Lawn One" with the id "thing/7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      Then it is known by "thing/7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+    Scenario: A thing rebuilt is known by the id of the stream it was rebuilt from
+      Given a stream where the example thing was opened as "Lawn One"
+      When the example thing is rebuilt from the stream "thing/7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      Then it is known by "thing/7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
   Rule: A thing is rebuilt from its stream, as the last of its events left it
 
