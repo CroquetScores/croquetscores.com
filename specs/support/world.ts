@@ -23,6 +23,7 @@ import type {
   PasswordHasher,
 } from "../../src/application/services/PasswordHasher.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
 import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Password } from "../../src/domain/aggregates/accounts/value-objects/Password.js";
 import type { PersonName } from "../../src/domain/aggregates/accounts/value-objects/PersonName.js";
@@ -179,6 +180,11 @@ export class SpecWorld extends World {
   public personName: PersonName | undefined;
   public madePassword: Password | undefined;
   public writtenOut: string[] = [];
+
+  // The thing that lasts a scenario is looking at, when it is a real one rather
+  // than the example thing, so that the steps every such thing shares — what
+  // it has recorded — can be asked of it.
+  public aggregate: AggregateRoot | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
