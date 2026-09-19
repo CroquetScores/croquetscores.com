@@ -23,6 +23,9 @@ import type {
   PasswordHasher,
 } from "../../src/application/services/PasswordHasher.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
+import type { Password } from "../../src/domain/aggregates/accounts/value-objects/Password.js";
+import type { PersonName } from "../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -167,6 +170,15 @@ export class SpecWorld extends World {
   public passwordHashes: string[] = [];
   public passwordCheck: PasswordCheck | undefined;
   public checkTook: { againstHash?: number; againstNone?: number } = {};
+
+  // The parts of an account a scenario makes, whether the last email address
+  // was found the same as another, and every way the last password made was
+  // written out. A failure to make any of them is kept in `failure`.
+  public emailAddress: EmailAddress | undefined;
+  public sameAddress: boolean | undefined;
+  public personName: PersonName | undefined;
+  public madePassword: Password | undefined;
+  public writtenOut: string[] = [];
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
