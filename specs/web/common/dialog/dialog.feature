@@ -17,6 +17,11 @@ Feature: Forms are shown in a dialog
   register anyone. It is here so that the dialog has a real page to be shown on,
   and it is replaced by the real thing when accounts arrive.
 
+  The register page needs scripting, because registering is guarded by
+  reCAPTCHA, so the scenarios that open it switch scripting on first. The
+  dialog itself does not need it: the example form's scenarios, with scripting
+  off, are what hold it to that.
+
   A form shows a message only when its field needs attention, which is
   specified with the form. How a message looks is specified here, against an
   example form that has been refused, because the stand-in has nothing that
@@ -26,64 +31,64 @@ Feature: Forms are shown in a dialog
 
     Scenario: There is no panel on a page with a form
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then there is no panel on the page
 
     Scenario: The dialog stands on the page's own background
       Given a viewport 1200 pixels wide
       And a machine that prefers light
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the page is light
 
   Rule: A dialog reads from its title, to its content, to its buttons
 
     Scenario: The title bar comes first
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog's title bar is above its content
 
     Scenario: The buttons come last
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog's buttons are below its content
 
     Scenario: The dialog is known by its title
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog is named "Register"
 
   Rule: The dialog is centred across the page
 
     Scenario: On a wide screen there is as much space either side of it
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog has as much space to its left as to its right
 
     Scenario: On a narrow screen it takes the width it is given
       Given a viewport 375 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog reaches from one side of the page's gutter to the other
 
   Rule: The button that submits is last, and unmistakable
 
     Scenario: It is the furthest right of the buttons
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button is the furthest right of the dialog's buttons
 
     Scenario: It is still the last button on a narrow screen
       Given a viewport 375 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button is the last of the dialog's buttons
 
     Scenario: It can be pressed with a thumb
       Given a viewport 375 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button is at least 44 pixels tall
 
     Scenario: It is the only button that looks like it
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then no other button in the dialog shares the submit button's colour
 
   Rule: In light, the dialog wears the section navigation's colour
@@ -91,19 +96,19 @@ Feature: Forms are shown in a dialog
     Scenario: The title bar is the colour of the section navigation
       Given a viewport 1200 pixels wide
       And a machine that prefers light
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog's title bar is the colour of the section navigation
 
     Scenario: The content is white
       Given a viewport 1200 pixels wide
       And a machine that prefers light
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog's content is white
 
     Scenario: The submit button is the colour of the section navigation
       Given a viewport 1200 pixels wide
       And a machine that prefers light
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button is the colour of the section navigation
 
   Rule: In dark, the submit button is the lightest thing in the dialog
@@ -116,13 +121,13 @@ Feature: Forms are shown in a dialog
     Scenario: The title bar is the colour of the section navigation
       Given a viewport 1200 pixels wide
       And a machine that prefers dark
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog's title bar is the colour of the section navigation
 
     Scenario: The submit button is lighter than the dialog's content
       Given a viewport 1200 pixels wide
       And a machine that prefers dark
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button is lighter than the dialog's content
 
   Rule: In either theme, the dialog can be read and its submit button found
@@ -130,7 +135,7 @@ Feature: Forms are shown in a dialog
     Scenario Outline: The title can be read on its bar
       Given a viewport 1200 pixels wide
       And a machine that prefers <theme>
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog's title reads against its bar at no less than 4.5 to 1
 
       Examples:
@@ -141,7 +146,7 @@ Feature: Forms are shown in a dialog
     Scenario Outline: The submit button stands out from the content around it
       Given a viewport 1200 pixels wide
       And a machine that prefers <theme>
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button stands out from the dialog's content at no less than 3 to 1
 
       Examples:
@@ -152,7 +157,7 @@ Feature: Forms are shown in a dialog
     Scenario Outline: The submit button's label can be read
       Given a viewport 1200 pixels wide
       And a machine that prefers <theme>
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the submit button's label reads against it at no less than 4.5 to 1
 
       Examples:
@@ -186,73 +191,73 @@ Feature: Forms are shown in a dialog
 
     Scenario: A field is no taller than the submit button
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then every field in the dialog is as tall as the submit button
 
     Scenario: A label rests where the typing will go
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then every label in the dialog rests where its field is typed in
 
     Scenario: Focusing a field lifts its label
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       Then the email address field's label is on the field's top edge
 
     Scenario: A lifted label is smaller than a resting one
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       Then the email address field's label is smaller than the password field's label
 
     Scenario: A label lifts without animating
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       Then the email address field's label is not animated
 
     Scenario: Focusing one field leaves the others' labels resting
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       Then the password field's label rests where its field is typed in
 
     Scenario: A label stays lifted over what has been typed
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When something is typed into the email address field
       And the password field is focused
       Then the email address field's label is on the field's top edge
 
     Scenario: A resting label stays between its field's sides
       Given a viewport 320 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then every label in the dialog is between its field's sides
 
     Scenario: A lifted label stays between its field's sides
       Given a viewport 320 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       Then the email address field's label is between its field's sides
 
     Scenario: A label comes back down when its field is left empty
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       And the password field is focused
       Then the email address field's label rests where its field is typed in
 
     Scenario: Pressing the field's border reaches the field it names
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the field's border is pressed where nothing can be typed
       Then the field it names is focused
 
     Scenario Outline: A lifted label can be read
       Given a viewport 1200 pixels wide
       And a machine that prefers <theme>
-      And the register page is open
+      And the register page is open with scripting on
       When the email address field is focused
       Then the email address field's label reads against what is behind it at no less than 4.5 to 1
 
@@ -273,7 +278,7 @@ Feature: Forms are shown in a dialog
 
     Scenario: Nothing is said to be wrong before anything has been typed
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then no field in the dialog is marked as wrong
 
     Scenario: A message sits beneath its field
@@ -330,43 +335,43 @@ Feature: Forms are shown in a dialog
 
     Scenario: It asks for an email address
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog asks for an email address
 
     Scenario: It asks for a password
       Given a viewport 1200 pixels wide
-      When the register page is opened
+      When the register page is opened with scripting on
       Then the dialog asks for a password
 
     Scenario: Submitting it says registering is not open yet
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the dialog is submitted
       Then the reader is told registering is not open yet
 
     Scenario: The email address is still there once it has been submitted
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       And "someone@example.com" is typed into the email address field
       When the dialog is submitted
       Then the email address field holds "someone@example.com"
 
     Scenario: The password is not put back once it has been submitted
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       And "open sesame" is typed into the password field
       When the dialog is submitted
       Then the password field is empty
 
     Scenario: Choosing a theme afterwards does not take the answer away
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the dialog is submitted
       And the theme "Dark" is chosen
       Then the page still says registering is not open yet
 
     Scenario: Cancelling returns the reader to the home page
       Given a viewport 1200 pixels wide
-      And the register page is open
+      And the register page is open with scripting on
       When the dialog is cancelled
       Then the home page is shown

@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { withScripting } from "../../support/browser.js";
 import { closes, opens, unmarked } from "../../support/languages.js";
 
 const register = "/accounts/register";
@@ -64,6 +65,20 @@ const openRegister = async function (this: SpecWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${register}`);
 };
 
+// Registering needs scripting, so a scenario that means to use the register
+// page switches it on first; one that opens it without is sent away from it.
+const openRegisterWithScripting = async function (
+  this: SpecWorld,
+): Promise<void> {
+  await withScripting(this);
+  await openRegister.call(this);
+};
+
+Given("the register page is open with scripting on", openRegisterWithScripting);
+When(
+  "the register page is opened with scripting on",
+  openRegisterWithScripting,
+);
 Given("the register page is open", openRegister);
 When("the register page is opened", openRegister);
 

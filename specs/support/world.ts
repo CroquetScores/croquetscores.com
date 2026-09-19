@@ -170,6 +170,10 @@ export class SpecWorld extends World {
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
+  // What the scenario has asked of the browser, kept so that a browser made
+  // again with scripting switched on is asked the same.
+  public colourScheme: "light" | "dark" | undefined;
+  public acceptLanguage: string | undefined;
   public page: Page | undefined;
   public baseUrl: string | undefined;
 

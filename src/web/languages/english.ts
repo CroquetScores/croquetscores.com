@@ -26,6 +26,11 @@ export const english: Language = {
     "welcome.nothingArrived":
       "If nothing arrives in a few minutes, look in your junk or spam folder.",
     "welcome.home": "Back to Croquet Scores",
+    "javaScriptRequired.title": "Scripting needed",
+    "javaScriptRequired.explanation":
+      "Registering needs scripting switched on for this site, so that it can check that whoever is registering is a person. Switch it on, then register again.",
+    "javaScriptRequired.register": "Back to registering",
+    "javaScriptRequired.home": "Back to Croquet Scores",
 
     "errors.backHome": "Back to Croquet Scores",
     "errors.notFound": "Not found",
