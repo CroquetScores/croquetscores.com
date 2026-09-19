@@ -15,6 +15,7 @@ import {
 } from "../../../src/infrastructure/config/Config.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import { useUnitOfWork } from "../../infrastructure/support/transactions.js";
+import { exampleRegistry } from "../../support/exampleEvents.js";
 import { askedAt } from "../../support/examples.js";
 import type { SpecWorld } from "../../support/world.js";
 
@@ -61,7 +62,15 @@ Given("the application is built", async function (this: SpecWorld) {
   const scenario = { now: askedAt.toDate() } as Built;
   const application = await buildApplication(
     { ...loadConfig(), databaseUrl },
-    { logger: false, clock: () => new Date(scenario.now.getTime()) },
+    {
+      logger: false,
+      clock: () => new Date(scenario.now.getTime()),
+      // The example events, and the scenario's own list of projections, so
+      // that a projection named after this step is still given what the
+      // application's store appends.
+      events: exampleRegistry(),
+      projections: this.projections,
+    },
   );
   Object.assign(scenario, { application });
   built.set(this, scenario);
@@ -81,4 +90,8 @@ Given("the application is built", async function (this: SpecWorld) {
   this.mediator = application.mediator;
   this.validation = application.validation;
   useUnitOfWork(this, application.unitOfWork);
+  // The steps the event store's features are written in append through the
+  // scenario's store, as a request would; here, the application's.
+  this.eventStore = application.eventStore;
+  this.asARequest = (work) => application.unitOfWork.inTransaction(work);
 });

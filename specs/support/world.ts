@@ -15,6 +15,7 @@ import type {
   RequestValidator,
   ValidationBehaviour,
 } from "../../src/application/common/ValidationBehaviour.js";
+import type { Projection } from "../../src/application/common/Projection.js";
 import type { AggregateRepository } from "../../src/application/common/AggregateRepository.js";
 import type { EventStore } from "../../src/application/services/EventStore.js";
 import type {
@@ -134,6 +135,9 @@ export class SpecWorld extends World {
   // waiting to be appended, what reading a stream back gave, and how many of
   // those the scenario has named so far.
   public eventStore: EventStore | undefined;
+  // The projections in front of that store, when a scenario has any, in the
+  // order they are given what is appended.
+  public projections: Projection[] = [];
   // A repository of example things over that store, when a scenario has one.
   public repository:
     AggregateRepository<ExampleThing, ExampleThingId> | undefined;

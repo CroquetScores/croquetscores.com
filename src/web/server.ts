@@ -9,7 +9,11 @@ import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
 import { Mediator } from "../application/common/Mediator.js";
+import { ProjectingEventStore } from "../application/common/ProjectingEventStore.js";
+import type { Projection } from "../application/common/Projection.js";
 import { ValidationBehaviour } from "../application/common/ValidationBehaviour.js";
+import type { EventStore } from "../application/services/EventStore.js";
+import { EventRegistry } from "../domain/common/EventRegistry.js";
 import {
   loadConfig,
   loadEnvFile,
@@ -19,6 +23,7 @@ import { createPool } from "../infrastructure/database/pool.js";
 import { ReadOnlyTransactionBehaviour } from "../infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../infrastructure/database/TransactionBehaviour.js";
 import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
+import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventStore.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
 import { refuseCrossSite } from "./common/crossSite.js";
@@ -55,6 +60,8 @@ export interface Application {
   readonly validation: ValidationBehaviour;
   /** What a repository, the event store or a projection asks for its connection. */
   readonly unitOfWork: UnitOfWork;
+  /** Where every event is kept, with every read model kept in step as it is. */
+  readonly eventStore: EventStore;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -141,7 +148,23 @@ export interface ApplicationOptions {
    * English alone, unless a scenario offers more.
    */
   readonly languages?: readonly Language[];
+  /**
+   * The kinds of event the store knows how to read back, and the projections
+   * that keep the read models. The application's own, unless a scenario gives
+   * its examples instead.
+   */
+  readonly events?: EventRegistry;
+  readonly projections?: readonly Projection[];
 }
+
+// Every kind of event the application records, each named once by the name it
+// is kept under, and how it is read back. None yet: the first arrive with the
+// account.
+const events = (): EventRegistry => new EventRegistry();
+
+// Every read model's projection, each given every event as it is appended. None
+// yet: the first, accounts by email address, arrives with the account.
+const projections: readonly Projection[] = [];
 
 export const buildApplication = async (
   config: Config,
@@ -152,6 +175,14 @@ export const buildApplication = async (
   const assets = readAssets(join(repositoryRoot, "assets"));
   const unitOfWork = new UnitOfWork(pool);
   const { mediator, validation } = putTogether(unitOfWork);
+
+  // On the unit of work the mediator's transactions use, so that what a
+  // command's handler appends, and what every projection writes of it, is kept
+  // in the command's transaction or not at all.
+  const eventStore = new ProjectingEventStore(
+    new PostgresEventStore(unitOfWork, options.events ?? events()),
+    options.projections ?? projections,
+  );
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -186,7 +217,7 @@ export const buildApplication = async (
   registerRegisterPage(server, assets);
   registerPublicPages(server, assets);
 
-  return { server, pool, config, mediator, validation, unitOfWork };
+  return { server, pool, config, mediator, validation, unitOfWork, eventStore };
 };
 
 const startedDirectly =

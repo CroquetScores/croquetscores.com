@@ -18,10 +18,17 @@ Feature: The application puts one mediator together, and every route sends throu
   in. Validation comes first on both sides, so that a request that was never
   going to be carried out does not cost a connection.
 
+  The application also puts its event store together once: Postgres, on the
+  same unit of work the mediator's transactions use, with the application's
+  projections in front of it. So every event a command's handler appends is
+  kept in the command's transaction, and every read model is brought up to
+  date in that same transaction.
+
   These scenarios run against Postgres, because whether the application's
   transactions write is not a thing a fake has an opinion about. They use the
   mediator's example command and example query, the validator's example range,
-  a place to keep notes, and an example route, none of which mean anything.
+  example events and example projections, a place to keep notes, and an
+  example route, none of which mean anything.
 
   Background:
     Given the application is built
@@ -99,3 +106,27 @@ Feature: The application puts one mediator together, and every route sends throu
       And an example route that asks the example query
       When the example route is requested
       Then the route answers "found"
+
+  Rule: The application keeps its events in Postgres, and projects them as they are appended
+
+    Scenario: An event appended through the application reads back
+      Given a stream nobody has written to
+      And an event called "opened"
+      When the events are appended expecting version 0
+      And the stream is read back
+      Then the first event is "opened"
+
+    Scenario: An event appended through the application is given to its projections
+      Given an example projection
+      And a stream nobody has written to
+      And an event called "opened"
+      When the events are appended expecting version 0
+      Then the first event the projection was given is "opened"
+
+    Scenario: What the application's projections write is kept with the events
+      Given a place to keep notes
+      And a projection that writes the note "projected"
+      And a stream nobody has written to
+      And an event called "opened"
+      When the events are appended expecting version 0
+      Then the note "projected" is there
