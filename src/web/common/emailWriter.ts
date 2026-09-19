@@ -73,9 +73,9 @@ const emails: Readonly<Record<string, readonly Block[]>> = {
   "Email.AlreadyRegistered": [
     { paragraph: "intro" },
     { paragraph: "ifYou" },
-    { button: "action", to: { page: "/accounts/sign-in" } },
+    { button: "action", to: { page: "/account/sign-in" } },
     { paragraph: "forgotten" },
-    { button: "forgottenAction", to: { page: "/accounts/forgot-password" } },
+    { button: "forgottenAction", to: { page: "/account/forgot-password" } },
     { paragraph: "notYou" },
   ],
   "Email.SetNewPassword": [
@@ -89,7 +89,7 @@ const emails: Readonly<Record<string, readonly Block[]>> = {
     { paragraph: "intro" },
     { paragraph: "otherAddress" },
     { paragraph: "register" },
-    { button: "action", to: { page: "/accounts/register" } },
+    { button: "action", to: { page: "/account/register" } },
     { paragraph: "notYou" },
   ],
   "Email.ConfirmForgetting": [

@@ -12,7 +12,7 @@ import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
 import { javaScriptRequiredPath } from "./javaScriptRequired.js";
 
-const path = "/accounts/register";
+const path = "/account/register";
 const notOpenPath = `${path}?notice=not-open`;
 
 const show = (

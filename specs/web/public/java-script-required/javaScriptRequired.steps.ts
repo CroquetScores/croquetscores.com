@@ -4,7 +4,7 @@ import { strict as assert } from "node:assert";
 import type { SpecWorld } from "../../../support/world.js";
 import { englishForScenarios } from "../../support/languages.js";
 
-const javaScriptRequired = "/accounts/java-script-required";
+const javaScriptRequired = "/account/java-script-required";
 
 When(
   "the java script required page is opened",
@@ -27,7 +27,7 @@ Then(
 // would have happened by then.
 Then("the register page is shown", async function (this: SpecWorld) {
   await this.browserPage.waitForLoadState("networkidle");
-  assert.equal(new URL(this.browserPage.url()).pathname, "/accounts/register");
+  assert.equal(new URL(this.browserPage.url()).pathname, "/account/register");
 });
 
 Then(
@@ -49,7 +49,7 @@ const offersAWayTo = async (world: SpecWorld, path: string): Promise<void> => {
 Then(
   "the page offers a way to the register page",
   async function (this: SpecWorld) {
-    await offersAWayTo(this, "/accounts/register");
+    await offersAWayTo(this, "/account/register");
   },
 );
 

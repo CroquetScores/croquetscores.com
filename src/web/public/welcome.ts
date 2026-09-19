@@ -12,7 +12,7 @@ import { speakingOf } from "../common/language.js";
 import { escape, render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
 
-export const welcomePath = "/accounts/welcome";
+export const welcomePath = "/account/welcome";
 
 export const registerWelcomePage = (
   server: FastifyInstance,

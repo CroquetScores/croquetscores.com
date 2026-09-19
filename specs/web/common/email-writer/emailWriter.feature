@@ -90,17 +90,17 @@ Feature: The site's emails are written in their reader's language
   Rule: A link is offered as a button and as the address itself
 
     Scenario: The link to follow is a button in the email's words
-      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/accounts/confirm-email-address?link=abc123"
-      Then its body has a button to "https://croquetscores.com/accounts/confirm-email-address?link=abc123"
+      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+      Then its body has a button to "https://croquetscores.com/account/confirm-email-address?link=abc123"
       And the button says the words for "Email.ConfirmAddress.action"
 
     Scenario: The link to follow is written out as an address to copy
-      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/accounts/confirm-email-address?link=abc123"
-      Then its body shows the address "https://croquetscores.com/accounts/confirm-email-address?link=abc123" as text
+      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+      Then its body shows the address "https://croquetscores.com/account/confirm-email-address?link=abc123" as text
 
     Scenario: A link to one of the site's own pages is made with the site's address
       When the email "Email.AlreadyRegistered" is written in "en"
-      Then its body has a button to "https://croquetscores.com/accounts/sign-in"
+      Then its body has a button to "https://croquetscores.com/account/sign-in"
 
   Rule: The site's address comes from its configuration
 

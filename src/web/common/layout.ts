@@ -77,7 +77,7 @@ export const navigation: readonly NavigationLink[] = [
   { href: "/tournaments", label: "Tournaments" },
   { href: "/blog", label: "Blog" },
   { href: "/help", label: "Help" },
-  { href: "/accounts/register", label: "Register" },
+  { href: "/account/register", label: "Register" },
 ];
 
 // Not read from a clock. A rendered year that moves on its own is a year

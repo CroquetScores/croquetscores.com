@@ -4,7 +4,7 @@ import { strict as assert } from "node:assert";
 import type { SpecWorld } from "../../../support/world.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
-const welcome = "/accounts/welcome";
+const welcome = "/account/welcome";
 
 When("the welcome page is opened", async function (this: SpecWorld) {
   await this.browserPage.goto(`${this.baseUrl!}${welcome}`);

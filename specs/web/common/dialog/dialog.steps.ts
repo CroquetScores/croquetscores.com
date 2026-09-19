@@ -5,7 +5,7 @@ import type { SpecWorld } from "../../../support/world.js";
 import { withScripting } from "../../support/browser.js";
 import { closes, opens, unmarked } from "../../support/languages.js";
 
-const register = "/accounts/register";
+const register = "/account/register";
 
 const dialog = "section.dialog";
 const title = ".dialog-title";

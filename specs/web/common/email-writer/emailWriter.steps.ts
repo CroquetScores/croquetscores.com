@@ -46,7 +46,7 @@ const writtenOf = (world: SpecWorld): WrittenEmail => {
 // Whatever each kind of email is filled in with, so that any of them can be
 // written. A scenario that cares about one of them says so.
 const everyFill = {
-  link: "https://croquetscores.com/accounts/confirm-email-address?link=abc123",
+  link: "https://croquetscores.com/account/confirm-email-address?link=abc123",
   service: "Have I Been Pwned",
   when: "2026-09-19T10:00:00Z",
 };

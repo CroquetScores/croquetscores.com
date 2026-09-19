@@ -102,7 +102,7 @@ Feature: Keeping emails to be sent in the same transaction as what they are abou
 
     Scenario: A queued email about an account does not hold what fills it in
       Given an account for "someone@example.com"
-      When the email "Email.ConfirmAddress" is queued for the account with the link "https://croquetscores.com/accounts/confirm-email-address?link=abc123"
+      When the email "Email.ConfirmAddress" is queued for the account with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
       Then no row of the queue contains "abc123"
 
     Scenario: A queued email with no account does not hold its address
@@ -161,9 +161,9 @@ Feature: Keeping emails to be sent in the same transaction as what they are abou
       Then the writer was asked to write it in "en-XA"
 
     Scenario: The writer is given what fills the email in
-      Given the email "Email.ConfirmAddress" is queued for "someone@example.com" with the link "https://croquetscores.com/accounts/confirm-email-address?link=abc123"
+      Given the email "Email.ConfirmAddress" is queued for "someone@example.com" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
       When what is queued is sent
-      Then the writer was given the link "https://croquetscores.com/accounts/confirm-email-address?link=abc123"
+      Then the writer was given the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
 
     Scenario: What is sent has the subject the writer wrote
       Given the email "Email.ConfirmAddress" has been queued for "someone@example.com"

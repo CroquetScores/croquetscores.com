@@ -9,9 +9,9 @@ import { speakingOf } from "../common/language.js";
 import { escape, render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
 
-export const javaScriptRequiredPath = "/accounts/java-script-required";
+export const javaScriptRequiredPath = "/account/java-script-required";
 
-const registerPath = "/accounts/register";
+const registerPath = "/account/register";
 
 export const registerJavaScriptRequiredPage = (
   server: FastifyInstance,

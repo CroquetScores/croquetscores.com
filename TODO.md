@@ -10,7 +10,7 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-- /accounts/adminstrator/view-email-queue
+- /account/adminstrator/view-email-queue
 
 - Review all emails
 
@@ -143,17 +143,17 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 Make the last nav bar menu the icon a solid person icon. When the current user is not signed in includes the following in the dropdown menu
 
-- Register          - /accounts/register
-- Sign In           - /accounts/sign-in
-- Forgot Password   - /accounts/forgot-password
+- Register          - /account/register
+- Sign In           - /account/sign-in
+- Forgot Password   - /account/forgot-password
 
 When signed in:
 
-- Sign Out              - Submit /api/accounts/sign-out
-- Profile               - /accounts/profile
-- Change Password       - /accounts/change-password
-- Change Email Address  - /accounts/change-email-address
-- Change Name           - /accounts/change-name
+- Sign Out              - Submit /api/account/sign-out
+- Profile               - /account/profile
+- Change Password       - /account/change-password
+- Change Email Address  - /account/change-email-address
+- Change Name           - /account/change-name
 
 ## Outstanding .feature files
 
