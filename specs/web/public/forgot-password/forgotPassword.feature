@@ -23,6 +23,14 @@ Feature: A reader who has forgotten their password is sent a way back in
   imported from the old site, which is how an imported account whose old
   password began or ended with a space gets back in.
 
+  Every link this page sends is on the site's own address, whatever host the
+  request that asked for it came with. A request's host is whatever its
+  sender wrote, and a link made from it could be pointed at anybody's site:
+  asking for a way back in to somebody else's account with another host would
+  send its owner a genuine email whose link handed the asker the way in. The
+  site's address comes from how the site is configured, and is specified with
+  the email writer (`emailWriter.feature`).
+
   Asking is limited, so that the page cannot be used to fill somebody's inbox
   or to try address after address. An address is sent at most 3 emails an hour;
   past that, nothing more is sent, and the page still says what it always says,
@@ -76,6 +84,21 @@ Feature: A reader who has forgotten their password is sent a way back in
       And the forgot password page is open
       When a way back in is asked for "nobody@example.com"
       Then "nobody@example.com" is sent a link to register
+
+  Rule: A link is on the site's own address, whatever host it was asked for with
+
+    Scenario: A link to set a new password asked for with another host is on the site's address
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com"
+      And the forgot password page is open
+      When a way back in is asked for "someone@example.com" with the host "elsewhere.example"
+      Then the link sent to "someone@example.com" is on the site's own address
+
+    Scenario: A link to register asked for with another host is on the site's address
+      Given a viewport 1200 pixels wide
+      And the forgot password page is open
+      When a way back in is asked for "nobody@example.com" with the host "elsewhere.example"
+      Then the link sent to "nobody@example.com" is on the site's own address
 
   Rule: The link sets a new password once, and for an hour
 
