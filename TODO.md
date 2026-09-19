@@ -10,15 +10,17 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-- /accounts/forgot-password
+- Review all emails
 
-- /accounts/welcome
+- Sign out option
 
-- /accounts/java-script-required
+- Rotating encryption keys
 
-- /accounts/registrations-suspended
+- **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
-- Email the administrator when registrations are suspended
+- **The proxy to trust for a reader's IP address**, which the forgot password page's limit counts by: a setting, like `CANONICAL_HOST`, for the deployment checklist.
+
+From earlier pull requests:
 
 - The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
 
@@ -103,7 +105,7 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 **Why it has not yet.** There are no commands yet, only the example ones the scenarios use. The window is narrow as well: the connection has to go after the commit is sent and before its answer comes back.
 
-**What to do.** Nothing in the unit of work can find out, so the answer is in the commands: one that matters has to be safe to send twice. The event store already catches part of this. A retry appending to a stream the first attempt wrote to expects the version the first attempt moved past, and is refused with `EventStore.Concurrency`. What it does not catch is a command that mints a new id each time it is sent — opening a tournament, registering an account — because the retry mints a second id and writes a second stream nobody else is using. For those, the caller gives the request an id it keeps across retries, carried on the command the way `requestedAt` is, and the command records it in the same transaction as its events and refuses one it has seen before. Decide which commands need it when the first real ones are written, and specify the refusal with them.
+**What to do.** Nothing in the unit of work can find out, so the answer is in the commands: one that matters has to be safe to send twice. The event store already catches part of this. A retry appending to a stream the first attempt wrote to expects the version the first attempt moved past, and is refused with `EventStore.Concurrency`. What it does not catch is a command that mints a new id each time it is sent — opening a tournament, registering an account — because the retry mints a second id and writes a second stream nobody else is using. For those, the caller gives the request an id it keeps across retries, carried on the command the way `requestedAt` is, and the command records it in the same transaction as its events and refuses one it has seen before. Registering is the first such command, and carries a request id (`RegisterAccount.feature`); decide for each command after it as it is written.
 
 ---
 
@@ -129,90 +131,27 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 **What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
 
----
+## Outstanding .feature files
 
-## /accounts/register
+In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-_Application_
-
-- `src/application/operations/accounts/` does not exist yet. It would hold the register command, its validator, its handler and its result.
-
-_Domain_
-
-- The `Account` aggregate, an `AccountRegistered` event, and an `EmailAddress` value object.
-
-### Form
-
-Requires the following fields:
-
-- Name
-- EmailAddress
-- Password
-- ConfirmPassword
-
-The form also requires Google ReCAPTCHA v3.
-
-All fields are trimmed.
-
-### Validation
-
-#### Name
-
-Must be between 3 and 254 characters inclusive
-
-#### Email Address
-
-Must be a valid email address. Do not use RegEx.
-
-#### Password
-
-From Copilot:
-
-Key NIST password recommendations (summary)
-
-- Minimum length: 8 characters (15 recommended for single‑factor).
-
-- No forced rotation unless evidence of compromise.
-
-- No complexity rules (uppercase/lowercase/symbol requirements are discouraged).
-
-- Mandatory screening against known‑breached passwords.
-
-- No security questions (explicitly prohibited).
-
-Only change from these is minimum 12 characters.
-
-Trimmed, like every other field, before it is checked or hashed: a password that begins or ends with a space loses it. An account imported from the old site whose password began or ended with a space cannot sign in with it, since the old site did not trim, and resets it through /accounts/forgot-password instead. The trimming is the form's, at the edge; the password hasher still hashes exactly what it is given.
-
-##### Known Passwords
-
-Use Have I Been Pwned range API, which is asked about the first five characters of the password's SHA-1 and never sees the password. It is a call to an outside service on every registration and password change.
-
-If it cannot be reached redirect the user to /accounts/registrations-suspended and email the administrator
-
-#### ConfirmPassword
-
-Must exactly match password
-
-### Email Address
-
-Whether the site already has an email address or not must not be disclosed.
-
-One of 3 emails will be sent to the email address:
-
-- Known un-confirmed email address
-- Known confirmed email address
-- New email address
-
-Emails must be recorded in a queue so that all database changes can be saved within one transaction.
-
-An email queue handler to remove items off the queue when the email has been successfully sent.
-
-Successful writing to event sotre & projections redirects to /accounts/welcome.
-
-### Encryption / Hashes
-
-- Name must be encrypted at rest
-- Email address must be encrypted at rest
-- Email address must be searchable therefore must be hashed at rest.
-- Password must be hashed.
+4. `specs/domain/aggregates/accounts/account/Account.feature`
+5. `specs/infrastructure/encryption/account-keys/AccountKeys.feature`
+6. `specs/infrastructure/read-models/accounts-by-email-address/AccountsByEmailAddress.feature`
+7. `specs/infrastructure/identity/have-i-been-pwned/HaveIBeenPwnedPasswords.feature`
+8. `specs/infrastructure/identity/recaptcha/RecaptchaReaderCheck.feature`
+9. `specs/infrastructure/email/file-email-sender/FileEmailSender.feature`
+10. `specs/infrastructure/email/postgres-email-queue/PostgresEmailQueue.feature`
+11. `specs/web/common/email-queue-sending/emailQueueSending.feature`
+12. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
+13. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
+14. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+15. `specs/application/operations/accounts/sign-in/SignIn.feature`
+16. `specs/web/public/register/register.feature`
+17. `specs/web/public/sign-in/signIn.feature`
+18. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
+19. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
+20. `specs/web/public/forgot-password/forgotPassword.feature`
+21. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
+22. `specs/web/public/forget-account/forgetAccount.feature`
+23. `specs/web/common/session/session.feature`
