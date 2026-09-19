@@ -7,14 +7,21 @@ Feature: Registering and resetting a password wait while a service they need is 
   second, since that page needs no scripting and reCAPTCHA runs in the
   browser. Neither can be skipped when it does not answer — a registration
   nobody judged, or a password nobody checked, is the very thing each is there
-  to stop — so when one that is asked cannot be reached, nothing is recorded
-  and the reader is sent to /accounts/registrations-suspended, which says
-  registering is suspended for now and to try again later.
+  to stop — so when one that is asked cannot be reached, nothing is recorded.
+  A reader registering is sent to /accounts/registrations-suspended, which
+  says registering is suspended for now and to try again later. A reader
+  setting a new password is not, since that page would tell them about
+  something they were not doing: the new password page is shown again,
+  saying above the fields that the password cannot be checked just now and to
+  try again later, with `BreachedPasswords.Unreachable`. Their link is not
+  used up by it, so that trying again later needs no new one, for as long as
+  the link's hour lasts.
 
   The administrator is emailed, so that the site is not quietly turning people
   away. That email is the web layer's to queue, in a transaction of its own,
-  since the registering it is about records nothing. At most once an hour for each service, so that an outage does not
-  bury them in email, and each email says which service it was.
+  since the registering it is about records nothing. At most once an hour for
+  each service, so that an outage does not bury them in email, and each email
+  says which service it was.
 
   Nothing stays suspended. Each attempt asks the services afresh, so the page
   stops being shown the moment they answer again, without anybody having to
@@ -53,16 +60,37 @@ Feature: Registering and resetting a password wait while a service they need is 
       When the dialog is submitted
       Then there is no account for "someone@example.com"
 
-  Rule: A service that cannot be reached suspends setting a new password
+  Rule: A service that cannot be reached holds up setting a new password, and keeps the link
 
-    Scenario: Setting a new password while the breached password check is down is suspended
+    Scenario: Setting a new password while the breached password check is down says it cannot be checked
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com"
       And a link to set a new password has been sent to "someone@example.com"
       And Have I Been Pwned cannot be reached
       And the link is followed
       When the new password "correct horse battery staple" is set
-      Then the registrations suspended page is shown
+      Then the dialog says the message for "BreachedPasswords.Unreachable"
+
+    Scenario: Setting a new password while the breached password check is down is not sent to the registrations suspended page
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com"
+      And a link to set a new password has been sent to "someone@example.com"
+      And Have I Been Pwned cannot be reached
+      And the link is followed
+      When the new password "correct horse battery staple" is set
+      Then the new password page is shown
+
+    Scenario: The link still works once the check answers again
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com"
+      And a link to set a new password has been sent to "someone@example.com"
+      And Have I Been Pwned cannot be reached
+      And the link is followed
+      And the new password "correct horse battery staple" is set
+      And Have I Been Pwned answers again
+      And the link is followed
+      When the new password "correct horse battery staple" is set
+      Then the reader is told their password has been changed
 
     Scenario: The password is not changed
       Given a viewport 1200 pixels wide

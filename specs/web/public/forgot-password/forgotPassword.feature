@@ -13,17 +13,22 @@ Feature: A reader who has forgotten their password is sent a way back in
 
   The link to set a new password opens /accounts/reset-password. It works once,
   and for an hour: a link is only as safe as the inbox it sits in, and one that
-  worked for ever would be a key left under the mat. The new password follows
-  the same rules as one given when registering — trimmed, at least 12
-  characters, not among those known to have been breached, and the same twice.
-  Setting it replaces whatever hash the account had, including one imported
-  from the old site, which is how an imported account whose old password began
-  or ended with a space gets back in.
+  worked for ever would be a key left under the mat. It is made for setting a
+  new password and nothing else, and says so where it cannot be changed: a link
+  the site made for anything else, such as confirming an email address, which
+  works for a day, does not set a password, however it is sent. The new
+  password follows the same rules as one given when registering — trimmed, at
+  least 12 characters, not among those known to have been breached, and the
+  same twice. Setting it replaces whatever hash the account had, including one
+  imported from the old site, which is how an imported account whose old
+  password began or ended with a space gets back in.
 
   Asking is limited, so that the page cannot be used to fill somebody's inbox
   or to try address after address. An address is sent at most 3 emails an hour;
   past that, nothing more is sent, and the page still says what it always says,
-  so the limit gives nothing away either. An IP address may ask at most 10
+  so the limit gives nothing away either. An address is counted as it is
+  found — trimmed and in lower case — and not as it was typed, so that
+  writing it another way does not count afresh. An IP address may ask at most 10
   times an hour; past that, whoever is asking from it is told to try again
   later. Behind a proxy, the IP address is the one the proxy says the request
   came from, and is believed only from the proxy: a header anybody can send is
@@ -135,6 +140,13 @@ Feature: A reader who has forgotten their password is sent a way back in
       When the new password "correct horse battery staple" is set
       Then the account for "someone@example.com" no longer has an imported password
 
+    Scenario: A link to confirm an email address does not set a new password
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", not confirmed
+      And a link to confirm the email address has been sent to "someone@example.com"
+      When the link to confirm the email address is followed as a link to set a new password
+      Then the reader is told the link no longer works
+
   Rule: Asking is limited, by address and by IP address, and the limit gives nothing away
 
     Scenario: An address is sent no more than 3 emails an hour
@@ -143,6 +155,14 @@ Feature: A reader who has forgotten their password is sent a way back in
       And a way back in has been asked for "someone@example.com" 3 times in the last hour
       And the forgot password page is open
       When a way back in is asked for "someone@example.com"
+      Then nothing more is sent to "someone@example.com"
+
+    Scenario: An address written another way counts toward the same limit
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com"
+      And a way back in has been asked for "someone@example.com" 3 times in the last hour
+      And the forgot password page is open
+      When a way back in is asked for "  SOMEONE@Example.com  "
       Then nothing more is sent to "someone@example.com"
 
     Scenario: The page says the same past an address's limit

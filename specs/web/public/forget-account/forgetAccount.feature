@@ -14,7 +14,10 @@ Feature: A reader who is signed in can have their account forgotten
 
   The link works once, and for 15 minutes. It is short because what it does
   cannot be undone, and a link that sat in an inbox for days would be a way to
-  forget the account for whoever came across it. It works only for the account
+  forget the account for whoever came across it. It is made for forgetting
+  and nothing else, and says so where it cannot be changed: a link the site
+  made for anything else, such as confirming an email address, which works
+  for a day, forgets nothing, however it is sent. It works only for the account
   it was sent for, signed in: following it signed in as somebody else, or as
   nobody, does not forget anything.
 
@@ -150,6 +153,16 @@ Feature: A reader who is signed in can have their account forgotten
       And the reader is signed out
       When the link is followed
       Then the sign in page is shown
+      And the account for "someone@example.com" is not forgotten
+
+    Scenario: A link to confirm an email address forgets nothing
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", not confirmed
+      And a link to confirm the email address has been sent to "someone@example.com"
+      And the account for "someone@example.com" is confirmed
+      And the reader is signed in to the account for "someone@example.com"
+      When the link to confirm the email address is followed as a link to confirm forgetting
+      Then the reader is told the link no longer works
       And the account for "someone@example.com" is not forgotten
 
   Rule: A forgotten account is signed out of, and its email address is free again
