@@ -33,6 +33,15 @@ Given("the email address {string}", function (this: SpecWorld, given: string) {
   this.emailAddress = EmailAddress.from(given);
 });
 
+Given(
+  "the email address {string} with its accent typed after the letter",
+  function (this: SpecWorld, given: string) {
+    const typed = given.normalize("NFD");
+    assert.notEqual(typed, given, `"${given}" has no accent to type after.`);
+    this.emailAddress = EmailAddress.from(typed);
+  },
+);
+
 When(
   "the email address {string} is made",
   function (this: SpecWorld, given: string) {
@@ -51,6 +60,15 @@ When(
   "an email address of {int} characters with spaces around it is made",
   function (this: SpecWorld, length: number) {
     tryToMake(this, `  ${addressOf(length)}  `);
+  },
+);
+
+// Each accented letter written as one character, two bytes in UTF-8, so the
+// address is fewer characters than it is bytes.
+When(
+  "an email address of {int} accented letters before the @ is made",
+  function (this: SpecWorld, letters: number) {
+    tryToMake(this, "é".normalize("NFC").repeat(letters) + DOMAIN);
   },
 );
 

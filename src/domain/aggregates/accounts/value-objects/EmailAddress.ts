@@ -10,8 +10,11 @@ export type EmailAddressErrorCode =
   | "EmailAddress.HasSpaces"
   | "EmailAddress.TooLong";
 
-// The most any mail system will carry.
-const MOST_CHARACTERS = 254;
+// The most any mail system will carry, in bytes of UTF-8, which is how mail
+// systems count it. Counted in characters, an address of accented letters could
+// pass here and be refused by every mail server it was sent to.
+const MOST_BYTES = 254;
+const utf8 = new TextEncoder();
 
 const ats = (given: string): number => given.split("@").length - 1;
 
@@ -64,7 +67,7 @@ const addresses = new Validator<string, EmailAddressErrorCode>({
     {
       field: "address",
       code: "EmailAddress.TooLong",
-      isBrokenBy: (given) => [...given].length > MOST_CHARACTERS,
+      isBrokenBy: (given) => utf8.encode(given).length > MOST_BYTES,
     },
   ],
 });
@@ -72,10 +75,12 @@ const addresses = new Validator<string, EmailAddressErrorCode>({
 /**
  * An email address an account can be reached at, and found by.
  *
- * It is kept as it was given, trimmed, for writing to, and compared in lower case, so
- * that Someone@Example.com and someone@example.com are one address: mail
- * systems treat them so in practice, and a reader who registers as one and
- * signs in as the other is the same reader.
+ * It is kept as it was given, trimmed, for writing to. It is compared in lower
+ * case, so that Someone@Example.com and someone@example.com are one address,
+ * as mail systems treat them in practice; and in one way of writing each
+ * letter, so that an é typed as one character and one typed as an e with its
+ * accent after it are one address too. A reader who registers one way and signs
+ * in the other is the same reader.
  */
 export class EmailAddress {
   readonly #given: string;
@@ -98,7 +103,9 @@ export class EmailAddress {
 
   /** The address in the one form it is compared, and found, in. */
   get comparable(): string {
-    return this.#given.toLowerCase();
+    // Composed after it is lowered, not before, since lowering can itself leave
+    // a letter written as two code points, and that has to be composed too.
+    return this.#given.toLowerCase().normalize("NFC");
   }
 
   /** Two addresses are the same when they differ, if at all, only in case. */
