@@ -12,7 +12,9 @@ import { Mediator } from "../application/common/Mediator.js";
 import { ProjectingEventStore } from "../application/common/ProjectingEventStore.js";
 import type { Projection } from "../application/common/Projection.js";
 import { ValidationBehaviour } from "../application/common/ValidationBehaviour.js";
+import type { EmailQueue } from "../application/services/EmailQueue.js";
 import type { EventStore } from "../application/services/EventStore.js";
+import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
 import {
   loadConfig,
@@ -23,9 +25,16 @@ import { createPool } from "../infrastructure/database/pool.js";
 import { ReadOnlyTransactionBehaviour } from "../infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../infrastructure/database/TransactionBehaviour.js";
 import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
+import { FileEmailSender } from "../infrastructure/email/FileEmailSender.js";
+import { PostgresEmailQueue } from "../infrastructure/email/PostgresEmailQueue.js";
+import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSealing.js";
+import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
+import { KeyedEmailAddressHasher } from "../infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventStore.js";
+import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
+import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
 import { speakToRequests, type Language } from "./common/language.js";
 import {
@@ -64,6 +73,8 @@ export interface Application {
   readonly unitOfWork: UnitOfWork;
   /** Where every event is kept, with every read model kept in step as it is. */
   readonly eventStore: EventStore;
+  /** Where emails wait to be sent, queued in the command they are about. */
+  readonly emailQueue: EmailQueue;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -160,13 +171,8 @@ export interface ApplicationOptions {
 }
 
 // Every kind of event the application records, each named once by the name it
-// is kept under, and how it is read back. None yet: the first arrive with the
-// account.
-const events = (): EventRegistry => new EventRegistry();
-
-// Every read model's projection, each given every event as it is appended. None
-// yet: the first, accounts by email address, arrives with the account.
-const projections: readonly Projection[] = [];
+// is kept under, and how it is read back.
+const events = (): EventRegistry => nameAccountEvents(new EventRegistry());
 
 export const buildApplication = async (
   config: Config,
@@ -178,12 +184,40 @@ export const buildApplication = async (
   const unitOfWork = new UnitOfWork(pool);
   const { mediator, validation } = putTogether(unitOfWork);
 
+  // What is personal in an account's events is encrypted with the account's
+  // own key as they are kept, and the key kept with the site's.
+  const accountKeys = new AccountKeys(unitOfWork, config.accountEncryptionKey);
+  const accountsByEmailAddress = new AccountsByEmailAddress(
+    unitOfWork,
+    new KeyedEmailAddressHasher(config.accountEmailAddressHashKey),
+  );
+
+  // Every read model's projection, each given every event as it is appended.
+  const projections: readonly Projection[] = [accountsByEmailAddress];
+
   // On the unit of work the mediator's transactions use, so that what a
   // command's handler appends, and what every projection writes of it, is kept
   // in the command's transaction or not at all.
   const eventStore = new ProjectingEventStore(
-    new PostgresEventStore(unitOfWork, options.events ?? events()),
+    new PostgresEventStore(
+      unitOfWork,
+      options.events ?? events(),
+      new AccountEventSealing(accountKeys),
+    ),
     options.projections ?? projections,
+  );
+
+  // Emails are written from the site's catalogues, with links made from the
+  // site's configured address and never a request's, and written to files in
+  // temp/ until there is a mail provider. Nothing sends what is queued yet:
+  // that is the web layer's, on a timer of its own.
+  const languages = options.languages ?? [english];
+  const emailQueue = new PostgresEmailQueue(
+    unitOfWork,
+    accountKeys,
+    emailWriter(languages, siteAddress(config.canonicalHost, config.port)),
+    new FileEmailSender(join(repositoryRoot, "temp")),
+    config.emailFromAddress,
   );
 
   // Before any route is added, so that every one of them finds it there.
@@ -195,7 +229,7 @@ export const buildApplication = async (
   registerErrorMapping(server, assets);
 
   stampRequests(server, options.clock ?? machineClock);
-  speakToRequests(server, options.languages ?? [english]);
+  speakToRequests(server, languages);
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
@@ -221,7 +255,16 @@ export const buildApplication = async (
   registerJavaScriptRequiredPage(server, assets);
   registerPublicPages(server, assets);
 
-  return { server, pool, config, mediator, validation, unitOfWork, eventStore };
+  return {
+    server,
+    pool,
+    config,
+    mediator,
+    validation,
+    unitOfWork,
+    eventStore,
+    emailQueue,
+  };
 };
 
 const startedDirectly =

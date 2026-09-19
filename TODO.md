@@ -10,11 +10,19 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
+- /accounts/adminstrator/view-email-queue
+
 - Review all emails
 
 - Sign out option
 
-- Rotating encryption keys
+- **Rotating encryption keys.** `AccountKeys.changeSiteKey` re-encrypts every account's key and every queued email with no account for a new `ACCOUNT_ENCRYPTION_KEY`, but nothing calls it: a script under `scripts/` is wanted, run with the old key and the new. `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` cannot be changed at all, since the hash is kept in every registering event; change it and rebuild, and no account is found by its address. Say it is never changed, or keep every key the hash has been made with and find an address by each (from the review of `account-keys`).
+
+- **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
+
+- **Nothing sends what is queued yet.** `PostgresEmailQueue.sendDue` sends whatever is due, but only the scenarios call it; the timer that calls it every 10 seconds while the server is up is `emailQueueSending.feature`, on the outstanding list below.
+
+- **A `@postgres` scenario now and then fails before its first step**, in the Before hook in `specs/infrastructure/support/database.ts`, with `terminating connection due to administrator command`. Seen twice, a different scenario each time, and each passed when the suite was run again; perhaps the clean-up of one scenario's database ending a connection another is using. Worth looking at before it hides a real failure.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
@@ -58,13 +66,13 @@ From earlier pull requests:
 
 ## Set `CANONICAL_HOST` when the site is deployed
 
-**Where:** `.env` on whatever serves the site; the setting is read in `src/infrastructure/config/Config.ts` and used by `src/web/common/crossSite.ts`.
+**Where:** `.env` on whatever serves the site; the setting is read in `src/infrastructure/config/Config.ts` and used by `src/web/common/crossSite.ts`, and by the email writer for the site's address (`emailWriter.feature`).
 
-**What will go wrong.** When a browser does not send `Sec-Fetch-Site`, the cross-site guard judges a change by its `Origin`, compared against `CANONICAL_HOST`. Left blank, it compares against each request's own `Host` instead. Behind a load balancer or reverse proxy that rewrites `Host` to an internal name, a genuine post from this site carries `Origin: https://croquetscores.com`, arrives addressed to `app.internal`, and is refused as cross-site.
+**What will go wrong.** When a browser does not send `Sec-Fetch-Site`, the cross-site guard judges a change by its `Origin`, compared against `CANONICAL_HOST`. Left blank, it compares against each request's own `Host` instead. Behind a load balancer or reverse proxy that rewrites `Host` to an internal name, a genuine post from this site carries `Origin: https://croquetscores.com`, arrives addressed to `app.internal`, and is refused as cross-site. And every link in every email — confirming an address, setting a new password, forgetting an account — is made from it, and left blank points at `http://localhost:3000`, where development serves: a reader following one reaches nothing, and cannot confirm, get back in or be forgotten.
 
-**Why it has not yet.** There is no deployment. The mechanism to prevent it arrived with the review of PR #10; what is missing is the value, and it cannot be supplied until there is somewhere to supply it. It only reaches readers whose browsers are too old to send `Sec-Fetch-Site`, so the exposure is small even then.
+**Why it has not yet.** There is no deployment. The mechanism to prevent it arrived with the review of PR #10; what is missing is the value, and it cannot be supplied until there is somewhere to supply it. For the cross-site guard it only reaches readers whose browsers are too old to send `Sec-Fetch-Site`, so the exposure is small even then. For email it would reach every reader, from the first email sent.
 
-**What to do.** Set `CANONICAL_HOST` to the host readers see in the address bar — `croquetscores.com`, with a port only if they see one. Nothing will fail at startup if it is forgotten: the setting is optional, because development needs it blank (`SETUP.md` §6.1 explains why). So it belongs on whatever deployment checklist gets written, and if the site ever grows a notion of which environment it is running in, a production start without it should be refused.
+**What to do.** Set `CANONICAL_HOST` to the host readers see in the address bar — `croquetscores.com`, with a port only if they see one. Nothing will fail at startup if it is forgotten: the setting is optional, because development needs it blank (`SETUP.md` §6.1 explains why). So it belongs on whatever deployment checklist gets written, and near its top now that emails depend on it; and if the site ever grows a notion of which environment it is running in, a production start without it should be refused. It must never be filled from a request's `Host` to save setting it: a host is whatever the request's sender wrote, and an email link made from one can be pointed at anybody's site.
 
 ---
 
@@ -131,26 +139,38 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 **What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
 
+## Accounts menu
+
+Make the last nav bar menu the icon a solid person icon. When the current user is not signed in includes the following in the dropdown menu
+
+- Register          - /accounts/register
+- Sign In           - /accounts/sign-in
+- Forgot Password   - /accounts/forgot-password
+
+When signed in:
+
+- Sign Out              - Submit /api/accounts/sign-out
+- Profile               - /accounts/profile
+- Change Password       - /accounts/change-password
+- Change Email Address  - /accounts/change-email-address
+- Change Name           - /accounts/change-name
+
 ## Outstanding .feature files
 
 In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-5. `specs/infrastructure/encryption/account-keys/AccountKeys.feature`
-6. `specs/infrastructure/read-models/accounts-by-email-address/AccountsByEmailAddress.feature`
 7. `specs/infrastructure/identity/have-i-been-pwned/HaveIBeenPwnedPasswords.feature`
 8. `specs/infrastructure/identity/recaptcha/RecaptchaReaderCheck.feature`
-9. `specs/infrastructure/email/file-email-sender/FileEmailSender.feature`
-10. `specs/infrastructure/email/postgres-email-queue/PostgresEmailQueue.feature`
-11. `specs/web/common/email-queue-sending/emailQueueSending.feature`
-12. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
-13. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-14. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-15. `specs/application/operations/accounts/sign-in/SignIn.feature`
-16. `specs/web/public/register/register.feature`
-17. `specs/web/public/sign-in/signIn.feature`
-18. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
-19. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
-20. `specs/web/public/forgot-password/forgotPassword.feature`
-21. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
-22. `specs/web/public/forget-account/forgetAccount.feature`
-23. `specs/web/common/session/session.feature`
+9. `specs/web/common/email-queue-sending/emailQueueSending.feature`
+10. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
+11. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
+12. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+13. `specs/application/operations/accounts/sign-in/SignIn.feature`
+14. `specs/web/public/register/register.feature`
+15. `specs/web/public/sign-in/signIn.feature`
+16. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
+17. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
+18. `specs/web/public/forgot-password/forgotPassword.feature`
+19. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
+20. `specs/web/public/forget-account/forgetAccount.feature`
+21. `specs/web/common/session/session.feature`

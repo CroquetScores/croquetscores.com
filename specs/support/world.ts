@@ -22,6 +22,7 @@ import type {
   PasswordCheck,
   PasswordHasher,
 } from "../../src/application/services/PasswordHasher.js";
+import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
 import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -185,6 +186,16 @@ export class SpecWorld extends World {
   // than the example thing, so that the steps every such thing shares — what
   // it has recorded — can be asked of it.
   public aggregate: AggregateRoot | undefined;
+
+  // What becomes of an account a scenario registers or changes, and how its
+  // email address is hashed, when the scenario keeps accounts rather than only
+  // making them: the domain's steps cannot name the store that keeps them, so
+  // whatever puts one together says so here. Absent, an account is only made.
+  public keepAccount: ((account: Account) => Promise<void>) | undefined;
+  public hashEmailAddress: ((address: string) => string) | undefined;
+  // What looking an account up found, when a scenario has looked one up, so
+  // that the steps every lookup shares — found, or not — can be asked of it.
+  public lookup: { found: AccountId | undefined } | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;

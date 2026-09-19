@@ -12,6 +12,14 @@ export interface Config {
   readonly databaseUrl: string;
   readonly sessionCookieSecret: string;
   readonly tokenSigningKey: string;
+  // The site's key, which each account's own key is encrypted with, and the
+  // key an email address is hashed with to find its account. Neither is ever
+  // to be made again once anything is kept with it: a new one leaves what the
+  // old one kept unreadable, or unfound.
+  readonly accountEncryptionKey: string;
+  readonly accountEmailAddressHashKey: string;
+  // The address the site's emails are sent from.
+  readonly emailFromAddress: string;
   // The host this site answers to, as a browser would name it: "croquetscores.com",
   // or "localhost:3000" in development. Absent means fall back to the Host header
   // of each request, which is right on a machine nothing sits in front of and
@@ -91,6 +99,9 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     "DATABASE_URL",
     "SESSION_COOKIE_SECRET",
     "TOKEN_SIGNING_KEY",
+    "ACCOUNT_ENCRYPTION_KEY",
+    "ACCOUNT_EMAIL_ADDRESS_HASH_KEY",
+    "EMAIL_FROM_ADDRESS",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
   if (missing.length > 0) problems.push(`Missing: ${missing.join(", ")}.`);
@@ -105,6 +116,9 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     databaseUrl: env["DATABASE_URL"]!,
     sessionCookieSecret: env["SESSION_COOKIE_SECRET"]!,
     tokenSigningKey: env["TOKEN_SIGNING_KEY"]!,
+    accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
+    accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
+    emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
     canonicalHost: readCanonicalHost(env),
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),

@@ -8,6 +8,10 @@ Feature: An account, from registering on
   The account's own id is given it by whatever registers it, and names its
   stream. Registering is the account's first event, and says everything the
   account began with. The password is never part of it: only its hash is.
+  Registering is also given a keyed hash of the email address, made by whatever
+  registers the account, since the key is the site's and not the domain's, and
+  says it, so that anything finding accounts by their address can be made from
+  the events alone.
 
   An account is registered once. Registering its address again, confirmed or
   not, changes nothing about it: what is sent to the address instead is
@@ -61,6 +65,10 @@ Feature: An account, from registering on
     Scenario: A registered account is not yet confirmed
       When an account is registered as "Sam Someone" at "someone@example.com"
       Then the account is not confirmed
+
+    Scenario: Registering records the hash of the email address it was given
+      When an account is registered as "Sam Someone" at "someone@example.com" with the email address hash "hash-of-someone"
+      Then its registering says the email address hash "hash-of-someone"
 
     Scenario: What it recorded does not hold the password
       When an account is registered as "Sam Someone" at "someone@example.com" with the password "correct horse battery staple"

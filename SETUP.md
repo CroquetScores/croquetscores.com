@@ -55,6 +55,8 @@ Dependencies point inwards and never outwards:
 
 When an inner layer needs something it cannot do itself — hash a password, verify a Google token, read a row, send mail — it declares an interface in its own `services/` folder describing what _it_ wants. `infrastructure` implements that interface at the mirrored path. The interface is written for the layer that needs it, never shaped around what an implementation would find convenient.
 
+One interface is implemented by `web` instead: writing an email's words. The email queue is infrastructure, and needs an email written before it can send it, but the words are the reader's, kept in the same catalogue as every word a page shows, so that a language is added to the site by adding one catalogue. Writing them is presentation, which is `web`'s. So the application declares an email writer in `services/`, `web` implements it from the catalogue, and `server.ts` hands that to the queue. The queue imports only the application's declaration, and nothing in `infrastructure` reaches into `web`. It is the one place `web` implements a service; anything else that needs words a reader will see should come the same way rather than keep words of its own.
+
 ESLint enforces all of this (§9); breaking it fails CI.
 
 ---
