@@ -163,7 +163,7 @@ Feature: A reader who has forgotten their password is sent a way back in
       And a way back in has been asked for "someone@example.com" 3 times in the last hour
       And the forgot password page is open
       When a way back in is asked for "  SOMEONE@Example.com  "
-      Then nothing more is sent to "someone@example.com"
+      Then nothing more is queued to be sent, to any address
 
     Scenario: The page says the same past an address's limit
       Given a viewport 1200 pixels wide
