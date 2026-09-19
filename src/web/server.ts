@@ -40,6 +40,7 @@ import { registerPublicPages } from "./public/pages.js";
 import { registerRegisterPage } from "./public/register.js";
 import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
+import { registerWelcomePage } from "./public/welcome.js";
 
 const repositoryRoot = join(import.meta.dirname, "..", "..");
 
@@ -215,6 +216,7 @@ export const buildApplication = async (
   registerThemeRoute(server);
   registerLanguageRoute(server);
   registerRegisterPage(server, assets);
+  registerWelcomePage(server, assets);
   registerPublicPages(server, assets);
 
   return { server, pool, config, mediator, validation, unitOfWork, eventStore };

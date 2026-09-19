@@ -20,6 +20,13 @@ export const english: Language = {
     "register.submit": "Register",
     "register.notOpen": "Registering is not open yet.",
 
+    "welcome.title": "Check your email",
+    "welcome.checkEmail":
+      "An email is on its way to the address you gave. Follow the link in it to carry on.",
+    "welcome.nothingArrived":
+      "If nothing arrives in a few minutes, look in your junk or spam folder.",
+    "welcome.home": "Back to Croquet Scores",
+
     "errors.backHome": "Back to Croquet Scores",
     "errors.notFound": "Not found",
     "errors.refused": "That could not be done",
