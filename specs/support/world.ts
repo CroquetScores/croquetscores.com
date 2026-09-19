@@ -15,6 +15,7 @@ import type {
   RequestValidator,
   ValidationBehaviour,
 } from "../../src/application/common/ValidationBehaviour.js";
+import type { AggregateRepository } from "../../src/application/common/AggregateRepository.js";
 import type { EventStore } from "../../src/application/services/EventStore.js";
 import type {
   PasswordCheck,
@@ -28,6 +29,7 @@ import type {
 } from "../../src/domain/common/EventRegistry.js";
 import type { Id } from "../../src/domain/common/Id.js";
 import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
+import type { ExampleThing, ExampleThingId } from "./exampleThing.js";
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 
 export class SpecWorld extends World {
@@ -132,6 +134,9 @@ export class SpecWorld extends World {
   // waiting to be appended, what reading a stream back gave, and how many of
   // those the scenario has named so far.
   public eventStore: EventStore | undefined;
+  // A repository of example things over that store, when a scenario has one.
+  public repository:
+    AggregateRepository<ExampleThing, ExampleThingId> | undefined;
   public streams: Id[] = [];
   public pendingEvents: DomainEvent[] = [];
   public readBack: readonly DomainEvent[] | undefined;

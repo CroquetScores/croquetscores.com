@@ -72,13 +72,15 @@ ESLint enforces all of this (§9); breaking it fails CI.
         /value-objects
     /services              interfaces the domain names
   /application
-    /common                Mediator, Command, Query, Handler, Behaviour, and the
-                           behaviours that need nothing outside the application
+    /common                Mediator, Command, Query, Handler, Behaviour, the
+                           behaviours that need nothing outside the application,
+                           and the one repository every aggregate is loaded and
+                           saved through, over the event store
     /operations            one folder per area, holding commands, queries,
                            validators, handlers and result types together
     /projections           read-model builders: events in, rows out
-    /services              interfaces the application names — repositories,
-                           EventStore, IdentityProvider
+    /services              interfaces the application names — EventStore,
+                           PasswordHasher, IdentityProvider
   /infrastructure
     /config                settings and secret loading
     /database              connection pool, migration runner, /migrations/*.sql,

@@ -1,9 +1,11 @@
 import type { DomainEvent } from "./DomainEvent.js";
+import type { Id } from "./Id.js";
 
 /**
- * What every thing that lasts shares: it is kept as everything that happened
- * to it, rebuilt by applying each event in turn, and it records what happens
- * next as events that change it as they are recorded.
+ * What every thing that lasts shares: it is known by an id, which is also the
+ * name of its stream; it is kept as everything that happened to it, rebuilt by
+ * applying each event in turn; and it records what happens next as events that
+ * change it as they are recorded.
  *
  * A subclass says how each event changes it, in {@link apply}, and offers its
  * own ways of being made new and of being rebuilt, since what it takes to begin
@@ -11,10 +13,24 @@ import type { DomainEvent } from "./DomainEvent.js";
  * {@link replay}.
  */
 export abstract class AggregateRoot {
+  readonly #id: Id;
   // How many events of its stream this has taken account of: those it was
   // rebuilt from, and those it has handed over to be kept since.
   #version = 0;
   #recorded: DomainEvent[] = [];
+
+  /**
+   * Given its id by whatever makes it — new, or rebuilt from the stream that
+   * id names — and keeping it for good.
+   */
+  protected constructor(id: Id) {
+    this.#id = id;
+  }
+
+  /** What it is known by, and what its stream is named. */
+  get id(): Id {
+    return this.#id;
+  }
 
   /**
    * Where this expects its stream to be when what it recorded is appended.
