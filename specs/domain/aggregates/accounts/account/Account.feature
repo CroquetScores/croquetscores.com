@@ -32,8 +32,12 @@ Feature: An account, from registering on
   alongside deleting the account's key: the key makes what is kept of them
   unreadable, and the event is what tells every read model to stop finding the
   account by what it holds, such as the row it is found by. A forgotten account
-  cannot be signed in to, confirmed or registered again, with
-  `Account.Forgotten`; its email address is free for a new account instead.
+  cannot be signed in to, confirmed, registered again or have its password
+  hashed again, with `Account.Forgotten`: a new hash would be something new
+  kept of the person after forgetting was to have kept nothing more. Its email
+  address is free for a new account instead. An account is forgotten once:
+  forgetting it again records nothing, so that whatever acts on its being
+  forgotten acts once.
 
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
@@ -140,6 +144,12 @@ Feature: An account, from registering on
       Given a stream where an account was registered as "Sam Someone" at "someone@example.com" with an imported password
       And its password was hashed again
       When the account is rebuilt from the stream
+      Then the account's password hash is the one it was hashed again with
+
+    Scenario: An account rebuilt after its password was hashed again no longer has an imported password
+      Given a stream where an account was registered as "Sam Someone" at "someone@example.com" with an imported password
+      And its password was hashed again
+      When the account is rebuilt from the stream
       Then the account's password is not imported
 
   Rule: A forgotten account is recorded as forgotten, and cannot be used again
@@ -174,3 +184,25 @@ Feature: An account, from registering on
       And the account is rebuilt from the stream
       When the account's email address is confirmed
       Then it is refused with "Account.Forgotten"
+
+    Scenario: A forgotten account's password cannot be hashed again
+      Given a stream where an account was registered as "Sam Someone" at "someone@example.com" with an imported password
+      And it was forgotten
+      And the account is rebuilt from the stream
+      When its password is hashed again
+      Then it is refused with "Account.Forgotten"
+
+    Scenario: A forgotten account's password hashed again records nothing
+      Given a stream where an account was registered as "Sam Someone" at "someone@example.com" with an imported password
+      And it was forgotten
+      And the account is rebuilt from the stream
+      When its password is hashed again
+      Then it has recorded 0 events
+
+    Scenario: Forgetting a forgotten account records nothing
+      Given a stream where an account was registered as "Sam Someone" at "someone@example.com"
+      And its email address was confirmed
+      And it was forgotten
+      And the account is rebuilt from the stream
+      When the account is forgotten
+      Then it has recorded 0 events

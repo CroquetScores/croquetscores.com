@@ -136,10 +136,11 @@ Given("its email address was confirmed", function (this: SpecWorld) {
   streamOf(this).push(new EmailAddressConfirmed(idOf(this), now(this)));
 });
 
+// The hash a password was hashed again with, when the stream says it was.
+const NEW_HASH = hashOf("a new hash");
+
 Given("its password was hashed again", function (this: SpecWorld) {
-  streamOf(this).push(
-    new PasswordHashedAgain(hashOf("a new hash"), idOf(this), now(this)),
-  );
+  streamOf(this).push(new PasswordHashedAgain(NEW_HASH, idOf(this), now(this)));
 });
 
 Given("it was forgotten", function (this: SpecWorld) {
@@ -272,6 +273,13 @@ Then("the account is confirmed", function (this: SpecWorld) {
 Then("the account is not confirmed", function (this: SpecWorld) {
   assert.equal(accountOf(this).confirmed, false);
 });
+
+Then(
+  "the account's password hash is the one it was hashed again with",
+  function (this: SpecWorld) {
+    assert.equal(accountOf(this).passwordHash, NEW_HASH);
+  },
+);
 
 Then("the account's password is not imported", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordImported, false);

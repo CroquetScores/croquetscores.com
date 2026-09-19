@@ -143,13 +143,24 @@ export class Account extends AggregateRoot {
     this.record(new SignedIn(this.id, at));
   }
 
-  /** That the account's password now has `passwordHash`, made a better way. */
+  /**
+   * That the account's password now has `passwordHash`, made a better way.
+   * Refused with `Account.Forgotten` for an account forgotten, since a new
+   * hash would be something new kept of the person after forgetting was to
+   * have kept nothing more.
+   */
   hashPasswordAgain(passwordHash: string, at: ReadOnlyDate): void {
+    this.#refuseIfForgotten();
     this.record(new PasswordHashedAgain(passwordHash, this.id, at));
   }
 
-  /** That the account is forgotten, which cannot be undone. */
+  /**
+   * That the account is forgotten, which cannot be undone. It is forgotten
+   * once: forgetting it again records nothing, so that whatever acts on its
+   * being forgotten acts once.
+   */
   forget(at: ReadOnlyDate): void {
+    if (this.#forgotten) return;
     this.record(new AccountForgotten(this.id, at));
   }
 
