@@ -10,11 +10,13 @@ import { closes, opens } from "../../support/languages.js";
 Given(
   "a browser that asks for {string}",
   async function (this: SpecWorld, asked: string) {
+    this.acceptLanguage = asked;
     await this.browserPage.setExtraHTTPHeaders({ "accept-language": asked });
   },
 );
 
 Given("a browser that asks for no language", async function (this: SpecWorld) {
+  this.acceptLanguage = "";
   await this.browserPage.setExtraHTTPHeaders({ "accept-language": "" });
 });
 
@@ -63,10 +65,6 @@ Then(
     assert.equal(await this.browserPage.inputValue(list), tag);
   },
 );
-
-Then("the register page is shown", function (this: SpecWorld) {
-  assert.equal(new URL(this.browserPage.url()).pathname, "/accounts/register");
-});
 
 // Every piece of text a reader sees within `selector`, each of which must be
 // marked at both ends: one that is not came from somewhere other than a
