@@ -142,10 +142,13 @@ Then("it has recorded nothing", function (this: SpecWorld) {
   assert.deepEqual(thingOf(this).recorded, []);
 });
 
+// Asked of whichever thing the scenario is looking at: a real one when it has
+// one, and the example thing otherwise.
 Then(
   "it has recorded {int} event(s)",
   function (this: SpecWorld, count: number) {
-    assert.equal(thingOf(this).recorded.length, count);
+    const looking = this.aggregate ?? thingOf(this);
+    assert.equal(looking.recorded.length, count);
   },
 );
 
