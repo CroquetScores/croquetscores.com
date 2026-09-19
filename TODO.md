@@ -10,10 +10,21 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
+- /accounts/forgot-password
+
+- /accounts/welcome
+
+- /accounts/java-script-required
+
+- /accounts/registrations-suspended
+
+- Email the administrator when registrations are suspended
+
 - The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
+
 - What a form shows for a rule the catalogue has no words for — `form.otherwise`, above the fields — is covered by no scenario (from PR #32).
+
 - Only the "not found" page is checked in the test locale. The words on the pages for a refused request and for the server failing come from the catalogue too, but no scenario looks (from PR #32).
-- The register stand-in answers a post with the page itself, so refreshing it offers to send the form again. Harmless while it records nothing; decide between showing the form again and redirecting after success when registering is real (from PR #32).
 
 ---
 
@@ -125,18 +136,83 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 _Application_
 
 - `src/application/operations/accounts/` does not exist yet. It would hold the register command, its validator, its handler and its result.
-- There is no way yet to load or save an aggregate through the event store.
-- Projections do not exist. The transaction scenarios mention one, but there is no mechanism, no read-model table and no migration. Refusing an email address that is already registered needs a read model of accounts by email address, so the first page is also the first projection.
-- Password hashing needs an interface in `src/application/services/`, with an argon2 implementation in infrastructure. `@node-rs/argon2` is already a dependency.
 
 _Domain_
 
 - The `Account` aggregate, an `AccountRegistered` event, and an `EmailAddress` value object.
 
-**Decisions to make before the feature is written**
+### Form
 
-1. **What happens after registering?** Signing the reader in straight away needs sessions (`SETUP.md` §7.7). Asking them to confirm their email address needs a way to send email. Neither exists. The suggestion is to make the first slice record the account and tell the reader it is done, then make sign-in the next page, where sessions arrive.
-2. **Is an email address that is already registered disclosed?** Saying "already registered" tells anyone which addresses have accounts. `SETUP.md` §7.6 already hides that at sign-in, where a wrong password and an unknown address fail the same way, so register would be consistent to hide it too. Hiding it usually means sending an email, which brings back the problem in the first decision.
-3. **What are the password rules?** The suggestion is a minimum length only (current guidance is at least 8 characters) and no rules about which kinds of character it must contain.
+Requires the following fields:
 
-With those decided, the first thing to write is `register.feature` in the web layer. It is limited to what a reader sees, and its scenarios say what the command and domain features need to cover.
+- Name
+- EmailAddress
+- Password
+- ConfirmPassword
+
+The form also requires Google ReCAPTCHA v3.
+
+All fields are trimmed.
+
+### Validation
+
+#### Name
+
+Must be between 3 and 254 characters inclusive
+
+#### Email Address
+
+Must be a valid email address. Do not use RegEx.
+
+#### Password
+
+From Copilot:
+
+Key NIST password recommendations (summary)
+
+- Minimum length: 8 characters (15 recommended for single‑factor).
+
+- No forced rotation unless evidence of compromise.
+
+- No complexity rules (uppercase/lowercase/symbol requirements are discouraged).
+
+- Mandatory screening against known‑breached passwords.
+
+- No security questions (explicitly prohibited).
+
+Only change from these is minimum 12 characters.
+
+Trimmed, like every other field, before it is checked or hashed: a password that begins or ends with a space loses it. An account imported from the old site whose password began or ended with a space cannot sign in with it, since the old site did not trim, and resets it through /accounts/forgot-password instead. The trimming is the form's, at the edge; the password hasher still hashes exactly what it is given.
+
+##### Known Passwords
+
+Use Have I Been Pwned range API, which is asked about the first five characters of the password's SHA-1 and never sees the password. It is a call to an outside service on every registration and password change.
+
+If it cannot be reached redirect the user to /accounts/registrations-suspended and email the administrator
+
+#### ConfirmPassword
+
+Must exactly match password
+
+### Email Address
+
+Whether the site already has an email address or not must not be disclosed.
+
+One of 3 emails will be sent to the email address:
+
+- Known un-confirmed email address
+- Known confirmed email address
+- New email address
+
+Emails must be recorded in a queue so that all database changes can be saved within one transaction.
+
+An email queue handler to remove items off the queue when the email has been successfully sent.
+
+Successful writing to event sotre & projections redirects to /accounts/welcome.
+
+### Encryption / Hashes
+
+- Name must be encrypted at rest
+- Email address must be encrypted at rest
+- Email address must be searchable therefore must be hashed at rest.
+- Password must be hashed.
