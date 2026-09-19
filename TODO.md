@@ -135,7 +135,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-4. `specs/domain/aggregates/accounts/account/Account.feature`
 5. `specs/infrastructure/encryption/account-keys/AccountKeys.feature`
 6. `specs/infrastructure/read-models/accounts-by-email-address/AccountsByEmailAddress.feature`
 7. `specs/infrastructure/identity/have-i-been-pwned/HaveIBeenPwnedPasswords.feature`
