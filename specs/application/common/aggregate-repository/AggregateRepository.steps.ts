@@ -39,11 +39,20 @@ const idOf = (world: SpecWorld): ExampleThingId => {
   return scenario.id;
 };
 
+// A save that is refused is kept to be asked about. Only a refusal, though —
+// one the store names by code. Anything else that goes wrong saving is a fault
+// in the code or the scenario, and fails the step rather than being kept and
+// mistaken for the refusal a later step is looking for.
 const saving = async (world: SpecWorld, thing: ExampleThing): Promise<void> => {
   const repository = repositoryOf(world);
   try {
     await world.asARequest(() => repository.save(thing));
   } catch (failure) {
+    assert.ok(
+      failure instanceof Error &&
+        typeof (failure as { code?: unknown }).code === "string",
+      `Saving failed rather than being refused: ${inspect(failure)}`,
+    );
     world.failure = failure;
   }
 };
@@ -92,7 +101,9 @@ When(
 When(
   "an example thing nobody saved is loaded",
   async function (this: SpecWorld) {
-    thingScenarioOf(this).thing = await loading(this, ExampleThingId.create());
+    const scenario = thingScenarioOf(this);
+    scenario.looked = true;
+    scenario.thing = await loading(this, ExampleThingId.create());
   },
 );
 
@@ -113,8 +124,12 @@ When(
 
 // What came of it ----------------------------------------------------------
 
+// Not found is only meaningful once something was looked for: a scenario that
+// never loaded has nothing, and should not pass for it.
 Then("nothing is found", function (this: SpecWorld) {
-  assert.equal(thingScenarioOf(this).thing, undefined, "Something was found.");
+  const scenario = thingScenarioOf(this);
+  assert.ok(scenario.looked === true, "Nothing was loaded.");
+  assert.equal(scenario.thing, undefined, "Something was found.");
 });
 
 Then("it is known by the example thing's id", function (this: SpecWorld) {

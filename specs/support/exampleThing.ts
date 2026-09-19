@@ -115,6 +115,9 @@ export interface ThingScenario {
   // The id of the thing the scenario is about, once it has one.
   id?: ExampleThingId;
   copies: Map<string, ExampleThing>;
+  // Whether a load has been asked for, so that "nothing is found" can tell a
+  // thing that was looked for and not found from one nobody looked for.
+  looked?: boolean;
 }
 
 const scenarios = new WeakMap<SpecWorld, ThingScenario>();
