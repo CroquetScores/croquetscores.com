@@ -50,13 +50,14 @@ export class Account extends AggregateRoot {
 
   /**
    * A new account, unconfirmed. It is given its id by whatever registers it,
-   * and a hash of its password rather than the password, which the domain
-   * never holds.
+   * a keyed hash of its email address, since the key is the site's, and a hash
+   * of its password rather than the password, which the domain never holds.
    */
   static register(
     id: AccountId,
     name: PersonName,
     emailAddress: EmailAddress,
+    emailAddressHash: string,
     passwordHash: string,
     at: ReadOnlyDate,
   ): Account {
@@ -65,6 +66,7 @@ export class Account extends AggregateRoot {
       new AccountRegistered(
         name.toString(),
         emailAddress.toString(),
+        emailAddressHash,
         passwordHash,
         false,
         id,

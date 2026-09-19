@@ -54,14 +54,25 @@ const accountOf = (world: SpecWorld): Account => {
 const hashOf = (password: string): string =>
   `stand-in$${createHash("sha256").update(password).digest("hex")}`;
 
+// The hash registering is given of an email address: the one the scenario
+// keeps accounts with, when it keeps them, so that they can be found by it; a
+// stand-in otherwise, since the account only carries it.
+const addressHashOf = (world: SpecWorld, address: string): string =>
+  world.hashEmailAddress?.(address) ?? `stand-in$${address.toLowerCase()}`;
+
 // Asking an account something may be refused, and the scenario says which it
-// expects.
-const tryTo = (world: SpecWorld, ask: (account: Account) => void): void => {
+// expects. What it recorded is kept, when the scenario keeps accounts.
+const tryTo = async (
+  world: SpecWorld,
+  ask: (account: Account) => void,
+): Promise<void> => {
   try {
     ask(accountOf(world));
   } catch (failure) {
     world.failure = failure;
+    return;
   }
+  await world.keepAccount?.(accountOf(world));
 };
 
 const firstRecorded = (world: SpecWorld): DomainEvent => {
@@ -72,32 +83,59 @@ const firstRecorded = (world: SpecWorld): DomainEvent => {
 
 // Registering --------------------------------------------------------------
 
-const register = (
+const register = async (
   world: SpecWorld,
   name: string,
   address: string,
   password: string,
-): void => {
-  world.aggregate = Account.register(
+  addressHash = addressHashOf(world, address),
+): Promise<void> => {
+  const account = Account.register(
     idOf(world),
     PersonName.from(name),
     EmailAddress.from(address),
+    addressHash,
     hashOf(password),
     now(world),
   );
+  world.aggregate = account;
+  await world.keepAccount?.(account);
 };
 
 When(
   "an account is registered as {string} at {string}",
-  function (this: SpecWorld, name: string, address: string) {
-    register(this, name, address, "correct horse battery staple");
+  async function (this: SpecWorld, name: string, address: string) {
+    await register(this, name, address, "correct horse battery staple");
   },
 );
 
 When(
   "an account is registered as {string} at {string} with the password {string}",
-  function (this: SpecWorld, name: string, address: string, password: string) {
-    register(this, name, address, password);
+  async function (
+    this: SpecWorld,
+    name: string,
+    address: string,
+    password: string,
+  ) {
+    await register(this, name, address, password);
+  },
+);
+
+When(
+  "an account is registered as {string} at {string} with the email address hash {string}",
+  async function (
+    this: SpecWorld,
+    name: string,
+    address: string,
+    addressHash: string,
+  ) {
+    await register(
+      this,
+      name,
+      address,
+      "correct horse battery staple",
+      addressHash,
+    );
   },
 );
 
@@ -112,6 +150,7 @@ const registered = (
   new AccountRegistered(
     name,
     address,
+    addressHashOf(world, address),
     imported ? "$old-site$stand-in" : hashOf("correct horse battery staple"),
     imported,
     idOf(world),
@@ -153,16 +192,19 @@ When("the account is rebuilt from the stream", function (this: SpecWorld) {
 
 // What is asked of it ------------------------------------------------------
 
-When("the account's email address is confirmed", function (this: SpecWorld) {
-  tryTo(this, (account) => account.confirm(now(this)));
+When(
+  "the account's email address is confirmed",
+  async function (this: SpecWorld) {
+    await tryTo(this, (account) => account.confirm(now(this)));
+  },
+);
+
+When("the account is signed in to", async function (this: SpecWorld) {
+  await tryTo(this, (account) => account.signIn(now(this)));
 });
 
-When("the account is signed in to", function (this: SpecWorld) {
-  tryTo(this, (account) => account.signIn(now(this)));
-});
-
-When("its password is hashed again", function (this: SpecWorld) {
-  tryTo(this, (account) =>
+When("its password is hashed again", async function (this: SpecWorld) {
+  await tryTo(this, (account) =>
     account.hashPasswordAgain(
       hashOf("correct horse battery staple"),
       now(this),
@@ -172,15 +214,15 @@ When("its password is hashed again", function (this: SpecWorld) {
 
 When(
   "its password {string} is hashed again",
-  function (this: SpecWorld, password: string) {
-    tryTo(this, (account) =>
+  async function (this: SpecWorld, password: string) {
+    await tryTo(this, (account) =>
       account.hashPasswordAgain(hashOf(password), now(this)),
     );
   },
 );
 
-When("the account is forgotten", function (this: SpecWorld) {
-  tryTo(this, (account) => account.forget(now(this)));
+When("the account is forgotten", async function (this: SpecWorld) {
+  await tryTo(this, (account) => account.forget(now(this)));
 });
 
 // What it recorded -----------------------------------------------------------
@@ -251,6 +293,18 @@ Then(
 );
 
 // What it is -----------------------------------------------------------------
+
+Then(
+  "its registering says the email address hash {string}",
+  function (this: SpecWorld, addressHash: string) {
+    const event = firstRecorded(this);
+    assert.ok(
+      event instanceof AccountRegistered,
+      `It recorded ${inspect(event)}.`,
+    );
+    assert.equal(event.emailAddressHash, addressHash);
+  },
+);
 
 Then(
   "the account is called {string}",

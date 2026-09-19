@@ -97,4 +97,4 @@ Report what happened, including what did not work. "Tests pass" when they were n
 
 Do what was asked. Where something else is wrong, say so and leave it: a change that quietly fixes three other things is a change nobody can review. Where a decision could go two ways and both are defensible, make one, say which, and say what would change if it went the other way.
 
-`git add` is nobody's but the author's. When asked to commit what is staged, commit what is staged.
+Git is nobody's but the author's. Nothing is staged, committed, pushed, force-pushed, or opened as a pull request without being asked for in those words, each time: being asked to commit is not being asked to push, and being asked once is not being asked again. Work is done, checked, and left in the working tree, with what is there said plainly. When asked to commit what is staged, commit what is staged: exactly that, with nothing added to the index first, and unstaged work left alone. Where a review or a fix changes files, say which, and leave the staging to whoever asked.

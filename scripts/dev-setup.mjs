@@ -10,9 +10,19 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const envPath = join(root, ".env");
 const examplePath = join(root, ".env.example");
 
-// Generated here rather than pasted in: these two reach nothing but a
-// developer's own machine, so there is nobody to ask for them.
-const generated = new Set(["SESSION_COOKIE_SECRET", "TOKEN_SIGNING_KEY"]);
+// Generated here rather than pasted in: on a developer's own machine these
+// reach nothing but that machine, so there is nobody to ask for them. Anywhere
+// else they are made once and kept, and never made again: a new encryption key
+// leaves everything encrypted with the old one unreadable.
+const generated = new Set([
+  "SESSION_COOKIE_SECRET",
+  "TOKEN_SIGNING_KEY",
+  // AES-256-GCM for an account's name and email address at rest, and the
+  // HMAC-SHA-256 key its address is found by: 32 bytes each, and each its own,
+  // so the key the table is searched with cannot decrypt anything.
+  "ACCOUNT_ENCRYPTION_KEY",
+  "ACCOUNT_EMAIL_ADDRESS_HASH_KEY",
+]);
 
 const assignment = /^(\s*)([A-Za-z_][A-Za-z0-9_.]*)(\s*=\s*)(.*)$/;
 

@@ -8,3 +8,6 @@ coverage/
 
 # Review output, written here to be read and acted on rather than kept.
 code-review.md
+
+# Emails written to files in place of being sent, by FileEmailSender.
+temp/

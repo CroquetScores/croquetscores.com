@@ -125,8 +125,14 @@ When(
 // What came of it ----------------------------------------------------------
 
 // Not found is only meaningful once something was looked for: a scenario that
-// never loaded has nothing, and should not pass for it.
+// never loaded has nothing, and should not pass for it. Asked of whatever the
+// scenario looked up — an account, when it looked one up by its email address —
+// and of the example thing it loaded otherwise.
 Then("nothing is found", function (this: SpecWorld) {
+  if (this.lookup !== undefined) {
+    assert.equal(this.lookup.found, undefined, "Something was found.");
+    return;
+  }
   const scenario = thingScenarioOf(this);
   assert.ok(scenario.looked === true, "Nothing was loaded.");
   assert.equal(scenario.thing, undefined, "Something was found.");
