@@ -10,6 +10,7 @@ import { typedFrom, type Typed } from "../common/form.js";
 import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
+import { javaScriptRequiredPath } from "./javaScriptRequired.js";
 
 const path = "/accounts/register";
 const notOpenPath = `${path}?notice=not-open`;
@@ -32,6 +33,9 @@ const show = (
     path: notOpen ? notOpenPath : path,
     currentPath: path,
     frame: "bare",
+    // Registering is guarded by reCAPTCHA, which runs in the browser, so a
+    // reader without scripting is told so before filling anything in.
+    withoutScripting: javaScriptRequiredPath,
     body: renderDialog({
       title: speaking.say("register.title"),
       action: path,

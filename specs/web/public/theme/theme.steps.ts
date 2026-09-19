@@ -21,6 +21,7 @@ Given(
       scheme === "light" || scheme === "dark",
       `Unknown preference ${scheme}.`,
     );
+    this.colourScheme = scheme;
     await this.browserPage.emulateMedia({ colorScheme: scheme });
   },
 );

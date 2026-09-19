@@ -55,6 +55,36 @@ Before({ tags: "@browser" }, async function (this: SpecWorld) {
   this.page = await this.browserContext.newPage();
 });
 
+/**
+ * Makes the scenario's browser one with scripting switched on, for a page that
+ * cannot be used without it. A browser's scripting is fixed when it is made, so
+ * this makes another, asked everything the scenario asked of the first — its
+ * width, its colour scheme and its languages — and closes the first.
+ */
+export const withScripting = async (world: SpecWorld): Promise<void> => {
+  const context = world.browserContext;
+  const page = world.page;
+  if (context === undefined || page === undefined || browser === undefined) {
+    throw new Error(
+      "This scenario has no browser. Tag it @browser if it needs one.",
+    );
+  }
+
+  const scripted = await browser.newContext({
+    javaScriptEnabled: true,
+    viewport: page.viewportSize(),
+    ...(world.colourScheme === undefined
+      ? {}
+      : { colorScheme: world.colourScheme }),
+    ...(world.acceptLanguage === undefined
+      ? {}
+      : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
+  });
+  world.browserContext = scripted;
+  world.page = await scripted.newPage();
+  await context.close();
+};
+
 After({ tags: "@browser" }, async function (this: SpecWorld) {
   await this.browserContext?.close();
   this.browserContext = undefined;

@@ -38,6 +38,7 @@ import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerPublicPages } from "./public/pages.js";
 import { registerRegisterPage } from "./public/register.js";
+import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
 
@@ -215,6 +216,7 @@ export const buildApplication = async (
   registerThemeRoute(server);
   registerLanguageRoute(server);
   registerRegisterPage(server, assets);
+  registerJavaScriptRequiredPage(server, assets);
   registerPublicPages(server, assets);
 
   return { server, pool, config, mediator, validation, unitOfWork, eventStore };

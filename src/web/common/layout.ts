@@ -39,7 +39,23 @@ export interface Shell {
   readonly frame?: "panel" | "bare" | undefined;
   /** The contents of the panel, already escaped. */
   readonly body: string;
+  /**
+   * Where to send a reader whose browser has scripting switched off, for a
+   * page that cannot be used without it. Absent for every page that can.
+   */
+  readonly withoutScripting?: string | undefined;
 }
+
+// A refresh inside noscript, which a browser acts on only when scripting is
+// off: with it on, the reader stays; with it off, they are taken straight to
+// the page that says why, before they have filled anything in. Sending them
+// needs no scripting, which is the point: the one thing a page cannot do for a
+// reader without scripting is run a script to notice.
+const sendAwayWithoutScripting = (path: string | undefined): string =>
+  path === undefined
+    ? ""
+    : `
+    <noscript><meta http-equiv="refresh" content="0; url=${escape(path)}" /></noscript>`;
 
 export const escape = (text: string): string =>
   text.replace(
@@ -182,7 +198,7 @@ export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escape(shell.title)}</title>
+    <title>${escape(shell.title)}</title>${sendAwayWithoutScripting(shell.withoutScripting)}
     <link rel="stylesheet" href="${assets.url("site.css")}" />
   </head>
   <body>

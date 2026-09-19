@@ -94,7 +94,7 @@ Feature: A reader is spoken to in their own language
     Scenario: Choosing brings the reader back to the page they chose on
       Given a viewport 1200 pixels wide
       And a browser that asks for "en"
-      And the register page is open
+      And the register page is open with scripting on
       When the language "en-XA" is chosen
       Then the register page is shown
 
@@ -126,13 +126,13 @@ Feature: A reader is spoken to in their own language
     Scenario: The register page
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
-      When the register page is opened
+      When the register page is opened with scripting on
       Then every word in the dialog is in the test locale
 
     Scenario: What the register page says once it has been submitted
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
-      And the register page is open
+      And the register page is open with scripting on
       When the dialog is submitted
       Then every word in the dialog is in the test locale
 
