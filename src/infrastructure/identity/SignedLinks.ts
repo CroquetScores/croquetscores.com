@@ -42,6 +42,39 @@ const encode = (text: string): string =>
 const decode = (encoded: string): string =>
   Buffer.from(encoded, "base64url").toString("utf8");
 
+// A signature is the 32 bytes of an HMAC-SHA256 written in base64url, which is
+// exactly 43 characters and no padding. Anything else is refused before it is
+// decoded, because decoding drops whatever is outside the alphabet: a
+// signature with rubbish on the end would otherwise decode to the same bytes
+// and hold, and one link would have several spellings that all work. Nothing
+// counts links by the text of them today, and the moment anything does — a
+// link used once, a limit on how often one is followed — several spellings of
+// one link would each be counted as its own.
+const isASignature = (given: string): boolean =>
+  /^[A-Za-z0-9_-]{43}$/.test(given);
+
+/**
+ * The part of `link` that was signed. Whatever the reader followed may be a
+ * whole address, the query on its own, or just what was carried, and
+ * everything around it is how it got here.
+ *
+ * The query is read by name rather than by looking for "link=" in the text,
+ * so that a parameter whose name merely ends in it — a "deeplink" put there
+ * by whatever forwarded the mail — is not taken for the link itself. Given
+ * twice there is no saying which was meant, so neither is taken.
+ */
+const carriedBy = (link: string): string | undefined => {
+  const query = link.indexOf("?");
+  const given = new URLSearchParams(
+    query === -1 ? link : link.slice(query + 1),
+  ).getAll("link");
+  if (given.length > 1) return undefined;
+  if (given.length === 1) return given[0];
+  // No link parameter: what was followed is what was carried, unless it had a
+  // query, in which case it is an address of ours with the link left off.
+  return query === -1 ? link : undefined;
+};
+
 export class SignedLinks implements Links {
   /**
    * @param siteAddress where the site answers, as the config says and never a
@@ -65,14 +98,17 @@ export class SignedLinks implements Links {
   }
 
   read(link: string): LinkCarried | undefined {
-    // Whatever the reader followed, which may be a whole address, the query on
-    // its own, or just what was carried: the link is the part that was signed,
-    // and everything around it is how it got here.
-    const carried = link.includes("link=")
-      ? (link.split("link=")[1]?.split("&")[0] ?? "")
-      : link;
-    const [body, signature] = carried.split(".");
+    const carried = carriedBy(link);
+    if (carried === undefined) return undefined;
+
+    // Two parts and no more. Read as the first two of however many, anything
+    // after a second dot would be ignored rather than refused, and a link
+    // would again have more than one spelling that works.
+    const parts = carried.split(".");
+    if (parts.length !== 2) return undefined;
+    const [body, signature] = parts;
     if (body === undefined || signature === undefined) return undefined;
+    if (!isASignature(signature)) return undefined;
     if (!this.holds(body, signature)) return undefined;
 
     const [purpose, account, until] = decode(body).split(".");

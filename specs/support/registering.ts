@@ -4,6 +4,7 @@
 // this. Application and domain types only, for the reason at the top of
 // world.ts.
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
+import type { LinkPurpose } from "../../src/application/services/Links.js";
 import type { RegisterAccount } from "../../src/application/operations/accounts/RegisterAccount.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 
@@ -41,8 +42,13 @@ export interface Registering {
   /** `link` with the moment it stops working changed, and not signed again. */
   alteredToWorkUntil(link: string, until: string): string;
 
-  /** A link of another kind, made for the account for `address`. */
-  aLinkFor(purpose: string, address: string): Promise<string>;
+  /**
+   * A link of another kind, made for the account for `address`. The kind is
+   * named by its own type rather than by any text, so that a scenario asking
+   * for a kind there is no such thing as is a build that fails rather than a
+   * link to nowhere that every purpose check refuses for the wrong reason.
+   */
+  aLinkFor(purpose: LinkPurpose, address: string): Promise<string>;
 
   /** Forgets the account for `address`, as forgetting one will. */
   forget(address: string): Promise<void>;

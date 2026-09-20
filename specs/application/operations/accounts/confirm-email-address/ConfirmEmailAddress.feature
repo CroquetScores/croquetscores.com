@@ -161,3 +161,27 @@ Feature: Confirming an account's email address
       And the moment "2026-09-20T10:01:00Z"
       When confirming is sent with the link that was taken
       Then it is refused with "Link.NoLongerWorks"
+
+  Rule: Confirming is asked for with text, or not at all
+
+    Confirming is made from what the edge read out of the query, and the query
+    is whatever the reader followed. A `link` parameter the edge was to find
+    and did not arrives as nothing at all, and one given twice arrives as both
+    of them, since there is no saying which was meant. Neither is text.
+
+    Left for the reading of the link to catch, that nothing is asked to search
+    itself for a query before any rule about links is reached, and the site
+    answers with its own code breaking rather than with the page that says the
+    link no longer works.
+
+    So confirming given anything but text is refused where it is made, as a
+    command given a plain date rather than a moment is. Text that is no link
+    of this site's is still text, and is the reading's to refuse.
+
+    Scenario: Confirming made with the link left out is refused
+      When confirming is made with the link left out
+      Then making it is refused with "ConfirmEmailAddress.NotText"
+
+    Scenario: Confirming made with the link given twice is refused
+      When confirming is made with the link given twice
+      Then making it is refused with "ConfirmEmailAddress.NotText"

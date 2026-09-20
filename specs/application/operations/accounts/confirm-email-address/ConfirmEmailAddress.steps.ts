@@ -41,6 +41,37 @@ const confirmWith = async (world: SpecWorld, link: string): Promise<void> => {
   }
 };
 
+// Making one at all ---------------------------------------------------------------
+
+// Made and not sent: what is refused here is refused before there is anything
+// to send, and the shared step reads the refusal from the world.
+//
+// The link is cast on its way in, which is the point rather than a way round
+// the types: the cast is what the edge does to whatever it read out of the
+// query, and what these scenarios are about is the command being handed
+// something the cast promised was text and was not.
+const madeWith = (world: SpecWorld, link: unknown): void => {
+  world.failure = undefined;
+  try {
+    new ConfirmEmailAddress(link as string, momentOf(world));
+  } catch (failure) {
+    world.failure = failure;
+  }
+};
+
+When("confirming is made with the link left out", function (this: SpecWorld) {
+  madeWith(this, undefined);
+});
+
+// Two of them, as a query carrying the parameter twice is read: a list, and
+// no saying which of the two was followed.
+When(
+  "confirming is made with the link given twice",
+  function (this: SpecWorld) {
+    madeWith(this, ["one", "another"]);
+  },
+);
+
 // Sending it --------------------------------------------------------------------
 
 // Defined once, though scenarios reach for it as a Given as well as a When: a
