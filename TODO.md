@@ -153,9 +153,9 @@ In the order they can be built, each after what it needs. Where two need each ot
 
 1. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
 2. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-3. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-4. `specs/application/operations/accounts/sign-in/SignIn.feature`
-5. `specs/web/public/register/register.feature`
+3. `specs/web/public/register/register.feature`
+4. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+5. `specs/application/operations/accounts/sign-in/SignIn.feature`
 6. `specs/web/public/sign-in/signIn.feature`
 7. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
 8. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
