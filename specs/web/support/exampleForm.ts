@@ -23,6 +23,7 @@ import { renderDialog, type Dialog } from "../../../src/web/common/dialog.js";
 import { submitForm, typedFrom } from "../../../src/web/common/form.js";
 import { speakingOf } from "../../../src/web/common/language.js";
 import { render } from "../../../src/web/common/layout.js";
+import { signedIn } from "../../../src/web/common/reader.js";
 import { themeOf } from "../../../src/web/common/theme.js";
 import type { Application } from "../../../src/web/server.js";
 import { Command } from "../../../src/application/common/Command.js";
@@ -119,6 +120,7 @@ export const addExampleForm = (application: Application): void => {
     return render(assets, {
       title: speaking.say("example.title"),
       theme: themeOf(request),
+      signedIn: signedIn(request),
       speaking,
       path: request.url,
       currentPath: exampleFormPath,

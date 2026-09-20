@@ -8,7 +8,7 @@ import type {
   WrittenEmail,
 } from "../../application/services/EmailWriter.js";
 import { speakingIn, type Language, type Speaking } from "./language.js";
-import { escape } from "./layout.js";
+import { escape } from "./escape.js";
 
 /** Every reason writing an email can be refused. */
 export type EmailWriterErrorCode =

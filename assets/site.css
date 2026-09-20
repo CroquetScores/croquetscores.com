@@ -356,6 +356,110 @@ a:hover {
   color: var(--accent-ink);
 }
 
+/* The site name is at one end and the navigation and the account menu together
+   at the other: the bar spreads what is in it, and without this the navigation
+   would sit in the middle once the menu joined it. */
+.site-bar-inner > .menu {
+  margin-left: auto;
+}
+
+/* The account menu: the last thing in the header, a person that opens on what
+   a reader can do with their account. A disclosure at every width, unlike the
+   primary navigation, because it is a menu rather than navigation that happens
+   to be collapsed: its items are pages of one reader's own.
+
+   Its items are read against the panel's surface rather than the bar's green,
+   so that what is read there is read the way everything else on the site is. */
+.account-menu {
+  position: relative;
+}
+
+.account-menu > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-1);
+  cursor: pointer;
+  list-style: none;
+}
+
+.account-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.account-menu > summary:hover,
+.account-menu > summary:focus-visible {
+  background: var(--accent-strong);
+}
+
+/* One shape, drawn in the markup so that it costs no request and takes the
+   colour of the words beside it. */
+.account-menu .person {
+  width: 1.5em;
+  height: 1.5em;
+  fill: currentcolor;
+}
+
+.account-menu-links {
+  position: absolute;
+  right: 0;
+  z-index: 5;
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  min-width: 14rem;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+}
+
+.account-menu-links ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A link and the sign-out button read as one list: signing out is a button
+   because it posts, and looking different would say it was something else. */
+.account-menu-links a,
+.account-menu-links button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--radius-1);
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.account-menu-links a:hover,
+.account-menu-links a:focus-visible,
+.account-menu-links button:hover,
+.account-menu-links button:focus-visible {
+  background: var(--surface);
+}
+
+/* The page being read, marked the way the primary navigation marks its own
+   rather than the way the section bar does: these are links on the panel's
+   colour, as the navigation's are on the bar's, and a filled tile among them
+   would read as the one item that is a button. */
+.account-menu-links a[aria-current="page"] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 /* The primary navigation. Below 40rem it is collapsed behind the disclosure;
    above it, the disclosure control is not rendered and the links sit inline.
    <details> opens, closes, takes focus and announces itself without script,

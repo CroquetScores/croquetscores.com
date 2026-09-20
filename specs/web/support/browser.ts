@@ -13,6 +13,7 @@ import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
 import { addExampleForm } from "./exampleForm.js";
 import { scenarioLanguages } from "./languages.js";
+import { readerTheScenariosSet } from "./reader.js";
 
 let browser: Browser | undefined;
 let application: Application | undefined;
@@ -26,6 +27,9 @@ const start = async (): Promise<{ browser: Browser; baseUrl: string }> => {
     application = await buildApplication(loadConfig(), {
       logger: false,
       languages: scenarioLanguages,
+      // Whether a scenario's reader is signed in, which it says with a cookie
+      // of its own: nothing signs anybody in until sessions are built.
+      reader: readerTheScenariosSet,
     });
     addExampleForm(application);
 
@@ -59,7 +63,8 @@ Before({ tags: "@browser" }, async function (this: SpecWorld) {
  * Makes the scenario's browser one with scripting switched on, for a page that
  * cannot be used without it. A browser's scripting is fixed when it is made, so
  * this makes another, asked everything the scenario asked of the first — its
- * width, its colour scheme and its languages — and closes the first.
+ * width, its colour scheme, its languages and whatever it was given to keep —
+ * and closes the first.
  */
 export const withScripting = async (world: SpecWorld): Promise<void> => {
   const context = world.browserContext;
@@ -80,6 +85,12 @@ export const withScripting = async (world: SpecWorld): Promise<void> => {
       ? {}
       : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
   });
+  // The cookies the scenario has the first browser keep are as much a part of
+  // what it asked for as its width is: the theme it chose, and the reader it is
+  // signed in as. Without this a scenario that signs in and then switches to
+  // scripting is silently signed out, and reads as though the page were wrong.
+  await scripted.addCookies(await context.cookies());
+
   world.browserContext = scripted;
   world.page = await scripted.newPage();
   await context.close();

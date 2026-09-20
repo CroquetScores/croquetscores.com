@@ -202,3 +202,46 @@ Then(
     );
   },
 );
+
+// What a page's answer says about keeping it -----------------------------------
+
+// Nothing is mounted here, so the request reaches the handler for a page that
+// is not there rather than a route of the scenario's own.
+When("a page that is not there is asked for", async function (this: SpecWorld) {
+  const scenario = builtFor(this);
+  scenario.response = await scenario.application.server.inject({
+    method: "GET",
+    url: "/nothing-is-mounted-here",
+  });
+});
+
+Then("the answer is kept for the one reader only", function (this: SpecWorld) {
+  assert.equal(answered(this).headers["cache-control"], "private, no-cache");
+});
+
+// Named among what it varies by, rather than the whole header, so that adding
+// something else to vary by does not fail a scenario about cookies.
+const variesBy = (world: SpecWorld, what: string): void => {
+  const vary = String(answered(world).headers["vary"] ?? "");
+  assert.ok(
+    vary
+      .split(",")
+      .map((each) => each.trim().toLowerCase())
+      .includes(what.toLowerCase()),
+    `The answer varies by ${vary}.`,
+  );
+};
+
+Then(
+  "the answer says it varies by the reader's cookies",
+  function (this: SpecWorld) {
+    variesBy(this, "Cookie");
+  },
+);
+
+Then(
+  "the answer says it varies by the languages the browser asks for",
+  function (this: SpecWorld) {
+    variesBy(this, "Accept-Language");
+  },
+);

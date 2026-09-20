@@ -9,8 +9,10 @@ import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { speakingOf } from "../common/language.js";
-import { escape, render } from "../common/layout.js";
+import { escape } from "../common/escape.js";
+import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
+import { signedIn } from "../common/reader.js";
 
 export const welcomePath = "/account/welcome";
 
@@ -24,6 +26,7 @@ export const registerWelcomePage = (
     const html = render(assets, {
       title: say("welcome.title"),
       theme: themeOf(request),
+      signedIn: signedIn(request),
       speaking,
       path: welcomePath,
       body: `          <h1>${escape(say("welcome.title"))}</h1>

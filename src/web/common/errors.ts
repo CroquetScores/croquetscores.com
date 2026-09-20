@@ -1,13 +1,20 @@
 // Errors map in one place, so no route decides for itself what a failure looks
 // like to a caller.
-import type { FastifyError, FastifyInstance, FastifyRequest } from "fastify";
+import type {
+  FastifyError,
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+} from "fastify";
 import { randomUUID } from "node:crypto";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import type { Assets } from "./assets.js";
 import { speakingOf } from "./language.js";
-import { escape, render } from "./layout.js";
+import { escape } from "./escape.js";
+import { render } from "./layout.js";
 import { themeOf } from "./theme.js";
+import { signedIn } from "./reader.js";
 
 // The API answers JSON and the public pages answer HTML, including when they
 // fail. A browser should not be handed a JSON body for a page it asked for.
@@ -29,6 +36,7 @@ const page = (
   return render(assets, {
     title,
     theme: themeOf(request),
+    signedIn: signedIn(request),
     speaking,
     path: request.url,
     body: `          <h1>${escape(title)}</h1>${
@@ -40,16 +48,32 @@ const page = (
   });
 };
 
+// An error page is drawn from the reader's cookies and the languages their
+// browser asks for, exactly as every other page is, and the shell it wears
+// carries whether the reader is signed in. So it is sent with what every other
+// page is sent with: a cache between the site and its readers that kept one
+// would hand the next reader a page saying they are somebody.
+const sendPage = (
+  reply: FastifyReply,
+  assets: Assets,
+  request: FastifyRequest,
+  heading: string,
+  detail?: string,
+  fill?: Readonly<Record<string, string>>,
+): FastifyReply =>
+  reply
+    .header("cache-control", "private, no-cache")
+    .header("vary", "Cookie, Accept-Language")
+    .type("text/html; charset=utf-8")
+    .send(page(assets, request, heading, detail, fill));
+
 export const registerErrorMapping = (
   server: FastifyInstance,
   assets: Assets,
 ): void => {
   server.setNotFoundHandler((request, reply) => {
     if (wantsJson(request)) return reply.code(404).send({ error: "NotFound" });
-    return reply
-      .code(404)
-      .type("text/html; charset=utf-8")
-      .send(page(assets, request, "errors.notFound"));
+    return sendPage(reply.code(404), assets, request, "errors.notFound");
   });
 
   server.setErrorHandler((error: FastifyError, request, reply) => {
@@ -70,10 +94,13 @@ export const registerErrorMapping = (
           .code(422)
           .send({ error: error.code, broken: error.broken });
       }
-      return reply
-        .code(422)
-        .type("text/html; charset=utf-8")
-        .send(page(assets, request, "errors.refused", "errors.refusedDetail"));
+      return sendPage(
+        reply.code(422),
+        assets,
+        request,
+        "errors.refused",
+        "errors.refusedDetail",
+      );
     }
 
     // A status on the error means something chose it — a route, or Fastify
@@ -88,10 +115,13 @@ export const registerErrorMapping = (
           .code(error.statusCode)
           .send({ error: error.code ?? "Error", message: error.message });
       }
-      return reply
-        .code(error.statusCode)
-        .type("text/html; charset=utf-8")
-        .send(page(assets, request, "errors.sorry", "errors.sorryDetail"));
+      return sendPage(
+        reply.code(error.statusCode),
+        assets,
+        request,
+        "errors.sorry",
+        "errors.sorryDetail",
+      );
     }
 
     // Everything else is ours and stays ours. The correlation id goes to the
@@ -101,13 +131,13 @@ export const registerErrorMapping = (
     if (wantsJson(request)) {
       return reply.code(500).send({ error: "Internal", correlationId });
     }
-    return reply
-      .code(500)
-      .type("text/html; charset=utf-8")
-      .send(
-        page(assets, request, "errors.failed", "errors.reference", {
-          reference: correlationId,
-        }),
-      );
+    return sendPage(
+      reply.code(500),
+      assets,
+      request,
+      "errors.failed",
+      "errors.reference",
+      { reference: correlationId },
+    );
   });
 };

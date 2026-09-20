@@ -1,7 +1,9 @@
 // The shape of every page the public side serves: green header, optional
 // section bar, content in a white panel, green footer. Error pages use it too,
 // because a page that cannot be found is still a page of this site.
+import { accountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
+import { escape } from "./escape.js";
 import type { Speaking } from "./language.js";
 import { themes, type Theme } from "./theme.js";
 
@@ -28,6 +30,11 @@ export interface Shell {
   readonly currentPath?: string | undefined;
   /** Which theme the reader has asked for, if they have asked. */
   readonly theme: Theme;
+  /** Whether the reader is signed in, which the account menu opens on. Asked
+      of every page rather than left out, because a page that forgot it would
+      show a reader who is signed in the ways in instead of their own pages, and
+      nothing would say so. */
+  readonly signedIn: boolean;
   /** The language the page is in, and the others it could be in. */
   readonly speaking: Speaking;
   /** The path the theme and language forms return to, so a choice keeps you
@@ -57,27 +64,14 @@ const sendAwayWithoutScripting = (path: string | undefined): string =>
     : `
     <noscript><meta http-equiv="refresh" content="0; url=${escape(path)}" /></noscript>`;
 
-export const escape = (text: string): string =>
-  text.replace(
-    /[&<>"']/g,
-    (character) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[character] ?? character,
-  );
-
-// Register is the one that matters. The rest stand in so the navigation has
-// enough in it to behave like navigation, and answer 404 until the features
-// that provide them land.
+// Stand-ins, so the navigation has enough in it to behave like navigation, and
+// answering 404 until the features that provide them land. Everything to do
+// with an account is in the account menu beside them rather than here, so that
+// the bar carries one item for an account however many pages an account has.
 export const navigation: readonly NavigationLink[] = [
   { href: "/tournaments", label: "Tournaments" },
   { href: "/blog", label: "Blog" },
   { href: "/help", label: "Help" },
-  { href: "/account/register", label: "Register" },
 ];
 
 // Not read from a clock. A rendered year that moves on its own is a year
@@ -208,6 +202,7 @@ export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
         <div class="site-bar-inner">
           <a class="site-name" href="/">Croquet Scores</a>
 ${menu(shell.currentPath)}
+${accountMenu(shell)}
         </div>
       </div>
     </header>${titleBar(shell.headerTitle)}${sectionBar(shell.sections, shell.currentSection)}

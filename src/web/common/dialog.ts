@@ -7,7 +7,7 @@
 // take focus or need dismissing: it is the page. So it is a section named by its
 // title, which is what a screen reader should announce, and "dialog" is what the
 // shape looks like rather than a role it claims.
-import { escape } from "./layout.js";
+import { escape } from "./escape.js";
 
 export interface Field {
   readonly name: string;
