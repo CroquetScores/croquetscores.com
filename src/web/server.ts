@@ -36,6 +36,7 @@ import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
+import { knowTheReader, nobodySignedIn, type Reader } from "./common/reader.js";
 import { speakToRequests, type Language } from "./common/language.js";
 import {
   machineClock,
@@ -168,6 +169,13 @@ export interface ApplicationOptions {
    */
   readonly events?: EventRegistry;
   readonly projections?: readonly Projection[];
+  /**
+   * What says whether the reader of a request is signed in, which the account
+   * menu opens on. Nobody is, unless a scenario says otherwise: sessions are
+   * specified in session.feature and not built, and this is where reading one
+   * arrives when they are.
+   */
+  readonly reader?: Reader;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -230,6 +238,7 @@ export const buildApplication = async (
 
   stampRequests(server, options.clock ?? machineClock);
   speakToRequests(server, languages);
+  knowTheReader(server, options.reader ?? nobodySignedIn);
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.

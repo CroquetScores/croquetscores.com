@@ -13,6 +13,18 @@ export const english: Language = {
     "form.otherwise":
       "Something here is not right. Check what was entered and try again.",
 
+    // The account menu in the header: what the person stands for, and every
+    // item it opens on.
+    "account.menu": "Account",
+    "account.register": "Register",
+    "account.signIn": "Sign In",
+    "account.forgotPassword": "Forgot Password",
+    "account.signOut": "Sign Out",
+    "account.profile": "Profile",
+    "account.changePassword": "Change Password",
+    "account.changeEmailAddress": "Change Email Address",
+    "account.changeName": "Change Name",
+
     "register.title": "Register",
     "register.emailAddress": "Email address",
     "register.password": "Password",

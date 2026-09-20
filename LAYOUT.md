@@ -45,7 +45,7 @@ Measured from the live site, rather than taken from a screenshot by eye. Recorde
 
 ```
 ┌─────────────────────────────────────────────┐
-│  Croquet Scores      Tournaments … Register │  pinned bar, green, white
+│  Croquet Scores      Tournaments …  Account │  pinned bar, green, white
 ├─────────────────────────────────────────────┤  stays as the page scrolls
 │  19th Spanish Championship…                 │  title strip, when a page
 ├─────────────────────────────────────────────┤  has a title. Scrolls away
@@ -64,6 +64,8 @@ Measured from the live site, rather than taken from a screenshot by eye. Recorde
 
 **The top bar is pinned to the top of the window** and stays there as the page scrolls, as the current site's does. Everything below it — the title strip, the section bar — scrolls away. That is what keeps a three-line tournament name off a phone screen once reading has started, while the site name and the way out remain in reach.
 
+The last thing in the pinned bar is the account menu, drawn as a filled person: pressed, it opens on what a reader can do with their account — registering, signing in and asking for a way back in, or, once they are signed in, their own pages and the way out (`accountMenu.feature`). It opens with no scripting, as a summary and the details beneath it, and its items are a panel hanging under the bar, in the dialog's surfaces (`STYLE.md` §5b) rather than the bar's green, so that what is read against them is read against white. The person is drawn inline rather than fetched or set in a font: it is one shape, it costs no request, and it takes the colour of the words beside it. It is named in words as well, for a reader who cannot see it. Whichever of its pages is being read is marked inside the menu, as the section bar marks its own, because the pages an account has are in here rather than in the navigation beside it.
+
 That pinning decides the markup. A sticky element only sticks within its own container, so a bar nested inside a header would scroll away the moment the header did. The pinned bar is therefore a `<header>` in its own right, and the page's title is a separate green strip beneath it rather than a second line of the same block.
 
 The section bar appears only on pages with sections to move between, and is absent everywhere else rather than present and empty. The section being read is a **full-height black block**: no green above it and none below, because green showing through would read as a gap rather than as a selection. That costs the `5px` radius the current site gives its tabs, which cannot survive a tile that reaches the bar's edges.
@@ -80,7 +82,7 @@ As the window narrows, the bars stay and their contents wrap. The current site w
 
 ## 4. The differences from the current site
 
-1. **The header navigation is short.** `Register` (`/account/register`) is the one that matters; `Tournaments`, `Blog` and `Help` stand in beside it so the navigation has enough in it to behave like navigation. None of those destinations exists yet, so every one of them answers `404` until the feature that provides it lands — which is the honest state of a layout built before its pages, and worth knowing before anyone reports it as a fault.
+1. **The header navigation is short, and ends in the account menu.** Registering, signing in and the rest are inside that menu rather than beside it, so the bar carries one item for an account however many pages an account has; `Tournaments`, `Blog` and `Help` stand in beside it so the navigation has enough in it to behave like navigation. None of those destinations exists yet, nor do most of the menu's, so every one of them answers `404` until the feature that provides it lands — which is the honest state of a layout built before its pages, and worth knowing before anyone reports it as a fault.
 2. **The body is out of scope.** Between the bars there is a panel with a heading in it and nothing else until a feature says otherwise.
 3. **The page behind the panel is a very light green**, where the current site is white.
 4. **The secondary navigation is kept**: dark green, tabs with a `5px` radius, the current one on black.

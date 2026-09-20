@@ -1,0 +1,103 @@
+// The last thing in the header: a person, which opens on what a reader can do
+// with their account. A reader who is not signed in is offered the ways in; one
+// who is signed in is offered their own pages and the way out.
+//
+// It is a summary and the details under it, as the primary navigation's menu
+// is, so that it opens with no scripting: every public page works without it,
+// and a menu that needed it would be the one part that did not.
+import { escape } from "./escape.js";
+import type { Speaking } from "./language.js";
+
+/**
+ * An item in the menu: where it goes, and the name the catalogue keeps its
+ * words under. `words` rather than `label`, which the primary navigation's
+ * links use for the words themselves: the two look alike and are not, and an
+ * item moved from one to the other would render the name of its words.
+ */
+interface MenuItem {
+  readonly href: string;
+  readonly words: string;
+}
+
+const waysIn: readonly MenuItem[] = [
+  { href: "/account/register", words: "account.register" },
+  { href: "/account/sign-in", words: "account.signIn" },
+  { href: "/account/forgot-password", words: "account.forgotPassword" },
+];
+
+const theAccounts: readonly MenuItem[] = [
+  { href: "/account/profile", words: "account.profile" },
+  { href: "/account/change-password", words: "account.changePassword" },
+  {
+    href: "/account/change-email-address",
+    words: "account.changeEmailAddress",
+  },
+  { href: "/account/change-name", words: "account.changeName" },
+];
+
+/** Where signing out is asked for. */
+export const signOutPath = "/account/sign-out";
+
+/** What the menu needs of the page it is drawn on. */
+export interface AccountMenu {
+  readonly speaking: Speaking;
+  /** Whether the reader is signed in, which decides what it opens on. */
+  readonly signedIn: boolean;
+  /** Where in the menu the reader is, if anywhere. */
+  readonly currentPath?: string | undefined;
+}
+
+// One shape, drawn here rather than fetched or set in a font: it costs no
+// request, and it takes the colour of the words beside it. Hidden from anyone
+// reading the page aloud, since the menu says in words what it is for.
+const person = `<svg class="person" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6Z" />
+            </svg>`;
+
+// Signing out is a button in a form that posts, never a link: a link can be put
+// in an image on another site and followed by a reader's browser without their
+// asking, and a post from another site is refused by the cross-site guard.
+// Nothing marks it as the page being read, because it is not a page to be on.
+const signOut = (speaking: Speaking): string =>
+  `              <li>
+                <form method="post" action="${signOutPath}">
+                  <button type="submit">${escape(speaking.say("account.signOut"))}</button>
+                </form>
+              </li>`;
+
+// The pages an account has are in here rather than in the navigation beside it,
+// so this is what has to say which of them the reader is on. Said the way the
+// section bar says it.
+const item = (
+  { href, words }: MenuItem,
+  speaking: Speaking,
+  currentPath: string | undefined,
+): string => {
+  const here = href === currentPath ? ' aria-current="page"' : "";
+  return `              <li><a href="${href}"${here}>${escape(speaking.say(words))}</a></li>`;
+};
+
+/** The menu, as the reader of the page it is drawn on sees it. */
+export const accountMenu = ({
+  speaking,
+  signedIn,
+  currentPath,
+}: AccountMenu): string => {
+  const named = escape(speaking.say("account.menu"));
+  const shown = (each: MenuItem) => item(each, speaking, currentPath);
+  const items = signedIn
+    ? [signOut(speaking), ...theAccounts.map(shown)]
+    : waysIn.map(shown);
+
+  return `        <details class="account-menu">
+          <summary>
+            <span class="visually-hidden">${named}</span>
+            ${person}
+          </summary>
+          <nav class="account-menu-links" aria-label="${named}">
+            <ul>
+${items.join("\n")}
+            </ul>
+          </nav>
+        </details>`;
+};

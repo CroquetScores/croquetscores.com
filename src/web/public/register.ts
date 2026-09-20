@@ -11,6 +11,7 @@ import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
 import { javaScriptRequiredPath } from "./javaScriptRequired.js";
+import { signedIn } from "../common/reader.js";
 
 const path = "/account/register";
 const notOpenPath = `${path}?notice=not-open`;
@@ -26,6 +27,7 @@ const show = (
   const html = render(assets, {
     title: speaking.say("register.title"),
     theme: themeOf(request),
+    signedIn: signedIn(request),
     speaking,
     // Where choosing a theme or a language comes back to: this page with the
     // notice, when it has one, rather than a bare copy of it with the notice

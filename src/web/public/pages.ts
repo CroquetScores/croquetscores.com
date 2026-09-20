@@ -8,6 +8,7 @@ import type { Assets } from "../common/assets.js";
 import { render, type Section } from "../common/layout.js";
 import { speakingOf } from "../common/language.js";
 import { themeOf } from "../common/theme.js";
+import { signedIn } from "../common/reader.js";
 
 export interface Page {
   readonly path: string;
@@ -119,6 +120,7 @@ export const registerPublicPages = (
         currentSection: page.currentSection,
         currentPath: page.path,
         theme: themeOf(request),
+        signedIn: signedIn(request),
         speaking: speakingOf(request),
         path: page.path,
         body: page.body(),

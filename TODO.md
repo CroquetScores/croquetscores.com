@@ -1,8 +1,10 @@
 # TODO.md
 
-Two kinds of thing, kept apart.
+Three kinds of thing, kept apart.
 
 **Jotted** is for whatever occurs to anyone, a line each, not yet thought through. Add to it freely.
+
+**Outstanding `.feature` files** are the specifications that have been accepted and not built, in the order they can be built. A file leaves the list when its scenarios pass.
 
 **Known problems** are written out in full — what will go wrong, why it has not yet, and what to do when it does — so they are found where people look, rather than left in a pull request nobody reads again after it merges. A jotted item that turns out to need that much explaining moves down and gets a section of its own.
 
@@ -10,11 +12,9 @@ Two kinds of thing, kept apart.
 
 ## Jotted
 
-- /account/adminstrator/view-email-queue
+- /account/administrator/view-email-queue
 
 - Review all emails
-
-- Sign out option
 
 - **Rotating encryption keys.** `AccountKeys.changeSiteKey` re-encrypts every account's key and every queued email with no account for a new `ACCOUNT_ENCRYPTION_KEY`, but nothing calls it: a script under `scripts/` is wanted, run with the old key and the new. `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` cannot be changed at all, since the hash is kept in every registering event; change it and rebuild, and no account is found by its address. Say it is never changed, or keep every key the hash has been made with and find an address by each (from the review of `account-keys`).
 
@@ -23,6 +23,12 @@ Two kinds of thing, kept apart.
 - **Nothing sends what is queued yet.** `PostgresEmailQueue.sendDue` sends whatever is due, but only the scenarios call it; the timer that calls it every 10 seconds while the server is up is `emailQueueSending.feature`, on the outstanding list below.
 
 - **A `@postgres` scenario now and then fails before its first step**, in the Before hook in `specs/infrastructure/support/database.ts`, with `terminating connection due to administrator command`. Seen twice, a different scenario each time, and each passed when the suite was run again; perhaps the clean-up of one scenario's database ending a connection another is using. Worth looking at before it hides a real failure.
+
+- **Sessions are handed in rather than found.** The account menu asks `src/web/common/reader.ts` whether a reader is signed in, and what answers is given to the application when it is built: production gives it nothing, so nobody is signed in, and the scenarios give it a cookie of their own (`specs/web/support/reader.ts`). Whatever `session.feature` builds is handed in there, and the scenarios' stand-in goes with it.
+
+- **Nothing in the primary navigation is served, so nothing can be marked as the page being read.** `layout.ts` puts `aria-current` on the navigation link whose address is the page's, and the three links it holds — Tournaments, Blog, Help — are stand-ins that answer 404, while the pages that are served are not in it. So that line cannot be reached and no scenario can cover it. The account menu marks its own (`accountMenu.feature`); this is the bar beside it. It comes right on its own as soon as one of those pages is built, and is worth a scenario then.
+
+- **A failed API request says nothing about being kept.** The error mapping now sends every error _page_ with `cache-control: private, no-cache` and `vary: Cookie, Accept-Language`, because the page carries the account menu (`errors.feature`). The JSON answers beside them carry neither. Nothing caches them today, and none of them is personal yet; decide what the API says about caching when the API answers something that is.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
@@ -139,38 +145,24 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 **What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
 
-## Accounts menu
+---
 
-Make the last nav bar menu the icon a solid person icon. When the current user is not signed in includes the following in the dropdown menu
-
-- Register          - /account/register
-- Sign In           - /account/sign-in
-- Forgot Password   - /account/forgot-password
-
-When signed in:
-
-- Sign Out              - Submit /api/account/sign-out
-- Profile               - /account/profile
-- Change Password       - /account/change-password
-- Change Email Address  - /account/change-email-address
-- Change Name           - /account/change-name
-
-## Outstanding .feature files
+# Outstanding .feature files
 
 In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-7. `specs/infrastructure/identity/have-i-been-pwned/HaveIBeenPwnedPasswords.feature`
-8. `specs/infrastructure/identity/recaptcha/RecaptchaReaderCheck.feature`
-9. `specs/web/common/email-queue-sending/emailQueueSending.feature`
-10. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
-11. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-12. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-13. `specs/application/operations/accounts/sign-in/SignIn.feature`
-14. `specs/web/public/register/register.feature`
-15. `specs/web/public/sign-in/signIn.feature`
-16. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
-17. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
-18. `specs/web/public/forgot-password/forgotPassword.feature`
-19. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
-20. `specs/web/public/forget-account/forgetAccount.feature`
-21. `specs/web/common/session/session.feature`
+1. `specs/infrastructure/identity/have-i-been-pwned/HaveIBeenPwnedPasswords.feature`
+2. `specs/infrastructure/identity/recaptcha/RecaptchaReaderCheck.feature`
+3. `specs/web/common/email-queue-sending/emailQueueSending.feature`
+4. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
+5. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
+6. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+7. `specs/application/operations/accounts/sign-in/SignIn.feature`
+8. `specs/web/public/register/register.feature`
+9. `specs/web/public/sign-in/signIn.feature`
+10. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
+11. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
+12. `specs/web/public/forgot-password/forgotPassword.feature`
+13. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
+14. `specs/web/public/forget-account/forgetAccount.feature`
+15. `specs/web/common/session/session.feature`

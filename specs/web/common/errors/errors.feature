@@ -107,3 +107,41 @@ Feature: What a failed request is answered with is decided in one place
       And it ends at 5
       When the example range is sent to the example route
       Then the answer does not name "Mediator.Unhandled"
+
+  Rule: An error page is kept for nobody but the reader it was made for
+
+    An error page wears the same shell as any other page of the site, and the
+    shell carries whether the reader is signed in: the account menu opens either
+    on the ways in or on the reader's own pages. A cache between the site and
+    its readers that kept one would hand the next reader a page saying they are
+    somebody. Every other page the site sends says who it is for in its headers;
+    these were the ones that did not, and a page nobody thinks of as personal is
+    where a mistake like that survives longest.
+
+    Scenario: A page that is not there is kept for the one reader only
+      When a page that is not there is asked for
+      Then the answer is kept for the one reader only
+
+    Scenario: A page that is not there says what it varies by
+      When a page that is not there is asked for
+      Then the answer says it varies by the reader's cookies
+      And the answer says it varies by the languages the browser asks for
+
+    Scenario: A refused page is kept for the one reader only
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      When the example range is sent to the example route
+      Then the answer is kept for the one reader only
+
+    Scenario: A refused page says what it varies by
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      When the example range is sent to the example route
+      Then the answer says it varies by the reader's cookies
+      And the answer says it varies by the languages the browser asks for

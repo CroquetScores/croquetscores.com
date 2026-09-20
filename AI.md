@@ -93,7 +93,17 @@ Report what happened, including what did not work. "Tests pass" when they were n
 
 ---
 
-## 7. Scope
+## 7. When a review is asked for
+
+A review is run when somebody asks for one, and not otherwise: it is not a step on the way to a pull request.
+
+Its report is written to the top of `code-review.md`, above whatever is already there, with a `---` line between the new report and the ones before it, so that the newest is the first thing read and nothing earlier is lost. The file is not committed; `.gitignore` keeps it out. `code-review-template.md` is the shape a report takes: the heading says when the review was run, then a heading for each file by its path from the root of the repository, and under each the status and what was found.
+
+A reviewer told to find faults will report some that are not, so a finding is checked against the code before it is acted on, and one that turns out to be wrong is recorded as wrong rather than quietly dropped. A finding that stands is either fixed or answered with the reason it stands.
+
+---
+
+## 8. Scope
 
 Do what was asked. Where something else is wrong, say so and leave it: a change that quietly fixes three other things is a change nobody can review. Where a decision could go two ways and both are defensible, make one, say which, and say what would change if it went the other way.
 
