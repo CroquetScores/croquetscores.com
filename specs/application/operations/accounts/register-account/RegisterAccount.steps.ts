@@ -26,10 +26,7 @@ const momentOf = (world: SpecWorld): ReadOnlyDate => {
 // the same id — which is the whole of what "again" means.
 interface Registration {
   readonly requestId: string;
-  readonly name: string;
   readonly address: string;
-  readonly password: string;
-  readonly confirmation: string;
 }
 
 // What came of one registration: the code it was refused with, or nothing when
@@ -64,30 +61,15 @@ const nth = (world: SpecWorld, which: number): Registration => {
 
 let minted = 0;
 
-const write = (
-  world: SpecWorld,
-  name: string,
-  address: string,
-  password: string,
-  confirmation: string,
-): void => {
+const write = (world: SpecWorld, address: string): void => {
   minted += 1;
-  theseOf(world).written.push({
-    requestId: `a-request-${minted}`,
-    name,
-    address,
-    password,
-    confirmation,
-  });
+  theseOf(world).written.push({ requestId: `a-request-${minted}`, address });
 };
 
 const commandFor = (world: SpecWorld, written: Registration): RegisterAccount =>
   new RegisterAccount(
     written.requestId,
-    written.name,
     written.address,
-    written.password,
-    written.confirmation,
     "en",
     momentOf(world),
   );
@@ -114,38 +96,19 @@ const send = async (world: SpecWorld, written: Registration): Promise<void> => {
   }
 };
 
-// What a scenario registers with when it says only the address: what it typed
-// is not what the scenario is about.
-const ANYTHING = {
-  name: "Sam Someone",
-  password: "correct horse battery staple",
-};
-
 // What is being registered -----------------------------------------------------
 
 Given(
-  "a registration for {string} as {string} with the password {string} confirmed as {string}",
-  function (
-    this: SpecWorld,
-    address: string,
-    name: string,
-    password: string,
-    confirmation: string,
-  ) {
-    write(this, name, address, password, confirmation);
+  "a registration for {string}",
+  function (this: SpecWorld, address: string) {
+    write(this, address);
   },
 );
 
 Given(
-  "another registration for {string} as {string} with the password {string} confirmed as {string}",
-  function (
-    this: SpecWorld,
-    address: string,
-    name: string,
-    password: string,
-    confirmation: string,
-  ) {
-    write(this, name, address, password, confirmation);
+  "another registration for {string}",
+  function (this: SpecWorld, address: string) {
+    write(this, address);
   },
 );
 
@@ -155,13 +118,6 @@ Given(
   /^"([^"]*)" has an account, (confirmed|not confirmed)$/,
   async function (this: SpecWorld, address: string, confirmed: string) {
     await registeringOf(this).giveAnAccount(address, confirmed === "confirmed");
-  },
-);
-
-Given(
-  "that account is called {string}",
-  async function (this: SpecWorld, name: string) {
-    await registeringOf(this).callTheLastAccount(name);
   },
 );
 
@@ -196,17 +152,6 @@ Given("recording the account will fail", function (this: SpecWorld) {
   registeringOf(this).makeRecordingFail();
 });
 
-Given(
-  "the breached password check cannot be reached",
-  async function (this: SpecWorld) {
-    assert.ok(
-      this.breachedPasswordsUnreachable !== undefined,
-      "There is no breached password check to take down.",
-    );
-    await this.breachedPasswordsUnreachable();
-  },
-);
-
 // Making one at all ---------------------------------------------------------------
 
 // Made and not sent: what is refused here is refused before there is anything
@@ -214,15 +159,7 @@ Given(
 When("a registration is made with no request id", function (this: SpecWorld) {
   this.failure = undefined;
   try {
-    new RegisterAccount(
-      "",
-      ANYTHING.name,
-      "someone@example.com",
-      ANYTHING.password,
-      ANYTHING.password,
-      "en",
-      momentOf(this),
-    );
+    new RegisterAccount("", "someone@example.com", "en", momentOf(this));
   } catch (failure) {
     this.failure = failure;
   }
@@ -244,21 +181,21 @@ When(
 When(
   "a registration for {string} is sent",
   async function (this: SpecWorld, address: string) {
-    write(this, ANYTHING.name, address, ANYTHING.password, ANYTHING.password);
+    write(this, address);
     await send(this, nth(this, theseOf(this).written.length - 1));
   },
 );
 
-// Both at once, so that each is in a transaction of its own and they race for
-// the address. Neither is allowed to fail the step: which of them is refused,
+// All at once, so that each is in a transaction of its own and they race for
+// the address. None is allowed to fail the step: which of them is refused,
 // and how, is what the scenarios ask about.
-When("the two are sent at once", async function (this: SpecWorld) {
-  const these = theseOf(this);
-  const commands = [nth(this, 0), nth(this, 1)].map((written) =>
-    commandFor(this, written),
-  );
+const sendAtOnce = async (
+  world: SpecWorld,
+  commands: RegisterAccount[],
+): Promise<void> => {
+  const these = theseOf(world);
   const answers = await Promise.allSettled(
-    commands.map((command) => registeringOf(this).send(command)),
+    commands.map((command) => registeringOf(world).send(command)),
   );
   for (const answer of answers) {
     const refused = (
@@ -273,7 +210,32 @@ When("the two are sent at once", async function (this: SpecWorld) {
             : inspect(refused),
     });
   }
+};
+
+When("the two are sent at once", async function (this: SpecWorld) {
+  await sendAtOnce(
+    this,
+    [nth(this, 0), nth(this, 1)].map((written) => commandFor(this, written)),
+  );
 });
+
+// Each with a request id of its own, so that none is taken for another sent
+// again: what they share is the account they write to, and nothing else.
+When(
+  "{int} registrations for {string} are sent at once",
+  async function (this: SpecWorld, many: number, address: string) {
+    const from = theseOf(this).written.length;
+    for (let sent = 0; sent < many; sent += 1) {
+      write(this, address);
+    }
+    await sendAtOnce(
+      this,
+      theseOf(this)
+        .written.slice(from)
+        .map((written) => commandFor(this, written)),
+    );
+  },
+);
 
 // What became of the account -----------------------------------------------------
 
@@ -301,15 +263,6 @@ Then(
 );
 
 Then(
-  "the account for {string} is called {string}",
-  async function (this: SpecWorld, address: string, name: string) {
-    const account = await registeringOf(this).accountFor(address);
-    assert.ok(account !== undefined, `There is no account for ${address}.`);
-    assert.equal(account.name.toString(), name);
-  },
-);
-
-Then(
   "the account for {string} is not confirmed",
   async function (this: SpecWorld, address: string) {
     const account = await registeringOf(this).accountFor(address);
@@ -319,31 +272,31 @@ Then(
 );
 
 Then(
-  "{string} is the password of the account for {string}",
-  async function (this: SpecWorld, password: string, address: string) {
-    assert.equal(
-      await registeringOf(this).passwordMatches(address, password),
-      true,
-    );
+  "the account for {string} has no name",
+  async function (this: SpecWorld, address: string) {
+    const account = await registeringOf(this).accountFor(address);
+    assert.ok(account !== undefined, `There is no account for ${address}.`);
+    assert.equal(account.name, undefined);
   },
 );
 
 Then(
-  "{string} is not the password of the account for {string}",
-  async function (this: SpecWorld, password: string, address: string) {
-    assert.equal(
-      await registeringOf(this).passwordMatches(address, password),
-      false,
-    );
+  "the account for {string} has no password",
+  async function (this: SpecWorld, address: string) {
+    const account = await registeringOf(this).accountFor(address);
+    assert.ok(account !== undefined, `There is no account for ${address}.`);
+    assert.equal(account.passwordHash, undefined);
   },
 );
 
+// An account read back has recorded nothing of its own, and expects its stream
+// where the events it was rebuilt from left it: that is how many there are.
 Then(
-  "nothing kept for the account contains {string}",
-  async function (this: SpecWorld, text: string) {
-    const written = nth(this, 0);
-    const kept = await registeringOf(this).everythingKeptFor(written.address);
-    assert.ok(!kept.includes(text), `What is kept holds ${text}.`);
+  "the account for {string} has recorded {int} event(s)",
+  async function (this: SpecWorld, address: string, events: number) {
+    const account = await registeringOf(this).accountFor(address);
+    assert.ok(account !== undefined, `There is no account for ${address}.`);
+    assert.equal(account.expectedVersion, events);
   },
 );
 
@@ -499,6 +452,16 @@ Then("neither of them was refused", function (this: SpecWorld) {
   }
 });
 
+Then("none of them was refused", function (this: SpecWorld) {
+  for (const outcome of theseOf(this).outcomes) {
+    assert.equal(
+      outcome.refusedWith,
+      undefined,
+      `One was refused with ${String(outcome.refusedWith)}.`,
+    );
+  }
+});
+
 Then("neither answer names {string}", function (this: SpecWorld, code: string) {
   for (const outcome of twoOutcomes(this)) {
     assert.ok(
@@ -506,18 +469,4 @@ Then("neither answer names {string}", function (this: SpecWorld, code: string) {
       `An answer names ${code}.`,
     );
   }
-});
-
-// What was asked of the services -------------------------------------------------
-
-Then("{string} was hashed", function (this: SpecWorld, password: string) {
-  const { hashed } = registeringOf(this);
-  assert.ok(
-    hashed.includes(password),
-    `What was hashed: ${hashed.join(", ")}.`,
-  );
-});
-
-Then("the breached password check was not asked", function (this: SpecWorld) {
-  assert.equal(registeringOf(this).wasTheBreachedCheckAsked(), false);
 });

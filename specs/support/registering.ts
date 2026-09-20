@@ -1,5 +1,5 @@
 // What a scenario registers through. The feature is the application's, so it
-// may not name what keeps accounts, queues emails or hashes passwords; this is
+// may not name what keeps accounts or queues emails; this is
 // the shape whatever stands those up puts on the world, and the steps ask only
 // this. Application and domain types only, for the reason at the top of
 // world.ts.
@@ -24,9 +24,6 @@ export interface Registering {
   /** An account for `address`, registered before the scenario's registration. */
   giveAnAccount(address: string, confirmed: boolean): Promise<void>;
 
-  /** That the last account given was registered as `name`. */
-  callTheLastAccount(name: string): Promise<void>;
-
   /** That `kind` was written to the account for `address`, `times` times. */
   wroteTo(address: string, kind: string, times: number): Promise<void>;
 
@@ -35,12 +32,6 @@ export interface Registering {
 
   /** How many accounts have been registered for `address`. */
   accountsFor(address: string): Promise<number>;
-
-  /** Whether `password` is the one the account for `address` keeps. */
-  passwordMatches(address: string, password: string): Promise<boolean>;
-
-  /** Everything kept for the account for `address`, as one piece of text. */
-  everythingKeptFor(address: string): Promise<string>;
 
   /** Every email waiting to be sent. */
   queued(): Promise<readonly SeenEmail[]>;
@@ -52,12 +43,6 @@ export interface Registering {
    * where they point is the writer's to decide from the kind.
    */
   writtenFor(address: string): Promise<string>;
-
-  /** Every password the hasher was asked to hash, in order. */
-  readonly hashed: string[];
-
-  /** Whether the breached password check was asked anything. */
-  wasTheBreachedCheckAsked(): boolean;
 
   /** Has keeping the account's events fail, to see what is kept with it. */
   makeRecordingFail(): void;

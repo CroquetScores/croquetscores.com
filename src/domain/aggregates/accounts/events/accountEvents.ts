@@ -1,6 +1,7 @@
 // The name each of an account's events is kept under, and how each is read
 // back. A name is kept for good, and must never be given to anything else.
 import type { EventRegistry } from "../../../common/EventRegistry.js";
+import { AccountBroughtOver } from "./AccountBroughtOver.js";
 import { AccountForgotten } from "./AccountForgotten.js";
 import { AccountRegistered } from "./AccountRegistered.js";
 import { EmailAddressConfirmed } from "./EmailAddressConfirmed.js";
@@ -29,11 +30,21 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-registered",
       (said, { createdBy, occurredAt }) =>
         new AccountRegistered(
-          text(said, "name", "account-registered"),
           text(said, "emailAddress", "account-registered"),
           text(said, "emailAddressHash", "account-registered"),
-          text(said, "passwordHash", "account-registered"),
-          said.passwordImported === true,
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      AccountBroughtOver,
+      "account-brought-over",
+      (said, { createdBy, occurredAt }) =>
+        new AccountBroughtOver(
+          text(said, "name", "account-brought-over"),
+          text(said, "emailAddress", "account-brought-over"),
+          text(said, "emailAddressHash", "account-brought-over"),
+          text(said, "passwordHash", "account-brought-over"),
           createdBy,
           occurredAt,
         ),
@@ -41,8 +52,13 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
     .name(
       EmailAddressConfirmed,
       "account-email-address-confirmed",
-      (_said, { createdBy, occurredAt }) =>
-        new EmailAddressConfirmed(createdBy, occurredAt),
+      (said, { createdBy, occurredAt }) =>
+        new EmailAddressConfirmed(
+          text(said, "name", "account-email-address-confirmed"),
+          text(said, "passwordHash", "account-email-address-confirmed"),
+          createdBy,
+          occurredAt,
+        ),
     )
     .name(
       SignedIn,

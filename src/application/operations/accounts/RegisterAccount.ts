@@ -6,8 +6,12 @@ import { ValidationError } from "../../../domain/common/validation/ValidationErr
 export type RegisterAccountRefusedCode = "RegisterAccount.RequestIdMissing";
 
 /**
- * Asking for an account: a name, an email address, a password typed twice, and
- * the language to write to the address in.
+ * Asking for an account: an email address, and the language to write to it in.
+ *
+ * No name and no password, on purpose. Whoever registers has not yet shown the
+ * address is theirs, and whatever they typed would be kept for whoever does
+ * turn out to own it, so both are asked for with confirming, of whoever has
+ * the link.
  *
  * It carries a request id, which is whoever asked's to keep across a retry. An
  * answer lost on its way back leaves nobody able to say whether the account
@@ -28,10 +32,7 @@ export type RegisterAccountRefusedCode = "RegisterAccount.RequestIdMissing";
 export class RegisterAccount extends Command<void> {
   constructor(
     readonly requestId: string,
-    readonly name: string,
     readonly emailAddress: string,
-    readonly password: string,
-    readonly passwordConfirmation: string,
     readonly language: string,
     requestedAt: ReadOnlyDate,
   ) {

@@ -47,47 +47,58 @@ Feature: Keeping an account's name and email address readable only with its own 
   Rule: Every account has a key of its own
 
     Scenario: Registering an account makes it a key
-      When an account is registered as "Sam Someone" at "someone@example.com"
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       Then the account has a key
 
     Scenario: Two accounts have different keys
-      When an account is registered as "Sam Someone" at "someone@example.com"
-      And another account is registered as "Sam Someone" at "sam@example.com"
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And another account is registered at "sam@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       Then the two accounts' keys differ
 
     Scenario: An account's key is not kept as it is
-      When an account is registered as "Sam Someone" at "someone@example.com"
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       Then no row of the account key store contains the account's key
 
   Rule: What is kept of a name and an email address cannot be read without the key
 
     Scenario: The account's events do not hold its name
-      When an account is registered as "Sam Someone" at "someone@example.com"
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       Then nothing kept of the account's events contains "Sam Someone"
 
     Scenario: The account's events do not hold its email address
-      When an account is registered as "Sam Someone" at "someone@example.com"
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       Then nothing kept of the account's events contains "someone@example.com"
 
     Scenario: The same name kept for two accounts is kept differently
-      When an account is registered as "Sam Someone" at "someone@example.com"
-      And another account is registered as "Sam Someone" at "sam@example.com"
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And another account is registered at "sam@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       Then what is kept of the two names differs
 
     Scenario: The same name encrypted twice for one account is kept differently
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When "Sam Someone" is encrypted for the account twice
       Then the two encryptions differ
 
   Rule: Read back with its key, an account is as it was given
 
     Scenario: A name reads back as it was given
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account is read back
       Then the account is called "Sam Someone"
 
     Scenario: An email address reads back as it was given
-      Given an account is registered as "Sam Someone" at "Someone@Example.com"
+      Given an account is registered at "Someone@Example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account is read back
       Then the account is reached at "Someone@Example.com"
 
@@ -107,14 +118,17 @@ Feature: Keeping an account's name and email address readable only with its own 
   Rule: What is kept, altered in the database, is refused rather than read
 
     Scenario: A name altered where it is kept is refused
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       And what is kept of the account's name has been altered in the database
       When the account is read back
       Then reading it is refused with "AccountKeys.Tampered"
 
     Scenario: A name encrypted for one account cannot be read as another's
-      Given an account is registered as "Sam Someone" at "someone@example.com"
-      And another account is registered as "Alex Other" at "alex@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And another account is registered at "alex@example.com"
+      And the account's email address is confirmed as "Alex Other"
       And what is kept of the first account's name has been copied over the second account's in the database
       When the second account is read back
       Then reading it is refused with "AccountKeys.Tampered"
@@ -141,49 +155,58 @@ Feature: Keeping an account's name and email address readable only with its own 
     finds it again. The row is kept, and so is the hash in it.
 
     Scenario: Deleting an account's key leaves its events where they were
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account's key is deleted
       Then the account's events are all still kept
 
     Scenario: An account whose key is deleted is called forgotten, by its id
-      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered as "Sam Someone" at "someone@example.com"
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account's key is deleted
       And the account is read back
       Then the account is called "Account Forgotten 7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
     Scenario: An account whose key is deleted is reached at a forgotten address, by its id
-      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered as "Sam Someone" at "someone@example.com"
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account's key is deleted
       And the account is read back
       Then the account is reached at "account-forgotten-7c9e6679-7425-40de-944b-e07fc1f90ae7@croquetscores.com"
 
     Scenario: A forgotten account reads back the same every time
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       And the account's key is deleted
       When the account is read back twice
       Then it is called the same both times
       And it is reached at the same address both times
 
     Scenario: Nothing is sent to a forgotten account's address
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       And the account's key is deleted
       When an email is queued for the account
       Then nothing is queued to be sent
 
     Scenario: Recording that an account was forgotten deletes its key
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account is forgotten
       Then the account has no key
 
     Scenario: A forgotten account cannot be found by its email address
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the account is forgotten
       And the account for "someone@example.com" is looked for
       Then nothing is found
 
     Scenario: Another account is untouched by one being forgotten
-      Given an account is registered as "Sam Someone" at "someone@example.com"
-      And another account is registered as "Alex Other" at "alex@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And another account is registered at "alex@example.com"
+      And the account's email address is confirmed as "Alex Other"
       When the first account's key is deleted
       And the second account is read back
       Then the account is called "Alex Other"
@@ -195,13 +218,15 @@ Feature: Keeping an account's name and email address readable only with its own 
       Then it is refused with "AccountKeys.SiteKeyMissing"
 
     Scenario: With a different site's key, no account can be read
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       And the account key store is made again with a different site's key
       When the account is read back
       Then reading it is refused with "AccountKeys.WrongSiteKey"
 
     Scenario: After the site's key is changed, every account still reads back
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the site's key is changed to a new one
       And the account is read back with the new site's key
       Then the account is called "Sam Someone"
@@ -213,6 +238,7 @@ Feature: Keeping an account's name and email address readable only with its own 
       Then "nobody@example.com" was sent the email "Email.RegisterInstead"
 
     Scenario: Changing the site's key rewrites none of the events
-      Given an account is registered as "Sam Someone" at "someone@example.com"
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
       When the site's key is changed to a new one
       Then every event is kept exactly as it was before

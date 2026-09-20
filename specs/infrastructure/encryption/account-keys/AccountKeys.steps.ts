@@ -5,7 +5,6 @@ import { inspect } from "node:util";
 
 import { Account } from "../../../../src/domain/aggregates/accounts/Account.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { PersonName } from "../../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import { AccountKeys } from "../../../../src/infrastructure/encryption/AccountKeys.js";
@@ -76,10 +75,12 @@ const eventsAsText = async (world: SpecWorld): Promise<string[]> => {
   return rows.map(({ row }) => row);
 };
 
+// The name is kept with the confirming, which is where it is given: an
+// account's registering holds its email address and nothing else.
 const keptNameOf = async (world: SpecWorld, id: AccountId): Promise<string> => {
   const { rows } = await world.database.query<{ name: string }>(
     `select data->>'name' as name from events
-      where stream_id = $1 and name = 'account-registered'`,
+      where stream_id = $1 and name = 'account-email-address-confirmed'`,
     [id.value],
   );
   const name = rows[0]?.name;
@@ -94,7 +95,7 @@ const replaceKeptName = async (
 ): Promise<void> => {
   await world.database.query(
     `update events set data = jsonb_set(data, '{name}', to_jsonb($2::text))
-      where stream_id = $1 and name = 'account-registered'`,
+      where stream_id = $1 and name = 'account-email-address-confirmed'`,
     [id.value, kept],
   );
 };
@@ -159,16 +160,16 @@ When(
 // Accounts -----------------------------------------------------------------
 
 When(
-  "another account is registered as {string} at {string}",
-  async function (this: SpecWorld, name: string, address: string) {
-    await registerFor(this, address, name);
+  "another account is registered at {string}",
+  async function (this: SpecWorld, address: string) {
+    await registerFor(this, address);
   },
 );
 
 Given(
-  "an account {string} is registered as {string} at {string}",
-  async function (this: SpecWorld, id: string, name: string, address: string) {
-    await registerFor(this, address, name, AccountId.from(id));
+  "an account {string} is registered at {string}",
+  async function (this: SpecWorld, id: string, address: string) {
+    await registerFor(this, address, AccountId.from(id));
   },
 );
 
@@ -184,10 +185,8 @@ When(
     assert.ok(this.moment !== undefined, "No moment has been named.");
     const account = Account.register(
       AccountId.create(),
-      PersonName.from("Sam Someone"),
       EmailAddress.from("someone@example.com"),
       "stand-in$hash",
-      "stand-in$password-hash",
       ReadOnlyDate.from(this.moment),
     );
     const { store } = accountsOf(this);
@@ -380,7 +379,8 @@ Then(
 Then("it is called the same both times", function (this: SpecWorld) {
   const [first, second] = keysOf(this).readBack;
   assert.ok(first !== undefined && second !== undefined, "Not read twice.");
-  assert.equal(first.name.toString(), second.name.toString());
+  assert.ok(first.name !== undefined, "It is called nothing.");
+  assert.equal(first.name.toString(), second.name?.toString());
 });
 
 Then(

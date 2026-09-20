@@ -15,7 +15,6 @@ import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { nameAccountEvents } from "../../../src/domain/aggregates/accounts/events/accountEvents.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import { EventRegistry } from "../../../src/domain/common/EventRegistry.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { AccountEventSealing } from "../../../src/infrastructure/encryption/AccountEventSealing.js";
@@ -133,16 +132,13 @@ export const readBack = async (
 export const registerFor = async (
   world: SpecWorld,
   address: string,
-  name = "Sam Someone",
   id = AccountId.create(),
 ): Promise<void> => {
   assert.ok(world.moment !== undefined, "No moment has been named.");
   const account = Account.register(
     id,
-    PersonName.from(name),
     EmailAddress.from(address),
     world.hashEmailAddress?.(address) ?? "",
-    "stand-in$password-hash",
     ReadOnlyDate.from(world.moment),
   );
   world.aggregate = account;

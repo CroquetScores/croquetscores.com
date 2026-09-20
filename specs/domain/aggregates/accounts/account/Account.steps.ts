@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { inspect } from "node:util";
 
 import { Account } from "../../../../../src/domain/aggregates/accounts/Account.js";
+import { AccountBroughtOver } from "../../../../../src/domain/aggregates/accounts/events/AccountBroughtOver.js";
 import { AccountForgotten } from "../../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts/events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
@@ -81,21 +82,23 @@ const firstRecorded = (world: SpecWorld): DomainEvent => {
   return event;
 };
 
+// What a scenario that does not say is confirmed as, and brought over with:
+// what was typed is not what that scenario is about.
+const A_NAME = "Sam Someone";
+const A_PASSWORD_HASH = hashOf("correct horse battery staple");
+const AN_OLD_SITE_HASH = "$old-site$stand-in";
+
 // Registering --------------------------------------------------------------
 
 const register = async (
   world: SpecWorld,
-  name: string,
   address: string,
-  password: string,
   addressHash = addressHashOf(world, address),
 ): Promise<void> => {
   const account = Account.register(
     idOf(world),
-    PersonName.from(name),
     EmailAddress.from(address),
     addressHash,
-    hashOf(password),
     now(world),
   );
   world.aggregate = account;
@@ -103,77 +106,120 @@ const register = async (
 };
 
 When(
-  "an account is registered as {string} at {string}",
-  async function (this: SpecWorld, name: string, address: string) {
-    await register(this, name, address, "correct horse battery staple");
+  "an account is registered at {string}",
+  async function (this: SpecWorld, address: string) {
+    await register(this, address);
   },
 );
 
 When(
-  "an account is registered as {string} at {string} with the password {string}",
+  "an account is registered at {string} with the email address hash {string}",
+  async function (this: SpecWorld, address: string, addressHash: string) {
+    await register(this, address, addressHash);
+  },
+);
+
+// Being brought over from the old site -----------------------------------------
+
+const bringOver = async (
+  world: SpecWorld,
+  name: string,
+  address: string,
+  passwordHash = AN_OLD_SITE_HASH,
+  addressHash = addressHashOf(world, address),
+): Promise<void> => {
+  const account = Account.bringOver(
+    idOf(world),
+    PersonName.from(name),
+    EmailAddress.from(address),
+    addressHash,
+    passwordHash,
+    now(world),
+  );
+  world.aggregate = account;
+  await world.keepAccount?.(account);
+};
+
+When(
+  "an account is brought over as {string} at {string}",
+  async function (this: SpecWorld, name: string, address: string) {
+    await bringOver(this, name, address);
+  },
+);
+
+When(
+  "an account is brought over as {string} at {string} with the password hash {string}",
   async function (
     this: SpecWorld,
     name: string,
     address: string,
-    password: string,
+    passwordHash: string,
   ) {
-    await register(this, name, address, password);
+    await bringOver(this, name, address, passwordHash);
   },
 );
 
 When(
-  "an account is registered as {string} at {string} with the email address hash {string}",
+  "an account is brought over as {string} at {string} with the email address hash {string}",
   async function (
     this: SpecWorld,
     name: string,
     address: string,
     addressHash: string,
   ) {
-    await register(
-      this,
-      name,
-      address,
-      "correct horse battery staple",
-      addressHash,
-    );
+    await bringOver(this, name, address, AN_OLD_SITE_HASH, addressHash);
   },
 );
 
 // The stream an account is rebuilt from -------------------------------------
 
-const registered = (
-  world: SpecWorld,
-  name: string,
-  address: string,
-  imported: boolean,
-): AccountRegistered =>
-  new AccountRegistered(
-    name,
-    address,
-    addressHashOf(world, address),
-    imported ? "$old-site$stand-in" : hashOf("correct horse battery staple"),
-    imported,
-    idOf(world),
-    now(world),
-  );
-
 Given(
-  "a stream where an account was registered as {string} at {string}",
-  function (this: SpecWorld, name: string, address: string) {
-    streamOf(this).push(registered(this, name, address, false));
+  "a stream where an account was registered at {string}",
+  function (this: SpecWorld, address: string) {
+    streamOf(this).push(
+      new AccountRegistered(
+        address,
+        addressHashOf(this, address),
+        idOf(this),
+        now(this),
+      ),
+    );
   },
 );
 
 Given(
-  "a stream where an account was registered as {string} at {string} with an imported password",
+  "a stream where an account was brought over as {string} at {string}",
   function (this: SpecWorld, name: string, address: string) {
-    streamOf(this).push(registered(this, name, address, true));
+    streamOf(this).push(
+      new AccountBroughtOver(
+        name,
+        address,
+        addressHashOf(this, address),
+        AN_OLD_SITE_HASH,
+        idOf(this),
+        now(this),
+      ),
+    );
   },
 );
 
-Given("its email address was confirmed", function (this: SpecWorld) {
-  streamOf(this).push(new EmailAddressConfirmed(idOf(this), now(this)));
-});
+Given(
+  "its email address was confirmed as {string}",
+  function (this: SpecWorld, name: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(name, A_PASSWORD_HASH, idOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "its email address was confirmed with the password hash {string}",
+  function (this: SpecWorld, passwordHash: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(A_NAME, passwordHash, idOf(this), now(this)),
+    );
+  },
+);
 
 // The hash a password was hashed again with, when the stream says it was.
 const NEW_HASH = hashOf("a new hash");
@@ -193,9 +239,29 @@ When("the account is rebuilt from the stream", function (this: SpecWorld) {
 // What is asked of it ------------------------------------------------------
 
 When(
-  "the account's email address is confirmed",
-  async function (this: SpecWorld) {
-    await tryTo(this, (account) => account.confirm(now(this)));
+  "the account's email address is confirmed as {string}",
+  async function (this: SpecWorld, name: string) {
+    await tryTo(this, (account) =>
+      account.confirm(PersonName.from(name), A_PASSWORD_HASH, now(this)),
+    );
+  },
+);
+
+When(
+  "the account's email address is confirmed with the password hash {string}",
+  async function (this: SpecWorld, passwordHash: string) {
+    await tryTo(this, (account) =>
+      account.confirm(PersonName.from(A_NAME), passwordHash, now(this)),
+    );
+  },
+);
+
+When(
+  "the account's email address is confirmed with the password {string}",
+  async function (this: SpecWorld, password: string) {
+    await tryTo(this, (account) =>
+      account.confirm(PersonName.from(A_NAME), hashOf(password), now(this)),
+    );
   },
 );
 
@@ -233,6 +299,17 @@ Then(
     const event = firstRecorded(this);
     assert.ok(
       event instanceof AccountRegistered,
+      `It recorded ${inspect(event)}.`,
+    );
+  },
+);
+
+Then(
+  "the first thing it recorded is its being brought over",
+  function (this: SpecWorld) {
+    const event = firstRecorded(this);
+    assert.ok(
+      event instanceof AccountBroughtOver,
       `It recorded ${inspect(event)}.`,
     );
   },
@@ -307,9 +384,36 @@ Then(
 );
 
 Then(
+  "its being brought over says the email address hash {string}",
+  function (this: SpecWorld, addressHash: string) {
+    const event = firstRecorded(this);
+    assert.ok(
+      event instanceof AccountBroughtOver,
+      `It recorded ${inspect(event)}.`,
+    );
+    assert.equal(event.emailAddressHash, addressHash);
+  },
+);
+
+Then(
   "the account is called {string}",
   function (this: SpecWorld, name: string) {
-    assert.equal(accountOf(this).name.toString(), name);
+    assert.equal(accountOf(this).name?.toString(), name);
+  },
+);
+
+Then("the account has no name", function (this: SpecWorld) {
+  assert.equal(accountOf(this).name, undefined);
+});
+
+Then("the account has no password", function (this: SpecWorld) {
+  assert.equal(accountOf(this).passwordHash, undefined);
+});
+
+Then(
+  "the account's password hash is {string}",
+  function (this: SpecWorld, passwordHash: string) {
+    assert.equal(accountOf(this).passwordHash, passwordHash);
   },
 );
 
@@ -334,6 +438,10 @@ Then(
     assert.equal(accountOf(this).passwordHash, NEW_HASH);
   },
 );
+
+Then("the account's password is imported", function (this: SpecWorld) {
+  assert.equal(accountOf(this).passwordImported, true);
+});
 
 Then("the account's password is not imported", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordImported, false);

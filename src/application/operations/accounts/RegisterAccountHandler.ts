@@ -1,20 +1,15 @@
 import { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/value-objects/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
-import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { RequestInvalid } from "../../common/ValidationBehaviour.js";
-import type { BreachedPasswords } from "../../services/BreachedPasswords.js";
 import type { LinkPurpose, Links } from "../../services/Links.js";
 import type { EmailAddressHasher } from "../../services/EmailAddressHasher.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 import type { EmailsWritten } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
-import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import { RegisterAccount } from "./RegisterAccount.js";
 
 /** What registering asks of where accounts are found by their address. */
@@ -71,11 +66,11 @@ const shiftedBy = (moment: ReadOnlyDate, milliseconds: number): ReadOnlyDate =>
  * of it is kept or none is, so an account is never left without its email, nor
  * an email sent about an account that was not recorded.
  *
- * The shape of the work is the same whoever the address belongs to, and in the
- * same order, because the answer must not say. The password is hashed before
- * anything is looked up and whatever is found, since hashing is slow on
- * purpose and an answer that came back sooner would say the address was
- * registered.
+ * The shape of the work is the same whoever the address belongs to, because
+ * the answer must not say: the address is reserved, and one email is queued,
+ * whoever holds it. Nothing slow is done for one kind of address and not for
+ * another. There is no password here to hash, and no outside service to ask,
+ * since the name and the password are asked for with confirming.
  */
 export class RegisterAccountHandler extends CommandHandler<
   RegisterAccount,
@@ -87,8 +82,6 @@ export class RegisterAccountHandler extends CommandHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly byAddress: AccountsByAddress,
     private readonly addresses: EmailAddressHasher,
-    private readonly passwords: PasswordHasher,
-    private readonly breached: BreachedPasswords,
     private readonly queue: EmailQueue,
     private readonly written: EmailsWritten,
     private readonly handled: HandledRequests,
@@ -105,27 +98,7 @@ export class RegisterAccountHandler extends CommandHandler<
       return;
     }
 
-    const name = PersonName.from(command.name);
     const address = EmailAddress.from(command.emailAddress);
-    const password = Password.from(command.password);
-
-    // Refused as a broken rule, and not by the validator, because asking
-    // whether a password has been breached is a request over the network and
-    // a validator answers without waiting. It is asked after the rules that
-    // need nobody asked, so a password that was never going to be allowed
-    // costs no request; and before the password is hashed, so a breached one
-    // costs no hash either. A refusal here is a visible answer whatever the
-    // address, so nothing about its timing says anything about the address.
-    if (await this.breached.isBreached(password.reveal())) {
-      throw new RequestInvalid(command, [
-        { code: "Password.Breached", fields: ["password"] },
-      ]);
-    }
-
-    // Hashed before the address is looked at, and whatever is found: hashing
-    // is slow on purpose, and an answer that came back sooner for a registered
-    // address would say it was one.
-    const passwordHash = await this.passwords.hash(password.reveal());
 
     // The id is minted before the address is reserved, because it is what the
     // reservation is made in the name of: whoever the reservation comes back
@@ -135,7 +108,7 @@ export class RegisterAccountHandler extends CommandHandler<
     const holder = await this.byAddress.reserve(address, id);
 
     if (holder.equals(id)) {
-      await this.registerNew(command, id, name, address, passwordHash);
+      await this.registerNew(command, id, address);
       return;
     }
     await this.writeToTheAccount(command, holder);
@@ -148,25 +121,20 @@ export class RegisterAccountHandler extends CommandHandler<
   private async registerNew(
     command: RegisterAccount,
     id: AccountId,
-    name: PersonName,
     address: EmailAddress,
-    passwordHash: string,
   ): Promise<void> {
     const account = Account.register(
       id,
-      name,
       address,
       this.addresses.hash(address),
-      passwordHash,
       command.requestedAt,
     );
     await this.accounts.save(account);
     await this.write(command, id, address, "Email.ConfirmAddress");
   }
 
-  // An address somebody already has. Nothing about the account changes —
-  // neither its name nor its password, whatever this registration typed —
-  // and the only thing that happens is that its owner is written to.
+  // An address somebody already has. Nothing about the account changes, and
+  // the only thing that happens is that its owner is written to.
   private async writeToTheAccount(
     command: RegisterAccount,
     id: AccountId,
@@ -179,6 +147,9 @@ export class RegisterAccountHandler extends CommandHandler<
       throw new Error(`The account ${id.value} has no events.`);
     }
 
+    // Counting holds the account until this transaction ends, so registrations
+    // arriving at once are counted one after another: side by side, each would
+    // count before any had recorded, and all of them would send.
     const since = shiftedBy(command.requestedAt, -AN_HOUR);
     if ((await this.written.countSince(id, since)) >= EMAILS_AN_HOUR) return;
 
