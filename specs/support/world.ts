@@ -22,6 +22,7 @@ import type {
   PasswordCheck,
   PasswordHasher,
 } from "../../src/application/services/PasswordHasher.js";
+import type { BreachedPasswords } from "../../src/application/services/BreachedPasswords.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
@@ -172,6 +173,16 @@ export class SpecWorld extends World {
   public passwordHashes: string[] = [];
   public passwordCheck: PasswordCheck | undefined;
   public checkTook: { againstHash?: number; againstNone?: number } = {};
+
+  // A breached password check, and what the last check found. The check's
+  // feature cannot name the service that stands behind it, so whatever puts
+  // one there says here how the scenario tells it which passwords have been
+  // breached, and how it makes the service unreachable. A failure to check is
+  // kept in `failure`.
+  public breachedPasswords: BreachedPasswords | undefined;
+  public knownBreached: ((password: string) => void) | undefined;
+  public breachedPasswordsUnreachable: (() => Promise<void>) | undefined;
+  public breached: boolean | undefined;
 
   // The parts of an account a scenario makes, whether the last email address
   // was found the same as another, and every way the last password made was

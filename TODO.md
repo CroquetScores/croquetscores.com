@@ -151,18 +151,17 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-1. `specs/infrastructure/identity/have-i-been-pwned/HaveIBeenPwnedPasswords.feature`
-2. `specs/infrastructure/identity/recaptcha/RecaptchaReaderCheck.feature`
-3. `specs/web/common/email-queue-sending/emailQueueSending.feature`
-4. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
-5. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-6. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-7. `specs/application/operations/accounts/sign-in/SignIn.feature`
-8. `specs/web/public/register/register.feature`
-9. `specs/web/public/sign-in/signIn.feature`
-10. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
-11. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
-12. `specs/web/public/forgot-password/forgotPassword.feature`
-13. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
-14. `specs/web/public/forget-account/forgetAccount.feature`
-15. `specs/web/common/session/session.feature`
+1. `specs/infrastructure/identity/recaptcha/RecaptchaReaderCheck.feature`
+2. `specs/web/common/email-queue-sending/emailQueueSending.feature`
+3. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
+4. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
+5. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+6. `specs/application/operations/accounts/sign-in/SignIn.feature`
+7. `specs/web/public/register/register.feature`
+8. `specs/web/public/sign-in/signIn.feature`
+9. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
+10. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
+11. `specs/web/public/forgot-password/forgotPassword.feature`
+12. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
+13. `specs/web/public/forget-account/forgetAccount.feature`
+14. `specs/web/common/session/session.feature`
