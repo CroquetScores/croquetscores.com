@@ -3,6 +3,7 @@
 // the shape whatever stands those up puts on the world, and the steps ask only
 // this. Application and domain types only, for the reason at the top of
 // world.ts.
+import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { RegisterAccount } from "../../src/application/operations/accounts/RegisterAccount.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 
@@ -20,6 +21,34 @@ export interface SeenEmail {
 export interface Registering {
   /** Sends a registration. Throws what the mediator throws. */
   send(command: RegisterAccount): Promise<void>;
+
+  /** Sends a confirming. Throws what the mediator throws. */
+  confirm(command: ConfirmEmailAddress): Promise<void>;
+
+  /**
+   * The link in the email queued for `address` — the only one, or the one of
+   * `kind` where more than one is waiting.
+   */
+  linkEmailedTo(address: string, kind?: string): Promise<string>;
+
+  /**
+   * `link` with what it carries changed and its signature left as it was,
+   * which is what a link somebody has tampered with looks like. The account is
+   * named by the address it was registered at.
+   */
+  alteredToName(link: string, address: string): Promise<string>;
+
+  /** `link` with the moment it stops working changed, and not signed again. */
+  alteredToWorkUntil(link: string, until: string): string;
+
+  /** A link of another kind, made for the account for `address`. */
+  aLinkFor(purpose: string, address: string): Promise<string>;
+
+  /** Forgets the account for `address`, as forgetting one will. */
+  forget(address: string): Promise<void>;
+
+  /** How many events the account for `address` has recorded. */
+  eventsRecordedFor(address: string): Promise<number>;
 
   /** An account for `address`, registered before the scenario's registration. */
   giveAnAccount(address: string, confirmed: boolean): Promise<void>;

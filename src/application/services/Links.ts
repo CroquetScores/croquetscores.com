@@ -11,6 +11,13 @@ import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 export type LinkPurpose =
   "confirm-email-address" | "set-new-password" | "confirm-forgetting";
 
+/** What a link carries, once it is known to have been made here unaltered. */
+export interface LinkCarried {
+  readonly purpose: LinkPurpose;
+  readonly account: AccountId;
+  readonly worksUntil: ReadOnlyDate;
+}
+
 /**
  * What the application wants of the links it emails.
  *
@@ -27,4 +34,12 @@ export interface Links {
    * host is not something the application knows.
    */
   make(purpose: LinkPurpose, account: AccountId, until: ReadOnlyDate): string;
+
+  /**
+   * What `link` carries, or nothing when it was not made here — altered,
+   * made up, or signed with another key. Nothing is said about whether it has
+   * expired: that is a moment to compare against the one the request was asked
+   * for, and reading a link never looks at a clock.
+   */
+  read(link: string): LinkCarried | undefined;
 }

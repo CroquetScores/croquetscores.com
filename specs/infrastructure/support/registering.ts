@@ -15,7 +15,9 @@ import { Mediator } from "../../../src/application/common/Mediator.js";
 import { ProjectingEventStore } from "../../../src/application/common/ProjectingEventStore.js";
 import { ValidationBehaviour } from "../../../src/application/common/ValidationBehaviour.js";
 import { RegisterAccountHandler } from "../../../src/application/operations/accounts/RegisterAccountHandler.js";
+import { ConfirmEmailAddressHandler } from "../../../src/application/operations/accounts/ConfirmEmailAddressHandler.js";
 import { RegisterAccountValidator } from "../../../src/application/operations/accounts/RegisterAccountValidator.js";
+import type { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { RegisterAccount } from "../../../src/application/operations/accounts/RegisterAccount.js";
 import type { Projection } from "../../../src/application/common/Projection.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
@@ -26,6 +28,7 @@ import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { PostgresHandledRequests } from "../../../src/infrastructure/database/PostgresHandledRequests.js";
 import { PostgresEmailsWritten } from "../../../src/infrastructure/email/PostgresEmailsWritten.js";
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
+import type { LinkPurpose } from "../../../src/application/services/Links.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import type { Registering, SeenEmail } from "../../support/registering.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -37,6 +40,33 @@ import { scenarioLanguages } from "../../web/support/languages.js";
 
 /** Where the scenarios' site answers, which its links are made with. */
 const SITE_ADDRESS = "https://croquetscores.com";
+
+// A link, with what it carries changed and its signature left alone. Written
+// here because what a link is made of is infrastructure's, and a scenario that
+// tampers with one has to take it apart the same way.
+const altered = (
+  link: string,
+  change: (purpose: string, account: string, until: string) => string,
+): string => {
+  const [before, after] = link.split("link=");
+  assert.ok(before !== undefined && after !== undefined, "That is no link.");
+  const [carried, signature] = after.split(".");
+  assert.ok(
+    carried !== undefined && signature !== undefined,
+    "That link carries nothing.",
+  );
+  const [purpose, account, until] = Buffer.from(carried, "base64url")
+    .toString("utf8")
+    .split(".");
+  assert.ok(
+    purpose !== undefined && account !== undefined && until !== undefined,
+    "That link carries nothing this can read.",
+  );
+  const changed = Buffer.from(change(purpose, account, until), "utf8").toString(
+    "base64url",
+  );
+  return `${before}link=${changed}.${signature}`;
+};
 
 /** A projection that fails the append it is given, when a scenario says to. */
 class RefusingProjection implements Projection {
@@ -105,6 +135,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       links,
     ),
   );
+  mediator.handleCommand(new ConfirmEmailAddressHandler(repository, links));
   world.mediator = mediator;
   world.validation = validation;
 
@@ -216,6 +247,73 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       });
       return `${written.subject}\n${written.body}`;
     },
+    async confirm(command: ConfirmEmailAddress): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    // Read out of the queue, as a reader reads it out of their mail: what was
+    // filled into the email is what the writer makes its button from.
+    async linkEmailedTo(address, kind) {
+      const emails = await world.asARequest(() => queue.emails());
+      const waiting = emails.filter(
+        (email) =>
+          !email.givenUp &&
+          email.to === address &&
+          (kind === undefined || email.kind === kind),
+      );
+      assert.equal(
+        waiting.length,
+        1,
+        `${waiting.length} emails are queued for ${address}.`,
+      );
+      const link = waiting[0]?.link;
+      assert.ok(link !== undefined, "The email carries no link.");
+      return link;
+    },
+
+    async alteredToName(link, address) {
+      const id = await idFor(address);
+      return altered(link, (purpose, _account, until) =>
+        [purpose, id.value, until].join("."),
+      );
+    },
+
+    alteredToWorkUntil(link, until) {
+      return altered(link, (purpose, account) =>
+        [purpose, account, String(new Date(until).getTime())].join("."),
+      );
+    },
+
+    async aLinkFor(purpose, address) {
+      const id = await idFor(address);
+      // A day, like the link registering sends: how long it works is not what
+      // these scenarios are about, only what it is for.
+      return links.make(
+        purpose as LinkPurpose,
+        id,
+        ReadOnlyDate.from(
+          new Date(now().toDate().getTime() + 24 * 60 * 60 * 1000),
+        ),
+      );
+    },
+
+    async forget(address) {
+      const id = await idFor(address);
+      const account = await readBack(world, id);
+      account.forget(now());
+      await world.keepAccount?.(account);
+    },
+
+    async eventsRecordedFor(address) {
+      const id = await idFor(address);
+      const { rows } = await world.database.query(
+        `select version from events where stream_id = $1`,
+        [id.value],
+      );
+      return rows.length;
+    },
+
     makeRecordingFail: () => {
       refusing.refusing = true;
     },

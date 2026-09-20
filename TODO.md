@@ -1,16 +1,20 @@
 # TODO.md
 
-Three kinds of thing, kept apart.
+Four kinds of thing, kept apart.
 
 **Jotted** is for whatever occurs to anyone, a line each, not yet thought through. Add to it freely.
 
 **Outstanding `.feature` files** are the specifications that have been accepted and not built, in the order they can be built. A file leaves the list when its scenarios pass.
+
+**Where the register page has got to**, at the end, is the one feature on the outstanding list that is not merely waiting its turn. It is there rather than jotted because what holds it up is three decisions, and each wants making on purpose.
 
 **Known problems** are written out in full — what will go wrong, why it has not yet, and what to do when it does — so they are found where people look, rather than left in a pull request nobody reads again after it merges. A jotted item that turns out to need that much explaining moves down and gets a section of its own.
 
 ---
 
 ## Jotted
+
+- A forgotten account's reservation isn't released anywhere
 
 - /account/administrator/view-email-queue
 
@@ -27,6 +31,10 @@ Three kinds of thing, kept apart.
 - **Nothing in the primary navigation is served, so nothing can be marked as the page being read.** `layout.ts` puts `aria-current` on the navigation link whose address is the page's, and the three links it holds — Tournaments, Blog, Help — are stand-ins that answer 404, while the pages that are served are not in it. So that line cannot be reached and no scenario can cover it. The account menu marks its own (`accountMenu.feature`); this is the bar beside it. It comes right on its own as soon as one of those pages is built, and is worth a scenario then.
 
 - **A failed API request says nothing about being kept.** The error mapping now sends every error _page_ with `cache-control: private, no-cache` and `vary: Cookie, Accept-Language`, because the page carries the account menu (`errors.feature`). The JSON answers beside them carry neither. Nothing caches them today, and none of them is personal yet; decide what the API says about caching when the API answers something that is.
+
+- **Registering hashes the password and asks Have I Been Pwned inside its transaction.** `TransactionBehaviour` wraps the handler, so the hash — slow on purpose — and the network call each hold a pool connection doing nothing, and enough registrations while the service is slow hold every connection. Neither needs the database. Moving them ahead of the transaction means a behaviour that runs before `TransactionBehaviour`, or a handler in two phases, and either decides how handlers are shaped; decide it with the known problem below about where handlers are registered, since both change the mediator (from the review of `account/register`).
+
+- **`emails_written` grows by a row per registration and nothing removes one.** It is only ever asked about the last hour, yet it keeps every row for ever, including one for every stranger who re-registers a taken address. The queue sweeps its given-up rows in `sendDue` and claiming sweeps its stale ones (`PostgresHandledRequests.feature`); this wants the same, and the decision to make first is how far back the count could ever be asked about, since an hour is only what registering asks for today (from the review of `account/register`).
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
