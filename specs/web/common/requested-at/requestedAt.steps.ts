@@ -4,22 +4,16 @@ import { strict as assert } from "node:assert";
 import { ExampleCommand } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { builtFor } from "../../support/application.js";
-
-Given(
-  "the server's clock reads {string}",
-  function (this: SpecWorld, moment: string) {
-    builtFor(this).now = new Date(moment);
-  },
-);
+import { clockFor } from "../../support/clock.js";
 
 // Moved from inside the handler, so that it moves while the request is being
 // served: after the request arrived, and before anything else it sends.
 Given(
   "the server's clock moves on a minute whenever the example command is handled",
   function (this: SpecWorld) {
-    const scenario = builtFor(this);
+    const clock = clockFor(this);
     this.whatTheExampleHandlerAlsoDoes.push(() => {
-      scenario.now = new Date(scenario.now.getTime() + 60_000);
+      clock.now = new Date(clock.now.getTime() + 60_000);
       return Promise.resolve();
     });
   },

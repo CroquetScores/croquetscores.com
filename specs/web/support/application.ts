@@ -16,13 +16,11 @@ import {
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import { useUnitOfWork } from "../../infrastructure/support/transactions.js";
 import { exampleRegistry } from "../../support/exampleEvents.js";
-import { askedAt } from "../../support/examples.js";
 import type { SpecWorld } from "../../support/world.js";
+import { clockFor } from "./clock.js";
 
 export interface Built {
   readonly application: Application;
-  /** What the server's clock reads. The scenario moves it; nothing else does. */
-  now: Date;
   route?: { method: "GET" | "POST"; url: string };
   response?: LightMyRequestResponse;
 }
@@ -57,14 +55,12 @@ Given("the application is built", async function (this: SpecWorld) {
   assert.ok(databaseUrl !== undefined, "The scenario's database has no URL.");
 
   loadEnvFile();
-  // Filled in straight after, because the clock reads it and it has to exist
-  // before the application does.
-  const scenario = { now: askedAt.toDate() } as Built;
+  const clock = clockFor(this);
   const application = await buildApplication(
     { ...loadConfig(), databaseUrl },
     {
       logger: false,
-      clock: () => new Date(scenario.now.getTime()),
+      clock: () => new Date(clock.now.getTime()),
       // The example events, and the scenario's own list of projections, so
       // that a projection named after this step is still given what the
       // application's store appends.
@@ -72,8 +68,7 @@ Given("the application is built", async function (this: SpecWorld) {
       projections: this.projections,
     },
   );
-  Object.assign(scenario, { application });
-  built.set(this, scenario);
+  built.set(this, { application });
 
   // Closed with the scenario's database, before it is dropped, rather than by
   // a hook of its own that might run either side of the drop. The server and

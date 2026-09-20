@@ -20,8 +20,6 @@ Three kinds of thing, kept apart.
 
 - **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
 
-- **Nothing sends what is queued yet.** `PostgresEmailQueue.sendDue` sends whatever is due, but only the scenarios call it; the timer that calls it every 10 seconds while the server is up is `emailQueueSending.feature`, on the outstanding list below.
-
 - **A `@postgres` scenario now and then fails before its first step**, in the Before hook in `specs/infrastructure/support/database.ts`, with `terminating connection due to administrator command`. Seen twice, a different scenario each time, and each passed when the suite was run again; perhaps the clean-up of one scenario's database ending a connection another is using. Worth looking at before it hides a real failure.
 
 - **Sessions are handed in rather than found.** The account menu asks `src/web/common/reader.ts` whether a reader is signed in, and what answers is given to the application when it is built: production gives it nothing, so nobody is signed in, and the scenarios give it a cookie of their own (`specs/web/support/reader.ts`). Whatever `session.feature` builds is handed in there, and the scenarios' stand-in goes with it.
@@ -151,16 +149,15 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-1. `specs/web/common/email-queue-sending/emailQueueSending.feature`
-2. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
-3. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-4. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-5. `specs/application/operations/accounts/sign-in/SignIn.feature`
-6. `specs/web/public/register/register.feature`
-7. `specs/web/public/sign-in/signIn.feature`
-8. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
-9. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
-10. `specs/web/public/forgot-password/forgotPassword.feature`
-11. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
-12. `specs/web/public/forget-account/forgetAccount.feature`
-13. `specs/web/common/session/session.feature`
+1. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
+2. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
+3. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+4. `specs/application/operations/accounts/sign-in/SignIn.feature`
+5. `specs/web/public/register/register.feature`
+6. `specs/web/public/sign-in/signIn.feature`
+7. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
+8. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
+9. `specs/web/public/forgot-password/forgotPassword.feature`
+10. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
+11. `specs/web/public/forget-account/forgetAccount.feature`
+12. `specs/web/common/session/session.feature`

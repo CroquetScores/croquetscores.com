@@ -30,6 +30,10 @@ const start = async (): Promise<{ browser: Browser; baseUrl: string }> => {
       // Whether a scenario's reader is signed in, which it says with a cookie
       // of its own: nothing signs anybody in until sessions are built.
       reader: readerTheScenariosSet,
+      // This application listens, over the database in .env rather than a
+      // scenario's own, and would otherwise send whatever is queued there
+      // every 10 seconds for as long as the run lasts.
+      sendsTheEmailQueue: false,
     });
     addExampleForm(application);
 

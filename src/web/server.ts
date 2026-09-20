@@ -34,6 +34,7 @@ import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventS
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { apiV1 } from "./api/v1/index.js";
 import { readAssets, type Assets } from "./common/assets.js";
+import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
 import { knowTheReader, nobodySignedIn, type Reader } from "./common/reader.js";
@@ -176,6 +177,13 @@ export interface ApplicationOptions {
    * arrives when they are.
    */
   readonly reader?: Reader;
+  /**
+   * Whether what is queued is sent while the server is listening. It is,
+   * unless a scenario says otherwise: the browser scenarios listen over the
+   * developer's own database, and a test run has no business sending what is
+   * queued there.
+   */
+  readonly sendsTheEmailQueue?: boolean;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -217,8 +225,7 @@ export const buildApplication = async (
 
   // Emails are written from the site's catalogues, with links made from the
   // site's configured address and never a request's, and written to files in
-  // temp/ until there is a mail provider. Nothing sends what is queued yet:
-  // that is the web layer's, on a timer of its own.
+  // temp/ until there is a mail provider.
   const languages = options.languages ?? [english];
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,
@@ -236,7 +243,8 @@ export const buildApplication = async (
 
   registerErrorMapping(server, assets);
 
-  stampRequests(server, options.clock ?? machineClock);
+  const clock = options.clock ?? machineClock;
+  stampRequests(server, clock);
   speakToRequests(server, languages);
   knowTheReader(server, options.reader ?? nobodySignedIn);
 
@@ -264,6 +272,12 @@ export const buildApplication = async (
   registerJavaScriptRequiredPage(server, assets);
   registerPublicPages(server, assets);
 
+  // What is queued is sent while the server is listening, and the pool is
+  // still open while the last round finishes: the server is closed before the
+  // pool is ended, by whoever closes them.
+  if (options.sendsTheEmailQueue ?? true)
+    sendTheEmailQueue(server, emailQueue, clock);
+
   return {
     server,
     pool,
@@ -285,4 +299,28 @@ if (startedDirectly) {
   const config = loadConfig();
   const application = await buildApplication(config);
   await application.server.listen({ port: config.port, host: "0.0.0.0" });
+
+  // A deploy stops the server with a signal, and left alone a signal ends the
+  // process where it stands, part way through sending an email if it is. So
+  // the server is closed instead, which waits for the round being sent, and
+  // the pool after it, which the round was using.
+  const stop = (): void => {
+    application.server
+      .close()
+      .then(() => application.pool.end())
+      .then(
+        () => process.exit(0),
+        // Whatever would not close, the process is still to end, and to say
+        // that it did not end well.
+        (error: unknown) => {
+          application.server.log.error(
+            error,
+            "The server did not stop cleanly.",
+          );
+          process.exit(1);
+        },
+      );
+  };
+  process.once("SIGTERM", stop);
+  process.once("SIGINT", stop);
 }
