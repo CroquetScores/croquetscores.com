@@ -149,14 +149,22 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 # Outstanding .feature files
 
-In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
+In the order they can be built, each after what it needs, and with an application feature followed straight away by the pages that put it in front of a reader, so that the two are built as a pair. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first, and the rule that waits on the other lands when the other does.
 
-4. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-5. `specs/application/operations/accounts/sign-in/SignIn.feature`
-6. `specs/web/public/sign-in/signIn.feature`
-7. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
-8. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
-9. `specs/web/public/forgot-password/forgotPassword.feature`
-10. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
-11. `specs/web/public/forget-account/forgetAccount.feature`
-12. `specs/web/common/session/session.feature`
+Sending the confirmation link again, and the two pages that ask for it:
+
+1. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
+2. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
+3. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
+
+Signing in, and its page:
+
+4. `specs/application/operations/accounts/sign-in/SignIn.feature`
+5. `specs/web/public/sign-in/signIn.feature`
+
+Pages with no application feature of their own outstanding:
+
+6. `specs/web/public/forgot-password/forgotPassword.feature`
+7. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
+8. `specs/web/public/forget-account/forgetAccount.feature`
+9. `specs/web/common/session/session.feature`
