@@ -28,6 +28,7 @@ import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { PostgresHandledRequests } from "../../../src/infrastructure/database/PostgresHandledRequests.js";
 import { PostgresEmailsWritten } from "../../../src/infrastructure/email/PostgresEmailsWritten.js";
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
+import type { LinkPurpose } from "../../../src/application/services/Links.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import type { Registering, SeenEmail } from "../../support/registering.js";
 import type { SpecWorld } from "../../support/world.js";
