@@ -37,6 +37,7 @@ import type {
 import type { Id } from "../../src/domain/common/Id.js";
 import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { ExampleThing, ExampleThingId } from "./exampleThing.js";
+import type { HandledRequests } from "../../src/application/services/HandledRequests.js";
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 
 export class SpecWorld extends World {
@@ -207,6 +208,13 @@ export class SpecWorld extends World {
   // What looking an account up found, when a scenario has looked one up, so
   // that the steps every lookup shares — found, or not — can be asked of it.
   public lookup: { found: AccountId | undefined } | undefined;
+
+  // Where a scenario's claims are remembered, when one stands a record of
+  // handled requests up, and what each claim answered, in order. The record's
+  // feature cannot name the place they are kept, so whatever puts one there
+  // says here what it is.
+  public handledRequestsRecord: HandledRequests | undefined;
+  public claims: boolean[] = [];
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
