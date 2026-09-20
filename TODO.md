@@ -151,9 +151,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
 
-1. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
-2. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-3. `specs/web/public/register/register.feature`
 4. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
 5. `specs/application/operations/accounts/sign-in/SignIn.feature`
 6. `specs/web/public/sign-in/signIn.feature`
