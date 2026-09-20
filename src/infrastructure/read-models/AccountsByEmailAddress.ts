@@ -67,6 +67,53 @@ export class AccountsByEmailAddress implements Projection {
     for (const event of events) await this.#project(stream.value, event);
   }
 
+  /**
+   * Reserves `address` for `account`, and says who holds it afterwards: the
+   * account given when the reservation was made here, and whoever already held
+   * it when it was not. Always somebody: the answer is never that nobody does.
+   *
+   * The insert is the reservation. Looking first and inserting after leaves a
+   * gap in which somebody else inserts, and two registrations that both looked
+   * before either wrote would both go on to make an account; the unique key on
+   * the address is what decides instead, and it decides once. It is asked not
+   * to fail on a conflict, so that losing costs the request nothing: a unique
+   * key that raised would leave the transaction unable to go on, and the
+   * failure would have said the address was taken, which registering must
+   * never say.
+   *
+   * The row is the same one projecting a registering writes, so an account and
+   * its reservation are the same fact rather than two that can drift. Written
+   * here first and projected after, which changes nothing: the projection's
+   * insert does nothing when the row is already there, and rebuilding from the
+   * events writes it again from what the registering event carries.
+   *
+   * The unique key it is asked about is the partial one: an address held by an
+   * account that has been forgotten is held by nobody, and reserving it again
+   * is how that address comes to have an account once more.
+   */
+  async reserve(address: EmailAddress, account: AccountId): Promise<AccountId> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ account_id: string }>(
+        `insert into accounts_by_email_address (account_id, email_address_hash)
+         values ($1, $2)
+         on conflict (email_address_hash) where not forgotten do nothing
+         returning account_id`,
+        [account.value, this.hasher.hash(address)],
+      );
+    if (rows.length === 1) return account;
+    // The insert conflicted, so a row holds the address; one that is not there
+    // to be found a moment later is a database that is not doing what its key
+    // says, and is not something to register into. An account made regardless
+    // would fail the same key when its events were projected, and that failure
+    // would say the address was taken.
+    const holder = await this.find(address);
+    if (holder === undefined) {
+      throw new Error("The address is reserved, and by no account.");
+    }
+    return holder;
+  }
+
   /** The account `address` belongs to, or nothing when it has none. */
   async find(address: EmailAddress): Promise<AccountId | undefined> {
     const { rows } = await this.unitOfWork

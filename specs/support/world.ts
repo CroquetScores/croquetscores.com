@@ -39,6 +39,7 @@ import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { ExampleThing, ExampleThingId } from "./exampleThing.js";
 import type { HandledRequests } from "../../src/application/services/HandledRequests.js";
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
+import type { Registering } from "./registering.js";
 
 export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
@@ -215,6 +216,13 @@ export class SpecWorld extends World {
   // says here what it is.
   public handledRequestsRecord: HandledRequests | undefined;
   public claims: boolean[] = [];
+
+  // What a scenario registers through, when one stands registering up: the
+  // application's feature cannot name what keeps accounts or queues emails, so
+  // whatever puts them there says here how the scenario asks and what it can
+  // look at. What came of the last registration is kept in `answer` and
+  // `failure`, as everything the mediator answers is.
+  public registering: Registering | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
