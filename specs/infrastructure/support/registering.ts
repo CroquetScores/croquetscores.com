@@ -1,7 +1,6 @@
 // What stands behind "the application's registering": the operation, with the
-// event store and read model the accounts support keeps, the Postgres email
-// queue, a password hasher and a breached password check the scenario
-// controls, all behind a mediator with the behaviours the application gives a
+// event store and read model the accounts support keeps and the Postgres email
+// queue, all behind a mediator with the behaviours the application gives a
 // command — validation, then a transaction.
 //
 // Here rather than beside the feature because the feature is the
@@ -10,7 +9,6 @@
 // steps ask only that.
 import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import { createHash } from "node:crypto";
 
 import { AggregateRepository } from "../../../src/application/common/AggregateRepository.js";
 import { Mediator } from "../../../src/application/common/Mediator.js";
@@ -19,10 +17,6 @@ import { ValidationBehaviour } from "../../../src/application/common/ValidationB
 import { RegisterAccountHandler } from "../../../src/application/operations/accounts/RegisterAccountHandler.js";
 import { RegisterAccountValidator } from "../../../src/application/operations/accounts/RegisterAccountValidator.js";
 import type { RegisterAccount } from "../../../src/application/operations/accounts/RegisterAccount.js";
-import type {
-  PasswordCheck,
-  PasswordHasher,
-} from "../../../src/application/services/PasswordHasher.js";
 import type { Projection } from "../../../src/application/common/Projection.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
@@ -36,7 +30,6 @@ import { TransactionBehaviour } from "../../../src/infrastructure/database/Trans
 import type { Registering, SeenEmail } from "../../support/registering.js";
 import type { SpecWorld } from "../../support/world.js";
 import { aSiteKey, keepAccounts, readBack } from "./accounts.js";
-import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
 import { queueingOf } from "./emailQueue.js";
 import { unitOfWorkOf } from "./transactions.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
@@ -44,33 +37,6 @@ import { scenarioLanguages } from "../../web/support/languages.js";
 
 /** Where the scenarios' site answers, which its links are made with. */
 const SITE_ADDRESS = "https://croquetscores.com";
-
-/**
- * A hasher that answers at once, and remembers what it was asked. The real one
- * is slow on purpose, and these scenarios hash on every registration; what
- * they are about is that it was asked, not how long it took.
- *
- * It hashes rather than keeping the password, so that "nothing kept for the
- * account contains the password" is asking something.
- */
-class RecordingHasher implements PasswordHasher {
-  readonly asked: string[] = [];
-
-  hash(password: string): Promise<string> {
-    this.asked.push(password);
-    return Promise.resolve(digestOf(password));
-  }
-
-  check(password: string, hash: string | undefined): Promise<PasswordCheck> {
-    return Promise.resolve({
-      matches: hash !== undefined && hash === digestOf(password),
-      remake: false,
-    });
-  }
-}
-
-const digestOf = (password: string): string =>
-  `sha256$${createHash("sha256").update(password).digest("hex")}`;
 
 /** A projection that fails the append it is given, when a scenario says to. */
 class RefusingProjection implements Projection {
@@ -84,30 +50,28 @@ class RefusingProjection implements Projection {
   }
 }
 
-// An account a scenario says exists, made only when something needs it: the
-// scenario says it exists in one step and what it is called in the next, and
-// an account cannot be renamed once it is registered.
+// An account a scenario says exists, made only when something needs it, so
+// that it is made at the moment the scenario has named by then.
 interface Pending {
   address: string;
   confirmed: boolean;
-  name: string;
 }
+
+// What an account a scenario says is confirmed was confirmed as. Registering
+// changes neither, and the scenarios ask only that nothing more was recorded.
+const CONFIRMED_AS = "Sam Someone";
+const CONFIRMED_WITH = "stand-in$password-hash";
 
 // The writer the site writes with, given the address the scenarios' links are
 // made with. Named here, where naming the web layer is allowed, so that the
 // application's feature can ask where an email points without naming it.
 const writesEmails = emailWriter(scenarioLanguages, SITE_ADDRESS);
 
-export const standUpRegistering = async (
-  world: SpecWorld,
-): Promise<Registering> => {
+export const standUpRegistering = (world: SpecWorld): Registering => {
   const unitOfWork = unitOfWorkOf(world);
   const accounts = keepAccounts(world, aSiteKey());
   const { queue } = queueingOf(world);
-  await aFakeOfHaveIBeenPwned(world);
 
-  const asked = { breached: false };
-  const hasher = new RecordingHasher();
   const refusing = new RefusingProjection();
   const store = new ProjectingEventStore(accounts.store, [
     accounts.readModel,
@@ -135,15 +99,6 @@ export const standUpRegistering = async (
       repository,
       accounts.readModel,
       accounts.hasher,
-      hasher,
-      {
-        isBreached: (password) => {
-          asked.breached = true;
-          assert.ok(world.breachedPasswords !== undefined);
-          const check = world.breachedPasswords;
-          return check.isBreached(password);
-        },
-      },
       queue,
       written,
       new PostgresHandledRequests(unitOfWork),
@@ -173,19 +128,31 @@ export const standUpRegistering = async (
 
   // Whatever the scenario said exists, made now. Called before anything reads
   // an account and before a registration is sent.
-  const settle = async (): Promise<void> => {
-    if (pending === undefined) return;
-    const { address, confirmed, name } = pending;
-    pending = undefined;
+  //
+  // The making is kept, so that registrations sent at once all wait for the
+  // one account rather than the first making it while the rest, finding
+  // nothing left to make, run ahead and race it for its address.
+  let settling: Promise<void> = Promise.resolve();
+
+  const settle = (): Promise<void> => {
+    if (pending !== undefined) {
+      const making = pending;
+      pending = undefined;
+      settling = settling.then(() => make(making));
+    }
+    return settling;
+  };
+
+  const make = async ({ address, confirmed }: Pending): Promise<void> => {
     const account = Account.register(
       AccountId.create(),
-      PersonName.from(name),
       EmailAddress.from(address),
       accounts.hasher.hash(EmailAddress.from(address)),
-      digestOf("whatever they registered with"),
       now(),
     );
-    if (confirmed) account.confirm(now());
+    if (confirmed) {
+      account.confirm(PersonName.from(CONFIRMED_AS), CONFIRMED_WITH, now());
+    }
     await world.keepAccount?.(account);
   };
 
@@ -195,12 +162,7 @@ export const standUpRegistering = async (
       await mediator.send(command);
     },
     giveAnAccount(address, confirmed) {
-      pending = { address, confirmed, name: "Sam Someone" };
-      return Promise.resolve();
-    },
-    callTheLastAccount(name) {
-      assert.ok(pending !== undefined, "No account is waiting to be made.");
-      pending.name = name;
+      pending = { address, confirmed };
       return Promise.resolve();
     },
     async wroteTo(address, kind, times) {
@@ -225,21 +187,6 @@ export const standUpRegistering = async (
         [accounts.hasher.hash(EmailAddress.from(address))],
       );
       return Number(rows[0]?.accounts ?? 0);
-    },
-    async passwordMatches(address, password) {
-      const account = await accountFor(address);
-      if (account === undefined) return false;
-      const { matches } = await hasher.check(password, account.passwordHash);
-      return matches;
-    },
-    async everythingKeptFor(address) {
-      await settle();
-      const id = await idFor(address);
-      const { rows } = await world.database.query<{ row: string }>(
-        `select e::text as row from events e where stream_id = $1`,
-        [id.value],
-      );
-      return rows.map(({ row }) => row).join("\n");
     },
     // Read back from the queue itself, so that what was rolled back is not
     // seen, and what the queue chose not to keep is not seen either.
@@ -269,14 +216,12 @@ export const standUpRegistering = async (
       });
       return `${written.subject}\n${written.body}`;
     },
-    hashed: hasher.asked,
-    wasTheBreachedCheckAsked: () => asked.breached,
     makeRecordingFail: () => {
       refusing.refusing = true;
     },
   };
 };
 
-Given("the application's registering", async function (this: SpecWorld) {
-  this.registering = await standUpRegistering(this);
+Given("the application's registering", function (this: SpecWorld) {
+  this.registering = standUpRegistering(this);
 });

@@ -1,6 +1,7 @@
 import { AggregateRoot } from "../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../common/ReadOnlyDate.js";
+import { AccountBroughtOver } from "./events/AccountBroughtOver.js";
 import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
@@ -28,18 +29,19 @@ export class AccountRefused extends Error {
 }
 
 // Every event an account records is caused by the account itself: registering
-// makes it, and confirming, signing in, hashing a password again and forgetting
-// are each asked for by whoever the account is. So an event is given the
+// or being brought over makes it, and confirming, signing in, hashing a
+// password again and forgetting are each asked for by whoever the account is. So an event is given the
 // account's own id as its cause, and nothing asks who else it might have been.
 
 /**
- * Somebody who has registered: a name, an email address, and a hash of their
- * password, from registering until the account is forgotten.
+ * Somebody who has registered, from registering until the account is
+ * forgotten: an email address to begin with, and a name and a hash of their
+ * password once they have confirmed the address is theirs.
  */
 export class Account extends AggregateRoot {
   #name: PersonName | undefined;
   #emailAddress: EmailAddress | undefined;
-  #passwordHash = "";
+  #passwordHash: string | undefined;
   #passwordImported = false;
   #confirmed = false;
   #forgotten = false;
@@ -49,11 +51,33 @@ export class Account extends AggregateRoot {
   }
 
   /**
-   * A new account, unconfirmed. It is given its id by whatever registers it,
-   * a keyed hash of its email address, since the key is the site's, and a hash
-   * of its password rather than the password, which the domain never holds.
+   * A new account: unconfirmed, unnamed and with no password. It is given its
+   * id by whatever registers it, and a keyed hash of its email address, since
+   * the key is the site's.
+   *
+   * Nothing else, because registering is open to anybody who can type an
+   * address, and a name or a password kept from it would be kept for whoever
+   * owns the address, whoever typed them. Both are given with confirming.
    */
   static register(
+    id: AccountId,
+    emailAddress: EmailAddress,
+    emailAddressHash: string,
+    at: ReadOnlyDate,
+  ): Account {
+    const account = new Account(id);
+    account.record(
+      new AccountRegistered(emailAddress.toString(), emailAddressHash, id, at),
+    );
+    return account;
+  }
+
+  /**
+   * An account that was somebody's on the old site, with the name it had
+   * there and the hash the old site made of its password, and confirmed: its
+   * owner gets in with the password they already have.
+   */
+  static bringOver(
     id: AccountId,
     name: PersonName,
     emailAddress: EmailAddress,
@@ -63,12 +87,11 @@ export class Account extends AggregateRoot {
   ): Account {
     const account = new Account(id);
     account.record(
-      new AccountRegistered(
+      new AccountBroughtOver(
         name.toString(),
         emailAddress.toString(),
         emailAddressHash,
         passwordHash,
-        false,
         id,
         at,
       ),
@@ -87,9 +110,8 @@ export class Account extends AggregateRoot {
     return super.id;
   }
 
-  /** What the account is called. */
-  get name(): PersonName {
-    if (this.#name === undefined) throw notRegistered();
+  /** What the account is called, or nothing until it has been confirmed. */
+  get name(): PersonName | undefined {
     return this.#name;
   }
 
@@ -99,8 +121,13 @@ export class Account extends AggregateRoot {
     return this.#emailAddress;
   }
 
-  /** The hash of the account's password, as it is now. */
-  get passwordHash(): string {
+  /**
+   * The hash of the account's password, as it is now, or nothing until the
+   * account has been confirmed. Nothing rather than an empty hash, so that
+   * whatever checks a password against it has to say what it does with an
+   * account that has none.
+   */
+  get passwordHash(): string | undefined {
     return this.#passwordHash;
   }
 
@@ -118,14 +145,19 @@ export class Account extends AggregateRoot {
   }
 
   /**
-   * That the account's email address is confirmed. It is confirmed once:
-   * confirming it again records nothing, so that a link followed twice leaves
-   * one event. Refused with `Account.Forgotten` for an account forgotten.
+   * That the account's email address is confirmed, by somebody called `name`
+   * whose password hashes to `passwordHash`. It is confirmed once: confirming
+   * it again records nothing and changes neither, so that a link followed
+   * twice leaves one event, and a link left in an inbox is not a way to take
+   * over an account that has since become somebody's. Refused with
+   * `Account.Forgotten` for an account forgotten.
    */
-  confirm(at: ReadOnlyDate): void {
+  confirm(name: PersonName, passwordHash: string, at: ReadOnlyDate): void {
     this.#refuseIfForgotten();
     if (this.#confirmed) return;
-    this.record(new EmailAddressConfirmed(this.id, at));
+    this.record(
+      new EmailAddressConfirmed(name.toString(), passwordHash, this.id, at),
+    );
   }
 
   /**
@@ -168,11 +200,16 @@ export class Account extends AggregateRoot {
 
   protected apply(event: DomainEvent): void {
     if (event instanceof AccountRegistered) {
+      this.#emailAddress = EmailAddress.from(event.emailAddress);
+    } else if (event instanceof AccountBroughtOver) {
       this.#name = PersonName.from(event.name);
       this.#emailAddress = EmailAddress.from(event.emailAddress);
       this.#passwordHash = event.passwordHash;
-      this.#passwordImported = event.passwordImported;
+      this.#passwordImported = true;
+      this.#confirmed = true;
     } else if (event instanceof EmailAddressConfirmed) {
+      this.#name = PersonName.from(event.name);
+      this.#passwordHash = event.passwordHash;
       this.#confirmed = true;
     } else if (event instanceof PasswordHashedAgain) {
       this.#passwordHash = event.passwordHash;
@@ -194,8 +231,8 @@ export class Account extends AggregateRoot {
   }
 }
 
-// An account rebuilt from a stream that does not begin with its registering is
-// a stream that is not an account's, and asking it anything is a mistake in
-// whoever rebuilt it.
+// An account rebuilt from a stream that begins with neither its registering
+// nor its being brought over is a stream that is not an account's, and asking
+// it anything is a mistake in whoever rebuilt it.
 const notRegistered = (): Error =>
   new Error("The account's stream does not begin with its registering.");
