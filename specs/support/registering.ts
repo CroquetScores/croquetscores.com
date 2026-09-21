@@ -6,6 +6,7 @@
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import type { WhatAConfirmationLinkIsWorth } from "../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
 import type { ConfirmationLinkWorth } from "../../src/application/operations/accounts/confirmationLinks.js";
@@ -36,6 +37,12 @@ export interface Registering {
 
   /** How many passwords have been checked against a hash, or against none. */
   passwordsChecked(): number;
+
+  /** Has reporting tell `address`, or nobody where there is none. */
+  tellsAdministrator(address: string | undefined): void;
+
+  /** Reports a service unreachable. Throws what the mediator throws. */
+  report(command: ReportUnreachableService): Promise<void>;
 
   /** Asks for the link to be sent again. Throws what the mediator throws. */
   sendAgain(command: SendConfirmationLinkAgain): Promise<void>;

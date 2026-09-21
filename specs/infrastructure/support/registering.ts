@@ -29,6 +29,8 @@ import { PostgresEmailsWritten } from "../../../src/infrastructure/email/Postgre
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
 import { ConfirmEmailAddressHandler } from "../../../src/application/operations/accounts/ConfirmEmailAddressHandler.js";
 import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
+import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
+import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
 import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../../../src/application/operations/accounts/SignInHandler.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
@@ -296,6 +298,18 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
 
     passwordsChecked: () => hasher.checks,
 
+    // Registered when the scenario says who the administrator is, since that
+    // is what the handler is made with, as the site's is made with its config.
+    tellsAdministrator(address) {
+      mediator.handleCommand(
+        new ReportUnreachableServiceHandler(queue, written, address),
+      );
+    },
+
+    async report(command: ReportUnreachableService): Promise<void> {
+      await mediator.send(command);
+    },
+
     async sendAgain(command: SendConfirmationLinkAgain): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -380,7 +394,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
         new Date(now().toDate().getTime() - 5 * 60 * 1000),
       );
       for (let each = 0; each < times; each++) {
-        await world.asARequest(() => written.record(id, kind, at));
+        await world.asARequest(() => written.record({ account: id }, kind, at));
       }
     },
     accountFor,
@@ -418,7 +432,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       const written = writesEmails.write({
         kind: only.kind,
         language: "en",
-        fill: only.link === undefined ? {} : { link: only.link },
+        fill: only.fill ?? {},
       });
       return `${written.subject}\n${written.body}`;
     },
@@ -448,6 +462,15 @@ Given("the application's registering", function (this: SpecWorld) {
 Given("the application's signing in", function (this: SpecWorld) {
   standUpFor(this);
 });
+
+// The same mediator over the same queue, said in its own words because a
+// scenario about telling the administrator is not about registering.
+Given(
+  "the application's reporting of unreachable services",
+  function (this: SpecWorld) {
+    standUpFor(this);
+  },
+);
 
 const standUpFor = (world: SpecWorld): void => {
   const registering = standUpRegistering(world);

@@ -20,6 +20,9 @@ export interface Config {
   readonly accountEmailAddressHashKey: string;
   // The address the site's emails are sent from.
   readonly emailFromAddress: string;
+  // Who is told when a service the site needs cannot be reached. Absent on a
+  // development machine, where nobody needs telling.
+  readonly administratorEmailAddress: string | undefined;
   // The host this site answers to, as a browser would name it: "croquetscores.com",
   // or "localhost:3000" in development. Absent means fall back to the Host header
   // of each request, which is right on a machine nothing sits in front of and
@@ -119,6 +122,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
     emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
+    administratorEmailAddress:
+      env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     canonicalHost: readCanonicalHost(env),
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),

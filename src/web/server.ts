@@ -19,6 +19,7 @@ import { RegisterAccountHandler } from "../application/operations/accounts/Regis
 import { RegisterAccountValidator } from "../application/operations/accounts/RegisterAccountValidator.js";
 import { SendConfirmationLinkAgainHandler } from "../application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../application/operations/accounts/SignInHandler.js";
+import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import type { EventStore } from "../application/services/EventStore.js";
@@ -338,6 +339,13 @@ export const buildApplication = async (
   );
   mediator.handleCommand(
     new SignInHandler(accounts, accountsByEmailAddress, passwords),
+  );
+  mediator.handleCommand(
+    new ReportUnreachableServiceHandler(
+      emailQueue,
+      emailsWritten,
+      config.administratorEmailAddress,
+    ),
   );
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(

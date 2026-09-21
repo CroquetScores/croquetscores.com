@@ -197,9 +197,9 @@ Given(
     const at = new Date(clockFor(this).now.getTime() - 5 * 60 * 1000);
     for (let each = 0; each < times; each++) {
       await this.database.query(
-        `insert into emails_written (account_id, kind, written_at)
+        `insert into emails_written (written_to, kind, written_at)
          values ($1, $2, $3)`,
-        [account, "Email.ConfirmAddressAgain", at],
+        [`account:${account}`, "Email.ConfirmAddressAgain", at],
       );
     }
   },
