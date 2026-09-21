@@ -33,6 +33,7 @@ import type { Flag } from "../../src/domain/aggregates/tournaments/value-objects
 import type { Flags } from "../../src/domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Country } from "../../src/domain/aggregates/tournaments/value-objects/Country.js";
 import type { Countries } from "../../src/domain/aggregates/tournaments/value-objects/Countries.js";
+import type { Sport } from "../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
@@ -237,6 +238,14 @@ export class SpecWorld extends World {
   public countryNames: [code: string, name: string][] = [];
   public countries: Countries | undefined;
   public countriesChecked = 0;
+  // The sport a scenario makes, and whether it was found the same as another;
+  // and the site a scenario names, the sports found for it, and how many of
+  // those in order the scenario has named so far.
+  public sport: Sport | undefined;
+  public sameSport: boolean | undefined;
+  public site: string | undefined;
+  public offeredSports: readonly Sport[] | undefined;
+  public offeredSportsChecked = 0;
   // The format a scenario makes, and whether it was found the same as another;
   // and the site a scenario names, the formats found for it, and how many of
   // those in order the scenario has named so far.
