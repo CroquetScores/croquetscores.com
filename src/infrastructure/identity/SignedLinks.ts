@@ -10,11 +10,15 @@
 // What it is for is signed with the rest, so that a link the site made for
 // setting a new password is not taken for one to confirm an address, however
 // it is sent.
-import { createHmac } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
-import type { LinkPurpose, Links } from "../../application/services/Links.js";
-import type { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
-import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import type {
+  LinkCarried,
+  LinkPurpose,
+  Links,
+} from "../../application/services/Links.js";
+import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 
 /** Where each kind of link is followed. */
 const pages: Readonly<Record<LinkPurpose, string>> = {
@@ -22,6 +26,13 @@ const pages: Readonly<Record<LinkPurpose, string>> = {
   "set-new-password": "/account/set-new-password",
   "confirm-forgetting": "/account/forget-account",
 };
+
+const purposes = new Set<string>(Object.keys(pages));
+
+const isAPurpose = (given: string): given is LinkPurpose => purposes.has(given);
+
+const decode = (encoded: string): string =>
+  Buffer.from(encoded, "base64url").toString("utf8");
 
 const encode = (text: string): string =>
   Buffer.from(text, "utf8").toString("base64url");
@@ -46,6 +57,60 @@ export class SignedLinks implements Links {
       `${purpose}.${account.value}.${until.toDate().getTime()}`,
     );
     return `${this.siteAddress}${pages[purpose]}?link=${carried}.${this.sign(carried)}`;
+  }
+
+  read(link: string): LinkCarried | undefined {
+    // Only the one spelling this made is read back. Whatever a reader
+    // followed may carry a whole address and a query around it, so the part
+    // that was signed is taken out by name; nothing else about the address is
+    // looked at, and no other spelling of the same bytes is accepted.
+    //
+    // Found wherever it sits in the query rather than only at the end. A mail
+    // provider that rewrites a link, or a page that orders its query
+    // differently, would otherwise send a reader back with a link this said
+    // it had never made.
+    const carried = /[?&]link=([^&]*)/.exec(link)?.[1];
+    if (carried === undefined) return undefined;
+
+    const [body, signature] = carried.split(".");
+    if (body === undefined || signature === undefined) return undefined;
+    if (!this.holds(body, signature)) return undefined;
+
+    const [purpose, account, until] = decode(body).split(".");
+    if (purpose === undefined || account === undefined || until === undefined) {
+      return undefined;
+    }
+    if (!isAPurpose(purpose)) return undefined;
+
+    const moment = Number(until);
+    if (!Number.isSafeInteger(moment)) return undefined;
+
+    try {
+      return {
+        purpose,
+        account: AccountId.from(account),
+        worksUntil: ReadOnlyDate.from(new Date(moment)),
+      };
+    } catch {
+      // An id or a moment the link carried that this could not have made is a
+      // link nobody here made, whatever its signature says.
+      return undefined;
+    }
+  }
+
+  // Compared as the bytes they are, in a time that does not depend on how much
+  // of them matches, so that guessing a signature one character at a time gets
+  // nowhere. The spellings are compared too, since two spellings of one
+  // signature would be two links where there should be one.
+  private holds(body: string, signature: string): boolean {
+    const expected = Buffer.from(this.sign(body));
+    const given = Buffer.from(signature);
+    // Compared as the bytes they are, and their lengths compared the same
+    // way: a signature of the same number of characters can be twice the
+    // bytes, and timingSafeEqual throws rather than answering when the two
+    // are not the same length.
+    if (expected.length !== given.length) return false;
+    return timingSafeEqual(expected, given);
   }
 
   private sign(carried: string): string {
