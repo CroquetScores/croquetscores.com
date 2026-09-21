@@ -1,4 +1,4 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { Sport } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Sport.js";
@@ -6,14 +6,15 @@ import {
   croquetScoresSports,
   gateballScoresSports,
 } from "../../../../../../src/domain/aggregates/tournaments/value-objects/sports.js";
+import { siteOfWorld, type Site } from "../../../../../support/sites.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 
 // The feature names a site as a reader would, and the domain keeps a list for
 // each, so this is where the one is turned into the other.
-const sportsOfSite: ReadonlyMap<string, readonly Sport[]> = new Map([
-  ["Croquet Scores", croquetScoresSports],
-  ["Gateball Scores", gateballScoresSports],
-]);
+const sportsOfSite: Readonly<Record<Site, readonly Sport[]>> = {
+  "Croquet Scores": croquetScoresSports,
+  "Gateball Scores": gateballScoresSports,
+};
 
 const offeredOfWorld = (world: SpecWorld): readonly Sport[] => {
   assert.ok(
@@ -35,14 +36,8 @@ const sportAt = (world: SpecWorld, position: number, code: string): void => {
   world.offeredSportsChecked = position + 1;
 };
 
-Given("the site {string}", function (this: SpecWorld, site: string) {
-  assert.ok(sportsOfSite.has(site), `There is no site "${site}".`);
-  this.site = site;
-});
-
 When("the sports it offers are found", function (this: SpecWorld) {
-  assert.ok(this.site !== undefined, "No site has been named.");
-  this.offeredSports = sportsOfSite.get(this.site);
+  this.offeredSports = sportsOfSite[siteOfWorld(this)];
 });
 
 Then("the sport {string} is offered", function (this: SpecWorld, code: string) {

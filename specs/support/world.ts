@@ -47,6 +47,7 @@ import type { HandledRequests } from "../../src/application/services/HandledRequ
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 import type { AccountsInHand } from "./accounts.js";
 import type { Registering } from "./registering.js";
+import type { Site } from "./sites.js";
 
 export class SpecWorld extends World {
   // Set by the @postgres hooks. A scenario without that tag has neither.
@@ -238,20 +239,20 @@ export class SpecWorld extends World {
   public countryNames: [code: string, name: string][] = [];
   public countries: Countries | undefined;
   public countriesChecked = 0;
+  // The site a scenario names, which whatever differs by site looks at.
+  public site: Site | undefined;
   // The sport a scenario makes, and whether it was found the same as another;
-  // and the site a scenario names, the sports found for it, and how many of
-  // those in order the scenario has named so far.
+  // and the sports found for the site it names, and how many of those in order
+  // the scenario has named so far.
   public sport: Sport | undefined;
   public sameSport: boolean | undefined;
-  public site: string | undefined;
   public offeredSports: readonly Sport[] | undefined;
   public offeredSportsChecked = 0;
   // The format a scenario makes, and whether it was found the same as another;
-  // and the site a scenario names, the formats found for it, and how many of
-  // those in order the scenario has named so far.
+  // and the formats found for the site it names, and how many of those in
+  // order the scenario has named so far.
   public tournamentFormat: TournamentFormat | undefined;
   public sameTournamentFormat: boolean | undefined;
-  public site: string | undefined;
   public offeredFormats: readonly TournamentFormat[] | undefined;
   public offeredFormatsChecked = 0;
 
