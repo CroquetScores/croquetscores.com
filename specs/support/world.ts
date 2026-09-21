@@ -29,6 +29,8 @@ import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
 import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Password } from "../../src/domain/aggregates/accounts/value-objects/Password.js";
 import type { PersonName } from "../../src/domain/aggregates/accounts/value-objects/PersonName.js";
+import type { Flag } from "../../src/domain/aggregates/tournaments/value-objects/Flag.js";
+import type { Flags } from "../../src/domain/aggregates/tournaments/value-objects/Flags.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -194,6 +196,17 @@ export class SpecWorld extends World {
   public personName: PersonName | undefined;
   public madePassword: Password | undefined;
   public writtenOut: string[] = [];
+
+  // The flag a scenario makes, the other it is compared with, and whether the
+  // two were found the same. A failure to make one is kept in `failure`.
+  public flag: Flag | undefined;
+  public otherFlag: Flag | undefined;
+  public sameFlag: boolean | undefined;
+  // The files a scenario makes its flags from, in the order it names them, the
+  // flags made, and how many of those in order the scenario has named so far.
+  public flagFiles: string[] = [];
+  public flags: Flags | undefined;
+  public flagsChecked = 0;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what
