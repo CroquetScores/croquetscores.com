@@ -6,6 +6,7 @@
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
 import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import type { WhatAConfirmationLinkIsWorth } from "../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
@@ -44,6 +45,9 @@ export interface Registering {
   /** Reports a service unreachable. Throws what the mediator throws. */
   report(command: ReportUnreachableService): Promise<void>;
 
+  /** Asks for a way back in. Throws what the mediator throws. */
+  resetPassword(command: ResetPassword): Promise<void>;
+
   /** Asks for the link to be sent again. Throws what the mediator throws. */
   sendAgain(command: SendConfirmationLinkAgain): Promise<void>;
 
@@ -70,6 +74,9 @@ export interface Registering {
 
   /** That `kind` was written to the account for `address`, `times` times. */
   wroteTo(address: string, kind: string, times: number): Promise<void>;
+
+  /** That `kind` was written `times` times to `address`, which has no account. */
+  wroteToAddress(address: string, kind: string, times: number): Promise<void>;
 
   /** The account for `address` as its stream reads now. */
   accountFor(address: string): Promise<Account | undefined>;

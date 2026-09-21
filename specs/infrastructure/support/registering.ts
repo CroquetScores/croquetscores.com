@@ -29,6 +29,9 @@ import { PostgresEmailsWritten } from "../../../src/infrastructure/email/Postgre
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
 import { ConfirmEmailAddressHandler } from "../../../src/application/operations/accounts/ConfirmEmailAddressHandler.js";
 import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
+import { ResetPasswordHandler } from "../../../src/application/operations/accounts/ResetPasswordHandler.js";
+import { ResetPasswordValidator } from "../../../src/application/operations/accounts/ResetPasswordValidator.js";
+import type { ResetPassword } from "../../../src/application/operations/accounts/ResetPassword.js";
 import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
 import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
 import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
@@ -201,6 +204,18 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       links,
     ),
   );
+  validation.register(new ResetPasswordValidator());
+  mediator.handleCommand(
+    new ResetPasswordHandler(
+      repository,
+      accounts.readModel,
+      accounts.hasher,
+      queue,
+      written,
+      new PostgresHandledRequests(unitOfWork),
+      links,
+    ),
+  );
   // A query changes nothing, so it is given a transaction it cannot write in,
   // as the application gives one.
   mediator.addQueryBehaviour(validation);
@@ -310,6 +325,11 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await mediator.send(command);
     },
 
+    async resetPassword(command: ResetPassword): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
     async sendAgain(command: SendConfirmationLinkAgain): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -397,6 +417,18 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
         await world.asARequest(() => written.record({ account: id }, kind, at));
       }
     },
+    async wroteToAddress(address, kind, times) {
+      await settle();
+      const at = ReadOnlyDate.from(
+        new Date(now().toDate().getTime() - 5 * 60 * 1000),
+      );
+      const whom = {
+        emailAddressHash: accounts.hasher.hash(EmailAddress.from(address)),
+      };
+      for (let each = 0; each < times; each++) {
+        await world.asARequest(() => written.record(whom, kind, at));
+      }
+    },
     accountFor,
     async accountsFor(address) {
       await settle();
@@ -460,6 +492,13 @@ Given("the application's registering", function (this: SpecWorld) {
 // standing registering up stands it up too. Said in its own words because a
 // scenario about signing in is not about registering.
 Given("the application's signing in", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts and the same queue, said in its own
+// words because a scenario about asking for a way back in is not about
+// registering.
+Given("the application's asking for a way back in", function (this: SpecWorld) {
   standUpFor(this);
 });
 

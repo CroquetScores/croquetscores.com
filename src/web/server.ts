@@ -19,6 +19,8 @@ import { RegisterAccountHandler } from "../application/operations/accounts/Regis
 import { RegisterAccountValidator } from "../application/operations/accounts/RegisterAccountValidator.js";
 import { SendConfirmationLinkAgainHandler } from "../application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../application/operations/accounts/SignInHandler.js";
+import { ResetPasswordHandler } from "../application/operations/accounts/ResetPasswordHandler.js";
+import { ResetPasswordValidator } from "../application/operations/accounts/ResetPasswordValidator.js";
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
@@ -339,6 +341,18 @@ export const buildApplication = async (
   );
   mediator.handleCommand(
     new SignInHandler(accounts, accountsByEmailAddress, passwords),
+  );
+  validation.register(new ResetPasswordValidator());
+  mediator.handleCommand(
+    new ResetPasswordHandler(
+      accounts,
+      accountsByEmailAddress,
+      emailAddresses,
+      emailQueue,
+      emailsWritten,
+      handledRequests,
+      links,
+    ),
   );
   mediator.handleCommand(
     new ReportUnreachableServiceHandler(
