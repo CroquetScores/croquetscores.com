@@ -38,8 +38,6 @@ interface Outcome {
 interface Confirmations {
   building?: Building;
   readonly outcomes: Outcome[];
-  /** The link the scenario last took hold of, altered or otherwise. */
-  link?: string;
 }
 
 const confirmations = new WeakMap<SpecWorld, Confirmations>();
@@ -53,13 +51,12 @@ const theseOf = (world: SpecWorld): Confirmations => {
   return found;
 };
 
-// The address the scenario last registered, which is the one its emails are
-// queued for. Kept so that a step naming no address still knows whose email to
-// read: a scenario says the address once, where it registers.
-const addresses = new WeakMap<SpecWorld, string>();
-
+// The address the scenario last named, which is the one its emails are queued
+// for. On the world rather than here, because other features put an address in
+// the scenario's hand too, and a step reading "that email" should find it
+// whichever of them did.
 const lastAddress = (world: SpecWorld): string => {
-  const address = addresses.get(world);
+  const address = world.addressInHand;
   assert.ok(address !== undefined, "No address has been registered.");
   return address;
 };
@@ -134,7 +131,7 @@ const submit = async (
 Given(
   "a registration for {string} is sent an email",
   async function (this: SpecWorld, address: string) {
-    addresses.set(this, address);
+    this.addressInHand = address;
     minted += 1;
     await registeringOf(this).send(
       new RegisterAccount(
@@ -151,7 +148,7 @@ Given(
 
 Given("the link in that email is altered", async function (this: SpecWorld) {
   const record = registeringOf(this);
-  theseOf(this).link = record.altered(
+  this.linkInHand = record.altered(
     await record.linkEmailedTo(lastAddress(this)),
   );
 });
@@ -159,7 +156,7 @@ Given("the link in that email is altered", async function (this: SpecWorld) {
 Given(
   "a link to confirm forgetting the account for {string}",
   async function (this: SpecWorld, address: string) {
-    theseOf(this).link = await registeringOf(this).aLinkToForget(address);
+    this.linkInHand = await registeringOf(this).aLinkToForget(address);
   },
 );
 
@@ -180,7 +177,7 @@ Given(
 );
 
 Given("a confirmation with that link", function (this: SpecWorld) {
-  const { link } = theseOf(this);
+  const link = this.linkInHand;
   assert.ok(link !== undefined, "The scenario has hold of no link.");
   build(this, link);
 });
@@ -257,13 +254,6 @@ Then(
   async function (this: SpecWorld, text: string) {
     const kept = await registeringOf(this).everythingKeptFor(lastAddress(this));
     assert.ok(!kept.includes(text), `What is kept holds ${text}.`);
-  },
-);
-
-Given(
-  "the account for {string} has been forgotten",
-  async function (this: SpecWorld, address: string) {
-    await registeringOf(this).forget(address);
   },
 );
 

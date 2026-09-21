@@ -8,12 +8,22 @@ import { createReadStream, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
+import { AggregateRepository } from "../application/common/AggregateRepository.js";
 import { Mediator } from "../application/common/Mediator.js";
 import { ProjectingEventStore } from "../application/common/ProjectingEventStore.js";
 import type { Projection } from "../application/common/Projection.js";
 import { ValidationBehaviour } from "../application/common/ValidationBehaviour.js";
-import type { EmailQueue } from "../application/services/EmailQueue.js";
+import { ConfirmEmailAddressHandler } from "../application/operations/accounts/ConfirmEmailAddressHandler.js";
+import { ConfirmEmailAddressValidator } from "../application/operations/accounts/ConfirmEmailAddressValidator.js";
+import { RegisterAccountHandler } from "../application/operations/accounts/RegisterAccountHandler.js";
+import { RegisterAccountValidator } from "../application/operations/accounts/RegisterAccountValidator.js";
+import { SendConfirmationLinkAgainHandler } from "../application/operations/accounts/SendConfirmationLinkAgainHandler.js";
+import { SignInHandler } from "../application/operations/accounts/SignInHandler.js";
+import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
+import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import type { EventStore } from "../application/services/EventStore.js";
+import { Account } from "../domain/aggregates/accounts/Account.js";
+import type { AccountId } from "../domain/aggregates/accounts/value-objects/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
 import {
@@ -30,14 +40,25 @@ import { PostgresEmailQueue } from "../infrastructure/email/PostgresEmailQueue.j
 import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSealing.js";
 import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
 import { KeyedEmailAddressHasher } from "../infrastructure/encryption/KeyedEmailAddressHasher.js";
+import { PostgresEmailsWritten } from "../infrastructure/email/PostgresEmailsWritten.js";
 import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventStore.js";
+import { PostgresHandledRequests } from "../infrastructure/database/PostgresHandledRequests.js";
+import { PostgresFailedSignIns } from "../infrastructure/database/PostgresFailedSignIns.js";
+import { PostgresSessions } from "../infrastructure/database/PostgresSessions.js";
+import { Argon2id } from "../infrastructure/identity/Argon2id.js";
+import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
+import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
+import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
+import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { apiV1 } from "./api/v1/index.js";
-import { readAssets, type Assets } from "./common/assets.js";
+import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
-import { knowTheReader, nobodySignedIn, type Reader } from "./common/reader.js";
+import { knowTheReader, type Reader } from "./common/reader.js";
+import type { InTransaction } from "./common/database.js";
+import { readerFromSessions, registerSignOut } from "./common/session.js";
 import { speakToRequests, type Language } from "./common/language.js";
 import {
   machineClock,
@@ -47,6 +68,9 @@ import {
 import { english } from "./languages/english.js";
 import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
+import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
+import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
+import { registerSignInPage } from "./public/signIn.js";
 import { registerPublicPages } from "./public/pages.js";
 import { registerRegisterPage } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
@@ -76,7 +100,17 @@ export interface Application {
   /** Where every event is kept, with every read model kept in step as it is. */
   readonly eventStore: EventStore;
   /** Where emails wait to be sent, queued in the command they are about. */
-  readonly emailQueue: EmailQueue;
+  readonly emailQueue: PostgresEmailQueue;
+  /** Every account, by its id, as a command loads and saves one. */
+  readonly accounts: AggregateRepository<Account, AccountId>;
+  /** Which account an email address belongs to, as the read model keeps it. */
+  readonly accountsByEmailAddress: AccountsByEmailAddress;
+  /** How an address is hashed to find its account. */
+  readonly emailAddresses: KeyedEmailAddressHasher;
+  /** How passwords are hashed and checked. */
+  readonly passwords: ImportedPasswordHasher;
+  /** Where sessions are kept, which is how a reader stays signed in. */
+  readonly sessions: PostgresSessions;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -102,25 +136,28 @@ const putTogether = (
 const year = 60 * 60 * 24 * 365;
 
 const registerAssets = (server: FastifyInstance, assets: Assets): void => {
-  server.get<{ Params: { "*": string } }>("/assets/*", (request, reply) => {
-    const asset = assets.resolve(request.params["*"]);
-    if (asset === undefined) return reply.callNotFound();
+  server.get<{ Params: { "*": string } }>(
+    `${assetsPath}*`,
+    (request, reply) => {
+      const asset = assets.resolve(request.params["*"]);
+      if (asset === undefined) return reply.callNotFound();
 
-    // A name carrying the current hash cannot come to mean a different file, so
-    // it may be kept for as long as anyone likes. A name without one — an old
-    // hash from a deploy ago, or none at all — still serves the file, so a page
-    // held in a browser's cache is not left unstyled, but it is not promised to
-    // stay put.
-    return reply
-      .header(
-        "cache-control",
-        asset.current
-          ? `public, max-age=${year}, immutable`
-          : "public, max-age=60",
-      )
-      .type(asset.contentType)
-      .send(createReadStream(asset.path));
-  });
+      // A name carrying the current hash cannot come to mean a different file, so
+      // it may be kept for as long as anyone likes. A name without one — an old
+      // hash from a deploy ago, or none at all — still serves the file, so a page
+      // held in a browser's cache is not left unstyled, but it is not promised to
+      // stay put.
+      return reply
+        .header(
+          "cache-control",
+          asset.current
+            ? `public, max-age=${year}, immutable`
+            : "public, max-age=60",
+        )
+        .type(asset.contentType)
+        .send(createReadStream(asset.path));
+    },
+  );
 };
 
 const registerAdmin = async (
@@ -171,10 +208,9 @@ export interface ApplicationOptions {
   readonly events?: EventRegistry;
   readonly projections?: readonly Projection[];
   /**
-   * What says whether the reader of a request is signed in, which the account
-   * menu opens on. Nobody is, unless a scenario says otherwise: sessions are
-   * specified in session.feature and not built, and this is where reading one
-   * arrives when they are.
+   * What says which account the reader of a request is signed in to. The
+   * session cookie, unless a scenario says otherwise: one with no database to
+   * keep sessions in hands in a way of its own.
    */
   readonly reader?: Reader;
   /**
@@ -184,6 +220,18 @@ export interface ApplicationOptions {
    * queued there.
    */
   readonly sendsTheEmailQueue?: boolean;
+  /**
+   * What says whether a password has been breached. Have I Been Pwned, unless
+   * a scenario says otherwise: a spec run has no business asking an outside
+   * service, and none of what it would answer is what a scenario is about.
+   */
+  readonly breachedPasswords?: BreachedPasswords;
+  /**
+   * Whether the application is behind something that forwards requests, and so
+   * whether the address a request came from is read from its headers. Off
+   * unless said, since a client can send those headers itself.
+   */
+  readonly behindAProxy?: boolean;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -194,7 +242,13 @@ export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
 ): Promise<Application> => {
-  const server = Fastify({ logger: options.logger ?? true });
+  const server = Fastify({
+    logger: options.logger ?? true,
+    // Behind a proxy, the address a request came from is in a header rather
+    // than on the socket. Off unless whoever starts the application says
+    // otherwise, because a client can send that header itself.
+    trustProxy: options.behindAProxy ?? false,
+  });
   const pool = createPool(config.databaseUrl);
   const assets = readAssets(join(repositoryRoot, "assets"));
   const unitOfWork = new UnitOfWork(pool);
@@ -203,9 +257,12 @@ export const buildApplication = async (
   // What is personal in an account's events is encrypted with the account's
   // own key as they are kept, and the key kept with the site's.
   const accountKeys = new AccountKeys(unitOfWork, config.accountEncryptionKey);
+  const emailAddresses = new KeyedEmailAddressHasher(
+    config.accountEmailAddressHashKey,
+  );
   const accountsByEmailAddress = new AccountsByEmailAddress(
     unitOfWork,
-    new KeyedEmailAddressHasher(config.accountEmailAddressHashKey),
+    emailAddresses,
   );
 
   // Every read model's projection, each given every event as it is appended.
@@ -227,12 +284,72 @@ export const buildApplication = async (
   // site's configured address and never a request's, and written to files in
   // temp/ until there is a mail provider.
   const languages = options.languages ?? [english];
+  const where = siteAddress(config.canonicalHost, config.port);
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,
     accountKeys,
-    emailWriter(languages, siteAddress(config.canonicalHost, config.port)),
+    emailWriter(languages, where),
     new FileEmailSender(join(repositoryRoot, "temp")),
     config.emailFromAddress,
+  );
+
+  // What an account's operations are put together from. The links are signed
+  // with the site's token signing key and made for the site's own address, so
+  // that a link is never made from the host a request happened to name.
+  const accounts = new AggregateRepository(
+    eventStore,
+    (id: AccountId, events) => Account.rebuiltFrom(id, events),
+  );
+  const links = new SignedLinks(where, config.tokenSigningKey);
+  const handledRequests = new PostgresHandledRequests(unitOfWork);
+  const emailsWritten = new PostgresEmailsWritten(unitOfWork);
+
+  // Today's hashes, and the old site's kept checkable until their readers sign
+  // in. Without the old site's salt an imported hash matches nothing, which is
+  // what a site that never imported anything wants anyway.
+  const passwords = new ImportedPasswordHasher(
+    new Argon2id(),
+    config.oldSitePasswordSalt === undefined
+      ? undefined
+      : new OldSitePasswordHasher(config.oldSitePasswordSalt),
+  );
+
+  validation.register(new RegisterAccountValidator());
+  mediator.handleCommand(
+    new RegisterAccountHandler(
+      accounts,
+      accountsByEmailAddress,
+      emailAddresses,
+      emailQueue,
+      emailsWritten,
+      handledRequests,
+      links,
+    ),
+  );
+  validation.register(new ConfirmEmailAddressValidator());
+  mediator.handleCommand(
+    new ConfirmEmailAddressHandler(
+      accounts,
+      links,
+      passwords,
+      options.breachedPasswords ?? new HaveIBeenPwnedPasswords(),
+      handledRequests,
+    ),
+  );
+  mediator.handleCommand(
+    new SignInHandler(accounts, accountsByEmailAddress, passwords),
+  );
+  mediator.handleCommand(
+    new SendConfirmationLinkAgainHandler(
+      accounts,
+      emailQueue,
+      emailsWritten,
+      handledRequests,
+      links,
+    ),
+  );
+  mediator.handleQuery(
+    new WhatAConfirmationLinkIsWorthHandler(accounts, links),
   );
 
   // Before any route is added, so that every one of them finds it there.
@@ -246,7 +363,15 @@ export const buildApplication = async (
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
   speakToRequests(server, languages);
-  knowTheReader(server, options.reader ?? nobodySignedIn);
+  // A page reads and writes through this, and knows nothing else of the
+  // database.
+  const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);
+
+  const sessions = new PostgresSessions(unitOfWork);
+  knowTheReader(
+    server,
+    options.reader ?? readerFromSessions(sessions, inTransaction),
+  );
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
@@ -268,6 +393,16 @@ export const buildApplication = async (
   registerThemeRoute(server);
   registerLanguageRoute(server);
   registerRegisterPage(server, assets);
+  registerConfirmEmailAddressPage(server, assets);
+  registerSignInPage(
+    server,
+    assets,
+    sessions,
+    new PostgresFailedSignIns(unitOfWork),
+    inTransaction,
+  );
+  registerSignOut(server, sessions, inTransaction);
+  registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);
   registerJavaScriptRequiredPage(server, assets);
   registerPublicPages(server, assets);
@@ -287,6 +422,11 @@ export const buildApplication = async (
     unitOfWork,
     eventStore,
     emailQueue,
+    accounts,
+    accountsByEmailAddress,
+    emailAddresses,
+    passwords,
+    sessions,
   };
 };
 

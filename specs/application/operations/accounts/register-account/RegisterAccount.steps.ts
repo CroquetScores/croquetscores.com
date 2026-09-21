@@ -115,13 +115,6 @@ Given(
 // What is there already ---------------------------------------------------------
 
 Given(
-  /^"([^"]*)" has an account, (confirmed|not confirmed)$/,
-  async function (this: SpecWorld, address: string, confirmed: string) {
-    await registeringOf(this).giveAnAccount(address, confirmed === "confirmed");
-  },
-);
-
-Given(
   "{string} has been registered {int} times in the last hour",
   async function (this: SpecWorld, address: string, times: number) {
     await registeringOf(this).wroteTo(
@@ -142,11 +135,6 @@ Given(
     );
   },
 );
-
-Given("an hour and a minute have passed", function (this: SpecWorld) {
-  assert.ok(this.moment !== undefined, "No moment has been named.");
-  this.moment = new Date(this.moment.getTime() + 61 * 60 * 1000);
-});
 
 Given("recording the account will fail", function (this: SpecWorld) {
   registeringOf(this).makeRecordingFail();

@@ -80,7 +80,7 @@ Feature: The way to a reader's account is the last thing in the header
 
     Scenario Outline: The menu offers each way in
       Given a viewport 1200 pixels wide
-      And the reader is signed out
+      And nobody is signed in
       And the home page is open
       When the account menu is pressed
       Then the menu offers "<item>" at "<path>"
@@ -93,7 +93,7 @@ Feature: The way to a reader's account is the last thing in the header
 
     Scenario Outline: The menu offers nothing that belongs to an account
       Given a viewport 1200 pixels wide
-      And the reader is signed out
+      And nobody is signed in
       And the home page is open
       When the account menu is pressed
       Then the menu does not offer "<item>"
@@ -111,7 +111,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario Outline: The menu offers each of the account's pages
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the home page is open
       When the account menu is pressed
       Then the menu offers "<item>" at "<path>"
@@ -126,7 +126,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario Outline: The menu offers no way in to a reader who is in
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the home page is open
       When the account menu is pressed
       Then the menu does not offer "<item>"
@@ -140,7 +140,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario: A browser with scripting on is offered the same
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the register page is open with scripting on
       When the account menu is pressed
       Then the menu offers "Profile" at "/account/profile"
@@ -150,7 +150,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario: The menu offers signing out
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the home page is open
       When the account menu is pressed
       Then the menu offers a button to sign out
@@ -158,7 +158,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario: Signing out is not a link
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the home page is open
       When the account menu is pressed
       Then the menu offers no link to sign out
@@ -166,7 +166,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario: The button's form asks to post
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the home page is open
       When the account menu is pressed
       Then the form the button is in asks to post
@@ -174,7 +174,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario: The button's form posts to the sign out path
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And a reader signed in as "someone@example.com"
       And the home page is open
       When the account menu is pressed
       Then the form the button is in posts to "/account/sign-out"
@@ -192,21 +192,21 @@ Feature: The way to a reader's account is the last thing in the header
 
     Scenario: The item for the page being read is marked as the current page
       Given a viewport 1200 pixels wide
-      And the reader is signed out
+      And nobody is signed in
       And the register page is open with scripting on
       When the account menu is pressed
       Then the menu marks "Register" as the page being read
 
     Scenario: The items for the other pages are not marked
       Given a viewport 1200 pixels wide
-      And the reader is signed out
+      And nobody is signed in
       And the register page is open with scripting on
       When the account menu is pressed
       Then the menu does not mark "Sign In" as the page being read
 
     Scenario: Nothing is marked on a page the menu does not offer
       Given a viewport 1200 pixels wide
-      And the reader is signed out
+      And nobody is signed in
       And the home page is open
       When the account menu is pressed
       Then the menu marks nothing as the page being read
@@ -216,7 +216,7 @@ Feature: The way to a reader's account is the last thing in the header
     Scenario: Every word in the menu is in the test locale
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
-      And the reader is signed out
+      And nobody is signed in
       And the home page is open
       When the account menu is pressed
       Then every word in the account menu is in the test locale

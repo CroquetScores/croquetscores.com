@@ -10,6 +10,7 @@
 // addresses can no longer be read to be hashed.
 import type { Projection } from "../../application/common/Projection.js";
 import type { EmailAddressHasher } from "../../application/services/EmailAddressHasher.js";
+import { AccountBroughtOver } from "../../domain/aggregates/accounts/events/AccountBroughtOver.js";
 import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../domain/aggregates/accounts/events/AccountRegistered.js";
 import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
@@ -150,7 +151,12 @@ export class AccountsByEmailAddress implements Projection {
         .map(({ stream }) => stream),
     );
     for (const { stream, event } of events) {
-      if (!(event instanceof AccountRegistered)) continue;
+      if (
+        !(event instanceof AccountRegistered) &&
+        !(event instanceof AccountBroughtOver)
+      ) {
+        continue;
+      }
       await connection.query(
         `insert into accounts_by_email_address
            (account_id, email_address_hash, forgotten)
@@ -163,7 +169,13 @@ export class AccountsByEmailAddress implements Projection {
 
   async #project(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
-    if (event instanceof AccountRegistered) {
+    // An account comes to have an address two ways: it is registered here, or
+    // it came over from the old site with the address it had there. Both are
+    // one row, and both are refused the same if the address is taken.
+    if (
+      event instanceof AccountRegistered ||
+      event instanceof AccountBroughtOver
+    ) {
       try {
         await connection.query(
           `insert into accounts_by_email_address (account_id, email_address_hash)

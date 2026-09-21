@@ -39,6 +39,7 @@ import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { ExampleThing, ExampleThingId } from "./exampleThing.js";
 import type { HandledRequests } from "../../src/application/services/HandledRequests.js";
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
+import type { AccountsInHand } from "./accounts.js";
 import type { Registering } from "./registering.js";
 
 export class SpecWorld extends World {
@@ -132,6 +133,22 @@ export class SpecWorld extends World {
   public moment: Date | undefined;
   public readOnlyDates: ReadOnlyDate[] = [];
   public writtenMoment: unknown;
+
+  // What makes the accounts a scenario says are already there, given by
+  // whichever support stood the scenario up: the operation's own, or the
+  // application a browser scenario is talking to.
+  public accountsInHand: AccountsInHand | undefined;
+
+  // The address a scenario last registered or asked about, so that a step
+  // naming none still knows whose email to read: a scenario says the address
+  // where it does something with it, not again in every step after.
+  public addressInHand: string | undefined;
+
+  // The link a scenario has taken hold of — out of an email, altered, or made
+  // for something else. On the world rather than beside one feature's steps
+  // because two features take hold of the same link: confirming, and asking
+  // what that link is worth before anybody follows it.
+  public linkInHand: string | undefined;
 
   // The account a scenario names, the example event it creates, and that
   // event written out as data.
