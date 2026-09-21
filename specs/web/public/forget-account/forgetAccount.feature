@@ -6,7 +6,7 @@ Feature: A reader who is signed in can have their account forgotten
   every one of its events left where it was. It cannot be undone, so it is
   asked for twice over.
 
-  Only somebody signed in to the account can ask, from /accounts/forget; a
+  Only somebody signed in to the account can ask, from /account/forget-account; a
   reader who is not signed in is sent to sign in first. Asking sends an email
   to the account's email address with a link to confirm it, and the page says
   to check their email. That is the second asking: whoever asked has to be
@@ -37,6 +37,10 @@ Feature: A reader who is signed in can have their account forgotten
   These scenarios sign in, send and follow links by the emails the email
   queue holds, and move the clock as each needs.
 
+  Each scenario has a database and an application of its own. What one
+  scenario registers, and whom it signs in, must not be there for the next to
+  find.
+
   Rule: Only a reader signed in to the account can ask
 
     Scenario: A reader not signed in is sent to sign in first
@@ -46,8 +50,8 @@ Feature: A reader who is signed in can have their account forgotten
 
     Scenario: A reader signed in can ask
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       When the forget account page is opened
       Then the forget account page is shown
 
@@ -55,141 +59,207 @@ Feature: A reader who is signed in can have their account forgotten
 
     Scenario: Asking sends a link to the account's email address
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       And the forget account page is open
       When forgetting the account is asked for
-      Then the email "Email.ConfirmForgetting" is queued for "someone@example.com"
+      Then a link to confirm forgetting is emailed to "someone@example.com"
 
     Scenario: Asking tells the reader to check their email
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       And the forget account page is open
       When forgetting the account is asked for
       Then the reader is told to check their email
 
     Scenario: Asking forgets nothing yet
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       And the forget account page is open
       When forgetting the account is asked for
-      Then the account for "someone@example.com" is not forgotten
+      Then "someone@example.com" has an account
 
   Rule: Following the link asks once more, and forgets only when the reader says so
 
     Scenario: Following the link forgets nothing by itself
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       When the link is followed
-      Then the account for "someone@example.com" is not forgotten
+      Then "someone@example.com" has an account
 
     Scenario: Following the link shows what forgetting means
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       When the link is followed
       Then the reader is told what forgetting the account means
 
     Scenario: Saying so forgets the account
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       And the link is followed
       When forgetting is confirmed
-      Then the account for "someone@example.com" is forgotten
+      Then "someone@example.com" has no account
 
   Rule: The link works once, for 15 minutes, and for its own account signed in
 
     Scenario: A link followed after 14 minutes still works
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       And 14 minutes have passed
       When the link is followed
       Then the reader is told what forgetting the account means
 
     Scenario: A link followed after 16 minutes does not work
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       And 16 minutes have passed
       When the link is followed
       Then the reader is told the link no longer works
 
     Scenario: A link does not work twice
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       And the link is followed
       And forgetting is confirmed
-      And an account for "someone@example.com" is registered again and signed in to
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       When the link is followed
       Then the reader is told the link no longer works
 
-    Scenario: A link followed signed in as somebody else forgets nothing
+    Scenario: A link followed signed in as somebody else says it no longer works
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And an account for "other@example.com", confirmed
-      And a link to confirm forgetting has been sent for "someone@example.com"
-      And the reader is signed in to the account for "other@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "other@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the reader has signed in as "other@example.com" with the password "correct horse battery staple"
       When the link is followed
       Then the reader is told the link no longer works
-      And the account for "someone@example.com" is not forgotten
-      And the account for "other@example.com" is not forgotten
+
+    Scenario: A link followed signed in as somebody else forgets the account it was sent for
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "other@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the reader has signed in as "other@example.com" with the password "correct horse battery staple"
+      When the link is followed
+      Then "someone@example.com" has an account
+
+    Scenario: A link followed signed in as somebody else forgets the reader's own account
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "other@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the reader has signed in as "other@example.com" with the password "correct horse battery staple"
+      When the link is followed
+      Then "other@example.com" has an account
+
+    Scenario: A link followed signed in as nobody is sent to sign in
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      When the link is followed
+      Then the sign in page is shown
 
     Scenario: A link followed signed in as nobody forgets nothing
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And a link to confirm forgetting has been sent for "someone@example.com"
-      And the reader is signed out
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       When the link is followed
-      Then the sign in page is shown
-      And the account for "someone@example.com" is not forgotten
+      Then "someone@example.com" has an account
+
+    Scenario: A link to confirm an email address says it no longer works
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a link to confirm the email address has been sent to "someone@example.com"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the link to confirm the email address is followed as a link to confirm forgetting
+      Then the reader is told the link no longer works
 
     Scenario: A link to confirm an email address forgets nothing
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", not confirmed
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And a link to confirm the email address has been sent to "someone@example.com"
-      And the account for "someone@example.com" is confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       When the link to confirm the email address is followed as a link to confirm forgetting
-      Then the reader is told the link no longer works
-      And the account for "someone@example.com" is not forgotten
+      Then "someone@example.com" has an account
 
   Rule: A forgotten account is signed out of, and its email address is free again
 
-    Scenario: The reader is signed out and told it is done
+    Scenario: The reader is told it is done
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
-      And a link to confirm forgetting has been sent for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
       And the link is followed
       When forgetting is confirmed
       Then the reader is told their account has been forgotten
-      And the reader is signed out
+
+    Scenario: The reader is signed out
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the link is followed
+      When forgetting is confirmed
+      Then the reader is signed out
+
+    Scenario: Forgetting leaves no session for the account
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the link is followed
+      When forgetting is confirmed
+      Then the account the link was sent for has 0 sessions
+
+    Scenario: Forgetting signs the account out on every browser
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the reader has signed in on another browser as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the link is followed
+      When forgetting is confirmed
+      Then the other browser is signed out
 
     Scenario: A forgotten account's email address can be registered again
       Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed
       And the account for "someone@example.com" has been forgotten
-      When a new account for "someone@example.com" is registered
-      Then there is an account for "someone@example.com"
-      And the email "Email.ConfirmAddress" is queued for "someone@example.com"
+      And the register page is open with scripting on
+      And the register form is filled in for "someone@example.com"
+      When the dialog is submitted
+      Then "someone@example.com" has an account
+
+    Scenario: Registering a forgotten account's email address again sends a link to confirm it
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed
+      And the account for "someone@example.com" has been forgotten
+      And the register page is open with scripting on
+      And the register form is filled in for "someone@example.com"
+      When the dialog is submitted
+      Then a link to confirm the email address is emailed to "someone@example.com"
 
   Rule: The pages are in the reader's language
 
     Scenario: Every word on the forget account page is in the test locale
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
-      And an account for "someone@example.com", confirmed
-      And the reader is signed in to the account for "someone@example.com"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       When the forget account page is opened
       Then every word in the page's content is in the test locale
