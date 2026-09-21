@@ -105,6 +105,15 @@ When(
   },
 );
 
+// Another setting, with whatever link the scenario now holds, carrying the id
+// the last one carried: an id is only a retry of the setting it was sent with.
+When(
+  "the new password {string} is set with that link, carrying the same request id",
+  async function (this: SpecWorld, password: string) {
+    await set(this, password, password, true);
+  },
+);
+
 // The same setting, carrying the id it carried the first time: a retry, not a
 // second setting.
 When("the same setting is sent again", async function (this: SpecWorld) {

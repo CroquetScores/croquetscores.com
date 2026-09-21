@@ -208,3 +208,14 @@ Feature: Setting a new password with the link that was emailed
       And the new password "a different long password" has been set with that link
       When the same setting is sent again
       Then it is answered with that account
+
+    Scenario: A request id already used, sent with another link, sets the password all the same
+      Given "someone@example.com" has an account, confirmed
+      And a way back in is asked for "someone@example.com"
+      And the link emailed to "someone@example.com" is taken out of it
+      And the new password "a different long password" has been set with that link
+      And the moment "2026-09-19T10:01:00Z"
+      And a way back in is asked for "someone@example.com"
+      And the second link emailed to "someone@example.com" is taken out of it
+      When the new password "another long password again" is set with that link, carrying the same request id
+      Then "another long password again" is the password of the account for "someone@example.com"

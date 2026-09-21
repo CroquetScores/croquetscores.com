@@ -29,6 +29,11 @@ Feature: Registering an account
   registering's to decide, and only the address's owner learns it. The address
   never appears on the welcome page or in its address.
 
+  The same form sent twice — pressed twice, or sent again by a browser whose
+  answer was lost — registers once: the form carries an id made when it was
+  shown, and the same id sent twice sends one email, counted once towards the
+  address's limit.
+
   When reCAPTCHA cannot be reached, the reader is sent to the registrations
   suspended page, which is specified with it.
 
@@ -125,6 +130,14 @@ Feature: Registering an account
       When the dialog is submitted
       Then the page does not contain "someone@example.com"
       And the page's address does not contain "someone@example.com"
+
+  Rule: The same form sent twice registers once
+
+    Scenario: The same registration sent twice sends one email
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      When the form is sent twice for "someone@example.com"
+      Then "someone@example.com" is sent one email
 
   Rule: reCAPTCHA must judge the reader a person
 

@@ -6,6 +6,7 @@
 // check makes of a reader is what the scenario said.
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import type { APIResponse } from "playwright";
 
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import {
@@ -37,18 +38,48 @@ const aToken = "a token reCAPTCHA's script filled in";
 
 // Filling the form in ----------------------------------------------------------------
 
+const fillIn = async (world: SpecWorld, address: string): Promise<void> => {
+  await world.browserPage.fill(`${dialog} input[name="emailAddress"]`, address);
+  // Put there the way the script would put it, rather than typed: nobody can
+  // type into a hidden field, and a browser will not let a scenario either.
+  await world.browserPage.evaluate(
+    `document.getElementsByName(${JSON.stringify(tokenField)})[0].value = ${JSON.stringify(aToken)}`,
+  );
+};
+
 Given(
   "the register form is filled in for {string}",
   async function (this: SpecWorld, address: string) {
-    await this.browserPage.fill(
-      `${dialog} input[name="emailAddress"]`,
-      address,
-    );
-    // Put there the way the script would put it, rather than typed: nobody can
-    // type into a hidden field, and a browser will not let a scenario either.
-    await this.browserPage.evaluate(
-      `document.getElementsByName(${JSON.stringify(tokenField)})[0].value = ${JSON.stringify(aToken)}`,
-    );
+    await fillIn(this, address);
+  },
+);
+
+// The form the page showed, sent twice as it stands, the way a browser sends it
+// again when the first answer never arrived. Sent from the scenario rather
+// than pressed, because a second press is held by the page's script while the
+// first is on its way, and what this is about is the site.
+When(
+  "the form is sent twice for {string}",
+  async function (this: SpecWorld, address: string) {
+    const action = await this.browserPage
+      .locator(`${dialog} form`)
+      .getAttribute("action");
+    assert.ok(action !== null, "The form says nowhere to send it.");
+    const form: Record<string, string> = {
+      emailAddress: address,
+      [tokenField]: aToken,
+    };
+    for (let sent = 0; sent < 2; sent++) {
+      const answer: APIResponse = await this.browserPage.request.post(
+        `${this.baseUrl!}${action}`,
+        {
+          headers: { "sec-fetch-site": "same-origin" },
+          form,
+          maxRedirects: 0,
+        },
+      );
+      assert.equal(answer.status(), 303, `It was answered ${answer.status()}.`);
+    }
   },
 );
 
@@ -171,6 +202,20 @@ Then(
       counted = 0;
     }
     assert.equal(counted, 0);
+  },
+);
+
+Then(
+  "{string} is sent one email",
+  async function (this: SpecWorld, address: string) {
+    const application = applicationFor(this);
+    const queued = await application.unitOfWork.inTransaction(() =>
+      application.emailQueue.emails(),
+    );
+    const sent = queued.filter(
+      (email) => !email.givenUp && email.to === address,
+    );
+    assert.equal(sent.length, 1, `${sent.length} emails were sent.`);
   },
 );
 

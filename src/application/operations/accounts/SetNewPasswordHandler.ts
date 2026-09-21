@@ -63,10 +63,17 @@ export class SetNewPasswordHandler extends CommandHandler<
   }
 
   async handle(command: SetNewPassword): Promise<AccountId> {
+    // The request id is claimed with the link it came with, so that it is a
+    // retry only of a setting sent with that same link. An id is whatever the
+    // form's address says, and one claimed by anything else — another command,
+    // or a setting with another link — must not pass for a setting that was
+    // kept, which would answer as though a password had been set when none was.
+    const asked = `${spent(command.link)}#${command.requestId}`;
+
     // A setting already kept, sent again because its answer was lost, is
     // answered as the first was. Asked before the link is judged, because the
     // first setting spent it, and judged now it would be refused.
-    if (await this.handled.wasHandled(command.requestId)) {
+    if (await this.handled.wasHandled(asked)) {
       const carried = this.links.read(command.link);
       if (carried?.purpose === "set-new-password") return carried.account;
     }
@@ -95,7 +102,7 @@ export class SetNewPasswordHandler extends CommandHandler<
     // at once sets one password: the second waits on the first's claim, and
     // finds it made. A retry of a refused setting is refused again, as it
     // should be, since a refused setting's claim is rolled back.
-    if (!(await this.handled.claim(command.requestId, command.requestedAt))) {
+    if (!(await this.handled.claim(asked, command.requestedAt))) {
       return account.id;
     }
 

@@ -99,9 +99,16 @@ const script = (siteKey: string | undefined): string =>
       })();
     </script>`;
 
-const formFor = (speaking: Speaking, typed: Typed): Dialog => ({
+// The request id travels in the form's own address, minted when the form is
+// shown, so that a form sent twice — pressed twice, or gone back to and sent
+// again — registers once.
+const formFor = (
+  speaking: Speaking,
+  requestId: string,
+  typed: Typed,
+): Dialog => ({
   title: speaking.say("register.title"),
-  action: registerPath,
+  action: `${registerPath}?request=${encodeURIComponent(requestId)}`,
   // Empty until the script fills it in, and sent empty by a browser that has
   // no script to fill it: what arrives with nothing in it is a reader nobody
   // judged, which is not the same as one judged not to be a person.
@@ -164,69 +171,77 @@ export const registerRegisterPage = (
 
   server.get(registerPath, (request, reply) => {
     const speaking = speakingOf(request);
-    return show(request, reply, formFor(speaking, {}), speaking);
+    return show(request, reply, formFor(speaking, randomUUID(), {}), speaking);
   });
 
-  server.post(registerPath, async (request, reply) => {
-    const speaking = speakingOf(request);
-    const typed = typedFrom(request.body);
-    const dialog = formFor(speaking, typed);
+  server.post<{ Querystring: { request?: string } }>(
+    registerPath,
+    async (request, reply) => {
+      const speaking = speakingOf(request);
+      const typed = typedFrom(request.body);
+      // An id given blank, or twice, is not one the form minted; a registration
+      // without one is nobody's retry, and gets an id of its own.
+      const given = request.query.request;
+      const requestId =
+        typeof given === "string" && given.trim() !== "" ? given : randomUUID();
+      const dialog = formFor(speaking, requestId, typed);
 
-    let judgement: Judgement;
-    try {
-      judgement = await readers.judge(typed[tokenField]);
-    } catch {
-      // Nobody judged, and a registration nobody judged is the thing the check
-      // is there to stop. Nothing is recorded, the administrator is told, and
-      // the reader is told that registering is suspended for now rather than
-      // that they did anything wrong.
-      await reportUnreachable(request, "reCAPTCHA");
-      return reply.redirect(registrationsSuspendedPath, 303);
-    }
+      let judgement: Judgement;
+      try {
+        judgement = await readers.judge(typed[tokenField]);
+      } catch {
+        // Nobody judged, and a registration nobody judged is the thing the check
+        // is there to stop. Nothing is recorded, the administrator is told, and
+        // the reader is told that registering is suspended for now rather than
+        // that they did anything wrong.
+        await reportUnreachable(request, "reCAPTCHA");
+        return reply.redirect(registrationsSuspendedPath, 303);
+      }
 
-    // No token at all is a browser that did not run the script, which is not
-    // the same as a reader Google will not stand behind.
-    if (judgement === "no judgement") {
-      return reply.redirect(javaScriptRequiredPath, 303);
-    }
-    if (judgement === "not a person") {
-      return show(
-        request,
-        reply,
-        {
-          ...dialog,
-          problems: {
-            messages: [speaking.say("Registration.NotAPerson")],
-            autofocus: true,
+      // No token at all is a browser that did not run the script, which is not
+      // the same as a reader Google will not stand behind.
+      if (judgement === "no judgement") {
+        return reply.redirect(javaScriptRequiredPath, 303);
+      }
+      if (judgement === "not a person") {
+        return show(
+          request,
+          reply,
+          {
+            ...dialog,
+            problems: {
+              messages: [speaking.say("Registration.NotAPerson")],
+              autofocus: true,
+            },
           },
-        },
-        speaking,
-        422,
-      );
-    }
+          speaking,
+          422,
+        );
+      }
 
-    try {
-      await request.server.mediator.send(
-        new RegisterAccount(
-          randomUUID(),
-          typed["emailAddress"] ?? "",
-          speaking.language.tag,
-          request.requestedAt,
-        ),
-      );
-    } catch (failure) {
-      if (!(failure instanceof RequestInvalid)) throw failure;
-      return show(
-        request,
-        reply,
-        refusedForm(dialog, typed, failure.broken, speaking),
-        speaking,
-        422,
-      );
-    }
+      try {
+        await request.server.mediator.send(
+          new RegisterAccount(
+            requestId,
+            typed["emailAddress"] ?? "",
+            speaking.language.tag,
+            request.requestedAt,
+          ),
+        );
+      } catch (failure) {
+        if (!(failure instanceof RequestInvalid)) throw failure;
+        return show(
+          request,
+          reply,
+          refusedForm(dialog, typed, failure.broken, speaking),
+          speaking,
+          422,
+        );
+      }
 
-    // The same page whoever the address belongs to, and nothing of the address
-    // in the address it is reached at.
-    return reply.redirect(welcomePath, 303);
-  });
+      // The same page whoever the address belongs to, and nothing of the address
+      // in the address it is reached at.
+      return reply.redirect(welcomePath, 303);
+    },
+  );
 };
