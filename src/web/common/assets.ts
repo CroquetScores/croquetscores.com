@@ -6,6 +6,15 @@ import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { extname, join, posix } from "node:path";
 
+/**
+ * Where the site's own files are served from. Named here, where the addresses
+ * are made, rather than spelled again wherever something has to know whether a
+ * request is for one: what is served from under it is served to everybody
+ * alike and kept for a year, and that is a thing more than the route cares
+ * about.
+ */
+export const assetsPath = "/assets/";
+
 const contentTypes = new Map([
   [".css", "text/css; charset=utf-8"],
   [".js", "text/javascript; charset=utf-8"],
@@ -84,7 +93,7 @@ export const readAssets = (root: string): Assets => {
       const asset = byName.get(name);
       if (asset === undefined)
         throw new Error(`There is no asset named ${name}.`);
-      return `/assets/${asset.publicName}`;
+      return `${assetsPath}${asset.publicName}`;
     },
     resolve(requestedName) {
       const asset = byName.get(withoutHash(requestedName));

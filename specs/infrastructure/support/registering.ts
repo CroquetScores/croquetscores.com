@@ -29,16 +29,26 @@ import { PostgresEmailsWritten } from "../../../src/infrastructure/email/Postgre
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
 import { ConfirmEmailAddressHandler } from "../../../src/application/operations/accounts/ConfirmEmailAddressHandler.js";
 import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
+import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
+import { SignInHandler } from "../../../src/application/operations/accounts/SignInHandler.js";
+import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
+import type { SendConfirmationLinkAgain } from "../../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
+import { WhatAConfirmationLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
+import type { WhatAConfirmationLinkIsWorth } from "../../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
+import type { ConfirmationLinkWorth } from "../../../src/application/operations/accounts/confirmationLinks.js";
 import type { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { BreachedPasswords } from "../../../src/application/services/BreachedPasswords.js";
 import type {
   PasswordCheck,
   PasswordHasher,
 } from "../../../src/application/services/PasswordHasher.js";
+import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
+import type { AccountAsGiven } from "../../support/accounts.js";
 import type { Registering, SeenEmail } from "../../support/registering.js";
 import type { SpecWorld } from "../../support/world.js";
 import { aSiteKey, keepAccounts, readBack } from "./accounts.js";
+import { alterLink } from "./links.js";
 import { queueingOf } from "./emailQueue.js";
 import { unitOfWorkOf } from "./transactions.js";
 import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
@@ -64,7 +74,7 @@ class RefusingProjection implements Projection {
 // that it is made at the moment the scenario has named by then.
 interface Pending {
   address: string;
-  confirmed: boolean;
+  as: AccountAsGiven;
 }
 
 // What an account a scenario says is confirmed was confirmed as. Registering
@@ -84,11 +94,22 @@ const writesEmails = emailWriter(scenarioLanguages, SITE_ADDRESS);
  * kept contains the password is asking something.
  */
 class QuickHasher implements PasswordHasher {
+  /** How many times a password has been checked against a hash, or against none. */
+  checks = 0;
+
   hash(password: string): Promise<string> {
     return Promise.resolve(digestOf(password));
   }
 
   check(password: string, hash: string | undefined): Promise<PasswordCheck> {
+    this.checks += 1;
+    // An old site's hash is checked its own way and marked to be made again,
+    // as the site's own hasher does with one; anything else is checked the way
+    // this makes them.
+    if (hash !== undefined && hash.startsWith(OLD_SITE)) {
+      const matches = hash === theOldSiteHashOf(password);
+      return Promise.resolve({ matches, remake: matches });
+    }
     return Promise.resolve({
       matches: hash !== undefined && hash === digestOf(password),
       remake: false,
@@ -98,6 +119,14 @@ class QuickHasher implements PasswordHasher {
 
 const digestOf = (password: string): string =>
   `sha256$${createHash("sha256").update(password).digest("hex")}`;
+
+const OLD_SITE = "old$";
+
+// A hash of the old site's making, told apart from one of ours by its shape,
+// so that a scenario can say an account came over with its old password and
+// signing in can find that it did.
+const theOldSiteHashOf = (password: string): string =>
+  `${OLD_SITE}${createHash("sha256").update(password).digest("hex")}`;
 
 export const standUpRegistering = (world: SpecWorld): Registering => {
   const unitOfWork = unitOfWorkOf(world);
@@ -158,10 +187,34 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       new PostgresHandledRequests(unitOfWork),
     ),
   );
+  mediator.handleCommand(
+    new SignInHandler(repository, accounts.readModel, hasher),
+  );
+  mediator.handleCommand(
+    new SendConfirmationLinkAgainHandler(
+      repository,
+      queue,
+      written,
+      new PostgresHandledRequests(unitOfWork),
+      links,
+    ),
+  );
+  // A query changes nothing, so it is given a transaction it cannot write in,
+  // as the application gives one.
+  mediator.addQueryBehaviour(validation);
+  mediator.addQueryBehaviour(new ReadOnlyTransactionBehaviour(unitOfWork));
+  mediator.handleQuery(
+    new WhatAConfirmationLinkIsWorthHandler(repository, links),
+  );
   world.mediator = mediator;
   world.validation = validation;
 
-  let pending: Pending | undefined;
+  // Every account the scenario has said is already there and that has not been
+  // made yet, in the order it said them. A list rather than one, because a
+  // scenario naming two accounts is naming two: the second overwriting the
+  // first would leave an address the scenario said had an account with none,
+  // and the scenario would pass or fail for a reason nobody wrote down.
+  const pending: Pending[] = [];
 
   const idFor = async (address: string): Promise<AccountId> => {
     const found = await world.asARequest(() =>
@@ -188,72 +241,73 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   let settling: Promise<void> = Promise.resolve();
 
   const settle = (): Promise<void> => {
-    if (pending !== undefined) {
-      const making = pending;
-      pending = undefined;
+    for (const making of pending.splice(0)) {
       settling = settling.then(() => make(making));
     }
     return settling;
   };
 
-  const make = async ({ address, confirmed }: Pending): Promise<void> => {
+  const make = async ({ address, as }: Pending): Promise<void> => {
+    const at = EmailAddress.from(address);
+    // Brought over rather than registered, because an account from the old
+    // site never registered here: it arrives with the name and the password
+    // hash it had there, and confirmed.
+    if (as.fromTheOldSite === true) {
+      const brought = Account.bringOver(
+        AccountId.create(),
+        PersonName.from(CONFIRMED_AS),
+        at,
+        accounts.hasher.hash(at),
+        theOldSiteHashOf(as.password ?? CONFIRMED_WITH),
+        now(),
+      );
+      await world.keepAccount?.(brought);
+      return;
+    }
+
     const account = Account.register(
       AccountId.create(),
-      EmailAddress.from(address),
-      accounts.hasher.hash(EmailAddress.from(address)),
+      at,
+      accounts.hasher.hash(at),
       now(),
     );
-    if (confirmed) {
-      account.confirm(PersonName.from(CONFIRMED_AS), CONFIRMED_WITH, now());
+    if (as.confirmed) {
+      // Hashed the way this scenario's hasher hashes, so that a password the
+      // scenario named is one that signing in can check.
+      account.confirm(
+        PersonName.from(CONFIRMED_AS),
+        as.password === undefined ? CONFIRMED_WITH : digestOf(as.password),
+        now(),
+      );
     }
     await world.keepAccount?.(account);
-  };
-
-  // A link with what it carries changed and its signature left alone, which is
-  // what a link somebody has tampered with looks like. Written here because
-  // what a link is made of is infrastructure's.
-  //
-  // What is changed is the moment it stops working, moved ten days back, and
-  // the rest is left readable: the same purpose, the same account, a moment
-  // that is still a moment. That is the point of it. Scrambling a character
-  // instead would leave something that decodes to nothing, and the link would
-  // be refused for carrying nonsense whether or not its signature was ever
-  // looked at — so the scenarios would pass against a check that had been
-  // taken out.
-  const altered = (link: string): string => {
-    const [before, carried] = link.split("link=");
-    assert.ok(
-      before !== undefined && carried !== undefined,
-      "That is no link.",
-    );
-    const [body, signature] = carried.split(".");
-    assert.ok(
-      body !== undefined && signature !== undefined,
-      "That link carries nothing.",
-    );
-    const [purpose, account, until] = Buffer.from(body, "base64url")
-      .toString("utf8")
-      .split(".");
-    assert.ok(
-      purpose !== undefined && account !== undefined && until !== undefined,
-      "That link carries nothing this can read.",
-    );
-    // Back rather than forward, so that the altered link is stale as well as
-    // altered: one that claimed a later expiry would never be old, and the
-    // scenario about an altered link being refused whatever its age would
-    // pass against a check that never looked at its age at all.
-    const earlier = Number(until) - 10 * 86400000;
-    const changed = Buffer.from(
-      [purpose, account, String(earlier)].join("."),
-      "utf8",
-    ).toString("base64url");
-    return `${before}link=${changed}.${signature}`;
   };
 
   return {
     async confirm(command: ConfirmEmailAddress): Promise<void> {
       await settle();
       await mediator.send(command);
+    },
+
+    async signIn(command: SignIn): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
+    passwordsChecked: () => hasher.checks,
+
+    async sendAgain(command: SendConfirmationLinkAgain): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    async worthOf(
+      query: WhatAConfirmationLinkIsWorth,
+    ): Promise<ConfirmationLinkWorth> {
+      // Whatever the scenario said exists is made first: an account it only
+      // said it had is not there for the link to name until it is.
+      await settle();
+      return mediator.query(query);
     },
 
     // Read out of the queue, as a reader reads it out of their mail.
@@ -271,7 +325,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       return only.link;
     },
 
-    altered,
+    altered: alterLink,
 
     async aLinkToForget(address) {
       // Whatever the scenario said exists is made first: an account it only
@@ -313,8 +367,8 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await settle();
       await mediator.send(command);
     },
-    giveAnAccount(address, confirmed) {
-      pending = { address, confirmed };
+    giveAnAccount(address, as) {
+      pending.push({ address, as });
       return Promise.resolve();
     },
     async wroteTo(address, kind, times) {
@@ -374,9 +428,35 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   };
 };
 
+// Registering stands up the operation too, since it is the same mediator over
+// the same accounts and the same queue. Said in its own words all the same,
+// because a scenario about sending the link again is not about registering.
+Given(
+  "the application's sending of the confirmation link again",
+  function (this: SpecWorld) {
+    standUpFor(this);
+  },
+);
+
 Given("the application's registering", function (this: SpecWorld) {
-  this.registering = standUpRegistering(this);
+  standUpFor(this);
 });
+
+// Signing in is handled by the same mediator over the same accounts, so
+// standing registering up stands it up too. Said in its own words because a
+// scenario about signing in is not about registering.
+Given("the application's signing in", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+const standUpFor = (world: SpecWorld): void => {
+  const registering = standUpRegistering(world);
+  world.registering = registering;
+  world.accountsInHand = {
+    give: (address, as) => registering.giveAnAccount(address, as),
+    forget: (address) => registering.forget(address),
+  };
+};
 
 // Confirming is handled by the same mediator, so standing registering up
 // stands it up too. What this adds is the breached password check confirming

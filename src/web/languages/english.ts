@@ -38,6 +38,77 @@ export const english: Language = {
     "welcome.nothingArrived":
       "If nothing arrives in a few minutes, look in your junk or spam folder.",
     "welcome.home": "Back to Croquet Scores",
+    "newConfirmationLink.title": "Get a new link",
+    "newConfirmationLink.explanation":
+      "The link to confirm your email address has expired. Ask for a new one and it will be sent to the address you registered with.",
+    "newConfirmationLink.send": "Send me a new link",
+    "newConfirmationLink.home": "Back to Croquet Scores",
+    "newConfirmationLink.signIn": "Sign in",
+    "newConfirmationLink.sent.title": "Check your email",
+    "newConfirmationLink.sent.explanation":
+      "A new link is on its way. Follow it to confirm your email address. If nothing arrives in a few minutes, look in your junk or spam folder.",
+    "newConfirmationLink.alreadyConfirmed.title":
+      "That email address is already confirmed",
+    "newConfirmationLink.alreadyConfirmed.explanation":
+      "There is nothing more to confirm. Sign in with the password you gave when you confirmed it.",
+    "newConfirmationLink.noLongerWorks.title": "That link no longer works",
+    "newConfirmationLink.noLongerWorks.explanation":
+      "Check that you followed the whole link from the email, without anything missing from the end of it. If it still does not work, register again and a new link will be sent.",
+    "newConfirmationLink.tooMany.title": "Try again later",
+    "newConfirmationLink.tooMany.explanation":
+      "Several links have been sent to this address lately. Wait an hour and ask again, and look in your junk or spam folder meanwhile.",
+
+    "signIn.title": "Sign in",
+    "signIn.emailAddress": "Email address",
+    "signIn.password": "Password",
+    "signIn.cancel": "Cancel",
+    "signIn.submit": "Sign in",
+    "signIn.elsewhere": "If you cannot sign in",
+    "signIn.forgotPassword": "I have forgotten my password",
+    "signIn.register": "I do not have an account yet",
+    "signIn.tryAgainLater":
+      "Too many attempts have been made lately. Wait an hour and try again.",
+
+    // The one answer to a wrong password and to an address nobody registered.
+    // It says neither which it was nor which it was not.
+    "SignIn.Failed":
+      "That email address and password do not sign in to anything. Check both and try again.",
+
+    "confirmEmailAddress.title": "Confirm your email address",
+    "confirmEmailAddress.name": "Name",
+    "confirmEmailAddress.password": "Password",
+    "confirmEmailAddress.passwordAgain": "Password again",
+    "confirmEmailAddress.cancel": "Cancel",
+    "confirmEmailAddress.submit": "Confirm my email address",
+    "confirmEmailAddress.signIn": "Sign in",
+    "confirmEmailAddress.home": "Back to Croquet Scores",
+    "confirmEmailAddress.confirmed.title": "Your email address is confirmed",
+    "confirmEmailAddress.confirmed.explanation":
+      "Your account is ready. Sign in with the email address and password you have just given.",
+    "confirmEmailAddress.expired.title": "That link has expired",
+    "confirmEmailAddress.expired.explanation":
+      "A link to confirm an email address works for 24 hours. Ask for a new one, and it will be sent to the same address.",
+    "confirmEmailAddress.expired.newLink": "Send me a new link",
+    "confirmEmailAddress.noLongerWorks.title": "That link no longer works",
+    "confirmEmailAddress.noLongerWorks.explanation":
+      "Check that you followed the whole link from the email, without anything missing from the end of it. If it still does not work, register again and a new link will be sent.",
+    "confirmEmailAddress.alreadyConfirmed.title":
+      "That email address is already confirmed",
+    "confirmEmailAddress.alreadyConfirmed.explanation":
+      "There is nothing more to do. Sign in with the password you gave when you confirmed it.",
+
+    // A rule broken, keyed by its code, so that every form saying it says it
+    // the same way. Said to whoever typed it, beneath the field it reads.
+    "PersonName.Missing": "Enter a name.",
+    "PersonName.TooShort": "A name has to be at least 3 characters.",
+    "PersonName.TooLong": "A name can be at most 254 characters.",
+    "Password.Missing": "Enter a password.",
+    "Password.TooShort": "A password has to be at least 12 characters.",
+    "Password.ConfirmationDiffers":
+      "This is not the same as the password above. Type it again.",
+    "Password.Breached":
+      "This password is one that has appeared in a data breach somewhere else, so it is not safe to use here. Choose another.",
+
     "javaScriptRequired.title": "Scripting needed",
     "javaScriptRequired.explanation":
       "Registering needs scripting switched on for this site, so that it can check that whoever is registering is a person. Switch it on, then register again.",

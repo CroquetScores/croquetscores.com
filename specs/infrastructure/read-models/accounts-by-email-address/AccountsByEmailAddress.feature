@@ -5,7 +5,7 @@ Feature: Finding an account by its email address
   way back in asks which account an address belongs to. Neither can replay
   every account's events to find out, so a read model keeps the answer: a
   table of accounts by email address, kept by a projection as accounts are
-  registered, and asked by a query.
+  registered or brought over from the old site, and asked by a query.
 
   The table does not hold the address. It holds a keyed hash of the address in
   lower case — an HMAC, whose key is a setting like any other secret — which is
@@ -68,6 +68,29 @@ Feature: Finding an account by its email address
       Given an account for "someone@example.com" is registered
       When the account for "nobody@example.com" is looked for
       Then nothing is found
+
+  Rule: An account brought over from the old site is found the same way
+
+    An account that came over from the old site never registered here, so it
+    has no registering to project. It has an address all the same, and is
+    found by it exactly as a registered account is: its owner signs in with
+    the password they already had, and signing in finds the account by the
+    address they type.
+
+    Scenario: An account brought over is found by its address
+      Given an account for "someone@example.com" is brought over from the old site
+      When the account for "someone@example.com" is looked for
+      Then it is found
+
+    Scenario: It is found by its address in another case
+      Given an account for "someone@example.com" is brought over from the old site
+      When the account for "Someone@Example.COM" is looked for
+      Then it is found
+
+    Scenario: An account brought over holds the address of one already registered
+      Given an account for "someone@example.com" is registered
+      And an account for "someone@example.com" is brought over from the old site
+      Then the read model holds 1 row
 
   Rule: The table does not hold the address
 
