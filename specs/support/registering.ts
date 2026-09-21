@@ -6,9 +6,11 @@
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
+import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
+import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
 import type { SetNewPassword } from "../../src/application/operations/accounts/SetNewPassword.js";
 import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
-import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import type { WhatAConfirmationLinkIsWorth } from "../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
 import type { ConfirmationLinkWorth } from "../../src/application/operations/accounts/confirmationLinks.js";
@@ -39,6 +41,12 @@ export interface Registering {
 
   /** How many passwords have been checked against a hash, or against none. */
   passwordsChecked(): number;
+
+  /** Asks for an account to be forgotten. Throws what the mediator throws. */
+  askToForget(command: AskToForgetAccount): Promise<void>;
+
+  /** Forgets an account with its link. Answers with it, or throws. */
+  forgetWithLink(command: ForgetAccount): Promise<AccountId>;
 
   /** Has reporting tell `address`, or nobody where there is none. */
   tellsAdministrator(address: string | undefined): void;

@@ -22,6 +22,7 @@ import {
   loadConfig,
   loadEnvFile,
 } from "../../../src/infrastructure/config/Config.js";
+import { CheckRefused } from "../../../src/application/services/BreachedPasswords.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -96,6 +97,9 @@ const itsOwn = async (world: SpecWorld): Promise<string> => {
       // can be made and signed in to whether or not whoever runs them has the
       // real salt in their .env.
       oldSitePasswordSalt: oldSiteSaltForScenarios,
+      // Somebody to tell when a service cannot be reached, so that a scenario
+      // can see they were told.
+      administratorEmailAddress: administratorForScenarios,
     },
     {
       logger: false,
@@ -111,7 +115,41 @@ const itsOwn = async (world: SpecWorld): Promise<string> => {
       // Pwned about a password, and what it would answer is not what any of
       // these scenarios is about. A scenario that is about a breached password
       // belongs with confirming, which can put one there.
-      breachedPasswords: { isBreached: () => Promise.resolve(false) },
+      // Answers that nothing is breached unless the scenario has taken it down,
+      // when it refuses as the real one does when Have I Been Pwned does not
+      // answer.
+      breachedPasswords: {
+        isBreached: () =>
+          down.get(world)?.has("Have I Been Pwned") === true
+            ? Promise.reject(
+                new CheckRefused(
+                  "BreachedPasswords.Unreachable",
+                  "The scenario has taken Have I Been Pwned down.",
+                ),
+              )
+            : Promise.resolve(false),
+      },
+      // Never Google: a spec run has no business asking it, and a scenario
+      // about being judged has to say what the judgement was. It judges a
+      // person unless the scenario says otherwise, and a form carrying no
+      // token is unjudged here exactly as it would be there.
+      readerCheck: {
+        // A key of the scenarios' own, so that the page asks for Google's
+        // script, and the scenario's browser is handed a stand-in for it.
+        siteKey: recaptchaSiteKeyForScenarios,
+        judge: (token) => {
+          if (token !== undefined) tokensJudgedBy(world).push(token);
+          if (down.get(world)?.has("reCAPTCHA") === true) {
+            return Promise.reject(
+              new Error("The scenario has taken reCAPTCHA down."),
+            );
+          }
+          if (token === undefined || token.trim() === "") {
+            return Promise.resolve("no judgement" as const);
+          }
+          return Promise.resolve(judgements.get(world) ?? "a person");
+        },
+      },
     },
   );
   applications.set(world, scenario);
@@ -140,6 +178,80 @@ const itsOwn = async (world: SpecWorld): Promise<string> => {
 };
 
 const applications = new WeakMap<SpecWorld, Application>();
+
+/** Who the scenarios' application tells when a service cannot be reached. */
+export const administratorForScenarios = "administrator@example.com";
+
+// The services a scenario has taken down, by the names the administrator is
+// told.
+const down = new WeakMap<SpecWorld, Set<string>>();
+
+/** Takes `service` down for this scenario, or brings it back up. */
+export const serviceIsDown = (
+  world: SpecWorld,
+  service: "reCAPTCHA" | "Have I Been Pwned",
+  isDown: boolean,
+): void => {
+  const services = down.get(world) ?? new Set<string>();
+  if (isDown) services.add(service);
+  else services.delete(service);
+  down.set(world, services);
+};
+
+/** The site key the scenarios' register page asks Google's script with. */
+const recaptchaSiteKeyForScenarios = "the scenarios' reCAPTCHA site key";
+
+// What stands in for Google's script in a scenario's browser. Its token says
+// whether it was asked for before or after the reader typed anything, which is
+// what a scenario about when the token is asked for looks at.
+const recaptchaScriptForScenarios = `
+window.grecaptcha = {
+  ready: function (then) { then(); },
+  execute: function () {
+    var typed = document.getElementsByName("emailAddress")[0];
+    return Promise.resolve(
+      typed && typed.value !== ""
+        ? "a token asked for once the form was filled in"
+        : "a token asked for before anything was typed"
+    );
+  }
+};`;
+
+// The scenarios whose browser does not load Google's script, as a browser that
+// blocks it does not.
+const withoutRecaptchaScript = new WeakSet<SpecWorld>();
+
+/** Has this scenario's browser fail to load Google's script. */
+export const recaptchaScriptDoesNotLoad = (world: SpecWorld): void => {
+  withoutRecaptchaScript.add(world);
+};
+
+// Every token the scenario's reCAPTCHA was asked to judge, in order.
+const tokensJudged = new WeakMap<SpecWorld, string[]>();
+
+const tokensJudgedBy = (world: SpecWorld): string[] => {
+  let judged = tokensJudged.get(world);
+  if (judged === undefined) {
+    judged = [];
+    tokensJudged.set(world, judged);
+  }
+  return judged;
+};
+
+/** The tokens this scenario's reCAPTCHA has been asked to judge. */
+export const tokensJudgedFor = (world: SpecWorld): readonly string[] =>
+  tokensJudgedBy(world);
+
+// What the scenario's reCAPTCHA says about its reader, when it says anything.
+const judgements = new WeakMap<SpecWorld, "a person" | "not a person">();
+
+/** Has this scenario's reCAPTCHA judge its reader `judgement`. */
+export const recaptchaJudges = (
+  world: SpecWorld,
+  judgement: "a person" | "not a person",
+): void => {
+  judgements.set(world, judgement);
+};
 
 /** The application this scenario is talking to, for a step that has to ask it. */
 export const applicationFor = (world: SpecWorld): Application => {
@@ -218,6 +330,16 @@ export const withScripting = async (world: SpecWorld): Promise<void> => {
   // signed in as. Without this a scenario that signs in and then switches to
   // scripting is silently signed out, and reads as though the page were wrong.
   await scripted.addCookies(await context.cookies());
+  // Never Google's script, for the reason the scenarios' application never
+  // asks Google: a stand-in the scenario can see into, or nothing at all.
+  await scripted.route("https://www.google.com/recaptcha/**", (route) =>
+    withoutRecaptchaScript.has(world)
+      ? route.abort()
+      : route.fulfill({
+          contentType: "text/javascript",
+          body: recaptchaScriptForScenarios,
+        }),
+  );
 
   world.browserContext = scripted;
   world.page = await scripted.newPage();

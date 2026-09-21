@@ -24,7 +24,7 @@ Then("the welcome page is shown", async function (this: SpecWorld) {
   assert.equal(unmarked(heading), title, "The welcome page was not shown.");
 });
 
-// Said by more than one page: where registering ends, and where a new link
+// Said by more than one page: where registering ends, and wherever a link
 // has just been asked for. Each says it in its own words, and what the
 // scenario is asking is that the reader was told to go and look.
 Then(
@@ -33,6 +33,8 @@ Then(
     const said = [
       englishForScenarios.words["welcome.checkEmail"],
       englishForScenarios.words["newConfirmationLink.sent.explanation"],
+      englishForScenarios.words["forgotPassword.sent.explanation"],
+      englishForScenarios.words["forgetAccount.sent.explanation"],
     ];
     const content =
       (await this.browserPage.locator("main").textContent()) ?? "";

@@ -230,6 +230,8 @@ Then("the reader is told to try again later", async function (this: SpecWorld) {
   const said = [
     words("signIn.tryAgainLater"),
     words("newConfirmationLink.tooMany.explanation"),
+    words("forgotPassword.tryAgainLater"),
+    words("registrationsSuspended.tryAgainLater"),
   ];
   assert.ok(
     said.some((each) => content.includes(each)),

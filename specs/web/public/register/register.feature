@@ -1,123 +1,98 @@
 @browser @postgres
 Feature: Registering an account
 
-  Anyone can register; nobody needs to be signed in. The register page asks
-  for a name, an email address, a password, and the password again, and every
-  one of them is trimmed where it is typed, the password included: a password
-  that begins or ends with a space loses it. That leaves an account imported
-  from the old site, whose password did, unable to sign in with it; it resets
-  it through the forgot password page instead, which is judged less trouble
-  than a password that must be typed with the same stray space every time.
+  Anyone can register; nobody needs to be signed in. The register page,
+  /account/register, asks for an email address and nothing else, trimmed where
+  it is typed. It asks for nothing else because registering takes nothing
+  else: whoever registers has not yet shown the address is theirs, so the name
+  and the password are given by whoever turns out to read mail at it, on the
+  page its link opens (`ConfirmEmailAddress.feature`).
 
   The page is guarded by reCAPTCHA, which runs in the browser, so the page
   needs scripting; a reader without it is sent to be told so before filling
   anything in, and a registration that arrives without reCAPTCHA's judgement
   anyway is sent there too, having recorded nothing. A registration judged not
-  to be from a person is refused, and says so above the fields.
+  to be from a person is refused, and says so above the fields. Registering
+  asks for no password and hashes nothing, so reCAPTCHA is all that stands
+  between a program and an inbox: without it, anybody could have the site
+  email an address of their choosing three times an hour.
 
   A registration that breaks a rule is shown again, as every refused form is:
-  each rule beneath the field it is about, what was typed put back, and never
-  the password.
+  each rule beneath the field it is about, and what was typed put back. The
+  field is an email address field, so a browser turns away what it can see is
+  not one before the site is asked at all; what reaches the rules is an address
+  a browser takes for one and the site does not, such as an address with no
+  domain after the @.
 
   One that breaks none ends at the welcome page, whoever the address belongs
   to. What differs — whether an account is made, and which email is sent — is
-  the registering's to decide and only the address's owner learns it. The
-  address never appears on the welcome page or in its address.
+  registering's to decide, and only the address's owner learns it. The address
+  never appears on the welcome page or in its address.
 
-  When a service registering needs cannot be reached, the reader is sent to
-  the registrations suspended page, which is specified with it.
+  When reCAPTCHA cannot be reached, the reader is sent to the registrations
+  suspended page, which is specified with it.
 
-  These scenarios register with scripting on, and stand in for reCAPTCHA and
-  for the breached password check with fakes the scenario controls; reCAPTCHA
-  judges a person unless the scenario says otherwise.
+  The token reCAPTCHA judges is asked for as the form is sent, not as the page
+  opens. A token lasts two minutes and is good once, so one fetched on arrival
+  would be stale for a reader who took their time, and missing for one who
+  sent the form before it came.
+
+  These scenarios register with scripting on, and stand in for reCAPTCHA with
+  one the scenario controls, on both sides: in place of Google's script in the
+  browser, and of Google's answer on the server. It judges a person unless the
+  scenario says otherwise.
 
   Each scenario has a database and an application of its own. What one
-  scenario registers, and how often it has asked from this browser's IP
-  address, must not be there for the next to find.
+  scenario registers must not be there for the next to find.
 
-  Rule: The page asks for a name, an email address and the password twice
+  Rule: The page asks for an email address, and for nothing else
 
-    Scenario Outline: The page asks for each
+    Scenario: The page asks for an email address
       Given a viewport 1200 pixels wide
       When the register page is opened with scripting on
-      Then the dialog asks for <what>
+      Then the dialog asks for an email address
 
-      Examples:
-        | what                  |
-        | a name                |
-        | an email address      |
-        | a password            |
-        | the password again    |
-
-  Rule: Every field is trimmed where it is typed, the password included
-
-    Scenario: A name typed with spaces around it is registered without them
+    Scenario: The page asks for no name
       Given a viewport 1200 pixels wide
-      And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      And "  Sam Someone  " is typed into the name field
-      When the dialog is submitted
-      Then the account for "someone@example.com" is called "Sam Someone"
+      When the register page is opened with scripting on
+      Then the dialog does not ask for a name
+
+    Scenario: The page asks for no password
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the dialog does not ask for a password
+
+  Rule: The email address is trimmed where it is typed
 
     Scenario: An address typed with spaces around it is registered without them
       Given a viewport 1200 pixels wide
       And the register page is open with scripting on
       And the register form is filled in for "  someone@example.com  "
       When the dialog is submitted
-      Then there is an account for "someone@example.com"
-
-    Scenario: A password typed with spaces around it is kept without them
-      Given a viewport 1200 pixels wide
-      And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      And "  correct horse battery staple  " is typed into the password field
-      And "  correct horse battery staple  " is typed into the confirm password field
-      When the dialog is submitted
-      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+      Then "someone@example.com" has an account
 
   Rule: A registration that breaks a rule is shown again
 
-    Scenario: A name too short is said beneath the name
+    Scenario: An address with no domain is said beneath the address
       Given a viewport 1200 pixels wide
       And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      And "Sa" is typed into the name field
+      And the register form is filled in for "someone@example"
       When the dialog is submitted
-      Then the name field says the message for "PersonName.TooShort"
+      Then the email address field says the message for "EmailAddress.NoDomain"
 
-    Scenario: A password known to have been breached is said beneath the password
-      Given a viewport 1200 pixels wide
-      And "correct horse battery staple" is known to have been breached
-      And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      When the dialog is submitted
-      Then the password field says the message for "Password.Breached"
-
-    Scenario: A password typed differently the second time is said beneath the second
+    Scenario: What was typed is put back
       Given a viewport 1200 pixels wide
       And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      And "correct horse battery stapel" is typed into the confirm password field
+      And the register form is filled in for "someone@example"
       When the dialog is submitted
-      Then the confirm password field says the message for "Password.ConfirmationDiffers"
-
-    Scenario: What was typed is put back, except the passwords
-      Given a viewport 1200 pixels wide
-      And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      And "Sa" is typed into the name field
-      When the dialog is submitted
-      Then the email address field holds "someone@example.com"
-      And the password field is empty
-      And the confirm password field is empty
+      Then the email address field holds "someone@example"
 
     Scenario: A registration shown again records nothing
       Given a viewport 1200 pixels wide
       And the register page is open with scripting on
-      And the register form is filled in for "someone@example.com"
-      And "Sa" is typed into the name field
+      And the register form is filled in for "someone@example"
       When the dialog is submitted
-      Then there is no account for "someone@example.com"
+      Then "someone@example" has no account
 
   Rule: Registering ends at the welcome page, whoever the address belongs to
 
@@ -128,9 +103,16 @@ Feature: Registering an account
       When the dialog is submitted
       Then the welcome page is shown
 
+    Scenario: Registering a new address sends it a link to confirm it
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      And the register form is filled in for "someone@example.com"
+      When the dialog is submitted
+      Then a link to confirm the email address is emailed to "someone@example.com"
+
     Scenario: Registering an address that already has an account arrives at the same page
       Given a viewport 1200 pixels wide
-      And an account for "someone@example.com", confirmed
+      And "someone@example.com" has an account, confirmed
       And the register page is open with scripting on
       And the register form is filled in for "someone@example.com"
       When the dialog is submitted
@@ -141,10 +123,22 @@ Feature: Registering an account
       And the register page is open with scripting on
       And the register form is filled in for "someone@example.com"
       When the dialog is submitted
-      Then "someone@example.com" is nowhere in the page's address
-      And "someone@example.com" is nowhere on the page
+      Then the page does not contain "someone@example.com"
+      And the page's address does not contain "someone@example.com"
 
   Rule: reCAPTCHA must judge the reader a person
+
+    Scenario: The form carries the token reCAPTCHA's script fills in
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the form carries reCAPTCHA's token
+
+    Scenario: The token judged is asked for as the form is sent
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      And the email address "someone@example.com" is typed
+      When the dialog is submitted
+      Then reCAPTCHA judged a token asked for once the form was filled in
 
     Scenario: A registration without reCAPTCHA's judgement is sent to be told why
       Given a viewport 1200 pixels wide
@@ -154,7 +148,7 @@ Feature: Registering an account
     Scenario: Nothing is recorded of a registration without a judgement
       Given a viewport 1200 pixels wide
       When a registration for "someone@example.com" arrives without reCAPTCHA's judgement
-      Then there is no account for "someone@example.com"
+      Then "someone@example.com" has no account
 
     Scenario: A registration judged not to be from a person is refused above the fields
       Given a viewport 1200 pixels wide
@@ -170,7 +164,7 @@ Feature: Registering an account
       And the register page is open with scripting on
       And the register form is filled in for "someone@example.com"
       When the dialog is submitted
-      Then there is no account for "someone@example.com"
+      Then "someone@example.com" has no account
 
   Rule: The page is in the reader's language
 

@@ -24,6 +24,10 @@ import { ResetPasswordValidator } from "../application/operations/accounts/Reset
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
+import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
+import { ForgetAccountHandler } from "../application/operations/accounts/ForgetAccountHandler.js";
+import { WhatAForgettingLinkIsWorthHandler } from "../application/operations/accounts/WhatAForgettingLinkIsWorthHandler.js";
+import { WhatASetNewPasswordLinkIsWorthHandler } from "../application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import type { EventStore } from "../application/services/EventStore.js";
@@ -49,11 +53,13 @@ import { PostgresEmailsWritten } from "../infrastructure/email/PostgresEmailsWri
 import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventStore.js";
 import { PostgresHandledRequests } from "../infrastructure/database/PostgresHandledRequests.js";
 import { PostgresFailedSignIns } from "../infrastructure/database/PostgresFailedSignIns.js";
+import { PostgresPasswordResetAskings } from "../infrastructure/database/PostgresPasswordResetAskings.js";
 import { PostgresSessions } from "../infrastructure/database/PostgresSessions.js";
 import { Argon2id } from "../infrastructure/identity/Argon2id.js";
 import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
+import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { apiV1 } from "./api/v1/index.js";
@@ -75,15 +81,33 @@ import { auth } from "./auth/index.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
+import { registerForgotPasswordPage } from "./public/forgotPassword.js";
+import { registerForgetAccountPage } from "./public/forgetAccount.js";
+import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspended.js";
+import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
 import { registerPublicPages } from "./public/pages.js";
-import { registerRegisterPage } from "./public/register.js";
+import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
 import { registerWelcomePage } from "./public/welcome.js";
 
 const repositoryRoot = join(import.meta.dirname, "..", "..");
+
+// The check the page wants, over the one the infrastructure offers: the page
+// asks what a reader is worth and shows the key, and reCAPTCHA answers the
+// first and the config holds the second.
+const recaptchaAsAReaderCheck = (keys: {
+  readonly siteKey: string;
+  readonly secretKey: string;
+}): ReaderCheck => {
+  const check = new RecaptchaReaderCheck(keys.secretKey);
+  return {
+    judge: (token) => check.judge(token),
+    siteKey: keys.siteKey,
+  };
+};
 
 // A route reaches the mediator as request.server.mediator, and nothing else of
 // the application. Declared here, beside the one place that puts it there.
@@ -232,6 +256,13 @@ export interface ApplicationOptions {
    */
   readonly breachedPasswords?: BreachedPasswords;
   /**
+   * What judges whether whoever is registering is a person. reCAPTCHA, when
+   * the site has keys for it, unless a scenario says otherwise: a spec run has
+   * no business asking Google, and a scenario that is about being judged needs
+   * to say what the judgement was.
+   */
+  readonly readerCheck?: ReaderCheck;
+  /**
    * Whether the application is behind something that forwards requests, and so
    * whether the address a request came from is read from its headers. Off
    * unless said, since a client can send those headers itself.
@@ -377,6 +408,14 @@ export const buildApplication = async (
       handledRequests,
     ),
   );
+  mediator.handleQuery(
+    new WhatASetNewPasswordLinkIsWorthHandler(accounts, links, handledRequests),
+  );
+  mediator.handleCommand(
+    new AskToForgetAccountHandler(accounts, emailQueue, links),
+  );
+  mediator.handleCommand(new ForgetAccountHandler(accounts, links));
+  mediator.handleQuery(new WhatAForgettingLinkIsWorthHandler(accounts, links));
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(
       accounts,
@@ -430,7 +469,18 @@ export const buildApplication = async (
 
   registerThemeRoute(server);
   registerLanguageRoute(server);
-  registerRegisterPage(server, assets);
+  // reCAPTCHA where the site has keys for it. Where it has none — development,
+  // which has no keys to give — every reader is taken for a person, which is
+  // what the page did before there was a check at all. A production site
+  // without the keys has an open form that emails whoever it is told to, so
+  // the keys belong on the deployment checklist (TODO.md says so).
+  const readers: ReaderCheck =
+    options.readerCheck ??
+    (config.recaptcha === undefined
+      ? { judge: () => Promise.resolve("a person"), siteKey: undefined }
+      : recaptchaAsAReaderCheck(config.recaptcha));
+
+  registerRegisterPage(server, assets, readers);
   registerConfirmEmailAddressPage(server, assets);
   registerSignInPage(
     server,
@@ -440,6 +490,15 @@ export const buildApplication = async (
     inTransaction,
   );
   registerSignOut(server, sessions, inTransaction);
+  registerForgotPasswordPage(
+    server,
+    assets,
+    new PostgresPasswordResetAskings(unitOfWork),
+    inTransaction,
+  );
+  registerSetNewPasswordPage(server, assets, sessions, inTransaction);
+  registerForgetAccountPage(server, assets, sessions, inTransaction);
+  registerRegistrationsSuspendedPage(server, assets);
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);
   registerJavaScriptRequiredPage(server, assets);

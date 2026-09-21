@@ -9,6 +9,8 @@
 // straight to the store, because nothing imports one yet.
 import { randomUUID } from "node:crypto";
 
+import { AskToForgetAccount } from "../../../src/application/operations/accounts/AskToForgetAccount.js";
+import { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import { RegisterAccount } from "../../../src/application/operations/accounts/RegisterAccount.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
@@ -46,21 +48,23 @@ export const accountsThrough = (
   application: Application,
   now: () => ReadOnlyDate,
 ): AccountsInHand => ({
-  // Through the account itself, because nothing asks the application to forget
-  // one yet: what will is the forget account page, and when it exists this
-  // goes through it instead.
+  // Asked for and confirmed, as the forget account page does, with the link
+  // the asking emailed.
   async forget(address) {
-    await application.unitOfWork.inTransaction(async () => {
-      const id = await application.accountsByEmailAddress.find(
-        EmailAddress.from(address),
-      );
-      if (id === undefined) throw new Error(`No account for ${address}.`);
-      const account = await application.accounts.load(id);
-      if (account === undefined)
-        throw new Error(`Nothing kept for ${address}.`);
-      account.forget(now());
-      await application.accounts.save(account);
-    });
+    const id = await application.unitOfWork.inTransaction(() =>
+      application.accountsByEmailAddress.find(EmailAddress.from(address)),
+    );
+    if (id === undefined) throw new Error(`No account for ${address}.`);
+    await application.mediator.send(
+      new AskToForgetAccount(id.value, "en", now()),
+    );
+    await application.mediator.send(
+      new ForgetAccount(
+        await linkEmailedTo(application, address, "Email.ConfirmForgetting"),
+        id.value,
+        now(),
+      ),
+    );
   },
 
   async give(address, as) {
@@ -89,16 +93,20 @@ export const accountsThrough = (
   },
 });
 
-/** The link in the newest email queued for `address`. */
+/** The link in the newest email queued for `address`, of `kind` if given. */
 export const linkEmailedTo = async (
   application: Application,
   address: string,
+  kind?: string,
 ): Promise<string> => {
   const queued = await application.unitOfWork.inTransaction(() =>
     application.emailQueue.emails(),
   );
   const waiting = queued.filter(
-    (email) => !email.givenUp && email.to === address,
+    (email) =>
+      !email.givenUp &&
+      email.to === address &&
+      (kind === undefined || email.kind === kind),
   );
   const last = waiting[waiting.length - 1];
   if (last?.link === undefined) {
