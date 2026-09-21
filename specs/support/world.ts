@@ -31,6 +31,8 @@ import type { Password } from "../../src/domain/aggregates/accounts/value-object
 import type { PersonName } from "../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import type { Flag } from "../../src/domain/aggregates/tournaments/value-objects/Flag.js";
 import type { Flags } from "../../src/domain/aggregates/tournaments/value-objects/Flags.js";
+import type { Country } from "../../src/domain/aggregates/tournaments/value-objects/Country.js";
+import type { Countries } from "../../src/domain/aggregates/tournaments/value-objects/Countries.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -207,6 +209,16 @@ export class SpecWorld extends World {
   public flagFiles: string[] = [];
   public flags: Flags | undefined;
   public flagsChecked = 0;
+  // The country a scenario makes or finds, the other it is compared with, and
+  // whether the two were found the same; and the names a scenario makes its
+  // countries from, in the order it gives them, the countries made, and how
+  // many of those in order the scenario has named so far.
+  public country: Country | undefined;
+  public otherCountry: Country | undefined;
+  public sameCountry: boolean | undefined;
+  public countryNames: [code: string, name: string][] = [];
+  public countries: Countries | undefined;
+  public countriesChecked = 0;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what
