@@ -9,6 +9,7 @@
 // steps ask only that.
 import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { createHash } from "node:crypto";
 
 import { AggregateRepository } from "../../../src/application/common/AggregateRepository.js";
 import { Mediator } from "../../../src/application/common/Mediator.js";
@@ -26,12 +27,21 @@ import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { PostgresHandledRequests } from "../../../src/infrastructure/database/PostgresHandledRequests.js";
 import { PostgresEmailsWritten } from "../../../src/infrastructure/email/PostgresEmailsWritten.js";
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
+import { ConfirmEmailAddressHandler } from "../../../src/application/operations/accounts/ConfirmEmailAddressHandler.js";
+import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
+import type { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
+import type { BreachedPasswords } from "../../../src/application/services/BreachedPasswords.js";
+import type {
+  PasswordCheck,
+  PasswordHasher,
+} from "../../../src/application/services/PasswordHasher.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import type { Registering, SeenEmail } from "../../support/registering.js";
 import type { SpecWorld } from "../../support/world.js";
 import { aSiteKey, keepAccounts, readBack } from "./accounts.js";
 import { queueingOf } from "./emailQueue.js";
 import { unitOfWorkOf } from "./transactions.js";
+import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
 import { scenarioLanguages } from "../../web/support/languages.js";
 
@@ -67,6 +77,28 @@ const CONFIRMED_WITH = "stand-in$password-hash";
 // application's feature can ask where an email points without naming it.
 const writesEmails = emailWriter(scenarioLanguages, SITE_ADDRESS);
 
+/**
+ * A hasher that answers at once. The site's own is slow on purpose, and what
+ * these scenarios are about is what is kept rather than what it cost. It
+ * hashes rather than keeping the password, so that asking whether anything
+ * kept contains the password is asking something.
+ */
+class QuickHasher implements PasswordHasher {
+  hash(password: string): Promise<string> {
+    return Promise.resolve(digestOf(password));
+  }
+
+  check(password: string, hash: string | undefined): Promise<PasswordCheck> {
+    return Promise.resolve({
+      matches: hash !== undefined && hash === digestOf(password),
+      remake: false,
+    });
+  }
+}
+
+const digestOf = (password: string): string =>
+  `sha256$${createHash("sha256").update(password).digest("hex")}`;
+
 export const standUpRegistering = (world: SpecWorld): Registering => {
   const unitOfWork = unitOfWorkOf(world);
   const accounts = keepAccounts(world, aSiteKey());
@@ -89,6 +121,17 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const written = new PostgresEmailsWritten(unitOfWork);
   const links = new SignedLinks(SITE_ADDRESS, "a signing key");
 
+  const hasher = new QuickHasher();
+  // Asked for when it is used rather than held now, because what stands the
+  // check up is a step of its own and may not have run yet.
+  const breached: BreachedPasswords = {
+    isBreached: (password) => {
+      const check = world.breachedPasswords;
+      assert.ok(check !== undefined, "There is no breached password check.");
+      return check.isBreached(password);
+    },
+  };
+
   const mediator = new Mediator();
   const validation = new ValidationBehaviour();
   mediator.addCommandBehaviour(validation);
@@ -103,6 +146,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       written,
       new PostgresHandledRequests(unitOfWork),
       links,
+    ),
+  );
+  validation.register(new ConfirmEmailAddressValidator());
+  mediator.handleCommand(
+    new ConfirmEmailAddressHandler(
+      repository,
+      links,
+      hasher,
+      breached,
+      new PostgresHandledRequests(unitOfWork),
     ),
   );
   world.mediator = mediator;
@@ -156,7 +209,106 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     await world.keepAccount?.(account);
   };
 
+  // A link with what it carries changed and its signature left alone, which is
+  // what a link somebody has tampered with looks like. Written here because
+  // what a link is made of is infrastructure's.
+  //
+  // What is changed is the moment it stops working, moved ten days back, and
+  // the rest is left readable: the same purpose, the same account, a moment
+  // that is still a moment. That is the point of it. Scrambling a character
+  // instead would leave something that decodes to nothing, and the link would
+  // be refused for carrying nonsense whether or not its signature was ever
+  // looked at — so the scenarios would pass against a check that had been
+  // taken out.
+  const altered = (link: string): string => {
+    const [before, carried] = link.split("link=");
+    assert.ok(
+      before !== undefined && carried !== undefined,
+      "That is no link.",
+    );
+    const [body, signature] = carried.split(".");
+    assert.ok(
+      body !== undefined && signature !== undefined,
+      "That link carries nothing.",
+    );
+    const [purpose, account, until] = Buffer.from(body, "base64url")
+      .toString("utf8")
+      .split(".");
+    assert.ok(
+      purpose !== undefined && account !== undefined && until !== undefined,
+      "That link carries nothing this can read.",
+    );
+    // Back rather than forward, so that the altered link is stale as well as
+    // altered: one that claimed a later expiry would never be old, and the
+    // scenario about an altered link being refused whatever its age would
+    // pass against a check that never looked at its age at all.
+    const earlier = Number(until) - 10 * 86400000;
+    const changed = Buffer.from(
+      [purpose, account, String(earlier)].join("."),
+      "utf8",
+    ).toString("base64url");
+    return `${before}link=${changed}.${signature}`;
+  };
+
   return {
+    async confirm(command: ConfirmEmailAddress): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    // Read out of the queue, as a reader reads it out of their mail.
+    async linkEmailedTo(address, nth = 1) {
+      const emails = await world.asARequest(() => queue.emails());
+      const waiting = emails.filter(
+        (email) => !email.givenUp && email.to === address,
+      );
+      const only = waiting[nth - 1];
+      assert.ok(
+        only !== undefined,
+        `${waiting.length} emails are queued for ${address}.`,
+      );
+      assert.ok(only.link !== undefined, "The email carries no link.");
+      return only.link;
+    },
+
+    altered,
+
+    async aLinkToForget(address) {
+      // Whatever the scenario said exists is made first: an account it only
+      // said it had is not there to be looked up until it is.
+      await settle();
+      const id = await idFor(address);
+      // A day, like the link registering sends: how long it works is not what
+      // the scenario using it is about, only what it is for.
+      return links.make(
+        "confirm-forgetting",
+        id,
+        ReadOnlyDate.from(new Date(now().toDate().getTime() + 86400000)),
+      );
+    },
+
+    async everythingKeptFor(address) {
+      // Whatever the scenario said exists is made first: an account it only
+      // said it had is not there to be looked up until it is.
+      await settle();
+      const id = await idFor(address);
+      const { rows } = await world.database.query<{ row: string }>(
+        `select e::text as row from events e where stream_id = $1`,
+        [id.value],
+      );
+      return rows.map(({ row }) => row).join("\n");
+    },
+
+    async forget(address) {
+      // Whatever the scenario said exists is made first: an account it only
+      // said it had is not there to be looked up until it is.
+      await settle();
+      const id = await idFor(address);
+      const account = await readBack(world, id);
+      account.forget(now());
+      await world.keepAccount?.(account);
+    },
+
     async send(command: RegisterAccount): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -224,4 +376,15 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
 
 Given("the application's registering", function (this: SpecWorld) {
   this.registering = standUpRegistering(this);
+});
+
+// Confirming is handled by the same mediator, so standing registering up
+// stands it up too. What this adds is the breached password check confirming
+// asks, which registering has no use for and which has to be started.
+Given("the application's confirming", async function (this: SpecWorld) {
+  assert.ok(
+    this.registering !== undefined,
+    "The application's registering is not stood up.",
+  );
+  await aFakeOfHaveIBeenPwned(this);
 });

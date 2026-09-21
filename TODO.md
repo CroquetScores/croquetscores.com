@@ -28,6 +28,8 @@ Three kinds of thing, kept apart.
 
 - **A failed API request says nothing about being kept.** The error mapping now sends every error _page_ with `cache-control: private, no-cache` and `vary: Cookie, Accept-Language`, because the page carries the account menu (`errors.feature`). The JSON answers beside them carry neither. Nothing caches them today, and none of them is personal yet; decide what the API says about caching when the API answers something that is.
 
+- **Confirming asks Have I Been Pwned and hashes a password inside its transaction.** `TransactionBehaviour` wraps the handler, so the network call — slow when the service is slow, and given seconds before it gives up — and the Argon2 hash each hold a pooled connection doing nothing, with the request id's row locked for the whole of it. Enough confirmations at once while the service is struggling hold every connection, and the rest of the site waits for one. Registering used to be the handler this applied to and no longer is: it asks nobody and hashes nothing, so confirming is the first handler with an outside service in its transaction, and the only one. Neither the check nor the hash needs the database. Moving them out means a behaviour that runs before `TransactionBehaviour`, or a handler in two parts, and either decides how handlers are shaped; decide it with the known problem below about where handlers are registered, since both change the mediator (from the review of confirming).
+
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
 - **The proxy to trust for a reader's IP address**, which the forgot password page's limit counts by: a setting, like `CANONICAL_HOST`, for the deployment checklist.
