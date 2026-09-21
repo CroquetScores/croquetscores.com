@@ -30,15 +30,28 @@ Given(
   },
 );
 
+// Each region as a list of its own, so that regions given for one country in
+// more than one list are what two regions named for one country always are.
+Given(
+  "the region {string} called {string} in {string}",
+  function (this: SpecWorld, code: string, name: string, country: string) {
+    this.countryRegions.push([country, [[code, name]]]);
+  },
+);
+
 Given("the countries there are", function (this: SpecWorld) {
   this.countries = Countries.thereAre;
 });
 
 // Made from the flags there are, since every country is made from a flag there
-// is, and the scenario names only what it is about: the names.
+// is, and the scenario names only what it is about: the names and the regions.
 When("the countries are made", function (this: SpecWorld) {
   try {
-    this.countries = Countries.from(Flags.thereAre, this.countryNames);
+    this.countries = Countries.from(
+      Flags.thereAre,
+      this.countryNames,
+      this.countryRegions,
+    );
   } catch (failure) {
     this.failure = failure;
   }
@@ -99,3 +112,15 @@ Then(
     );
   },
 );
+
+// Named in full when it fails, so that whoever reads it knows which countries
+// have no region to put a tournament in.
+Then("every one of them has at least one region", function (this: SpecWorld) {
+  assert.deepEqual(
+    countriesOfWorld(this)
+      .all.filter((country) => country.regions.length === 0)
+      .map((country) => country.code),
+    [],
+    "These countries have no region.",
+  );
+});

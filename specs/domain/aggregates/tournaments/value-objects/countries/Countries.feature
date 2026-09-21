@@ -22,6 +22,20 @@ Feature: The countries there are
   Two names given for one code are refused: a country is known by its code,
   and there is no saying which of the two it is called.
 
+  Each country's regions are given with it, by its code, and a country whose
+  regions are not given is its own one region, as every country is that is
+  not divided. Regions given for a code that no country has are refused, since
+  there would be no country to find them in.
+
+  The regions there are are the old site's, written down once in the code
+  from its list, so that what the old site recorded still finds its region.
+  The old site listed regions for 29 countries, and every other country is
+  its own one region. Three of its codes are not the codes here: it called
+  England "en", Scotland "sc" and Wales "wa", where their flags are named
+  "england", "scotland" and "wales", and "sc" is the Seychelles. Those three
+  are given under the codes here, so the Seychelles do not have Scotland's
+  regions.
+
   A country is found by its code as a flag is found by its name, so "AU"
   finds Australia, and a code no country has finds nothing. The countries are
   in order of their names as a reader would look for them in a list, so the
@@ -103,6 +117,44 @@ Feature: The countries there are
       And the third country is "zw"
       And there are no more countries
 
+  Rule: A country's regions are given with it, by its code
+
+    Scenario: A region given for a country's code is one of its regions
+      Given the name "Australia" for "au"
+      And the region "vic" called "Victoria" in "au"
+      When the countries are made
+      And the country "au" is found
+      Then the country has a region "vic"
+
+    Scenario: Every region given for a country's code is one of its regions
+      Given the name "Australia" for "au"
+      And the region "vic" called "Victoria" in "au"
+      And the region "nsw" called "New South Wales" in "au"
+      When the countries are made
+      And the country "au" is found
+      Then the country has a region "vic"
+      And the country has a region "nsw"
+
+    Scenario: Regions given for a code in capitals are that country's
+      Given the name "Australia" for "au"
+      And the region "vic" called "Victoria" in "AU"
+      When the countries are made
+      And the country "au" is found
+      Then the country has a region "vic"
+
+    Scenario: A country whose regions are not given is its own one region
+      Given the name "New Zealand" for "nz"
+      When the countries are made
+      And the country "nz" is found
+      Then the first region is "nz"
+      And there are no more regions
+
+    Scenario: Regions given for a code no country has are refused
+      Given the name "Australia" for "au"
+      And the region "auc" called "Auckland" in "nz"
+      When the countries are made
+      Then it is refused for breaking "Countries.RegionsForNoCountry"
+
   Rule: The countries there are are the flags there are, but the European Union's
 
     Scenario: Every flag there is, but the European Union's, is a country there is
@@ -127,3 +179,38 @@ Feature: The countries there are
         | england | England        |
         | im      | Isle of Man    |
         | je      | Jersey         |
+
+  Rule: The regions there are are the old site's
+
+    Scenario Outline: A country there is has the region the old site gave it
+      Given the countries there are
+      When the country "<country>" is found
+      And the region "<region>" is found
+      Then the region's name is "<name>"
+
+      Examples:
+        | country  | region | name                  |
+        | au       | vic    | Victoria              |
+        | nz       | auc    | Auckland              |
+        | ar       | cór    | Córdoba               |
+        | cz       | únlr   | Ústí nad Labem Region |
+        | im       | iom    | Isle of Man           |
+        | england  | ken    | Kent                  |
+        | scotland | fif    | Fife                  |
+        | wales    | car    | Cardiff               |
+
+    Scenario: A country the old site gave no regions is its own one region
+      Given the countries there are
+      When the country "fj" is found
+      Then the first region is "fj"
+      And there are no more regions
+
+    Scenario: The Seychelles do not have Scotland's regions
+      Given the countries there are
+      When the country "sc" is found
+      Then the first region is "sc"
+      And there are no more regions
+
+    Scenario: Every country there is has at least one region
+      Given the countries there are
+      Then every one of them has at least one region
