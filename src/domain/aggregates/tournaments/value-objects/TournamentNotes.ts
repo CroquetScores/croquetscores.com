@@ -34,14 +34,26 @@ const declarations = /<[!?][^>]*(?:>|$)/g;
 // its opening tag is still there to find.
 const scriptsAndStyles = /<(script|style)\b[^>]*>[\s\S]*?(?:<\/\1\s*>|$)/gi;
 
-// A tag's name is followed by whitespace, a slash or its end, and that is what
-// tells it from a link between angle brackets, whose scheme is followed by a
-// colon, and from an address between them, whose name is followed by an "@".
-// A "<" followed by anything else begins no tag, and is text. A tag left open
+// Markdown's own ways of writing a link between angle brackets, as CommonMark
+// defines them: a scheme and a colon with no whitespace or angle bracket after
+// it, or an email address. Either one with anything else before its ">" is not
+// one of these, and is a tag like any other.
+const link = "[a-z][a-z0-9+.-]{1,31}:[^\\s<>]*";
+const emailAddress =
+  "[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?" +
+  "(?:\\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*";
+
+// A tag begins where a browser takes one to begin, at a "<" or "</" followed by
+// a letter, whatever the rest of its name holds: "<x!y onmouseover=...>" is a
+// tag to a browser, and its attributes count. Only the links above are not. A
+// "<" followed by anything else begins no tag, and is text. A tag left open
 // takes everything after it: Markdown passes "<div onmouseover=..." at the
 // start of a line through as it stands, and a browser would then read the
 // page after the notes as the rest of the tag, so its attributes would count.
-const tags = /<\/?[a-z][a-z0-9-]*(?=[\s/>]|$)[^>]*(?:>|$)/gi;
+const tags = new RegExp(
+  `<(?!(?:${link}|${emailAddress})>)\\/?[a-z][^>]*(?:>|$)`,
+  "gi",
+);
 
 // A browser reads a letter of a scheme however it is written: in either case,
 // or as a character reference, decimal or hexadecimal, with or without its
@@ -75,7 +87,7 @@ const scripts = new RegExp(
 
 const withoutHtmlOrScripts = (text: string): string => {
   // Taking out one piece can bring two halves of another together, as
-  // "<scr<b></b>ipt>" and "java<b></b>script:" do, so this goes on until a
+  // "<<b></b>script>" and "java<b></b>script:" do, so this goes on until a
   // pass takes out nothing.
   let before: string;
   let after = text;

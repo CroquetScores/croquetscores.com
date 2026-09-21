@@ -18,14 +18,17 @@ Feature: The notes a tournament has
   read whatever the page puts after the notes as the rest of it.
 
   Taking out one piece of HTML can bring two halves of another together, as
-  "<scr<b></b>ipt>" does, so taking out goes on until there is nothing left to
+  "<<b></b>script>" does, so taking out goes on until there is nothing left to
   take. Notes with any HTML left in them would be worse than none.
 
   Markdown is kept exactly as it was written, because it is what the notes are
-  written in. That includes a link written between angle brackets, such as
-  "<https://example.com>": it looks like a tag, and is Markdown's own way of
-  writing a link. A "<" that begins no tag, as in "a < b", is text, and is
-  kept.
+  written in. That includes a link or an email address written between angle
+  brackets, such as "<https://example.com>" or "<entries@example.com>": each
+  looks like a tag, and is Markdown's own way of writing a link. What begins a
+  tag is what a browser takes to begin one, a "<" or "</" followed by a letter,
+  so anything else that begins that way is a tag, whatever its name holds:
+  "<x!y onmouseover=...>" is one to a browser, and its attributes would count.
+  A "<" that begins no tag, as in "a < b" or "x<3", is text, and is kept.
 
   The one thing Markdown can say that a page must not show is a link that runs
   a script when it is followed, such as "[the draw](javascript:alert(1))". So
@@ -62,9 +65,17 @@ Feature: The notes a tournament has
       When the notes "See <https://example.com> for the draw." are made
       Then the notes are "See <https://example.com> for the draw."
 
+    Scenario: An email address between angle brackets is Markdown, and is kept
+      When the notes "Write to <entries@example.com> to enter." are made
+      Then the notes are "Write to <entries@example.com> to enter."
+
     Scenario: A less-than sign that begins no tag is kept
       When the notes "Handicaps < 2 play on lawn 1." are made
       Then the notes are "Handicaps < 2 play on lawn 1."
+
+    Scenario: A less-than sign followed by a digit begins no tag, and is kept
+      When the notes "Handicaps<3 play on lawn 1." are made
+      Then the notes are "Handicaps<3 play on lawn 1."
 
     Scenario: The lines of notes are kept as they were written
       When the notes are made from:
@@ -95,6 +106,18 @@ Feature: The notes a tournament has
     Scenario: A tag that closes itself is taken out
       When the notes "Lunch<br/>at noon." are made
       Then the notes are "Lunchat noon."
+
+    Scenario: A tag whose name holds more than letters and digits is taken out
+      When the notes "Welcome.<x!y onmouseover=alert(1)>hover me" are made
+      Then the notes are "Welcome.hover me"
+
+    Scenario: A tag whose name holds a quotation mark is taken out
+      When the notes 'Welcome.<x"y onmouseover=alert(1)>hover me' are made
+      Then the notes are "Welcome.hover me"
+
+    Scenario: A link between angle brackets with anything after its address is a tag, and is taken out
+      When the notes "Welcome.<https://example.com onmouseover=alert(1)>hover me" are made
+      Then the notes are "Welcome.hover me"
 
     Scenario: A tag in capitals is taken out
       When the notes "Play starts <B>early</B>." are made
@@ -137,7 +160,7 @@ Feature: The notes a tournament has
       Then the notes are "Welcome."
 
     Scenario: HTML that taking out other HTML brings together is taken out too
-      When the notes "Welcome.<scr<b></b>ipt>alert(1)</script>" are made
+      When the notes "Welcome.<<b></b>script>alert(1)</script>" are made
       Then the notes are "Welcome."
 
   Rule: A link that runs a script is taken out
@@ -146,9 +169,9 @@ Feature: The notes a tournament has
       When the notes "See [the draw](javascript:alert(1))." are made
       Then the notes are "See [the draw](alert(1))."
 
-    Scenario: A link to a script between angle brackets is taken out
+    Scenario: A link to a script between angle brackets is taken out, and what is left of it is a tag
       When the notes "See <javascript:alert(1)>." are made
-      Then the notes are "See <alert(1)>."
+      Then the notes are "See ."
 
     Scenario: A link to a script given by reference is taken out
       When the notes are made from:
