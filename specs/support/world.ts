@@ -33,6 +33,7 @@ import type { Flag } from "../../src/domain/aggregates/tournaments/value-objects
 import type { Flags } from "../../src/domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Country } from "../../src/domain/aggregates/tournaments/value-objects/Country.js";
 import type { Countries } from "../../src/domain/aggregates/tournaments/value-objects/Countries.js";
+import type { Region } from "../../src/domain/aggregates/tournaments/value-objects/Region.js";
 import type { Sport } from "../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
@@ -240,6 +241,17 @@ export class SpecWorld extends World {
   public countryNames: [code: string, name: string][] = [];
   public countries: Countries | undefined;
   public countriesChecked = 0;
+  // The region a scenario makes, or finds in a country; the regions a scenario
+  // gives the country it makes, and those it gives each country by its code,
+  // in the order it gives them; and how many of a country's regions in order
+  // the scenario has named so far.
+  public region: Region | undefined;
+  public regionEntries: [code: string, name: string][] = [];
+  public countryRegions: [
+    country: string,
+    regions: [code: string, name: string][],
+  ][] = [];
+  public regionsChecked = 0;
   // The site a scenario names, which whatever differs by site looks at.
   public site: Site | undefined;
   // The sport a scenario makes, and whether it was found the same as another;

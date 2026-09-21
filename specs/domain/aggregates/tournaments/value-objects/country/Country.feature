@@ -19,6 +19,15 @@ Feature: The country a tournament is played in
   Two countries are the same country when their codes are, so a country
   whose name is written another way is still the same country.
 
+  A country is divided into regions, and every country has at least one. A
+  country that is not divided, or whose regions nobody has listed, has one
+  region, which is the whole country, coded and named as the country is: so
+  there is always a region to put a tournament in. A country's regions are in
+  order of their names as a reader would look for them in a list, and a region
+  is found by its code, taken as a region's code is, so "VIC" finds Victoria.
+  Two regions with one code are refused: a region is known by its code within
+  its country, and there is no saying which of the two a tournament was in.
+
   Rule: A country is made from its flag
 
     Scenario: A country's code is its flag's name
@@ -75,3 +84,73 @@ Feature: The country a tournament is played in
       And the other country named "Australia"
       When the countries are compared
       Then they are different countries
+
+  Rule: Every country has at least one region
+
+    Scenario: A region given to a country is one of its regions
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      When the country named "Australia" is made
+      Then the country has a region "vic"
+
+    Scenario: A country's region has its name
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      When the country named "Australia" is made
+      And the region "vic" is found
+      Then the region's name is "Victoria"
+
+    Scenario: A code that is none of the country's regions finds nothing
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      When the country named "Australia" is made
+      Then the country has no region "tas"
+
+    Scenario: A region is found by a code in capitals
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      When the country named "Australia" is made
+      Then the country has a region "VIC"
+
+    Scenario: A country's regions come in order of their names, whatever order they were given in
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      And the region "act" called "Australian Capital Territory"
+      And the region "nsw" called "New South Wales"
+      When the country named "Australia" is made
+      Then the first region is "act"
+      And the second region is "nsw"
+      And the third region is "vic"
+      And there are no more regions
+
+    Scenario: A country given no regions has one, which is the whole country
+      Given the flag "fj"
+      When the country named "Fiji" is made
+      Then the first region is "fj"
+      And there are no more regions
+
+    Scenario: The one region of a country given none is named as the country is
+      Given the flag "fj"
+      When the country named "Fiji" is made
+      And the region "fj" is found
+      Then the region's name is "Fiji"
+
+    Scenario: Two regions with one code are refused
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      And the region "vic" called "Victoria State"
+      When the country named "Australia" is made
+      Then it is refused for breaking "Country.SameRegionTwice"
+
+    Scenario: Two regions whose codes differ only in case are refused
+      Given the flag "au"
+      And the region "vic" called "Victoria"
+      And the region "VIC" called "Victoria State"
+      When the country named "Australia" is made
+      Then it is refused for breaking "Country.SameRegionTwice"
+
+    Scenario: A region that could not be a region is refused as a region is
+      Given the flag "au"
+      And the region "v-c" called "Victoria"
+      When the country named "Australia" is made
+      Then it is refused for breaking "Region.NotLettersOrDigits"
