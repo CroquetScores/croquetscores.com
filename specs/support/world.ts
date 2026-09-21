@@ -35,6 +35,7 @@ import type { Country } from "../../src/domain/aggregates/tournaments/value-obje
 import type { Countries } from "../../src/domain/aggregates/tournaments/value-objects/Countries.js";
 import type { Sport } from "../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
+import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -255,6 +256,9 @@ export class SpecWorld extends World {
   public sameTournamentFormat: boolean | undefined;
   public offeredFormats: readonly TournamentFormat[] | undefined;
   public offeredFormatsChecked = 0;
+  // The notes a scenario made, which may be none, kept apart from whether any
+  // were made at all.
+  public madeNotes: { notes: TournamentNotes | undefined } | undefined;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what
