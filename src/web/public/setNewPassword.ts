@@ -118,11 +118,14 @@ export const registerSetNewPasswordPage = (
     body: string,
     title: string,
     frame?: "bare",
+    signedOut = false,
   ): string =>
     render(assets, {
       title,
       theme: themeOf(request),
-      signedIn: signedIn(request),
+      // Who the reader was is read as the request arrives, and a reader whose
+      // sessions this request ended is not signed in to anything any more.
+      signedIn: !signedOut && signedIn(request),
       speaking: speakingOf(request),
       path: setNewPasswordPath,
       currentPath: setNewPasswordPath,
@@ -134,6 +137,7 @@ export const registerSetNewPasswordPage = (
     request: FastifyRequest,
     reply: FastifyReply,
     said: Said,
+    signedOut = false,
   ): FastifyReply => {
     const home = speakingOf(request).say("setNewPassword.home");
     const onwards =
@@ -151,6 +155,8 @@ export const registerSetNewPasswordPage = (
           <p>${escape(said.explanation)}</p>${onwards}
           <p><a href="/">${escape(home)}</a></p>`,
           said.title,
+          undefined,
+          signedOut,
         ),
       );
   };
@@ -256,14 +262,19 @@ export const registerSetNewPasswordPage = (
         await endSession(request, reply, sessions);
       });
 
-      return telling(request, reply, {
-        title: speaking.say("setNewPassword.changed.title"),
-        explanation: speaking.say("setNewPassword.changed.explanation"),
-        onwards: {
-          href: signInPath,
-          label: speaking.say("setNewPassword.signIn"),
+      return telling(
+        request,
+        reply,
+        {
+          title: speaking.say("setNewPassword.changed.title"),
+          explanation: speaking.say("setNewPassword.changed.explanation"),
+          onwards: {
+            href: signInPath,
+            label: speaking.say("setNewPassword.signIn"),
+          },
         },
-      });
+        true,
+      );
     },
   );
 };

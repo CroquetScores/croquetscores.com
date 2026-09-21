@@ -143,6 +143,15 @@ Feature: A reader who has forgotten their password is sent a way back in
       When the new password "a different long password" is set
       Then the account for "someone@example.com" has 0 sessions
 
+    Scenario: Setting a new password signs out the reader who set it
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to set a new password has been sent to "someone@example.com"
+      And the link is followed
+      When the new password "a different long password" is set
+      Then the reader is signed out
+
   Rule: A link is on the site's own address, whatever host it was asked for with
 
     Scenario: A link to set a new password asked for with another host is on the site's address
