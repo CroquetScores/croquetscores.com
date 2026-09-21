@@ -15,6 +15,7 @@ import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { nameAccountEvents } from "../../../src/domain/aggregates/accounts/events/accountEvents.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
+import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import { EventRegistry } from "../../../src/domain/common/EventRegistry.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { AccountEventSealing } from "../../../src/infrastructure/encryption/AccountEventSealing.js";
@@ -153,6 +154,30 @@ const registeredFor = (world: SpecWorld, address: string): AccountId[] =>
   accountsOf(world).byAddress.get(EmailAddress.from(address).comparable) ?? [];
 
 // Registering and forgetting -----------------------------------------------
+
+// Brought over rather than registered: the account was somebody's on the old
+// site, and arrives with the name, the address and the password hash it had
+// there.
+Given(
+  "an account for {string} is brought over from the old site",
+  async function (this: SpecWorld, address: string) {
+    assert.ok(this.moment !== undefined, "No moment has been named.");
+    const account = Account.bringOver(
+      AccountId.create(),
+      PersonName.from("Sam Someone"),
+      EmailAddress.from(address),
+      this.hashEmailAddress?.(address) ?? "",
+      "the old site's hash",
+      ReadOnlyDate.from(this.moment),
+    );
+    this.aggregate = account;
+    try {
+      await this.keepAccount?.(account);
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
 
 Given(
   "an account for {string} is registered",

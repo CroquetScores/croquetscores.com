@@ -4,8 +4,14 @@
 // this. Application and domain types only, for the reason at the top of
 // world.ts.
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
+import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
+import type { WhatAConfirmationLinkIsWorth } from "../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
+import type { ConfirmationLinkWorth } from "../../src/application/operations/accounts/confirmationLinks.js";
 import type { RegisterAccount } from "../../src/application/operations/accounts/RegisterAccount.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
+import type { AccountAsGiven } from "./accounts.js";
 
 /** A queued email, as a scenario reads it back. */
 export interface SeenEmail {
@@ -25,6 +31,18 @@ export interface Registering {
   /** Sends a confirmation. Throws what the mediator throws. */
   confirm(command: ConfirmEmailAddress): Promise<void>;
 
+  /** Signs in. Answers with the account, or throws what the mediator throws. */
+  signIn(command: SignIn): Promise<AccountId>;
+
+  /** How many passwords have been checked against a hash, or against none. */
+  passwordsChecked(): number;
+
+  /** Asks for the link to be sent again. Throws what the mediator throws. */
+  sendAgain(command: SendConfirmationLinkAgain): Promise<void>;
+
+  /** Asks what a link is worth, without following it. */
+  worthOf(query: WhatAConfirmationLinkIsWorth): Promise<ConfirmationLinkWorth>;
+
   /**
    * The link in the email queued for `address` — the only one, or the `nth`
    * of them, counting from one, where registering has sent more than one.
@@ -40,8 +58,8 @@ export interface Registering {
   /** Forgets the account for `address`, as forgetting one will. */
   forget(address: string): Promise<void>;
 
-  /** An account for `address`, registered before the scenario's registration. */
-  giveAnAccount(address: string, confirmed: boolean): Promise<void>;
+  /** An account for `address`, made before the scenario's own request. */
+  giveAnAccount(address: string, as: AccountAsGiven): Promise<void>;
 
   /** That `kind` was written to the account for `address`, `times` times. */
   wroteTo(address: string, kind: string, times: number): Promise<void>;

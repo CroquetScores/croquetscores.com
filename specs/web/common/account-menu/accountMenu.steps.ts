@@ -185,14 +185,18 @@ Given("an account for {string}, confirmed", function (address: string) {
   assert.ok(address.includes("@"), `${address} is not an email address.`);
 });
 
+// Said of the scenario's browser rather than of any account: these scenarios
+// have no database, and what the menu asks is only whether anybody is signed
+// in. Whether a reader really is signed in, to a real account, is asked in the
+// words of the features that sign one in.
 Given(
-  "the reader is signed in to the account for {string}",
+  "a reader signed in as {string}",
   async function (this: SpecWorld, address: string) {
     await signInAs(this, address);
   },
 );
 
-Given("the reader is signed out", async function (this: SpecWorld) {
+Given("nobody is signed in", async function (this: SpecWorld) {
   await signOutOf(this);
 });
 

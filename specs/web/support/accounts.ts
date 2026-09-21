@@ -1,0 +1,131 @@
+// The accounts a browser scenario says are already there, made through the
+// application it is talking to.
+//
+// Made the way the site makes them, rather than by writing rows: an account
+// that is registered is registered, and one that is confirmed is confirmed by
+// submitting a name and a password with the link the registering emailed, so
+// that a scenario about signing in is signing in to an account the site could
+// actually have. Only an account brought over from the old site is written
+// straight to the store, because nothing imports one yet.
+import { randomUUID } from "node:crypto";
+
+import { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
+import { RegisterAccount } from "../../../src/application/operations/accounts/RegisterAccount.js";
+import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
+import { AccountId } from "../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
+import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
+import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
+import { OldSitePasswordHasher } from "../../../src/infrastructure/identity/OldSitePasswordHasher.js";
+import type { Application } from "../../../src/web/server.js";
+import type { AccountsInHand } from "../../support/accounts.js";
+
+/** What an account is called when the scenario has not said. */
+const CALLED = "Sam Someone";
+
+/**
+ * The salt the old site added to every password. A scenario's own, so that an
+ * account brought over can be made and signed in to whether or not whoever
+ * runs the specs has the real one.
+ */
+export const oldSiteSaltForScenarios = "the old site's site-wide salt";
+
+const theOldSite = new OldSitePasswordHasher(oldSiteSaltForScenarios);
+
+// Sixteen bytes of salt, as the old site made them, fixed so that a scenario
+// making the same account twice makes the same hash.
+const ITS_SALT = Buffer.alloc(16, 7).toString("base64");
+
+/** `password` as the old site would have kept it: its salt and its hash. */
+const asTheOldSiteKeptIt = (password: string): string => {
+  const hash = theOldSite.hashOf(password, ITS_SALT);
+  return `${ITS_SALT.slice(0, 4)}${hash}${ITS_SALT.slice(4)}`;
+};
+
+export const accountsThrough = (
+  application: Application,
+  now: () => ReadOnlyDate,
+): AccountsInHand => ({
+  // Through the account itself, because nothing asks the application to forget
+  // one yet: what will is the forget account page, and when it exists this
+  // goes through it instead.
+  async forget(address) {
+    await application.unitOfWork.inTransaction(async () => {
+      const id = await application.accountsByEmailAddress.find(
+        EmailAddress.from(address),
+      );
+      if (id === undefined) throw new Error(`No account for ${address}.`);
+      const account = await application.accounts.load(id);
+      if (account === undefined)
+        throw new Error(`Nothing kept for ${address}.`);
+      account.forget(now());
+      await application.accounts.save(account);
+    });
+  },
+
+  async give(address, as) {
+    if (as.fromTheOldSite === true) {
+      await broughtOver(application, address, as.password ?? "", now());
+      return;
+    }
+
+    await application.mediator.send(
+      new RegisterAccount(randomUUID(), address, "en", now()),
+    );
+    if (!as.confirmed) return;
+
+    const link = await linkEmailedTo(application, address);
+    const password = as.password ?? "correct horse battery staple";
+    await application.mediator.send(
+      new ConfirmEmailAddress(
+        randomUUID(),
+        link,
+        CALLED,
+        password,
+        password,
+        now(),
+      ),
+    );
+  },
+});
+
+/** The link in the newest email queued for `address`. */
+export const linkEmailedTo = async (
+  application: Application,
+  address: string,
+): Promise<string> => {
+  const queued = await application.unitOfWork.inTransaction(() =>
+    application.emailQueue.emails(),
+  );
+  const waiting = queued.filter(
+    (email) => !email.givenUp && email.to === address,
+  );
+  const last = waiting[waiting.length - 1];
+  if (last?.link === undefined) {
+    throw new Error(`No email carrying a link is queued for ${address}.`);
+  }
+  return last.link;
+};
+
+// Written straight to the store, because nothing imports an account yet: what
+// would is a maintenance task over the old site's database, and when it exists
+// this goes through it instead.
+const broughtOver = async (
+  application: Application,
+  address: string,
+  password: string,
+  at: ReadOnlyDate,
+): Promise<void> => {
+  const at_ = EmailAddress.from(address);
+  const account = Account.bringOver(
+    AccountId.create(),
+    PersonName.from(CALLED),
+    at_,
+    application.emailAddresses.hash(at_),
+    await application.passwords.import(asTheOldSiteKeptIt(password)),
+    at,
+  );
+  await application.unitOfWork.inTransaction(() =>
+    application.accounts.save(account),
+  );
+};
