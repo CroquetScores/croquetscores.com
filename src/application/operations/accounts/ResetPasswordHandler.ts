@@ -11,6 +11,7 @@ import type { EmailsWritten, WrittenTo } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { LinkPurpose, Links } from "../../services/Links.js";
 import { ResetPassword } from "./ResetPassword.js";
+import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
 
 /** What asking needs of where accounts are found by their address. */
 export interface AccountsByAddressForAsking {
@@ -22,7 +23,10 @@ export interface AccountsByAddressForAsking {
 const emails: Readonly<
   Record<Kind, { readonly link?: LinkPurpose; readonly hours: number }>
 > = {
-  "Email.SetNewPassword": { link: "set-new-password", hours: 1 },
+  "Email.SetNewPassword": {
+    link: "set-new-password",
+    hours: SET_NEW_PASSWORD_LINK_HOURS,
+  },
   "Email.ConfirmAddressAgain": { link: "confirm-email-address", hours: 24 },
   "Email.RegisterInstead": { hours: 0 },
 };

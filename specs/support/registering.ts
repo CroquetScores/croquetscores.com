@@ -6,6 +6,7 @@
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { SetNewPassword } from "../../src/application/operations/accounts/SetNewPassword.js";
 import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
 import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
@@ -44,6 +45,12 @@ export interface Registering {
 
   /** Reports a service unreachable. Throws what the mediator throws. */
   report(command: ReportUnreachableService): Promise<void>;
+
+  /** Sets a new password. Answers with the account, or throws. */
+  setNewPassword(command: SetNewPassword): Promise<AccountId>;
+
+  /** A link to confirm the email address of the account for `address`. */
+  aLinkToConfirm(address: string): Promise<string>;
 
   /** Asks for a way back in. Throws what the mediator throws. */
   resetPassword(command: ResetPassword): Promise<void>;

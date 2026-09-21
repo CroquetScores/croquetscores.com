@@ -92,3 +92,30 @@ Then("one of the two claims was refused", function (this: SpecWorld) {
     "Both claims were answered the same.",
   );
 });
+
+// Asking, which claims nothing ------------------------------------------------------
+
+const asked = new WeakMap<SpecWorld, boolean>();
+
+const ask = async (world: SpecWorld, requestId: string): Promise<void> => {
+  asked.set(
+    world,
+    await world.asARequest(() => recordOf(world).wasHandled(requestId)),
+  );
+};
+
+// Given and When alike: Cucumber holds one definition for both.
+When(
+  "the request {string} is asked about",
+  async function (this: SpecWorld, requestId: string) {
+    await ask(this, requestId);
+  },
+);
+
+Then("it has been handled", function (this: SpecWorld) {
+  assert.equal(asked.get(this), true);
+});
+
+Then("it has not been handled", function (this: SpecWorld) {
+  assert.equal(asked.get(this), false);
+});

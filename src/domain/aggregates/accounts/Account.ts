@@ -6,6 +6,7 @@ import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
+import { PasswordSet } from "./events/PasswordSet.js";
 import { SignedIn } from "./events/SignedIn.js";
 import type { AccountId } from "./value-objects/AccountId.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
@@ -43,6 +44,7 @@ export class Account extends AggregateRoot {
   #emailAddress: EmailAddress | undefined;
   #passwordHash: string | undefined;
   #passwordImported = false;
+  #passwordSetAt: ReadOnlyDate | undefined;
   #confirmed = false;
   #forgotten = false;
 
@@ -136,6 +138,16 @@ export class Account extends AggregateRoot {
     return this.#passwordImported;
   }
 
+  /**
+   * When the account was last given a password — by confirming its address, by
+   * being brought over, or by setting a new one — or nothing where it has
+   * none. What a link that sets a password is judged against: one made before
+   * the password was last set has been spent.
+   */
+  get passwordSetAt(): ReadOnlyDate | undefined {
+    return this.#passwordSetAt;
+  }
+
   get confirmed(): boolean {
     return this.#confirmed;
   }
@@ -178,6 +190,24 @@ export class Account extends AggregateRoot {
   }
 
   /**
+   * That somebody has given the account a new password, whose hash is
+   * `passwordHash`. Refused with `Account.Forgotten` for an account forgotten,
+   * and with `Account.NotConfirmed` for one whose address nobody has shown
+   * they read: it has no password to replace, and giving it one here would
+   * hand the account to whoever asked.
+   */
+  setNewPassword(passwordHash: string, at: ReadOnlyDate): void {
+    this.#refuseIfForgotten();
+    if (!this.#confirmed) {
+      throw new AccountRefused(
+        "Account.NotConfirmed",
+        "The account's email address has not been confirmed.",
+      );
+    }
+    this.record(new PasswordSet(passwordHash, this.id, at));
+  }
+
+  /**
    * That the account's password now has `passwordHash`, made a better way.
    * Refused with `Account.Forgotten` for an account forgotten, since a new
    * hash would be something new kept of the person after forgetting was to
@@ -206,14 +236,22 @@ export class Account extends AggregateRoot {
       this.#emailAddress = EmailAddress.from(event.emailAddress);
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = true;
+      this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
     } else if (event instanceof EmailAddressConfirmed) {
       this.#name = PersonName.from(event.name);
       this.#passwordHash = event.passwordHash;
+      this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
     } else if (event instanceof PasswordHashedAgain) {
+      // The same password, hashed a better way, so the moment it was set is
+      // still the moment somebody chose it.
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = false;
+    } else if (event instanceof PasswordSet) {
+      this.#passwordHash = event.passwordHash;
+      this.#passwordImported = false;
+      this.#passwordSetAt = event.occurredAt;
     } else if (event instanceof AccountForgotten) {
       this.#forgotten = true;
     }

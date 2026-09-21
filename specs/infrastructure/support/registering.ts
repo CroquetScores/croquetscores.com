@@ -34,6 +34,9 @@ import { ResetPasswordValidator } from "../../../src/application/operations/acco
 import type { ResetPassword } from "../../../src/application/operations/accounts/ResetPassword.js";
 import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
 import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
+import { SetNewPasswordHandler } from "../../../src/application/operations/accounts/SetNewPasswordHandler.js";
+import { SetNewPasswordValidator } from "../../../src/application/operations/accounts/SetNewPasswordValidator.js";
+import type { SetNewPassword } from "../../../src/application/operations/accounts/SetNewPassword.js";
 import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../../../src/application/operations/accounts/SignInHandler.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
@@ -156,6 +159,9 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const links = new SignedLinks(SITE_ADDRESS, "a signing key");
 
   const hasher = new QuickHasher();
+  // On the world as well, so that a scenario can ask whether a hash was made
+  // from a password without knowing how this one makes them.
+  world.passwordHasher = hasher;
   // Asked for when it is used rather than held now, because what stands the
   // check up is a step of its own and may not have run yet.
   const breached: BreachedPasswords = {
@@ -214,6 +220,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       written,
       new PostgresHandledRequests(unitOfWork),
       links,
+    ),
+  );
+  validation.register(new SetNewPasswordValidator());
+  mediator.handleCommand(
+    new SetNewPasswordHandler(
+      repository,
+      links,
+      hasher,
+      breached,
+      new PostgresHandledRequests(unitOfWork),
     ),
   );
   // A query changes nothing, so it is given a transaction it cannot write in,
@@ -325,6 +341,11 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await mediator.send(command);
     },
 
+    async setNewPassword(command: SetNewPassword): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
     async resetPassword(command: ResetPassword): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -360,6 +381,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     },
 
     altered: alterLink,
+
+    async aLinkToConfirm(address) {
+      await settle();
+      const id = await idFor(address);
+      return links.make(
+        "confirm-email-address",
+        id,
+        ReadOnlyDate.from(new Date(now().toDate().getTime() + 86400000)),
+      );
+    },
 
     async aLinkToForget(address) {
       // Whatever the scenario said exists is made first: an account it only

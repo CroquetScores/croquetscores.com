@@ -59,6 +59,15 @@ Given(
   },
 );
 
+// Where the address has been sent more than one, and the scenario is about the
+// later.
+Given(
+  "the second link emailed to {string} is taken out of it",
+  async function (this: SpecWorld, address: string) {
+    this.linkInHand = await registeringOf(this).linkEmailedTo(address, 2);
+  },
+);
+
 // Asking ---------------------------------------------------------------------------
 
 Given(

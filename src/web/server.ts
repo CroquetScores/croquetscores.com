@@ -22,6 +22,8 @@ import { SignInHandler } from "../application/operations/accounts/SignInHandler.
 import { ResetPasswordHandler } from "../application/operations/accounts/ResetPasswordHandler.js";
 import { ResetPasswordValidator } from "../application/operations/accounts/ResetPasswordValidator.js";
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
+import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
+import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import type { EventStore } from "../application/services/EventStore.js";
@@ -317,6 +319,10 @@ export const buildApplication = async (
       : new OldSitePasswordHasher(config.oldSitePasswordSalt),
   );
 
+  // Asked by confirming an address and by setting a new password: the same
+  // question about the same kind of password.
+  const breached = options.breachedPasswords ?? new HaveIBeenPwnedPasswords();
+
   validation.register(new RegisterAccountValidator());
   mediator.handleCommand(
     new RegisterAccountHandler(
@@ -335,7 +341,7 @@ export const buildApplication = async (
       accounts,
       links,
       passwords,
-      options.breachedPasswords ?? new HaveIBeenPwnedPasswords(),
+      breached,
       handledRequests,
     ),
   );
@@ -359,6 +365,16 @@ export const buildApplication = async (
       emailQueue,
       emailsWritten,
       config.administratorEmailAddress,
+    ),
+  );
+  validation.register(new SetNewPasswordValidator());
+  mediator.handleCommand(
+    new SetNewPasswordHandler(
+      accounts,
+      links,
+      passwords,
+      breached,
+      handledRequests,
     ),
   );
   mediator.handleCommand(

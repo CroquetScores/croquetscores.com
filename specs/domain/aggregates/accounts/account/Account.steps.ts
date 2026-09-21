@@ -9,6 +9,7 @@ import { AccountForgotten } from "../../../../../src/domain/aggregates/accounts/
 import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts/events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accounts/events/PasswordHashedAgain.js";
+import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
 import { SignedIn } from "../../../../../src/domain/aggregates/accounts/events/SignedIn.js";
 import type { AccountId } from "../../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
 import { EmailAddress } from "../../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -228,9 +229,92 @@ Given("its password was hashed again", function (this: SpecWorld) {
   streamOf(this).push(new PasswordHashedAgain(NEW_HASH, idOf(this), now(this)));
 });
 
+// The hash a new password is set with, when the stream says one was set.
+const A_NEW_PASSWORD_HASH = hashOf("a password set later");
+
+Given("a new password was set on the account", function (this: SpecWorld) {
+  streamOf(this).push(
+    new PasswordSet(A_NEW_PASSWORD_HASH, idOf(this), now(this)),
+  );
+});
+
+Given(
+  "a new password was set on the account at {string}",
+  function (this: SpecWorld, moment: string) {
+    streamOf(this).push(
+      new PasswordSet(
+        A_NEW_PASSWORD_HASH,
+        idOf(this),
+        ReadOnlyDate.from(new Date(moment)),
+      ),
+    );
+  },
+);
+
+Given(
+  "its email address was confirmed as {string} at {string}",
+  function (this: SpecWorld, name: string, moment: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(
+        name,
+        A_PASSWORD_HASH,
+        idOf(this),
+        ReadOnlyDate.from(new Date(moment)),
+      ),
+    );
+  },
+);
+
 Given("it was forgotten", function (this: SpecWorld) {
   streamOf(this).push(new AccountForgotten(idOf(this), now(this)));
 });
+
+// Kept rather than thrown, because half of these scenarios are about what it
+// refuses.
+const setANewPasswordOn = (world: SpecWorld, hash: string): void => {
+  world.failure = undefined;
+  try {
+    accountOf(world).setNewPassword(hash, now(world));
+  } catch (failure) {
+    world.failure = failure;
+  }
+};
+
+When("a new password is set on the account", function (this: SpecWorld) {
+  setANewPasswordOn(this, A_NEW_PASSWORD_HASH);
+});
+
+When(
+  "the new password {string} is set on the account",
+  function (this: SpecWorld, password: string) {
+    setANewPasswordOn(this, hashOf(password));
+  },
+);
+
+Then(
+  "the first thing it recorded is its password being set",
+  function (this: SpecWorld) {
+    const event = firstRecorded(this);
+    assert.ok(event instanceof PasswordSet, `It recorded ${inspect(event)}.`);
+  },
+);
+
+Then(
+  "the account's password hash is the one it was set with",
+  function (this: SpecWorld) {
+    assert.equal(accountOf(this).passwordHash, A_NEW_PASSWORD_HASH);
+  },
+);
+
+Then(
+  "the account's password was set at {string}",
+  function (this: SpecWorld, moment: string) {
+    assert.equal(
+      accountOf(this).passwordSetAt?.toDate().toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
 
 When("the account is rebuilt from the stream", function (this: SpecWorld) {
   this.aggregate = Account.rebuiltFrom(idOf(this), streamOf(this));

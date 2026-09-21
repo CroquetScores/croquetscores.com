@@ -67,6 +67,27 @@ Feature: Remembering which requests have already been carried out
       When the request "a-request" is claimed
       Then it is not claimed
 
+  Rule: Whether a request has been carried out can be asked without claiming it
+
+    A page that shows what a link is worth asks before it does anything, and
+    must not spend the link by asking: a link that sets a password is spent by
+    a setting that was kept (`SetNewPassword.feature`), and a reader who only
+    opened the page has set nothing.
+
+    Scenario: A request nobody has carried out has not been handled
+      When the request "a-request" is asked about
+      Then it has not been handled
+
+    Scenario: A request that was claimed has been handled
+      Given the request "a-request" has been claimed
+      When the request "a-request" is asked about
+      Then it has been handled
+
+    Scenario: Asking about a request does not claim it
+      Given the request "a-request" is asked about
+      When the request "a-request" is claimed
+      Then it is claimed
+
   Rule: Two of the same request at once are claimed once
 
     Only one of them is to go on and do the work. Which one is nobody's to

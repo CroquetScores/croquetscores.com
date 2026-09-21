@@ -58,16 +58,14 @@ const ask = async (world: SpecWorld, { account, requestId }: Asked) => {
 Given(
   "the account for {string} is taken hold of",
   async function (this: SpecWorld, address: string) {
-    held.set(this, await accountIdOf(this, address));
+    this.accountHeld = await accountIdOf(this, address);
   },
 );
-
-const held = new WeakMap<SpecWorld, string>();
 
 When(
   "sending the link again is asked for that account",
   async function (this: SpecWorld) {
-    const account = held.get(this);
+    const account = this.accountHeld;
     assert.ok(account !== undefined, "The scenario holds no account.");
     minted += 1;
     await ask(this, { account, requestId: `a-sending-${minted}` });

@@ -44,6 +44,17 @@ export class PostgresHandledRequests implements HandledRequests {
     return rowCount === 1;
   }
 
+  async wasHandled(requestId: string): Promise<boolean> {
+    // Nothing is forgotten here, and nothing is written: asking is a read, and
+    // a read that tidied up would make a page's every visit a write.
+    const { rowCount } = await this.unitOfWork
+      .connection()
+      .query(`select 1 from handled_requests where request_id = $1`, [
+        requestId,
+      ]);
+    return rowCount === 1;
+  }
+
   // Older than the window, not as old as it: a claim made exactly that long
   // ago is still remembered, so that the boundary is somewhere rather than
   // wherever the clock happened to land.
