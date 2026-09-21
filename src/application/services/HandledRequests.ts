@@ -22,4 +22,11 @@ export interface HandledRequests {
    * as everything else the request records.
    */
   claim(requestId: string, at: ReadOnlyDate): Promise<boolean>;
+
+  /**
+   * Whether `requestId` has been carried out, without claiming it. What asks
+   * is whatever has to show a reader where they stand before anything is
+   * done: asking must not be what spends the thing asked about.
+   */
+  wasHandled(requestId: string): Promise<boolean>;
 }

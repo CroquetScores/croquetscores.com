@@ -99,6 +99,14 @@ When(
   },
 );
 
+Then("the other browser is signed out", async function (this: SpecWorld) {
+  assert.equal(
+    await signedInAccount(this, otherOf(this).context),
+    undefined,
+    "The other browser still has a session.",
+  );
+});
+
 Then(
   "the reader is signed in on the other browser to the account for {string}",
   async function (this: SpecWorld, address: string) {

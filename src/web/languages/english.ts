@@ -27,10 +27,17 @@ export const english: Language = {
 
     "register.title": "Register",
     "register.emailAddress": "Email address",
-    "register.password": "Password",
     "register.cancel": "Cancel",
     "register.submit": "Register",
-    "register.notOpen": "Registering is not open yet.",
+    "Registration.NotAPerson":
+      "This did not look like it came from a person. Try again, and if it keeps happening, wait a few minutes and come back.",
+
+    // A rule the address can break, said beneath the field it is about.
+    "EmailAddress.Missing": "Enter an email address.",
+    "EmailAddress.NoAt": "An email address has an @ in it.",
+    "EmailAddress.MoreThanOneAt": "An email address has one @ in it.",
+    "EmailAddress.NoDomain":
+      "An email address has a domain after the @, such as example.com.",
 
     "welcome.title": "Check your email",
     "welcome.checkEmail":
@@ -58,6 +65,67 @@ export const english: Language = {
     "newConfirmationLink.tooMany.explanation":
       "Several links have been sent to this address lately. Wait an hour and ask again, and look in your junk or spam folder meanwhile.",
 
+    "forgotPassword.title": "Forgotten your password?",
+    "forgotPassword.emailAddress": "Email address",
+    "forgotPassword.cancel": "Cancel",
+    "forgotPassword.submit": "Send me a way back in",
+    "forgotPassword.home": "Back to Croquet Scores",
+    "forgotPassword.sent.title": "Check your email",
+    "forgotPassword.sent.explanation":
+      "If that address has an account, a link to set a new password is on its way. Follow it within the hour. If nothing arrives in a few minutes, look in your junk or spam folder.",
+    "forgotPassword.tryAgainLater":
+      "Too many ways back in have been asked for from here lately. Wait an hour and try again.",
+
+    "setNewPassword.title": "Set a new password",
+    "setNewPassword.password": "Password",
+    "setNewPassword.confirmPassword": "Confirm password",
+    "setNewPassword.cancel": "Cancel",
+    "setNewPassword.submit": "Set my new password",
+    "setNewPassword.home": "Back to Croquet Scores",
+    "setNewPassword.signIn": "Sign in",
+    "setNewPassword.askAgain": "Ask for a new link",
+    "setNewPassword.changed.title": "Your password has been changed",
+    "setNewPassword.changed.explanation":
+      "You have been signed out everywhere you were signed in. Sign in with your new password.",
+    "setNewPassword.expired.title": "That link has expired",
+    "setNewPassword.expired.explanation":
+      "A link to set a new password works for an hour. Ask for another, and it will be sent to the same address.",
+    "setNewPassword.noLongerWorks.title": "That link no longer works",
+    "setNewPassword.noLongerWorks.explanation":
+      "It may already have been used, or something may be missing from the end of it. Ask for another if you still need one.",
+
+    // Said above the fields when the breached password check cannot be asked.
+    "BreachedPasswords.Unreachable":
+      "Your password cannot be checked just now, so it has not been changed. Try again in a few minutes; your link still works until it expires.",
+
+    "forgetAccount.title": "Forget your account",
+    "forgetAccount.explanation":
+      "Your name and email address can be made unreadable for good, and your account closed. To be sure it is you, we will email a link to your account's address first, and nothing is forgotten until you follow it.",
+    "forgetAccount.submit": "Email me the link",
+    "forgetAccount.cancel": "Keep my account",
+    "forgetAccount.sent.title": "Check your email",
+    "forgetAccount.sent.explanation":
+      "We have emailed a link to your account's address. It works for 15 minutes, and only while you are signed in to this account.",
+    "forgetAccount.confirm.title": "Forget your account for good?",
+    "forgetAccount.confirm.explanation":
+      "Once forgotten, your name and email address can never be read again, by anybody, and your account cannot be signed in to. It cannot be undone.",
+    "forgetAccount.confirm.submit": "Forget my account",
+    "forgetAccount.forgotten.title": "Your account has been forgotten",
+    "forgetAccount.forgotten.explanation":
+      "Your name and email address can no longer be read, and you have been signed out everywhere you were signed in.",
+    "forgetAccount.noLongerWorks.title": "That link no longer works",
+    "forgetAccount.noLongerWorks.explanation":
+      "It may have expired, been used already, or be for an account you are not signed in to. Ask again from your account if you still want it forgotten.",
+    "forgetAccount.askAgain": "Ask again",
+    "forgetAccount.home": "Back to Croquet Scores",
+
+    "registrationsSuspended.title": "Registering is suspended for now",
+    "registrationsSuspended.explanation":
+      "A service registering needs cannot be reached just now, so nobody can register until it answers again. Nothing you typed was kept.",
+    "registrationsSuspended.tryAgainLater":
+      "Try again in a little while. The site's administrator has been told.",
+    "registrationsSuspended.home": "Back to Croquet Scores",
+
     "signIn.title": "Sign in",
     "signIn.emailAddress": "Email address",
     "signIn.password": "Password",
@@ -77,7 +145,7 @@ export const english: Language = {
     "confirmEmailAddress.title": "Confirm your email address",
     "confirmEmailAddress.name": "Name",
     "confirmEmailAddress.password": "Password",
-    "confirmEmailAddress.passwordAgain": "Password again",
+    "confirmEmailAddress.confirmPassword": "Confirm password",
     "confirmEmailAddress.cancel": "Cancel",
     "confirmEmailAddress.submit": "Confirm my email address",
     "confirmEmailAddress.signIn": "Sign in",

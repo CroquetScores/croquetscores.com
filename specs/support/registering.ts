@@ -6,6 +6,11 @@
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
+import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
+import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
+import type { SetNewPassword } from "../../src/application/operations/accounts/SetNewPassword.js";
+import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import type { WhatAConfirmationLinkIsWorth } from "../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
 import type { ConfirmationLinkWorth } from "../../src/application/operations/accounts/confirmationLinks.js";
@@ -37,6 +42,27 @@ export interface Registering {
   /** How many passwords have been checked against a hash, or against none. */
   passwordsChecked(): number;
 
+  /** Asks for an account to be forgotten. Throws what the mediator throws. */
+  askToForget(command: AskToForgetAccount): Promise<void>;
+
+  /** Forgets an account with its link. Answers with it, or throws. */
+  forgetWithLink(command: ForgetAccount): Promise<AccountId>;
+
+  /** Has reporting tell `address`, or nobody where there is none. */
+  tellsAdministrator(address: string | undefined): void;
+
+  /** Reports a service unreachable. Throws what the mediator throws. */
+  report(command: ReportUnreachableService): Promise<void>;
+
+  /** Sets a new password. Answers with the account, or throws. */
+  setNewPassword(command: SetNewPassword): Promise<AccountId>;
+
+  /** A link to confirm the email address of the account for `address`. */
+  aLinkToConfirm(address: string): Promise<string>;
+
+  /** Asks for a way back in. Throws what the mediator throws. */
+  resetPassword(command: ResetPassword): Promise<void>;
+
   /** Asks for the link to be sent again. Throws what the mediator throws. */
   sendAgain(command: SendConfirmationLinkAgain): Promise<void>;
 
@@ -63,6 +89,9 @@ export interface Registering {
 
   /** That `kind` was written to the account for `address`, `times` times. */
   wroteTo(address: string, kind: string, times: number): Promise<void>;
+
+  /** That `kind` was written `times` times to `address`, which has no account. */
+  wroteToAddress(address: string, kind: string, times: number): Promise<void>;
 
   /** The account for `address` as its stream reads now. */
   accountFor(address: string): Promise<Account | undefined>;

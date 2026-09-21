@@ -151,7 +151,10 @@ export class RegisterAccountHandler extends CommandHandler<
     // arriving at once are counted one after another: side by side, each would
     // count before any had recorded, and all of them would send.
     const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if ((await this.written.countSince(id, since)) >= EMAILS_AN_HOUR) return;
+    if (
+      (await this.written.countSince({ account: id }, since)) >= EMAILS_AN_HOUR
+    )
+      return;
 
     // To the address the account holds, never the one this registration typed:
     // an address differing only in case is the same address, but not every
@@ -193,6 +196,6 @@ export class RegisterAccountHandler extends CommandHandler<
       ...(purpose === undefined ? {} : { linkWorksUntil: until }),
       queuedAt: command.requestedAt,
     });
-    await this.written.record(account, kind, command.requestedAt);
+    await this.written.record({ account }, kind, command.requestedAt);
   }
 }

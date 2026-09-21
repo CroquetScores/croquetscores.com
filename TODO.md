@@ -28,7 +28,7 @@ Three kinds of thing, kept apart.
 
 - **A failed API request says nothing about being kept.** The error mapping now sends every error _page_ with `cache-control: private, no-cache` and `vary: Cookie, Accept-Language`, because the page carries the account menu (`errors.feature`). The JSON answers beside them carry neither. Nothing caches them today, and none of them is personal yet; decide what the API says about caching when the API answers something that is.
 
-- **Confirming asks Have I Been Pwned and hashes a password inside its transaction.** `TransactionBehaviour` wraps the handler, so the network call — slow when the service is slow, and given seconds before it gives up — and the Argon2 hash each hold a pooled connection doing nothing, with the request id's row locked for the whole of it. Enough confirmations at once while the service is struggling hold every connection, and the rest of the site waits for one. Registering used to be the handler this applied to and no longer is: it asks nobody and hashes nothing, so confirming is the first handler with an outside service in its transaction, and the only one. Neither the check nor the hash needs the database. Moving them out means a behaviour that runs before `TransactionBehaviour`, or a handler in two parts, and either decides how handlers are shaped; decide it with the known problem below about where handlers are registered, since both change the mediator (from the review of confirming).
+- **Confirming asks Have I Been Pwned and hashes a password inside its transaction.** `TransactionBehaviour` wraps the handler, so the network call — slow when the service is slow, and given seconds before it gives up — and the Argon2 hash each hold a pooled connection doing nothing, with the request id's row locked for the whole of it. Enough confirmations at once while the service is struggling hold every connection, and the rest of the site waits for one. Registering used to be the handler this applied to and no longer is: it asks nobody and hashes nothing, so confirming was the first handler with an outside service in its transaction; setting a new password is the second, and asks the same service the same way. Neither the check nor the hash needs the database. Moving them out means a behaviour that runs before `TransactionBehaviour`, or a handler in two parts, and either decides how handlers are shaped; decide it with the known problem below about where handlers are registered, since both change the mediator (from the review of confirming).
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
@@ -149,17 +149,4 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 # Outstanding .feature files
 
-In the order they can be built, each after what it needs. Where two need each other — the sign in page and the confirm email address page, sessions and the pages that end them — the one the other leans on least comes first.
-
-1. `specs/application/operations/accounts/register-account/RegisterAccount.feature`
-2. `specs/application/operations/accounts/confirm-email-address/ConfirmEmailAddress.feature`
-3. `specs/application/operations/accounts/send-confirmation-link-again/SendConfirmationLinkAgain.feature`
-4. `specs/application/operations/accounts/sign-in/SignIn.feature`
-5. `specs/web/public/register/register.feature`
-6. `specs/web/public/sign-in/signIn.feature`
-7. `specs/web/public/confirm-email-address/confirmEmailAddress.feature`
-8. `specs/web/public/new-confirmation-link/newConfirmationLink.feature`
-9. `specs/web/public/forgot-password/forgotPassword.feature`
-10. `specs/web/public/registrations-suspended/registrationsSuspended.feature`
-11. `specs/web/public/forget-account/forgetAccount.feature`
-12. `specs/web/common/session/session.feature`
+None.

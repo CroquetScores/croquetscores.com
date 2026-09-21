@@ -6,6 +6,7 @@ import { AccountForgotten } from "./AccountForgotten.js";
 import { AccountRegistered } from "./AccountRegistered.js";
 import { EmailAddressConfirmed } from "./EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "./PasswordHashedAgain.js";
+import { PasswordSet } from "./PasswordSet.js";
 import { SignedIn } from "./SignedIn.js";
 
 // What was kept comes back from a table something else could have written to,
@@ -71,6 +72,16 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new PasswordHashedAgain(
           text(said, "passwordHash", "account-password-hashed-again"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      PasswordSet,
+      "account-password-set",
+      (said, { createdBy, occurredAt }) =>
+        new PasswordSet(
+          text(said, "passwordHash", "account-password-set"),
           createdBy,
           occurredAt,
         ),

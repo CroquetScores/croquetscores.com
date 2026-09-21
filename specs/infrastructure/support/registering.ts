@@ -29,10 +29,23 @@ import { PostgresEmailsWritten } from "../../../src/infrastructure/email/Postgre
 import { SignedLinks } from "../../../src/infrastructure/identity/SignedLinks.js";
 import { ConfirmEmailAddressHandler } from "../../../src/application/operations/accounts/ConfirmEmailAddressHandler.js";
 import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
+import { ResetPasswordHandler } from "../../../src/application/operations/accounts/ResetPasswordHandler.js";
+import { AskToForgetAccountHandler } from "../../../src/application/operations/accounts/AskToForgetAccountHandler.js";
+import type { AskToForgetAccount } from "../../../src/application/operations/accounts/AskToForgetAccount.js";
+import { ForgetAccountHandler } from "../../../src/application/operations/accounts/ForgetAccountHandler.js";
+import type { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
+import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
+import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
+import { SetNewPasswordHandler } from "../../../src/application/operations/accounts/SetNewPasswordHandler.js";
+import { SetNewPasswordValidator } from "../../../src/application/operations/accounts/SetNewPasswordValidator.js";
+import type { SetNewPassword } from "../../../src/application/operations/accounts/SetNewPassword.js";
+import { ResetPasswordValidator } from "../../../src/application/operations/accounts/ResetPasswordValidator.js";
+import type { ResetPassword } from "../../../src/application/operations/accounts/ResetPassword.js";
 import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../../../src/application/operations/accounts/SignInHandler.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
 import type { SendConfirmationLinkAgain } from "../../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
+import { WhatASetNewPasswordLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { WhatAConfirmationLinkIsWorth } from "../../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
 import type { ConfirmationLinkWorth } from "../../../src/application/operations/accounts/confirmationLinks.js";
@@ -151,6 +164,9 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const links = new SignedLinks(SITE_ADDRESS, "a signing key");
 
   const hasher = new QuickHasher();
+  // On the world as well, so that a scenario can ask whether a hash was made
+  // from a password without knowing how this one makes them.
+  world.passwordHasher = hasher;
   // Asked for when it is used rather than held now, because what stands the
   // check up is a step of its own and may not have run yet.
   const breached: BreachedPasswords = {
@@ -199,6 +215,32 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       links,
     ),
   );
+  validation.register(new ResetPasswordValidator());
+  mediator.handleCommand(
+    new ResetPasswordHandler(
+      repository,
+      accounts.readModel,
+      accounts.hasher,
+      queue,
+      written,
+      new PostgresHandledRequests(unitOfWork),
+      links,
+    ),
+  );
+  mediator.handleCommand(
+    new AskToForgetAccountHandler(repository, queue, links),
+  );
+  mediator.handleCommand(new ForgetAccountHandler(repository, links));
+  validation.register(new SetNewPasswordValidator());
+  mediator.handleCommand(
+    new SetNewPasswordHandler(
+      repository,
+      links,
+      hasher,
+      breached,
+      new PostgresHandledRequests(unitOfWork),
+    ),
+  );
   // A query changes nothing, so it is given a transaction it cannot write in,
   // as the application gives one.
   mediator.addQueryBehaviour(validation);
@@ -206,6 +248,14 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleQuery(
     new WhatAConfirmationLinkIsWorthHandler(repository, links),
   );
+  mediator.handleQuery(
+    new WhatASetNewPasswordLinkIsWorthHandler(
+      repository,
+      links,
+      new PostgresHandledRequests(unitOfWork),
+    ),
+  );
+
   world.mediator = mediator;
   world.validation = validation;
 
@@ -296,6 +346,38 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
 
     passwordsChecked: () => hasher.checks,
 
+    async askToForget(command: AskToForgetAccount): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    async forgetWithLink(command: ForgetAccount): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
+    // Registered when the scenario says who the administrator is, since that
+    // is what the handler is made with, as the site's is made with its config.
+    tellsAdministrator(address) {
+      mediator.handleCommand(
+        new ReportUnreachableServiceHandler(queue, written, address),
+      );
+    },
+
+    async report(command: ReportUnreachableService): Promise<void> {
+      await mediator.send(command);
+    },
+
+    async setNewPassword(command: SetNewPassword): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
+    async resetPassword(command: ResetPassword): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
     async sendAgain(command: SendConfirmationLinkAgain): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -326,6 +408,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     },
 
     altered: alterLink,
+
+    async aLinkToConfirm(address) {
+      await settle();
+      const id = await idFor(address);
+      return links.make(
+        "confirm-email-address",
+        id,
+        ReadOnlyDate.from(new Date(now().toDate().getTime() + 86400000)),
+      );
+    },
 
     async aLinkToForget(address) {
       // Whatever the scenario said exists is made first: an account it only
@@ -380,7 +472,19 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
         new Date(now().toDate().getTime() - 5 * 60 * 1000),
       );
       for (let each = 0; each < times; each++) {
-        await world.asARequest(() => written.record(id, kind, at));
+        await world.asARequest(() => written.record({ account: id }, kind, at));
+      }
+    },
+    async wroteToAddress(address, kind, times) {
+      await settle();
+      const at = ReadOnlyDate.from(
+        new Date(now().toDate().getTime() - 5 * 60 * 1000),
+      );
+      const whom = {
+        emailAddressHash: accounts.hasher.hash(EmailAddress.from(address)),
+      };
+      for (let each = 0; each < times; each++) {
+        await world.asARequest(() => written.record(whom, kind, at));
       }
     },
     accountFor,
@@ -418,7 +522,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       const written = writesEmails.write({
         kind: only.kind,
         language: "en",
-        fill: only.link === undefined ? {} : { link: only.link },
+        fill: only.fill ?? {},
       });
       return `${written.subject}\n${written.body}`;
     },
@@ -446,6 +550,28 @@ Given("the application's registering", function (this: SpecWorld) {
 // standing registering up stands it up too. Said in its own words because a
 // scenario about signing in is not about registering.
 Given("the application's signing in", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about forgetting is not about registering.
+Given("the application's forgetting of accounts", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same queue, said in its own words because a
+// scenario about telling the administrator is not about registering.
+Given(
+  "the application's reporting of unreachable services",
+  function (this: SpecWorld) {
+    standUpFor(this);
+  },
+);
+
+// The same mediator over the same accounts and the same queue, said in its own
+// words because a scenario about asking for a way back in is not about
+// registering.
+Given("the application's asking for a way back in", function (this: SpecWorld) {
   standUpFor(this);
 });
 

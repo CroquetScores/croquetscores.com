@@ -46,6 +46,11 @@ export interface QueuedEmail {
   readonly to: string | undefined;
   /** The link it carries, when it carries one and nothing stops it being read. */
   readonly link: string | undefined;
+  /**
+   * Everything that fills it in, the link among it, or nothing when nothing
+   * can read it. What the writer is given when the email is sent.
+   */
+  readonly fill: Readonly<Record<string, string>> | undefined;
   /** When that link stops working, when the queue was told. */
   readonly linkWorksUntil: Date | undefined;
   readonly tries: number;
@@ -156,6 +161,7 @@ export class PostgresEmailQueue implements EmailQueue {
         kind: row.kind,
         to: sealed?.to,
         link: sealed?.fill["link"],
+        fill: sealed?.fill,
         linkWorksUntil: row.link_works_until ?? undefined,
         tries: row.tries,
         dueAt: row.due_at,

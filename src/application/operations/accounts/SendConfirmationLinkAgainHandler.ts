@@ -101,7 +101,9 @@ export class SendConfirmationLinkAgainHandler extends CommandHandler<
     }
 
     const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if ((await this.written.countSince(id, since)) >= EMAILS_AN_HOUR) {
+    if (
+      (await this.written.countSince({ account: id }, since)) >= EMAILS_AN_HOUR
+    ) {
       throw new SendingRefused(
         "EmailsWritten.TooManyLately",
         "The account has been written to as often as it is to be this hour.",
@@ -123,7 +125,7 @@ export class SendConfirmationLinkAgainHandler extends CommandHandler<
       queuedAt: command.requestedAt,
     });
     await this.written.record(
-      id,
+      { account: id },
       "Email.ConfirmAddressAgain",
       command.requestedAt,
     );

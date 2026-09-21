@@ -64,6 +64,8 @@ Comments say why, not what. The code already says what it does; a comment that r
 
 Plain words over jargon, and a whole sentence over an abbreviation. This holds in comments, in `.feature` files, in commit messages and in pull request descriptions. It is why this repository reads the way it does, and matching it is part of the work rather than a flourish on top.
 
+An email address is always an email address: `emailAddress` in code, `EMAIL_ADDRESS` in a setting, "email address" in a feature, a comment or a page, and never `email` on its own. An email is what is sent or received. The two are different things, and a name that could be either leaves every reader to guess, and sooner or later one of them guesses wrong.
+
 A commit message says what changed and why it changed, in paragraphs. What went wrong before, what it does now, and what was checked. Not a list of files: the diff already has those.
 
 ---

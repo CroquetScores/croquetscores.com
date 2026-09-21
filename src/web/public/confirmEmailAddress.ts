@@ -30,6 +30,7 @@ import { ConfirmEmailAddress } from "../../application/operations/accounts/Confi
 import { ConfirmingRefused } from "../../application/operations/accounts/ConfirmEmailAddressHandler.js";
 import { WhatAConfirmationLinkIsWorth } from "../../application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
 import type { ConfirmationLinkWorth } from "../../application/operations/accounts/confirmationLinks.js";
+import { CheckRefused } from "../../application/services/BreachedPasswords.js";
 import type { Assets } from "../common/assets.js";
 // Where a reader is sent or pointed from here, from the pages themselves, so
 // that a page that moves takes every way to it along.
@@ -42,6 +43,7 @@ import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
+import { reportUnreachable } from "../common/unreachableServices.js";
 
 export const confirmEmailAddressPath = "/account/confirm-email-address";
 
@@ -185,7 +187,7 @@ const formFor = (
     },
     {
       name: "passwordConfirmation",
-      label: speaking.say("confirmEmailAddress.passwordAgain"),
+      label: speaking.say("confirmEmailAddress.confirmPassword"),
       type: "password",
       autocomplete: "new-password",
       value: typed["passwordConfirmation"],
@@ -306,6 +308,33 @@ export const registerConfirmEmailAddressPage = (
         // rule beneath the field it is about, and there is nothing to add.
         if (sent.refused) return reply;
       } catch (failure) {
+        // Nobody could say whether the password has been breached, so the
+        // address is not confirmed, the administrator is told, and the reader
+        // is shown their form again saying so above the fields. The link is
+        // not spent by it, so trying again later needs no new one.
+        if (failure instanceof CheckRefused) {
+          await reportUnreachable(request, "Have I Been Pwned");
+          return reply
+            .code(503)
+            .header("cache-control", "no-store")
+            .header("vary", "Cookie, Accept-Language")
+            .type("text/html; charset=utf-8")
+            .send(
+              pageOf(
+                assets,
+                request,
+                renderDialog({
+                  ...dialog,
+                  problems: {
+                    messages: [speaking.say(failure.code)],
+                    autofocus: true,
+                  },
+                }),
+                speaking.say("confirmEmailAddress.title"),
+                "bare",
+              ),
+            );
+        }
         if (!(failure instanceof ConfirmingRefused)) throw failure;
         return telling(
           assets,

@@ -53,6 +53,13 @@ export interface Dialog {
   /** A way out that changes nothing, when there is one. */
   readonly cancel?:
     { readonly label: string; readonly href: string } | undefined;
+  /**
+   * What the form sends that the reader never fills in, by the name it is sent
+   * under: the token reCAPTCHA's script hands the register page, say. They
+   * travel inside the form, because that is what a browser sends, and nothing
+   * outside it would be sent at all.
+   */
+  readonly hidden?: Readonly<Record<string, string>> | undefined;
   /** Something the reader needs telling before anything else, if anything. */
   readonly notice?: string | undefined;
   /** What is wrong with the form as a whole, when it has been refused. */
@@ -183,6 +190,19 @@ const attentionAskedFor = (dialog: Dialog): boolean =>
   dialog.problems?.autofocus === true ||
   dialog.fields.some((field) => field.autofocus === true);
 
+// Written last, inside the form and after everything a reader sees: a hidden
+// field has no label, no message and no place in the reading order, and
+// nothing looking for the form's first field should find one nobody can see.
+const hidden = (values: Dialog["hidden"]): string =>
+  values === undefined
+    ? ""
+    : Object.entries(values)
+        .map(
+          ([name, value]) =>
+            `\n            <input type="hidden" name="${escape(name)}" value="${escape(value)}" />`,
+        )
+        .join("");
+
 export const renderDialog = (
   dialog: Dialog,
 ): string => `        <section class="dialog" aria-labelledby="dialog-title">
@@ -193,6 +213,6 @@ ${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}$
             </div>
             <div class="dialog-buttons">
 ${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>
-            </div>
+            </div>${hidden(dialog.hidden)}
           </form>
         </section>`;

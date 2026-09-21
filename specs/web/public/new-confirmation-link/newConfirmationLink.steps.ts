@@ -174,15 +174,15 @@ Then(
   },
 );
 
-// Nothing the page could have sent: the link registering emailed is still
+// Nothing a page could have sent: the link registering emailed is still
 // queued, and is not what any of these scenarios is asking about.
 Then(
   "nothing more is sent to {string}",
   async function (this: SpecWorld, address: string) {
     const sent = (await emailsFor(this, address)).filter(
-      (email) => email.kind === "Email.ConfirmAddressAgain",
+      (email) => email.kind !== "Email.ConfirmAddress",
     );
-    assert.deepEqual(sent, [], `A new link was sent to ${address}.`);
+    assert.deepEqual(sent, [], `More was sent to ${address}.`);
   },
 );
 
@@ -197,9 +197,9 @@ Given(
     const at = new Date(clockFor(this).now.getTime() - 5 * 60 * 1000);
     for (let each = 0; each < times; each++) {
       await this.database.query(
-        `insert into emails_written (account_id, kind, written_at)
+        `insert into emails_written (written_to, kind, written_at)
          values ($1, $2, $3)`,
-        [account, "Email.ConfirmAddressAgain", at],
+        [`account:${account}`, "Email.ConfirmAddressAgain", at],
       );
     }
   },

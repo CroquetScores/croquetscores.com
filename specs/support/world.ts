@@ -153,6 +153,11 @@ export class SpecWorld extends World {
   // where it does something with it, not again in every step after.
   public addressInHand: string | undefined;
 
+  // The id of an account a scenario took hold of before anything happened to
+  // it. A forgotten account is no longer found by its address, and steps after
+  // its forgetting still have to name it.
+  public accountHeld: string | undefined;
+
   // The link a scenario has taken hold of — out of an email, altered, or made
   // for something else. On the world rather than beside one feature's steps
   // because two features take hold of the same link: confirming, and asking

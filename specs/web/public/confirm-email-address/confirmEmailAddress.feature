@@ -87,12 +87,12 @@ Feature: A reader confirms their email address by the link sent to it
       When the link is followed
       Then the dialog asks for a password
 
-    Scenario: Following the link asks the reader for the password again
+    Scenario: Following the link asks the reader to confirm the password
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, not confirmed
       And a link to confirm the email address has been sent to "someone@example.com"
       When the link is followed
-      Then the dialog asks for the password again
+      Then the dialog asks for the confirm password
 
   Rule: Submitting a sound name and password confirms the account, and points to sign in
 
@@ -103,7 +103,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       When the dialog is submitted
       Then the email address "someone@example.com" is confirmed
 
@@ -114,7 +114,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       When the dialog is submitted
       Then the account for the email address "someone@example.com" is called "Sam Someone"
 
@@ -125,7 +125,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       When the dialog is submitted
       Then the reader is told their email address is confirmed
 
@@ -136,7 +136,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       When the dialog is submitted
       Then the page links to the sign in page
 
@@ -149,7 +149,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery stapel"
+      And the confirm password typed as "correct horse battery stapel"
       When the dialog is submitted
       Then the reader is told the password was typed differently the second time
 
@@ -160,7 +160,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery stapel"
+      And the confirm password typed as "correct horse battery stapel"
       When the dialog is submitted
       Then the email address "someone@example.com" is not confirmed
 
@@ -171,7 +171,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery stapel"
+      And the confirm password typed as "correct horse battery stapel"
       When the dialog is submitted
       Then the name in the form is "Sam Someone"
 
@@ -182,11 +182,11 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery stapel"
+      And the confirm password typed as "correct horse battery stapel"
       And the dialog is submitted
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       When the dialog is submitted
       Then the email address "someone@example.com" is confirmed
 
@@ -224,7 +224,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       And 2 minutes have passed
       When the dialog is submitted
       Then the reader is told the link has expired
@@ -264,7 +264,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       And the dialog is submitted
       When the link is followed
       Then the reader is told their email address is already confirmed
@@ -276,7 +276,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       And the dialog is submitted
       When the link is followed
       Then the page links to the sign in page
@@ -288,7 +288,7 @@ Feature: A reader confirms their email address by the link sent to it
       And the link is followed
       And the name typed as "Sam Someone"
       And the password typed as "correct horse battery staple"
-      And the password typed again as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
       And the dialog is submitted
       When the link is followed
       Then the page has no form to fill in

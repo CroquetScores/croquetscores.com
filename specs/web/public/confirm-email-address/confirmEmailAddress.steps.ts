@@ -142,7 +142,7 @@ Given(
 );
 
 Given(
-  "the password typed again as {string}",
+  "the confirm password typed as {string}",
   function (this: SpecWorld, password: string) {
     return type(this, "passwordConfirmation", password);
   },
@@ -174,15 +174,17 @@ Then("the dialog asks for a name", async function (this: SpecWorld) {
 });
 
 Then(
-  "the dialog asks for the password again",
+  "the dialog asks for the confirm password",
   async function (this: SpecWorld) {
     const input = this.browserPage
       .locator(dialog)
-      .getByLabel(words("confirmEmailAddress.passwordAgain"), { exact: true });
+      .getByLabel(words("confirmEmailAddress.confirmPassword"), {
+        exact: true,
+      });
     assert.equal(
       await input.count(),
       1,
-      "The dialog does not ask for the password again.",
+      "The dialog does not ask for the confirm password.",
     );
     assert.equal(await input.getAttribute("type"), "password");
   },
@@ -219,9 +221,25 @@ Then("the reader is told the link has expired", function (this: SpecWorld) {
   return toldThat(this, "confirmEmailAddress.expired.explanation");
 });
 
-Then("the reader is told the link no longer works", function (this: SpecWorld) {
-  return toldThat(this, "confirmEmailAddress.noLongerWorks.explanation");
-});
+// Every page a link opens can say it, each in its own words; what the scenario
+// asks is that the reader was told.
+Then(
+  "the reader is told the link no longer works",
+  async function (this: SpecWorld) {
+    const content = await contentOf(this);
+    const said = [
+      words("confirmEmailAddress.noLongerWorks.explanation"),
+      words("newConfirmationLink.noLongerWorks.explanation"),
+      words("setNewPassword.noLongerWorks.explanation"),
+      words("setNewPassword.expired.explanation"),
+      words("forgetAccount.noLongerWorks.explanation"),
+    ];
+    assert.ok(
+      said.some((each) => content.includes(each)),
+      "No page says the link no longer works.",
+    );
+  },
+);
 
 // Either page can say it: the one a link opens, and the one that trades an
 // expired link for a new one. Both say it in their own words, and what the

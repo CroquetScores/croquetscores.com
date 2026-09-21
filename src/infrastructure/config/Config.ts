@@ -2,6 +2,12 @@
 // in the repository touches process.env: a second reader is a second answer.
 import { existsSync } from "node:fs";
 
+/** What reCAPTCHA needs: the key the page shows, and the one only the site has. */
+export interface RecaptchaKeys {
+  readonly siteKey: string;
+  readonly secretKey: string;
+}
+
 export interface OAuthCredentials {
   readonly clientId: string;
   readonly clientSecret: string;
@@ -20,6 +26,9 @@ export interface Config {
   readonly accountEmailAddressHashKey: string;
   // The address the site's emails are sent from.
   readonly emailFromAddress: string;
+  // Who is told when a service the site needs cannot be reached. Absent on a
+  // development machine, where nobody needs telling.
+  readonly administratorEmailAddress: string | undefined;
   // The host this site answers to, as a browser would name it: "croquetscores.com",
   // or "localhost:3000" in development. Absent means fall back to the Host header
   // of each request, which is right on a machine nothing sits in front of and
@@ -29,6 +38,13 @@ export interface Config {
   // need them refuse to register rather than half-working at runtime.
   readonly google: OAuthCredentials | undefined;
   readonly facebook: OAuthCredentials | undefined;
+  // What the register page guards itself with. Absent in development, where
+  // there are no keys to give: the page then asks nobody and takes every
+  // reader for a person, which is what it did before there was a check at all.
+  // It belongs on the deployment checklist beside CANONICAL_HOST, because a
+  // production site without it has an open form that emails whoever it is told
+  // to (TODO.md says more).
+  readonly recaptcha: RecaptchaKeys | undefined;
   // The salt the old site added to every password before hashing it. Absent
   // until whoever runs the site sets it, and optional, because the site runs
   // without it: only checking a password against a hash imported from the old
@@ -59,6 +75,15 @@ const optional = (
 
 // Written as a host, but a whole address is what people reach for, so one is
 // accepted and reduced to its host and port.
+// Both or neither: a site key with no secret cannot judge anybody, and a
+// secret with no site key has nothing to judge.
+const recaptchaKeys = (env: NodeJS.ProcessEnv): RecaptchaKeys | undefined => {
+  const siteKey = env["RECAPTCHA_SITE_KEY"]?.trim() ?? "";
+  const secretKey = env["RECAPTCHA_SECRET_KEY"]?.trim() ?? "";
+  if (siteKey === "" || secretKey === "") return undefined;
+  return { siteKey, secretKey };
+};
+
 const readCanonicalHost = (env: NodeJS.ProcessEnv): string | undefined => {
   const raw = env["CANONICAL_HOST"]?.trim() ?? "";
   if (raw === "") return undefined;
@@ -119,7 +144,10 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
     emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
+    administratorEmailAddress:
+      env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     canonicalHost: readCanonicalHost(env),
+    recaptcha: recaptchaKeys(env),
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
     oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
