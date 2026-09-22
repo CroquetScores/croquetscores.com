@@ -212,21 +212,42 @@ export const english: Language = {
     "Email.ConfirmAddress.subject":
       "Confirm your email address for {emailFromSite}",
     "Email.ConfirmAddress.body": `
-  <p>Thank you for registering with {emailFromSite}. To finish, confirm that
-     this is your email address.</p>
-  <p><a href="{link}"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Confirm my email address</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {link}</p>
-  <p>The link works for 24 hours. If it has expired by the time you follow
-     it, you will be offered a new one.</p>
-  <p>If you did not register, somebody may have typed your email address by
-     mistake. You need do nothing: nobody can sign in to the account without
-     this link.</p>
-  <p>{emailFromName}</p>`,
+<p>Hi,</p>
+
+<p>
+    Thanks for creating an account with <strong>{emailFromSite}</strong>.<br />
+    Before you can start using your account, please confirm your email address by 
+    clicking the button below:
+</p>
+
+<p>
+    <a href="{link}" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Confirm Email Address
+    </a>
+</p>
+
+<p>
+    If the button doesn't work, you can also confirm your email by opening this link in your browser:<br />
+    <a href="{link}">{link}</a>
+</p>
+
+<p>
+    If you didn't create this account, you can safely ignore this email.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
 
     "Email.ConfirmAddressAgain.subject":
       "A new link to confirm your email address for {emailFromSite}",
