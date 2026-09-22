@@ -20,7 +20,6 @@ Three kinds of thing, kept apart.
 
 - **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
 
-- **A `@postgres` scenario now and then fails before its first step**, in the Before hook in `specs/infrastructure/support/database.ts`, with `terminating connection due to administrator command`. Seen twice, a different scenario each time, and each passed when the suite was run again; perhaps the clean-up of one scenario's database ending a connection another is using. Worth looking at before it hides a real failure.
 
 - **Nothing in the primary navigation is served, so nothing can be marked as the page being read.** `layout.ts` puts `aria-current` on the navigation link whose address is the page's, and the three links it holds — Tournaments, Blog, Help — are stand-ins that answer 404, while the pages that are served are not in it. So that line cannot be reached and no scenario can cover it. The account menu marks its own (`accountMenu.feature`); this is the bar beside it. It comes right on its own as soon as one of those pages is built, and is worth a scenario then.
 

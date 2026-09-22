@@ -1,7 +1,9 @@
 // A database of its own for every @postgres scenario. Two scenarios sharing one
-// set of tables would pass or fail by the order they ran in.
+// set of tables would pass or fail by the order they ran in, and two runs
+// sharing one — a second terminal, or the editor running a scenario while the
+// suite runs — would do the same.
 import { After, AfterAll, Before } from "@cucumber/cucumber";
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomInt } from "node:crypto";
 import pg from "pg";
 
 import {
@@ -12,11 +14,26 @@ import { migrate } from "../../../src/infrastructure/database/migrate.js";
 import { createPool } from "../../../src/infrastructure/database/pool.js";
 import type { SpecWorld } from "../../support/world.js";
 
-// Every database this harness makes is named for the prefix, so a run that was
-// interrupted can be cleaned up by the next one.
-const prefix = "spec_";
+// Every database this harness makes is named for the prefix and for the run
+// that made it, so that a run that was interrupted can be cleaned up by the
+// next one without the next one also dropping the databases of a run that is
+// still going. The prefix sorts them after every real database in a list of
+// them, and says to whoever finds one there what it is for.
+const prefix = "zzz_delete_me_spec_";
+const named = new RegExp(`^${prefix}(\\d+)_[0-9a-f]+$`);
+
+// A run says it is still going by holding an advisory lock on its number for
+// as long as it lasts, on a connection kept open for nothing else. Postgres lets
+// go of the lock when that connection goes, however the run ended, so a lock
+// that can be taken belongs to a run that is over. Asking the operating system
+// whether a process is alive would do the same only where the run and whoever
+// asks share a machine. The two-number form of the lock is used so that it
+// cannot meet the one-number locks the migration runner takes.
+const runs = 0x73706563; // "spec"
 
 let maintenance: pg.Pool | undefined;
+let held: pg.PoolClient | undefined;
+let run: number | undefined;
 let serverUrl: string | undefined;
 
 // Opened by the first @postgres scenario and not before. Cucumber runs
@@ -78,22 +95,72 @@ const connect = async (): Promise<pg.Pool> => {
   const pool = createPool(serverUrl);
 
   try {
+    const client = await pool.connect();
+    held = client;
+    run = await claimARun(client);
+
     const { rows } = await pool.query<{ datname: string }>(
-      `select datname from pg_database where datname like $1`,
-      [`${prefix}%`],
+      `select datname from pg_database where starts_with(datname, $1)`,
+      [prefix],
     );
     for (const { datname } of rows) {
-      await pool.query(`drop database if exists "${datname}" with (force)`);
+      if (await isLeftBehind(client, datname)) {
+        await pool.query(`drop database if exists "${datname}" with (force)`);
+      }
     }
   } catch (cause) {
     // Not kept, so that nothing later mistakes a pool that never worked for one
     // that did.
+    held?.release();
+    held = undefined;
+    run = undefined;
     await pool.end().catch(() => undefined);
     throw explain(serverUrl, cause);
   }
 
   maintenance = pool;
   return maintenance;
+};
+
+// A number no run still going has, held until this one ends. Chosen at random
+// rather than counted, because runs do not know about each other; and taken with
+// a lock that is tried rather than waited for, so that two runs happening on the
+// same number is a second draw rather than one run waiting for the other.
+const claimARun = async (client: pg.PoolClient): Promise<number> => {
+  for (;;) {
+    const candidate = randomInt(1, 2 ** 31);
+    const {
+      rows: [claimed],
+    } = await client.query<{ taken: boolean }>(
+      "select pg_try_advisory_lock($1, $2) as taken",
+      [runs, candidate],
+    );
+    if (claimed?.taken === true) return candidate;
+  }
+};
+
+// Left behind by a run that is over: one whose lock can be taken, or one named
+// before databases carried the run that made them.
+const isLeftBehind = async (
+  client: pg.PoolClient,
+  databaseName: string,
+): Promise<boolean> => {
+  const owner = named.exec(databaseName)?.[1];
+  if (owner === undefined) return true;
+
+  const number = Number(owner);
+  if (number === run) return false;
+
+  const {
+    rows: [claimed],
+  } = await client.query<{ taken: boolean }>(
+    "select pg_try_advisory_lock($1, $2) as taken",
+    [runs, number],
+  );
+  if (claimed?.taken !== true) return false;
+
+  await client.query("select pg_advisory_unlock($1, $2)", [runs, number]);
+  return true;
 };
 
 const nameFor = (databaseName: string): string => {
@@ -103,6 +170,11 @@ const nameFor = (databaseName: string): string => {
 };
 
 AfterAll(async () => {
+  // Released rather than unlocked first: ending the pool closes the connection,
+  // and the lock goes with it.
+  held?.release();
+  held = undefined;
+  run = undefined;
   await maintenance?.end();
   maintenance = undefined;
 });
@@ -110,7 +182,7 @@ AfterAll(async () => {
 Before({ tags: "@postgres" }, async function (this: SpecWorld) {
   const server = await connect();
 
-  this.databaseName = prefix + randomBytes(16).toString("hex");
+  this.databaseName = `${prefix}${run!}_${randomBytes(8).toString("hex")}`;
   await server.query(`create database "${this.databaseName}"`);
 
   this.pool = createPool(nameFor(this.databaseName));
