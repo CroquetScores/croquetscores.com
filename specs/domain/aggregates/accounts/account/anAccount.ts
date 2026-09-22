@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { inspect } from "node:util";
 
 import { Account } from "../../../../../src/domain/aggregates/accounts/Account.js";
-import { AccountId } from "../../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
 import type { Role } from "../../../../../src/domain/aggregates/accounts/value-objects/Role.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
