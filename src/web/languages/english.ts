@@ -319,7 +319,7 @@ export const english: Language = {
 </p>
 
 <p>
-    If you have forgotten your password, you can reset it here:<br />
+    If you have forgotten your password, you can reset it here:
 </p>
 
 <p>

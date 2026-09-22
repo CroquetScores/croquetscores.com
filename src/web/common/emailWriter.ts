@@ -45,14 +45,6 @@ export const siteAddress = (
   return `${local ? "http" : "https"}://${canonicalHost}`;
 };
 
-// The kinds of email this writes. Each is two entries in every catalogue,
-// `<kind>.subject` and `<kind>.body`, and the body is the whole of the email's
-// markup: paragraphs, and links offered both as a button and as the address
-// itself, for a reader whose mail shows no buttons. The email is therefore
-// read where it is written, and translating one is translating a piece of
-// writing rather than assembling one out of phrases. A kind is named here so
-// that an email of a kind the site does not send is refused as unknown rather
-// than as a catalogue that has lost its words.
 /**
  * What a button in an email is painted with: the site's darker green, and the
  * white read on it — `--action` and `--action-ink` in `assets/site.css`, at
@@ -68,6 +60,14 @@ export const siteAddress = (
 const buttonBackgroundColour = "#066b00";
 const buttonTextColour = "#ffffff";
 
+// The kinds of email this writes. Each is two entries in every catalogue,
+// `<kind>.subject` and `<kind>.body`, and the body is the whole of the email's
+// markup: paragraphs, and links offered both as a button and as the address
+// itself, for a reader whose mail shows no buttons. The email is therefore
+// read where it is written, and translating one is translating a piece of
+// writing rather than assembling one out of phrases. A kind is named here so
+// that an email of a kind the site does not send is refused as unknown rather
+// than as a catalogue that has lost its words.
 const kinds: readonly string[] = [
   "Email.ConfirmAddress",
   "Email.ConfirmAddressAgain",
@@ -165,8 +165,10 @@ export const emailWriter = (
     const body = speaking.say(`${kind}.body`, {
       ...escaped,
       // The site's address, for a link to one of its own pages: it is the
-      // site's own and is written into the markup as {site} and a path.
-      site: address,
+      // site's own and is written into the markup as {site} and a path. It is
+      // escaped with the rest, since it lands inside an href and is read from
+      // configuration, which nothing here has checked for markup.
+      site: escape(address),
       buttonBackgroundColour,
       buttonTextColour,
       emailFromName: escape(fromName),

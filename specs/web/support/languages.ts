@@ -51,11 +51,14 @@ export const englishForScenarios: Language = {
 // value would put the marks outside the paragraphs, where no reader sees them,
 // and leave every paragraph looking as though it came from somewhere other
 // than a catalogue.
+// The whitespace either side of the words is kept out of the marks and put
+// back around them, rather than cut out of the middle, because replacing one
+// string with another would read a `$` in the words as a pattern of its own.
 const markedBetweenTags = (markup: string): string =>
-  markup.replace(/>([^<]+)</g, (whole, between: string) =>
-    between.trim() === ""
-      ? whole
-      : `>${between.replace(between.trim(), marked(between.trim()))}<`,
+  markup.replace(
+    />(\s*)([^<]*?)(\s*)</g,
+    (whole, before: string, between: string, after: string) =>
+      between === "" ? whole : `>${before}${marked(between)}${after}<`,
   );
 
 const marked = (text: string): string =>
