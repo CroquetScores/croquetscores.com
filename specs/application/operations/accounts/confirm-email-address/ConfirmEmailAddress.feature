@@ -26,12 +26,11 @@ Feature: Confirming an account's email address
   mail at the address, and nothing a stranger typed is ever kept. An account
   waiting to be confirmed has no name and no password at all.
 
-  It follows that the slow work is here. Registering has no password to hash
-  and no outside service to ask, and confirming has both: the password is
-  hashed, and checked against those known to have been breached. Neither
-  matters to what confirming answers the way it mattered to registering, since
-  confirming is asked for by somebody who has already shown the address is
-  theirs, and there is nothing left to keep from them.
+  It follows that the slow work is here. Registering has no password to hash,
+  and confirming has one. How long it takes does not matter to what confirming
+  answers the way it mattered to registering, since confirming is asked for by
+  somebody who has already shown the address is theirs, and there is nothing
+  left to keep from them.
 
   What was typed is judged before the link. The name's rules and the
   password's are the command's own, and every command's rules are asked on the
@@ -40,11 +39,19 @@ Feature: Confirming an account's email address
   one. So a reader whose password is too short is told so whatever became of
   their link, and a reader who types a sound one is told about the link.
 
-  The link is judged before the account is changed, and before the password is
-  sent anywhere. What a link is worth needs the account it names, so it cannot
-  be asked on the way in with the rules; and the breached password check is a
-  request over the network, which is not made for a link that was never going
-  to confirm anything.
+  The link is judged before the account is changed. What a link is worth needs
+  the account it names, so it cannot be asked on the way in with the rules.
+
+  Whether the password has been breached is not asked here at all. It is asked
+  in front of the transaction, of every command that sets a password, and is
+  specified there (`BreachedPasswordBehaviour.feature`): a request over the
+  network made inside a transaction holds a database connection for as long as
+  the service takes to answer. So it is asked before the link is judged, and a
+  breached password is refused whatever became of the link — which is the
+  right way round for whoever typed it, since a password they cannot use here
+  is one they should not be using anywhere. One scenario below says the check
+  stands in front of this operation; what the check itself is worth, and what
+  becomes of a password nobody could check, are said where the check is.
 
   The rules about links below send a name and a password that break no rule
   without saying so, so that they stay about links: what a good submission
@@ -226,7 +233,12 @@ Feature: Confirming an account's email address
       When the confirmation is submitted
       Then the account for "someone@example.com" is confirmed
 
-  Rule: A breached password is refused, and an unreachable check cannot go on
+  Rule: A breached password is refused before the link is judged
+
+    This is the one scenario here about the check, and it is kept so that a
+    confirmation with nothing in front of it would be noticed. Everything else
+    about the check — the order it runs in, what is asked, and a service that
+    cannot be reached — is specified with the behaviour that asks.
 
     Scenario: A password known to have been breached is refused
       Given a registration for "someone@example.com" is sent an email
@@ -238,26 +250,6 @@ Feature: Confirming an account's email address
       When the confirmation is submitted
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Password.Breached"
-
-    Scenario: A confirmation when the breached password check cannot be reached cannot go on
-      Given a registration for "someone@example.com" is sent an email
-      And the breached password check cannot be reached
-      And a confirmation with the link in that email
-      And the name given as "Sam Someone"
-      And the password given as "correct horse battery staple"
-      And the password confirmed as "correct horse battery staple"
-      When the confirmation is submitted
-      Then it is refused with "BreachedPasswords.Unreachable"
-
-    Scenario: Nothing is confirmed when the check cannot be reached
-      Given a registration for "someone@example.com" is sent an email
-      And the breached password check cannot be reached
-      And a confirmation with the link in that email
-      And the name given as "Sam Someone"
-      And the password given as "correct horse battery staple"
-      And the password confirmed as "correct horse battery staple"
-      When the confirmation is submitted
-      Then the account for "someone@example.com" is not confirmed
 
   Rule: A link works for 24 hours
 

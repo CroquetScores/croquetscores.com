@@ -4,8 +4,6 @@ import { Password } from "../../../domain/aggregates/accounts/value-objects/Pass
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { RequestInvalid } from "../../common/ValidationBehaviour.js";
-import type { BreachedPasswords } from "../../services/BreachedPasswords.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
@@ -56,7 +54,6 @@ export class SetNewPasswordHandler extends CommandHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly links: Links,
     private readonly passwords: PasswordHasher,
-    private readonly breached: BreachedPasswords,
     private readonly handled: HandledRequests,
   ) {
     super();
@@ -119,12 +116,6 @@ export class SetNewPasswordHandler extends CommandHandler<
 
     // Made from what the validator has already found sound.
     const password = Password.from(command.password);
-    if (await this.breached.isBreached(password.reveal())) {
-      throw new RequestInvalid(command, [
-        { code: "Password.Breached", fields: ["password"] },
-      ]);
-    }
-
     account.setNewPassword(
       await this.passwords.hash(password.reveal()),
       command.requestedAt,

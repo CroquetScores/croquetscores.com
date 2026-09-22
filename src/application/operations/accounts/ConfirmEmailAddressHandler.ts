@@ -5,8 +5,6 @@ import { PersonName } from "../../../domain/aggregates/accounts/value-objects/Pe
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { RequestInvalid } from "../../common/ValidationBehaviour.js";
-import type { BreachedPasswords } from "../../services/BreachedPasswords.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
@@ -61,10 +59,11 @@ const said: Readonly<
  *
  * The name and the password have been asked about before this runs: their
  * rules are the command's own, and every command's rules are asked on the way
- * in. So what is left here is everything a validator cannot ask — the account
- * the link names, whether it has been forgotten or confirmed, whether the link
- * has expired, and whether the password has been breached, which is a request
- * over the network.
+ * in, and whether the password has been breached is asked in front of the
+ * transaction, where it costs no connection. So what is left here is
+ * everything neither a validator nor that check can ask — the account the link
+ * names, whether it has been forgotten or confirmed, and whether the link has
+ * expired.
  */
 export class ConfirmEmailAddressHandler extends CommandHandler<
   ConfirmEmailAddress,
@@ -76,7 +75,6 @@ export class ConfirmEmailAddressHandler extends CommandHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly links: Links,
     private readonly passwords: PasswordHasher,
-    private readonly breached: BreachedPasswords,
     private readonly handled: HandledRequests,
   ) {
     super();
@@ -108,15 +106,6 @@ export class ConfirmEmailAddressHandler extends CommandHandler<
     // refuse here.
     const name = PersonName.from(command.name);
     const password = Password.from(command.password);
-
-    // Asked after the link, so a password is not sent anywhere for a link that
-    // was never going to confirm anything; and before it is hashed, so a
-    // breached one costs no hash either.
-    if (await this.breached.isBreached(password.reveal())) {
-      throw new RequestInvalid(command, [
-        { code: "Password.Breached", fields: ["password"] },
-      ]);
-    }
 
     account.confirm(
       name,
