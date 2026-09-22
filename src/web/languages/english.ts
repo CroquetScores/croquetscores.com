@@ -252,119 +252,186 @@ export const english: Language = {
     "Email.ConfirmAddressAgain.subject":
       "A new link to confirm your email address for {emailFromSite}",
     "Email.ConfirmAddressAgain.body": `
-  <p>Here is a new link to confirm your email address for {emailFromSite}.
-     Any earlier link that has not expired still works too.</p>
-  <p><a href="{link}"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Confirm my email address</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {link}</p>
-  <p>The link works for 24 hours. If it has expired by the time you follow
-     it, you will be offered a new one.</p>
-  <p>If you registered again to get this, nothing you gave the second time
-     was kept. Sign in with the password you first registered with, or set a
-     new one from the forgot password page.</p>
-  <p>If you did not register, somebody may have typed your email address by
-     mistake. You need do nothing: nobody can sign in to the account without
-     this link.</p>
-  <p>{emailFromName}</p>`,
+<p>Hi,</p>
+
+<p>
+    You recently requested a new email to confirm your email address for <strong>{emailFromSite}</strong>.<br />
+    Please confirm your email address by clicking the button below:
+</p>
+
+<p>
+    <a href="{link}" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Confirm Email Address
+    </a>
+</p>
+
+<p>
+    If the button doesn't work, you can also confirm your email by opening this link in your browser:<br />
+    <a href="{link}">{link}</a>
+</p>
+
+<p>
+    Once confirmed, you'll be able to continue using your account without interruption.
+</p>
+
+<p>
+    If you didn't request this email, you can safely ignore it.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
 
     "Email.AlreadyRegistered.subject":
       "Somebody tried to register with your email address",
     "Email.AlreadyRegistered.body": `
-  <p>Somebody tried to register with {emailFromSite} using this email
-     address, which already has an account. Nothing about your account has
-     changed.</p>
-  <p>If it was you, you already have an account, and can sign in to it.</p>
-  <p><a href="{site}/account/sign-in"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Sign in</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {site}/account/sign-in</p>
-  <p>If you have forgotten your password, you can set a new one.</p>
-  <p><a href="{site}/account/forgot-password"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Set a new password</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {site}/account/forgot-password</p>
-  <p>If it was not you, you need do nothing. Nobody has been given a way
-     into your account.</p>
-  <p>{emailFromName}</p>`,
+  <p>Hi,</p>
+
+<p>
+    Your email address has already been confirmed for <strong>{emailFromSite}</strong>.<br />
+    You can now sign in to your account using the link below:
+</p>
+
+<p>
+    <a href="{site}/account/sign-in" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Sign In
+    </a>
+</p>
+
+<p>
+    If you have forgotten your password, you can reset it here:<br />
+</p>
+
+<p>
+    <a href="{site}/account/forgot-password" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Forgot Password
+    </a>
+</p>
+
+<p>
+    If you didn't request this email, you can safely ignore it.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
 
     "Email.SetNewPassword.subject": "Set a new password for {emailFromSite}",
     "Email.SetNewPassword.body": `
-  <p>Somebody asked for a way back in to your {emailFromSite} account. Follow
-     the link to set a new password.</p>
-  <p><a href="{link}"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Set a new password</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {link}</p>
-  <p>The link works once, until an hour after you asked for it. After that,
-     ask again from the forgot password page.</p>
-  <p>Setting a new password signs your account out on every device it is
-     signed in on.</p>
-  <p>If you did not ask, you need do nothing. Your password stays as it is
-     unless this link is followed.</p>
-  <p>{emailFromName}</p>`,
+<p>Hi,</p>
+
+<p>
+    You recently requested to reset your password for <strong>{emailFromSite}</strong>.<br />
+    You can reset your password by clicking the button below:
+</p>
+
+<p>
+    <a href="{link}" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Reset Password
+    </a>
+</p>
+
+<p>
+    If the button doesn't work, you can also reset your password by opening this link in your browser:<br />
+    <a href="{link}">{link}</a>
+</p>
+
+<p>
+    If you didn't request a password reset, you can safely ignore this email.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
 
     "Email.RegisterInstead.subject":
       "There is no {emailFromSite} account for this email address",
     "Email.RegisterInstead.body": `
-  <p>Somebody asked for a way back in to {emailFromSite} with this email
-     address, but there is no account for it.</p>
-  <p>If you registered with another email address, ask again with that one.</p>
-  <p>If you meant to make an account, you can register now.</p>
-  <p><a href="{site}/account/register"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Register</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {site}/account/register</p>
-  <p>If you did not ask, you need do nothing. No account has been made.</p>
-  <p>{emailFromName}</p>`,
+<p>Hi,</p>
 
-    "Email.ConfirmForgetting.subject":
-      "Confirm that your {emailFromSite} account is to be forgotten",
-    "Email.ConfirmForgetting.body": `
-  <p>You asked for your {emailFromSite} account to be forgotten. Follow the
-     link to see what that means, and to say for certain that you want it.</p>
-  <p><a href="{link}"
-        style="display: inline-block; padding: 12px 20px;
-        background-color: {buttonBackgroundColour};
-        color: {buttonTextColour}; text-decoration: none;
-        border-radius: 5px; font-weight: bold">Forget my account</a></p>
-  <p>If the button does not work, copy this address into your browser:
-     {link}</p>
-  <p>Once forgotten, your name and email address can never be read again, by
-     anybody, and your account cannot be signed in to. It cannot be undone.</p>
-  <p>The link works once, until 15 minutes after you asked for it, and only
-     while you are signed in to this account. After that, ask again from your
-     account.</p>
-  <p>If you did not ask, nothing will happen unless the link is followed.
-     Somebody signed in to your account asked, though, so set a new password
-     from the forgot password page to be sure they cannot sign in again.</p>
-  <p>{emailFromName}</p>`,
+<p>
+    A request was made to reset the password for an email address that is 
+    not associated with an account on <strong>{emailFromSite}</strong>.
+</p>
+
+<p>
+    If you would like to use our service, you can create a new account by visiting:<br />
+    <a href="{site}/account/register">{site}/account/register</a>
+</p>
+
+<p>
+    If you did not make this request, you can safely ignore this email.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
 
     "Email.RegistrationsSuspended.subject":
       "Registering is suspended: {service} cannot be reached",
     "Email.RegistrationsSuspended.body": `
-  <p>{emailFromSite} could not reach {service} at {when}. Until it answers,
-     readers who need it, to register or to set a new password, are told to
-     try again later.</p>
-  <p>Nothing needs lifting. Each attempt asks {service} afresh, and the pages
-     work again the moment it answers.</p>
-  <p>While {service} stays down, you will be emailed about it at most once an
-     hour.</p>
-  <p>{emailFromName}</p>`,
+<p>Hi,</p>
+
+<p>
+    {emailFromSite} could not reach {service} at {when}. Until it answers,
+    readers who need it, to register or to set a new password, are told to
+    try again later.
+</p>
+
+<p>
+    Nothing needs lifting. Each attempt asks {service} afresh, and the pages
+    work again the moment it answers.
+</p>
+
+<p>
+    While {service} stays down, you will be emailed about it at most once an
+    hour.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
   },
 };
