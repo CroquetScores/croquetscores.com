@@ -11,5 +11,17 @@
     "formatOptions": {
       "snippetInterface": "async-await"
     }
+  },
+  "changed": {
+    "import": [
+      "specs/**/*.steps.ts",
+      "specs/support/**/*.ts",
+      "specs/infrastructure/support/**/*.ts",
+      "specs/web/support/**/*.ts"
+    ],
+    "format": ["progress-bar", "html:reports/cucumber-changed.html"],
+    "formatOptions": {
+      "snippetInterface": "async-await"
+    }
   }
 }
