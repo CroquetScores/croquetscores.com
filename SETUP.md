@@ -447,7 +447,9 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 Most scenarios reach nothing outside the process and run on a machine with no Postgres anywhere near them. Those that do are tagged `@postgres`, so `npm run test:nodb` is the fast loop while working on anything else.
 
-Each `@postgres` scenario gets a database of its own, created and migrated in a `Before` hook and dropped in an `After` hook. Scenarios cannot share one: two of them writing the same tables would pass or fail according to the order they ran in. Any database left behind by an interrupted run is cleaned up at the start of the next one, matched by its name prefix.
+Each `@postgres` scenario runs in isolation, over a database of its own: made under a name no other scenario has, migrated in a `Before` hook, used by that scenario and nothing else, and dropped in an `After` hook. Scenarios cannot share one: two of them writing the same tables would pass or fail according to the order they ran in. Anything the scenario opens on its database — a pool, an application — is closed before the database is dropped.
+
+Runs are kept apart the same way. A second terminal, or an editor running one scenario while the suite runs, is a second run against the same Postgres, and neither may touch what the other made. So a database's name carries the run that made it as well as the `zzz_delete_me_spec_` prefix, which sorts them after every real database in a list and says what they are to whoever finds one there, and a run holds a Postgres advisory lock on its own number for as long as it lasts. A database left behind by a run that was interrupted is dropped at the start of the next one; one whose run still holds its lock is left alone. Postgres lets go of the lock when the connection holding it closes, however the run ended, so this needs no clean shutdown, and it works whether or not the run and Postgres are on one machine, which asking the operating system about a process would not.
 
 That harness lives in `specs/infrastructure/support/`, not `specs/support/`, because it reads the configuration and reaches infrastructure, and `specs/support/` is loaded by every spec in the repository and may not.
 
@@ -459,7 +461,14 @@ Some claims cannot be checked by reading the thing that makes them. Whether a me
 
 A `@browser` scenario gets a browser context of its own and a page in it, and **scripting is switched off** unless the scenario asks for it back. That is not caution, it is the subject: the public pages are required to work without JavaScript, and a browser that has been given none is what turns that requirement into a test rather than an intention.
 
-The application starts once, on the first such scenario, listening on whatever port is free. A fixed port would collide with a development server, and the first person to run both at once would find out the hard way. The browser starts on the same occasion. Neither starts in `BeforeAll`, because Cucumber runs `BeforeAll` ahead of tag filtering, and a run that wants neither should pay for neither.
+What the browser talks to depends on whether the scenario keeps anything:
+
+- A scenario tagged `@browser` alone only looks at pages. It keeps nothing and reads nothing kept, so every such scenario shares one application, started by the first of them. Sharing it is what keeps them quick.
+- A scenario tagged `@browser @postgres` registers, signs in, confirms, or writes something else down, and runs in isolation. The `@postgres` hooks give it a database of its own (§8.1), and it gets an application of its own over that database, listening on a port of its own and reading a clock the scenario sets. It is closed with the database, before the drop. Two such scenarios sharing one application would share its tables, and a scenario that moves the clock would move it for whichever scenario came next.
+
+Every application listens on whatever port is free, and never on a fixed one. A fixed port would collide with a development server, or with another scenario's application, and the first person to run two at once would find out the hard way. The browser starts once, on the first `@browser` scenario, and each scenario gets a context of its own in it, so no cookie is carried from one scenario to the next. Nothing here starts in `BeforeAll`, because Cucumber runs `BeforeAll` ahead of tag filtering, and a run that wants neither should pay for neither.
+
+The `@postgres` hooks have to run before the `@browser` ones, because a scenario's application is built over a database that must already exist. Cucumber runs hooks in the order they were defined, so the browser harness imports the database harness before it defines its own.
 
 That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
 
