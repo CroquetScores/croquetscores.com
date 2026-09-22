@@ -46,16 +46,26 @@ export class BreachedPasswordBehaviour implements Behaviour {
     const field = fieldSet(request);
     if (field === undefined) return next();
 
-    const password = (request as unknown as Record<string, unknown>)[field];
+    const given = (request as unknown as Record<string, unknown>)[field];
     // A command that says which field holds the password it sets, and holds
     // no password there, is a mistake in the code that made it rather than
     // anything to tell whoever sent it: what it says of itself and what it
     // carries disagree, and passing it on would set a password from nothing.
-    if (typeof password !== "string") {
+    if (typeof given !== "string") {
       throw new Error(
         `${request.constructor.name || "A command"} says it sets a password from ${field}, which holds no password.`,
       );
     }
+
+    // Asked about as it will be kept, which is with the whitespace at either
+    // end taken off: a password is trimmed wherever one is made from what a
+    // command carries. A breached password typed with a space after it would
+    // otherwise be asked about as nobody will ever type it again, found clean,
+    // and then kept as the breached password it is. Trimmed here rather than
+    // by making the password out of what the command carries, because what a
+    // password may be is the password's own rule and has been asked already;
+    // all this needs is the words that will be hashed.
+    const password = given.trim();
 
     // A breached password is refused the way a password too short is refused,
     // because it is the same thing to whoever typed it: something wrong with

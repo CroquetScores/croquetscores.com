@@ -33,9 +33,12 @@ const noLongerWorks = (why: string): SettingRefused =>
 /**
  * Setting a new password from the link it was emailed.
  *
- * The link is judged before the password is sent anywhere, as confirming does
- * it and for the same reason: a password is not handed to an outside service
- * for a link that was never going to set anything.
+ * The password has been asked about before this runs: its rules are the
+ * command's own, asked on the way in as every command's are, and whether it
+ * has been breached is asked in front of the transaction, where it costs no
+ * connection (`BreachedPasswordBehaviour.feature`). So what is left here is
+ * everything neither of those can ask — the account the link names, and
+ * whether the link still works.
  *
  * A link works once, and what spends it is a setting that was kept: the link
  * is written down among the requests already carried out, so a second

@@ -127,12 +127,33 @@ Feature: Asking whether a command's password has been breached before its transa
 
   Rule: The password checked is the one the command says it sets
 
+    Asked about as it will be kept, which is with the whitespace at either end
+    taken off: a password is trimmed wherever one is made from what a command
+    carries. A breached password typed with a space after it would otherwise be
+    asked about as nobody will ever type it again, found clean, and then kept
+    as the breached password it is.
+
     Scenario: The password the command sets is the password checked
       Given a handler registered for the example command
       And an example command
       And it sets the password "correct horse battery staple"
       When the example command is sent
       Then the password checked was "correct horse battery staple"
+
+    Scenario: The spaces around a password are not part of what is checked
+      Given a handler registered for the example command
+      And an example command
+      And it sets the password "  correct horse battery staple  "
+      When the example command is sent
+      Then the password checked was "correct horse battery staple"
+
+    Scenario: A breached password typed with spaces around it is refused
+      Given "password123456" is known to have been breached
+      And a handler registered for the example command
+      And an example command
+      And it sets the password "  password123456  "
+      When the example command is sent
+      Then the first rule broken is "Password.Breached"
 
     Scenario: A field the command sets no password from is not checked
       Given "hunter2 and more" is known to have been breached

@@ -43,10 +43,12 @@ const ruleBrokenBy = (
 /**
  * What a confirmation must carry, asked on the way in.
  *
- * Nothing about the link is asked here, and nothing about the account. Whether
- * a link works needs the account it names, and whether a password has been
- * breached is a request over the network; a validator answers without waiting
- * and without reading anything, so both are the handler's.
+ * Nothing about the link is asked here, and nothing about the account: whether
+ * a link works needs the account it names, which a validator cannot read, so
+ * that is the handler's. Neither is whether the password has been breached,
+ * which is a request over the network and which a validator answers without
+ * waiting: it is asked of every command that sets a password, in front of the
+ * transaction (`BreachedPasswordBehaviour.feature`).
  *
  * `Password.Breached` is named beside the rules this asks all the same,
  * because to whoever typed the password it is one more thing wrong with what
