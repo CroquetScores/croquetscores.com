@@ -12,7 +12,10 @@
 // infrastructure or the web, for the reason world.ts gives.
 import { Command } from "../../src/application/common/Command.js";
 import { CommandValidator } from "../../src/application/common/CommandValidator.js";
-import type { ValidationBehaviour } from "../../src/application/common/ValidationBehaviour.js";
+import {
+  RequestInvalid,
+  type ValidationBehaviour,
+} from "../../src/application/common/ValidationBehaviour.js";
 import {
   Mediator,
   type RequestType,
@@ -197,7 +200,15 @@ export const exampleQueryHandler = <TQuery extends Query<string>>(
   handle: handler.handle,
 });
 
-/** What came of handing a request in: the answer, or the failure. */
+/**
+ * What came of handing a request in: the answer, or the failure.
+ *
+ * A refusal for breaking rules says which, and the steps that read those rules
+ * are the validator's own: so what refused the request is put where they look,
+ * and "the first rule broken is" means the same thing wherever a request was
+ * refused, whether its own rules refused it or something in front of its
+ * handler did.
+ */
 export const attempt = async (
   world: SpecWorld,
   handing: () => Promise<unknown>,
@@ -206,5 +217,9 @@ export const attempt = async (
     world.answer = await handing();
   } catch (failure) {
     world.failure = failure;
+    if (failure instanceof RequestInvalid) {
+      world.brokenRules = failure.broken;
+      world.brokenRulesChecked = 0;
+    }
   }
 };
