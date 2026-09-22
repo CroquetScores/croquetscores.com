@@ -199,16 +199,26 @@ export const english: Language = {
     // order: whoever writes one sees what its reader will see. Only what fills
     // an email in is escaped, so nothing given to one can become markup; the
     // markup here is the site's own. `{link}` is the link the email carries,
-    // `{site}` the site's address, for a link to one of its own pages. None
-    // greets its reader by name, so that nothing about a person but the address
-    // an email goes to need be put in the queue.
+    // `{site}` the site's address, for a link to one of its own pages,
+    // `{buttonBackgroundColour}` and `{buttonTextColour}` what a button is
+    // painted with, `{emailFromName}` the name the site's emails are sent
+    // from, which each email is signed off with, and `{emailFromSite}` what an
+    // email calls the site it comes from. The last four are the site's
+    // own and are filled in by the writer, never by what queued the email. A
+    // button is painted where it stands, because a mail program reads no
+    // stylesheet. None greets its reader by name, so that nothing about a
+    // person but the address an email goes to need be put in the queue.
 
     "Email.ConfirmAddress.subject":
-      "Confirm your email address for Croquet Scores",
+      "Confirm your email address for {emailFromSite}",
     "Email.ConfirmAddress.body": `
-  <p>Thank you for registering with Croquet Scores. To finish, confirm that
+  <p>Thank you for registering with {emailFromSite}. To finish, confirm that
      this is your email address.</p>
-  <p><a href="{link}">Confirm my email address</a></p>
+  <p><a href="{link}"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Confirm my email address</a></p>
   <p>If the button does not work, copy this address into your browser:
      {link}</p>
   <p>The link works for 24 hours. If it has expired by the time you follow
@@ -216,14 +226,18 @@ export const english: Language = {
   <p>If you did not register, somebody may have typed your email address by
      mistake. You need do nothing: nobody can sign in to the account without
      this link.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
 
     "Email.ConfirmAddressAgain.subject":
-      "A new link to confirm your email address for Croquet Scores",
+      "A new link to confirm your email address for {emailFromSite}",
     "Email.ConfirmAddressAgain.body": `
-  <p>Here is a new link to confirm your email address for Croquet Scores.
+  <p>Here is a new link to confirm your email address for {emailFromSite}.
      Any earlier link that has not expired still works too.</p>
-  <p><a href="{link}">Confirm my email address</a></p>
+  <p><a href="{link}"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Confirm my email address</a></p>
   <p>If the button does not work, copy this address into your browser:
      {link}</p>
   <p>The link works for 24 hours. If it has expired by the time you follow
@@ -234,31 +248,43 @@ export const english: Language = {
   <p>If you did not register, somebody may have typed your email address by
      mistake. You need do nothing: nobody can sign in to the account without
      this link.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
 
     "Email.AlreadyRegistered.subject":
       "Somebody tried to register with your email address",
     "Email.AlreadyRegistered.body": `
-  <p>Somebody tried to register with Croquet Scores using this email
+  <p>Somebody tried to register with {emailFromSite} using this email
      address, which already has an account. Nothing about your account has
      changed.</p>
   <p>If it was you, you already have an account, and can sign in to it.</p>
-  <p><a href="{site}/account/sign-in">Sign in</a></p>
+  <p><a href="{site}/account/sign-in"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Sign in</a></p>
   <p>If the button does not work, copy this address into your browser:
      {site}/account/sign-in</p>
   <p>If you have forgotten your password, you can set a new one.</p>
-  <p><a href="{site}/account/forgot-password">Set a new password</a></p>
+  <p><a href="{site}/account/forgot-password"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Set a new password</a></p>
   <p>If the button does not work, copy this address into your browser:
      {site}/account/forgot-password</p>
   <p>If it was not you, you need do nothing. Nobody has been given a way
      into your account.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
 
-    "Email.SetNewPassword.subject": "Set a new password for Croquet Scores",
+    "Email.SetNewPassword.subject": "Set a new password for {emailFromSite}",
     "Email.SetNewPassword.body": `
-  <p>Somebody asked for a way back in to your Croquet Scores account. Follow
+  <p>Somebody asked for a way back in to your {emailFromSite} account. Follow
      the link to set a new password.</p>
-  <p><a href="{link}">Set a new password</a></p>
+  <p><a href="{link}"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Set a new password</a></p>
   <p>If the button does not work, copy this address into your browser:
      {link}</p>
   <p>The link works once, until an hour after you asked for it. After that,
@@ -267,27 +293,35 @@ export const english: Language = {
      signed in on.</p>
   <p>If you did not ask, you need do nothing. Your password stays as it is
      unless this link is followed.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
 
     "Email.RegisterInstead.subject":
-      "There is no Croquet Scores account for this email address",
+      "There is no {emailFromSite} account for this email address",
     "Email.RegisterInstead.body": `
-  <p>Somebody asked for a way back in to Croquet Scores with this email
+  <p>Somebody asked for a way back in to {emailFromSite} with this email
      address, but there is no account for it.</p>
   <p>If you registered with another email address, ask again with that one.</p>
   <p>If you meant to make an account, you can register now.</p>
-  <p><a href="{site}/account/register">Register</a></p>
+  <p><a href="{site}/account/register"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Register</a></p>
   <p>If the button does not work, copy this address into your browser:
      {site}/account/register</p>
   <p>If you did not ask, you need do nothing. No account has been made.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
 
     "Email.ConfirmForgetting.subject":
-      "Confirm that your Croquet Scores account is to be forgotten",
+      "Confirm that your {emailFromSite} account is to be forgotten",
     "Email.ConfirmForgetting.body": `
-  <p>You asked for your Croquet Scores account to be forgotten. Follow the
+  <p>You asked for your {emailFromSite} account to be forgotten. Follow the
      link to see what that means, and to say for certain that you want it.</p>
-  <p><a href="{link}">Forget my account</a></p>
+  <p><a href="{link}"
+        style="display: inline-block; padding: 12px 20px;
+        background-color: {buttonBackgroundColour};
+        color: {buttonTextColour}; text-decoration: none;
+        border-radius: 5px; font-weight: bold">Forget my account</a></p>
   <p>If the button does not work, copy this address into your browser:
      {link}</p>
   <p>Once forgotten, your name and email address can never be read again, by
@@ -298,18 +332,18 @@ export const english: Language = {
   <p>If you did not ask, nothing will happen unless the link is followed.
      Somebody signed in to your account asked, though, so set a new password
      from the forgot password page to be sure they cannot sign in again.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
 
     "Email.RegistrationsSuspended.subject":
       "Registering is suspended: {service} cannot be reached",
     "Email.RegistrationsSuspended.body": `
-  <p>Croquet Scores could not reach {service} at {when}. Until it answers,
+  <p>{emailFromSite} could not reach {service} at {when}. Until it answers,
      readers who need it, to register or to set a new password, are told to
      try again later.</p>
   <p>Nothing needs lifting. Each attempt asks {service} afresh, and the pages
      work again the moment it answers.</p>
   <p>While {service} stays down, you will be emailed about it at most once an
      hour.</p>
-  <p>Croquet Scores</p>`,
+  <p>{emailFromName}</p>`,
   },
 };

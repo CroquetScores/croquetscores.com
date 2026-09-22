@@ -84,10 +84,12 @@ const textsOf = (html: string): string[] =>
     .map((text) => text.trim())
     .filter((text) => text !== "");
 
+// A button's words, by where it goes. The anchor carries what it is painted
+// with as well as where it points, so anything else on it is stepped over.
 const buttonTo = (html: string, link: string): string | undefined => {
   const escaped = link.replace(/&/g, "&amp;");
   const found = new RegExp(
-    `<a href="${escaped.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}">([^<]*)</a>`,
+    `<a href="${escaped.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>([^<]*)</a>`,
   ).exec(html);
   return found?.[1];
 };
@@ -100,10 +102,56 @@ const wordsFor = (key: string): string => {
 
 // The writer -----------------------------------------------------------------
 
+// The name the scenarios' emails are sent from, and what they call the site
+// they come from, unless a scenario says otherwise.
+const sendingAs = "Croquet Scores";
+const sendingFromSite = "Croquet Scores";
+
+// What the site fills into an email about itself, as the writer fills it in:
+// the words are the catalogue's, whoever puts the values in them.
+const aboutTheSite: Readonly<Record<string, string>> = {
+  buttonBackgroundColour: "#066b00",
+  buttonTextColour: "#ffffff",
+  emailFromName: sendingAs,
+  emailFromSite: sendingFromSite,
+};
+
+const filledIn = (words: string): string =>
+  Object.entries(aboutTheSite).reduce(
+    (said, [name, value]) => said.split(`{${name}}`).join(value),
+    words,
+  );
+
 Given(
   "an email writer for {string}",
   function (this: SpecWorld, address: string) {
-    writingOf(this).writer = emailWriter(scenarioLanguages, address);
+    writingOf(this).writer = emailWriter(scenarioLanguages, {
+      address,
+      fromName: sendingAs,
+      fromSite: sendingFromSite,
+    });
+  },
+);
+
+Given(
+  "an email writer sending as {string}",
+  function (this: SpecWorld, name: string) {
+    writingOf(this).writer = emailWriter(scenarioLanguages, {
+      address: "https://croquetscores.com",
+      fromName: name,
+      fromSite: sendingFromSite,
+    });
+  },
+);
+
+Given(
+  "an email writer sending from the site {string}",
+  function (this: SpecWorld, site: string) {
+    writingOf(this).writer = emailWriter(scenarioLanguages, {
+      address: "https://croquetscores.com",
+      fromName: sendingAs,
+      fromSite: site,
+    });
   },
 );
 
@@ -123,7 +171,11 @@ Given(
         Object.entries(language.words).filter(([each]) => each !== key),
       ),
     }));
-    writingOf(this).writer = emailWriter(without, "https://croquetscores.com");
+    writingOf(this).writer = emailWriter(without, {
+      address: "https://croquetscores.com",
+      fromName: sendingAs,
+      fromSite: sendingFromSite,
+    });
   },
 );
 
@@ -176,7 +228,22 @@ Then(
 Then(
   "its subject is the words for {string} in English",
   function (this: SpecWorld, key: string) {
-    assert.equal(writtenOf(this).subject, wordsFor(key));
+    assert.equal(writtenOf(this).subject, filledIn(wordsFor(key)));
+  },
+);
+
+// The email's first paragraph, rather than anywhere in the body: the head's
+// title says the subject, so a body asked whether it holds something says yes
+// to whatever the subject says, whatever the email's own words are.
+Then(
+  "its first paragraph contains {string}",
+  function (this: SpecWorld, words: string) {
+    const paragraph = /<p>([^]*?)<\/p>/.exec(writtenOf(this).body)?.[1];
+    assert.ok(paragraph !== undefined, "The body has no paragraph.");
+    assert.ok(
+      paragraph.includes(words),
+      `The first paragraph is ${paragraph}.`,
+    );
   },
 );
 
@@ -216,14 +283,34 @@ Then(
     // The markup as the catalogue holds it, with what filled it in put where
     // it says: the same email the catalogue was written to say, not one the
     // writer made out of pieces of it.
-    const markup = wordsFor(key).replace(
-      /\{link\}/g,
-      everyFill.link.replace(/&/g, "&amp;"),
+    const markup = filledIn(
+      wordsFor(key).replace(/\{link\}/g, everyFill.link.replace(/&/g, "&amp;")),
     );
     assert.ok(
       writtenOf(this).body.includes(markup.trim()),
       `The body is not the markup for ${key}: ${writtenOf(this).body}`,
     );
+  },
+);
+
+// What a button is painted with, from the style on the anchor the scenarios'
+// emails carry: the value of one property, by its name.
+const paintedWith = (html: string, property: string): string | undefined => {
+  const style = /<a [^>]*style="([^"]*)"/.exec(html)?.[1];
+  return style
+    ?.split(";")
+    .map((declaration) => declaration.split(":").map((part) => part.trim()))
+    .find(([name]) => name === property)?.[1];
+};
+
+Then("its button is on {string}", function (this: SpecWorld, colour: string) {
+  assert.equal(paintedWith(writtenOf(this).body, "background-color"), colour);
+});
+
+Then(
+  "its button's words are {string}",
+  function (this: SpecWorld, colour: string) {
+    assert.equal(paintedWith(writtenOf(this).body, "color"), colour);
   },
 );
 

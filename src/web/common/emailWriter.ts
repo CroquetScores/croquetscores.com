@@ -53,6 +53,21 @@ export const siteAddress = (
 // writing rather than assembling one out of phrases. A kind is named here so
 // that an email of a kind the site does not send is refused as unknown rather
 // than as a catalogue that has lost its words.
+/**
+ * What a button in an email is painted with: the site's darker green, and the
+ * white read on it — `--action` and `--action-ink` in `assets/site.css`, at
+ * their light values.
+ *
+ * Written out here rather than named, because a mail program reads neither a
+ * custom property nor `light-dark()`, and a button whose colours did not
+ * arrive would be a line of text where the thing to press should be. The light
+ * values are used whatever the reader's own theme, since an email carries no
+ * theme to ask about. Kept in step with the stylesheet by hand; `STYLE.md`
+ * says what the pairing is for and that it meets WCAG AA.
+ */
+const buttonBackgroundColour = "#066b00";
+const buttonTextColour = "#ffffff";
+
 const kinds: readonly string[] = [
   "Email.ConfirmAddress",
   "Email.ConfirmAddressAgain",
@@ -77,10 +92,20 @@ const languageFor = (
   return find(tag) ?? find(tag.split("-")[0] ?? "") ?? offered[0];
 };
 
-/** Writes the site's emails from `offered`, making links with `address`. */
+/** What the site knows about itself, which every email it writes is given. */
+export interface SendingEmails {
+  /** The address links to the site's own pages are made with. */
+  readonly address: string;
+  /** The name the site's emails are sent from, which each is signed off with. */
+  readonly fromName: string;
+  /** What an email calls the site it comes from, in its subject and its words. */
+  readonly fromSite: string;
+}
+
+/** Writes the site's emails from `offered`, as `sending` says the site sends. */
 export const emailWriter = (
   offered: readonly Language[],
-  address: string,
+  { address, fromName, fromSite }: SendingEmails,
 ): EmailWriter => ({
   write: ({ kind, language, fill }: EmailToWrite): WrittenEmail => {
     if (!kinds.includes(kind)) {
@@ -127,12 +152,25 @@ export const emailWriter = (
     const escaped = Object.fromEntries(
       Object.entries(fill).map(([name, value]) => [name, escape(value)]),
     );
-    const subject = speaking.say(`${kind}.subject`, fill);
+    // A subject is text wherever it lands, so nothing in it is escaped; the
+    // body's markup is where escaping matters.
+    const subject = speaking.say(`${kind}.subject`, {
+      ...fill,
+      emailFromName: fromName,
+      emailFromSite: fromSite,
+    });
+    // What the site knows about itself, filled in wherever an email's markup
+    // asks for it, and after what the queue gave, so that nothing an email is
+    // queued with can paint a button or sign an email as somebody else.
     const body = speaking.say(`${kind}.body`, {
       ...escaped,
       // The site's address, for a link to one of its own pages: it is the
       // site's own and is written into the markup as {site} and a path.
       site: address,
+      buttonBackgroundColour,
+      buttonTextColour,
+      emailFromName: escape(fromName),
+      emailFromSite: escape(fromSite),
     });
 
     return {

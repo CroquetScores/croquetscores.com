@@ -99,7 +99,11 @@ const CONFIRMED_WITH = "stand-in$password-hash";
 // The writer the site writes with, given the address the scenarios' links are
 // made with. Named here, where naming the web layer is allowed, so that the
 // application's feature can ask where an email points without naming it.
-const writesEmails = emailWriter(scenarioLanguages, SITE_ADDRESS);
+const writesEmails = emailWriter(scenarioLanguages, {
+  address: SITE_ADDRESS,
+  fromName: "Croquet Scores",
+  fromSite: "Croquet Scores",
+});
 
 /**
  * A hasher that answers at once. The site's own is slow on purpose, and what

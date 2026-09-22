@@ -22,6 +22,19 @@ Feature: The site's emails are written in their reader's language
   language where the site does not offer that one. A word the language has not
   got is written in the site's first language, as a page's is.
 
+  An email's markup asks for four things the site knows about itself, and the
+  writer fills all four in wherever the markup says: `{buttonBackgroundColour}`
+  and `{buttonTextColour}`, which a button is painted with, `{emailFromName}`,
+  the name the site's emails are sent from, which each email is signed off
+  with, and `{emailFromSite}`, what an email calls the site it comes from, in
+  its subject and wherever its words name the site. The colours are the site's
+  darker green and the white on it, written out rather than named, because mail
+  programs read neither a custom property nor `light-dark()`; the writer holds
+  them, and `STYLE.md` says what they are on a page. The name and the site are
+  configured, as the address emails are sent from is, so that a site serving
+  from this repository under another name neither signs its emails nor calls
+  itself Croquet Scores.
+
   Whatever fills an email in — a link, the name of a service, a moment — is
   put where the email's markup says, and written as text rather than as
   markup, so that nothing given to an email can change what the email is. The
@@ -129,6 +142,31 @@ Feature: The site's emails are written in their reader's language
     Scenario: An email is signed off in its own words
       When the email "Email.ConfirmAddress" is written in "en"
       Then its body ends with "Croquet Scores"
+
+  Rule: An email is painted and signed with what the site knows about itself
+
+    Scenario: A button is painted with the site's darker green
+      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+      Then its button is on "#066b00"
+
+    Scenario: A button's words are painted to be read on that green
+      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+      Then its button's words are "#ffffff"
+
+    Scenario: An email is signed off with the name it is sent from
+      Given an email writer sending as "Croquet Scores Under Another Name"
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then its body ends with "Croquet Scores Under Another Name"
+
+    Scenario: An email's subject calls the site what it is sent from
+      Given an email writer sending from the site "Another Site Altogether"
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then its subject contains "Another Site Altogether"
+
+    Scenario: An email's words call the site what it is sent from
+      Given an email writer sending from the site "Another Site Altogether"
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then its first paragraph contains "Another Site Altogether"
 
   Rule: The site's address comes from its configuration
 

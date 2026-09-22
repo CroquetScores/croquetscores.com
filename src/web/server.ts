@@ -332,7 +332,11 @@ export const buildApplication = async (
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,
     accountKeys,
-    emailWriter(languages, where),
+    emailWriter(languages, {
+      address: where,
+      fromName: config.emailFromName,
+      fromSite: config.emailFromSite,
+    }),
     new FileEmailSender(join(repositoryRoot, "temp")),
     config.emailFromAddress,
   );
