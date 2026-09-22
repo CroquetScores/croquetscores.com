@@ -6,7 +6,7 @@
 // link has expired, or has already been used, is owed that on arrival rather
 // than after choosing a password that was never going to be kept.
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";

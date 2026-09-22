@@ -1,4 +1,4 @@
-import type { AccountId } from "../aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../aggregates/accounts/AccountId.js";
 import type { ReadOnlyDate } from "./ReadOnlyDate.js";
 
 // How Node asks an object to describe itself. Named by the well-known key

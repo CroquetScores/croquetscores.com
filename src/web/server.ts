@@ -32,7 +32,7 @@ import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/a
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
 import {

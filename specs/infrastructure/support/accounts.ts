@@ -13,7 +13,7 @@ import { randomBytes } from "node:crypto";
 import { ProjectingEventStore } from "../../../src/application/common/ProjectingEventStore.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { nameAccountEvents } from "../../../src/domain/aggregates/accounts/events/accountEvents.js";
-import { AccountId } from "../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import { EventRegistry } from "../../../src/domain/common/EventRegistry.js";

@@ -13,7 +13,7 @@
 import { createHash, randomBytes } from "node:crypto";
 
 import type { Sessions } from "../../application/services/Sessions.js";
-import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 

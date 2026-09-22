@@ -25,7 +25,7 @@ import { ForgetAccount } from "../../application/operations/accounts/ForgetAccou
 import { ForgettingRefused } from "../../application/operations/accounts/ForgetAccountHandler.js";
 import { WhatAForgettingLinkIsWorth } from "../../application/operations/accounts/WhatAForgettingLinkIsWorth.js";
 import type { Sessions } from "../../application/services/Sessions.js";
-import type { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { Assets } from "../common/assets.js";
 import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";

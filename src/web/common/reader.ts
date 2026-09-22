@@ -11,7 +11,7 @@
 // database once.
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import type { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 
 /**
  * What says which account the reader of a request is signed in to, if any. It

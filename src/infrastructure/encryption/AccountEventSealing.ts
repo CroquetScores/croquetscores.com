@@ -11,7 +11,7 @@
 // uuid in its id, and reached at "account-forgotten-", the uuid, and the site's
 // own domain, which nothing is ever sent to. The uuid is the id's, so that the
 // account reads back the same every time.
-import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { KeptEvent } from "../../domain/common/EventRegistry.js";
 import type { KeptEventSealing } from "../event-store/PostgresEventStore.js";
 import type { AccountKeys } from "./AccountKeys.js";

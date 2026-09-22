@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { AccountId } from "../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../support/world.js";

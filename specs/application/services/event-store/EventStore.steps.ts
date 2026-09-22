@@ -3,7 +3,7 @@ import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
 import type { EventStore } from "../../../../src/application/services/EventStore.js";
-import { AccountId } from "../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import type { Id } from "../../../../src/domain/common/Id.js";
 import {

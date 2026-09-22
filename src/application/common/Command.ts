@@ -1,4 +1,4 @@
-import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 

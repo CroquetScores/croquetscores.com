@@ -14,7 +14,7 @@ import type {
 } from "../../application/services/EmailQueue.js";
 import type { EmailSender } from "../../application/services/EmailSender.js";
 import type { EmailWriter } from "../../application/services/EmailWriter.js";
-import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import {
