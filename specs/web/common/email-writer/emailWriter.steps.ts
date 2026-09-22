@@ -85,13 +85,15 @@ const textsOf = (html: string): string[] =>
     .filter((text) => text !== "");
 
 // A button's words, by where it goes. The anchor carries what it is painted
-// with as well as where it points, so anything else on it is stepped over.
+// with as well as where it points, so anything else on it is stepped over, and
+// the words are taken without the markup's own spacing around them, which is
+// how a reader sees them.
 const buttonTo = (html: string, link: string): string | undefined => {
   const escaped = link.replace(/&/g, "&amp;");
   const found = new RegExp(
     `<a href="${escaped.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>([^<]*)</a>`,
   ).exec(html);
-  return found?.[1];
+  return found?.[1]?.trim();
 };
 
 const wordsFor = (key: string): string => {
@@ -232,20 +234,20 @@ Then(
   },
 );
 
-// The email's first paragraph, rather than anywhere in the body: the head's
-// title says the subject, so a body asked whether it holds something says yes
-// to whatever the subject says, whatever the email's own words are.
-Then(
-  "its first paragraph contains {string}",
-  function (this: SpecWorld, words: string) {
-    const paragraph = /<p>([^]*?)<\/p>/.exec(writtenOf(this).body)?.[1];
-    assert.ok(paragraph !== undefined, "The body has no paragraph.");
-    assert.ok(
-      paragraph.includes(words),
-      `The first paragraph is ${paragraph}.`,
-    );
-  },
-);
+// The email's paragraphs, rather than anywhere in what was written: the head's
+// title says the subject, so a document asked whether it holds something says
+// yes to whatever the subject says, whatever the email's own words are.
+const paragraphsOf = (html: string): string[] =>
+  [...html.matchAll(/<p>([^]*?)<\/p>/g)].map((found) => found[1] ?? "");
+
+Then("its words contain {string}", function (this: SpecWorld, words: string) {
+  const paragraphs = paragraphsOf(writtenOf(this).body);
+  assert.ok(paragraphs.length > 0, "The body has no paragraph.");
+  assert.ok(
+    paragraphs.some((paragraph) => paragraph.includes(words)),
+    `Its words are ${paragraphs.join(" ")}.`,
+  );
+});
 
 Then(
   "its subject contains {string}",
@@ -318,8 +320,14 @@ Then("its body has a paragraph", function (this: SpecWorld) {
   assert.match(writtenOf(this).body, /<p>/);
 });
 
-Then("its body ends with {string}", function (this: SpecWorld, words: string) {
-  assert.equal(textsOf(writtenOf(this).body).at(-1), words);
+// An email signs off in its last paragraph, and signs off with two things: the
+// name it is sent from and what it calls the site. So the step asks what that
+// paragraph says rather than what the very last word of the body is, which is
+// only ever the second of the two.
+Then("its sign off says {string}", function (this: SpecWorld, words: string) {
+  const signOff = paragraphsOf(writtenOf(this).body).at(-1);
+  assert.ok(signOff !== undefined, "The body has no paragraph.");
+  assert.ok(textsOf(signOff).includes(words), `It signs off ${signOff}.`);
 });
 
 Then("the button says {string}", function (this: SpecWorld, words: string) {

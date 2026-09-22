@@ -230,12 +230,12 @@ export const english: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Confirm Email Address
+        Confirm my email address
     </a>
 </p>
 
 <p>
-    If the button doesn't work, you can also confirm your email by opening this link in your browser:<br />
+    If the button doesn't work, you can also confirm your email address by opening this link in your browser:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -269,12 +269,12 @@ export const english: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Confirm Email Address
+        Confirm my email address
     </a>
 </p>
 
 <p>
-    If the button doesn't work, you can also confirm your email by opening this link in your browser:<br />
+    If the button doesn't work, you can also confirm your email address by opening this link in your browser:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -295,11 +295,13 @@ export const english: Language = {
     "Email.AlreadyRegistered.subject":
       "Somebody tried to register with your email address",
     "Email.AlreadyRegistered.body": `
-  <p>Hi,</p>
+<p>Hi,</p>
 
 <p>
-    Your email address has already been confirmed for <strong>{emailFromSite}</strong>.<br />
-    You can now sign in to your account using the link below:
+    Somebody tried to register with <strong>{emailFromSite}</strong> using this
+    email address, which already has an account. Nothing about your account has
+    changed.<br />
+    If it was you, you already have an account, and can sign in to it:
 </p>
 
 <p>
@@ -335,7 +337,8 @@ export const english: Language = {
 </p>
 
 <p>
-    If you didn't request this email, you can safely ignore it.
+    If it was not you, you need do nothing. Nobody has been given a way into
+    your account.
 </p>
 
 <p>
@@ -399,6 +402,60 @@ export const english: Language = {
 
 <p>
     If you did not make this request, you can safely ignore this email.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {emailFromSite}
+</p>
+`,
+
+    "Email.ConfirmForgetting.subject":
+      "Confirm that your {emailFromSite} account is to be forgotten",
+    "Email.ConfirmForgetting.body": `
+<p>Hi,</p>
+
+<p>
+    You asked for your <strong>{emailFromSite}</strong> account to be
+    forgotten.<br />
+    Follow the button below to see what that means, and to say for certain
+    that you want it:
+</p>
+
+<p>
+    <a href="{link}" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Forget my account
+    </a>
+</p>
+
+<p>
+    If the button does not work, you can also open this link in your browser:<br />
+    <a href="{link}">{link}</a>
+</p>
+
+<p>
+    Once forgotten, your name and email address can never be read again, by
+    anybody, and your account cannot be signed in to. It cannot be undone.
+</p>
+
+<p>
+    The link works once, until 15 minutes after you asked for it, and only
+    while you are signed in to this account. After that, ask again from your
+    account.
+</p>
+
+<p>
+    If you did not ask, nothing will happen unless the link is followed.
+    Somebody signed in to your account asked, though, so set a new password
+    from the forgot password page to be sure they cannot sign in again.
 </p>
 
 <p>

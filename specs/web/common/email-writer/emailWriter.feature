@@ -141,7 +141,7 @@ Feature: The site's emails are written in their reader's language
 
     Scenario: An email is signed off in its own words
       When the email "Email.ConfirmAddress" is written in "en"
-      Then its body ends with "Croquet Scores"
+      Then its sign off says "Croquet Scores"
 
   Rule: An email is painted and signed with what the site knows about itself
 
@@ -156,7 +156,7 @@ Feature: The site's emails are written in their reader's language
     Scenario: An email is signed off with the name it is sent from
       Given an email writer sending as "Croquet Scores Under Another Name"
       When the email "Email.ConfirmAddress" is written in "en"
-      Then its body ends with "Croquet Scores Under Another Name"
+      Then its sign off says "Croquet Scores Under Another Name"
 
     Scenario: An email's subject calls the site what it is sent from
       Given an email writer sending from the site "Another Site Altogether"
@@ -166,7 +166,7 @@ Feature: The site's emails are written in their reader's language
     Scenario: An email's words call the site what it is sent from
       Given an email writer sending from the site "Another Site Altogether"
       When the email "Email.ConfirmAddress" is written in "en"
-      Then its first paragraph contains "Another Site Altogether"
+      Then its words contain "Another Site Altogether"
 
   Rule: The site's address comes from its configuration
 
