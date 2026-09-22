@@ -24,8 +24,14 @@ export interface Config {
   // old one kept unreadable, or unfound.
   readonly accountEncryptionKey: string;
   readonly accountEmailAddressHashKey: string;
-  // The address the site's emails are sent from.
+  // The address the site's emails are sent from, the name they are sent from
+  // and signed off with, and what they call the site they come from. The last
+  // two are configured rather than written into the catalogues so that a site
+  // serving from this repository under another name neither signs its emails
+  // nor calls itself Croquet Scores.
   readonly emailFromAddress: string;
+  readonly emailFromName: string;
+  readonly emailFromSite: string;
   // Who is told when a service the site needs cannot be reached. Absent on a
   // development machine, where nobody needs telling.
   readonly administratorEmailAddress: string | undefined;
@@ -127,6 +133,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     "ACCOUNT_ENCRYPTION_KEY",
     "ACCOUNT_EMAIL_ADDRESS_HASH_KEY",
     "EMAIL_FROM_ADDRESS",
+    "EMAIL_FROM_NAME",
+    "EMAIL_FROM_SITE",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
   if (missing.length > 0) problems.push(`Missing: ${missing.join(", ")}.`);
@@ -144,6 +152,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
     emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
+    emailFromName: env["EMAIL_FROM_NAME"]!.trim(),
+    emailFromSite: env["EMAIL_FROM_SITE"]!.trim(),
     administratorEmailAddress:
       env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     canonicalHost: readCanonicalHost(env),
