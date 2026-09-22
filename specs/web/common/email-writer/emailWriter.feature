@@ -7,7 +7,11 @@ Feature: The site's emails are written in their reader's language
 
   An email's words are the site's words, and are kept where every other word a
   reader is shown is kept: in the catalogue for the reader's language, keyed by
-  the email's kind. So a language is added to the site's emails by adding its
+  the email's kind. An email is two entries there: its subject, which is text,
+  and its body, which is the whole of its markup, paragraphs and links and all.
+  So the email is read where it is written, in the order its reader reads it,
+  and putting it into another language is translating one piece of writing
+  rather than assembling one out of phrases. So a language is added to the site's emails by adding its
   catalogue, as it is added to the site's pages, and a word is written once
   whether a page says it or an email does. That is why this is in the web layer
   rather than beside the queue. The application declares what it asks of an
@@ -19,12 +23,15 @@ Feature: The site's emails are written in their reader's language
   got is written in the site's first language, as a page's is.
 
   Whatever fills an email in — a link, the name of a service, a moment — is
-  put where the email's words say, and written as text rather than as markup,
-  so that nothing given to an email can change what the email is. A link to
-  follow is offered twice: as a button in the email's words, and as the
-  address itself, for a reader whose mail shows no buttons. A link to one of
-  the site's own pages, such as the sign in page, is made with the site's
-  address, which the writer is given.
+  put where the email's markup says, and written as text rather than as
+  markup, so that nothing given to an email can change what the email is. The
+  markup around it is the catalogue's own and stays markup; only what is filled
+  into it is escaped, which is the whole of the difference between the two. A
+  link to follow is offered twice: as a button, and as the address itself, for
+  a reader whose mail shows no buttons. A link to one of the site's own pages,
+  such as the sign in page, is written in the markup as `{site}` and the path,
+  and `{site}` is filled in with the site's address, which the writer is
+  given.
 
   The site's address comes from how the site is configured, and never from a
   request. An email is written when the queue sends it, outside any request,
@@ -47,7 +54,8 @@ Feature: The site's emails are written in their reader's language
 
   An email of a kind this does not know is refused with
   `EmailWriter.UnknownKind`, rather than written with nothing in it. So is one
-  whose words a catalogue has not got, with `EmailWriter.MissingWords`, and one
+  whose subject or body a catalogue has not got, with
+  `EmailWriter.MissingWords`, and one
   that carries a link and was given none, with `EmailWriter.MissingFill`: an
   email with a dead button, or one saying "copy this address into your browser"
   and then nothing, is a mistake in the site rather than anything a reader did,
@@ -92,7 +100,7 @@ Feature: The site's emails are written in their reader's language
     Scenario: The link to follow is a button in the email's words
       When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
       Then its body has a button to "https://croquetscores.com/account/confirm-email-address?link=abc123"
-      And the button says the words for "Email.ConfirmAddress.action"
+      And the button says "Confirm my email address"
 
     Scenario: The link to follow is written out as an address to copy
       When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
@@ -102,25 +110,25 @@ Feature: The site's emails are written in their reader's language
       When the email "Email.AlreadyRegistered" is written in "en"
       Then its body has a button to "https://croquetscores.com/account/sign-in"
 
-  Rule: Each email is written from its own words
+  Rule: An email's body is one piece of markup
 
-    No email borrows a phrase from another, nor from a stock of phrases they
-    all share: its sign off, and the words offering each of its links as an
-    address to copy, are its own, kept under its kind like the rest of it. So
-    an email reads as a whole where it is kept, and one can be reworded, or
-    signed off differently, without changing what any other says.
+    An email's body is kept whole, as one entry under its kind, rather than as
+    a list of phrases the writer puts in order. Whoever writes or translates an
+    email then sees what its reader will see, and an email is changed in one
+    place, in the catalogue, instead of in a catalogue and a list of blocks
+    that has to agree with it.
+
+    Scenario: An email's body is the markup kept for its kind
+      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+      Then its body holds the markup for "Email.ConfirmAddress.body"
+
+    Scenario: The markup a catalogue holds stays markup
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then its body has a paragraph
 
     Scenario: An email is signed off in its own words
       When the email "Email.ConfirmAddress" is written in "en"
-      Then its body ends with the words for "Email.ConfirmAddress.signOff"
-
-    Scenario: The address to copy is offered in the email's own words
-      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
-      Then its body shows the words for "Email.ConfirmAddress.actionFallback" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
-
-    Scenario: Each link in an email is offered to copy in words of its own
-      When the email "Email.AlreadyRegistered" is written in "en"
-      Then its body shows the words for "Email.AlreadyRegistered.forgottenActionFallback" with the link "https://croquetscores.com/account/forgot-password"
+      Then its body ends with "Croquet Scores"
 
   Rule: The site's address comes from its configuration
 
@@ -167,18 +175,13 @@ Feature: The site's emails are written in their reader's language
       When the email "Email.NoSuchKind" is written in "en"
       Then it is refused with "EmailWriter.UnknownKind"
 
-    Scenario: An email whose words a catalogue has not got is refused
-      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.intro"
+    Scenario: An email whose body a catalogue has not got is refused
+      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.body"
       When the email "Email.ConfirmAddress" is written in "en"
       Then it is refused with "EmailWriter.MissingWords"
 
-    Scenario: An email whose sign off a catalogue has not got is refused
-      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.signOff"
-      When the email "Email.ConfirmAddress" is written in "en"
-      Then it is refused with "EmailWriter.MissingWords"
-
-    Scenario: An email whose address to copy a catalogue has not got is refused
-      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.actionFallback"
+    Scenario: An email whose subject a catalogue has not got is refused
+      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.subject"
       When the email "Email.ConfirmAddress" is written in "en"
       Then it is refused with "EmailWriter.MissingWords"
 

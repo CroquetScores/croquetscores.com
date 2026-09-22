@@ -200,15 +200,6 @@ Then(
 );
 
 Then(
-  "the button says the words for {string}",
-  function (this: SpecWorld, key: string) {
-    const link = writingOf(this).address;
-    assert.ok(link !== undefined, "No button has been named.");
-    assert.equal(buttonTo(writtenOf(this).body, link), wordsFor(key));
-  },
-);
-
-Then(
   "its body shows the address {string} as text",
   function (this: SpecWorld, link: string) {
     const escaped = link.replace(/&/g, "&amp;");
@@ -220,23 +211,35 @@ Then(
 );
 
 Then(
-  "its body shows the words for {string} with the link {string}",
-  function (this: SpecWorld, key: string, link: string) {
-    const words = wordsFor(key).replace("{link}", link).replace(/&/g, "&amp;");
-    const texts = textsOf(writtenOf(this).body);
+  "its body holds the markup for {string}",
+  function (this: SpecWorld, key: string) {
+    // The markup as the catalogue holds it, with what filled it in put where
+    // it says: the same email the catalogue was written to say, not one the
+    // writer made out of pieces of it.
+    const markup = wordsFor(key).replace(
+      /\{link\}/g,
+      everyFill.link.replace(/&/g, "&amp;"),
+    );
     assert.ok(
-      texts.includes(words),
-      `The body's text has no "${words}": ${inspect(texts)}`,
+      writtenOf(this).body.includes(markup.trim()),
+      `The body is not the markup for ${key}: ${writtenOf(this).body}`,
     );
   },
 );
 
-Then(
-  "its body ends with the words for {string}",
-  function (this: SpecWorld, key: string) {
-    assert.equal(textsOf(writtenOf(this).body).at(-1), wordsFor(key));
-  },
-);
+Then("its body has a paragraph", function (this: SpecWorld) {
+  assert.match(writtenOf(this).body, /<p>/);
+});
+
+Then("its body ends with {string}", function (this: SpecWorld, words: string) {
+  assert.equal(textsOf(writtenOf(this).body).at(-1), words);
+});
+
+Then("the button says {string}", function (this: SpecWorld, words: string) {
+  const link = writingOf(this).address;
+  assert.ok(link !== undefined, "No button has been named.");
+  assert.equal(buttonTo(writtenOf(this).body, link), words);
+});
 
 Then(
   "its body contains no element named {string}",

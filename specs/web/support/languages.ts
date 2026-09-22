@@ -45,7 +45,21 @@ export const englishForScenarios: Language = {
   },
 };
 
-const marked = (text: string): string => `${opens}${text}${closes}`;
+// A value the site holds as markup — an email's body, and nothing else — is
+// marked inside its tags rather than around them. What a reader sees is then
+// marked, as it is on a page, while the markup stays markup: marking the whole
+// value would put the marks outside the paragraphs, where no reader sees them,
+// and leave every paragraph looking as though it came from somewhere other
+// than a catalogue.
+const markedBetweenTags = (markup: string): string =>
+  markup.replace(/>([^<]+)</g, (whole, between: string) =>
+    between.trim() === ""
+      ? whole
+      : `>${between.replace(between.trim(), marked(between.trim()))}<`,
+  );
+
+const marked = (text: string): string =>
+  text.includes("<") ? markedBetweenTags(text) : `${opens}${text}${closes}`;
 
 export const testLocale: Language = {
   tag: testLocaleTag,

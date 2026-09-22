@@ -192,110 +192,124 @@ export const english: Language = {
     "errors.failed": "Something went wrong",
     "errors.reference": "Reference {reference}.",
 
-    // An email's words are keyed by its kind, one paragraph to a key, and a
-    // link's words apart from where it goes, so that no catalogue holds markup.
-    // Each email has all of its own words, its sign off and the words offering
-    // its links to copy included, so that one can be reworded without changing
-    // another. None greets its reader by name, so that nothing about a person
-    // but the address an email goes to need be put in the queue.
+    // An email is two entries: its subject, which is text, and its body, which
+    // is the whole of its markup. This is the one place a catalogue holds
+    // markup, and it holds it because an email is written and translated as a
+    // piece of writing rather than as a list of phrases somewhere else puts in
+    // order: whoever writes one sees what its reader will see. Only what fills
+    // an email in is escaped, so nothing given to one can become markup; the
+    // markup here is the site's own. `{link}` is the link the email carries,
+    // `{site}` the site's address, for a link to one of its own pages. None
+    // greets its reader by name, so that nothing about a person but the address
+    // an email goes to need be put in the queue.
+
     "Email.ConfirmAddress.subject":
       "Confirm your email address for Croquet Scores",
-    "Email.ConfirmAddress.intro":
-      "Thank you for registering with Croquet Scores. To finish, confirm that this is your email address.",
-    "Email.ConfirmAddress.action": "Confirm my email address",
-    "Email.ConfirmAddress.actionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.ConfirmAddress.expiry":
-      "The link works for 24 hours. If it has expired by the time you follow it, you will be offered a new one.",
-    "Email.ConfirmAddress.notYou":
-      "If you did not register, somebody may have typed your email address by mistake. You need do nothing: nobody can sign in to the account without this link.",
-    "Email.ConfirmAddress.signOff": "Croquet Scores",
+    "Email.ConfirmAddress.body": `
+  <p>Thank you for registering with Croquet Scores. To finish, confirm that
+     this is your email address.</p>
+  <p><a href="{link}">Confirm my email address</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {link}</p>
+  <p>The link works for 24 hours. If it has expired by the time you follow
+     it, you will be offered a new one.</p>
+  <p>If you did not register, somebody may have typed your email address by
+     mistake. You need do nothing: nobody can sign in to the account without
+     this link.</p>
+  <p>Croquet Scores</p>`,
 
     "Email.ConfirmAddressAgain.subject":
       "A new link to confirm your email address for Croquet Scores",
-    "Email.ConfirmAddressAgain.intro":
-      "Here is a new link to confirm your email address for Croquet Scores. Any earlier link that has not expired still works too.",
-    "Email.ConfirmAddressAgain.action": "Confirm my email address",
-    "Email.ConfirmAddressAgain.actionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.ConfirmAddressAgain.expiry":
-      "The link works for 24 hours. If it has expired by the time you follow it, you will be offered a new one.",
-    "Email.ConfirmAddressAgain.registeredAgain":
-      "If you registered again to get this, nothing you gave the second time was kept. Sign in with the password you first registered with, or set a new one from the forgot password page.",
-    "Email.ConfirmAddressAgain.notYou":
-      "If you did not register, somebody may have typed your email address by mistake. You need do nothing: nobody can sign in to the account without this link.",
-    "Email.ConfirmAddressAgain.signOff": "Croquet Scores",
+    "Email.ConfirmAddressAgain.body": `
+  <p>Here is a new link to confirm your email address for Croquet Scores.
+     Any earlier link that has not expired still works too.</p>
+  <p><a href="{link}">Confirm my email address</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {link}</p>
+  <p>The link works for 24 hours. If it has expired by the time you follow
+     it, you will be offered a new one.</p>
+  <p>If you registered again to get this, nothing you gave the second time
+     was kept. Sign in with the password you first registered with, or set a
+     new one from the forgot password page.</p>
+  <p>If you did not register, somebody may have typed your email address by
+     mistake. You need do nothing: nobody can sign in to the account without
+     this link.</p>
+  <p>Croquet Scores</p>`,
 
     "Email.AlreadyRegistered.subject":
       "Somebody tried to register with your email address",
-    "Email.AlreadyRegistered.intro":
-      "Somebody tried to register with Croquet Scores using this email address, which already has an account. Nothing about your account has changed.",
-    "Email.AlreadyRegistered.ifYou":
-      "If it was you, you already have an account, and can sign in to it.",
-    "Email.AlreadyRegistered.action": "Sign in",
-    "Email.AlreadyRegistered.actionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.AlreadyRegistered.forgotten":
-      "If you have forgotten your password, you can set a new one.",
-    "Email.AlreadyRegistered.forgottenAction": "Set a new password",
-    "Email.AlreadyRegistered.forgottenActionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.AlreadyRegistered.notYou":
-      "If it was not you, you need do nothing. Nobody has been given a way into your account.",
-    "Email.AlreadyRegistered.signOff": "Croquet Scores",
+    "Email.AlreadyRegistered.body": `
+  <p>Somebody tried to register with Croquet Scores using this email
+     address, which already has an account. Nothing about your account has
+     changed.</p>
+  <p>If it was you, you already have an account, and can sign in to it.</p>
+  <p><a href="{site}/account/sign-in">Sign in</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {site}/account/sign-in</p>
+  <p>If you have forgotten your password, you can set a new one.</p>
+  <p><a href="{site}/account/forgot-password">Set a new password</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {site}/account/forgot-password</p>
+  <p>If it was not you, you need do nothing. Nobody has been given a way
+     into your account.</p>
+  <p>Croquet Scores</p>`,
 
     "Email.SetNewPassword.subject": "Set a new password for Croquet Scores",
-    "Email.SetNewPassword.intro":
-      "Somebody asked for a way back in to your Croquet Scores account. Follow the link to set a new password.",
-    "Email.SetNewPassword.action": "Set a new password",
-    "Email.SetNewPassword.actionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.SetNewPassword.expiry":
-      "The link works once, until an hour after you asked for it. After that, ask again from the forgot password page.",
-    "Email.SetNewPassword.signsOut":
-      "Setting a new password signs your account out on every device it is signed in on.",
-    "Email.SetNewPassword.notYou":
-      "If you did not ask, you need do nothing. Your password stays as it is unless this link is followed.",
-    "Email.SetNewPassword.signOff": "Croquet Scores",
+    "Email.SetNewPassword.body": `
+  <p>Somebody asked for a way back in to your Croquet Scores account. Follow
+     the link to set a new password.</p>
+  <p><a href="{link}">Set a new password</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {link}</p>
+  <p>The link works once, until an hour after you asked for it. After that,
+     ask again from the forgot password page.</p>
+  <p>Setting a new password signs your account out on every device it is
+     signed in on.</p>
+  <p>If you did not ask, you need do nothing. Your password stays as it is
+     unless this link is followed.</p>
+  <p>Croquet Scores</p>`,
 
     "Email.RegisterInstead.subject":
       "There is no Croquet Scores account for this email address",
-    "Email.RegisterInstead.intro":
-      "Somebody asked for a way back in to Croquet Scores with this email address, but there is no account for it.",
-    "Email.RegisterInstead.otherAddress":
-      "If you registered with another email address, ask again with that one.",
-    "Email.RegisterInstead.register":
-      "If you meant to make an account, you can register now.",
-    "Email.RegisterInstead.action": "Register",
-    "Email.RegisterInstead.actionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.RegisterInstead.notYou":
-      "If you did not ask, you need do nothing. No account has been made.",
-    "Email.RegisterInstead.signOff": "Croquet Scores",
+    "Email.RegisterInstead.body": `
+  <p>Somebody asked for a way back in to Croquet Scores with this email
+     address, but there is no account for it.</p>
+  <p>If you registered with another email address, ask again with that one.</p>
+  <p>If you meant to make an account, you can register now.</p>
+  <p><a href="{site}/account/register">Register</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {site}/account/register</p>
+  <p>If you did not ask, you need do nothing. No account has been made.</p>
+  <p>Croquet Scores</p>`,
 
     "Email.ConfirmForgetting.subject":
       "Confirm that your Croquet Scores account is to be forgotten",
-    "Email.ConfirmForgetting.intro":
-      "You asked for your Croquet Scores account to be forgotten. Follow the link to see what that means, and to say for certain that you want it.",
-    "Email.ConfirmForgetting.action": "Forget my account",
-    "Email.ConfirmForgetting.actionFallback":
-      "If the button does not work, copy this address into your browser: {link}",
-    "Email.ConfirmForgetting.meaning":
-      "Once forgotten, your name and email address can never be read again, by anybody, and your account cannot be signed in to. It cannot be undone.",
-    "Email.ConfirmForgetting.expiry":
-      "The link works once, until 15 minutes after you asked for it, and only while you are signed in to this account. After that, ask again from your account.",
-    "Email.ConfirmForgetting.notYou":
-      "If you did not ask, nothing will happen unless the link is followed. Somebody signed in to your account asked, though, so set a new password from the forgot password page to be sure they cannot sign in again.",
-    "Email.ConfirmForgetting.signOff": "Croquet Scores",
+    "Email.ConfirmForgetting.body": `
+  <p>You asked for your Croquet Scores account to be forgotten. Follow the
+     link to see what that means, and to say for certain that you want it.</p>
+  <p><a href="{link}">Forget my account</a></p>
+  <p>If the button does not work, copy this address into your browser:
+     {link}</p>
+  <p>Once forgotten, your name and email address can never be read again, by
+     anybody, and your account cannot be signed in to. It cannot be undone.</p>
+  <p>The link works once, until 15 minutes after you asked for it, and only
+     while you are signed in to this account. After that, ask again from your
+     account.</p>
+  <p>If you did not ask, nothing will happen unless the link is followed.
+     Somebody signed in to your account asked, though, so set a new password
+     from the forgot password page to be sure they cannot sign in again.</p>
+  <p>Croquet Scores</p>`,
 
     "Email.RegistrationsSuspended.subject":
       "Registering is suspended: {service} cannot be reached",
-    "Email.RegistrationsSuspended.intro":
-      "Croquet Scores could not reach {service} at {when}. Until it answers, readers who need it, to register or to set a new password, are told to try again later.",
-    "Email.RegistrationsSuspended.lifting":
-      "Nothing needs lifting. Each attempt asks {service} afresh, and the pages work again the moment it answers.",
-    "Email.RegistrationsSuspended.again":
-      "While {service} stays down, you will be emailed about it at most once an hour.",
-    "Email.RegistrationsSuspended.signOff": "Croquet Scores",
+    "Email.RegistrationsSuspended.body": `
+  <p>Croquet Scores could not reach {service} at {when}. Until it answers,
+     readers who need it, to register or to set a new password, are told to
+     try again later.</p>
+  <p>Nothing needs lifting. Each attempt asks {service} afresh, and the pages
+     work again the moment it answers.</p>
+  <p>While {service} stays down, you will be emailed about it at most once an
+     hour.</p>
+  <p>Croquet Scores</p>`,
   },
 };

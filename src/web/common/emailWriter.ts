@@ -7,7 +7,7 @@ import type {
   EmailWriter,
   WrittenEmail,
 } from "../../application/services/EmailWriter.js";
-import { speakingIn, type Language, type Speaking } from "./language.js";
+import { speakingIn, type Language } from "./language.js";
 import { escape } from "./escape.js";
 
 /** Every reason writing an email can be refused. */
@@ -45,93 +45,23 @@ export const siteAddress = (
   return `${local ? "http" : "https"}://${canonicalHost}`;
 };
 
-// What an email is made of, in the order it is read: paragraphs, and links to
-// follow. A link is to what fills the email in, or to one of the site's own
-// pages; either is offered as a button in the email's words and again as the
-// address itself, for a reader whose mail shows no buttons, in words of its
-// own. Every block names its words under the email's kind, its sign off
-// included: no email borrows a phrase from another, or from a stock they all
-// share, so that one can be reworded without changing what another says.
-type Block =
-  | { readonly paragraph: string }
-  | {
-      readonly button: string;
-      readonly fallback: string;
-      readonly to: { readonly fill: string } | { readonly page: string };
-    };
-
-const emails: Readonly<Record<string, readonly Block[]>> = {
-  "Email.ConfirmAddress": [
-    { paragraph: "intro" },
-    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
-    { paragraph: "expiry" },
-    { paragraph: "notYou" },
-    { paragraph: "signOff" },
-  ],
-  "Email.ConfirmAddressAgain": [
-    { paragraph: "intro" },
-    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
-    { paragraph: "expiry" },
-    { paragraph: "registeredAgain" },
-    { paragraph: "notYou" },
-    { paragraph: "signOff" },
-  ],
-  "Email.AlreadyRegistered": [
-    { paragraph: "intro" },
-    { paragraph: "ifYou" },
-    {
-      button: "action",
-      fallback: "actionFallback",
-      to: { page: "/account/sign-in" },
-    },
-    { paragraph: "forgotten" },
-    {
-      button: "forgottenAction",
-      fallback: "forgottenActionFallback",
-      to: { page: "/account/forgot-password" },
-    },
-    { paragraph: "notYou" },
-    { paragraph: "signOff" },
-  ],
-  "Email.SetNewPassword": [
-    { paragraph: "intro" },
-    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
-    { paragraph: "expiry" },
-    { paragraph: "signsOut" },
-    { paragraph: "notYou" },
-    { paragraph: "signOff" },
-  ],
-  "Email.RegisterInstead": [
-    { paragraph: "intro" },
-    { paragraph: "otherAddress" },
-    { paragraph: "register" },
-    {
-      button: "action",
-      fallback: "actionFallback",
-      to: { page: "/account/register" },
-    },
-    { paragraph: "notYou" },
-    { paragraph: "signOff" },
-  ],
-  "Email.ConfirmForgetting": [
-    { paragraph: "intro" },
-    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
-    { paragraph: "meaning" },
-    { paragraph: "expiry" },
-    { paragraph: "notYou" },
-    { paragraph: "signOff" },
-  ],
-  "Email.RegistrationsSuspended": [
-    { paragraph: "intro" },
-    { paragraph: "lifting" },
-    { paragraph: "again" },
-    { paragraph: "signOff" },
-  ],
-};
-
-// What a block says, by the names its words are kept under.
-const wordsOf = (block: Block): readonly string[] =>
-  "paragraph" in block ? [block.paragraph] : [block.button, block.fallback];
+// The kinds of email this writes. Each is two entries in every catalogue,
+// `<kind>.subject` and `<kind>.body`, and the body is the whole of the email's
+// markup: paragraphs, and links offered both as a button and as the address
+// itself, for a reader whose mail shows no buttons. The email is therefore
+// read where it is written, and translating one is translating a piece of
+// writing rather than assembling one out of phrases. A kind is named here so
+// that an email of a kind the site does not send is refused as unknown rather
+// than as a catalogue that has lost its words.
+const kinds: readonly string[] = [
+  "Email.ConfirmAddress",
+  "Email.ConfirmAddressAgain",
+  "Email.AlreadyRegistered",
+  "Email.SetNewPassword",
+  "Email.RegisterInstead",
+  "Email.ConfirmForgetting",
+  "Email.RegistrationsSuspended",
+];
 
 // The language an email was queued in, as the site offers it: that language, or
 // the language it is a regional form of, or the site's first where it offers
@@ -153,8 +83,7 @@ export const emailWriter = (
   address: string,
 ): EmailWriter => ({
   write: ({ kind, language, fill }: EmailToWrite): WrittenEmail => {
-    const blocks = emails[kind];
-    if (blocks === undefined) {
+    if (!kinds.includes(kind)) {
       throw new EmailWriterRefused(
         "EmailWriter.UnknownKind",
         `${kind} is not a kind of email this writes.`,
@@ -168,15 +97,10 @@ export const emailWriter = (
     }
     const speaking = speakingIn(chosen, offered);
 
-    // Every phrase the email is made of, and every link it carries, before a
-    // word of it is written: an email with a phrase missing, or with a dead
-    // button and an address to copy that is not there, is a mistake in the
+    // Both of the email's entries, before a word of it is written: an email
+    // with no body, or with a subject line saying nothing, is a mistake in the
     // site, and one that never goes is better than one that does.
-    for (const key of [`${kind}.subject`].concat(
-      blocks.flatMap((block) =>
-        wordsOf(block).map((words) => `${kind}.${words}`),
-      ),
-    )) {
+    for (const key of [`${kind}.subject`, `${kind}.body`]) {
       if (!speaking.knows(key)) {
         throw new EmailWriterRefused(
           "EmailWriter.MissingWords",
@@ -184,22 +108,32 @@ export const emailWriter = (
         );
       }
     }
-    for (const block of blocks) {
-      if ("button" in block && "fill" in block.to && !(block.to.fill in fill)) {
-        throw new EmailWriterRefused(
-          "EmailWriter.MissingFill",
-          `An email of the kind ${kind} carries a ${block.to.fill}, and was given none.`,
-        );
-      }
+    // The markup as the catalogue holds it, so that what it asks to be filled
+    // in can be seen before anything is: an email whose markup carries a link
+    // and was given none would go out with a dead button and an address to
+    // copy that is not there, which is worse than not going.
+    const markup = speaking.say(`${kind}.body`);
+    if (markup.includes("{link}") && !("link" in fill)) {
+      throw new EmailWriterRefused(
+        "EmailWriter.MissingFill",
+        `An email of the kind ${kind} carries a link, and was given none.`,
+      );
     }
-    // Filled before it is escaped, so that whatever fills a phrase in is
-    // escaped with it and is text wherever it lands, never markup.
-    const say = (key: string): string => escape(speaking.say(key, fill));
 
+    // Escaped before it is filled in, the other way round from a page, because
+    // here the words themselves are markup and are meant to stay markup. Only
+    // what fills them in is escaped, so that nothing given to an email — a
+    // link, the name of a service — can become markup of its own.
+    const escaped = Object.fromEntries(
+      Object.entries(fill).map(([name, value]) => [name, escape(value)]),
+    );
     const subject = speaking.say(`${kind}.subject`, fill);
-    const body = blocks
-      .map((block) => write(block, kind, fill, address, say, speaking))
-      .join("\n");
+    const body = speaking.say(`${kind}.body`, {
+      ...escaped,
+      // The site's address, for a link to one of its own pages: it is the
+      // site's own and is written into the markup as {site} and a path.
+      site: address,
+    });
 
     return {
       subject,
@@ -217,22 +151,3 @@ ${body}
     };
   },
 });
-
-const write = (
-  block: Block,
-  kind: string,
-  fill: Readonly<Record<string, string>>,
-  address: string,
-  say: (key: string) => string,
-  speaking: Speaking,
-): string => {
-  if ("paragraph" in block)
-    return `    <p>${say(`${kind}.${block.paragraph}`)}</p>`;
-  const link =
-    "fill" in block.to ? (fill[block.to.fill] ?? "") : address + block.to.page;
-  // The address to copy is a phrase of its own, with the link filled into it,
-  // so that it is text and says itself in the reader's language.
-  const copy = escape(speaking.say(`${kind}.${block.fallback}`, { link }));
-  return `    <p><a href="${escape(link)}">${say(`${kind}.${block.button}`)}</a></p>
-    <p>${copy}</p>`;
-};
