@@ -1,5 +1,5 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";

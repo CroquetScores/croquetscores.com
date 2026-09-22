@@ -13,7 +13,7 @@
 // over a database of its own, and signs in for real.
 import type { FastifyRequest } from "fastify";
 
-import { AccountId } from "../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import type { Reader } from "../../../src/web/common/reader.js";
 import type { SpecWorld } from "../../support/world.js";
 

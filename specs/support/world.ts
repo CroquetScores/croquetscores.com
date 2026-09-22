@@ -24,7 +24,7 @@ import type {
 } from "../../src/application/services/PasswordHasher.js";
 import type { BreachedPasswords } from "../../src/application/services/BreachedPasswords.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
 import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Password } from "../../src/domain/aggregates/accounts/value-objects/Password.js";
@@ -37,6 +37,7 @@ import type { Region } from "../../src/domain/aggregates/tournaments/value-objec
 import type { Sport } from "../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
+import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/TournamentPlayer.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -276,6 +277,12 @@ export class SpecWorld extends World {
   // The notes a scenario made, which may be none, kept apart from whether any
   // were made at all.
   public madeNotes: { notes: TournamentNotes | undefined } | undefined;
+  // The player in a tournament a scenario makes, the other it is compared
+  // with, and whether the two were found the same. A failure to make one is
+  // kept in `failure`.
+  public tournamentPlayer: TournamentPlayer | undefined;
+  public otherTournamentPlayer: TournamentPlayer | undefined;
+  public sameTournamentPlayer: boolean | undefined;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what

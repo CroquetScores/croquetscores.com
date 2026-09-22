@@ -19,7 +19,7 @@ import {
 } from "../../src/application/common/Mediator.js";
 import { Query } from "../../src/application/common/Query.js";
 import { QueryValidator } from "../../src/application/common/QueryValidator.js";
-import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 import { type Range, ranges } from "./exampleRange.js";

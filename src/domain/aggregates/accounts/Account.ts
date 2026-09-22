@@ -10,7 +10,7 @@ import { PasswordSet } from "./events/PasswordSet.js";
 import { RoleAdded } from "./events/RoleAdded.js";
 import { RoleRemoved } from "./events/RoleRemoved.js";
 import { SignedIn } from "./events/SignedIn.js";
-import type { AccountId } from "./value-objects/AccountId.js";
+import type { AccountId } from "./AccountId.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
 import type { Role } from "./value-objects/Role.js";

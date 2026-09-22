@@ -81,7 +81,7 @@ export default tseslint.config(
               // A regex rather than a group: a group is read as gitignore
               // would read it, and a file cannot be let back in from under a
               // directory that has been shut out.
-              regex: "/aggregates/(?!accounts/value-objects/AccountId\\.js$)",
+              regex: "/aggregates/(?!accounts/AccountId\\.js$)",
               message:
                 "domain/common is shared by every aggregate and names none of them, except the id of the account that caused an event.",
             },

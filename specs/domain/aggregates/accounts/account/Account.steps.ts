@@ -11,6 +11,12 @@ import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accoun
 import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
 import { RoleAdded } from "../../../../../src/domain/aggregates/accounts/events/RoleAdded.js";
 import { RoleRemoved } from "../../../../../src/domain/aggregates/accounts/events/RoleRemoved.js";
+import { SignedIn } from "../../../../../src/domain/aggregates/accounts/events/SignedIn.js";
+import type { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
+import { EmailAddress } from "../../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
+import { PersonName } from "../../../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
+import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
+import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../../support/world.js";
 import {
   A_BETTER_HASH,

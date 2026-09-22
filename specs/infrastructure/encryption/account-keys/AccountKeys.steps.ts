@@ -5,7 +5,7 @@ import { inspect } from "node:util";
 
 import { Account } from "../../../../src/domain/aggregates/accounts/Account.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { AccountId } from "../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import { AccountKeys } from "../../../../src/infrastructure/encryption/AccountKeys.js";
 import type { SpecWorld } from "../../../support/world.js";

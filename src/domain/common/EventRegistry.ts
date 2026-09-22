@@ -1,4 +1,4 @@
-import { AccountId } from "../aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../aggregates/accounts/AccountId.js";
 import type { DomainEvent } from "./DomainEvent.js";
 import { ReadOnlyDate } from "./ReadOnlyDate.js";
 

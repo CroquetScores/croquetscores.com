@@ -3,7 +3,7 @@ import { strict as assert } from "node:assert";
 
 import { AskToForgetAccount } from "../../../../../src/application/operations/accounts/AskToForgetAccount.js";
 import { ForgetAccount } from "../../../../../src/application/operations/accounts/ForgetAccount.js";
-import type { AccountId } from "../../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import type { Registering } from "../../../../support/registering.js";
 import type { SpecWorld } from "../../../../support/world.js";
