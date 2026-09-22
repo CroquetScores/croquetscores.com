@@ -47,6 +47,15 @@ Feature: Registering an account
       When an account is registered at "someone@example.com"
       Then the account has no password
 
+    Scenario Outline: A registered account holds no role
+      When an account is registered at "someone@example.com"
+      Then the account does not hold the role "<role>"
+
+      Examples:
+        | role                  |
+        | Administrator         |
+        | World Ranking Officer |
+
     Scenario: Registering records the hash of the email address it was given
       When an account is registered at "someone@example.com" with the email address hash "hash-of-someone"
       Then its registering says the email address hash "hash-of-someone"

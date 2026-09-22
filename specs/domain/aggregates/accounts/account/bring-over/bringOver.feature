@@ -39,6 +39,15 @@ Feature: Bringing an account over from the old site
       When an account is brought over as "Sam Someone" at "someone@example.com"
       Then the account's password is imported
 
+    Scenario Outline: An account brought over holds no role
+      When an account is brought over as "Sam Someone" at "someone@example.com"
+      Then the account does not hold the role "<role>"
+
+      Examples:
+        | role                  |
+        | Administrator         |
+        | World Ranking Officer |
+
     Scenario: Being brought over records the hash of the email address it was given
       When an account is brought over as "Sam Someone" at "someone@example.com" with the email address hash "hash-of-someone"
       Then its being brought over says the email address hash "hash-of-someone"
