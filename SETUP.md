@@ -110,6 +110,7 @@ ESLint enforces all of this (§9); breaking it fails CI.
 Rules across the tree:
 
 - A feature and its step definitions share a folder, and both are named after the source file they describe, casing and all: `Mediator.feature` and `Mediator.steps.ts` for `Mediator.ts`. The folder is named for the same thing in lower case, hyphenated where it runs to more than one word — `specs/domain/common/read-only-date/ReadOnlyDate.feature` — so a capital letter in a path always means a file, and a file with one holds a type. The code they drive sits under the matching path in `/src`.
+- Where a class has more to say than one feature can be read as, each of its methods gets a feature of its own, in a folder beneath the class's named for the method, the feature cased as the method is: `specs/domain/aggregates/accounts/account/set-new-password/setNewPassword.feature` for `Account.setNewPassword`.
 - `specs/support/` is the exception: it holds what every feature shares, so it is loaded everywhere and may not reach into `src/infrastructure/`.
 - A spec obeys the import rule of the layer it describes. `specs/domain/` may reach `src/domain/` and no further out. `specs/infrastructure/` is the one place a spec touches a concrete implementation, because that is precisely what it is describing.
 - Where a feature describes an interface, the fake that satisfies it sits beside that feature, so the fake and the scenarios defining it stay together.
@@ -639,7 +640,7 @@ npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
 Working on one feature:
 
 ```bash
-npm run test:features -- specs/domain/accounts/account/Account.feature
+npm run test:features -- specs/domain/aggregates/accounts/account/confirm/confirm.feature
 npm run test:features -- --tags "@wip"
 npm run test:nodb
 ```

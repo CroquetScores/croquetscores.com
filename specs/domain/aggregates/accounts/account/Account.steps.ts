@@ -1,6 +1,5 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import { createHash } from "node:crypto";
 import { inspect } from "node:util";
 
 import { Account } from "../../../../../src/domain/aggregates/accounts/Account.js";
@@ -10,169 +9,40 @@ import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts
 import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accounts/events/PasswordHashedAgain.js";
 import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
-import { SignedIn } from "../../../../../src/domain/aggregates/accounts/events/SignedIn.js";
-import type { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
-import { EmailAddress } from "../../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { PersonName } from "../../../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
-import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
-import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
+import { RoleAdded } from "../../../../../src/domain/aggregates/accounts/events/RoleAdded.js";
+import { RoleRemoved } from "../../../../../src/domain/aggregates/accounts/events/RoleRemoved.js";
 import type { SpecWorld } from "../../../../support/world.js";
+import {
+  A_BETTER_HASH,
+  A_NAME,
+  A_NEW_PASSWORD_HASH,
+  A_PASSWORD_HASH,
+  AN_OLD_SITE_HASH,
+  accountOf,
+  addressHashOf,
+  askedBy,
+  askerOf,
+  at,
+  idOf,
+  now,
+  roleNamed,
+  streamOf,
+} from "./anAccount.js";
 
-// The stream an account is rebuilt from. Kept here rather than on the world,
-// which has no business knowing what an account's events are.
-const streams = new WeakMap<SpecWorld, DomainEvent[]>();
+// The steps more than one of an account's features uses: who asks, the stream
+// it is rebuilt from, rebuilding it, and what it is. Each method's own steps
+// are beside its feature, in the folder named for it.
 
-const streamOf = (world: SpecWorld): DomainEvent[] => {
-  let stream = streams.get(world);
-  if (stream === undefined) {
-    stream = [];
-    streams.set(world, stream);
-  }
-  return stream;
-};
+// Who asks -----------------------------------------------------------------
 
-// The account the scenario names in its Background is the one registered, and
-// so, as every account event is, the cause of what it records.
-const idOf = (world: SpecWorld): AccountId => {
-  assert.ok(world.account !== undefined, "No account has been named.");
-  return world.account;
-};
-
-const now = (world: SpecWorld): ReadOnlyDate => {
-  assert.ok(world.moment !== undefined, "No moment has been named.");
-  return ReadOnlyDate.from(world.moment);
-};
-
-const accountOf = (world: SpecWorld): Account => {
-  assert.ok(
-    world.aggregate instanceof Account,
-    `There is no account: ${inspect(world.failure)}`,
-  );
-  return world.aggregate;
-};
-
-// A hash stands in for the password's. The account is only ever given a hash,
-// so what matters is that it is not the password; how it was made does not.
-const hashOf = (password: string): string =>
-  `stand-in$${createHash("sha256").update(password).digest("hex")}`;
-
-// The hash registering is given of an email address: the one the scenario
-// keeps accounts with, when it keeps them, so that they can be found by it; a
-// stand-in otherwise, since the account only carries it.
-const addressHashOf = (world: SpecWorld, address: string): string =>
-  world.hashEmailAddress?.(address) ?? `stand-in$${address.toLowerCase()}`;
-
-// Asking an account something may be refused, and the scenario says which it
-// expects. What it recorded is kept, when the scenario keeps accounts.
-const tryTo = async (
-  world: SpecWorld,
-  ask: (account: Account) => void,
-): Promise<void> => {
-  try {
-    ask(accountOf(world));
-  } catch (failure) {
-    world.failure = failure;
-    return;
-  }
-  await world.keepAccount?.(accountOf(world));
-};
-
-const firstRecorded = (world: SpecWorld): DomainEvent => {
-  const event = accountOf(world).recorded[0];
-  assert.ok(event !== undefined, "It recorded nothing.");
-  return event;
-};
-
-// What a scenario that does not say is confirmed as, and brought over with:
-// what was typed is not what that scenario is about.
-const A_NAME = "Sam Someone";
-const A_PASSWORD_HASH = hashOf("correct horse battery staple");
-const AN_OLD_SITE_HASH = "$old-site$stand-in";
-
-// Registering --------------------------------------------------------------
-
-const register = async (
-  world: SpecWorld,
-  address: string,
-  addressHash = addressHashOf(world, address),
-): Promise<void> => {
-  const account = Account.register(
-    idOf(world),
-    EmailAddress.from(address),
-    addressHash,
-    now(world),
-  );
-  world.aggregate = account;
-  await world.keepAccount?.(account);
-};
-
-When(
-  "an account is registered at {string}",
-  async function (this: SpecWorld, address: string) {
-    await register(this, address);
+Given(
+  "it is asked for by {string}",
+  function (this: SpecWorld, account: string) {
+    askedBy(this, account);
   },
 );
 
-When(
-  "an account is registered at {string} with the email address hash {string}",
-  async function (this: SpecWorld, address: string, addressHash: string) {
-    await register(this, address, addressHash);
-  },
-);
-
-// Being brought over from the old site -----------------------------------------
-
-const bringOver = async (
-  world: SpecWorld,
-  name: string,
-  address: string,
-  passwordHash = AN_OLD_SITE_HASH,
-  addressHash = addressHashOf(world, address),
-): Promise<void> => {
-  const account = Account.bringOver(
-    idOf(world),
-    PersonName.from(name),
-    EmailAddress.from(address),
-    addressHash,
-    passwordHash,
-    now(world),
-  );
-  world.aggregate = account;
-  await world.keepAccount?.(account);
-};
-
-When(
-  "an account is brought over as {string} at {string}",
-  async function (this: SpecWorld, name: string, address: string) {
-    await bringOver(this, name, address);
-  },
-);
-
-When(
-  "an account is brought over as {string} at {string} with the password hash {string}",
-  async function (
-    this: SpecWorld,
-    name: string,
-    address: string,
-    passwordHash: string,
-  ) {
-    await bringOver(this, name, address, passwordHash);
-  },
-);
-
-When(
-  "an account is brought over as {string} at {string} with the email address hash {string}",
-  async function (
-    this: SpecWorld,
-    name: string,
-    address: string,
-    addressHash: string,
-  ) {
-    await bringOver(this, name, address, AN_OLD_SITE_HASH, addressHash);
-  },
-);
-
-// The stream an account is rebuilt from -------------------------------------
+// The stream --------------------------------------------------------------
 
 Given(
   "a stream where an account was registered at {string}",
@@ -214,6 +84,15 @@ Given(
 );
 
 Given(
+  "its email address was confirmed as {string} at {string}",
+  function (this: SpecWorld, name: string, moment: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(name, A_PASSWORD_HASH, idOf(this), at(moment)),
+    );
+  },
+);
+
+Given(
   "its email address was confirmed with the password hash {string}",
   function (this: SpecWorld, passwordHash: string) {
     streamOf(this).push(
@@ -222,15 +101,11 @@ Given(
   },
 );
 
-// The hash a password was hashed again with, when the stream says it was.
-const NEW_HASH = hashOf("a new hash");
-
 Given("its password was hashed again", function (this: SpecWorld) {
-  streamOf(this).push(new PasswordHashedAgain(NEW_HASH, idOf(this), now(this)));
+  streamOf(this).push(
+    new PasswordHashedAgain(A_BETTER_HASH, idOf(this), now(this)),
+  );
 });
-
-// The hash a new password is set with, when the stream says one was set.
-const A_NEW_PASSWORD_HASH = hashOf("a password set later");
 
 Given("a new password was set on the account", function (this: SpecWorld) {
   streamOf(this).push(
@@ -242,25 +117,25 @@ Given(
   "a new password was set on the account at {string}",
   function (this: SpecWorld, moment: string) {
     streamOf(this).push(
-      new PasswordSet(
-        A_NEW_PASSWORD_HASH,
-        idOf(this),
-        ReadOnlyDate.from(new Date(moment)),
-      ),
+      new PasswordSet(A_NEW_PASSWORD_HASH, idOf(this), at(moment)),
     );
   },
 );
 
 Given(
-  "its email address was confirmed as {string} at {string}",
-  function (this: SpecWorld, name: string, moment: string) {
+  "the role {string} was added to it",
+  function (this: SpecWorld, role: string) {
     streamOf(this).push(
-      new EmailAddressConfirmed(
-        name,
-        A_PASSWORD_HASH,
-        idOf(this),
-        ReadOnlyDate.from(new Date(moment)),
-      ),
+      new RoleAdded(roleNamed(role), askerOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "the role {string} was removed from it",
+  function (this: SpecWorld, role: string) {
+    streamOf(this).push(
+      new RoleRemoved(roleNamed(role), askerOf(this), now(this)),
     );
   },
 );
@@ -269,178 +144,15 @@ Given("it was forgotten", function (this: SpecWorld) {
   streamOf(this).push(new AccountForgotten(idOf(this), now(this)));
 });
 
-// Kept rather than thrown, because half of these scenarios are about what it
-// refuses.
-const setANewPasswordOn = (world: SpecWorld, hash: string): void => {
-  world.failure = undefined;
-  try {
-    accountOf(world).setNewPassword(hash, now(world));
-  } catch (failure) {
-    world.failure = failure;
-  }
-};
-
-When("a new password is set on the account", function (this: SpecWorld) {
-  setANewPasswordOn(this, A_NEW_PASSWORD_HASH);
-});
-
-When(
-  "the new password {string} is set on the account",
-  function (this: SpecWorld, password: string) {
-    setANewPasswordOn(this, hashOf(password));
-  },
-);
-
-Then(
-  "the first thing it recorded is its password being set",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(event instanceof PasswordSet, `It recorded ${inspect(event)}.`);
-  },
-);
-
-Then(
-  "the account's password hash is the one it was set with",
-  function (this: SpecWorld) {
-    assert.equal(accountOf(this).passwordHash, A_NEW_PASSWORD_HASH);
-  },
-);
-
-Then(
-  "the account's password was set at {string}",
-  function (this: SpecWorld, moment: string) {
-    assert.equal(
-      accountOf(this).passwordSetAt?.toDate().toISOString(),
-      new Date(moment).toISOString(),
-    );
-  },
-);
+// Rebuilding ----------------------------------------------------------------
 
 When("the account is rebuilt from the stream", function (this: SpecWorld) {
   this.aggregate = Account.rebuiltFrom(idOf(this), streamOf(this));
 });
 
-// What is asked of it ------------------------------------------------------
-
-When(
-  "the account's email address is confirmed as {string}",
-  async function (this: SpecWorld, name: string) {
-    await tryTo(this, (account) =>
-      account.confirm(PersonName.from(name), A_PASSWORD_HASH, now(this)),
-    );
-  },
-);
-
-When(
-  "the account's email address is confirmed with the password hash {string}",
-  async function (this: SpecWorld, passwordHash: string) {
-    await tryTo(this, (account) =>
-      account.confirm(PersonName.from(A_NAME), passwordHash, now(this)),
-    );
-  },
-);
-
-When(
-  "the account's email address is confirmed with the password {string}",
-  async function (this: SpecWorld, password: string) {
-    await tryTo(this, (account) =>
-      account.confirm(PersonName.from(A_NAME), hashOf(password), now(this)),
-    );
-  },
-);
-
-When("the account is signed in to", async function (this: SpecWorld) {
-  await tryTo(this, (account) => account.signIn(now(this)));
-});
-
-When("its password is hashed again", async function (this: SpecWorld) {
-  await tryTo(this, (account) =>
-    account.hashPasswordAgain(
-      hashOf("correct horse battery staple"),
-      now(this),
-    ),
-  );
-});
-
-When(
-  "its password {string} is hashed again",
-  async function (this: SpecWorld, password: string) {
-    await tryTo(this, (account) =>
-      account.hashPasswordAgain(hashOf(password), now(this)),
-    );
-  },
-);
-
-When("the account is forgotten", async function (this: SpecWorld) {
-  await tryTo(this, (account) => account.forget(now(this)));
-});
-
 // What it recorded -----------------------------------------------------------
 
-Then(
-  "the first thing it recorded is its registering",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof AccountRegistered,
-      `It recorded ${inspect(event)}.`,
-    );
-  },
-);
-
-Then(
-  "the first thing it recorded is its being brought over",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof AccountBroughtOver,
-      `It recorded ${inspect(event)}.`,
-    );
-  },
-);
-
-Then(
-  "the first thing it recorded is its email address being confirmed",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof EmailAddressConfirmed,
-      `It recorded ${inspect(event)}.`,
-    );
-  },
-);
-
-Then(
-  "the first thing it recorded is its signing in",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(event instanceof SignedIn, `It recorded ${inspect(event)}.`);
-  },
-);
-
-Then(
-  "the first thing it recorded is its password being hashed again",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof PasswordHashedAgain,
-      `It recorded ${inspect(event)}.`,
-    );
-  },
-);
-
-Then(
-  "the first thing it recorded is its being forgotten",
-  function (this: SpecWorld) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof AccountForgotten,
-      `It recorded ${inspect(event)}.`,
-    );
-  },
-);
-
-// Every way what it recorded is written down: as JSON, which is how an event
+// Both ways what it recorded is written down: as JSON, which is how an event
 // is kept, and as console.log shows it.
 Then(
   "what it recorded does not contain {string}",
@@ -456,26 +168,9 @@ Then(
 // What it is -----------------------------------------------------------------
 
 Then(
-  "its registering says the email address hash {string}",
-  function (this: SpecWorld, addressHash: string) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof AccountRegistered,
-      `It recorded ${inspect(event)}.`,
-    );
-    assert.equal(event.emailAddressHash, addressHash);
-  },
-);
-
-Then(
-  "its being brought over says the email address hash {string}",
-  function (this: SpecWorld, addressHash: string) {
-    const event = firstRecorded(this);
-    assert.ok(
-      event instanceof AccountBroughtOver,
-      `It recorded ${inspect(event)}.`,
-    );
-    assert.equal(event.emailAddressHash, addressHash);
+  "the account is reached at {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(accountOf(this).emailAddress.toString(), address);
   },
 );
 
@@ -490,6 +185,14 @@ Then("the account has no name", function (this: SpecWorld) {
   assert.equal(accountOf(this).name, undefined);
 });
 
+Then("the account is confirmed", function (this: SpecWorld) {
+  assert.equal(accountOf(this).confirmed, true);
+});
+
+Then("the account is not confirmed", function (this: SpecWorld) {
+  assert.equal(accountOf(this).confirmed, false);
+});
+
 Then("the account has no password", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordHash, undefined);
 });
@@ -501,28 +204,6 @@ Then(
   },
 );
 
-Then(
-  "the account is reached at {string}",
-  function (this: SpecWorld, address: string) {
-    assert.equal(accountOf(this).emailAddress.toString(), address);
-  },
-);
-
-Then("the account is confirmed", function (this: SpecWorld) {
-  assert.equal(accountOf(this).confirmed, true);
-});
-
-Then("the account is not confirmed", function (this: SpecWorld) {
-  assert.equal(accountOf(this).confirmed, false);
-});
-
-Then(
-  "the account's password hash is the one it was hashed again with",
-  function (this: SpecWorld) {
-    assert.equal(accountOf(this).passwordHash, NEW_HASH);
-  },
-);
-
 Then("the account's password is imported", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordImported, true);
 });
@@ -530,3 +211,29 @@ Then("the account's password is imported", function (this: SpecWorld) {
 Then("the account's password is not imported", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordImported, false);
 });
+
+// Asked through the account's own answer for each role, so that each is
+// covered by name.
+const holds = (world: SpecWorld, role: string): boolean => {
+  const account = accountOf(world);
+  switch (roleNamed(role)) {
+    case "administrator":
+      return account.isAdministrator;
+    case "world-ranking-officer":
+      return account.isWorldRankingOfficer;
+  }
+};
+
+Then(
+  "the account holds the role {string}",
+  function (this: SpecWorld, role: string) {
+    assert.equal(holds(this, role), true);
+  },
+);
+
+Then(
+  "the account does not hold the role {string}",
+  function (this: SpecWorld, role: string) {
+    assert.equal(holds(this, role), false);
+  },
+);

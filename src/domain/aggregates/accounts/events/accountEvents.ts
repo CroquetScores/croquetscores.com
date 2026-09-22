@@ -7,7 +7,10 @@ import { AccountRegistered } from "./AccountRegistered.js";
 import { EmailAddressConfirmed } from "./EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "./PasswordHashedAgain.js";
 import { PasswordSet } from "./PasswordSet.js";
+import { RoleAdded } from "./RoleAdded.js";
+import { RoleRemoved } from "./RoleRemoved.js";
 import { SignedIn } from "./SignedIn.js";
+import { isRole, type Role } from "../value-objects/Role.js";
 
 // What was kept comes back from a table something else could have written to,
 // so a field an event cannot do without is refused rather than guessed at.
@@ -19,6 +22,14 @@ const text = (
   const value = said[field];
   if (typeof value !== "string") {
     throw new TypeError(`What was kept as "${name}" has no ${field}.`);
+  }
+  return value;
+};
+
+const role = (said: Readonly<Record<string, unknown>>, name: string): Role => {
+  const value = text(said, "role", name);
+  if (!isRole(value)) {
+    throw new TypeError(`What was kept as "${name}" names no role: ${value}.`);
   }
   return value;
 };
@@ -91,4 +102,20 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-forgotten",
       (_said, { createdBy, occurredAt }) =>
         new AccountForgotten(createdBy, occurredAt),
+    )
+    .name(
+      RoleAdded,
+      "account-role-added",
+      (said, { createdBy, occurredAt }) =>
+        new RoleAdded(role(said, "account-role-added"), createdBy, occurredAt),
+    )
+    .name(
+      RoleRemoved,
+      "account-role-removed",
+      (said, { createdBy, occurredAt }) =>
+        new RoleRemoved(
+          role(said, "account-role-removed"),
+          createdBy,
+          occurredAt,
+        ),
     );

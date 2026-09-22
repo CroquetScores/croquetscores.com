@@ -7,17 +7,20 @@ import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
 import { PasswordSet } from "./events/PasswordSet.js";
+import { RoleAdded } from "./events/RoleAdded.js";
+import { RoleRemoved } from "./events/RoleRemoved.js";
 import { SignedIn } from "./events/SignedIn.js";
 import type { AccountId } from "./AccountId.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
+import type { Role } from "./value-objects/Role.js";
 
-/** Every reason an account refuses what it is asked. */
+/** Why an account will not do what it was asked. */
 export type AccountErrorCode = "Account.NotConfirmed" | "Account.Forgotten";
 
 /**
- * Something an account will not do. Named by a code, because the code is the
- * contract: whoever asked decides what to tell a reader from it.
+ * An account's refusal, named by its code. The code is what whoever asked
+ * decides by; the message is only for whoever reads the log.
  */
 export class AccountRefused extends Error {
   readonly code: AccountErrorCode;
@@ -29,37 +32,36 @@ export class AccountRefused extends Error {
   }
 }
 
-// Every event an account records is caused by the account itself: registering
-// or being brought over makes it, and confirming, signing in, hashing a
-// password again and forgetting are each asked for by whoever the account is. So an event is given the
-// account's own id as its cause, and nothing asks who else it might have been.
-
 /**
- * Somebody who has registered, from registering until the account is
- * forgotten: an email address to begin with, and a name and a hash of their
- * password once they have confirmed the address is theirs.
+ * Somebody known to the site by an email address. Registered with nothing but
+ * the address, and given a name and a password only once somebody has shown
+ * they read mail there; or brought over from the old site already named,
+ * confirmed and with the old site's hash of their password.
+ *
+ * Every event it records gives the account's own id as its cause: nobody but
+ * whoever the account is can register it, confirm it, sign in to it, give it a
+ * password or have it forgotten. Its roles are the exception, given and taken
+ * away by somebody else, and so caused by whoever that was.
  */
 export class Account extends AggregateRoot {
-  #name: PersonName | undefined;
   #emailAddress: EmailAddress | undefined;
+  #name: PersonName | undefined;
   #passwordHash: string | undefined;
   #passwordImported = false;
   #passwordSetAt: ReadOnlyDate | undefined;
   #confirmed = false;
   #forgotten = false;
+  readonly #roles = new Set<Role>();
 
   private constructor(id: AccountId) {
     super(id);
   }
 
   /**
-   * A new account: unconfirmed, unnamed and with no password. It is given its
-   * id by whatever registers it, and a keyed hash of its email address, since
-   * the key is the site's.
-   *
-   * Nothing else, because registering is open to anybody who can type an
-   * address, and a name or a password kept from it would be kept for whoever
-   * owns the address, whoever typed them. Both are given with confirming.
+   * A new account at `emailAddress`, and nothing else: no name and no
+   * password, because whoever registers has not yet shown the address is
+   * theirs. `emailAddressHash` is made by whatever registers it, since the key
+   * it is made with is the site's and not the domain's.
    */
   static register(
     id: AccountId,
@@ -75,8 +77,8 @@ export class Account extends AggregateRoot {
   }
 
   /**
-   * An account that was somebody's on the old site, with the name it had
-   * there and the hash the old site made of its password, and confirmed: its
+   * An account the old site had, begun as it was there: called `name`,
+   * confirmed, and with `passwordHash` as the old site made it, so that its
    * owner gets in with the password they already have.
    */
   static bringOver(
@@ -101,7 +103,7 @@ export class Account extends AggregateRoot {
     return account;
   }
 
-  /** The account `events` leave, which are its stream. */
+  /** The account its stream, `events`, leaves. */
   static rebuiltFrom(id: AccountId, events: readonly DomainEvent[]): Account {
     const account = new Account(id);
     account.replay(events);
@@ -112,22 +114,26 @@ export class Account extends AggregateRoot {
     return super.id;
   }
 
-  /** What the account is called, or nothing until it has been confirmed. */
+  /** Where the account is reached. */
+  get emailAddress(): EmailAddress {
+    // Every account's stream begins by giving it an address, so one without
+    // is a stream that was never an account's, and a mistake in whoever
+    // rebuilt it rather than something to answer.
+    if (this.#emailAddress === undefined) {
+      throw new Error("The account's stream did not begin by registering it.");
+    }
+    return this.#emailAddress;
+  }
+
+  /** What the account is called, or nothing until it is confirmed. */
   get name(): PersonName | undefined {
     return this.#name;
   }
 
-  /** Where the account is reached. */
-  get emailAddress(): EmailAddress {
-    if (this.#emailAddress === undefined) throw notRegistered();
-    return this.#emailAddress;
-  }
-
   /**
-   * The hash of the account's password, as it is now, or nothing until the
-   * account has been confirmed. Nothing rather than an empty hash, so that
-   * whatever checks a password against it has to say what it does with an
-   * account that has none.
+   * The hash of the password the account is signed in with, or nothing until
+   * it has one. Nothing rather than an empty string, so that whatever checks a
+   * password has to decide what an account without one means.
    */
   get passwordHash(): string | undefined {
     return this.#passwordHash;
@@ -139,10 +145,9 @@ export class Account extends AggregateRoot {
   }
 
   /**
-   * When the account was last given a password — by confirming its address, by
-   * being brought over, or by setting a new one — or nothing where it has
-   * none. What a link that sets a password is judged against: one made before
-   * the password was last set has been spent.
+   * When somebody last chose the account's password, or nothing if nobody
+   * has. A link that sets a password is judged against it: one made before
+   * the password was last chosen has been spent.
    */
   get passwordSetAt(): ReadOnlyDate | undefined {
     return this.#passwordSetAt;
@@ -156,16 +161,22 @@ export class Account extends AggregateRoot {
     return this.#forgotten;
   }
 
+  get isAdministrator(): boolean {
+    return this.#roles.has("administrator");
+  }
+
+  get isWorldRankingOfficer(): boolean {
+    return this.#roles.has("world-ranking-officer");
+  }
+
   /**
-   * That the account's email address is confirmed, by somebody called `name`
-   * whose password hashes to `passwordHash`. It is confirmed once: confirming
-   * it again records nothing and changes neither, so that a link followed
-   * twice leaves one event, and a link left in an inbox is not a way to take
-   * over an account that has since become somebody's. Refused with
-   * `Account.Forgotten` for an account forgotten.
+   * That the address is somebody's, who is called `name` and signs in with a
+   * password hashing to `passwordHash`. Only the first confirming counts: a
+   * link followed twice records one event, and a link left in an inbox cannot
+   * rename an account or change its password once it is somebody's.
    */
   confirm(name: PersonName, passwordHash: string, at: ReadOnlyDate): void {
-    this.#refuseIfForgotten();
+    this.#refuseOnceForgotten();
     if (this.#confirmed) return;
     this.record(
       new EmailAddressConfirmed(name.toString(), passwordHash, this.id, at),
@@ -173,55 +184,66 @@ export class Account extends AggregateRoot {
   }
 
   /**
-   * That the account was signed in to. Refused with `Account.Forgotten` for an
-   * account forgotten, and with `Account.NotConfirmed` for one whose address
-   * nobody has yet shown they read. Checking the password is not the
-   * account's: it is asked only once the password is known to be right.
+   * That somebody signed in to the account. Whether their password was right
+   * is decided before the account is asked; what the account decides is
+   * whether it is one that can be signed in to at all.
    */
   signIn(at: ReadOnlyDate): void {
-    this.#refuseIfForgotten();
-    if (!this.#confirmed) {
-      throw new AccountRefused(
-        "Account.NotConfirmed",
-        "The account's email address has not been confirmed.",
-      );
-    }
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
     this.record(new SignedIn(this.id, at));
   }
 
   /**
-   * That somebody has given the account a new password, whose hash is
-   * `passwordHash`. Refused with `Account.Forgotten` for an account forgotten,
-   * and with `Account.NotConfirmed` for one whose address nobody has shown
-   * they read: it has no password to replace, and giving it one here would
-   * hand the account to whoever asked.
+   * That somebody chose a new password, hashing to `passwordHash`. An account
+   * not yet confirmed is refused: it has no password to replace, and giving it
+   * one would hand an account to somebody who never showed they read mail at
+   * its address.
    */
   setNewPassword(passwordHash: string, at: ReadOnlyDate): void {
-    this.#refuseIfForgotten();
-    if (!this.#confirmed) {
-      throw new AccountRefused(
-        "Account.NotConfirmed",
-        "The account's email address has not been confirmed.",
-      );
-    }
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
     this.record(new PasswordSet(passwordHash, this.id, at));
   }
 
   /**
-   * That the account's password now has `passwordHash`, made a better way.
-   * Refused with `Account.Forgotten` for an account forgotten, since a new
-   * hash would be something new kept of the person after forgetting was to
-   * have kept nothing more.
+   * That the same password is now hashed a better way, as `passwordHash`.
+   * Refused once the account is forgotten, since a new hash would be something
+   * new kept of the person after forgetting was to keep nothing more.
    */
   hashPasswordAgain(passwordHash: string, at: ReadOnlyDate): void {
-    this.#refuseIfForgotten();
+    this.#refuseOnceForgotten();
     this.record(new PasswordHashedAgain(passwordHash, this.id, at));
   }
 
   /**
-   * That the account is forgotten, which cannot be undone. It is forgotten
-   * once: forgetting it again records nothing, so that whatever acts on its
-   * being forgotten acts once.
+   * That `by` gave the account `role`. Only an account somebody has shown is
+   * theirs is given one, since a role given to any other would be given to
+   * whoever turns out to own the address. Whether `by` may give it is not the
+   * account's to know. A role already held is not given again, so a request
+   * sent twice records one event.
+   */
+  addRole(role: Role, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+    if (this.#roles.has(role)) return;
+    this.record(new RoleAdded(role, by, at));
+  }
+
+  /**
+   * That `by` took `role` away from the account. One it does not hold is not
+   * taken away, and not refused either: there is nothing to lose, and a
+   * request sent twice records one event.
+   */
+  removeRole(role: Role, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    if (!this.#roles.has(role)) return;
+    this.record(new RoleRemoved(role, by, at));
+  }
+
+  /**
+   * That the account is forgotten, for good. Only the first forgetting is
+   * recorded, so that whatever acts on it acts once.
    */
   forget(at: ReadOnlyDate): void {
     if (this.#forgotten) return;
@@ -232,8 +254,8 @@ export class Account extends AggregateRoot {
     if (event instanceof AccountRegistered) {
       this.#emailAddress = EmailAddress.from(event.emailAddress);
     } else if (event instanceof AccountBroughtOver) {
-      this.#name = PersonName.from(event.name);
       this.#emailAddress = EmailAddress.from(event.emailAddress);
+      this.#name = PersonName.from(event.name);
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = true;
       this.#passwordSetAt = event.occurredAt;
@@ -243,23 +265,32 @@ export class Account extends AggregateRoot {
       this.#passwordHash = event.passwordHash;
       this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
-    } else if (event instanceof PasswordHashedAgain) {
-      // The same password, hashed a better way, so the moment it was set is
-      // still the moment somebody chose it.
-      this.#passwordHash = event.passwordHash;
-      this.#passwordImported = false;
     } else if (event instanceof PasswordSet) {
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = false;
       this.#passwordSetAt = event.occurredAt;
+    } else if (event instanceof PasswordHashedAgain) {
+      // Nobody chose anything: it is the same password, so when it was set
+      // stays when somebody last chose it.
+      this.#passwordHash = event.passwordHash;
+      this.#passwordImported = false;
+    } else if (event instanceof RoleAdded) {
+      this.#roles.add(event.role);
+    } else if (event instanceof RoleRemoved) {
+      this.#roles.delete(event.role);
     } else if (event instanceof AccountForgotten) {
       this.#forgotten = true;
+      // So that whatever asks what an account may do gets the right answer
+      // without also having to ask whether it is forgotten.
+      this.#roles.clear();
     }
-    // Signing in changes nothing the account decides anything by, so it has no
-    // case here: it is in the stream only as a record that it happened.
+    // Signing in is kept as a record that it happened, and changes nothing
+    // the account decides by, so it has no case here.
   }
 
-  #refuseIfForgotten(): void {
+  // Forgotten is asked before confirmed, so that a forgotten account says it
+  // is forgotten whether or not it was ever confirmed.
+  #refuseOnceForgotten(): void {
     if (this.#forgotten) {
       throw new AccountRefused(
         "Account.Forgotten",
@@ -267,10 +298,13 @@ export class Account extends AggregateRoot {
       );
     }
   }
-}
 
-// An account rebuilt from a stream that begins with neither its registering
-// nor its being brought over is a stream that is not an account's, and asking
-// it anything is a mistake in whoever rebuilt it.
-const notRegistered = (): Error =>
-  new Error("The account's stream does not begin with its registering.");
+  #refuseUntilConfirmed(): void {
+    if (!this.#confirmed) {
+      throw new AccountRefused(
+        "Account.NotConfirmed",
+        "The account's email address has not been confirmed.",
+      );
+    }
+  }
+}
