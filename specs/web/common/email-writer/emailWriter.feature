@@ -102,6 +102,26 @@ Feature: The site's emails are written in their reader's language
       When the email "Email.AlreadyRegistered" is written in "en"
       Then its body has a button to "https://croquetscores.com/account/sign-in"
 
+  Rule: Each email is written from its own words
+
+    No email borrows a phrase from another, nor from a stock of phrases they
+    all share: its sign off, and the words offering each of its links as an
+    address to copy, are its own, kept under its kind like the rest of it. So
+    an email reads as a whole where it is kept, and one can be reworded, or
+    signed off differently, without changing what any other says.
+
+    Scenario: An email is signed off in its own words
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then its body ends with the words for "Email.ConfirmAddress.signOff"
+
+    Scenario: The address to copy is offered in the email's own words
+      When the email "Email.ConfirmAddress" is written in "en" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+      Then its body shows the words for "Email.ConfirmAddress.actionFallback" with the link "https://croquetscores.com/account/confirm-email-address?link=abc123"
+
+    Scenario: Each link in an email is offered to copy in words of its own
+      When the email "Email.AlreadyRegistered" is written in "en"
+      Then its body shows the words for "Email.AlreadyRegistered.forgottenActionFallback" with the link "https://croquetscores.com/account/forgot-password"
+
   Rule: The site's address comes from its configuration
 
     Scenario: The site's address is the host it is configured to answer to
@@ -149,6 +169,16 @@ Feature: The site's emails are written in their reader's language
 
     Scenario: An email whose words a catalogue has not got is refused
       Given an email writer whose catalogues have no words for "Email.ConfirmAddress.intro"
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then it is refused with "EmailWriter.MissingWords"
+
+    Scenario: An email whose sign off a catalogue has not got is refused
+      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.signOff"
+      When the email "Email.ConfirmAddress" is written in "en"
+      Then it is refused with "EmailWriter.MissingWords"
+
+    Scenario: An email whose address to copy a catalogue has not got is refused
+      Given an email writer whose catalogues have no words for "Email.ConfirmAddress.actionFallback"
       When the email "Email.ConfirmAddress" is written in "en"
       Then it is refused with "EmailWriter.MissingWords"
 

@@ -48,67 +48,90 @@ export const siteAddress = (
 // What an email is made of, in the order it is read: paragraphs, and links to
 // follow. A link is to what fills the email in, or to one of the site's own
 // pages; either is offered as a button in the email's words and again as the
-// address itself, for a reader whose mail shows no buttons.
+// address itself, for a reader whose mail shows no buttons, in words of its
+// own. Every block names its words under the email's kind, its sign off
+// included: no email borrows a phrase from another, or from a stock they all
+// share, so that one can be reworded without changing what another says.
 type Block =
   | { readonly paragraph: string }
   | {
       readonly button: string;
+      readonly fallback: string;
       readonly to: { readonly fill: string } | { readonly page: string };
     };
 
 const emails: Readonly<Record<string, readonly Block[]>> = {
   "Email.ConfirmAddress": [
     { paragraph: "intro" },
-    { button: "action", to: { fill: "link" } },
+    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
     { paragraph: "expiry" },
     { paragraph: "notYou" },
+    { paragraph: "signOff" },
   ],
   "Email.ConfirmAddressAgain": [
     { paragraph: "intro" },
-    { button: "action", to: { fill: "link" } },
+    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
     { paragraph: "expiry" },
     { paragraph: "registeredAgain" },
     { paragraph: "notYou" },
+    { paragraph: "signOff" },
   ],
   "Email.AlreadyRegistered": [
     { paragraph: "intro" },
     { paragraph: "ifYou" },
-    { button: "action", to: { page: "/account/sign-in" } },
+    {
+      button: "action",
+      fallback: "actionFallback",
+      to: { page: "/account/sign-in" },
+    },
     { paragraph: "forgotten" },
-    { button: "forgottenAction", to: { page: "/account/forgot-password" } },
+    {
+      button: "forgottenAction",
+      fallback: "forgottenActionFallback",
+      to: { page: "/account/forgot-password" },
+    },
     { paragraph: "notYou" },
+    { paragraph: "signOff" },
   ],
   "Email.SetNewPassword": [
     { paragraph: "intro" },
-    { button: "action", to: { fill: "link" } },
+    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
     { paragraph: "expiry" },
     { paragraph: "signsOut" },
     { paragraph: "notYou" },
+    { paragraph: "signOff" },
   ],
   "Email.RegisterInstead": [
     { paragraph: "intro" },
     { paragraph: "otherAddress" },
     { paragraph: "register" },
-    { button: "action", to: { page: "/account/register" } },
+    {
+      button: "action",
+      fallback: "actionFallback",
+      to: { page: "/account/register" },
+    },
     { paragraph: "notYou" },
+    { paragraph: "signOff" },
   ],
   "Email.ConfirmForgetting": [
     { paragraph: "intro" },
-    { button: "action", to: { fill: "link" } },
+    { button: "action", fallback: "actionFallback", to: { fill: "link" } },
     { paragraph: "meaning" },
     { paragraph: "expiry" },
     { paragraph: "notYou" },
+    { paragraph: "signOff" },
   ],
   "Email.RegistrationsSuspended": [
     { paragraph: "intro" },
     { paragraph: "lifting" },
     { paragraph: "again" },
+    { paragraph: "signOff" },
   ],
 };
 
-// What a block says, by the name its words are kept under.
-const wordsOf = (block: Block): string =>
-  "paragraph" in block ? block.paragraph : block.button;
+// What a block says, by the names its words are kept under.
+const wordsOf = (block: Block): readonly string[] =>
+  "paragraph" in block ? [block.paragraph] : [block.button, block.fallback];
 
 // The language an email was queued in, as the site offers it: that language, or
 // the language it is a regional form of, or the site's first where it offers
@@ -149,11 +172,11 @@ export const emailWriter = (
     // word of it is written: an email with a phrase missing, or with a dead
     // button and an address to copy that is not there, is a mistake in the
     // site, and one that never goes is better than one that does.
-    for (const key of [
-      `${kind}.subject`,
-      "email.signOff",
-      "email.linkFallback",
-    ].concat(blocks.map((block) => `${kind}.${wordsOf(block)}`))) {
+    for (const key of [`${kind}.subject`].concat(
+      blocks.flatMap((block) =>
+        wordsOf(block).map((words) => `${kind}.${words}`),
+      ),
+    )) {
       if (!speaking.knows(key)) {
         throw new EmailWriterRefused(
           "EmailWriter.MissingWords",
@@ -188,7 +211,6 @@ export const emailWriter = (
   </head>
   <body>
 ${body}
-    <p>${say("email.signOff")}</p>
   </body>
 </html>
 `,
@@ -210,7 +232,7 @@ const write = (
     "fill" in block.to ? (fill[block.to.fill] ?? "") : address + block.to.page;
   // The address to copy is a phrase of its own, with the link filled into it,
   // so that it is text and says itself in the reader's language.
-  const copy = escape(speaking.say("email.linkFallback", { link }));
+  const copy = escape(speaking.say(`${kind}.${block.fallback}`, { link }));
   return `    <p><a href="${escape(link)}">${say(`${kind}.${block.button}`)}</a></p>
     <p>${copy}</p>`;
 };

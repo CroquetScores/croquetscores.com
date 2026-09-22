@@ -220,6 +220,25 @@ Then(
 );
 
 Then(
+  "its body shows the words for {string} with the link {string}",
+  function (this: SpecWorld, key: string, link: string) {
+    const words = wordsFor(key).replace("{link}", link).replace(/&/g, "&amp;");
+    const texts = textsOf(writtenOf(this).body);
+    assert.ok(
+      texts.includes(words),
+      `The body's text has no "${words}": ${inspect(texts)}`,
+    );
+  },
+);
+
+Then(
+  "its body ends with the words for {string}",
+  function (this: SpecWorld, key: string) {
+    assert.equal(textsOf(writtenOf(this).body).at(-1), wordsFor(key));
+  },
+);
+
+Then(
   "its body contains no element named {string}",
   function (this: SpecWorld, name: string) {
     const { body } = writtenOf(this);
