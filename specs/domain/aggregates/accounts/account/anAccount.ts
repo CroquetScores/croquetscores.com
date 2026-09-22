@@ -3,7 +3,8 @@ import { createHash } from "node:crypto";
 import { inspect } from "node:util";
 
 import { Account } from "../../../../../src/domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../../../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { Role } from "../../../../../src/domain/aggregates/accounts/value-objects/Role.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../../support/world.js";
@@ -31,6 +32,35 @@ export const streamOf = (world: SpecWorld): DomainEvent[] => {
 export const idOf = (world: SpecWorld): AccountId => {
   assert.ok(world.account !== undefined, "No account has been named.");
   return world.account;
+};
+
+// Who asks for what is done to the account, where that is somebody other than
+// the account: giving it a role, or taking one away.
+const askers = new WeakMap<SpecWorld, AccountId>();
+
+export const askedBy = (world: SpecWorld, account: string): void => {
+  askers.set(world, AccountId.from(account));
+};
+
+// Somebody other than the account, for a scenario that does not say who asked
+// because who did is not what it is about.
+const SOMEBODY_ELSE = AccountId.from(
+  "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b",
+);
+
+export const askerOf = (world: SpecWorld): AccountId =>
+  askers.get(world) ?? SOMEBODY_ELSE;
+
+// A role as a feature names it, and as the account knows it.
+const named: Readonly<Record<string, Role>> = {
+  Administrator: "administrator",
+  "World Ranking Officer": "world-ranking-officer",
+};
+
+export const roleNamed = (name: string): Role => {
+  const role = named[name];
+  assert.ok(role !== undefined, `There is no role called ${name}.`);
+  return role;
 };
 
 export const now = (world: SpecWorld): ReadOnlyDate => {

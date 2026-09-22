@@ -9,6 +9,8 @@ import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts
 import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accounts/events/PasswordHashedAgain.js";
 import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
+import { RoleAdded } from "../../../../../src/domain/aggregates/accounts/events/RoleAdded.js";
+import { RoleRemoved } from "../../../../../src/domain/aggregates/accounts/events/RoleRemoved.js";
 import type { SpecWorld } from "../../../../support/world.js";
 import {
   A_BETTER_HASH,
@@ -18,15 +20,27 @@ import {
   AN_OLD_SITE_HASH,
   accountOf,
   addressHashOf,
+  askedBy,
+  askerOf,
   at,
   idOf,
   now,
+  roleNamed,
   streamOf,
 } from "./anAccount.js";
 
-// The steps more than one of an account's features uses: the stream it is
-// rebuilt from, rebuilding it, and what it is. Each method's own steps are
-// beside its feature, in the folder named for it.
+// The steps more than one of an account's features uses: who asks, the stream
+// it is rebuilt from, rebuilding it, and what it is. Each method's own steps
+// are beside its feature, in the folder named for it.
+
+// Who asks -----------------------------------------------------------------
+
+Given(
+  "it is asked for by {string}",
+  function (this: SpecWorld, account: string) {
+    askedBy(this, account);
+  },
+);
 
 // The stream --------------------------------------------------------------
 
@@ -108,6 +122,24 @@ Given(
   },
 );
 
+Given(
+  "the role {string} was added to it",
+  function (this: SpecWorld, role: string) {
+    streamOf(this).push(
+      new RoleAdded(roleNamed(role), askerOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "the role {string} was removed from it",
+  function (this: SpecWorld, role: string) {
+    streamOf(this).push(
+      new RoleRemoved(roleNamed(role), askerOf(this), now(this)),
+    );
+  },
+);
+
 Given("it was forgotten", function (this: SpecWorld) {
   streamOf(this).push(new AccountForgotten(idOf(this), now(this)));
 });
@@ -179,3 +211,29 @@ Then("the account's password is imported", function (this: SpecWorld) {
 Then("the account's password is not imported", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordImported, false);
 });
+
+// Asked through the account's own answer for each role, so that each is
+// covered by name.
+const holds = (world: SpecWorld, role: string): boolean => {
+  const account = accountOf(world);
+  switch (roleNamed(role)) {
+    case "administrator":
+      return account.isAdministrator;
+    case "world-ranking-officer":
+      return account.isWorldRankingOfficer;
+  }
+};
+
+Then(
+  "the account holds the role {string}",
+  function (this: SpecWorld, role: string) {
+    assert.equal(holds(this, role), true);
+  },
+);
+
+Then(
+  "the account does not hold the role {string}",
+  function (this: SpecWorld, role: string) {
+    assert.equal(holds(this, role), false);
+  },
+);

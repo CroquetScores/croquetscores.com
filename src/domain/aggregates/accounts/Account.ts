@@ -7,10 +7,13 @@ import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
 import { PasswordSet } from "./events/PasswordSet.js";
+import { RoleAdded } from "./events/RoleAdded.js";
+import { RoleRemoved } from "./events/RoleRemoved.js";
 import { SignedIn } from "./events/SignedIn.js";
 import type { AccountId } from "./value-objects/AccountId.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
+import type { Role } from "./value-objects/Role.js";
 
 /** Why an account will not do what it was asked. */
 export type AccountErrorCode = "Account.NotConfirmed" | "Account.Forgotten";
@@ -37,7 +40,8 @@ export class AccountRefused extends Error {
  *
  * Every event it records gives the account's own id as its cause: nobody but
  * whoever the account is can register it, confirm it, sign in to it, give it a
- * password or have it forgotten.
+ * password or have it forgotten. Its roles are the exception, given and taken
+ * away by somebody else, and so caused by whoever that was.
  */
 export class Account extends AggregateRoot {
   #emailAddress: EmailAddress | undefined;
@@ -47,6 +51,7 @@ export class Account extends AggregateRoot {
   #passwordSetAt: ReadOnlyDate | undefined;
   #confirmed = false;
   #forgotten = false;
+  readonly #roles = new Set<Role>();
 
   private constructor(id: AccountId) {
     super(id);
@@ -156,6 +161,14 @@ export class Account extends AggregateRoot {
     return this.#forgotten;
   }
 
+  get isAdministrator(): boolean {
+    return this.#roles.has("administrator");
+  }
+
+  get isWorldRankingOfficer(): boolean {
+    return this.#roles.has("world-ranking-officer");
+  }
+
   /**
    * That the address is somebody's, who is called `name` and signs in with a
    * password hashing to `passwordHash`. Only the first confirming counts: a
@@ -204,6 +217,31 @@ export class Account extends AggregateRoot {
   }
 
   /**
+   * That `by` gave the account `role`. Only an account somebody has shown is
+   * theirs is given one, since a role given to any other would be given to
+   * whoever turns out to own the address. Whether `by` may give it is not the
+   * account's to know. A role already held is not given again, so a request
+   * sent twice records one event.
+   */
+  addRole(role: Role, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+    if (this.#roles.has(role)) return;
+    this.record(new RoleAdded(role, by, at));
+  }
+
+  /**
+   * That `by` took `role` away from the account. One it does not hold is not
+   * taken away, and not refused either: there is nothing to lose, and a
+   * request sent twice records one event.
+   */
+  removeRole(role: Role, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    if (!this.#roles.has(role)) return;
+    this.record(new RoleRemoved(role, by, at));
+  }
+
+  /**
    * That the account is forgotten, for good. Only the first forgetting is
    * recorded, so that whatever acts on it acts once.
    */
@@ -236,8 +274,15 @@ export class Account extends AggregateRoot {
       // stays when somebody last chose it.
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = false;
+    } else if (event instanceof RoleAdded) {
+      this.#roles.add(event.role);
+    } else if (event instanceof RoleRemoved) {
+      this.#roles.delete(event.role);
     } else if (event instanceof AccountForgotten) {
       this.#forgotten = true;
+      // So that whatever asks what an account may do gets the right answer
+      // without also having to ask whether it is forgotten.
+      this.#roles.clear();
     }
     // Signing in is kept as a record that it happened, and changes nothing
     // the account decides by, so it has no case here.

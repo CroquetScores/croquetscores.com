@@ -175,10 +175,12 @@ Then(
   },
 );
 
+// Asked of whichever thing the scenario is looking at, as what it has recorded
+// is: the account's roles are given by somebody other than the account.
 Then(
   "what it recorded was caused by {string}",
   function (this: SpecWorld, account: string) {
-    const recorded = thingOf(this).recorded;
+    const recorded = (this.aggregate ?? thingOf(this)).recorded;
     assert.ok(recorded.length > 0, "It recorded nothing.");
     for (const event of recorded) {
       assert.ok(event.createdBy.equals(AccountId.from(account)));
