@@ -91,6 +91,18 @@ Given("a handler registered for the other command", function (this: SpecWorld) {
   );
 });
 
+Given(
+  "a handler registered for the other command that answers {string}",
+  function (this: SpecWorld, answer: string) {
+    mediatorOf(this).handleCommand(
+      exampleCommandHandler(
+        OtherCommand,
+        exampleHandler(this, "other command", answer),
+      ),
+    );
+  },
+);
+
 Given("a handler registered for the other query", function (this: SpecWorld) {
   mediatorOf(this).handleQuery(
     exampleQueryHandler(
@@ -192,8 +204,16 @@ Given(
 
 // Handing requests in ----------------------------------------------------
 
+// Carrying whatever the scenario said it carries, which is nothing unless a
+// scenario said otherwise.
 When("the example command is sent", async function (this: SpecWorld) {
-  await attempt(this, () => mediatorOf(this).send(new ExampleCommand(askedAt)));
+  const command = new ExampleCommand(
+    askedAt,
+    undefined,
+    undefined,
+    this.exampleCommandCarries,
+  );
+  await attempt(this, () => mediatorOf(this).send(command));
 });
 
 When("the example query is asked", async function (this: SpecWorld) {

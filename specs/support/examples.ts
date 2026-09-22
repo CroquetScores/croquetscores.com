@@ -35,18 +35,43 @@ const nothingAskedFor: Range = {
   step: undefined,
 };
 
+/**
+ * What the example command carries besides the range it asks for: a password,
+ * when a scenario gives it one, and something else in a field the command sets
+ * no password from, for a scenario that wants text nothing should look at.
+ */
+export interface Carried {
+  password?: string;
+  somethingElse?: string;
+}
+
+const carryingNothing: Carried = {};
+
 export class ExampleCommand extends Command<string> implements Range {
   readonly start: number | undefined;
   readonly end: number | undefined;
   readonly step: number | undefined;
+  readonly password: string | undefined;
+  readonly somethingElse: string | undefined;
 
   constructor(
     requestedAt: ReadOnlyDate,
     askingFor: Range = nothingAskedFor,
     requestedBy?: AccountId,
+    carrying: Carried = carryingNothing,
   ) {
     super(requestedAt, requestedBy);
     ({ start: this.start, end: this.end, step: this.step } = askingFor);
+    ({ password: this.password, somethingElse: this.somethingElse } = carrying);
+  }
+
+  /**
+   * Which of its fields holds the password it sets, as a command that sets one
+   * says. It sets one only when a scenario gave it one: a command carrying no
+   * password sets none, and says nothing.
+   */
+  get passwordField(): string | undefined {
+    return this.password === undefined ? undefined : "password";
   }
 }
 
@@ -68,6 +93,15 @@ export class ExampleQuery extends Query<string> implements Range {
 }
 
 export class OtherQuery extends Query<string> {}
+
+/**
+ * What the scenario's example command will carry when it is sent, made on
+ * first use. A scenario says what the command carries before sending it, and
+ * the command itself is made at the sending: a command is what it was made
+ * with, and nothing hands one out to be filled in afterwards.
+ */
+export const carriedByExampleCommand = (world: SpecWorld): Carried =>
+  (world.exampleCommandCarries ??= {});
 
 /** Neither a command nor a query, for a handler to name by mistake. */
 export class NotARequest {}
