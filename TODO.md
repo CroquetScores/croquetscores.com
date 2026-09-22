@@ -1,8 +1,10 @@
 # TODO.md
 
-Three kinds of thing, kept apart.
+Four kinds of thing, kept apart.
 
 **Jotted** is for whatever occurs to anyone, a line each, not yet thought through. Add to it freely.
+
+**Waiting on a dependency** is for items waiting on a dependency before they can be implemented.
 
 **Outstanding `.feature` files** are the specifications that have been accepted and not built, in the order they can be built. A file leaves the list when its scenarios pass.
 
@@ -12,14 +14,7 @@ Three kinds of thing, kept apart.
 
 ## Jotted
 
-- /account/administrator/view-email-queue
-
 - Review all emails
-
-- **Rotating encryption keys.** `AccountKeys.changeSiteKey` re-encrypts every account's key and every queued email with no account for a new `ACCOUNT_ENCRYPTION_KEY`, but nothing calls it: a script under `scripts/` is wanted, run with the old key and the new. `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` cannot be changed at all, since the hash is kept in every registering event; change it and rebuild, and no account is found by its address. Say it is never changed, or keep every key the hash has been made with and find an address by each (from the review of `account-keys`).
-
-- **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
-
 
 - **Nothing in the primary navigation is served, so nothing can be marked as the page being read.** `layout.ts` puts `aria-current` on the navigation link whose address is the page's, and the three links it holds — Tournaments, Blog, Help — are stand-ins that answer 404, while the pages that are served are not in it. So that line cannot be reached and no scenario can cover it. The account menu marks its own (`accountMenu.feature`); this is the bar beside it. It comes right on its own as soon as one of those pages is built, and is worth a scenario then.
 
@@ -38,6 +33,25 @@ From earlier pull requests:
 - What a form shows for a rule the catalogue has no words for — `form.otherwise`, above the fields — is covered by no scenario (from PR #32).
 
 - Only the "not found" page is checked in the test locale. The words on the pages for a refused request and for the server failing come from the catalogue too, but no scenario looks (from PR #32).
+
+---
+
+## Waiting on a dependency
+
+### Rotating encryption keys
+
+Depends on: /admin SPA
+
+`AccountKeys.changeSiteKey` re-encrypts every account's key and every queued email with no account for a new `ACCOUNT_ENCRYPTION_KEY`, but nothing calls it: a script under `scripts/` is wanted, run with the old key and the new. `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` cannot be changed at all, since the hash is kept in every registering event; change it and rebuild, and no account is found by its address. Say it is never changed, or keep every key the hash has been made with and find an address by each (from the review of `account-keys`).
+
+### Rebuild read models
+
+Depends on: /admin SPA
+
+Going to use SPA instead of /scripts.
+
+- **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
+
 
 ---
 
