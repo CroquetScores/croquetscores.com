@@ -1,0 +1,181 @@
+import { Given, Then, When } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
+import { inspect } from "node:util";
+
+import { Account } from "../../../../../src/domain/aggregates/accounts/Account.js";
+import { AccountBroughtOver } from "../../../../../src/domain/aggregates/accounts/events/AccountBroughtOver.js";
+import { AccountForgotten } from "../../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
+import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts/events/AccountRegistered.js";
+import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
+import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accounts/events/PasswordHashedAgain.js";
+import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
+import type { SpecWorld } from "../../../../support/world.js";
+import {
+  A_BETTER_HASH,
+  A_NAME,
+  A_NEW_PASSWORD_HASH,
+  A_PASSWORD_HASH,
+  AN_OLD_SITE_HASH,
+  accountOf,
+  addressHashOf,
+  at,
+  idOf,
+  now,
+  streamOf,
+} from "./anAccount.js";
+
+// The steps more than one of an account's features uses: the stream it is
+// rebuilt from, rebuilding it, and what it is. Each method's own steps are
+// beside its feature, in the folder named for it.
+
+// The stream --------------------------------------------------------------
+
+Given(
+  "a stream where an account was registered at {string}",
+  function (this: SpecWorld, address: string) {
+    streamOf(this).push(
+      new AccountRegistered(
+        address,
+        addressHashOf(this, address),
+        idOf(this),
+        now(this),
+      ),
+    );
+  },
+);
+
+Given(
+  "a stream where an account was brought over as {string} at {string}",
+  function (this: SpecWorld, name: string, address: string) {
+    streamOf(this).push(
+      new AccountBroughtOver(
+        name,
+        address,
+        addressHashOf(this, address),
+        AN_OLD_SITE_HASH,
+        idOf(this),
+        now(this),
+      ),
+    );
+  },
+);
+
+Given(
+  "its email address was confirmed as {string}",
+  function (this: SpecWorld, name: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(name, A_PASSWORD_HASH, idOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "its email address was confirmed as {string} at {string}",
+  function (this: SpecWorld, name: string, moment: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(name, A_PASSWORD_HASH, idOf(this), at(moment)),
+    );
+  },
+);
+
+Given(
+  "its email address was confirmed with the password hash {string}",
+  function (this: SpecWorld, passwordHash: string) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(A_NAME, passwordHash, idOf(this), now(this)),
+    );
+  },
+);
+
+Given("its password was hashed again", function (this: SpecWorld) {
+  streamOf(this).push(
+    new PasswordHashedAgain(A_BETTER_HASH, idOf(this), now(this)),
+  );
+});
+
+Given("a new password was set on the account", function (this: SpecWorld) {
+  streamOf(this).push(
+    new PasswordSet(A_NEW_PASSWORD_HASH, idOf(this), now(this)),
+  );
+});
+
+Given(
+  "a new password was set on the account at {string}",
+  function (this: SpecWorld, moment: string) {
+    streamOf(this).push(
+      new PasswordSet(A_NEW_PASSWORD_HASH, idOf(this), at(moment)),
+    );
+  },
+);
+
+Given("it was forgotten", function (this: SpecWorld) {
+  streamOf(this).push(new AccountForgotten(idOf(this), now(this)));
+});
+
+// Rebuilding ----------------------------------------------------------------
+
+When("the account is rebuilt from the stream", function (this: SpecWorld) {
+  this.aggregate = Account.rebuiltFrom(idOf(this), streamOf(this));
+});
+
+// What it recorded -----------------------------------------------------------
+
+// Both ways what it recorded is written down: as JSON, which is how an event
+// is kept, and as console.log shows it.
+Then(
+  "what it recorded does not contain {string}",
+  function (this: SpecWorld, words: string) {
+    const recorded = accountOf(this).recorded;
+    assert.ok(recorded.length > 0, "It recorded nothing.");
+    for (const written of [JSON.stringify(recorded), inspect(recorded)]) {
+      assert.ok(!written.includes(words), `It recorded ${written}.`);
+    }
+  },
+);
+
+// What it is -----------------------------------------------------------------
+
+Then(
+  "the account is reached at {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(accountOf(this).emailAddress.toString(), address);
+  },
+);
+
+Then(
+  "the account is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(accountOf(this).name?.toString(), name);
+  },
+);
+
+Then("the account has no name", function (this: SpecWorld) {
+  assert.equal(accountOf(this).name, undefined);
+});
+
+Then("the account is confirmed", function (this: SpecWorld) {
+  assert.equal(accountOf(this).confirmed, true);
+});
+
+Then("the account is not confirmed", function (this: SpecWorld) {
+  assert.equal(accountOf(this).confirmed, false);
+});
+
+Then("the account has no password", function (this: SpecWorld) {
+  assert.equal(accountOf(this).passwordHash, undefined);
+});
+
+Then(
+  "the account's password hash is {string}",
+  function (this: SpecWorld, passwordHash: string) {
+    assert.equal(accountOf(this).passwordHash, passwordHash);
+  },
+);
+
+Then("the account's password is imported", function (this: SpecWorld) {
+  assert.equal(accountOf(this).passwordImported, true);
+});
+
+Then("the account's password is not imported", function (this: SpecWorld) {
+  assert.equal(accountOf(this).passwordImported, false);
+});
