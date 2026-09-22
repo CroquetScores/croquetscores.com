@@ -39,4 +39,14 @@ export class SetNewPassword extends Command<AccountId> {
       }
     }
   }
+
+  /**
+   * Which of its fields holds the password it sets, so that the check standing
+   * in front of the transaction knows what to ask about, and which field to
+   * name when it refuses. Saying so is the command's because only the command
+   * knows what it is doing with the password it carries.
+   */
+  get passwordField(): string {
+    return "password";
+  }
 }
