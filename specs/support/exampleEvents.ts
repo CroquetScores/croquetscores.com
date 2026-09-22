@@ -9,7 +9,7 @@
 //
 // Loaded by every spec in the repository, so it names nothing from
 // infrastructure or the web.
-import { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import {
   EventRegistry,

@@ -24,7 +24,7 @@ import type {
 } from "../../src/application/services/PasswordHasher.js";
 import type { BreachedPasswords } from "../../src/application/services/BreachedPasswords.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
 import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Password } from "../../src/domain/aggregates/accounts/value-objects/Password.js";

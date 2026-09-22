@@ -15,7 +15,7 @@
 // trade for an account that is forgotten, or already confirmed, would be
 // offering something that cannot be had.
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { Links } from "../../services/Links.js";

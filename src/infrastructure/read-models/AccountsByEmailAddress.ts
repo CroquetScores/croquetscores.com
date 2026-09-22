@@ -13,7 +13,7 @@ import type { EmailAddressHasher } from "../../application/services/EmailAddress
 import { AccountBroughtOver } from "../../domain/aggregates/accounts/events/AccountBroughtOver.js";
 import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../domain/aggregates/accounts/events/AccountRegistered.js";
-import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { EmailAddress } from "../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";

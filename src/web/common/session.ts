@@ -19,7 +19,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { Sessions } from "../../application/services/Sessions.js";
-import type { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import { signOutPath } from "./accountMenu.js";
 import { assetsPath } from "./assets.js";
 import type { InTransaction } from "./database.js";

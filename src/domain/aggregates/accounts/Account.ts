@@ -8,7 +8,7 @@ import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
 import { PasswordSet } from "./events/PasswordSet.js";
 import { SignedIn } from "./events/SignedIn.js";
-import type { AccountId } from "./value-objects/AccountId.js";
+import type { AccountId } from "./AccountId.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
 

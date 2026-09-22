@@ -1,6 +1,6 @@
 import { DomainEvent } from "../../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
-import type { AccountId } from "../value-objects/AccountId.js";
+import type { AccountId } from "../AccountId.js";
 
 /**
  * That the account was forgotten. It says nothing about the person: what is

@@ -1,5 +1,5 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../../../domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";

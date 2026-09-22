@@ -5,7 +5,7 @@
 // world.ts.
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
-import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
 import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
 import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";

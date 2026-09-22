@@ -1,4 +1,4 @@
-import { Id } from "../../../common/Id.js";
+import { Id } from "../../common/Id.js";
 
 const kind = "account";
 

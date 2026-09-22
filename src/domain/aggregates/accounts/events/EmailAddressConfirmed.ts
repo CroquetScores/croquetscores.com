@@ -1,6 +1,6 @@
 import { DomainEvent } from "../../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
-import type { AccountId } from "../value-objects/AccountId.js";
+import type { AccountId } from "../AccountId.js";
 
 /**
  * That whoever followed the link showed they can read mail at the address,

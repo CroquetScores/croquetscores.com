@@ -17,7 +17,7 @@ import type {
   LinkPurpose,
   Links,
 } from "../../application/services/Links.js";
-import { AccountId } from "../../domain/aggregates/accounts/value-objects/AccountId.js";
+import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 
 /** Where each kind of link is followed. */

@@ -8,7 +8,7 @@
 //
 // Loaded by every spec in the repository, so it names nothing from
 // infrastructure or the web.
-import type { AccountId } from "../../src/domain/aggregates/accounts/value-objects/AccountId.js";
+import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
 import { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import { EventRegistry } from "../../src/domain/common/EventRegistry.js";
