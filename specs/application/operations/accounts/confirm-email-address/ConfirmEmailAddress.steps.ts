@@ -256,14 +256,3 @@ Then(
     assert.ok(!kept.includes(text), `What is kept holds ${text}.`);
   },
 );
-
-Given(
-  "the breached password check cannot be reached",
-  async function (this: SpecWorld) {
-    assert.ok(
-      this.breachedPasswordsUnreachable !== undefined,
-      "There is no breached password check to take down.",
-    );
-    await this.breachedPasswordsUnreachable();
-  },
-);

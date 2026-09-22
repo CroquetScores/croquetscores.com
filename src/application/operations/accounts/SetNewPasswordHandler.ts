@@ -4,8 +4,6 @@ import { Password } from "../../../domain/aggregates/accounts/value-objects/Pass
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { RequestInvalid } from "../../common/ValidationBehaviour.js";
-import type { BreachedPasswords } from "../../services/BreachedPasswords.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
@@ -35,9 +33,12 @@ const noLongerWorks = (why: string): SettingRefused =>
 /**
  * Setting a new password from the link it was emailed.
  *
- * The link is judged before the password is sent anywhere, as confirming does
- * it and for the same reason: a password is not handed to an outside service
- * for a link that was never going to set anything.
+ * The password has been asked about before this runs: its rules are the
+ * command's own, asked on the way in as every command's are, and whether it
+ * has been breached is asked in front of the transaction, where it costs no
+ * connection (`BreachedPasswordBehaviour.feature`). So what is left here is
+ * everything neither of those can ask — the account the link names, and
+ * whether the link still works.
  *
  * A link works once, and what spends it is a setting that was kept: the link
  * is written down among the requests already carried out, so a second
@@ -56,7 +57,6 @@ export class SetNewPasswordHandler extends CommandHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly links: Links,
     private readonly passwords: PasswordHasher,
-    private readonly breached: BreachedPasswords,
     private readonly handled: HandledRequests,
   ) {
     super();
@@ -119,12 +119,6 @@ export class SetNewPasswordHandler extends CommandHandler<
 
     // Made from what the validator has already found sound.
     const password = Password.from(command.password);
-    if (await this.breached.isBreached(password.reveal())) {
-      throw new RequestInvalid(command, [
-        { code: "Password.Breached", fields: ["password"] },
-      ]);
-    }
-
     account.setNewPassword(
       await this.passwords.hash(password.reveal()),
       command.requestedAt,

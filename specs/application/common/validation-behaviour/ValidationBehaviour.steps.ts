@@ -1,10 +1,7 @@
 import { Given, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  RequestInvalid,
-  ValidationBehaviour,
-} from "../../../../src/application/common/ValidationBehaviour.js";
+import { ValidationBehaviour } from "../../../../src/application/common/ValidationBehaviour.js";
 import type { Range } from "../../../support/exampleRange.js";
 import {
   askedAt,
@@ -21,21 +18,6 @@ import type { SpecWorld } from "../../../support/world.js";
 const rangeOf = (world: SpecWorld): Range => {
   assert.ok(world.range !== undefined, "No example range has been given.");
   return world.range;
-};
-
-// A refusal for breaking rules says which, and the validator's own steps read
-// the rules broken from the world: so what the behaviour refused with is put
-// where they look, and "the first rule broken is" means the same thing here as
-// it does there.
-const handing = async (
-  world: SpecWorld,
-  hand: () => Promise<unknown>,
-): Promise<void> => {
-  await attempt(world, hand);
-  if (world.failure instanceof RequestInvalid) {
-    world.brokenRules = world.failure.broken;
-    world.brokenRulesChecked = 0;
-  }
 };
 
 const registeringAnother = (world: SpecWorld, register: () => void): void => {
@@ -94,7 +76,7 @@ When(
   "the example command is sent for the example range",
   async function (this: SpecWorld) {
     const command = new ExampleCommand(askedAt, rangeOf(this));
-    await handing(this, () => mediatorOf(this).send(command));
+    await attempt(this, () => mediatorOf(this).send(command));
   },
 );
 
@@ -102,6 +84,6 @@ When(
   "the example query is asked for the example range",
   async function (this: SpecWorld) {
     const query = new ExampleQuery(rangeOf(this));
-    await handing(this, () => mediatorOf(this).query(query));
+    await attempt(this, () => mediatorOf(this).query(query));
   },
 );

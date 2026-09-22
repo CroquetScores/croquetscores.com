@@ -104,6 +104,11 @@ export class SpecWorld extends World {
     | undefined;
   public unregisteredValidator:
     RequestValidator<Command<unknown> | Query<unknown>> | undefined;
+  // What the example command carries when a scenario sends one: what it says
+  // it carries before sending it, rather than the command itself, which is
+  // made at the sending.
+  public exampleCommandCarries:
+    { password?: string; somethingElse?: string } | undefined;
   public answer: unknown;
   public failure: unknown;
   public handled: string[] = [];

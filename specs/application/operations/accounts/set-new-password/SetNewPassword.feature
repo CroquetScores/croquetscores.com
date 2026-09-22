@@ -8,10 +8,16 @@ Feature: Setting a new password with the link that was emailed
 
   The password's rules are the command's own, and asked on the way in, as
   every command's are: they are the same rules confirming asks, since it is
-  the same password (`ConfirmEmailAddress.feature`). Whether it has been
-  breached is asked over the network, and so is the handler's, after the link
-  is known to be one that would set anything: a password is not sent anywhere
-  for a link that was never going to be used.
+  the same password (`ConfirmEmailAddress.feature`).
+
+  Whether it has been breached is not asked here. It is asked in front of the
+  transaction, of every command that sets a password, and is specified there
+  (`BreachedPasswordBehaviour.feature`): a request over the network made
+  inside a transaction holds a database connection for as long as the service
+  takes to answer. So it is asked before the link is judged, and a breached
+  password is refused whatever became of the link. One scenario below says the
+  check stands in front of this operation; the rest is said where the check
+  is.
 
   A link works for an hour, and once. Once, because a setting that was kept
   writes the link down among the requests already carried out, and a second
@@ -103,14 +109,6 @@ Feature: Setting a new password with the link that was emailed
       And the link emailed to "someone@example.com" is taken out of it
       When the new password "too short" is set with that link
       Then "correct horse battery staple" is the password of the account for "someone@example.com"
-
-    Scenario: A password nobody could check cannot go on
-      Given "someone@example.com" has an account, confirmed
-      And a way back in is asked for "someone@example.com"
-      And the link emailed to "someone@example.com" is taken out of it
-      And the breached password check cannot be reached
-      When the new password "a different long password" is set with that link
-      Then it is refused with "BreachedPasswords.Unreachable"
 
   Rule: A link works for an hour
 
