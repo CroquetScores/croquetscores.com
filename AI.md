@@ -84,10 +84,24 @@ ESLint enforces this, so breaking it fails the build rather than being noticed i
 npm run typecheck
 npm run lint
 npx prettier --check .
-npm test
+npm run test:changed
 ```
 
-All four, and `npm test` means every scenario, not the ones that were touched. Where a database is not available, say which scenarios were not run rather than leaving it to be assumed.
+`npm run test:changed` runs the scenarios in the feature files this branch has touched, and none of the others. It looks in all four places a change can be — committed on the branch, staged, in the working tree, and not yet added at all — so a feature still being written counts the same as one that landed three commits ago.
+
+It is narrowed because the whole suite takes long enough that running it after every change holds the work up, and nearly all of what it runs has nothing to do with the change in front of it. A gate that slow stops being run, which is worse than a gate that is narrow.
+
+Nothing is given up by narrowing it, because CI runs `npm test` — every scenario, against a real database and a real browser — on every pull request and on every push to `main`. The full suite is still what has to pass before anything reaches `main`. It is simply not what has to pass before saying a morning's work is done.
+
+Run `npm test` by hand where a change reaches further than its own feature: anything under `specs/support/`, anything in `src/domain/common/`, anything most of the suite is standing on. Judgement is wanted here, and the cost of being wrong is one CI run.
+
+Where something changed under `/src` with no feature file changed beside it, name the feature to run:
+
+```bash
+npm run test:changed -- specs/application/common/mediator/Mediator.feature
+```
+
+Where a database is not available, say which scenarios were not run rather than leaving it to be assumed. Say too when only the changed features were run, because "tests pass" means something narrower than it used to.
 
 A new scenario is worth only as much as its ability to fail. Check it by breaking the code it describes and watching it go red, then put the code back. A scenario that passes against a deliberately broken implementation is worse than no scenario, because it says something is covered when it is not.
 
@@ -98,6 +112,14 @@ Report what happened, including what did not work. "Tests pass" when they were n
 ## 7. When a review is asked for
 
 A review is run when somebody asks for one, and not otherwise: it is not a step on the way to a pull request.
+
+A pull request is where to say that one is worth asking for. When a pull request has been opened, say so, and give the line that runs the review with the number filled in:
+
+```
+/code-review 123
+```
+
+Wait for CI to go green first, and say so: a review of code that does not yet pass its own scenarios spends itself on faults the scenarios were about to name. Reminding is the whole of it — whoever opened the pull request decides whether the review happens.
 
 Its report is written to the top of `code-review.md`, above whatever is already there, with a `---` line between the new report and the ones before it, so that the newest is the first thing read and nothing earlier is lost. The file is not committed; `.gitignore` keeps it out. `code-review-template.md` is the shape a report takes: the heading says when the review was run, then a heading for each file by its path from the root of the repository, and under each the status and what was found.
 
