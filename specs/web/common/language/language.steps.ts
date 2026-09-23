@@ -2,6 +2,9 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { english } from "../../../../src/web/languages/english.js";
+import { javaScriptRequiredPath } from "../../../../src/web/public/javaScriptRequired.js";
+import { registrationsSuspendedPath } from "../../../../src/web/public/registrationsSuspended.js";
+import { welcomePath } from "../../../../src/web/public/welcome.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { anApplicationCalled } from "../../support/browser.js";
 import {
@@ -143,32 +146,37 @@ When("a page that fails is opened", async function (this: SpecWorld) {
   await this.browserPage.goto(`${this.baseUrl!}${exampleFailedPath}`);
 });
 
-// Three of the pages carrying a link back to the home page: the three a reader
-// reaches by asking for them and nothing else, so that the name in that link
-// can be looked at without a database. The other five come at the end of
-// something written down and wait on one (TODO.md).
-const welcome = "/account/welcome";
-const javaScriptRequired = "/account/java-script-required";
-const registrationsSuspended = "/account/registrations-suspended";
+// Three of the four pages whose link back to the home page is looked at here:
+// the page that is not there is the fourth, and is asked for by a step of its
+// own. Each of these three is reached by asking for it and nothing else, so the
+// name in that link can be looked at without a database. The four left come at
+// the end of something written down and wait on one (TODO.md).
+//
+// Asked for by the address the page itself is served at, rather than by one
+// written out again here. A page that is not there carries the same link back,
+// so a step that spelled an address out would go on passing against the page
+// that is not there the day the page it means is served somewhere else.
 
 When(
   "the page shown after registering is opened",
   async function (this: SpecWorld) {
-    await this.browserPage.goto(`${this.baseUrl!}${welcome}`);
+    await this.browserPage.goto(`${this.baseUrl!}${welcomePath}`);
   },
 );
 
 When(
   "the page asking for scripting is opened",
   async function (this: SpecWorld) {
-    await this.browserPage.goto(`${this.baseUrl!}${javaScriptRequired}`);
+    await this.browserPage.goto(`${this.baseUrl!}${javaScriptRequiredPath}`);
   },
 );
 
 When(
   "the page saying registering is suspended is opened",
   async function (this: SpecWorld) {
-    await this.browserPage.goto(`${this.baseUrl!}${registrationsSuspended}`);
+    await this.browserPage.goto(
+      `${this.baseUrl!}${registrationsSuspendedPath}`,
+    );
   },
 );
 

@@ -126,9 +126,12 @@ Feature: A reader is spoken to in their own language
     that link are looked at here — the page that is not there, the page shown
     after registering, the page asking for scripting, and the page saying
     registering is suspended — because each is reached by asking for it and
-    nothing else. A fifth, the page offering a new confirmation link, is held
-    to it by its own scenario reading every word it shows, because a place left
-    to fill counts among the words that came from somewhere other than a
+    nothing else. Each says which page it is on before it reads the link,
+    because the page that is not there carries the same link back: a scenario
+    that only read the link would go on passing the day the page it means stops
+    being served. A fifth, the page offering a new confirmation link, is held to
+    it by its own scenario reading every word it shows, because a place left to
+    fill counts among the words that came from somewhere other than a
     catalogue. The last four come at the end of something written down, so a
     scenario for them needs a database, and they wait on one (`TODO.md`).
 
@@ -191,19 +194,22 @@ Feature: A reader is spoken to in their own language
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
       When the page shown after registering is opened
-      Then the way back to the home page names the site "Gateball Scores"
+      Then the page says the words for "welcome.title"
+      And the way back to the home page names the site "Gateball Scores"
 
     Scenario: The way back from the page asking for scripting names the site
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
       When the page asking for scripting is opened
-      Then the way back to the home page names the site "Gateball Scores"
+      Then the page says the words for "javaScriptRequired.title"
+      And the way back to the home page names the site "Gateball Scores"
 
     Scenario: The way back from the page saying registering is suspended names the site
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
       When the page saying registering is suspended is opened
-      Then the way back to the home page names the site "Gateball Scores"
+      Then the page says the words for "registrationsSuspended.title"
+      And the way back to the home page names the site "Gateball Scores"
 
     Scenario: The site's name is not translated for a reader of another language
       Given a viewport 1200 pixels wide

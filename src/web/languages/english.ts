@@ -223,11 +223,10 @@ export const english: Language = {
     // painted with, `{emailFromName}` the name the site's emails are sent
     // from, which each email is signed off with, and `{siteName}` what the
     // site is called, which is the same name its pages call it. The last four
-    // are the site's
-    // own and are filled in by the writer, never by what queued the email. A
-    // button is painted where it stands, because a mail program reads no
-    // stylesheet. None greets its reader by name, so that nothing about a
-    // person but the address an email goes to need be put in the queue.
+    // are the site's own and are filled in by the writer, never by what queued
+    // the email. A button is painted where it stands, because a mail program
+    // reads no stylesheet. None greets its reader by name, so that nothing
+    // about a person but the address an email goes to need be put in the queue.
 
     "Email.ConfirmAddress.subject": "Confirm your email address for {siteName}",
     "Email.ConfirmAddress.body": `
