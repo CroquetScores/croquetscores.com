@@ -1,12 +1,10 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
-import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import { SetNewPassword } from "./SetNewPassword.js";
 import { spent, worthOfSetNewPasswordLink } from "./setNewPasswordLinks.js";
 
@@ -36,9 +34,11 @@ const noLongerWorks = (why: string): SettingRefused =>
  * The password has been asked about before this runs: its rules are the
  * command's own, asked on the way in as every command's are, and whether it
  * has been breached is asked in front of the transaction, where it costs no
- * connection (`BreachedPasswordBehaviour.feature`). So what is left here is
- * everything neither of those can ask — the account the link names, and
- * whether the link still works.
+ * connection (`BreachedPasswordBehaviour.feature`). It is hashed there too, so
+ * the hash is to hand here and no connection is held while one is made
+ * (`HashedPasswordBehaviour.feature`). So what is left here is everything none
+ * of those can ask — the account the link names, and whether the link still
+ * works.
  *
  * A link works once, and what spends it is a setting that was kept: the link
  * is written down among the requests already carried out, so a second
@@ -56,7 +56,6 @@ export class SetNewPasswordHandler extends CommandHandler<
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly links: Links,
-    private readonly passwords: PasswordHasher,
     private readonly handled: HandledRequests,
   ) {
     super();
@@ -117,12 +116,9 @@ export class SetNewPasswordHandler extends CommandHandler<
       throw noLongerWorks("has already set a password");
     }
 
-    // Made from what the validator has already found sound.
-    const password = Password.from(command.password);
-    account.setNewPassword(
-      await this.passwords.hash(password.reveal()),
-      command.requestedAt,
-    );
+    // The hash of it was made in front of the transaction, and the hash is
+    // the whole of what is kept, so no password is made here at all.
+    account.setNewPassword(command.passwordHash.made, command.requestedAt);
     await this.accounts.save(account);
     return account.id;
   }

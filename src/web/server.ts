@@ -31,7 +31,9 @@ import { WhatASetNewPasswordLinkIsWorthHandler } from "../application/operations
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { BreachedPasswordBehaviour } from "../application/common/BreachedPasswordBehaviour.js";
+import { HashedPasswordBehaviour } from "../application/common/HashedPasswordBehaviour.js";
 import type { EventStore } from "../application/services/EventStore.js";
+import type { PasswordHasher } from "../application/services/PasswordHasher.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
@@ -149,17 +151,22 @@ export interface Application {
 // a validator is registered once whichever side its request comes in on. Behind
 // it, in the command's line alone, a command that sets a password has it asked
 // about, which is a request over the network and so is made before a connection
-// is borrowed rather than inside the transaction. Behind that a command gets a
-// transaction it can write in, and a query one it cannot.
+// is borrowed rather than inside the transaction. Behind that the password is
+// hashed, which costs no connection either and is done only for a password
+// nobody has refused: a hash of a breached password need never exist. Behind
+// that a command gets a transaction it can write in, and a query one it
+// cannot.
 const putTogether = (
   unitOfWork: UnitOfWork,
   breached: BreachedPasswords,
+  passwords: PasswordHasher,
 ): { mediator: Mediator; validation: ValidationBehaviour } => {
   const mediator = new Mediator();
   const validation = new ValidationBehaviour();
 
   mediator.addCommandBehaviour(validation);
   mediator.addCommandBehaviour(new BreachedPasswordBehaviour(breached));
+  mediator.addCommandBehaviour(new HashedPasswordBehaviour(passwords));
   mediator.addCommandBehaviour(new TransactionBehaviour(unitOfWork));
 
   mediator.addQueryBehaviour(validation);
@@ -296,7 +303,19 @@ export const buildApplication = async (
   const unitOfWork = new UnitOfWork(pool);
   // Asked of every command that sets a password, in front of its transaction.
   const breached = options.breachedPasswords ?? new HaveIBeenPwnedPasswords();
-  const { mediator, validation } = putTogether(unitOfWork, breached);
+  // Today's hashes, and the old site's kept checkable until their readers sign
+  // in. Without the old site's salt an imported hash matches nothing, which is
+  // what a site that never imported anything wants anyway. Made here rather
+  // than with the rest of what a handler is given, because a command that sets
+  // a password is hashed in front of its transaction and so the mediator is
+  // put together with this.
+  const passwords = new ImportedPasswordHasher(
+    new Argon2id(),
+    config.oldSitePasswordSalt === undefined
+      ? undefined
+      : new OldSitePasswordHasher(config.oldSitePasswordSalt),
+  );
+  const { mediator, validation } = putTogether(unitOfWork, breached, passwords);
 
   // What is personal in an account's events is encrypted with the account's
   // own key as they are kept, and the key kept with the site's.
@@ -352,16 +371,6 @@ export const buildApplication = async (
   const handledRequests = new PostgresHandledRequests(unitOfWork);
   const emailsWritten = new PostgresEmailsWritten(unitOfWork);
 
-  // Today's hashes, and the old site's kept checkable until their readers sign
-  // in. Without the old site's salt an imported hash matches nothing, which is
-  // what a site that never imported anything wants anyway.
-  const passwords = new ImportedPasswordHasher(
-    new Argon2id(),
-    config.oldSitePasswordSalt === undefined
-      ? undefined
-      : new OldSitePasswordHasher(config.oldSitePasswordSalt),
-  );
-
   validation.register(new RegisterAccountValidator());
   mediator.handleCommand(
     new RegisterAccountHandler(
@@ -376,7 +385,7 @@ export const buildApplication = async (
   );
   validation.register(new ConfirmEmailAddressValidator());
   mediator.handleCommand(
-    new ConfirmEmailAddressHandler(accounts, links, passwords, handledRequests),
+    new ConfirmEmailAddressHandler(accounts, links, handledRequests),
   );
   mediator.handleCommand(
     new SignInHandler(accounts, accountsByEmailAddress, passwords),
@@ -402,7 +411,7 @@ export const buildApplication = async (
   );
   validation.register(new SetNewPasswordValidator());
   mediator.handleCommand(
-    new SetNewPasswordHandler(accounts, links, passwords, handledRequests),
+    new SetNewPasswordHandler(accounts, links, handledRequests),
   );
   mediator.handleQuery(
     new WhatASetNewPasswordLinkIsWorthHandler(accounts, links, handledRequests),

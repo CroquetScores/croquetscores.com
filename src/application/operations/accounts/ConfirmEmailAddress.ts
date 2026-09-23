@@ -1,4 +1,5 @@
 import { Command } from "../../common/Command.js";
+import { PasswordHash } from "../../common/SetsPassword.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 
@@ -53,12 +54,16 @@ export class ConfirmEmailAddress extends Command<void> {
   }
 
   /**
-   * Which of its fields holds the password it sets, so that the check standing
-   * in front of the transaction knows what to ask about, and which field to
-   * name when it refuses. Saying so is the command's because only the command
-   * knows what it is doing with the password it carries.
+   * Which of its fields holds the password it sets, so that the two behaviours
+   * standing in front of the transaction — the one asking whether it has been
+   * breached, and the one hashing it — know which field to read, and which to
+   * name when the asking refuses it. Saying so is the command's because only
+   * the command knows what it is doing with the password it carries.
    */
   get passwordField(): string {
     return "password";
   }
+
+  /** Where the hash of that password is put, in front of the transaction. */
+  readonly passwordHash = new PasswordHash();
 }

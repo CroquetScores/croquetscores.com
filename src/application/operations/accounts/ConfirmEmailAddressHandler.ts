@@ -1,13 +1,11 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
-import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import {
   worthOfConfirmationLink,
   type ConfirmationLinkWorth,
@@ -59,11 +57,12 @@ const said: Readonly<
  *
  * The name and the password have been asked about before this runs: their
  * rules are the command's own, and every command's rules are asked on the way
- * in, and whether the password has been breached is asked in front of the
- * transaction, where it costs no connection. So what is left here is
- * everything neither a validator nor that check can ask — the account the link
- * names, whether it has been forgotten or confirmed, and whether the link has
- * expired.
+ * in; whether the password has been breached is asked in front of the
+ * transaction, where it costs no connection; and the password is hashed there
+ * too, so the hash is to hand here and this borrows no connection to make one.
+ * So what is left here is everything none of those can ask — the account the
+ * link names, whether it has been forgotten or confirmed, and whether the link
+ * has expired.
  */
 export class ConfirmEmailAddressHandler extends CommandHandler<
   ConfirmEmailAddress,
@@ -74,7 +73,6 @@ export class ConfirmEmailAddressHandler extends CommandHandler<
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly links: Links,
-    private readonly passwords: PasswordHasher,
     private readonly handled: HandledRequests,
   ) {
     super();
@@ -102,16 +100,12 @@ export class ConfirmEmailAddressHandler extends CommandHandler<
     }
     const { account } = judged;
 
-    // Made from what the validator has already found sound, so neither can
-    // refuse here.
+    // Made from what the validator has already found sound, so it cannot
+    // refuse here. The password is not made at all: the hash of it was made in
+    // front of the transaction, and the hash is the whole of what is kept.
     const name = PersonName.from(command.name);
-    const password = Password.from(command.password);
 
-    account.confirm(
-      name,
-      await this.passwords.hash(password.reveal()),
-      command.requestedAt,
-    );
+    account.confirm(name, command.passwordHash.made, command.requestedAt);
     await this.accounts.save(account);
   }
 }

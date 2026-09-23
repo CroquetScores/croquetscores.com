@@ -21,6 +21,7 @@ import {
   type RequestType,
 } from "../../src/application/common/Mediator.js";
 import { Query } from "../../src/application/common/Query.js";
+import { PasswordHash } from "../../src/application/common/SetsPassword.js";
 import { QueryValidator } from "../../src/application/common/QueryValidator.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
@@ -76,6 +77,9 @@ export class ExampleCommand extends Command<string> implements Range {
   get passwordField(): string | undefined {
     return this.password === undefined ? undefined : "password";
   }
+
+  /** Where the hash of that password is put, as a command that sets one carries. */
+  readonly passwordHash = new PasswordHash();
 }
 
 export class OtherCommand extends Command<string> {
