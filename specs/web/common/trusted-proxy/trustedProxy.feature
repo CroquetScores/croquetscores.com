@@ -177,3 +177,24 @@ Feature: The IP address a request is counted as coming from
       Given the site is told nothing forwards requests to it
       When the site starts
       Then it starts
+
+  Rule: A range that fixes no bits is every address, and stops the site starting
+
+    A range says an address and how many of its leading bits are fixed, so /0
+    fixes nothing and is every address there is. Written here it would mean
+    believing a forwarded address from whatever could reach the site, which is
+    the yes this setting exists to make impossible: no limit at all, and
+    nothing to notice. So it is refused with the rest, while somebody is
+    deploying.
+
+    Scenario Outline: The site refuses to start when told to trust every address
+      Given the site is told requests are forwarded by "<trusted>"
+      When the site starts
+      Then it refuses to start
+      And what it says names the setting
+
+      Examples:
+        | trusted    |
+        | 0.0.0.0/0  |
+        | ::/0       |
+        | 10.0.0.0/0 |

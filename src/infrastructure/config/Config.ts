@@ -115,6 +115,12 @@ const readCanonicalHost = (env: NodeJS.ProcessEnv): string | undefined => {
 // well-known ranges — loopback, linklocal — are not accepted, because a
 // deployment's proxy has an address and a name would only ever be a way of
 // trusting more than was meant.
+//
+// A range has to fix at least one bit. /0 is every address there is, which is
+// the answer this setting exists to make impossible: it would believe a
+// forwarded address from whatever could reach the site, and so from everybody.
+// Fastify refuses it too, so accepting it here would only move the refusal to
+// where it is a startup crash naming no setting.
 const addressOrRange = (named: string): boolean => {
   const [address, prefix, ...rest] = named.split("/");
   if (address === undefined || rest.length > 0) return false;
@@ -123,7 +129,8 @@ const addressOrRange = (named: string): boolean => {
   if (family === 0) return false;
   if (prefix === undefined) return true;
   if (!/^[0-9]{1,3}$/.test(prefix)) return false;
-  return Number(prefix) <= (family === 4 ? 32 : 128);
+  const bits = Number(prefix);
+  return bits >= 1 && bits <= (family === 4 ? 32 : 128);
 };
 
 // Blank is a site with nothing in front of it, which believes nobody. Anything
