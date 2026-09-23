@@ -70,12 +70,22 @@ const sendPage = (
     .type("text/html; charset=utf-8")
     .send(page(assets, request, heading, detail, fill));
 
+// An API failure is kept by nobody, the caller included. The API answers to a
+// bearer token or the session cookie, so a failure can be about whoever asked,
+// and unlike a page there is no going back to it: a program that wants to know
+// again asks again. So there is nothing to keep it for, which is why this is
+// no-store rather than the pages' private, no-cache and a vary to go with it.
+const sendJson = (reply: FastifyReply, body: unknown): FastifyReply =>
+  reply.header("cache-control", "no-store").send(body);
+
 export const registerErrorMapping = (
   server: FastifyInstance,
   assets: Assets,
 ): void => {
   server.setNotFoundHandler((request, reply) => {
-    if (wantsJson(request)) return reply.code(404).send({ error: "NotFound" });
+    if (wantsJson(request)) {
+      return sendJson(reply.code(404), { error: "NotFound" });
+    }
     return sendPage(reply.code(404), assets, request, "errors.notFound");
   });
 
@@ -93,9 +103,10 @@ export const registerErrorMapping = (
     if (error instanceof RequestInvalid) {
       request.log.info({ broken: error.broken }, "Request refused");
       if (wantsJson(request)) {
-        return reply
-          .code(422)
-          .send({ error: error.code, broken: error.broken });
+        return sendJson(reply.code(422), {
+          error: error.code,
+          broken: error.broken,
+        });
       }
       return sendPage(
         reply.code(422),
@@ -114,9 +125,10 @@ export const registerErrorMapping = (
     if (typeof error.statusCode === "number") {
       request.log.warn({ err: error }, "Request failed");
       if (wantsJson(request)) {
-        return reply
-          .code(error.statusCode)
-          .send({ error: error.code ?? "Error", message: error.message });
+        return sendJson(reply.code(error.statusCode), {
+          error: error.code ?? "Error",
+          message: error.message,
+        });
       }
       return sendPage(
         reply.code(error.statusCode),
@@ -132,7 +144,7 @@ export const registerErrorMapping = (
     const correlationId = randomUUID();
     request.log.error({ err: error, correlationId }, "Unhandled error");
     if (wantsJson(request)) {
-      return reply.code(500).send({ error: "Internal", correlationId });
+      return sendJson(reply.code(500), { error: "Internal", correlationId });
     }
     return sendPage(
       reply.code(500),

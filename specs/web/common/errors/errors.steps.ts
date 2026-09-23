@@ -245,3 +245,38 @@ Then(
     variesBy(this, "Accept-Language");
   },
 );
+
+// What an API answer says about keeping it ------------------------------------
+
+// Nothing is mounted here either, so the request reaches the same handler as
+// the page above, and is told apart from it only by being under /api/.
+When(
+  "an API address that is not there is asked for",
+  async function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    scenario.response = await scenario.application.server.inject({
+      method: "GET",
+      url: "/api/nothing-is-mounted-here",
+    });
+  },
+);
+
+// A body that says it is JSON and is not. Fastify refuses it itself, before any
+// route runs, with a status of its own — which is the way out of the error
+// mapping that neither a refusal nor the server failing takes.
+When(
+  "something that cannot be read is sent to the example route",
+  async function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    assert.ok(scenario.route !== undefined, "There is no example route.");
+    scenario.response = await scenario.application.server.inject({
+      ...scenario.route,
+      headers: { "content-type": "application/json" },
+      payload: "{",
+    });
+  },
+);
+
+Then("the answer is kept by nobody", function (this: SpecWorld) {
+  assert.equal(answered(this).headers["cache-control"], "no-store");
+});
