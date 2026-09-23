@@ -127,10 +127,11 @@ Then("the form is shown again as refused", async function (this: SpecWorld) {
 // Beneath the field, found by what the field announces, so that a message
 // drawn beneath it and not tied to it does not count. A field that broke more
 // than one rule says each, on a line of its own.
-Then(
-  /^the (.+) field says the message for "([^"]*)"$/,
-  async function (this: SpecWorld, field: string, code: string) {
-    const lines = await this.browserPage.evaluate<string[] | null>(`(() => {
+const messagesBeneath = (
+  world: SpecWorld,
+  field: string,
+): Promise<string[] | null> =>
+  world.browserPage.evaluate<string[] | null>(`(() => {
       const unmark = (text) => text.split(${JSON.stringify(opens)}).join("").split(${JSON.stringify(closes)}).join("");
       const wanted = ${JSON.stringify(field.toLowerCase())};
       const input = [...document.querySelectorAll("section.dialog input")].find(
@@ -142,9 +143,29 @@ Then(
       const spans = [...message.querySelectorAll("span")];
       return (spans.length > 0 ? spans : [message]).map((line) => line.textContent.trim());
     })()`);
+
+Then(
+  /^the (.+) field says the message for "([^"]*)"$/,
+  async function (this: SpecWorld, field: string, code: string) {
+    const lines = await messagesBeneath(this, field);
     assert.ok(lines !== null, `The ${field} field says nothing.`);
     assert.ok(
       lines.includes(wordsFor(code)),
+      `The ${field} field says ${JSON.stringify(lines)}.`,
+    );
+  },
+);
+
+// How many it says, rather than which: two rules with no words are the same
+// sentence, and a field saying it twice is what this is here to catch.
+Then(
+  /^the (.+) field says one message$/,
+  async function (this: SpecWorld, field: string) {
+    const lines = await messagesBeneath(this, field);
+    assert.ok(lines !== null, `The ${field} field says nothing.`);
+    assert.equal(
+      lines.length,
+      1,
       `The ${field} field says ${JSON.stringify(lines)}.`,
     );
   },
