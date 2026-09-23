@@ -75,7 +75,17 @@ When(
 When(
   "the example command is sent for the example range",
   async function (this: SpecWorld) {
-    const command = new ExampleCommand(askedAt, rangeOf(this));
+    // Carrying whatever else the scenario said the command carries, as the
+    // step that sends one without a range does. A scenario that said nothing
+    // carries nothing, so this reads the same as it always did; one that set a
+    // password can now ask for a range as well, which is what it takes to say
+    // that a command breaking its own rules never has its password looked at.
+    const command = new ExampleCommand(
+      askedAt,
+      rangeOf(this),
+      undefined,
+      this.exampleCommandCarries,
+    );
     await attempt(this, () => mediatorOf(this).send(command));
   },
 );

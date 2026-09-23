@@ -4,7 +4,7 @@
 // change in front of it. CI still runs every scenario on every pull request, so
 // this narrows what is run while work is in hand, not what has to pass.
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -96,6 +96,40 @@ const missing = named.filter(
 if (missing.length > 0) {
   console.error(
     `There is no such feature file: ${missing.join(", ")}. Nothing was run.`,
+  );
+  process.exit(1);
+}
+
+// A line number on the end of a path names one scenario, and cucumber wants
+// the line that scenario begins on: a line anywhere else in it — a step, the
+// narrative above it, a line past the end of the file — matches no scenario,
+// so cucumber runs nothing and has nothing to complain about. That is the same
+// green run of nothing as a path that was never there, and it is caught the
+// same way.
+//
+// A scenario made from an outline begins on its row of the Examples table
+// instead, which is the line that tells the outline's runs apart, so a table
+// row counts as naming one. The header row names none, and is let through
+// rather than picked apart: this is here to catch a line that plainly names no
+// scenario, not to work out for itself what cucumber would make of every line.
+const namesAScenario =
+  /^\s*((Scenario|Scenario Outline|Scenario Template|Example):|\|)/;
+const namesNoScenario = named.filter((feature) => {
+  const numbered = /:(\d+)$/.exec(feature);
+  if (numbered === null) return false;
+  const wanted = Number(numbered[1]);
+  const lines = readFileSync(
+    join(root, feature.replace(/:\d+$/, "")),
+    "utf8",
+  ).split(/\r?\n/);
+  return wanted > lines.length || !namesAScenario.test(lines[wanted - 1] ?? "");
+});
+if (namesNoScenario.length > 0) {
+  console.error(
+    `No scenario is named by: ${namesNoScenario.join(", ")}. Nothing was run.`,
+  );
+  console.error(
+    "A line number names the scenario that line falls in, and that line falls in none.",
   );
   process.exit(1);
 }

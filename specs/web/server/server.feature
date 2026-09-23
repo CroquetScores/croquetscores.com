@@ -18,6 +18,17 @@ Feature: The application puts one mediator together, and every route sends throu
   in. Validation comes first on both sides, so that a request that was never
   going to be carried out does not cost a connection.
 
+  On the command's side one more thing stands between them: whether the
+  password a command sets has been breached, asked of an outside service and
+  so asked in front of the transaction, where it holds no connection while
+  another site takes its time. That it is in front of the transaction is
+  specified with the check itself. What is here is the other half of where it
+  stands — that validation is in front of it in turn, so that a command
+  breaking its own rules is refused without a request being made about its
+  password. Only the application knows that order, because only the
+  application puts the line together, and the two lines that decide it can be
+  swapped without a single other scenario noticing.
+
   The application also puts its event store together once: Postgres, on the
   same unit of work the mediator's transactions use, with the application's
   projections in front of it. So every event a command's handler appends is
@@ -63,6 +74,15 @@ Feature: The application puts one mediator together, and every route sends throu
       And it starts at 1
       When the example command is sent for the example range
       Then no connection was taken for it
+
+    Scenario: A command that breaks a rule has its password left unasked about
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example range
+      And it starts at 1
+      And it sets the password "password123456"
+      When the example command is sent for the example range
+      Then nothing was asked of the breached password check
 
   Rule: A query is validated, then run in a transaction it cannot write in
 

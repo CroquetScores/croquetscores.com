@@ -4,7 +4,7 @@
 //
 // Here rather than in specs/support/ because it names infrastructure, and
 // specs/support/ is loaded by every spec in the repository and so may not.
-import { After, Given } from "@cucumber/cucumber";
+import { After, Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { HaveIBeenPwnedPasswords } from "../../../src/infrastructure/identity/HaveIBeenPwnedPasswords.js";
@@ -51,6 +51,18 @@ export const aFakeOfHaveIBeenPwned = async (
 Given("a breached password check", async function (this: SpecWorld) {
   await aFakeOfHaveIBeenPwned(this);
 });
+
+// Read from the fake rather than from the check in front of it, because what
+// is being asked is whether the request was made at all: a check that worked
+// out an answer without asking would leave the fake untouched, and so would a
+// check that was never reached. Only the second is what a scenario using this
+// means, and the two are told apart by the scenario that expects the asking.
+Then(
+  "nothing was asked of the breached password check",
+  function (this: SpecWorld) {
+    assert.deepEqual(fakeOf(this).askedAbout, []);
+  },
+);
 
 After(async function (this: SpecWorld) {
   await fakes.get(this)?.stop();
