@@ -80,10 +80,11 @@ const theSharedOne = async (): Promise<string> => {
  * what it is called, listening on a port of its own and closed with the
  * scenario.
  *
- * A scenario that needs one needs no database: what it looks at is what the
- * site calls itself in its bars, which is decided as a page is rendered. So it
- * is not the application a @postgres scenario gets, which is built over that
- * scenario's own tables.
+ * Most scenarios that need one need no database: what they look at is what
+ * the site calls itself, which is decided as a page is rendered. A scenario
+ * with a database of its own gets its own application again instead, called
+ * what it asked for and over the same tables, because what it looks at is at
+ * the end of something written down there.
  */
 export const anApplicationCalled = (
   world: SpecWorld,
@@ -103,6 +104,8 @@ const anApplicationWith = async (
   world: SpecWorld,
   changed: Partial<Config>,
 ): Promise<string> => {
+  if (world.pool !== undefined) return itsOwn(world, changed);
+
   loadEnvFile();
   const named = await buildApplication(
     { ...loadConfig(), ...changed },
@@ -140,11 +143,12 @@ const namedApplicationsFor = (world: SpecWorld): Application[] => {
 /**
  * What the site the scenario's browser is talking to is called, asked of the
  * application rather than read off a page, so that a scenario can hold a page
- * to the name without that page having to show it anywhere else first. Every
- * application but one of the scenario's own is called what the settings say.
+ * to the name without that page having to show it anywhere else first. The
+ * scenario's own application, where it has one, and otherwise the shared one,
+ * which is called what the settings say.
  */
 export const siteNameFor = (world: SpecWorld): string => {
-  const named = namedApplications.get(world)?.at(-1);
+  const named = namedApplications.get(world)?.at(-1) ?? applications.get(world);
   if (named !== undefined) return named.server.siteName;
   loadEnvFile();
   return loadConfig().siteName;
@@ -159,7 +163,10 @@ export const siteNameFor = (world: SpecWorld): string => {
  * database keeps real sessions, so who is signed in is whatever the session
  * cookie says, which is what these scenarios are here to find out.
  */
-const itsOwn = async (world: SpecWorld): Promise<string> => {
+const itsOwn = async (
+  world: SpecWorld,
+  changed: Partial<Config> = {},
+): Promise<string> => {
   const databaseUrl = world.database.options.connectionString;
   if (databaseUrl === undefined) {
     throw new Error("The scenario's database has no URL.");
@@ -184,6 +191,7 @@ const itsOwn = async (world: SpecWorld): Promise<string> => {
       // the site would say it. Configured rather than handed to the builder,
       // because the setting is the only way the site is told (trustedProxy.ts).
       trustedProxies: ["127.0.0.1"],
+      ...changed,
     },
     {
       logger: false,
