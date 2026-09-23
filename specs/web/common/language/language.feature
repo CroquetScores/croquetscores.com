@@ -122,18 +122,20 @@ Feature: A reader is spoken to in their own language
     the site is called something, and the two would come to disagree. The same
     holds wherever else the site names itself: the link back to the home page
     that most pages carry leaves a place for the name in the same way, though
-    it is a page's words rather than a bar's. Four of the nine pages carrying
-    that link are looked at here — the page that is not there, the page shown
-    after registering, the page asking for scripting, and the page saying
-    registering is suspended — because each is reached by asking for it and
-    nothing else. Each says which page it is on before it reads the link,
-    because the page that is not there carries the same link back: a scenario
-    that only read the link would go on passing the day the page it means stops
-    being served. A fifth, the page offering a new confirmation link, is held to
-    it by its own scenario reading every word it shows, because a place left to
+    it is a page's words rather than a bar's. Nine pages carry that link, and
+    eight are looked at here. Four are reached by asking for them and nothing
+    else — the page that is not there, the page shown after registering, the
+    page asking for scripting, and the page saying registering is suspended.
+    Four come at the end of something written down — a way back in asked for,
+    a new password set, an account forgotten, an email address confirmed — so
+    each is reached by doing it, with a database to write it down in. Each
+    scenario says which page it is on before it reads the link, because the
+    page that is not there carries the same link back: a scenario that only
+    read the link would go on passing the day the page it means stops being
+    served. The ninth, the page offering a new confirmation link, is held to it
+    by its own scenario reading every word it shows, because a place left to
     fill counts among the words that came from somewhere other than a
-    catalogue. The last four come at the end of something written down, so a
-    scenario for them needs a database, and they wait on one (`TODO.md`).
+    catalogue.
 
     Two more names stay as they are written. Each language in the list is named
     in its own language, so that a reader can find theirs, which is the rule
@@ -209,6 +211,53 @@ Feature: A reader is spoken to in their own language
       And a site called "Gateball Scores"
       When the page saying registering is suspended is opened
       Then the page says the words for "registrationsSuspended.title"
+      And the way back to the home page names the site "Gateball Scores"
+
+    @postgres
+    Scenario: The way back from the page saying a way back in is on its way names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      And "someone@example.com" has an account, confirmed
+      And the forgot password page is open
+      When the reader asks for a way back in for "someone@example.com"
+      Then the reader is told to check their email
+      And the way back to the home page names the site "Gateball Scores"
+
+    @postgres
+    Scenario: The way back from the page saying a new password is set names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      And "someone@example.com" has an account, confirmed
+      And a link to set a new password has been sent to "someone@example.com"
+      And the link is followed
+      When the new password "correct horse battery staple" is set
+      Then the reader is told their password has been changed
+      And the way back to the home page names the site "Gateball Scores"
+
+    @postgres
+    Scenario: The way back from the page saying an account is forgotten names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "someone@example.com"
+      And the link is followed
+      When forgetting is confirmed
+      Then the reader is told their account has been forgotten
+      And the way back to the home page names the site "Gateball Scores"
+
+    @postgres
+    Scenario: The way back from the page saying an email address is confirmed names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      And "someone@example.com" has an account, not confirmed
+      And a link to confirm the email address has been sent to "someone@example.com"
+      And the link is followed
+      And the name typed as "Sam Someone"
+      And the password typed as "correct horse battery staple"
+      And the confirm password typed as "correct horse battery staple"
+      When the dialog is submitted
+      Then the reader is told their email address is confirmed
       And the way back to the home page names the site "Gateball Scores"
 
     Scenario: The site's name is not translated for a reader of another language

@@ -14,8 +14,6 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- **Four of the nine ways back to the home page are not proved to name the site.** Each of the nine says "Back to {siteName}" and each fills the name in itself. Five are held to it: `language.feature` looks at four by name — the page that is not there, the page shown after registering, the page asking for scripting, the page saying registering is suspended — and the page offering a new confirmation link is caught by its own scenario reading every word it shows, since a place left to fill now counts as a word from somewhere other than a catalogue. The four left are a password reset sent, a new password set, an account forgotten, and an email address confirmed, each shown at the end of something written down, so reaching one wants a database and a request in it. Measured rather than reasoned: with all nine fills dropped, those four are the pages nothing says anything about. Worth a scenario each when one of those flows is next opened up (from the review of PR #85).
-
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
 ---
