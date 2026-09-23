@@ -47,8 +47,8 @@ const ruleBrokenBy = (
  * a link works needs the account it names, which a validator cannot read, so
  * that is the handler's. Neither is whether the password has been breached,
  * which is a request over the network and which a validator answers without
- * waiting: it is asked of every command that sets a password, in front of the
- * transaction (`BreachedPasswordBehaviour.feature`).
+ * waiting: the handler asks it, once the link is known to be good and with no
+ * transaction held open across it (`ConfirmEmailAddress.feature`).
  *
  * `Password.Breached` is named beside the rules this asks all the same,
  * because to whoever typed the password it is one more thing wrong with what

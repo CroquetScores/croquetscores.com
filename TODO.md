@@ -20,7 +20,13 @@ Four kinds of thing, kept apart.
 
 - **A failed API request says nothing about being kept.** The error mapping now sends every error _page_ with `cache-control: private, no-cache` and `vary: Cookie, Accept-Language`, because the page carries the account menu (`errors.feature`). The JSON answers beside them carry neither. Nothing caches them today, and none of them is personal yet; decide what the API says about caching when the API answers something that is.
 
-- **Confirming asks Have I Been Pwned and hashes a password inside its transaction.** `TransactionBehaviour` wraps the handler, so the network call — slow when the service is slow, and given seconds before it gives up — and the Argon2 hash each hold a pooled connection doing nothing, with the request id's row locked for the whole of it. Enough confirmations at once while the service is struggling hold every connection, and the rest of the site waits for one. Registering used to be the handler this applied to and no longer is: it asks nobody and hashes nothing, so confirming was the first handler with an outside service in its transaction; setting a new password is the second, and asks the same service the same way. Neither the check nor the hash needs the database. Moving them out means a behaviour that runs before `TransactionBehaviour`, or a handler in two parts, and either decides how handlers are shaped; decide it with the known problem below about where handlers are registered, since both change the mediator (from the review of confirming).
+- **A password is hashed inside a transaction, in three places.** An Argon2 hash is slow on purpose — a measurable slice of a second and a good deal of memory, so that whoever steals a table of hashes pays it for every guess — and every time one is made inside a transaction, that slice of a second is a pooled connection held doing nothing with the rows already touched locked for the whole of it. Enough passwords set at once and every connection is held by something that is not using the database.
+
+  Confirming an email address and setting a new password are two of them, and both are now easy to fix: each already runs its own transactions, reads, lets go, asks Have I Been Pwned with nothing held, and opens the transaction it writes in only then (`ConfirmEmailAddress.feature`). The hash belongs in that same gap, beside the asking. Put it there and it costs nothing at all for a link that was never any good, since the reading settles those before the gap is reached — and it holds no connection either. Ask about the breach before hashing: a hash of a password already known to be breached is a thing that need never exist.
+
+  Hashing in front of everything instead — a behaviour ahead of the transaction, as PR #81 proposed — would hold no connection either, but it hashes before anything is known about the command, so a forged link posted by anybody costs a full Argon2 hash. That is a far better way to spend the site's processor than the one request to Have I Been Pwned it used to cost, which is why the gap is the place and not the front of the line.
+
+  **Signing in is the one that is genuinely hard.** An account whose hash is still the old site's has it made again today's way as it signs in, and whether that is wanted is only known once the stored hash has been read and checked — which needs the connection the transaction is holding. Hashing every sign-in in front of the transaction would pay the cost for every reader who signs in to save it for an imported account once each, which is the wrong way round. What would fix it is signing in that finishes its transaction, hashes, and opens another to keep the new hash — which is what `RunsItsOwnTransactions` now makes possible. Not worth doing until an import has actually been run (from the review of confirming, and from PR #81).
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
@@ -52,12 +58,11 @@ Going to use SPA instead of /scripts.
 
 - **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
 
-
 ---
 
-# Known problems
+## Known problems
 
-## The cross-site guard will refuse an OAuth callback that posts
+### The cross-site guard will refuse an OAuth callback that posts
 
 **Where:** `src/web/common/crossSite.ts` — from PR #10.
 
@@ -69,7 +74,7 @@ Going to use SPA instead of /scripts.
 
 ---
 
-## A field the browser fills in has never been looked at
+### A field the browser fills in has never been looked at
 
 **Where:** `assets/site.css`, the two places that name `:autofill` under `.field-box` — from PR #28.
 
@@ -81,7 +86,7 @@ Going to use SPA instead of /scripts.
 
 ---
 
-## Set `CANONICAL_HOST` when the site is deployed
+### Set `CANONICAL_HOST` when the site is deployed
 
 **Where:** `.env` on whatever serves the site; the setting is read in `src/infrastructure/config/Config.ts` and used by `src/web/common/crossSite.ts`, and by the email writer for the site's address (`emailWriter.feature`).
 
@@ -93,7 +98,7 @@ Going to use SPA instead of /scripts.
 
 ---
 
-## The admin SPA ignores the reader's theme choice
+### The admin SPA ignores the reader's theme choice
 
 **Where:** `src/web/admin/` — served as a static `index.html` from `src/web/server.ts`. From PR #9.
 
@@ -110,7 +115,7 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## The theme choice may not stick in Safari during development
+### The theme choice may not stick in Safari during development
 
 **Where:** `src/web/common/theme.ts`, where the cookie is set — from PR #9.
 
@@ -122,7 +127,7 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## A command whose commit is lost on the way may have happened after all
+### A command whose commit is lost on the way may have happened after all
 
 **Where:** `src/infrastructure/database/UnitOfWork.ts`, where a command's transaction is committed.
 
@@ -134,7 +139,7 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## The application hands out its mediator's parts, and nothing in production asks for them
+### The application hands out its mediator's parts, and nothing in production asks for them
 
 **Where:** the `Application` interface in `src/web/server.ts` — from PR #30.
 
@@ -146,7 +151,7 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-## The whole application is built for every scenario about its mediator
+### The whole application is built for every scenario about its mediator
 
 **Where:** "the application is built" in `specs/web/support/application.ts`, the Background of `server.feature` and of `requestedAt.feature` — from PR #30.
 
@@ -158,6 +163,6 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 
 ---
 
-# Outstanding .feature files
+## Outstanding .feature files
 
 None.

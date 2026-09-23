@@ -104,11 +104,10 @@ export class SpecWorld extends World {
     | undefined;
   public unregisteredValidator:
     RequestValidator<Command<unknown> | Query<unknown>> | undefined;
-  // What the example command carries when a scenario sends one: what it says
-  // it carries before sending it, rather than the command itself, which is
-  // made at the sending.
-  public exampleCommandCarries:
-    { password?: string; somethingElse?: string } | undefined;
+  // Whether the scenario's example command says it runs its own transactions.
+  public exampleCommandRunsItsOwnTransactions = false;
+  // Whether the handler found a transaction underway when it ran.
+  public foundUnderway: boolean | undefined;
   public answer: unknown;
   public failure: unknown;
   public handled: string[] = [];

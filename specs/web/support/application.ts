@@ -14,6 +14,7 @@ import {
   loadEnvFile,
 } from "../../../src/infrastructure/config/Config.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
+import { aFakeOfHaveIBeenPwned } from "../../infrastructure/support/breachedPasswords.js";
 import { useUnitOfWork } from "../../infrastructure/support/transactions.js";
 import { exampleRegistry } from "../../support/exampleEvents.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -56,11 +57,24 @@ Given("the application is built", async function (this: SpecWorld) {
 
   loadEnvFile();
   const clock = clockFor(this);
+  // Asking whether a password has been breached goes to a fake of Have I Been
+  // Pwned, stood up here rather than left to the scenario: the application
+  // would otherwise be built asking the real service, and a scenario that sent
+  // a command carrying a password would reach across the internet from a test
+  // run. Standing it up for every scenario costs a port and nothing else, and
+  // means what the application was asked can be read in any of them.
+  await aFakeOfHaveIBeenPwned(this);
+  const breachedPasswords = this.breachedPasswords;
+  assert.ok(
+    breachedPasswords !== undefined,
+    "The fake of Have I Been Pwned left no check behind it.",
+  );
   const application = await buildApplication(
     { ...loadConfig(), databaseUrl },
     {
       logger: false,
       clock: () => new Date(clock.now.getTime()),
+      breachedPasswords,
       // The example events, and the scenario's own list of projections, so
       // that a projection named after this step is still given what the
       // application's store appends.

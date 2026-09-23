@@ -203,3 +203,39 @@ Feature: Running a command inside one transaction
       Given a handler registered for the example command that waits until both commands have a connection
       When two example commands are sent at the same time
       Then the two commands ran on different connections
+
+  Rule: A command that runs its own transactions is given none
+
+    Nearly every command wants one transaction around the whole of it, and gets
+    it here without having to ask. A few cannot have it. A command that must ask
+    another site something partway through would, wrapped this way, hold a
+    connection open across the network for as long as that site took to answer,
+    and enough of those at once leaves the site with no connections at all. Such
+    a command reads what it needs, lets go of what it read on, asks, and only
+    then opens the transaction it writes in — and it can only do that if nothing
+    has opened one around it already, since a second transaction inside the
+    first is refused.
+
+    So a command says whether it runs its own, and one that does is passed
+    straight through to its handler with nothing underway. Saying so is the
+    command's rather than the handler's because this behaviour is never given
+    the handler: the command is all it sees. What such a command gives up is
+    everything the rest of this feature guarantees, and it takes the whole of it
+    on itself, which is specified with the handler that does so.
+
+    Scenario: A command that runs its own transactions reaches its handler with nothing underway
+      Given the example command runs its own transactions
+      And a handler registered for the example command that looks for a transaction
+      When the example command is sent
+      Then the handler found nothing underway
+
+    Scenario: A command that says nothing is given a transaction as before
+      Given a handler registered for the example command that looks for a transaction
+      When the example command is sent
+      Then the handler found a transaction underway
+
+    Scenario: A command that runs its own transactions is still handled
+      Given the example command runs its own transactions
+      And a handler registered for the example command that answers "recorded"
+      When the example command is sent
+      Then the answer is "recorded"

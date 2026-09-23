@@ -10,14 +10,26 @@ Feature: Setting a new password with the link that was emailed
   every command's are: they are the same rules confirming asks, since it is
   the same password (`ConfirmEmailAddress.feature`).
 
-  Whether it has been breached is not asked here. It is asked in front of the
-  transaction, of every command that sets a password, and is specified there
-  (`BreachedPasswordBehaviour.feature`): a request over the network made
-  inside a transaction holds a database connection for as long as the service
-  takes to answer. So it is asked before the link is judged, and a breached
-  password is refused whatever became of the link. One scenario below says the
-  check stands in front of this operation; the rest is said where the check
-  is.
+  Whether it has been breached is asked here, and where in the order it is
+  asked is the substance of it. Asking means a request to another site, which
+  takes as long as that site takes; a transaction held open across it holds a
+  database connection doing nothing, and enough of those at once leaves the
+  site with no connections at all. So setting a password reads what it needs
+  and lets go of it, asks with nothing held open, and opens the transaction it
+  writes in only then — which is why the command says it runs its own
+  transactions (`TransactionBehaviour.feature`).
+
+  The password is asked about as it will be kept, which is with the whitespace
+  at either end taken off, because a password is trimmed wherever one is made
+  from what a command carries. One typed with a space after it would otherwise
+  be asked about as nobody will ever type it again, found clean, and then kept
+  as the breached password it is.
+
+  What falls out of that order is that a link that was never any good, and a
+  setting already kept, are both answered without the service being asked
+  anything: a forged link would otherwise cost a request to it every time one
+  was posted. What the service itself is worth, and what becomes of a password
+  nobody could check, are said where the service is.
 
   A link works for an hour, and once. Once, because a setting that was kept
   writes the link down among the requests already carried out, and a second
@@ -102,6 +114,32 @@ Feature: Setting a new password with the link that was emailed
       When the new password "a different long password" is set with that link
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Password.Breached"
+
+    Scenario: A breached password typed with spaces around it is refused
+      Given "someone@example.com" has an account, confirmed
+      And a way back in is asked for "someone@example.com"
+      And the link emailed to "someone@example.com" is taken out of it
+      And "a different long password" is known to have been breached
+      When the new password "  a different long password  " is set with that link
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "Password.Breached"
+
+    Scenario: A setting whose link no longer works asks nothing about the password
+      Given "someone@example.com" has an account, confirmed
+      And a way back in is asked for "someone@example.com"
+      And the link in that email is altered
+      When the new password "a different long password" is set with that link
+      Then it is refused with "Link.NoLongerWorks"
+      And nothing was asked of the breached password check
+
+    Scenario: A setting already kept asks nothing about the password when it is sent again
+      Given "someone@example.com" has an account, confirmed
+      And a way back in is asked for "someone@example.com"
+      And the link emailed to "someone@example.com" is taken out of it
+      When the new password "a different long password" is set with that link
+      And what the breached password check was asked is forgotten
+      And the same setting is sent again
+      Then nothing was asked of the breached password check
 
     Scenario: A password that breaks a rule changes nothing
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"

@@ -42,16 +42,22 @@ Feature: Confirming an account's email address
   The link is judged before the account is changed. What a link is worth needs
   the account it names, so it cannot be asked on the way in with the rules.
 
-  Whether the password has been breached is not asked here at all. It is asked
-  in front of the transaction, of every command that sets a password, and is
-  specified there (`BreachedPasswordBehaviour.feature`): a request over the
-  network made inside a transaction holds a database connection for as long as
-  the service takes to answer. So it is asked before the link is judged, and a
-  breached password is refused whatever became of the link — which is the
-  right way round for whoever typed it, since a password they cannot use here
-  is one they should not be using anywhere. One scenario below says the check
-  stands in front of this operation; what the check itself is worth, and what
-  becomes of a password nobody could check, are said where the check is.
+  Whether the password has been breached is asked here, and where in the order
+  it is asked is the substance of it. Asking means a request to another site,
+  which takes as long as that site takes; a transaction held open across it
+  holds a database connection doing nothing, and enough of those at once leaves
+  the site with no connections at all. So confirming reads what it needs and
+  lets go of it, asks with nothing held open, and opens the transaction it
+  writes in only then — which is why the command says it runs its own
+  transactions (`TransactionBehaviour.feature`).
+
+  What falls out of that order is that a link that was never any good, and a
+  confirmation already carried out, are both answered without the service being
+  asked anything. A link nobody made, or one long expired, costs no request:
+  whoever posted it is told what is wrong with it, and Have I Been Pwned never
+  hears about the password that came with it. What the service itself is worth,
+  and what becomes of a password nobody could check, are said where the service
+  is.
 
   The rules about links below send a name and a password that break no rule
   without saying so, so that they stay about links: what a good submission
@@ -233,12 +239,24 @@ Feature: Confirming an account's email address
       When the confirmation is submitted
       Then the account for "someone@example.com" is confirmed
 
-  Rule: A breached password is refused before the link is judged
+  Rule: A breached password is refused, and is asked about only once the link is good
 
-    This is the one scenario here about the check, and it is kept so that a
-    confirmation with nothing in front of it would be noticed. Everything else
-    about the check — the order it runs in, what is asked, and a service that
-    cannot be reached — is specified with the behaviour that asks.
+    The refusal is the same thing to whoever typed it as a password too short:
+    something wrong with what they typed, told to them beside the field they
+    typed it into. What is asked of the service, and what becomes of a password
+    nobody could check, are specified with the service itself.
+
+    The password is asked about as it will be kept, which is with the
+    whitespace at either end taken off, because a password is trimmed wherever
+    one is made from what a command carries. A breached password typed with a
+    space after it would otherwise be asked about as nobody will ever type it
+    again, found clean, and then kept as the breached password it is.
+
+    What is here is when the asking happens. A link that will be refused
+    whatever the password is, and a confirmation that has already been carried
+    out, are both settled by reading alone, and neither is worth a request to
+    another site — a forged link would otherwise cost one every time it was
+    posted, from somebody who had proved nothing.
 
     Scenario: A password known to have been breached is refused
       Given a registration for "someone@example.com" is sent an email
@@ -250,6 +268,40 @@ Feature: Confirming an account's email address
       When the confirmation is submitted
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Password.Breached"
+
+    Scenario: A breached password typed with spaces around it is refused
+      Given a registration for "someone@example.com" is sent an email
+      And "correct horse battery staple" is known to have been breached
+      And a confirmation with the link in that email
+      And the name given as "Sam Someone"
+      And the password given as "  correct horse battery staple  "
+      And the password confirmed as "  correct horse battery staple  "
+      When the confirmation is submitted
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "Password.Breached"
+
+    Scenario: A confirmation whose link no longer works asks nothing about the password
+      Given a registration for "someone@example.com" is sent an email
+      And the link in that email is altered
+      And a confirmation with that link
+      And the name given as "Sam Someone"
+      And the password given as "correct horse battery staple"
+      And the password confirmed as "correct horse battery staple"
+      When the confirmation is submitted
+      Then it is refused with "Link.NoLongerWorks"
+      And nothing was asked of the breached password check
+
+    Scenario: A confirmation already carried out asks nothing about the password
+      Given a registration for "someone@example.com" is sent an email
+      And a confirmation with the link in that email
+      And the name given as "Sam Someone"
+      And the password given as "correct horse battery staple"
+      And the password confirmed as "correct horse battery staple"
+      When the confirmation is submitted
+      And what the breached password check was asked is forgotten
+      And the confirmation is submitted again with the same request id
+      Then the two confirmations answer the same
+      And nothing was asked of the breached password check
 
   Rule: A link works for 24 hours
 
