@@ -96,6 +96,18 @@ Going to use SPA instead of /scripts.
 
 ---
 
+### Set `TRUSTED_PROXY` when the site is deployed behind a proxy
+
+**Where:** `.env` on whatever serves the site; the setting is read in `src/infrastructure/config/Config.ts` and used by `src/web/common/trustedProxy.ts`, which decides the address the forgot password page's limit and signing in's are counted by (`trustedProxy.feature`).
+
+**What will go wrong.** Behind a load balancer or a reverse proxy, every connection reaches the site from the proxy. Left blank, the site believes nobody and counts every reader as that one address: the tenth asking for a way back in, from anybody at all, holds every reader out of the forgot password page for the rest of the hour, and the thirtieth failed sign-in holds them all out of signing in. Both pages would then be shut to everybody, and neither says why, because a limit that explained itself would explain itself to whoever was guessing.
+
+**Why it has not yet.** There is no deployment. On a machine with nothing in front of it — development, and the scenarios — the connection's address is the reader's, and blank is the right answer. The scenarios set it to `127.0.0.1`, which is what their browser reaches them from, so the path a deployment takes is the one they run.
+
+**What to do.** Set `TRUSTED_PROXY` to the address or range the proxy reaches the site from — `10.0.0.0/8`, or the one address if it is fixed — and never to something wider than what only the proxy can be at. Anything that can reach the site can write an `X-Forwarded-For` for itself, so what is trusted here is exactly what may name somebody else's address. It is a value that cannot be supplied until there is somewhere to supply it, so it belongs on the same deployment checklist as `CANONICAL_HOST` above. Nothing will fail at startup if it is forgotten, because blank is legitimate; a value that is not addresses does stop the site starting, so a typo is found while somebody is deploying rather than afterwards.
+
+---
+
 ### The admin SPA ignores the reader's theme choice
 
 **Where:** `src/web/admin/` — served as a static `index.html` from `src/web/server.ts`. From PR #9.

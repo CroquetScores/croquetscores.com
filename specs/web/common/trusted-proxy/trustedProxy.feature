@@ -123,6 +123,42 @@ Feature: The IP address a request is counted as coming from
       And it says that was forwarded on by "203.0.113.5"
       Then it is counted as coming from "203.0.113.5"
 
+  Rule: Counting stops at anything in the chain that is not an address
+
+    A proxy writes what it likes into the header it appends to, and a
+    misconfigured one writes something that is no address at all. It cannot be
+    judged: it is in no range the site was told to trust, because it is in no
+    range, and it names nobody who could be counted. So counting stops there,
+    exactly as it stops at a hop that was not trusted, and the request is
+    counted as coming from the last address the chain could be read back to —
+    at worst the connection it came in on, which is always an address.
+
+    Counted as it was written, it would be a limit counting by whatever the
+    misconfiguration wrote: the same words on every request, holding every
+    reader to one reader's share, or different words on each, holding nobody to
+    anything. Only a trusted proxy can put it there, so this is not a way in
+    for a reader; it is an answer that would be wrong.
+
+    Scenario: A forwarded word that is not an address leaves the connection's address
+      Given the site is told requests are forwarded by "10.0.0.0/8"
+      And a request that came in from "10.0.0.1"
+      And it says it was forwarded from "not an address"
+      Then it is counted as coming from "10.0.0.1"
+
+    Scenario: A hop that is not an address is as far back as counting goes
+      Given the site is told requests are forwarded by "10.0.0.0/8"
+      And a request that came in from "10.0.0.1"
+      And it says it was forwarded from "198.51.100.7"
+      And it says that was forwarded on by "not an address"
+      Then it is counted as coming from "10.0.0.1"
+
+    Scenario: Counting goes back as far as the chain can be read
+      Given the site is told requests are forwarded by "10.0.0.0/8"
+      And a request that came in from "10.0.0.1"
+      And it says it was forwarded from "not an address"
+      And it says that was forwarded on by "10.0.0.9"
+      Then it is counted as coming from "10.0.0.9"
+
   Rule: A setting that names no proxy stops the site starting
 
     A misspelling here is not something to carry on from. Ignoring it would

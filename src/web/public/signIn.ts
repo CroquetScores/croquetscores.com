@@ -38,6 +38,7 @@ import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { startSession } from "../common/session.js";
 import { safeReturnPath, themeOf } from "../common/theme.js";
+import { ipAddressOf } from "../common/trustedProxy.js";
 
 export const signInPath = "/account/sign-in";
 
@@ -72,9 +73,6 @@ export const goBackTo = (given: unknown): string => {
   if (controlCharacters.test(given)) return "/";
   return safeReturnPath(given);
 };
-
-/** The address the request came from, as the limit counts it. */
-const ipOf = (request: FastifyRequest): string => request.ip;
 
 /** The email address as it is counted: trimmed, and in lower case. */
 const countedAs = (typed: string): string => {
@@ -180,7 +178,7 @@ export const registerSignInPage = (
       const dialog = formFor(speaking, goBack, typed);
 
       const address = countedAs(typed["emailAddress"] ?? "");
-      const from = ipOf(request);
+      const from = ipAddressOf(request);
 
       // Counted and written down before the password is checked: being held
       // then costs no hash, the answer comes back in the same time whoever is

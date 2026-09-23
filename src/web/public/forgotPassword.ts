@@ -26,6 +26,7 @@ import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
+import { ipAddressOf } from "../common/trustedProxy.js";
 
 export const forgotPasswordPath = "/account/forgot-password";
 
@@ -113,7 +114,7 @@ export const registerForgotPasswordPage = (
       // Counted before anything is sent, and written down as it is made, so that
       // askings sent all at once are counted one after another.
       const letThrough = await inTransaction(() =>
-        askings.ask(request.ip, request.requestedAt, ASKINGS_AN_HOUR),
+        askings.ask(ipAddressOf(request), request.requestedAt, ASKINGS_AN_HOUR),
       );
       if (!letThrough) {
         return show(
