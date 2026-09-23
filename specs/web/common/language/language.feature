@@ -122,7 +122,15 @@ Feature: A reader is spoken to in their own language
     the site is called something, and the two would come to disagree. The same
     holds wherever else the site names itself: the link back to the home page
     that most pages carry leaves a place for the name in the same way, though
-    it is a page's words rather than a bar's.
+    it is a page's words rather than a bar's. Four of the nine pages carrying
+    that link are looked at here — the page that is not there, the page shown
+    after registering, the page asking for scripting, and the page saying
+    registering is suspended — because each is reached by asking for it and
+    nothing else. A fifth, the page offering a new confirmation link, is held
+    to it by its own scenario reading every word it shows, because a place left
+    to fill counts among the words that came from somewhere other than a
+    catalogue. The last four come at the end of something written down, so a
+    scenario for them needs a database, and they wait on one (`TODO.md`).
 
     Two more names stay as they are written. Each language in the list is named
     in its own language, so that a reader can find theirs, which is the rule
@@ -177,6 +185,24 @@ Feature: A reader is spoken to in their own language
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
       When a page that is not there is opened
+      Then the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The way back from the page shown after registering names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the page shown after registering is opened
+      Then the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The way back from the page asking for scripting names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the page asking for scripting is opened
+      Then the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The way back from the page saying registering is suspended names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the page saying registering is suspended is opened
       Then the way back to the home page names the site "Gateball Scores"
 
     Scenario: The site's name is not translated for a reader of another language

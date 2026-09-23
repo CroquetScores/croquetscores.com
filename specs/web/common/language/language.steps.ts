@@ -103,8 +103,16 @@ const unmarkedWithin = async (
     `There is nothing on the page matching ${selector}.`,
   );
   assert.ok(found.length > 0, `There are no words in ${selector}.`);
+
+  // A phrase still holding a place for something is a stray too, though it is
+  // marked at both ends like any other: what a reader sees is {siteName}, which
+  // is nobody's language, and the marks would otherwise say it came from a
+  // catalogue and leave it at that.
+  const leftToFill = /\{[A-Za-z]+\}/;
   return found.filter(
-    (text) => !(text.startsWith(opens) && text.endsWith(closes)),
+    (text) =>
+      leftToFill.test(text) ||
+      !(text.startsWith(opens) && text.endsWith(closes)),
   );
 };
 
@@ -134,6 +142,35 @@ When(
 When("a page that fails is opened", async function (this: SpecWorld) {
   await this.browserPage.goto(`${this.baseUrl!}${exampleFailedPath}`);
 });
+
+// Three of the pages carrying a link back to the home page: the three a reader
+// reaches by asking for them and nothing else, so that the name in that link
+// can be looked at without a database. The other five come at the end of
+// something written down and wait on one (TODO.md).
+const welcome = "/account/welcome";
+const javaScriptRequired = "/account/java-script-required";
+const registrationsSuspended = "/account/registrations-suspended";
+
+When(
+  "the page shown after registering is opened",
+  async function (this: SpecWorld) {
+    await this.browserPage.goto(`${this.baseUrl!}${welcome}`);
+  },
+);
+
+When(
+  "the page asking for scripting is opened",
+  async function (this: SpecWorld) {
+    await this.browserPage.goto(`${this.baseUrl!}${javaScriptRequired}`);
+  },
+);
+
+When(
+  "the page saying registering is suspended is opened",
+  async function (this: SpecWorld) {
+    await this.browserPage.goto(`${this.baseUrl!}${registrationsSuspended}`);
+  },
+);
 
 // Which of the pages the reader is on, by the words it is headed with. Read
 // with the test locale's marks taken off, and compared against English, so

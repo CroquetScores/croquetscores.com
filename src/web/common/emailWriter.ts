@@ -98,7 +98,7 @@ export interface SendingEmails {
   readonly address: string;
   /** The name the site's emails are sent from, which each is signed off with. */
   readonly fromName: string;
-  /** What an email calls the site it comes from, in its subject and its words. */
+  /** What the site is called, which its emails name it by as its pages do. */
   readonly siteName: string;
 }
 
