@@ -34,7 +34,7 @@ export const registerWelcomePage = (
       body: `          <h1>${escape(say("welcome.title"))}</h1>
           <p>${escape(say("welcome.checkEmail"))}</p>
           <p>${escape(say("welcome.nothingArrived"))}</p>
-          <p><a href="/">${escape(say("welcome.home"))}</a></p>`,
+          <p><a href="/">${escape(say("welcome.home", { siteName: siteNameOf(request) }))}</a></p>`,
     });
 
     // Like every other public page, it depends on the theme and language

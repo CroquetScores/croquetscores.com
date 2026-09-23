@@ -7,9 +7,14 @@ import { escape } from "./escape.js";
 import type { Speaking } from "./language.js";
 import { themes, type Theme } from "./theme.js";
 
+/**
+ * A link in the primary navigation: where it goes, and the name the catalogue
+ * keeps its words under. `words` rather than `label`, which a section uses for
+ * the words themselves, because the site writes these and a page writes those.
+ */
 export interface NavigationLink {
   readonly href: string;
-  readonly label: string;
+  readonly words: string;
 }
 
 export interface Section {
@@ -73,9 +78,9 @@ const sendAwayWithoutScripting = (path: string | undefined): string =>
 // with an account is in the account menu beside them rather than here, so that
 // the bar carries one item for an account however many pages an account has.
 export const navigation: readonly NavigationLink[] = [
-  { href: "/tournaments", label: "navigation.tournaments" },
-  { href: "/blog", label: "navigation.blog" },
-  { href: "/help", label: "navigation.help" },
+  { href: "/tournaments", words: "navigation.tournaments" },
+  { href: "/blog", words: "navigation.blog" },
+  { href: "/help", words: "navigation.help" },
 ];
 
 // Not read from a clock. A rendered year that moves on its own is a year
@@ -92,9 +97,9 @@ const paypalButton = "AQ432ABTXDPYU";
 
 const menu = (speaking: Speaking, currentPath: string | undefined): string => {
   const items = navigation
-    .map(({ href, label }) => {
+    .map(({ href, words }) => {
       const here = href === currentPath ? ' aria-current="page"' : "";
-      return `            <li><a href="${href}"${here}>${escape(speaking.say(label))}</a></li>`;
+      return `            <li><a href="${href}"${here}>${escape(speaking.say(words))}</a></li>`;
     })
     .join("\n");
 

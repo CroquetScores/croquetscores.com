@@ -162,7 +162,7 @@ export const registerForgotPasswordPage = (
         reply,
         `          <h1>${escape(say("forgotPassword.sent.title"))}</h1>
           <p>${escape(say("forgotPassword.sent.explanation"))}</p>
-          <p><a href="/">${escape(say("forgotPassword.home"))}</a></p>`,
+          <p><a href="/">${escape(say("forgotPassword.home", { siteName: siteNameOf(request) }))}</a></p>`,
         speaking,
         200,
         undefined,

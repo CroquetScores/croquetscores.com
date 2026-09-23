@@ -127,7 +127,9 @@ export const registerForgetAccountPage = (
     said: Said,
     signedOut = false,
   ): FastifyReply => {
-    const home = speakingOf(request).say("forgetAccount.home");
+    const home = speakingOf(request).say("forgetAccount.home", {
+      siteName: siteNameOf(request),
+    });
     const onwards =
       said.onwards === undefined
         ? ""

@@ -130,7 +130,9 @@ const telling = (
     said.onwards === undefined
       ? ""
       : `\n          <p><a href="${escape(said.onwards.href)}">${escape(said.onwards.label)}</a></p>`;
-  const home = speakingOf(request).say("confirmEmailAddress.home");
+  const home = speakingOf(request).say("confirmEmailAddress.home", {
+    siteName: siteNameOf(request),
+  });
 
   return reply
     .header("cache-control", "private, no-cache")

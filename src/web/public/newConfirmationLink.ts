@@ -125,7 +125,7 @@ export const registerNewConfirmationLinkPage = (
           currentPath: newConfirmationLinkPath,
           body: `          <h1>${escape(said.title)}</h1>
           <p>${escape(said.explanation)}</p>${button}${onwards}
-          <p><a href="/">${escape(speaking.say("newConfirmationLink.home"))}</a></p>`,
+          <p><a href="/">${escape(speaking.say("newConfirmationLink.home", { siteName: siteNameOf(request) }))}</a></p>`,
         }),
       );
   };

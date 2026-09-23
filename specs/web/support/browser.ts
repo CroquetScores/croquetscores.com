@@ -98,7 +98,7 @@ export const anApplicationCalled = async (
       sendsTheEmailQueue: false,
     },
   );
-  namedApplications.get(world)?.push(named);
+  namedApplicationsFor(world).push(named);
 
   await named.server.listen({ port: 0, host: "127.0.0.1" });
   const address = named.server.addresses()[0];
@@ -112,6 +112,15 @@ export const anApplicationCalled = async (
 // own, so that a server that will not close does not leave a pool holding the
 // run up until its idle connections time out.
 const namedApplications = new WeakMap<SpecWorld, Application[]>();
+
+const namedApplicationsFor = (world: SpecWorld): Application[] => {
+  let held = namedApplications.get(world);
+  if (held === undefined) {
+    held = [];
+    namedApplications.set(world, held);
+  }
+  return held;
+};
 
 /**
  * The application a scenario with a database of its own talks to, listening on
@@ -322,15 +331,26 @@ Before({ tags: "@browser" }, async function (this: SpecWorld) {
     javaScriptEnabled: false,
   });
   this.page = await this.browserContext.newPage();
-  namedApplications.set(this, []);
 });
 
+// Each of them closed whatever the one before it did: a server that will not
+// close would otherwise leave every application after it listening, with its
+// pool open, for the rest of the run. What a teardown has to say is nothing
+// the scenario's own verdict should be overturned by, as the database's
+// teardown says (specs/infrastructure/support/database.ts).
 After({ tags: "@browser" }, async function (this: SpecWorld) {
-  for (const named of namedApplications.get(this) ?? []) {
-    await named.server.close();
-    await named.pool.end();
-  }
+  const held = namedApplications.get(this) ?? [];
   namedApplications.delete(this);
+
+  for (const named of held) {
+    for (const close of [() => named.server.close(), () => named.pool.end()]) {
+      try {
+        await close();
+      } catch {
+        // Nothing to say, and nothing that saying it would improve.
+      }
+    }
+  }
 });
 
 /**

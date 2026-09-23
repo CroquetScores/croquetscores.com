@@ -39,7 +39,7 @@ export const registerRegistrationsSuspendedPage = (
           body: `          <h1>${escape(say("registrationsSuspended.title"))}</h1>
           <p>${escape(say("registrationsSuspended.explanation"))}</p>
           <p>${escape(say("registrationsSuspended.tryAgainLater"))}</p>
-          <p><a href="/">${escape(say("registrationsSuspended.home"))}</a></p>`,
+          <p><a href="/">${escape(say("registrationsSuspended.home", { siteName: siteNameOf(request) }))}</a></p>`,
         }),
       );
   });

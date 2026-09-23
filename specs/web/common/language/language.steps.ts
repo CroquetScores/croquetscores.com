@@ -243,6 +243,21 @@ Then(
   },
 );
 
+// The link most pages carry back to the home page, which names the site as the
+// plea does, and takes the name the same way.
+Then(
+  /^the way back to the home page names the site "([^"]*)"$/,
+  async function (this: SpecWorld, siteName: string) {
+    const back = unmarked(
+      await this.browserPage.locator('main a[href="/"]').first().innerText(),
+    );
+    assert.ok(
+      back.includes(siteName),
+      `The way back says ${JSON.stringify(back)}.`,
+    );
+  },
+);
+
 Then(
   /^the plea names the site "([^"]*)"$/,
   async function (this: SpecWorld, siteName: string) {

@@ -63,12 +63,12 @@ export const english: Language = {
       "An email is on its way to the address you gave. Follow the link in it to carry on.",
     "welcome.nothingArrived":
       "If nothing arrives in a few minutes, look in your junk or spam folder.",
-    "welcome.home": "Back to Croquet Scores",
+    "welcome.home": "Back to {siteName}",
     "newConfirmationLink.title": "Get a new link",
     "newConfirmationLink.explanation":
       "The link to confirm your email address has expired. Ask for a new one and it will be sent to the address you registered with.",
     "newConfirmationLink.send": "Send me a new link",
-    "newConfirmationLink.home": "Back to Croquet Scores",
+    "newConfirmationLink.home": "Back to {siteName}",
     "newConfirmationLink.signIn": "Sign in",
     "newConfirmationLink.sent.title": "Check your email",
     "newConfirmationLink.sent.explanation":
@@ -88,7 +88,7 @@ export const english: Language = {
     "forgotPassword.emailAddress": "Email address",
     "forgotPassword.cancel": "Cancel",
     "forgotPassword.submit": "Send me a way back in",
-    "forgotPassword.home": "Back to Croquet Scores",
+    "forgotPassword.home": "Back to {siteName}",
     "forgotPassword.sent.title": "Check your email",
     "forgotPassword.sent.explanation":
       "If that address has an account, a link to set a new password is on its way. Follow it within the hour. If nothing arrives in a few minutes, look in your junk or spam folder.",
@@ -100,7 +100,7 @@ export const english: Language = {
     "setNewPassword.confirmPassword": "Confirm password",
     "setNewPassword.cancel": "Cancel",
     "setNewPassword.submit": "Set my new password",
-    "setNewPassword.home": "Back to Croquet Scores",
+    "setNewPassword.home": "Back to {siteName}",
     "setNewPassword.signIn": "Sign in",
     "setNewPassword.askAgain": "Ask for a new link",
     "setNewPassword.changed.title": "Your password has been changed",
@@ -136,14 +136,14 @@ export const english: Language = {
     "forgetAccount.noLongerWorks.explanation":
       "It may have expired, been used already, or be for an account you are not signed in to. Ask again from your account if you still want it forgotten.",
     "forgetAccount.askAgain": "Ask again",
-    "forgetAccount.home": "Back to Croquet Scores",
+    "forgetAccount.home": "Back to {siteName}",
 
     "registrationsSuspended.title": "Registering is suspended for now",
     "registrationsSuspended.explanation":
       "A service registering needs cannot be reached just now, so nobody can register until it answers again. Nothing you typed was kept.",
     "registrationsSuspended.tryAgainLater":
       "Try again in a little while. The site's administrator has been told.",
-    "registrationsSuspended.home": "Back to Croquet Scores",
+    "registrationsSuspended.home": "Back to {siteName}",
 
     "signIn.title": "Sign in",
     "signIn.emailAddress": "Email address",
@@ -168,7 +168,7 @@ export const english: Language = {
     "confirmEmailAddress.cancel": "Cancel",
     "confirmEmailAddress.submit": "Confirm my email address",
     "confirmEmailAddress.signIn": "Sign in",
-    "confirmEmailAddress.home": "Back to Croquet Scores",
+    "confirmEmailAddress.home": "Back to {siteName}",
     "confirmEmailAddress.confirmed.title": "Your email address is confirmed",
     "confirmEmailAddress.confirmed.explanation":
       "Your account is ready. Sign in with the email address and password you have just given.",
@@ -200,9 +200,9 @@ export const english: Language = {
     "javaScriptRequired.explanation":
       "Registering needs scripting switched on for this site, so that it can check that whoever is registering is a person. Switch it on, then register again.",
     "javaScriptRequired.register": "Back to registering",
-    "javaScriptRequired.home": "Back to Croquet Scores",
+    "javaScriptRequired.home": "Back to {siteName}",
 
-    "errors.backHome": "Back to Croquet Scores",
+    "errors.backHome": "Back to {siteName}",
     "errors.notFound": "Not found",
     "errors.refused": "That could not be done",
     "errors.refusedDetail": "Something in what was sent was not right.",

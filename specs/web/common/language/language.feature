@@ -119,7 +119,10 @@ Feature: A reader is spoken to in their own language
     names the site — the plea beside the Donate button does — the catalogue
     leaves a place for the name and the site fills it in, exactly as an email's
     subject does. A catalogue that spelled the name out would be a second place
-    the site is called something, and the two would come to disagree.
+    the site is called something, and the two would come to disagree. The same
+    holds wherever else the site names itself: the link back to the home page
+    that most pages carry leaves a place for the name in the same way, though
+    it is a page's words rather than a bar's.
 
     Two more names stay as they are written. Each language in the list is named
     in its own language, so that a reader can find theirs, which is the rule
@@ -176,6 +179,12 @@ Feature: A reader is spoken to in their own language
       When the home page is opened
       Then the header names the site "Gateball Scores"
       And the plea names the site "Gateball Scores"
+
+    Scenario: A site configured under another name is named in the way back to it
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When a page that is not there is opened
+      Then the way back to the home page names the site "Gateball Scores"
 
   Rule: Every word a form shows is in the reader's language
 

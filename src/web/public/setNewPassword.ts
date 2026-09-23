@@ -141,7 +141,9 @@ export const registerSetNewPasswordPage = (
     said: Said,
     signedOut = false,
   ): FastifyReply => {
-    const home = speakingOf(request).say("setNewPassword.home");
+    const home = speakingOf(request).say("setNewPassword.home", {
+      siteName: siteNameOf(request),
+    });
     const onwards =
       said.onwards === undefined
         ? ""

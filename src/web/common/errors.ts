@@ -46,7 +46,7 @@ const page = (
         ? ""
         : `\n          <p>${escape(speaking.say(detail, fill))}</p>`
     }
-          <p><a href="/">${escape(speaking.say("errors.backHome"))}</a></p>`,
+          <p><a href="/">${escape(speaking.say("errors.backHome", { siteName: siteNameOf(request) }))}</a></p>`,
   });
 };
 

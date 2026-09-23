@@ -267,6 +267,7 @@ Settings are read once, at startup, by `src/infrastructure/config/`, which valid
 DATABASE_URL=postgres://croquet_scores:croquet_scores@localhost:5432/croquet_scores
 SESSION_COOKIE_SECRET=
 TOKEN_SIGNING_KEY=
+SITE_NAME=Croquet Scores
 CANONICAL_HOST=
 TRUSTED_PROXY=
 GOOGLE_CLIENT_ID=
@@ -274,6 +275,8 @@ GOOGLE_CLIENT_SECRET=
 FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET=
 ```
+
+`SITE_NAME` is what the site is called, and the site calls itself nothing else: it is in the header, in the plea in the footer, in the link back to the home page on every page that has one, and in the subject and words of every email sent. It is configured rather than written into the catalogues because a name is not a word of anybody's language, and because a site serving from this repository under another name should call itself that everywhere. It was `EMAIL_FROM_SITE` until the bars began asking for it, and nothing answers to the old name: an environment still setting that one is missing a setting the site needs, and the config loader says so and refuses to start.
 
 `CANONICAL_HOST` is the host this site answers to, exactly as a browser's address bar spells it — `croquetscores.com`, with a port only where readers see one. It is what an `Origin` is judged against (§7.7). Anything deployed sets it, because left blank each request's own `Host` is used instead, which is the truth on a machine nothing sits in front of and a lie behind a proxy that rewrites it.
 
