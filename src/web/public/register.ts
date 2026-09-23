@@ -28,6 +28,7 @@ import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
@@ -141,6 +142,7 @@ export const registerRegisterPage = (
       theme: themeOf(request),
       signedIn: signedIn(request),
       speaking,
+      siteName: siteNameOf(request),
       path: registerPath,
       currentPath: registerPath,
       frame: "bare",

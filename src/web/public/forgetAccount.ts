@@ -31,6 +31,7 @@ import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { readerOf, signedIn } from "../common/reader.js";
 import { endSession } from "../common/session.js";
@@ -106,6 +107,7 @@ export const registerForgetAccountPage = (
       // sessions this request ended is not signed in to anything any more.
       signedIn: !signedOut && signedIn(request),
       speaking: speakingOf(request),
+      siteName: siteNameOf(request),
       path: forgetAccountPath,
       currentPath: forgetAccountPath,
       ...(frame === undefined ? {} : { frame }),
@@ -125,7 +127,9 @@ export const registerForgetAccountPage = (
     said: Said,
     signedOut = false,
   ): FastifyReply => {
-    const home = speakingOf(request).say("forgetAccount.home");
+    const home = speakingOf(request).say("forgetAccount.home", {
+      siteName: siteNameOf(request),
+    });
     const onwards =
       said.onwards === undefined
         ? ""

@@ -10,9 +10,9 @@ import type { Speaking } from "./language.js";
 
 /**
  * An item in the menu: where it goes, and the name the catalogue keeps its
- * words under. `words` rather than `label`, which the primary navigation's
- * links use for the words themselves: the two look alike and are not, and an
- * item moved from one to the other would render the name of its words.
+ * words under. `words` rather than `label`, which a page's sections use for
+ * the words themselves: the two look alike and are not, and an item moved from
+ * one to the other would render the name of its words.
  */
 interface MenuItem {
   readonly href: string;

@@ -6,6 +6,7 @@ import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { speakingOf } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { escape } from "../common/escape.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
@@ -27,11 +28,12 @@ export const registerJavaScriptRequiredPage = (
       theme: themeOf(request),
       signedIn: signedIn(request),
       speaking,
+      siteName: siteNameOf(request),
       path: javaScriptRequiredPath,
       body: `          <h1>${escape(say("javaScriptRequired.title"))}</h1>
           <p>${escape(say("javaScriptRequired.explanation"))}</p>
           <p><a href="${registerPath}">${escape(say("javaScriptRequired.register"))}</a></p>
-          <p><a href="/">${escape(say("javaScriptRequired.home"))}</a></p>`,
+          <p><a href="/">${escape(say("javaScriptRequired.home", { siteName: siteNameOf(request) }))}</a></p>`,
     });
 
     // Like every other public page, it depends on the theme and language

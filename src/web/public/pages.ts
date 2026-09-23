@@ -7,12 +7,14 @@ import type { FastifyInstance } from "fastify";
 import type { Assets } from "../common/assets.js";
 import { render, type Section } from "../common/layout.js";
 import { speakingOf } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { signedIn } from "../common/reader.js";
 
 export interface Page {
   readonly path: string;
-  readonly title: string;
+  /** The <title>. Absent for a page whose title is the site's own name. */
+  readonly title?: string | undefined;
   readonly headerTitle?: string | undefined;
   readonly sections?: readonly Section[] | undefined;
   readonly currentSection?: string | undefined;
@@ -32,7 +34,6 @@ const filters: readonly Section[] = [
 
 const home: Page = {
   path: "/",
-  title: "Croquet Scores",
   sections: filters,
   currentSection: "All",
   // Placeholder prose, here so there is something to scroll past while the
@@ -114,7 +115,7 @@ export const registerPublicPages = (
   for (const page of pages) {
     server.get(page.path, (request, reply) => {
       const html = render(assets, {
-        title: page.title,
+        title: page.title ?? siteNameOf(request),
         headerTitle: page.headerTitle,
         sections: page.sections,
         currentSection: page.currentSection,
@@ -122,6 +123,7 @@ export const registerPublicPages = (
         theme: themeOf(request),
         signedIn: signedIn(request),
         speaking: speakingOf(request),
+        siteName: siteNameOf(request),
         path: page.path,
         body: page.body(),
       });

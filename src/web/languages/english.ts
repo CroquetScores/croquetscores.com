@@ -7,6 +7,25 @@ export const english: Language = {
   tag: "en",
   name: "English",
   words: {
+    // The site's own bars. What the site is called is not among them: a name
+    // is not a word of anybody's language, so it is configured and filled into
+    // the plea that names it (site.ts).
+    "site.skipToContent": "Skip to content",
+    "navigation.menu": "Menu",
+    "navigation.label": "Primary",
+    "navigation.tournaments": "Tournaments",
+    "navigation.blog": "Blog",
+    "navigation.help": "Help",
+    "sections.label": "Sections",
+    "theme.label": "Theme",
+    "theme.light": "Light",
+    "theme.dark": "Dark",
+    "theme.system": "System",
+    "footer.donate": "Donate",
+    "footer.plea":
+      "Are you enjoying {siteName}? Please donate to help further development.",
+    "footer.copyright": "© Copyright {years}, {owner}",
+
     "language.label": "Language",
     "language.choose": "Change",
 
@@ -44,12 +63,12 @@ export const english: Language = {
       "An email is on its way to the address you gave. Follow the link in it to carry on.",
     "welcome.nothingArrived":
       "If nothing arrives in a few minutes, look in your junk or spam folder.",
-    "welcome.home": "Back to Croquet Scores",
+    "welcome.home": "Back to {siteName}",
     "newConfirmationLink.title": "Get a new link",
     "newConfirmationLink.explanation":
       "The link to confirm your email address has expired. Ask for a new one and it will be sent to the address you registered with.",
     "newConfirmationLink.send": "Send me a new link",
-    "newConfirmationLink.home": "Back to Croquet Scores",
+    "newConfirmationLink.home": "Back to {siteName}",
     "newConfirmationLink.signIn": "Sign in",
     "newConfirmationLink.sent.title": "Check your email",
     "newConfirmationLink.sent.explanation":
@@ -69,7 +88,7 @@ export const english: Language = {
     "forgotPassword.emailAddress": "Email address",
     "forgotPassword.cancel": "Cancel",
     "forgotPassword.submit": "Send me a way back in",
-    "forgotPassword.home": "Back to Croquet Scores",
+    "forgotPassword.home": "Back to {siteName}",
     "forgotPassword.sent.title": "Check your email",
     "forgotPassword.sent.explanation":
       "If that address has an account, a link to set a new password is on its way. Follow it within the hour. If nothing arrives in a few minutes, look in your junk or spam folder.",
@@ -81,7 +100,7 @@ export const english: Language = {
     "setNewPassword.confirmPassword": "Confirm password",
     "setNewPassword.cancel": "Cancel",
     "setNewPassword.submit": "Set my new password",
-    "setNewPassword.home": "Back to Croquet Scores",
+    "setNewPassword.home": "Back to {siteName}",
     "setNewPassword.signIn": "Sign in",
     "setNewPassword.askAgain": "Ask for a new link",
     "setNewPassword.changed.title": "Your password has been changed",
@@ -117,14 +136,14 @@ export const english: Language = {
     "forgetAccount.noLongerWorks.explanation":
       "It may have expired, been used already, or be for an account you are not signed in to. Ask again from your account if you still want it forgotten.",
     "forgetAccount.askAgain": "Ask again",
-    "forgetAccount.home": "Back to Croquet Scores",
+    "forgetAccount.home": "Back to {siteName}",
 
     "registrationsSuspended.title": "Registering is suspended for now",
     "registrationsSuspended.explanation":
       "A service registering needs cannot be reached just now, so nobody can register until it answers again. Nothing you typed was kept.",
     "registrationsSuspended.tryAgainLater":
       "Try again in a little while. The site's administrator has been told.",
-    "registrationsSuspended.home": "Back to Croquet Scores",
+    "registrationsSuspended.home": "Back to {siteName}",
 
     "signIn.title": "Sign in",
     "signIn.emailAddress": "Email address",
@@ -149,7 +168,7 @@ export const english: Language = {
     "confirmEmailAddress.cancel": "Cancel",
     "confirmEmailAddress.submit": "Confirm my email address",
     "confirmEmailAddress.signIn": "Sign in",
-    "confirmEmailAddress.home": "Back to Croquet Scores",
+    "confirmEmailAddress.home": "Back to {siteName}",
     "confirmEmailAddress.confirmed.title": "Your email address is confirmed",
     "confirmEmailAddress.confirmed.explanation":
       "Your account is ready. Sign in with the email address and password you have just given.",
@@ -181,9 +200,9 @@ export const english: Language = {
     "javaScriptRequired.explanation":
       "Registering needs scripting switched on for this site, so that it can check that whoever is registering is a person. Switch it on, then register again.",
     "javaScriptRequired.register": "Back to registering",
-    "javaScriptRequired.home": "Back to Croquet Scores",
+    "javaScriptRequired.home": "Back to {siteName}",
 
-    "errors.backHome": "Back to Croquet Scores",
+    "errors.backHome": "Back to {siteName}",
     "errors.notFound": "Not found",
     "errors.refused": "That could not be done",
     "errors.refusedDetail": "Something in what was sent was not right.",
@@ -202,20 +221,19 @@ export const english: Language = {
     // `{site}` the site's address, for a link to one of its own pages,
     // `{buttonBackgroundColour}` and `{buttonTextColour}` what a button is
     // painted with, `{emailFromName}` the name the site's emails are sent
-    // from, which each email is signed off with, and `{emailFromSite}` what an
-    // email calls the site it comes from. The last four are the site's
-    // own and are filled in by the writer, never by what queued the email. A
-    // button is painted where it stands, because a mail program reads no
-    // stylesheet. None greets its reader by name, so that nothing about a
-    // person but the address an email goes to need be put in the queue.
+    // from, which each email is signed off with, and `{siteName}` what the
+    // site is called, which is the same name its pages call it. The last four
+    // are the site's own and are filled in by the writer, never by what queued
+    // the email. A button is painted where it stands, because a mail program
+    // reads no stylesheet. None greets its reader by name, so that nothing
+    // about a person but the address an email goes to need be put in the queue.
 
-    "Email.ConfirmAddress.subject":
-      "Confirm your email address for {emailFromSite}",
+    "Email.ConfirmAddress.subject": "Confirm your email address for {siteName}",
     "Email.ConfirmAddress.body": `
 <p>Hi,</p>
 
 <p>
-    Thanks for creating an account with <strong>{emailFromSite}</strong>.<br />
+    Thanks for creating an account with <strong>{siteName}</strong>.<br />
     Before you can start using your account, please confirm your email address by 
     clicking the button below:
 </p>
@@ -245,17 +263,17 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
     "Email.ConfirmAddressAgain.subject":
-      "A new link to confirm your email address for {emailFromSite}",
+      "A new link to confirm your email address for {siteName}",
     "Email.ConfirmAddressAgain.body": `
 <p>Hi,</p>
 
 <p>
-    You recently requested a new email to confirm your email address for <strong>{emailFromSite}</strong>.<br />
+    You recently requested a new email to confirm your email address for <strong>{siteName}</strong>.<br />
     Please confirm your email address by clicking the button below:
 </p>
 
@@ -288,7 +306,7 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
@@ -298,7 +316,7 @@ export const english: Language = {
 <p>Hi,</p>
 
 <p>
-    Somebody tried to register with <strong>{emailFromSite}</strong> using this
+    Somebody tried to register with <strong>{siteName}</strong> using this
     email address, which already has an account. Nothing about your account has
     changed.<br />
     If it was you, you already have an account, and can sign in to it:
@@ -343,16 +361,16 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
-    "Email.SetNewPassword.subject": "Set a new password for {emailFromSite}",
+    "Email.SetNewPassword.subject": "Set a new password for {siteName}",
     "Email.SetNewPassword.body": `
 <p>Hi,</p>
 
 <p>
-    You recently requested to reset your password for <strong>{emailFromSite}</strong>.<br />
+    You recently requested to reset your password for <strong>{siteName}</strong>.<br />
     You can reset your password by clicking the button below:
 </p>
 
@@ -381,18 +399,18 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
     "Email.RegisterInstead.subject":
-      "There is no {emailFromSite} account for this email address",
+      "There is no {siteName} account for this email address",
     "Email.RegisterInstead.body": `
 <p>Hi,</p>
 
 <p>
     A request was made to reset the password for an email address that is 
-    not associated with an account on <strong>{emailFromSite}</strong>.
+    not associated with an account on <strong>{siteName}</strong>.
 </p>
 
 <p>
@@ -406,17 +424,17 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Confirm that your {emailFromSite} account is to be forgotten",
+      "Confirm that your {siteName} account is to be forgotten",
     "Email.ConfirmForgetting.body": `
 <p>Hi,</p>
 
 <p>
-    You asked for your <strong>{emailFromSite}</strong> account to be
+    You asked for your <strong>{siteName}</strong> account to be
     forgotten.<br />
     Follow the button below to see what that means, and to say for certain
     that you want it:
@@ -460,7 +478,7 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
@@ -470,7 +488,7 @@ export const english: Language = {
 <p>Hi,</p>
 
 <p>
-    {emailFromSite} could not reach {service} at {when}. Until it answers,
+    {siteName} could not reach {service} at {when}. Until it answers,
     readers who need it, to register or to set a new password, are told to
     try again later.
 </p>
@@ -487,7 +505,7 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
   },

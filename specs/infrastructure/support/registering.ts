@@ -101,7 +101,7 @@ const CONFIRMED_WITH = "stand-in$password-hash";
 const writesEmails = emailWriter(scenarioLanguages, {
   address: SITE_ADDRESS,
   fromName: "Croquet Scores",
-  fromSite: "Croquet Scores",
+  siteName: "Croquet Scores",
 });
 
 /**

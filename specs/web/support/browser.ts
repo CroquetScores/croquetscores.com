@@ -75,6 +75,54 @@ const theSharedOne = async (): Promise<string> => {
 };
 
 /**
+ * An application of this scenario's own, the same as the shared one but for
+ * what it is called, listening on a port of its own and closed with the
+ * scenario.
+ *
+ * A scenario that needs one needs no database: what it looks at is what the
+ * site calls itself in its bars, which is decided as a page is rendered. So it
+ * is not the application a @postgres scenario gets, which is built over that
+ * scenario's own tables.
+ */
+export const anApplicationCalled = async (
+  world: SpecWorld,
+  siteName: string,
+): Promise<string> => {
+  loadEnvFile();
+  const named = await buildApplication(
+    { ...loadConfig(), siteName },
+    {
+      logger: false,
+      languages: scenarioLanguages,
+      reader: readerTheScenariosSet,
+      sendsTheEmailQueue: false,
+    },
+  );
+  namedApplicationsFor(world).push(named);
+
+  await named.server.listen({ port: 0, host: "127.0.0.1" });
+  const address = named.server.addresses()[0];
+  if (address === undefined) {
+    throw new Error("The application called something else is not listening.");
+  }
+  return `http://127.0.0.1:${address.port}`;
+};
+
+// Closed after the scenario that asked for one, server and pool each on their
+// own, so that a server that will not close does not leave a pool holding the
+// run up until its idle connections time out.
+const namedApplications = new WeakMap<SpecWorld, Application[]>();
+
+const namedApplicationsFor = (world: SpecWorld): Application[] => {
+  let held = namedApplications.get(world);
+  if (held === undefined) {
+    held = [];
+    namedApplications.set(world, held);
+  }
+  return held;
+};
+
+/**
  * The application a scenario with a database of its own talks to, listening on
  * a port of its own. Nothing it keeps outlives the scenario, and the clock it
  * reads is the one the scenario sets.
@@ -283,6 +331,26 @@ Before({ tags: "@browser" }, async function (this: SpecWorld) {
     javaScriptEnabled: false,
   });
   this.page = await this.browserContext.newPage();
+});
+
+// Each of them closed whatever the one before it did: a server that will not
+// close would otherwise leave every application after it listening, with its
+// pool open, for the rest of the run. What a teardown has to say is nothing
+// the scenario's own verdict should be overturned by, as the database's
+// teardown says (specs/infrastructure/support/database.ts).
+After({ tags: "@browser" }, async function (this: SpecWorld) {
+  const held = namedApplications.get(this) ?? [];
+  namedApplications.delete(this);
+
+  for (const named of held) {
+    for (const close of [() => named.server.close(), () => named.pool.end()]) {
+      try {
+        await close();
+      } catch {
+        // Nothing to say, and nothing that saying it would improve.
+      }
+    }
+  }
 });
 
 /**

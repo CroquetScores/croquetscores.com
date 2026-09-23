@@ -29,11 +29,10 @@ Feature: A reader is spoken to in their own language
   catalogue. The test locale exists only where the scenarios run; nobody else
   is offered it.
 
-  This change puts forms, and pages saying something went wrong, into the
-  reader's language. The words in the site's own bars — the header, the section
-  navigation and the footer — follow in a change of their own, and until then
-  are English whatever the reader's language is, the language choice itself
-  excepted.
+  Forms, pages saying something went wrong, and the site's own bars are all
+  in the reader's language. What is left in English on a page is what that page
+  brought with it, and what is left is stand-ins: the home page's prose and the
+  sections it names, which go with the features that replace them.
 
   Rule: The browser decides until the reader says otherwise
 
@@ -97,6 +96,128 @@ Feature: A reader is spoken to in their own language
       And the register page is open with scripting on
       When the language "en-XA" is chosen
       Then the register page is shown
+
+  Rule: Every word in the site's own bars is in the reader's language
+
+    The bars are the site's own rather than any page's: the pinned header with
+    its navigation, the section bar beneath it, and the footer with the Donate
+    button, the plea beside it, the copyright line, the theme choice and the
+    language choice. Their words were written into the shell in English when it
+    was built, so a reader who asked for another language has been reading the
+    page in theirs and everything around it in English. The account menu in the
+    header was put right first and is looked at with the menu itself
+    (`accountMenu.feature`).
+
+    Some of what is in the bars is a name rather than a word, and a name is not
+    translated.
+
+    The site's name is the site's own. It is configured rather than written
+    into the shell, and it is the same name the site's emails call it by
+    (`emailWriter.feature`): a site serving from this repository under another
+    name should no more call itself Croquet Scores in its own footer than in
+    its email. So it is not in any catalogue, and where a phrase in the bars
+    names the site — the plea beside the Donate button does — the catalogue
+    leaves a place for the name and the site fills it in, exactly as an email's
+    subject does. A catalogue that spelled the name out would be a second place
+    the site is called something, and the two would come to disagree. The same
+    holds wherever else the site names itself: the link back to the home page
+    that most pages carry leaves a place for the name in the same way, though
+    it is a page's words rather than a bar's. Four of the nine pages carrying
+    that link are looked at here — the page that is not there, the page shown
+    after registering, the page asking for scripting, and the page saying
+    registering is suspended — because each is reached by asking for it and
+    nothing else. Each says which page it is on before it reads the link,
+    because the page that is not there carries the same link back: a scenario
+    that only read the link would go on passing the day the page it means stops
+    being served. A fifth, the page offering a new confirmation link, is held to
+    it by its own scenario reading every word it shows, because a place left to
+    fill counts among the words that came from somewhere other than a
+    catalogue. The last four come at the end of something written down, so a
+    scenario for them needs a database, and they wait on one (`TODO.md`).
+
+    Two more names stay as they are written. Each language in the list is named
+    in its own language, so that a reader can find theirs, which is the rule
+    below. And the copyright line holds a person and a span of years, filled
+    into the catalogue's words the same way, so that what a reader sees is one
+    phrase from the catalogue rather than a phrase with something bolted on the
+    end of it.
+
+    What a page puts in the bars stays the page's. The sections a page names
+    are its own words, and today they are stand-ins for the ones the first
+    feature with real sections will bring; the bar's own word is the one it is
+    announced by to a reader who cannot see it.
+
+    Scenario: Every word in the header
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then every word in the header is in the test locale
+
+    Scenario: Every word in the footer
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then every word in the footer is in the test locale
+
+    Scenario: The way to the content, for a reader coming by keyboard
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then the way to skip to the content is in the test locale
+
+    Scenario: The navigation is named for a reader who cannot see it
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then the navigation is named in the test locale
+
+    Scenario: The section bar is named for a reader who cannot see it
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then the section bar is named in the test locale
+
+    Scenario: A site configured under another name calls itself that
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the home page is opened
+      Then the header names the site "Gateball Scores"
+      And the plea names the site "Gateball Scores"
+
+    Scenario: A site configured under another name is named in the way back to it
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When a page that is not there is opened
+      Then the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The way back from the page shown after registering names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the page shown after registering is opened
+      Then the page says the words for "welcome.title"
+      And the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The way back from the page asking for scripting names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the page asking for scripting is opened
+      Then the page says the words for "javaScriptRequired.title"
+      And the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The way back from the page saying registering is suspended names the site
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the page saying registering is suspended is opened
+      Then the page says the words for "registrationsSuspended.title"
+      And the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The site's name is not translated for a reader of another language
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then the header names the site "Gateball Scores"
+      And the plea names the site "Gateball Scores"
 
   Rule: Every word a form shows is in the reader's language
 

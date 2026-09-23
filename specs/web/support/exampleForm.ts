@@ -22,6 +22,7 @@ import { readAssets } from "../../../src/web/common/assets.js";
 import { renderDialog, type Dialog } from "../../../src/web/common/dialog.js";
 import { submitForm, typedFrom } from "../../../src/web/common/form.js";
 import { speakingOf } from "../../../src/web/common/language.js";
+import { siteNameOf } from "../../../src/web/common/site.js";
 import { render } from "../../../src/web/common/layout.js";
 import { signedIn } from "../../../src/web/common/reader.js";
 import { themeOf } from "../../../src/web/common/theme.js";
@@ -169,6 +170,7 @@ export const addExampleForm = (application: Application): void => {
       theme: themeOf(request),
       signedIn: signedIn(request),
       speaking,
+      siteName: siteNameOf(request),
       path: request.url,
       currentPath: exampleFormPath,
       frame: "bare",
