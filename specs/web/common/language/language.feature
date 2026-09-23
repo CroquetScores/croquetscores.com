@@ -138,11 +138,54 @@ Feature: A reader is spoken to in their own language
 
   Rule: A page saying something went wrong is in the reader's language
 
+    There are four of these pages, and each of them is the last thing a reader
+    sees before giving up: a page that is not there, a page whose request broke
+    a rule, a page for a request the site could not deal with, and a page where
+    the site itself failed. They are the pages nobody opens on purpose, and the
+    easiest place for an English sentence to be written in by hand, because
+    whoever adds one is thinking about what went wrong rather than about who is
+    reading it. So each of them is looked at, and not only the first.
+
+    The page where the site failed carries a reference to find the failure by in
+    the log. It is filled into the catalogue's sentence rather than put beside
+    it, so what the reader sees is still one phrase from the catalogue with the
+    reference inside it, and a reference given a label of its own would be a
+    word from nowhere.
+
+    Each scenario says which of the four it is on before it reads it. Every
+    page of the site says what it says in the reader's language, so a scenario
+    that only read the words would pass just as well on the page it was meant
+    to leave, and would go on passing if the reader stopped being brought here
+    at all.
+
     Scenario: A page that is not there
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
       When a page that is not there is opened
-      Then every word in the page's content is in the test locale
+      Then the page says the words for "errors.notFound"
+      And every word in the page's content is in the test locale
+
+    Scenario: A page whose request broke a rule
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When a page whose request breaks a rule is opened
+      Then the page says the words for "errors.refused"
+      And every word in the page's content is in the test locale
+
+    Scenario: A page for a request the site could not deal with
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      And a page on another site with a button that posts "dark" here
+      When the reader presses the button on that page
+      Then the page says the words for "errors.sorry"
+      And every word in the page's content is in the test locale
+
+    Scenario: A page where the site failed
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When a page that fails is opened
+      Then the page says the words for "errors.failed"
+      And every word in the page's content is in the test locale
 
   Rule: The language choice names each language in that language
 

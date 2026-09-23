@@ -52,7 +52,7 @@ const withNotice = (
  * passphrase. The example command would do but for the passphrase, and adding
  * one to it would give every feature using it a rule to break.
  */
-class ExampleFormCommand extends Command<string> implements Range {
+export class ExampleFormCommand extends Command<string> implements Range {
   readonly start: number | undefined;
   readonly end: number | undefined;
   readonly step: number | undefined;

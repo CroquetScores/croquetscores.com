@@ -28,6 +28,7 @@ import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsThrough, oldSiteSaltForScenarios } from "./accounts.js";
 import { clockFor } from "./clock.js";
+import { addExampleFailures } from "./exampleFailures.js";
 import { addExampleForm } from "./exampleForm.js";
 import { scenarioLanguages } from "./languages.js";
 import { readerTheScenariosSet } from "./reader.js";
@@ -58,6 +59,7 @@ const theSharedOne = async (): Promise<string> => {
       sendsTheEmailQueue: false,
     });
     addExampleForm(application);
+    addExampleFailures(application);
 
     // Port 0 is whatever is free. A fixed one would collide with a development
     // server, and the first person to run both at once would find out the hard

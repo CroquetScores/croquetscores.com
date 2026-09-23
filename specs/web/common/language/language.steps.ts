@@ -1,8 +1,13 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { english } from "../../../../src/web/languages/english.js";
 import type { SpecWorld } from "../../../support/world.js";
-import { closes, opens } from "../../support/languages.js";
+import {
+  exampleFailedPath,
+  exampleRefusedPath,
+} from "../../support/exampleFailures.js";
+import { closes, opens, unmarked } from "../../support/languages.js";
 
 // What the browser says its reader reads, on every request from here on. The
 // browser's own is replaced rather than added to, so the scenario says all of
@@ -108,5 +113,32 @@ Then(
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "main");
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
+  },
+);
+
+When(
+  "a page whose request breaks a rule is opened",
+  async function (this: SpecWorld) {
+    await this.browserPage.goto(`${this.baseUrl!}${exampleRefusedPath}`);
+  },
+);
+
+When("a page that fails is opened", async function (this: SpecWorld) {
+  await this.browserPage.goto(`${this.baseUrl!}${exampleFailedPath}`);
+});
+
+// Which of the pages the reader is on, by the words it is headed with. Read
+// with the test locale's marks taken off, and compared against English, so
+// that the step says the same thing whatever language the page is in: what it
+// is here to tell apart is the pages, and whether the words came from a
+// catalogue is the step above.
+Then(
+  "the page says the words for {string}",
+  async function (this: SpecWorld, key: string) {
+    const said = english.words[key];
+    assert.ok(said !== undefined, `English has no words for ${key}.`);
+
+    const shown = unmarked(await this.browserPage.locator("main").innerText());
+    assert.ok(shown.includes(said), `The page says ${JSON.stringify(shown)}.`);
   },
 );
