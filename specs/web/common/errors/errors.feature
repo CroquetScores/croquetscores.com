@@ -145,3 +145,40 @@ Feature: What a failed request is answered with is decided in one place
       When the example range is sent to the example route
       Then the answer says it varies by the reader's cookies
       And the answer says it varies by the languages the browser asks for
+
+  Rule: A failed API request is kept by nobody
+
+    The API answers to a bearer token or to the session cookie, so what it says
+    can be about whoever is asking, and a failure can be too: a refusal names
+    the rules the caller's own request broke. None of them is personal yet,
+    which is why this is decided now rather than when one is, in the same way
+    the error pages were. An error page is kept for the one reader because a
+    browser going back to it is worth something; nothing is worth keeping about
+    a failure a program asked for, which it asks again for when it wants to
+    know. So a failed API request is kept by nobody, the reader included.
+
+    Scenario: An API address that is not there is kept by nobody
+      When an API address that is not there is asked for
+      Then the answer is kept by nobody
+
+    Scenario: A refused API request is kept by nobody
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example API route that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      When the example range is sent to the example route
+      Then the answer is kept by nobody
+
+    Scenario: An API request the server could not read is kept by nobody
+      Given an example API route that sends the example command for the range it is given
+      When something that cannot be read is sent to the example route
+      Then the answer is kept by nobody
+
+    Scenario: An API request the server failed on is kept by nobody
+      Given an example API route that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      And it ends at 5
+      When the example range is sent to the example route
+      Then the answer is kept by nobody
