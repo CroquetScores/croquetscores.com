@@ -68,6 +68,8 @@ The last thing in the pinned bar is the account menu, drawn as a filled person: 
 
 That pinning decides the markup. A sticky element only sticks within its own container, so a bar nested inside a header would scroll away the moment the header did. The pinned bar is therefore a `<header>` in its own right, and the page's title is a separate green strip beneath it rather than a second line of the same block.
 
+On a try website a white strip sits directly beneath the pinned bar, above the title strip, saying in bold that this is a safe place to learn the site and that anything entered may be removed at any time (`layout.feature`). It scrolls away with the rest, since once read it has said what it has to say. It is body text on white rather than a warning colour of its own: it is news the reader needs, not a fault they caused, and it keeps to a pairing the palette is already measured for. Nowhere else carries it, development included, so that a page worked on there looks as it will where it is served.
+
 The section bar appears only on pages with sections to move between, and is absent everywhere else rather than present and empty. The section being read is a **full-height black block**: no green above it and none below, because green showing through would read as a gap rather than as a selection. That costs the `5px` radius the current site gives its tabs, which cannot survive a tile that reaches the bar's edges.
 
 Content sits in a **white panel with near-black text** on the light green page. That is what makes the tint work: the green is the surface the page is laid on, not the surface anything is read against.

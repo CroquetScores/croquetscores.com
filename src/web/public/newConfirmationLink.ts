@@ -24,7 +24,7 @@ import type { Links } from "../../application/services/Links.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import { speakingOf, type Speaking } from "../common/language.js";
-import { siteNameOf } from "../common/site.js";
+import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
@@ -121,6 +121,7 @@ export const registerNewConfirmationLinkPage = (
           signedIn: signedIn(request),
           speaking,
           siteName: siteNameOf(request),
+          tryWebsite: websiteOf(request).isTry,
           path: newConfirmationLinkPath,
           currentPath: newConfirmationLinkPath,
           body: `          <h1>${escape(said.title)}</h1>

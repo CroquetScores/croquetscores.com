@@ -335,6 +335,23 @@ a:hover {
   color: var(--accent-ink);
 }
 
+/* On a try website, the line saying it is somewhere to learn. Body text on the
+   panel, a pairing the palette is already measured for, rather than a warning
+   colour of its own: it is news the reader needs, not a fault they caused. */
+.try-banner {
+  background: var(--panel);
+  color: var(--ink);
+  border-block-end: 1px solid var(--border);
+}
+
+.try-banner p {
+  margin: 0;
+  max-width: none;
+  padding-block: var(--space-2);
+  padding-inline: var(--panel-inset);
+  font-weight: 700;
+}
+
 .site-name {
   color: var(--accent-ink);
   font-size: var(--text-lg);

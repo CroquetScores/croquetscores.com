@@ -229,6 +229,17 @@ Then(
   },
 );
 
+// Here with the other bars' rather than beside layout.feature, whose rule it
+// belongs to, because reading every word of a part of the page for marks is
+// this file's, and one reader of them is one answer.
+Then(
+  "every word in the try website's banner is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, ".try-banner");
+    assert.deepEqual(stray, [], "Words in the banner came from elsewhere.");
+  },
+);
+
 Then(
   "the way to skip to the content is in the test locale",
   async function (this: SpecWorld) {

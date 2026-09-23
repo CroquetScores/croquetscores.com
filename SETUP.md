@@ -268,6 +268,7 @@ DATABASE_URL=postgres://croquet_scores:croquet_scores@localhost:5432/croquet_sco
 SESSION_COOKIE_SECRET=
 TOKEN_SIGNING_KEY=
 SITE_NAME=Croquet Scores
+WEBSITE=localhost:3000
 CANONICAL_HOST=
 TRUSTED_PROXY=
 GOOGLE_CLIENT_ID=
@@ -277,6 +278,8 @@ FACEBOOK_APP_SECRET=
 ```
 
 `SITE_NAME` is what the site is called, and it is where every page a reader is served and every email sent takes the name from: the header, the plea in the footer, the link back to the home page on every page that has one, and the subject and words of every email. Two places still spell it out rather than ask. The home page's placeholder prose names the site, and goes with the rest of that prose when the tournament list arrives. And the admin SPA names itself in its bar and its tab title, because its `index.html` is built by Vite and sent as it is, so there is nothing for the server to render the name into (`TODO.md`). It is configured rather than written into the catalogues because a name is not a word of anybody's language, and because a site serving from this repository under another name should call itself that everywhere. It was `EMAIL_FROM_SITE` until the bars began asking for it, and nothing answers to the old name: an environment still setting that one is missing a setting the site needs, and the config loader says so and refuses to start.
+
+`WEBSITE` is which of the five websites this is: `croquetscores.com`, `try.croquetscores.com`, `gateballscores.com`, `try.gateballscores.com`, or `localhost:3000` for development (`Website.feature`). It says which of the two sites is served, which the sports and formats on offer follow, and whether it is a try website, which puts a banner on every page saying that anything entered may be removed at any time (`layout.feature`). Development is Croquet Scores and not a try website. It is required, and a host that is not one of the five stops the site starting, because a Gateball Scores that forgot it and fell back to development would quietly offer croquet. It is not worked out from `CANONICAL_HOST`, which development leaves blank on purpose (below), and it says nothing of what the site is called, which stays `SITE_NAME`'s. `.env.example` sets it to `localhost:3000`, and `npm run dev:setup` adds it to a `.env` written before it existed.
 
 `CANONICAL_HOST` is the host this site answers to, exactly as a browser's address bar spells it — `croquetscores.com`, with a port only where readers see one. It is what an `Origin` is judged against (§7.7). Anything deployed sets it, because left blank each request's own `Host` is used instead, which is the truth on a machine nothing sits in front of and a lie behind a proxy that rewrites it.
 

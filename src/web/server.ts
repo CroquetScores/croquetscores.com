@@ -443,7 +443,7 @@ export const buildApplication = async (
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
   speakToRequests(server, languages);
-  nameTheSite(server, config.siteName);
+  nameTheSite(server, config.siteName, config.website);
   // A page reads and writes through this, and knows nothing else of the
   // database.
   const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);
