@@ -29,10 +29,26 @@ export const fakeOf = (world: SpecWorld): FakeHaveIBeenPwned => {
   return fake;
 };
 
-/** Stands a fake up and puts the check in front of it. */
+/**
+ * Stands a fake up and puts the check in front of it, or hands back the one
+ * this scenario already has.
+ *
+ * One to a scenario, because three steps ask for it — the step that asks for
+ * nothing else, the one that stands the application's confirming up, and the
+ * building of the application itself — and a scenario may reasonably reach
+ * for more than one of them. A second fake would listen on a port of its own
+ * that the After hook, which stops only the one this scenario is holding,
+ * would never stop; and it would take over the steps that say what has been
+ * breached, pointing them at a fake that whatever is being exercised is not
+ * asking. The scenario would then be told a password is known to be breached,
+ * and watch the check come back saying it is not.
+ */
 export const aFakeOfHaveIBeenPwned = async (
   world: SpecWorld,
 ): Promise<FakeHaveIBeenPwned> => {
+  const standing = fakes.get(world);
+  if (standing !== undefined) return standing;
+
   const fake = await FakeHaveIBeenPwned.start();
   fakes.set(world, fake);
   world.breachedPasswords = new HaveIBeenPwnedPasswords(
