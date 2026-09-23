@@ -134,7 +134,22 @@ if (namesNoScenario.length > 0) {
   process.exit(1);
 }
 
-const changed = new Set([...changedIn("*.feature"), ...named]);
+// A feature file this branch changed and has since done away with — deleted or
+// renamed in the working tree after the commit that touched it — is still in
+// the diff against the base and is no longer on disk. Cucumber finds no
+// scenario in a path that is not there, says so among its output, and reports
+// that nothing failed, so the whole feature is skipped and the run reads as
+// green. That is the same fault as a path named by hand that was never there,
+// and it is caught in the same place.
+//
+// Dropped rather than refused, because the branch plainly meant it to go. What
+// is left, and whether running none of it may pass, is decided below.
+const changed = new Set([
+  ...[...changedIn("*.feature")].filter((feature) =>
+    existsSync(join(root, feature)),
+  ),
+  ...named,
+]);
 
 const listed = (files) => {
   for (const file of [...files].sort()) console.error(`  ${file}`);

@@ -246,6 +246,12 @@ Feature: Confirming an account's email address
     typed it into. What is asked of the service, and what becomes of a password
     nobody could check, are specified with the service itself.
 
+    The password is asked about as it will be kept, which is with the
+    whitespace at either end taken off, because a password is trimmed wherever
+    one is made from what a command carries. A breached password typed with a
+    space after it would otherwise be asked about as nobody will ever type it
+    again, found clean, and then kept as the breached password it is.
+
     What is here is when the asking happens. A link that will be refused
     whatever the password is, and a confirmation that has already been carried
     out, are both settled by reading alone, and neither is worth a request to
@@ -259,6 +265,17 @@ Feature: Confirming an account's email address
       And the name given as "Sam Someone"
       And the password given as "correct horse battery staple"
       And the password confirmed as "correct horse battery staple"
+      When the confirmation is submitted
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "Password.Breached"
+
+    Scenario: A breached password typed with spaces around it is refused
+      Given a registration for "someone@example.com" is sent an email
+      And "correct horse battery staple" is known to have been breached
+      And a confirmation with the link in that email
+      And the name given as "Sam Someone"
+      And the password given as "  correct horse battery staple  "
+      And the password confirmed as "  correct horse battery staple  "
       When the confirmation is submitted
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Password.Breached"

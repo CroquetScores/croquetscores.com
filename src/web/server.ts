@@ -290,7 +290,9 @@ export const buildApplication = async (
   const pool = createPool(config.databaseUrl);
   const assets = readAssets(join(repositoryRoot, "assets"));
   const unitOfWork = new UnitOfWork(pool);
-  // Asked of every command that sets a password, in front of its transaction.
+  // Handed to the two handlers that set a password, each of which asks it
+  // between the transaction it reads in and the one it writes in, where the
+  // asking holds no connection.
   const breached = options.breachedPasswords ?? new HaveIBeenPwnedPasswords();
   const { mediator, validation } = putTogether(unitOfWork);
 

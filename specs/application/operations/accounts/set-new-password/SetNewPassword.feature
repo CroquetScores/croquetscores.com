@@ -19,6 +19,12 @@ Feature: Setting a new password with the link that was emailed
   writes in only then — which is why the command says it runs its own
   transactions (`TransactionBehaviour.feature`).
 
+  The password is asked about as it will be kept, which is with the whitespace
+  at either end taken off, because a password is trimmed wherever one is made
+  from what a command carries. One typed with a space after it would otherwise
+  be asked about as nobody will ever type it again, found clean, and then kept
+  as the breached password it is.
+
   What falls out of that order is that a link that was never any good, and a
   setting already kept, are both answered without the service being asked
   anything: a forged link would otherwise cost a request to it every time one
@@ -106,6 +112,15 @@ Feature: Setting a new password with the link that was emailed
       And the link emailed to "someone@example.com" is taken out of it
       And "a different long password" is known to have been breached
       When the new password "a different long password" is set with that link
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "Password.Breached"
+
+    Scenario: A breached password typed with spaces around it is refused
+      Given "someone@example.com" has an account, confirmed
+      And a way back in is asked for "someone@example.com"
+      And the link emailed to "someone@example.com" is taken out of it
+      And "a different long password" is known to have been breached
+      When the new password "  a different long password  " is set with that link
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Password.Breached"
 
