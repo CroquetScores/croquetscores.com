@@ -3,9 +3,12 @@ import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
+import { RequestInvalid } from "../../common/ValidationBehaviour.js";
 import type { RequestType } from "../../common/Mediator.js";
+import type { BreachedPasswords } from "../../services/BreachedPasswords.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
+import type { Transactions } from "../../services/Transactions.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import { SetNewPassword } from "./SetNewPassword.js";
 import { spent, worthOfSetNewPasswordLink } from "./setNewPasswordLinks.js";
@@ -33,12 +36,19 @@ const noLongerWorks = (why: string): SettingRefused =>
 /**
  * Setting a new password from the link it was emailed.
  *
- * The password has been asked about before this runs: its rules are the
- * command's own, asked on the way in as every command's are, and whether it
- * has been breached is asked in front of the transaction, where it costs no
- * connection (`BreachedPasswordBehaviour.feature`). So what is left here is
- * everything neither of those can ask — the account the link names, and
- * whether the link still works.
+ * The password's own rules have been asked before this runs, as every
+ * command's are on the way in. What is left here is what a validator cannot
+ * ask — the account the link names, whether the link still works — and whether
+ * the password has been breached, which is asked here.
+ *
+ * That is why this runs its own transactions, and it is the shape of `handle`.
+ * Asking Have I Been Pwned takes as long as another site takes, and a
+ * transaction open across it holds a database connection doing nothing; enough
+ * of those at once and the site has no connections left. So the reading comes
+ * first, in a read-only transaction that is finished with; then the asking,
+ * with nothing held; then the writing, in a transaction of its own. A link
+ * that was never any good, and a setting already kept, are both settled by the
+ * reading, and neither costs Have I Been Pwned a request.
  *
  * A link works once, and what spends it is a setting that was kept: the link
  * is written down among the requests already carried out, so a second
@@ -58,29 +68,89 @@ export class SetNewPasswordHandler extends CommandHandler<
     private readonly links: Links,
     private readonly passwords: PasswordHasher,
     private readonly handled: HandledRequests,
+    private readonly transactions: Transactions,
+    private readonly breached: BreachedPasswords,
   ) {
     super();
   }
 
   async handle(command: SetNewPassword): Promise<AccountId> {
-    // The request id is claimed with the link it came with, so that it is a
-    // retry only of a setting sent with that same link. An id is whatever the
-    // form's address says, and one claimed by anything else — another command,
-    // or a setting with another link — must not pass for a setting that was
-    // kept, which would answer as though a password had been set when none was.
+    // Read first, on a transaction of its own that is finished with before
+    // anything else happens, so that a setting already kept and a link that was
+    // never any good are both settled without Have I Been Pwned being asked
+    // anything. The asking then happens with nothing held open, and the writing
+    // in a transaction of its own after it. See the note on the class.
+    const settled = await this.transactions.inReadOnlyTransaction(() =>
+      this.read(command),
+    );
+    if (settled !== undefined) return settled;
+
+    // Asked with no connection held, which is what all of this is for. Refused
+    // the way a password too short is refused, because it is the same thing to
+    // whoever typed it. A password nobody could check is neither allowed nor
+    // refused here; the check's own refusal is let out as it came.
+    if (await this.breached.isBreached(command.password.trim())) {
+      throw new RequestInvalid(command, [
+        { code: "Password.Breached", fields: ["password"] },
+      ]);
+    }
+
+    return this.transactions.inTransaction(() => this.write(command));
+  }
+
+  /**
+   * What the reading settles, or nothing when the setting is to go on.
+   *
+   * A guard rather than a decision: it is over before the writing begins, so
+   * what it saw may have changed, and everything it asks is asked again inside
+   * the transaction where the answer has to hold. A link found no good here is
+   * refused here, because a link no good now will not become good, and that is
+   * the answer whoever asked is owed without another site being troubled.
+   */
+  private async read(command: SetNewPassword): Promise<AccountId | undefined> {
     const asked = `${spent(command.link)}#${command.requestId}`;
 
-    // A setting already kept, sent again because its answer was lost, is
-    // answered as the first was. Asked before the link is judged, because the
-    // first setting spent it, and judged now it would be refused.
     if (await this.handled.wasHandled(asked)) {
       const carried = this.links.read(command.link);
       if (carried?.purpose === "set-new-password") return carried.account;
     }
 
-    // The same question the page the link opened asked, of the same place, so
-    // that what the reader was shown and what their submission is answered
-    // with cannot disagree.
+    const judged = await worthOfSetNewPasswordLink(
+      this.links,
+      this.accounts,
+      this.handled,
+      command.link,
+      command.requestedAt,
+    );
+    if (judged.worth !== "Link.Works") {
+      throw judged.worth === "Link.Expired"
+        ? new SettingRefused(
+            "Link.Expired",
+            "The link has stopped working, and a new one can be asked for.",
+          )
+        : noLongerWorks("cannot set a password");
+    }
+    return undefined;
+  }
+
+  private async write(command: SetNewPassword): Promise<AccountId> {
+    // The request id is claimed with the link it came with, so that it is a
+    // retry only of a setting sent with that same link. An id is whatever the
+    // form's address says, and one claimed by anything else — another command,
+    // or a setting with another link — must not pass for a setting that was
+    // kept, which would answer as though a password had been set when none was.
+    // Asked again inside the transaction that keeps the work, because the
+    // reading before the check is over by now and may have gone stale. A
+    // setting already kept, sent again because its answer was lost, is answered
+    // as the first was; the link is judged after it, because the first setting
+    // spent it and judging it now would refuse it.
+    const asked = `${spent(command.link)}#${command.requestId}`;
+
+    if (await this.handled.wasHandled(asked)) {
+      const carried = this.links.read(command.link);
+      if (carried?.purpose === "set-new-password") return carried.account;
+    }
+
     const judged = await worthOfSetNewPasswordLink(
       this.links,
       this.accounts,

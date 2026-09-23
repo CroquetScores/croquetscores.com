@@ -30,7 +30,6 @@ import { WhatAForgettingLinkIsWorthHandler } from "../application/operations/acc
 import { WhatASetNewPasswordLinkIsWorthHandler } from "../application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
-import { BreachedPasswordBehaviour } from "../application/common/BreachedPasswordBehaviour.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
@@ -147,19 +146,16 @@ export interface Application {
 // first in both lines and is the same behaviour in each, so that a request that
 // was never going to be carried out is refused before it costs a connection, and
 // a validator is registered once whichever side its request comes in on. Behind
-// it, in the command's line alone, a command that sets a password has it asked
-// about, which is a request over the network and so is made before a connection
-// is borrowed rather than inside the transaction. Behind that a command gets a
-// transaction it can write in, and a query one it cannot.
+// it a command gets a transaction it can write in, and a query one it cannot —
+// except for the few commands that say they run their own, which are given
+// none and open what they need themselves.
 const putTogether = (
   unitOfWork: UnitOfWork,
-  breached: BreachedPasswords,
 ): { mediator: Mediator; validation: ValidationBehaviour } => {
   const mediator = new Mediator();
   const validation = new ValidationBehaviour();
 
   mediator.addCommandBehaviour(validation);
-  mediator.addCommandBehaviour(new BreachedPasswordBehaviour(breached));
   mediator.addCommandBehaviour(new TransactionBehaviour(unitOfWork));
 
   mediator.addQueryBehaviour(validation);
@@ -296,7 +292,7 @@ export const buildApplication = async (
   const unitOfWork = new UnitOfWork(pool);
   // Asked of every command that sets a password, in front of its transaction.
   const breached = options.breachedPasswords ?? new HaveIBeenPwnedPasswords();
-  const { mediator, validation } = putTogether(unitOfWork, breached);
+  const { mediator, validation } = putTogether(unitOfWork);
 
   // What is personal in an account's events is encrypted with the account's
   // own key as they are kept, and the key kept with the site's.
@@ -376,7 +372,14 @@ export const buildApplication = async (
   );
   validation.register(new ConfirmEmailAddressValidator());
   mediator.handleCommand(
-    new ConfirmEmailAddressHandler(accounts, links, passwords, handledRequests),
+    new ConfirmEmailAddressHandler(
+      accounts,
+      links,
+      passwords,
+      handledRequests,
+      unitOfWork,
+      breached,
+    ),
   );
   mediator.handleCommand(
     new SignInHandler(accounts, accountsByEmailAddress, passwords),
@@ -402,7 +405,14 @@ export const buildApplication = async (
   );
   validation.register(new SetNewPasswordValidator());
   mediator.handleCommand(
-    new SetNewPasswordHandler(accounts, links, passwords, handledRequests),
+    new SetNewPasswordHandler(
+      accounts,
+      links,
+      passwords,
+      handledRequests,
+      unitOfWork,
+      breached,
+    ),
   );
   mediator.handleQuery(
     new WhatASetNewPasswordLinkIsWorthHandler(accounts, links, handledRequests),

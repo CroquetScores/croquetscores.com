@@ -53,12 +53,11 @@ export class ConfirmEmailAddress extends Command<void> {
   }
 
   /**
-   * Which of its fields holds the password it sets, so that the check standing
-   * in front of the transaction knows what to ask about, and which field to
-   * name when it refuses. Saying so is the command's because only the command
-   * knows what it is doing with the password it carries.
+   * It runs its own, because its handler has to ask Have I Been Pwned about
+   * the password partway through, and a transaction held open across that
+   * request holds a connection with it. The handler reads what it needs, lets
+   * go, asks, and opens the transaction it writes in only then — none of which
+   * it could do inside a transaction opened around it.
    */
-  get passwordField(): string {
-    return "password";
-  }
+  readonly runsItsOwnTransactions = true;
 }

@@ -278,3 +278,46 @@ Then(
     assert.equal(failure.code, code);
   },
 );
+
+// A command that runs its own transactions --------------------------------
+
+Given(
+  "the example command runs its own transactions",
+  function (this: SpecWorld) {
+    this.exampleCommandRunsItsOwnTransactions = true;
+  },
+);
+
+// What the handler finds is read through the unit of work rather than by
+// asking for a connection, because asking when nothing is underway throws, and
+// a step that told the two apart by catching would pass just as well if the
+// throwing changed for some unrelated reason.
+Given(
+  "a handler registered for the example command that looks for a transaction",
+  function (this: SpecWorld) {
+    const unitOfWork = unitOfWorkOf(this);
+    mediatorOf(this).handleCommand({
+      handles: ExampleCommand,
+      handle: () => {
+        this.foundUnderway = unitOfWork.isUnderway;
+        return Promise.resolve("handled");
+      },
+    });
+  },
+);
+
+Then("the handler found nothing underway", function (this: SpecWorld) {
+  assert.equal(
+    this.foundUnderway,
+    false,
+    "The handler was given a transaction, and should have been given none.",
+  );
+});
+
+Then("the handler found a transaction underway", function (this: SpecWorld) {
+  assert.equal(
+    this.foundUnderway,
+    true,
+    "The handler was given no transaction, and should have been given one.",
+  );
+});

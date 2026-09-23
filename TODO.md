@@ -20,7 +20,7 @@ Four kinds of thing, kept apart.
 
 - **A failed API request says nothing about being kept.** The error mapping now sends every error _page_ with `cache-control: private, no-cache` and `vary: Cookie, Accept-Language`, because the page carries the account menu (`errors.feature`). The JSON answers beside them carry neither. Nothing caches them today, and none of them is personal yet; decide what the API says about caching when the API answers something that is.
 
-- **Confirming hashes a password inside its transaction.** `TransactionBehaviour` wraps the handler, so the Argon2 hash holds a pooled connection doing nothing, with the request id's row locked for the whole of it. The Have I Been Pwned call was the other half of this and has been moved out: `BreachedPasswordBehaviour` asks in front of the transaction (PR #79), which is also what the known problem below about that check is now about. The hash is the half that is left, and it needs the database no more than the check did. Setting a new password hashes the same way. Moving it out means a handler in two parts, which decides how handlers are shaped; decide it with the known problem below about where handlers are registered, since it changes the mediator (from the review of confirming).
+- **Confirming hashes a password inside its transaction.** `ConfirmEmailAddressHandler` opens the transaction it writes in itself, and the Argon2 hash is made inside it, so a pooled connection is held with the request id's row locked for as long as hashing takes. The Have I Been Pwned call was the other half of this and is out: the handler reads, lets go, asks, and only then opens the transaction (`ConfirmEmailAddress.feature`). The hash could move the same way, into the stretch between the reading and the writing where nothing is held — it needs the database no more than the check did. Setting a new password hashes the same way and would move the same way.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
@@ -55,30 +55,6 @@ Going to use SPA instead of /scripts.
 ---
 
 ## Known problems
-
-### Anyone can make the site ask Have I Been Pwned, and a retry asks again
-
-**Where:** `src/application/common/BreachedPasswordBehaviour.ts`, registered in `src/web/server.ts` between validation and the transaction; the two routes it reaches are `src/web/public/confirmEmailAddress.ts` and `src/web/public/setNewPassword.ts` — from the review of PR #79.
-
-**What will go wrong.** The check stands in front of the transaction, which is what it was written to do, and the transaction is where everything needing the database happens. So it also stands in front of everything needing the database, and two of those matter.
-
-The first is the link. A `POST` to either form now makes an outbound request to Have I Been Pwned before anything has asked whether the link is real, and the command's validator cannot ask: judging a link needs the account it names, which a validator may not read (`ConfirmEmailAddressValidator`). A forged or expired link used to cost no network traffic at all and now costs one request each. Neither route is behind reCAPTCHA — only registering is — and neither counts attempts. There are limits elsewhere, on failed sign-ins, on password resets asked for and on emails written, but every one of them is kept in the database, so every one of them sits behind this check rather than in front of it. Somebody posting junk links in a loop is therefore one request to Have I Been Pwned per post, from an address nobody has proved anything about, against a budget shared by the whole site.
-
-The second is the retry. Both handlers claim the request id before they do anything, so a submission sent twice because its answer was lost is carried out once. The check now runs before that claim. A retried confirmation whose first attempt already succeeded asks Have I Been Pwned all over again, and — because a password nobody could check is refused rather than guessed at — is answered `BreachedPasswords.Unreachable` while the service is down, for an account that is already confirmed. The reader is told to try again over something that was finished before they asked.
-
-**Why it has not yet.** Nothing is deployed, so nobody is posting anything in a loop, and the check that would be spent is against a budget nothing is drawing on. The retry is the narrower one in practice: it needs a lost answer and a struggling service in the same minute.
-
-Both are the price of the trade PR #79 made deliberately, and the trade was the right way round. Asking from inside the transaction held a pooled connection open across the network for as long as another site took to answer, which took the whole site down rather than one reader's submission. `BreachedPasswordBehaviour.feature` specifies the order as it stands, with the reasoning written out, and the order is not to be quietly changed: the feature is changed first, or not at all.
-
-**What to do.** Do not move the check back behind the transaction — that is the problem it was written to solve. Two ways forward, either of which is specified before it is built:
-
-Count the posts. A limit on the confirm-address and set-new-password routes, counted by the reader's address, in front of the check rather than behind it — which means it cannot be kept in the database like the limits that already exist, and so is its own decision about where such a count lives. This answers the first problem and leaves the second.
-
-Or split the handler. A handler in two parts, the first reading what it needs without a transaction — the claim, and the link — and the second writing inside one, with the check between them. This answers both, and is the same shape the jotted item above wants for moving the Argon2 hash out, so the two are worth deciding together.
-
-A cache of answers already had would blunt the first without answering either, and is worth having whichever of the two is chosen.
-
----
 
 ### The cross-site guard will refuse an OAuth callback that posts
 

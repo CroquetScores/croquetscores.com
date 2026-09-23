@@ -204,14 +204,14 @@ Given(
 
 // Handing requests in ----------------------------------------------------
 
-// Carrying whatever the scenario said it carries, which is nothing unless a
-// scenario said otherwise.
+// Saying it runs its own transactions when the scenario said so, and nothing
+// else: the example command means nothing beyond what a scenario gives it.
 When("the example command is sent", async function (this: SpecWorld) {
   const command = new ExampleCommand(
     askedAt,
     undefined,
     undefined,
-    this.exampleCommandCarries,
+    this.exampleCommandRunsItsOwnTransactions,
   );
   await attempt(this, () => mediatorOf(this).send(command));
 });

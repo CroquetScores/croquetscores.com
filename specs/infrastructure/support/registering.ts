@@ -64,7 +64,6 @@ import { aSiteKey, keepAccounts, readBack } from "./accounts.js";
 import { alterLink } from "./links.js";
 import { queueingOf } from "./emailQueue.js";
 import { unitOfWorkOf } from "./transactions.js";
-import { BreachedPasswordBehaviour } from "../../../src/application/common/BreachedPasswordBehaviour.js";
 import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
 import { scenarioLanguages } from "../../web/support/languages.js";
@@ -185,9 +184,6 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const mediator = new Mediator();
   const validation = new ValidationBehaviour();
   mediator.addCommandBehaviour(validation);
-  // In front of the transaction, as the application puts it: a command that
-  // sets a password has it asked about before a connection is borrowed.
-  mediator.addCommandBehaviour(new BreachedPasswordBehaviour(breached));
   mediator.addCommandBehaviour(new TransactionBehaviour(unitOfWork));
   validation.register(new RegisterAccountValidator());
   mediator.handleCommand(
@@ -208,6 +204,8 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       links,
       hasher,
       new PostgresHandledRequests(unitOfWork),
+      unitOfWork,
+      breached,
     ),
   );
   mediator.handleCommand(
@@ -245,6 +243,8 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       links,
       hasher,
       new PostgresHandledRequests(unitOfWork),
+      unitOfWork,
+      breached,
     ),
   );
   // A query changes nothing, so it is given a transaction it cannot write in,

@@ -4,7 +4,7 @@
 //
 // Here rather than in specs/support/ because it names infrastructure, and
 // specs/support/ is loaded by every spec in the repository and so may not.
-import { After, Given, Then } from "@cucumber/cucumber";
+import { After, Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { HaveIBeenPwnedPasswords } from "../../../src/infrastructure/identity/HaveIBeenPwnedPasswords.js";
@@ -83,3 +83,15 @@ Then(
 After(async function (this: SpecWorld) {
   await fakes.get(this)?.stop();
 });
+
+// Forgets what the fake has been asked, so that a scenario about a second
+// submission can say what that submission asked rather than what the two of
+// them asked between them. It forgets the asking only: what the scenario said
+// has been breached stays said, because that is about the service and not
+// about any one request to it.
+When(
+  "what the breached password check was asked is forgotten",
+  function (this: SpecWorld) {
+    fakeOf(this).askedAbout.length = 0;
+  },
+);

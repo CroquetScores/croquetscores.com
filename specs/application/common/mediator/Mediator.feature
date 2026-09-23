@@ -19,24 +19,6 @@ Feature: Handing a request to the one thing that deals with it
   made, and never reaches the mediator. This feature is how the mediator runs them, and it is
   written with example requests and behaviours that exist only to exercise it.
 
-  A command is given to its handler twice: once to be considered, and once to be
-  carried out. Considering is a first look with nothing held open — no
-  transaction, and nothing yet asked of anybody outside — in which a handler
-  may answer the command outright from what it can read. A command already
-  carried out, or one whose link was never any good, is settled there, and the
-  expensive half never runs. A handler that has nothing to say while
-  considering says nothing, and its command is carried out as it always was.
-
-  So a command has two lines of behaviours rather than one, with the
-  considering between them: those in front of it, which see every command that
-  arrives, and those behind it, which see only the commands that are going to
-  be carried out. What belongs in front is whatever must hold for a command to
-  be considered at all — its own rules, since a handler should not be asked to
-  consider a command that makes no sense. What belongs behind is whatever costs
-  something a command settled by considering should never spend: a connection,
-  or a question put to another site. A query has one line, because a query is
-  read-only throughout and has nothing to settle early.
-
   Rule: A request is answered by the handler registered for it
 
     Scenario: A command is handled by its handler
@@ -140,106 +122,6 @@ Feature: Handing a request to the one thing that deals with it
       And a handler registered for the example command that fails
       When the example command is sent
       Then "outer" saw the failure on its way out
-
-  Rule: A command is considered before it is carried out
-
-    A handler that has nothing to say while considering says nothing, and every
-    handler written before there was anything to say says nothing without being
-    asked to. So considering is something a handler opts into, and a command
-    whose handler does not is carried out exactly as it was.
-
-    Scenario: A command is considered before it is carried out
-      Given a handler registered for the example command that considers it
-      When the example command is sent
-      Then the first thing to happen is "the considering"
-      And the next thing to happen is "the handler"
-      And nothing else happens
-
-    Scenario: A command whose handler considers nothing is carried out
-      Given a handler registered for the example command that answers "recorded"
-      When the example command is sent
-      Then the answer is "recorded"
-
-    Scenario: A command whose handler considers nothing is not considered
-      Given a handler registered for the example command
-      When the example command is sent
-      Then nothing called "the considering" happens
-
-  Rule: A command the handler answers while considering is not carried out
-
-    This is what considering is for. The handler has read enough to answer, and
-    what is left would only cost something to reach the same answer by: the
-    point is not that it is faster but that nothing behind the considering runs
-    at all.
-
-    Scenario: What the handler answers while considering is what the sender receives
-      Given a handler registered for the example command that answers "already done" while considering it
-      When the example command is sent
-      Then the answer is "already done"
-
-    Scenario: A command answered while considering is not carried out
-      Given a handler registered for the example command that answers "already done" while considering it
-      When the example command is sent
-      Then the example command's handler has not been called
-
-    Scenario: A handler's failure while considering reaches the sender unchanged
-      Given a handler registered for the example command that fails while considering it
-      When the example command is sent
-      Then sending it fails with the handler's own failure
-
-    Scenario: A command refused while considering is not carried out
-      Given a handler registered for the example command that fails while considering it
-      When the example command is sent
-      Then the example command's handler has not been called
-
-  Rule: A command's behaviours are in two lines, one either side of the considering
-
-    A behaviour in front of the considering sees every command that arrives. One
-    behind it sees only the commands that are going to be carried out, which is
-    the whole reason for having two: a behaviour that costs something — a
-    connection borrowed, another site asked — belongs where a command settled by
-    considering never reaches it.
-
-    Scenario: A behaviour in front of the considering runs before it
-      Given a command behaviour called "in front" that runs before the considering
-      And a handler registered for the example command that considers it
-      When the example command is sent
-      Then the first thing to happen is "in front, going in"
-      And the next thing to happen is "the considering"
-      And the next thing to happen is "the handler"
-      And the next thing to happen is "in front, coming out"
-      And nothing else happens
-
-    Scenario: A behaviour behind the considering runs after it
-      Given a command behaviour called "behind"
-      And a handler registered for the example command that considers it
-      When the example command is sent
-      Then the first thing to happen is "the considering"
-      And the next thing to happen is "behind, going in"
-      And the next thing to happen is "the handler"
-      And the next thing to happen is "behind, coming out"
-      And nothing else happens
-
-    Scenario: A behaviour in front of the considering sees a command answered while considering
-      Given a command behaviour called "in front" that runs before the considering
-      And a handler registered for the example command that answers "already done" while considering it
-      When the example command is sent
-      Then the first thing to happen is "in front, going in"
-      And the next thing to happen is "the considering"
-      And the next thing to happen is "in front, coming out"
-      And nothing else happens
-
-    Scenario: A behaviour behind the considering does not see a command answered while considering
-      Given a command behaviour called "behind"
-      And a handler registered for the example command that answers "already done" while considering it
-      When the example command is sent
-      Then nothing called "behind" happens
-
-    Scenario: A query has no considering line
-      Given a query behaviour called "for queries"
-      And a handler registered for the example query
-      When the example query is asked
-      Then nothing called "the considering" happens
 
   Rule: Commands and queries have behaviours of their own
 
