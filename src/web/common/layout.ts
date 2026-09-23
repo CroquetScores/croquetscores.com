@@ -120,15 +120,18 @@ ${items}
 
 // Beneath the site bar rather than in it, so that it scrolls away once read
 // instead of taking a line of every screen for as long as the reader stays.
-const tryWebsiteBanner = (shell: Shell): string =>
-  shell.tryWebsite
-    ? `
-    <div class="try-banner">
+// Said by the admin's page too (adminPage.ts), whose own words are in no
+// language yet, so it can say which language it is in where the page cannot.
+export const tryWebsiteBanner = (
+  speaking: Speaking,
+  siteName: string,
+  lang?: string,
+): string => `
+    <div class="try-banner"${lang === undefined ? "" : ` lang="${escape(lang)}"`}>
       <div class="page">
-        <p>${escape(shell.speaking.say("tryWebsite.banner", { siteName: shell.siteName }))}</p>
+        <p>${escape(speaking.say("tryWebsite.banner", { siteName }))}</p>
       </div>
-    </div>`
-    : "";
+    </div>`;
 
 // What a page names its sections is the page's own words; the bar's own word
 // is the one it is announced by to a reader who cannot see it.
@@ -242,7 +245,7 @@ ${menu(shell.speaking, shell.currentPath)}
 ${accountMenu(shell)}
         </div>
       </div>
-    </header>${tryWebsiteBanner(shell)}${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+    </header>${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${

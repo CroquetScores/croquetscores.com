@@ -14,7 +14,7 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- **The admin SPA calls the site Croquet Scores whatever it is configured as.** `src/web/admin/index.html` spells the name out in the tab title and `src/web/admin/App.tsx` in the bar, so a site deployed under another name is that name on every page a reader is served (§6.1 of `SETUP.md`) and Croquet Scores in its admin. For the same reason the admin carries no banner on a try website, which every page a reader is served does (`layout.feature`). It has the same cause as the known problem below about the admin ignoring the reader's theme choice — the SPA's `index.html` is built by Vite and sent as it is, so the server has nothing to render into — and the same fix, rendering that file rather than sending it, would settle both. Do them together, and not before, since one change to how the admin is served is easier to review than two.
+- **The admin takes the reader's theme but does not offer it.** It is light or dark as the reader chose on a public page (`admin.feature`), but has no control of its own to choose with. When it has one it should post to the same `/theme`, as the public pages' footer does.
 
 - **Four of the nine ways back to the home page are not proved to name the site.** Each of the nine says "Back to {siteName}" and each fills the name in itself. Five are held to it: `language.feature` looks at four by name — the page that is not there, the page shown after registering, the page asking for scripting, the page saying registering is suspended — and the page offering a new confirmation link is caught by its own scenario reading every word it shows, since a place left to fill now counts as a word from somewhere other than a catalogue. The four left are a password reset sent, a new password set, an account forgotten, and an email address confirmed, each shown at the end of something written down, so reaching one wants a database and a request in it. Measured rather than reasoned: with all nine fills dropped, those four are the pages nothing says anything about. Worth a scenario each when one of those flows is next opened up (from the review of PR #85).
 
@@ -87,23 +87,6 @@ Going to use SPA instead of /scripts.
 **Why it has not yet.** There is no deployment. On a machine with nothing in front of it — development, and the scenarios — the connection's address is the reader's, and blank is the right answer. The scenarios set it to `127.0.0.1`, which is what their browser reaches them from, so the path a deployment takes is the one they run.
 
 **What to do.** Set `TRUSTED_PROXY` to the address or range the proxy reaches the site from — `10.0.0.0/8`, or the one address if it is fixed — and never to something wider than what only the proxy can be at. Anything that can reach the site can write an `X-Forwarded-For` for itself, so what is trusted here is exactly what may name somebody else's address. It is a value that cannot be supplied until there is somewhere to supply it, so it belongs on the same deployment checklist as `CANONICAL_HOST` above. Nothing will fail at startup if it is forgotten, because blank is legitimate; a value that is not addresses does stop the site starting, so a typo is found while somebody is deploying rather than afterwards.
-
----
-
-### The admin SPA ignores the reader's theme choice
-
-**Where:** `src/web/admin/` — served as a static `index.html` from `src/web/server.ts`. From PR #9.
-
-**What will go wrong.** A reader who has chosen Light or Dark in the public site's footer opens `/admin` and gets whatever their machine prefers instead. The public pages honour the choice because the server reads the `theme` cookie and renders `data-theme` onto `<html>`; the SPA's `index.html` is a file built by Vite and sent as it is, so there is nothing for the server to render into. It imports the same stylesheet and falls back to `color-scheme: light dark`, which follows the operating system.
-
-**Why it has not yet.** The admin SPA is a shell with a heading and an API health check, and nobody uses it. The mismatch is visible to anyone who looks, but nobody is looking yet.
-
-**What to do.** The cookie is `HttpOnly`, so the SPA cannot read it itself, and should not be made to: loosening that for a colour would loosen it for whatever is copied from it later. Two ways that keep it:
-
-- Have the server render `index.html` rather than send it, putting `data-theme` on `<html>` exactly as the public pages do. This keeps the choice in one place and needs no request from the SPA, at the cost of treating one built file as a template.
-- Add an endpoint the SPA asks on load — `GET /api/v1/preferences` — returning the theme, and have the SPA set `data-theme` from the answer. Simpler to build, but the page paints once in the machine's preference before the answer arrives.
-
-Prefer the first. Whichever is chosen, the admin should also offer the same control, posting to the same `/theme`. Extend the theme feature with a scenario that chooses Dark on a public page, opens `/admin`, and expects the admin to be dark.
 
 ---
 
