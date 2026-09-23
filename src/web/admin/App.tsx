@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 
-// The shell. Screens arrive with the features that specify them; what this
-// proves for now is that the SPA is built, served under /admin, reaches the API
-// it shares with the mobile apps, and speaks the same vocabulary as the public
-// pages.
 // What the site is called, which the server says into the page as it sends it
 // (adminPage.ts), since a page built ahead of time cannot know. The admin's own
 // development server has no server behind the page to say it, so there the bar
@@ -12,6 +8,10 @@ const siteName =
   document.querySelector<HTMLMetaElement>('meta[name="application-name"]')
     ?.content ?? document.title;
 
+// The shell. Screens arrive with the features that specify them; what this
+// proves for now is that the SPA is built, served under /admin, reaches the API
+// it shares with the mobile apps, and speaks the same vocabulary as the public
+// pages.
 export const App = (): React.JSX.Element => {
   const [status, setStatus] = useState("checking…");
 

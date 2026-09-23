@@ -123,7 +123,7 @@ The cookie is `HttpOnly`, `SameSite=Lax`, a year long, and **always `Secure`**. 
 
 **A page that depends on a cookie is not a page anyone else may cache.** The public pages were `public, max-age=60`; they are now `private, no-cache` with `Vary: Cookie`. The `ETag` still does the work — a revalidation that finds nothing changed costs a `304` and no body — but a shared cache can no longer hand one reader's theme to another.
 
-The admin SPA's page is built by Vite ahead of time, and the server says the choice into it as it sends it, putting `data-theme` on `<html>` as it does on every other page (`admin.feature`). The SPA does not read the cookie, and is not made to: loosening `HttpOnly` for a colour would loosen it for whatever is copied from it later. The admin does not yet offer the choice itself; it is made on a public page.
+The admin SPA's page is built by Vite ahead of time, and the server says the choice into it as it sends it, putting `data-theme` on `<html>` as it does on every other page (`admin.feature`). The SPA does not read the cookie, and is not made to: loosening `HttpOnly` for a colour would loosen it for whatever is copied from it later. The admin offers the same choice beneath whatever it draws: the public footer's own form, said into its page with the rest, posting to the same `/theme` and coming back to the admin, so that there is one choice rather than two.
 
 ---
 

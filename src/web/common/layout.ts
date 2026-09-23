@@ -176,8 +176,10 @@ const themeWords: Record<Theme, string> = {
 };
 
 // Three submit buttons rather than a select and a Go: one press, no scripting,
-// and the choice that is in force is announced rather than only shaded.
-const themeChoice = (
+// and the choice that is in force is announced rather than only shaded. Offered
+// by the admin's page too (adminPage.ts), so that there is one choice rather
+// than two that could come to disagree.
+export const themeChoice = (
   speaking: Speaking,
   chosen: Theme,
   path: string,

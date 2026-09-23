@@ -11,8 +11,15 @@ Given("a browser that runs scripts", async function (this: SpecWorld) {
   await withScripting(this);
 });
 
-When("the admin is opened", async function (this: SpecWorld) {
+const openAdmin = async function (this: SpecWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${admin}`);
+};
+
+Given("the admin is open", openAdmin);
+When("the admin is opened", openAdmin);
+
+Then("the admin is shown", function (this: SpecWorld) {
+  assert.equal(new URL(this.browserPage.url()).pathname, admin);
 });
 
 // Named in the title rather than being the whole of it, since the tab also

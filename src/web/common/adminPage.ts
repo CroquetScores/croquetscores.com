@@ -10,7 +10,7 @@ import type { FastifyRequest } from "fastify";
 
 import { escape } from "./escape.js";
 import { speakingOf } from "./language.js";
-import { tryWebsiteBanner } from "./layout.js";
+import { themeChoice, tryWebsiteBanner } from "./layout.js";
 import { siteNameOf, websiteOf } from "./site.js";
 import { themeOf } from "./theme.js";
 
@@ -22,6 +22,7 @@ const html = /<html([^>]*)>/;
 const title = /<title>([^<]*)<\/title>/;
 const headEnd = "</head>";
 const body = /<body([^>]*)>/;
+const bodyEnd = "</body>";
 
 /**
  * The built page, checked once, as the application starts, for everything it
@@ -34,6 +35,7 @@ export const builtAdminPage = (built: string): string => {
     title.test(built) ? undefined : "<title>",
     built.includes(headEnd) ? undefined : headEnd,
     body.test(built) ? undefined : "<body>",
+    built.includes(bodyEnd) ? undefined : bodyEnd,
   ].filter((each) => each !== undefined);
   if (missing.length > 0) {
     throw new Error(
@@ -79,6 +81,22 @@ export const adminPage = (built: string, request: FastifyRequest): string => {
         websiteOf(request).isTry
           ? `${whole}${tryWebsiteBanner(speaking, siteName, speaking.language.tag)}`
           : whole,
+      )
+      // The public footer's own choice of light or dark, beneath whatever the
+      // admin draws, so that it is made the way it is made there: a form posted
+      // with no scripting, back to the address the admin was opened at. Only
+      // the choice, since the rest of that footer is for a reader of the public
+      // pages rather than for whoever is running the site.
+      .replace(
+        bodyEnd,
+        () => `  <footer class="site-footer" lang="${escape(speaking.language.tag)}">
+      <div class="page">
+        <div class="site-footer-theme">
+${themeChoice(speaking, theme, request.url)}
+        </div>
+      </div>
+    </footer>
+  ${bodyEnd}`,
       )
   );
 };

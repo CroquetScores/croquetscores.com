@@ -241,6 +241,18 @@ Then(
 );
 
 Then(
+  "every word in the theme choice is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, "footer form.theme");
+    assert.deepEqual(
+      stray,
+      [],
+      "Words in the theme choice came from elsewhere.",
+    );
+  },
+);
+
+Then(
   "the way to skip to the content is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, ".skip-link");
