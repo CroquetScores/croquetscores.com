@@ -71,6 +71,7 @@ import { knowTheReader, type Reader } from "./common/reader.js";
 import type { InTransaction } from "./common/database.js";
 import { readerFromSessions, registerSignOut } from "./common/session.js";
 import { speakToRequests, type Language } from "./common/language.js";
+import { sendersBelieved } from "./common/trustedProxy.js";
 import {
   machineClock,
   stampRequests,
@@ -264,12 +265,6 @@ export interface ApplicationOptions {
    * to say what the judgement was.
    */
   readonly readerCheck?: ReaderCheck;
-  /**
-   * Whether the application is behind something that forwards requests, and so
-   * whether the address a request came from is read from its headers. Off
-   * unless said, since a client can send those headers itself.
-   */
-  readonly behindAProxy?: boolean;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -282,10 +277,9 @@ export const buildApplication = async (
 ): Promise<Application> => {
   const server = Fastify({
     logger: options.logger ?? true,
-    // Behind a proxy, the address a request came from is in a header rather
-    // than on the socket. Off unless whoever starts the application says
-    // otherwise, because a client can send that header itself.
-    trustProxy: options.behindAProxy ?? false,
+    // Which senders' word for where a request came from is believed, from
+    // the setting that names what forwards to this site (trustedProxy.ts).
+    trustProxy: sendersBelieved(config.trustedProxies),
   });
   const pool = createPool(config.databaseUrl);
   const assets = readAssets(join(repositoryRoot, "assets"));

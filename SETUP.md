@@ -268,6 +268,7 @@ DATABASE_URL=postgres://croquet_scores:croquet_scores@localhost:5432/croquet_sco
 SESSION_COOKIE_SECRET=
 TOKEN_SIGNING_KEY=
 CANONICAL_HOST=
+TRUSTED_PROXY=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 FACEBOOK_APP_ID=
@@ -277,6 +278,8 @@ FACEBOOK_APP_SECRET=
 `CANONICAL_HOST` is the host this site answers to, exactly as a browser's address bar spells it — `croquetscores.com`, with a port only where readers see one. It is what an `Origin` is judged against (§7.7). Anything deployed sets it, because left blank each request's own `Host` is used instead, which is the truth on a machine nothing sits in front of and a lie behind a proxy that rewrites it.
 
 In development it stays blank, and deliberately. `npm run dev` serves `localhost:3000`, the `@browser` scenarios serve `127.0.0.1` on whatever port was free (§8.2), and `npm run dev:admin` is a Vite server on a fourth address proxying to the third: one value would be wrong for three of them, and every one of those origins sends a `Host` that is already correct.
+
+`TRUSTED_PROXY` is what forwards requests to the site, if anything: the proxies whose word for where a request came from is believed, written as addresses or ranges — `10.0.0.0/8`, `2001:db8::/32` — separated by commas. Two of the site's limits count by the address a request came from, how often one may ask for a way back in and how often signing in may fail from one, and behind a load balancer every connection comes in from the load balancer, so counting by the connection counts every reader as one and holds them all to one reader's share. The reader's own address is in `X-Forwarded-For`, which anything that can reach the site can write for itself, so it is believed from the proxies named here and from nowhere else. A value that is not addresses stops the site starting, rather than quietly meaning none, and so does a range that fixes no bits — `0.0.0.0/0` is every address there is, which is the yes this setting exists to avoid. It stays blank in development, where nothing sits in front of the site, and anything deployed behind one sets it.
 
 `.env.example` is committed with the keys and no values. `npm run dev:setup` copies it if absent and fills the two local secrets with fresh random bytes, leaving anything already present untouched — regenerating a signing key would invalidate every token signed with it. OAuth credentials stay blank until real ones are pasted in, and the config loader fails at startup, loudly, if something it needs is missing.
 

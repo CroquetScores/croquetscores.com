@@ -1,6 +1,7 @@
 // Settings are read once, here, and handed out as a typed object. Nothing else
 // in the repository touches process.env: a second reader is a second answer.
 import { existsSync } from "node:fs";
+import { isIP } from "node:net";
 
 /** What reCAPTCHA needs: the key the page shows, and the one only the site has. */
 export interface RecaptchaKeys {
@@ -40,6 +41,11 @@ export interface Config {
   // of each request, which is right on a machine nothing sits in front of and
   // wrong behind a proxy that rewrites it.
   readonly canonicalHost: string | undefined;
+  // What forwards requests to the site, if anything: the proxies whose word
+  // for where a request came from is believed, each an address or a range.
+  // Empty on a machine nothing sits in front of, which is development and
+  // which is why it is optional. What is done with it is trustedProxy.ts.
+  readonly trustedProxies: readonly string[];
   // Absent until somebody pastes real credentials in. The sign-in routes that
   // need them refuse to register rather than half-working at runtime.
   readonly google: OAuthCredentials | undefined;
@@ -104,6 +110,60 @@ const readCanonicalHost = (env: NodeJS.ProcessEnv): string | undefined => {
   return raw.replace(/\/+$/, "").toLowerCase();
 };
 
+// An address, or a range written as an address and how many of its leading
+// bits are fixed: 10.0.0.0/8, 2001:db8::/32. The names some libraries take for
+// well-known ranges — loopback, linklocal — are not accepted, because a
+// deployment's proxy has an address and a name would only ever be a way of
+// trusting more than was meant.
+//
+// A range has to fix at least one bit. /0 is every address there is, which is
+// the answer this setting exists to make impossible: it would believe a
+// forwarded address from whatever could reach the site, and so from everybody.
+// Fastify refuses it too, so accepting it here would only move the refusal to
+// where it is a startup crash naming no setting.
+const addressOrRange = (named: string): boolean => {
+  const [address, prefix, ...rest] = named.split("/");
+  if (address === undefined || rest.length > 0) return false;
+
+  const family = isIP(address);
+  if (family === 0) return false;
+  if (prefix === undefined) return true;
+  if (!/^[0-9]{1,3}$/.test(prefix)) return false;
+  const bits = Number(prefix);
+  return bits >= 1 && bits <= (family === 4 ? 32 : 128);
+};
+
+// Blank is a site with nothing in front of it, which believes nobody. Anything
+// else has to name proxies: a misspelling left to mean nothing would leave a
+// deployment counting every reader as its proxy, and the first anybody would
+// know of it is readers told to try again later for something none of them had
+// done.
+const readTrustedProxies = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): readonly string[] => {
+  const raw = env["TRUSTED_PROXY"]?.trim() ?? "";
+  if (raw === "") return [];
+
+  const named = raw
+    .split(",")
+    .map((one) => one.trim())
+    .filter((one) => one !== "");
+  if (named.length === 0) {
+    problems.push("TRUSTED_PROXY names no proxy.");
+    return [];
+  }
+
+  const wrong = named.filter((one) => !addressOrRange(one));
+  if (wrong.length > 0) {
+    problems.push(
+      `TRUSTED_PROXY must be IP addresses or ranges such as "10.0.0.0/8", ` +
+        `separated by commas, not ${wrong.map((one) => JSON.stringify(one)).join(", ")}.`,
+    );
+  }
+  return named;
+};
+
 const defaultPort = 3000;
 
 // A blank value is what .env holds for a key nobody has filled in, so it means
@@ -142,6 +202,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   // Every problem at once. Fixing one thing only to be told about the next is
   // a worse morning than being told about both.
   const port = readPort(env, problems);
+  const trustedProxies = readTrustedProxies(env, problems);
   if (problems.length > 0) throw new ConfigError(problems);
 
   return {
@@ -157,6 +218,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     administratorEmailAddress:
       env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     canonicalHost: readCanonicalHost(env),
+    trustedProxies,
     recaptcha: recaptchaKeys(env),
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),

@@ -78,6 +78,16 @@ export class SpecWorld extends World {
   // The host the site is configured to answer to, when a scenario sets one.
   public canonicalHost: string | undefined;
 
+  // What a scenario has told the site forwards requests to it, written as the
+  // setting is written, and the request being judged by it: the address its
+  // connection came in on, and what it says about having been forwarded, from
+  // the reader's own address outwards. Typed by their shape rather than by
+  // naming anything in src/web, for the reason at the top of this file.
+  public trustedProxySetting: string | undefined;
+  public requestCameIn: { connection: string; forwarded: string[] } | undefined;
+  // What came of starting the site with that setting: nothing, or the refusal.
+  public startingFailed: unknown;
+
   // A page on some other site, served into the browser by the scenario.
   public elsewhere: string | undefined;
 

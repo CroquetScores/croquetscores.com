@@ -100,6 +100,12 @@ const itsOwn = async (world: SpecWorld): Promise<string> => {
       // Somebody to tell when a service cannot be reached, so that a scenario
       // can see they were told.
       administratorEmailAddress: administratorForScenarios,
+      // This application listens on 127.0.0.1, so every scenario's browser
+      // reaches it from there, and saying that address is trusted is what lets
+      // a scenario ask from another IP address the way something in front of
+      // the site would say it. Configured rather than handed to the builder,
+      // because the setting is the only way the site is told (trustedProxy.ts).
+      trustedProxies: ["127.0.0.1"],
     },
     {
       logger: false,
@@ -108,9 +114,6 @@ const itsOwn = async (world: SpecWorld): Promise<string> => {
       // Nothing is sent. What these scenarios read is what is waiting in the
       // queue, which is where a reader's link comes from.
       sendsTheEmailQueue: false,
-      // So that a scenario can ask from another IP address, by saying where it
-      // came from the way something in front of the site would.
-      behindAProxy: true,
       // Never the real service: a spec run has no business asking Have I Been
       // Pwned about a password, and what it would answer is not what any of
       // these scenarios is about. A scenario that is about a breached password

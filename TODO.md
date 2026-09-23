@@ -30,8 +30,6 @@ Four kinds of thing, kept apart.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
-- **The proxy to trust for a reader's IP address**, which the forgot password page's limit counts by: a setting, like `CANONICAL_HOST`, for the deployment checklist.
-
 From earlier pull requests:
 
 - The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
@@ -95,6 +93,18 @@ Going to use SPA instead of /scripts.
 **Why it has not yet.** There is no deployment. The mechanism to prevent it arrived with the review of PR #10; what is missing is the value, and it cannot be supplied until there is somewhere to supply it. For the cross-site guard it only reaches readers whose browsers are too old to send `Sec-Fetch-Site`, so the exposure is small even then. For email it would reach every reader, from the first email sent.
 
 **What to do.** Set `CANONICAL_HOST` to the host readers see in the address bar — `croquetscores.com`, with a port only if they see one. Nothing will fail at startup if it is forgotten: the setting is optional, because development needs it blank (`SETUP.md` §6.1 explains why). So it belongs on whatever deployment checklist gets written, and near its top now that emails depend on it; and if the site ever grows a notion of which environment it is running in, a production start without it should be refused. It must never be filled from a request's `Host` to save setting it: a host is whatever the request's sender wrote, and an email link made from one can be pointed at anybody's site.
+
+---
+
+### Set `TRUSTED_PROXY` when the site is deployed behind a proxy
+
+**Where:** `.env` on whatever serves the site; the setting is read in `src/infrastructure/config/Config.ts` and used by `src/web/common/trustedProxy.ts`, which decides the address the forgot password page's limit and signing in's are counted by (`trustedProxy.feature`).
+
+**What will go wrong.** Behind a load balancer or a reverse proxy, every connection reaches the site from the proxy. Left blank, the site believes nobody and counts every reader as that one address: the tenth asking for a way back in, from anybody at all, holds every reader out of the forgot password page for the rest of the hour, and the thirtieth failed sign-in holds them all out of signing in. Both pages would then be shut to everybody, and neither says why, because a limit that explained itself would explain itself to whoever was guessing.
+
+**Why it has not yet.** There is no deployment. On a machine with nothing in front of it — development, and the scenarios — the connection's address is the reader's, and blank is the right answer. The scenarios set it to `127.0.0.1`, which is what their browser reaches them from, so the path a deployment takes is the one they run.
+
+**What to do.** Set `TRUSTED_PROXY` to the address or range the proxy reaches the site from — `10.0.0.0/8`, or the one address if it is fixed — and never to something wider than what only the proxy can be at. Anything that can reach the site can write an `X-Forwarded-For` for itself, so what is trusted here is exactly what may name somebody else's address. It is a value that cannot be supplied until there is somewhere to supply it, so it belongs on the same deployment checklist as `CANONICAL_HOST` above. Nothing will fail at startup if it is forgotten, because blank is legitimate; a value that is not addresses does stop the site starting, so a typo is found while somebody is deploying rather than afterwards.
 
 ---
 
