@@ -133,7 +133,7 @@ When("a page that fails is opened", async function (this: SpecWorld) {
 // is here to tell apart is the pages, and whether the words came from a
 // catalogue is the step above.
 Then(
-  /^the page says the words for "([^"]*)"$/,
+  "the page says the words for {string}",
   async function (this: SpecWorld, key: string) {
     const said = english.words[key];
     assert.ok(said !== undefined, `English has no words for ${key}.`);
