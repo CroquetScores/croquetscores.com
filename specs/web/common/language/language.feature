@@ -166,13 +166,6 @@ Feature: A reader is spoken to in their own language
       When the home page is opened
       Then the section bar is named in the test locale
 
-    Scenario: The site names itself by the name it is configured with
-      Given a viewport 1200 pixels wide
-      And a browser that asks for "en-XA"
-      When the home page is opened
-      Then the header names the site "Croquet Scores"
-      And the plea names the site "Croquet Scores"
-
     Scenario: A site configured under another name calls itself that
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
@@ -185,6 +178,14 @@ Feature: A reader is spoken to in their own language
       And a site called "Gateball Scores"
       When a page that is not there is opened
       Then the way back to the home page names the site "Gateball Scores"
+
+    Scenario: The site's name is not translated for a reader of another language
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      And a browser that asks for "en-XA"
+      When the home page is opened
+      Then the header names the site "Gateball Scores"
+      And the plea names the site "Gateball Scores"
 
   Rule: Every word a form shows is in the reader's language
 

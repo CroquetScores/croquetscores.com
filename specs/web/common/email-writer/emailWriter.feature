@@ -26,9 +26,9 @@ Feature: The site's emails are written in their reader's language
   writer fills all four in wherever the markup says: `{buttonBackgroundColour}`
   and `{buttonTextColour}`, which a button is painted with, `{emailFromName}`,
   the name the site's emails are sent from, which each email is signed off
-  with, and `{siteName}`, what the site is called, which its pages call it too,
-  in an email's subject and wherever its words name the site. The colours are the site's
-  darker green and the white on it, written out rather than named, because mail
+  with, and `{siteName}`, what the site is called, which its pages call it
+  too, in an email's subject and wherever its words name the site. The colours
+  are the site's darker green and the white on it, written out rather than named, because mail
   programs read neither a custom property nor `light-dark()`; the writer holds
   them, and `STYLE.md` says what they are on a page. The name and the site are
   configured, as the address emails are sent from is, so that a site serving

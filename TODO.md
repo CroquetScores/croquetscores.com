@@ -28,6 +28,8 @@ Four kinds of thing, kept apart.
 
   **Signing in is the one that is genuinely hard.** An account whose hash is still the old site's has it made again today's way as it signs in, and whether that is wanted is only known once the stored hash has been read and checked — which needs the connection the transaction is holding. Hashing every sign-in in front of the transaction would pay the cost for every reader who signs in to save it for an imported account once each, which is the wrong way round. What would fix it is signing in that finishes its transaction, hashes, and opens another to keep the new hash — which is what `RunsItsOwnTransactions` now makes possible. Not worth doing until an import has actually been run (from the review of confirming, and from PR #81).
 
+- **The admin SPA calls the site Croquet Scores whatever it is configured as.** `src/web/admin/index.html` spells the name out in the tab title and `src/web/admin/App.tsx` in the bar, so a site deployed under another name is that name on every page a reader is served (§6.1 of `SETUP.md`) and Croquet Scores in its admin. It has the same cause as the known problem below about the admin ignoring the reader's theme choice — the SPA's `index.html` is built by Vite and sent as it is, so the server has nothing to render into — and the same fix, rendering that file rather than sending it, would settle both. Do them together, and not before, since one change to how the admin is served is easier to review than two.
+
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
 ---

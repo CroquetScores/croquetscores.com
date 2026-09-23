@@ -157,7 +157,7 @@ export const emailWriter = (
     const subject = speaking.say(`${kind}.subject`, {
       ...fill,
       emailFromName: fromName,
-      siteName: siteName,
+      siteName,
     });
     // What the site knows about itself, filled in wherever an email's markup
     // asks for it, and after what the queue gave, so that nothing an email is
