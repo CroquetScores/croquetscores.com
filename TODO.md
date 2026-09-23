@@ -30,8 +30,6 @@ Four kinds of thing, kept apart.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
-- **The proxy to trust for a reader's IP address**, which the forgot password page's limit counts by: a setting, like `CANONICAL_HOST`, for the deployment checklist.
-
 From earlier pull requests:
 
 - The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
