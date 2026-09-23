@@ -72,6 +72,7 @@ import type { InTransaction } from "./common/database.js";
 import { readerFromSessions, registerSignOut } from "./common/session.js";
 import { speakToRequests, type Language } from "./common/language.js";
 import { sendersBelieved } from "./common/trustedProxy.js";
+import { nameTheSite } from "./common/site.js";
 import {
   machineClock,
   stampRequests,
@@ -327,7 +328,7 @@ export const buildApplication = async (
     emailWriter(languages, {
       address: where,
       fromName: config.emailFromName,
-      fromSite: config.emailFromSite,
+      siteName: config.siteName,
     }),
     new FileEmailSender(join(repositoryRoot, "temp")),
     config.emailFromAddress,
@@ -442,6 +443,7 @@ export const buildApplication = async (
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
   speakToRequests(server, languages);
+  nameTheSite(server, config.siteName);
   // A page reads and writes through this, and knows nothing else of the
   // database.
   const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);

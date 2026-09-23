@@ -20,7 +20,7 @@ const settingsWith = (trustedProxy: string): NodeJS.ProcessEnv => ({
   ACCOUNT_EMAIL_ADDRESS_HASH_KEY: "not a key",
   EMAIL_FROM_ADDRESS: "nobody@example.com",
   EMAIL_FROM_NAME: "Nobody",
-  EMAIL_FROM_SITE: "Nowhere",
+  SITE_NAME: "Nowhere",
   TRUSTED_PROXY: trustedProxy,
 });
 

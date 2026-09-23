@@ -9,6 +9,7 @@ import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { speakingOf } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { escape } from "../common/escape.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
@@ -28,6 +29,7 @@ export const registerWelcomePage = (
       theme: themeOf(request),
       signedIn: signedIn(request),
       speaking,
+      siteName: siteNameOf(request),
       path: welcomePath,
       body: `          <h1>${escape(say("welcome.title"))}</h1>
           <p>${escape(say("welcome.checkEmail"))}</p>

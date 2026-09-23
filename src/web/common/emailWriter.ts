@@ -99,13 +99,13 @@ export interface SendingEmails {
   /** The name the site's emails are sent from, which each is signed off with. */
   readonly fromName: string;
   /** What an email calls the site it comes from, in its subject and its words. */
-  readonly fromSite: string;
+  readonly siteName: string;
 }
 
 /** Writes the site's emails from `offered`, as `sending` says the site sends. */
 export const emailWriter = (
   offered: readonly Language[],
-  { address, fromName, fromSite }: SendingEmails,
+  { address, fromName, siteName }: SendingEmails,
 ): EmailWriter => ({
   write: ({ kind, language, fill }: EmailToWrite): WrittenEmail => {
     if (!kinds.includes(kind)) {
@@ -157,7 +157,7 @@ export const emailWriter = (
     const subject = speaking.say(`${kind}.subject`, {
       ...fill,
       emailFromName: fromName,
-      emailFromSite: fromSite,
+      siteName: siteName,
     });
     // What the site knows about itself, filled in wherever an email's markup
     // asks for it, and after what the queue gave, so that nothing an email is
@@ -172,7 +172,7 @@ export const emailWriter = (
       buttonBackgroundColour,
       buttonTextColour,
       emailFromName: escape(fromName),
-      emailFromSite: escape(fromSite),
+      siteName: escape(siteName),
     });
 
     return {

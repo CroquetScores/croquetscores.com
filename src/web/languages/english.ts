@@ -7,6 +7,25 @@ export const english: Language = {
   tag: "en",
   name: "English",
   words: {
+    // The site's own bars. What the site is called is not among them: a name
+    // is not a word of anybody's language, so it is configured and filled into
+    // the plea that names it (site.ts).
+    "site.skipToContent": "Skip to content",
+    "navigation.menu": "Menu",
+    "navigation.label": "Primary",
+    "navigation.tournaments": "Tournaments",
+    "navigation.blog": "Blog",
+    "navigation.help": "Help",
+    "sections.label": "Sections",
+    "theme.label": "Theme",
+    "theme.light": "Light",
+    "theme.dark": "Dark",
+    "theme.system": "System",
+    "footer.donate": "Donate",
+    "footer.plea":
+      "Are you enjoying {siteName}? Please donate to help further development.",
+    "footer.copyright": "© Copyright {years}, {owner}",
+
     "language.label": "Language",
     "language.choose": "Change",
 
@@ -202,20 +221,20 @@ export const english: Language = {
     // `{site}` the site's address, for a link to one of its own pages,
     // `{buttonBackgroundColour}` and `{buttonTextColour}` what a button is
     // painted with, `{emailFromName}` the name the site's emails are sent
-    // from, which each email is signed off with, and `{emailFromSite}` what an
-    // email calls the site it comes from. The last four are the site's
+    // from, which each email is signed off with, and `{siteName}` what the
+    // site is called, which is the same name its pages call it. The last four
+    // are the site's
     // own and are filled in by the writer, never by what queued the email. A
     // button is painted where it stands, because a mail program reads no
     // stylesheet. None greets its reader by name, so that nothing about a
     // person but the address an email goes to need be put in the queue.
 
-    "Email.ConfirmAddress.subject":
-      "Confirm your email address for {emailFromSite}",
+    "Email.ConfirmAddress.subject": "Confirm your email address for {siteName}",
     "Email.ConfirmAddress.body": `
 <p>Hi,</p>
 
 <p>
-    Thanks for creating an account with <strong>{emailFromSite}</strong>.<br />
+    Thanks for creating an account with <strong>{siteName}</strong>.<br />
     Before you can start using your account, please confirm your email address by 
     clicking the button below:
 </p>
@@ -245,17 +264,17 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
     "Email.ConfirmAddressAgain.subject":
-      "A new link to confirm your email address for {emailFromSite}",
+      "A new link to confirm your email address for {siteName}",
     "Email.ConfirmAddressAgain.body": `
 <p>Hi,</p>
 
 <p>
-    You recently requested a new email to confirm your email address for <strong>{emailFromSite}</strong>.<br />
+    You recently requested a new email to confirm your email address for <strong>{siteName}</strong>.<br />
     Please confirm your email address by clicking the button below:
 </p>
 
@@ -288,7 +307,7 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
@@ -298,7 +317,7 @@ export const english: Language = {
 <p>Hi,</p>
 
 <p>
-    Somebody tried to register with <strong>{emailFromSite}</strong> using this
+    Somebody tried to register with <strong>{siteName}</strong> using this
     email address, which already has an account. Nothing about your account has
     changed.<br />
     If it was you, you already have an account, and can sign in to it:
@@ -343,16 +362,16 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
-    "Email.SetNewPassword.subject": "Set a new password for {emailFromSite}",
+    "Email.SetNewPassword.subject": "Set a new password for {siteName}",
     "Email.SetNewPassword.body": `
 <p>Hi,</p>
 
 <p>
-    You recently requested to reset your password for <strong>{emailFromSite}</strong>.<br />
+    You recently requested to reset your password for <strong>{siteName}</strong>.<br />
     You can reset your password by clicking the button below:
 </p>
 
@@ -381,18 +400,18 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
     "Email.RegisterInstead.subject":
-      "There is no {emailFromSite} account for this email address",
+      "There is no {siteName} account for this email address",
     "Email.RegisterInstead.body": `
 <p>Hi,</p>
 
 <p>
     A request was made to reset the password for an email address that is 
-    not associated with an account on <strong>{emailFromSite}</strong>.
+    not associated with an account on <strong>{siteName}</strong>.
 </p>
 
 <p>
@@ -406,17 +425,17 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Confirm that your {emailFromSite} account is to be forgotten",
+      "Confirm that your {siteName} account is to be forgotten",
     "Email.ConfirmForgetting.body": `
 <p>Hi,</p>
 
 <p>
-    You asked for your <strong>{emailFromSite}</strong> account to be
+    You asked for your <strong>{siteName}</strong> account to be
     forgotten.<br />
     Follow the button below to see what that means, and to say for certain
     that you want it:
@@ -460,7 +479,7 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
 
@@ -470,7 +489,7 @@ export const english: Language = {
 <p>Hi,</p>
 
 <p>
-    {emailFromSite} could not reach {service} at {when}. Until it answers,
+    {siteName} could not reach {service} at {when}. Until it answers,
     readers who need it, to register or to set a new password, are told to
     try again later.
 </p>
@@ -487,7 +506,7 @@ export const english: Language = {
 
 <p>
     {emailFromName}<br />
-    {emailFromSite}
+    {siteName}
 </p>
 `,
   },

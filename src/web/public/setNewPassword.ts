@@ -29,6 +29,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { endSession } from "../common/session.js";
@@ -127,6 +128,7 @@ export const registerSetNewPasswordPage = (
       // sessions this request ended is not signed in to anything any more.
       signedIn: !signedOut && signedIn(request),
       speaking: speakingOf(request),
+      siteName: siteNameOf(request),
       path: setNewPasswordPath,
       currentPath: setNewPasswordPath,
       ...(frame === undefined ? {} : { frame }),

@@ -11,6 +11,7 @@ import { randomUUID } from "node:crypto";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import type { Assets } from "./assets.js";
 import { speakingOf } from "./language.js";
+import { siteNameOf } from "./site.js";
 import { escape } from "./escape.js";
 import { render } from "./layout.js";
 import { themeOf } from "./theme.js";
@@ -38,6 +39,7 @@ const page = (
     theme: themeOf(request),
     signedIn: signedIn(request),
     speaking,
+    siteName: siteNameOf(request),
     path: request.url,
     body: `          <h1>${escape(title)}</h1>${
       detail === undefined

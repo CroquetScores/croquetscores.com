@@ -34,6 +34,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { siteNameOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { startSession } from "../common/session.js";
@@ -134,6 +135,7 @@ export const registerSignInPage = (
       theme: themeOf(request),
       signedIn: signedIn(request),
       speaking,
+      siteName: siteNameOf(request),
       path: signInPath,
       currentPath: signInPath,
       frame: "bare",

@@ -104,10 +104,10 @@ const wordsFor = (key: string): string => {
 
 // The writer -----------------------------------------------------------------
 
-// The name the scenarios' emails are sent from, and what they call the site
-// they come from, unless a scenario says otherwise.
+// The name the scenarios' emails are sent from, and what the scenarios' site
+// is called, unless a scenario says otherwise.
 const sendingAs = "Croquet Scores";
-const sendingFromSite = "Croquet Scores";
+const sendingAsTheSite = "Croquet Scores";
 
 // What the site fills into an email about itself, as the writer fills it in:
 // the words are the catalogue's, whoever puts the values in them.
@@ -115,7 +115,7 @@ const aboutTheSite: Readonly<Record<string, string>> = {
   buttonBackgroundColour: "#066b00",
   buttonTextColour: "#ffffff",
   emailFromName: sendingAs,
-  emailFromSite: sendingFromSite,
+  siteName: sendingAsTheSite,
 };
 
 const filledIn = (words: string): string =>
@@ -130,7 +130,7 @@ Given(
     writingOf(this).writer = emailWriter(scenarioLanguages, {
       address,
       fromName: sendingAs,
-      fromSite: sendingFromSite,
+      siteName: sendingAsTheSite,
     });
   },
 );
@@ -141,7 +141,7 @@ Given(
     writingOf(this).writer = emailWriter(scenarioLanguages, {
       address: "https://croquetscores.com",
       fromName: name,
-      fromSite: sendingFromSite,
+      siteName: sendingAsTheSite,
     });
   },
 );
@@ -152,7 +152,7 @@ Given(
     writingOf(this).writer = emailWriter(scenarioLanguages, {
       address: "https://croquetscores.com",
       fromName: sendingAs,
-      fromSite: site,
+      siteName: site,
     });
   },
 );
@@ -176,7 +176,7 @@ Given(
     writingOf(this).writer = emailWriter(without, {
       address: "https://croquetscores.com",
       fromName: sendingAs,
-      fromSite: sendingFromSite,
+      siteName: sendingAsTheSite,
     });
   },
 );

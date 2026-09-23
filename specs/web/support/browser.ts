@@ -75,6 +75,45 @@ const theSharedOne = async (): Promise<string> => {
 };
 
 /**
+ * An application of this scenario's own, the same as the shared one but for
+ * what it is called, listening on a port of its own and closed with the
+ * scenario.
+ *
+ * A scenario that needs one needs no database: what it looks at is what the
+ * site calls itself in its bars, which is decided as a page is rendered. So it
+ * is not the application a @postgres scenario gets, which is built over that
+ * scenario's own tables.
+ */
+export const anApplicationCalled = async (
+  world: SpecWorld,
+  siteName: string,
+): Promise<string> => {
+  loadEnvFile();
+  const named = await buildApplication(
+    { ...loadConfig(), siteName },
+    {
+      logger: false,
+      languages: scenarioLanguages,
+      reader: readerTheScenariosSet,
+      sendsTheEmailQueue: false,
+    },
+  );
+  namedApplications.get(world)?.push(named);
+
+  await named.server.listen({ port: 0, host: "127.0.0.1" });
+  const address = named.server.addresses()[0];
+  if (address === undefined) {
+    throw new Error("The application called something else is not listening.");
+  }
+  return `http://127.0.0.1:${address.port}`;
+};
+
+// Closed after the scenario that asked for one, server and pool each on their
+// own, so that a server that will not close does not leave a pool holding the
+// run up until its idle connections time out.
+const namedApplications = new WeakMap<SpecWorld, Application[]>();
+
+/**
  * The application a scenario with a database of its own talks to, listening on
  * a port of its own. Nothing it keeps outlives the scenario, and the clock it
  * reads is the one the scenario sets.
@@ -283,6 +322,15 @@ Before({ tags: "@browser" }, async function (this: SpecWorld) {
     javaScriptEnabled: false,
   });
   this.page = await this.browserContext.newPage();
+  namedApplications.set(this, []);
+});
+
+After({ tags: "@browser" }, async function (this: SpecWorld) {
+  for (const named of namedApplications.get(this) ?? []) {
+    await named.server.close();
+    await named.pool.end();
+  }
+  namedApplications.delete(this);
 });
 
 /**
