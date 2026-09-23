@@ -21,6 +21,7 @@ import "../../infrastructure/support/database.js";
 import {
   loadConfig,
   loadEnvFile,
+  type Config,
 } from "../../../src/infrastructure/config/Config.js";
 import { CheckRefused } from "../../../src/application/services/BreachedPasswords.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
@@ -84,13 +85,27 @@ const theSharedOne = async (): Promise<string> => {
  * is not the application a @postgres scenario gets, which is built over that
  * scenario's own tables.
  */
-export const anApplicationCalled = async (
+export const anApplicationCalled = (
   world: SpecWorld,
   siteName: string,
+): Promise<string> => anApplicationWith(world, { siteName });
+
+/**
+ * An application of this scenario's own, the same as the shared one but for
+ * which website it is served as, and otherwise as {@link anApplicationCalled}.
+ */
+export const anApplicationServedAs = (
+  world: SpecWorld,
+  website: Config["website"],
+): Promise<string> => anApplicationWith(world, { website });
+
+const anApplicationWith = async (
+  world: SpecWorld,
+  changed: Partial<Config>,
 ): Promise<string> => {
   loadEnvFile();
   const named = await buildApplication(
-    { ...loadConfig(), siteName },
+    { ...loadConfig(), ...changed },
     {
       logger: false,
       languages: scenarioLanguages,
@@ -103,7 +118,7 @@ export const anApplicationCalled = async (
   await named.server.listen({ port: 0, host: "127.0.0.1" });
   const address = named.server.addresses()[0];
   if (address === undefined) {
-    throw new Error("The application called something else is not listening.");
+    throw new Error("The scenario's own application is not listening.");
   }
   return `http://127.0.0.1:${address.port}`;
 };

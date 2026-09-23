@@ -40,7 +40,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { submitForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
-import { siteNameOf } from "../common/site.js";
+import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
@@ -114,6 +114,7 @@ const pageOf = (
     signedIn: signedIn(request),
     speaking: speakingOf(request),
     siteName: siteNameOf(request),
+    tryWebsite: websiteOf(request).isTry,
     path: confirmEmailAddressPath,
     currentPath: confirmEmailAddressPath,
     ...(frame === undefined ? {} : { frame }),

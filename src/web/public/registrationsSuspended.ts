@@ -10,7 +10,7 @@ import type { FastifyInstance } from "fastify";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import { speakingOf } from "../common/language.js";
-import { siteNameOf } from "../common/site.js";
+import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
@@ -35,6 +35,7 @@ export const registerRegistrationsSuspendedPage = (
           signedIn: signedIn(request),
           speaking,
           siteName: siteNameOf(request),
+          tryWebsite: websiteOf(request).isTry,
           path: registrationsSuspendedPath,
           body: `          <h1>${escape(say("registrationsSuspended.title"))}</h1>
           <p>${escape(say("registrationsSuspended.explanation"))}</p>

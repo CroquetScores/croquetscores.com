@@ -6,7 +6,7 @@ import type { FastifyInstance } from "fastify";
 
 import type { Assets } from "../common/assets.js";
 import { speakingOf } from "../common/language.js";
-import { siteNameOf } from "../common/site.js";
+import { siteNameOf, websiteOf } from "../common/site.js";
 import { escape } from "../common/escape.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
@@ -29,6 +29,7 @@ export const registerJavaScriptRequiredPage = (
       signedIn: signedIn(request),
       speaking,
       siteName: siteNameOf(request),
+      tryWebsite: websiteOf(request).isTry,
       path: javaScriptRequiredPath,
       body: `          <h1>${escape(say("javaScriptRequired.title"))}</h1>
           <p>${escape(say("javaScriptRequired.explanation"))}</p>

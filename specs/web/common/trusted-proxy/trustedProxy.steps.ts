@@ -21,6 +21,7 @@ const settingsWith = (trustedProxy: string): NodeJS.ProcessEnv => ({
   EMAIL_FROM_ADDRESS: "nobody@example.com",
   EMAIL_FROM_NAME: "Nobody",
   SITE_NAME: "Nowhere",
+  WEBSITE: "localhost:3000",
   TRUSTED_PROXY: trustedProxy,
 });
 

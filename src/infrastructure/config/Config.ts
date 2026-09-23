@@ -3,6 +3,8 @@
 import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
+import { Website } from "../../domain/common/Website.js";
+
 /** What reCAPTCHA needs: the key the page shows, and the one only the site has. */
 export interface RecaptchaKeys {
   readonly siteKey: string;
@@ -33,6 +35,12 @@ export interface Config {
   readonly emailFromAddress: string;
   readonly emailFromName: string;
   readonly siteName: string;
+  // Which of the five websites this is, which says which site it serves and
+  // whether it is a try website. Required rather than falling back to
+  // development, because a Gateball Scores that forgot it would quietly be a
+  // Croquet Scores offering croquet. Not worked out from CANONICAL_HOST, which
+  // development leaves blank on purpose (SETUP.md §6.1).
+  readonly website: Website;
   // Who is told when a service the site needs cannot be reached. Absent on a
   // development machine, where nobody needs telling.
   readonly administratorEmailAddress: string | undefined;
@@ -164,6 +172,24 @@ const readTrustedProxies = (
   return named;
 };
 
+// Blank is left to the list of what is missing, so that it is said once.
+const readWebsite = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): Website | undefined => {
+  const raw = env["WEBSITE"]?.trim() ?? "";
+  if (raw === "") return undefined;
+  try {
+    return Website.from(raw);
+  } catch {
+    problems.push(
+      `WEBSITE must be one of ${Website.all.map((one) => one.host).join(", ")}, ` +
+        `not ${JSON.stringify(raw)}.`,
+    );
+    return undefined;
+  }
+};
+
 const defaultPort = 3000;
 
 // A blank value is what .env holds for a key nobody has filled in, so it means
@@ -195,6 +221,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     "EMAIL_FROM_ADDRESS",
     "EMAIL_FROM_NAME",
     "SITE_NAME",
+    "WEBSITE",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
   if (missing.length > 0) problems.push(`Missing: ${missing.join(", ")}.`);
@@ -203,7 +230,9 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   // a worse morning than being told about both.
   const port = readPort(env, problems);
   const trustedProxies = readTrustedProxies(env, problems);
-  if (problems.length > 0) throw new ConfigError(problems);
+  const website = readWebsite(env, problems);
+  if (problems.length > 0 || website === undefined)
+    throw new ConfigError(problems);
 
   return {
     port,
@@ -215,6 +244,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
     emailFromName: env["EMAIL_FROM_NAME"]!.trim(),
     siteName: env["SITE_NAME"]!.trim(),
+    website,
     administratorEmailAddress:
       env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     canonicalHost: readCanonicalHost(env),

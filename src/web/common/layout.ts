@@ -46,6 +46,11 @@ export interface Shell {
       catalogue: a site serving from this repository under another name calls
       itself that in its bars, as it does in its emails (site.ts). */
   readonly siteName: string;
+  /** Whether the site is served as a try website, which says so on every
+      page. Asked of every page, as signedIn is, so that a page that forgot it
+      is refused by the typecheck rather than left without the banner on the
+      one website where a reader needs it. */
+  readonly tryWebsite: boolean;
   /** The path the theme and language forms return to, so a choice keeps you
       where you were. */
   readonly path: string;
@@ -112,6 +117,18 @@ ${items}
           </nav>
         </details>`;
 };
+
+// Beneath the site bar rather than in it, so that it scrolls away once read
+// instead of taking a line of every screen for as long as the reader stays.
+const tryWebsiteBanner = (shell: Shell): string =>
+  shell.tryWebsite
+    ? `
+    <div class="try-banner">
+      <div class="page">
+        <p>${escape(shell.speaking.say("tryWebsite.banner", { siteName: shell.siteName }))}</p>
+      </div>
+    </div>`
+    : "";
 
 // What a page names its sections is the page's own words; the bar's own word
 // is the one it is announced by to a reader who cannot see it.
@@ -225,7 +242,7 @@ ${menu(shell.speaking, shell.currentPath)}
 ${accountMenu(shell)}
         </div>
       </div>
-    </header>${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+    </header>${tryWebsiteBanner(shell)}${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${
