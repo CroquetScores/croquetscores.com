@@ -104,24 +104,10 @@ export class ConfirmEmailAddressHandler extends CommandHandler<
     // carried out, a link that was never any good — is settled without Have I
     // Been Pwned being asked anything at all, which is the whole reason the
     // reading is separated from the writing.
-    const worth = await this.transactions.inReadOnlyTransaction(async () => {
-      if (await this.handled.wasHandled(command.requestId)) return "Handled";
-
-      const judged = await worthOfConfirmationLink(
-        this.links,
-        this.accounts,
-        command.link,
-        command.requestedAt,
-      );
-      return judged.worth;
-    });
-
-    // A confirmation already kept, sent again because its answer was lost, is
-    // answered as the first was: it confirmed, and says so by answering
-    // nothing. Judging the link now would refuse it, the first confirmation
-    // having spent it.
-    if (worth === "Handled") return;
-    if (worth !== "Link.Works") throw new ConfirmingRefused(worth, said[worth]);
+    const alreadyConfirmed = await this.transactions.inReadOnlyTransaction(() =>
+      this.read(command),
+    );
+    if (alreadyConfirmed) return;
 
     // Asked with no connection held, which is what all of this is for: the
     // request goes to another site and is given as long as it takes, and no
@@ -135,37 +121,72 @@ export class ConfirmEmailAddressHandler extends CommandHandler<
       ]);
     }
 
-    await this.transactions.inTransaction(async () => {
-      // Claimed inside the transaction that keeps the work, so that the id is
-      // remembered if and only if the confirmation was. The reading above is
-      // over by now and may have gone stale, so everything it asked is asked
-      // again here, where the answer has to hold.
-      if (!(await this.handled.claim(command.requestId, command.requestedAt))) {
-        return;
-      }
+    await this.transactions.inTransaction(() => this.write(command));
+  }
 
-      const judged = await worthOfConfirmationLink(
-        this.links,
-        this.accounts,
-        command.link,
-        command.requestedAt,
-      );
-      if (judged.worth !== "Link.Works") {
-        throw new ConfirmingRefused(judged.worth, said[judged.worth]);
-      }
-      const { account } = judged;
+  /**
+   * Whether the confirmation has already been carried out, in which case there
+   * is nothing left to do and whoever sent it is answered as the first sending
+   * was. Refuses a link that is no good, because a link no good now will not
+   * become good, and that is the answer whoever asked is owed without another
+   * site being troubled about their password.
+   *
+   * A guard rather than a decision: it is over before the writing begins, so
+   * what it saw may have changed, and the writing asks it all again where the
+   * answer has to hold.
+   */
+  private async read(command: ConfirmEmailAddress): Promise<boolean> {
+    if (await this.handled.wasHandled(command.requestId)) return true;
 
-      // Made from what the validator has already found sound, so neither can
-      // refuse here.
-      const name = PersonName.from(command.name);
-      const password = Password.from(command.password);
+    await this.accountTheLinkNames(command);
+    return false;
+  }
 
-      account.confirm(
-        name,
-        await this.passwords.hash(password.reveal()),
-        command.requestedAt,
-      );
-      await this.accounts.save(account);
-    });
+  private async write(command: ConfirmEmailAddress): Promise<void> {
+    // Claimed inside the transaction that keeps the work, so that the id is
+    // remembered if and only if the confirmation was. A confirmation already
+    // kept is answered as the first was, which is by answering nothing.
+    if (!(await this.handled.claim(command.requestId, command.requestedAt))) {
+      return;
+    }
+
+    const account = await this.accountTheLinkNames(command);
+
+    // Made from what the validator has already found sound, so neither can
+    // refuse here.
+    const name = PersonName.from(command.name);
+    const password = Password.from(command.password);
+
+    account.confirm(
+      name,
+      await this.passwords.hash(password.reveal()),
+      command.requestedAt,
+    );
+    await this.accounts.save(account);
+  }
+
+  /**
+   * The account a working link names, or a refusal saying what is wrong with
+   * the link.
+   *
+   * Asked by both halves, once either side of the stretch where the password
+   * is asked about, so that the question and the refusal it raises are written
+   * once and cannot drift apart. It is the same question the page the link
+   * opened asked, of the same place, so that what the reader was shown and
+   * what their submission is answered with cannot disagree.
+   */
+  private async accountTheLinkNames(
+    command: ConfirmEmailAddress,
+  ): Promise<Account> {
+    const judged = await worthOfConfirmationLink(
+      this.links,
+      this.accounts,
+      command.link,
+      command.requestedAt,
+    );
+    if (judged.worth !== "Link.Works") {
+      throw new ConfirmingRefused(judged.worth, said[judged.worth]);
+    }
+    return judged.account;
   }
 }

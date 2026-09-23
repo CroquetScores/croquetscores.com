@@ -108,49 +108,45 @@ export class SetNewPasswordHandler extends CommandHandler<
    * the answer whoever asked is owed without another site being troubled.
    */
   private async read(command: SetNewPassword): Promise<AccountId | undefined> {
-    const asked = `${spent(command.link)}#${command.requestId}`;
+    const kept = await this.alreadyKept(command);
+    if (kept !== undefined) return kept;
 
-    if (await this.handled.wasHandled(asked)) {
-      const carried = this.links.read(command.link);
-      if (carried?.purpose === "set-new-password") return carried.account;
-    }
-
-    const judged = await worthOfSetNewPasswordLink(
-      this.links,
-      this.accounts,
-      this.handled,
-      command.link,
-      command.requestedAt,
-    );
-    if (judged.worth !== "Link.Works") {
-      throw judged.worth === "Link.Expired"
-        ? new SettingRefused(
-            "Link.Expired",
-            "The link has stopped working, and a new one can be asked for.",
-          )
-        : noLongerWorks("cannot set a password");
-    }
+    await this.accountTheLinkNames(command);
     return undefined;
   }
 
-  private async write(command: SetNewPassword): Promise<AccountId> {
-    // The request id is claimed with the link it came with, so that it is a
-    // retry only of a setting sent with that same link. An id is whatever the
-    // form's address says, and one claimed by anything else — another command,
-    // or a setting with another link — must not pass for a setting that was
-    // kept, which would answer as though a password had been set when none was.
-    // Asked again inside the transaction that keeps the work, because the
-    // reading before the check is over by now and may have gone stale. A
-    // setting already kept, sent again because its answer was lost, is answered
-    // as the first was; the link is judged after it, because the first setting
-    // spent it and judging it now would refuse it.
+  /**
+   * The account to answer with when this very setting was already kept, and
+   * nothing when it was not.
+   *
+   * Asked before the link is judged, because a setting that was kept spent the
+   * link, and judging it now would refuse a retry that ought to be answered as
+   * the first sending was. The id is the link and the request id together, so
+   * that it is a retry only of a setting sent with that same link: an id is
+   * whatever the form's address says, and one claimed by anything else must
+   * not pass for a setting that was kept.
+   */
+  private async alreadyKept(
+    command: SetNewPassword,
+  ): Promise<AccountId | undefined> {
     const asked = `${spent(command.link)}#${command.requestId}`;
+    if (!(await this.handled.wasHandled(asked))) return undefined;
 
-    if (await this.handled.wasHandled(asked)) {
-      const carried = this.links.read(command.link);
-      if (carried?.purpose === "set-new-password") return carried.account;
-    }
+    const carried = this.links.read(command.link);
+    return carried?.purpose === "set-new-password"
+      ? carried.account
+      : undefined;
+  }
 
+  /**
+   * The account a working link names, or a refusal saying what is wrong with
+   * the link.
+   *
+   * Asked by both halves, once either side of the stretch where the password
+   * is asked about, so that the question and the refusals it raises are
+   * written once and cannot drift apart.
+   */
+  private async accountTheLinkNames(command: SetNewPassword): Promise<Account> {
     const judged = await worthOfSetNewPasswordLink(
       this.links,
       this.accounts,
@@ -166,7 +162,18 @@ export class SetNewPasswordHandler extends CommandHandler<
           )
         : noLongerWorks("cannot set a password");
     }
-    const { account } = judged;
+    return judged.account;
+  }
+
+  private async write(command: SetNewPassword): Promise<AccountId> {
+    // Both asked again inside the transaction that keeps the work, because the
+    // reading before the password was asked about is over by now and may have
+    // gone stale. These are the answers that count.
+    const kept = await this.alreadyKept(command);
+    if (kept !== undefined) return kept;
+
+    const account = await this.accountTheLinkNames(command);
+    const asked = `${spent(command.link)}#${command.requestId}`;
 
     // Claimed once the link is known to be good, so that a setting sent twice
     // at once sets one password: the second waits on the first's claim, and
