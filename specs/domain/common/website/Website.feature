@@ -19,8 +19,8 @@ Feature: The website a site is served as
   and whether it is a try website. The site is what the sports and formats
   it offers follow, which are specified with them; a try website offers what
   its own site offers, because the point of it is to learn the same system.
-  What else a try website does differently is each page's to say, as that
-  page is specified.
+  What a try website shows differently is specified where it is shown: the
+  banner every one of its pages carries is the shell's (`layout.feature`).
 
   Development is not a try website. It is where the site itself is worked
   on, and a try website is somewhere readers are sent.

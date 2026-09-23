@@ -26,6 +26,7 @@ import type { BreachedPasswords } from "../../src/application/services/BreachedP
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
+import type { Website } from "../../src/domain/common/Website.js";
 import type { EmailAddress } from "../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Password } from "../../src/domain/aggregates/accounts/value-objects/Password.js";
 import type { PersonName } from "../../src/domain/aggregates/accounts/value-objects/PersonName.js";
@@ -274,6 +275,10 @@ export class SpecWorld extends World {
   public regionsChecked = 0;
   // The site a scenario names, which whatever differs by site looks at.
   public site: Site | undefined;
+  // The website a scenario makes, and whether it was found the same as
+  // another. A failure to make one is kept in `failure`.
+  public website: Website | undefined;
+  public sameWebsite: boolean | undefined;
   // The sport a scenario makes, and whether it was found the same as another;
   // and the sports found for the site it names, and how many of those in order
   // the scenario has named so far.
