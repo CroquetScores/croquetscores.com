@@ -32,6 +32,8 @@ Four kinds of thing, kept apart.
 
 From earlier pull requests:
 
+- The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
+
 - Only the "not found" page is checked in the test locale. The words on the pages for a refused request and for the server failing come from the catalogue too, but no scenario looks (from PR #32).
 
 ---

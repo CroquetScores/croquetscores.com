@@ -43,7 +43,7 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
 
     Example.Unworded        the passphrase is "unworded passphrase"
     Example.AlsoUnworded    the passphrase is "unworded passphrase"
-    Example.UnwordedRange   the start and the end are the same
+    Example.UnwordedRange   a start is given, and the end is the same
 
   The words the example form shows for each rule are in the reader's language,
   and are named here by the rule's code, never by their wording.
