@@ -91,3 +91,64 @@ Feature: The admin is served as the site it belongs to
       And a machine that prefers dark
       When the admin is opened
       Then the page is dark
+
+  Rule: The admin offers the choice of light or dark itself
+
+    A reader who wants the admin dark should not have to leave it for a public
+    page to say so. The admin offers the same choice the public pages do, in
+    the same words and made the same way, so that there is one choice rather
+    than two that could come to disagree: made in the admin, it holds on the
+    public pages, as one made there holds here. Like the choice on a public
+    page it is made with scripting off, and brings the reader back to where
+    they made it.
+
+    Scenario: Wanting dark in the admin on a machine that prefers light
+      Given a viewport 1200 pixels wide
+      And a machine that prefers light
+      And the admin is open
+      When the theme "Dark" is chosen
+      Then the page is dark
+
+    Scenario: Wanting light in the admin on a machine that prefers dark
+      Given a viewport 1200 pixels wide
+      And a machine that prefers dark
+      And the admin is open
+      When the theme "Light" is chosen
+      Then the page is light
+
+    Scenario: The choice brings the reader back to the admin
+      Given a viewport 1200 pixels wide
+      And the admin is open
+      When the theme "Dark" is chosen
+      Then the admin is shown
+
+    Scenario: The admin says which theme is in force when nothing has been chosen
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the theme "System" is the one in force
+
+    Scenario: The admin says which theme is in force once one has been chosen
+      Given a viewport 1200 pixels wide
+      And the admin is open
+      When the theme "Light" is chosen
+      Then the theme "Light" is the one in force
+
+    Scenario: A choice made in the admin holds on the public pages
+      Given a viewport 1200 pixels wide
+      And a machine that prefers light
+      And the admin is open
+      And the theme "Dark" is chosen
+      When the home page is opened
+      Then the page is dark
+
+    Scenario: The choice is in the reader's language
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the admin is opened
+      Then every word in the theme choice is in the test locale
+
+    Scenario: The choice can be made with a thumb
+      Given a viewport 375 pixels wide
+      When the admin is opened
+      Then the theme button "Light" is at least 44 pixels tall
+      And the theme button "Light" is at least 44 pixels wide
