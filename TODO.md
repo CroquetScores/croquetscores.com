@@ -30,10 +30,6 @@ Four kinds of thing, kept apart.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
-From earlier pull requests:
-
-- The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
-
 ---
 
 ## Waiting on a dependency
