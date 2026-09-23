@@ -36,6 +36,15 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
     Passphrase.Missing    nothing is given
     Passphrase.TooShort   something is given, and it is under 12 characters
 
+  The form has three more rules that no catalogue anywhere has words for,
+  which exist so that what a form does with such a rule can be seen. Two of
+  them read the passphrase and are broken together, so that one place has two
+  of them to say; the third reads the start and the end:
+
+    Example.Unworded        the passphrase is "unworded passphrase"
+    Example.AlsoUnworded    the passphrase is "unworded passphrase"
+    Example.UnwordedRange   a start is given, and the end is the same
+
   The words the example form shows for each rule are in the reader's language,
   and are named here by the rule's code, never by their wording.
 
@@ -138,6 +147,63 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
       And "correct horse battery" is typed into the passphrase field
       When the dialog is submitted
       Then the passphrase field has no message
+
+  Rule: A rule the catalogue has no words for is still said
+
+    A rule is said in words looked up by its code, in the reader's language and
+    then in the site's first, so a rule is only unworded when neither has
+    anything (`language.feature`). That is a mistake in the catalogue rather
+    than in what was typed, and it is whoever added the rule who has to put it
+    right.
+
+    Until they do, the reader broke a rule and is owed saying so. The form says
+    it in the catalogue's words for a rule it cannot name: something here is not
+    right, and where to look. Showing the form again with nothing marked would
+    read as a button that did nothing, and an error page would say the site is
+    broken when what is wrong is what was typed.
+
+    Where it is said does not change. A rule with no words goes beneath its
+    field where it reads one, and above the fields where it reads more, as any
+    other rule does.
+
+    Two such rules in the same place say it once. They are the same sentence,
+    and a reader told twice that something is not right learns nothing the
+    second time and would look for a second fault.
+
+    Scenario: A rule with no words is said beneath the field it reads
+      Given "1" is typed into the start field
+      And "5" is typed into the end field
+      And "unworded passphrase" is typed into the passphrase field
+      When the dialog is submitted
+      Then the passphrase field says the message for "form.otherwise"
+
+    Scenario: A field whose only broken rule has no words is marked as wrong
+      Given "1" is typed into the start field
+      And "5" is typed into the end field
+      And "unworded passphrase" is typed into the passphrase field
+      When the dialog is submitted
+      Then the passphrase field is marked as wrong
+
+    Scenario: Two rules with no words are said once
+      Given "1" is typed into the start field
+      And "5" is typed into the end field
+      And "unworded passphrase" is typed into the passphrase field
+      When the dialog is submitted
+      Then the passphrase field says one message
+
+    Scenario: A rule with no words about more than one field is said above the fields
+      Given "7" is typed into the start field
+      And "7" is typed into the end field
+      And "correct horse battery" is typed into the passphrase field
+      When the dialog is submitted
+      Then the message for "form.otherwise" is above the fields
+
+    Scenario: A form refused only by a rule with no words is shown again
+      Given "7" is typed into the start field
+      And "7" is typed into the end field
+      And "correct horse battery" is typed into the passphrase field
+      When the dialog is submitted
+      Then the form is shown again as refused
 
   Rule: What was typed is kept, except a password
 

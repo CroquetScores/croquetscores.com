@@ -29,7 +29,10 @@ import type { Application } from "../../../src/web/server.js";
 import { Command } from "../../../src/application/common/Command.js";
 import { CommandValidator } from "../../../src/application/common/CommandValidator.js";
 import type { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
-import type { BrokenRule } from "../../../src/domain/common/validation/Validator.js";
+import {
+  Validator,
+  type BrokenRule,
+} from "../../../src/domain/common/validation/Validator.js";
 import { passphrases } from "../../support/examplePassphrase.js";
 import { type Range, ranges } from "../../support/exampleRange.js";
 
@@ -66,6 +69,49 @@ class ExampleFormCommand extends Command<string> implements Range {
   }
 }
 
+/** What breaks the rules below, typed into the passphrase field. */
+export const unwordedPassphrase = "unworded passphrase";
+
+/**
+ * Rules that no catalogue anywhere has words for, so that what a form shows
+ * for such a rule can be seen (form.feature). They are the example form's own
+ * rather than the example range's or the example passphrase's, because those
+ * are asked about the example requests by the validator's feature and the
+ * validation behaviour's, which hold them to the rules they have.
+ *
+ * Two of them are broken by the same passphrase, so that one place has two
+ * unworded rules to say and the form can be seen saying it once. The passphrase
+ * that breaks them is past the length the passphrase's own rules ask for, so
+ * nothing else is said beneath that field while they are.
+ */
+const unworded = new Validator<
+  ExampleFormCommand,
+  "Example.Unworded" | "Example.AlsoUnworded" | "Example.UnwordedRange"
+>({
+  fields: [
+    {
+      field: "passphrase",
+      code: "Example.Unworded",
+      isBrokenBy: (command) => command.passphrase === unwordedPassphrase,
+    },
+    {
+      field: "passphrase",
+      code: "Example.AlsoUnworded",
+      isBrokenBy: (command) => command.passphrase === unwordedPassphrase,
+    },
+  ],
+  spanning: [
+    {
+      reads: ["start", "end"],
+      code: "Example.UnwordedRange",
+      // Neither one typed is not the same start and end: it is a form sent
+      // empty, which the range's own rules are about, and which two of these
+      // scenarios send on purpose.
+      isBrokenBy: ({ start, end }) => start !== undefined && start === end,
+    },
+  ],
+});
+
 // The range's rules and the passphrase's, the one set after the other. The
 // passphrase's are written for a passphrase alone, and say they read its
 // "value"; here, where it is known which of the request's fields holds it,
@@ -79,6 +125,7 @@ class ExampleFormCommandValidator extends CommandValidator<ExampleFormCommand> {
       ...passphrases
         .check(command.passphrase)
         .map((rule) => ({ ...rule, fields: ["passphrase"] })),
+      ...unworded.check(command),
     ];
   }
 }

@@ -34,8 +34,6 @@ From earlier pull requests:
 
 - The words in the site's own bars — the header, the section navigation and the footer, the language choice excepted — are still written into `src/web/common/layout.ts` in English, whatever the reader's language (from PR #32).
 
-- What a form shows for a rule the catalogue has no words for — `form.otherwise`, above the fields — is covered by no scenario (from PR #32).
-
 - Only the "not found" page is checked in the test locale. The words on the pages for a refused request and for the server failing come from the catalogue too, but no scenario looks (from PR #32).
 
 ---
@@ -170,6 +168,23 @@ Prefer the first. Whichever is chosen, the admin should also offer the same cont
 **Why it has not yet.** The assets are a stylesheet and little else. The cross-site guard lets a request with neither header through.
 
 **What to do.** Nothing until it is felt. When it is, build less rather than build once: these scenarios register handlers, so they cannot share one application across a run the way `specs/web/support/browser.ts` does. Letting `buildApplication` be given assets already read, or exporting the function that puts the mediator together so the scenarios can decorate a bare server with it, would each take the cost away — and the second would stop testing the application as the server builds it, which is the point of the feature, so prefer the first. If the cross-site guard is ever tightened, give the example `POST` the headers a same-site browser sends, rather than blanking the config the step builds with.
+
+### A rule with no words is said beside a field already said to be wrong
+
+**Where:** the `unworded` validator in `specs/web/support/exampleForm.ts`, and `check` in `src/domain/common/validation/Validator.ts` — from the review of PR #83.
+
+**What will go wrong.** `Validator.check` keeps a rule that reads several fields quiet where a field rule has already marked one of those fields, so that one mistake draws one complaint and nobody is pointed at a field that is not the one they got wrong. The record of which fields are marked belongs to that one call, so it cannot reach across validators, and `ExampleFormCommandValidator` asks three in turn: the range's, the passphrase's, and the example form's own unworded rules. `Example.UnwordedRange` reads the start and the end from the third of them.
+
+So a start of `-1`, an end of `-1` and a passphrase long enough to satisfy its own rules gets "The start cannot be below zero." beneath the start field and "Something here is not right…" above the fields: two complaints about one mistake, the second naming a pair of fields where one is wrong and the other is not. `Range.EndBeforeStart` cannot do this, sitting in the same validator as the rule that marks the start, which is what "Neither field it reads is said to be wrong" in `form.feature` holds it to. The same would hold for any command validator asking several validators in turn where one of them reads across fields; none of the real ones does yet, so today this is the example form's alone.
+
+**Why it has not yet.** No scenario types a negative start into the example form. Every one that reaches `Example.UnwordedRange` leaves the start empty or types zero or above, so there is never a marked field for the suppression to find. It is a trap for the next form scenario written with a negative start rather than something failing now.
+
+**What to do.** Two ways, and each says something different in the table in `form.feature` that names what breaks each rule, so choose before writing either.
+
+- Give the rule the condition it is missing — `start !== undefined && start >= 0 && start === end` — and the table gains a clause about the start not being below zero. It writes one of the range's rules into the example form a second time, where it can come to disagree with the original.
+- Ask the range first — `ranges.check(command).length === 0 && ...` — and the table gains "and nothing else about the range is wrong". Nothing is written twice, but the rule then goes quiet for anything at all wrong with the range, a bad step included, which is a field it does not read.
+
+Prefer the first. The duplication is one comparison, in a support file whose rules exist only to be broken, and the rule stays readable where it is written; the second makes an example rule depend on the whole of another validator's verdict, which is more to hold in the head than the rule is worth. What should not be done is moving the rule into the range's own validator: those rules are asked about the example requests by the validator's feature and the validation behaviour's, which hold them to the rules they have.
 
 ---
 
