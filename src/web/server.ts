@@ -4,7 +4,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
-import { createReadStream, existsSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
@@ -63,6 +63,7 @@ import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReader
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { apiV1 } from "./api/v1/index.js";
+import { adminPage, builtAdminPage } from "./common/adminPage.js";
 import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
@@ -210,16 +211,27 @@ const registerAdmin = async (
     return;
   }
 
-  // wildcard: false leaves the star route below free to claim every path that
-  // is not a file, which is what makes a deep link reload rather than 404.
+  // Only what Vite puts in assets/ is served as it was built. The page itself
+  // is not: it is said into on the way out (adminPage.ts), so it is left to the
+  // star route below, which with wildcard: false also claims every path that is
+  // not a file, which is what makes a deep link reload rather than 404.
   await server.register(fastifyStatic, {
-    root: adminRoot,
-    prefix: "/admin/",
+    root: join(adminRoot, "assets"),
+    prefix: "/admin/assets/",
     wildcard: false,
   });
+  const built = builtAdminPage(
+    readFileSync(join(adminRoot, "index.html"), "utf8"),
+  );
   server.get("/admin", (_request, reply) => reply.redirect("/admin/", 308));
-  server.get("/admin/*", (_request, reply) =>
-    reply.type("text/html; charset=utf-8").sendFile("index.html"),
+  // What every other page is sent with, for the same reason: the page is now
+  // drawn from the reader's cookies and the languages their browser asks for.
+  server.get("/admin/*", (request, reply) =>
+    reply
+      .header("cache-control", "private, no-cache")
+      .header("vary", "Cookie, Accept-Language")
+      .type("text/html; charset=utf-8")
+      .send(adminPage(built, request)),
   );
 };
 

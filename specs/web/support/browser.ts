@@ -138,6 +138,19 @@ const namedApplicationsFor = (world: SpecWorld): Application[] => {
 };
 
 /**
+ * What the site the scenario's browser is talking to is called, asked of the
+ * application rather than read off a page, so that a scenario can hold a page
+ * to the name without that page having to show it anywhere else first. Every
+ * application but one of the scenario's own is called what the settings say.
+ */
+export const siteNameFor = (world: SpecWorld): string => {
+  const named = namedApplications.get(world)?.at(-1);
+  if (named !== undefined) return named.server.siteName;
+  loadEnvFile();
+  return loadConfig().siteName;
+};
+
+/**
  * The application a scenario with a database of its own talks to, listening on
  * a port of its own. Nothing it keeps outlives the scenario, and the clock it
  * reads is the one the scenario sets.
