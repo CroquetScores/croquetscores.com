@@ -4,6 +4,7 @@
 // change in front of it. CI still runs every scenario on every pull request, so
 // this narrows what is run while work is in hand, not what has to pass.
 import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -69,35 +70,64 @@ const changedIn = (...pathspec) =>
     ...git("ls-files", "--others", "--exclude-standard", "--", ...pathspec),
   ]);
 
-const changed = new Set([
-  ...changedIn("*.feature"),
-  // Anything named on the command line, for a change under /src that no feature
-  // file changed alongside.
-  ...process.argv.slice(2),
-]);
+// Anything named on the command line, for a change under /src that no feature
+// file changed alongside. A switch is not a feature file, and passing one on as
+// though it were leaves cucumber to refuse it several lines later: it is
+// refused here instead, where what is wrong with it can be said.
+const named = process.argv.slice(2);
+const switches = named.filter((argument) => argument.startsWith("-"));
+if (switches.length > 0) {
+  console.error(
+    `This takes feature files to run, and nothing else. It was given ${switches.join(", ")}.`,
+  );
+  console.error(
+    "Name a feature to run it: npm run test:changed -- specs/.../Thing.feature",
+  );
+  process.exit(1);
+}
+
+// A feature named by hand that is not there. Cucumber finds no scenario in it,
+// says so, and answers that nothing failed, which is the one thing this script
+// exists to stop: a run of nothing must not read as passing. A path with a
+// line number on the end names the same file.
+const missing = named.filter(
+  (feature) => !existsSync(join(root, feature.replace(/:\d+$/, ""))),
+);
+if (missing.length > 0) {
+  console.error(
+    `There is no such feature file: ${missing.join(", ")}. Nothing was run.`,
+  );
+  process.exit(1);
+}
+
+const changed = new Set([...changedIn("*.feature"), ...named]);
 
 const listed = (files) => {
   for (const file of [...files].sort()) console.error(`  ${file}`);
   console.error("");
 };
 
-if (changed.size === 0) {
-  // Code that changed with no feature file beside it is the one case where
-  // running nothing must not read as passing: the scenarios covering it exist,
-  // and the run simply did not find them by looking at what changed. Step
-  // definitions count as much as /src does — a branch can rewrite a steps file
-  // without touching the feature it belongs to, and that is a change to how
-  // the scenarios are carried out with nothing run to show for it. A branch
-  // that touched neither, such as one that only changed documents or settings,
-  // has genuinely nothing to run.
-  const code = changedIn("src/*", "specs/*.ts");
-  const reaching = [...code].filter((file) =>
-    file.startsWith("specs/support/"),
-  );
+// Code that changed with no feature file beside it is the one case where
+// running nothing must not read as passing: the scenarios covering it exist,
+// and the run simply did not find them by looking at what changed. Step
+// definitions count as much as /src does — a branch can rewrite a steps file
+// without touching the feature it belongs to, and that is a change to how the
+// scenarios are carried out with nothing run to show for it. A branch that
+// touched neither, such as one that only changed documents or settings, has
+// genuinely nothing to run.
+const code = changedIn("src/*", "specs/*.ts");
 
-  // AI.md asks for the whole suite by hand where a change reaches further than
-  // its own feature, and names specs/support as exactly that: every spec in the
-  // repository loads it, so there is no one feature to name.
+// AI.md asks for the whole suite by hand where a change reaches further than
+// its own feature, and names a spec's support as exactly that: cucumber.json
+// imports every support folder on every run, so there is no one feature to
+// name. All three are counted, not specs/support alone — specs/web/support and
+// specs/infrastructure/support are loaded just as widely, and a change to one
+// of them is under no single feature either.
+const reaching = [...code].filter((file) =>
+  /^specs\/(.*\/)?support\//.test(file),
+);
+
+if (changed.size === 0) {
   if (reaching.length > 0) {
     console.error(
       `No feature file has changed against ${base}, and what did change is loaded by every spec:`,
@@ -127,6 +157,19 @@ if (changed.size === 0) {
     "Name one to run it anyway: npm run test:changed -- specs/.../Thing.feature",
   );
   process.exit(0);
+}
+
+// A change under a spec's support reaches every spec whether or not a feature
+// changed beside it, so it is said here as well as where nothing was found to
+// run. It is said rather than refused: there is a narrowed run to make, and
+// what the whole suite would add is the reader's to weigh.
+if (reaching.length > 0) {
+  console.error("What changed under a spec's support is loaded by every spec:");
+  listed(reaching);
+  console.error(
+    "That reaches further than the features below, so run the whole suite as well: npm test",
+  );
+  console.error("");
 }
 
 const features = [...changed].sort();
