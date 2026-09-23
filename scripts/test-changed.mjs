@@ -4,24 +4,49 @@
 // change in front of it. CI still runs every scenario on every pull request, so
 // this narrows what is run while work is in hand, not what has to pass.
 import { execFileSync, spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-
-// What the branch is measured against. Everything here branches from main, and
-// a branch's own commits are the ones main does not have.
-const base = "main";
+const require = createRequire(import.meta.url);
 
 const git = (...args) =>
   execFileSync("git", args, { cwd: root, encoding: "utf8" })
     .split("\n")
     .filter((line) => line.length > 0);
 
+const hasRef = (ref) => {
+  try {
+    execFileSync(
+      "git",
+      ["rev-parse", "--verify", "--quiet", `${ref}^{commit}`],
+      {
+        cwd: root,
+        stdio: "ignore",
+      },
+    );
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// What the branch is measured against. Everything here branches from main, and
+// a branch's own commits are the ones main does not have — but the local main
+// ref is only as fresh as the last fetch, and is routinely behind. Measuring
+// against a stale one counts commits already on main as the branch's own,
+// which was harmless while the worst of it was running a few scenarios too
+// many, and is not harmless now that finding nothing to run can fail: a branch
+// would be refused over source files somebody else wrote. So the remote's ref
+// is preferred where there is one, and the local one is what a clone with no
+// remote falls back to.
+const base = hasRef("origin/main") ? "origin/main" : "main";
+
 // A change can be in any of four places, and a feature half way through being
 // written is usually in the last two. Deletions are filtered out: a feature
-// that is gone has nothing left to run, and a source file that is gone has
-// nothing left to cover.
+// that is gone has nothing left to run, and a file that is gone has nothing
+// left to cover.
 const changedIn = (...pathspec) =>
   new Set([
     ...git(
@@ -51,20 +76,44 @@ const changed = new Set([
   ...process.argv.slice(2),
 ]);
 
+const listed = (files) => {
+  for (const file of [...files].sort()) console.error(`  ${file}`);
+  console.error("");
+};
+
 if (changed.size === 0) {
-  // A branch that changed something under /src and no feature file beside it is
-  // the one case where running nothing must not read as passing: the scenarios
-  // that cover that source file exist, and the run simply did not find them by
-  // looking at what changed. AI.md says to name the feature by hand here, and
-  // this is what makes that more than advice. A branch that touched neither —
-  // documents, settings, this script — has genuinely nothing to run.
-  const source = changedIn("src/*");
-  if (source.size > 0) {
+  // Code that changed with no feature file beside it is the one case where
+  // running nothing must not read as passing: the scenarios covering it exist,
+  // and the run simply did not find them by looking at what changed. Step
+  // definitions count as much as /src does — a branch can rewrite a steps file
+  // without touching the feature it belongs to, and that is a change to how
+  // the scenarios are carried out with nothing run to show for it. A branch
+  // that touched neither, such as one that only changed documents or settings,
+  // has genuinely nothing to run.
+  const code = changedIn("src/*", "specs/*.ts");
+  const reaching = [...code].filter((file) =>
+    file.startsWith("specs/support/"),
+  );
+
+  // AI.md asks for the whole suite by hand where a change reaches further than
+  // its own feature, and names specs/support as exactly that: every spec in the
+  // repository loads it, so there is no one feature to name.
+  if (reaching.length > 0) {
     console.error(
-      `No feature file has changed against ${base}, but ${source.size} file${source.size === 1 ? " under /src has" : "s under /src have"}:`,
+      `No feature file has changed against ${base}, and what did change is loaded by every spec:`,
     );
-    for (const file of [...source].sort()) console.error(`  ${file}`);
-    console.error("");
+    listed(reaching);
+    console.error(
+      "This reaches further than one feature, so run the whole suite: npm test",
+    );
+    process.exit(1);
+  }
+
+  if (code.size > 0) {
+    console.error(
+      `No feature file has changed against ${base}, but ${code.size} file${code.size === 1 ? " has" : "s have"}:`,
+    );
+    listed(code);
     console.error(
       "Name the feature that covers the change: npm run test:changed -- specs/.../Thing.feature",
     );
@@ -72,7 +121,7 @@ if (changed.size === 0) {
   }
 
   console.log(
-    `No feature file has changed against ${base}, and nothing under /src has either, so there is nothing to run.`,
+    `No feature file has changed against ${base}, and no code has either, so there is nothing to run.`,
   );
   console.log(
     "Name one to run it anyway: npm run test:changed -- specs/.../Thing.feature",
@@ -82,7 +131,7 @@ if (changed.size === 0) {
 
 const features = [...changed].sort();
 console.log(
-  `Running ${features.length} feature file${features.length === 1 ? "" : "s"}:`,
+  `Running ${features.length} feature file${features.length === 1 ? "" : "s"} against ${base}:`,
 );
 for (const feature of features) console.log(`  ${feature}`);
 console.log("");
@@ -90,17 +139,21 @@ console.log("");
 // Node is spawned against tsx's own entry point rather than the shim in
 // node_modules/.bin, because the shim is a shell script with no extension that
 // Windows cannot execute, and its .cmd twin cannot be spawned without a shell.
-// Going straight to the entry point needs neither, so the one line runs the
-// same on every platform.
+// Both entry points are resolved rather than built from a path under
+// node_modules, so that a layout which is not npm's flat one — pnpm, or a
+// workspace hoisting its dependencies elsewhere — finds them where they are.
+// Cucumber's own bin is reached through its package.json, which is the only
+// thing it exports, and names the bin so a move survives.
+const tsx = require.resolve("tsx/cli");
+const cucumberPackage = require.resolve("@cucumber/cucumber/package.json");
+const cucumber = join(
+  dirname(cucumberPackage),
+  require(cucumberPackage).bin["cucumber-js"],
+);
+
 const { status, error } = spawnSync(
   process.execPath,
-  [
-    join(root, "node_modules", "tsx", "dist", "cli.mjs"),
-    join(root, "node_modules", "@cucumber", "cucumber", "bin", "cucumber.js"),
-    "--profile",
-    "changed",
-    ...features,
-  ],
+  [tsx, cucumber, "--profile", "changed", ...features],
   { cwd: root, stdio: "inherit" },
 );
 
