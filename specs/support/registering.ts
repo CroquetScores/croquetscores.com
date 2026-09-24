@@ -46,6 +46,12 @@ export interface Registering {
   /** Signs in with Google. Answers with the account, or throws. */
   signInWithGoogle(command: SignInWithGoogle): Promise<AccountId>;
 
+  /**
+   * Has the next signing in with Google find no account by its Google account,
+   * as one that looked before another had linked it would.
+   */
+  lookForGoogleAccountTooEarly(): void;
+
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
 

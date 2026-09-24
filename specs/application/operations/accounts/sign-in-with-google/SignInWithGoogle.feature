@@ -329,3 +329,23 @@ Feature: Signing in with Google
       And Google calls the reader "Sam Someone"
       When signing in with Google is sent
       Then it is answered with a new account for "someone@example.com"
+
+  Rule: A second signing in that looked before the first had linked signs in too
+
+    Two first signings in with the same Google account can arrive together, as
+    a double click sends them. Both look for the Google account before either
+    has linked it, and neither finds it. The first links it to the account at
+    its email address, making the account if there was none. The second then
+    finds that account linked to the Google account it is signing in with,
+    which is not another Google account, so it signs in rather than being
+    refused.
+
+    Scenario: A second signing in that looked too early is answered with the account
+      Given Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And signing in with Google has been sent
+      And the next signing in with Google looks for its Google account before it is linked
+      When signing in with Google is sent
+      Then it is answered with the account for "someone@example.com"

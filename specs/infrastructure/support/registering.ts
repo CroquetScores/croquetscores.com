@@ -43,7 +43,10 @@ import { ResetPasswordValidator } from "../../../src/application/operations/acco
 import type { ResetPassword } from "../../../src/application/operations/accounts/ResetPassword.js";
 import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../../../src/application/operations/accounts/SignInHandler.js";
-import { SignInWithGoogleHandler } from "../../../src/application/operations/accounts/SignInWithGoogleHandler.js";
+import {
+  type AccountsByGoogleAccount,
+  SignInWithGoogleHandler,
+} from "../../../src/application/operations/accounts/SignInWithGoogleHandler.js";
 import type { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
 import { CryptoRandomPasswords } from "../../../src/infrastructure/identity/CryptoRandomPasswords.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
@@ -222,13 +225,27 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleCommand(
     new SignInHandler(repository, accounts.readModel, hasher),
   );
+  // Told to miss once, a scenario can stand where the second of two signings
+  // in at once stands: it looked for the Google account before the first had
+  // linked it. Missing is all that request saw, and one connection cannot run
+  // two requests side by side to see it for real.
+  let missNextLookup = false;
+  const byGoogleAccount: AccountsByGoogleAccount = {
+    find: (subject) => {
+      if (missNextLookup) {
+        missNextLookup = false;
+        return Promise.resolve(undefined);
+      }
+      return accounts.byGoogleAccount.find(subject);
+    },
+  };
   // The random passwords the site makes, since what is asked of them is only
   // what the site's are: how long, and whether two are the same.
   mediator.handleCommand(
     new SignInWithGoogleHandler(
       repository,
       accounts.readModel,
-      accounts.byGoogleAccount,
+      byGoogleAccount,
       accounts.hasher,
       hasher,
       new CryptoRandomPasswords(),
@@ -378,6 +395,10 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     async signInWithGoogle(command: SignInWithGoogle): Promise<AccountId> {
       await settle();
       return mediator.send(command);
+    },
+
+    lookForGoogleAccountTooEarly() {
+      missNextLookup = true;
     },
 
     async linkToGoogle(address, subject) {

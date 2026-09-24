@@ -94,6 +94,13 @@ Given(
   },
 );
 
+Given(
+  "the next signing in with Google looks for its Google account before it is linked",
+  function (this: SpecWorld) {
+    registeringOf(this).lookForGoogleAccountTooEarly();
+  },
+);
+
 // Whatever came of it is kept for the scenario rather than thrown, as signing
 // in with a password keeps it: some of these scenarios are about how it is
 // refused.
