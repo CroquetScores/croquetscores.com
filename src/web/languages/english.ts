@@ -168,13 +168,8 @@ export const english: Language = {
     "signIn.elsewhere": "If you cannot sign in",
     "signIn.forgotPassword": "I have forgotten my password",
     "signIn.register": "I do not have an account yet",
-    "signIn.tryAgainLater":
-      "Too many attempts have been made lately. Wait an hour and try again.",
-
-    // The one answer to a wrong password and to an address nobody registered.
-    // It says neither which it was nor which it was not.
-    "SignIn.Failed":
-      "That email address and password do not sign in to anything. Check both and try again.",
+    "signIn.tryAgainLater": "Too many attempts have been made lately. Wait an hour and try again.",
+    "signIn.failed": "The email address or password is incorrect. Please try again.",
 
     "confirmEmailAddress.title": "Confirm your email address",
     "confirmEmailAddress.name": "Name",

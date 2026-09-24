@@ -6,7 +6,7 @@ Feature: Signing in with an email address and a password
   that follows is the web layer's; this says only whose it is.
 
   A wrong password, an address with no account, and an account that has been
-  forgotten are refused alike, with `SignIn.Failed`, and take as long: the
+  forgotten are refused alike, with `signIn.failed`, and take as long: the
   password is checked against a hash whether or not the address has an account,
   since checking is slow on purpose and an answer that came back sooner for an
   address with none would say so.
@@ -52,11 +52,11 @@ Feature: Signing in with an email address and a password
     Scenario: A wrong password is refused
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       When signing in as "someone@example.com" with the password "not the right password" is sent
-      Then it is refused with "SignIn.Failed"
+      Then it is refused with "signIn.failed"
 
     Scenario: An email address with no account is refused the same
       When signing in as "nobody@example.com" with the password "correct horse battery staple" is sent
-      Then it is refused with "SignIn.Failed"
+      Then it is refused with "signIn.failed"
 
     Scenario: A password is checked for an email address with no account
       When signing in as "nobody@example.com" with the password "correct horse battery staple" is sent
@@ -71,7 +71,7 @@ Feature: Signing in with an email address and a password
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the account for "someone@example.com" has been forgotten
       When signing in as "someone@example.com" with the password "correct horse battery staple" is sent
-      Then it is refused with "SignIn.Failed"
+      Then it is refused with "signIn.failed"
 
   Rule: An account imported from the old site is hashed again today's way when it signs in
 
