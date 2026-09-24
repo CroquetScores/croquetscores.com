@@ -17,6 +17,8 @@ import type { SpecWorld } from "./world.js";
 /** How an account a scenario says exists was come by. */
 export interface AccountAsGiven {
   readonly confirmed: boolean;
+  /** What it was confirmed as called, where the scenario says. */
+  readonly name?: string;
   /** The password it was confirmed with, where the scenario says one. */
   readonly password?: string;
   /** Whether it came over from the old site, with the hash the old site made. */
@@ -45,6 +47,13 @@ Given(
     await inHand(this).give(address, {
       confirmed: confirmed === "confirmed",
     });
+  },
+);
+
+Given(
+  "{string} has an account, confirmed, called {string}",
+  async function (this: SpecWorld, address: string, name: string) {
+    await inHand(this).give(address, { confirmed: true, name });
   },
 );
 

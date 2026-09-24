@@ -43,6 +43,12 @@ import { ResetPasswordValidator } from "../../../src/application/operations/acco
 import type { ResetPassword } from "../../../src/application/operations/accounts/ResetPassword.js";
 import { SendConfirmationLinkAgainHandler } from "../../../src/application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../../../src/application/operations/accounts/SignInHandler.js";
+import {
+  type AccountsByGoogleAccount,
+  SignInWithGoogleHandler,
+} from "../../../src/application/operations/accounts/SignInWithGoogleHandler.js";
+import type { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
+import { CryptoRandomPasswords } from "../../../src/infrastructure/identity/CryptoRandomPasswords.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
 import type { SendConfirmationLinkAgain } from "../../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import { WhatASetNewPasswordLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
@@ -114,7 +120,14 @@ class QuickHasher implements PasswordHasher {
   /** How many times a password has been checked against a hash, or against none. */
   checks = 0;
 
+  /**
+   * Every password hashed, so that a scenario can ask about a password nobody
+   * was told, which reaches nothing else before it is hashed.
+   */
+  readonly hashed: string[] = [];
+
   hash(password: string): Promise<string> {
+    this.hashed.push(password);
     return Promise.resolve(digestOf(password));
   }
 
@@ -153,6 +166,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const refusing = new RefusingProjection();
   const store = new ProjectingEventStore(accounts.store, [
     accounts.readModel,
+    accounts.byGoogleAccount,
     refusing,
   ]);
   // Wrapped rather than handed over as it is: a static passed on its own is a
@@ -210,6 +224,32 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   );
   mediator.handleCommand(
     new SignInHandler(repository, accounts.readModel, hasher),
+  );
+  // Told to miss once, a scenario can stand where the second of two signings
+  // in at once stands: it looked for the Google account before the first had
+  // linked it. Missing is all that request saw, and one connection cannot run
+  // two requests side by side to see it for real.
+  let missNextLookup = false;
+  const byGoogleAccount: AccountsByGoogleAccount = {
+    find: (subject) => {
+      if (missNextLookup) {
+        missNextLookup = false;
+        return Promise.resolve(undefined);
+      }
+      return accounts.byGoogleAccount.find(subject);
+    },
+  };
+  // The random passwords the site makes, since what is asked of them is only
+  // what the site's are: how long, and whether two are the same.
+  mediator.handleCommand(
+    new SignInWithGoogleHandler(
+      repository,
+      accounts.readModel,
+      byGoogleAccount,
+      accounts.hasher,
+      hasher,
+      new CryptoRandomPasswords(),
+    ),
   );
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(
@@ -331,7 +371,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       // Hashed the way this scenario's hasher hashes, so that a password the
       // scenario named is one that signing in can check.
       account.confirm(
-        PersonName.from(CONFIRMED_AS),
+        PersonName.from(as.name ?? CONFIRMED_AS),
         as.password === undefined ? CONFIRMED_WITH : digestOf(as.password),
         now(),
       );
@@ -351,6 +391,24 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     },
 
     passwordsChecked: () => hasher.checks,
+
+    async signInWithGoogle(command: SignInWithGoogle): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
+    lookForGoogleAccountTooEarly() {
+      missNextLookup = true;
+    },
+
+    async linkToGoogle(address, subject) {
+      await settle();
+      const account = await readBack(world, await idFor(address));
+      account.linkGoogleAccount(subject, now());
+      await world.keepAccount?.(account);
+    },
+
+    passwordsHashed: () => hasher.hashed,
 
     async askToForget(command: AskToForgetAccount): Promise<void> {
       await settle();
@@ -556,6 +614,12 @@ Given("the application's registering", function (this: SpecWorld) {
 // standing registering up stands it up too. Said in its own words because a
 // scenario about signing in is not about registering.
 Given("the application's signing in", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about signing in with Google is not about registering.
+Given("the application's signing in with Google", function (this: SpecWorld) {
   standUpFor(this);
 });
 

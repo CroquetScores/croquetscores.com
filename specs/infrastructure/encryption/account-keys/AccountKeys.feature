@@ -69,7 +69,7 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       Then no row of the account key store contains the account's key
 
-  Rule: What is kept of a name and an email address cannot be read without the key
+  Rule: What is kept of a name, an email address and a Google account cannot be read without the key
 
     Scenario: The account's events do not hold its name
       When an account is registered at "someone@example.com"
