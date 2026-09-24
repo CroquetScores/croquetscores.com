@@ -7,20 +7,22 @@ Feature: A reader signs in with their email address and password
   signed in with it the same way.
 
   A reader who gives the right password for a confirmed account is signed in,
-  and taken back to the page that sent them to sign in, or to the home page if
-  none did. Only a page on this site is gone back to: an address that named
-  another site would let a link to this sign in page send a reader anywhere,
-  looking as though this site had sent them. So what is gone back to has to be
-  a path, beginning with one slash and followed by neither another slash nor a
-  backslash, which browsers read as a slash, and holding no control character
-  anywhere in it, such as a tab or a line break, which browsers strip from an
-  address before reading it, so that a slash, a tab and a slash would reach
-  the browser as two slashes; anything else — another site's address, one
-  beginning with two slashes, or a slash and a backslash, or a scheme such as
-  javascript: — goes to the home page instead. What is left is judged by the
-  one guard the site has for going back somewhere (`theme.feature`), which
-  resolves it the way a browser would; the two rules above are this page's own,
-  and are stricter, because a reader is sent here by a page of ours and
+  and taken back to the page that sent them to sign in, or to the admin if none
+  did: a reader who came to sign in of their own accord came to use the site,
+  and the admin is where that is done, open to every confirmed account. Only a
+  page on this site is gone back to: an address that named another site would
+  let a link to this sign in page send a reader anywhere, looking as though this
+  site had sent them. So what is gone back to has to be a path, beginning with
+  one slash and followed by neither another slash nor a backslash, which
+  browsers read as a slash, and holding no control character anywhere in it,
+  such as a tab or a line break, which browsers strip from an address before
+  reading it, so that a slash, a tab and a slash would reach the browser as two
+  slashes; anything else — another site's address, one beginning with two
+  slashes, or a slash and a backslash, or a scheme such as javascript: — is
+  taken as no page at all, and goes to the admin instead. What is left is judged
+  by the one guard the site has for going back somewhere (`theme.feature`),
+  which resolves it the way a browser would; the two rules above are this page's
+  own, and are stricter, because a reader is sent here by a page of ours and
   anything that does not look like what those pages send was not sent by one.
 
   A wrong password and an address with no account are refused alike, with one
@@ -246,12 +248,12 @@ Feature: A reader signs in with their email address and password
 
   Rule: Signing in goes back to the page that sent the reader, if it is on this site
 
-    Scenario: A reader signing in with nowhere to go back to arrives at the home page
+    Scenario: A reader signing in with nowhere to go back to arrives at the admin
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the sign in page is open
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
-      Then the home page is shown
+      Then the admin is shown
 
     Scenario: A reader sent to sign in is taken back once signed in
       Given a viewport 1200 pixels wide
@@ -260,12 +262,12 @@ Feature: A reader signs in with their email address and password
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
       Then the reader is taken to "/account/forget-account"
 
-    Scenario Outline: A sign in page asked to go back anywhere but a path on this site sends the reader home
+    Scenario Outline: A sign in page asked to go back anywhere but a path on this site sends the reader to the admin
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the sign in page is open, to go back to "<where>"
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
-      Then the home page is shown
+      Then the admin is shown
 
       Examples:
         | where                      |
@@ -276,26 +278,26 @@ Feature: A reader signs in with their email address and password
         | javascript:alert(1)        |
         | account/forget-account     |
 
-    Scenario: A sign in page asked to go back to a path with a tab after its first slash sends the reader home
+    Scenario: A sign in page asked to go back to a path with a tab after its first slash sends the reader to the admin
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the sign in page is open, to go back to a slash, a tab, and "/elsewhere.example/"
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
-      Then the home page is shown
+      Then the admin is shown
 
-    Scenario: A sign in page asked to go back to a path with a line break after its first slash sends the reader home
+    Scenario: A sign in page asked to go back to a path with a line break after its first slash sends the reader to the admin
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the sign in page is open, to go back to a slash, a line break, and "/elsewhere.example/"
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
-      Then the home page is shown
+      Then the admin is shown
 
-    Scenario: A sign in page asked to go back to a path on this site with a tab in it sends the reader home
+    Scenario: A sign in page asked to go back to a path on this site with a tab in it sends the reader to the admin
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the sign in page is open, to go back to "/account/forget-account", a tab, and "x"
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
-      Then the home page is shown
+      Then the admin is shown
 
   Rule: A wrong password and an unknown email address are refused alike
 
