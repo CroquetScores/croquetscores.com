@@ -51,8 +51,8 @@ export const english: Language = {
     "register.emailAddress": "Email address",
     "register.cancel": "Cancel",
     "register.submit": "Register",
-    "register.elsewhere": "Other ways to register",
     "register.withGoogle": "Register with Google",
+    "register.or": "or",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave.
     "SignInWithGoogle.EmailAddressNotVerified":

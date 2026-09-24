@@ -949,6 +949,29 @@ main {
   color: var(--action-ink);
 }
 
+/* Another way to do what a form is for, above its fields. The content's column
+   stretches it to the fields' width, since it is a way in of the same weight as
+   they are; it is drawn as the buttons other than the submit button are,
+   because the way forward it is not is the form's. */
+.dialog-alternative {
+  gap: var(--space-3);
+}
+
+.dialog-alternative-icon {
+  flex: none;
+}
+
+/* The word between the other way in and the fields. Written in lower case and
+   drawn in capitals, for the reason given where it is written (dialog.ts). */
+.dialog-or {
+  max-width: none;
+  margin: 0;
+  color: var(--ink-muted);
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .notice {
   padding: var(--space-3) var(--space-4);
   border-inline-start: 4px solid var(--accent-strong);
