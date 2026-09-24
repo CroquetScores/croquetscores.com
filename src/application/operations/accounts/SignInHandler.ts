@@ -8,7 +8,7 @@ import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import { SignIn } from "./SignIn.js";
 
 /** Every way signing in is refused. */
-export type SignInErrorCode = "signIn.failed";
+export type SignInErrorCode = "SignIn.Failed";
 
 /**
  * Signing in refused. One code, because one answer: which of the several
@@ -126,6 +126,6 @@ export class SignInHandler extends CommandHandler<SignIn, AccountId> {
 
 const refusal = (): SignInRefused =>
   new SignInRefused(
-    "signIn.failed",
+    "SignIn.Failed",
     "That email address and password do not sign in to anything.",
   );

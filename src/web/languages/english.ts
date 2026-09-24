@@ -164,7 +164,10 @@ export const english: Language = {
     "signIn.register": "Register",
     "signIn.tryAgainLater":
       "Too many attempts have been made lately. Wait an hour and try again.",
-    "signIn.failed":
+
+    // The one answer to a wrong password and to an address nobody registered.
+    // It says neither which it was nor which it was not.
+    "SignIn.Failed":
       "The email address or password is incorrect. Please try again.",
 
     "confirmEmailAddress.title": "Confirm your email address",

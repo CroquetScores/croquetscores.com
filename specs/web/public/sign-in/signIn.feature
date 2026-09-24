@@ -304,13 +304,13 @@ Feature: A reader signs in with their email address and password
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the sign in page is open
       When the reader signs in as "someone@example.com" with the password "not the right password"
-      Then the dialog says the message for "signIn.failed"
+      Then the dialog says the message for "SignIn.Failed"
 
     Scenario: An email address with no account is refused the same
       Given a viewport 1200 pixels wide
       And the sign in page is open
       When the reader signs in as "nobody@example.com" with the password "correct horse battery staple"
-      Then the dialog says the message for "signIn.failed"
+      Then the dialog says the message for "SignIn.Failed"
 
     Scenario: A refused reader is not signed in
       Given a viewport 1200 pixels wide
