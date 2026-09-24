@@ -327,3 +327,39 @@ Feature: Forms are shown in a dialog
         | theme |
         | light |
         | dark  |
+
+  Rule: A field the browser fills in looks like any other field that has been filled in
+
+    A browser that has an email address and a password saved for the site
+    fills them in for the reader, and does two things to the field as it does.
+    It paints the field its own tint, which under a label on the panel's colour
+    reads as a patch rather than a field. And it can fill the field in before
+    anybody has touched the page, when the field may still count as empty to
+    the stylesheet, so that a label waiting for something to be typed would
+    stay at rest, lying over the address that was filled in. So a field the
+    browser fills in has its label lifted, as one that has been typed in does,
+    and is the colour of the dialog around it.
+
+    A scenario cannot have a browser fill a field in for itself: it has nothing
+    saved, and typing into the field, which a scenario can do, brings neither
+    the tint nor the empty-seeming field. Chromium can be told to take a field
+    as filled in by it, which brings both, and that is what these scenarios
+    do.
+
+    Scenario: A field the browser fills in has its label lifted
+      Given a viewport 1200 pixels wide
+      And the sign in page is open
+      When the browser fills the email address field in
+      Then the email address field's label is on the field's top edge
+
+    Scenario Outline: A field the browser fills in is the colour of the dialog
+      Given a viewport 1200 pixels wide
+      And a machine that prefers <theme>
+      And the sign in page is open
+      When the browser fills the email address field in
+      Then the email address field is painted the colour of the dialog
+
+      Examples:
+        | theme |
+        | light |
+        | dark  |

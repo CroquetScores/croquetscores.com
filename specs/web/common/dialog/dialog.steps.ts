@@ -787,6 +787,84 @@ When(
   },
 );
 
+// The browser filling a field in, as it does with an email address and a
+// password it has saved. A scenario's browser has nothing saved, so Chromium
+// is told through its DevTools protocol to take the field as filled in by it:
+// the field then matches :autofill and wears the browser's own tint, and,
+// being empty, still counts as showing its placeholder — both of what a field
+// filled in before anybody touched the page does. The field is marked so the
+// protocol can find it, and the session is kept for the rest of the scenario,
+// since a state it forced lasts only as long as it does.
+const autofilling = new WeakMap<SpecWorld, unknown>();
+
+When(
+  /^the browser fills the (.+) field in$/,
+  async function (this: SpecWorld, field: string) {
+    const input = `(${inputByLabel(field)})`;
+    await this.browserPage.evaluate(
+      `${input}.setAttribute("data-spec-autofilled", "")`,
+    );
+    const session = await this.browserPage
+      .context()
+      .newCDPSession(this.browserPage);
+    autofilling.set(this, session);
+    await session.send("DOM.enable");
+    await session.send("CSS.enable");
+    const { root } = await session.send("DOM.getDocument");
+    const { nodeId } = await session.send("DOM.querySelector", {
+      nodeId: root.nodeId,
+      selector: "[data-spec-autofilled]",
+    });
+    await session.send("CSS.forcePseudoState", {
+      nodeId,
+      forcedPseudoClasses: ["autofill"],
+    });
+    assert.ok(
+      await this.browserPage.evaluate<boolean>(`${input}.matches(":autofill")`),
+      `The ${field} field was not taken as filled in by the browser.`,
+    );
+  },
+);
+
+// What is painted in the middle of the field, read from a picture of it rather
+// than from its style: the browser's tint is laid on as a background nothing on
+// the page can take away, so the field's background always says the tint, and
+// what covers it is a shadow painted over it. The picture is read back through
+// a canvas in the page, which is the one thing to hand that reads a PNG.
+Then(
+  /^the (.+) field is painted the colour of the dialog$/,
+  async function (this: SpecWorld, field: string) {
+    const bounds = await (await inputOf(this, field)).boundingBox();
+    assert.ok(bounds !== null, `The ${field} field is not on the page.`);
+    const picture = await this.browserPage.screenshot({
+      clip: {
+        x: Math.round(bounds.x + bounds.width / 2) - 1,
+        y: Math.round(bounds.y + bounds.height / 2) - 1,
+        width: 3,
+        height: 3,
+      },
+    });
+    const source = `data:image/png;base64,${picture.toString("base64")}`;
+    const painted = await this.browserPage.evaluate<
+      string | null
+    >(`(async () => {
+      const image = new Image();
+      image.src = ${JSON.stringify(source)};
+      await image.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const drawing = canvas.getContext("2d");
+      if (drawing === null) return null;
+      drawing.drawImage(image, 0, 0);
+      const [red, green, blue] = drawing.getImageData(1, 1, 1, 1).data;
+      return "rgb(" + red + ", " + green + ", " + blue + ")";
+    })()`);
+    assert.ok(painted !== null, "The picture of the field could not be read.");
+    assert.equal(painted, await styleOf(this, content, "background-color"));
+  },
+);
+
 When(
   /^something is typed into the (.+) field$/,
   async function (this: SpecWorld, field: string) {
