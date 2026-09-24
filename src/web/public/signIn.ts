@@ -104,10 +104,9 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
       value: typed["password"],
     },
   ],
-  // Three do not fit side by side, so they are stacked beneath signing in: the
-  // way back in first, for a reader whose password does not come, and then the
-  // way to make an account, for a reader who has none.
-  stacked: true,
+  // Beneath signing in, the way back in first, for a reader whose password
+  // does not come, and then the way to make an account, for a reader who has
+  // none.
   elsewhere: [
     { label: speaking.say("signIn.forgotPassword"), href: forgotPasswordPath },
     { label: speaking.say("signIn.register"), href: registerPath },

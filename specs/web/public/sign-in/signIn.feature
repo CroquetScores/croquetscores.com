@@ -90,9 +90,9 @@ Feature: A reader signs in with their email address and password
 
   Rule: The dialog has no cancel button
 
-    Cancelling signing in changes nothing and goes nowhere a reader could not
-    reach from the site's own bars, so the button does nothing for them, and
-    the row has room for buttons that do.
+    No form has a cancel button (`dialog.feature`). It is said here as well
+    because the sign in page once had one, and the room it took is where the
+    way back in and the way to register now are.
 
     Scenario: The dialog has no cancel button
       Given a viewport 1200 pixels wide
@@ -101,11 +101,10 @@ Feature: A reader signs in with their email address and password
 
   Rule: The dialog's buttons are stacked, signing in first
 
-    Three buttons do not fit side by side in a dialog, so they are stacked, each
-    as wide as the fields, and read from the top: signing in first, since it is
-    what the form is for, then the way back in for a reader whose password does
-    not come, then the way to make an account for a reader who has none. It is
-    the one dialog whose submit button is not last (`dialog.feature`).
+    Every dialog stacks its buttons, each as wide as the fields, with the one
+    that does what the form is for first (`dialog.feature`). What this page adds
+    is the order of the other two: the way back in, for a reader whose password
+    does not come, then the way to make an account, for a reader who has none.
 
     Scenario: The submit button is the first of the dialog's buttons
       Given a viewport 1200 pixels wide

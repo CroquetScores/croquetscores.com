@@ -53,7 +53,6 @@ const formFor = (
       value: typed["emailAddress"],
     },
   ],
-  cancel: { label: speaking.say("forgotPassword.cancel"), href: "/" },
   submit: speaking.say("forgotPassword.submit"),
 });
 

@@ -1,7 +1,7 @@
 // Every form that is a page's purpose is shown the same way: a title bar saying
-// what it is for, the fields beneath it, and a row of buttons with the one that
-// does it furthest right. A reader who has filled in one knows where to look on
-// the next.
+// what it is for, the fields beneath it, and its buttons beneath them, stacked,
+// with the one that does it first. A reader who has filled in one knows where
+// to look on the next.
 //
 // It is a page region rather than an ARIA dialog. It does not sit over the page,
 // take focus or need dismissing: it is the page. So it is a section named by its
@@ -66,20 +66,15 @@ export interface Dialog {
   readonly fields: readonly Field[];
   /** The label on the button that does what the form is for. */
   readonly submit: string;
-  /** A way out that changes nothing, when there is one. */
-  readonly cancel?:
-    { readonly label: string; readonly href: string } | undefined;
   /**
    * Somewhere else to go instead of filling the form in, such as the forgot
-   * password page from signing in. Drawn as the cancel button is, before it.
+   * password page from signing in, drawn beneath the submit button in the
+   * order given. There is no way out that goes nowhere: leaving a form changes
+   * nothing and goes nowhere the site's own bars do not, so a cancel button
+   * did nothing for a reader, and is not offered.
    */
   readonly elsewhere?:
     readonly { readonly label: string; readonly href: string }[] | undefined;
-  /**
-   * Whether the buttons are stacked, each as wide as the fields, with the
-   * submit button first, for a dialog with more than fit side by side.
-   */
-  readonly stacked?: boolean | undefined;
   /**
    * What the form sends that the reader never fills in, by the name it is sent
    * under: the token reCAPTCHA's script hands the register page, say. They
@@ -219,35 +214,21 @@ const alternative = (other: Alternative | undefined): string =>
               <p class="dialog-or">${escape(other.or)}</p>
 `;
 
-// Cancel comes first in the markup so that it comes first in reading order and
-// in tab order, and the submit button is last in both — which is also what puts
-// it furthest right.
-const cancel = (link: Dialog["cancel"]): string =>
-  link === undefined
-    ? ""
-    : `              <a class="button" href="${escape(link.href)}">${escape(link.label)}</a>\n`;
-
-// Before cancel, since each leaves the form without doing what it is for, and
-// cancel is the one that changes nothing and goes nowhere in particular. Links
-// drawn as buttons, so that they work with scripting off.
+// Links drawn as buttons, so that they work with scripting off.
 const elsewhere = (links: Dialog["elsewhere"]): string =>
   (links ?? [])
     .map(
       (link) =>
-        `              <a class="button" href="${escape(link.href)}">${escape(link.label)}</a>\n`,
+        `\n              <a class="button" href="${escape(link.href)}">${escape(link.label)}</a>`,
     )
     .join("");
 
-const submit = (label: string): string =>
-  `              <button class="button button-submit" type="submit">${escape(label)}</button>`;
-
-// In a row, the submit button is last, which is also what puts it furthest
-// right. Stacked, it is first, at the top where the eye starts, and the ways
-// elsewhere follow it in the order they were given.
+// Stacked, each as wide as the fields, so that however many buttons a form has
+// and however long their words, none is pushed onto a line of its own. The
+// submit button is first, at the top where the eye starts, and first in
+// reading and tab order too.
 const buttons = (dialog: Dialog): string =>
-  dialog.stacked === true
-    ? `${submit(dialog.submit)}\n${elsewhere(dialog.elsewhere)}${cancel(dialog.cancel)}`.trimEnd()
-    : `${elsewhere(dialog.elsewhere)}${cancel(dialog.cancel)}${submit(dialog.submit)}`;
+  `              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>${elsewhere(dialog.elsewhere)}`;
 
 // Whether the reader is being taken to something that needs attention.
 const attentionAskedFor = (dialog: Dialog): boolean =>
@@ -275,7 +256,7 @@ export const renderDialog = (
             <div class="dialog-content stack">
 ${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternative(dialog.alternative)}${dialog.fields.map(field).join("\n")}
             </div>
-            <div class="dialog-buttons${dialog.stacked === true ? " dialog-buttons-stacked" : ""}">
+            <div class="dialog-buttons">
 ${buttons(dialog)}
             </div>${hidden(dialog.hidden)}
           </form>

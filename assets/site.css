@@ -794,11 +794,13 @@ main {
   color: var(--ink);
 }
 
+/* Stacked, each as wide as the fields: the row's padding is the content's, so
+   a button stretched across it is as wide as a field. The submit button is
+   first in the markup, and so at the top. */
 .dialog-buttons {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--border);
@@ -924,13 +926,6 @@ main {
   border-inline-start: 4px solid var(--danger);
   color: var(--danger);
   font-weight: 700;
-}
-
-/* A dialog with more buttons than fit side by side stacks them, each as wide
-   as the fields, which the row's padding matches the content's to make so. */
-.dialog-buttons-stacked {
-  flex-direction: column;
-  align-items: stretch;
 }
 
 /* A thing to press, whether it is a button or a link that behaves like one. */

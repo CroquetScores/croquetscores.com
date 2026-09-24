@@ -3,7 +3,8 @@ Feature: Forms are shown in a dialog
 
   Every form on the site is shown the same way, so that a reader who has filled
   in one knows where to look on the next: what the form is for across the top,
-  what to fill in beneath that, and the button that does it at the bottom right.
+  what to fill in beneath that, and the buttons beneath that, the one that does
+  it first.
 
   A form is the whole of the page it is on. It takes the place of the white
   panel other content sits in, and stands on the page's own background.
@@ -69,22 +70,34 @@ Feature: Forms are shown in a dialog
       When the sign in page is opened
       Then the dialog reaches from one side of the page's gutter to the other
 
-  Rule: The button that submits is last, and unmistakable
+  Rule: The buttons are stacked, the one that submits first, and unmistakable
 
-    Where a dialog's buttons stand in a row, the submit button ends it. The
-    sign in dialog has more buttons than fit in a row, and stacks them with the
-    submit button first (`signIn.feature`), so the row is looked at on the
-    register page.
+    A dialog's buttons are stacked beneath the fields, each as wide as they
+    are, so that however many a form has and however long their words, none is
+    pushed onto a line of its own. The submit button is first, where the eye
+    starts. No form has a cancel button: leaving a form changes nothing and goes
+    nowhere the site's own bars do not, so the button did nothing for a reader,
+    and took room from buttons that do.
 
-    Scenario: It is the furthest right of the buttons
+    Scenario: It is the first of the buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the submit button is the first of the dialog's buttons
+
+    Scenario: It is still the first button on a narrow screen
+      Given a viewport 375 pixels wide
+      When the sign in page is opened
+      Then the submit button is the first of the dialog's buttons
+
+    Scenario: Every button is as wide as the fields
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then each of the dialog's buttons is as wide as the email address field
+
+    Scenario: A form has no cancel button
       Given a viewport 1200 pixels wide
       When the register page is opened with scripting on
-      Then the submit button is the furthest right of the dialog's buttons
-
-    Scenario: It is still the last button on a narrow screen
-      Given a viewport 375 pixels wide
-      When the register page is opened with scripting on
-      Then the submit button is the last of the dialog's buttons
+      Then the dialog has no cancel button
 
     Scenario: It can be pressed with a thumb
       Given a viewport 375 pixels wide
