@@ -52,6 +52,13 @@ export interface Registering {
    */
   lookForGoogleAccountTooEarly(): void;
 
+  /**
+   * Has the account the next signing in with Google finds by its Google
+   * account forgotten before that signing in holds it, as one forgotten while
+   * the signing in waited its turn would be.
+   */
+  forgetAccountOnceFoundByGoogle(): void;
+
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
 

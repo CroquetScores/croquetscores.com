@@ -230,11 +230,23 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   // linked it. Missing is all that request saw, and one connection cannot run
   // two requests side by side to see it for real.
   let missNextLookup = false;
+  // Told to forget once, a scenario can stand where a signing in stands that
+  // found its account and then waited its turn while the account was being
+  // forgotten: the account is forgotten before the signing in is sent, in a
+  // request of its own, and the signing in is told what it would have found
+  // before, which is all that request saw.
+  let forgetNextFound = false;
+  let foundBeforeForgetting: AccountId | undefined;
   const byGoogleAccount: AccountsByGoogleAccount = {
     find: (subject) => {
       if (missNextLookup) {
         missNextLookup = false;
         return Promise.resolve(undefined);
+      }
+      if (foundBeforeForgetting !== undefined) {
+        const found = foundBeforeForgetting;
+        foundBeforeForgetting = undefined;
+        return Promise.resolve(found);
       }
       return accounts.byGoogleAccount.find(subject);
     },
@@ -394,11 +406,26 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
 
     async signInWithGoogle(command: SignInWithGoogle): Promise<AccountId> {
       await settle();
+      if (forgetNextFound) {
+        forgetNextFound = false;
+        const found = await world.asARequest(() =>
+          accounts.byGoogleAccount.find(command.subject),
+        );
+        assert.ok(found !== undefined, `No account for ${command.subject}.`);
+        const account = await readBack(world, found);
+        account.forget(now());
+        await world.keepAccount?.(account);
+        foundBeforeForgetting = found;
+      }
       return mediator.send(command);
     },
 
     lookForGoogleAccountTooEarly() {
       missNextLookup = true;
+    },
+
+    forgetAccountOnceFoundByGoogle() {
+      forgetNextFound = true;
     },
 
     async linkToGoogle(address, subject) {

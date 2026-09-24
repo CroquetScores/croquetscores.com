@@ -102,9 +102,14 @@ export class SignInWithGoogleHandler extends CommandHandler<
       // whichever way each found it.
       await this.byAddress.hold(linked);
       const account = await this.load(linked);
-      account.signIn(command.requestedAt);
-      await this.accounts.save(account);
-      return account.id;
+      // Forgotten while this waited its turn: looked for now, the Google
+      // account would be linked to nothing, so it is carried on with as one
+      // linked to nothing is, and gets a new account at its address.
+      if (!account.forgotten) {
+        account.signIn(command.requestedAt);
+        await this.accounts.save(account);
+        return account.id;
+      }
     }
 
     const address = EmailAddress.from(command.emailAddress);

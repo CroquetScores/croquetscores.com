@@ -40,6 +40,13 @@ Given(
   },
 );
 
+Given(
+  "the next signing in with Google finds its account before it is forgotten",
+  function (this: SpecWorld) {
+    registeringOf(this).forgetAccountOnceFoundByGoogle();
+  },
+);
+
 // Whatever came of it is kept for the scenario rather than thrown, as signing
 // in with a password keeps it: some of these scenarios are about how it is
 // refused.
