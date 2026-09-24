@@ -280,10 +280,26 @@ export const accountIdFor = async (
 // By what the menu offers: the way out is there for a reader who is signed in,
 // and the ways in for one who is not. The person in the summary is drawn for
 // everybody, so it says nothing about who is reading.
-const theSiteSaysSignedIn = async (world: SpecWorld): Promise<boolean> =>
-  (await world.browserPage
-    .locator('details.account-menu form[action="/account/sign-out"]')
-    .count()) > 0;
+const signOutForm = 'details.account-menu form[action="/account/sign-out"]';
+
+// Asked of the page the reader is on, where it carries the account menu. The
+// admin carries none, so a reader who has landed there is asked about on the
+// home page instead, in another tab of the same browser, which leaves the page
+// the scenario is on where it was.
+const theSiteSaysSignedIn = async (world: SpecWorld): Promise<boolean> => {
+  if ((await world.browserPage.locator("details.account-menu").count()) > 0) {
+    return (await world.browserPage.locator(signOutForm).count()) > 0;
+  }
+  const context = world.browserContext;
+  assert.ok(context !== undefined, "This scenario has no browser.");
+  const home = await context.newPage();
+  try {
+    await home.goto(`${world.baseUrl!}/`);
+    return (await home.locator(signOutForm).count()) > 0;
+  } finally {
+    await home.close();
+  }
+};
 
 Then(
   "the reader is signed in to the account for {string}",

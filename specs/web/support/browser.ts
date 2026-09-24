@@ -32,6 +32,7 @@ import { clockFor } from "./clock.js";
 import { addExampleFailures } from "./exampleFailures.js";
 import { addExampleForm } from "./exampleForm.js";
 import { scenarioLanguages } from "./languages.js";
+import { googleCredentialsForScenarios, standInGoogleFor } from "./google.js";
 import { readerTheScenariosSet } from "./reader.js";
 
 let browser: Browser | undefined;
@@ -95,6 +96,13 @@ export const anApplicationCalled = (
  * An application of this scenario's own, the same as the shared one but for
  * which website it is served as, and otherwise as {@link anApplicationCalled}.
  */
+/**
+ * An application of this scenario's own that has not been given Google's
+ * credentials, and otherwise as {@link anApplicationCalled}.
+ */
+export const anApplicationWithoutGoogle = (world: SpecWorld): Promise<string> =>
+  anApplicationWith(world, { google: undefined });
+
 export const anApplicationServedAs = (
   world: SpecWorld,
   website: Config["website"],
@@ -174,6 +182,7 @@ const itsOwn = async (
 
   loadEnvFile();
   const clock = clockFor(world);
+  const google = await standInGoogleFor(world);
   const scenario = await buildApplication(
     {
       ...loadConfig(),
@@ -191,6 +200,10 @@ const itsOwn = async (
       // the site would say it. Configured rather than handed to the builder,
       // because the setting is the only way the site is told (trustedProxy.ts).
       trustedProxies: ["127.0.0.1"],
+      // The scenarios' own, for the stand-in below, so that the register page
+      // offers registering with Google whatever is in .env. A scenario about a
+      // site without them takes them away.
+      google: googleCredentialsForScenarios,
       ...changed,
     },
     {
@@ -200,6 +213,9 @@ const itsOwn = async (
       // Nothing is sent. What these scenarios read is what is waiting in the
       // queue, which is where a reader's link comes from.
       sendsTheEmailQueue: false,
+      // Never Google, for the reason reCAPTCHA is never asked below: a stand-in
+      // of the scenario's own, which says what the scenario has Google say.
+      googleEndpoints: google.endpoints,
       // Never the real service: a spec run has no business asking Have I Been
       // Pwned about a password, and what it would answer is not what any of
       // these scenarios is about. A scenario that is about a breached password

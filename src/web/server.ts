@@ -65,6 +65,11 @@ import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { CryptoRandomPasswords } from "../infrastructure/identity/CryptoRandomPasswords.js";
+import {
+  GoogleOpenIdConnect,
+  GoogleOpenIdConnectFailed,
+  type GoogleEndpoints,
+} from "../infrastructure/identity/GoogleOpenIdConnect.js";
 import { apiV1 } from "./api/v1/index.js";
 import { adminPage, builtAdminPage } from "./common/adminPage.js";
 import { assetsPath, readAssets, type Assets } from "./common/assets.js";
@@ -84,6 +89,11 @@ import {
 } from "./common/requestedAt.js";
 import { english } from "./languages/english.js";
 import { auth } from "./auth/index.js";
+import {
+  GoogleUnreachable,
+  registerGoogleRoutes,
+  type GoogleSignIn,
+} from "./auth/google.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
@@ -114,6 +124,27 @@ const recaptchaAsAReaderCheck = (keys: {
     siteKey: keys.siteKey,
   };
 };
+
+// The sign-in the Google routes want, over the OpenID Connect client the
+// infrastructure offers: the one failure the routes tell a reader about, Google
+// being unreachable, is said in their words; anything else is not believed and
+// goes on as the failure it is.
+const googleAsASignIn = (google: GoogleOpenIdConnect): GoogleSignIn => ({
+  whereToSend: (asking) => google.whereToSend(asking),
+  whoCameBack: async (returned) => {
+    try {
+      return await google.whoCameBack(returned);
+    } catch (failure) {
+      if (
+        failure instanceof GoogleOpenIdConnectFailed &&
+        failure.code === "Google.Unreachable"
+      ) {
+        throw new GoogleUnreachable(failure.message);
+      }
+      throw failure;
+    }
+  },
+});
 
 // A route reaches the mediator as request.server.mediator, and nothing else of
 // the application. Declared here, beside the one place that puts it there.
@@ -281,6 +312,13 @@ export interface ApplicationOptions {
    * to say what the judgement was.
    */
   readonly readerCheck?: ReaderCheck;
+  /**
+   * Where Google answers. Google's own, unless a scenario stands one in: a
+   * spec run has no business asking Google, and a scenario has to say who
+   * Google says the reader is. The site checks what a stand-in says exactly as
+   * it checks what Google says.
+   */
+  readonly googleEndpoints?: GoogleEndpoints;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -517,7 +555,27 @@ export const buildApplication = async (
       ? { judge: () => Promise.resolve("a person"), siteKey: undefined }
       : recaptchaAsAReaderCheck(config.recaptcha));
 
-  registerRegisterPage(server, assets, readers);
+  // Offered only where the site has been given Google's credentials: without
+  // them there is nothing to send a reader to Google with.
+  const google =
+    config.google === undefined
+      ? undefined
+      : googleAsASignIn(
+          new GoogleOpenIdConnect(config.google, options.googleEndpoints),
+        );
+  if (google !== undefined) {
+    registerGoogleRoutes(server, {
+      google,
+      sessions,
+      inTransaction,
+      siteAddress:
+        config.canonicalHost === undefined
+          ? undefined
+          : siteAddress(config.canonicalHost, config.port),
+    });
+  }
+
+  registerRegisterPage(server, assets, readers, google !== undefined);
   registerConfirmEmailAddressPage(server, assets);
   registerSignInPage(
     server,

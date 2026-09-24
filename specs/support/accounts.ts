@@ -31,6 +31,9 @@ export interface AccountsInHand {
 
   /** Forgets the account for `address`, as forgetting one will. */
   forget(address: string): Promise<void>;
+
+  /** Links the account for `address` to the Google account `subject`. */
+  linkToGoogle(address: string, subject: string): Promise<void>;
 }
 
 const inHand = (world: SpecWorld): AccountsInHand => {
@@ -82,5 +85,12 @@ Given(
   "the account for {string} has been forgotten",
   async function (this: SpecWorld, address: string) {
     await inHand(this).forget(address);
+  },
+);
+
+Given(
+  "the account for {string} was linked to the Google account {string}",
+  async function (this: SpecWorld, address: string, subject: string) {
+    await inHand(this).linkToGoogle(address, subject);
   },
 );

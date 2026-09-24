@@ -41,9 +41,15 @@ export const signInAs = async (
   ]);
 };
 
-/** Has this scenario's browser ask as a reader who is signed in to nothing. */
+/**
+ * Has this scenario's browser ask as a reader who is signed in to nothing:
+ * neither this cookie nor a real session's, since a scenario with a database
+ * of its own signs in for real, and a reader who is signed in to nothing holds
+ * neither.
+ */
 export const signOutOf = async (world: SpecWorld): Promise<void> => {
   const context = world.browserContext;
   if (context === undefined) throw new Error("This scenario has no browser.");
   await context.clearCookies({ name: cookie });
+  await context.clearCookies({ name: "session" });
 };

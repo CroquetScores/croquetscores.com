@@ -18,6 +18,12 @@
 // times an hour. A reader whose browser did not run the script sends no token,
 // and is told the page needs scripting rather than refused, because nothing is
 // wrong with what they typed.
+//
+// Where the site has been given Google's credentials, the page also offers
+// registering with Google, beneath the form (auth/google.ts). A reader Google
+// did not let in is brought back here and told why, by a code in the page's
+// address; only the codes that way back sends are said, so that the address
+// cannot be made to put anything else on the page.
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -38,6 +44,22 @@ import { registrationsSuspendedPath } from "./registrationsSuspended.js";
 import { welcomePath } from "./welcome.js";
 
 export const registerPath = "/account/register";
+
+// Named here rather than taken from the Google routes, which import this page's
+// address, so that neither module needs the other to be loaded first.
+const googlePath = "/auth/google";
+const refusalsFromGoogle: readonly string[] = [
+  "SignInWithGoogle.EmailAddressNotVerified",
+  "SignInWithGoogle.LinkedToAnother",
+  "SignInWithGoogle.NameMissing",
+  "Google.Unreachable",
+];
+
+// The other way in, beneath the form, as the sign in page puts its ways on.
+const withGoogle = (speaking: Speaking): string =>
+  `        <nav class="dialog-elsewhere" aria-label="${escape(speaking.say("register.elsewhere"))}">
+          <p><a href="${googlePath}">${escape(speaking.say("register.withGoogle"))}</a></p>
+        </nav>`;
 
 /** The field reCAPTCHA's script fills in, and the form sends back. */
 export const tokenField = "recaptchaToken";
@@ -131,6 +153,7 @@ export const registerRegisterPage = (
   server: FastifyInstance,
   assets: Assets,
   readers: ReaderCheck,
+  googleOffered: boolean,
 ): void => {
   const page = (
     request: FastifyRequest,
@@ -154,7 +177,7 @@ export const registerRegisterPage = (
       // how reCAPTCHA is meant to be sent and needs no hidden-field support of
       // its own: the dialog draws the fields a reader fills in, and this one
       // is written beside it.
-      body: `${renderDialog(dialog)}${script(readers.siteKey)}`,
+      body: `${renderDialog(dialog)}${googleOffered ? `\n${withGoogle(speaking)}` : ""}${script(readers.siteKey)}`,
     });
 
   const show = (
@@ -172,10 +195,23 @@ export const registerRegisterPage = (
       .type("text/html; charset=utf-8")
       .send(page(request, dialog, speaking));
 
-  server.get(registerPath, (request, reply) => {
-    const speaking = speakingOf(request);
-    return show(request, reply, formFor(speaking, randomUUID(), {}), speaking);
-  });
+  server.get<{ Querystring: { refused?: string } }>(
+    registerPath,
+    (request, reply) => {
+      const speaking = speakingOf(request);
+      const dialog = formFor(speaking, randomUUID(), {});
+      const refused = request.query.refused;
+      if (refused === undefined || !refusalsFromGoogle.includes(refused)) {
+        return show(request, reply, dialog, speaking);
+      }
+      return show(
+        request,
+        reply,
+        { ...dialog, problems: { messages: [speaking.say(refused)] } },
+        speaking,
+      );
+    },
+  );
 
   server.post<{ Querystring: { request?: string } }>(
     registerPath,

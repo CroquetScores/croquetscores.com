@@ -651,6 +651,8 @@ const standUpFor = (world: SpecWorld): void => {
   world.accountsInHand = {
     give: (address, as) => registering.giveAnAccount(address, as),
     forget: (address) => registering.forget(address),
+    linkToGoogle: (address, subject) =>
+      registering.linkToGoogle(address, subject),
   };
 };
 
