@@ -14,7 +14,10 @@ Feature: A reader who is signed in can change what their account is called
   sent from (`ChangeName.feature`), since a page emails nothing itself.
 
   Only a reader who is signed in can change it; one who is not is sent to sign
-  in first. Changing it needs no scripting.
+  in first. So is one whose account is forgotten while the page is open: its
+  sessions are ended after it is forgotten, not with it, so the form can be
+  sent in between, and the reader is by then signed in to nothing. Changing it
+  needs no scripting.
 
   Each scenario has a database and an application of its own. What one
   scenario registers, and whom it signs in, must not be there for the next to
@@ -33,6 +36,16 @@ Feature: A reader who is signed in can change what their account is called
       And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       When the change name page is opened
       Then the dialog asks for a name
+
+    Scenario: A reader whose account is forgotten while the page is open is sent to sign in
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change name page is open
+      And the account for "someone@example.com" has been forgotten
+      And the name "Samantha Someone" is typed
+      When the dialog is submitted
+      Then the sign in page is shown
 
   Rule: The form holds the name the account has now
 

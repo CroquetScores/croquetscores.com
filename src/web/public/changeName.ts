@@ -11,6 +11,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { AccountProfile } from "../../application/operations/accounts/AccountProfile.js";
 import { ChangeName } from "../../application/operations/accounts/ChangeName.js";
+import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import type { Assets } from "../common/assets.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
@@ -100,6 +101,15 @@ export const registerChangeNamePage = (
         new ChangeName(reader.value, typed["name"] ?? "", request.requestedAt),
       );
     } catch (failure) {
+      // Forgetting an account ends its sessions afterwards, not with it, so a
+      // form sent in between comes from a reader signed in to nothing, and is
+      // answered as the page itself answers one.
+      if (
+        failure instanceof AccountRefused &&
+        failure.code === "Account.Forgotten"
+      ) {
+        return toSignIn(request, reply);
+      }
       if (!(failure instanceof RequestInvalid)) throw failure;
       return show(
         request,
