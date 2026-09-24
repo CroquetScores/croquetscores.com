@@ -50,28 +50,37 @@ const mostAnHour: MostAnHour = { byEmailAddress: 10, byIpAddress: 30 };
 
 /**
  * Where to go once signed in: the path that sent the reader here, when it is
- * one of ours, and the home page otherwise.
+ * one of ours, and the admin otherwise. A reader who came to sign in of their
+ * own accord came to use the site, and the admin is where that is done.
  *
  * Judged by the one guard the site has for this, which resolves the value the
  * way a browser would and keeps it only if it lands back on nowhere — so
- * //elsewhere and /\elsewhere, which browsers read as another host, go home.
+ * //elsewhere and /\elsewhere, which browsers read as another host, are
+ * refused. The guard answers a refusal with the home page, which is right for
+ * the pages that share it and wrong here, so an answer of the home page for
+ * anything but the home page itself is taken as the refusal it is, and goes to
+ * the admin with every other value that names no page.
  *
- * This asks two things of its own before handing over, and sends a reader home
- * rather than tidying either up. A value must begin with a slash, because
- * every page of ours that sends somebody here sends a path and one that did
- * not was written by somebody else. And it must hold no control character: a
- * browser strips those before reading an address, so a slash, a tab and a
- * slash reach it as two slashes, and what the guard would resolve is not what
- * the browser would follow.
+ * This asks two things of its own before handing over, and sends a reader to
+ * the admin rather than tidying either up. A value must begin with a slash,
+ * because every page of ours that sends somebody here sends a path and one
+ * that did not was written by somebody else. And it must hold no control
+ * character: a browser strips those before reading an address, so a slash, a
+ * tab and a slash reach it as two slashes, and what the guard would resolve is
+ * not what the browser would follow.
  */
 // eslint-disable-next-line no-control-regex
 const controlCharacters = /[\u0000-\u001f\u007f]/;
 
+const home = "/";
+const admin = "/admin/";
+
 export const goBackTo = (given: unknown): string => {
-  if (typeof given !== "string") return "/";
-  if (!given.startsWith("/")) return "/";
-  if (controlCharacters.test(given)) return "/";
-  return safeReturnPath(given);
+  if (typeof given !== "string") return admin;
+  if (!given.startsWith("/")) return admin;
+  if (controlCharacters.test(given)) return admin;
+  const resolved = safeReturnPath(given);
+  return resolved === home && given !== home ? admin : resolved;
 };
 
 /** The email address as it is counted: trimmed, and in lower case. */
