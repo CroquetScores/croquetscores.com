@@ -1,8 +1,12 @@
 Feature: Setting a new password on an account
 
   A reader who has forgotten their password is sent a link that sets a new one
-  (`forgotPassword.feature`). What the account keeps of it is the new hash and
-  the moment it was set, which is when somebody last chose the password the
+  (`forgotPassword.feature`), and a reader signed in who knows the one they
+  have can change it (`ChangePassword.feature`). The account records both the
+  same way, since both are somebody choosing the password it is signed in
+  with, and whether that somebody was entitled to is decided before the
+  account is asked. What the account keeps of it is the new hash and the
+  moment it was set, which is when somebody last chose the password the
   account is signed in with.
 
   An account that has not been confirmed is refused with

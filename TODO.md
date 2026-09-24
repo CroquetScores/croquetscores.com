@@ -16,21 +16,16 @@ Four kinds of thing, kept apart.
 
 ### Changing a password
 
-- **Domain.** Nothing new: changing a password is setting a new one, once the one the account has now has matched.
-- **Application.** `ChangePassword.feature` says how a reader signed in changes their password with the one they have now; written, not yet accepted.
-- **Application.** Whether a wrong password given here should count toward the sign in limit, as a wrong one at the sign in page does, is not decided. The same question stands for moving to another email address.
-- **Web.** `change-password/changePassword.feature` says what the change password page does; written, not yet accepted. The account menu already offers the page, and it answers nothing yet.
-- **Web.** `Email.PasswordChanged` is named in `emailWriter.feature` and wants its words in every catalogue.
-- **Web.** Three scenarios in `changePassword.feature` say nothing is queued to be sent, and in a browser something always is: the scenarios make their confirmed accounts by registering them, which queues a link to confirm. Change name met the same and left the saying to its operation's feature; these want the same, or a step that asks only what was queued after the page was open.
 
 ### Moving to another email address
 
 - **Domain.** An account cannot yet move to another address. `account/change-email-address/changeEmailAddress.feature` says how it will, recorded as an event holding the new address and its hash; written, not yet accepted.
 - **Application.** `ChangeEmailAddress.feature` says how a reader signed in asks to move, and confirms it with a link sent to the new address; written, not yet accepted, and to be built after the domain's and the read model's.
+- **Application.** Whether a wrong password given when asking to move should count toward the sign in limits, as it does when changing a password, is not decided.
 - **Application.** Asking to move emails the new address, and nothing limits how often, as registering limits how often an address is emailed. It is asked only signed in and with the account's password, so it is not the open door registering was, but it is a way to fill somebody's inbox.
 - **Infrastructure.** Whatever finds an account by its address cannot follow one that moves. A rule in `AccountsByEmailAddress.feature` says how it will, rebuilding included; written, not yet accepted.
 - **Web.** `change-email-address/changeEmailAddress.feature` says what the change email address page, and the page its link opens, do; written, not yet accepted. The account menu already offers the page, and it answers nothing yet.
-- **Web.** Two scenarios in `changeEmailAddress.feature` say nothing is queued to be sent, which cannot hold in a browser, for the reason given under changing a password.
+- **Web.** Two scenarios in `changeEmailAddress.feature` say nothing is queued to be sent, and in a browser something always is: the scenarios make their confirmed accounts by registering them, which queues a link to confirm. Changing a name and changing a password left the saying to the operation's feature; these want the same.
 - **Web.** `Email.ConfirmNewEmailAddress`, `Email.AlreadyHasAnAccount` and `Email.EmailAddressChanged` are named in `emailWriter.feature` and want their words in every catalogue. `Email.AlreadyHasAnAccount` may turn out to be `Email.AlreadyRegistered` said differently; whether one email can serve both is not decided.
 
 ### Sending email

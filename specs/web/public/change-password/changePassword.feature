@@ -12,7 +12,18 @@ Feature: A reader who is signed in can change their password
   enough. A browser left signed in, on a shared computer or an unlocked phone,
   would otherwise let whoever picked it up choose a password its owner does not
   know, and lock them out with it. A password that is not the account's is said
-  beneath the field it was typed in, and changes nothing.
+  beneath the field it was typed in, changes nothing, and emails nothing; the
+  last is said where an email would be sent from (`ChangePassword.feature`),
+  since a page emails nothing itself.
+
+  Being asked for the password makes this page a way to guess it, one guess to
+  a submission, for whoever holds a browser left signed in; and a password
+  guessed here is a password that moves the account to another address. So a
+  wrong password here counts toward the limits signing in is held to
+  (`signIn.feature`), against the account's email address and against the IP
+  address it came from, and the right one counts for nothing. An address or an
+  IP address held by either limit is told to try again later, whatever was
+  typed, and nothing is changed.
 
   A reader who does not know the password they have now — one who registered
   with Google, whose account was given a password nobody was told, or one who
@@ -176,7 +187,9 @@ Feature: A reader who is signed in can change their password
       When the dialog is submitted
       Then "correct horse battery staple" is the password of the account for "someone@example.com"
 
-    Scenario: A wrong current password emails nothing
+  Rule: A wrong password counts toward the sign in limits, and a held address is told to try later
+
+    Scenario: A wrong current password is counted
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
@@ -185,7 +198,54 @@ Feature: A reader who is signed in can change their password
       And the new password "staple battery horse correct" is typed
       And the new password is typed again as "staple battery horse correct"
       When the dialog is submitted
-      Then nothing is queued to be sent
+      Then signing in as "someone@example.com" has been counted 1 time
+
+    Scenario: The right current password counts for nothing
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then signing in as "someone@example.com" has been counted 0 times
+
+    Scenario: An email address that has failed 10 times in an hour is told to try later
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And signing in as "someone@example.com" has failed 10 times in the last hour
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the reader is told to try again later
+
+    Scenario: An email address held by the limit keeps its password, even given the right one
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And signing in as "someone@example.com" has failed 10 times in the last hour
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+
+    Scenario: An IP address that has failed 30 times in an hour is told to try later
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And this IP address has failed to sign in 30 times in the last hour
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the reader is told to try again later
 
   Rule: A new password that breaks a rule is said beneath its field, and changes nothing
 

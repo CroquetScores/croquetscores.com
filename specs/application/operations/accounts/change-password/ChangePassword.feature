@@ -16,9 +16,11 @@ Feature: Changing a password with the one the account has now
 
   The password the account has now is checked before anything else is asked
   about the new one. One that is not the account's is refused with
-  `ChangePassword.WrongPassword`, and costs the breached password check
-  nothing: a reader guessing at the password would otherwise have the site ask
-  another site about every guess. It is checked as signing in checks it, so an
+  `ChangePassword.WrongPassword`, and costs the breached password check nothing:
+  a reader guessing at the password would otherwise have the site ask another
+  site about every guess. How often a wrong one may be given is held to the
+  limits signing in is held to, and is the page's to count, as it is for signing
+  in (`changePassword.feature`). It is checked as signing in checks it, so an
   account brought over from the old site, still holding the hash it had there,
   changes its password with the one it had there (`SignIn.feature`).
 
