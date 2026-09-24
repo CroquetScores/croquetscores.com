@@ -30,6 +30,13 @@ export class SignInWithGoogleRefused extends Error {
 /** What signing in with Google asks of where accounts are found by address. */
 export interface AccountsByAddressForGoogle extends AccountsByAddress {
   find(address: EmailAddress): Promise<AccountId | undefined>;
+
+  /**
+   * Holds `account` until the request is done, as reserving its address does,
+   * so that two requests for it take turns rather than both changing it from
+   * where it stood before either began.
+   */
+  hold(account: AccountId): Promise<void>;
 }
 
 /** What signing in with Google asks of where accounts are found by Google. */
@@ -54,6 +61,10 @@ const PASSWORD_LENGTH = 50;
  * Whoever holds the address is found by reserving it, as registering does,
  * rather than by looking and then writing: between a look that found nothing
  * and the writing after it, another request could have made an account there.
+ * Reserving holds the account until the request is done, and one found by its
+ * Google account is held the same way, so that signings in at once, as from a
+ * double click, take turns with it rather than each changing it from where it
+ * stood before any began, and all but one being refused for it.
  *
  * An account made or confirmed here is given a password, because an account
  * confirmed has one, and it is made at random and told to nobody. Its owner
@@ -86,6 +97,10 @@ export class SignInWithGoogleHandler extends CommandHandler<
 
     const linked = await this.byGoogle.find(command.subject);
     if (linked !== undefined) {
+      // Held before it is loaded, as one found by its address is held by
+      // reserving it, so that signings in at once take turns with the account
+      // whichever way each found it.
+      await this.byAddress.hold(linked);
       const account = await this.load(linked);
       account.signIn(command.requestedAt);
       await this.accounts.save(account);

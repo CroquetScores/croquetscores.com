@@ -349,3 +349,31 @@ Feature: Signing in with Google
       And the next signing in with Google looks for its Google account before it is linked
       When signing in with Google is sent
       Then it is answered with the account for "someone@example.com"
+
+  Rule: Signings in with the same Google account at once all sign in
+
+    The rule above stands where the second of two signings in stands. This is
+    the two, or more, run for real, each in a transaction of its own. Where the
+    account at the email address is already there, none of them makes it, so
+    nothing makes the later ones wait: each loads the account as it was before
+    any had linked it, and all but the first would find it changed under them
+    when they came to keep what they did, and be refused for it. So whoever
+    finds the account at the address holds it until they are done, as whoever
+    makes one does, and the next finds it linked.
+
+    Scenario: Signings in at once to an account already there are each answered with it
+      Given "someone@example.com" has an account, confirmed
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      When 5 signings in with Google are sent at once
+      Then each of them is answered with the account for "someone@example.com"
+
+    Scenario: Signings in at once for an address with no account are each answered with the one account made
+      Given Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      When 5 signings in with Google are sent at once
+      Then each of them is answered with the account for "someone@example.com"

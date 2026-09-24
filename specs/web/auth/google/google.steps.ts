@@ -50,6 +50,11 @@ const registerWithGoogle = async function (this: SpecWorld): Promise<void> {
   const arrived = this.browserPage.waitForEvent("load");
   await this.browserPage.click(offer);
   await arrived;
+  // And what the page it landed on asks for itself, which the admin does as it
+  // starts. Each of those requests carries the session cookie and brings it
+  // back renewed, so one still on its way when a scenario then signs the
+  // reader out would sign them back in again when it arrived.
+  await this.browserPage.waitForLoadState("networkidle");
 };
 
 When("the reader registers with Google", registerWithGoogle);
