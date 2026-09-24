@@ -57,6 +57,16 @@ const registerWithGoogle = async function (this: SpecWorld): Promise<void> {
   await this.browserPage.waitForLoadState("networkidle");
 };
 
+// The scenario's own stand-in, which its application was pointed at when the
+// scenario began.
+Given(
+  "Google will take a code more than once",
+  async function (this: SpecWorld) {
+    const google = await standInGoogleFor(this);
+    google.misbehaving = { ...google.misbehaving, takesCodesAgain: true };
+  },
+);
+
 When("the reader registers with Google", registerWithGoogle);
 Given("the reader has registered with Google", registerWithGoogle);
 

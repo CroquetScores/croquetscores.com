@@ -67,6 +67,12 @@ export interface Misbehaving {
   hangUpOnTheExchange?: boolean;
   /** Not answering for its keys, or answering with something else. */
   keys?: "no answer" | "not keys";
+  /**
+   * Taking a code again after it has been exchanged, as Google does not, so
+   * that the site's own guard against a way back followed twice is all there
+   * is to stop it.
+   */
+  takesCodesAgain?: boolean;
 }
 
 // Keys made once for the run: making one is slow enough to notice, and a
@@ -227,8 +233,8 @@ export class StandInGoogle {
       const form = await bodyOf(request);
       const code = form.get("code") ?? "";
       const issued = this.#codes.get(code);
-      // A code is good once, as Google's is.
-      this.#codes.delete(code);
+      // A code is good once, as Google's is, unless the scenario says not.
+      if (this.misbehaving.takesCodesAgain !== true) this.#codes.delete(code);
       const verifier = form.get("code_verifier") ?? "";
       if (
         issued === undefined ||
