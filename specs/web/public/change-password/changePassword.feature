@@ -1,0 +1,259 @@
+@browser @postgres
+Feature: A reader who is signed in can change their password
+
+  The change password page, /account/change-password, asks a reader who is
+  signed in for the password they have now, a new password, and the new
+  password again, under "Confirm password". The new password is held to the
+  rules any password is held to when it is set (`SetNewPassword.feature`): long
+  enough, typed the same twice, and not known to have been breached. Every
+  field is trimmed where it is typed, as it is when signing in.
+
+  The password they have now is asked for because being signed in is not
+  enough. A browser left signed in, on a shared computer or an unlocked phone,
+  would otherwise let whoever picked it up choose a password its owner does not
+  know, and lock them out with it. A password that is not the account's is said
+  beneath the field it was typed in, and changes nothing.
+
+  A reader who does not know the password they have now — one who registered
+  with Google, whose account was given a password nobody was told, or one who
+  has forgotten it — cannot change it here, so the page points them to the
+  forgot password page, where a password is set by a link sent to the account's
+  email address instead.
+
+  Once changed, the password signs in and the old one does not. The reader
+  stays signed in on the browser they changed it from, and every other browser
+  signed in to the account is signed out: a password is changed most often
+  because somebody else might know it, and whoever that is should not stay in
+  on the strength of it. The account's email address is sent an email saying
+  the password was changed, so that an owner who did not change it finds out,
+  and the reader is taken to their profile.
+
+  Only a reader who is signed in can change it; one who is not is sent to sign
+  in first. Changing it needs no scripting.
+
+  These scenarios stand in for the breached password check with one the
+  scenario controls, which finds a password clean unless the scenario says
+  otherwise.
+
+  Each scenario has a database and an application of its own. What one
+  scenario registers, and whom it signs in, must not be there for the next to
+  find.
+
+  Rule: Only a reader signed in can change the password
+
+    Scenario: A reader not signed in is sent to sign in first
+      Given a viewport 1200 pixels wide
+      When the change password page is opened
+      Then the sign in page is shown
+
+    Scenario Outline: A reader signed in is asked for each
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the change password page is opened
+      Then the dialog asks for <what>
+
+      Examples:
+        | what                   |
+        | the current password   |
+        | a new password         |
+        | the new password again |
+
+  Rule: A reader who does not know their password is pointed to the forgot password page
+
+    Scenario: The page links to the forgot password page
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the change password page is opened
+      Then the page links to the forgot password page once
+
+  Rule: The right password and a sound new one change it
+
+    Scenario: The new password signs in
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then "staple battery horse correct" is the password of the account for "someone@example.com"
+
+    Scenario: The old password no longer signs in
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then "correct horse battery staple" is not the password of the account for "someone@example.com"
+
+    Scenario: Passwords typed with spaces around them are kept without them
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "  correct horse battery staple  " is typed
+      And the new password "  staple battery horse correct  " is typed
+      And the new password is typed again as "  staple battery horse correct  "
+      When the dialog is submitted
+      Then "staple battery horse correct" is the password of the account for "someone@example.com"
+
+    Scenario: The reader is taken to their profile
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the profile page is shown
+
+  Rule: Changing the password keeps this browser signed in, and signs every other out
+
+    Scenario: The reader stays signed in
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the reader is signed in to the account for "someone@example.com"
+
+    Scenario: Another browser signed in to the account is signed out
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the reader has signed in on another browser as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the other browser is signed out
+
+  Rule: The account's email address is told the password was changed
+
+    Scenario: An email saying so is sent to the account's email address
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then "someone@example.com" is sent an email saying their password was changed
+
+  Rule: A password that is not the account's is said beneath its field, and changes nothing
+
+    Scenario: A wrong current password is said beneath its field
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "not the right password" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the current password field says the message for "ChangePassword.WrongPassword"
+
+    Scenario: A wrong current password changes nothing
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "not the right password" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+
+    Scenario: A wrong current password emails nothing
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "not the right password" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then nothing is queued to be sent
+
+  Rule: A new password that breaks a rule is said beneath its field, and changes nothing
+
+    Scenario Outline: A new password that breaks a rule is said beneath its field
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "<password>" is typed
+      And the new password is typed again as "<again>"
+      When the dialog is submitted
+      Then the <field> field says the message for "<code>"
+
+      Examples:
+        | password                     | again                        | field            | code                         |
+        | too short                    | too short                    | new password     | Password.TooShort            |
+        | staple battery horse correct | staple battery horse corerct | confirm password | Password.ConfirmationDiffers |
+
+    Scenario: A new password known to have been breached is said beneath its field
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And "staple battery horse correct" is known to have been breached
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "staple battery horse correct" is typed
+      And the new password is typed again as "staple battery horse correct"
+      When the dialog is submitted
+      Then the new password field says the message for "Password.Breached"
+
+    Scenario: A new password that breaks a rule changes nothing
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "too short" is typed
+      And the new password is typed again as "too short"
+      When the dialog is submitted
+      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+
+    Scenario: No password is put back
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change password page is open
+      And the current password "correct horse battery staple" is typed
+      And the new password "too short" is typed
+      And the new password is typed again as "too short"
+      When the dialog is submitted
+      Then every password field is empty
+
+  Rule: The page needs no scripting
+
+    Scenario: The change password page does not send a reader without scripting away
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the change password page is opened with scripting off
+      Then the change password page is shown
+
+  Rule: The page is in the reader's language
+
+    Scenario: Every word in the dialog is in the test locale
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the change password page is opened
+      Then every word in the dialog is in the test locale

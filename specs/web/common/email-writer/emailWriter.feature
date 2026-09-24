@@ -99,6 +99,10 @@ Feature: The site's emails are written in their reader's language
         | Email.RegisterInstead        |
         | Email.ConfirmForgetting      |
         | Email.RegistrationsSuspended |
+        | Email.PasswordChanged        |
+        | Email.ConfirmNewEmailAddress |
+        | Email.AlreadyHasAnAccount    |
+        | Email.EmailAddressChanged    |
 
     Scenario: An email in a language the site does not offer is written in English
       When the email "Email.ConfirmAddress" is written in "xx"

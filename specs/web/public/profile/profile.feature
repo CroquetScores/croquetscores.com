@@ -1,0 +1,94 @@
+@browser @postgres
+Feature: A reader who is signed in sees their account's profile
+
+  The profile page, /account/profile, shows a reader who is signed in the
+  account they are signed in to: what it is called, and its email address. It
+  is where the account's own pages lead from, so it links to changing the
+  name, the email address and the password, each a page of its own. It changes
+  nothing itself, and it is not a form, so it is read on the panel rather than
+  in a dialog.
+
+  Only a reader who is signed in sees it. One who is not is sent to sign in
+  first, and brought back here once they have, as every page of an account's
+  own does (`forgetAccount.feature`).
+
+  The account's name and email address are the account's own, not words of the
+  reader's language, so they are shown as they are, whatever language the page
+  is in.
+
+  Nobody needs scripting to see it.
+
+  Each scenario has a database and an application of its own. What one
+  scenario registers, and whom it signs in, must not be there for the next to
+  find.
+
+  Rule: Only a reader signed in sees the profile
+
+    Scenario: A reader not signed in is sent to sign in first
+      Given a viewport 1200 pixels wide
+      When the profile page is opened
+      Then the sign in page is shown
+
+    Scenario: A reader who signs in from there is brought back to the profile
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the profile page is open
+      When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
+      Then the profile page is shown
+
+    Scenario: A reader signed in sees the profile
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the profile page is shown
+
+  Rule: The profile says who the account is
+
+    Scenario: The profile shows the account's name
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, called "Sam Someone", with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the profile shows the name "Sam Someone"
+
+    Scenario: The profile shows the account's email address
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the profile shows the email address "someone@example.com"
+
+  Rule: The profile leads to the pages that change the account
+
+    Scenario Outline: The profile links to each
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the profile links to "<page>" at "<path>"
+
+      Examples:
+        | page                 | path                          |
+        | Change Name          | /account/change-name          |
+        | Change Email Address | /account/change-email-address |
+        | Change Password      | /account/change-password      |
+
+  Rule: The page needs no scripting
+
+    Scenario: The profile page does not send a reader without scripting away
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened with scripting off
+      Then the profile page is shown
+
+  Rule: The page is in the reader's language
+
+    Scenario: Every word on the profile page but the account's own is in the test locale
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then every word on the profile page but the account's own is in the test locale
