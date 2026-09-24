@@ -105,8 +105,13 @@ export class SignInWithGoogleHandler extends CommandHandler<
       : await this.load(holder);
 
     // Another Google account is linked already, and whoever holds the address
-    // for now does not get to add a second.
-    if (account.googleSubject !== undefined) {
+    // for now does not get to add a second. This one linked already is not
+    // another: a second signing in that looked before the first had linked it
+    // finds it here, and is to sign in rather than be refused.
+    if (
+      account.googleSubject !== undefined &&
+      account.googleSubject !== command.subject
+    ) {
       throw new SignInWithGoogleRefused(
         "SignInWithGoogle.LinkedToAnother",
         "The account is linked to another Google account.",
