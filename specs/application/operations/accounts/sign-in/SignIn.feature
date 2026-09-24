@@ -95,3 +95,35 @@ Feature: Signing in with an email address and a password
       Given "someone@example.com" has an account brought over from the old site, with the password "correct horse battery staple"
       When signing in as "someone@example.com" with the password "not the right password" is sent
       Then the account for "someone@example.com" still has an imported password
+
+  Rule: Signings in to the same account at once take turns with it
+
+    Signing in is recorded on the account, as an event kept at the version the
+    account was read at. Two signings in to one account at once that each read
+    it before either kept anything would each keep an event at the same
+    version, and the second would be refused for it, which the reader sees as
+    the site failing. Signings in with Google already take turns with the
+    account (`SignInWithGoogle.feature`); a signing in with a password takes
+    its turn with them and with every other, rather than going round them.
+
+    These are sent for real at once, each in a transaction of its own, and
+    several of each, so that they meet rather than happening to arrive one
+    after another.
+
+    Scenario: Signings in with a password at once are each answered with the account
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And 5 signings in as "someone@example.com" with the password "correct horse battery staple"
+      When they are sent at once
+      Then each of them is answered with the account for "someone@example.com"
+
+    Scenario: Signings in with a password and with Google at once are each answered with the account
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And 3 signings in as "someone@example.com" with the password "correct horse battery staple"
+      And 3 signings in with Google
+      When they are sent at once
+      Then each of them is answered with the account for "someone@example.com"

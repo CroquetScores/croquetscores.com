@@ -62,15 +62,15 @@ Going to use SPA instead of /scripts.
 
 ---
 
-### Signing in with a password and with Google at the same moment can collide
+### Signing in with Google as the account is forgotten fails as the site failing
 
-**Where:** `src/application/operations/accounts/SignInHandler.ts`, beside `SignInWithGoogleHandler.ts` — from the review of registering with Google.
+**Where:** `src/application/operations/accounts/SignInWithGoogleHandler.ts`, where an account is found by its Google account — from the review of PR #100.
 
-**What will go wrong.** Signing in is recorded on the account, as an event appended at the version the account was loaded at. Signings in with Google for the same account take turns: whichever way each finds the account, it holds the row for the account's address until its transaction is done, and the next waits and loads the account as it was left (`SignInWithGoogle.feature`). Signing in with a password holds nothing. So a password sign-in and a Google sign-in for the same account at the same moment can both load it at one version, and the second to keep what it did is refused with `EventStore.Concurrency`, which the reader sees as the site failing. Two password sign-ins at once collide the same way, and so does anything else that changes an account while somebody signs in to it.
+**What will go wrong.** A signing in with Google finds the account linked to that Google account, and then waits its turn at holding it. If the account is being forgotten meanwhile, the hold waits for the forgetting to finish, and the account it loads is forgotten. `account.signIn` refuses with `Account.Forgotten`, which is not a `SignInWithGoogleRefused`, so the callback in `src/web/auth/google.ts` throws it on, and the reader lands on an error page instead of being told what an account nobody has is told. Signing in with a password had the same gap and was closed in PR #100: it refuses an account forgotten while it was not held as it refuses an address with no account.
 
-**Why it has not yet.** It needs one person signing in to one account two ways within the same fraction of a second, or two people sharing an account doing so. Neither happens often, and the reader who meets it signs in again and gets in.
+**Why it has not yet.** It needs someone to sign in with Google in the moment between their account being found and its forgetting being done, and forgetting an account is asked for by its owner.
 
-**What to do.** Have `SignInHandler` hold the account as signing in with Google does, with `hold` on the accounts by email address read model before it loads the account, and add a scenario to `SignIn.feature` that sends several at once and expects each answered with the account, as `SignInWithGoogle.feature` does. If more handlers come to need it, holding the account belongs somewhere they all pass through rather than in each: the repository loading an account for a command could hold it.
+**What to do.** After the hold and the load, treat a forgotten account as a Google account linked to nothing: carry on as if `byGoogle.find` had found nothing, or refuse as that path would. Add a scenario that forgets the account while a signing in with Google to it is held back, and expects the reader not to see the site fail.
 
 ---
 

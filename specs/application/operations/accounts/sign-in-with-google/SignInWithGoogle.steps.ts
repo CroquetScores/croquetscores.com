@@ -6,6 +6,11 @@ import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import { identitySaidFor } from "../../../../support/google.js";
 import type { Registering } from "../../../../support/registering.js";
 import type { SpecWorld } from "../../../../support/world.js";
+import {
+  answeredAtOnce,
+  sendAtOnce,
+  toSendAtOnce,
+} from "../signingsInAtOnce.js";
 
 const registeringOf = (world: SpecWorld): Registering => {
   assert.ok(world.registering !== undefined, "Registering is not stood up.");
@@ -48,42 +53,37 @@ When("signing in with Google is sent", async function (this: SpecWorld) {
   }
 });
 
-// Each answer or refusal of the signings in sent at once, in the order sent.
-const atOnce = new WeakMap<SpecWorld, PromiseSettledResult<unknown>[]>();
-
-// All at once, so that each is in a transaction of its own and they race for
-// the account, as registering's are sent. None is allowed to fail the step:
-// whether any was refused is what the scenario asks.
 When(
   "{int} signings in with Google are sent at once",
   async function (this: SpecWorld, many: number) {
     const registering = registeringOf(this);
-    atOnce.set(
-      this,
-      await Promise.allSettled(
-        Array.from({ length: many }, () =>
-          registering.signInWithGoogle(commandFor(this)),
-        ),
-      ),
-    );
+    for (let each = 0; each < many; each++) {
+      toSendAtOnce(this, () => registering.signInWithGoogle(commandFor(this)));
+    }
+    await sendAtOnce(this);
+  },
+);
+
+Given(
+  "{int} signings in with Google",
+  function (this: SpecWorld, many: number) {
+    const registering = registeringOf(this);
+    for (let each = 0; each < many; each++) {
+      toSendAtOnce(this, () => registering.signInWithGoogle(commandFor(this)));
+    }
   },
 );
 
 Then(
   "each of them is answered with the account for {string}",
   async function (this: SpecWorld, address: string) {
-    const answers = atOnce.get(this);
-    assert.ok(answers !== undefined, "Nothing was sent at once.");
     const account = await accountFor(this, address);
-    for (const answer of answers) {
+    for (const answer of answeredAtOnce(this)) {
       assert.ok(
         answer.status === "fulfilled",
         `One was refused: ${answer.status === "rejected" ? String(answer.reason) : ""}`,
       );
-      assert.equal(
-        (answer.value as { value?: unknown }).value,
-        account.id.value,
-      );
+      assert.equal(answer.value.value, account.id.value);
     }
   },
 );

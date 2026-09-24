@@ -1,10 +1,11 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { SignIn } from "../../../../../src/application/operations/accounts/SignIn.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import type { Registering } from "../../../../support/registering.js";
 import type { SpecWorld } from "../../../../support/world.js";
+import { sendAtOnce, toSendAtOnce } from "../signingsInAtOnce.js";
 
 const registeringOf = (world: SpecWorld): Registering => {
   assert.ok(world.registering !== undefined, "Registering is not stood up.");
@@ -51,6 +52,22 @@ Then(
     assert.equal(answered?.value, account.id.value);
   },
 );
+
+Given(
+  "{int} signings in as {string} with the password {string}",
+  function (this: SpecWorld, many: number, address: string, password: string) {
+    const registering = registeringOf(this);
+    for (let each = 0; each < many; each++) {
+      toSendAtOnce(this, () =>
+        registering.signIn(new SignIn(address, password, momentOf(this))),
+      );
+    }
+  },
+);
+
+When("they are sent at once", async function (this: SpecWorld) {
+  await sendAtOnce(this);
+});
 
 // Found by the name the event is kept under, which is what the stream holds:
 // the class name is not in the database, and a scenario reading the stream
