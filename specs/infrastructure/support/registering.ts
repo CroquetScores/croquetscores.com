@@ -33,6 +33,14 @@ import { ResetPasswordHandler } from "../../../src/application/operations/accoun
 import { AskToForgetAccountHandler } from "../../../src/application/operations/accounts/AskToForgetAccountHandler.js";
 import type { AskToForgetAccount } from "../../../src/application/operations/accounts/AskToForgetAccount.js";
 import { ForgetAccountHandler } from "../../../src/application/operations/accounts/ForgetAccountHandler.js";
+import type { ChangeName } from "../../../src/application/operations/accounts/ChangeName.js";
+import type {
+  AccountProfile,
+  Profile,
+} from "../../../src/application/operations/accounts/AccountProfile.js";
+import { AccountProfileHandler } from "../../../src/application/operations/accounts/AccountProfileHandler.js";
+import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
+import { ChangeNameValidator } from "../../../src/application/operations/accounts/ChangeNameValidator.js";
 import type { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
 import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
@@ -288,6 +296,9 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     new AskToForgetAccountHandler(repository, queue, links),
   );
   mediator.handleCommand(new ForgetAccountHandler(repository, links));
+  validation.register(new ChangeNameValidator());
+  mediator.handleCommand(new ChangeNameHandler(repository));
+  mediator.handleQuery(new AccountProfileHandler(repository));
   validation.register(new SetNewPasswordValidator());
   mediator.handleCommand(
     new SetNewPasswordHandler(
@@ -440,6 +451,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     async askToForget(command: AskToForgetAccount): Promise<void> {
       await settle();
       await mediator.send(command);
+    },
+
+    async profile(query: AccountProfile): Promise<Profile | undefined> {
+      await settle();
+      return mediator.query(query);
+    },
+
+    async changeName(command: ChangeName): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
     },
 
     async forgetWithLink(command: ForgetAccount): Promise<AccountId> {
@@ -653,6 +674,18 @@ Given("the application's signing in with Google", function (this: SpecWorld) {
 // The same mediator over the same accounts, said in its own words because a
 // scenario about forgetting is not about registering.
 Given("the application's forgetting of accounts", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about changing a name is not about registering.
+Given("the application's changing of names", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about what an account shows is not about registering.
+Given("the application's finding of profiles", function (this: SpecWorld) {
   standUpFor(this);
 });
 

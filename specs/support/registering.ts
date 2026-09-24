@@ -9,6 +9,11 @@ import type { SignInWithGoogle } from "../../src/application/operations/accounts
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
 import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
+import type { ChangeName } from "../../src/application/operations/accounts/ChangeName.js";
+import type {
+  AccountProfile,
+  Profile,
+} from "../../src/application/operations/accounts/AccountProfile.js";
 import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
 import type { SetNewPassword } from "../../src/application/operations/accounts/SetNewPassword.js";
 import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
@@ -70,6 +75,12 @@ export interface Registering {
 
   /** Forgets an account with its link. Answers with it, or throws. */
   forgetWithLink(command: ForgetAccount): Promise<AccountId>;
+
+  /** Changes an account's name. Answers with the account, or throws. */
+  changeName(command: ChangeName): Promise<AccountId>;
+
+  /** What an account is called and where it is reached, or nothing. */
+  profile(query: AccountProfile): Promise<Profile | undefined>;
 
   /** Has reporting tell `address`, or nobody where there is none. */
   tellsAdministrator(address: string | undefined): void;

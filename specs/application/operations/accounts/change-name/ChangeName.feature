@@ -52,9 +52,8 @@ Feature: Changing what an account is called
 
     Scenario: The same name is not recorded
       Given "someone@example.com" has an account, confirmed, called "Sam Someone"
-      And the account for "someone@example.com" is taken hold of
       When the reader signed in to the account for "someone@example.com" changes its name to "Sam Someone"
-      Then the account for "someone@example.com" has recorded nothing since it was taken hold of
+      Then the account for "someone@example.com" has recorded no change of its name
 
     Scenario: The same name is not refused
       Given "someone@example.com" has an account, confirmed, called "Sam Someone"

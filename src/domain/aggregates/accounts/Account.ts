@@ -6,6 +6,7 @@ import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
 import { GoogleAccountLinked } from "./events/GoogleAccountLinked.js";
+import { NameChanged } from "./events/NameChanged.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
 import { PasswordSet } from "./events/PasswordSet.js";
 import { RoleAdded } from "./events/RoleAdded.js";
@@ -194,6 +195,18 @@ export class Account extends AggregateRoot {
   }
 
   /**
+   * That the account is now called `name`. The name it has already records
+   * nothing, because nothing happened. An account not yet confirmed has no
+   * name to change: it is given its first by confirming.
+   */
+  changeName(name: PersonName, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+    if (name.equals(this.#name)) return;
+    this.record(new NameChanged(name.toString(), this.id, at));
+  }
+
+  /**
    * That somebody signed in to the account. Whether their password was right
    * is decided before the account is asked; what the account decides is
    * whether it is one that can be signed in to at all.
@@ -296,6 +309,8 @@ export class Account extends AggregateRoot {
       this.#passwordHash = event.passwordHash;
       this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
+    } else if (event instanceof NameChanged) {
+      this.#name = PersonName.from(event.name);
     } else if (event instanceof PasswordSet) {
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = false;

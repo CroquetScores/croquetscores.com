@@ -76,6 +76,12 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       Then nothing kept of the account's events contains "Sam Someone"
 
+    Scenario: The account's events do not hold a name it was changed to
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account's name is changed to "Samantha Someone"
+      Then nothing kept of the account's events contains "Samantha Someone"
+
     Scenario: The account's events do not hold its email address
       When an account is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
@@ -107,6 +113,13 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       When the account is read back
       Then the account is called "Sam Someone"
+
+    Scenario: A name it was changed to reads back as it was given
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account's name is changed to "Samantha Someone"
+      When the account is read back
+      Then the account is called "Samantha Someone"
 
     Scenario: An email address reads back as it was given
       Given an account is registered at "Someone@Example.com"
@@ -184,6 +197,14 @@ Feature: Keeping an account's name and email address readable only with its own 
     Scenario: An account whose key is deleted is called forgotten, by its id
       Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
+      When the account's key is deleted
+      And the account is read back
+      Then the account is called "Account Forgotten 7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+    Scenario: An account whose key is deleted is called forgotten, whatever it was changed to
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account's name is changed to "Samantha Someone"
       When the account's key is deleted
       And the account is read back
       Then the account is called "Account Forgotten 7c9e6679-7425-40de-944b-e07fc1f90ae7"

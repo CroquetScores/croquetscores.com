@@ -61,6 +61,18 @@ Given(
 );
 
 Given(
+  "{string} has an account, confirmed, called {string}, with the password {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    password: string,
+  ) {
+    await inHand(this).give(address, { confirmed: true, name, password });
+  },
+);
+
+Given(
   "{string} has an account, confirmed, with the password {string}",
   async function (this: SpecWorld, address: string, password: string) {
     await inHand(this).give(address, { confirmed: true, password });

@@ -170,6 +170,14 @@ export const english: Language = {
     "SignIn.Failed":
       "The email address or password is incorrect. Please try again.",
 
+    "profile.title": "Profile",
+    "profile.name": "Name",
+    "profile.emailAddress": "Email address",
+
+    "changeName.title": "Change name",
+    "changeName.name": "Name",
+    "changeName.submit": "Change name",
+
     "confirmEmailAddress.title": "Confirm your email address",
     "confirmEmailAddress.name": "Name",
     "confirmEmailAddress.password": "Password",

@@ -26,6 +26,9 @@ import { ReportUnreachableServiceHandler } from "../application/operations/accou
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
+import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
+import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
+import { ChangeNameValidator } from "../application/operations/accounts/ChangeNameValidator.js";
 import { ForgetAccountHandler } from "../application/operations/accounts/ForgetAccountHandler.js";
 import { WhatAForgettingLinkIsWorthHandler } from "../application/operations/accounts/WhatAForgettingLinkIsWorthHandler.js";
 import { WhatASetNewPasswordLinkIsWorthHandler } from "../application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
@@ -99,6 +102,8 @@ import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
 import { registerForgetAccountPage } from "./public/forgetAccount.js";
+import { registerChangeNamePage } from "./public/changeName.js";
+import { registerProfilePage } from "./public/profile.js";
 import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspended.js";
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
@@ -489,6 +494,9 @@ export const buildApplication = async (
     new AskToForgetAccountHandler(accounts, emailQueue, links),
   );
   mediator.handleCommand(new ForgetAccountHandler(accounts, links));
+  validation.register(new ChangeNameValidator());
+  mediator.handleCommand(new ChangeNameHandler(accounts));
+  mediator.handleQuery(new AccountProfileHandler(accounts));
   mediator.handleQuery(new WhatAForgettingLinkIsWorthHandler(accounts, links));
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(
@@ -593,6 +601,8 @@ export const buildApplication = async (
   );
   registerSetNewPasswordPage(server, assets, sessions, inTransaction);
   registerForgetAccountPage(server, assets, sessions, inTransaction);
+  registerProfilePage(server, assets);
+  registerChangeNamePage(server, assets);
   registerRegistrationsSuspendedPage(server, assets);
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);

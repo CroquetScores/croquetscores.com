@@ -6,6 +6,7 @@ import { AccountForgotten } from "./AccountForgotten.js";
 import { AccountRegistered } from "./AccountRegistered.js";
 import { EmailAddressConfirmed } from "./EmailAddressConfirmed.js";
 import { GoogleAccountLinked } from "./GoogleAccountLinked.js";
+import { NameChanged } from "./NameChanged.js";
 import { PasswordHashedAgain } from "./PasswordHashedAgain.js";
 import { PasswordSet } from "./PasswordSet.js";
 import { RoleAdded } from "./RoleAdded.js";
@@ -69,6 +70,16 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
         new EmailAddressConfirmed(
           text(said, "name", "account-email-address-confirmed"),
           text(said, "passwordHash", "account-email-address-confirmed"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      NameChanged,
+      "account-name-changed",
+      (said, { createdBy, occurredAt }) =>
+        new NameChanged(
+          text(said, "name", "account-name-changed"),
           createdBy,
           occurredAt,
         ),

@@ -10,7 +10,8 @@ Feature: A reader who is signed in can change what their account is called
   put back. A sound one is kept, and the reader is taken to their profile,
   which shows it. Nothing is emailed: what an account is called says nothing
   about who can reach it, and an email for every correction would teach its
-  owner to ignore the ones that matter.
+  owner to ignore the ones that matter. That is said where the email would be
+  sent from (`ChangeName.feature`), since a page emails nothing itself.
 
   Only a reader who is signed in can change it; one who is not is sent to sign
   in first. Changing it needs no scripting.
@@ -51,7 +52,7 @@ Feature: A reader who is signed in can change what their account is called
       And the change name page is open
       And the name "Samantha Someone" is typed
       When the dialog is submitted
-      Then the account for "someone@example.com" is called "Samantha Someone"
+      Then the account for the email address "someone@example.com" is called "Samantha Someone"
 
     Scenario: A name typed with spaces around it is kept without them
       Given a viewport 1200 pixels wide
@@ -60,7 +61,7 @@ Feature: A reader who is signed in can change what their account is called
       And the change name page is open
       And the name "  Samantha Someone  " is typed
       When the dialog is submitted
-      Then the account for "someone@example.com" is called "Samantha Someone"
+      Then the account for the email address "someone@example.com" is called "Samantha Someone"
 
     Scenario: The reader is taken to their profile
       Given a viewport 1200 pixels wide
@@ -79,15 +80,6 @@ Feature: A reader who is signed in can change what their account is called
       And the name "Samantha Someone" is typed
       When the dialog is submitted
       Then the profile shows the name "Samantha Someone"
-
-    Scenario: Nothing is emailed about the change
-      Given a viewport 1200 pixels wide
-      And "someone@example.com" has an account, confirmed, called "Sam Someone", with the password "correct horse battery staple"
-      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
-      And the change name page is open
-      And the name "Samantha Someone" is typed
-      When the dialog is submitted
-      Then nothing is queued to be sent
 
   Rule: A name that breaks a rule is said beneath the field, and changes nothing
 
@@ -121,7 +113,7 @@ Feature: A reader who is signed in can change what their account is called
       And the change name page is open
       And the name "Sa" is typed
       When the dialog is submitted
-      Then the account for "someone@example.com" is called "Sam Someone"
+      Then the account for the email address "someone@example.com" is called "Sam Someone"
 
   Rule: The page needs no scripting
 
