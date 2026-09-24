@@ -76,7 +76,7 @@ Feature: A reader signs in with their email address and password
       When the sign in page is opened with scripting off
       Then the sign in page is shown
 
-  Rule: The page asks for an email address and a password, and points elsewhere for the rest
+  Rule: The page asks for an email address and a password
 
     Scenario Outline: The page asks for each
       Given a viewport 1200 pixels wide
@@ -88,11 +88,6 @@ Feature: A reader signs in with their email address and password
         | an email address |
         | a password       |
 
-    Scenario: The page links to the register page
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the page links to the register page
-
   Rule: The dialog has no cancel button
 
     Cancelling signing in changes nothing and goes nowhere a reader could not
@@ -103,6 +98,51 @@ Feature: A reader signs in with their email address and password
       Given a viewport 1200 pixels wide
       When the sign in page is opened
       Then the dialog has no cancel button
+
+  Rule: The way to the register page is the first of the dialog's buttons
+
+    A reader with no account cannot sign in whatever they type, so the way to
+    make one is put among the form's buttons rather than beneath the form, and
+    first, where it is found before anything is typed. It is drawn as every
+    button but the submit button is. The register page needs scripting, and a
+    reader without it is told so there, so it is pressed here with scripting
+    on.
+
+    Scenario: The dialog's buttons include one to the register page
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the dialog's buttons include one to the register page
+
+    Scenario: The register button says "Register"
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button says "Register"
+
+    Scenario: The register button is the first of the dialog's buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button is the first of the dialog's buttons
+
+    Scenario: The register button is the furthest left of the dialog's buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button is the furthest left of the dialog's buttons
+
+    Scenario: The register button looks like a button other than the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button looks like a button other than the submit button
+
+    Scenario: The page links to the register page once
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the page links to the register page once
+
+    Scenario: Pressing the register button opens the register page
+      Given a viewport 1200 pixels wide
+      And the sign in page is open with scripting on
+      When the register button is pressed
+      Then the register page is shown
 
   Rule: The way to the forgot password page is a button among the dialog's own
 
