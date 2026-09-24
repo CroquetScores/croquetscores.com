@@ -411,18 +411,6 @@ Then(
   },
 );
 
-When("the dialog is cancelled", async function (this: SpecWorld) {
-  await this.browserPage
-    .locator(buttons)
-    .getByText("Cancel", { exact: true })
-    .click();
-  await this.browserPage.waitForLoadState();
-});
-
-Then("the home page is shown", function (this: SpecWorld) {
-  assert.equal(new URL(this.browserPage.url()).pathname, "/");
-});
-
 interface Rect {
   left: number;
   right: number;
