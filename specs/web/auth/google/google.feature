@@ -49,28 +49,28 @@ Feature: Registering with Google
 
   Rule: The offer to register with Google is a button at the top of the dialog
 
-    Registering with Google asks nothing more of the reader than pressing it,
-    so it comes first, above the email address field, where it is seen before
-    any typing starts. It looks like the cancel button rather than the submit
-    button, because the submit button is the only one painted as the way
-    forward, and what it is the way forward for is the form beneath. It carries
-    Google's icon, so that a reader who knows the icon finds it without
-    reading, and it is as wide as the email address field, so the two read as
-    alternatives of the same weight. A line saying "OR" stands between it and
-    the field, centred, so the two are read as two ways in rather than as two
-    steps of one. A message saying why Google turned the reader away stays at
-    the top of the dialog, above the button, where every dialog puts what it
-    has to say before anything is filled in.
+    Registering with Google asks nothing more of the reader than pressing it, so
+    it comes first, above the email address field, where it is seen before any
+    typing starts. It is drawn as every button but the submit button is, because
+    the submit button is the only one painted as the way forward, and what it is
+    the way forward for is the form beneath. It carries Google's icon, so that a
+    reader who knows the icon finds it without reading, and it is as wide as the
+    email address field, so the two read as alternatives of the same weight. A
+    line saying "OR" stands between it and the field, centred, so the two are
+    read as two ways in rather than as two steps of one. A message saying why
+    Google turned the reader away stays at the top of the dialog, above the
+    button, where every dialog puts what it has to say before anything is filled
+    in.
 
     Scenario: The offer is a button
       Given a viewport 1200 pixels wide
       When the register page is opened with scripting on
       Then the offer to register with Google is a button
 
-    Scenario: The offer looks like the cancel button
+    Scenario: The offer looks like a button other than the submit button
       Given a viewport 1200 pixels wide
       When the register page is opened with scripting on
-      Then the offer to register with Google looks like the cancel button
+      Then the offer to register with Google looks like a button other than the submit button
 
     Scenario: The offer carries Google's icon
       Given a viewport 1200 pixels wide

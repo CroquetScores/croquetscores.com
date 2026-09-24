@@ -67,6 +67,17 @@ Feature: Registering an account
       When the register page is opened with scripting on
       Then the dialog does not ask for a password
 
+  Rule: The dialog has no cancel button
+
+    Cancelling registering changes nothing and goes nowhere a reader could not
+    reach from the site's own bars, so the button does nothing for them, and
+    the row has room for buttons that do.
+
+    Scenario: The dialog has no cancel button
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the dialog has no cancel button
+
   Rule: The email address is trimmed where it is typed
 
     Scenario: An address typed with spaces around it is registered without them
