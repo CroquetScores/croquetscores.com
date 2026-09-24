@@ -88,15 +88,56 @@ Feature: A reader signs in with their email address and password
         | an email address |
         | a password       |
 
-    Scenario: The page links to the forgot password page
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the page links to the forgot password page
-
     Scenario: The page links to the register page
       Given a viewport 1200 pixels wide
       When the sign in page is opened
       Then the page links to the register page
+
+  Rule: The way to the forgot password page is a button beside the cancel button
+
+    A reader who cannot remember their password finds that out at the form,
+    with their email address typed and the password not coming, so the way on
+    is put among the form's buttons rather than beneath the form. It comes
+    before the cancel button, since both leave without signing in, and looks
+    like it, because the submit button is the only one that looks like the way
+    forward. It is still a link to the forgot password page, so it works with
+    scripting off.
+
+    Scenario: The dialog's buttons include one to the forgot password page
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the dialog's buttons include one to the forgot password page
+
+    Scenario: The forgot password button says "Forgot Password?"
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button says "Forgot Password?"
+
+    Scenario: The forgot password button comes before the cancel button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button comes before the cancel button
+
+    Scenario: The forgot password button is to the left of the cancel button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button is to the left of the cancel button
+
+    Scenario: The forgot password button looks like the cancel button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button looks like the cancel button
+
+    Scenario: The page links to the forgot password page once
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the page links to the forgot password page once
+
+    Scenario: Pressing the forgot password button opens the forgot password page
+      Given a viewport 1200 pixels wide
+      And the sign in page is open
+      When the forgot password button is pressed
+      Then the forgot password page is shown
 
   Rule: Every field is trimmed where it is typed, the password included
 
