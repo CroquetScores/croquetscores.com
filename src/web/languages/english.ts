@@ -166,7 +166,7 @@ export const english: Language = {
     "signIn.cancel": "Cancel",
     "signIn.submit": "Sign in",
     "signIn.elsewhere": "If you cannot sign in",
-    "signIn.forgotPassword": "I have forgotten my password",
+    "signIn.forgotPassword": "Forgot Password?",
     "signIn.register": "I do not have an account yet",
     "signIn.tryAgainLater": "Too many attempts have been made lately. Wait an hour and try again.",
     "signIn.failed": "The email address or password is incorrect. Please try again.",

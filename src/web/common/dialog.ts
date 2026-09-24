@@ -70,6 +70,12 @@ export interface Dialog {
   readonly cancel?:
     { readonly label: string; readonly href: string } | undefined;
   /**
+   * Somewhere else to go instead of filling the form in, such as the forgot
+   * password page from signing in. Drawn as the cancel button is, before it.
+   */
+  readonly elsewhere?:
+    readonly { readonly label: string; readonly href: string }[] | undefined;
+  /**
    * What the form sends that the reader never fills in, by the name it is sent
    * under: the token reCAPTCHA's script hands the register page, say. They
    * travel inside the form, because that is what a browser sends, and nothing
@@ -216,6 +222,17 @@ const cancel = (link: Dialog["cancel"]): string =>
     ? ""
     : `              <a class="button" href="${escape(link.href)}">${escape(link.label)}</a>\n`;
 
+// Before cancel, since each leaves the form without doing what it is for, and
+// cancel is the one that changes nothing and goes nowhere in particular. Links
+// drawn as buttons, so that they work with scripting off.
+const elsewhere = (links: Dialog["elsewhere"]): string =>
+  (links ?? [])
+    .map(
+      (link) =>
+        `              <a class="button" href="${escape(link.href)}">${escape(link.label)}</a>\n`,
+    )
+    .join("");
+
 // Whether the reader is being taken to something that needs attention.
 const attentionAskedFor = (dialog: Dialog): boolean =>
   dialog.problems?.autofocus === true ||
@@ -243,7 +260,7 @@ export const renderDialog = (
 ${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternative(dialog.alternative)}${dialog.fields.map(field).join("\n")}
             </div>
             <div class="dialog-buttons">
-${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>
+${elsewhere(dialog.elsewhere)}${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>
             </div>${hidden(dialog.hidden)}
           </form>
         </section>`;

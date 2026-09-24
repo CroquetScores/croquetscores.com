@@ -190,17 +190,109 @@ Then(
   },
 );
 
+const forgotPasswordPage = 'a[href="/account/forgot-password"]';
+const forgotPasswordButton = `${dialog} .dialog-buttons ${forgotPasswordPage}`;
+const cancelButton = `${dialog} .dialog-buttons a.button[href="/"]`;
+
+// Once, so that a link left beneath the form beside the button would show.
 Then(
-  "the page links to the forgot password page",
+  "the page links to the forgot password page once",
   async function (this: SpecWorld) {
-    assert.ok(
-      (await this.browserPage
-        .locator('main a[href="/account/forgot-password"]')
-        .count()) > 0,
-      "Nothing points to the forgot password page.",
+    assert.equal(
+      await this.browserPage.locator(`main ${forgotPasswordPage}`).count(),
+      1,
     );
   },
 );
+
+Then(
+  "the dialog's buttons include one to the forgot password page",
+  async function (this: SpecWorld) {
+    const classes = await this.browserPage
+      .locator(forgotPasswordButton)
+      .getAttribute("class");
+    assert.match(classes ?? "", /\bbutton\b/, "It is not drawn as a button.");
+  },
+);
+
+Then(
+  "the forgot password button says {string}",
+  async function (this: SpecWorld, said: string) {
+    const shown = await this.browserPage
+      .locator(forgotPasswordButton)
+      .innerText();
+    assert.equal(unmarked(shown).trim(), said);
+  },
+);
+
+// In the markup, which is the order it is read out and tabbed through in.
+Then(
+  "the forgot password button comes before the cancel button",
+  async function (this: SpecWorld) {
+    const before = await this.browserPage.evaluate<boolean | null>(`(() => {
+      const button = document.querySelector(${JSON.stringify(forgotPasswordButton)});
+      const cancel = document.querySelector(${JSON.stringify(cancelButton)});
+      if (!button || !cancel) return null;
+      return Boolean(button.compareDocumentPosition(cancel) & Node.DOCUMENT_POSITION_FOLLOWING);
+    })()`);
+    assert.ok(before !== null, "The dialog lacks one of the two buttons.");
+    assert.ok(before, "The forgot password button comes after cancel.");
+  },
+);
+
+Then(
+  "the forgot password button is to the left of the cancel button",
+  async function (this: SpecWorld) {
+    const button = await this.browserPage
+      .locator(forgotPasswordButton)
+      .boundingBox();
+    const cancel = await this.browserPage.locator(cancelButton).boundingBox();
+    assert.ok(button !== null && cancel !== null, "A button is not drawn.");
+    assert.ok(
+      button.x + button.width <= cancel.x + 0.5,
+      "The forgot password button does not end left of cancel.",
+    );
+  },
+);
+
+// Every part of how a button is drawn, read from what the browser drew rather
+// than from the classes, so that a rule written for one and not the other shows.
+const drawn = [
+  "background-color",
+  "color",
+  "border-top-width",
+  "border-top-style",
+  "border-top-color",
+  "border-radius",
+  "font-family",
+  "font-size",
+  "font-weight",
+  "min-height",
+];
+
+Then(
+  "the forgot password button looks like the cancel button",
+  async function (this: SpecWorld) {
+    const styleOf = (selector: string) =>
+      this.browserPage.evaluate<Record<string, string> | null>(`(() => {
+        const element = document.querySelector(${JSON.stringify(selector)});
+        if (!element) return null;
+        const style = getComputedStyle(element);
+        return Object.fromEntries(
+          ${JSON.stringify(drawn)}.map((name) => [name, style.getPropertyValue(name)]),
+        );
+      })()`);
+    const button = await styleOf(forgotPasswordButton);
+    assert.ok(button !== null, "There is no forgot password button.");
+    assert.deepEqual(button, await styleOf(cancelButton));
+  },
+);
+
+When("the forgot password button is pressed", async function (this: SpecWorld) {
+  const arrived = this.browserPage.waitForEvent("load");
+  await this.browserPage.click(forgotPasswordButton);
+  await arrived;
+});
 
 Then("the page links to the register page", async function (this: SpecWorld) {
   assert.ok(

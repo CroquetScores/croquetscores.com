@@ -105,16 +105,18 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
       value: typed["password"],
     },
   ],
+  elsewhere: [
+    { label: speaking.say("signIn.forgotPassword"), href: forgotPasswordPath },
+  ],
   cancel: { label: speaking.say("signIn.cancel"), href: "/" },
   submit: speaking.say("signIn.submit"),
 });
 
-// The ways on from here, beneath the form: a reader who cannot sign in either
-// has no account or cannot remember their password, and both are pages of
-// their own.
+// The way on from here for a reader with no account, beneath the form. One
+// who cannot remember their password finds that out at the form, so the way on
+// for them is among the form's buttons instead.
 const elsewhere = (speaking: Speaking): string =>
   `        <nav class="dialog-elsewhere" aria-label="${escape(speaking.say("signIn.elsewhere"))}">
-          <p><a href="${forgotPasswordPath}">${escape(speaking.say("signIn.forgotPassword"))}</a></p>
           <p><a href="${registerPath}">${escape(speaking.say("signIn.register"))}</a></p>
         </nav>`;
 
