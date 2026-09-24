@@ -62,18 +62,6 @@ Going to use SPA instead of /scripts.
 
 ---
 
-### Signing in with a password and with Google at the same moment can collide
-
-**Where:** `src/application/operations/accounts/SignInHandler.ts`, beside `SignInWithGoogleHandler.ts` — from the review of registering with Google.
-
-**What will go wrong.** Signing in is recorded on the account, as an event appended at the version the account was loaded at. Signings in with Google for the same account take turns: whichever way each finds the account, it holds the row for the account's address until its transaction is done, and the next waits and loads the account as it was left (`SignInWithGoogle.feature`). Signing in with a password holds nothing. So a password sign-in and a Google sign-in for the same account at the same moment can both load it at one version, and the second to keep what it did is refused with `EventStore.Concurrency`, which the reader sees as the site failing. Two password sign-ins at once collide the same way, and so does anything else that changes an account while somebody signs in to it.
-
-**Why it has not yet.** It needs one person signing in to one account two ways within the same fraction of a second, or two people sharing an account doing so. Neither happens often, and the reader who meets it signs in again and gets in.
-
-**What to do.** Have `SignInHandler` hold the account as signing in with Google does, with `hold` on the accounts by email address read model before it loads the account, and add a scenario to `SignIn.feature` that sends several at once and expects each answered with the account, as `SignInWithGoogle.feature` does. If more handlers come to need it, holding the account belongs somewhere they all pass through rather than in each: the repository loading an account for a command could hold it.
-
----
-
 ## Outstanding .feature files
 
 None.
