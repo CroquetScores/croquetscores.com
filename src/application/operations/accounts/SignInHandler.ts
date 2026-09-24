@@ -27,6 +27,12 @@ export class SignInRefused extends Error {
 /** What signing in asks of where accounts are found by their address. */
 export interface AccountsByAddressForSigningIn {
   find(address: EmailAddress): Promise<AccountId | undefined>;
+
+  /**
+   * Holds `account` until the request is done, so that signings in to it at
+   * once take turns rather than each reading it before any has changed it.
+   */
+  hold(account: AccountId): Promise<void>;
 }
 
 /**
@@ -42,6 +48,12 @@ export interface AccountsByAddressForSigningIn {
  * A forgotten account needs nothing of its own here: it is not found by its
  * address any more, so it arrives as an address with no account does, which is
  * what it is to whoever is asking.
+ *
+ * The account is held before it is read, as signing in with Google holds it,
+ * so that signings in to one account at once, however each came, take turns
+ * with it: each is recorded on the account, and two that read it before either
+ * had recorded anything would be kept at the same version, and all but one
+ * refused for it.
  *
  * An account whose hash is still the old site's has it made again today's way
  * as it signs in, since this is the first moment its password is to hand. The
@@ -97,6 +109,8 @@ export class SignInHandler extends CommandHandler<SignIn, AccountId> {
       return undefined;
     }
     const id = await this.byAddress.find(address);
-    return id === undefined ? undefined : this.accounts.load(id);
+    if (id === undefined) return undefined;
+    await this.byAddress.hold(id);
+    return this.accounts.load(id);
   }
 }
