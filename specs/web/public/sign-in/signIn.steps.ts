@@ -226,6 +226,15 @@ Then(
   },
 );
 
+Then(
+  "the forgot password button looks like a button other than the submit button",
+  async function (this: SpecWorld) {
+    const drawn = await drawnBesideAButton(this, forgotPasswordButton);
+    assert.ok(drawn !== null, "There is no forgot password button.");
+    assert.deepEqual(drawn.it, drawn.aButton);
+  },
+);
+
 When("the forgot password button is pressed", async function (this: SpecWorld) {
   const arrived = this.browserPage.waitForEvent("load");
   await this.browserPage.click(forgotPasswordButton);
