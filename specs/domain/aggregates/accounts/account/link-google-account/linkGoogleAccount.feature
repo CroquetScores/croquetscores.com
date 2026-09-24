@@ -68,6 +68,14 @@ Feature: Linking a Google account to an account
       When the Google account "google-subject-1" is linked to the account
       Then it has recorded 0 events
 
+    Scenario: Linking the same Google account again is not refused
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And the Google account "google-subject-1" was linked to it
+      And the account is rebuilt from the stream
+      When the Google account "google-subject-1" is linked to the account
+      Then it is not refused
+
   Rule: An account is linked to one Google account
 
     Scenario: Linking another Google account is refused

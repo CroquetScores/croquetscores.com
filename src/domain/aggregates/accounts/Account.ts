@@ -5,6 +5,7 @@ import { AccountBroughtOver } from "./events/AccountBroughtOver.js";
 import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
+import { GoogleAccountLinked } from "./events/GoogleAccountLinked.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
 import { PasswordSet } from "./events/PasswordSet.js";
 import { RoleAdded } from "./events/RoleAdded.js";
@@ -16,7 +17,10 @@ import { PersonName } from "./value-objects/PersonName.js";
 import type { Role } from "./value-objects/Role.js";
 
 /** Why an account will not do what it was asked. */
-export type AccountErrorCode = "Account.NotConfirmed" | "Account.Forgotten";
+export type AccountErrorCode =
+  | "Account.NotConfirmed"
+  | "Account.Forgotten"
+  | "Account.GoogleAccountAlreadyLinked";
 
 /**
  * An account's refusal, named by its code. The code is what whoever asked
@@ -51,6 +55,7 @@ export class Account extends AggregateRoot {
   #passwordSetAt: ReadOnlyDate | undefined;
   #confirmed = false;
   #forgotten = false;
+  #googleSubject: string | undefined;
   readonly #roles = new Set<Role>();
 
   private constructor(id: AccountId) {
@@ -161,6 +166,11 @@ export class Account extends AggregateRoot {
     return this.#forgotten;
   }
 
+  /** The subject of the Google account linked to it, or nothing if none is. */
+  get googleSubject(): string | undefined {
+    return this.#googleSubject;
+  }
+
   get isAdministrator(): boolean {
     return this.#roles.has("administrator");
   }
@@ -214,6 +224,27 @@ export class Account extends AggregateRoot {
   hashPasswordAgain(passwordHash: string, at: ReadOnlyDate): void {
     this.#refuseOnceForgotten();
     this.record(new PasswordHashedAgain(passwordHash, this.id, at));
+  }
+
+  /**
+   * That the Google account Google knows as `subject` signs in to this one.
+   * Whether it should is decided before the account is asked. An account is
+   * linked to one Google account: the same one again records nothing, so a
+   * request sent twice records one event, and another is refused, so that
+   * whoever holds the account's email address for a while cannot add a way in
+   * of their own. Only an account somebody has shown is theirs is linked.
+   */
+  linkGoogleAccount(subject: string, at: ReadOnlyDate): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+    if (this.#googleSubject === subject) return;
+    if (this.#googleSubject !== undefined) {
+      throw new AccountRefused(
+        "Account.GoogleAccountAlreadyLinked",
+        "The account is linked to another Google account.",
+      );
+    }
+    this.record(new GoogleAccountLinked(subject, this.id, at));
   }
 
   /**
@@ -274,6 +305,8 @@ export class Account extends AggregateRoot {
       // stays when somebody last chose it.
       this.#passwordHash = event.passwordHash;
       this.#passwordImported = false;
+    } else if (event instanceof GoogleAccountLinked) {
+      this.#googleSubject = event.subject;
     } else if (event instanceof RoleAdded) {
       this.#roles.add(event.role);
     } else if (event instanceof RoleRemoved) {
@@ -283,6 +316,9 @@ export class Account extends AggregateRoot {
       // So that whatever asks what an account may do gets the right answer
       // without also having to ask whether it is forgotten.
       this.#roles.clear();
+      // And for the same reason, so that signing in with the Google account
+      // it had cannot find it.
+      this.#googleSubject = undefined;
     }
     // Signing in is kept as a record that it happened, and changes nothing
     // the account decides by, so it has no case here.
