@@ -38,17 +38,7 @@ Going to use SPA instead of /scripts.
 
 ## Known problems
 
-### The cross-site guard will refuse an OAuth callback that posts
-
-**Where:** `src/web/common/crossSite.ts` — from PR #10.
-
-**What will go wrong.** Every `POST`, `PUT`, `PATCH` and `DELETE` is refused with `403 Request.CrossSite` when the browser says it came from another site. Some identity providers return a signed-in user by having the browser post a form back from the provider's own domain — `response_mode=form_post` in OpenID Connect. That post arrives with `Sec-Fetch-Site: cross-site`, because it is one, and it would be refused. The reader would be sent to the provider, sign in successfully, and land on an error page.
-
-**Why it has not yet.** Signing in is with a password only, posted from this site's own page. The Google and Facebook flows planned in `SETUP.md` §7.6 redirect back with a `GET`, which the guard never looks at.
-
-**What to do.** Whoever builds sign-in: if any provider is configured to post its callback, that one route needs exempting from the guard, and the exemption should name the route rather than loosen the rule. A `POST` callback is also a place where a forged request would matter a great deal, so the exemption is only safe alongside the checks the flow already requires — the `state` parameter matched against what was issued, and the token's signature and audience verified. Add a scenario that posts to the callback cross-site and expects it through, and another that posts to any other route cross-site and expects it refused.
-
----
+None.
 
 ### Signing in with Google as the account is forgotten fails as the site failing
 
