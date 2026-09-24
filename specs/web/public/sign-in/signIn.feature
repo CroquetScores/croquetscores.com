@@ -93,15 +93,26 @@ Feature: A reader signs in with their email address and password
       When the sign in page is opened
       Then the page links to the register page
 
-  Rule: The way to the forgot password page is a button beside the cancel button
+  Rule: The dialog has no cancel button
+
+    Cancelling signing in changes nothing and goes nowhere a reader could not
+    reach from the site's own bars, so the button does nothing for them, and
+    the row has room for buttons that do.
+
+    Scenario: The dialog has no cancel button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the dialog has no cancel button
+
+  Rule: The way to the forgot password page is a button among the dialog's own
 
     A reader who cannot remember their password finds that out at the form,
     with their email address typed and the password not coming, so the way on
     is put among the form's buttons rather than beneath the form. It comes
-    before the cancel button, since both leave without signing in, and looks
-    like it, because the submit button is the only one that looks like the way
-    forward. It is still a link to the forgot password page, so it works with
-    scripting off.
+    before the submit button, which is last in every dialog, and is drawn as
+    every button but the submit button is, because the submit button is the
+    only one that looks like the way forward. It is still a link to the forgot
+    password page, so it works with scripting off.
 
     Scenario: The dialog's buttons include one to the forgot password page
       Given a viewport 1200 pixels wide
@@ -113,20 +124,20 @@ Feature: A reader signs in with their email address and password
       When the sign in page is opened
       Then the forgot password button says "Forgot Password?"
 
-    Scenario: The forgot password button comes before the cancel button
+    Scenario: The forgot password button comes before the submit button
       Given a viewport 1200 pixels wide
       When the sign in page is opened
-      Then the forgot password button comes before the cancel button
+      Then the forgot password button comes before the submit button
 
-    Scenario: The forgot password button is to the left of the cancel button
+    Scenario: The forgot password button is to the left of the submit button
       Given a viewport 1200 pixels wide
       When the sign in page is opened
-      Then the forgot password button is to the left of the cancel button
+      Then the forgot password button is to the left of the submit button
 
-    Scenario: The forgot password button looks like the cancel button
+    Scenario: The forgot password button looks like a button other than the submit button
       Given a viewport 1200 pixels wide
       When the sign in page is opened
-      Then the forgot password button looks like the cancel button
+      Then the forgot password button looks like a button other than the submit button
 
     Scenario: The page links to the forgot password page once
       Given a viewport 1200 pixels wide
