@@ -86,6 +86,9 @@ Then(
     await page.fill('section.dialog input[name="password"]', password);
     await page.click('section.dialog button[type="submit"]');
     await page.waitForLoadState();
+    // Signing in with nowhere to go back to ends at the admin, which has a
+    // menu of its own; the public pages' menu is what says who is signed in.
+    await page.goto(`${this.baseUrl!}/`);
     assert.ok(
       (await page
         .locator('details.account-menu form[action="/account/sign-out"]')
