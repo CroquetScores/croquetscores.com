@@ -161,49 +161,65 @@ Then(
   },
 );
 
+// First in reading order, and not shown beneath any other button either.
 Then(
-  "the submit button is the furthest right of the dialog's buttons",
+  "the submit button is the first of the dialog's buttons",
   async function (this: SpecWorld) {
     const all = this.browserPage.locator(buttons);
     const count = await all.count();
-    assert.ok(count > 1, "There is no other button to be further right than.");
-    const pressed = await box(this, submit);
-    for (let index = 0; index < count; index += 1) {
-      const other = await all.nth(index).boundingBox();
-      assert.ok(other !== null);
-      assert.ok(
-        pressed.x + pressed.width >= other.x + other.width - 0.5,
-        "Another button reaches further right than the submit button.",
-      );
-    }
-  },
-);
-
-Then(
-  "the submit button is the last of the dialog's buttons",
-  async function (this: SpecWorld) {
-    const all = this.browserPage.locator(buttons);
-    const count = await all.count();
-    const last = all.nth(count - 1);
+    assert.ok(count > 0, "The dialog has no buttons.");
+    const first = all.nth(0);
     assert.equal(
-      await last.getAttribute("type"),
+      await first.getAttribute("type"),
       "submit",
-      "The last button is not the submit button.",
+      "The first button is not the submit button.",
     );
-
-    // Last in reading order, and not shown above any other button either.
-    const pressed = await last.boundingBox();
+    const pressed = await first.boundingBox();
     assert.ok(pressed !== null);
-    for (let index = 0; index < count - 1; index += 1) {
+    for (let index = 1; index < count; index += 1) {
       const other = await all.nth(index).boundingBox();
       assert.ok(other !== null);
       assert.ok(
-        pressed.y >= other.y - 0.5,
-        "The submit button is shown above another button.",
+        pressed.y <= other.y + 0.5,
+        "The submit button is shown beneath another button.",
       );
     }
   },
 );
+
+Then(
+  "each of the dialog's buttons is as wide as the email address field",
+  async function (this: SpecWorld) {
+    const field = await box(
+      this,
+      `${dialog} label.field-box[for="field-emailAddress"]`,
+    );
+    const all = await this.browserPage.locator(`${dialog} ${buttons}`).all();
+    assert.ok(all.length > 0, "The dialog has no buttons.");
+    for (const button of all) {
+      const drawn = await button.boundingBox();
+      assert.ok(drawn !== null, "A button in the dialog is not drawn.");
+      assert.ok(
+        Math.abs(drawn.width - field.width) <= 0.5,
+        `A button is ${drawn.width} pixels wide and the field ${field.width}.`,
+      );
+    }
+  },
+);
+
+// A cancel button is a way out of the form to the home page, whatever it says,
+// or anything among the dialog's buttons that says Cancel, wherever it goes:
+// either would be the button the rule says is not there.
+Then("the dialog has no cancel button", async function (this: SpecWorld) {
+  const all = await this.browserPage.locator(`${dialog} ${buttons}`).all();
+  assert.ok(all.length > 0, "The dialog has no buttons at all.");
+  for (const button of all) {
+    const href = await button.getAttribute("href");
+    const said = unmarked(await button.innerText()).trim();
+    assert.notEqual(href, "/", `"${said}" goes to the home page.`);
+    assert.notEqual(said.toLowerCase(), "cancel", "A button says Cancel.");
+  }
+});
 
 Then(
   "the submit button is at least {int} pixels tall",

@@ -794,11 +794,13 @@ main {
   color: var(--ink);
 }
 
+/* Stacked, each as wide as the fields: the row's padding is the content's, so
+   a button stretched across it is as wide as a field. The submit button is
+   first in the markup, and so at the top. */
 .dialog-buttons {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--border);

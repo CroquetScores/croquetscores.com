@@ -52,7 +52,6 @@ const askingFor = (speaking: Speaking): Dialog => ({
   action: forgetAccountPath,
   fields: [],
   notice: speaking.say("forgetAccount.explanation"),
-  cancel: { label: speaking.say("forgetAccount.cancel"), href: "/" },
   submit: speaking.say("forgetAccount.submit"),
 });
 
@@ -64,7 +63,6 @@ const confirmingFor = (speaking: Speaking, carried: string): Dialog => ({
   action: `${forgetAccountPath}?link=${carried}`,
   fields: [],
   notice: speaking.say("forgetAccount.confirm.explanation"),
-  cancel: { label: speaking.say("forgetAccount.cancel"), href: "/" },
   submit: speaking.say("forgetAccount.confirm.submit"),
 });
 

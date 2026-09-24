@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { anApplicationWithoutGoogle } from "../../support/browser.js";
+import { drawnBesideAButton } from "../../support/buttons.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 import { standInGoogleFor } from "../../../infrastructure/support/google.js";
 import type { SpecWorld } from "../../../support/world.js";
@@ -37,7 +38,6 @@ Then(
 const dialog = "section.dialog";
 const titleBar = `${dialog} .dialog-title`;
 const emailAddressField = `${dialog} label.field-box[for="field-emailAddress"]`;
-const cancelButton = `${dialog} .dialog-buttons .button:not(.button-submit)`;
 const problems = `${dialog} .dialog-problems`;
 
 interface Box {
@@ -88,34 +88,12 @@ Then(
   },
 );
 
-// Every part of how a button is drawn, read from what the browser drew rather
-// than from the classes, so that a rule written for one and not the other shows.
-const drawn = [
-  "background-color",
-  "color",
-  "border-top-width",
-  "border-top-style",
-  "border-top-color",
-  "border-radius",
-  "font-family",
-  "font-size",
-  "font-weight",
-  "min-height",
-];
-
 Then(
-  "the offer to register with Google looks like the cancel button",
+  "the offer to register with Google looks like a button other than the submit button",
   async function (this: SpecWorld) {
-    const styleOf = (selector: string) =>
-      this.browserPage.evaluate<Record<string, string> | null>(`(() => {
-        const element = document.querySelector(${JSON.stringify(selector)});
-        if (!element) return null;
-        const style = getComputedStyle(element);
-        return Object.fromEntries(
-          ${JSON.stringify(drawn)}.map((name) => [name, style.getPropertyValue(name)]),
-        );
-      })()`);
-    assert.deepEqual(await styleOf(offer), await styleOf(cancelButton));
+    const drawn = await drawnBesideAButton(this, offer);
+    assert.ok(drawn !== null, "There is no offer, or no row of buttons.");
+    assert.deepEqual(drawn.it, drawn.aButton);
   },
 );
 

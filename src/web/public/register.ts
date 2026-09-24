@@ -157,7 +157,6 @@ const formFor = (
       value: typed["emailAddress"],
     },
   ],
-  cancel: { label: speaking.say("register.cancel"), href: "/" },
   submit: speaking.say("register.submit"),
   alternative: googleOffered ? withGoogle(speaking) : undefined,
 });

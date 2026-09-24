@@ -49,7 +49,6 @@ export const english: Language = {
 
     "register.title": "Register",
     "register.emailAddress": "Email address",
-    "register.cancel": "Cancel",
     "register.submit": "Register",
     "register.withGoogle": "Register with Google",
     "register.or": "or",
@@ -101,7 +100,6 @@ export const english: Language = {
 
     "forgotPassword.title": "Forgotten your password?",
     "forgotPassword.emailAddress": "Email address",
-    "forgotPassword.cancel": "Cancel",
     "forgotPassword.submit": "Send me a way back in",
     "forgotPassword.home": "Back to {siteName}",
     "forgotPassword.sent.title": "Check your email",
@@ -113,7 +111,6 @@ export const english: Language = {
     "setNewPassword.title": "Set a new password",
     "setNewPassword.password": "Password",
     "setNewPassword.confirmPassword": "Confirm password",
-    "setNewPassword.cancel": "Cancel",
     "setNewPassword.submit": "Set my new password",
     "setNewPassword.home": "Back to {siteName}",
     "setNewPassword.signIn": "Sign in",
@@ -136,7 +133,6 @@ export const english: Language = {
     "forgetAccount.explanation":
       "Your name and email address can be made unreadable for good, and your account closed. To be sure it is you, we will email a link to your account's address first, and nothing is forgotten until you follow it.",
     "forgetAccount.submit": "Email me the link",
-    "forgetAccount.cancel": "Keep my account",
     "forgetAccount.sent.title": "Check your email",
     "forgetAccount.sent.explanation":
       "We have emailed a link to your account's address. It works for 15 minutes, and only while you are signed in to this account.",
@@ -163,24 +159,21 @@ export const english: Language = {
     "signIn.title": "Sign in",
     "signIn.emailAddress": "Email address",
     "signIn.password": "Password",
-    "signIn.cancel": "Cancel",
     "signIn.submit": "Sign in",
-    "signIn.elsewhere": "If you cannot sign in",
-    "signIn.forgotPassword": "I have forgotten my password",
-    "signIn.register": "I do not have an account yet",
+    "signIn.forgotPassword": "Forgot Password?",
+    "signIn.register": "Register",
     "signIn.tryAgainLater":
       "Too many attempts have been made lately. Wait an hour and try again.",
 
     // The one answer to a wrong password and to an address nobody registered.
     // It says neither which it was nor which it was not.
     "SignIn.Failed":
-      "That email address and password do not sign in to anything. Check both and try again.",
+      "The email address or password is incorrect. Please try again.",
 
     "confirmEmailAddress.title": "Confirm your email address",
     "confirmEmailAddress.name": "Name",
     "confirmEmailAddress.password": "Password",
     "confirmEmailAddress.confirmPassword": "Confirm password",
-    "confirmEmailAddress.cancel": "Cancel",
     "confirmEmailAddress.submit": "Confirm my email address",
     "confirmEmailAddress.signIn": "Sign in",
     "confirmEmailAddress.home": "Back to {siteName}",

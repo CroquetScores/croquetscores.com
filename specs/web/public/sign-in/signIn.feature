@@ -76,7 +76,7 @@ Feature: A reader signs in with their email address and password
       When the sign in page is opened with scripting off
       Then the sign in page is shown
 
-  Rule: The page asks for an email address and a password, and points elsewhere for the rest
+  Rule: The page asks for an email address and a password
 
     Scenario Outline: The page asks for each
       Given a viewport 1200 pixels wide
@@ -88,15 +88,122 @@ Feature: A reader signs in with their email address and password
         | an email address |
         | a password       |
 
-    Scenario: The page links to the forgot password page
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the page links to the forgot password page
+  Rule: The dialog has no cancel button
 
-    Scenario: The page links to the register page
+    No form has a cancel button (`dialog.feature`). It is said here as well
+    because the sign in page once had one, and the room it took is where the
+    way back in and the way to register now are.
+
+    Scenario: The dialog has no cancel button
       Given a viewport 1200 pixels wide
       When the sign in page is opened
-      Then the page links to the register page
+      Then the dialog has no cancel button
+
+  Rule: The dialog's buttons are stacked, signing in first
+
+    Every dialog stacks its buttons, each as wide as the fields, with the one
+    that does what the form is for first (`dialog.feature`). What this page adds
+    is the order of the other two: the way back in, for a reader whose password
+    does not come, then the way to make an account, for a reader who has none.
+
+    Scenario: The submit button is the first of the dialog's buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the submit button is the first of the dialog's buttons
+
+    Scenario: The forgot password button comes after the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button comes after the submit button
+
+    Scenario: The register button is the last of the dialog's buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button is the last of the dialog's buttons
+
+    Scenario: The forgot password button is beneath the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button is beneath the submit button
+
+    Scenario: The register button is beneath the forgot password button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button is beneath the forgot password button
+
+    Scenario: Each of the dialog's buttons is as wide as the email address field
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then each of the dialog's buttons is as wide as the email address field
+
+  Rule: The way to the register page is a button among the dialog's own
+
+    A reader with no account cannot sign in whatever they type, so the way to
+    make one is put among the form's buttons rather than beneath the form. It
+    is drawn as every button but the submit button is. The register page needs
+    scripting, and a reader without it is told so there, so it is pressed here
+    with scripting on.
+
+    Scenario: The dialog's buttons include one to the register page
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the dialog's buttons include one to the register page
+
+    Scenario: The register button says "Register"
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button says "Register"
+
+    Scenario: The register button looks like a button other than the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button looks like a button other than the submit button
+
+    Scenario: The page links to the register page once
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the page links to the register page once
+
+    Scenario: Pressing the register button opens the register page
+      Given a viewport 1200 pixels wide
+      And the sign in page is open with scripting on
+      When the register button is pressed
+      Then the register page is shown
+
+  Rule: The way to the forgot password page is a button among the dialog's own
+
+    A reader who cannot remember their password finds that out at the form,
+    with their email address typed and the password not coming, so the way on
+    is put among the form's buttons rather than beneath the form. It is drawn
+    as every button but the submit button is, because the submit button is the
+    only one that looks like the way forward. It is still a link to the forgot
+    password page, so it works with scripting off.
+
+    Scenario: The dialog's buttons include one to the forgot password page
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the dialog's buttons include one to the forgot password page
+
+    Scenario: The forgot password button says "Forgot Password?"
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button says "Forgot Password?"
+
+    Scenario: The forgot password button looks like a button other than the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button looks like a button other than the submit button
+
+    Scenario: The page links to the forgot password page once
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the page links to the forgot password page once
+
+    Scenario: Pressing the forgot password button opens the forgot password page
+      Given a viewport 1200 pixels wide
+      And the sign in page is open
+      When the forgot password button is pressed
+      Then the forgot password page is shown
 
   Rule: Every field is trimmed where it is typed, the password included
 

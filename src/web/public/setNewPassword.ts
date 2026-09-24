@@ -101,7 +101,6 @@ const formFor = (
       value: typed["passwordConfirmation"],
     },
   ],
-  cancel: { label: speaking.say("setNewPassword.cancel"), href: "/" },
   submit: speaking.say("setNewPassword.submit"),
 });
 
