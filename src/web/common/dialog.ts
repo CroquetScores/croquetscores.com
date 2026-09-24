@@ -43,6 +43,22 @@ export interface Problems {
   readonly autofocus?: boolean | undefined;
 }
 
+/**
+ * Another way to do what the form is for, offered above its fields: registering
+ * with Google rather than by email address, say.
+ */
+export interface Alternative {
+  readonly label: string;
+  readonly href: string;
+  /**
+   * Drawn before the label. Markup, written into the page as it is, so it is
+   * only ever the page's own and never anything a reader sent.
+   */
+  readonly icon: string;
+  /** The word that stands between it and the fields. */
+  readonly or: string;
+}
+
 export interface Dialog {
   readonly title: string;
   /** Where the form posts. */
@@ -64,6 +80,8 @@ export interface Dialog {
   readonly notice?: string | undefined;
   /** What is wrong with the form as a whole, when it has been refused. */
   readonly problems?: Problems | undefined;
+  /** Another way to do what the form is for, when there is one. */
+  readonly alternative?: Alternative | undefined;
 }
 
 // The label rests inside the field's border, where the typing will go, and
@@ -177,6 +195,19 @@ ${said.messages.map((text) => `                <p>${escape(text)}</p>`).join("\n
               </div>
 `;
 
+// Beneath whatever the reader needs telling, which comes first in every dialog,
+// and above the fields, so that it is seen before any typing starts. A link
+// that looks like a button, since what it does is go somewhere else. The word
+// beneath it is written in lower case and drawn in capitals by the stylesheet,
+// because a screen reader can spell out a word written in capitals letter by
+// letter.
+const alternative = (other: Alternative | undefined): string =>
+  other === undefined
+    ? ""
+    : `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>
+              <p class="dialog-or">${escape(other.or)}</p>
+`;
+
 // Cancel comes first in the markup so that it comes first in reading order and
 // in tab order, and the submit button is last in both — which is also what puts
 // it furthest right.
@@ -209,7 +240,7 @@ export const renderDialog = (
           <h1 class="dialog-title" id="dialog-title">${escape(dialog.title)}</h1>
           <form class="dialog-form" method="post" action="${escape(dialog.action)}">
             <div class="dialog-content stack">
-${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${dialog.fields.map(field).join("\n")}
+${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternative(dialog.alternative)}${dialog.fields.map(field).join("\n")}
             </div>
             <div class="dialog-buttons">
 ${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>

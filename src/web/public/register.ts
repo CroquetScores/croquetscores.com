@@ -20,7 +20,7 @@
 // wrong with what they typed.
 //
 // Where the site has been given Google's credentials, the page also offers
-// registering with Google, beneath the form (auth/google.ts). A reader Google
+// registering with Google, at the top of the form (auth/google.ts). A reader Google
 // did not let in is brought back here and told why, by a code in the page's
 // address; only the codes that way back sends are said, so that the address
 // cannot be made to put anything else on the page.
@@ -29,7 +29,11 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { RegisterAccount } from "../../application/operations/accounts/RegisterAccount.js";
 import type { Assets } from "../common/assets.js";
-import { renderDialog, type Dialog } from "../common/dialog.js";
+import {
+  renderDialog,
+  type Alternative,
+  type Dialog,
+} from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
@@ -55,11 +59,18 @@ const refusalsFromGoogle: readonly string[] = [
   "Google.Unreachable",
 ];
 
-// The other way in, beneath the form, as the sign in page puts its ways on.
-const withGoogle = (speaking: Speaking): string =>
-  `        <nav class="dialog-elsewhere" aria-label="${escape(speaking.say("register.elsewhere"))}">
-          <p><a href="${googlePath}">${escape(speaking.say("register.withGoogle"))}</a></p>
-        </nav>`;
+// Google's own mark, as its sign-in buttons carry it, so that a reader who
+// knows it finds the way in without reading. Drawn inline rather than fetched:
+// it is small, it costs no request, and it is the page's own markup. Hidden
+// from a screen reader, which has the words beside it.
+const googleIcon = `<svg class="dialog-alternative-icon" viewBox="0 0 48 48" width="18" height="18" aria-hidden="true" focusable="false"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>`;
+
+const withGoogle = (speaking: Speaking): Alternative => ({
+  label: speaking.say("register.withGoogle"),
+  href: googlePath,
+  icon: googleIcon,
+  or: speaking.say("register.or"),
+});
 
 /** The field reCAPTCHA's script fills in, and the form sends back. */
 export const tokenField = "recaptchaToken";
@@ -129,6 +140,7 @@ const formFor = (
   speaking: Speaking,
   requestId: string,
   typed: Typed,
+  googleOffered: boolean,
 ): Dialog => ({
   title: speaking.say("register.title"),
   action: `${registerPath}?request=${encodeURIComponent(requestId)}`,
@@ -147,6 +159,7 @@ const formFor = (
   ],
   cancel: { label: speaking.say("register.cancel"), href: "/" },
   submit: speaking.say("register.submit"),
+  alternative: googleOffered ? withGoogle(speaking) : undefined,
 });
 
 export const registerRegisterPage = (
@@ -177,7 +190,7 @@ export const registerRegisterPage = (
       // how reCAPTCHA is meant to be sent and needs no hidden-field support of
       // its own: the dialog draws the fields a reader fills in, and this one
       // is written beside it.
-      body: `${renderDialog(dialog)}${googleOffered ? `\n${withGoogle(speaking)}` : ""}${script(readers.siteKey)}`,
+      body: `${renderDialog(dialog)}${script(readers.siteKey)}`,
     });
 
   const show = (
@@ -199,7 +212,7 @@ export const registerRegisterPage = (
     registerPath,
     (request, reply) => {
       const speaking = speakingOf(request);
-      const dialog = formFor(speaking, randomUUID(), {});
+      const dialog = formFor(speaking, randomUUID(), {}, googleOffered);
       const refused = request.query.refused;
       if (refused === undefined || !refusalsFromGoogle.includes(refused)) {
         return show(request, reply, dialog, speaking);
@@ -223,7 +236,7 @@ export const registerRegisterPage = (
       const given = request.query.request;
       const requestId =
         typeof given === "string" && given.trim() !== "" ? given : randomUUID();
-      const dialog = formFor(speaking, requestId, typed);
+      const dialog = formFor(speaking, requestId, typed, googleOffered);
 
       let judgement: Judgement;
       try {

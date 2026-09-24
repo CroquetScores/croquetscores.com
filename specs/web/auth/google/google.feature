@@ -47,6 +47,84 @@ Feature: Registering with Google
       When the register page is opened with scripting on
       Then the offer to register with Google is in the test locale
 
+  Rule: The offer to register with Google is a button at the top of the dialog
+
+    Registering with Google asks nothing more of the reader than pressing it,
+    so it comes first, above the email address field, where it is seen before
+    any typing starts. It looks like the cancel button rather than the submit
+    button, because the submit button is the only one painted as the way
+    forward, and what it is the way forward for is the form beneath. It carries
+    Google's icon, so that a reader who knows the icon finds it without
+    reading, and it is as wide as the email address field, so the two read as
+    alternatives of the same weight. A line saying "OR" stands between it and
+    the field, centred, so the two are read as two ways in rather than as two
+    steps of one. A message saying why Google turned the reader away stays at
+    the top of the dialog, above the button, where every dialog puts what it
+    has to say before anything is filled in.
+
+    Scenario: The offer is a button
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google is a button
+
+    Scenario: The offer looks like the cancel button
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google looks like the cancel button
+
+    Scenario: The offer carries Google's icon
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google carries Google's icon
+
+    Scenario: The offer is in the dialog
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google is in the dialog
+
+    Scenario: The offer is beneath the title bar
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google is beneath the dialog's title bar
+
+    Scenario: The offer is above the email address field
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google is above the email address field
+
+    Scenario: The offer is as wide as the email address field
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the offer to register with Google is as wide as the email address field
+
+    Scenario: A reader Google turned away is told so above the offer
+      Given a viewport 1200 pixels wide
+      And Google cannot be reached
+      And the register page is open with scripting on
+      When the reader registers with Google
+      Then the message for "Google.Unreachable" is above the offer to register with Google
+
+    Scenario: "OR" is beneath the offer
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the line saying "OR" is beneath the offer to register with Google
+
+    Scenario: "OR" is above the email address field
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the line saying "OR" is above the email address field
+
+    Scenario: "OR" is centred in the dialog
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the line saying "OR" is centred in the dialog
+
+    Scenario: A site without Google's credentials says no "OR"
+      Given a viewport 1200 pixels wide
+      And a site that has not been given Google's credentials
+      When the register page is opened with scripting on
+      Then the dialog has no line saying "OR"
+
   Rule: Registering with Google signs the reader in, and takes them to the admin
 
     Scenario: A reader new to the site is signed in to a new account

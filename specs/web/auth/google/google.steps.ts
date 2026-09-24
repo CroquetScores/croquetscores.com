@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { anApplicationWithoutGoogle } from "../../support/browser.js";
+import { englishForScenarios, unmarked } from "../../support/languages.js";
 import { standInGoogleFor } from "../../../infrastructure/support/google.js";
 import type { SpecWorld } from "../../../support/world.js";
 
@@ -30,6 +31,220 @@ Then(
   "the page does not offer registering with Google",
   async function (this: SpecWorld) {
     assert.equal(await this.browserPage.locator(offer).count(), 0);
+  },
+);
+
+const dialog = "section.dialog";
+const titleBar = `${dialog} .dialog-title`;
+const emailAddressField = `${dialog} label.field-box[for="field-emailAddress"]`;
+const cancelButton = `${dialog} .dialog-buttons .button:not(.button-submit)`;
+const problems = `${dialog} .dialog-problems`;
+
+interface Box {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+const boxOf = async (world: SpecWorld, selector: string): Promise<Box> => {
+  const found = await world.browserPage.locator(selector).boundingBox();
+  assert.ok(found !== null, `Nothing on the page matches ${selector}.`);
+  return found;
+};
+
+// The words themselves, rather than the element around them: a paragraph runs
+// the width of the dialog wherever its words sit in it, so only the words' own
+// box can say whether they are centred. Found by what the reader sees, capitals
+// and all, so a line whose words are drawn in capitals is found by them.
+const linesSaying = (world: SpecWorld, said: string): Promise<Box[]> =>
+  world.browserPage.evaluate<Box[]>(`(() => {
+    const said = ${JSON.stringify(said)};
+    return [...document.querySelectorAll(${JSON.stringify(`${dialog} *`)})]
+      .filter((each) => each instanceof HTMLElement && each.children.length === 0 && each.innerText.trim() === said)
+      .map((each) => {
+        const words = document.createRange();
+        words.selectNodeContents(each);
+        const { x, y, width, height } = words.getBoundingClientRect();
+        return { x, y, width, height };
+      });
+  })()`);
+
+const lineSaying = async (world: SpecWorld, said: string): Promise<Box> => {
+  const found = await linesSaying(world, said);
+  assert.equal(
+    found.length,
+    1,
+    `${found.length} lines in the dialog say ${said}.`,
+  );
+  return found[0]!;
+};
+
+Then(
+  "the offer to register with Google is a button",
+  async function (this: SpecWorld) {
+    const classes = await this.browserPage.locator(offer).getAttribute("class");
+    assert.match(classes ?? "", /\bbutton\b/, "The offer is not a button.");
+  },
+);
+
+// Every part of how a button is drawn, read from what the browser drew rather
+// than from the classes, so that a rule written for one and not the other shows.
+const drawn = [
+  "background-color",
+  "color",
+  "border-top-width",
+  "border-top-style",
+  "border-top-color",
+  "border-radius",
+  "font-family",
+  "font-size",
+  "font-weight",
+  "min-height",
+];
+
+Then(
+  "the offer to register with Google looks like the cancel button",
+  async function (this: SpecWorld) {
+    const styleOf = (selector: string) =>
+      this.browserPage.evaluate<Record<string, string> | null>(`(() => {
+        const element = document.querySelector(${JSON.stringify(selector)});
+        if (!element) return null;
+        const style = getComputedStyle(element);
+        return Object.fromEntries(
+          ${JSON.stringify(drawn)}.map((name) => [name, style.getPropertyValue(name)]),
+        );
+      })()`);
+    assert.deepEqual(await styleOf(offer), await styleOf(cancelButton));
+  },
+);
+
+// Google's mark is the G in its four colours, so it is known by them.
+Then(
+  "the offer to register with Google carries Google's icon",
+  async function (this: SpecWorld) {
+    const fills: string[] = [];
+    for (const path of await this.browserPage
+      .locator(`${offer} svg path`)
+      .all()) {
+      fills.push(((await path.getAttribute("fill")) ?? "").toUpperCase());
+    }
+    assert.deepEqual(fills.sort(), [
+      "#34A853",
+      "#4285F4",
+      "#EA4335",
+      "#FBBC05",
+    ]);
+  },
+);
+
+Then(
+  "the offer to register with Google is in the dialog",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await this.browserPage.locator(`${dialog} ${offer}`).count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the offer to register with Google is beneath the dialog's title bar",
+  async function (this: SpecWorld) {
+    const bar = await boxOf(this, titleBar);
+    const button = await boxOf(this, offer);
+    assert.ok(
+      button.y >= bar.y + bar.height - 0.5,
+      "The offer does not start beneath the title bar.",
+    );
+  },
+);
+
+Then(
+  "the offer to register with Google is above the email address field",
+  async function (this: SpecWorld) {
+    const button = await boxOf(this, offer);
+    const field = await boxOf(this, emailAddressField);
+    assert.ok(
+      button.y + button.height <= field.y + 0.5,
+      "The offer does not end above the email address field.",
+    );
+  },
+);
+
+Then(
+  "the offer to register with Google is as wide as the email address field",
+  async function (this: SpecWorld) {
+    const button = await boxOf(this, offer);
+    const field = await boxOf(this, emailAddressField);
+    assert.ok(
+      Math.abs(button.width - field.width) <= 0.5,
+      `The offer is ${button.width} pixels wide and the field ${field.width}.`,
+    );
+  },
+);
+
+Then(
+  "the message for {string} is above the offer to register with Google",
+  async function (this: SpecWorld, code: string) {
+    const words = englishForScenarios.words[code];
+    assert.ok(words !== undefined, `English has no words for ${code}.`);
+    const said = await this.browserPage.locator(problems).textContent();
+    assert.ok(
+      unmarked(said ?? "").includes(words),
+      `Above the fields says ${JSON.stringify(said)}.`,
+    );
+    const message = await boxOf(this, problems);
+    const button = await boxOf(this, offer);
+    assert.ok(
+      message.y + message.height <= button.y + 0.5,
+      "The message does not end above the offer.",
+    );
+  },
+);
+
+Then(
+  "the line saying {string} is beneath the offer to register with Google",
+  async function (this: SpecWorld, said: string) {
+    const button = await boxOf(this, offer);
+    const line = await lineSaying(this, said);
+    assert.ok(
+      line.y >= button.y + button.height - 0.5,
+      `${said} does not start beneath the offer.`,
+    );
+  },
+);
+
+Then(
+  "the line saying {string} is above the email address field",
+  async function (this: SpecWorld, said: string) {
+    const line = await lineSaying(this, said);
+    const field = await boxOf(this, emailAddressField);
+    assert.ok(
+      line.y + line.height <= field.y + 0.5,
+      `${said} does not end above the email address field.`,
+    );
+  },
+);
+
+Then(
+  "the line saying {string} is centred in the dialog",
+  async function (this: SpecWorld, said: string) {
+    const line = await lineSaying(this, said);
+    const shape = await boxOf(this, dialog);
+    const left = line.x - shape.x;
+    const right = shape.x + shape.width - (line.x + line.width);
+    assert.ok(
+      Math.abs(left - right) <= 1,
+      `${said} has ${Math.round(left)} pixels to its left and ${Math.round(right)} to its right.`,
+    );
+  },
+);
+
+Then(
+  "the dialog has no line saying {string}",
+  async function (this: SpecWorld, said: string) {
+    assert.deepEqual(await linesSaying(this, said), []);
   },
 );
 
