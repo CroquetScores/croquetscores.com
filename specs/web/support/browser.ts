@@ -93,16 +93,16 @@ export const anApplicationCalled = (
 ): Promise<string> => anApplicationWith(world, { siteName });
 
 /**
- * An application of this scenario's own, the same as the shared one but for
- * which website it is served as, and otherwise as {@link anApplicationCalled}.
- */
-/**
  * An application of this scenario's own that has not been given Google's
  * credentials, and otherwise as {@link anApplicationCalled}.
  */
 export const anApplicationWithoutGoogle = (world: SpecWorld): Promise<string> =>
   anApplicationWith(world, { google: undefined });
 
+/**
+ * An application of this scenario's own, the same as the shared one but for
+ * which website it is served as, and otherwise as {@link anApplicationCalled}.
+ */
 export const anApplicationServedAs = (
   world: SpecWorld,
   website: Config["website"],
