@@ -38,8 +38,6 @@ Going to use SPA instead of /scripts.
 
 ## Known problems
 
-None.
-
 ### Signing in with Google as the account is forgotten fails as the site failing
 
 **Where:** `src/application/operations/accounts/SignInWithGoogleHandler.ts`, where an account is found by its Google account — from the review of PR #100.
