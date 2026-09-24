@@ -43,11 +43,13 @@ const registerWithGoogle = async function (this: SpecWorld): Promise<void> {
       followed.push(request.url());
     }
   });
-  await Promise.all([
-    this.browserPage.waitForURL((url) => !url.pathname.startsWith("/auth/")),
-    this.browserPage.click(offer),
-  ]);
-  await this.browserPage.waitForLoadState();
+  // The page loaded at the end of the redirects, which is the only one of them
+  // a browser commits: waiting for an address instead would be satisfied by
+  // the register page before anything had happened, and the scenario would go
+  // on while the way back was still arriving.
+  const arrived = this.browserPage.waitForEvent("load");
+  await this.browserPage.click(offer);
+  await arrived;
 };
 
 When("the reader registers with Google", registerWithGoogle);
