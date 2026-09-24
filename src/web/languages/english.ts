@@ -171,8 +171,9 @@ export const english: Language = {
       "The email address or password is incorrect. Please try again.",
 
     "profile.title": "Profile",
-    "profile.name": "Name",
-    "profile.emailAddress": "Email address",
+    // A label's colon is its words', since languages set it differently.
+    "profile.name": "Name:",
+    "profile.emailAddress": "Email address:",
 
     "changeName.title": "Change name",
     "changeName.name": "Name",

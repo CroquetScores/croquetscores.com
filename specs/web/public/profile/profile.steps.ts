@@ -71,3 +71,58 @@ Then(
     assert.equal(unmarked((await link.textContent()) ?? "").trim(), page);
   },
 );
+
+// Each value, and the label that names it, by the words a scenario uses for it.
+const shownAs: Readonly<Record<string, { label: string; value: string }>> = {
+  name: { label: "#profile-name-label", value: "#profile-name" },
+  "email address": {
+    label: "#profile-email-address-label",
+    value: "#profile-email-address",
+  },
+};
+
+const partsOf = (value: string): { label: string; value: string } => {
+  const parts = shownAs[value];
+  assert.ok(parts !== undefined, `The profile shows no ${value}.`);
+  return parts;
+};
+
+Then(
+  /^the label for the (name|email address) says "([^"]*)"$/,
+  async function (this: SpecWorld, value: string, said: string) {
+    const shown = await this.browserPage
+      .locator(partsOf(value).label)
+      .textContent();
+    assert.equal(unmarked(shown ?? "").trim(), said);
+  },
+);
+
+// Read from what the browser drew, since bold is what the reader sees.
+Then(
+  /^the label for the (name|email address) is bold$/,
+  async function (this: SpecWorld, value: string) {
+    const weight = await this.browserPage.evaluate<string>(
+      `getComputedStyle(document.querySelector(${JSON.stringify(partsOf(value).label)})).fontWeight`,
+    );
+    assert.ok(Number(weight) >= 700, `The label is drawn at ${weight}.`);
+  },
+);
+
+// Beside it: starting on the same line, and to its right rather than beneath.
+Then(
+  /^the (name|email address) is on the same row as its label$/,
+  async function (this: SpecWorld, value: string) {
+    const parts = partsOf(value);
+    const label = await this.browserPage.locator(parts.label).boundingBox();
+    const shown = await this.browserPage.locator(parts.value).boundingBox();
+    assert.ok(label !== null && shown !== null, "It is not drawn.");
+    assert.ok(
+      Math.abs(label.y - shown.y) <= 1,
+      `The label starts at ${label.y} and the ${value} at ${shown.y}.`,
+    );
+    assert.ok(
+      shown.x >= label.x + label.width - 0.5,
+      `The ${value} does not start to the right of its label.`,
+    );
+  },
+);

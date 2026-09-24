@@ -981,6 +981,25 @@ main {
   color: var(--ink);
 }
 
+/* What an account is called and where it is reached: each label bold, with
+   its value beside it on the same row. The labels take the width of the
+   longest, so the values start together; a value too long for its row, such as
+   a long address, breaks onto another line of its own column rather than
+   pushing out past the panel. */
+.profile {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-2) var(--space-3);
+}
+
+.profile dt {
+  font-weight: 700;
+}
+
+.profile dd {
+  overflow-wrap: anywhere;
+}
+
 /* --- Utilities ----------------------------------------------------------- */
 
 .lead {

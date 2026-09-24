@@ -68,9 +68,9 @@ export const registerProfilePage = (
       currentPath: profilePath,
       body: `          <h1>${escape(say("profile.title"))}</h1>
           <dl class="profile">
-            <dt>${escape(say("profile.name"))}</dt>
+            <dt id="profile-name-label">${escape(say("profile.name"))}</dt>
             <dd class="profile-own" id="profile-name">${escape(profile.name)}</dd>
-            <dt>${escape(say("profile.emailAddress"))}</dt>
+            <dt id="profile-email-address-label">${escape(say("profile.emailAddress"))}</dt>
             <dd class="profile-own" id="profile-email-address">${escape(profile.emailAddress)}</dd>
           </dl>
           <ul class="profile-changes">

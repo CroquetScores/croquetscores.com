@@ -59,6 +59,62 @@ Feature: A reader who is signed in sees their account's profile
       When the profile page is opened
       Then the profile shows the email address "someone@example.com"
 
+  Rule: Each label is bold, ends with a colon, and has its value beside it
+
+    A label is told from its value by being bold, and says it is a label by
+    ending with a colon. The colon is in the label's words rather than put there
+    by the stylesheet, because languages set it differently — French puts a
+    space before it — and a colon drawn by a stylesheet is not always read out.
+    Each value sits on the same row as its label, so the two are read together.
+
+    Scenario Outline: Each label ends with a colon
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the label for the <value> says "<label>"
+
+      Examples:
+        | value         | label          |
+        | name          | Name:          |
+        | email address | Email address: |
+
+    Scenario Outline: Each label is bold
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the label for the <value> is bold
+
+      Examples:
+        | value         |
+        | name          |
+        | email address |
+
+    Scenario Outline: Each value is on the same row as its label
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the <value> is on the same row as its label
+
+      Examples:
+        | value         |
+        | name          |
+        | email address |
+
+    Scenario Outline: Each value is beside its label, not beneath it, on a narrow screen
+      Given a viewport 375 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the <value> is on the same row as its label
+
+      Examples:
+        | value         |
+        | name          |
+        | email address |
+
   Rule: The profile leads to the pages that change the account
 
     Scenario Outline: The profile links to each
