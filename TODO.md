@@ -18,6 +18,18 @@ Four kinds of thing, kept apart.
 
 ---
 
+## Known problems
+
+None.
+
+---
+
+## Outstanding .feature files
+
+None.
+
+---
+
 ## Waiting on a dependency
 
 ### Rotating encryption keys
@@ -35,13 +47,3 @@ Going to use SPA instead of /scripts.
 - **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
 
 ---
-
-## Known problems
-
-None.
-
----
-
-## Outstanding .feature files
-
-None.
