@@ -86,7 +86,9 @@ export class SignInHandler extends CommandHandler<SignIn, AccountId> {
 
     await this.byAddress.hold(found.id);
     const account = await this.accounts.load(found.id);
-    if (account === undefined) throw refusal();
+    // Forgotten while it was not held: refused as any account not found by its
+    // address is, rather than by the account's own refusal.
+    if (account === undefined || account.forgotten) throw refusal();
     if (account.passwordHash !== found.passwordHash) {
       checked = await this.passwords.check(password, account.passwordHash);
       if (!checked.matches) throw refusal();
