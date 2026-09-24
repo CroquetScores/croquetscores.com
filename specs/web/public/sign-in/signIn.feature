@@ -99,14 +99,51 @@ Feature: A reader signs in with their email address and password
       When the sign in page is opened
       Then the dialog has no cancel button
 
-  Rule: The way to the register page is the first of the dialog's buttons
+  Rule: The dialog's buttons are stacked, signing in first
+
+    Three buttons do not fit side by side in a dialog, so they are stacked, each
+    as wide as the fields, and read from the top: signing in first, since it is
+    what the form is for, then the way back in for a reader whose password does
+    not come, then the way to make an account for a reader who has none. It is
+    the one dialog whose submit button is not last (`dialog.feature`).
+
+    Scenario: The submit button is the first of the dialog's buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the submit button is the first of the dialog's buttons
+
+    Scenario: The forgot password button comes after the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button comes after the submit button
+
+    Scenario: The register button is the last of the dialog's buttons
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button is the last of the dialog's buttons
+
+    Scenario: The forgot password button is beneath the submit button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the forgot password button is beneath the submit button
+
+    Scenario: The register button is beneath the forgot password button
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the register button is beneath the forgot password button
+
+    Scenario: Each of the dialog's buttons is as wide as the email address field
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then each of the dialog's buttons is as wide as the email address field
+
+  Rule: The way to the register page is a button among the dialog's own
 
     A reader with no account cannot sign in whatever they type, so the way to
-    make one is put among the form's buttons rather than beneath the form, and
-    first, where it is found before anything is typed. It is drawn as every
-    button but the submit button is. The register page needs scripting, and a
-    reader without it is told so there, so it is pressed here with scripting
-    on.
+    make one is put among the form's buttons rather than beneath the form. It
+    is drawn as every button but the submit button is. The register page needs
+    scripting, and a reader without it is told so there, so it is pressed here
+    with scripting on.
 
     Scenario: The dialog's buttons include one to the register page
       Given a viewport 1200 pixels wide
@@ -117,16 +154,6 @@ Feature: A reader signs in with their email address and password
       Given a viewport 1200 pixels wide
       When the sign in page is opened
       Then the register button says "Register"
-
-    Scenario: The register button is the first of the dialog's buttons
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the register button is the first of the dialog's buttons
-
-    Scenario: The register button is the furthest left of the dialog's buttons
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the register button is the furthest left of the dialog's buttons
 
     Scenario: The register button looks like a button other than the submit button
       Given a viewport 1200 pixels wide
@@ -148,9 +175,8 @@ Feature: A reader signs in with their email address and password
 
     A reader who cannot remember their password finds that out at the form,
     with their email address typed and the password not coming, so the way on
-    is put among the form's buttons rather than beneath the form. It comes
-    before the submit button, which is last in every dialog, and is drawn as
-    every button but the submit button is, because the submit button is the
+    is put among the form's buttons rather than beneath the form. It is drawn
+    as every button but the submit button is, because the submit button is the
     only one that looks like the way forward. It is still a link to the forgot
     password page, so it works with scripting off.
 
@@ -163,16 +189,6 @@ Feature: A reader signs in with their email address and password
       Given a viewport 1200 pixels wide
       When the sign in page is opened
       Then the forgot password button says "Forgot Password?"
-
-    Scenario: The forgot password button comes before the submit button
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the forgot password button comes before the submit button
-
-    Scenario: The forgot password button is to the left of the submit button
-      Given a viewport 1200 pixels wide
-      When the sign in page is opened
-      Then the forgot password button is to the left of the submit button
 
     Scenario: The forgot password button looks like a button other than the submit button
       Given a viewport 1200 pixels wide

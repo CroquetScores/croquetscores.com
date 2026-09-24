@@ -10,7 +10,7 @@ import { createHash } from "node:crypto";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../support/world.js";
-import { applicationFor } from "../../support/browser.js";
+import { applicationFor, withScripting } from "../../support/browser.js";
 import { clockFor } from "../../support/clock.js";
 import { drawnBesideAButton } from "../../support/buttons.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
@@ -242,36 +242,6 @@ Then("the dialog has no cancel button", async function (this: SpecWorld) {
   }
 });
 
-// In the markup, which is the order it is read out and tabbed through in.
-Then(
-  "the forgot password button comes before the submit button",
-  async function (this: SpecWorld) {
-    const before = await this.browserPage.evaluate<boolean | null>(`(() => {
-      const button = document.querySelector(${JSON.stringify(forgotPasswordButton)});
-      const submit = document.querySelector(${JSON.stringify(submitButton)});
-      if (!button || !submit) return null;
-      return Boolean(button.compareDocumentPosition(submit) & Node.DOCUMENT_POSITION_FOLLOWING);
-    })()`);
-    assert.ok(before !== null, "The dialog lacks one of the two buttons.");
-    assert.ok(before, "The forgot password button comes after submit.");
-  },
-);
-
-Then(
-  "the forgot password button is to the left of the submit button",
-  async function (this: SpecWorld) {
-    const button = await this.browserPage
-      .locator(forgotPasswordButton)
-      .boundingBox();
-    const submit = await this.browserPage.locator(submitButton).boundingBox();
-    assert.ok(button !== null && submit !== null, "A button is not drawn.");
-    assert.ok(
-      button.x + button.width <= submit.x + 0.5,
-      "The forgot password button does not end left of submit.",
-    );
-  },
-);
-
 Then(
   "the forgot password button looks like a button other than the submit button",
   async function (this: SpecWorld) {
@@ -287,14 +257,154 @@ When("the forgot password button is pressed", async function (this: SpecWorld) {
   await arrived;
 });
 
-Then("the page links to the register page", async function (this: SpecWorld) {
-  assert.ok(
-    (await this.browserPage
-      .locator('main a[href="/account/register"]')
-      .count()) > 0,
-    "Nothing points to the register page.",
-  );
+const registerPage = 'a[href="/account/register"]';
+const registerButton = `${dialog} .dialog-buttons ${registerPage}`;
+const dialogButtons = `${dialog} .dialog-buttons :is(a, button)`;
+
+// Once, so that a link left beneath the form beside the button would show.
+Then(
+  "the page links to the register page once",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await this.browserPage.locator(`main ${registerPage}`).count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the dialog's buttons include one to the register page",
+  async function (this: SpecWorld) {
+    const classes = await this.browserPage
+      .locator(registerButton)
+      .getAttribute("class");
+    assert.match(classes ?? "", /\bbutton\b/, "It is not drawn as a button.");
+  },
+);
+
+Then(
+  "the register button says {string}",
+  async function (this: SpecWorld, said: string) {
+    const shown = await this.browserPage.locator(registerButton).innerText();
+    assert.equal(unmarked(shown).trim(), said);
+  },
+);
+
+Then(
+  "the register button looks like a button other than the submit button",
+  async function (this: SpecWorld) {
+    const drawn = await drawnBesideAButton(this, registerButton);
+    assert.ok(drawn !== null, "There is no register button.");
+    assert.deepEqual(drawn.it, drawn.aButton);
+  },
+);
+
+// The register page asks for scripting, and sends a reader without it away to
+// be told so; a scenario that goes on to it from here has it switched on.
+Given(
+  "the sign in page is open with scripting on",
+  async function (this: SpecWorld) {
+    await withScripting(this);
+    await open(this);
+  },
+);
+
+When("the register button is pressed", async function (this: SpecWorld) {
+  const arrived = this.browserPage.waitForEvent("load");
+  await this.browserPage.click(registerButton);
+  await arrived;
 });
+
+// Stacked: read from the top, in the order the markup gives them, which is the
+// order they are read out and tabbed through in.
+const emailAddressField = `${dialog} label.field-box[for="field-emailAddress"]`;
+
+const inOrder = async (world: SpecWorld): Promise<string[]> => {
+  const found: string[] = [];
+  for (const button of await world.browserPage.locator(dialogButtons).all()) {
+    found.push(
+      (await button.getAttribute("type")) === "submit"
+        ? "submit"
+        : ((await button.getAttribute("href")) ?? ""),
+    );
+  }
+  return found;
+};
+
+const boxOf = async (world: SpecWorld, selector: string) => {
+  const box = await world.browserPage.locator(selector).boundingBox();
+  assert.ok(box !== null, `Nothing on the page matches ${selector}.`);
+  return box;
+};
+
+Then(
+  "the submit button is the first of the dialog's buttons",
+  async function (this: SpecWorld) {
+    assert.equal((await inOrder(this))[0], "submit");
+  },
+);
+
+Then(
+  "the forgot password button comes after the submit button",
+  async function (this: SpecWorld) {
+    const order = await inOrder(this);
+    const submit = order.indexOf("submit");
+    const forgot = order.indexOf("/account/forgot-password");
+    assert.ok(
+      submit >= 0 && forgot >= 0,
+      `The buttons are ${order.join(", ")}.`,
+    );
+    assert.ok(forgot > submit, `The buttons are ${order.join(", ")}.`);
+  },
+);
+
+Then(
+  "the register button is the last of the dialog's buttons",
+  async function (this: SpecWorld) {
+    assert.equal((await inOrder(this)).at(-1), "/account/register");
+  },
+);
+
+Then(
+  "the forgot password button is beneath the submit button",
+  async function (this: SpecWorld) {
+    const submit = await boxOf(this, submitButton);
+    const forgot = await boxOf(this, forgotPasswordButton);
+    assert.ok(
+      forgot.y >= submit.y + submit.height - 0.5,
+      "The forgot password button does not start beneath the submit button.",
+    );
+  },
+);
+
+Then(
+  "the register button is beneath the forgot password button",
+  async function (this: SpecWorld) {
+    const forgot = await boxOf(this, forgotPasswordButton);
+    const register = await boxOf(this, registerButton);
+    assert.ok(
+      register.y >= forgot.y + forgot.height - 0.5,
+      "The register button does not start beneath the forgot password button.",
+    );
+  },
+);
+
+Then(
+  "each of the dialog's buttons is as wide as the email address field",
+  async function (this: SpecWorld) {
+    const field = await boxOf(this, emailAddressField);
+    const buttons = await this.browserPage.locator(dialogButtons).all();
+    assert.ok(buttons.length > 0, "The dialog has no buttons.");
+    for (const button of buttons) {
+      const box = await button.boundingBox();
+      assert.ok(box !== null, "A button in the dialog is not drawn.");
+      assert.ok(
+        Math.abs(box.width - field.width) <= 0.5,
+        `A button is ${box.width} pixels wide and the field ${field.width}.`,
+      );
+    }
+  },
+);
 
 Then(
   "the dialog says the message for {string}",

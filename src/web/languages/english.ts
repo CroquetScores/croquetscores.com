@@ -164,11 +164,12 @@ export const english: Language = {
     "signIn.emailAddress": "Email address",
     "signIn.password": "Password",
     "signIn.submit": "Sign in",
-    "signIn.elsewhere": "If you cannot sign in",
     "signIn.forgotPassword": "Forgot Password?",
-    "signIn.register": "I do not have an account yet",
-    "signIn.tryAgainLater": "Too many attempts have been made lately. Wait an hour and try again.",
-    "signIn.failed": "The email address or password is incorrect. Please try again.",
+    "signIn.register": "Register",
+    "signIn.tryAgainLater":
+      "Too many attempts have been made lately. Wait an hour and try again.",
+    "signIn.failed":
+      "The email address or password is incorrect. Please try again.",
 
     "confirmEmailAddress.title": "Confirm your email address",
     "confirmEmailAddress.name": "Name",

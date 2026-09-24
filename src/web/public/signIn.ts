@@ -31,7 +31,6 @@ import { EmailAddress } from "../../domain/aggregates/accounts/value-objects/Ema
 import type { Assets } from "../common/assets.js";
 import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
-import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
@@ -105,19 +104,16 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
       value: typed["password"],
     },
   ],
+  // Three do not fit side by side, so they are stacked beneath signing in: the
+  // way back in first, for a reader whose password does not come, and then the
+  // way to make an account, for a reader who has none.
+  stacked: true,
   elsewhere: [
     { label: speaking.say("signIn.forgotPassword"), href: forgotPasswordPath },
+    { label: speaking.say("signIn.register"), href: registerPath },
   ],
   submit: speaking.say("signIn.submit"),
 });
-
-// The way on from here for a reader with no account, beneath the form. One
-// who cannot remember their password finds that out at the form, so the way on
-// for them is among the form's buttons instead.
-const elsewhere = (speaking: Speaking): string =>
-  `        <nav class="dialog-elsewhere" aria-label="${escape(speaking.say("signIn.elsewhere"))}">
-          <p><a href="${registerPath}">${escape(speaking.say("signIn.register"))}</a></p>
-        </nav>`;
 
 export const registerSignInPage = (
   server: FastifyInstance,
@@ -141,7 +137,7 @@ export const registerSignInPage = (
       path: signInPath,
       currentPath: signInPath,
       frame: "bare",
-      body: `${renderDialog(dialog)}\n${elsewhere(speaking)}`,
+      body: renderDialog(dialog),
     });
 
   const show = (

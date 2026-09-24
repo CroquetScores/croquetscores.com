@@ -926,6 +926,13 @@ main {
   font-weight: 700;
 }
 
+/* A dialog with more buttons than fit side by side stacks them, each as wide
+   as the fields, which the row's padding matches the content's to make so. */
+.dialog-buttons-stacked {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 /* A thing to press, whether it is a button or a link that behaves like one. */
 .button {
   display: inline-flex;

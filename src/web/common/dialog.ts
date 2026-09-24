@@ -76,6 +76,11 @@ export interface Dialog {
   readonly elsewhere?:
     readonly { readonly label: string; readonly href: string }[] | undefined;
   /**
+   * Whether the buttons are stacked, each as wide as the fields, with the
+   * submit button first, for a dialog with more than fit side by side.
+   */
+  readonly stacked?: boolean | undefined;
+  /**
    * What the form sends that the reader never fills in, by the name it is sent
    * under: the token reCAPTCHA's script hands the register page, say. They
    * travel inside the form, because that is what a browser sends, and nothing
@@ -233,6 +238,17 @@ const elsewhere = (links: Dialog["elsewhere"]): string =>
     )
     .join("");
 
+const submit = (label: string): string =>
+  `              <button class="button button-submit" type="submit">${escape(label)}</button>`;
+
+// In a row, the submit button is last, which is also what puts it furthest
+// right. Stacked, it is first, at the top where the eye starts, and the ways
+// elsewhere follow it in the order they were given.
+const buttons = (dialog: Dialog): string =>
+  dialog.stacked === true
+    ? `${submit(dialog.submit)}\n${elsewhere(dialog.elsewhere)}${cancel(dialog.cancel)}`.trimEnd()
+    : `${elsewhere(dialog.elsewhere)}${cancel(dialog.cancel)}${submit(dialog.submit)}`;
+
 // Whether the reader is being taken to something that needs attention.
 const attentionAskedFor = (dialog: Dialog): boolean =>
   dialog.problems?.autofocus === true ||
@@ -259,8 +275,8 @@ export const renderDialog = (
             <div class="dialog-content stack">
 ${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternative(dialog.alternative)}${dialog.fields.map(field).join("\n")}
             </div>
-            <div class="dialog-buttons">
-${elsewhere(dialog.elsewhere)}${cancel(dialog.cancel)}              <button class="button button-submit" type="submit">${escape(dialog.submit)}</button>
+            <div class="dialog-buttons${dialog.stacked === true ? " dialog-buttons-stacked" : ""}">
+${buttons(dialog)}
             </div>${hidden(dialog.hidden)}
           </form>
         </section>`;

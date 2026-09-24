@@ -71,14 +71,19 @@ Feature: Forms are shown in a dialog
 
   Rule: The button that submits is last, and unmistakable
 
+    Where a dialog's buttons stand in a row, the submit button ends it. The
+    sign in dialog has more buttons than fit in a row, and stacks them with the
+    submit button first (`signIn.feature`), so the row is looked at on the
+    register page.
+
     Scenario: It is the furthest right of the buttons
       Given a viewport 1200 pixels wide
-      When the sign in page is opened
+      When the register page is opened with scripting on
       Then the submit button is the furthest right of the dialog's buttons
 
     Scenario: It is still the last button on a narrow screen
       Given a viewport 375 pixels wide
-      When the sign in page is opened
+      When the register page is opened with scripting on
       Then the submit button is the last of the dialog's buttons
 
     Scenario: It can be pressed with a thumb

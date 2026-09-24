@@ -98,6 +98,8 @@ A notice at the top of a dialog is not a live region. It arrives with the page, 
 
 `.button` is anything to press, whether a `<button>` or a link that behaves like one, and is `44px` tall. `.button-submit` is the only one painted with `--action`, so there is never a second thing that looks like the way forward.
 
+A dialog with more buttons than fit side by side — signing in, with the way back in and the way to register beside it — stacks them instead, with `.dialog-buttons-stacked`: each as wide as the fields, the submit button first, where the eye starts, and the others beneath it in the order they are given. It is the one place the submit button is not last.
+
 Where there is another way to do what a form is for — registering with Google rather than by email address — it is `.dialog-alternative`: a `.button` at the top of the content, beneath anything the reader needs telling and above the fields, as wide as they are, carrying the other way's own icon. It is drawn as the buttons other than the submit button are, because the way forward it is not is the form's. Beneath it, `.dialog-or` says "or", centred, in `--ink-muted`: written in lower case and drawn in capitals, because a screen reader can spell out a word written in capitals letter by letter.
 
 Each part of the dialog carries its own background and the radius of its own corners, rather than the dialog clipping them with `overflow: hidden`, which would also clip the focus ring of any control near its edge.
