@@ -5,6 +5,7 @@
 // world.ts.
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
+import type { SignInWithGoogle } from "../../src/application/operations/accounts/SignInWithGoogle.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
 import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
@@ -41,6 +42,15 @@ export interface Registering {
 
   /** How many passwords have been checked against a hash, or against none. */
   passwordsChecked(): number;
+
+  /** Signs in with Google. Answers with the account, or throws. */
+  signInWithGoogle(command: SignInWithGoogle): Promise<AccountId>;
+
+  /** Links the account for `address` to the Google account `subject`. */
+  linkToGoogle(address: string, subject: string): Promise<void>;
+
+  /** Every password hashed, in the order it was hashed. */
+  passwordsHashed(): readonly string[];
 
   /** Asks for an account to be forgotten. Throws what the mediator throws. */
   askToForget(command: AskToForgetAccount): Promise<void>;

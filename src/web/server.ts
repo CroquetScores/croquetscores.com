@@ -19,6 +19,7 @@ import { RegisterAccountHandler } from "../application/operations/accounts/Regis
 import { RegisterAccountValidator } from "../application/operations/accounts/RegisterAccountValidator.js";
 import { SendConfirmationLinkAgainHandler } from "../application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../application/operations/accounts/SignInHandler.js";
+import { SignInWithGoogleHandler } from "../application/operations/accounts/SignInWithGoogleHandler.js";
 import { ResetPasswordHandler } from "../application/operations/accounts/ResetPasswordHandler.js";
 import { ResetPasswordValidator } from "../application/operations/accounts/ResetPasswordValidator.js";
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
@@ -62,6 +63,8 @@ import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwn
 import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
+import { CryptoRandomPasswords } from "../infrastructure/identity/CryptoRandomPasswords.js";
 import { apiV1 } from "./api/v1/index.js";
 import { adminPage, builtAdminPage } from "./common/adminPage.js";
 import { assetsPath, readAssets, type Assets } from "./common/assets.js";
@@ -314,8 +317,16 @@ export const buildApplication = async (
     emailAddresses,
   );
 
+  const accountsByGoogleAccount = new AccountsByGoogleAccount(
+    unitOfWork,
+    config.accountEmailAddressHashKey,
+  );
+
   // Every read model's projection, each given every event as it is appended.
-  const projections: readonly Projection[] = [accountsByEmailAddress];
+  const projections: readonly Projection[] = [
+    accountsByEmailAddress,
+    accountsByGoogleAccount,
+  ];
 
   // On the unit of work the mediator's transactions use, so that what a
   // command's handler appends, and what every projection writes of it, is kept
@@ -392,6 +403,16 @@ export const buildApplication = async (
   );
   mediator.handleCommand(
     new SignInHandler(accounts, accountsByEmailAddress, passwords),
+  );
+  mediator.handleCommand(
+    new SignInWithGoogleHandler(
+      accounts,
+      accountsByEmailAddress,
+      accountsByGoogleAccount,
+      emailAddresses,
+      passwords,
+      new CryptoRandomPasswords(),
+    ),
   );
   validation.register(new ResetPasswordValidator());
   mediator.handleCommand(

@@ -1,7 +1,8 @@
 // What stands behind a scenario that keeps accounts: the account key store with
 // a site's key, the Postgres event store sealing what is personal in an
 // account's events with it, and the accounts by email address read model kept
-// in step with every append. And the steps the account keys' feature and the
+// in step with every append, and the accounts by Google account read model
+// with it. And the steps the account keys' feature and the
 // read model's feature share: registering, forgetting and looking accounts up.
 //
 // Here rather than in specs/support/ because it names infrastructure, and
@@ -23,6 +24,7 @@ import { AccountKeys } from "../../../src/infrastructure/encryption/AccountKeys.
 import { KeyedEmailAddressHasher } from "../../../src/infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEventStore } from "../../../src/infrastructure/event-store/PostgresEventStore.js";
 import { AccountsByEmailAddress } from "../../../src/infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByGoogleAccount } from "../../../src/infrastructure/read-models/AccountsByGoogleAccount.js";
 import type { SpecWorld } from "../../support/world.js";
 import { unitOfWorkOf } from "./transactions.js";
 
@@ -31,6 +33,7 @@ export interface Accounts {
   keys: AccountKeys;
   store: PostgresEventStore;
   readModel: AccountsByEmailAddress;
+  byGoogleAccount: AccountsByGoogleAccount;
   hasher: KeyedEmailAddressHasher;
   /** Every account kept, in the order they were first kept. */
   readonly kept: AccountId[];
@@ -73,12 +76,14 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
   const unitOfWork = unitOfWorkOf(world);
   const hasher = new KeyedEmailAddressHasher(aSiteKey());
   const readModel = new AccountsByEmailAddress(unitOfWork, hasher);
+  const byGoogleAccount = new AccountsByGoogleAccount(unitOfWork, aSiteKey());
   const { keys, store } = storesFor(world, siteKey);
   const kept: Accounts = {
     siteKey,
     keys,
     store,
     readModel,
+    byGoogleAccount,
     hasher,
     kept: [],
     byAddress: new Map(),
@@ -93,7 +98,10 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
     const expected = account.expectedVersion;
     const events = account.handOver();
     if (events.length === 0) return;
-    const projecting = new ProjectingEventStore(kept.store, [readModel]);
+    const projecting = new ProjectingEventStore(kept.store, [
+      readModel,
+      byGoogleAccount,
+    ]);
     await world.asARequest(() =>
       projecting.appendEvents(account.id, expected, events),
     );

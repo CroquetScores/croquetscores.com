@@ -48,7 +48,7 @@ Feature: Signing in with Google
 
     Scenario: A linked Google account signs in to its account
       Given "someone@example.com" has an account, confirmed
-      And the account for "someone@example.com" is linked to the Google account "google-subject-1"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
       And Google knows the reader as "google-subject-1"
       And Google gives the email address "someone@example.com"
       And Google has verified the email address
@@ -58,7 +58,7 @@ Feature: Signing in with Google
 
     Scenario: A linked Google account is found whatever email address it now carries
       Given "someone@example.com" has an account, confirmed
-      And the account for "someone@example.com" is linked to the Google account "google-subject-1"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
       And Google knows the reader as "google-subject-1"
       And Google gives the email address "sam@example.org"
       And Google has verified the email address
@@ -68,7 +68,7 @@ Feature: Signing in with Google
 
     Scenario: Signing in with Google is recorded on the account
       Given "someone@example.com" has an account, confirmed
-      And the account for "someone@example.com" is linked to the Google account "google-subject-1"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
       And Google knows the reader as "google-subject-1"
       And Google gives the email address "someone@example.com"
       And Google has verified the email address
@@ -183,7 +183,7 @@ Feature: Signing in with Google
 
     Scenario: A second Google account for the same email address is refused
       Given "someone@example.com" has an account, confirmed
-      And the account for "someone@example.com" is linked to the Google account "google-subject-1"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
       And Google knows the reader as "google-subject-2"
       And Google gives the email address "someone@example.com"
       And Google has verified the email address
@@ -193,7 +193,7 @@ Feature: Signing in with Google
 
     Scenario: The first Google account stays linked
       Given "someone@example.com" has an account, confirmed
-      And the account for "someone@example.com" is linked to the Google account "google-subject-1"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
       And Google knows the reader as "google-subject-2"
       And Google gives the email address "someone@example.com"
       And Google has verified the email address
@@ -307,7 +307,7 @@ Feature: Signing in with Google
       And Google has verified the email address
       And Google calls the reader "Sam Someone"
       When signing in with Google is sent
-      Then nothing is waiting to be emailed
+      Then nothing is queued to be sent
 
     Scenario: A forgotten account's email address gets a new account
       Given "someone@example.com" has an account, confirmed
@@ -321,7 +321,7 @@ Feature: Signing in with Google
 
     Scenario: A Google account linked to a forgotten account gets a new account
       Given "someone@example.com" has an account, confirmed
-      And the account for "someone@example.com" is linked to the Google account "google-subject-1"
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
       And the account for "someone@example.com" has been forgotten
       And Google knows the reader as "google-subject-1"
       And Google gives the email address "someone@example.com"
