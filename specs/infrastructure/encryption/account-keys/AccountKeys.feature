@@ -40,6 +40,12 @@ Feature: Keeping an account's name and email address readable only with its own 
   so that two accounts with the same name cannot be told apart by what is kept,
   nor one account's name matched from one event to the next.
 
+  The Google account linked to an account is kept the same way. What it is
+  kept by is the subject Google knows it by, which says nothing a reader could
+  read, but is the same for that person on every site that signs in with
+  Google, so kept as it was given it would tie a forgotten account to the
+  person it was for good.
+
   Background:
     Given the site's key
     And an account key store
@@ -75,6 +81,12 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       Then nothing kept of the account's events contains "someone@example.com"
 
+    Scenario: The account's events do not hold the Google account linked to it
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the Google account "google-subject-1" is linked to the account
+      Then nothing kept of the account's events contains "google-subject-1"
+
     Scenario: The same name kept for two accounts is kept differently
       When an account is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
@@ -101,6 +113,13 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       When the account is read back
       Then the account is reached at "Someone@Example.com"
+
+    Scenario: A Google account reads back as it was linked
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the Google account "google-subject-1" is linked to the account
+      When the account is read back
+      Then the account is linked to the Google account "google-subject-1"
 
   Rule: An append that is refused leaves no key behind
 
@@ -143,7 +162,9 @@ Feature: Keeping an account's name and email address readable only with its own 
     afresh, so that the account reads back the same every time; the id is kept
     in any case, and says nothing about the person. Nothing is ever sent to
     that address: it is the site's own, and anything sent to it would reach the
-    site rather than anybody who was.
+    site rather than anybody who was. A Google account it was linked to reads
+    back as "google-account-forgotten-" and the same uuid, which no Google
+    account is known by, since Google knows every one by digits alone.
 
     Deleting the key is not all of forgetting. The table an account is found
     by holds a keyed hash of its address, made with a key the whole site
@@ -173,6 +194,14 @@ Feature: Keeping an account's name and email address readable only with its own 
       When the account's key is deleted
       And the account is read back
       Then the account is reached at "account-forgotten-7c9e6679-7425-40de-944b-e07fc1f90ae7@croquetscores.com"
+
+    Scenario: An account whose key is deleted is linked to a forgotten Google account, by its id
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the Google account "google-subject-1" is linked to the account
+      When the account's key is deleted
+      And the account is read back
+      Then the account is linked to the Google account "google-account-forgotten-7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
     Scenario: A forgotten account reads back the same every time
       Given an account is registered at "someone@example.com"
