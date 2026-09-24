@@ -12,6 +12,7 @@ import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { applicationFor } from "../../support/browser.js";
 import { clockFor } from "../../support/clock.js";
+import { drawnBesideAButton } from "../../support/buttons.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 const signIn = "/account/sign-in";
@@ -192,7 +193,7 @@ Then(
 
 const forgotPasswordPage = 'a[href="/account/forgot-password"]';
 const forgotPasswordButton = `${dialog} .dialog-buttons ${forgotPasswordPage}`;
-const cancelButton = `${dialog} .dialog-buttons a.button[href="/"]`;
+const submitButton = `${dialog} .dialog-buttons button[type="submit"]`;
 
 // Once, so that a link left beneath the form beside the button would show.
 Then(
@@ -225,66 +226,58 @@ Then(
   },
 );
 
+// A cancel button is a way out of the form to the home page, whatever it says,
+// or anything among the dialog's buttons that says Cancel, wherever it goes:
+// either would be the button the rule says is not there.
+Then("the dialog has no cancel button", async function (this: SpecWorld) {
+  const buttons = await this.browserPage
+    .locator(`${dialog} .dialog-buttons :is(a, button)`)
+    .all();
+  assert.ok(buttons.length > 0, "The dialog has no buttons at all.");
+  for (const button of buttons) {
+    const href = await button.getAttribute("href");
+    const said = unmarked(await button.innerText()).trim();
+    assert.notEqual(href, "/", `"${said}" goes to the home page.`);
+    assert.notEqual(said.toLowerCase(), "cancel", "A button says Cancel.");
+  }
+});
+
 // In the markup, which is the order it is read out and tabbed through in.
 Then(
-  "the forgot password button comes before the cancel button",
+  "the forgot password button comes before the submit button",
   async function (this: SpecWorld) {
     const before = await this.browserPage.evaluate<boolean | null>(`(() => {
       const button = document.querySelector(${JSON.stringify(forgotPasswordButton)});
-      const cancel = document.querySelector(${JSON.stringify(cancelButton)});
-      if (!button || !cancel) return null;
-      return Boolean(button.compareDocumentPosition(cancel) & Node.DOCUMENT_POSITION_FOLLOWING);
+      const submit = document.querySelector(${JSON.stringify(submitButton)});
+      if (!button || !submit) return null;
+      return Boolean(button.compareDocumentPosition(submit) & Node.DOCUMENT_POSITION_FOLLOWING);
     })()`);
     assert.ok(before !== null, "The dialog lacks one of the two buttons.");
-    assert.ok(before, "The forgot password button comes after cancel.");
+    assert.ok(before, "The forgot password button comes after submit.");
   },
 );
 
 Then(
-  "the forgot password button is to the left of the cancel button",
+  "the forgot password button is to the left of the submit button",
   async function (this: SpecWorld) {
     const button = await this.browserPage
       .locator(forgotPasswordButton)
       .boundingBox();
-    const cancel = await this.browserPage.locator(cancelButton).boundingBox();
-    assert.ok(button !== null && cancel !== null, "A button is not drawn.");
+    const submit = await this.browserPage.locator(submitButton).boundingBox();
+    assert.ok(button !== null && submit !== null, "A button is not drawn.");
     assert.ok(
-      button.x + button.width <= cancel.x + 0.5,
-      "The forgot password button does not end left of cancel.",
+      button.x + button.width <= submit.x + 0.5,
+      "The forgot password button does not end left of submit.",
     );
   },
 );
 
-// Every part of how a button is drawn, read from what the browser drew rather
-// than from the classes, so that a rule written for one and not the other shows.
-const drawn = [
-  "background-color",
-  "color",
-  "border-top-width",
-  "border-top-style",
-  "border-top-color",
-  "border-radius",
-  "font-family",
-  "font-size",
-  "font-weight",
-  "min-height",
-];
-
 Then(
-  "the forgot password button looks like the cancel button",
+  "the forgot password button looks like a button other than the submit button",
   async function (this: SpecWorld) {
-    const styleOf = (selector: string) =>
-      this.browserPage.evaluate<Record<string, string> | null>(`(() => {
-        const element = document.querySelector(${JSON.stringify(selector)});
-        if (!element) return null;
-        const style = getComputedStyle(element);
-        return Object.fromEntries(
-          ${JSON.stringify(drawn)}.map((name) => [name, style.getPropertyValue(name)]),
-        );
-      })()`);
-    const button = await styleOf(forgotPasswordButton);
-    assert.ok(button !== null, "There is no forgot password button.");
-    assert.deepEqual(button, await styleOf(cancelButton));
+    const drawn = await drawnBesideAButton(this, forgotPasswordButton);
+    assert.ok(drawn !== null, "There is no forgot password button.");
+    assert.deepEqual(drawn.it, drawn.aButton);
   },
 );
 

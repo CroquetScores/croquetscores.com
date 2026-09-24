@@ -163,7 +163,6 @@ export const english: Language = {
     "signIn.title": "Sign in",
     "signIn.emailAddress": "Email address",
     "signIn.password": "Password",
-    "signIn.cancel": "Cancel",
     "signIn.submit": "Sign in",
     "signIn.elsewhere": "If you cannot sign in",
     "signIn.forgotPassword": "Forgot Password?",

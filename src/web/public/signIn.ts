@@ -108,7 +108,6 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
   elsewhere: [
     { label: speaking.say("signIn.forgotPassword"), href: forgotPasswordPath },
   ],
-  cancel: { label: speaking.say("signIn.cancel"), href: "/" },
   submit: speaking.say("signIn.submit"),
 });
 
