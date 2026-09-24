@@ -377,3 +377,35 @@ Feature: Signing in with Google
       And Google calls the reader "Sam Someone"
       When 5 signings in with Google are sent at once
       Then each of them is answered with the account for "someone@example.com"
+
+  Rule: A Google account whose account is forgotten while it waits gets a new account
+
+    A signing in with a Google account already linked finds the account, and
+    then waits its turn to hold it. If the account's owner is having it
+    forgotten meanwhile, the account it holds once its turn comes is
+    forgotten. Found a moment later, the Google account would have been linked
+    to nothing, and a Google account linked to a forgotten account gets a new
+    account. So this one does too, rather than the reader seeing the site
+    fail.
+
+    Scenario: A Google account whose account is forgotten while it waits is answered with a new account
+      Given "someone@example.com" has an account, confirmed
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
+      And the next signing in with Google finds its account before it is forgotten
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      When signing in with Google is sent
+      Then it is answered with a new account for "someone@example.com"
+
+    Scenario: The new account is linked to the Google account whose account was forgotten while it waited
+      Given "someone@example.com" has an account, confirmed
+      And the account for "someone@example.com" was linked to the Google account "google-subject-1"
+      And the next signing in with Google finds its account before it is forgotten
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      When signing in with Google is sent
+      Then the account for "someone@example.com" is linked to the Google account "google-subject-1"

@@ -38,15 +38,7 @@ Going to use SPA instead of /scripts.
 
 ## Known problems
 
-### Signing in with Google as the account is forgotten fails as the site failing
-
-**Where:** `src/application/operations/accounts/SignInWithGoogleHandler.ts`, where an account is found by its Google account — from the review of PR #100.
-
-**What will go wrong.** A signing in with Google finds the account linked to that Google account, and then waits its turn at holding it. If the account is being forgotten meanwhile, the hold waits for the forgetting to finish, and the account it loads is forgotten. `account.signIn` refuses with `Account.Forgotten`, which is not a `SignInWithGoogleRefused`, so the callback in `src/web/auth/google.ts` throws it on, and the reader lands on an error page instead of being told what an account nobody has is told. Signing in with a password had the same gap and was closed in PR #100: it refuses an account forgotten while it was not held as it refuses an address with no account.
-
-**Why it has not yet.** It needs someone to sign in with Google in the moment between their account being found and its forgetting being done, and forgetting an account is asked for by its owner.
-
-**What to do.** After the hold and the load, treat a forgotten account as a Google account linked to nothing: carry on as if `byGoogle.find` had found nothing, or refuse as that path would. Add a scenario that forgets the account while a signing in with Google to it is held back, and expects the reader not to see the site fail.
+None.
 
 ---
 
