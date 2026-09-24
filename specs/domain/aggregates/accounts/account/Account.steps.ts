@@ -9,6 +9,7 @@ import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts
 import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accounts/events/PasswordHashedAgain.js";
 import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
+import { GoogleAccountLinked } from "../../../../../src/domain/aggregates/accounts/events/GoogleAccountLinked.js";
 import { RoleAdded } from "../../../../../src/domain/aggregates/accounts/events/RoleAdded.js";
 import { RoleRemoved } from "../../../../../src/domain/aggregates/accounts/events/RoleRemoved.js";
 import type { SpecWorld } from "../../../../support/world.js";
@@ -140,6 +141,15 @@ Given(
   },
 );
 
+Given(
+  "the Google account {string} was linked to it",
+  function (this: SpecWorld, subject: string) {
+    streamOf(this).push(
+      new GoogleAccountLinked(subject, idOf(this), now(this)),
+    );
+  },
+);
+
 Given("it was forgotten", function (this: SpecWorld) {
   streamOf(this).push(new AccountForgotten(idOf(this), now(this)));
 });
@@ -210,6 +220,17 @@ Then("the account's password is imported", function (this: SpecWorld) {
 
 Then("the account's password is not imported", function (this: SpecWorld) {
   assert.equal(accountOf(this).passwordImported, false);
+});
+
+Then(
+  "the account is linked to the Google account {string}",
+  function (this: SpecWorld, subject: string) {
+    assert.equal(accountOf(this).googleSubject, subject);
+  },
+);
+
+Then("the account is linked to no Google account", function (this: SpecWorld) {
+  assert.equal(accountOf(this).googleSubject, undefined);
 });
 
 // Asked through the account's own answer for each role, so that each is
