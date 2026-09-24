@@ -13,6 +13,7 @@ import { AskToForgetAccount } from "../../../src/application/operations/accounts
 import { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import { RegisterAccount } from "../../../src/application/operations/accounts/RegisterAccount.js";
+import { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -84,11 +85,20 @@ export const accountsThrough = (
       new ConfirmEmailAddress(
         randomUUID(),
         link,
-        CALLED,
+        as.name ?? CALLED,
         password,
         password,
         now(),
       ),
+    );
+  },
+
+  // Linked the way the site links one: by a sign-in with Google carrying the
+  // account's own address, verified. A scenario that says an account was
+  // linked is not about how, and this is the one way there is.
+  async linkToGoogle(address, subject) {
+    await application.mediator.send(
+      new SignInWithGoogle(subject, address, true, CALLED, now()),
     );
   },
 });

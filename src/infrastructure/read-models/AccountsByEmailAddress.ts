@@ -82,6 +82,17 @@ export class AccountsByEmailAddress implements Projection {
    * failure would have said the address was taken, which registering must
    * never say.
    *
+   * Where the address is held, the row holding it is written to as it stands
+   * rather than left alone, which changes nothing in it and holds it until the
+   * transaction is done. So whoever reserves an address holds its account
+   * until they are finished with it, whether they made the account or found
+   * it, and the next to reserve the address waits, then finds the account as
+   * they left it. Left alone instead, every request finding the same account
+   * at once would load it as it was before any of them changed it, and all
+   * but the first would be refused for keeping what they did over what the
+   * first kept. Signing in with Google at once is what showed it
+   * (SignInWithGoogle.feature).
+   *
    * The row is the same one projecting a registering writes, so an account and
    * its reservation are the same fact rather than two that can drift. Written
    * here first and projected after, which changes nothing: the projection's
@@ -98,21 +109,32 @@ export class AccountsByEmailAddress implements Projection {
       .query<{ account_id: string }>(
         `insert into accounts_by_email_address (account_id, email_address_hash)
          values ($1, $2)
-         on conflict (email_address_hash) where not forgotten do nothing
+         on conflict (email_address_hash) where not forgotten
+           do update set email_address_hash = excluded.email_address_hash
          returning account_id`,
         [account.value, this.hasher.hash(address)],
       );
-    if (rows.length === 1) return account;
-    // The insert conflicted, so a row holds the address; one that is not there
-    // to be found a moment later is a database that is not doing what its key
-    // says, and is not something to register into. An account made regardless
-    // would fail the same key when its events were projected, and that failure
-    // would say the address was taken.
-    const holder = await this.find(address);
+    // One row either way: the one inserted, or the one that already held the
+    // address. None would be a database not doing what its key says, and is
+    // not something to register into.
+    const holder = rows[0];
     if (holder === undefined) {
       throw new Error("The address is reserved, and by no account.");
     }
-    return holder;
+    return AccountId.from(holder.account_id);
+  }
+
+  /**
+   * Holds `account` until the transaction is done, as reserving its address
+   * does, for a request that found the account some other way: the next to
+   * reserve its address or hold it waits, and then finds it as this left it.
+   */
+  async hold(account: AccountId): Promise<void> {
+    await this.unitOfWork.connection().query(
+      `select 1 from accounts_by_email_address
+          where account_id = $1 for update`,
+      [account.value],
+    );
   }
 
   /** The account `address` belongs to, or nothing when it has none. */

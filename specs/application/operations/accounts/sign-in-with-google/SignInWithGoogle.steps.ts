@@ -3,29 +3,9 @@ import { strict as assert } from "node:assert";
 
 import { SignInWithGoogle } from "../../../../../src/application/operations/accounts/SignInWithGoogle.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
+import { identitySaidFor } from "../../../../support/google.js";
 import type { Registering } from "../../../../support/registering.js";
 import type { SpecWorld } from "../../../../support/world.js";
-
-// What Google says about the reader, one thing to a step, until the scenario
-// sends it. Kept beside the world rather than on it, since nothing but these
-// steps reads it.
-interface GoogleSays {
-  subject?: string;
-  emailAddress?: string;
-  verified?: boolean;
-  name?: string | undefined;
-}
-
-const said = new WeakMap<SpecWorld, GoogleSays>();
-
-const googleSaysFor = (world: SpecWorld): GoogleSays => {
-  let says = said.get(world);
-  if (says === undefined) {
-    says = {};
-    said.set(world, says);
-  }
-  return says;
-};
 
 const registeringOf = (world: SpecWorld): Registering => {
   assert.ok(world.registering !== undefined, "Registering is not stood up.");
@@ -37,62 +17,16 @@ const momentOf = (world: SpecWorld): ReadOnlyDate => {
   return ReadOnlyDate.from(world.moment);
 };
 
-// Each thing Google says is asked for, rather than defaulted, so that a
-// scenario leaving one out fails for that rather than for what a default did.
 const commandFor = (world: SpecWorld): SignInWithGoogle => {
-  const says = googleSaysFor(world);
-  assert.ok(says.subject !== undefined, "Google knows the reader as nobody.");
-  assert.ok(says.emailAddress !== undefined, "Google gives no email address.");
-  assert.ok(says.verified !== undefined, "Google says nothing of verifying.");
-  assert.ok("name" in says, "Google says nothing of a name.");
+  const identity = identitySaidFor(world);
   return new SignInWithGoogle(
-    says.subject,
-    says.emailAddress,
-    says.verified,
-    says.name,
+    identity.subject,
+    identity.emailAddress,
+    identity.verified,
+    identity.name,
     momentOf(world),
   );
 };
-
-Given(
-  "Google knows the reader as {string}",
-  function (this: SpecWorld, subject: string) {
-    googleSaysFor(this).subject = subject;
-  },
-);
-
-Given(
-  "Google gives the email address {string}",
-  function (this: SpecWorld, address: string) {
-    googleSaysFor(this).emailAddress = address;
-  },
-);
-
-Given("Google has verified the email address", function (this: SpecWorld) {
-  googleSaysFor(this).verified = true;
-});
-
-Given("Google has not verified the email address", function (this: SpecWorld) {
-  googleSaysFor(this).verified = false;
-});
-
-Given(
-  "Google calls the reader {string}",
-  function (this: SpecWorld, name: string) {
-    googleSaysFor(this).name = name;
-  },
-);
-
-Given("Google gives no name", function (this: SpecWorld) {
-  googleSaysFor(this).name = undefined;
-});
-
-Given(
-  "the account for {string} was linked to the Google account {string}",
-  async function (this: SpecWorld, address: string, subject: string) {
-    await registeringOf(this).linkToGoogle(address, subject);
-  },
-);
 
 Given(
   "the next signing in with Google looks for its Google account before it is linked",
@@ -113,6 +47,46 @@ When("signing in with Google is sent", async function (this: SpecWorld) {
     this.failure = failure;
   }
 });
+
+// Each answer or refusal of the signings in sent at once, in the order sent.
+const atOnce = new WeakMap<SpecWorld, PromiseSettledResult<unknown>[]>();
+
+// All at once, so that each is in a transaction of its own and they race for
+// the account, as registering's are sent. None is allowed to fail the step:
+// whether any was refused is what the scenario asks.
+When(
+  "{int} signings in with Google are sent at once",
+  async function (this: SpecWorld, many: number) {
+    const registering = registeringOf(this);
+    atOnce.set(
+      this,
+      await Promise.allSettled(
+        Array.from({ length: many }, () =>
+          registering.signInWithGoogle(commandFor(this)),
+        ),
+      ),
+    );
+  },
+);
+
+Then(
+  "each of them is answered with the account for {string}",
+  async function (this: SpecWorld, address: string) {
+    const answers = atOnce.get(this);
+    assert.ok(answers !== undefined, "Nothing was sent at once.");
+    const account = await accountFor(this, address);
+    for (const answer of answers) {
+      assert.ok(
+        answer.status === "fulfilled",
+        `One was refused: ${answer.status === "rejected" ? String(answer.reason) : ""}`,
+      );
+      assert.equal(
+        (answer.value as { value?: unknown }).value,
+        account.id.value,
+      );
+    }
+  },
+);
 
 // Something the scenario builds on, so a refusal here is a scenario that is
 // wrong about what it is standing on, and is thrown.
