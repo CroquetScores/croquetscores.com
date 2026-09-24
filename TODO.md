@@ -16,8 +16,6 @@ Four kinds of thing, kept apart.
 
 - **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
 
-- **Nothing says the way back from Google is taken once.** The callback uses up the cookie it was sent with, so the same way back followed again signs nobody in. The scenario that says so passes with that line deleted: the stand-in, as Google does, takes a code once, so a way back followed twice fails at Google whatever the site does. What the site does is its own guard, for a provider that does not. A scenario for it wants the stand-in told to take a code twice (from the review of registering with Google).
-
 ---
 
 ## Waiting on a dependency

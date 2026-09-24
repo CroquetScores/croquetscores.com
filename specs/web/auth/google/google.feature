@@ -82,6 +82,12 @@ Feature: Registering with Google
 
   Rule: A way back from Google is taken only from a reader this site sent there
 
+    A way back is taken once. Google takes a code once as well, so a way back
+    followed again is refused by Google whatever the site does, and a scenario
+    of that alone would pass with the site taking the same way back twice.
+    The site's guard is its own, and is not to lean on Google's: so it is held
+    to it with a Google that would take the code again.
+
     Scenario: A way back this site did not send the reader on signs nobody in
       Given a viewport 1200 pixels wide
       And Google knows the reader as "google-subject-1"
@@ -106,6 +112,19 @@ Feature: Registering with Google
       And Google gives the email address "someone@example.com"
       And Google has verified the email address
       And Google calls the reader "Sam Someone"
+      And the register page is open with scripting on
+      And the reader has registered with Google
+      And nobody is signed in
+      When the reader follows the same way back from Google again
+      Then the reader is signed out
+
+    Scenario: A way back used twice signs nobody in the second time, even where Google would take its code again
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And Google will take a code more than once
       And the register page is open with scripting on
       And the reader has registered with Google
       And nobody is signed in
