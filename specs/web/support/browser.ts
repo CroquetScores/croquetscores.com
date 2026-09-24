@@ -32,7 +32,10 @@ import { clockFor } from "./clock.js";
 import { addExampleFailures } from "./exampleFailures.js";
 import { addExampleForm } from "./exampleForm.js";
 import { scenarioLanguages } from "./languages.js";
-import { googleCredentialsForScenarios, standInGoogleFor } from "./google.js";
+import {
+  googleCredentialsForScenarios,
+  standInGoogleFor,
+} from "../../infrastructure/support/google.js";
 import { readerTheScenariosSet } from "./reader.js";
 
 let browser: Browser | undefined;

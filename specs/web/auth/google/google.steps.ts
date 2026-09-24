@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { anApplicationWithoutGoogle } from "../../support/browser.js";
-import { standInGoogleFor } from "../../support/google.js";
+import { standInGoogleFor } from "../../../infrastructure/support/google.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 const offer = 'a[href="/auth/google"]';

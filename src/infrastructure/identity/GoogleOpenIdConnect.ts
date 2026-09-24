@@ -199,11 +199,18 @@ export class GoogleOpenIdConnect {
   }
 }
 
-// A key set that could not be fetched: the fetch itself failing, which is a
-// TypeError, or jose giving up on it, timed out or answered with something
-// other than keys. Anything else is the token.
+// A key set that could not be had: the fetch itself failing, which is a
+// TypeError; jose giving up on it, timed out or not answered with 200; or an
+// answer that is not a key set at all. Each is Google being unwell rather than
+// the token being bad. Anything else — no key matching the token's, or a
+// signature, an issuer, an audience or an expiry that does not check — is the
+// token.
 const isUnreachable = (failure: unknown): boolean => {
   if (failure instanceof TypeError) return true;
   const code = (failure as { code?: unknown } | null)?.code;
-  return code === "ERR_JWKS_TIMEOUT" || code === "ERR_JOSE_GENERIC";
+  return (
+    code === "ERR_JWKS_TIMEOUT" ||
+    code === "ERR_JOSE_GENERIC" ||
+    code === "ERR_JWKS_INVALID"
+  );
 };
