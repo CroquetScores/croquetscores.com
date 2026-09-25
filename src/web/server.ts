@@ -510,8 +510,10 @@ export const buildApplication = async (
     new AskToChangeEmailAddressHandler(
       accounts,
       accountsByEmailAddress,
+      emailAddresses,
       passwords,
       emailQueue,
+      emailsWritten,
       links,
     ),
   );

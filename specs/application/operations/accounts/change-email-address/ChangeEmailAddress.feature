@@ -31,6 +31,14 @@ Feature: Moving an account to another email address, asked for and then confirme
   address whose account has been forgotten has none, and is sent a link as any
   other would be.
 
+  Asking writes to an address the reader typed, which need not be theirs, so
+  the new address is held to the limit every other email the site writes to
+  somebody is held to (`ResetPassword.feature`): at most 3 an hour, counted by
+  the account where the address has one and by the address where it has none.
+  Otherwise a reader who knows their own password could have the site fill
+  anybody's inbox. Past the limit nothing is sent, and asking answers as it
+  always does.
+
   The link works for 24 hours, as a link to confirm an address does, and once.
   It is made for moving this account to this address and nothing else, and
   says so where it cannot be changed: a link the site made for anything else
@@ -109,6 +117,35 @@ Feature: Moving an account to another email address, asked for and then confirme
       And the account for "sam@example.org" has been forgotten
       When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
       Then the email "Email.ConfirmNewEmailAddress" is queued for "sam@example.org"
+
+  Rule: The new address is sent at most 3 emails an hour
+
+    Scenario: An address with no account written to 3 times in the last hour is sent nothing more
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "sam@example.org" has been written to 3 times in the last hour
+      When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      Then nothing more is queued for "sam@example.org"
+
+    Scenario: An address with an account sent 3 emails in the last hour is sent nothing more
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "sam@example.org" has an account, confirmed
+      And "sam@example.org" has been registered 3 times in the last hour
+      When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      Then nothing more is queued for "sam@example.org"
+
+    Scenario: Each asking counts toward the limit
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And moving to "sam@example.org" has been asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      And moving to "sam@example.org" has been asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      And moving to "sam@example.org" has been asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      Then 3 emails are queued for "sam@example.org"
+
+    Scenario: Past the limit, asking answers as it always does
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "sam@example.org" has been written to 3 times in the last hour
+      When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      Then it is answered without refusal
 
   Rule: A password that is not the account's is refused, and sends nothing
 

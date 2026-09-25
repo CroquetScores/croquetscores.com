@@ -317,8 +317,10 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     new AskToChangeEmailAddressHandler(
       repository,
       accounts.readModel,
+      accounts.hasher,
       hasher,
       queue,
+      written,
       links,
     ),
   );

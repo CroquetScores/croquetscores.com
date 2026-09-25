@@ -5,12 +5,19 @@ import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
+import type { EmailAddressHasher } from "../../services/EmailAddressHasher.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
+import type { EmailsWritten, WrittenTo } from "../../services/EmailsWritten.js";
 import type { Links } from "../../services/Links.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import { AskToChangeEmailAddress } from "./AskToChangeEmailAddress.js";
 import { ChangeEmailAddressRefused } from "./ChangeEmailAddressRefused.js";
 import { MOVING_LINK_WORKS_FOR_MILLISECONDS } from "./movingLinks.js";
+
+/** How many emails an inbox may be filled with, per hour. */
+const EMAILS_AN_HOUR = 3;
+
+const AN_HOUR = 60 * 60 * 1000;
 
 /** What moving to another address asks of where accounts are found by address. */
 export interface AccountsByAddressForMoving {
@@ -30,6 +37,13 @@ export interface AccountsByAddressForMoving {
  * it. An address that has an account already is sent an email saying so, and
  * nothing is recorded. Either way it answers the same, so that which addresses
  * have accounts is not found out by asking to move to them.
+ *
+ * The new address is one the reader typed, and need not be theirs, so what is
+ * written to it is counted as every other email the site writes to somebody
+ * is: by the account where the address has one, and by the address where it
+ * has none. Past the limit nothing is sent or recorded, and it answers the
+ * same, so that knowing one's own password is not a way to fill somebody
+ * else's inbox.
  */
 export class AskToChangeEmailAddressHandler extends CommandHandler<
   AskToChangeEmailAddress,
@@ -41,8 +55,10 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly byAddress: AccountsByAddressForMoving,
+    private readonly addresses: EmailAddressHasher,
     private readonly passwords: PasswordHasher,
     private readonly queue: EmailQueue,
+    private readonly written: EmailsWritten,
     private readonly links: Links,
   ) {
     super();
@@ -75,7 +91,19 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
       );
     }
 
-    if ((await this.byAddress.find(address)) !== undefined) {
+    // Counting holds whoever is counted until this transaction ends, so that
+    // askings sent at once cannot each count before any has recorded.
+    const holder = await this.byAddress.find(address);
+    const whom: WrittenTo =
+      holder === undefined
+        ? { emailAddressHash: this.addresses.hash(address) }
+        : { account: holder };
+    const since = ReadOnlyDate.from(
+      new Date(command.requestedAt.toDate().getTime() - AN_HOUR),
+    );
+    if ((await this.written.countSince(whom, since)) >= EMAILS_AN_HOUR) return;
+
+    if (holder !== undefined) {
       await this.queue.queue({
         kind: "Email.AlreadyHasAnAccount",
         to: address.toString(),
@@ -83,6 +111,11 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
         fill: {},
         queuedAt: command.requestedAt,
       });
+      await this.written.record(
+        whom,
+        "Email.AlreadyHasAnAccount",
+        command.requestedAt,
+      );
       return;
     }
 
@@ -112,5 +145,10 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
       linkWorksUntil: until,
       queuedAt: command.requestedAt,
     });
+    await this.written.record(
+      whom,
+      "Email.ConfirmNewEmailAddress",
+      command.requestedAt,
+    );
   }
 }
