@@ -21,6 +21,12 @@ Feature: A reader who is signed in sees their account's profile
   account menu: what cannot be undone is not put where a reader goes for
   everything else, a slip away from Sign Out.
 
+  The profile says nothing of Google: not whether a Google account is linked,
+  nor how to link or unlink one. A Google account is linked by signing in
+  with Google at the account's email address (`SignInWithGoogle.feature`),
+  and that is enough. One linked stays linked until the account is forgotten
+  (`linkGoogleAccount.feature`).
+
   Only a reader who is signed in sees it. One who is not is sent to sign in
   first, and brought back here once they have, as every page of an account's
   own does (`forgetAccount.feature`).

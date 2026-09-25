@@ -14,11 +14,6 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-### /account
-
-- **The profile says nothing of Google.** It does not show whether a Google account is linked, and there is no way to link one other than signing in with Google at the same email address, nor any way to unlink one. Decide whether that is enough, and say so in a feature either way.
-- **An account with no password is not told why it cannot change its email address.** Changing it asks for the password, so the page is not offered, but nothing says to set a password first.
-
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
