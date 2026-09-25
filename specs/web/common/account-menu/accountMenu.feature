@@ -11,6 +11,9 @@ Feature: The way to a reader's account is the last thing in the header
   none, because they have only ever signed in with Google, is offered neither
   (`changePassword.feature`, `changeEmailAddress.feature`). They are offered
   setting a password instead, and nobody else is (`setPassword.feature`).
+  Forgetting the account is not offered at all: what cannot be undone is not
+  put a slip away from Sign Out, and the profile leads to it instead
+  (`profile.feature`).
 
   The menu opens with no scripting, as every public page works with none: it is
   a summary and the details under it, which a browser opens and closes by
@@ -156,6 +159,14 @@ Feature: The way to a reader's account is the last thing in the header
       And the home page is open
       When the account menu is pressed
       Then the menu does not offer "Set Password"
+
+    Scenario: The menu does not offer forgetting the account
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", confirmed
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the account menu is pressed
+      Then the menu does not offer "Forget Account"
 
     Scenario Outline: The menu offers no way in to a reader who is in
       Given a viewport 1200 pixels wide

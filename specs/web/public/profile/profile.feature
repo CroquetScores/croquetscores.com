@@ -15,6 +15,12 @@ Feature: A reader who is signed in sees their account's profile
   setting a password instead, which it offers nobody else
   (`setPassword.feature`).
 
+  The profile is the way to forgetting the account (`forgetAccount.feature`),
+  for an account with a password or without, since forgetting asks for none.
+  It is last among the pages it links to, and it is here and not in the
+  account menu: what cannot be undone is not put where a reader goes for
+  everything else, a slip away from Sign Out.
+
   Only a reader who is signed in sees it. One who is not is sent to sign in
   first, and brought back here once they have, as every page of an account's
   own does (`forgetAccount.feature`).
@@ -162,6 +168,29 @@ Feature: A reader who is signed in sees their account's profile
       And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       When the profile page is opened
       Then the profile does not link to "Set Password"
+
+  Rule: The profile leads to forgetting the account
+
+    Scenario: The profile of an account with a password links to forgetting it
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the profile links to "Forget Account" at "/account/forget-account"
+
+    Scenario: The profile of an account with no password links to forgetting it
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      When the profile page is opened
+      Then the profile links to "Forget Account" at "/account/forget-account"
+
+    Scenario: Forgetting the account is the last page the profile links to
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the last page the profile links to is "Forget Account"
 
   Rule: The page needs no scripting
 

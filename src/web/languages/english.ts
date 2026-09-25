@@ -47,6 +47,7 @@ export const english: Language = {
     "account.changeEmailAddress": "Change Email Address",
     "account.changeName": "Change Name",
     "account.setPassword": "Set Password",
+    "account.forgetAccount": "Forget Account",
 
     "register.title": "Register",
     "register.emailAddress": "Email address",
