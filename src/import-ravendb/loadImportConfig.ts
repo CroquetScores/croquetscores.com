@@ -46,8 +46,10 @@ export const loadImportConfig = (
 
   return {
     databaseUrl: given(env, "DATABASE_URL")!,
-    accountEncryptionKey: given(env, "ACCOUNT_ENCRYPTION_KEY")!,
-    accountEmailAddressHashKey: given(env, "ACCOUNT_EMAIL_ADDRESS_HASH_KEY")!,
+    // Untrimmed, as the site takes them: trimmed by one and not the other, they
+    // are two keys, and the site could neither find nor open an account.
+    accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
+    accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
     // Trimmed as the site trims it, so that the import and the site read one
     // setting as the same salt.
     oldSitePasswordSalt: given(env, "OLD_SITE_PASSWORD_SALT")!,

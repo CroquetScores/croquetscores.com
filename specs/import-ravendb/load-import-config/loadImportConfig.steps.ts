@@ -73,6 +73,23 @@ Then(
   },
 );
 
+const accountKeys: Record<
+  string,
+  "accountEncryptionKey" | "accountEmailAddressHashKey"
+> = {
+  ACCOUNT_ENCRYPTION_KEY: "accountEncryptionKey",
+  ACCOUNT_EMAIL_ADDRESS_HASH_KEY: "accountEmailAddressHashKey",
+};
+
+Then(
+  "the key read from {string} is {string}",
+  function (this: SpecWorld, setting: string, key: string) {
+    const field = accountKeys[setting];
+    assert.ok(field !== undefined, `${setting} is not an account key.`);
+    assert.equal(readOf(this)[field], key);
+  },
+);
+
 Then("RavenDB is at {string}", function (this: SpecWorld, url: string) {
   assert.equal(readOf(this).ravenDbUrl, url);
 });

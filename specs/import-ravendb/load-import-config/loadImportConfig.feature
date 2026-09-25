@@ -45,6 +45,24 @@ Feature: What the import from the old sites is configured with
       When the import's settings are read
       Then the old sites' salt is "the old sites' salt"
 
+  Rule: The account keys are read as the site reads them
+
+    The site takes each account key exactly as it is written, space and all,
+    and cannot begin trimming one without losing every account already
+    sealed with it. So the import takes them as written too: a key trimmed by
+    one and not the other is two keys, and every account the import brought
+    over would be sealed with the one and hashed by the other.
+
+    Scenario Outline: An account key is kept with the space around it
+      Given the setting "<setting>" is " the key "
+      When the import's settings are read
+      Then the key read from "<setting>" is " the key "
+
+      Examples:
+        | setting                        |
+        | ACCOUNT_ENCRYPTION_KEY         |
+        | ACCOUNT_EMAIL_ADDRESS_HASH_KEY |
+
   Rule: RavenDB is where the old sites kept it, unless it is said to be elsewhere
 
     Scenario: RavenDB is on this machine unless it is said to be elsewhere
