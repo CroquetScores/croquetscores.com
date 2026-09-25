@@ -56,6 +56,7 @@ export class Account extends AggregateRoot {
   #passwordHash: string | undefined;
   #passwordImported = false;
   #passwordSetAt: ReadOnlyDate | undefined;
+  #movedAt: ReadOnlyDate | undefined;
   #confirmed = false;
   #forgotten = false;
   #googleSubject: string | undefined;
@@ -161,6 +162,15 @@ export class Account extends AggregateRoot {
    */
   get passwordSetAt(): ReadOnlyDate | undefined {
     return this.#passwordSetAt;
+  }
+
+  /**
+   * When the account last moved to another address, or nothing if it never
+   * has: so that a link sent to the address it moved from, made before then,
+   * can be known to have been sent somewhere the account no longer is.
+   */
+  get movedAt(): ReadOnlyDate | undefined {
+    return this.#movedAt;
   }
 
   get confirmed(): boolean {
@@ -370,6 +380,7 @@ export class Account extends AggregateRoot {
       );
     } else if (event instanceof EmailAddressChanged) {
       this.#emailAddress = EmailAddress.from(event.emailAddress);
+      this.#movedAt = event.occurredAt;
       this.#movesAsked.clear();
     } else if (event instanceof NameChanged) {
       this.#name = PersonName.from(event.name);

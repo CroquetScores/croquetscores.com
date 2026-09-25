@@ -51,7 +51,8 @@ const noLongerWorks = {
  * A link that has been used is worth nothing rather than expired, because
  * there is nothing to be had for it: whether it has been used is asked of what
  * writes down the requests already carried out, which is where a setting that
- * was kept wrote it. So is one made before the password was last set.
+ * was kept wrote it. So is one made before the password was last set, and one
+ * made before the account last moved to another address.
  */
 export const worthOfSetNewPasswordLink = async (
   links: Links,
@@ -84,6 +85,13 @@ export const worthOfSetNewPasswordLink = async (
     SET_NEW_PASSWORD_LINK_HOURS * AN_HOUR;
   const setAt = account.passwordSetAt;
   if (setAt !== undefined && madeAt < setAt.toDate().getTime()) {
+    return noLongerWorks;
+  }
+  // And by the account moving to another address after it was made: the link
+  // went to the address it moved from, which a reader may have moved away from
+  // because it is no longer theirs. Strictly after, for the same reason.
+  const movedAt = account.movedAt;
+  if (movedAt !== undefined && madeAt < movedAt.toDate().getTime()) {
     return noLongerWorks;
   }
 

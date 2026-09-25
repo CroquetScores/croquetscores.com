@@ -220,6 +220,7 @@ Feature: A reader who is signed in can change their account's email address
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       And the account has been moved to "sam@example.org"
+      And a minute has passed
       And the register page is open with scripting on
       And the register form is filled in for "someone@example.com"
       When the dialog is submitted
