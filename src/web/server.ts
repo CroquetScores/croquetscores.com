@@ -28,6 +28,12 @@ import { SetNewPasswordValidator } from "../application/operations/accounts/SetN
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
+import { ChangePasswordHandler } from "../application/operations/accounts/ChangePasswordHandler.js";
+import { AskToChangeEmailAddressHandler } from "../application/operations/accounts/AskToChangeEmailAddressHandler.js";
+import { AskToChangeEmailAddressValidator } from "../application/operations/accounts/AskToChangeEmailAddressValidator.js";
+import { ChangeEmailAddressHandler } from "../application/operations/accounts/ChangeEmailAddressHandler.js";
+import { WhatAMovingLinkIsWorthHandler } from "../application/operations/accounts/WhatAMovingLinkIsWorthHandler.js";
+import { ChangePasswordValidator } from "../application/operations/accounts/ChangePasswordValidator.js";
 import { ChangeNameValidator } from "../application/operations/accounts/ChangeNameValidator.js";
 import { ForgetAccountHandler } from "../application/operations/accounts/ForgetAccountHandler.js";
 import { WhatAForgettingLinkIsWorthHandler } from "../application/operations/accounts/WhatAForgettingLinkIsWorthHandler.js";
@@ -103,6 +109,8 @@ import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
 import { registerForgetAccountPage } from "./public/forgetAccount.js";
 import { registerChangeNamePage } from "./public/changeName.js";
+import { registerChangePasswordPage } from "./public/changePassword.js";
+import { registerChangeEmailAddressPage } from "./public/changeEmailAddress.js";
 import { registerProfilePage } from "./public/profile.js";
 import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspended.js";
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
@@ -497,6 +505,30 @@ export const buildApplication = async (
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
   mediator.handleQuery(new AccountProfileHandler(accounts));
+  validation.register(new AskToChangeEmailAddressValidator());
+  mediator.handleCommand(
+    new AskToChangeEmailAddressHandler(
+      accounts,
+      accountsByEmailAddress,
+      passwords,
+      emailQueue,
+      links,
+    ),
+  );
+  mediator.handleQuery(new WhatAMovingLinkIsWorthHandler(accounts, links));
+  mediator.handleCommand(
+    new ChangeEmailAddressHandler(accounts, emailAddresses, emailQueue, links),
+  );
+  validation.register(new ChangePasswordValidator());
+  mediator.handleCommand(
+    new ChangePasswordHandler(
+      accounts,
+      passwords,
+      emailQueue,
+      unitOfWork,
+      breached,
+    ),
+  );
   mediator.handleQuery(new WhatAForgettingLinkIsWorthHandler(accounts, links));
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(
@@ -585,11 +617,15 @@ export const buildApplication = async (
 
   registerRegisterPage(server, assets, readers, google !== undefined);
   registerConfirmEmailAddressPage(server, assets);
-  registerSignInPage(
+  // One count of failed signings in, shared by every page that takes a
+  // password, so that guessing on one counts against guessing on the other.
+  const failedSignIns = new PostgresFailedSignIns(unitOfWork);
+  registerSignInPage(server, assets, sessions, failedSignIns, inTransaction);
+  registerChangePasswordPage(
     server,
     assets,
     sessions,
-    new PostgresFailedSignIns(unitOfWork),
+    failedSignIns,
     inTransaction,
   );
   registerSignOut(server, sessions, inTransaction);
@@ -603,6 +639,7 @@ export const buildApplication = async (
   registerForgetAccountPage(server, assets, sessions, inTransaction);
   registerProfilePage(server, assets);
   registerChangeNamePage(server, assets);
+  registerChangeEmailAddressPage(server, assets);
   registerRegistrationsSuspendedPage(server, assets);
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);

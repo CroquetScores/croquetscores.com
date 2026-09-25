@@ -283,7 +283,7 @@ Feature: A reader who is signed in can change their account's email address
       And the new email address "sam@example.org" is typed
       And the current password "not the right password" is typed
       When the dialog is submitted
-      Then nothing is queued to be sent
+      Then no link to confirm the new email address is emailed to "sam@example.org"
 
     Scenario Outline: A new address that breaks a rule is said beneath its field
       Given a viewport 1200 pixels wide
@@ -309,7 +309,7 @@ Feature: A reader who is signed in can change their account's email address
       And the new email address "sam@example" is typed
       And the current password "correct horse battery staple" is typed
       When the dialog is submitted
-      Then nothing is queued to be sent
+      Then no link to confirm the new email address is emailed to "sam@example"
 
     Scenario: The new address that was typed is put back
       Given a viewport 1200 pixels wide

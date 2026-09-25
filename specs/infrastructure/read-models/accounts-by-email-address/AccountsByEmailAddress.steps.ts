@@ -4,6 +4,10 @@ import { createHash } from "node:crypto";
 
 import { AccountForgotten } from "../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../../../src/domain/aggregates/accounts/events/AccountRegistered.js";
+import { EmailAddressChanged } from "../../../../src/domain/aggregates/accounts/events/EmailAddressChanged.js";
+import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
+import { PersonName } from "../../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
+import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import type { StoredEvent } from "../../../../src/infrastructure/event-store/PostgresEventStore.js";
 import type { SpecWorld } from "../../../support/world.js";
@@ -12,6 +16,7 @@ import {
   aSiteKey,
   keepAccounts,
   keptAt,
+  readBack,
 } from "../../support/accounts.js";
 
 const rowsAsText = async (world: SpecWorld): Promise<string[]> => {
@@ -84,6 +89,54 @@ When("its forgetting is projected again", async function (this: SpecWorld) {
   const { readModel } = accountsOf(this);
   const id = keptAt(this, 1);
   await this.asARequest(() => readModel.project(id, 2, [forgotten]));
+});
+
+// Moving ----------------------------------------------------------------------
+
+// Moved as an account is, through the account and kept by the projecting
+// store, so that what the read model sees is what a move writes. The account
+// is confirmed first where it is not yet, since only a confirmed account can be
+// moved and these scenarios register accounts without confirming them: what
+// they are about is the row, not who the account is. A refusal is kept for the
+// scenario rather than thrown.
+const moveTo = async (
+  world: SpecWorld,
+  from: string,
+  to: string,
+): Promise<void> => {
+  const id = accountsOf(world)
+    .byAddress.get(EmailAddress.from(from).comparable)
+    ?.at(-1);
+  assert.ok(id !== undefined, `No account was registered for ${from}.`);
+  assert.ok(world.moment !== undefined, "No moment has been named.");
+  const at = ReadOnlyDate.from(world.moment);
+  const account = await readBack(world, id);
+  if (!account.confirmed) {
+    account.confirm(PersonName.from("Sam Someone"), "a password hash", at);
+  }
+  const hash = world.hashEmailAddress;
+  assert.ok(hash !== undefined, "There is no way to hash an address.");
+  account.changeEmailAddress(EmailAddress.from(to), hash(to), at);
+  world.failure = undefined;
+  try {
+    await world.keepAccount?.(account);
+  } catch (failure) {
+    world.failure = failure;
+  }
+};
+
+Given(
+  "the account for {string} is moved to {string}",
+  async function (this: SpecWorld, from: string, to: string) {
+    await moveTo(this, from, to);
+  },
+);
+
+When("its move is projected again", async function (this: SpecWorld) {
+  const moved = await firstAccounts(this, EmailAddressChanged);
+  const { readModel } = accountsOf(this);
+  const id = keptAt(this, 1);
+  await this.asARequest(() => readModel.project(id, 3, [moved]));
 });
 
 Given("every account's key is deleted", async function (this: SpecWorld) {

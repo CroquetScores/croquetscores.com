@@ -42,9 +42,11 @@ Feature: A reader who is signed in can change their password
   Only a reader who is signed in can change it; one who is not is sent to sign
   in first. Changing it needs no scripting.
 
-  These scenarios stand in for the breached password check with one the
-  scenario controls, which finds a password clean unless the scenario says
-  otherwise.
+  These scenarios stand in for the breached password check with one that finds
+  every password clean, as every browser scenario's does. That a breached
+  password is refused is said with the operation (`ChangePassword.feature`),
+  which can say a password has been breached; the page says it beneath the new
+  password as it says a password too short.
 
   Each scenario has a database and an application of its own. What one
   scenario registers, and whom it signs in, must not be there for the next to
@@ -90,7 +92,7 @@ Feature: A reader who is signed in can change their password
       And the new password "staple battery horse correct" is typed
       And the new password is typed again as "staple battery horse correct"
       When the dialog is submitted
-      Then "staple battery horse correct" is the password of the account for "someone@example.com"
+      Then the account for the email address "someone@example.com" has the password "staple battery horse correct"
 
     Scenario: The old password no longer signs in
       Given a viewport 1200 pixels wide
@@ -101,7 +103,7 @@ Feature: A reader who is signed in can change their password
       And the new password "staple battery horse correct" is typed
       And the new password is typed again as "staple battery horse correct"
       When the dialog is submitted
-      Then "correct horse battery staple" is not the password of the account for "someone@example.com"
+      Then the account for the email address "someone@example.com" does not have the password "correct horse battery staple"
 
     Scenario: Passwords typed with spaces around them are kept without them
       Given a viewport 1200 pixels wide
@@ -112,7 +114,7 @@ Feature: A reader who is signed in can change their password
       And the new password "  staple battery horse correct  " is typed
       And the new password is typed again as "  staple battery horse correct  "
       When the dialog is submitted
-      Then "staple battery horse correct" is the password of the account for "someone@example.com"
+      Then the account for the email address "someone@example.com" has the password "staple battery horse correct"
 
     Scenario: The reader is taken to their profile
       Given a viewport 1200 pixels wide
@@ -185,7 +187,7 @@ Feature: A reader who is signed in can change their password
       And the new password "staple battery horse correct" is typed
       And the new password is typed again as "staple battery horse correct"
       When the dialog is submitted
-      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+      Then the account for the email address "someone@example.com" has the password "correct horse battery staple"
 
   Rule: A wrong password counts toward the sign in limits, and a held address is told to try later
 
@@ -233,7 +235,7 @@ Feature: A reader who is signed in can change their password
       And the new password "staple battery horse correct" is typed
       And the new password is typed again as "staple battery horse correct"
       When the dialog is submitted
-      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+      Then the account for the email address "someone@example.com" has the password "correct horse battery staple"
 
     Scenario: An IP address that has failed 30 times in an hour is told to try later
       Given a viewport 1200 pixels wide
@@ -265,18 +267,6 @@ Feature: A reader who is signed in can change their password
         | too short                    | too short                    | new password     | Password.TooShort            |
         | staple battery horse correct | staple battery horse corerct | confirm password | Password.ConfirmationDiffers |
 
-    Scenario: A new password known to have been breached is said beneath its field
-      Given a viewport 1200 pixels wide
-      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
-      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
-      And "staple battery horse correct" is known to have been breached
-      And the change password page is open
-      And the current password "correct horse battery staple" is typed
-      And the new password "staple battery horse correct" is typed
-      And the new password is typed again as "staple battery horse correct"
-      When the dialog is submitted
-      Then the new password field says the message for "Password.Breached"
-
     Scenario: A new password that breaks a rule changes nothing
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
@@ -286,7 +276,7 @@ Feature: A reader who is signed in can change their password
       And the new password "too short" is typed
       And the new password is typed again as "too short"
       When the dialog is submitted
-      Then "correct horse battery staple" is the password of the account for "someone@example.com"
+      Then the account for the email address "someone@example.com" has the password "correct horse battery staple"
 
     Scenario: No password is put back
       Given a viewport 1200 pixels wide

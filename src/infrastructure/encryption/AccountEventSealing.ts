@@ -30,6 +30,8 @@ const personal: Readonly<Record<string, readonly string[]>> = {
   "account-brought-over": ["name", "emailAddress"],
   "account-email-address-confirmed": ["name"],
   "account-name-changed": ["name"],
+  "account-email-address-change-asked": ["emailAddress"],
+  "account-email-address-changed": ["emailAddress"],
   "account-google-account-linked": ["subject"],
 };
 

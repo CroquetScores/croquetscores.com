@@ -4,6 +4,8 @@ import type { ReadOnlyDate } from "../../common/ReadOnlyDate.js";
 import { AccountBroughtOver } from "./events/AccountBroughtOver.js";
 import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
+import { EmailAddressChangeAsked } from "./events/EmailAddressChangeAsked.js";
+import { EmailAddressChanged } from "./events/EmailAddressChanged.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
 import { GoogleAccountLinked } from "./events/GoogleAccountLinked.js";
 import { NameChanged } from "./events/NameChanged.js";
@@ -57,6 +59,8 @@ export class Account extends AggregateRoot {
   #confirmed = false;
   #forgotten = false;
   #googleSubject: string | undefined;
+  // The moves asked for and not yet made, by the reference each link carries.
+  readonly #movesAsked = new Map<string, EmailAddress>();
   readonly #roles = new Set<Role>();
 
   private constructor(id: AccountId) {
@@ -167,6 +171,15 @@ export class Account extends AggregateRoot {
     return this.#forgotten;
   }
 
+  /**
+   * The address moving the account to was asked for as `reference`, or
+   * nothing where no such move is waiting: never asked for, or spent by a move
+   * made since.
+   */
+  moveAskedFor(reference: string): EmailAddress | undefined {
+    return this.#movesAsked.get(reference);
+  }
+
   /** The subject of the Google account linked to it, or nothing if none is. */
   get googleSubject(): string | undefined {
     return this.#googleSubject;
@@ -204,6 +217,47 @@ export class Account extends AggregateRoot {
     this.#refuseUntilConfirmed();
     if (name.equals(this.#name)) return;
     this.record(new NameChanged(name.toString(), this.id, at));
+  }
+
+  /**
+   * That moving the account to `address` was asked for, as `reference`, which
+   * the link sent there carries. It moves nothing. An account not yet
+   * confirmed has an address nobody has shown is theirs, and is not moved from
+   * it before they have.
+   */
+  askToChangeEmailAddress(
+    address: EmailAddress,
+    reference: string,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+    this.record(
+      new EmailAddressChangeAsked(address.toString(), reference, this.id, at),
+    );
+  }
+
+  /**
+   * That the account is now at `address`, whose keyed hash is
+   * `emailAddressHash`. The address it has already, however it is written,
+   * records nothing. Every move asked for before it is spent by it.
+   */
+  changeEmailAddress(
+    address: EmailAddress,
+    emailAddressHash: string,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+    if (address.equals(this.#emailAddress)) return;
+    this.record(
+      new EmailAddressChanged(
+        address.toString(),
+        emailAddressHash,
+        this.id,
+        at,
+      ),
+    );
   }
 
   /**
@@ -309,6 +363,14 @@ export class Account extends AggregateRoot {
       this.#passwordHash = event.passwordHash;
       this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
+    } else if (event instanceof EmailAddressChangeAsked) {
+      this.#movesAsked.set(
+        event.reference,
+        EmailAddress.from(event.emailAddress),
+      );
+    } else if (event instanceof EmailAddressChanged) {
+      this.#emailAddress = EmailAddress.from(event.emailAddress);
+      this.#movesAsked.clear();
     } else if (event instanceof NameChanged) {
       this.#name = PersonName.from(event.name);
     } else if (event instanceof PasswordSet) {

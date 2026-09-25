@@ -10,6 +10,13 @@ Feature: Moving an account to another email address
   an account is registered: the account does not hold the key it is made
   with.
 
+  A move is asked for before it is made, and the asking is recorded too: an
+  event holding the address asked for, kept as the account's other addresses
+  are, and the reference the link sent there carries, so that the link names
+  its asking without the address being written into it. Asking moves nothing.
+  A move spends every asking made before it, so that no link still sitting in
+  an inbox can move the account again.
+
   Moving changes the address and nothing else. The account keeps its name, its
   password, its roles and any Google account linked to it, because the account
   is who it was, reached somewhere else.
@@ -27,6 +34,53 @@ Feature: Moving an account to another email address
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-19T10:00:00Z"
+
+  Rule: Asking to move records the address asked for, and moves nothing
+
+    Scenario: Asking records it
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And the account is rebuilt from the stream
+      When moving the account to "sam@example.org" is asked for, as "asking-1"
+      Then it has recorded 1 event
+      And the first thing it recorded is a move being asked for
+
+    Scenario: The address asked for is known by its asking
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And moving it to "sam@example.org" was asked for, as "asking-1"
+      When the account is rebuilt from the stream
+      Then the move asked for as "asking-1" is to "sam@example.org"
+
+    Scenario: Asking moves nothing
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And moving it to "sam@example.org" was asked for, as "asking-1"
+      When the account is rebuilt from the stream
+      Then the account is reached at "someone@example.com"
+
+    Scenario: A move spends every asking made before it
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And moving it to "sam@example.org" was asked for, as "asking-1"
+      And moving it to "samantha@example.org" was asked for, as "asking-2"
+      And it was moved to "samantha@example.org"
+      When the account is rebuilt from the stream
+      Then no move is asked for as "asking-1"
+
+    Scenario: Asking to move an account that is not confirmed is refused
+      Given a stream where an account was registered at "someone@example.com"
+      And the account is rebuilt from the stream
+      When moving the account to "sam@example.org" is asked for, as "asking-1"
+      Then it is refused with "Account.NotConfirmed"
+
+    Scenario: Asking to move a forgotten account is refused
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And it was forgotten
+      And the account is rebuilt from the stream
+      When moving the account to "sam@example.org" is asked for, as "asking-1"
+      Then it is refused with "Account.Forgotten"
 
   Rule: A new address is recorded, and is where the account is
 

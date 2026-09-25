@@ -66,7 +66,7 @@ Feature: Changing a password with the one the account has now
     Scenario: The account keeps a hash, and not the password
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       When the reader signed in to the account for "someone@example.com" changes its password from "correct horse battery staple" to "staple battery horse correct"
-      Then nothing kept for the account contains "staple battery horse correct"
+      Then nothing kept for the account for "someone@example.com" contains "staple battery horse correct"
 
     Scenario: Passwords typed with spaces around them are taken without them
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"

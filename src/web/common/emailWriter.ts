@@ -76,6 +76,10 @@ const kinds: readonly string[] = [
   "Email.RegisterInstead",
   "Email.ConfirmForgetting",
   "Email.RegistrationsSuspended",
+  "Email.PasswordChanged",
+  "Email.ConfirmNewEmailAddress",
+  "Email.AlreadyHasAnAccount",
+  "Email.EmailAddressChanged",
 ];
 
 // The language an email was queued in, as the site offers it: that language, or

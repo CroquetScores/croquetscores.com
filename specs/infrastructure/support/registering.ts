@@ -40,6 +40,19 @@ import type {
 } from "../../../src/application/operations/accounts/AccountProfile.js";
 import { AccountProfileHandler } from "../../../src/application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
+import type { ChangePassword } from "../../../src/application/operations/accounts/ChangePassword.js";
+import { ChangePasswordHandler } from "../../../src/application/operations/accounts/ChangePasswordHandler.js";
+import type { AskToChangeEmailAddress } from "../../../src/application/operations/accounts/AskToChangeEmailAddress.js";
+import { AskToChangeEmailAddressHandler } from "../../../src/application/operations/accounts/AskToChangeEmailAddressHandler.js";
+import { AskToChangeEmailAddressValidator } from "../../../src/application/operations/accounts/AskToChangeEmailAddressValidator.js";
+import type { ChangeEmailAddress } from "../../../src/application/operations/accounts/ChangeEmailAddress.js";
+import { ChangeEmailAddressHandler } from "../../../src/application/operations/accounts/ChangeEmailAddressHandler.js";
+import type {
+  MovingLinkWorth,
+  WhatAMovingLinkIsWorth,
+} from "../../../src/application/operations/accounts/WhatAMovingLinkIsWorth.js";
+import { WhatAMovingLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatAMovingLinkIsWorthHandler.js";
+import { ChangePasswordValidator } from "../../../src/application/operations/accounts/ChangePasswordValidator.js";
 import { ChangeNameValidator } from "../../../src/application/operations/accounts/ChangeNameValidator.js";
 import type { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
@@ -299,6 +312,24 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(repository));
   mediator.handleQuery(new AccountProfileHandler(repository));
+  validation.register(new AskToChangeEmailAddressValidator());
+  mediator.handleCommand(
+    new AskToChangeEmailAddressHandler(
+      repository,
+      accounts.readModel,
+      hasher,
+      queue,
+      links,
+    ),
+  );
+  mediator.handleQuery(new WhatAMovingLinkIsWorthHandler(repository, links));
+  mediator.handleCommand(
+    new ChangeEmailAddressHandler(repository, accounts.hasher, queue, links),
+  );
+  validation.register(new ChangePasswordValidator());
+  mediator.handleCommand(
+    new ChangePasswordHandler(repository, hasher, queue, unitOfWork, breached),
+  );
   validation.register(new SetNewPasswordValidator());
   mediator.handleCommand(
     new SetNewPasswordHandler(
@@ -456,6 +487,28 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     async profile(query: AccountProfile): Promise<Profile | undefined> {
       await settle();
       return mediator.query(query);
+    },
+
+    async askToMove(command: AskToChangeEmailAddress): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    async worthOfMovingLink(
+      query: WhatAMovingLinkIsWorth,
+    ): Promise<MovingLinkWorth> {
+      await settle();
+      return mediator.query(query);
+    },
+
+    async moveWithLink(command: ChangeEmailAddress): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
+    },
+
+    async changePassword(command: ChangePassword): Promise<AccountId> {
+      await settle();
+      return mediator.send(command);
     },
 
     async changeName(command: ChangeName): Promise<AccountId> {
@@ -682,6 +735,27 @@ Given("the application's forgetting of accounts", function (this: SpecWorld) {
 Given("the application's changing of names", function (this: SpecWorld) {
   standUpFor(this);
 });
+
+// The same mediator over the same accounts and the same queue, said in its own
+// words because a scenario about moving to another address is not about
+// registering.
+Given(
+  "the application's changing of email addresses",
+  function (this: SpecWorld) {
+    standUpFor(this);
+  },
+);
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about changing a password is not about registering. The breached
+// password check it asks is stood up here, as confirming's is.
+Given(
+  "the application's changing of passwords",
+  async function (this: SpecWorld) {
+    standUpFor(this);
+    await aFakeOfHaveIBeenPwned(this);
+  },
+);
 
 // The same mediator over the same accounts, said in its own words because a
 // scenario about what an account shows is not about registering.

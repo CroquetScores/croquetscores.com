@@ -87,6 +87,18 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       Then nothing kept of the account's events contains "someone@example.com"
 
+    Scenario: The account's events do not hold an address moving it was asked to
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And moving the account to "sam@example.org" is asked for, as "asking-1"
+      Then nothing kept of the account's events contains "sam@example.org"
+
+    Scenario: The account's events do not hold an address it was moved to
+      When an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account is moved to "sam@example.org" with the email address hash "hash-of-sam"
+      Then nothing kept of the account's events contains "sam@example.org"
+
     Scenario: The account's events do not hold the Google account linked to it
       When an account is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
@@ -126,6 +138,13 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       When the account is read back
       Then the account is reached at "Someone@Example.com"
+
+    Scenario: An address it was moved to reads back as it was given
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account is moved to "Sam@Example.org" with the email address hash "hash-of-sam"
+      When the account is read back
+      Then the account is reached at "Sam@Example.org"
 
     Scenario: A Google account reads back as it was linked
       Given an account is registered at "someone@example.com"
