@@ -18,18 +18,16 @@ Feature: Signing in with Google
   new password asks of them. So an account at that address is linked to the
   Google account and signed in to, keeping the name and the password it had.
   An account at that address not yet confirmed is confirmed by it, called
-  what Google calls the reader. An address Google has not verified proves
+  what Google calls the reader, and left with no password. An address Google has not verified proves
   nothing, and is refused before anything is looked up. An account already
   linked to another Google account is refused rather than linked again or
   taken over (`linkGoogleAccount.feature`).
 
   An address with no account gets one, confirmed, called what Google calls
-  the reader, and linked. It is given a password of 50 characters made at
-  random and told to nobody, since an account has a password and nobody
-  should be able to guess this one; a reader who wants to sign in without
-  Google sets their own by the way back in (`forgotPassword.feature`). An
-  account that has been forgotten is not there to be found, so its address
-  gets a new account, as registering it again would.
+  the reader, and linked, with no password. The reader signs in with Google,
+  and one who wants to sign in with a password as well sets one by the way
+  back in (`forgotPassword.feature`). An account that has been forgotten is not there to
+  be found, so its address gets a new account, as registering it again would.
 
   An account is called something, and a reader who registers with Google is
   called what Google calls them. Google does not always say, and where it
@@ -132,6 +130,15 @@ Feature: Signing in with Google
       And Google calls the reader "Sam Someone"
       When signing in with Google is sent
       Then the account for "someone@example.com" is confirmed
+
+    Scenario: An account not yet confirmed is left with no password
+      Given "someone@example.com" has an account, not confirmed
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      When signing in with Google is sent
+      Then the account for "someone@example.com" has no password
 
     Scenario: An account not yet confirmed is called what Google calls the reader
       Given "someone@example.com" has an account, not confirmed
@@ -280,26 +287,13 @@ Feature: Signing in with Google
       When signing in with Google is sent
       Then the account for "someone@example.com" is linked to the Google account "google-subject-1"
 
-    Scenario: The new account is given a password of 50 characters
+    Scenario: The new account has no password
       Given Google knows the reader as "google-subject-1"
       And Google gives the email address "someone@example.com"
       And Google has verified the email address
       And Google calls the reader "Sam Someone"
       When signing in with Google is sent
-      Then the password the new account was given is 50 characters long
-
-    Scenario: Two new accounts are given different passwords
-      Given Google knows the reader as "google-subject-1"
-      And Google gives the email address "someone@example.com"
-      And Google has verified the email address
-      And Google calls the reader "Sam Someone"
-      And signing in with Google has been sent
-      And Google knows the reader as "google-subject-2"
-      And Google gives the email address "somebody@example.com"
-      And Google has verified the email address
-      And Google calls the reader "Sasha Somebody"
-      When signing in with Google is sent
-      Then the two new accounts were given different passwords
+      Then the account for "someone@example.com" has no password
 
     Scenario: Nothing is emailed about the new account
       Given Google knows the reader as "google-subject-1"

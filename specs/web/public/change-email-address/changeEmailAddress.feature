@@ -45,6 +45,12 @@ Feature: A reader who is signed in can change their account's email address
   owner who did not move it finds out while they can still read mail for the
   account. The reader is taken to their profile, which shows the new address.
 
+  A reader whose account has no password, because they have only ever signed
+  in with Google, has none to give here. For them the page is not there:
+  opening it, or posting to it, is answered as a page that does not exist is,
+  and neither the menu nor the profile leads to it (`accountMenu.feature`,
+  `profile.feature`). They set a password by the forgot password page first.
+
   Only a reader who is signed in can ask; one who is not is sent to sign in
   first. None of it needs scripting.
 
@@ -73,6 +79,22 @@ Feature: A reader who is signed in can change their account's email address
         | what                 |
         | a new email address  |
         | the current password |
+
+  Rule: A reader whose account has no password finds no page there
+
+    Scenario: A reader whose account has no password is told the page is not found
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      When the change email address page is opened
+      Then the page is not found
+
+    Scenario: A reader whose account has no password is told the page is not found when posting to it
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      When the change email address page is posted to
+      Then the page is not found
 
   Rule: Asking emails a link to the new address, and changes nothing yet
 

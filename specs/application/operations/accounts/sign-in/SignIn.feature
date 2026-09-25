@@ -18,6 +18,12 @@ Feature: Signing in with an email address and a password
   account does. `Account.NotConfirmed` stays the account's own refusal, for
   whatever reaches it another way.
 
+  An account confirmed with no password, as signing in with Google leaves one
+  (`SignInWithGoogle.feature`), refuses every password alike too, with
+  `SignIn.Failed`. A password is checked against a hash for it all the same,
+  so that it takes as long as an account with a password does, and how long
+  signing in took does not say which accounts sign in only with Google.
+
   Signing in is recorded on the account, as an event of its own. And an
   account imported from the old site has its password hashed again today's way
   the first time it signs in, since that is the first time the password is to
@@ -72,6 +78,16 @@ Feature: Signing in with an email address and a password
       And the account for "someone@example.com" has been forgotten
       When signing in as "someone@example.com" with the password "correct horse battery staple" is sent
       Then it is refused with "SignIn.Failed"
+
+    Scenario: An account with no password is refused the same
+      Given "someone@example.com" has an account, confirmed, with no password
+      When signing in as "someone@example.com" with the password "correct horse battery staple" is sent
+      Then it is refused with "SignIn.Failed"
+
+    Scenario: A password is checked for an account with no password
+      Given "someone@example.com" has an account, confirmed, with no password
+      When signing in as "someone@example.com" with the password "correct horse battery staple" is sent
+      Then a password was checked against a hash
 
   Rule: An account imported from the old site is hashed again today's way when it signs in
 

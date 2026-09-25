@@ -25,11 +25,15 @@ Feature: A reader who is signed in can change their password
   IP address held by either limit is told to try again later, whatever was
   typed, and nothing is changed.
 
-  A reader who does not know the password they have now — one who registered
-  with Google, whose account was given a password nobody was told, or one who
-  has forgotten it — cannot change it here, so the page points them to the
-  forgot password page, where a password is set by a link sent to the account's
-  email address instead.
+  A reader whose account has no password, because they have only ever signed
+  in with Google, has none to give and none to change. For them the page is
+  not there: opening it, or posting to it, is answered as a page that does not
+  exist is, and nothing leads to it (`profile.feature`, `accountMenu.feature`). They set a
+  password by the forgot password page, where a password is set by a link sent
+  to the account's email address.
+
+  A reader who has forgotten the password they have now cannot change it here
+  either, so the page points them to the forgot password page too.
 
   Once changed, the password signs in and the old one does not. The reader
   stays signed in on the browser they changed it from, and every other browser
@@ -71,6 +75,22 @@ Feature: A reader who is signed in can change their password
         | the current password   |
         | a new password         |
         | the new password again |
+
+  Rule: A reader whose account has no password finds no page there
+
+    Scenario: A reader whose account has no password is told the page is not found
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      When the change password page is opened
+      Then the page is not found
+
+    Scenario: A reader whose account has no password is told the page is not found when posting to it
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      When the change password page is posted to
+      Then the page is not found
 
   Rule: A reader who does not know their password is pointed to the forgot password page
 

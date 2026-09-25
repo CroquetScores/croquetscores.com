@@ -3,7 +3,9 @@ Feature: Confirming an account's email address
   Confirming is an event of its own, stamped with the moment it was asked for
   like every other, and says the name the account is called and the hash of
   the password it is signed in to with. The password is never part of it: only
-  its hash is. An account is confirmed once: confirming it again records
+  its hash is. An account confirmed by signing in with Google is confirmed
+  with no password at all (`SignInWithGoogle.feature`), and has none until
+  somebody sets one. An account is confirmed once: confirming it again records
   nothing and changes neither, so that a link followed twice leaves one event
   and not two, and a link left in an inbox is not a way to take over an
   account that has since been confirmed.
@@ -12,7 +14,7 @@ Feature: Confirming an account's email address
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-19T10:00:00Z"
 
-  Rule: Confirming gives an account its name and its password, once
+  Rule: Confirming gives an account its name, and its password if it has one, once
 
     Scenario: Confirming records that the email address was confirmed
       Given a stream where an account was registered at "someone@example.com"
@@ -38,6 +40,18 @@ Feature: Confirming an account's email address
       And the account is rebuilt from the stream
       When the account's email address is confirmed with the password hash "hash-of-a-password"
       Then the account's password hash is "hash-of-a-password"
+
+    Scenario: An account confirmed with no password is confirmed
+      Given a stream where an account was registered at "someone@example.com"
+      And the account is rebuilt from the stream
+      When the account's email address is confirmed with no password
+      Then the account is confirmed
+
+    Scenario: An account confirmed with no password has no password hash
+      Given a stream where an account was registered at "someone@example.com"
+      And the account is rebuilt from the stream
+      When the account's email address is confirmed with no password
+      Then the account has no password hash
 
     Scenario: What confirming recorded does not hold the password
       Given a stream where an account was registered at "someone@example.com"
@@ -83,6 +97,12 @@ Feature: Confirming an account's email address
       And its email address was confirmed with the password hash "hash-of-a-password"
       When the account is rebuilt from the stream
       Then the account's password hash is "hash-of-a-password"
+
+    Scenario: An account rebuilt from its confirming with no password has no password hash
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed with no password
+      When the account is rebuilt from the stream
+      Then the account has no password hash
 
   Rule: A forgotten account cannot be confirmed
 
