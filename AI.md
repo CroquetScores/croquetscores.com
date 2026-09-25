@@ -72,7 +72,7 @@ A commit message says what changed and why it changed, in paragraphs. What went 
 
 ## 5. The layers hold
 
-Dependencies point inwards — web and infrastructure onto application, application onto domain, domain onto nothing. `src/web/server.ts` is the only file outside `src/infrastructure/` that names a concrete implementation. `specs/support/` is loaded by every spec in the repository, so it may name nothing from infrastructure or web.
+Dependencies point inwards — web and infrastructure onto application, application onto domain, domain onto nothing. `src/web/server.ts` is the only file outside `src/infrastructure/` that names a concrete implementation, apart from the import from the old sites under `src/import-ravendb/`, which is put together from the layers as the site is and which nothing in them may name. `specs/support/` is loaded by every spec in the repository, so it may name nothing from infrastructure or web.
 
 ESLint enforces this, so breaking it fails the build rather than being noticed in review. If a rule is in the way, the thing to question is the design, not the rule.
 
