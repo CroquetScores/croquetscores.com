@@ -31,6 +31,7 @@ export class AccountProfileHandler extends QueryHandler<
     return {
       name: name.toString(),
       emailAddress: account.emailAddress.toString(),
+      hasPassword: account.passwordHash !== undefined,
     };
   }
 }

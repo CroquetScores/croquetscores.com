@@ -6,6 +6,8 @@
 // let whoever picked it up move the account to an address of their own. It
 // sends a link to the new address and says to check their email there, and
 // says the same whoever the address belongs to.
+// A reader whose account has no password, having only ever signed in with
+// Google, has none to give, and finds no page here at all, opened or posted to.
 //
 // The confirming is the link, which opens this page again. Following it moves
 // nothing by itself: it says where the account will move to, with a button
@@ -38,7 +40,7 @@ import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
-import { readerOf } from "../common/reader.js";
+import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { ipAddressOf } from "../common/trustedProxy.js";
@@ -119,6 +121,7 @@ export const registerChangeEmailAddressPage = (
           title,
           theme: themeOf(request),
           signedIn: true,
+          hasPassword: hasPassword(request),
           speaking: speakingOf(request),
           siteName: siteNameOf(request),
           tryWebsite: websiteOf(request).isTry,
@@ -159,6 +162,7 @@ export const registerChangeEmailAddressPage = (
   server.get(changeEmailAddressPath, async (request, reply) => {
     const reader = readerOf(request);
     if (reader === undefined) return toSignIn(request, reply);
+    if (!hasPassword(request)) return reply.callNotFound();
 
     const speaking = speakingOf(request);
     const carried = carriedIn(request);
@@ -185,6 +189,7 @@ export const registerChangeEmailAddressPage = (
   server.post(changeEmailAddressPath, async (request, reply) => {
     const reader = readerOf(request);
     if (reader === undefined) return toSignIn(request, reply);
+    if (!hasPassword(request)) return reply.callNotFound();
     const speaking = speakingOf(request);
 
     if (carriedIn(request) === undefined) {

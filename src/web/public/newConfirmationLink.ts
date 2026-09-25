@@ -26,7 +26,7 @@ import { escape } from "../common/escape.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
 import { signInPath } from "./signIn.js";
 
@@ -119,6 +119,7 @@ export const registerNewConfirmationLinkPage = (
           title: said.title,
           theme: themeOf(request),
           signedIn: signedIn(request),
+          hasPassword: hasPassword(request),
           speaking,
           siteName: siteNameOf(request),
           tryWebsite: websiteOf(request).isTry,

@@ -53,3 +53,7 @@ Then(
     );
   },
 );
+
+Then("the account's password was never set", function (this: SpecWorld) {
+  assert.equal(accountOf(this).passwordSetAt, undefined);
+});

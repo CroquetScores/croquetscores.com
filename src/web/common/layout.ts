@@ -40,6 +40,10 @@ export interface Shell {
       show a reader who is signed in the ways in instead of their own pages, and
       nothing would say so. */
   readonly signedIn: boolean;
+  /** Whether the account the reader is signed in to has a password, which
+      decides whether the account menu offers the pages that ask for it. Asked
+      of every page for the reason signedIn is. */
+  readonly hasPassword: boolean;
   /** The language the page is in, and the others it could be in. */
   readonly speaking: Speaking;
   /** What the site is called, which is the site's own name and in no

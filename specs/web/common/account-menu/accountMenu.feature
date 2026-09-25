@@ -6,7 +6,11 @@ Feature: The way to a reader's account is the last thing in the header
   their account. A reader who is not signed in is offered the ways in —
   registering, signing in, and asking for a way back in when they have
   forgotten their password. A reader who is signed in is offered their own
-  pages, and the way out.
+  pages, and the way out. Changing the password and changing the email address
+  each ask for the password the account has now, so a reader whose account has
+  none, because they have only ever signed in with Google, is offered neither
+  (`changePassword.feature`, `changeEmailAddress.feature`). They are offered
+  setting a password instead, and nobody else is (`setPassword.feature`).
 
   The menu opens with no scripting, as every public page works with none: it is
   a summary and the details under it, which a browser opens and closes by
@@ -105,6 +109,7 @@ Feature: The way to a reader's account is the last thing in the header
         | Change Password      |
         | Change Email Address |
         | Change Name          |
+        | Set Password         |
 
   Rule: A reader who is signed in is offered their own pages
 
@@ -122,6 +127,35 @@ Feature: The way to a reader's account is the last thing in the header
         | Change Password      | /account/change-password      |
         | Change Email Address | /account/change-email-address |
         | Change Name          | /account/change-name          |
+
+    Scenario Outline: The menu offers an account with no password nothing that asks for one
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the account menu is pressed
+      Then the menu does not offer "<item>"
+
+      Examples:
+        | item                 |
+        | Change Password      |
+        | Change Email Address |
+
+    Scenario: The menu offers an account with no password setting one
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the account menu is pressed
+      Then the menu offers "Set Password" at "/account/set-password"
+
+    Scenario: The menu does not offer an account with a password setting one
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", confirmed
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the account menu is pressed
+      Then the menu does not offer "Set Password"
 
     Scenario Outline: The menu offers no way in to a reader who is in
       Given a viewport 1200 pixels wide

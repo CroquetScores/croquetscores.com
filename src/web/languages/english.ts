@@ -46,6 +46,7 @@ export const english: Language = {
     "account.changePassword": "Change Password",
     "account.changeEmailAddress": "Change Email Address",
     "account.changeName": "Change Name",
+    "account.setPassword": "Set Password",
 
     "register.title": "Register",
     "register.emailAddress": "Email address",
@@ -182,6 +183,15 @@ export const english: Language = {
     "changeName.title": "Change name",
     "changeName.name": "Name",
     "changeName.submit": "Change name",
+
+    "setPassword.title": "Set a password",
+    "setPassword.explanation":
+      "Your account has no password: you sign in with Google. To sign in with a password as well, we will email a link to set one to {emailAddress}.",
+    "setPassword.submit": "Email me a link",
+    "setPassword.sent.title": "Check your email",
+    "setPassword.sent.explanation":
+      "We have emailed you a link to set a password. It works for an hour.",
+    "setPassword.profile": "Back to your profile",
 
     "changePassword.title": "Change password",
     "changePassword.currentPassword": "Current password",
@@ -564,6 +574,45 @@ export const english: Language = {
 
 <p>
     If you didn't request a password reset, you can safely ignore this email.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.SetPassword.subject": "Set a password for {siteName}",
+    "Email.SetPassword.body": `
+<p>Hi,</p>
+
+<p>
+    Your <strong>{siteName}</strong> account has no password: you sign in with Google.<br />
+    You asked to set one, so that you can sign in with your email address and a password as well.
+    You can set it by clicking the button below:
+</p>
+
+<p>
+    <a href="{link}" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Set Password
+    </a>
+</p>
+
+<p>
+    If the button doesn't work, you can also set your password by opening this link in your browser:<br />
+    <a href="{link}">{link}</a>
+</p>
+
+<p>
+    The link works for an hour. If you didn't ask to set a password, you can safely ignore this email.
 </p>
 
 <p>

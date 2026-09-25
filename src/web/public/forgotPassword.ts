@@ -25,7 +25,7 @@ import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
 import { ipAddressOf } from "../common/trustedProxy.js";
 
@@ -68,7 +68,9 @@ export const registerForgotPasswordPage = (
     body: string,
     speaking: Speaking,
     code = 200,
-    frame: "bare" | undefined = "bare",
+    // The dialog brings its own frame; what is said once it is sent is read
+    // on the panel.
+    frame: "bare" | "panel" = "bare",
   ): FastifyReply =>
     reply
       .code(code)
@@ -81,12 +83,13 @@ export const registerForgotPasswordPage = (
           title: speaking.say("forgotPassword.title"),
           theme: themeOf(request),
           signedIn: signedIn(request),
+          hasPassword: hasPassword(request),
           speaking,
           siteName: siteNameOf(request),
           tryWebsite: websiteOf(request).isTry,
           path: forgotPasswordPath,
           currentPath: forgotPasswordPath,
-          ...(frame === undefined ? {} : { frame }),
+          frame,
           body,
         }),
       );
@@ -165,7 +168,7 @@ export const registerForgotPasswordPage = (
           <p><a href="/">${escape(say("forgotPassword.home", { siteName: siteNameOf(request) }))}</a></p>`,
         speaking,
         200,
-        undefined,
+        "panel",
       );
     },
   );

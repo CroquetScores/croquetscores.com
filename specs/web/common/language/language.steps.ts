@@ -137,6 +137,17 @@ Then(
   },
 );
 
+// The account's address is filled into the words that say where a link will
+// go, so it is read inside their marks with them, as any word filled in is;
+// the step says it is left out, since that is what the scenario is about.
+Then(
+  "every word in the dialog but the account's own is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, "section.dialog");
+    assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+  },
+);
+
 // The name is in the field, where it is a value rather than words on the page,
 // so reading the dialog's words for marks leaves it out already; the step says
 // so, since what the scenario is about is that it is left out.

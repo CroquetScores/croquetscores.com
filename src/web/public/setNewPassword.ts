@@ -31,7 +31,7 @@ import { refusedForm, typedFrom } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 import { endSession } from "../common/session.js";
 import { reportUnreachable } from "../common/unreachableServices.js";
 import { themeOf } from "../common/theme.js";
@@ -125,6 +125,7 @@ export const registerSetNewPasswordPage = (
       // Who the reader was is read as the request arrives, and a reader whose
       // sessions this request ended is not signed in to anything any more.
       signedIn: !signedOut && signedIn(request),
+      hasPassword: hasPassword(request),
       speaking: speakingOf(request),
       siteName: siteNameOf(request),
       tryWebsite: websiteOf(request).isTry,

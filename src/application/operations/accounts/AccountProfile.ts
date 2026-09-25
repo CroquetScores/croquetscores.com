@@ -4,10 +4,15 @@ import { ValidationError } from "../../../domain/common/validation/ValidationErr
 /** Every reason asking for a profile can be refused where it is asked. */
 export type AccountProfileRefusedCode = "AccountProfile.NotText";
 
-/** What an account is called, and the email address it is reached at. */
+/**
+ * What an account is called, the email address it is reached at, and whether
+ * it has a password: one made by signing in with Google has none, and nothing
+ * that asks for the password it has now is offered to it.
+ */
 export interface Profile {
   readonly name: string;
   readonly emailAddress: string;
+  readonly hasPassword: boolean;
 }
 
 /**

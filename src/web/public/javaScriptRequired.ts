@@ -10,7 +10,7 @@ import { siteNameOf, websiteOf } from "../common/site.js";
 import { escape } from "../common/escape.js";
 import { render } from "../common/layout.js";
 import { themeOf } from "../common/theme.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 
 export const javaScriptRequiredPath = "/account/java-script-required";
 
@@ -27,6 +27,7 @@ export const registerJavaScriptRequiredPage = (
       title: say("javaScriptRequired.title"),
       theme: themeOf(request),
       signedIn: signedIn(request),
+      hasPassword: hasPassword(request),
       speaking,
       siteName: siteNameOf(request),
       tryWebsite: websiteOf(request).isTry,

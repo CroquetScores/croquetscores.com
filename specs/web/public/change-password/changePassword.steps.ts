@@ -5,6 +5,10 @@ import { strict as assert } from "node:assert";
 
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { SpecWorld } from "../../../support/world.js";
+import {
+  openAndKeepTheAnswer,
+  postAndKeepTheAnswer,
+} from "../../support/answered.js";
 import { applicationFor } from "../../support/browser.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
@@ -18,7 +22,7 @@ const words = (key: string): string => {
 };
 
 const open = async (world: SpecWorld): Promise<void> => {
-  await world.browserPage.goto(`${world.baseUrl!}${changePassword}`);
+  await openAndKeepTheAnswer(world, changePassword);
 };
 
 Given("the change password page is open", async function (this: SpecWorld) {
@@ -27,6 +31,16 @@ Given("the change password page is open", async function (this: SpecWorld) {
 
 When("the change password page is opened", async function (this: SpecWorld) {
   await open(this);
+});
+
+// Whatever it is posted, since what is posted is not what is being asked
+// about: only whether there is a page there to take it.
+When("the change password page is posted to", async function (this: SpecWorld) {
+  await postAndKeepTheAnswer(this, changePassword, {
+    currentPassword: "correct horse battery staple",
+    password: "staple battery horse correct",
+    passwordConfirmation: "staple battery horse correct",
+  });
 });
 
 // Scripting is off unless a step asks for it back, so this is the same

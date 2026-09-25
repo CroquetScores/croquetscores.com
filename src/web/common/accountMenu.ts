@@ -1,6 +1,8 @@
 // The last thing in the header: a person, which opens on what a reader can do
 // with their account. A reader who is not signed in is offered the ways in; one
-// who is signed in is offered their own pages and the way out.
+// who is signed in is offered their own pages and the way out: the ones that
+// ask for the password the account has now only when it has one, and setting a
+// password only when it has none.
 //
 // It is a summary and the details under it, as the primary navigation's menu
 // is, so that it opens with no scripting: every public page works without it,
@@ -17,6 +19,8 @@ import type { Speaking } from "./language.js";
 interface MenuItem {
   readonly href: string;
   readonly words: string;
+  /** Which accounts it is offered to, where it is not offered to all. */
+  readonly for?: "with a password" | "without a password";
 }
 
 const waysIn: readonly MenuItem[] = [
@@ -27,13 +31,31 @@ const waysIn: readonly MenuItem[] = [
 
 const theAccounts: readonly MenuItem[] = [
   { href: "/account/profile", words: "account.profile" },
-  { href: "/account/change-password", words: "account.changePassword" },
+  {
+    href: "/account/change-password",
+    words: "account.changePassword",
+    for: "with a password",
+  },
+  {
+    href: "/account/set-password",
+    words: "account.setPassword",
+    for: "without a password",
+  },
   {
     href: "/account/change-email-address",
     words: "account.changeEmailAddress",
+    for: "with a password",
   },
   { href: "/account/change-name", words: "account.changeName" },
 ];
+
+/** Whether `item` is offered to an account that has a password or not. */
+export const offeredTo = (
+  item: { readonly for?: "with a password" | "without a password" },
+  hasPassword: boolean,
+): boolean =>
+  item.for === undefined ||
+  item.for === (hasPassword ? "with a password" : "without a password");
 
 /** Where signing out is asked for. */
 export const signOutPath = "/account/sign-out";
@@ -43,6 +65,8 @@ export interface AccountMenu {
   readonly speaking: Speaking;
   /** Whether the reader is signed in, which decides what it opens on. */
   readonly signedIn: boolean;
+  /** Whether the account signed in to has a password. */
+  readonly hasPassword: boolean;
   /** Where in the menu the reader is, if anywhere. */
   readonly currentPath?: string | undefined;
 }
@@ -81,12 +105,18 @@ const item = (
 export const accountMenu = ({
   speaking,
   signedIn,
+  hasPassword,
   currentPath,
 }: AccountMenu): string => {
   const named = escape(speaking.say("account.menu"));
   const shown = (each: MenuItem) => item(each, speaking, currentPath);
   const items = signedIn
-    ? [signOut(speaking), ...theAccounts.map(shown)]
+    ? [
+        signOut(speaking),
+        ...theAccounts
+          .filter((each) => offeredTo(each, hasPassword))
+          .map(shown),
+      ]
     : waysIn.map(shown);
 
   return `        <details class="account-menu">

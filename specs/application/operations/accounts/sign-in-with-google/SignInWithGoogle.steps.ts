@@ -137,21 +137,3 @@ Then(
     assert.equal(account.forgotten, false);
   },
 );
-
-Then(
-  "the password the new account was given is {int} characters long",
-  function (this: SpecWorld, length: number) {
-    const hashed = registeringOf(this).passwordsHashed();
-    assert.equal(hashed.length, 1, `${hashed.length} passwords were hashed.`);
-    assert.equal([...(hashed[0] ?? "")].length, length);
-  },
-);
-
-Then(
-  "the two new accounts were given different passwords",
-  function (this: SpecWorld) {
-    const hashed = registeringOf(this).passwordsHashed();
-    assert.equal(hashed.length, 2, `${hashed.length} passwords were hashed.`);
-    assert.notEqual(hashed[0], hashed[1]);
-  },
-);

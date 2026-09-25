@@ -9,6 +9,11 @@ Feature: Setting a new password on an account
   moment it was set, which is when somebody last chose the password the
   account is signed in with.
 
+  An account confirmed with no password, as one confirmed by signing in with
+  Google is, is given one the same way: it has been confirmed, so somebody has
+  shown they read mail at the address, and until a password is set on it
+  nobody has chosen one.
+
   An account that has not been confirmed is refused with
   `Account.NotConfirmed`: it has no password to replace, and giving it one
   here would let somebody who never showed they read mail at the address have
@@ -61,6 +66,19 @@ Feature: Setting a new password on an account
       And its email address was confirmed as "Sam Someone" at "2026-09-19T10:30:00Z"
       When the account is rebuilt from the stream
       Then the account's password was set at "2026-09-19T10:30:00Z"
+
+    Scenario: A new password can be set on an account confirmed with no password
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed with no password
+      And the account is rebuilt from the stream
+      When a new password is set on the account
+      Then the account's password hash is the one it was set with
+
+    Scenario: An account confirmed with no password knows no moment its password was set
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed with no password
+      When the account is rebuilt from the stream
+      Then the account's password was never set
 
     Scenario: Setting a new password on an account that is not confirmed is refused
       Given a stream where an account was registered at "someone@example.com"

@@ -36,7 +36,7 @@ import { RequestInvalid } from "../../application/common/ValidationBehaviour.js"
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
 import { reportUnreachable } from "../common/unreachableServices.js";
 import { googlePath, refusalsFromGoogle, withGoogle } from "./googleOffer.js";
@@ -157,6 +157,7 @@ export const registerRegisterPage = (
       title: speaking.say("register.title"),
       theme: themeOf(request),
       signedIn: signedIn(request),
+      hasPassword: hasPassword(request),
       speaking,
       siteName: siteNameOf(request),
       tryWebsite: websiteOf(request).isTry,

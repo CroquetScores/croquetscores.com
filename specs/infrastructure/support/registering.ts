@@ -31,7 +31,9 @@ import { ConfirmEmailAddressHandler } from "../../../src/application/operations/
 import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
 import { ResetPasswordHandler } from "../../../src/application/operations/accounts/ResetPasswordHandler.js";
 import { AskToForgetAccountHandler } from "../../../src/application/operations/accounts/AskToForgetAccountHandler.js";
+import { AskToSetPasswordHandler } from "../../../src/application/operations/accounts/AskToSetPasswordHandler.js";
 import type { AskToForgetAccount } from "../../../src/application/operations/accounts/AskToForgetAccount.js";
+import type { AskToSetPassword } from "../../../src/application/operations/accounts/AskToSetPassword.js";
 import { ForgetAccountHandler } from "../../../src/application/operations/accounts/ForgetAccountHandler.js";
 import type { ChangeName } from "../../../src/application/operations/accounts/ChangeName.js";
 import type {
@@ -69,7 +71,6 @@ import {
   SignInWithGoogleHandler,
 } from "../../../src/application/operations/accounts/SignInWithGoogleHandler.js";
 import type { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
-import { CryptoRandomPasswords } from "../../../src/infrastructure/identity/CryptoRandomPasswords.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
 import type { SendConfirmationLinkAgain } from "../../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import { WhatASetNewPasswordLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
@@ -141,14 +142,7 @@ class QuickHasher implements PasswordHasher {
   /** How many times a password has been checked against a hash, or against none. */
   checks = 0;
 
-  /**
-   * Every password hashed, so that a scenario can ask about a password nobody
-   * was told, which reaches nothing else before it is hashed.
-   */
-  readonly hashed: string[] = [];
-
   hash(password: string): Promise<string> {
-    this.hashed.push(password);
     return Promise.resolve(digestOf(password));
   }
 
@@ -272,16 +266,12 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       return accounts.byGoogleAccount.find(subject);
     },
   };
-  // The random passwords the site makes, since what is asked of them is only
-  // what the site's are: how long, and whether two are the same.
   mediator.handleCommand(
     new SignInWithGoogleHandler(
       repository,
       accounts.readModel,
       byGoogleAccount,
       accounts.hasher,
-      hasher,
-      new CryptoRandomPasswords(),
     ),
   );
   mediator.handleCommand(
@@ -307,6 +297,15 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   );
   mediator.handleCommand(
     new AskToForgetAccountHandler(repository, queue, links),
+  );
+  mediator.handleCommand(
+    new AskToSetPasswordHandler(
+      repository,
+      queue,
+      written,
+      new PostgresHandledRequests(unitOfWork),
+      links,
+    ),
   );
   mediator.handleCommand(new ForgetAccountHandler(repository, links));
   validation.register(new ChangeNameValidator());
@@ -428,7 +427,11 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       // scenario named is one that signing in can check.
       account.confirm(
         PersonName.from(as.name ?? CONFIRMED_AS),
-        as.password === undefined ? CONFIRMED_WITH : digestOf(as.password),
+        as.noPassword === true
+          ? undefined
+          : as.password === undefined
+            ? CONFIRMED_WITH
+            : digestOf(as.password),
         now(),
       );
     }
@@ -479,7 +482,10 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await world.keepAccount?.(account);
     },
 
-    passwordsHashed: () => hasher.hashed,
+    async askToSetPassword(command: AskToSetPassword): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
 
     async askToForget(command: AskToForgetAccount): Promise<void> {
       await settle();
@@ -780,6 +786,17 @@ Given(
 Given("the application's asking for a way back in", function (this: SpecWorld) {
   standUpFor(this);
 });
+
+// The same again, for a scenario about asking for a link to set a password;
+// with the breached password check confirming starts, since those scenarios
+// go on to set the password with the link.
+Given(
+  "the application's asking to set a password",
+  async function (this: SpecWorld) {
+    standUpFor(this);
+    await aFakeOfHaveIBeenPwned(this);
+  },
+);
 
 const standUpFor = (world: SpecWorld): void => {
   const registering = standUpRegistering(world);

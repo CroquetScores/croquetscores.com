@@ -96,6 +96,7 @@ Feature: The site's emails are written in their reader's language
         | Email.ConfirmAddressAgain    |
         | Email.AlreadyRegistered      |
         | Email.SetNewPassword         |
+        | Email.SetPassword            |
         | Email.RegisterInstead        |
         | Email.ConfirmForgetting      |
         | Email.RegistrationsSuspended |

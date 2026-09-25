@@ -8,7 +8,10 @@ Feature: What an account is called, and where it is reached
   the web layer's to say, from the session, and it changes nothing.
 
   It answers with the name and the address as the account has them now, after
-  every change made to them. An account with nothing to show answers with
+  every change made to them, and with whether the account has a password. An
+  account made by signing in with Google has none (`SignInWithGoogle.feature`),
+  and the pages that ask for the password the account has now are neither
+  offered to it nor there for it (`profile.feature`, `accountMenu.feature`). An account with nothing to show answers with
   nothing: one that has been forgotten, whose name and address are gone, and
   one that has never been confirmed, which has no name yet and cannot be signed
   in to. The pages treat an answer of nothing as nobody signed in.
@@ -37,6 +40,18 @@ Feature: What an account is called, and where it is reached
       And the reader signed in to the account for "someone@example.com" changes its name to "Samantha Someone"
       When the profile of the account for "someone@example.com" is asked for
       Then the profile says the name "Samantha Someone"
+
+  Rule: The profile says whether the account has a password
+
+    Scenario: The profile says an account with a password has one
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      When the profile of the account for "someone@example.com" is asked for
+      Then the profile says the account has a password
+
+    Scenario: The profile says an account with no password has none
+      Given "someone@example.com" has an account, confirmed, with no password
+      When the profile of the account for "someone@example.com" is asked for
+      Then the profile says the account has no password
 
   Rule: An account with nothing to show is answered with nothing
 

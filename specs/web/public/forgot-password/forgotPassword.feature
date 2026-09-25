@@ -82,6 +82,12 @@ Feature: A reader who has forgotten their password is sent a way back in
       When the reader asks for a way back in for "nobody@example.com"
       Then the reader is told to check their email
 
+    Scenario: Being told to check their email is on the panel
+      Given a viewport 1200 pixels wide
+      And the forgot password page is open
+      When the reader asks for a way back in for "nobody@example.com"
+      Then the page is on the panel
+
   Rule: What is sent depends on the address
 
     Scenario: An address with an account is sent a link to set a new password

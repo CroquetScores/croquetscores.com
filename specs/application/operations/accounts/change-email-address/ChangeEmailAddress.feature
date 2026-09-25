@@ -12,6 +12,9 @@ Feature: Moving an account to another email address, asked for and then confirme
   an address of their own, and with it the way back in. It is checked as
   signing in checks it (`SignIn.feature`), before anything is sent, and one
   that is not the account's is refused with `ChangeEmailAddress.WrongPassword`.
+  So is every password given for an account that has none, because its reader
+  has only ever signed in with Google: they set one by the way back in first
+  (`SetNewPassword.feature`).
 
   The new address's rules are the command's own, and asked on the way in: the
   rules registering asks (`RegisterAccount.feature`). The address the account
@@ -158,6 +161,11 @@ Feature: Moving an account to another email address, asked for and then confirme
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "not the right password"
       Then nothing is queued to be sent
+
+    Scenario: Any password is refused for an account with no password
+      Given "someone@example.com" has an account, confirmed, with no password
+      When moving to "sam@example.org" is asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      Then it is refused with "ChangeEmailAddress.WrongPassword"
 
   Rule: The new address must break none of its own rules, and must not be the account's own
 

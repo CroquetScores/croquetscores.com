@@ -5,7 +5,8 @@ Feature: Changing a password with the one the account has now
   it has now and a new one, typed twice. It is asked for by the reader signed
   in, for the account they are signed in to: which account that is, is the web
   layer's to say, from the session. A reader who does not know the password
-  the account has now sets one by the way back in instead
+  the account has now, or whose account has none because they have only ever
+  signed in with Google, sets one by the way back in instead
   (`SetNewPassword.feature`).
 
   The new password's rules are the command's own, and asked on the way in, as
@@ -16,7 +17,8 @@ Feature: Changing a password with the one the account has now
 
   The password the account has now is checked before anything else is asked
   about the new one. One that is not the account's is refused with
-  `ChangePassword.WrongPassword`, and costs the breached password check nothing:
+  `ChangePassword.WrongPassword`, as is every password given for an account
+  that has none, and costs the breached password check nothing:
   a reader guessing at the password would otherwise have the site ask another
   site about every guess. How often a wrong one may be given is held to the
   limits signing in is held to, and is the page's to count, as it is for signing
@@ -122,6 +124,16 @@ Feature: Changing a password with the one the account has now
       Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       When the reader signed in to the account for "someone@example.com" changes its password from "not the right password" to "staple battery horse correct"
       Then nothing is queued to be sent
+
+    Scenario: Any password is refused for an account with no password
+      Given "someone@example.com" has an account, confirmed, with no password
+      When the reader signed in to the account for "someone@example.com" changes its password from "correct horse battery staple" to "staple battery horse correct"
+      Then it is refused with "ChangePassword.WrongPassword"
+
+    Scenario: An account with no password is left without one
+      Given "someone@example.com" has an account, confirmed, with no password
+      When the reader signed in to the account for "someone@example.com" changes its password from "correct horse battery staple" to "staple battery horse correct"
+      Then the account for "someone@example.com" has no password
 
   Rule: The new password must break none of its own rules
 

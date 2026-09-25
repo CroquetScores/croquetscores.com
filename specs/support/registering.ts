@@ -8,6 +8,7 @@ import type { SignIn } from "../../src/application/operations/accounts/SignIn.js
 import type { SignInWithGoogle } from "../../src/application/operations/accounts/SignInWithGoogle.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
+import type { AskToSetPassword } from "../../src/application/operations/accounts/AskToSetPassword.js";
 import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
 import type { ChangeName } from "../../src/application/operations/accounts/ChangeName.js";
 import type { ChangePassword } from "../../src/application/operations/accounts/ChangePassword.js";
@@ -74,11 +75,11 @@ export interface Registering {
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
 
-  /** Every password hashed, in the order it was hashed. */
-  passwordsHashed(): readonly string[];
-
   /** Asks for an account to be forgotten. Throws what the mediator throws. */
   askToForget(command: AskToForgetAccount): Promise<void>;
+
+  /** Asks for a link to set a password. Throws what the mediator throws. */
+  askToSetPassword(command: AskToSetPassword): Promise<void>;
 
   /** Forgets an account with its link. Answers with it, or throws. */
   forgetWithLink(command: ForgetAccount): Promise<AccountId>;

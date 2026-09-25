@@ -72,6 +72,17 @@ Then(
   },
 );
 
+Then(
+  "the profile does not link to {string}",
+  async function (this: SpecWorld, page: string) {
+    const links = await this.browserPage.locator("main a").allTextContents();
+    assert.ok(
+      !links.some((each) => unmarked(each).trim() === page),
+      `The profile links to ${page}.`,
+    );
+  },
+);
+
 // Each value, and the label that names it, by the words a scenario uses for it.
 const shownAs: Readonly<Record<string, { label: string; value: string }>> = {
   name: { label: "#profile-name-label", value: "#profile-name" },
