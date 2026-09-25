@@ -1,10 +1,9 @@
 Feature: What the import from the old sites is configured with
 
-  The import reads the old sites' RavenDB databases and writes into a Postgres
-  database of its own, which it empties first. That database is named by a
-  setting of its own, and never by the site's: an import that fell back to the
-  database the site or its development server runs on would drop every table
-  in it.
+  The import reads the old sites' RavenDB databases and writes into the
+  site's own Postgres database, the one the site is served from, so that what
+  it brings over is there for the site to read. It empties that database
+  first, dropping every table in it (`ImportDatabase.feature`).
 
   It needs the site's two account keys, the same ones as the site that will be
   served from what it writes, because every account it brings over is sealed
@@ -17,22 +16,16 @@ Feature: What the import from the old sites is configured with
   sites.
 
   Background:
-    Given the setting "IMPORT_DATABASE_URL" is "postgres://import:import@localhost:5432/import"
+    Given the setting "DATABASE_URL" is "postgres://site:site@localhost:5432/site"
     And the setting "ACCOUNT_ENCRYPTION_KEY" is "the site's key"
     And the setting "ACCOUNT_EMAIL_ADDRESS_HASH_KEY" is "the site's hash key"
     And the setting "OLD_SITE_PASSWORD_SALT" is "the old sites' salt"
 
-  Rule: The import is written into the database of its own setting
+  Rule: The import is written into the site's database
 
-    Scenario: The import's database is the one its setting names
+    Scenario: The import's database is the site's
       When the import's settings are read
-      Then the import writes into "postgres://import:import@localhost:5432/import"
-
-    Scenario: The site's database is not the import's
-      Given the setting "IMPORT_DATABASE_URL" is ""
-      And the setting "DATABASE_URL" is "postgres://site:site@localhost:5432/site"
-      When the import's settings are read
-      Then reading them is refused, naming "IMPORT_DATABASE_URL"
+      Then the import writes into "postgres://site:site@localhost:5432/site"
 
   Rule: The import has what it needs to bring accounts over
 
@@ -43,7 +36,7 @@ Feature: What the import from the old sites is configured with
 
       Examples:
         | setting                        |
-        | IMPORT_DATABASE_URL            |
+        | DATABASE_URL                   |
         | ACCOUNT_ENCRYPTION_KEY         |
         | ACCOUNT_EMAIL_ADDRESS_HASH_KEY |
         | OLD_SITE_PASSWORD_SALT         |

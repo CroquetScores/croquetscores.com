@@ -3,11 +3,11 @@ Feature: The database an import empties and fills
 
   An import is run over and over while it is being written, and what the last
   run left would be imported a second time on top of itself. So an import
-  begins by emptying the database it writes into: every table is dropped, and
-  every migration is applied again. The migration runner never drops anything,
-  and must not, so the dropping is here, where nothing but an import reaches
-  it, and the database it is done to is the import's own
-  (`loadImportConfig.feature`).
+  begins by emptying the database it writes into, which is the site's
+  (`loadImportConfig.feature`): every table in it is dropped, in whatever
+  schema it is, and every migration is applied again. The migration runner
+  never drops anything, and must not, so the dropping is here, where nothing
+  but an import reaches it.
 
   Two tables of the import's own are made with the rest: one keeping what
   could not be imported, and one keeping which account each of the old sites'
@@ -40,6 +40,12 @@ Feature: The database an import empties and fills
       Given a table "left_over" nobody migrated
       When the import's database is emptied
       Then there is no table "left_over"
+
+    Scenario: A table in another schema is gone after emptying
+      Given a schema "elsewhere"
+      And a table "elsewhere.left_over" nobody migrated
+      When the import's database is emptied
+      Then there is no table "elsewhere.left_over"
 
   Rule: Emptying the database makes every table again
 

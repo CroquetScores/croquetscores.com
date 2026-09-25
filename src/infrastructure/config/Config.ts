@@ -1,5 +1,8 @@
 // Settings are read once, here, and handed out as a typed object. Nothing else
 // in the repository touches process.env: a second reader is a second answer.
+// The one exception is the import from the old sites, which reads what it needs
+// in src/import-ravendb/loadImportConfig.ts: settings of its own, and the
+// site's two account keys, because it writes what the site will read.
 import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
