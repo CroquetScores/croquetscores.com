@@ -16,11 +16,6 @@ Four kinds of thing, kept apart.
 
 - Sign in with Google.
 
-### Moving to another email address
-
-- **Application.** Asking to move emails the new address, and nothing limits how often, as registering limits how often an address is emailed. It is asked only signed in and with the account's password, so it is not the open door registering was, but it is a way to fill somebody's inbox.
-- **Web.** Whether a wrong password given when asking to move should count toward the sign in limits, as it does when changing a password, is not decided. It does not count yet.
-
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
