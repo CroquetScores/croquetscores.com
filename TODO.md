@@ -14,10 +14,6 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-### /account
-
-- **An account with no password is not told why it cannot change its email address.** Changing it asks for the password, so the page is not offered, but nothing says to set a password first.
-
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
