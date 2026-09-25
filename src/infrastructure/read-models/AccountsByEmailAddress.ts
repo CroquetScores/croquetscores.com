@@ -13,6 +13,7 @@ import type { EmailAddressHasher } from "../../application/services/EmailAddress
 import { AccountBroughtOver } from "../../domain/aggregates/accounts/events/AccountBroughtOver.js";
 import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../domain/aggregates/accounts/events/AccountRegistered.js";
+import { EmailAddressChanged } from "../../domain/aggregates/accounts/events/EmailAddressChanged.js";
 import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { EmailAddress } from "../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
@@ -172,6 +173,17 @@ export class AccountsByEmailAddress implements Projection {
         .filter(({ event }) => event instanceof AccountForgotten)
         .map(({ stream }) => stream),
     );
+    // And where each account ended up, before any row is written: a row
+    // written at an address its account later moved from would take that
+    // address from whichever account has it now, if that account's stream
+    // were read first. A stream's events come in the order they were kept, so
+    // the last move read is the last made.
+    const movedTo = new Map<string, string>();
+    for (const { stream, event } of events) {
+      if (event instanceof EmailAddressChanged) {
+        movedTo.set(stream, event.emailAddressHash);
+      }
+    }
     for (const { stream, event } of events) {
       if (
         !(event instanceof AccountRegistered) &&
@@ -184,7 +196,11 @@ export class AccountsByEmailAddress implements Projection {
            (account_id, email_address_hash, forgotten)
          values ($1, $2, $3)
          on conflict (account_id) do nothing`,
-        [stream, event.emailAddressHash, forgotten.has(stream)],
+        [
+          stream,
+          movedTo.get(stream) ?? event.emailAddressHash,
+          forgotten.has(stream),
+        ],
       );
     }
   }
@@ -203,6 +219,25 @@ export class AccountsByEmailAddress implements Projection {
           `insert into accounts_by_email_address (account_id, email_address_hash)
            values ($1, $2)
            on conflict (account_id) do nothing`,
+          [stream, event.emailAddressHash],
+        );
+      } catch (failure) {
+        if (isTheAddressTaken(failure)) {
+          throw new AccountsByEmailAddressRefused(
+            "AccountsByEmailAddress.AddressTaken",
+            "The email address already has an account.",
+          );
+        }
+        throw failure;
+      }
+    } else if (event instanceof EmailAddressChanged) {
+      // The account's one row, found somewhere else. Refused as registering
+      // is when the address has an account already, which is what stops a
+      // move and a registering sent at once giving one address to two.
+      try {
+        await connection.query(
+          `update accounts_by_email_address set email_address_hash = $2
+            where account_id = $1`,
           [stream, event.emailAddressHash],
         );
       } catch (failure) {

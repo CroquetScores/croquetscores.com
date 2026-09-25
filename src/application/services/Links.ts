@@ -9,13 +9,23 @@ import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
  * is not a link to confirm an address, however it is sent.
  */
 export type LinkPurpose =
-  "confirm-email-address" | "set-new-password" | "confirm-forgetting";
+  | "confirm-email-address"
+  | "set-new-password"
+  | "confirm-forgetting"
+  | "change-email-address";
 
 /** What a link carries, once it is known to have been made here unaltered. */
 export interface LinkCarried {
   readonly purpose: LinkPurpose;
   readonly account: AccountId;
   readonly worksUntil: ReadOnlyDate;
+  /**
+   * Which of the account's askings the link answers, where there can be more
+   * than one: moving to another address, say, where each asking is to an
+   * address of its own. Signed with the rest, so that a link cannot be made to
+   * answer an asking it was not sent for.
+   */
+  readonly reference?: string;
 }
 
 /**
@@ -33,7 +43,12 @@ export interface Links {
    * The whole address, since it is what a reader follows, and the site's own
    * host is not something the application knows.
    */
-  make(purpose: LinkPurpose, account: AccountId, until: ReadOnlyDate): string;
+  make(
+    purpose: LinkPurpose,
+    account: AccountId,
+    until: ReadOnlyDate,
+    reference?: string,
+  ): string;
 
   /**
    * What `link` carries, or nothing when it was not made here — altered, made

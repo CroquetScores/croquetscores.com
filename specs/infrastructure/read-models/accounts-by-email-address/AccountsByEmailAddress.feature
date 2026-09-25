@@ -122,6 +122,61 @@ Feature: Finding an account by its email address
       When the account for "someone@example.com" is looked for
       Then the other account is found
 
+  Rule: A moved account is found by its new address, and its old one is free
+
+    An account that moves to another address (`changeEmailAddress.feature`)
+    keeps its one row, with the new address's hash in place of the old: it is
+    the same account, found somewhere else. The old address is then no row's,
+    and free to be registered again. Moving to an address that has an account
+    is refused as registering one is, with
+    `AccountsByEmailAddress.AddressTaken`, since that is what stops an address
+    being given to two accounts by a move and a registering sent at the same
+    moment.
+
+    Scenario: A moved account is found by its new address
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" is moved to "sam@example.org"
+      When the account for "sam@example.org" is looked for
+      Then it is found
+
+    Scenario: A moved account is not found by its old address
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" is moved to "sam@example.org"
+      When the account for "someone@example.com" is looked for
+      Then nothing is found
+
+    Scenario: A moved account keeps its one row
+      Given an account for "someone@example.com" is registered
+      When the account for "someone@example.com" is moved to "sam@example.org"
+      Then the read model holds 1 row
+
+    Scenario: The old address finds the new account registered with it
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" is moved to "sam@example.org"
+      And another account for "someone@example.com" is registered
+      When the account for "someone@example.com" is looked for
+      Then the other account is found
+
+    Scenario: Moving to an address that has an account is refused
+      Given an account for "someone@example.com" is registered
+      And another account for "sam@example.org" is registered
+      When the account for "someone@example.com" is moved to "sam@example.org"
+      Then it is refused with "AccountsByEmailAddress.AddressTaken"
+
+    Scenario: Moving to the address of a forgotten account is kept
+      Given an account for "someone@example.com" is registered
+      And another account for "sam@example.org" is registered
+      And the account for "sam@example.org" is forgotten
+      When the account for "someone@example.com" is moved to "sam@example.org"
+      Then it is not refused
+
+    Scenario: A move projected twice is still found by its new address
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" is moved to "sam@example.org"
+      When its move is projected again
+      And the account for "sam@example.org" is looked for
+      Then it is found
+
   Rule: Projecting the same events again changes nothing
 
     Scenario: An account's registering projected twice is one row
@@ -159,13 +214,14 @@ Feature: Finding an account by its email address
       When another account for "someone@example.com" is registered
       Then the read model holds 2 rows
 
-  Rule: The read model is rebuilt from the events alone, forgotten accounts and all
+  Rule: The read model is rebuilt from the events alone, forgotten and moved accounts and all
 
     A rebuild is handed every event there is, one stream at a time, and which
     stream comes first says nothing: nothing records an order across streams,
     and a stream is named by a random uuid. So a rebuild works out which
-    accounts were forgotten before it writes a single row, and writes each row
-    once, already marked. Reading a stream and writing as it goes would refuse
+    accounts were forgotten, and the address each account ended up at, before
+    it writes a single row, and writes each row once, already marked and at its
+    last address. Reading a stream and writing as it goes would refuse
     an address as taken whenever the account that has it now was read before
     the one that gave it up.
 
@@ -201,6 +257,23 @@ Feature: Finding an account by its email address
     Scenario: The address of a forgotten account finds the new account whichever account's stream is read first
       Given an account for "someone@example.com" is registered
       And the account for "someone@example.com" is forgotten
+      And another account for "someone@example.com" is registered
+      When the read model is rebuilt from the events, the newest account first
+      And the account for "someone@example.com" is looked for
+      Then it is rebuilt without failing
+      And the other account is found
+
+    Scenario: A moved account rebuilt is found by its new address
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" is moved to "sam@example.org"
+      When the read model is rebuilt from the events
+      And the account for "sam@example.org" is looked for
+      Then it is rebuilt without failing
+      And it is found
+
+    Scenario: The address an account moved away from finds the new account registered with it, whichever stream is read first
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" is moved to "sam@example.org"
       And another account for "someone@example.com" is registered
       When the read model is rebuilt from the events, the newest account first
       And the account for "someone@example.com" is looked for

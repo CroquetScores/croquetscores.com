@@ -18,7 +18,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import type { BrokenRule } from "../../domain/common/validation/Validator.js";
-import type { Dialog } from "./dialog.js";
+import type { Dialog, Field } from "./dialog.js";
 import { speakingOf, type Speaking } from "./language.js";
 
 /** What was typed into each field, by the field's name. */
@@ -87,13 +87,18 @@ export const refusedForm = (
       above.length === 0
         ? undefined
         : { messages: above, autofocus: first === undefined },
-    fields: dialog.fields.map((field) => ({
-      ...field,
-      value: typed[field.name],
-      messages: beneath.get(field.name),
-      invalid: beneath.has(field.name),
-      autofocus: field === first,
-    })),
+    // What was typed is put back, except into a password field, which has
+    // nowhere to hold it: a password is never sent back to the reader.
+    fields: dialog.fields.map((field): Field => {
+      const said = {
+        messages: beneath.get(field.name),
+        invalid: beneath.has(field.name),
+        autofocus: field === first,
+      };
+      return field.type === "password"
+        ? { ...field, ...said }
+        : { ...field, ...said, value: typed[field.name] };
+    }),
   };
 };
 

@@ -46,7 +46,7 @@ const forgotPasswordPath = "/account/forgot-password";
 const registerPath = "/account/register";
 
 /** How many times an email address, and one IP address, may fail in an hour. */
-const mostAnHour: MostAnHour = { byEmailAddress: 10, byIpAddress: 30 };
+export const mostAnHour: MostAnHour = { byEmailAddress: 10, byIpAddress: 30 };
 
 /**
  * Where to go once signed in: the path that sent the reader here, when it is
@@ -84,7 +84,7 @@ export const goBackTo = (given: unknown): string => {
 };
 
 /** The email address as it is counted: trimmed, and in lower case. */
-const countedAs = (typed: string): string => {
+export const countedAs = (typed: string): string => {
   try {
     return EmailAddress.from(typed).comparable;
   } catch {
@@ -110,7 +110,6 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
       label: speaking.say("signIn.password"),
       type: "password",
       autocomplete: "current-password",
-      value: typed["password"],
     },
   ],
   // Beneath signing in, the way back in first, for a reader whose password

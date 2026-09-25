@@ -170,6 +170,46 @@ export const english: Language = {
     "SignIn.Failed":
       "The email address or password is incorrect. Please try again.",
 
+    "profile.title": "Profile",
+    // A label's colon is its words', since languages set it differently.
+    "profile.name": "Name:",
+    "profile.emailAddress": "Email address:",
+
+    "changeName.title": "Change name",
+    "changeName.name": "Name",
+    "changeName.submit": "Change name",
+
+    "changePassword.title": "Change password",
+    "changePassword.currentPassword": "Current password",
+    "changePassword.password": "New password",
+    "changePassword.passwordConfirmation": "Confirm password",
+    "changePassword.forgotPassword": "Forgot Password?",
+    "changePassword.submit": "Change password",
+    // Beneath the current password, which is the one it is about.
+    "ChangePassword.WrongPassword": "That is not your password.",
+
+    "changeEmailAddress.title": "Change email address",
+    "changeEmailAddress.emailAddress": "New email address",
+    "changeEmailAddress.currentPassword": "Current password",
+    "changeEmailAddress.submit": "Send a link to confirm",
+    "changeEmailAddress.sent.title": "Check your email",
+    "changeEmailAddress.sent.explanation":
+      "A link to confirm the move has been sent to the new email address. Follow it, signed in, to move your account there.",
+    "changeEmailAddress.confirm.title": "Move your account",
+    "changeEmailAddress.confirm.explanation":
+      "Your account will move to {emailAddress}. You will sign in with that address from now on.",
+    "changeEmailAddress.confirm.submit": "Move my account",
+    "changeEmailAddress.noLongerWorks.title": "This link no longer works",
+    "changeEmailAddress.noLongerWorks.explanation":
+      "It has expired, has been used, or was not sent for the account you are signed in to. Ask again from your profile.",
+    "changeEmailAddress.taken.title": "Your account has not moved",
+    "changeEmailAddress.profile": "Back to your profile",
+    // Beneath the field each is about.
+    "ChangeEmailAddress.WrongPassword": "That is not your password.",
+    "ChangeEmailAddress.Unchanged": "Your account is at this address already.",
+    "ChangeEmailAddress.Taken":
+      "That email address has an account of its own now, so yours cannot move there.",
+
     "confirmEmailAddress.title": "Confirm your email address",
     "confirmEmailAddress.name": "Name",
     "confirmEmailAddress.password": "Password",
@@ -365,6 +405,123 @@ export const english: Language = {
 <p>
     If it was not you, you need do nothing. Nobody has been given a way into
     your account.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.ConfirmNewEmailAddress.subject":
+      "Confirm moving your {siteName} account to this address",
+    "Email.ConfirmNewEmailAddress.body": `
+<p>Hi,</p>
+
+<p>
+    Somebody signed in to a <strong>{siteName}</strong> account asked to move it
+    to this email address. If it was you, confirm it here, signed in to that
+    account. The link works for 24 hours.
+</p>
+
+<p>
+    <a href="{link}" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Move My Account
+    </a>
+</p>
+
+<p>
+    Or copy this address into your browser:<br />
+    {link}
+</p>
+
+<p>
+    If it was not you, you need do nothing. No account will move here.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.AlreadyHasAnAccount.subject":
+      "Somebody asked to move an account to your email address",
+    "Email.AlreadyHasAnAccount.body": `
+<p>Hi,</p>
+
+<p>
+    Somebody signed in to a <strong>{siteName}</strong> account asked to move it
+    to this email address, which already has an account of its own. Nothing
+    has moved, and nothing about your account has changed.
+</p>
+
+<p>
+    If it was you, you already have an account at this address, and can sign in
+    to it.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.EmailAddressChanged.subject": "Your {siteName} account has moved",
+    "Email.EmailAddressChanged.body": `
+<p>Hi,</p>
+
+<p>
+    Your <strong>{siteName}</strong> account was just moved to another email
+    address, {emailAddress}, and signs in with that address from now on.
+</p>
+
+<p>
+    If it was not you, somebody else has your account. Reply to this email and
+    tell us.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.PasswordChanged.subject": "Your {siteName} password was changed",
+    "Email.PasswordChanged.body": `
+<p>Hi,</p>
+
+<p>
+    The password for your <strong>{siteName}</strong> account was just
+    changed, and every other browser signed in to it was signed out.<br />
+    If it was you, you need do nothing.
+</p>
+
+<p>
+    If it was not you, somebody else has your password. Set a new one here, and
+    they will be signed out:
+</p>
+
+<p>
+    <a href="{site}/account/forgot-password" style="
+        background-color:{buttonBackgroundColour};
+        color:{buttonTextColour};
+        font-weight:bold;
+        padding:12px 24px;
+        border-radius:4px;
+        text-decoration:none;
+        display:inline-block;
+    ">
+        Forgot Password
+    </a>
 </p>
 
 <p>

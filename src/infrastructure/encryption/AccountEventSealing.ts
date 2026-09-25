@@ -1,11 +1,12 @@
-// What is personal in an account's events — its name, its email address and
-// the Google account linked to it — encrypted with the account's own key as the
+// What is personal in an account's events — its name, its email address and the
+// Google account linked to it — encrypted with the account's own key as the
 // events are kept, and decrypted as they are read back. The address is in the
 // event an account begins with, and the name in its confirming, which is where
-// it is given; an account brought over from the old site begins with both. The
-// Google account is kept by the subject Google knows it by, which reads as
-// nothing to anybody, but is the same for that person on every site signing in
-// with Google, and so would tie a forgotten account to them if kept as given.
+// it is given, and in any change of it since; an account brought over from the
+// old site begins with both. The Google account is kept by the subject Google
+// knows it by, which reads as nothing to anybody, but is the same for that
+// person on every site signing in with Google, and so would tie a forgotten
+// account to them if kept as given.
 //
 // The key is made as the event an account begins with is kept, and deleted as
 // its forgetting is, each in the transaction of that append, so that an account
@@ -28,6 +29,9 @@ const personal: Readonly<Record<string, readonly string[]>> = {
   "account-registered": ["emailAddress"],
   "account-brought-over": ["name", "emailAddress"],
   "account-email-address-confirmed": ["name"],
+  "account-name-changed": ["name"],
+  "account-email-address-change-asked": ["emailAddress"],
+  "account-email-address-changed": ["emailAddress"],
   "account-google-account-linked": ["subject"],
 };
 

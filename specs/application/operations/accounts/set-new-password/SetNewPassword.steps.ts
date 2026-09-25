@@ -135,3 +135,15 @@ Then(
     assert.equal(checked.matches, true, `That is not its password.`);
   },
 );
+
+Then(
+  "{string} is not the password of the account for {string}",
+  async function (this: SpecWorld, password: string, address: string) {
+    const account = await registeringOf(this).accountFor(address);
+    assert.ok(account !== undefined, `There is no account for ${address}.`);
+    const hasher = this.passwordHasher;
+    assert.ok(hasher !== undefined, "This scenario has no password hasher.");
+    const checked = await hasher.check(password, account.passwordHash);
+    assert.equal(checked.matches, false, `That is still its password.`);
+  },
+);

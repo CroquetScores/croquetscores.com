@@ -162,6 +162,16 @@ Then(
 );
 
 Then(
+  "the email {string} is not queued for {string}",
+  async function (this: SpecWorld, kind: string, to: string) {
+    const waiting = (await emailsOf(this)).filter(
+      (email) => !email.givenUp && email.kind === kind && email.to === to,
+    );
+    assert.equal(waiting.length, 0, `${kind} is queued for ${to}.`);
+  },
+);
+
+Then(
   "the queue holds {int} email(s)",
   async function (this: SpecWorld, count: number) {
     const { rows } = await this.database.query(`select id from email_queue`);

@@ -48,6 +48,12 @@ Feature: Setting a new password with the link that was emailed
   strictly before, because an account confirmed and a link asked for can share
   a moment, and the link asked for then has not been spent by anything.
 
+  So is every link made before the account last moved to another address. It
+  was sent to the address the account has moved from, and a reader may move
+  because that address is no longer theirs: whoever reads mail there now would
+  otherwise have what is left of the hour to set the password of an account
+  that has left them. Strictly before, for the same reason.
+
   A link for an account that has been forgotten, or one whose address has
   never been confirmed, is refused the same way: neither has a password to
   replace. So is a link the site made for anything else, however it is sent.
@@ -194,6 +200,28 @@ Feature: Setting a new password with the link that was emailed
       And the link emailed to "someone@example.com" is taken out of it
       When the new password "another long password again" is set with that link
       Then it is refused with "Link.NoLongerWorks"
+
+    Scenario: A link made before the account moved to another address no longer works
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And a way back in is asked for "someone@example.com"
+      And the moment "2026-09-19T10:01:00Z"
+      And moving to "sam@example.org" has been asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      And the link emailed to "sam@example.org" is taken out of it
+      And moving has been confirmed with that link, signed in to the account for "someone@example.com"
+      And the link emailed to "someone@example.com" is taken out of it
+      When the new password "a different long password" is set with that link
+      Then it is refused with "Link.NoLongerWorks"
+
+    Scenario: A link made after the account moved works
+      Given "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And moving to "sam@example.org" has been asked for by the reader signed in to the account for "someone@example.com", with the password "correct horse battery staple"
+      And the link emailed to "sam@example.org" is taken out of it
+      And moving has been confirmed with that link, signed in to the account for "someone@example.com"
+      And the moment "2026-09-19T10:01:00Z"
+      And a way back in is asked for "sam@example.org"
+      And the second link emailed to "sam@example.org" is taken out of it
+      When the new password "a different long password" is set with that link
+      Then it is answered with the account for "sam@example.org"
 
   Rule: A link that could set nothing no longer works
 

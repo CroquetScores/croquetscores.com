@@ -14,7 +14,11 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- **A mail provider** for sending real email, and its settings. `FileEmailSender` stands in until then.
+- Sign in with Google.
+
+### Sending email
+
+- **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
 
 ---
 

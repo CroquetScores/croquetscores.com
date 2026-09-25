@@ -27,7 +27,7 @@ import type { Assets } from "../common/assets.js";
 import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
-import { refusedForm, typedFrom, type Typed } from "../common/form.js";
+import { refusedForm, typedFrom } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
@@ -77,11 +77,12 @@ const saidFor = (
 // the page a confirmation link opens: neither is a secret the page is keeping,
 // and the id is minted when the form is shown so that a submission sent twice
 // sets one password.
+// Every field is a password, and a password is never handed back to the form:
+// a field of that kind has nowhere to hold one.
 const formFor = (
   speaking: Speaking,
   carried: string,
   requestId: string,
-  typed: Typed,
 ): Dialog => ({
   title: speaking.say("setNewPassword.title"),
   action: `${setNewPasswordPath}?link=${carried}&request=${encodeURIComponent(requestId)}`,
@@ -91,14 +92,12 @@ const formFor = (
       label: speaking.say("setNewPassword.password"),
       type: "password",
       autocomplete: "new-password",
-      value: typed["password"],
     },
     {
       name: "passwordConfirmation",
       label: speaking.say("setNewPassword.confirmPassword"),
       type: "password",
       autocomplete: "new-password",
-      value: typed["passwordConfirmation"],
     },
   ],
   submit: speaking.say("setNewPassword.submit"),
@@ -191,11 +190,7 @@ export const registerSetNewPasswordPage = (
     if (worth !== "Link.Works") {
       return telling(request, reply, saidFor(worth, speaking));
     }
-    return showForm(
-      request,
-      reply,
-      formFor(speaking, carried, randomUUID(), {}),
-    );
+    return showForm(request, reply, formFor(speaking, carried, randomUUID()));
   });
 
   server.post<{ Querystring: { request?: string } }>(
@@ -213,7 +208,7 @@ export const registerSetNewPasswordPage = (
       const given = request.query.request;
       const requestId =
         typeof given === "string" && given.trim() !== "" ? given : randomUUID();
-      const dialog = formFor(speaking, carried, requestId, typed);
+      const dialog = formFor(speaking, carried, requestId);
 
       let account;
       try {

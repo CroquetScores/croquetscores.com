@@ -4,8 +4,11 @@ import type { EventRegistry } from "../../../common/EventRegistry.js";
 import { AccountBroughtOver } from "./AccountBroughtOver.js";
 import { AccountForgotten } from "./AccountForgotten.js";
 import { AccountRegistered } from "./AccountRegistered.js";
+import { EmailAddressChangeAsked } from "./EmailAddressChangeAsked.js";
+import { EmailAddressChanged } from "./EmailAddressChanged.js";
 import { EmailAddressConfirmed } from "./EmailAddressConfirmed.js";
 import { GoogleAccountLinked } from "./GoogleAccountLinked.js";
+import { NameChanged } from "./NameChanged.js";
 import { PasswordHashedAgain } from "./PasswordHashedAgain.js";
 import { PasswordSet } from "./PasswordSet.js";
 import { RoleAdded } from "./RoleAdded.js";
@@ -69,6 +72,38 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
         new EmailAddressConfirmed(
           text(said, "name", "account-email-address-confirmed"),
           text(said, "passwordHash", "account-email-address-confirmed"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      EmailAddressChangeAsked,
+      "account-email-address-change-asked",
+      (said, { createdBy, occurredAt }) =>
+        new EmailAddressChangeAsked(
+          text(said, "emailAddress", "account-email-address-change-asked"),
+          text(said, "reference", "account-email-address-change-asked"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      EmailAddressChanged,
+      "account-email-address-changed",
+      (said, { createdBy, occurredAt }) =>
+        new EmailAddressChanged(
+          text(said, "emailAddress", "account-email-address-changed"),
+          text(said, "emailAddressHash", "account-email-address-changed"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      NameChanged,
+      "account-name-changed",
+      (said, { createdBy, occurredAt }) =>
+        new NameChanged(
+          text(said, "name", "account-name-changed"),
           createdBy,
           occurredAt,
         ),

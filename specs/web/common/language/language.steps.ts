@@ -127,6 +127,27 @@ Then(
   },
 );
 
+// The account's name and address are the account's own, not words of the
+// reader's language, so they are left out of what is read for marks.
+Then(
+  "every word on the profile page but the account's own is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, "main", [".profile-own"]);
+    assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
+  },
+);
+
+// The name is in the field, where it is a value rather than words on the page,
+// so reading the dialog's words for marks leaves it out already; the step says
+// so, since what the scenario is about is that it is left out.
+Then(
+  "every word in the dialog but the account's name is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, "section.dialog", ["input"]);
+    assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+  },
+);
+
 Then(
   "every word in the page's content is in the test locale",
   async function (this: SpecWorld) {

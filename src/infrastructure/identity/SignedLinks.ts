@@ -25,6 +25,7 @@ const pages: Readonly<Record<LinkPurpose, string>> = {
   "confirm-email-address": "/account/confirm-email-address",
   "set-new-password": "/account/set-new-password",
   "confirm-forgetting": "/account/forget-account",
+  "change-email-address": "/account/change-email-address",
 };
 
 const purposes = new Set<string>(Object.keys(pages));
@@ -49,13 +50,24 @@ export class SignedLinks implements Links {
     private readonly signingKey: string,
   ) {}
 
-  make(purpose: LinkPurpose, account: AccountId, until: ReadOnlyDate): string {
+  make(
+    purpose: LinkPurpose,
+    account: AccountId,
+    until: ReadOnlyDate,
+    reference?: string,
+  ): string {
+    // A reference is written after the rest, so a link made without one reads
+    // as every link made before references were. It cannot hold the dot the
+    // parts are joined with, or it would read back as something else.
+    if (reference !== undefined && !/^[A-Za-z0-9-]+$/.test(reference)) {
+      throw new Error("A link's reference is letters, digits and hyphens.");
+    }
     // The moment in milliseconds since the epoch: one number, in no timezone,
     // which is what a link should carry rather than a spelling of a date that
     // whoever reads it back has to agree with.
-    const carried = encode(
-      `${purpose}.${account.value}.${until.toDate().getTime()}`,
-    );
+    const parts = [purpose, account.value, `${until.toDate().getTime()}`];
+    if (reference !== undefined) parts.push(reference);
+    const carried = encode(parts.join("."));
     return `${this.siteAddress}${pages[purpose]}?link=${carried}.${this.sign(carried)}`;
   }
 
@@ -76,7 +88,9 @@ export class SignedLinks implements Links {
     if (body === undefined || signature === undefined) return undefined;
     if (!this.holds(body, signature)) return undefined;
 
-    const [purpose, account, until] = decode(body).split(".");
+    const parts = decode(body).split(".");
+    if (parts.length !== 3 && parts.length !== 4) return undefined;
+    const [purpose, account, until, reference] = parts;
     if (purpose === undefined || account === undefined || until === undefined) {
       return undefined;
     }
@@ -90,6 +104,7 @@ export class SignedLinks implements Links {
         purpose,
         account: AccountId.from(account),
         worksUntil: ReadOnlyDate.from(new Date(moment)),
+        ...(reference === undefined ? {} : { reference }),
       };
     } catch {
       // An id or a moment the link carried that this could not have made is a

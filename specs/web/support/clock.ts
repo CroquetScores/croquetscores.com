@@ -69,6 +69,14 @@ Given(
   },
 );
 
+Given("{int} hours have passed", function (this: SpecWorld, hours: number) {
+  movePast(this, hours * AN_HOUR);
+});
+
+Given("a minute has passed", function (this: SpecWorld) {
+  movePast(this, A_MINUTE);
+});
+
 Given("{int} minutes have passed", function (this: SpecWorld, minutes: number) {
   movePast(this, minutes * A_MINUTE);
 });
