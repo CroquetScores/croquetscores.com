@@ -114,12 +114,14 @@ Feature: A player in a competition
     Scenario: A withdrawn player who withdraws again has still withdrawn
       Given a player in a competition who has withdrawn
       When the player withdraws
-      Then the player has withdrawn
+      Then it is not refused
+      And the player has withdrawn
 
     Scenario: Reversing the withdrawal of a player who has not withdrawn leaves them playing
       Given a player in a competition
       When the player's withdrawal is reversed
-      Then the player has not withdrawn
+      Then it is not refused
+      And the player has not withdrawn
 
     Scenario: A player who has games can withdraw
       Given a player in a competition who has games
@@ -130,12 +132,12 @@ Feature: A player in a competition
 
     Scenario: A player with no games who is archived is archived
       Given a player in a competition who has no games
-      When the player is archived
+      When the competition archives the player
       Then the player is archived
 
     Scenario: A player with games cannot be archived
       Given a player in a competition who has games
-      When the player is archived
+      When the competition archives the player
       Then it is refused for breaking "CompetitionPlayer.HasGames"
 
     Scenario: An archived player who is restored is not archived
@@ -145,19 +147,21 @@ Feature: A player in a competition
 
     Scenario: An archived player who is archived again is still archived
       Given a player in a competition who is archived
-      When the player is archived
-      Then the player is archived
+      When the competition archives the player
+      Then it is not refused
+      And the player is archived
 
     Scenario: Restoring a player who is not archived leaves them not archived
       Given a player in a competition
       When the player is restored
-      Then the player is not archived
+      Then it is not refused
+      And the player is not archived
 
   Rule: A withdrawn player can only have their withdrawal reversed
 
     Scenario: A withdrawn player cannot be archived
       Given a player in a competition who has withdrawn
-      When the player is archived
+      When the competition archives the player
       Then it is refused for breaking "CompetitionPlayer.Withdrawn"
 
   Rule: An archived player can only be restored
