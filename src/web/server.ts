@@ -622,7 +622,14 @@ export const buildApplication = async (
   // One count of failed signings in, shared by every page that takes a
   // password, so that guessing on one counts against guessing on the other.
   const failedSignIns = new PostgresFailedSignIns(unitOfWork);
-  registerSignInPage(server, assets, sessions, failedSignIns, inTransaction);
+  registerSignInPage(
+    server,
+    assets,
+    sessions,
+    failedSignIns,
+    inTransaction,
+    google !== undefined,
+  );
   registerChangePasswordPage(
     server,
     assets,
