@@ -55,6 +55,10 @@ Feature: The database an import empties and fills
 
   Rule: The users imported are found by their email address, whatever its case
 
+    An address is compared here as the site compares it, since an address
+    this took for a new one the site would take for one it already has, and
+    the second account would be refused rather than kept as the first.
+
     Scenario: A user kept is found by the address they were kept with
       Given the import's database is emptied
       And "users/1" on "croquetscores.com" is kept as an account at "someone@example.com"
@@ -71,6 +75,12 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       And "users/1" on "croquetscores.com" is kept as an account at "someone@example.com"
       When the account imported for " someone@example.com " is looked for
+      Then the account kept for "users/1" on "croquetscores.com" is found
+
+    Scenario: A user kept with space around their address is found by it
+      Given the import's database is emptied
+      And "users/1" on "croquetscores.com" is kept as an account at " someone@example.com "
+      When the account imported for "someone@example.com" is looked for
       Then the account kept for "users/1" on "croquetscores.com" is found
 
     Scenario: An address nobody was kept with finds no account

@@ -70,21 +70,16 @@ export class ImportUsers implements Importer<User> {
     if (confirmedAt === null) return;
 
     await this.unitOfWork.inTransaction(async () => {
-      const already = await this.database.findImportedAccount(
-        document.EmailAddress,
-      );
+      // Read before it is looked for, so that it is looked for in the form the
+      // site will compare it in.
+      const address = EmailAddress.from(document.EmailAddress);
+      const already = await this.database.findImportedAccount(address);
       if (already !== undefined) {
-        await this.database.recordImportedUser(
-          website,
-          id,
-          already,
-          document.EmailAddress,
-        );
+        await this.database.recordImportedUser(website, id, already, address);
         return;
       }
 
       const name = PersonName.from(nameToImport(document.Name));
-      const address = EmailAddress.from(document.EmailAddress);
       const account = Account.bringOver(
         AccountId.create(),
         name,
@@ -98,7 +93,7 @@ export class ImportUsers implements Importer<User> {
         website,
         id,
         account.id.value,
-        document.EmailAddress,
+        address,
       );
     });
   }

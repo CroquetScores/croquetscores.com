@@ -1,5 +1,6 @@
 import type { Pool } from "pg";
 
+import type { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { migrate } from "../infrastructure/database/migrate.js";
 
@@ -63,20 +64,27 @@ export class ImportDatabase implements ImportErrors {
 
     // Which account each user became, so that a user on both old sites is one
     // account, and whatever is imported later can find the account a user's
-    // document now means. The email address is kept as it is, which nothing
-    // the site keeps does, because the table goes when importing is finished.
+    // document now means. The email address is kept as written, trimmed, which
+    // nothing the site keeps does, because the table goes when importing is
+    // finished.
+    //
+    // It is looked for by the form the site compares it in, worked out here
+    // rather than by lower() in Postgres: lower() leaves an address with space
+    // around it, or an accent written two ways, as a second address, where the
+    // site would take it for the first and refuse the account made for it.
     await this.#pool.query(`
       create table imported_users (
-          website       text not null,
-          document_id   text not null,
-          account_id    text not null,
-          email_address text not null,
+          website                  text not null,
+          document_id              text not null,
+          account_id               text not null,
+          email_address            text not null,
+          comparable_email_address text not null,
           primary key (website, document_id)
       )
     `);
     await this.#pool.query(`
       create index imported_users_by_email_address
-          on imported_users (lower(email_address))
+          on imported_users (comparable_email_address)
     `);
   }
 
@@ -85,25 +93,34 @@ export class ImportDatabase implements ImportErrors {
     website: string,
     documentId: string,
     accountId: string,
-    emailAddress: string,
+    emailAddress: EmailAddress,
   ): Promise<void> {
     await this.#queryable().query(
-      `insert into imported_users (website, document_id, account_id, email_address)
-       values ($1, $2, $3, $4)`,
-      [website, documentId, accountId, emailAddress],
+      `insert into imported_users
+           (website, document_id, account_id, email_address, comparable_email_address)
+       values ($1, $2, $3, $4, $5)`,
+      [
+        website,
+        documentId,
+        accountId,
+        emailAddress.toString(),
+        emailAddress.comparable,
+      ],
     );
   }
 
   /**
    * The account a user at `emailAddress` already became, if one did. Compared
-   * without regard to case or the space around it, as an email address is.
+   * as the site compares an email address.
    */
-  async findImportedAccount(emailAddress: string): Promise<string | undefined> {
+  async findImportedAccount(
+    emailAddress: EmailAddress,
+  ): Promise<string | undefined> {
     const { rows } = await this.#queryable().query<{ account_id: string }>(
       `select account_id from imported_users
-       where lower(email_address) = lower($1)
+       where comparable_email_address = $1
        limit 1`,
-      [emailAddress.trim()],
+      [emailAddress.comparable],
     );
     return rows[0]?.account_id;
   }

@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 
+import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { SpecWorld } from "../../support/world.js";
 import {
   aSiteKey,
@@ -75,7 +76,7 @@ Given(
       website,
       documentId,
       account,
-      address,
+      EmailAddress.from(address),
     );
     keptOf(this).accounts.set(keyOf(website, documentId), account);
   },
@@ -124,8 +125,9 @@ Then("every migration has been applied", async function (this: SpecWorld) {
 When(
   "the account imported for {string} is looked for",
   async function (this: SpecWorld, address: string) {
-    keptOf(this).lookedFor =
-      await importDatabaseOf(this).findImportedAccount(address);
+    keptOf(this).lookedFor = await importDatabaseOf(this).findImportedAccount(
+      EmailAddress.from(address),
+    );
   },
 );
 
