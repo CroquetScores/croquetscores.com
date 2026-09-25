@@ -28,7 +28,7 @@ import type { Sessions } from "../../application/services/Sessions.js";
 import type { Assets } from "../common/assets.js";
 import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
-import { refusedForm, typedFrom, type Typed } from "../common/form.js";
+import { refusedForm, typedFrom } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { readerOf } from "../common/reader.js";
@@ -43,9 +43,9 @@ export const changePasswordPath = "/account/change-password";
 
 const forgotPasswordPath = "/account/forgot-password";
 
-// No password is ever written back into the form, whoever asks: the dialog
-// refuses to, and nothing here offers one.
-const formFor = (speaking: Speaking, typed: Typed): Dialog => ({
+// Every field is a password, and a password is never handed back to the form:
+// a field of that kind has nowhere to hold one.
+const formFor = (speaking: Speaking): Dialog => ({
   title: speaking.say("changePassword.title"),
   action: changePasswordPath,
   fields: [
@@ -54,21 +54,18 @@ const formFor = (speaking: Speaking, typed: Typed): Dialog => ({
       label: speaking.say("changePassword.currentPassword"),
       type: "password",
       autocomplete: "current-password",
-      value: typed["currentPassword"],
     },
     {
       name: "password",
       label: speaking.say("changePassword.password"),
       type: "password",
       autocomplete: "new-password",
-      value: typed["password"],
     },
     {
       name: "passwordConfirmation",
       label: speaking.say("changePassword.passwordConfirmation"),
       type: "password",
       autocomplete: "new-password",
-      value: typed["passwordConfirmation"],
     },
   ],
   elsewhere: [
@@ -116,7 +113,7 @@ export const registerChangePasswordPage = (
 
   server.get(changePasswordPath, (request, reply) => {
     if (readerOf(request) === undefined) return toSignIn(request, reply);
-    return show(request, reply, formFor(speakingOf(request), {}));
+    return show(request, reply, formFor(speakingOf(request)));
   });
 
   server.post(changePasswordPath, async (request, reply) => {
@@ -131,7 +128,7 @@ export const registerChangePasswordPage = (
 
     const speaking = speakingOf(request);
     const typed = typedFrom(request.body);
-    const dialog = formFor(speaking, typed);
+    const dialog = formFor(speaking);
 
     const attempt = await inTransaction(() =>
       failures.attempt(

@@ -69,7 +69,6 @@ const askingFor = (speaking: Speaking, typed: Typed): Dialog => ({
       label: speaking.say("changeEmailAddress.currentPassword"),
       type: "password",
       autocomplete: "current-password",
-      value: typed["currentPassword"],
     },
   ],
   submit: speaking.say("changeEmailAddress.submit"),

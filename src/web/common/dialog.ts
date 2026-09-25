@@ -9,10 +9,10 @@
 // shape looks like rather than a role it claims.
 import { escape } from "./escape.js";
 
-export interface Field {
+/** What every field has, whatever kind it is. */
+interface FieldCommon {
   readonly name: string;
   readonly label: string;
-  readonly type: "email" | "password" | "text";
   /** What a browser or password manager should offer to fill in. */
   readonly autocomplete: string;
   /**
@@ -27,14 +27,30 @@ export interface Field {
    * nobody has touched yet is not invalid.
    */
   readonly invalid?: boolean | undefined;
-  /**
-   * What is already in the field, such as what was typed before the form was
-   * refused. Never written for a password, whatever is given.
-   */
-  readonly value?: string | undefined;
   /** Whether the reader is taken here when the page arrives. */
   readonly autofocus?: boolean | undefined;
 }
+
+/**
+ * A field of the form.
+ *
+ * A password field has nowhere to put what was typed. A password is never
+ * sent back to the reader in a page, whoever asks, and it is kept from being
+ * handed to the form at all, not only from being written: a field that could
+ * hold one is a place for it to leak from — into a page, a log, or whatever
+ * holds the dialog next — the day something reads the field without asking
+ * what kind it is.
+ */
+export type Field =
+  | (FieldCommon & {
+      readonly type: "email" | "text";
+      /** What is already in the field, such as what was typed before the form was refused. */
+      readonly value?: string | undefined;
+    })
+  | (FieldCommon & {
+      readonly type: "password";
+      readonly value?: never;
+    });
 
 /** What needs saying above the fields, about no one of them. */
 export interface Problems {
@@ -143,8 +159,10 @@ const field = ({
   const described =
     messages.length === 0 ? "" : ` aria-describedby="${messageId}"`;
   const wrong = invalid === true ? ` aria-invalid="true"` : "";
+  // A password field can be given no value, and is asked about here all the
+  // same: this is the last place one could be written into a page.
   const kept =
-    value === undefined || type === "password"
+    type === "password" || value === undefined
       ? ""
       : ` value="${escape(value)}"`;
   const focused = autofocus === true ? " autofocus" : "";

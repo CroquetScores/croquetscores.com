@@ -110,7 +110,6 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
       label: speaking.say("signIn.password"),
       type: "password",
       autocomplete: "current-password",
-      value: typed["password"],
     },
   ],
   // Beneath signing in, the way back in first, for a reader whose password

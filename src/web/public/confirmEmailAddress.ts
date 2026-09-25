@@ -188,14 +188,12 @@ const formFor = (
       // password manager offers to make one instead of offering the last one
       // it kept.
       autocomplete: "new-password",
-      value: typed["password"],
     },
     {
       name: "passwordConfirmation",
       label: speaking.say("confirmEmailAddress.confirmPassword"),
       type: "password",
       autocomplete: "new-password",
-      value: typed["passwordConfirmation"],
     },
   ],
   submit: speaking.say("confirmEmailAddress.submit"),
