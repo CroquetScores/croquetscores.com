@@ -36,6 +36,7 @@ Then(
       englishForScenarios.words["forgotPassword.sent.explanation"],
       englishForScenarios.words["forgetAccount.sent.explanation"],
       englishForScenarios.words["changeEmailAddress.sent.explanation"],
+      englishForScenarios.words["setPassword.sent.explanation"],
     ];
     const content =
       (await this.browserPage.locator("main").textContent()) ?? "";

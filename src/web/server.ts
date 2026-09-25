@@ -26,6 +26,7 @@ import { ReportUnreachableServiceHandler } from "../application/operations/accou
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
+import { AskToSetPasswordHandler } from "../application/operations/accounts/AskToSetPasswordHandler.js";
 import { AccountProfile } from "../application/operations/accounts/AccountProfile.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
@@ -112,6 +113,7 @@ import { registerChangeNamePage } from "./public/changeName.js";
 import { registerChangePasswordPage } from "./public/changePassword.js";
 import { registerChangeEmailAddressPage } from "./public/changeEmailAddress.js";
 import { registerProfilePage } from "./public/profile.js";
+import { registerSetPasswordPage } from "./public/setPassword.js";
 import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspended.js";
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
@@ -499,6 +501,15 @@ export const buildApplication = async (
   mediator.handleCommand(
     new AskToForgetAccountHandler(accounts, emailQueue, links),
   );
+  mediator.handleCommand(
+    new AskToSetPasswordHandler(
+      accounts,
+      emailQueue,
+      emailsWritten,
+      handledRequests,
+      links,
+    ),
+  );
   mediator.handleCommand(new ForgetAccountHandler(accounts, links));
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
@@ -652,6 +663,7 @@ export const buildApplication = async (
   registerSetNewPasswordPage(server, assets, sessions, inTransaction);
   registerForgetAccountPage(server, assets, sessions, inTransaction);
   registerProfilePage(server, assets);
+  registerSetPasswordPage(server, assets);
   registerChangeNamePage(server, assets);
   registerChangeEmailAddressPage(server, assets, failedSignIns, inTransaction);
   registerRegistrationsSuspendedPage(server, assets);

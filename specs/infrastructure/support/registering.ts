@@ -31,7 +31,9 @@ import { ConfirmEmailAddressHandler } from "../../../src/application/operations/
 import { ConfirmEmailAddressValidator } from "../../../src/application/operations/accounts/ConfirmEmailAddressValidator.js";
 import { ResetPasswordHandler } from "../../../src/application/operations/accounts/ResetPasswordHandler.js";
 import { AskToForgetAccountHandler } from "../../../src/application/operations/accounts/AskToForgetAccountHandler.js";
+import { AskToSetPasswordHandler } from "../../../src/application/operations/accounts/AskToSetPasswordHandler.js";
 import type { AskToForgetAccount } from "../../../src/application/operations/accounts/AskToForgetAccount.js";
+import type { AskToSetPassword } from "../../../src/application/operations/accounts/AskToSetPassword.js";
 import { ForgetAccountHandler } from "../../../src/application/operations/accounts/ForgetAccountHandler.js";
 import type { ChangeName } from "../../../src/application/operations/accounts/ChangeName.js";
 import type {
@@ -296,6 +298,15 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleCommand(
     new AskToForgetAccountHandler(repository, queue, links),
   );
+  mediator.handleCommand(
+    new AskToSetPasswordHandler(
+      repository,
+      queue,
+      written,
+      new PostgresHandledRequests(unitOfWork),
+      links,
+    ),
+  );
   mediator.handleCommand(new ForgetAccountHandler(repository, links));
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(repository));
@@ -469,6 +480,11 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       const account = await readBack(world, await idFor(address));
       account.linkGoogleAccount(subject, now());
       await world.keepAccount?.(account);
+    },
+
+    async askToSetPassword(command: AskToSetPassword): Promise<void> {
+      await settle();
+      await mediator.send(command);
     },
 
     async askToForget(command: AskToForgetAccount): Promise<void> {
@@ -770,6 +786,17 @@ Given(
 Given("the application's asking for a way back in", function (this: SpecWorld) {
   standUpFor(this);
 });
+
+// The same again, for a scenario about asking for a link to set a password;
+// with the breached password check confirming starts, since those scenarios
+// go on to set the password with the link.
+Given(
+  "the application's asking to set a password",
+  async function (this: SpecWorld) {
+    standUpFor(this);
+    await aFakeOfHaveIBeenPwned(this);
+  },
+);
 
 const standUpFor = (world: SpecWorld): void => {
   const registering = standUpRegistering(world);

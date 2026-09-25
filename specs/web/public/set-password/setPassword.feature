@@ -85,6 +85,14 @@ Feature: A reader whose account has no password can have a link sent to set one
       When the reader asks for a link to set a password
       Then the reader is told to check their email
 
+    Scenario: Being told to check their email is on the panel
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the set password page is open
+      When the reader asks for a link to set a password
+      Then the page is on the panel
+
   Rule: The link sets a password the account signs in with
 
     Scenario: Following the link lets a password be set

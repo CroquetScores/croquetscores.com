@@ -1,7 +1,8 @@
 // The last thing in the header: a person, which opens on what a reader can do
 // with their account. A reader who is not signed in is offered the ways in; one
-// who is signed in is offered their own pages and the way out, leaving out the
-// ones that ask for the password the account has now when it has none.
+// who is signed in is offered their own pages and the way out: the ones that
+// ask for the password the account has now only when it has one, and setting a
+// password only when it has none.
 //
 // It is a summary and the details under it, as the primary navigation's menu
 // is, so that it opens with no scripting: every public page works without it,
@@ -18,8 +19,8 @@ import type { Speaking } from "./language.js";
 interface MenuItem {
   readonly href: string;
   readonly words: string;
-  /** Whether the page asks for the password the account has now. */
-  readonly asksForPassword?: boolean;
+  /** Which accounts it is offered to, where it is not offered to all. */
+  readonly for?: "with a password" | "without a password";
 }
 
 const waysIn: readonly MenuItem[] = [
@@ -33,15 +34,28 @@ const theAccounts: readonly MenuItem[] = [
   {
     href: "/account/change-password",
     words: "account.changePassword",
-    asksForPassword: true,
+    for: "with a password",
+  },
+  {
+    href: "/account/set-password",
+    words: "account.setPassword",
+    for: "without a password",
   },
   {
     href: "/account/change-email-address",
     words: "account.changeEmailAddress",
-    asksForPassword: true,
+    for: "with a password",
   },
   { href: "/account/change-name", words: "account.changeName" },
 ];
+
+/** Whether `item` is offered to an account that has a password or not. */
+export const offeredTo = (
+  item: { readonly for?: "with a password" | "without a password" },
+  hasPassword: boolean,
+): boolean =>
+  item.for === undefined ||
+  item.for === (hasPassword ? "with a password" : "without a password");
 
 /** Where signing out is asked for. */
 export const signOutPath = "/account/sign-out";
@@ -100,7 +114,7 @@ export const accountMenu = ({
     ? [
         signOut(speaking),
         ...theAccounts
-          .filter((each) => hasPassword || each.asksForPassword !== true)
+          .filter((each) => offeredTo(each, hasPassword))
           .map(shown),
       ]
     : waysIn.map(shown);

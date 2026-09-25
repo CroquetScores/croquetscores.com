@@ -15,6 +15,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { AccountProfile } from "../../application/operations/accounts/AccountProfile.js";
 import type { Assets } from "../common/assets.js";
+import { offeredTo } from "../common/accountMenu.js";
 import { escape } from "../common/escape.js";
 import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
@@ -27,22 +28,28 @@ export const profilePath = "/account/profile";
 
 // The pages that change the account, in the order the account menu offers
 // them, and in its words. The ones that ask for the password the account has
-// now are left out for an account that has none.
+// now are offered only to an account that has one, and setting a password only
+// to one that has none.
 const changes: readonly {
   readonly href: string;
   readonly words: string;
-  readonly asksForPassword?: boolean;
+  readonly for?: "with a password" | "without a password";
 }[] = [
   { href: "/account/change-name", words: "account.changeName" },
   {
     href: "/account/change-email-address",
     words: "account.changeEmailAddress",
-    asksForPassword: true,
+    for: "with a password",
   },
   {
     href: "/account/change-password",
     words: "account.changePassword",
-    asksForPassword: true,
+    for: "with a password",
+  },
+  {
+    href: "/account/set-password",
+    words: "account.setPassword",
+    for: "without a password",
   },
 ];
 
@@ -86,7 +93,7 @@ export const registerProfilePage = (
           </dl>
           <ul class="profile-changes">
 ${changes
-  .filter((each) => profile.hasPassword || each.asksForPassword !== true)
+  .filter((each) => offeredTo(each, profile.hasPassword))
   .map(
     ({ href, words }) =>
       `            <li><a href="${href}">${escape(say(words))}</a></li>`,

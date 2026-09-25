@@ -83,6 +83,10 @@ When(
 Given("the register page is open", openRegister);
 When("the register page is opened", openRegister);
 
+Then("the page is on the panel", async function (this: SpecWorld) {
+  assert.equal(await this.browserPage.locator(".panel").count(), 1);
+});
+
 Then("there is no panel on the page", async function (this: SpecWorld) {
   assert.equal(await this.browserPage.locator(".panel").count(), 0);
 });

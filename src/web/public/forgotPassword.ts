@@ -68,7 +68,9 @@ export const registerForgotPasswordPage = (
     body: string,
     speaking: Speaking,
     code = 200,
-    frame: "bare" | undefined = "bare",
+    // The dialog brings its own frame; what is said once it is sent is read
+    // on the panel.
+    frame: "bare" | "panel" = "bare",
   ): FastifyReply =>
     reply
       .code(code)
@@ -87,7 +89,7 @@ export const registerForgotPasswordPage = (
           tryWebsite: websiteOf(request).isTry,
           path: forgotPasswordPath,
           currentPath: forgotPasswordPath,
-          ...(frame === undefined ? {} : { frame }),
+          frame,
           body,
         }),
       );
@@ -166,7 +168,7 @@ export const registerForgotPasswordPage = (
           <p><a href="/">${escape(say("forgotPassword.home", { siteName: siteNameOf(request) }))}</a></p>`,
         speaking,
         200,
-        undefined,
+        "panel",
       );
     },
   );

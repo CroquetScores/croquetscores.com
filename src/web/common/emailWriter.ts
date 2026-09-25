@@ -73,6 +73,7 @@ const kinds: readonly string[] = [
   "Email.ConfirmAddressAgain",
   "Email.AlreadyRegistered",
   "Email.SetNewPassword",
+  "Email.SetPassword",
   "Email.RegisterInstead",
   "Email.ConfirmForgetting",
   "Email.RegistrationsSuspended",
