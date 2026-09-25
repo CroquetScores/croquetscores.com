@@ -17,6 +17,13 @@
 // let a link to this page send a reader anywhere, looking as though this site
 // had sent them.
 //
+// Where the site has been given Google's credentials, the page also offers
+// signing in with Google, at the top of the form, as the register page does
+// (auth/google.ts). The offer carries where the reader goes back to, so that
+// coming in by Google goes back to the same page a password would. A reader
+// Google did not let in is brought back here and told why, by a code in the
+// page's address; only the codes that way back sends are said.
+//
 // It needs no scripting and nobody signed in.
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -39,6 +46,12 @@ import { signedIn } from "../common/reader.js";
 import { startSession } from "../common/session.js";
 import { safeReturnPath, themeOf } from "../common/theme.js";
 import { ipAddressOf } from "../common/trustedProxy.js";
+import {
+  googlePath,
+  refusalsFromGoogle,
+  withGoogle,
+  type SentFrom,
+} from "./googleOffer.js";
 
 export const signInPath = "/account/sign-in";
 
@@ -94,7 +107,14 @@ export const countedAs = (typed: string): string => {
   }
 };
 
-const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
+const sentFrom: SentFrom = "sign-in";
+
+const formFor = (
+  speaking: Speaking,
+  goBack: string,
+  typed: Typed,
+  googleOffered: boolean,
+): Dialog => ({
   title: speaking.say("signIn.title"),
   action: `${signInPath}?return=${encodeURIComponent(goBack)}`,
   fields: [
@@ -120,6 +140,13 @@ const formFor = (speaking: Speaking, goBack: string, typed: Typed): Dialog => ({
     { label: speaking.say("signIn.register"), href: registerPath },
   ],
   submit: speaking.say("signIn.submit"),
+  alternative: googleOffered
+    ? withGoogle(
+        speaking.say("signIn.withGoogle"),
+        speaking.say("signIn.or"),
+        `${googlePath}?from=${sentFrom}&return=${encodeURIComponent(goBack)}`,
+      )
+    : undefined,
 });
 
 export const registerSignInPage = (
@@ -128,6 +155,7 @@ export const registerSignInPage = (
   sessions: Sessions,
   failures: FailedSignIns,
   inTransaction: InTransaction,
+  googleOffered: boolean,
 ): void => {
   const page = (
     request: FastifyRequest,
@@ -163,14 +191,24 @@ export const registerSignInPage = (
       .type("text/html; charset=utf-8")
       .send(page(request, dialog, speaking));
 
-  server.get<{ Querystring: { return?: string } }>(
+  server.get<{ Querystring: { return?: string; refused?: string } }>(
     signInPath,
     (request, reply) => {
       const speaking = speakingOf(request);
+      const dialog = formFor(
+        speaking,
+        goBackTo(request.query.return),
+        {},
+        googleOffered,
+      );
+      const refused = request.query.refused;
+      if (refused === undefined || !refusalsFromGoogle.includes(refused)) {
+        return show(request, reply, dialog, speaking);
+      }
       return show(
         request,
         reply,
-        formFor(speaking, goBackTo(request.query.return), {}),
+        { ...dialog, problems: { messages: [speaking.say(refused)] } },
         speaking,
       );
     },
@@ -182,7 +220,7 @@ export const registerSignInPage = (
       const speaking = speakingOf(request);
       const typed = typedFrom(request.body);
       const goBack = goBackTo(request.query.return);
-      const dialog = formFor(speaking, goBack, typed);
+      const dialog = formFor(speaking, goBack, typed, googleOffered);
 
       const address = countedAs(typed["emailAddress"] ?? "");
       const from = ipAddressOf(request);

@@ -126,6 +126,72 @@ Given(
   },
 );
 
+// Each numbered in what fills it in, in the order it was queued, so that the
+// order it is listed or written in can be read off it. Each is queued as a
+// request of its own, at the scenario's one moment, as two requests in the
+// same instant would queue them.
+const numbered = "number";
+const queuedInOrder = new WeakMap<SpecWorld, readonly string[]>();
+
+Given(
+  "{int} emails have been queued for {string}, one after another, due at the same moment",
+  async function (this: SpecWorld, count: number, to: string) {
+    const numbers: string[] = [];
+    for (let each = 1; each <= count; each++) {
+      const number = String(each);
+      await queueAsARequest(this, {
+        kind: "Email.ConfirmAddress",
+        to,
+        fill: { [numbered]: number },
+      });
+      numbers.push(number);
+    }
+    queuedInOrder.set(this, numbers);
+  },
+);
+
+const listed = new WeakMap<SpecWorld, readonly QueuedEmail[]>();
+
+When("what is queued is listed", async function (this: SpecWorld) {
+  listed.set(this, await emailsOf(this));
+});
+
+const inTheOrderQueued = (world: SpecWorld): readonly string[] => {
+  const numbers = queuedInOrder.get(world);
+  assert.ok(numbers !== undefined, "Nothing was queued one after another.");
+  return numbers;
+};
+
+Then(
+  "the emails are listed in the order they were queued",
+  function (this: SpecWorld) {
+    const emails = listed.get(this);
+    assert.ok(emails !== undefined, "Nothing was listed.");
+    assert.deepEqual(
+      emails.map((email) => email.fill?.[numbered]),
+      inTheOrderQueued(this),
+    );
+  },
+);
+
+// By the order the writer was asked to write them in: each is written as it
+// is sent, one after another, so the two orders are the same.
+Then(
+  "the emails were sent in the order they were queued",
+  function (this: SpecWorld) {
+    const { sender, writer } = queueingOf(this);
+    assert.equal(
+      sender.sent.length,
+      inTheOrderQueued(this).length,
+      `${sender.sent.length} emails were sent.`,
+    );
+    assert.deepEqual(
+      writer.asked.map((email) => email.fill[numbered]),
+      inTheOrderQueued(this),
+    );
+  },
+);
+
 Given("an account for {string}", async function (this: SpecWorld, to: string) {
   await registerFor(this, to);
 });

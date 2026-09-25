@@ -53,15 +53,17 @@ export const english: Language = {
     "register.withGoogle": "Register with Google",
     "register.or": "or",
     // Said above the form when Google sent the reader back without them being
-    // let in, each by the code the way back gave.
+    // let in, each by the code the way back gave. The register page and the
+    // sign in page both say them, so they say "use your email address" rather
+    // than naming what either form does with it.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Google has not confirmed that email address is yours, so it cannot be used to register here. Register with it below instead, and we will email you a link to confirm it.",
+      "Google has not confirmed that email address is yours, so it cannot be used with Google here. Use your email address below instead.",
     "SignInWithGoogle.LinkedToAnother":
       "That email address already has an account, linked to a different Google account. Sign in with that Google account, or with your email address and password.",
     "SignInWithGoogle.NameMissing":
-      "Google did not tell us your name, and an account needs one. Register with your email address below instead.",
+      "Google did not tell us your name, and an account needs one. Use your email address below instead.",
     "Google.Unreachable":
-      "Google could not be reached just now. Try again in a few minutes, or register with your email address below.",
+      "Google could not be reached just now. Try again in a few minutes, or use your email address below.",
     "Registration.NotAPerson":
       "This did not look like it came from a person. Try again, and if it keeps happening, wait a few minutes and come back.",
 
@@ -162,6 +164,8 @@ export const english: Language = {
     "signIn.submit": "Sign in",
     "signIn.forgotPassword": "Forgot Password?",
     "signIn.register": "Register",
+    "signIn.withGoogle": "Sign in with Google",
+    "signIn.or": "or",
     "signIn.tryAgainLater":
       "Too many attempts have been made lately. Wait an hour and try again.",
 

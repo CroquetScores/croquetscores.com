@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { autofocusSettled } from "../../support/autofocus.js";
 import { withScripting } from "../../support/browser.js";
 import { closes, opens, unmarked } from "../../support/languages.js";
 
@@ -376,6 +377,7 @@ Then(
     // notice, so a screen reader reads it on arrival. Checking the page merely
     // contains the words would pass for a page nobody is ever taken to — the
     // body's own text contains everything on it.
+    await autofocusSettled(this);
     const focused = await this.browserPage.evaluate<{
       tag: string;
       text: string;
@@ -1020,6 +1022,7 @@ Then(
 Then(
   /^the reader is taken to the (.+) field$/,
   async function (this: SpecWorld, field: string) {
+    await autofocusSettled(this);
     const focused = await this.browserPage.evaluate<boolean | null>(`(() => {
       const input = ${inputByLabel(field)};
       return input ? input === document.activeElement : null;

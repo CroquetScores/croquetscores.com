@@ -14,7 +14,8 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- Sign in with Google.
+- Don't save password when register account with google
+- How to handle forms when a password needs to be retyped but a password has never been set
 
 ### Sending email
 

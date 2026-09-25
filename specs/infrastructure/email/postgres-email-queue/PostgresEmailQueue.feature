@@ -93,6 +93,33 @@ Feature: Keeping emails to be sent in the same transaction as what they are abou
       When what is queued is sent by two senders at once
       Then "someone@example.com" was sent 1 email
 
+  Rule: Emails due at the same moment are listed and sent in the order they were queued
+
+    The queue is read by when each email is due, and two emails can be due at
+    the same moment: queued by one request, which has one moment, or by two
+    requests in the same instant. Nothing but the order they were queued in
+    says which came first, and it matters: an email saying an account has moved
+    away from an address, followed by one to confirm that address for a new
+    account, says something false read in the other order. So the order they
+    were queued in is kept, and is the order they are listed and sent in.
+
+    It was found because the scenarios' clock stands still, so everything one
+    scenario queues is due at the same moment, and a step asking for the newest
+    email to an address was answered by chance. A queue that broke the tie
+    another way would pass a scenario of two emails half the time, so these
+    queue twenty, which a queue ordered by anything else puts back in order by
+    chance too seldom to count.
+
+    Scenario: Emails due at the same moment are listed in the order they were queued
+      Given 20 emails have been queued for "someone@example.com", one after another, due at the same moment
+      When what is queued is listed
+      Then the emails are listed in the order they were queued
+
+    Scenario: Emails due at the same moment are sent in the order they were queued
+      Given 20 emails have been queued for "someone@example.com", one after another, due at the same moment
+      When what is queued is sent
+      Then the emails were sent in the order they were queued
+
   Rule: What is queued cannot be read without its key
 
     Scenario: A queued email about an account does not hold its address

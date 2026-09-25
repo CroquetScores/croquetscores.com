@@ -10,6 +10,13 @@
 // verifier; the way back must carry the same state, and uses the cookie up.
 // A way back with no cookie, another state, or one followed a second time
 // signs nobody in.
+//
+// The cookie also holds which page sent the reader, the register page or the
+// sign in page, and so which one a reader Google did not let in is brought
+// back to, and where a reader signed in goes next. It is kept in the cookie
+// rather than in the address Google is told to come back to, because that
+// address has to be the one Google was given beforehand, and because what is
+// in the signed cookie is what this site put there.
 import { createHash, randomBytes } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -18,12 +25,16 @@ import { SignInWithGoogleRefused } from "../../application/operations/accounts/S
 import type { Sessions } from "../../application/services/Sessions.js";
 import type { InTransaction } from "../common/database.js";
 import { startSession } from "../common/session.js";
+import { googlePath, type SentFrom } from "../public/googleOffer.js";
 import { registerPath } from "../public/register.js";
+import { goBackTo, signInPath } from "../public/signIn.js";
 
-export const googlePath = "/auth/google";
 const callbackPath = `${googlePath}/callback`;
 
-/** Where a reader signed in with Google is taken. */
+/**
+ * Where a reader who registered with Google is taken. A reader who signed in
+ * with Google goes back where the sign in page would have sent them instead.
+ */
 const landing = "/admin/";
 
 /** Who Google says the reader is. */
@@ -85,6 +96,9 @@ interface Pending {
   readonly state: string;
   readonly nonce: string;
   readonly codeVerifier: string;
+  readonly sentFrom: SentFrom;
+  /** Where the reader goes once signed in, already judged safe to go to. */
+  readonly goBack: string;
   /** When the reader was sent, in milliseconds, for the cookie not to outlive. */
   readonly sentAt: number;
 }
@@ -115,6 +129,8 @@ const pendingFrom = (request: FastifyRequest): Pending | undefined => {
       typeof pending.state !== "string" ||
       typeof pending.nonce !== "string" ||
       typeof pending.codeVerifier !== "string" ||
+      (pending.sentFrom !== "register" && pending.sentFrom !== "sign-in") ||
+      typeof pending.goBack !== "string" ||
       typeof pending.sentAt !== "number"
     ) {
       return undefined;
@@ -135,13 +151,31 @@ const notSentFromHere = (): never => {
   );
 };
 
-const backToRegister = (reply: FastifyReply, refused?: string): FastifyReply =>
-  reply.redirect(
-    refused === undefined
-      ? registerPath
-      : `${registerPath}?refused=${encodeURIComponent(refused)}`,
+// Back to the page that sent the reader. The sign in page is told again where
+// the reader was going back to, so that signing in with a password from there
+// still goes there.
+const backToWhereSent = (
+  reply: FastifyReply,
+  pending: Pending,
+  refused?: string,
+): FastifyReply => {
+  const said: string[] = [];
+  if (refused !== undefined)
+    said.push(`refused=${encodeURIComponent(refused)}`);
+  if (pending.sentFrom === "sign-in") {
+    said.push(`return=${encodeURIComponent(pending.goBack)}`);
+  }
+  const page = pending.sentFrom === "sign-in" ? signInPath : registerPath;
+  return reply.redirect(
+    said.length === 0 ? page : `${page}?${said.join("&")}`,
     303,
   );
+};
+
+// A way to Google that names no page is the register page's, which offered it
+// before the sign in page did and still sends it so.
+const sentFromOf = (given: unknown): SentFrom =>
+  given === "sign-in" ? "sign-in" : "register";
 
 export const registerGoogleRoutes = (
   server: FastifyInstance,
@@ -150,27 +184,36 @@ export const registerGoogleRoutes = (
   const redirectUriFor = (request: FastifyRequest): string =>
     `${options.siteAddress ?? `${request.protocol}://${request.host}`}${callbackPath}`;
 
-  server.get(googlePath, (request, reply) => {
-    const pending: Pending = {
-      state: aSecret(),
-      nonce: aSecret(),
-      codeVerifier: aSecret(),
-      sentAt: Date.now(),
-    };
-    reply.setCookie(pendingCookie, JSON.stringify(pending), {
-      ...cookieOptions,
-      maxAge: PENDING_SECONDS,
-    });
-    return reply.redirect(
-      options.google.whereToSend({
-        redirectUri: redirectUriFor(request),
-        state: pending.state,
-        nonce: pending.nonce,
-        codeChallenge: challengeOf(pending.codeVerifier),
-      }),
-      303,
-    );
-  });
+  server.get<{ Querystring: { from?: string; return?: string } }>(
+    googlePath,
+    (request, reply) => {
+      const sentFrom = sentFromOf(request.query.from);
+      const pending: Pending = {
+        state: aSecret(),
+        nonce: aSecret(),
+        codeVerifier: aSecret(),
+        sentFrom,
+        // Judged by the sign in page's own rule, so that which page is gone back
+        // to does not depend on which way the reader came in.
+        goBack:
+          sentFrom === "sign-in" ? goBackTo(request.query.return) : landing,
+        sentAt: Date.now(),
+      };
+      reply.setCookie(pendingCookie, JSON.stringify(pending), {
+        ...cookieOptions,
+        maxAge: PENDING_SECONDS,
+      });
+      return reply.redirect(
+        options.google.whereToSend({
+          redirectUri: redirectUriFor(request),
+          state: pending.state,
+          nonce: pending.nonce,
+          codeChallenge: challengeOf(pending.codeVerifier),
+        }),
+        303,
+      );
+    },
+  );
 
   server.get<{
     Querystring: { state?: string; code?: string; error?: string };
@@ -191,10 +234,11 @@ export const registerGoogleRoutes = (
     }
 
     // The reader said no to Google, or Google said no to them. Either way they
-    // chose not to come in by Google, and are brought back to register the
-    // other way; there is nothing to tell them they do not know.
+    // chose not to come in by Google, and are brought back to the page they
+    // came from to come in the other way; there is nothing to tell them they
+    // do not know.
     if (error !== undefined || typeof code !== "string" || code === "") {
-      return backToRegister(reply);
+      return backToWhereSent(reply, pending);
     }
 
     let identity: GoogleIdentity;
@@ -208,7 +252,7 @@ export const registerGoogleRoutes = (
     } catch (failure) {
       if (failure instanceof GoogleUnreachable) {
         request.log.warn({ err: failure }, "Google could not be reached");
-        return backToRegister(reply, "Google.Unreachable");
+        return backToWhereSent(reply, pending, "Google.Unreachable");
       }
       throw failure;
     }
@@ -226,12 +270,12 @@ export const registerGoogleRoutes = (
       );
     } catch (failure) {
       if (!(failure instanceof SignInWithGoogleRefused)) throw failure;
-      return backToRegister(reply, failure.code);
+      return backToWhereSent(reply, pending, failure.code);
     }
 
     await options.inTransaction(() =>
       startSession(request, reply, options.sessions, account),
     );
-    return reply.redirect(landing, 303);
+    return reply.redirect(pending.goBack, 303);
   });
 };

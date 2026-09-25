@@ -270,6 +270,14 @@ Then(
 );
 
 Then(
+  "the offer to sign in with Google is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, ".dialog-alternative");
+    assert.deepEqual(stray, [], "Words in the offer came from elsewhere.");
+  },
+);
+
+Then(
   "every word in the theme choice is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "footer form.theme");

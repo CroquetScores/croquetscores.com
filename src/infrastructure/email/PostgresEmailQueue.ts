@@ -6,6 +6,12 @@
 // sends it again, since nothing can tell it went. Two senders at once never
 // take the same email, because each takes one it can lock and passes over one
 // another has locked.
+//
+// Emails due at the same moment are listed and sent in the order they were
+// queued, by a number the database gives each row as it is inserted: nothing
+// else says which came first, and an email saying an account has moved away
+// from an address, followed by one confirming that address for a new account,
+// says something false read in the other order.
 import { randomUUID } from "node:crypto";
 
 import type {
@@ -148,7 +154,7 @@ export class PostgresEmailQueue implements EmailQueue {
   async emails(): Promise<readonly QueuedEmail[]> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<Row>(`select * from email_queue order by due_at, id`);
+      .query<Row>(`select * from email_queue order by due_at, queued`);
     const emails: QueuedEmail[] = [];
     for (const row of rows) {
       // Only what says nobody can read the row is passed over; a database that
@@ -178,7 +184,7 @@ export class PostgresEmailQueue implements EmailQueue {
     const { rows } = await connection.query<Row>(
       `select * from email_queue
         where given_up_at is null and due_at <= $1
-        order by due_at
+        order by due_at, queued
         limit 1
         for update skip locked`,
       [at.toDate()],
