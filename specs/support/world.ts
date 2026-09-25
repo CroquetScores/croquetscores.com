@@ -39,6 +39,8 @@ import type { Sport } from "../../src/domain/aggregates/tournaments/value-object
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
 import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/TournamentPlayer.js";
+import type { TournamentPlayerId } from "../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
+import type { CompetitionPlayer } from "../../src/domain/aggregates/competitions/CompetitionPlayer.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -302,6 +304,19 @@ export class SpecWorld extends World {
   public tournamentPlayer: TournamentPlayer | undefined;
   public otherTournamentPlayer: TournamentPlayer | undefined;
   public sameTournamentPlayer: boolean | undefined;
+  // The player in a competition a scenario makes, the other it is compared
+  // with, and whether the two were found the same. A failure to make or change
+  // one is kept in `failure`. The tournament player a scenario names for it,
+  // and whether the competition says the player has games.
+  public competitionPlayer: CompetitionPlayer | undefined;
+  public otherCompetitionPlayer: CompetitionPlayer | undefined;
+  public sameCompetitionPlayer: boolean | undefined;
+  public tournamentPlayerId: TournamentPlayerId | undefined;
+  public competitionPlayerHasGames = false;
+  // The players a competition has when a scenario finds the order for the
+  // next, and the order found.
+  public competitionPlayers: CompetitionPlayer[] = [];
+  public orderFound: number | undefined;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what
