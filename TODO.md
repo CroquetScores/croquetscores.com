@@ -14,7 +14,7 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- Sign in with Google.
+None
 
 ### Sending email
 

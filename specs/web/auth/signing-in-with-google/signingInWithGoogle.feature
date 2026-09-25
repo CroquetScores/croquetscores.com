@@ -169,6 +169,14 @@ Feature: Signing in with Google
 
   Rule: Signing in with Google goes back to the page that sent the reader, if it is on this site
 
+    The way to Google is an address like any other, and a link elsewhere can
+    send a reader along it without the sign in page ever having been opened,
+    carrying wherever that link likes to go back to. The sign in page judges
+    where to go back to before putting it in its offer, so the scenarios that
+    open it would pass with nothing judging it on the way to Google. So the
+    way to Google is held to the same rule on its own, by a reader sent along
+    it from elsewhere.
+
     Scenario: A reader signing in with Google with nowhere to go back to arrives at the admin
       Given a viewport 1200 pixels wide
       And Google knows the reader as "google-subject-1"
@@ -197,6 +205,20 @@ Feature: Signing in with Google
       And Google calls the reader "Sam Someone"
       And the sign in page is open, to go back to "<where>"
       When the reader signs in with Google
+      Then the admin is shown
+
+      Examples:
+        | where                      |
+        | https://elsewhere.example/ |
+        | //elsewhere.example/       |
+
+    Scenario Outline: A way to Google from elsewhere, asked to go back anywhere but a path on this site, sends the reader to the admin
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      When the reader follows a link from elsewhere to sign in with Google, to go back to "<where>"
       Then the admin is shown
 
       Examples:

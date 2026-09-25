@@ -6,6 +6,7 @@ import {
   exampleFormPath,
   exampleFormWithNoticePath,
 } from "../../support/exampleForm.js";
+import { autofocusSettled } from "../../support/autofocus.js";
 import { closes, englishForScenarios, opens } from "../../support/languages.js";
 
 // The status of the last page the browser arrived at, which a browser shows
@@ -205,6 +206,7 @@ Then(
 Then(
   "the reader is taken to the message above the fields",
   async function (this: SpecWorld) {
+    await autofocusSettled(this);
     const focused = await this.browserPage.evaluate<string | null>(
       "document.activeElement && document.activeElement.id",
     );

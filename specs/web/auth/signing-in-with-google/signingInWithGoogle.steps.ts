@@ -108,3 +108,18 @@ const signInWithGoogle = async function (this: SpecWorld): Promise<void> {
 
 When("the reader signs in with Google", signInWithGoogle);
 Given("the reader has signed in with Google", signInWithGoogle);
+
+// Straight to the way to Google, as a link on another site would send the
+// reader, so that nothing the sign in page does stands between what the link
+// asks to go back to and the way to Google that is asked to take it.
+When(
+  "the reader follows a link from elsewhere to sign in with Google, to go back to {string}",
+  async function (this: SpecWorld, goBack: string) {
+    await this.browserPage.goto(
+      `${this.baseUrl!}/auth/google?from=sign-in&return=${encodeURIComponent(goBack)}`,
+    );
+    // As when the offer is pressed: what the page landed on asks for itself
+    // renews the session cookie, and must be done before the scenario goes on.
+    await this.browserPage.waitForLoadState("networkidle");
+  },
+);
