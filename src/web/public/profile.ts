@@ -1,7 +1,7 @@
 // Where a reader signed in sees their own account: what it is called, the
 // email address it is reached at, and the pages that change either, or the
-// password. It changes nothing itself, and it is not a form, so it is read on
-// the panel rather than in a dialog.
+// password, or forget the account. It changes nothing itself, and it is not a
+// form, so it is read on the panel rather than in a dialog.
 //
 // A reader who is not signed in is sent to sign in and brought back. So is one
 // whose account has nothing to show, which is one forgotten since they signed
@@ -30,6 +30,8 @@ export const profilePath = "/account/profile";
 // them, and in its words. The ones that ask for the password the account has
 // now are offered only to an account that has one, and setting a password only
 // to one that has none.
+// Forgetting it comes last, and the menu does not offer it: what cannot be
+// undone is not put a slip away from signing out.
 const changes: readonly {
   readonly href: string;
   readonly words: string;
@@ -51,6 +53,7 @@ const changes: readonly {
     words: "account.setPassword",
     for: "without a password",
   },
+  { href: "/account/forget-account", words: "account.forgetAccount" },
 ];
 
 /** Back to `request`'s own address once the reader has signed in. */
