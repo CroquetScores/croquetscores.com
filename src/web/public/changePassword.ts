@@ -1,6 +1,9 @@
 // Where a reader signed in changes their password, by giving the one they have
 // now and a new one twice. A reader who does not know the one they have now
 // is pointed to the forgot password page, which sets one by a link instead.
+// A reader whose account has none, having only ever signed in with Google,
+// finds no page here at all, opened or posted to: there is nothing to change,
+// and nothing they could give.
 //
 // Asking for the password makes this page a way to guess it, one guess to a
 // submission, for whoever holds a browser left signed in; and a password
@@ -31,7 +34,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { refusedForm, typedFrom } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
-import { readerOf } from "../common/reader.js";
+import { hasPassword, readerOf } from "../common/reader.js";
 import { startSession } from "../common/session.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
@@ -101,6 +104,7 @@ export const registerChangePasswordPage = (
           title: dialog.title,
           theme: themeOf(request),
           signedIn: true,
+          hasPassword: hasPassword(request),
           speaking: speakingOf(request),
           siteName: siteNameOf(request),
           tryWebsite: websiteOf(request).isTry,
@@ -113,12 +117,14 @@ export const registerChangePasswordPage = (
 
   server.get(changePasswordPath, (request, reply) => {
     if (readerOf(request) === undefined) return toSignIn(request, reply);
+    if (!hasPassword(request)) return reply.callNotFound();
     return show(request, reply, formFor(speakingOf(request)));
   });
 
   server.post(changePasswordPath, async (request, reply) => {
     const reader = readerOf(request);
     if (reader === undefined) return toSignIn(request, reply);
+    if (!hasPassword(request)) return reply.callNotFound();
     // Counted by the account's address, which is what signing in counts by,
     // so that guesses here and at the sign in page share one limit.
     const profile = await request.server.mediator.query(

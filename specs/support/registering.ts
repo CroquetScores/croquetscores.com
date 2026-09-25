@@ -74,9 +74,6 @@ export interface Registering {
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
 
-  /** Every password hashed, in the order it was hashed. */
-  passwordsHashed(): readonly string[];
-
   /** Asks for an account to be forgotten. Throws what the mediator throws. */
   askToForget(command: AskToForgetAccount): Promise<void>;
 

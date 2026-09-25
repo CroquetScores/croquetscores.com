@@ -14,6 +14,16 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 
 /**
+ * The account a reader is signed in to, and whether it has a password. The
+ * account menu asks the second on every page, since what it offers a reader
+ * whose account has none leaves out every page that asks for one.
+ */
+export interface SignedInReader {
+  readonly account: AccountId;
+  readonly hasPassword: boolean;
+}
+
+/**
  * What says which account the reader of a request is signed in to, if any. It
  * is given the reply as well as the request, because reading a session is
  * using one: what says so may want to say it back to the browser.
@@ -21,12 +31,14 @@ import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 export type Reader = (
   request: FastifyRequest,
   reply: FastifyReply,
-) => Promise<AccountId | undefined> | AccountId | undefined;
+) => Promise<SignedInReader | undefined> | SignedInReader | undefined;
 
 declare module "fastify" {
   interface FastifyRequest {
     /** Which account is asking, if any. Read it through readerOf or signedIn. */
     readonly readerAccount: AccountId | undefined;
+    /** Whether that account has a password. Read it through hasPassword. */
+    readonly readerHasPassword: boolean;
   }
 }
 
@@ -36,15 +48,28 @@ export const knowTheReader = (
   reader: Reader,
 ): void => {
   server.decorateRequest("readerAccount", undefined);
+  server.decorateRequest("readerHasPassword", false);
   server.addHook("onRequest", async (request, reply) => {
-    (request as { readerAccount: AccountId | undefined }).readerAccount =
-      await reader(request, reply);
+    const found = await reader(request, reply);
+    const told = request as {
+      readerAccount: AccountId | undefined;
+      readerHasPassword: boolean;
+    };
+    told.readerAccount = found?.account;
+    told.readerHasPassword = found?.hasPassword ?? false;
   });
 };
 
 /** The account `request` is signed in to, or nothing. */
 export const readerOf = (request: FastifyRequest): AccountId | undefined =>
   request.readerAccount;
+
+/**
+ * Whether the account the reader of `request` is signed in to has a password.
+ * Nobody signed in has none.
+ */
+export const hasPassword = (request: FastifyRequest): boolean =>
+  request.readerHasPassword;
 
 /** Whether the reader of `request` is signed in to anything. */
 export const signedIn = (request: FastifyRequest): boolean =>

@@ -6,8 +6,6 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { EmailAddressHasher } from "../../services/EmailAddressHasher.js";
-import type { PasswordHasher } from "../../services/PasswordHasher.js";
-import type { RandomPasswords } from "../../services/RandomPasswords.js";
 import type { AccountsByAddress } from "./RegisterAccountHandler.js";
 import { SignInWithGoogle } from "./SignInWithGoogle.js";
 
@@ -44,9 +42,6 @@ export interface AccountsByGoogleAccount {
   find(subject: string): Promise<AccountId | undefined>;
 }
 
-/** How long the password nobody chose is. */
-const PASSWORD_LENGTH = 50;
-
 /**
  * Signing in with Google.
  *
@@ -66,9 +61,9 @@ const PASSWORD_LENGTH = 50;
  * double click, take turns with it rather than each changing it from where it
  * stood before any began, and all but one being refused for it.
  *
- * An account made or confirmed here is given a password, because an account
- * confirmed has one, and it is made at random and told to nobody. Its owner
- * sets one of their own, if they want one, by asking for a way back in.
+ * An account made or confirmed here is given no password: its owner signs in
+ * with Google, and sets one of their own, if they want one, by asking for a
+ * way back in.
  */
 export class SignInWithGoogleHandler extends CommandHandler<
   SignInWithGoogle,
@@ -81,8 +76,6 @@ export class SignInWithGoogleHandler extends CommandHandler<
     private readonly byAddress: AccountsByAddressForGoogle,
     private readonly byGoogle: AccountsByGoogleAccount,
     private readonly addresses: EmailAddressHasher,
-    private readonly passwords: PasswordHasher,
-    private readonly randomPasswords: RandomPasswords,
   ) {
     super();
   }
@@ -138,11 +131,7 @@ export class SignInWithGoogleHandler extends CommandHandler<
       );
     }
     if (!account.confirmed) {
-      account.confirm(
-        this.nameOf(command),
-        await this.passwords.hash(this.randomPasswords.make(PASSWORD_LENGTH)),
-        command.requestedAt,
-      );
+      account.confirm(this.nameOf(command), undefined, command.requestedAt);
     }
     account.linkGoogleAccount(command.subject, command.requestedAt);
     account.signIn(command.requestedAt);

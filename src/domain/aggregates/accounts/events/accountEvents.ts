@@ -30,6 +30,14 @@ const text = (
   return value;
 };
 
+// A field an event can do without, and which JSON leaves out when it is.
+const optionalText = (
+  said: Readonly<Record<string, unknown>>,
+  field: string,
+  name: string,
+): string | undefined =>
+  said[field] === undefined ? undefined : text(said, field, name);
+
 const role = (said: Readonly<Record<string, unknown>>, name: string): Role => {
   const value = text(said, "role", name);
   if (!isRole(value)) {
@@ -71,7 +79,7 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new EmailAddressConfirmed(
           text(said, "name", "account-email-address-confirmed"),
-          text(said, "passwordHash", "account-email-address-confirmed"),
+          optionalText(said, "passwordHash", "account-email-address-confirmed"),
           createdBy,
           occurredAt,
         ),

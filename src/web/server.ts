@@ -26,6 +26,7 @@ import { ReportUnreachableServiceHandler } from "../application/operations/accou
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
+import { AccountProfile } from "../application/operations/accounts/AccountProfile.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
 import { ChangePasswordHandler } from "../application/operations/accounts/ChangePasswordHandler.js";
@@ -73,7 +74,6 @@ import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReader
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
-import { CryptoRandomPasswords } from "../infrastructure/identity/CryptoRandomPasswords.js";
 import {
   GoogleOpenIdConnect,
   GoogleOpenIdConnectFailed,
@@ -461,8 +461,6 @@ export const buildApplication = async (
       accountsByEmailAddress,
       accountsByGoogleAccount,
       emailAddresses,
-      passwords,
-      new CryptoRandomPasswords(),
     ),
   );
   validation.register(new ResetPasswordValidator());
@@ -564,7 +562,14 @@ export const buildApplication = async (
   const sessions = new PostgresSessions(unitOfWork);
   knowTheReader(
     server,
-    options.reader ?? readerFromSessions(sessions, inTransaction),
+    options.reader ??
+      readerFromSessions(
+        sessions,
+        inTransaction,
+        async (account) =>
+          (await mediator.query(new AccountProfile(account.value)))
+            ?.hasPassword ?? false,
+      ),
   );
 
   // Before any route, so nothing that changes something can be reached from

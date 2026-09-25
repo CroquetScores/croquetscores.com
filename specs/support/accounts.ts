@@ -21,6 +21,8 @@ export interface AccountAsGiven {
   readonly name?: string;
   /** The password it was confirmed with, where the scenario says one. */
   readonly password?: string;
+  /** Whether it was confirmed with no password, as signing in with Google confirms one. */
+  readonly noPassword?: boolean;
   /** Whether it came over from the old site, with the hash the old site made. */
   readonly fromTheOldSite?: boolean;
 }
@@ -76,6 +78,13 @@ Given(
   "{string} has an account, confirmed, with the password {string}",
   async function (this: SpecWorld, address: string, password: string) {
     await inHand(this).give(address, { confirmed: true, password });
+  },
+);
+
+Given(
+  "{string} has an account, confirmed, with no password",
+  async function (this: SpecWorld, address: string) {
+    await inHand(this).give(address, { confirmed: true, noPassword: true });
   },
 );
 

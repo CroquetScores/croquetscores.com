@@ -47,11 +47,11 @@ Feature: Confirming an account's email address
       When the account's email address is confirmed with no password
       Then the account is confirmed
 
-    Scenario: An account confirmed with no password has no password hash
+    Scenario: An account confirmed with no password has no password
       Given a stream where an account was registered at "someone@example.com"
       And the account is rebuilt from the stream
       When the account's email address is confirmed with no password
-      Then the account has no password hash
+      Then the account has no password
 
     Scenario: What confirming recorded does not hold the password
       Given a stream where an account was registered at "someone@example.com"
@@ -98,11 +98,11 @@ Feature: Confirming an account's email address
       When the account is rebuilt from the stream
       Then the account's password hash is "hash-of-a-password"
 
-    Scenario: An account rebuilt from its confirming with no password has no password hash
+    Scenario: An account rebuilt from its confirming with no password has no password
       Given a stream where an account was registered at "someone@example.com"
       And its email address was confirmed with no password
       When the account is rebuilt from the stream
-      Then the account has no password hash
+      Then the account has no password
 
   Rule: A forgotten account cannot be confirmed
 

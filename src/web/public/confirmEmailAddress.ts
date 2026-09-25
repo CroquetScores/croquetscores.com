@@ -42,7 +42,7 @@ import { submitForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
 import { reportUnreachable } from "../common/unreachableServices.js";
 
@@ -112,6 +112,7 @@ const pageOf = (
     title,
     theme: themeOf(request),
     signedIn: signedIn(request),
+    hasPassword: hasPassword(request),
     speaking: speakingOf(request),
     siteName: siteNameOf(request),
     tryWebsite: websiteOf(request).isTry,

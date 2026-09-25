@@ -15,7 +15,7 @@ import {
 const confirm = (
   world: SpecWorld,
   name: string,
-  passwordHash: string,
+  passwordHash: string | undefined,
 ): Promise<void> =>
   ask(world, (account) =>
     account.confirm(PersonName.from(name), passwordHash, now(world)),
@@ -32,6 +32,13 @@ When(
   "the account's email address is confirmed with the password hash {string}",
   async function (this: SpecWorld, passwordHash: string) {
     await confirm(this, A_NAME, passwordHash);
+  },
+);
+
+When(
+  "the account's email address is confirmed with no password",
+  async function (this: SpecWorld) {
+    await confirm(this, A_NAME, undefined);
   },
 );
 

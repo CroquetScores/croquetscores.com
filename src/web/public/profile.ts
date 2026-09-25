@@ -18,7 +18,7 @@ import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
-import { readerOf } from "../common/reader.js";
+import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { signInPath } from "./signIn.js";
@@ -26,14 +26,24 @@ import { signInPath } from "./signIn.js";
 export const profilePath = "/account/profile";
 
 // The pages that change the account, in the order the account menu offers
-// them, and in its words.
-const changes: readonly { readonly href: string; readonly words: string }[] = [
+// them, and in its words. The ones that ask for the password the account has
+// now are left out for an account that has none.
+const changes: readonly {
+  readonly href: string;
+  readonly words: string;
+  readonly asksForPassword?: boolean;
+}[] = [
   { href: "/account/change-name", words: "account.changeName" },
   {
     href: "/account/change-email-address",
     words: "account.changeEmailAddress",
+    asksForPassword: true,
   },
-  { href: "/account/change-password", words: "account.changePassword" },
+  {
+    href: "/account/change-password",
+    words: "account.changePassword",
+    asksForPassword: true,
+  },
 ];
 
 /** Back to `request`'s own address once the reader has signed in. */
@@ -61,6 +71,7 @@ export const registerProfilePage = (
       title: say("profile.title"),
       theme: themeOf(request),
       signedIn: true,
+      hasPassword: hasPassword(request),
       speaking,
       siteName: siteNameOf(request),
       tryWebsite: websiteOf(request).isTry,
@@ -74,7 +85,13 @@ export const registerProfilePage = (
             <dd class="profile-own" id="profile-email-address">${escape(profile.emailAddress)}</dd>
           </dl>
           <ul class="profile-changes">
-${changes.map(({ href, words }) => `            <li><a href="${href}">${escape(say(words))}</a></li>`).join("\n")}
+${changes
+  .filter((each) => profile.hasPassword || each.asksForPassword !== true)
+  .map(
+    ({ href, words }) =>
+      `            <li><a href="${href}">${escape(say(words))}</a></li>`,
+  )
+  .join("\n")}
           </ul>`,
     });
 

@@ -17,7 +17,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
-import { readerOf } from "../common/reader.js";
+import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { profilePath, toSignIn } from "./profile.js";
@@ -65,6 +65,7 @@ export const registerChangeNamePage = (
             title: dialog.title,
             theme: themeOf(request),
             signedIn: true,
+            hasPassword: hasPassword(request),
             speaking,
             siteName: siteNameOf(request),
             tryWebsite: websiteOf(request).isTry,

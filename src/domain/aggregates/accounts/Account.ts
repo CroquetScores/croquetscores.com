@@ -205,11 +205,16 @@ export class Account extends AggregateRoot {
 
   /**
    * That the address is somebody's, who is called `name` and signs in with a
-   * password hashing to `passwordHash`. Only the first confirming counts: a
+   * password hashing to `passwordHash`, or with none, having shown it by
+   * signing in with Google. Only the first confirming counts: a
    * link followed twice records one event, and a link left in an inbox cannot
    * rename an account or change its password once it is somebody's.
    */
-  confirm(name: PersonName, passwordHash: string, at: ReadOnlyDate): void {
+  confirm(
+    name: PersonName,
+    passwordHash: string | undefined,
+    at: ReadOnlyDate,
+  ): void {
     this.#refuseOnceForgotten();
     if (this.#confirmed) return;
     this.record(
@@ -370,9 +375,12 @@ export class Account extends AggregateRoot {
       this.#confirmed = true;
     } else if (event instanceof EmailAddressConfirmed) {
       this.#name = PersonName.from(event.name);
-      this.#passwordHash = event.passwordHash;
-      this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
+      // Nobody chose a password when there is none, so none was set then.
+      if (event.passwordHash !== undefined) {
+        this.#passwordHash = event.passwordHash;
+        this.#passwordSetAt = event.occurredAt;
+      }
     } else if (event instanceof EmailAddressChangeAsked) {
       this.#movesAsked.set(
         event.reference,

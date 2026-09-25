@@ -15,7 +15,7 @@ import { siteNameOf, websiteOf } from "./site.js";
 import { escape } from "./escape.js";
 import { render } from "./layout.js";
 import { themeOf } from "./theme.js";
-import { signedIn } from "./reader.js";
+import { hasPassword, signedIn } from "./reader.js";
 
 // The API answers JSON and the public pages answer HTML, including when they
 // fail. A browser should not be handed a JSON body for a page it asked for.
@@ -38,6 +38,7 @@ const page = (
     title,
     theme: themeOf(request),
     signedIn: signedIn(request),
+    hasPassword: hasPassword(request),
     speaking,
     siteName: siteNameOf(request),
     tryWebsite: websiteOf(request).isTry,

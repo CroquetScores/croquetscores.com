@@ -61,6 +61,17 @@ Then(
   },
 );
 
+Then("the profile says the account has a password", function (this: SpecWorld) {
+  assert.equal(profileOf(this).hasPassword, true);
+});
+
+Then(
+  "the profile says the account has no password",
+  function (this: SpecWorld) {
+    assert.equal(profileOf(this).hasPassword, false);
+  },
+);
+
 Then("there is no profile", function (this: SpecWorld) {
   assert.ok(answered.has(this), "No profile was asked for.");
   assert.equal(answered.get(this), undefined);

@@ -1,6 +1,7 @@
 // The last thing in the header: a person, which opens on what a reader can do
 // with their account. A reader who is not signed in is offered the ways in; one
-// who is signed in is offered their own pages and the way out.
+// who is signed in is offered their own pages and the way out, leaving out the
+// ones that ask for the password the account has now when it has none.
 //
 // It is a summary and the details under it, as the primary navigation's menu
 // is, so that it opens with no scripting: every public page works without it,
@@ -17,6 +18,8 @@ import type { Speaking } from "./language.js";
 interface MenuItem {
   readonly href: string;
   readonly words: string;
+  /** Whether the page asks for the password the account has now. */
+  readonly asksForPassword?: boolean;
 }
 
 const waysIn: readonly MenuItem[] = [
@@ -27,10 +30,15 @@ const waysIn: readonly MenuItem[] = [
 
 const theAccounts: readonly MenuItem[] = [
   { href: "/account/profile", words: "account.profile" },
-  { href: "/account/change-password", words: "account.changePassword" },
+  {
+    href: "/account/change-password",
+    words: "account.changePassword",
+    asksForPassword: true,
+  },
   {
     href: "/account/change-email-address",
     words: "account.changeEmailAddress",
+    asksForPassword: true,
   },
   { href: "/account/change-name", words: "account.changeName" },
 ];
@@ -43,6 +51,8 @@ export interface AccountMenu {
   readonly speaking: Speaking;
   /** Whether the reader is signed in, which decides what it opens on. */
   readonly signedIn: boolean;
+  /** Whether the account signed in to has a password. */
+  readonly hasPassword: boolean;
   /** Where in the menu the reader is, if anywhere. */
   readonly currentPath?: string | undefined;
 }
@@ -81,12 +91,18 @@ const item = (
 export const accountMenu = ({
   speaking,
   signedIn,
+  hasPassword,
   currentPath,
 }: AccountMenu): string => {
   const named = escape(speaking.say("account.menu"));
   const shown = (each: MenuItem) => item(each, speaking, currentPath);
   const items = signedIn
-    ? [signOut(speaking), ...theAccounts.map(shown)]
+    ? [
+        signOut(speaking),
+        ...theAccounts
+          .filter((each) => hasPassword || each.asksForPassword !== true)
+          .map(shown),
+      ]
     : waysIn.map(shown);
 
   return `        <details class="account-menu">

@@ -27,6 +27,15 @@ import type { AccountsInHand } from "../../support/accounts.js";
 const CALLED = "Sam Someone";
 
 /**
+ * The Google account an account with no password is made by, and so the one
+ * that signs in to it.
+ */
+export const googleSubjectOf = (address: string): string => `google-${address}`;
+
+/** What Google says a reader with no password is called. */
+export const calledByGoogle = CALLED;
+
+/**
  * The salt the old site added to every password. A scenario's own, so that an
  * account brought over can be made and signed in to whether or not whoever
  * runs the specs has the real one.
@@ -71,6 +80,21 @@ export const accountsThrough = (
   async give(address, as) {
     if (as.fromTheOldSite === true) {
       await broughtOver(application, address, as.password ?? "", now());
+      return;
+    }
+
+    // Made the one way the site makes an account with no password: by
+    // signing in with Google.
+    if (as.noPassword === true) {
+      await application.mediator.send(
+        new SignInWithGoogle(
+          googleSubjectOf(address),
+          address,
+          true,
+          as.name ?? CALLED,
+          now(),
+        ),
+      );
       return;
     }
 

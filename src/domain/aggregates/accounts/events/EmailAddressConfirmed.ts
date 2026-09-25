@@ -7,7 +7,8 @@ import type { AccountId } from "../AccountId.js";
  * and said who they are: the name the account is called, and the hash of the
  * password it is signed in to with. They are given here, by the one person
  * who can have the link, rather than with registering, which anybody can ask
- * for with anybody's address.
+ * for with anybody's address. An address Google has verified is confirmed
+ * with no password at all, since its owner signs in with Google.
  *
  * The name is held as text rather than as the value it came from, as the
  * address is where the account was registered, and the password only as its
@@ -16,7 +17,7 @@ import type { AccountId } from "../AccountId.js";
 export class EmailAddressConfirmed extends DomainEvent {
   constructor(
     readonly name: string,
-    readonly passwordHash: string,
+    readonly passwordHash: string | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

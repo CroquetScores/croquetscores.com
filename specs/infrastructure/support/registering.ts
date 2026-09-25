@@ -69,7 +69,6 @@ import {
   SignInWithGoogleHandler,
 } from "../../../src/application/operations/accounts/SignInWithGoogleHandler.js";
 import type { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
-import { CryptoRandomPasswords } from "../../../src/infrastructure/identity/CryptoRandomPasswords.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
 import type { SendConfirmationLinkAgain } from "../../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
 import { WhatASetNewPasswordLinkIsWorthHandler } from "../../../src/application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
@@ -141,14 +140,7 @@ class QuickHasher implements PasswordHasher {
   /** How many times a password has been checked against a hash, or against none. */
   checks = 0;
 
-  /**
-   * Every password hashed, so that a scenario can ask about a password nobody
-   * was told, which reaches nothing else before it is hashed.
-   */
-  readonly hashed: string[] = [];
-
   hash(password: string): Promise<string> {
-    this.hashed.push(password);
     return Promise.resolve(digestOf(password));
   }
 
@@ -272,16 +264,12 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       return accounts.byGoogleAccount.find(subject);
     },
   };
-  // The random passwords the site makes, since what is asked of them is only
-  // what the site's are: how long, and whether two are the same.
   mediator.handleCommand(
     new SignInWithGoogleHandler(
       repository,
       accounts.readModel,
       byGoogleAccount,
       accounts.hasher,
-      hasher,
-      new CryptoRandomPasswords(),
     ),
   );
   mediator.handleCommand(
@@ -428,7 +416,11 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       // scenario named is one that signing in can check.
       account.confirm(
         PersonName.from(as.name ?? CONFIRMED_AS),
-        as.password === undefined ? CONFIRMED_WITH : digestOf(as.password),
+        as.noPassword === true
+          ? undefined
+          : as.password === undefined
+            ? CONFIRMED_WITH
+            : digestOf(as.password),
         now(),
       );
     }
@@ -478,8 +470,6 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       account.linkGoogleAccount(subject, now());
       await world.keepAccount?.(account);
     },
-
-    passwordsHashed: () => hasher.hashed,
 
     async askToForget(command: AskToForgetAccount): Promise<void> {
       await settle();

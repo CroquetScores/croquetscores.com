@@ -9,7 +9,7 @@ import { render, type Section } from "../common/layout.js";
 import { speakingOf } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
-import { signedIn } from "../common/reader.js";
+import { hasPassword, signedIn } from "../common/reader.js";
 
 export interface Page {
   readonly path: string;
@@ -122,6 +122,7 @@ export const registerPublicPages = (
         currentPath: page.path,
         theme: themeOf(request),
         signedIn: signedIn(request),
+        hasPassword: hasPassword(request),
         speaking: speakingOf(request),
         siteName: siteNameOf(request),
         tryWebsite: websiteOf(request).isTry,

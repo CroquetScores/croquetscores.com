@@ -23,6 +23,7 @@ import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import { signOutPath } from "./accountMenu.js";
 import { assetsPath } from "./assets.js";
 import type { InTransaction } from "./database.js";
+import type { SignedInReader } from "./reader.js";
 
 export const sessionCookie = "session";
 
@@ -52,6 +53,9 @@ const options = {
  * cookie's life from when it was given it, and would otherwise drop it 90 days
  * after signing in however often its reader came back.
  *
+ * Whether the account has a password is asked of `hasPassword` only once a
+ * session has been found, and so only for a reader who is signed in.
+ *
  * A request for one of the site's own files is not asked at all. Nothing under
  * /assets/ is drawn for a reader, so there is nothing there to know — and the
  * answer is sent as public and kept for a year, so renewing the cookie on it
@@ -59,11 +63,15 @@ const options = {
  * and its readers is invited to hand to somebody else.
  */
 export const readerFromSessions =
-  (sessions: Sessions, inTransaction: InTransaction) =>
+  (
+    sessions: Sessions,
+    inTransaction: InTransaction,
+    hasPassword: (account: AccountId) => Promise<boolean>,
+  ) =>
   async (
     request: FastifyRequest,
     reply: FastifyReply,
-  ): Promise<AccountId | undefined> => {
+  ): Promise<SignedInReader | undefined> => {
     if (request.url.startsWith(assetsPath)) return undefined;
 
     const id = request.cookies[sessionCookie];
@@ -72,8 +80,9 @@ export const readerFromSessions =
     const account = await inTransaction(() =>
       sessions.readerOf(id, request.requestedAt),
     );
-    if (account !== undefined) reply.setCookie(sessionCookie, id, options);
-    return account;
+    if (account === undefined) return undefined;
+    reply.setCookie(sessionCookie, id, options);
+    return { account, hasPassword: await hasPassword(account) };
   };
 
 /**

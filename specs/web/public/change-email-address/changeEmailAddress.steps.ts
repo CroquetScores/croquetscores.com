@@ -5,6 +5,10 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import {
+  openAndKeepTheAnswer,
+  postAndKeepTheAnswer,
+} from "../../support/answered.js";
 import { applicationFor } from "../../support/browser.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
@@ -21,7 +25,7 @@ const words = (key: string, fill: Record<string, string> = {}): string => {
 };
 
 const open = async (world: SpecWorld): Promise<void> => {
-  await world.browserPage.goto(`${world.baseUrl!}${changeEmailAddress}`);
+  await openAndKeepTheAnswer(world, changeEmailAddress);
 };
 
 Given(
@@ -35,6 +39,18 @@ When(
   "the change email address page is opened",
   async function (this: SpecWorld) {
     await open(this);
+  },
+);
+
+// Whatever it is posted, since what is posted is not what is being asked
+// about: only whether there is a page there to take it.
+When(
+  "the change email address page is posted to",
+  async function (this: SpecWorld) {
+    await postAndKeepTheAnswer(this, changeEmailAddress, {
+      emailAddress: "sam@example.org",
+      currentPassword: "correct horse battery staple",
+    });
   },
 );
 

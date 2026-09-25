@@ -102,6 +102,15 @@ Given(
   },
 );
 
+Given(
+  "its email address was confirmed with no password",
+  function (this: SpecWorld) {
+    streamOf(this).push(
+      new EmailAddressConfirmed(A_NAME, undefined, idOf(this), now(this)),
+    );
+  },
+);
+
 Given("its password was hashed again", function (this: SpecWorld) {
   streamOf(this).push(
     new PasswordHashedAgain(A_BETTER_HASH, idOf(this), now(this)),

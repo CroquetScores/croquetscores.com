@@ -4,7 +4,7 @@ import { strict as assert } from "node:assert";
 import { signOutPath } from "../../../../src/web/common/accountMenu.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { closes, opens } from "../../support/languages.js";
-import { signInAs, signOutOf } from "../../support/reader.js";
+import { hasNoPassword, signInAs, signOutOf } from "../../support/reader.js";
 
 const MENU = "details.account-menu";
 const SUMMARY = `${MENU} > summary`;
@@ -184,6 +184,15 @@ Given("an account for {string}, confirmed", function (address: string) {
   // as though it has an account should not pass for want of the step.
   assert.ok(address.includes("@"), `${address} is not an email address.`);
 });
+
+// Nothing is made, for the reason above; what is kept is only that signing in
+// as the address says its account has no password.
+Given(
+  "an account for {string}, confirmed, with no password",
+  function (this: SpecWorld, address: string) {
+    hasNoPassword(this, address);
+  },
+);
 
 // Said of the scenario's browser rather than of any account: these scenarios
 // have no database, and what the menu asks is only whether anybody is signed
