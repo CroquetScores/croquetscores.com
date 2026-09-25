@@ -11,7 +11,9 @@ Feature: A reader who is signed in sees their account's profile
   An account with no password, because its reader has only ever signed in with
   Google, has no password to change and none to give for moving to another
   email address, so the profile links to neither
-  (`changePassword.feature`, `changeEmailAddress.feature`).
+  (`changePassword.feature`, `changeEmailAddress.feature`). It links to
+  setting a password instead, which it offers nobody else
+  (`setPassword.feature`).
 
   Only a reader who is signed in sees it. One who is not is sent to sign in
   first, and brought back here once they have, as every page of an account's
@@ -146,6 +148,20 @@ Feature: A reader who is signed in sees their account's profile
         | page                 |
         | Change Email Address |
         | Change Password      |
+
+    Scenario: The profile of an account with no password links to setting one
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      When the profile page is opened
+      Then the profile links to "Set Password" at "/account/set-password"
+
+    Scenario: The profile of an account with a password does not link to setting one
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      When the profile page is opened
+      Then the profile does not link to "Set Password"
 
   Rule: The page needs no scripting
 

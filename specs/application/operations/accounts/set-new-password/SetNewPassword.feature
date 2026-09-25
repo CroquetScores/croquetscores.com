@@ -2,7 +2,10 @@
 Feature: Setting a new password with the link that was emailed
 
   A reader who has forgotten their password is emailed a link
-  (`ResetPassword.feature`), and submits a new password with it. It is
+  (`ResetPassword.feature`), and submits a new password with it. So is a
+  reader whose account has no password and who asked for one
+  (`AskToSetPassword.feature`): the link is the same, and sets a password the
+  same way. It is
   asked for by nobody signed in: whoever has the link has shown they can read
   mail at the address, and that is the whole of what they are asked to show.
 

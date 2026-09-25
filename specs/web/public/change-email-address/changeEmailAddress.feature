@@ -49,7 +49,8 @@ Feature: A reader who is signed in can change their account's email address
   in with Google, has none to give here. For them the page is not there:
   opening it, or posting to it, is answered as a page that does not exist is,
   and neither the menu nor the profile leads to it (`accountMenu.feature`,
-  `profile.feature`). They set a password by the forgot password page first.
+  `profile.feature`). They set a password on the set password page first
+  (`setPassword.feature`).
 
   Only a reader who is signed in can ask; one who is not is sent to sign in
   first. None of it needs scripting.

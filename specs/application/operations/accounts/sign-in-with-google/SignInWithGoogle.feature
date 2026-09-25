@@ -25,9 +25,10 @@ Feature: Signing in with Google
 
   An address with no account gets one, confirmed, called what Google calls
   the reader, and linked, with no password. The reader signs in with Google,
-  and one who wants to sign in with a password as well sets one by the way
-  back in (`forgotPassword.feature`). An account that has been forgotten is not there to
-  be found, so its address gets a new account, as registering it again would.
+  and one who wants to sign in with a password as well has a link sent to set
+  one (`setPassword.feature`). An account that has been forgotten is not there
+  to be found, so its address gets a new account, as registering it again
+  would.
 
   An account is called something, and a reader who registers with Google is
   called what Google calls them. Google does not always say, and where it
