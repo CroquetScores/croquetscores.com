@@ -39,6 +39,9 @@ import type { Sport } from "../../src/domain/aggregates/tournaments/value-object
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
 import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/TournamentPlayer.js";
+import type { CompetitionName } from "../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import type { CompetitionReference } from "../../src/domain/aggregates/tournaments/CompetitionReference.js";
+import type { Slug } from "../../src/domain/common/Slug.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type {
   EventRegistry,
@@ -302,6 +305,16 @@ export class SpecWorld extends World {
   public tournamentPlayer: TournamentPlayer | undefined;
   public otherTournamentPlayer: TournamentPlayer | undefined;
   public sameTournamentPlayer: boolean | undefined;
+  // The competition name and the slug a scenario makes. A failure to make
+  // either is kept in `failure`.
+  public competitionName: CompetitionName | undefined;
+  public slug: Slug | undefined;
+  // The reference to a competition a scenario makes, the other it is compared
+  // with, and whether the two were found the same. A failure to make one is
+  // kept in `failure`.
+  public competitionReference: CompetitionReference | undefined;
+  public otherCompetitionReference: CompetitionReference | undefined;
+  public sameCompetitionReference: boolean | undefined;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what
