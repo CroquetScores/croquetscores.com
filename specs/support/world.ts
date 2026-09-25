@@ -307,6 +307,16 @@ export class SpecWorld extends World {
   public tournamentPlayer: TournamentPlayer | undefined;
   public otherTournamentPlayer: TournamentPlayer | undefined;
   public sameTournamentPlayer: boolean | undefined;
+  // The competition name and the slug a scenario makes. A failure to make
+  // either is kept in `failure`.
+  public competitionName: CompetitionName | undefined;
+  public slug: Slug | undefined;
+  // The reference to a competition a scenario makes, the other it is compared
+  // with, and whether the two were found the same. A failure to make one is
+  // kept in `failure`.
+  public competitionReference: CompetitionReference | undefined;
+  public otherCompetitionReference: CompetitionReference | undefined;
+  public sameCompetitionReference: boolean | undefined;
   // The player in a competition a scenario makes, the other it is compared
   // with, and whether the two were found the same. A failure to make or change
   // one is kept in `failure`. The tournament player a scenario names for it,
