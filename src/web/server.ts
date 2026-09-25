@@ -639,7 +639,7 @@ export const buildApplication = async (
   registerForgetAccountPage(server, assets, sessions, inTransaction);
   registerProfilePage(server, assets);
   registerChangeNamePage(server, assets);
-  registerChangeEmailAddressPage(server, assets);
+  registerChangeEmailAddressPage(server, assets, failedSignIns, inTransaction);
   registerRegistrationsSuspendedPage(server, assets);
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);

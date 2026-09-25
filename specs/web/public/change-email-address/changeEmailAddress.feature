@@ -10,6 +10,16 @@ Feature: A reader who is signed in can change their account's email address
   the account's is said beneath its field, and sends nothing. So is an address
   that breaks a rule, or the address the account has already.
 
+  Being asked for the password makes this page a way to guess it, as the
+  change password page is, and a guess that lands here moves the account. So a
+  wrong password here counts toward the limits signing in is held to
+  (`signIn.feature`), against the account's email address and the IP address
+  it came from, as it does there, and the right one counts for nothing. Were it
+  counted on one page and not the other, whoever holds a browser left signed in
+  would guess on the page that does not count. An address or an IP address
+  held by either limit is told to try again later, whatever was typed, and
+  nothing is sent.
+
   Asking changes nothing yet. The account is only moved to an address once
   whoever reads mail there has said so, as an account is only confirmed at one
   (`ConfirmEmailAddress.feature`): an address that was mistyped, or that is
@@ -262,6 +272,61 @@ Feature: A reader who is signed in can change their account's email address
       And nobody is signed in
       When the link emailed to "sam@example.org" is followed
       Then the sign in page is shown
+
+  Rule: A wrong password counts toward the sign in limits, and a held address is told to try later
+
+    Scenario: A wrong current password is counted
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change email address page is open
+      And the new email address "sam@example.org" is typed
+      And the current password "not the right password" is typed
+      When the dialog is submitted
+      Then signing in as "someone@example.com" has been counted 1 time
+
+    Scenario: The right current password counts for nothing
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And the change email address page is open
+      And the new email address "sam@example.org" is typed
+      And the current password "correct horse battery staple" is typed
+      When the dialog is submitted
+      Then signing in as "someone@example.com" has been counted 0 times
+
+    Scenario: An email address that has failed 10 times in an hour is told to try later
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And signing in as "someone@example.com" has failed 10 times in the last hour
+      And the change email address page is open
+      And the new email address "sam@example.org" is typed
+      And the current password "correct horse battery staple" is typed
+      When the dialog is submitted
+      Then the reader is told to try again later
+
+    Scenario: An email address held by the limit sends nothing, even given the right password
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And signing in as "someone@example.com" has failed 10 times in the last hour
+      And the change email address page is open
+      And the new email address "sam@example.org" is typed
+      And the current password "correct horse battery staple" is typed
+      When the dialog is submitted
+      Then no link to confirm the new email address is emailed to "sam@example.org"
+
+    Scenario: An IP address that has failed 30 times in an hour is told to try later
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And this IP address has failed to sign in 30 times in the last hour
+      And the change email address page is open
+      And the new email address "sam@example.org" is typed
+      And the current password "correct horse battery staple" is typed
+      When the dialog is submitted
+      Then the reader is told to try again later
 
   Rule: What breaks a rule is said beneath its field, and sends nothing
 
