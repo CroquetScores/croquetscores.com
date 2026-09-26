@@ -233,6 +233,10 @@ export const TournamentForm = ({
     above: Refusal[];
   }>({ byField: {}, above: [] });
   const [sending, setSending] = useState(false);
+  // What stops a second send, where `sending` only says one is under way. A
+  // double click or a second Enter can arrive before the form has drawn itself
+  // again, and so before `sending` has changed for it; a ref is changed at once.
+  const inFlight = useRef(false);
   const form = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -275,6 +279,11 @@ export const TournamentForm = ({
   const asksAboutWorldRankings = withWorldRankings.includes(sport) && !handicap;
 
   const save = async (): Promise<void> => {
+    // Each send of a new tournament is given an address of its own, so a
+    // second one is not refused as the same tournament: it is a second
+    // tournament.
+    if (inFlight.current) return;
+    inFlight.current = true;
     setSending(true);
     try {
       const response = await send({
@@ -296,6 +305,8 @@ export const TournamentForm = ({
       });
       const answer: unknown = await response.json();
       if (response.ok) {
+        // Still sending as far as the reader can tell, and still refusing a
+        // second send, until the browser has left for the tournament.
         window.location.assign(
           `/admin/${(answer as { address: string }).address}`,
         );
@@ -304,9 +315,9 @@ export const TournamentForm = ({
       setRefused(placed(answer));
     } catch {
       setRefused({ byField: {}, above: [refusal("Unknown")] });
-    } finally {
-      setSending(false);
     }
+    inFlight.current = false;
+    setSending(false);
   };
 
   const said = (field: string): Refusal[] | undefined => refused.byField[field];
