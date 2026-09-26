@@ -99,6 +99,7 @@ import {
   type Clock,
 } from "./common/requestedAt.js";
 import { english } from "./languages/english.js";
+import { spanish } from "./languages/spanish.js";
 import { auth } from "./auth/index.js";
 import {
   GoogleUnreachable,
@@ -292,7 +293,7 @@ export interface ApplicationOptions {
   readonly clock?: Clock;
   /**
    * The languages the site offers, the first being the one it falls back to.
-   * English alone, unless a scenario offers more.
+   * English and Spanish, unless a scenario offers others.
    */
   readonly languages?: readonly Language[];
   /**
@@ -398,7 +399,7 @@ export const buildApplication = async (
   // Emails are written from the site's catalogues, with links made from the
   // site's configured address and never a request's, and written to files in
   // temp/ until there is a mail provider.
-  const languages = options.languages ?? [english];
+  const languages = options.languages ?? [english, spanish];
   const where = siteAddress(config.canonicalHost, config.port);
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,
