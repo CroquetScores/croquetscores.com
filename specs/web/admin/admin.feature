@@ -60,9 +60,9 @@ Feature: The admin is served as the site it belongs to
     Scenario: The admin's header offers the public pages' navigation
       Given a viewport 1200 pixels wide
       When the admin is opened
-      Then the link "Tournaments" is visible
-      And the link "Blog" is visible
+      Then the link "Home" is visible
       And the link "Help" is visible
+      And the link "Admin" is visible
 
     Scenario: The admin's navigation marks the admin as the page being read
       Given a viewport 1200 pixels wide
@@ -102,7 +102,7 @@ Feature: The admin is served as the site it belongs to
       Given a viewport 375 pixels wide
       When the admin is opened
       Then the menu button is visible
-      And the link "Tournaments" is not visible
+      And the link "Help" is not visible
 
     Scenario: The admin's footer carries the plea
       Given a viewport 1200 pixels wide

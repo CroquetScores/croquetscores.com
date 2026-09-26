@@ -67,7 +67,7 @@ Feature: The site can be read in Spanish
       And a site offering the languages it is served with
       And a browser that asks for "es"
       When the home page is opened
-      Then the link "Torneos" is visible
+      Then the link "Ayuda" is visible
 
     @browser
     Scenario: The footer offers Spanish by its own name
