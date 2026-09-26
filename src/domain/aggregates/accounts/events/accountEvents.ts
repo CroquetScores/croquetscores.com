@@ -17,15 +17,15 @@ import { SignedIn } from "./SignedIn.js";
 import { isRole, type Role } from "../value-objects/Role.js";
 
 // What was kept comes back from a table something else could have written to,
-// so a field an event cannot do without is refused rather than guessed at.
+// so a field an event cannot do without is refused rather than guessed at. The
+// registry says which event it was.
 const text = (
   said: Readonly<Record<string, unknown>>,
   field: string,
-  name: string,
 ): string => {
   const value = said[field];
   if (typeof value !== "string") {
-    throw new TypeError(`What was kept as "${name}" has no ${field}.`);
+    throw new TypeError(`it has no ${field}`);
   }
   return value;
 };
@@ -34,14 +34,13 @@ const text = (
 const optionalText = (
   said: Readonly<Record<string, unknown>>,
   field: string,
-  name: string,
 ): string | undefined =>
-  said[field] === undefined ? undefined : text(said, field, name);
+  said[field] === undefined ? undefined : text(said, field);
 
-const role = (said: Readonly<Record<string, unknown>>, name: string): Role => {
-  const value = text(said, "role", name);
+const role = (said: Readonly<Record<string, unknown>>): Role => {
+  const value = text(said, "role");
   if (!isRole(value)) {
-    throw new TypeError(`What was kept as "${name}" names no role: ${value}.`);
+    throw new TypeError(`${JSON.stringify(value)} is not a role`);
   }
   return value;
 };
@@ -54,8 +53,8 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-registered",
       (said, { createdBy, occurredAt }) =>
         new AccountRegistered(
-          text(said, "emailAddress", "account-registered"),
-          text(said, "emailAddressHash", "account-registered"),
+          text(said, "emailAddress"),
+          text(said, "emailAddressHash"),
           createdBy,
           occurredAt,
         ),
@@ -65,10 +64,10 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-brought-over",
       (said, { createdBy, occurredAt }) =>
         new AccountBroughtOver(
-          text(said, "name", "account-brought-over"),
-          text(said, "emailAddress", "account-brought-over"),
-          text(said, "emailAddressHash", "account-brought-over"),
-          text(said, "passwordHash", "account-brought-over"),
+          text(said, "name"),
+          text(said, "emailAddress"),
+          text(said, "emailAddressHash"),
+          text(said, "passwordHash"),
           createdBy,
           occurredAt,
         ),
@@ -78,8 +77,8 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-email-address-confirmed",
       (said, { createdBy, occurredAt }) =>
         new EmailAddressConfirmed(
-          text(said, "name", "account-email-address-confirmed"),
-          optionalText(said, "passwordHash", "account-email-address-confirmed"),
+          text(said, "name"),
+          optionalText(said, "passwordHash"),
           createdBy,
           occurredAt,
         ),
@@ -89,8 +88,8 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-email-address-change-asked",
       (said, { createdBy, occurredAt }) =>
         new EmailAddressChangeAsked(
-          text(said, "emailAddress", "account-email-address-change-asked"),
-          text(said, "reference", "account-email-address-change-asked"),
+          text(said, "emailAddress"),
+          text(said, "reference"),
           createdBy,
           occurredAt,
         ),
@@ -100,8 +99,8 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-email-address-changed",
       (said, { createdBy, occurredAt }) =>
         new EmailAddressChanged(
-          text(said, "emailAddress", "account-email-address-changed"),
-          text(said, "emailAddressHash", "account-email-address-changed"),
+          text(said, "emailAddress"),
+          text(said, "emailAddressHash"),
           createdBy,
           occurredAt,
         ),
@@ -110,11 +109,7 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       NameChanged,
       "account-name-changed",
       (said, { createdBy, occurredAt }) =>
-        new NameChanged(
-          text(said, "name", "account-name-changed"),
-          createdBy,
-          occurredAt,
-        ),
+        new NameChanged(text(said, "name"), createdBy, occurredAt),
     )
     .name(
       SignedIn,
@@ -126,7 +121,7 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-password-hashed-again",
       (said, { createdBy, occurredAt }) =>
         new PasswordHashedAgain(
-          text(said, "passwordHash", "account-password-hashed-again"),
+          text(said, "passwordHash"),
           createdBy,
           occurredAt,
         ),
@@ -135,21 +130,13 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       PasswordSet,
       "account-password-set",
       (said, { createdBy, occurredAt }) =>
-        new PasswordSet(
-          text(said, "passwordHash", "account-password-set"),
-          createdBy,
-          occurredAt,
-        ),
+        new PasswordSet(text(said, "passwordHash"), createdBy, occurredAt),
     )
     .name(
       GoogleAccountLinked,
       "account-google-account-linked",
       (said, { createdBy, occurredAt }) =>
-        new GoogleAccountLinked(
-          text(said, "subject", "account-google-account-linked"),
-          createdBy,
-          occurredAt,
-        ),
+        new GoogleAccountLinked(text(said, "subject"), createdBy, occurredAt),
     )
     .name(
       AccountForgotten,
@@ -161,15 +148,11 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       RoleAdded,
       "account-role-added",
       (said, { createdBy, occurredAt }) =>
-        new RoleAdded(role(said, "account-role-added"), createdBy, occurredAt),
+        new RoleAdded(role(said), createdBy, occurredAt),
     )
     .name(
       RoleRemoved,
       "account-role-removed",
       (said, { createdBy, occurredAt }) =>
-        new RoleRemoved(
-          role(said, "account-role-removed"),
-          createdBy,
-          occurredAt,
-        ),
+        new RoleRemoved(role(said), createdBy, occurredAt),
     );

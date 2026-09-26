@@ -49,3 +49,23 @@ Going to use SPA instead of /scripts.
 - **A script to rebuild a read model.** `AccountsByEmailAddress.rebuildFrom` makes the table again from every event kept, and only the scenarios call it: `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so nothing in the running site can rebuild anything. SETUP.md §5 says rebuilding is a maintenance script's under `scripts/`; that script is what is missing (from the review of `account-keys`).
 
 ---
+
+## Refactor
+
+### src/domain/aggregates/accounts
+
+From a review of the directory on 2026-09-26. Ordered by how much each is worth. None changes what the site does, except where the item says so.
+
+- **Count characters in one place.** `value-objects/Password.ts` and `value-objects/PersonName.ts` each make an `Intl.Segmenter` and a `charactersIn` of their own, and so do `CompetitionName.ts` and `TournamentNotes.ts` under `tournaments` and `ImportUsers.ts` in the import. The five are the same code and the same comment. What counts as a character is one decision, so it belongs in `src/domain/common/`, and the import can take it from there. Run `npm test`, since it reaches past accounts.
+
+- **Put the two refusals every change begins with into one.** Seven of `Account`'s methods begin `#refuseOnceForgotten(); #refuseUntilConfirmed();`, and the comment above them says the order matters: a forgotten account says it is forgotten whether or not it was confirmed. One `#refuseUnlessInUse()` holding both would keep that order in one place rather than seven. `hashPasswordAgain`, `removeRole` and `forget` still ask less, and keep calling what they ask for by itself.
+
+- **Let the account's refusal speak for linking another Google account.** `SignInWithGoogleHandler` checks `account.googleSubject` against the subject before calling `linkGoogleAccount`, which makes the same check and refuses with `Account.GoogleAccountAlreadyLinked`. The rule is written twice, once in the domain and once in the application, and the two can drift. The handler could catch the account's refusal and throw `SignInWithGoogle.LinkedToAnother` instead. The check is not needed before `confirm` either, since an account not yet confirmed can never have been linked.
+
+- **Ask whether `passwordImported` is wanted.** Nothing under `/src` reads it. Whether a hash is made again on signing in is decided by the hasher's `remake`, from the hash itself, and only the scenarios in `SignIn.steps.ts` and `Account.steps.ts` ask the account. Either something should decide by it, or the state and its getter go, and the scenarios say what they want by whether the hash is made again. This is a question for whoever owns the feature before it is a refactor.
+
+- **Ask for a role by the role.** `isAdministrator` and `isWorldRankingOfficer` are a getter for each role in `value-objects/Role.ts`, so every role added needs one more. `hasRole(role)` would need none. Only `Account.steps.ts` asks either today, so it costs little now and more once pages begin asking.
+
+- **Correct what `EmailAddress.equals` says.** Its comment says two addresses are the same when they differ "only in case", but it compares `comparable`, which puts each letter into one Unicode form as well. The class's own comment has it right.
+
+Seen along the way, and wider than this directory: the refusal class `Account.ts` declares (a code, a name and a message, with a cause sometimes) is written out again about twenty-five times across `/src`. A generic base in `src/domain/common/` would save the boilerplate, but each class is small and read by `instanceof`, so it is probably not worth the churn.
