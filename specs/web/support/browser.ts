@@ -25,6 +25,7 @@ import {
 } from "../../../src/infrastructure/config/Config.js";
 import { CheckRefused } from "../../../src/application/services/BreachedPasswords.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
+import type { Language } from "../../../src/web/common/language.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsThrough, oldSiteSaltForScenarios } from "./accounts.js";
@@ -111,18 +112,41 @@ export const anApplicationServedAs = (
   website: Config["website"],
 ): Promise<string> => anApplicationWith(world, { website });
 
+/**
+ * An application of this scenario's own offering the languages the site is
+ * served with rather than the scenarios' English and test locale, and
+ * otherwise as {@link anApplicationCalled}. Given none, so that it is the
+ * site's own choice that is offered and not a copy of it written down here.
+ */
+export const anApplicationOfferingItsOwnLanguages = (
+  world: SpecWorld,
+): Promise<string> => anApplicationWith(world, {}, "its own");
+
+// Which languages a scenario's application offers: the scenarios', or the
+// site's own. Named rather than left as undefined for the second, because an
+// undefined argument takes a parameter's default, which is the first.
+type Offering = readonly Language[] | "its own";
+
+// Left out altogether for the site's own, rather than given as undefined, which
+// the options' type does not allow.
+const offered = (
+  offering: Offering,
+): { readonly languages?: readonly Language[] } =>
+  offering === "its own" ? {} : { languages: offering };
+
 const anApplicationWith = async (
   world: SpecWorld,
   changed: Partial<Config>,
+  languages: Offering = scenarioLanguages,
 ): Promise<string> => {
-  if (world.pool !== undefined) return itsOwn(world, changed);
+  if (world.pool !== undefined) return itsOwn(world, changed, languages);
 
   loadEnvFile();
   const named = await buildApplication(
     { ...loadConfig(), ...changed },
     {
       logger: false,
-      languages: scenarioLanguages,
+      ...offered(languages),
       reader: readerTheScenariosSet,
       sendsTheEmailQueue: false,
     },
@@ -177,6 +201,7 @@ export const siteNameFor = (world: SpecWorld): string => {
 const itsOwn = async (
   world: SpecWorld,
   changed: Partial<Config> = {},
+  languages: Offering = scenarioLanguages,
 ): Promise<string> => {
   const databaseUrl = world.database.options.connectionString;
   if (databaseUrl === undefined) {
@@ -211,7 +236,7 @@ const itsOwn = async (
     },
     {
       logger: false,
-      languages: scenarioLanguages,
+      ...offered(languages),
       clock: () => new Date(clock.now.getTime()),
       // Nothing is sent. What these scenarios read is what is waiting in the
       // queue, which is where a reader's link comes from.
