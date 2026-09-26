@@ -228,8 +228,7 @@ export class Account extends AggregateRoot {
    * name to change: it is given its first by confirming.
    */
   changeName(name: PersonName, at: ReadOnlyDate): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     if (name.equals(this.#name)) return;
     this.record(new NameChanged(name.toString(), this.id, at));
   }
@@ -245,8 +244,7 @@ export class Account extends AggregateRoot {
     reference: string,
     at: ReadOnlyDate,
   ): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     this.record(
       new EmailAddressChangeAsked(address.toString(), reference, this.id, at),
     );
@@ -262,8 +260,7 @@ export class Account extends AggregateRoot {
     emailAddressHash: string,
     at: ReadOnlyDate,
   ): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     if (address.equals(this.#emailAddress)) return;
     this.record(
       new EmailAddressChanged(
@@ -281,8 +278,7 @@ export class Account extends AggregateRoot {
    * whether it is one that can be signed in to at all.
    */
   signIn(at: ReadOnlyDate): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     this.record(new SignedIn(this.id, at));
   }
 
@@ -293,8 +289,7 @@ export class Account extends AggregateRoot {
    * its address.
    */
   setNewPassword(passwordHash: string, at: ReadOnlyDate): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     this.record(new PasswordSet(passwordHash, this.id, at));
   }
 
@@ -317,8 +312,7 @@ export class Account extends AggregateRoot {
    * of their own. Only an account somebody has shown is theirs is linked.
    */
   linkGoogleAccount(subject: string, at: ReadOnlyDate): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     if (this.#googleSubject === subject) return;
     if (this.#googleSubject !== undefined) {
       throw new AccountRefused(
@@ -337,8 +331,7 @@ export class Account extends AggregateRoot {
    * sent twice records one event.
    */
   addRole(role: Role, by: AccountId, at: ReadOnlyDate): void {
-    this.#refuseOnceForgotten();
-    this.#refuseUntilConfirmed();
+    this.#refuseUnlessInUse();
     if (this.#roles.has(role)) return;
     this.record(new RoleAdded(role, by, at));
   }
@@ -421,7 +414,12 @@ export class Account extends AggregateRoot {
   }
 
   // Forgotten is asked before confirmed, so that a forgotten account says it
-  // is forgotten whether or not it was ever confirmed.
+  // is forgotten whether or not it was ever confirmed (forget.feature).
+  #refuseUnlessInUse(): void {
+    this.#refuseOnceForgotten();
+    this.#refuseUntilConfirmed();
+  }
+
   #refuseOnceForgotten(): void {
     if (this.#forgotten) {
       throw new AccountRefused(

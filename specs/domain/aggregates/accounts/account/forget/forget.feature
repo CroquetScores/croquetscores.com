@@ -72,3 +72,28 @@ Feature: Forgetting an account
         | role                  |
         | Administrator         |
         | World Ranking Officer |
+
+  Rule: A forgotten account says it is forgotten, whether or not it was confirmed
+
+    What an account not yet confirmed cannot do, a forgotten one cannot do
+    either, and being forgotten is what it is told. An account forgotten
+    before anybody confirmed its address is forgotten first and unconfirmed
+    second: telling whoever asked that it is waiting to be confirmed would
+    send them to confirm an account that is gone.
+
+    Scenario Outline: A forgotten account never confirmed is refused as forgotten
+      Given a stream where an account was registered at "someone@example.com"
+      And it was forgotten
+      And the account is rebuilt from the stream
+      When <asking>
+      Then it is refused with "Account.Forgotten"
+
+      Examples:
+        | asking                                                                                   |
+        | the account's name is changed to "Samantha Someone"                                      |
+        | moving the account to "sam@example.org" is asked for, as "asking-1"                      |
+        | the account is moved to "sam@example.org" with the email address hash "hash-of-sam"      |
+        | the account is signed in to                                                              |
+        | a new password is set on the account                                                     |
+        | the Google account "google-subject-1" is linked to the account                           |
+        | the role "Administrator" is added to the account                                         |

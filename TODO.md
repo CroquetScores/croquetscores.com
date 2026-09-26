@@ -56,8 +56,6 @@ Going to use SPA instead of /scripts.
 
 From a review of the directory on 2026-09-26. Ordered by how much each is worth. None changes what the site does, except where the item says so.
 
-- **Put the two refusals every change begins with into one.** Seven of `Account`'s methods begin `#refuseOnceForgotten(); #refuseUntilConfirmed();`, and the comment above them says the order matters: a forgotten account says it is forgotten whether or not it was confirmed. One `#refuseUnlessInUse()` holding both would keep that order in one place rather than seven. `hashPasswordAgain`, `removeRole` and `forget` still ask less, and keep calling what they ask for by itself.
-
 - **Let the account's refusal speak for linking another Google account.** `SignInWithGoogleHandler` checks `account.googleSubject` against the subject before calling `linkGoogleAccount`, which makes the same check and refuses with `Account.GoogleAccountAlreadyLinked`. The rule is written twice, once in the domain and once in the application, and the two can drift. The handler could catch the account's refusal and throw `SignInWithGoogle.LinkedToAnother` instead. The check is not needed before `confirm` either, since an account not yet confirmed can never have been linked.
 
 - **Ask whether `passwordImported` is wanted.** Nothing under `/src` reads it. Whether a hash is made again on signing in is decided by the hasher's `remake`, from the hash itself, and only the scenarios in `SignIn.steps.ts` and `Account.steps.ts` ask the account. Either something should decide by it, or the state and its getter go, and the scenarios say what they want by whether the hash is made again. This is a question for whoever owns the feature before it is a refactor.
