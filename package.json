@@ -18,7 +18,8 @@
     "db:migrate": "tsx src/infrastructure/database/migrate-cli.ts",
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\"",
     "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\"",
-    "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\""
+    "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\"",
+    "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts"
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,7 @@
     "eslint": "^10.10.0",
     "playwright": "^1.63.0",
     "prettier": "^3.9.6",
+    "ravendb": "4.2.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tsx": "^4.23.13",

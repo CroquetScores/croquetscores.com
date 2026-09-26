@@ -53,6 +53,8 @@ Dependencies point inwards and never outwards:
 - **infrastructure** may import from `application` and `domain`.
 - **web** may import from `application` and `domain`. It may name `infrastructure` in exactly one file — `src/web/server.ts`, the composition root, where concrete implementations are chosen and wired.
 
+One thing stands outside the four: `src/import-ravendb/`, which brings the old sites' data over from RavenDB. It is a second composition root, put together from the same parts as the site so that what it writes is what the site reads, and it may import from any layer. No layer may import from it. It is run by hand, from source, on the machine holding the old sites' databases, is left out of the build, and goes once everything is brought over, taking nothing of the site's with it.
+
 When an inner layer needs something it cannot do itself — hash a password, verify a Google token, read a row, send mail — it declares an interface in its own `services/` folder describing what _it_ wants. `infrastructure` implements that interface at the mirrored path. The interface is written for the layer that needs it, never shaped around what an implementation would find convenient.
 
 One interface is implemented by `web` instead: writing an email's words. The email queue is infrastructure, and needs an email written before it can send it, but the words are the reader's, kept in the same catalogue as every word a page shows, so that a language is added to the site by adding one catalogue. Writing them is presentation, which is `web`'s. So the application declares an email writer in `services/`, `web` implements it from the catalogue, and `server.ts` hands that to the queue. The queue imports only the application's declaration, and nothing in `infrastructure` reaches into `web`. It is the one place `web` implements a service; anything else that needs words a reader will see should come the same way rather than keep words of its own.
@@ -99,10 +101,11 @@ ESLint enforces all of this (§9); breaking it fails CI.
     /public                server-rendered public pages and their templates
     /admin                 the React SPA, its own tsconfig, built by Vite
     /common                request context, error mapping, cookies, CSRF
+  /import-ravendb          the import from the old sites' RavenDB, run by hand
 /specs                     mirrors /src; each .feature sits with its .steps.ts
   /support                 World, hooks, the example requests and events, shared
                            step helpers
-  /domain /application /infrastructure /web
+  /domain /application /infrastructure /web /import-ravendb
 /scripts                   one-off development tooling
 /assets                    css and images served as static files
 ```
@@ -143,6 +146,7 @@ npm install --save-dev \
   @cucumber/cucumber playwright \
   eslint typescript-eslint @eslint/js prettier \
   vite @vitejs/plugin-react react react-dom @types/react @types/react-dom
+npm install --save-dev --save-exact ravendb@4.2.3
 ```
 
 The browser binaries are not in the package, and are fetched once:
@@ -154,6 +158,7 @@ npx playwright install chromium
 - `@node-rs/argon2` ships prebuilt binaries, so a fresh clone needs no compiler.
 - `playwright` is the library, not `@playwright/test`. The runner here is Cucumber and stays Cucumber; what Playwright adds is a browser for step definitions to drive.
 - `jose` signs and verifies the mobile JWTs and validates Google's `id_token` against its JWKS. Facebook needs nothing beyond `fetch`.
+- `ravendb` is pinned to the 4.2 client, which is what the old sites' RavenDB 4.2 server speaks. It is a development dependency because only the import uses it, and the import is never run from a build. `npm audit` names the versions of `stream-json` and `uuid` it depends on; only a 7.x client is clear of them, and the client reads nothing but the old sites' own databases.
 - `typescript` is pinned to `^5`; TypeScript 6 stops auto-including everything under `node_modules/@types`, which is why the configs below name `types` explicitly.
 
 ---
@@ -207,11 +212,11 @@ Three configs, because the SPA compiles for a browser and the rest for Node.
     "rootDir": "src"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/web/admin"]
+  "exclude": ["src/web/admin", "src/import-ravendb"]
 }
 ```
 
-The build emits only `src/`, so `src/` is its root and the output is `dist/web/server.js` rather than `dist/src/web/server.js`. That matters because the server finds the repository root — and with it `assets/` and `dist/admin/` — by walking up from its own directory, and the walk has to be the same length whether it is running from source through tsx or from `dist` through node.
+The build emits only `src/`, so `src/` is its root and the output is `dist/web/server.js` rather than `dist/src/web/server.js`. That matters because the server finds the repository root — and with it `assets/` and `dist/admin/` — by walking up from its own directory, and the walk has to be the same length whether it is running from source through tsx or from `dist` through node. The import from the old sites is left out: it is run from source, and the RavenDB client it needs is a development dependency (§2).
 
 `src/web/admin/tsconfig.json` — the SPA:
 
@@ -644,6 +649,7 @@ npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucu
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
+npm pkg set scripts.import:ravendb="tsx src/import-ravendb/import-ravendb.ts"
 ```
 
 Working on one feature:

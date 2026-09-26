@@ -8,5 +8,8 @@
     "rootDir": "src"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/web/admin"]
+  // The import from the old sites is run from source, by "npm run
+  // import:ravendb", on the machine holding their RavenDB. The site never
+  // runs it, and its RavenDB client is a development dependency.
+  "exclude": ["src/web/admin", "src/import-ravendb"]
 }
