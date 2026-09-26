@@ -131,6 +131,15 @@ Given(
   },
 );
 
+// Everything the registry reads for every kind is sound; only the kind's own
+// field is missing, so a refusal can only have come from the kind.
+Given(
+  "something kept under the name {string} that is not called anything",
+  function (this: SpecWorld, name: string) {
+    this.kept = keptAs(name, { called: undefined });
+  },
+);
+
 // Kept as the registry would have kept it before the kind could say where:
 // with no mention of where at all.
 Given(

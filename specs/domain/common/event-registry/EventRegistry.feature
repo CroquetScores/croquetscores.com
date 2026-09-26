@@ -129,3 +129,18 @@ Feature: Knowing each kind of event by a name that lasts
       And something kept under the name "example" whose cause is not an account
       When what was kept is read back through the registry
       Then reading it back is refused with "EventRegistry.Unreadable"
+
+  Rule: What was kept is refused if its kind cannot read what it says
+
+    A kind reads its own fields, and refuses one it cannot do without that is
+    missing or is not what it should be. The registry refuses what the kind
+    refused as it refuses a cause or a moment it cannot read, so that whoever
+    reads events back is told one thing, whichever part could not be read, and
+    so that the refusal names the event it came from without every kind having
+    to name itself.
+
+    Scenario: What was kept without a field its kind cannot do without is refused
+      Given a registry that knows the example kind as "example"
+      And something kept under the name "example" that is not called anything
+      When what was kept is read back through the registry
+      Then reading it back is refused with "EventRegistry.Unreadable"

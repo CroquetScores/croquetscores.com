@@ -45,6 +45,9 @@ export interface Stamp {
  * A kind only ever gains fields, and only ones it can do without, so a reader
  * has to cope with any field added since the kind began being absent: an event
  * kept before it existed does not have it.
+ *
+ * A field it cannot do without that is missing, or is not what it should be,
+ * is thrown, saying which field. The registry names the event it was.
  */
 export type ReadBack<TEvent extends DomainEvent> = (
   said: Readonly<Record<string, unknown>>,
@@ -122,7 +125,8 @@ export class EventRegistry {
   /**
    * The event `kept` was made from. Refused with `EventRegistry.UnknownName`
    * when nothing was given its name, and with `EventRegistry.Unreadable` when
-   * what was kept cannot say who caused it or when.
+   * what was kept cannot say who caused it or when, or its kind cannot read
+   * what it says.
    */
   readBack(kept: KeptEvent): DomainEvent {
     const read = this.#readersByName.get(kept.name);
@@ -134,10 +138,19 @@ export class EventRegistry {
     }
 
     const { createdBy, occurredAt, ...said } = kept.data;
-    return read(said, {
+    const stamp = {
       createdBy: causeOf(kept.name, createdBy),
       occurredAt: momentOf(kept.name, occurredAt),
-    });
+    };
+    try {
+      return read(said, stamp);
+    } catch (cause) {
+      throw new EventRegistryRefused(
+        "EventRegistry.Unreadable",
+        `What was kept as "${kept.name}" cannot be read: ${cause instanceof Error ? cause.message : String(cause)}.`,
+        cause,
+      );
+    }
   }
 }
 
