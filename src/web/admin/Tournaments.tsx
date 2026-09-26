@@ -169,7 +169,6 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
             className="panel stack"
             aria-busy={acting || answered !== question}
           >
-            <h1>Tournaments</h1>
             {/* Above the list rather than beneath it, where a long one would
                 push it off a phone's screen. Offered to every reader, since
                 anybody signed in can create a tournament and manage it. */}
