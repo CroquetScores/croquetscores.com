@@ -32,10 +32,77 @@ Feature: The admin is served as the site it belongs to
 
     Scenario: The admin's bar names the site
       Given a viewport 1200 pixels wide
-      And a browser that runs scripts
       And a site called "Gateball Scores"
       When the admin is opened
       Then the header names the site "Gateball Scores"
+
+  Rule: The admin is set in the public pages' own header and footer
+
+    The admin drew a header of its own, under a name the stylesheet had
+    stopped styling as a bar, and a footer that was the theme choice alone. It
+    read as another site rather than as part of the one a reader had come
+    from. The server now says the public pages' own header and footer into the
+    admin's page as it sends it: the same navigation, the same account menu,
+    the same Donate button, plea and copyright line, drawn by the same code, so
+    that there is one of each rather than a copy of each that drifts. They are
+    on the page before a script runs, and what the admin draws is what goes
+    between them, in a white panel on the light green page (`LAYOUT.md`).
+
+    Scenario: The admin's header offers the public pages' navigation
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the link "Tournaments" is visible
+      And the link "Blog" is visible
+      And the link "Help" is visible
+
+    Scenario: The admin's header ends in the account menu
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the last item in the header navigation is the account menu
+
+    Scenario: The admin's account menu knows who is reading
+      Given a viewport 1200 pixels wide
+      And an account for "someone@example.com", confirmed
+      And a reader signed in as "someone@example.com"
+      When the admin is opened
+      And the account menu is pressed
+      Then the menu offers a button to sign out
+
+    Scenario: The admin's navigation is behind the menu on a phone
+      Given a viewport 375 pixels wide
+      When the admin is opened
+      Then the menu button is visible
+      And the link "Tournaments" is not visible
+
+    Scenario: The admin's footer carries the plea
+      Given a viewport 1200 pixels wide
+      And a site called "Gateball Scores"
+      When the admin is opened
+      Then the plea names the site "Gateball Scores"
+
+    Scenario: The admin's header is in the reader's language
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the admin is opened
+      Then every word in the header is in the test locale
+
+    Scenario: The admin's footer is in the reader's language
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the admin is opened
+      Then every word in the footer is in the test locale
+
+    Scenario: The admin's content is set in a panel
+      Given a viewport 1200 pixels wide
+      And a browser that runs scripts
+      When the admin is opened
+      Then the site name starts at the same left edge as the text in the panel
+
+    Scenario: The admin's footer is at the foot of the window
+      Given a viewport 1200 pixels wide
+      And a browser that runs scripts
+      When the admin is opened
+      Then the footer reaches the bottom of the window
 
   Rule: The admin of a try website says so
 

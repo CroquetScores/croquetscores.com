@@ -180,10 +180,8 @@ const themeWords: Record<Theme, string> = {
 };
 
 // Three submit buttons rather than a select and a Go: one press, no scripting,
-// and the choice that is in force is announced rather than only shaded. Offered
-// by the admin's page too (adminPage.ts), so that there is one choice rather
-// than two that could come to disagree.
-export const themeChoice = (
+// and the choice that is in force is announced rather than only shaded.
+const themeChoice = (
   speaking: Speaking,
   chosen: Theme,
   path: string,
@@ -233,37 +231,40 @@ ${options}
           </form>`;
 };
 
-export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
-<html lang="${escape(shell.speaking.language.tag)}"${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escape(shell.title)}</title>${sendAwayWithoutScripting(shell.withoutScripting)}
-    <link rel="stylesheet" href="${assets.url("site.css")}" />
-  </head>
-  <body>
-    <a class="skip-link" href="#content">${escape(shell.speaking.say("site.skipToContent"))}</a>
-    <header class="site-bar">
+// A lang for the header and footer where the page around them is not in the
+// reader's language, as the admin's is not yet (adminPage.ts).
+const langOf = (lang: string | undefined): string =>
+  lang === undefined ? "" : ` lang="${escape(lang)}"`;
+
+/** What the header needs of the page it is drawn on. */
+export type SiteBar = Pick<
+  Shell,
+  "speaking" | "siteName" | "currentPath" | "signedIn" | "hasPassword"
+>;
+
+// Said by the admin's page too (adminPage.ts), so that there is one header
+// rather than a copy of it that drifts.
+export const siteBar = (bar: SiteBar, lang?: string): string => `
+    <a class="skip-link" href="#content"${langOf(lang)}>${escape(bar.speaking.say("site.skipToContent"))}</a>
+    <header class="site-bar"${langOf(lang)}>
       <div class="page">
         <div class="site-bar-inner">
-          <a class="site-name" href="/">${escape(shell.siteName)}</a>
-${menu(shell.speaking, shell.currentPath)}
-${accountMenu(shell)}
+          <a class="site-name" href="/">${escape(bar.siteName)}</a>
+${menu(bar.speaking, bar.currentPath)}
+${accountMenu(bar)}
         </div>
       </div>
-    </header>${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
-    <main id="content">
-      <div class="page">
-${
-  shell.frame === "bare"
-    ? shell.body
-    : `        <div class="panel stack">
-${shell.body}
-        </div>`
-}
-      </div>
-    </main>
-    <footer class="site-footer">
+    </header>`;
+
+/** What the footer needs of the page it is drawn on. */
+export type SiteFooter = Pick<
+  Shell,
+  "speaking" | "siteName" | "theme" | "path"
+>;
+
+// Said by the admin's page too, for the reason the header is.
+export const siteFooter = (footer: SiteFooter, lang?: string): string => `
+    <footer class="site-footer"${langOf(lang)}>
       <div class="page">
         <div class="site-footer-bar">
         <form
@@ -274,21 +275,42 @@ ${shell.body}
         >
           <input type="hidden" name="cmd" value="_s-xclick" />
           <input type="hidden" name="hosted_button_id" value="${paypalButton}" />
-          <button type="submit">${escape(shell.speaking.say("footer.donate"))}</button>
+          <button type="submit">${escape(footer.speaking.say("footer.donate"))}</button>
         </form>
-        <p>${escape(shell.speaking.say("footer.plea", { siteName: shell.siteName }))}</p>
+        <p>${escape(footer.speaking.say("footer.plea", { siteName: footer.siteName }))}</p>
           <p class="copyright">${escape(
-            shell.speaking.say("footer.copyright", {
+            footer.speaking.say("footer.copyright", {
               years: copyrightYears,
               owner: copyrightOwner,
             }),
           )}</p>
         </div>
         <div class="site-footer-theme">
-${themeChoice(shell.speaking, shell.theme, shell.path)}${languageChoice(shell.speaking, shell.path)}
+${themeChoice(footer.speaking, footer.theme, footer.path)}${languageChoice(footer.speaking, footer.path)}
         </div>
       </div>
-    </footer>
+    </footer>`;
+
+export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
+<html lang="${escape(shell.speaking.language.tag)}"${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escape(shell.title)}</title>${sendAwayWithoutScripting(shell.withoutScripting)}
+    <link rel="stylesheet" href="${assets.url("site.css")}" />
+  </head>
+  <body>${siteBar(shell)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+    <main id="content">
+      <div class="page">
+${
+  shell.frame === "bare"
+    ? shell.body
+    : `        <div class="panel stack">
+${shell.body}
+        </div>`
+}
+      </div>
+    </main>${siteFooter(shell)}
   </body>
 </html>
 `;

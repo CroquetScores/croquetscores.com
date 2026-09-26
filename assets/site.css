@@ -251,6 +251,15 @@ a:hover {
   }
 }
 
+/* The admin's mount point, which stands between the body and the main the
+   admin draws. Out of the way, main is in the body's own column beside the
+   header and footer the server puts round it, as it is on every other page,
+   and pushes the footer to the foot of the window rather than leaving it under
+   a short page. */
+#root {
+  display: contents;
+}
+
 /* --- Layout primitives --------------------------------------------------- */
 
 /* The bars run the full width of the window, so .page holds their contents off

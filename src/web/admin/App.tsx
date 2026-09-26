@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
 
-// What the site is called, which the server says into the page as it sends it
-// (adminPage.ts), since a page built ahead of time cannot know. The admin's own
-// development server has no server behind the page to say it, so there the bar
-// falls back to the tab's title rather than to a name spelled out here.
-const siteName =
-  document.querySelector<HTMLMetaElement>('meta[name="application-name"]')
-    ?.content ?? document.title;
-
 // The shell. Screens arrive with the features that specify them; what this
 // proves for now is that the SPA is built, served under /admin, reaches the API
 // it shares with the mobile apps, and speaks the same vocabulary as the public
@@ -30,28 +22,18 @@ export const App = (): React.JSX.Element => {
       });
   }, []);
 
+  // What goes between the public pages' header and footer, which the server
+  // says in around the mount point (adminPage.ts). Set in the panel every
+  // public page's content is set in. Its words are the admin's own, and in no
+  // catalogue yet.
   return (
-    <>
-      <header className="site-header">
-        <div className="page">
-          <a className="site-name" href="/admin/">
-            {siteName}
-          </a>
-          <nav className="menu-links" aria-label="Primary">
-            <ul>
-              <li>
-                <a href="/">Public site</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-      <main id="content">
-        <div className="page stack stack-loose">
+    <main id="content">
+      <div className="page">
+        <div className="panel stack">
           <h1>Admin</h1>
           <p className="lead">API: {status}</p>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
