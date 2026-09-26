@@ -1,0 +1,508 @@
+import { Given, Then } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
+
+import { AddBlock } from "../../../../src/application/operations/tournaments/AddBlock.js";
+import { AddKnockout } from "../../../../src/application/operations/tournaments/AddKnockout.js";
+import { AddManager } from "../../../../src/application/operations/tournaments/AddManager.js";
+import { AddPlayer } from "../../../../src/application/operations/tournaments/AddPlayer.js";
+import { AddScorer } from "../../../../src/application/operations/tournaments/AddScorer.js";
+import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
+import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
+import { ArchivePlayer } from "../../../../src/application/operations/tournaments/ArchivePlayer.js";
+import { ArchiveTournament } from "../../../../src/application/operations/tournaments/ArchiveTournament.js";
+import {
+  type CreatedTournament,
+  CreateTournament,
+} from "../../../../src/application/operations/tournaments/CreateTournament.js";
+import { RemoveManager } from "../../../../src/application/operations/tournaments/RemoveManager.js";
+import { RemoveScorer } from "../../../../src/application/operations/tournaments/RemoveScorer.js";
+import type { TournamentRequest } from "../../../../src/application/operations/tournaments/tournamentOperations.js";
+import { UpdateTournament } from "../../../../src/application/operations/tournaments/UpdateTournament.js";
+import type { Command } from "../../../../src/application/common/Command.js";
+import type { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { SpecWorld } from "../../../support/world.js";
+import {
+  competitionNamed,
+  playerNamed,
+  tournamentOf,
+} from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
+import {
+  accountFor,
+  created,
+  inHandOf,
+  load,
+  lookAt,
+  momentOf,
+  scenarioOf,
+  tournamentNamed,
+} from "./aRequest.js";
+import { competitionIn } from "./requests.js";
+
+// The steps more than one of a tournament's operations uses: what was done
+// before the request the scenario is about, what the request says, and what
+// the tournament is afterwards. Each operation's own steps are beside its
+// feature, in the folder named for it.
+
+// What was done before -------------------------------------------------------
+
+// Done as the account for `address`, and not refused: a scenario that says it
+// was done is not about whether it could be.
+const done = async <TResult>(
+  world: SpecWorld,
+  command: Command<TResult>,
+): Promise<TResult> => inHandOf(world).send(command);
+
+// A tournament made before the scenario's own request, as well made as the
+// scenario leaves it: the Spring Open, from 3 to 5 October 2026, in Victoria.
+const aTournament = (
+  name: string,
+  changed: Partial<TournamentRequest> = {},
+): TournamentRequest => ({
+  name,
+  starts: "2026-10-03T00:00:00Z",
+  finishes: "2026-10-05T00:00:00Z",
+  format: "Standard",
+  sport: "ac",
+  country: "au",
+  region: "vic",
+  ...changed,
+});
+
+const createdBefore = async (
+  world: SpecWorld,
+  address: string,
+  request: TournamentRequest,
+): Promise<void> => {
+  const account = await accountFor(world, address);
+  const answer: CreatedTournament = await done(
+    world,
+    new CreateTournament(
+      account.value,
+      "croquetscores.com",
+      request,
+      momentOf(world),
+    ),
+  );
+  created(world, answer.id, request.name);
+  await lookAt(world, answer.id);
+};
+
+Given(
+  "{string} has created the tournament {string}",
+  async function (this: SpecWorld, address: string, name: string) {
+    await createdBefore(this, address, aTournament(name));
+  },
+);
+
+Given(
+  "{string} has created the tournament {string} starting at {string} in the sport {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    starts: string,
+    sport: string,
+  ) {
+    await createdBefore(
+      this,
+      address,
+      aTournament(name, { starts, finishes: starts, sport }),
+    );
+  },
+);
+
+// The request to update `tournament` to what it is, with `changed`.
+const updated = async (
+  world: SpecWorld,
+  address: string,
+  tournament: TournamentId,
+  changed: Partial<TournamentRequest>,
+): Promise<void> => {
+  const account = await accountFor(world, address);
+  const as = await load(world, tournament);
+  await done(
+    world,
+    new UpdateTournament(
+      account.value,
+      tournament.value,
+      {
+        name: as.name.toString(),
+        starts: as.starts.toISOString(),
+        finishes: as.finishes.toISOString(),
+        format: as.format.name,
+        sport: as.sport.code,
+        country: as.country.code,
+        region: as.region.code,
+        // Said again as it is, since an update says everything the
+        // tournament is, and one without its notes would take them away.
+        ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
+        handicap: as.handicap,
+        worldRankings: as.worldRankings,
+        national: as.national,
+        international: as.international,
+        ...changed,
+      },
+      momentOf(world),
+    ),
+  );
+  await lookAt(world, tournament);
+};
+
+Given(
+  "{string} has moved the tournament {string} to the sport {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    sport: string,
+  ) {
+    await updated(this, address, tournamentNamed(this, name), { sport });
+  },
+);
+
+// Something done to the tournament `name` as the account for `address`.
+const doneTo = async (
+  world: SpecWorld,
+  address: string,
+  name: string,
+  making: (
+    account: string,
+    tournament: TournamentId,
+  ) => Promise<Command<unknown>>,
+): Promise<void> => {
+  const account = await accountFor(world, address);
+  const tournament = tournamentNamed(world, name);
+  await done(world, await making(account.value, tournament));
+  await lookAt(world, tournament);
+};
+
+Given(
+  "{string} has archived the tournament {string}",
+  async function (this: SpecWorld, address: string, name: string) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new ArchiveTournament(account, tournament.value, momentOf(this)),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has added the player {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new AddPlayer(
+          account,
+          tournament.value,
+          { name: player },
+          momentOf(this),
+        ),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has archived the player {string} in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, async (account, tournament) => {
+      const found = playerNamed(await load(this, tournament), player);
+      return new ArchivePlayer(
+        account,
+        tournament.value,
+        found.id.value,
+        momentOf(this),
+      );
+    });
+  },
+);
+
+// A competition added before the scenario's own request is the best of 1, or
+// a draw of four places each round the best of 1.
+Given(
+  "{string} has added the block {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    block: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new AddBlock(account, tournament.value, block, 1, momentOf(this)),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has added the Swiss {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    swiss: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new AddSwiss(account, tournament.value, swiss, 1, momentOf(this)),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has added the knockout {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    knockout: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new AddKnockout(
+          account,
+          tournament.value,
+          knockout,
+          4,
+          [1, 1],
+          momentOf(this),
+        ),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has archived the competition {string} in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, async (account, tournament) => {
+      const id = await competitionIn(this, tournament, competition);
+      return new ArchiveCompetition(
+        account,
+        tournament.value,
+        id.value,
+        momentOf(this),
+      );
+    });
+  },
+);
+
+Given(
+  "{string} has made {string} a manager of {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    made: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new AddManager(account, tournament.value, made, momentOf(this)),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has made {string} a scorer of {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    made: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new AddScorer(account, tournament.value, made, momentOf(this)),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has taken {string} off the managers of {string}",
+  async function (this: SpecWorld, address: string, off: string, name: string) {
+    const manager = await accountFor(this, off);
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new RemoveManager(
+          account,
+          tournament.value,
+          manager.value,
+          momentOf(this),
+        ),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has taken {string} off the scorers of {string}",
+  async function (this: SpecWorld, address: string, off: string, name: string) {
+    const scorer = await accountFor(this, off);
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new RemoveScorer(
+          account,
+          tournament.value,
+          scorer.value,
+          momentOf(this),
+        ),
+      ),
+    );
+  },
+);
+
+// What the games say -----------------------------------------------------------
+
+Given(
+  "games that say the player {string} in {string} has played",
+  async function (this: SpecWorld, player: string, name: string) {
+    const found = playerNamed(
+      await load(this, tournamentNamed(this, name)),
+      player,
+    );
+    inHandOf(this).games.playersWhoHavePlayed.add(found.id.value);
+  },
+);
+
+Given(
+  "games that say the competition {string} in {string} has games",
+  async function (this: SpecWorld, competition: string, name: string) {
+    const id = await competitionIn(
+      this,
+      tournamentNamed(this, name),
+      competition,
+    );
+    inHandOf(this).games.competitionsWithGames.add(id.value);
+  },
+);
+
+Given(
+  "games that say the change to the knockout {string} in {string} moves a player who has played",
+  async function (this: SpecWorld, knockout: string, name: string) {
+    const id = await competitionIn(this, tournamentNamed(this, name), knockout);
+    inHandOf(this).games.knockoutsWhoseChangeMovesAPlayer.add(id.value);
+  },
+);
+
+// What the request says ----------------------------------------------------
+
+// A value as typed, where the scenario says something none of the
+// tournament's own steps could make.
+Given(
+  "the request says the {word} is {string}",
+  function (this: SpecWorld, field: string, value: string) {
+    scenarioOf(this).says[field] = value;
+  },
+);
+
+Given(
+  "the request says the notes are {int} characters long",
+  function (this: SpecWorld, length: number) {
+    scenarioOf(this).says.notes = "n".repeat(length);
+  },
+);
+
+// What came of it ----------------------------------------------------------------
+
+Then(
+  "nothing more is recorded of the tournament",
+  async function (this: SpecWorld) {
+    const { looking, eventsBefore } = scenarioOf(this);
+    assert.ok(looking !== undefined, "The scenario looks at no tournament.");
+    assert.equal((await inHandOf(this).eventsOf(looking)).length, eventsBefore);
+  },
+);
+
+Then(
+  "the last thing the tournament recorded was caused by the account for {string}",
+  async function (this: SpecWorld, address: string) {
+    const { looking } = scenarioOf(this);
+    assert.ok(looking !== undefined, "The scenario looks at no tournament.");
+    const events = await inHandOf(this).eventsOf(looking);
+    const last = events.at(-1);
+    assert.ok(last !== undefined, "The tournament recorded nothing.");
+    assert.ok(last.createdBy.equals(await accountFor(this, address)));
+  },
+);
+
+Then(
+  "the account for {string} manages the tournament",
+  async function (this: SpecWorld, address: string) {
+    assert.equal(
+      tournamentOf(this).manages(await accountFor(this, address)),
+      true,
+    );
+  },
+);
+
+Then(
+  "the account for {string} does not manage the tournament",
+  async function (this: SpecWorld, address: string) {
+    assert.equal(
+      tournamentOf(this).manages(await accountFor(this, address)),
+      false,
+    );
+  },
+);
+
+Then(
+  "the account for {string} scores the tournament",
+  async function (this: SpecWorld, address: string) {
+    assert.equal(
+      tournamentOf(this).scores(await accountFor(this, address)),
+      true,
+    );
+  },
+);
+
+Then(
+  "the account for {string} does not score the tournament",
+  async function (this: SpecWorld, address: string) {
+    assert.equal(
+      tournamentOf(this).scores(await accountFor(this, address)),
+      false,
+    );
+  },
+);
+
+Then(
+  "it is answered with the id of the tournament's player {string}",
+  function (this: SpecWorld, name: string) {
+    const id = playerNamed(tournamentOf(this), name).id;
+    assert.ok(
+      id.equals(this.answer as TournamentId),
+      `It was answered with ${String(this.answer)}.`,
+    );
+  },
+);
+
+Then(
+  "it is answered with the id of the tournament's competition {string}",
+  function (this: SpecWorld, name: string) {
+    const id = competitionNamed(tournamentOf(this), name).reference.id;
+    assert.ok(
+      id.equals(this.answer as TournamentId),
+      `It was answered with ${String(this.answer)}.`,
+    );
+  },
+);

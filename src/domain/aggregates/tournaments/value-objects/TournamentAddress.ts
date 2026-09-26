@@ -1,3 +1,4 @@
+import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
 import { Slug } from "../../../common/Slug.js";
 import { Validator } from "../../../common/validation/Validator.js";
 import { Sport } from "./Sport.js";
@@ -76,6 +77,16 @@ export class TournamentAddress {
   static from(year: number, sport: Sport, slug: Slug): TournamentAddress {
     years.ensureValid(year);
     return new TournamentAddress(year, sport, slug);
+  }
+
+  /**
+   * The year in the address of a tournament that starts at `starts`: the year
+   * it starts as it is written in UTC, so that the same tournament is found at
+   * the same address wherever it was created from. Said here, once, since
+   * whatever finds which addresses are taken asks it too.
+   */
+  static yearOf(starts: ReadOnlyDate): number {
+    return starts.toDate().getUTCFullYear();
   }
 
   /**

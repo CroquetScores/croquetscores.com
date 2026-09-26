@@ -126,12 +126,17 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
   return scenario;
 };
 
-// Every event of a tournament says whoever asked caused it, and the account
-// the Background names is whoever asked.
-export const byOf = (world: SpecWorld): AccountId => {
+// The account the Background names, which created the tournament and so
+// manages it, and which is whoever does what the stream says was done.
+export const creatorOf = (world: SpecWorld): AccountId => {
   assert.ok(world.account !== undefined, "No account has been named.");
   return world.account;
 };
+
+// Every event of a tournament says whoever asked caused it: whoever the
+// scenario says asks, or the account the Background names when it does not.
+export const byOf = (world: SpecWorld): AccountId =>
+  world.askedBy ?? creatorOf(world);
 
 export const now = (world: SpecWorld): ReadOnlyDate => {
   assert.ok(world.moment !== undefined, "No moment has been named.");
@@ -211,7 +216,7 @@ const creationOf = (world: SpecWorld, said: Said): DomainEvent => {
     websiteOf(said),
     detailsOf(said),
     () => false,
-    byOf(world),
+    creatorOf(world),
     now(world),
   );
   const [created] = tournament.handOver();

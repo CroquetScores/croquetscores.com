@@ -10,6 +10,10 @@ import { CompetitionArchived } from "./CompetitionArchived.js";
 import { CompetitionRestored } from "./CompetitionRestored.js";
 import { KnockoutAdded } from "./KnockoutAdded.js";
 import { KnockoutUpdated } from "./KnockoutUpdated.js";
+import { ManagerAdded } from "./ManagerAdded.js";
+import { ManagerRemoved } from "./ManagerRemoved.js";
+import { ScorerAdded } from "./ScorerAdded.js";
+import { ScorerRemoved } from "./ScorerRemoved.js";
 import { SwissAdded } from "./SwissAdded.js";
 import { SwissUpdated } from "./SwissUpdated.js";
 import { TournamentArchived } from "./TournamentArchived.js";
@@ -245,6 +249,46 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           text(said, "competitionId", "tournament-swiss-updated"),
           text(said, "name", "tournament-swiss-updated"),
           number(said, "bestOf", "tournament-swiss-updated"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      ManagerAdded,
+      "tournament-manager-added",
+      (said, { createdBy, occurredAt }) =>
+        new ManagerAdded(
+          text(said, "account", "tournament-manager-added"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      ManagerRemoved,
+      "tournament-manager-removed",
+      (said, { createdBy, occurredAt }) =>
+        new ManagerRemoved(
+          text(said, "account", "tournament-manager-removed"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      ScorerAdded,
+      "tournament-scorer-added",
+      (said, { createdBy, occurredAt }) =>
+        new ScorerAdded(
+          text(said, "account", "tournament-scorer-added"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      ScorerRemoved,
+      "tournament-scorer-removed",
+      (said, { createdBy, occurredAt }) =>
+        new ScorerRemoved(
+          text(said, "account", "tournament-scorer-removed"),
           createdBy,
           occurredAt,
         ),

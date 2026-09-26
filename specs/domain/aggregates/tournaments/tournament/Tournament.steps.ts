@@ -1,6 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
 import { TournamentPlayerId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import { BestOf } from "../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
@@ -144,6 +145,42 @@ Given(
         byOf(this),
         now(this),
       ),
+    );
+  },
+);
+
+Given(
+  "the account {string} was made a manager of it",
+  function (this: SpecWorld, account: string) {
+    happened(this, (tournament) =>
+      tournament.addManager(AccountId.from(account), byOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "the account {string} was taken off its managers",
+  function (this: SpecWorld, account: string) {
+    happened(this, (tournament) =>
+      tournament.removeManager(AccountId.from(account), byOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "the account {string} was made a scorer of it",
+  function (this: SpecWorld, account: string) {
+    happened(this, (tournament) =>
+      tournament.addScorer(AccountId.from(account), byOf(this), now(this)),
+    );
+  },
+);
+
+Given(
+  "the account {string} was taken off its scorers",
+  function (this: SpecWorld, account: string) {
+    happened(this, (tournament) =>
+      tournament.removeScorer(AccountId.from(account), byOf(this), now(this)),
     );
   },
 );
@@ -430,5 +467,35 @@ Then(
       competitionNamed(tournamentOf(this), name).reference.archived,
       false,
     );
+  },
+);
+
+// Who manages and scores it ---------------------------------------------------
+
+Then(
+  "the account {string} manages the tournament",
+  function (this: SpecWorld, account: string) {
+    assert.equal(tournamentOf(this).manages(AccountId.from(account)), true);
+  },
+);
+
+Then(
+  "the account {string} does not manage the tournament",
+  function (this: SpecWorld, account: string) {
+    assert.equal(tournamentOf(this).manages(AccountId.from(account)), false);
+  },
+);
+
+Then(
+  "the account {string} scores the tournament",
+  function (this: SpecWorld, account: string) {
+    assert.equal(tournamentOf(this).scores(AccountId.from(account)), true);
+  },
+);
+
+Then(
+  "the account {string} does not score the tournament",
+  function (this: SpecWorld, account: string) {
+    assert.equal(tournamentOf(this).scores(AccountId.from(account)), false);
   },
 );

@@ -5,7 +5,7 @@ import { ReadOnlyDate } from "../../common/ReadOnlyDate.js";
 import { Refused } from "../../common/Refused.js";
 import { Slug } from "../../common/Slug.js";
 import { Website } from "../../common/Website.js";
-import type { AccountId } from "../accounts/AccountId.js";
+import { AccountId } from "../accounts/AccountId.js";
 import { CompetitionReference } from "./CompetitionReference.js";
 import { BlockAdded } from "./events/BlockAdded.js";
 import { BlockUpdated } from "./events/BlockUpdated.js";
@@ -13,6 +13,10 @@ import { CompetitionArchived } from "./events/CompetitionArchived.js";
 import { CompetitionRestored } from "./events/CompetitionRestored.js";
 import { KnockoutAdded } from "./events/KnockoutAdded.js";
 import { KnockoutUpdated } from "./events/KnockoutUpdated.js";
+import { ManagerAdded } from "./events/ManagerAdded.js";
+import { ManagerRemoved } from "./events/ManagerRemoved.js";
+import { ScorerAdded } from "./events/ScorerAdded.js";
+import { ScorerRemoved } from "./events/ScorerRemoved.js";
 import { SwissAdded } from "./events/SwissAdded.js";
 import { SwissUpdated } from "./events/SwissUpdated.js";
 import { TournamentArchived } from "./events/TournamentArchived.js";
@@ -74,7 +78,10 @@ export type TournamentErrorCode =
   | "Tournament.NotABlock"
   | "Tournament.NotAKnockout"
   | "Tournament.NotASwiss"
-  | "Tournament.KnockoutPlayerHasGames";
+  | "Tournament.KnockoutPlayerHasGames"
+  | "Tournament.NotAManager"
+  | "Tournament.LastManager"
+  | "Tournament.AlreadyAManager";
 
 /**
  * A tournament's refusal, named by its code. The code is what whoever asked
@@ -205,6 +212,11 @@ const refuse = (code: TournamentErrorCode, message: string): never => {
  * to each of its competitions. Everything it is, it says was caused by whoever
  * asked for it, since organising a tournament is many people's work.
  *
+ * It is run by its managers. Whoever creates it is the first, and only a
+ * manager can do anything to it afterwards, so every method is told who asks
+ * and asks that before anything else. Its scorers enter scores, which nothing
+ * records yet, and can do nothing else.
+ *
  * What it is given is refused as each value would be on its own before it gets
  * here; what the tournament refuses is what it asks of them together, and of
  * them against what it already holds.
@@ -218,6 +230,9 @@ export class Tournament extends AggregateRoot {
   // are listed in.
   readonly #players = new Map<string, TournamentPlayer>();
   readonly #competitions = new Map<string, CompetitionInTournament>();
+  // By the written id, in the order they were made.
+  readonly #managers = new Set<string>();
+  readonly #scorers = new Set<string>();
 
   private constructor(id: TournamentId) {
     super(id);
@@ -339,6 +354,80 @@ export class Tournament extends AggregateRoot {
     );
   }
 
+  /** Its managers, in the order they were made, the one who created it first. */
+  get managers(): readonly AccountId[] {
+    return [...this.#managers].map((written) => AccountId.from(written));
+  }
+
+  /** Its scorers, in the order they were made. */
+  get scorers(): readonly AccountId[] {
+    return [...this.#scorers].map((written) => AccountId.from(written));
+  }
+
+  manages(account: AccountId): boolean {
+    return this.#managers.has(account.value);
+  }
+
+  scores(account: AccountId): boolean {
+    return this.#scorers.has(account.value);
+  }
+
+  /**
+   * That `account` is a manager of the tournament. A scorer made one is no
+   * longer a scorer, since a manager can do everything a scorer can. Making a
+   * manager of a manager records nothing.
+   */
+  addManager(account: AccountId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    if (this.manages(account)) return;
+    this.record(new ManagerAdded(account.value, by, at));
+  }
+
+  /**
+   * That `account` no longer manages the tournament. A tournament always has
+   * a manager, since nobody else can change it, so the last is refused.
+   * Taking off an account that does not manage records nothing.
+   */
+  removeManager(account: AccountId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    if (!this.manages(account)) return;
+    if (this.#managers.size === 1) {
+      refuse("Tournament.LastManager", "A tournament always has a manager.");
+    }
+    this.record(new ManagerRemoved(account.value, by, at));
+  }
+
+  /**
+   * That `account` is a scorer of the tournament. A manager is refused: they
+   * can already do everything a scorer can, and one who wants to do less is
+   * taken off the managers first. Making a scorer of a scorer records nothing.
+   */
+  addScorer(account: AccountId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    if (this.manages(account)) {
+      refuse(
+        "Tournament.AlreadyAManager",
+        "The account manages the tournament.",
+      );
+    }
+    if (this.scores(account)) return;
+    this.record(new ScorerAdded(account.value, by, at));
+  }
+
+  /**
+   * That `account` no longer scores the tournament. Taking off an account that
+   * does not score records nothing.
+   */
+  removeScorer(account: AccountId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    if (!this.scores(account)) return;
+    this.record(new ScorerRemoved(account.value, by, at));
+  }
+
   /**
    * That the tournament is now as `details` say. It keeps its address unless
    * the year it starts or its sport changes, and is then found at the first
@@ -352,6 +441,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const settled = this.#settle(this.#now.website, details, taken);
     const written = writtenFrom(settled);
@@ -361,6 +451,7 @@ export class Tournament extends AggregateRoot {
 
   /** That the tournament is set aside. Archiving it again records nothing. */
   archive(by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
     if (this.#archived) return;
     this.record(new TournamentArchived(by, at));
   }
@@ -370,6 +461,7 @@ export class Tournament extends AggregateRoot {
    * that is not archived records nothing.
    */
   restore(by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
     if (!this.#archived) return;
     this.record(new TournamentRestored(by, at));
   }
@@ -384,6 +476,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const player = TournamentPlayer.from(id, details);
     if (this.#players.has(id.value)) {
@@ -404,6 +497,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const found = this.#playerFound(id);
     const player = found.update(details);
@@ -423,6 +517,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const found = this.#playerFound(id);
     if (found.archive({ hasGames: hasPlayedGames }) === found) return;
@@ -431,6 +526,7 @@ export class Tournament extends AggregateRoot {
 
   /** That the archived player `id` is restored. One who is not records nothing. */
   restorePlayer(id: TournamentPlayerId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const found = this.#playerFound(id);
     if (found.restore() === found) return;
@@ -445,6 +541,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
     this.record(
       new BlockAdded(
@@ -467,6 +564,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
     this.record(
       new KnockoutAdded(
@@ -490,6 +588,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
     this.record(
       new SwissAdded(
@@ -516,6 +615,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "block", name);
     if (found.shape.kind !== "block") return;
     if (found.reference.name.equals(name) && found.shape.bestOf.equals(bestOf))
@@ -539,6 +639,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "knockout", name);
     if (found.shape.kind !== "knockout") return;
     const drawChanged = !found.shape.draw.equals(draw);
@@ -573,6 +674,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "swiss", name);
     if (found.shape.kind !== "swiss") return;
     if (found.reference.name.equals(name) && found.shape.bestOf.equals(bestOf))
@@ -594,6 +696,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     if (this.#competitionFound(id).reference.archived) return;
     if (hasGames) {
@@ -607,6 +710,7 @@ export class Tournament extends AggregateRoot {
    * nothing.
    */
   restoreCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     if (!this.#competitionFound(id).reference.archived) return;
     this.record(new CompetitionRestored(id.value, by, at));
@@ -615,6 +719,9 @@ export class Tournament extends AggregateRoot {
   protected apply(event: DomainEvent): void {
     if (event instanceof TournamentCreated) {
       this.#becomes(Website.from(event.website), event);
+      // Whoever created it is its first manager, and says so by having caused
+      // its creation.
+      this.#managers.add(event.createdBy.value);
     } else if (event instanceof TournamentUpdated) {
       this.#becomes(this.#now.website, event);
     } else if (event instanceof TournamentArchived) {
@@ -664,6 +771,15 @@ export class Tournament extends AggregateRoot {
         kind: "swiss",
         bestOf: BestOf.from(event.bestOf),
       });
+    } else if (event instanceof ManagerAdded) {
+      this.#managers.add(event.account);
+      this.#scorers.delete(event.account);
+    } else if (event instanceof ManagerRemoved) {
+      this.#managers.delete(event.account);
+    } else if (event instanceof ScorerAdded) {
+      this.#scorers.add(event.account);
+    } else if (event instanceof ScorerRemoved) {
+      this.#scorers.delete(event.account);
     } else if (event instanceof CompetitionArchived) {
       this.#competitionIs(event.competitionId, true);
     } else if (event instanceof CompetitionRestored) {
@@ -784,9 +900,7 @@ export class Tournament extends AggregateRoot {
     sport: Sport,
     taken: AddressTaken,
   ): TournamentAddress {
-    // The year it starts as it is written in UTC, so that the same tournament
-    // is found at the same address wherever it was created from.
-    const year = starts.toDate().getUTCFullYear();
+    const year = TournamentAddress.yearOf(starts);
     const current = this.#settled?.address;
     if (current?.year === year && current.sport.equals(sport)) return current;
     const slug = Slug.fromName(name.toString());
@@ -829,6 +943,17 @@ export class Tournament extends AggregateRoot {
     };
     if (!this.#addresses.some((kept) => kept.equals(address))) {
       this.#addresses.push(address);
+    }
+  }
+
+  // Asked before anything else, so that somebody who may not ask is told no
+  // more than that, whatever they asked for.
+  #refuseUnlessManager(by: AccountId): void {
+    if (!this.manages(by)) {
+      refuse(
+        "Tournament.NotAManager",
+        "Only a manager can change the tournament.",
+      );
     }
   }
 

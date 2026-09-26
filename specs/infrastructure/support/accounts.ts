@@ -14,6 +14,7 @@ import { randomBytes } from "node:crypto";
 import { ProjectingEventStore } from "../../../src/application/common/ProjectingEventStore.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { nameAccountEvents } from "../../../src/domain/aggregates/accounts/events/accountEvents.js";
+import { nameTournamentEvents } from "../../../src/domain/aggregates/tournaments/events/tournamentEvents.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
@@ -62,7 +63,10 @@ export const storesFor = (
   const keys = new AccountKeys(unitOfWorkOf(world), siteKey);
   const store = new PostgresEventStore(
     unitOfWorkOf(world),
-    nameAccountEvents(new EventRegistry()),
+    // Every kind the application records, as the application's own registry
+    // knows them, so that a scenario about a tournament keeps its events in
+    // the store its accounts are kept in.
+    nameTournamentEvents(nameAccountEvents(new EventRegistry())),
     new AccountEventSealing(keys),
   );
   return { keys, store };
