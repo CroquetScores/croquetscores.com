@@ -181,10 +181,14 @@ const setThePassword = async (
   await send(world);
 };
 
+// The password set, so that what it was kept as can be asked about.
+const set = new WeakMap<SpecWorld, string>();
+
 When(
   "the new password {string} is set",
   async function (this: SpecWorld, password: string) {
     await setThePassword(this, password);
+    set.set(this, password);
   },
 );
 
@@ -307,6 +311,15 @@ Then(
       assert.ok(id !== undefined, `There is no account for ${address}.`);
       return application.accounts.load(id);
     });
-    assert.equal(account?.passwordImported, false);
+    // Asked of the site's own hasher, which knows a hash of today's kind from
+    // one brought over by how it checks it: today's needs no making again.
+    const password = set.get(this);
+    assert.ok(password !== undefined, "No new password has been set.");
+    const checked = await application.passwords.check(
+      password,
+      account?.passwordHash,
+    );
+    assert.ok(checked.matches, "The new password does not sign in.");
+    assert.equal(checked.remake, false);
   },
 );

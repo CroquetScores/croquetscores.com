@@ -30,12 +30,6 @@ Feature: Hashing an account's password again
       When the account is rebuilt from the stream
       Then the account's password hash is the one it was hashed again with
 
-    Scenario: An account rebuilt after its password was hashed again no longer has an imported password
-      Given a stream where an account was brought over as "Sam Someone" at "someone@example.com"
-      And its password was hashed again
-      When the account is rebuilt from the stream
-      Then the account's password is not imported
-
   Rule: A forgotten account's password cannot be hashed again
 
     A new hash would be something new kept of the person after forgetting was

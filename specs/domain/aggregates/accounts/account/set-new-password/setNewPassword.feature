@@ -48,12 +48,6 @@ Feature: Setting a new password on an account
       When the account is rebuilt from the stream
       Then the account's password hash is the one it was set with
 
-    Scenario: An account rebuilt after a new password was set no longer has an imported password
-      Given a stream where an account was brought over as "Sam Someone" at "someone@example.com"
-      And a new password was set on the account
-      When the account is rebuilt from the stream
-      Then the account's password is not imported
-
     Scenario: An account knows when its password was set
       Given a stream where an account was registered at "someone@example.com"
       And its email address was confirmed as "Sam Someone"

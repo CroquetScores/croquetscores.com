@@ -96,10 +96,10 @@ Feature: Signing in with an email address and a password
       When signing in as "someone@example.com" with the password "correct horse battery staple" is sent
       Then it is answered with the account for "someone@example.com"
 
-    Scenario: An imported account that signs in no longer has an imported password
+    Scenario: An imported account that signs in no longer has the old site's hash
       Given "someone@example.com" has an account brought over from the old site, with the password "correct horse battery staple"
       When signing in as "someone@example.com" with the password "correct horse battery staple" is sent
-      Then the account for "someone@example.com" no longer has an imported password
+      Then the account for "someone@example.com" no longer has the old site's hash of its password
 
     Scenario: An imported account's password still signs in once hashed again
       Given "someone@example.com" has an account brought over from the old site, with the password "correct horse battery staple"
@@ -110,7 +110,7 @@ Feature: Signing in with an email address and a password
     Scenario: A wrong password leaves an imported account's password as it was
       Given "someone@example.com" has an account brought over from the old site, with the password "correct horse battery staple"
       When signing in as "someone@example.com" with the password "not the right password" is sent
-      Then the account for "someone@example.com" still has an imported password
+      Then the account for "someone@example.com" still has the old site's hash of its password
 
   Rule: Signings in to the same account at once take turns with it
 

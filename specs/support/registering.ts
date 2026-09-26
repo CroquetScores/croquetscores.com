@@ -56,6 +56,9 @@ export interface Registering {
   /** How many passwords have been checked against a hash, or against none. */
   passwordsChecked(): number;
 
+  /** Whether `hash` is of the old site's making, not yet made again. */
+  isTheOldSitesHash(hash: string | undefined): boolean;
+
   /** Signs in with Google. Answers with the account, or throws. */
   signInWithGoogle(command: SignInWithGoogle): Promise<AccountId>;
 

@@ -107,17 +107,25 @@ const accountFor = async (world: SpecWorld, address: string) => {
   return account;
 };
 
+// Whether an account is linked is asked as anything else would ask it: by
+// linking, on the account as it was read, which is never saved. The Google
+// account it is linked to already records nothing, and linking one to an
+// account linked to none records it.
 Then(
   "the account for {string} is linked to the Google account {string}",
   async function (this: SpecWorld, address: string, subject: string) {
-    assert.equal((await accountFor(this, address)).googleSubject, subject);
+    const account = await accountFor(this, address);
+    account.linkGoogleAccount(subject, momentOf(this));
+    assert.equal(account.recorded.length, 0, "It was linked to none.");
   },
 );
 
 Then(
   "the account for {string} is linked to no Google account",
   async function (this: SpecWorld, address: string) {
-    assert.equal((await accountFor(this, address)).googleSubject, undefined);
+    const account = await accountFor(this, address);
+    account.linkGoogleAccount("a-google-account-never-seen", momentOf(this));
+    assert.equal(account.recorded.length, 1);
   },
 );
 

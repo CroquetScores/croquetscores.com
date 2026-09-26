@@ -54,7 +54,6 @@ export class Account extends AggregateRoot {
   #emailAddress: EmailAddress | undefined;
   #name: PersonName | undefined;
   #passwordHash: string | undefined;
-  #passwordImported = false;
   #passwordSetAt: ReadOnlyDate | undefined;
   #movedAt: ReadOnlyDate | undefined;
   #confirmed = false;
@@ -150,11 +149,6 @@ export class Account extends AggregateRoot {
     return this.#passwordHash;
   }
 
-  /** Whether the hash is still the old site's, to be made again when it can. */
-  get passwordImported(): boolean {
-    return this.#passwordImported;
-  }
-
   /**
    * When somebody last chose the account's password, or nothing if nobody
    * has. A link that sets a password is judged against it: one made before
@@ -188,11 +182,6 @@ export class Account extends AggregateRoot {
    */
   moveAskedFor(reference: string): EmailAddress | undefined {
     return this.#movesAsked.get(reference);
-  }
-
-  /** The subject of the Google account linked to it, or nothing if none is. */
-  get googleSubject(): string | undefined {
-    return this.#googleSubject;
   }
 
   get isAdministrator(): boolean {
@@ -363,7 +352,6 @@ export class Account extends AggregateRoot {
       this.#emailAddress = EmailAddress.from(event.emailAddress);
       this.#name = PersonName.from(event.name);
       this.#passwordHash = event.passwordHash;
-      this.#passwordImported = true;
       this.#passwordSetAt = event.occurredAt;
       this.#confirmed = true;
     } else if (event instanceof EmailAddressConfirmed) {
@@ -387,13 +375,11 @@ export class Account extends AggregateRoot {
       this.#name = PersonName.from(event.name);
     } else if (event instanceof PasswordSet) {
       this.#passwordHash = event.passwordHash;
-      this.#passwordImported = false;
       this.#passwordSetAt = event.occurredAt;
     } else if (event instanceof PasswordHashedAgain) {
       // Nobody chose anything: it is the same password, so when it was set
       // stays when somebody last chose it.
       this.#passwordHash = event.passwordHash;
-      this.#passwordImported = false;
     } else if (event instanceof GoogleAccountLinked) {
       this.#googleSubject = event.subject;
     } else if (event instanceof RoleAdded) {
@@ -405,9 +391,6 @@ export class Account extends AggregateRoot {
       // So that whatever asks what an account may do gets the right answer
       // without also having to ask whether it is forgotten.
       this.#roles.clear();
-      // And for the same reason, so that signing in with the Google account
-      // it had cannot find it.
-      this.#googleSubject = undefined;
     }
     // Signing in is kept as a record that it happened, and changes nothing
     // the account decides by, so it has no case here.

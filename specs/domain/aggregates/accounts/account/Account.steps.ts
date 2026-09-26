@@ -223,23 +223,34 @@ Then(
   },
 );
 
-Then("the account's password is imported", function (this: SpecWorld) {
-  assert.equal(accountOf(this).passwordImported, true);
-});
-
-Then("the account's password is not imported", function (this: SpecWorld) {
-  assert.equal(accountOf(this).passwordImported, false);
-});
+// Whether an account is linked is asked as anything else would ask it: by
+// linking. The Google account it is linked to already records nothing, and so
+// changes nothing a later step looks at; any other is refused, and one linked
+// to none records it, and either way the scenario has already failed. When it
+// is asked is of no matter, since nothing is recorded that is kept.
+const ASKED_AT = at("2026-01-01T00:00:00Z");
 
 Then(
   "the account is linked to the Google account {string}",
   function (this: SpecWorld, subject: string) {
-    assert.equal(accountOf(this).googleSubject, subject);
+    const account = accountOf(this);
+    const before = account.recorded.length;
+    account.linkGoogleAccount(subject, ASKED_AT);
+    assert.equal(account.recorded.length, before, "It was linked to none.");
   },
 );
 
+// Linking one records it only where none is linked. Asked of a copy, rebuilt
+// from everything it has, since this time the answer that passes is the one
+// that records something.
 Then("the account is linked to no Google account", function (this: SpecWorld) {
-  assert.equal(accountOf(this).googleSubject, undefined);
+  const account = accountOf(this);
+  const copy = Account.rebuiltFrom(account.id, [
+    ...streamOf(this),
+    ...account.recorded,
+  ]);
+  copy.linkGoogleAccount("a-google-account-never-seen", ASKED_AT);
+  assert.equal(copy.recorded.length, 1);
 });
 
 // Asked through the account's own answer for each role, so that each is

@@ -451,6 +451,8 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
 
     passwordsChecked: () => hasher.checks,
 
+    isTheOldSitesHash: (hash) => hash?.startsWith(OLD_SITE) === true,
+
     async signInWithGoogle(command: SignInWithGoogle): Promise<AccountId> {
       await settle();
       if (forgetNextFound) {
