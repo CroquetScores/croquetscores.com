@@ -21,6 +21,7 @@ import { TournamentFormat } from "../../../domain/aggregates/tournaments/value-o
 import { TournamentName } from "../../../domain/aggregates/tournaments/value-objects/TournamentName.js";
 import { TournamentNotes } from "../../../domain/aggregates/tournaments/value-objects/TournamentNotes.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
@@ -37,15 +38,7 @@ export type TournamentOperationErrorCode =
  * An operation's refusal, named by its code. The code is what whoever asked
  * decides by; the message is only for whoever reads the log.
  */
-export class TournamentOperationRefused extends Error {
-  readonly code: TournamentOperationErrorCode;
-
-  constructor(code: TournamentOperationErrorCode, message: string) {
-    super(message);
-    this.name = "TournamentOperationRefused";
-    this.code = code;
-  }
-}
+export class TournamentOperationRefused extends Refused<TournamentOperationErrorCode> {}
 
 /**
  * Where tournaments are found. Every address a tournament has ever been found
