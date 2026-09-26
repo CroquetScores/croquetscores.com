@@ -8,7 +8,6 @@ import type { Tournament } from "../../../../src/domain/aggregates/tournaments/T
 import { Website } from "../../../../src/domain/common/Website.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { BrokenRule } from "../../../../src/domain/common/validation/Validator.js";
-import type { Registering } from "../../../support/registering.js";
 import type { TournamentsInHand } from "../../../support/tournaments.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { scenarioOf as domainScenarioOf } from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
@@ -65,15 +64,13 @@ export const inHandOf = (world: SpecWorld): TournamentsInHand => {
   return world.tournamentsInHand;
 };
 
-const registeringOf = (world: SpecWorld): Registering => {
-  assert.ok(world.registering !== undefined, "Registering is not stood up.");
-  return world.registering;
-};
-
-export const momentOf = (world: SpecWorld): ReadOnlyDate => {
-  assert.ok(world.moment !== undefined, "No moment has been named.");
-  return ReadOnlyDate.from(world.moment);
-};
+// The moment the scenario named, or where it named none, the moment by the
+// clock of whatever stood the tournaments up: a browser scenario says what its
+// reader's clock says, not what the site's does.
+export const momentOf = (world: SpecWorld): ReadOnlyDate =>
+  world.moment === undefined
+    ? inHandOf(world).now()
+    : ReadOnlyDate.from(world.moment);
 
 /**
  * The id of the account for `address`. Asking for it makes every account the
@@ -83,9 +80,9 @@ export const accountFor = async (
   world: SpecWorld,
   address: string,
 ): Promise<AccountId> => {
-  const account = await registeringOf(world).accountFor(address);
+  const account = await inHandOf(world).accountFor(address);
   assert.ok(account !== undefined, `There is no account for ${address}.`);
-  return account.id;
+  return account;
 };
 
 /** The account the scenario took hold of, as the session would name it. */

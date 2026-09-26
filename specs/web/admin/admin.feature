@@ -22,6 +22,15 @@ Feature: The admin is served as the site it belongs to
   before a script runs, and is looked at with none, so that a scenario cannot
   pass on something the application drew after the server failed to.
 
+  Nothing in the admin is shown to a reader who is not signed in, who is sent
+  to sign in first (`tournaments.feature`). So every scenario here has a
+  reader signed in: the sign in page wears the same header and footer, and a
+  scenario looking at them there would pass without the admin being opened at
+  all.
+
+  Background:
+    Given a reader signed in as "someone@example.com"
+
   Rule: The admin calls the site by the name it is given
 
     Scenario: The admin's tab names the site

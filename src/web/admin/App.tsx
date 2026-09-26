@@ -1,37 +1,55 @@
 import { useEffect, useState } from "react";
 
-// The shell. Screens arrive with the features that specify them; what this
-// proves for now is that the SPA is built, served under /admin, reaches the API
-// it shares with the mobile apps, and speaks the same vocabulary as the public
-// pages.
+import { Tournaments } from "./Tournaments.js";
+
+// What goes between the public pages' header and footer, which the server
+// says in around the mount point (adminPage.ts). Which screen that is is read
+// off the address, so that every screen can be linked to and the browser's
+// back button goes back through them.
+
+// /admin/ is this year's tournaments, and /admin/2025 another year's. A year
+// is written as an address writes one: four digits, the first not a nought.
+const yearIn = (path: string): number | "this year" | undefined => {
+  if (/^\/admin\/?$/.test(path)) return "this year";
+  const year = /^\/admin\/([1-9]\d{3})\/?$/.exec(path)?.[1];
+  return year === undefined ? undefined : Number(year);
+};
+
 export const App = (): React.JSX.Element => {
-  const [status, setStatus] = useState("checking…");
+  const [path, setPath] = useState(window.location.pathname);
 
   useEffect(() => {
-    fetch("/api/v1/health")
-      .then(async (response) => {
-        const body: unknown = await response.json();
-        setStatus(
-          typeof body === "object" && body !== null && "status" in body
-            ? String(body.status)
-            : "unrecognised",
-        );
-      })
-      .catch(() => {
-        setStatus("unreachable");
-      });
+    const back = (): void => {
+      setPath(window.location.pathname);
+    };
+    window.addEventListener("popstate", back);
+    return () => {
+      window.removeEventListener("popstate", back);
+    };
   }, []);
 
-  // What goes between the public pages' header and footer, which the server
-  // says in around the mount point (adminPage.ts). Set in the panel every
-  // public page's content is set in. Its words are the admin's own, and in no
-  // catalogue yet.
+  const go = (to: string): void => {
+    window.history.pushState(null, "", to);
+    setPath(to);
+  };
+
+  const year = yearIn(path);
+  if (year !== undefined) {
+    return (
+      <Tournaments
+        year={year === "this year" ? new Date().getFullYear() : year}
+        go={go}
+      />
+    );
+  }
+
+  // A tournament's own screens arrive with the features that specify them.
+  // Set in the panel every public page's content is set in.
   return (
     <main id="content">
       <div className="page">
         <div className="panel stack">
           <h1>Admin</h1>
-          <p className="lead">API: {status}</p>
         </div>
       </div>
     </main>
