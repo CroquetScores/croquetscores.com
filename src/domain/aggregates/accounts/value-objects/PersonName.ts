@@ -1,3 +1,4 @@
+import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a name can break. */
@@ -6,13 +7,6 @@ export type PersonNameErrorCode =
 
 const FEWEST_CHARACTERS = 3;
 const MOST_CHARACTERS = 254;
-
-// Characters as a reader counts them. A letter with its accent typed after it
-// is two code points and one character, and a name is not refused, or let
-// through, for how its keyboard spelled it.
-const graphemes = new Intl.Segmenter();
-const charactersIn = (text: string): number =>
-  [...graphemes.segment(text)].length;
 
 // Nothing is asked of a name but its length. People's names are not a shape
 // rules can be written for, and every rule written for them turns somebody

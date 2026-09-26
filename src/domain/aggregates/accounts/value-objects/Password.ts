@@ -1,3 +1,4 @@
+import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a password can break. */
@@ -6,12 +7,6 @@ export type PasswordErrorCode = "Password.Missing" | "Password.TooShort";
 // NIST asks for at least 8, and 15 where a password is all there is. The site
 // asks for more than NIST's least, as Password.feature says.
 const FEWEST_CHARACTERS = 12;
-
-// Characters as a reader counts them, as a name's are, so that a password is
-// not refused for how its keyboard spelled an accented letter.
-const graphemes = new Intl.Segmenter();
-const charactersIn = (text: string): number =>
-  [...graphemes.segment(text)].length;
 
 // Nothing is asked of which kinds of character a password has. Rules like that
 // make a password harder to remember without making it harder to guess.

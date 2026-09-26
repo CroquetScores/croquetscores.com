@@ -56,8 +56,6 @@ Going to use SPA instead of /scripts.
 
 From a review of the directory on 2026-09-26. Ordered by how much each is worth. None changes what the site does, except where the item says so.
 
-- **Count characters in one place.** `value-objects/Password.ts` and `value-objects/PersonName.ts` each make an `Intl.Segmenter` and a `charactersIn` of their own, and so do `CompetitionName.ts` and `TournamentNotes.ts` under `tournaments` and `ImportUsers.ts` in the import. The five are the same code and the same comment. What counts as a character is one decision, so it belongs in `src/domain/common/`, and the import can take it from there. Run `npm test`, since it reaches past accounts.
-
 - **Put the two refusals every change begins with into one.** Seven of `Account`'s methods begin `#refuseOnceForgotten(); #refuseUntilConfirmed();`, and the comment above them says the order matters: a forgotten account says it is forgotten whether or not it was confirmed. One `#refuseUnlessInUse()` holding both would keep that order in one place rather than seven. `hashPasswordAgain`, `removeRole` and `forget` still ask less, and keep calling what they ask for by itself.
 
 - **Let the account's refusal speak for linking another Google account.** `SignInWithGoogleHandler` checks `account.googleSubject` against the subject before calling `linkGoogleAccount`, which makes the same check and refuses with `Account.GoogleAccountAlreadyLinked`. The rule is written twice, once in the domain and once in the application, and the two can drift. The handler could catch the account's refusal and throw `SignInWithGoogle.LinkedToAnother` instead. The check is not needed before `confirm` either, since an account not yet confirmed can never have been linked.

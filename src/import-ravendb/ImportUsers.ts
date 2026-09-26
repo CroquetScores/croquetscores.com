@@ -4,6 +4,7 @@ import { Account } from "../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
+import { charactersIn } from "../domain/common/charactersIn.js";
 import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
@@ -15,12 +16,6 @@ import type { Importer, ReadDocument } from "./runImporter.js";
 const FEWEST_CHARACTERS = 3;
 
 const TOO_SHORT = " (name must be 3 characters or more)";
-
-// Characters as a reader counts them, as PersonName counts them, so that a
-// name this lets through is one PersonName does.
-const graphemes = new Intl.Segmenter();
-const charactersIn = (text: string): number =>
-  [...graphemes.segment(text)].length;
 
 /**
  * A name the old sites accepted, changed only as far as it must be to be

@@ -1,16 +1,10 @@
+import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule notes can break. */
 export type TournamentNotesErrorCode = "TournamentNotes.TooLong";
 
 const MOST_CHARACTERS = 2000;
-
-// Characters as a reader counts them. A letter with its accent typed after it
-// is two code points and one character, and notes are not refused, or let
-// through, for how their keyboard spelled them.
-const graphemes = new Intl.Segmenter();
-const charactersIn = (text: string): number =>
-  [...graphemes.segment(text)].length;
 
 const notes = new Validator<string, TournamentNotesErrorCode>({
   fields: [
