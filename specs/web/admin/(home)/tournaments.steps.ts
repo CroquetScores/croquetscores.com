@@ -5,12 +5,12 @@ import type { Locator } from "playwright";
 import {
   type CreatedTournament,
   CreateTournament,
-} from "../../../src/application/operations/tournaments/CreateTournament.js";
-import type { TournamentRequest } from "../../../src/application/operations/tournaments/tournamentOperations.js";
-import { UpdateTournament } from "../../../src/application/operations/tournaments/UpdateTournament.js";
-import { Website } from "../../../src/domain/common/Website.js";
-import { signOutPath } from "../../../src/web/common/accountMenu.js";
-import { signInPath } from "../../../src/web/public/signIn.js";
+} from "../../../../src/application/operations/tournaments/CreateTournament.js";
+import type { TournamentRequest } from "../../../../src/application/operations/tournaments/tournamentOperations.js";
+import { UpdateTournament } from "../../../../src/application/operations/tournaments/UpdateTournament.js";
+import { Website } from "../../../../src/domain/common/Website.js";
+import { signOutPath } from "../../../../src/web/common/accountMenu.js";
+import { signInPath } from "../../../../src/web/public/signIn.js";
 import {
   accountFor,
   created,
@@ -18,8 +18,8 @@ import {
   load,
   momentOf,
   tournamentNamed,
-} from "../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../support/world.js";
+} from "../../../application/operations/tournaments/aRequest.js";
+import type { SpecWorld } from "../../../support/world.js";
 
 // The admin draws the list itself, after asking the API for it, so nothing
 // here is read until the list says it is the answer to what was last asked
