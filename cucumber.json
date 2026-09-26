@@ -8,6 +8,8 @@
     ],
     "paths": ["specs/**/*.feature"],
     "format": ["progress-bar", "html:reports/cucumber.html"],
+    "loader": ["./cucumber-loader.mjs"],
+    "parallel": 6,
     "formatOptions": {
       "snippetInterface": "async-await"
     }
@@ -20,6 +22,8 @@
       "specs/web/support/**/*.ts"
     ],
     "format": ["progress-bar", "html:reports/cucumber-changed.html"],
+    "loader": ["./cucumber-loader.mjs"],
+    "parallel": 6,
     "formatOptions": {
       "snippetInterface": "async-await"
     }

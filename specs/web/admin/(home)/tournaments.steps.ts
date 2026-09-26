@@ -136,11 +136,21 @@ Given("the reader has signed out", async function (this: SpecWorld) {
   // keeps the session comes back, and signing out before it would be undone
   // by it.
   await this.browserPage.waitForURL((url) => url.pathname !== signInPath);
-  const answer = await this.browserPage.request.post(
-    `${this.baseUrl!}${signOutPath}`,
-    { maxRedirects: 0 },
+  // Posted from the page, so that it goes with the browser's own cookie. It
+  // was posted with Playwright's request instead, which does not send a secure
+  // cookie to a site served over plain http, as the scenarios' is: the server
+  // was asked to end no session, ended none, and took the cookie away all the
+  // same. The reader looked signed out only until an answer the admin had
+  // asked for before then came back and renewed the cookie, which a run with
+  // scenarios in parallel was slow enough to show.
+  const status = await this.browserPage.evaluate(
+    async (path) =>
+      (await fetch(path, { method: "POST", redirect: "manual" })).status,
+    signOutPath,
   );
-  assert.ok(answer.status() < 400, `Signing out answered ${answer.status()}.`);
+  // A redirect not followed is answered to a script as status 0, and the
+  // redirect is what signing out answers with.
+  assert.equal(status, 0, `Signing out answered ${String(status)}.`);
 });
 
 // Opening the admin at a year --------------------------------------------------

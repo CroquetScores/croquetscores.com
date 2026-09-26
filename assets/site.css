@@ -750,6 +750,29 @@ main {
   font-weight: 700;
 }
 
+/* The label on the list's top border, drawn as a field's label is once the
+   field holds something (.field-box), since a list is never empty. The field's
+   label is placed from inside the box's 1px border and this one from outside
+   the list's, so each offset here is a pixel more to land in the same place. */
+.language-box {
+  position: relative;
+  display: flex;
+}
+
+.language-box label {
+  position: absolute;
+  top: -2px;
+  left: calc(var(--space-3) + 1px);
+  margin-inline-start: calc(-1 * var(--space-1));
+  padding-inline: var(--space-1);
+  transform: translateY(-50%);
+  background: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  white-space: nowrap;
+}
+
 /* The list is drawn on the green bar like the buttons beside it, and opens
    onto the page's own colours, which is what a browser draws its options on. */
 .language option {

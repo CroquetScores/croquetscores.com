@@ -447,6 +447,8 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
     ],
     "paths": ["specs/**/*.feature"],
     "format": ["progress-bar", "html:reports/cucumber.html"],
+    "loader": ["./cucumber-loader.mjs"],
+    "parallel": 6,
     "formatOptions": {
       "snippetInterface": "async-await"
     }
@@ -456,7 +458,8 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
-- There is no `loader` entry: Cucumber forwards it to Node's deprecated `--loader` flag, which tsx rejects. tsx is applied by the npm script instead, running Cucumber's bin through it, so steps execute as TypeScript with no build step.
+- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:features -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
+- tsx is applied twice over, once to each kind of thread. The npm script runs Cucumber's bin through tsx, which is what the main thread loads the steps with. A worker thread does not inherit that, so `loader` names `cucumber-loader.mjs`, which Cucumber registers in each worker before loading anything: tsx's own hooks, handed the empty options that Cucumber does not give them and without which tsx takes itself to have been started with Node's deprecated `--loader` flag and refuses to run. Steps execute as TypeScript with no build step either way.
 
 ### 8.1 Scenarios that need a database
 
