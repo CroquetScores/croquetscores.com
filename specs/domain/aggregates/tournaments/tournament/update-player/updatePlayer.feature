@@ -153,7 +153,7 @@ Feature: Changing what a tournament's player is
       And the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"
       When the player "Sam Someone" is updated
-      Then it is refused with "Tournament.PlayerArchived"
+      Then it is refused for breaking "TournamentPlayer.Archived"
 
     Scenario: Updating a player in an archived tournament is refused
       Given a stream where a tournament was created as "Spring Open"

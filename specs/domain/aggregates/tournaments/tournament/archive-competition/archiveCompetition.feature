@@ -11,6 +11,12 @@ Feature: Archiving a tournament's competition
   be restored (`restoreCompetition.feature`), which is all that can be done
   to it until it is.
 
+  A competition that has any games cannot be archived, since the games would
+  then be in a competition nobody can see, and what the players won in them
+  would go with it. The games are not the tournament's to know: they are the
+  competition's. So whatever asks for a competition to be archived says
+  whether it has any, as it says which competition.
+
   Archiving a competition that is already archived records nothing, because
   nothing happened.
 
@@ -27,6 +33,7 @@ Feature: Archiving a tournament's competition
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the tournament is rebuilt from the stream
+      And the competition "Block A" has no games
       When the competition "Block A" is archived
       Then it has recorded 1 event
       And the first thing it recorded is a competition being archived
@@ -35,6 +42,7 @@ Feature: Archiving a tournament's competition
       Given a stream where a tournament was created as "Spring Open"
       And the <kind> "Final Stage" was added to it
       And the tournament is rebuilt from the stream
+      And the competition "Final Stage" has no games
       When the competition "Final Stage" is archived
       Then the tournament's competition "Final Stage" is archived
 
@@ -48,6 +56,7 @@ Feature: Archiving a tournament's competition
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the tournament is rebuilt from the stream
+      And the competition "Block A" has no games
       When the competition "Block A" is archived
       Then the tournament has the competition "Block A"
 
@@ -55,6 +64,7 @@ Feature: Archiving a tournament's competition
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the tournament is rebuilt from the stream
+      And the competition "Block A" has no games
       When the competition "Block A" is archived
       Then the tournament's competition "Block A" has the slug "block-a"
 
@@ -64,6 +74,24 @@ Feature: Archiving a tournament's competition
       And the competition "Block A" was archived
       When the tournament is rebuilt from the stream
       Then the tournament's competition "Block A" is archived
+
+  Rule: A competition that has games cannot be archived
+
+    Scenario: Archiving a competition that has games is refused
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the competition "Block A" has games
+      When the competition "Block A" is archived
+      Then it is refused with "Tournament.CompetitionHasGames"
+
+    Scenario: A competition that has games is not archived
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the competition "Block A" has games
+      When the competition "Block A" is archived
+      Then the tournament's competition "Block A" is not archived
 
   Rule: Only a competition there is can be archived
 
@@ -80,6 +108,7 @@ Feature: Archiving a tournament's competition
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
+      And the competition "Block A" has no games
       When the competition "Block A" is archived
       Then it has recorded 0 events
 
@@ -88,6 +117,7 @@ Feature: Archiving a tournament's competition
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
+      And the competition "Block A" has no games
       When the competition "Block A" is archived
       Then it is not refused
 
@@ -98,5 +128,6 @@ Feature: Archiving a tournament's competition
       And the block "Block A" was added to it
       And it was archived
       And the tournament is rebuilt from the stream
+      And the competition "Block A" has no games
       When the competition "Block A" is archived
       Then it is refused with "Tournament.Archived"

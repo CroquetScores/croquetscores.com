@@ -5,7 +5,10 @@ import type { Flag } from "./value-objects/Flag.js";
 import { Flags } from "./value-objects/Flags.js";
 
 /** Every rule a player can break, besides those of a person's name. */
-export type TournamentPlayerErrorCode = "TournamentPlayer.NoSuchFlag";
+export type TournamentPlayerErrorCode =
+  | "TournamentPlayer.NoSuchFlag"
+  | "TournamentPlayer.HasGames"
+  | "TournamentPlayer.Archived";
 
 /** What a player is, as it is given, before anything is asked of it. */
 export interface TournamentPlayerDetails {
@@ -21,6 +24,11 @@ export interface TournamentPlayerDetails {
  * another tournament is another player, since what they are called, what they
  * play for and which flag they fly can differ between the two.
  *
+ * A player is never altered: updating, archiving and restoring each give the
+ * player as they are afterwards, and leave the one asked unchanged. Asking for
+ * what a player already is gives them back as they are, since a form sent
+ * twice is not a mistake worth refusing.
+ *
  * Two players are the same player when their ids are, whatever else differs,
  * since a player whose name is corrected is still the player who played.
  */
@@ -29,27 +37,38 @@ export class TournamentPlayer {
   readonly #name: PersonName;
   readonly #represents: string | undefined;
   readonly #flag: Flag | undefined;
+  readonly #archived: boolean;
 
   private constructor(
     id: TournamentPlayerId,
     name: PersonName,
     represents: string | undefined,
     flag: Flag | undefined,
+    archived: boolean,
   ) {
     this.#id = id;
     this.#name = name;
     this.#represents = represents;
     this.#flag = flag;
+    this.#archived = archived;
   }
 
   /**
-   * The player known by `id` that `details` describe. Throws
+   * The new player known by `id` that `details` describe, not archived. Throws
    * {@link ValidationError} naming the first rule the details break: the name
    * first, then the flag.
    */
   static from(
     id: TournamentPlayerId,
     details: TournamentPlayerDetails,
+  ): TournamentPlayer {
+    return TournamentPlayer.#made(id, details, false);
+  }
+
+  static #made(
+    id: TournamentPlayerId,
+    details: TournamentPlayerDetails,
+    archived: boolean,
   ): TournamentPlayer {
     const name = PersonName.from(details.name);
     // What is nothing but whitespace was left blank by whoever typed it, so it
@@ -60,6 +79,7 @@ export class TournamentPlayer {
       name,
       represents,
       TournamentPlayer.#flagNamed(details.flag),
+      archived,
     );
   }
 
@@ -93,11 +113,60 @@ export class TournamentPlayer {
     return this.#flag;
   }
 
+  get archived(): boolean {
+    return this.#archived;
+  }
+
+  /**
+   * The same player, as `details` describe them: everything said again, and
+   * each asked what it is asked of a new player. Throws
+   * {@link ValidationError} as `TournamentPlayer.Archived` for an archived
+   * player, and otherwise naming the first rule the details break.
+   */
+  update(details: TournamentPlayerDetails): TournamentPlayer {
+    if (this.#archived)
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.Archived",
+      );
+    return TournamentPlayer.#made(this.#id, details, false);
+  }
+
+  /**
+   * The player, archived. Whether they have games is the tournament's to
+   * know, so it says. Throws {@link ValidationError} as
+   * `TournamentPlayer.HasGames` for one with games, since the games would then
+   * be against somebody who is no longer there.
+   */
+  archive({ hasGames }: { readonly hasGames: boolean }): TournamentPlayer {
+    if (this.#archived) return this;
+    if (hasGames)
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.HasGames",
+      );
+    return this.#withArchived(true);
+  }
+
+  /** The player, no longer archived. */
+  restore(): TournamentPlayer {
+    if (!this.#archived) return this;
+    return this.#withArchived(false);
+  }
+
   equals(other: TournamentPlayer | undefined): boolean {
     return other instanceof TournamentPlayer && this.#id.equals(other.#id);
   }
 
   toString(): string {
     return String(this.#name);
+  }
+
+  #withArchived(archived: boolean): TournamentPlayer {
+    return new TournamentPlayer(
+      this.#id,
+      this.#name,
+      this.#represents,
+      this.#flag,
+      archived,
+    );
   }
 }

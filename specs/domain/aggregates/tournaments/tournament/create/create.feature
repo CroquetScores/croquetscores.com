@@ -68,12 +68,12 @@ Feature: Creating a tournament
       Then the tournament is called "Spring Open"
 
     Scenario: A new tournament starts when it was created to
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       When a tournament is created
       Then the tournament starts at "2026-10-03T00:00:00.000Z"
 
     Scenario: A new tournament finishes when it was created to
-      Given the tournament finishes at "2026-10-05T00:00:00Z"
+      Given the tournament is to finish at "2026-10-05T00:00:00Z"
       When a tournament is created
       Then the tournament finishes at "2026-10-05T00:00:00.000Z"
 
@@ -167,14 +167,14 @@ Feature: Creating a tournament
   Rule: A tournament finishes no earlier than it starts
 
     Scenario: A tournament that finishes the moment it starts is accepted
-      Given the tournament starts at "2026-10-03T00:00:00Z"
-      And the tournament finishes at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
+      And the tournament is to finish at "2026-10-03T00:00:00Z"
       When a tournament is created
       Then it is not refused
 
     Scenario: A tournament that finishes before it starts is refused
-      Given the tournament starts at "2026-10-03T00:00:00Z"
-      And the tournament finishes at "2026-10-02T23:59:59Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
+      And the tournament is to finish at "2026-10-02T23:59:59Z"
       When a tournament is created
       Then it is refused with "Tournament.FinishesBeforeStarts"
 
@@ -195,22 +195,22 @@ Feature: Creating a tournament
   Rule: A tournament is found at its year, its sport and a slug of its name
 
     Scenario: A tournament is found at the year it starts, its sport and its name's slug
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       When a tournament is created
       Then the tournament is found at "2026/ac/spring-open"
 
     Scenario: The year is the year the tournament starts in UTC
-      Given the tournament starts at "2027-01-01T09:00:00+10:00"
-      And the tournament finishes at "2027-01-02T00:00:00Z"
+      Given the tournament is to start at "2027-01-01T09:00:00+10:00"
+      And the tournament is to finish at "2027-01-02T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       When a tournament is created
       Then the tournament is found at "2026/ac/spring-open"
 
     Scenario: A new tournament has been found nowhere else
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       When a tournament is created
@@ -224,7 +224,7 @@ Feature: Creating a tournament
   Rule: A tournament is not found at an address somebody else has
 
     Scenario: An address taken is followed by "-01"
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2026/ac/spring-open" is taken
@@ -232,7 +232,7 @@ Feature: Creating a tournament
       Then the tournament is found at "2026/ac/spring-open-01"
 
     Scenario: An address followed by "-01" that is taken too is followed by "-02"
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2026/ac/spring-open" is taken
@@ -241,7 +241,7 @@ Feature: Creating a tournament
       Then the tournament is found at "2026/ac/spring-open-02"
 
     Scenario: The first address not taken is the tournament's, whatever is taken after it
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2026/ac/spring-open" is taken
@@ -250,7 +250,7 @@ Feature: Creating a tournament
       Then the tournament is found at "2026/ac/spring-open-01"
 
     Scenario: The last address followed by a number is "-99"
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2026/ac/spring-open" is taken
@@ -260,7 +260,7 @@ Feature: Creating a tournament
 
     Scenario: With every numbered address taken the slug is followed by the tournament's id
       Given the tournament id "tournament/7c9e6679-7425-40de-944b-e07fc1f90ae7"
-      And the tournament starts at "2026-10-03T00:00:00Z"
+      And the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2026/ac/spring-open" is taken
@@ -269,7 +269,7 @@ Feature: Creating a tournament
       Then the tournament is found at "2026/ac/spring-open-7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
     Scenario: An address taken in another year does not count
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2025/ac/spring-open" is taken
@@ -277,7 +277,7 @@ Feature: Creating a tournament
       Then the tournament is found at "2026/ac/spring-open"
 
     Scenario: An address taken in another sport does not count
-      Given the tournament starts at "2026-10-03T00:00:00Z"
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
       And the sport "ac"
       And the tournament name "Spring Open"
       And the address "2026/gc/spring-open" is taken

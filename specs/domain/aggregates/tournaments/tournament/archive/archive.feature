@@ -22,14 +22,14 @@ Feature: Archiving a tournament
     Scenario: Archiving records it
       Given a stream where a tournament was created as "Spring Open"
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then it has recorded 1 event
       And the first thing it recorded is its archiving
 
     Scenario: An archived tournament is archived
       Given a stream where a tournament was created as "Spring Open"
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then the tournament is archived
 
     Scenario: A tournament rebuilt after it was archived is archived
@@ -41,20 +41,20 @@ Feature: Archiving a tournament
     Scenario: An archived tournament keeps its name
       Given a stream where a tournament was created as "Spring Open"
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then the tournament is called "Spring Open"
 
     Scenario: An archived tournament is found where it was
       Given a stream where a tournament was created at "2026/ac/spring-open"
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then the tournament is found at "2026/ac/spring-open"
 
     Scenario: An archived tournament keeps its players
       Given a stream where a tournament was created as "Spring Open"
       And the player "Sam Someone" was added to it
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then the tournament has the player "Sam Someone"
 
   Rule: Archiving an archived tournament records nothing
@@ -63,12 +63,12 @@ Feature: Archiving a tournament
       Given a stream where a tournament was created as "Spring Open"
       And it was archived
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then it has recorded 0 events
 
     Scenario: Archiving an archived tournament is not refused
       Given a stream where a tournament was created as "Spring Open"
       And it was archived
       And the tournament is rebuilt from the stream
-      When the tournament is archived
+      When somebody archives the tournament
       Then it is not refused

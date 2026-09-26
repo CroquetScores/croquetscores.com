@@ -42,6 +42,10 @@ import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/T
 import type { TournamentPlayerId } from "../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { CompetitionPlayer } from "../../src/domain/aggregates/competitions/CompetitionPlayer.js";
 import type { CompetitionName } from "../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import type { TournamentName } from "../../src/domain/aggregates/tournaments/value-objects/TournamentName.js";
+import type { TournamentAddress } from "../../src/domain/aggregates/tournaments/value-objects/TournamentAddress.js";
+import type { BestOf } from "../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
+import type { KnockoutDraw } from "../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import type { CompetitionReference } from "../../src/domain/aggregates/tournaments/CompetitionReference.js";
 import type { Slug } from "../../src/domain/common/Slug.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
@@ -307,6 +311,10 @@ export class SpecWorld extends World {
   public tournamentPlayer: TournamentPlayer | undefined;
   public otherTournamentPlayer: TournamentPlayer | undefined;
   public sameTournamentPlayer: boolean | undefined;
+  // The player in a tournament as they were before a scenario changed them,
+  // and whether the tournament says they have games.
+  public tournamentPlayerBefore: TournamentPlayer | undefined;
+  public tournamentPlayerHasGames = false;
   // The competition name and the slug a scenario makes. A failure to make
   // either is kept in `failure`.
   public competitionName: CompetitionName | undefined;
@@ -330,6 +338,23 @@ export class SpecWorld extends World {
   // next, and the order found.
   public competitionPlayers: CompetitionPlayer[] = [];
   public orderFound: number | undefined;
+  // The tournament name a scenario makes. A failure to make one is kept in
+  // `failure`.
+  public tournamentName: TournamentName | undefined;
+  // The year a tournament address is made with, the address a scenario makes,
+  // the other it is compared with, and whether the two were found the same. A
+  // failure to make one is kept in `failure`.
+  public year: number | undefined;
+  public tournamentAddress: TournamentAddress | undefined;
+  public otherTournamentAddress: TournamentAddress | undefined;
+  public sameTournamentAddress: boolean | undefined;
+  // The best-of a scenario makes. A failure to make one is kept in `failure`.
+  public bestOf: BestOf | undefined;
+  // What a knockout's draw is to be made from, and the draw made. A failure to
+  // make one is kept in `failure`.
+  public drawPlaces: number | undefined;
+  public drawRounds: number[] = [];
+  public knockoutDraw: KnockoutDraw | undefined;
 
   // The thing that lasts a scenario is looking at, when it is a real one rather
   // than the example thing, so that the steps every such thing shares — what

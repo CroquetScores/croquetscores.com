@@ -123,8 +123,10 @@ When("what it recorded is handed over", function (this: SpecWorld) {
 
 // What came of it --------------------------------------------------------
 
+// Asked of whichever thing the scenario is looking at, as what it recorded is.
 Then("it is known by {string}", function (this: SpecWorld, id: string) {
-  assert.equal(thingOf(this).id.value, id);
+  const looking = this.aggregate ?? thingOf(this);
+  assert.equal(looking.id.value, id);
 });
 
 Then("it is called {string}", function (this: SpecWorld, name: string) {

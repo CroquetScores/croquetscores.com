@@ -64,7 +64,7 @@ Feature: Archiving a tournament's player
       And the tournament is rebuilt from the stream
       And the player "Sam Someone" has played games
       When the player "Sam Someone" is archived
-      Then it is refused with "Tournament.PlayerHasGames"
+      Then it is refused for breaking "TournamentPlayer.HasGames"
 
   Rule: Only a player there is can be archived
 

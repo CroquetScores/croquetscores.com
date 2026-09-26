@@ -29,8 +29,18 @@ Feature: A player in a tournament
   who has any games in the tournament cannot be archived, since the games
   would then be against somebody who is no longer there. The games are the
   tournament's to know, not the player's, so the tournament says whether the
-  player has any when it asks for them to be archived. Archiving a player who
-  is already archived leaves them archived.
+  player has any when it asks for them to be archived. An archived player can
+  be restored, and that is all that can be done to them until they are.
+
+  A player can be updated: their name, what they represent and the flag they
+  fly said again, each asked what it is asked of a new player. The player
+  updated is the same player, with the same id, since a player whose name is
+  corrected is still the player who played.
+
+  A player is never altered: updating, archiving and restoring each give the
+  player as they are afterwards. Asking for what a player already is —
+  archiving one who is archived, restoring one who is not — gives them back as
+  they are, since a form sent twice is not a mistake worth refusing.
 
   Two players are the same player when their ids are, whatever they are
   called.
@@ -84,6 +94,94 @@ Feature: A player in a tournament
     Scenario: A name that is no flag there is is refused
       When a player flying the flag "zz" is made
       Then it is refused for breaking "TournamentPlayer.NoSuchFlag"
+
+  Rule: A player can be updated, and is the same player afterwards
+
+    Scenario: An updated player has the name they were updated to
+      Given a player named "Sam Someone"
+      When the player is updated to be called "Samantha Someone"
+      Then the player's name is "Samantha Someone"
+
+    Scenario: An updated player is the same player they were
+      Given a player named "Sam Someone"
+      When the player is updated to be called "Samantha Someone"
+      Then the player is the same player they were
+
+    Scenario: An updated player represents what they were updated to
+      Given a player named "Sam Someone"
+      When the player is updated to represent "Canterbury Croquet Club"
+      Then the player represents "Canterbury Croquet Club"
+
+    Scenario: An updated player flies the flag they were updated to
+      Given a player named "Sam Someone"
+      When the player is updated to fly the flag "nz"
+      Then the player flies the flag "nz"
+
+    Scenario: An updated player keeps what the update did not change
+      Given a player named "Sam Someone" representing "Canterbury Croquet Club"
+      When the player is updated to be called "Samantha Someone"
+      Then the player represents "Canterbury Croquet Club"
+
+    Scenario: A name that could not be a person's is refused as a person's is
+      Given a player named "Sam Someone"
+      When the player is updated to be called "Sa"
+      Then it is refused for breaking "PersonName.TooShort"
+
+    Scenario: A flag there is not is refused as it is for a new player
+      Given a player named "Sam Someone"
+      When the player is updated to fly the flag "zz"
+      Then it is refused for breaking "TournamentPlayer.NoSuchFlag"
+
+  Rule: A new player is not archived
+
+    Scenario: A new player is not archived
+      When a player named "Sam Someone" is made
+      Then the tournament player is not archived
+
+  Rule: A player with no games can be archived, and restored
+
+    Scenario: A player with no games who is archived is archived
+      Given a player named "Sam Someone"
+      And the tournament says the player has no games
+      When the tournament archives the player
+      Then the tournament player is archived
+
+    Scenario: A player with games cannot be archived
+      Given a player named "Sam Someone"
+      And the tournament says the player has games
+      When the tournament archives the player
+      Then it is refused for breaking "TournamentPlayer.HasGames"
+
+    Scenario: An archived player keeps who they are
+      Given a player named "Sam Someone"
+      And the tournament says the player has no games
+      When the tournament archives the player
+      Then the player's name is "Sam Someone"
+
+    Scenario: An archived player who is restored is not archived
+      Given a player named "Sam Someone" who is archived
+      When the tournament restores the player
+      Then the tournament player is not archived
+
+    Scenario: An archived player who is archived again is still archived
+      Given a player named "Sam Someone" who is archived
+      And the tournament says the player has no games
+      When the tournament archives the player
+      Then it is not refused
+      And the tournament player is archived
+
+    Scenario: Restoring a player who is not archived leaves them not archived
+      Given a player named "Sam Someone"
+      When the tournament restores the player
+      Then it is not refused
+      And the tournament player is not archived
+
+  Rule: An archived player can only be restored
+
+    Scenario: An archived player cannot be updated
+      Given a player named "Sam Someone" who is archived
+      When the player is updated to be called "Samantha Someone"
+      Then it is refused for breaking "TournamentPlayer.Archived"
 
   Rule: Two players are the same when their ids are
 

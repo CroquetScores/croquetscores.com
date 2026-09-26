@@ -55,6 +55,36 @@ Given("a player named {string}", function (this: SpecWorld, name: string) {
 });
 
 Given(
+  "a player named {string} representing {string}",
+  function (this: SpecWorld, name: string, represents: string) {
+    this.tournamentPlayer = TournamentPlayer.from(TournamentPlayerId.create(), {
+      name,
+      represents,
+    });
+  },
+);
+
+Given(
+  "a player named {string} who is archived",
+  function (this: SpecWorld, name: string) {
+    this.tournamentPlayer = TournamentPlayer.from(TournamentPlayerId.create(), {
+      name,
+    }).archive({ hasGames: false });
+  },
+);
+
+Given("the tournament says the player has games", function (this: SpecWorld) {
+  this.tournamentPlayerHasGames = true;
+});
+
+Given(
+  "the tournament says the player has no games",
+  function (this: SpecWorld) {
+    this.tournamentPlayerHasGames = false;
+  },
+);
+
+Given(
   "another player with the same id named {string}",
   function (this: SpecWorld, name: string) {
     this.otherTournamentPlayer = TournamentPlayer.from(playerOfWorld(this).id, {
@@ -102,6 +132,68 @@ When("a player flying no flag is made", function (this: SpecWorld) {
   tryToMake(this, { flag: undefined });
 });
 
+// Changing a player may be refused, and the scenario says which it expects.
+// The player as they were is kept, so that what they are afterwards can be
+// compared with it.
+const tryToChange = (
+  world: SpecWorld,
+  changing: (player: TournamentPlayer) => TournamentPlayer,
+): void => {
+  const player = playerOfWorld(world);
+  world.tournamentPlayerBefore = player;
+  try {
+    world.tournamentPlayer = changing(player);
+  } catch (failure) {
+    world.failure = failure;
+  }
+};
+
+// An update says everything about the player again, so what the scenario does
+// not change is said as the player already has it.
+const updatedWith = (
+  world: SpecWorld,
+  changed: Partial<TournamentPlayerDetails>,
+): void => {
+  tryToChange(world, (player) =>
+    player.update({
+      name: player.name.toString(),
+      represents: player.represents,
+      flag: player.flag === undefined ? undefined : String(player.flag),
+      ...changed,
+    }),
+  );
+};
+
+When(
+  "the player is updated to be called {string}",
+  function (this: SpecWorld, name: string) {
+    updatedWith(this, { name });
+  },
+);
+
+When(
+  "the player is updated to represent {string}",
+  function (this: SpecWorld, represents: string) {
+    updatedWith(this, { represents });
+  },
+);
+
+When(
+  "the player is updated to fly the flag {string}",
+  function (this: SpecWorld, flag: string) {
+    updatedWith(this, { flag });
+  },
+);
+
+When("the tournament archives the player", function (this: SpecWorld) {
+  const hasGames = this.tournamentPlayerHasGames;
+  tryToChange(this, (player) => player.archive({ hasGames }));
+});
+
+When("the tournament restores the player", function (this: SpecWorld) {
+  tryToChange(this, (player) => player.restore());
+});
+
 When("the players are compared", function (this: SpecWorld) {
   this.sameTournamentPlayer = playerOfWorld(this).equals(
     otherPlayerOfWorld(this),
@@ -140,4 +232,18 @@ Then("they are the same player", function (this: SpecWorld) {
 
 Then("they are different players", function (this: SpecWorld) {
   assert.equal(this.sameTournamentPlayer, false);
+});
+
+Then("the player is the same player they were", function (this: SpecWorld) {
+  const before = this.tournamentPlayerBefore;
+  assert.ok(before !== undefined, "The player was not changed.");
+  assert.ok(playerOfWorld(this).equals(before));
+});
+
+Then("the tournament player is archived", function (this: SpecWorld) {
+  assert.equal(playerOfWorld(this).archived, true);
+});
+
+Then("the tournament player is not archived", function (this: SpecWorld) {
+  assert.equal(playerOfWorld(this).archived, false);
 });
