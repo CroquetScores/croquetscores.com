@@ -724,3 +724,61 @@ Then(
     });
   },
 );
+
+// Starting a new tournament ---------------------------------------------------------
+
+// What the list offers above its tournaments, rather than what any one of them
+// offers.
+const listOffers = (world: SpecWorld, option: string): Locator =>
+  world.browserPage
+    .locator("main .panel a:not(.tournaments a)")
+    .filter({ hasText: exactly(option) });
+
+Then(
+  "the list offers {string}",
+  async function (this: SpecWorld, option: string) {
+    await eventually(this, async () => {
+      assert.equal(await listOffers(this, option).count(), 1);
+    });
+  },
+);
+
+Then(
+  "{string} is above the tournaments",
+  async function (this: SpecWorld, option: string) {
+    await eventually(this, async () => {
+      const offer = await sizeAndPlaceOf(listOffers(this, option));
+      const list = await sizeAndPlaceOf(
+        this.browserPage.locator(".tournaments"),
+      );
+      assert.ok(
+        offer.y + offer.height <= list.y,
+        `It ends ${String(offer.y + offer.height)} pixels down, and the tournaments start ${String(list.y)} down.`,
+      );
+    });
+  },
+);
+
+When("{string} is pressed", async function (this: SpecWorld, option: string) {
+  await settled(this);
+  await listOffers(this, option).click();
+  await this.browserPage.waitForLoadState();
+});
+
+Then(
+  "{string} is at least {int} pixels tall",
+  async function (this: SpecWorld, option: string, least: number) {
+    await eventually(this, async () => {
+      const { height } = await sizeAndPlaceOf(listOffers(this, option));
+      assert.ok(height >= least, `It is ${String(height)} pixels tall.`);
+    });
+  },
+);
+
+const sizeAndPlaceOf = async (
+  found: Locator,
+): Promise<{ y: number; height: number }> => {
+  const box = await found.boundingBox();
+  assert.ok(box !== null, "It is not on the page.");
+  return box;
+};

@@ -170,6 +170,14 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
             aria-busy={acting || answered !== question}
           >
             <h1>Tournaments</h1>
+            {/* Above the list rather than beneath it, where a long one would
+                push it off a phone's screen. Offered to every reader, since
+                anybody signed in can create a tournament and manage it. */}
+            <p>
+              <a className="button" href="/admin/tournaments/new">
+                New Tournament
+              </a>
+            </p>
             {listed === undefined ? null : listed.length === 0 ? (
               <p className="tournaments-none">No tournaments</p>
             ) : (

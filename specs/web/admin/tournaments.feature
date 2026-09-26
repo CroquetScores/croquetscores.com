@@ -70,6 +70,43 @@ Feature: The admin lists the reader's tournaments
       When the reader signs in as "organiser@example.com" with the password "correct horse battery staple"
       Then the address is "/admin/2025"
 
+  Rule: A new tournament is started from above the list
+
+    Any reader who is signed in can create a tournament, and becomes its first
+    manager (`CreateTournament.feature`), so every one of them is offered to,
+    whatever year is chosen and whether or not it has tournaments in it. It is
+    above the tournaments rather than beneath them, where a long list would
+    push it off a phone's screen.
+
+    Scenario: The list offers a new tournament
+      When the admin is opened
+      Then the list offers "New Tournament"
+
+    Scenario: A new tournament is offered above the tournaments
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then "New Tournament" is above the tournaments
+
+    Scenario: A new tournament is offered in a year with no tournaments
+      When the admin for 2025 is opened
+      Then the list offers "New Tournament"
+
+    Scenario: A new tournament is offered to a reader who only scores
+      Given "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And "other@example.com" has made "organiser@example.com" a scorer of "Autumn Open"
+      When the admin is opened
+      Then the list offers "New Tournament"
+
+    Scenario: A new tournament is started on a page of its own
+      Given the admin is open
+      When "New Tournament" is pressed
+      Then the address is "/admin/tournaments/new"
+
+    Scenario: A new tournament can be asked for with a thumb
+      When the admin is opened
+      Then "New Tournament" is at least 44 pixels tall
+
   Rule: The list is of the tournaments the reader manages or scores
 
     Scenario: A tournament the reader manages is listed
