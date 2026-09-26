@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { NewTournament } from "./tournaments/new/new.js";
 import { Tournaments } from "./Tournaments.js";
 
 // What goes between the public pages' header and footer, which the server
@@ -32,6 +33,8 @@ export const App = (): React.JSX.Element => {
     window.history.pushState(null, "", to);
     setPath(to);
   };
+
+  if (/^\/admin\/tournaments\/new\/?$/.test(path)) return <NewTournament />;
 
   const year = yearIn(path);
   if (year !== undefined) {

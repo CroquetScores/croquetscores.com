@@ -9,6 +9,7 @@ import type {
 import { randomUUID } from "node:crypto";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
+import { Refused } from "../../domain/common/Refused.js";
 import type { Assets } from "./assets.js";
 import { speakingOf } from "./language.js";
 import { siteNameOf, websiteOf } from "./site.js";
@@ -116,6 +117,16 @@ export const registerErrorMapping = (
         "errors.refused",
         "errors.refusedDetail",
       );
+    }
+
+    // A refusal from the domain or the application is as much the caller's to
+    // hear as a broken rule: a tournament that finishes before it starts, a
+    // reader who no longer manages it. The API passes on its code, which is
+    // the contract, for the caller to say in its own words. A page has no form
+    // here to show again, so it falls through to what it did before.
+    if (error instanceof Refused && wantsJson(request)) {
+      request.log.info({ code: error.code }, "Request refused");
+      return sendJson(reply.code(422), { error: error.code });
     }
 
     // A status on the error means something chose it — a route, or Fastify

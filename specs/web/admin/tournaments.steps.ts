@@ -27,7 +27,12 @@ import type { SpecWorld } from "../../support/world.js";
 // taken as failing, since a list redrawn once something is pressed is redrawn
 // a moment after the press.
 
+// On the list's own pages, /admin/ and /admin/2025, which are the ones that
+// say when they are busy; every other page of the admin is settled once it has
+// loaded.
 const settled = async (world: SpecWorld): Promise<void> => {
+  const path = new URL(world.browserPage.url()).pathname;
+  if (!/^\/admin\/(\d{4})?$/.test(path)) return;
   await world.browserPage.locator('main .panel[aria-busy="false"]').waitFor();
 };
 
@@ -731,7 +736,7 @@ Then(
 // offers.
 const listOffers = (world: SpecWorld, option: string): Locator =>
   world.browserPage
-    .locator("main .panel a:not(.tournaments a)")
+    .locator("main :is(a, button):not(.tournaments *)")
     .filter({ hasText: exactly(option) });
 
 Then(
@@ -759,10 +764,31 @@ Then(
   },
 );
 
+// Pressed, and waited on until what it does is done: a link followed, or a
+// form's answer come back and acted on, so that the next step reads what
+// pressing it did rather than the page as it was before.
 When("{string} is pressed", async function (this: SpecWorld, option: string) {
   await settled(this);
+  const page = this.browserPage;
+  const from = new URL(page.url()).pathname;
+  const answered =
+    from === "/admin/tournaments/new"
+      ? page.waitForResponse(
+          (response) =>
+            new URL(response.url()).pathname === "/api/v1/tournaments" &&
+            response.request().method() === "POST",
+        )
+      : undefined;
   await listOffers(this, option).click();
-  await this.browserPage.waitForLoadState();
+  if (answered !== undefined) {
+    const answer = await answered;
+    if (answer.status() === 201) {
+      await page.waitForURL((url) => url.pathname !== from);
+    } else {
+      await page.locator('form[aria-busy="false"]').waitFor();
+    }
+  }
+  await page.waitForLoadState();
 });
 
 Then(
@@ -782,3 +808,44 @@ const sizeAndPlaceOf = async (
   assert.ok(box !== null, "It is not on the page.");
   return box;
 };
+
+// Where a row's parts are ------------------------------------------------------------
+
+const placeOf = async (
+  found: Locator,
+): Promise<{ x: number; y: number; height: number }> => {
+  const box = await found.boundingBox();
+  assert.ok(box !== null, "It is not on the page.");
+  return box;
+};
+
+// On the same row where each is level with the other, the top of each within
+// the height of the other: a name that wraps onto two lines is still beside
+// the dates it starts level with.
+Then(
+  "the dates of {string} are on the same row as its name",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const dates = await placeOf(
+        rowOf(this, name).locator(".tournament-dates"),
+      );
+      const called = await placeOf(nameOf(this, name));
+      assert.ok(
+        dates.y < called.y + called.height && called.y < dates.y + dates.height,
+        `The dates are ${String(Math.round(dates.y))} pixels down and the name ${String(Math.round(called.y))}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "the dates of {string} are to the left of its name",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const dates = await placeOf(
+        rowOf(this, name).locator(".tournament-dates"),
+      );
+      assert.ok(dates.x < (await placeOf(nameOf(this, name))).x);
+    });
+  },
+);

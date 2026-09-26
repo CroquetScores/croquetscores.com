@@ -1,7 +1,7 @@
 /* The admin's list of tournaments, and the years above it. Laid out for a
-   phone first: a row is its dates, its name and what can be done with it, one
-   above the other, and only a screen with room for them sets them side by
-   side. */
+   phone first: a row is its dates and its name side by side, read as when and
+   what, with what can be done with it beneath them, and only a screen with
+   room for all three sets them on one line. */
 
 /* The bar's two lists share one row: the one seen, and the one measured. */
 .years-row {
@@ -44,7 +44,8 @@
 
 .tournament {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
   gap: var(--space-1) var(--space-3);
   padding-block: var(--space-3);
   border-bottom: 1px solid var(--border);
@@ -77,6 +78,7 @@
 }
 
 .tournament-options {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -85,6 +87,9 @@
 @media (min-width: 40rem) {
   .tournament {
     grid-template-columns: 9rem minmax(0, 1fr) auto;
-    align-items: center;
+  }
+
+  .tournament-options {
+    grid-column: auto;
   }
 }

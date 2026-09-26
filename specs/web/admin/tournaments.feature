@@ -710,7 +710,20 @@ Feature: The admin lists the reader's tournaments
 
     A tournament's name is the thing a reader is looking for, so it wraps onto
     as many lines as it needs rather than being cut short (`LAYOUT.md`), and
-    nothing in a row pushes the page wider than the phone it is read on.
+    nothing in a row pushes the page wider than the phone it is read on. Its
+    dates are beside it rather than above it, as they are on a wider screen,
+    so that a row is read as when and what at a glance, and what can be done
+    with it is beneath them both.
+
+    Scenario: A tournament's dates are beside its name on a phone
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then the dates of "Spring Open" are on the same row as its name
+
+    Scenario: A tournament's dates come before its name on a phone
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then the dates of "Spring Open" are to the left of its name
 
     Scenario: A long name wraps rather than widening the page
       Given "organiser@example.com" has created the tournament "The Northern Counties Invitation Golf Croquet Championship"

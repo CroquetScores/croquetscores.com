@@ -16,6 +16,8 @@ Four kinds of thing, kept apart.
 
 - Tournament finish date can not be greater than current year + 1.
 
+- Feature files for api
+
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
