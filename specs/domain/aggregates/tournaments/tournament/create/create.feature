@@ -39,6 +39,11 @@ Feature: Creating a tournament
 
   A new tournament is not archived, and has no players and no competitions.
 
+  Whoever creates a tournament is its first manager, and nobody else is: a
+  tournament is run by its managers, and until the one who created it says
+  who else is to, there is nobody else. It has no scorers
+  (`addManager.feature`, `addScorer.feature`).
+
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-26T10:00:00Z"
@@ -373,6 +378,25 @@ Feature: Creating a tournament
       And the tournament is said to be international
       When a tournament is created
       Then it is refused with "Tournament.NationalAndInternational"
+
+  Rule: Whoever creates a tournament is its first manager
+
+    Scenario: The account that creates a tournament manages it
+      When a tournament is created
+      Then the account "account/123e4567-e89b-42d3-a456-426614174000" manages the tournament
+
+    Scenario: A new tournament has one manager
+      When a tournament is created
+      Then the tournament has 1 manager
+
+    Scenario: A new tournament has no scorers
+      When a tournament is created
+      Then the tournament has no scorers
+
+    Scenario: A tournament rebuilt from its creation is managed by whoever created it
+      Given a stream where a tournament was created as "Spring Open"
+      When the tournament is rebuilt from the stream
+      Then the account "account/123e4567-e89b-42d3-a456-426614174000" manages the tournament
 
   Rule: A tournament rebuilt from its stream is as creating it left it
 
