@@ -35,11 +35,10 @@ export const idOf = (world: SpecWorld): AccountId => {
 };
 
 // Who asks for what is done to the account, where that is somebody other than
-// the account: giving it a role, or taking one away.
-const askers = new WeakMap<SpecWorld, AccountId>();
-
+// the account: giving it a role, or taking one away. Kept on the world, since
+// a tournament's steps are asked who asks in the same words.
 export const askedBy = (world: SpecWorld, account: string): void => {
-  askers.set(world, AccountId.from(account));
+  world.askedBy = AccountId.from(account);
 };
 
 // Somebody other than the account, for a scenario that does not say who asked
@@ -49,7 +48,7 @@ const SOMEBODY_ELSE = AccountId.from(
 );
 
 export const askerOf = (world: SpecWorld): AccountId =>
-  askers.get(world) ?? SOMEBODY_ELSE;
+  world.askedBy ?? SOMEBODY_ELSE;
 
 // A role as a feature names it, and as the account knows it.
 const named: Readonly<Record<string, Role>> = {

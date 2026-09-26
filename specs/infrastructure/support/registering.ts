@@ -800,7 +800,9 @@ Given(
   },
 );
 
-const standUpFor = (world: SpecWorld): void => {
+// Exported so that what stands up a tournament's operations can stand up the
+// accounts they are asked by, the same way.
+export const standUpFor = (world: SpecWorld): void => {
   const registering = standUpRegistering(world);
   world.registering = registering;
   world.accountsInHand = {

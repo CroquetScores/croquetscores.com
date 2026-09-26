@@ -241,3 +241,14 @@ Then(
     assert.equal(tournamentOf(this).international, false);
   },
 );
+
+Then(
+  "the tournament has {int} manager(s)",
+  function (this: SpecWorld, count: number) {
+    assert.equal(tournamentOf(this).managers.length, count);
+  },
+);
+
+Then("the tournament has no scorers", function (this: SpecWorld) {
+  assert.deepEqual(tournamentOf(this).scorers, []);
+});

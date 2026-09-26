@@ -8,6 +8,10 @@ import { CompetitionArchived } from "../../../../../src/domain/aggregates/tourna
 import { CompetitionRestored } from "../../../../../src/domain/aggregates/tournaments/events/CompetitionRestored.js";
 import { KnockoutAdded } from "../../../../../src/domain/aggregates/tournaments/events/KnockoutAdded.js";
 import { KnockoutUpdated } from "../../../../../src/domain/aggregates/tournaments/events/KnockoutUpdated.js";
+import { ManagerAdded } from "../../../../../src/domain/aggregates/tournaments/events/ManagerAdded.js";
+import { ManagerRemoved } from "../../../../../src/domain/aggregates/tournaments/events/ManagerRemoved.js";
+import { ScorerAdded } from "../../../../../src/domain/aggregates/tournaments/events/ScorerAdded.js";
+import { ScorerRemoved } from "../../../../../src/domain/aggregates/tournaments/events/ScorerRemoved.js";
 import { SwissAdded } from "../../../../../src/domain/aggregates/tournaments/events/SwissAdded.js";
 import { SwissUpdated } from "../../../../../src/domain/aggregates/tournaments/events/SwissUpdated.js";
 import { TournamentArchived } from "../../../../../src/domain/aggregates/tournaments/events/TournamentArchived.js";
@@ -46,6 +50,7 @@ const A_TOURNAMENT: WrittenTournament = {
 };
 
 const PLAYER = "tournament-player/123e4567-e89b-42d3-a456-426614174000";
+const ANOTHER_ACCOUNT = "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const COMPETITION = "competition/123e4567-e89b-42d3-a456-426614174000";
 
 // One event of each kind a tournament records, as a feature names what
@@ -161,6 +166,14 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new SwissUpdated(COMPETITION, "Swiss Stage", 3, causedBy, happenedAt),
   "a competition being archived": () =>
     new CompetitionArchived(COMPETITION, causedBy, happenedAt),
+  "an account being made a manager": () =>
+    new ManagerAdded(ANOTHER_ACCOUNT, causedBy, happenedAt),
+  "an account being taken off the managers": () =>
+    new ManagerRemoved(ANOTHER_ACCOUNT, causedBy, happenedAt),
+  "an account being made a scorer": () =>
+    new ScorerAdded(ANOTHER_ACCOUNT, causedBy, happenedAt),
+  "an account being taken off the scorers": () =>
+    new ScorerRemoved(ANOTHER_ACCOUNT, causedBy, happenedAt),
   "a competition being restored": () =>
     new CompetitionRestored(COMPETITION, causedBy, happenedAt),
 };

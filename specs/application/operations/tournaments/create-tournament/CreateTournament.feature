@@ -163,6 +163,15 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then it is answered with the address "2026/ac/spring-open-01"
 
+    Scenario: An address another tournament was moved to is taken
+      Given "organiser@example.com" has created the tournament "Spring Open" starting at "2026-10-03T00:00:00Z" in the sport "ac"
+      And "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
+      And the tournament is to start at "2026-11-07T00:00:00Z"
+      And the sport "gc"
+      And the tournament name "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then it is answered with the address "2026/gc/spring-open-01"
+
     Scenario: An address taken in another year does not count
       Given "organiser@example.com" has created the tournament "Spring Open" starting at "2025-10-04T00:00:00Z" in the sport "ac"
       And the tournament is to start at "2026-10-03T00:00:00Z"

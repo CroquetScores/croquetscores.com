@@ -60,6 +60,7 @@ import type { HandledRequests } from "../../src/application/services/HandledRequ
 import type { BrokenRule } from "../../src/domain/common/validation/Validator.js";
 import type { AccountsInHand } from "./accounts.js";
 import type { Registering } from "./registering.js";
+import type { TournamentsInHand } from "./tournaments.js";
 import type { Site } from "./sites.js";
 
 export class SpecWorld extends World {
@@ -192,6 +193,9 @@ export class SpecWorld extends World {
   // The account a scenario names, the example event it creates, and that
   // event written out as data.
   public account: AccountId | undefined;
+  // Who asks for what a scenario does, when it is somebody other than the
+  // account the scenario names.
+  public askedBy: AccountId | undefined;
   public event: DomainEvent | undefined;
   public writtenEvent: Record<string, unknown> | undefined;
 
@@ -384,6 +388,11 @@ export class SpecWorld extends World {
   // look at. What came of the last registration is kept in `answer` and
   // `failure`, as everything the mediator answers is.
   public registering: Registering | undefined;
+  // A tournament's operations, stood up as the application stands them up,
+  // and the games they ask, as a scenario says they are.
+  public tournamentsInHand: TournamentsInHand | undefined;
+  public games:
+    import("../../src/application/services/Games.js").Games | undefined;
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
