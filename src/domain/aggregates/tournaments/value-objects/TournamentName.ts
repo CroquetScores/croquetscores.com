@@ -1,3 +1,4 @@
+import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a tournament name can break. */
@@ -10,12 +11,6 @@ export type TournamentNameErrorCode =
 
 const FEWEST_CHARACTERS = 3;
 const MOST_CHARACTERS = 254;
-
-// Characters as a reader counts them, as a person's name counts them, so that
-// a name is not refused for how its keyboard spelled an accent.
-const graphemes = new Intl.Segmenter();
-const charactersIn = (text: string): number =>
-  [...graphemes.segment(text)].length;
 
 // A letter has a case when it has a capital and a lower-case form that are not
 // the same. Digits, punctuation and the letters of a script with no capitals
