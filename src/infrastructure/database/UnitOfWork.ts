@@ -10,20 +10,13 @@
 // opaque type would be every adapter casting its way back out.
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { Pool, PoolClient } from "pg";
+import { Refused } from "../../domain/common/Refused.js";
 
 /** Every reason asking for a connection can be refused. */
 export type UnitOfWorkErrorCode =
   "UnitOfWork.NothingUnderway" | "UnitOfWork.AlreadyUnderway";
 
-export class UnitOfWorkRefused extends Error {
-  readonly code: UnitOfWorkErrorCode;
-
-  constructor(code: UnitOfWorkErrorCode, message: string) {
-    super(message);
-    this.name = "UnitOfWorkRefused";
-    this.code = code;
-  }
-}
+export class UnitOfWorkRefused extends Refused<UnitOfWorkErrorCode> {}
 
 export class UnitOfWork {
   // Async local storage rather than a field, because a field would be one

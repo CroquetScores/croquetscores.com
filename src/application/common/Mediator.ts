@@ -6,6 +6,7 @@
 // separate doors, have separate handlers and run separate behaviours, because a
 // command is run inside a transaction it writes in and has to commit, and a
 // query inside a read-only one.
+import { Refused } from "../../domain/common/Refused.js";
 import type { Behaviour } from "./Behaviour.js";
 import { Command } from "./Command.js";
 import type { CommandHandler } from "./CommandHandler.js";
@@ -22,15 +23,7 @@ export type RequestType<TRequest> = abstract new (
  * application was put together or in how a request was made, not answers a
  * handler gave, so they are thrown rather than returned.
  */
-export class RequestRefused extends Error {
-  readonly code: string;
-
-  constructor(code: string, message: string) {
-    super(message);
-    this.name = "RequestRefused";
-    this.code = code;
-  }
-}
+export class RequestRefused extends Refused<string> {}
 
 // Handlers are stored under their request's class and taken back out under the
 // class of whatever arrives, so the types they were registered with cannot be

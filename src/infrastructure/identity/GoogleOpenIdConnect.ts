@@ -9,6 +9,7 @@
 // along as well, so that a code taken from the reader's address bar is no use
 // without the verifier that stayed in their browser's cookie.
 import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
+import { Refused } from "../../domain/common/Refused.js";
 
 /** Where Google answers. Google's own, unless a scenario stands one in. */
 export interface GoogleEndpoints {
@@ -47,15 +48,7 @@ export interface GoogleClaims {
 export type GoogleOpenIdConnectErrorCode =
   "Google.Unreachable" | "Google.Refused";
 
-export class GoogleOpenIdConnectFailed extends Error {
-  readonly code: GoogleOpenIdConnectErrorCode;
-
-  constructor(code: GoogleOpenIdConnectErrorCode, message: string) {
-    super(message);
-    this.name = "GoogleOpenIdConnectFailed";
-    this.code = code;
-  }
-}
+export class GoogleOpenIdConnectFailed extends Refused<GoogleOpenIdConnectErrorCode> {}
 
 /** How long Google is waited for before it is taken to be unreachable. */
 const WAIT_MILLISECONDS = 5000;

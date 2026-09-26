@@ -10,18 +10,16 @@
 // nothing to a password before hashing it, so nor does this: no trimming, no
 // change of case, and no taking an accent the same however it was typed.
 import { createHash, timingSafeEqual } from "node:crypto";
+import { Refused } from "../../domain/common/Refused.js";
 
 /** Every reason the old site's hasher can refuse. */
 export type OldSitePasswordErrorCode =
   "OldSitePassword.SaltMissing" | "OldSitePassword.Unreadable";
 
-export class OldSitePasswordRefused extends Error {
-  readonly code: OldSitePasswordErrorCode;
-
+export class OldSitePasswordRefused extends Refused<OldSitePasswordErrorCode> {
+  // The code says all there is to say, so it is the message too.
   constructor(code: OldSitePasswordErrorCode) {
-    super(code);
-    this.name = "OldSitePasswordRefused";
-    this.code = code;
+    super(code, code);
   }
 }
 

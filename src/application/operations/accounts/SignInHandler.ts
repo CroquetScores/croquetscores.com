@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -14,15 +15,7 @@ export type SignInErrorCode = "SignIn.Failed";
  * Signing in refused. One code, because one answer: which of the several
  * reasons it was is exactly what must not be said.
  */
-export class SignInRefused extends Error {
-  readonly code: SignInErrorCode;
-
-  constructor(code: SignInErrorCode, message: string) {
-    super(message);
-    this.name = "SignInRefused";
-    this.code = code;
-  }
-}
+export class SignInRefused extends Refused<SignInErrorCode> {}
 
 /** What signing in asks of where accounts are found by their address. */
 export interface AccountsByAddressForSigningIn {

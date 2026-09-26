@@ -18,6 +18,7 @@ import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { EmailAddress } from "../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
+import { Refused } from "../../domain/common/Refused.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
@@ -25,15 +26,7 @@ import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 export type AccountsByEmailAddressErrorCode =
   "AccountsByEmailAddress.AddressTaken";
 
-export class AccountsByEmailAddressRefused extends Error {
-  readonly code: AccountsByEmailAddressErrorCode;
-
-  constructor(code: AccountsByEmailAddressErrorCode, message: string) {
-    super(message);
-    this.name = "AccountsByEmailAddressRefused";
-    this.code = code;
-  }
-}
+export class AccountsByEmailAddressRefused extends Refused<AccountsByEmailAddressErrorCode> {}
 
 // 23505 is unique_violation. The account's own id is kept once by an insert
 // that does nothing when it is there already, so the one key a registering

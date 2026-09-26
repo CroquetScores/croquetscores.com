@@ -41,7 +41,6 @@ export class RequestInvalid extends RequestRefused {
       "Request.Invalid",
       `${request.constructor.name || "A request"} breaks ${broken.map((rule) => rule.code).join(", ")}.`,
     );
-    this.name = "RequestInvalid";
     this.broken = broken;
   }
 }

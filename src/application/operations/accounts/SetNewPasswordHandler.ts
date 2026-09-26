@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import { RequestInvalid } from "../../common/ValidationBehaviour.js";
@@ -20,15 +21,7 @@ export type SetNewPasswordErrorCode = "Link.NoLongerWorks" | "Link.Expired";
  * Setting a new password refused. Named by a code, because the code is the
  * contract: what a reader is shown for each is the page's to decide.
  */
-export class SettingRefused extends Error {
-  readonly code: SetNewPasswordErrorCode;
-
-  constructor(code: SetNewPasswordErrorCode, message: string) {
-    super(message);
-    this.name = "SettingRefused";
-    this.code = code;
-  }
-}
+export class SettingRefused extends Refused<SetNewPasswordErrorCode> {}
 
 const noLongerWorks = (why: string): SettingRefused =>
   new SettingRefused("Link.NoLongerWorks", `The link ${why}.`);

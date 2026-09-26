@@ -5,6 +5,7 @@ import {
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -18,15 +19,7 @@ export type SignInWithGoogleErrorCode =
   | "SignInWithGoogle.LinkedToAnother"
   | "SignInWithGoogle.NameMissing";
 
-export class SignInWithGoogleRefused extends Error {
-  readonly code: SignInWithGoogleErrorCode;
-
-  constructor(code: SignInWithGoogleErrorCode, message: string) {
-    super(message);
-    this.name = "SignInWithGoogleRefused";
-    this.code = code;
-  }
-}
+export class SignInWithGoogleRefused extends Refused<SignInWithGoogleErrorCode> {}
 
 // Asked after confirming, which changes nothing here: an account nobody has
 // confirmed has never been linked to anything.
