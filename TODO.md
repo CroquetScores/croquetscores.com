@@ -56,12 +56,6 @@ Going to use SPA instead of /scripts.
 
 From a review of the directory on 2026-09-26. Ordered by how much each is worth. None changes what the site does, except where the item says so.
 
-- **Let the account's refusal speak for linking another Google account.** `SignInWithGoogleHandler` checks `account.googleSubject` against the subject before calling `linkGoogleAccount`, which makes the same check and refuses with `Account.GoogleAccountAlreadyLinked`. The rule is written twice, once in the domain and once in the application, and the two can drift. The handler could catch the account's refusal and throw `SignInWithGoogle.LinkedToAnother` instead. The check is not needed before `confirm` either, since an account not yet confirmed can never have been linked.
-
-- **Ask whether `passwordImported` is wanted.** Nothing under `/src` reads it. Whether a hash is made again on signing in is decided by the hasher's `remake`, from the hash itself, and only the scenarios in `SignIn.steps.ts` and `Account.steps.ts` ask the account. Either something should decide by it, or the state and its getter go, and the scenarios say what they want by whether the hash is made again. This is a question for whoever owns the feature before it is a refactor.
-
-- **Ask for a role by the role.** `isAdministrator` and `isWorldRankingOfficer` are a getter for each role in `value-objects/Role.ts`, so every role added needs one more. `hasRole(role)` would need none. Only `Account.steps.ts` asks either today, so it costs little now and more once pages begin asking.
-
 - **Correct what `EmailAddress.equals` says.** Its comment says two addresses are the same when they differ "only in case", but it compares `comparable`, which puts each letter into one Unicode form as well. The class's own comment has it right.
 
 Seen along the way, and wider than this directory: the refusal class `Account.ts` declares (a code, a name and a message, with a cause sometimes) is written out again about twenty-five times across `/src`. A generic base in `src/domain/common/` would save the boilerplate, but each class is small and read by `instanceof`, so it is probably not worth the churn.

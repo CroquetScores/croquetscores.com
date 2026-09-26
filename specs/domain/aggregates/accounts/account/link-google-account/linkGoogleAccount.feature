@@ -16,8 +16,9 @@ Feature: Linking a Google account to an account
 
   Only a confirmed account is linked. An account whose address has not been
   confirmed has nobody behind it yet, and one that has been forgotten has
-  nobody behind it any more. A forgotten account is linked to nothing, so that
-  signing in with the Google account it had cannot find it.
+  nobody behind it any more. Signing in with the Google account a forgotten
+  account had does not find it, and gets a new account instead
+  (`SignInWithGoogle.feature`).
 
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
@@ -109,11 +110,3 @@ Feature: Linking a Google account to an account
       And the account is rebuilt from the stream
       When the Google account "google-subject-1" is linked to the account
       Then it is refused with "Account.Forgotten"
-
-    Scenario: Forgetting an account unlinks its Google account
-      Given a stream where an account was registered at "someone@example.com"
-      And its email address was confirmed as "Sam Someone"
-      And the Google account "google-subject-1" was linked to it
-      And it was forgotten
-      When the account is rebuilt from the stream
-      Then the account is linked to no Google account

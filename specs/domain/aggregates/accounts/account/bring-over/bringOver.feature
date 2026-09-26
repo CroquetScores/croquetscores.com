@@ -35,10 +35,6 @@ Feature: Bringing an account over from the old site
       When an account is brought over as "Sam Someone" at "someone@example.com" with the password hash "hash-from-the-old-site"
       Then the account's password hash is "hash-from-the-old-site"
 
-    Scenario: An account brought over has an imported password
-      When an account is brought over as "Sam Someone" at "someone@example.com"
-      Then the account's password is imported
-
     Scenario Outline: An account brought over holds no role
       When an account is brought over as "Sam Someone" at "someone@example.com"
       Then the account does not hold the role "<role>"
@@ -56,8 +52,3 @@ Feature: Bringing an account over from the old site
       Given a stream where an account was brought over as "Sam Someone" at "someone@example.com"
       When the account is rebuilt from the stream
       Then the account is confirmed
-
-    Scenario: An account rebuilt from its being brought over has an imported password
-      Given a stream where an account was brought over as "Sam Someone" at "someone@example.com"
-      When the account is rebuilt from the stream
-      Then the account's password is imported

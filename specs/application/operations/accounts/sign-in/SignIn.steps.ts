@@ -91,15 +91,17 @@ Then("a password was checked against a hash", function (this: SpecWorld) {
 });
 
 Then(
-  "the account for {string} no longer has an imported password",
+  "the account for {string} no longer has the old site's hash of its password",
   async function (this: SpecWorld, address: string) {
-    assert.equal((await accountFor(this, address)).passwordImported, false);
+    const { passwordHash } = await accountFor(this, address);
+    assert.equal(registeringOf(this).isTheOldSitesHash(passwordHash), false);
   },
 );
 
 Then(
-  "the account for {string} still has an imported password",
+  "the account for {string} still has the old site's hash of its password",
   async function (this: SpecWorld, address: string) {
-    assert.equal((await accountFor(this, address)).passwordImported, true);
+    const { passwordHash } = await accountFor(this, address);
+    assert.equal(registeringOf(this).isTheOldSitesHash(passwordHash), true);
   },
 );

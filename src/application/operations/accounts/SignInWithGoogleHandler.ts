@@ -1,4 +1,7 @@
-import { Account } from "../../../domain/aggregates/accounts/Account.js";
+import {
+  Account,
+  AccountRefused,
+} from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
@@ -24,6 +27,12 @@ export class SignInWithGoogleRefused extends Error {
     this.code = code;
   }
 }
+
+// Asked after confirming, which changes nothing here: an account nobody has
+// confirmed has never been linked to anything.
+const isLinkedToAnother = (failure: unknown): boolean =>
+  failure instanceof AccountRefused &&
+  failure.code === "Account.GoogleAccountAlreadyLinked";
 
 /** What signing in with Google asks of where accounts are found by address. */
 export interface AccountsByAddressForGoogle extends AccountsByAddress {
@@ -117,23 +126,24 @@ export class SignInWithGoogleHandler extends CommandHandler<
         )
       : await this.load(holder);
 
-    // Another Google account is linked already, and whoever holds the address
-    // for now does not get to add a second. This one linked already is not
-    // another: a second signing in that looked before the first had linked it
-    // finds it here, and is to sign in rather than be refused.
-    if (
-      account.googleSubject !== undefined &&
-      account.googleSubject !== command.subject
-    ) {
-      throw new SignInWithGoogleRefused(
-        "SignInWithGoogle.LinkedToAnother",
-        "The account is linked to another Google account.",
-      );
-    }
     if (!account.confirmed) {
       account.confirm(this.nameOf(command), undefined, command.requestedAt);
     }
-    account.linkGoogleAccount(command.subject, command.requestedAt);
+    // Whoever holds the address for now does not get to add a second Google
+    // account, and the account is what refuses it. This one linked already is
+    // not a second: a signing in that looked before another had linked it
+    // finds it here, and the account links it again by recording nothing.
+    try {
+      account.linkGoogleAccount(command.subject, command.requestedAt);
+    } catch (failure) {
+      if (isLinkedToAnother(failure)) {
+        throw new SignInWithGoogleRefused(
+          "SignInWithGoogle.LinkedToAnother",
+          "The account is linked to another Google account.",
+        );
+      }
+      throw failure;
+    }
     account.signIn(command.requestedAt);
     await this.accounts.save(account);
     return account.id;
