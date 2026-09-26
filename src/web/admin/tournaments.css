@@ -1,0 +1,95 @@
+/* The admin's list of tournaments, and the years above it. Laid out for a
+   phone first: a row is its dates and its name side by side, read as when and
+   what, with what can be done with it beneath them, and only a screen with
+   room for all three sets them on one line. */
+
+/* The bar's two lists share one row: the one seen, and the one measured. */
+.years-row {
+  position: relative;
+}
+
+/* Laid out exactly as the bar lays out the one seen, and never seen itself,
+   so that how wide each year would be is known before deciding how many fit
+   (Years.tsx). */
+.years-measuring {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.years-earlier {
+  display: flex;
+  align-items: center;
+}
+
+/* Pressed with a thumb, so as tall as anything else that is. */
+.years-earlier select {
+  min-height: 44px;
+  padding-inline: var(--space-2);
+  border: 1px solid var(--accent-ink);
+  border-radius: var(--radius-1);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font: inherit;
+}
+
+.tournaments {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tournament {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.tournament:last-child {
+  border-bottom: none;
+}
+
+.tournament-dates {
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+/* The name is what the reader is looking for, so it wraps onto as many lines
+   as it needs rather than being cut short, and is as tall as a thumb. */
+.tournament-name {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Struck through so that an archived tournament is not taken for one being
+   run. Its row says so in words too, for a reader who is not looking. */
+.tournament[data-archived] .tournament-dates,
+.tournament[data-archived] .tournament-name {
+  text-decoration: line-through;
+}
+
+.tournament-options {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+@media (min-width: 40rem) {
+  .tournament {
+    grid-template-columns: 9rem minmax(0, 1fr) auto;
+  }
+
+  .tournament-options {
+    grid-column: auto;
+  }
+}

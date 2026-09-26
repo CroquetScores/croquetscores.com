@@ -10,6 +10,7 @@
 // infrastructure. It puts a plain shape on the world (specs/support/
 // tournaments.ts) and the steps ask only that.
 import { Given } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
 
 import { AggregateRepository } from "../../../src/application/common/AggregateRepository.js";
 import { Mediator } from "../../../src/application/common/Mediator.js";
@@ -50,6 +51,7 @@ import { UpdateTournamentValidator } from "../../../src/application/operations/t
 import type { Games } from "../../../src/application/services/Games.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
+import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import { TournamentsByAddress } from "../../../src/infrastructure/read-models/TournamentsByAddress.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
@@ -144,6 +146,17 @@ Given("the application's tournaments", function (this: SpecWorld) {
       return Number(rows[0]?.kept ?? 0);
     },
     games: said,
+    // Through registering, which makes every account the scenario said there
+    // was the first time one is asked for, so that whatever the request finds
+    // is there.
+    accountFor: async (address) => {
+      assert.ok(this.registering !== undefined, "Registering is not stood up.");
+      return (await this.registering.accountFor(address))?.id;
+    },
+    now: () => {
+      assert.ok(this.moment !== undefined, "No moment has been named.");
+      return ReadOnlyDate.from(this.moment);
+    },
   };
   this.tournamentsInHand = inHand;
 });

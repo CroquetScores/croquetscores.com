@@ -8,7 +8,8 @@
 // Here rather than in specs/support/ because it names the Postgres store and
 // the unit of work, and specs/support/ is loaded by every spec in the
 // repository and so may not.
-import { Given } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
 
 import { ProjectingEventStore } from "../../../src/application/common/ProjectingEventStore.js";
 import { PostgresEventStore } from "../../../src/infrastructure/event-store/PostgresEventStore.js";
@@ -58,3 +59,39 @@ Given(
       });
   },
 );
+
+// How the scenario's read model is made again from every event kept, which
+// each read model's own steps say as they stand it up, so that rebuilding is
+// said in the same words whichever read model it is.
+const rebuilds = new WeakMap<SpecWorld, () => Promise<void>>();
+
+/** Says how the read model this scenario stood up is rebuilt. */
+export const rebuildsWith = (
+  world: SpecWorld,
+  rebuild: () => Promise<void>,
+): void => {
+  rebuilds.set(world, rebuild);
+};
+
+// A failure is kept for the scenario rather than thrown, so that a scenario can
+// say it did not fail — which every one of them does, since a rebuild that
+// fails is rolled back and leaves the table as it was.
+When(
+  "the read model is rebuilt from the events",
+  async function (this: SpecWorld) {
+    const rebuild = rebuilds.get(this);
+    assert.ok(
+      rebuild !== undefined,
+      "This scenario has no read model to rebuild.",
+    );
+    try {
+      await rebuild();
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
+Then("it is rebuilt without failing", function (this: SpecWorld) {
+  assert.equal(this.failure, undefined, `It failed: ${String(this.failure)}`);
+});

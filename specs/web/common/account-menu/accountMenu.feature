@@ -229,8 +229,11 @@ Feature: The way to a reader's account is the last thing in the header
     A reader can tell where they are from the bar at the top of the page, and
     the pages an account has are in this menu rather than in the navigation
     beside it, so the menu is what has to say it. It says it the way the section
-    bar does, with aria-current, which a screen reader announces and the
-    stylesheet shades. Signing out is not marked: it is not a page to be on.
+    bar and the navigation do, with aria-current, which a screen reader
+    announces, and a tile of its own with no line under the words: black in
+    light and pale in dark, so that being here looks the same wherever it is
+    said (`navigation.feature`). Signing out is not marked: it is not a page to
+    be on.
 
     The register page is the one page in the menu that is built, so it is the
     one these scenarios read. It needs scripting, so they are given it.
@@ -248,6 +251,21 @@ Feature: The way to a reader's account is the last thing in the header
       And the register page is open with scripting on
       When the account menu is pressed
       Then the menu does not mark "Sign In" as the page being read
+
+    Scenario: The item for the page being read is on black in light
+      Given a viewport 1200 pixels wide
+      And a machine that prefers light
+      And nobody is signed in
+      And the register page is open with scripting on
+      When the account menu is pressed
+      Then the menu shows "Register" on black
+
+    Scenario: The item for the page being read is not underlined
+      Given a viewport 1200 pixels wide
+      And nobody is signed in
+      And the register page is open with scripting on
+      When the account menu is pressed
+      Then the menu does not underline "Register"
 
     Scenario: Nothing is marked on a page the menu does not offer
       Given a viewport 1200 pixels wide

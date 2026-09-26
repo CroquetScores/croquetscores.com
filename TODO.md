@@ -14,6 +14,10 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
+- Tournament finish date can not be greater than current year + 1.
+
+- Feature files for api
+
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
@@ -53,3 +57,33 @@ Going to use SPA instead of /scripts.
 ## Refactor
 
 None.
+
+---
+
+## Q & A
+
+- **Where Manage, Edit and Scores go.** Manage may just be the same address as the name, and none of those screens exists yet.
+
+Manage and Scores goto to same as clicking tournament admin/{year}/{sport}/{slug}
+
+Edit goes to admin/{year}/{sport}/{slug}/edit
+
+- **Whether the chosen year goes in the address,** like `/admin/2025`, so the back button and links keep it. I also didn't say which years can be chosen.
+
+Yes
+
+- **What happens if nobody is signed in.** The existing `admin.feature` scenarios open the admin signed out, so sending readers to sign in would change those too.
+
+User must be signed in to see anything in /admin
+
+- **Whether the list covers only the website being served,** so a reader on Gateball Scores sees only their Gateball tournaments.
+
+Yes only the website
+
+- **Whether a screen reader is told a row is archived.** Strikethrough alone isn't announced.
+
+Yes
+
+- **Month names in the reader's language.** The admin's words aren't in any catalogue yet.
+
+Yes

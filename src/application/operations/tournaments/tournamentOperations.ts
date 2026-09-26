@@ -57,6 +57,13 @@ export interface TournamentAddresses {
     sport: Sport,
     tournament: TournamentId,
   ): Promise<ReadonlySet<string>>;
+
+  /**
+   * The tournament found at `address`, written as "2026/ac/spring-open", now or
+   * before: an old address still leads to its tournament. Nothing where no
+   * tournament has ever been found there.
+   */
+  tournamentAt(address: string): Promise<TournamentId | undefined>;
 }
 
 /** What a request says a tournament is, as it was typed. */

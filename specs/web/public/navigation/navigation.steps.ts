@@ -92,3 +92,102 @@ Then(
     );
   },
 );
+
+// What the navigation offers ------------------------------------------------------
+
+// Every link in it, in the order it offers them, whether or not the menu is
+// open: what is offered is the same either way.
+const offered = (world: SpecWorld): Promise<string[]> =>
+  world.browserPage.locator(".menu-links a").allTextContents();
+
+Then(
+  /^the (first|second|third) link in the navigation is "([^"]*)"$/,
+  async function (this: SpecWorld, which: string, label: string) {
+    const at = ["first", "second", "third"].indexOf(which);
+    assert.equal((await offered(this))[at], label);
+  },
+);
+
+Then(
+  "the navigation holds {int} links",
+  async function (this: SpecWorld, count: number) {
+    assert.equal((await offered(this)).length, count);
+  },
+);
+
+Then(
+  "the link {string} leads to {string}",
+  async function (this: SpecWorld, label: string, address: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(link(label), "href"),
+      address,
+    );
+  },
+);
+
+// How the page being read is marked -----------------------------------------------
+
+Then(
+  "the link {string} is marked as the page being read",
+  async function (this: SpecWorld, label: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(link(label), "aria-current"),
+      "page",
+    );
+  },
+);
+
+Then(
+  "the link {string} is not marked as the page being read",
+  async function (this: SpecWorld, label: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(link(label), "aria-current"),
+      null,
+    );
+  },
+);
+
+// What the stylesheet draws the link `label` with, found by its place among
+// the navigation's links and read as an expression, as the other steps read
+// what they run in the page, since the specs are typed without the browser's
+// own types.
+const drawn = async (
+  world: SpecWorld,
+  label: string,
+  property: string,
+): Promise<string> => {
+  const at = (
+    await world.browserPage.locator(".menu-links a").allTextContents()
+  ).indexOf(label);
+  assert.ok(at >= 0, `The navigation has no link ${label}.`);
+  return world.browserPage.evaluate<string>(
+    `getComputedStyle(document.querySelectorAll(".menu-links a")[${String(at)}]).${property}`,
+  );
+};
+
+Then(
+  "the link {string} is on black",
+  async function (this: SpecWorld, label: string) {
+    assert.equal(await drawn(this, label, "backgroundColor"), "rgb(0, 0, 0)");
+  },
+);
+
+Then(
+  "the link {string} is on the colour the current section is on",
+  async function (this: SpecWorld, label: string) {
+    const section = await this.browserPage.evaluate<string>(
+      `getComputedStyle(document.querySelector('.site-sections a[aria-current="page"]')).backgroundColor`,
+    );
+    assert.equal(await drawn(this, label, "backgroundColor"), section);
+  },
+);
+
+Then(
+  "the link {string} is not underlined",
+  async function (this: SpecWorld, label: string) {
+    assert.ok(
+      !(await drawn(this, label, "textDecorationLine")).includes("underline"),
+      `${label} is underlined.`,
+    );
+  },
+);

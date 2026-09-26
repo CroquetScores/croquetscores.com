@@ -249,6 +249,14 @@ Then(
   },
 );
 
+Then(
+  "every word in the navigation is in the test locale",
+  async function (this: SpecWorld) {
+    const stray = await unmarkedWithin(this, "header .menu-links", []);
+    assert.deepEqual(stray, [], "Words in the navigation came from elsewhere.");
+  },
+);
+
 // Each language in the list is named in its own language, which is the point of
 // the list, so those names are left out with the site's.
 Then(

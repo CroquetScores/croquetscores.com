@@ -476,13 +476,12 @@ a:hover {
   background: var(--surface);
 }
 
-/* The page being read, marked the way the primary navigation marks its own
-   rather than the way the section bar does: these are links on the panel's
-   colour, as the navigation's are on the bar's, and a filled tile among them
-   would read as the one item that is a button. */
+/* The page being read, marked as the section bar and the primary navigation
+   mark theirs: black in light, pale in dark, and not underlined, so that being
+   here looks the same wherever it is said. */
 .account-menu-links a[aria-current="page"] {
-  font-weight: 700;
-  text-decoration: underline;
+  background: var(--current);
+  color: var(--current-ink);
 }
 
 /* The primary navigation. Below 40rem it is collapsed behind the disclosure;
@@ -563,9 +562,11 @@ a:hover {
   background: var(--accent-strong);
 }
 
+/* The page being read is marked as the section being read is: black in light,
+   pale in dark, and not underlined, which read as a link like any other. */
 .menu-links a[aria-current="page"] {
-  font-weight: 700;
-  text-decoration: underline;
+  background: var(--current);
+  color: var(--current-ink);
 }
 
 /* Above the one breakpoint this foundation has, the links are the navigation
@@ -637,8 +638,7 @@ a:hover {
   display: flex;
   align-items: center;
   align-self: stretch;
-  min-height: 40px;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-1) var(--space-3);
   color: var(--accent-ink);
   text-decoration: none;
 }

@@ -45,7 +45,7 @@ Measured from the live site, rather than taken from a screenshot by eye. Recorde
 
 ```
 ┌─────────────────────────────────────────────┐
-│  Croquet Scores      Tournaments …  Account │  pinned bar, green, white
+│  Croquet Scores      Home  Help …   Account │  pinned bar, green, white
 ├─────────────────────────────────────────────┤  stays as the page scrolls
 │  19th Spanish Championship…                 │  title strip, when a page
 ├─────────────────────────────────────────────┤  has a title. Scrolls away
@@ -84,7 +84,7 @@ As the window narrows, the bars stay and their contents wrap. The current site w
 
 ## 4. The differences from the current site
 
-1. **The header navigation is short, and ends in the account menu.** Registering, signing in and the rest are inside that menu rather than beside it, so the bar carries one item for an account however many pages an account has; `Tournaments`, `Blog` and `Help` stand in beside it so the navigation has enough in it to behave like navigation. None of those destinations exists yet, nor do most of the menu's, so every one of them answers `404` until the feature that provides it lands — which is the honest state of a layout built before its pages, and worth knowing before anyone reports it as a fault.
+1. **The header navigation is short, and ends in the account menu.** Registering, signing in and the rest are inside that menu rather than beside it, so the bar carries one item for an account however many pages an account has. Beside it are `Home` and `Help`, and `Admin` for a reader who is signed in: the admin shows nothing to anybody else, so offering it to them would only send them to sign in (`navigation.feature`). `Help` does not exist yet, nor do most of the menu's pages, so each of them answers `404` until the feature that provides it lands — which is the honest state of a layout built before its pages, and worth knowing before anyone reports it as a fault.
 2. **The body is out of scope.** Between the bars there is a panel with a heading in it and nothing else until a feature says otherwise.
 3. **The page behind the panel is a very light green**, where the current site is white.
 4. **The secondary navigation is kept**: dark green, tabs with a `5px` radius, the current one on black.
@@ -140,7 +140,7 @@ The admin SPA's page is built by Vite ahead of time, and the server says the cho
 - **The content green is `C #e6f2e6`.**
 - **Panel text is the foundation's near-black `--ink`** (`#16181c`) rather than pure `#000`: black to look at, slightly kinder to read.
 - **A long tournament name wraps** onto as many lines as it needs, as the current site's does. The name is the page, and truncating it would lose the one thing the reader came for.
-- **The bars are tight.** The pinned bar is `44px` and the section bar `45px`. Inline navigation items are `36px` at least, while the ones inside the disclosure keep `44px`: those are pressed with a thumb, these are pointed at with a mouse. `36px` still clears the `24px` that WCAG 2.2 asks for. That exception is for the inline navigation and nothing else: the theme buttons in the footer are on screen on a phone and pressed with a thumb, so they are `44px` at every width, like the Donate button beside them.
+- **The bars are tight.** The pinned bar is `44px`, and the section bar is as tall as its tabs' words with `0.25rem` above and below them, and no taller: about `36px` at the body size. Inline navigation items are `36px` at least, while the ones inside the disclosure keep `44px`: those are pressed with a thumb, these are pointed at with a mouse. `36px` still clears the `24px` that WCAG 2.2 asks for. That exception is for the inline navigation and nothing else: the theme buttons in the footer are on screen on a phone and pressed with a thumb, so they are `44px` at every width, like the Donate button beside them.
 - **The active tab fills its bar.** No block padding and no row gap on the section list, so the black runs edge to edge and between wrapped rows.
 - **Bar contents align with panel text**, through `--panel-inset`.
 

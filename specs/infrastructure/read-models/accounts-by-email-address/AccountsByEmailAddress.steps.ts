@@ -18,6 +18,7 @@ import {
   keptAt,
   readBack,
 } from "../../support/accounts.js";
+import { rebuildsWith } from "../../support/projections.js";
 
 const rowsAsText = async (world: SpecWorld): Promise<string[]> => {
   const { rows } = await world.database.query<{ row: string }>(
@@ -44,6 +45,12 @@ Given(
   "the accounts by email address read model, with its key",
   function (this: SpecWorld) {
     keepAccounts(this, aSiteKey());
+    rebuildsWith(this, async () => {
+      const { readModel, store } = accountsOf(this);
+      await this.asARequest(async () =>
+        readModel.rebuildFrom(await store.readAll()),
+      );
+    });
   },
 );
 
@@ -160,13 +167,6 @@ const rebuild = async (
   }
 };
 
-When(
-  "the read model is rebuilt from the events",
-  async function (this: SpecWorld) {
-    await rebuild(this, (events) => events);
-  },
-);
-
 // The event store reads stream by stream, and a stream is named by a random
 // uuid, so which stream it hands over first is chance: a rebuild that depends
 // on reading the older account first would be caught by the scenario above
@@ -183,7 +183,3 @@ When(
     );
   },
 );
-
-Then("it is rebuilt without failing", function (this: SpecWorld) {
-  assert.equal(this.failure, undefined, `It failed: ${String(this.failure)}`);
-});

@@ -82,15 +82,23 @@ const sendAwayWithoutScripting = (path: string | undefined): string =>
     : `
     <noscript><meta http-equiv="refresh" content="0; url=${escape(path)}" /></noscript>`;
 
-// Stand-ins, so the navigation has enough in it to behave like navigation, and
-// answering 404 until the features that provide them land. Everything to do
-// with an account is in the account menu beside them rather than here, so that
-// the bar carries one item for an account however many pages an account has.
-export const navigation: readonly NavigationLink[] = [
-  { href: "/tournaments", words: "navigation.tournaments" },
-  { href: "/blog", words: "navigation.blog" },
+// The way home and the way to help, for every reader, and the way to the admin
+// for a reader who is signed in: the admin shows nothing to anybody else, so
+// offering it to them would only send them to sign in. Everything to do with
+// an account is in the account menu beside them rather than here, so that the
+// bar carries one item for an account however many pages an account has.
+const everyone: readonly NavigationLink[] = [
+  { href: "/", words: "navigation.home" },
   { href: "/help", words: "navigation.help" },
 ];
+
+const signedInToo: readonly NavigationLink[] = [
+  { href: "/admin/", words: "navigation.admin" },
+];
+
+/** The primary navigation, for a reader signed in or not. */
+export const navigation = (signedIn: boolean): readonly NavigationLink[] =>
+  signedIn ? [...everyone, ...signedInToo] : everyone;
 
 // Not read from a clock. A rendered year that moves on its own is a year
 // nobody decided, and this one is a claim about when the work was done. The
@@ -104,8 +112,12 @@ const copyrightOwner = "Tim Murphy";
 // have.
 const paypalButton = "AQ432ABTXDPYU";
 
-const menu = (speaking: Speaking, currentPath: string | undefined): string => {
-  const items = navigation
+const menu = (
+  speaking: Speaking,
+  currentPath: string | undefined,
+  signedIn: boolean,
+): string => {
+  const items = navigation(signedIn)
     .map(({ href, words }) => {
       const here = href === currentPath ? ' aria-current="page"' : "";
       return `            <li><a href="${href}"${here}>${escape(speaking.say(words))}</a></li>`;
@@ -250,7 +262,7 @@ export const siteBar = (bar: SiteBar, lang?: string): string => `
       <div class="page">
         <div class="site-bar-inner">
           <a class="site-name" href="/">${escape(bar.siteName)}</a>
-${menu(bar.speaking, bar.currentPath)}
+${menu(bar.speaking, bar.currentPath, bar.signedIn)}
 ${accountMenu(bar)}
         </div>
       </div>

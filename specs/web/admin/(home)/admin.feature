@@ -22,6 +22,15 @@ Feature: The admin is served as the site it belongs to
   before a script runs, and is looked at with none, so that a scenario cannot
   pass on something the application drew after the server failed to.
 
+  Nothing in the admin is shown to a reader who is not signed in, who is sent
+  to sign in first (`tournaments.feature`). So every scenario here has a
+  reader signed in: the sign in page wears the same header and footer, and a
+  scenario looking at them there would pass without the admin being opened at
+  all.
+
+  Background:
+    Given a reader signed in as "someone@example.com"
+
   Rule: The admin calls the site by the name it is given
 
     Scenario: The admin's tab names the site
@@ -51,9 +60,30 @@ Feature: The admin is served as the site it belongs to
     Scenario: The admin's header offers the public pages' navigation
       Given a viewport 1200 pixels wide
       When the admin is opened
-      Then the link "Tournaments" is visible
-      And the link "Blog" is visible
+      Then the link "Home" is visible
       And the link "Help" is visible
+      And the link "Admin" is visible
+
+    Scenario: The admin's navigation marks the admin as the page being read
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the link "Admin" is marked as the page being read
+
+    Scenario: The admin's navigation marks the admin from any of its pages
+      Given a viewport 1200 pixels wide
+      When the admin for 2025 is opened
+      Then the link "Admin" is marked as the page being read
+
+    Scenario: The admin's navigation marks the admin on black
+      Given a viewport 1200 pixels wide
+      And a machine that prefers light
+      When the admin is opened
+      Then the link "Admin" is on black
+
+    Scenario: The admin's navigation does not underline the admin
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the link "Admin" is not underlined
 
     Scenario: The admin's header ends in the account menu
       Given a viewport 1200 pixels wide
@@ -72,7 +102,7 @@ Feature: The admin is served as the site it belongs to
       Given a viewport 375 pixels wide
       When the admin is opened
       Then the menu button is visible
-      And the link "Tournaments" is not visible
+      And the link "Help" is not visible
 
     Scenario: The admin's footer carries the plea
       Given a viewport 1200 pixels wide

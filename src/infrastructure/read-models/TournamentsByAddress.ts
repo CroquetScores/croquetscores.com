@@ -2,7 +2,7 @@ import type { Projection } from "../../application/common/Projection.js";
 import type { TournamentAddresses } from "../../application/operations/tournaments/tournamentOperations.js";
 import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
 import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
-import type { TournamentId } from "../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { TournamentId } from "../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
@@ -50,6 +50,17 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
         );
       }
     }
+  }
+
+  async tournamentAt(address: string): Promise<TournamentId | undefined> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ tournament_id: string }>(
+        `select tournament_id from tournaments_by_address where address = $1`,
+        [address],
+      );
+    const found = rows[0]?.tournament_id;
+    return found === undefined ? undefined : TournamentId.from(found);
   }
 
   async takenIn(

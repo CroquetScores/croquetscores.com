@@ -1,8 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { withScripting } from "../support/browser.js";
-import type { SpecWorld } from "../../support/world.js";
+import { withScripting } from "../../support/browser.js";
+import type { SpecWorld } from "../../../support/world.js";
 
 // The admin's front door. /admin itself only sends the reader here.
 const admin = "/admin/";

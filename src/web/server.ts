@@ -41,10 +41,48 @@ import { ForgetAccountHandler } from "../application/operations/accounts/ForgetA
 import { WhatAForgettingLinkIsWorthHandler } from "../application/operations/accounts/WhatAForgettingLinkIsWorthHandler.js";
 import { WhatASetNewPasswordLinkIsWorthHandler } from "../application/operations/accounts/WhatASetNewPasswordLinkIsWorthHandler.js";
 import { WhatAConfirmationLinkIsWorthHandler } from "../application/operations/accounts/WhatAConfirmationLinkIsWorthHandler.js";
+import { AddBlockHandler } from "../application/operations/tournaments/AddBlockHandler.js";
+import { AddBlockValidator } from "../application/operations/tournaments/AddBlockValidator.js";
+import { AddKnockoutHandler } from "../application/operations/tournaments/AddKnockoutHandler.js";
+import { AddKnockoutValidator } from "../application/operations/tournaments/AddKnockoutValidator.js";
+import { AddManagerHandler } from "../application/operations/tournaments/AddManagerHandler.js";
+import { AddManagerValidator } from "../application/operations/tournaments/AddManagerValidator.js";
+import { AddPlayerHandler } from "../application/operations/tournaments/AddPlayerHandler.js";
+import { AddPlayerValidator } from "../application/operations/tournaments/AddPlayerValidator.js";
+import { AddScorerHandler } from "../application/operations/tournaments/AddScorerHandler.js";
+import { AddScorerValidator } from "../application/operations/tournaments/AddScorerValidator.js";
+import { AddSwissHandler } from "../application/operations/tournaments/AddSwissHandler.js";
+import { AddSwissValidator } from "../application/operations/tournaments/AddSwissValidator.js";
+import { ArchiveCompetitionHandler } from "../application/operations/tournaments/ArchiveCompetitionHandler.js";
+import { ArchivePlayerHandler } from "../application/operations/tournaments/ArchivePlayerHandler.js";
+import { ArchiveTournamentHandler } from "../application/operations/tournaments/ArchiveTournamentHandler.js";
+import { CreateTournamentHandler } from "../application/operations/tournaments/CreateTournamentHandler.js";
+import { CreateTournamentValidator } from "../application/operations/tournaments/CreateTournamentValidator.js";
+import { RemoveManagerHandler } from "../application/operations/tournaments/RemoveManagerHandler.js";
+import { RemoveScorerHandler } from "../application/operations/tournaments/RemoveScorerHandler.js";
+import { RestoreCompetitionHandler } from "../application/operations/tournaments/RestoreCompetitionHandler.js";
+import { RestorePlayerHandler } from "../application/operations/tournaments/RestorePlayerHandler.js";
+import { RestoreTournamentHandler } from "../application/operations/tournaments/RestoreTournamentHandler.js";
+import { UpdateBlockHandler } from "../application/operations/tournaments/UpdateBlockHandler.js";
+import { UpdateBlockValidator } from "../application/operations/tournaments/UpdateBlockValidator.js";
+import { UpdateKnockoutHandler } from "../application/operations/tournaments/UpdateKnockoutHandler.js";
+import { UpdateKnockoutValidator } from "../application/operations/tournaments/UpdateKnockoutValidator.js";
+import { UpdatePlayerHandler } from "../application/operations/tournaments/UpdatePlayerHandler.js";
+import { UpdatePlayerValidator } from "../application/operations/tournaments/UpdatePlayerValidator.js";
+import { UpdateSwissHandler } from "../application/operations/tournaments/UpdateSwissHandler.js";
+import { UpdateSwissValidator } from "../application/operations/tournaments/UpdateSwissValidator.js";
+import { UpdateTournamentHandler } from "../application/operations/tournaments/UpdateTournamentHandler.js";
+import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
+import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
+import { TournamentToChangeHandler } from "../application/operations/tournaments/TournamentToChangeHandler.js";
+import { TournamentYearsOfAccountHandler } from "../application/operations/tournaments/TournamentYearsOfAccountHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
+import { noGamesYet } from "../application/services/Games.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
+import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
@@ -76,6 +114,8 @@ import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReader
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
+import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
+import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import {
   GoogleOpenIdConnect,
   GoogleOpenIdConnectFailed,
@@ -87,7 +127,7 @@ import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
-import { knowTheReader, type Reader } from "./common/reader.js";
+import { knowTheReader, signedIn, type Reader } from "./common/reader.js";
 import type { InTransaction } from "./common/database.js";
 import { readerFromSessions, registerSignOut } from "./common/session.js";
 import { speakToRequests, type Language } from "./common/language.js";
@@ -114,7 +154,7 @@ import { registerForgetAccountPage } from "./public/forgetAccount.js";
 import { registerChangeNamePage } from "./public/changeName.js";
 import { registerChangePasswordPage } from "./public/changePassword.js";
 import { registerChangeEmailAddressPage } from "./public/changeEmailAddress.js";
-import { registerProfilePage } from "./public/profile.js";
+import { registerProfilePage, toSignIn } from "./public/profile.js";
 import { registerSetPasswordPage } from "./public/setPassword.js";
 import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspended.js";
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
@@ -194,6 +234,10 @@ export interface Application {
   readonly passwords: ImportedPasswordHasher;
   /** Where sessions are kept, which is how a reader stays signed in. */
   readonly sessions: PostgresSessions;
+  /** Every tournament, by its id, as a command loads and saves one. */
+  readonly tournaments: AggregateRepository<Tournament, TournamentId>;
+  /** The tournaments each account has a part in, as the read model keeps them. */
+  readonly tournamentsByAccount: TournamentsByAccount;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -277,12 +321,17 @@ const registerAdmin = async (
   server.get("/admin", (_request, reply) => reply.redirect("/admin/", 308));
   // What every other page is sent with, for the same reason: the page is now
   // drawn from the reader's cookies and the languages their browser asks for.
+  // Nothing in the admin is anybody's but the reader's own, so a reader who is
+  // not signed in is sent to sign in first, and brought back to the address
+  // they asked for, as every page of an account's own does.
   server.get("/admin/*", (request, reply) =>
-    reply
-      .header("cache-control", "private, no-cache")
-      .header("vary", "Cookie, Accept-Language")
-      .type("text/html; charset=utf-8")
-      .send(adminPage(built, request)),
+    signedIn(request)
+      ? reply
+          .header("cache-control", "private, no-cache")
+          .header("vary", "Cookie, Accept-Language")
+          .type("text/html; charset=utf-8")
+          .send(adminPage(built, request))
+      : toSignIn(request, reply),
   );
 };
 
@@ -378,10 +427,15 @@ export const buildApplication = async (
     config.accountEmailAddressHashKey,
   );
 
+  const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
+  const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
+
   // Every read model's projection, each given every event as it is appended.
   const projections: readonly Projection[] = [
     accountsByEmailAddress,
     accountsByGoogleAccount,
+    tournamentsByAddress,
+    tournamentsByAccount,
   ];
 
   // On the unit of work the mediator's transactions use, so that what a
@@ -557,6 +611,60 @@ export const buildApplication = async (
     new WhatAConfirmationLinkIsWorthHandler(accounts, links),
   );
 
+  // Every operation on a tournament, asked by the account the reader is
+  // signed in to. Nothing records games yet, so whatever asks whether any have
+  // been played is told none have.
+  const tournaments = new AggregateRepository(
+    eventStore,
+    (id: TournamentId, events) => Tournament.rebuiltFrom(id, events),
+  );
+  const both = [tournaments, accounts] as const;
+  validation.register(new CreateTournamentValidator());
+  validation.register(new UpdateTournamentValidator());
+  validation.register(new AddPlayerValidator());
+  validation.register(new UpdatePlayerValidator());
+  validation.register(new AddBlockValidator());
+  validation.register(new UpdateBlockValidator());
+  validation.register(new AddKnockoutValidator());
+  validation.register(new UpdateKnockoutValidator());
+  validation.register(new AddSwissValidator());
+  validation.register(new UpdateSwissValidator());
+  validation.register(new AddManagerValidator());
+  validation.register(new AddScorerValidator());
+  mediator.handleCommand(
+    new CreateTournamentHandler(...both, tournamentsByAddress),
+  );
+  mediator.handleCommand(
+    new UpdateTournamentHandler(...both, tournamentsByAddress),
+  );
+  mediator.handleCommand(new ArchiveTournamentHandler(...both));
+  mediator.handleCommand(new RestoreTournamentHandler(...both));
+  mediator.handleCommand(new AddPlayerHandler(...both));
+  mediator.handleCommand(new UpdatePlayerHandler(...both));
+  mediator.handleCommand(new ArchivePlayerHandler(...both, noGamesYet));
+  mediator.handleCommand(new RestorePlayerHandler(...both));
+  mediator.handleCommand(new AddBlockHandler(...both));
+  mediator.handleCommand(new UpdateBlockHandler(...both));
+  mediator.handleCommand(new AddKnockoutHandler(...both));
+  mediator.handleCommand(new UpdateKnockoutHandler(...both, noGamesYet));
+  mediator.handleCommand(new AddSwissHandler(...both));
+  mediator.handleCommand(new UpdateSwissHandler(...both));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both, noGamesYet));
+  mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(
+    new AddManagerHandler(...both, accountsByEmailAddress),
+  );
+  mediator.handleCommand(new AddScorerHandler(...both, accountsByEmailAddress));
+  mediator.handleCommand(new RemoveManagerHandler(...both));
+  mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
+  mediator.handleQuery(
+    new TournamentToChangeHandler(tournaments, tournamentsByAddress),
+  );
+  mediator.handleQuery(
+    new TournamentYearsOfAccountHandler(tournamentsByAccount),
+  );
+
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
 
@@ -695,6 +803,8 @@ export const buildApplication = async (
     emailAddresses,
     passwords,
     sessions,
+    tournaments,
+    tournamentsByAccount,
   };
 };
 

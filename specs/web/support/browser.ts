@@ -38,6 +38,7 @@ import {
   standInGoogleFor,
 } from "../../infrastructure/support/google.js";
 import { readerTheScenariosSet } from "./reader.js";
+import { tournamentsThrough } from "./tournaments.js";
 
 let browser: Browser | undefined;
 let application: Application | undefined;
@@ -134,19 +135,34 @@ const offered = (
 ): { readonly languages?: readonly Language[] } =>
   offering === "its own" ? {} : { languages: offering };
 
+// What a scenario has asked of its own application so far, so that asking for
+// something more keeps what it asked for before: a site served as one website
+// and then asked to offer its own languages is that website still, offering
+// them, rather than whatever website the settings name.
+const askedOf = new WeakMap<
+  SpecWorld,
+  { changed: Partial<Config>; languages: Offering | undefined }
+>();
+
 const anApplicationWith = async (
   world: SpecWorld,
-  changed: Partial<Config>,
-  languages: Offering = scenarioLanguages,
+  asked: Partial<Config>,
+  asking?: Offering,
 ): Promise<string> => {
-  if (world.pool !== undefined) return itsOwn(world, changed, languages);
+  const before = askedOf.get(world);
+  const changed = { ...before?.changed, ...asked };
+  const languages = asking ?? before?.languages;
+  askedOf.set(world, { changed, languages });
+  if (world.pool !== undefined) {
+    return itsOwn(world, changed, languages ?? scenarioLanguages);
+  }
 
   loadEnvFile();
   const named = await buildApplication(
     { ...loadConfig(), ...changed },
     {
       logger: false,
-      ...offered(languages),
+      ...offered(languages ?? scenarioLanguages),
       reader: readerTheScenariosSet,
       sendsTheEmailQueue: false,
     },
@@ -286,9 +302,10 @@ const itsOwn = async (
     },
   );
   applications.set(world, scenario);
-  world.accountsInHand = accountsThrough(scenario, () =>
-    ReadOnlyDate.from(new Date(clock.now.getTime())),
-  );
+  const now = (): ReadOnlyDate =>
+    ReadOnlyDate.from(new Date(clock.now.getTime()));
+  world.accountsInHand = accountsThrough(scenario, now);
+  world.tournamentsInHand = tournamentsThrough(scenario, now);
 
   // Closed with the scenario's database, before it is dropped, rather than by a
   // hook of its own that might run either side of the drop. The server and the

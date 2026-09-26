@@ -56,11 +56,15 @@ export const adminPage = (built: string, request: FastifyRequest): string => {
   // whatever it was configured as.
   return (
     built
-      .replace(html, (_whole, attributes: string) =>
-        theme === "system"
-          ? `<html${attributes}>`
-          : `<html${attributes} data-theme="${theme}">`,
-      )
+      // In the reader's language rather than the one it was built with, since
+      // what the admin draws itself — the months it dates a tournament by —
+      // is drawn in whatever the page says it is in.
+      .replace(html, (_whole, attributes: string) => {
+        const said = `<html lang="${escape(lang)}"${attributes.replace(/\s+lang="[^"]*"/, "")}`;
+        return theme === "system"
+          ? `${said}>`
+          : `${said} data-theme="${theme}">`;
+      })
       .replace(
         title,
         (_whole, words: string) =>
@@ -80,6 +84,9 @@ export const adminPage = (built: string, request: FastifyRequest): string => {
           {
             speaking,
             siteName,
+            // Every page of the admin is the admin to the navigation, which
+            // has one way in to it however deep the reader has gone.
+            currentPath: "/admin/",
             signedIn: signedIn(request),
             hasPassword: hasPassword(request),
           },
