@@ -108,7 +108,10 @@ export class EmailAddress {
     return this.#given.toLowerCase().normalize("NFC");
   }
 
-  /** Two addresses are the same when they differ, if at all, only in case. */
+  /**
+   * Two addresses are the same when they differ, if at all, only in case or
+   * in how an accented letter was typed: when their comparable forms are one.
+   */
   equals(other: EmailAddress | undefined): boolean {
     return (
       other instanceof EmailAddress && this.comparable === other.comparable

@@ -56,6 +56,4 @@ Going to use SPA instead of /scripts.
 
 From a review of the directory on 2026-09-26. Ordered by how much each is worth. None changes what the site does, except where the item says so.
 
-- **Correct what `EmailAddress.equals` says.** Its comment says two addresses are the same when they differ "only in case", but it compares `comparable`, which puts each letter into one Unicode form as well. The class's own comment has it right.
-
 Seen along the way, and wider than this directory: the refusal class `Account.ts` declares (a code, a name and a message, with a cause sometimes) is written out again about twenty-five times across `/src`. A generic base in `src/domain/common/` would save the boilerplate, but each class is small and read by `instanceof`, so it is probably not worth the churn.
