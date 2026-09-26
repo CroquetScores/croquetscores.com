@@ -6,8 +6,6 @@ import {
   type CreatedTournament,
   CreateTournament,
 } from "../../../../src/application/operations/tournaments/CreateTournament.js";
-import type { TournamentRequest } from "../../../../src/application/operations/tournaments/tournamentOperations.js";
-import { UpdateTournament } from "../../../../src/application/operations/tournaments/UpdateTournament.js";
 import { Website } from "../../../../src/domain/common/Website.js";
 import { signOutPath } from "../../../../src/web/common/accountMenu.js";
 import { signInPath } from "../../../../src/web/public/signIn.js";
@@ -15,11 +13,10 @@ import {
   accountFor,
   created,
   inHandOf,
-  load,
   momentOf,
-  tournamentNamed,
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { changeTournament } from "../../support/tournaments.js";
 
 // The admin draws the list itself, after asking the API for it, so nothing
 // here is read until the list says it is the answer to what was last asked
@@ -160,41 +157,6 @@ When("the admin for {int} is opened", openAdminFor);
 
 // The tournaments there are -----------------------------------------------------
 
-// What the tournament is now, said again with `changed`, as updating one says
-// everything it is. Done as its first manager, who is whoever created it.
-const changedTo = async (
-  world: SpecWorld,
-  name: string,
-  changed: Partial<TournamentRequest>,
-): Promise<void> => {
-  const id = tournamentNamed(world, name);
-  const as = await load(world, id);
-  const manager = as.managers[0];
-  assert.ok(manager !== undefined, `${name} has no manager.`);
-  await inHandOf(world).send(
-    new UpdateTournament(
-      manager.value,
-      id.value,
-      {
-        name: as.name.toString(),
-        starts: as.starts.toISOString(),
-        finishes: as.finishes.toISOString(),
-        format: as.format.name,
-        sport: as.sport.code,
-        country: as.country.code,
-        region: as.region.code,
-        ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
-        handicap: as.handicap,
-        worldRankings: as.worldRankings,
-        national: as.national,
-        international: as.international,
-        ...changed,
-      },
-      momentOf(world),
-    ),
-  );
-};
-
 // A tournament of one day unless the scenario goes on to say when it
 // finishes, so that a start moved into another year leaves a tournament that
 // makes sense rather than one running for a year and more.
@@ -202,21 +164,21 @@ Given(
   "the tournament {string} starts on {string}",
   async function (this: SpecWorld, name: string, day: string) {
     const at = `${day}T00:00:00Z`;
-    await changedTo(this, name, { starts: at, finishes: at });
+    await changeTournament(this, name, { starts: at, finishes: at });
   },
 );
 
 Given(
   "the tournament {string} finishes on {string}",
   async function (this: SpecWorld, name: string, day: string) {
-    await changedTo(this, name, { finishes: `${day}T00:00:00Z` });
+    await changeTournament(this, name, { finishes: `${day}T00:00:00Z` });
   },
 );
 
 Given(
   "the tournament {string} is for the sport {string}",
   async function (this: SpecWorld, name: string, sport: string) {
-    await changedTo(this, name, { sport });
+    await changeTournament(this, name, { sport });
   },
 );
 
@@ -482,7 +444,10 @@ Then(
   "the year {int} is offered",
   async function (this: SpecWorld, year: number) {
     await eventually(this, async () => {
-      assert.ok((await yearsOffered(this)).includes(year));
+      assert.ok(
+        (await yearsOffered(this)).includes(year),
+        `${String(year)} is not offered.`,
+      );
     });
   },
 );
@@ -491,7 +456,10 @@ Then(
   "the year {int} is not offered",
   async function (this: SpecWorld, year: number) {
     await eventually(this, async () => {
-      assert.ok(!(await yearsOffered(this)).includes(year));
+      assert.ok(
+        !(await yearsOffered(this)).includes(year),
+        `${String(year)} is offered.`,
+      );
     });
   },
 );
@@ -535,7 +503,7 @@ Then(
 Then("every year offered is a tab", async function (this: SpecWorld) {
   await eventually(this, async () => {
     assert.equal(await dropDown(this).count(), 0);
-    assert.ok((await tabYears(this)).length > 0);
+    assert.ok((await tabYears(this)).length > 0, "No year is a tab.");
   });
 });
 
@@ -547,7 +515,10 @@ Then("no drop-down list of years is offered", async function (this: SpecWorld) {
 
 Then("the year {int} is a tab", async function (this: SpecWorld, year: number) {
   await eventually(this, async () => {
-    assert.ok((await tabYears(this)).includes(year));
+    assert.ok(
+      (await tabYears(this)).includes(year),
+      `${String(year)} is not a tab.`,
+    );
   });
 });
 
@@ -555,7 +526,10 @@ Then(
   "the year {int} is in the drop-down list",
   async function (this: SpecWorld, year: number) {
     await eventually(this, async () => {
-      assert.ok((await dropDownYears(this)).includes(year));
+      assert.ok(
+        (await dropDownYears(this)).includes(year),
+        `${String(year)} is not in the drop-down list.`,
+      );
     });
   },
 );
@@ -565,7 +539,10 @@ Then(
   async function (this: SpecWorld, year: number) {
     await eventually(this, async () => {
       assert.equal(await dropDown(this).count(), 1);
-      assert.ok(!(await dropDownYears(this)).includes(year));
+      assert.ok(
+        !(await dropDownYears(this)).includes(year),
+        `${String(year)} is in the drop-down list.`,
+      );
     });
   },
 );
@@ -609,7 +586,10 @@ Then(
   "the tab for {int} is not marked as the year chosen",
   async function (this: SpecWorld, year: number) {
     await eventually(this, async () => {
-      assert.ok((await tabYears(this)).includes(year));
+      assert.ok(
+        (await tabYears(this)).includes(year),
+        `${String(year)} is not a tab.`,
+      );
       assert.equal(await markedTab(this, year).count(), 0);
     });
   },
@@ -617,7 +597,7 @@ Then(
 
 Then("no tab is marked as the year chosen", async function (this: SpecWorld) {
   await eventually(this, async () => {
-    assert.ok((await tabYears(this)).length > 0);
+    assert.ok((await tabYears(this)).length > 0, "No year is a tab.");
     assert.equal(
       await tabs(this).and(this.browserPage.locator("[aria-current]")).count(),
       0,
@@ -669,7 +649,8 @@ Then(
   "the drop-down list is at least {int} pixels tall",
   async function (this: SpecWorld, least: number) {
     await eventually(this, async () => {
-      assert.ok((await sizeOf(this, dropDown(this))).height >= least);
+      const { height } = await sizeOf(this, dropDown(this));
+      assert.ok(height >= least, `It is ${String(height)} pixels tall.`);
     });
   },
 );
@@ -771,18 +752,28 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
   await settled(this);
   const page = this.browserPage;
   const from = new URL(page.url()).pathname;
+  // What a form's button sends, where the page is one: creating a tournament
+  // from the new tournament page, and changing one from its edit page.
+  const sends = (response: {
+    url(): string;
+    request(): { method(): string };
+  }) => {
+    const to = new URL(response.url()).pathname;
+    const method = response.request().method();
+    return from === "/admin/tournaments/new"
+      ? to === "/api/v1/tournaments" && method === "POST"
+      : from.endsWith("/edit") &&
+          to.startsWith("/api/v1/tournaments/at/") &&
+          method === "PUT";
+  };
   const answered =
-    from === "/admin/tournaments/new"
-      ? page.waitForResponse(
-          (response) =>
-            new URL(response.url()).pathname === "/api/v1/tournaments" &&
-            response.request().method() === "POST",
-        )
+    from === "/admin/tournaments/new" || from.endsWith("/edit")
+      ? page.waitForResponse(sends)
       : undefined;
   await listOffers(this, option).click();
   if (answered !== undefined) {
     const answer = await answered;
-    if (answer.status() === 201) {
+    if (answer.ok()) {
       await page.waitForURL((url) => url.pathname !== from);
     } else {
       await page.locator('form[aria-busy="false"]').waitFor();
@@ -845,7 +836,11 @@ Then(
       const dates = await placeOf(
         rowOf(this, name).locator(".tournament-dates"),
       );
-      assert.ok(dates.x < (await placeOf(nameOf(this, name))).x);
+      const called = await placeOf(nameOf(this, name));
+      assert.ok(
+        dates.x < called.x,
+        `The dates start ${String(Math.round(dates.x))} pixels across and the name ${String(Math.round(called.x))}.`,
+      );
     });
   },
 );

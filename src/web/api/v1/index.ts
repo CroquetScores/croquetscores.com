@@ -12,6 +12,8 @@ import type { TournamentRequest } from "../../../application/operations/tourname
 import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
 import { TournamentYearsOfAccount } from "../../../application/operations/tournaments/TournamentYearsOfAccount.js";
+import { TournamentToChange } from "../../../application/operations/tournaments/TournamentToChange.js";
+import { UpdateTournament } from "../../../application/operations/tournaments/UpdateTournament.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { Countries } from "../../../domain/aggregates/tournaments/value-objects/Countries.js";
 import {
@@ -59,6 +61,36 @@ const yesOrNoOf = (body: unknown, field: string): boolean | undefined => {
   const value = (body as Record<string, unknown> | null)?.[field];
   return typeof value === "boolean" ? value : undefined;
 };
+
+// What a tournament is to be, as a form sends it to create one or to change
+// one. Notes left empty are no notes.
+const tournamentFrom = (body: unknown): TournamentRequest => {
+  const notes = textOf(body, "notes");
+  return {
+    name: textOf(body, "name"),
+    starts: textOf(body, "starts"),
+    finishes: textOf(body, "finishes"),
+    format: textOf(body, "format"),
+    sport: textOf(body, "sport"),
+    country: textOf(body, "country"),
+    region: textOf(body, "region"),
+    ...(notes === "" ? {} : { notes }),
+    handicap: yesOrNoOf(body, "handicap"),
+    worldRankings: yesOrNoOf(body, "worldRankings"),
+    national: yesOrNoOf(body, "national"),
+    international: yesOrNoOf(body, "international"),
+  };
+};
+
+// A tournament's address, from the three parts of an API address that carry
+// it, so that it reads as the admin's own address does.
+interface AtAddress {
+  readonly year: string;
+  readonly sport: string;
+  readonly slug: string;
+}
+const addressOf = ({ year, sport, slug }: AtAddress): string =>
+  `${year}/${sport}/${slug}`;
 
 export const apiV1: FastifyPluginCallback = (server, _options, done) => {
   server.get("/health", () => ({ status: "ok" }));
@@ -129,22 +161,7 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
   server.post("/tournaments", async (request, reply) => {
     const reader = signedInOrRefused(request, reply);
     if (reader === undefined) return reply;
-    const body = request.body;
-    const notes = textOf(body, "notes");
-    const tournament: TournamentRequest = {
-      name: textOf(body, "name"),
-      starts: textOf(body, "starts"),
-      finishes: textOf(body, "finishes"),
-      format: textOf(body, "format"),
-      sport: textOf(body, "sport"),
-      country: textOf(body, "country"),
-      region: textOf(body, "region"),
-      ...(notes === "" ? {} : { notes }),
-      handicap: yesOrNoOf(body, "handicap"),
-      worldRankings: yesOrNoOf(body, "worldRankings"),
-      national: yesOrNoOf(body, "national"),
-      international: yesOrNoOf(body, "international"),
-    };
+    const tournament = tournamentFrom(request.body);
     const created = await request.server.mediator.send(
       new CreateTournament(
         reader.value,
@@ -158,6 +175,50 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
       .header("cache-control", "no-store")
       .send({ id: created.id.value, address: created.address.toString() });
   });
+
+  // The tournament found at an address, now or before, as the reader would
+  // change it, with where it is found now. Refused where they do not manage it,
+  // where it is archived, and where nothing has been found there.
+  server.get<{ Params: AtAddress }>(
+    "/tournaments/at/:year/:sport/:slug",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const tournament = await request.server.mediator.query(
+        new TournamentToChange(reader.value, addressOf(request.params)),
+      );
+      return reply.header("cache-control", "no-store").send(tournament);
+    },
+  );
+
+  // The tournament found at an address changed, and answered with where it is
+  // found afterwards, which is somewhere else when its year or its sport
+  // changed. Found at the address it was asked at both times, which still
+  // leads to it after it has moved.
+  server.put<{ Params: AtAddress }>(
+    "/tournaments/at/:year/:sport/:slug",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const asked = new TournamentToChange(
+        reader.value,
+        addressOf(request.params),
+      );
+      const before = await request.server.mediator.query(asked);
+      await request.server.mediator.send(
+        new UpdateTournament(
+          reader.value,
+          before.id,
+          tournamentFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      const after = await request.server.mediator.query(asked);
+      return reply
+        .header("cache-control", "no-store")
+        .send({ address: after.address });
+    },
+  );
 
   // The tournament by the part of its id after "tournament/", so that the id
   // is one segment of the address rather than two.

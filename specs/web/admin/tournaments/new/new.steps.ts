@@ -2,10 +2,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { TournamentId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../../../src/domain/aggregates/tournaments/Tournament.js";
-import { load } from "../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../support/world.js";
+import { keptCalled } from "../../../support/tournaments.js";
 
 // The admin draws the form itself, after asking the API what the website
 // offers, so a step reads it once it is drawn, and asks again for a while
@@ -14,8 +12,13 @@ import type { SpecWorld } from "../../../../support/world.js";
 
 const newTournament = "/admin/tournaments/new";
 
+// The form, or what the page says in its place where the reader cannot use
+// it (edit.feature): either is the page drawn.
 const drawn = async (world: SpecWorld): Promise<void> => {
-  await world.browserPage.locator("form.dialog-form").waitFor();
+  await world.browserPage
+    .locator("form.dialog-form, main .page-refused")
+    .first()
+    .waitFor();
 };
 
 // Three seconds, which leaves the step time to fail with what it found rather
@@ -149,7 +152,10 @@ Then(
   "the region {string} is offered",
   async function (this: SpecWorld, region: string) {
     await eventually(this, async () => {
-      assert.ok((await offeredIn(this, "Region")).includes(region));
+      assert.ok(
+        (await offeredIn(this, "Region")).includes(region),
+        `${region} is not offered.`,
+      );
     });
   },
 );
@@ -162,6 +168,24 @@ Then(
   async function (this: SpecWorld, sport: string) {
     await eventually(this, async () => {
       assert.equal(await chosenIn(this, "Sport"), sport);
+    });
+  },
+);
+
+Then(
+  "the country chosen is {string}",
+  async function (this: SpecWorld, country: string) {
+    await eventually(this, async () => {
+      assert.equal(await chosenIn(this, "Country"), country);
+    });
+  },
+);
+
+Then(
+  "the region chosen is {string}",
+  async function (this: SpecWorld, region: string) {
+    await eventually(this, async () => {
+      assert.equal(await chosenIn(this, "Region"), region);
     });
   },
 );
@@ -293,35 +317,24 @@ Then(
 
 // What was kept ------------------------------------------------------------------
 
-// Found by its name among those kept, since the scenario created it through
-// the form and so never knew its id.
-const kept = async (world: SpecWorld, name: string): Promise<Tournament> => {
-  const { rows } = await world.database.query<{ tournament_id: string }>(
-    `select tournament_id from tournaments_by_account_details where name = $1`,
-    [name],
-  );
-  assert.equal(rows.length, 1, `${String(rows.length)} are called ${name}.`);
-  return load(world, TournamentId.from(rows[0]!.tournament_id));
-};
-
 Then(
   "the tournament {string} is kept in the format {string}",
   async function (this: SpecWorld, name: string, format: string) {
-    assert.equal((await kept(this, name)).format.name, format);
+    assert.equal((await keptCalled(this, name)).format.name, format);
   },
 );
 
 Then(
   "the tournament {string} is kept as not national",
   async function (this: SpecWorld, name: string) {
-    assert.equal((await kept(this, name)).national, false);
+    assert.equal((await keptCalled(this, name)).national, false);
   },
 );
 
 Then(
   "the tournament {string} is kept as not international",
   async function (this: SpecWorld, name: string) {
-    assert.equal((await kept(this, name)).international, false);
+    assert.equal((await keptCalled(this, name)).international, false);
   },
 );
 
@@ -363,7 +376,14 @@ Then(
   "{string} is to the left of {string}",
   async function (this: SpecWorld, one: string, other: string) {
     await eventually(this, async () => {
-      assert.ok((await boxOf(this, one)).x < (await boxOf(this, other)).x);
+      const [first, second] = [
+        await boxOf(this, one),
+        await boxOf(this, other),
+      ];
+      assert.ok(
+        first.x < second.x,
+        `${one} starts ${String(Math.round(first.x))} pixels across and ${other} ${String(Math.round(second.x))}.`,
+      );
     });
   },
 );

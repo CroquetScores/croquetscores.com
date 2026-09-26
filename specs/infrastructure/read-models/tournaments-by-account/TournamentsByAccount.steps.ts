@@ -389,7 +389,10 @@ Then("{string} is found", function (this: SpecWorld, name: string) {
 });
 
 Then("{string} is not found", function (this: SpecWorld, name: string) {
-  assert.ok(!scenarioOf(this).found.some((each) => each.name === name));
+  assert.ok(
+    !scenarioOf(this).found.some((each) => each.name === name),
+    `${name} is found.`,
+  );
 });
 
 Then(

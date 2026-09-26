@@ -187,6 +187,7 @@ Then(
   async function (this: SpecWorld, label: string) {
     assert.ok(
       !(await drawn(this, label, "textDecorationLine")).includes("underline"),
+      `${label} is underlined.`,
     );
   },
 );

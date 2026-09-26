@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { NewTournament } from "./tournaments/new/new.js";
+import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { Tournaments } from "./Tournaments.js";
 
 // What goes between the public pages' header and footer, which the server
@@ -35,6 +36,12 @@ export const App = (): React.JSX.Element => {
   };
 
   if (/^\/admin\/tournaments\/new\/?$/.test(path)) return <NewTournament />;
+
+  // A tournament's address and then edit, as /admin/2026/ac/spring-open/edit.
+  const editing = /^\/admin\/([1-9]\d{3}\/[^/]+\/[^/]+)\/edit\/?$/.exec(
+    path,
+  )?.[1];
+  if (editing !== undefined) return <EditTournament address={editing} />;
 
   const year = yearIn(path);
   if (year !== undefined) {

@@ -74,6 +74,7 @@ import { UpdateSwissValidator } from "../application/operations/tournaments/Upda
 import { UpdateTournamentHandler } from "../application/operations/tournaments/UpdateTournamentHandler.js";
 import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
 import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
+import { TournamentToChangeHandler } from "../application/operations/tournaments/TournamentToChangeHandler.js";
 import { TournamentYearsOfAccountHandler } from "../application/operations/tournaments/TournamentYearsOfAccountHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { noGamesYet } from "../application/services/Games.js";
@@ -657,6 +658,9 @@ export const buildApplication = async (
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
   mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
+  mediator.handleQuery(
+    new TournamentToChangeHandler(tournaments, tournamentsByAddress),
+  );
   mediator.handleQuery(
     new TournamentYearsOfAccountHandler(tournamentsByAccount),
   );

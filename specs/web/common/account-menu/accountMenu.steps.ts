@@ -274,6 +274,7 @@ Then(
       !(await drawnItem(this, item, "textDecorationLine")).includes(
         "underline",
       ),
+      `${item} is underlined.`,
     );
   },
 );
