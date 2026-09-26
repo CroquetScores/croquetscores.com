@@ -233,7 +233,6 @@ a:hover {
 }
 
 /* On the green bars a dark ring disappears, so it turns white there. */
-.site-header :focus-visible,
 .site-sections :focus-visible,
 .site-footer :focus-visible {
   outline-color: var(--accent-ink);
