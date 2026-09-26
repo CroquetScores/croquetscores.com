@@ -222,6 +222,10 @@ ${buttons}
 // is how a reader looks for theirs; the lang on each says so to a screen
 // reader. The list opens on the language in force. Only where there is a
 // choice to make: a site in one language offers nothing.
+//
+// The label sits on the list's top border, where a field's label goes once
+// something is typed in it (dialog.ts): a list always holds a choice, so its
+// label is never anywhere else.
 const languageChoice = (speaking: Speaking, path: string): string => {
   if (speaking.offered.length < 2) return "";
 
@@ -234,11 +238,13 @@ const languageChoice = (speaking: Speaking, path: string): string => {
 
   return `
           <form class="language" method="post" action="/language">
-            <label for="language-choice">${escape(speaking.say("language.label"))}</label>
             <input type="hidden" name="return" value="${escape(path)}" />
-            <select id="language-choice" name="language">
+            <span class="language-box">
+              <label for="language-choice">${escape(speaking.say("language.label"))}</label>
+              <select id="language-choice" name="language">
 ${options}
-            </select>
+              </select>
+            </span>
             <button type="submit">${escape(speaking.say("language.choose"))}</button>
           </form>`;
 };
