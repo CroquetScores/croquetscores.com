@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -14,15 +15,7 @@ import { ChangePassword } from "./ChangePassword.js";
 /** Every way changing a password is refused, past its rules. */
 export type ChangePasswordErrorCode = "ChangePassword.WrongPassword";
 
-export class ChangePasswordRefused extends Error {
-  readonly code: ChangePasswordErrorCode;
-
-  constructor(code: ChangePasswordErrorCode, message: string) {
-    super(message);
-    this.name = "ChangePasswordRefused";
-    this.code = code;
-  }
-}
+export class ChangePasswordRefused extends Refused<ChangePasswordErrorCode> {}
 
 const wrongPassword = (): ChangePasswordRefused =>
   new ChangePasswordRefused(

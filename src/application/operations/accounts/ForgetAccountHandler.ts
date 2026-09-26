@@ -1,5 +1,6 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -11,15 +12,7 @@ import { ForgetAccount } from "./ForgetAccount.js";
 export type ForgetAccountErrorCode = "Link.NoLongerWorks";
 
 /** Forgetting refused. One code, because there is one thing to say. */
-export class ForgettingRefused extends Error {
-  readonly code: ForgetAccountErrorCode;
-
-  constructor(code: ForgetAccountErrorCode, message: string) {
-    super(message);
-    this.name = "ForgettingRefused";
-    this.code = code;
-  }
-}
+export class ForgettingRefused extends Refused<ForgetAccountErrorCode> {}
 
 /**
  * Forgetting an account from the link it was emailed, followed by a reader

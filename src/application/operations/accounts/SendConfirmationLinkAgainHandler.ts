@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -21,15 +22,7 @@ export type SendConfirmationLinkAgainErrorCode =
  * Sending the link again refused. Named by a code, because the code is the
  * contract: what a reader is shown for each is the page's to decide.
  */
-export class SendingRefused extends Error {
-  readonly code: SendConfirmationLinkAgainErrorCode;
-
-  constructor(code: SendConfirmationLinkAgainErrorCode, message: string) {
-    super(message);
-    this.name = "SendingRefused";
-    this.code = code;
-  }
-}
+export class SendingRefused extends Refused<SendConfirmationLinkAgainErrorCode> {}
 
 /** How long a link to confirm an address works. Confirming says why. */
 const LINK_WORKS_FOR_HOURS = 24;

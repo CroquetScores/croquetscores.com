@@ -2,6 +2,7 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import { RequestInvalid } from "../../common/ValidationBehaviour.js";
@@ -26,15 +27,7 @@ export type ConfirmEmailAddressErrorCode =
  * a reader is shown for each — a page saying it is done, one offering a new
  * link, one saying the link is no good — is the page's to decide.
  */
-export class ConfirmingRefused extends Error {
-  readonly code: ConfirmEmailAddressErrorCode;
-
-  constructor(code: ConfirmEmailAddressErrorCode, message: string) {
-    super(message);
-    this.name = "ConfirmingRefused";
-    this.code = code;
-  }
-}
+export class ConfirmingRefused extends Refused<ConfirmEmailAddressErrorCode> {}
 
 // Why each answer but "it would confirm" is refused, in the words the log
 // reads. The codes are the contract, and the same codes the page shows a reader

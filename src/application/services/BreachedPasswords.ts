@@ -1,3 +1,4 @@
+import { Refused } from "../../domain/common/Refused.js";
 /** Every way asking about a password can be refused. */
 export type BreachedPasswordsErrorCode = "BreachedPasswords.Unreachable";
 
@@ -7,19 +8,7 @@ export type BreachedPasswordsErrorCode = "BreachedPasswords.Unreachable";
  * registering until the service is back — is the caller's to say, and the
  * caller tells this apart from an answer by the code rather than the words.
  */
-export class CheckRefused extends Error {
-  readonly code: BreachedPasswordsErrorCode;
-
-  constructor(
-    code: BreachedPasswordsErrorCode,
-    message: string,
-    cause?: unknown,
-  ) {
-    super(message, cause === undefined ? undefined : { cause });
-    this.name = "CheckRefused";
-    this.code = code;
-  }
-}
+export class CheckRefused extends Refused<BreachedPasswordsErrorCode> {}
 
 /**
  * What the application wants of the place a password is asked about.

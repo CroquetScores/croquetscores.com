@@ -52,8 +52,4 @@ Going to use SPA instead of /scripts.
 
 ## Refactor
 
-### src/domain/aggregates/accounts
-
-From a review of the directory on 2026-09-26. Ordered by how much each is worth. None changes what the site does, except where the item says so.
-
-Seen along the way, and wider than this directory: the refusal class `Account.ts` declares (a code, a name and a message, with a cause sometimes) is written out again about twenty-five times across `/src`. A generic base in `src/domain/common/` would save the boilerplate, but each class is small and read by `instanceof`, so it is probably not worth the churn.
+None.

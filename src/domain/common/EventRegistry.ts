@@ -1,6 +1,7 @@
 import { AccountId } from "../aggregates/accounts/AccountId.js";
 import type { DomainEvent } from "./DomainEvent.js";
 import { ReadOnlyDate } from "./ReadOnlyDate.js";
+import { Refused } from "./Refused.js";
 
 /** Every reason the registry can refuse. */
 export type EventRegistryErrorCode =
@@ -15,15 +16,7 @@ export type EventRegistryErrorCode =
  * contract: the first two are mistakes in how the application was put
  * together, and the rest are an event that cannot be kept or read back.
  */
-export class EventRegistryRefused extends Error {
-  readonly code: EventRegistryErrorCode;
-
-  constructor(code: EventRegistryErrorCode, message: string, cause?: unknown) {
-    super(message, cause === undefined ? undefined : { cause });
-    this.name = "EventRegistryRefused";
-    this.code = code;
-  }
-}
+export class EventRegistryRefused extends Refused<EventRegistryErrorCode> {}
 
 /** An event as it is kept: the name its kind goes by, and what it said. */
 export interface KeptEvent {

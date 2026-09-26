@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -14,15 +15,7 @@ import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
 /** Every way asking to set a password is refused. */
 export type AskToSetPasswordErrorCode = "AskToSetPassword.HasPassword";
 
-export class AskToSetPasswordRefused extends Error {
-  readonly code: AskToSetPasswordErrorCode;
-
-  constructor(code: AskToSetPasswordErrorCode, message: string) {
-    super(message);
-    this.name = "AskToSetPasswordRefused";
-    this.code = code;
-  }
-}
+export class AskToSetPasswordRefused extends Refused<AskToSetPasswordErrorCode> {}
 
 /** How many emails an inbox may be filled with, per hour. */
 const EMAILS_AN_HOUR = 3;

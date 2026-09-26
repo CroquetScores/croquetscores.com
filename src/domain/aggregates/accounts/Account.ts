@@ -1,6 +1,7 @@
 import { AggregateRoot } from "../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../common/ReadOnlyDate.js";
+import { Refused } from "../../common/Refused.js";
 import { AccountBroughtOver } from "./events/AccountBroughtOver.js";
 import { AccountForgotten } from "./events/AccountForgotten.js";
 import { AccountRegistered } from "./events/AccountRegistered.js";
@@ -29,15 +30,7 @@ export type AccountErrorCode =
  * An account's refusal, named by its code. The code is what whoever asked
  * decides by; the message is only for whoever reads the log.
  */
-export class AccountRefused extends Error {
-  readonly code: AccountErrorCode;
-
-  constructor(code: AccountErrorCode, message: string) {
-    super(message);
-    this.name = "AccountRefused";
-    this.code = code;
-  }
-}
+export class AccountRefused extends Refused<AccountErrorCode> {}
 
 /**
  * Somebody known to the site by an email address. Registered with nothing but

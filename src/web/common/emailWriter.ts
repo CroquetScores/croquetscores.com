@@ -7,6 +7,7 @@ import type {
   EmailWriter,
   WrittenEmail,
 } from "../../application/services/EmailWriter.js";
+import { Refused } from "../../domain/common/Refused.js";
 import { speakingIn, type Language } from "./language.js";
 import { escape } from "./escape.js";
 
@@ -16,15 +17,7 @@ export type EmailWriterErrorCode =
   | "EmailWriter.MissingWords"
   | "EmailWriter.MissingFill";
 
-export class EmailWriterRefused extends Error {
-  readonly code: EmailWriterErrorCode;
-
-  constructor(code: EmailWriterErrorCode, message: string) {
-    super(message);
-    this.name = "EmailWriterRefused";
-    this.code = code;
-  }
-}
+export class EmailWriterRefused extends Refused<EmailWriterErrorCode> {}
 
 /**
  * The address the site's links are made with, from how the site is configured

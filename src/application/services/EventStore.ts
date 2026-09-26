@@ -1,5 +1,6 @@
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
+import { Refused } from "../../domain/common/Refused.js";
 
 /** Every reason an append, or a reading back, can be refused. */
 export type EventStoreErrorCode =
@@ -13,30 +14,14 @@ export type EventStoreErrorCode =
  * contract: a caller retries on a concurrency refusal and fixes its code on
  * the other kind, and it tells them apart by this rather than by the words.
  */
-export class AppendRefused extends Error {
-  readonly code: EventStoreErrorCode;
-
-  constructor(code: EventStoreErrorCode, message: string) {
-    super(message);
-    this.name = "AppendRefused";
-    this.code = code;
-  }
-}
+export class AppendRefused extends Refused<EventStoreErrorCode> {}
 
 /**
  * A stream the store will not read back. A stream is read to rebuild the thing
  * it belongs to, and a thing rebuilt from part of its history never existed,
  * so a stream is refused whole rather than read back with a gap in it.
  */
-export class ReadRefused extends Error {
-  readonly code: EventStoreErrorCode;
-
-  constructor(code: EventStoreErrorCode, message: string, cause?: unknown) {
-    super(message, cause === undefined ? undefined : { cause });
-    this.name = "ReadRefused";
-    this.code = code;
-  }
-}
+export class ReadRefused extends Refused<EventStoreErrorCode> {}
 
 /**
  * Where events are kept: a stream for each thing that lasts, named by its id,

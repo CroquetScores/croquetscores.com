@@ -8,6 +8,7 @@
 // reCAPTCHA is the only way a reader is judged here, so the failure a caller
 // handles is named for reCAPTCHA rather than for an interface that would have
 // only ever had one thing behind it (RecaptchaReaderCheck.feature says why).
+import { Refused } from "../../domain/common/Refused.js";
 
 /** Where Google answers a token. */
 export const recaptchaSiteVerify =
@@ -46,19 +47,7 @@ export type RecaptchaReaderCheckErrorCode = "RecaptchaReaderCheck.Unreachable";
  * suspending registering until Google is back — is the caller's to say, and
  * the caller tells this apart from a judgement by the code, not by the words.
  */
-export class JudgingRefused extends Error {
-  readonly code: RecaptchaReaderCheckErrorCode;
-
-  constructor(
-    code: RecaptchaReaderCheckErrorCode,
-    message: string,
-    cause?: unknown,
-  ) {
-    super(message, cause === undefined ? undefined : { cause });
-    this.name = "JudgingRefused";
-    this.code = code;
-  }
-}
+export class JudgingRefused extends Refused<RecaptchaReaderCheckErrorCode> {}
 
 // The parts of Google's answer this reads, each still unknown: it is JSON from
 // outside, so nothing about it is known until it has been looked at.

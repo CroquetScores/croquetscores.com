@@ -2,6 +2,7 @@ import { AggregateRoot } from "../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../common/DomainEvent.js";
 import type { Id } from "../../common/Id.js";
 import { ReadOnlyDate } from "../../common/ReadOnlyDate.js";
+import { Refused } from "../../common/Refused.js";
 import { Slug } from "../../common/Slug.js";
 import { Website } from "../../common/Website.js";
 import type { AccountId } from "../accounts/AccountId.js";
@@ -79,15 +80,7 @@ export type TournamentErrorCode =
  * A tournament's refusal, named by its code. The code is what whoever asked
  * decides by; the message is only for whoever reads the log.
  */
-export class TournamentRefused extends Error {
-  readonly code: TournamentErrorCode;
-
-  constructor(code: TournamentErrorCode, message: string) {
-    super(message);
-    this.name = "TournamentRefused";
-    this.code = code;
-  }
-}
+export class TournamentRefused extends Refused<TournamentErrorCode> {}
 
 /**
  * What creating a tournament says, and updating it says again. Its region is

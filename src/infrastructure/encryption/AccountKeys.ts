@@ -21,6 +21,7 @@ import {
 } from "node:crypto";
 
 import type { Id } from "../../domain/common/Id.js";
+import { Refused } from "../../domain/common/Refused.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 
 /** Every reason the account key store refuses. */
@@ -29,15 +30,7 @@ export type AccountKeysErrorCode =
   | "AccountKeys.WrongSiteKey"
   | "AccountKeys.Tampered";
 
-export class AccountKeysRefused extends Error {
-  readonly code: AccountKeysErrorCode;
-
-  constructor(code: AccountKeysErrorCode, message: string, cause?: unknown) {
-    super(message, cause === undefined ? undefined : { cause });
-    this.name = "AccountKeysRefused";
-    this.code = code;
-  }
-}
+export class AccountKeysRefused extends Refused<AccountKeysErrorCode> {}
 
 // What an encryption is kept as: which way it was made, and then its nonce,
 // its tag and what was encrypted, together, in base64.
