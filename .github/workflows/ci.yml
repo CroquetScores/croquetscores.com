@@ -26,7 +26,11 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
       - run: npm run db:up
-      - run: npm test
+      # Two workers rather than the six cucumber.json asks for: the runner has
+      # two cores, and workers beyond them only wait their turn for one. Asked
+      # of test:features rather than test, because test runs it through a
+      # second npm run, and npm keeps what follows the -- for itself.
+      - run: npm run test:features -- --parallel 2
       - if: always()
         run: npm run db:down
       - if: always()
