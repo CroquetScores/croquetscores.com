@@ -1,3 +1,4 @@
+import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a competition name can break. */
@@ -5,12 +6,6 @@ export type CompetitionNameErrorCode =
   "CompetitionName.Missing" | "CompetitionName.TooLong";
 
 const MOST_CHARACTERS = 254;
-
-// Characters as a reader counts them, as a person's name counts them, so that
-// a name is not refused for how its keyboard spelled an accent.
-const graphemes = new Intl.Segmenter();
-const charactersIn = (text: string): number =>
-  [...graphemes.segment(text)].length;
 
 // There is no fewest beyond one, as there is for a person's name: a block is
 // often called by a letter alone, and "A" is a whole name for one.
