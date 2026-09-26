@@ -46,6 +46,7 @@ import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
+import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
 import {
   loadConfig,
@@ -338,7 +339,8 @@ export interface ApplicationOptions {
 
 // Every kind of event the application records, each named once by the name it
 // is kept under, and how it is read back.
-const events = (): EventRegistry => nameAccountEvents(new EventRegistry());
+const events = (): EventRegistry =>
+  nameTournamentEvents(nameAccountEvents(new EventRegistry()));
 
 export const buildApplication = async (
   config: Config,
