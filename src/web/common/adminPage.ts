@@ -80,6 +80,9 @@ export const adminPage = (built: string, request: FastifyRequest): string => {
           {
             speaking,
             siteName,
+            // Every page of the admin is the admin to the navigation, which
+            // has one way in to it however deep the reader has gone.
+            currentPath: "/admin/",
             signedIn: signedIn(request),
             hasPassword: hasPassword(request),
           },

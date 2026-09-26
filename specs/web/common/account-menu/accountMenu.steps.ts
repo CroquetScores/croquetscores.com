@@ -238,3 +238,42 @@ Then(
     );
   },
 );
+
+// What the stylesheet draws the item `item` with, found by its place among the
+// menu's links and read as an expression, as the other steps read what they
+// run in the page, since the specs are typed without the browser's own types.
+const drawnItem = async (
+  world: SpecWorld,
+  item: string,
+  property: string,
+): Promise<string> => {
+  const items = ".account-menu-links a";
+  const at = (await menuOf(world).locator(items).allTextContents()).indexOf(
+    item,
+  );
+  assert.ok(at >= 0, `The menu has no item ${item}.`);
+  return world.browserPage.evaluate<string>(
+    `getComputedStyle(document.querySelectorAll(".account-menu ${items}")[${String(at)}]).${property}`,
+  );
+};
+
+Then(
+  "the menu shows {string} on black",
+  async function (this: SpecWorld, item: string) {
+    assert.equal(
+      await drawnItem(this, item, "backgroundColor"),
+      "rgb(0, 0, 0)",
+    );
+  },
+);
+
+Then(
+  "the menu does not underline {string}",
+  async function (this: SpecWorld, item: string) {
+    assert.ok(
+      !(await drawnItem(this, item, "textDecorationLine")).includes(
+        "underline",
+      ),
+    );
+  },
+);

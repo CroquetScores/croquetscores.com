@@ -25,6 +25,48 @@ Feature: Finding your way around the public site
       Then the menu button is visible
       And the link "Tournaments" is not visible
 
+  Rule: The page being read is marked as the current section is
+
+    The navigation marks the page being read the way the section bar marks the
+    section being read: a tile of its own, black in light and pale in dark,
+    with no line under the words. An underline read as a link like any other
+    rather than as where the reader is, and one mark for being here, wherever
+    it is on the page, is one thing to learn rather than two (`LAYOUT.md`).
+
+    Scenario: The page being read is marked
+      Given a viewport 1200 pixels wide
+      When the home page is opened
+      Then the link "Home" is marked as the page being read
+
+    Scenario: A page not being read is not marked
+      Given a viewport 1200 pixels wide
+      When the home page is opened
+      Then the link "Help" is not marked as the page being read
+
+    Scenario: The page being read is on black in light
+      Given a viewport 1200 pixels wide
+      And a machine that prefers light
+      When the home page is opened
+      Then the link "Home" is on black
+
+    Scenario: The page being read is on the current section's colour in dark
+      Given a viewport 1200 pixels wide
+      And a machine that prefers dark
+      When the home page is opened
+      Then the link "Home" is on the colour the current section is on
+
+    Scenario: The page being read is not underlined
+      Given a viewport 1200 pixels wide
+      When the home page is opened
+      Then the link "Home" is not underlined
+
+    Scenario: The page being read is on black in the menu on a phone
+      Given a viewport 375 pixels wide
+      And a machine that prefers light
+      And the home page is open
+      When the menu button is pressed
+      Then the link "Home" is on black
+
   Rule: The menu needs no scripting
 
     Scenario: Pressing the button reveals the links
