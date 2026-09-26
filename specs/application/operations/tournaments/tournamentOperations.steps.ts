@@ -133,6 +133,9 @@ const updated = async (
         sport: as.sport.code,
         country: as.country.code,
         region: as.region.code,
+        // Said again as it is, since an update says everything the
+        // tournament is, and one without its notes would take them away.
+        ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
         handicap: as.handicap,
         worldRankings: as.worldRankings,
         national: as.national,
