@@ -2,7 +2,7 @@
 // from the codes rather than asked of Intl.DisplayNames each time, because what
 // that answers changes with the version of Node, and some of what it answers,
 // such as "Congo - Kinshasa", is not what a reader would look for in a list.
-// Every flag but the European Union's is a country's, and Countries.feature
+// Every flag is a country's, and Countries.feature
 // holds this list to the flags so that none is left out by mistake.
 export const countryNames: readonly (readonly [code: string, name: string])[] =
   [

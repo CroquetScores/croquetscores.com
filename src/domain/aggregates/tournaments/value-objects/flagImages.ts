@@ -71,7 +71,6 @@ export const flagImages: readonly string[] = [
   "famfamfam/flags/er.png",
   "famfamfam/flags/es.png",
   "famfamfam/flags/et.png",
-  "famfamfam/flags/europeanunion.png",
   "famfamfam/flags/fi.png",
   "famfamfam/flags/fj.png",
   "famfamfam/flags/fk.png",

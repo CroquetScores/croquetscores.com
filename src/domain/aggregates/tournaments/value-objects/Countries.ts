@@ -85,8 +85,7 @@ export class Countries {
   }
 
   /**
-   * The countries there are: every flag there is but the European Union's,
-   * each divided into the regions the old site gave it.
+   * The countries there are: one for every flag there is, each divided into the regions the old site gave it.
    */
   static readonly thereAre: Countries = Countries.from(
     Flags.thereAre,

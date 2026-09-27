@@ -5,10 +5,11 @@ Feature: The countries there are
   from a flag there is, and a name given for a code that no flag has is
   refused: it would be a country nobody could see the flag of.
 
-  Not every flag is a country's. The European Union's flag is a flag there
-  is, and is no country, so it is given no name and is not among the
-  countries. Every other flag is one: England, Scotland and Wales play croquet
-  as countries of their own, and are countries here, and so is Catalonia.
+  Every flag is a country's. England, Scotland and Wales play croquet as
+  countries of their own, and are countries here, and so is Catalonia. There
+  was a flag for the European Union, which is no country and which nobody
+  plays croquet for, and it has been taken away rather than kept as the one
+  flag that is not a country's.
 
   The names are written down once, in the code, one for each flag that is a
   country, worked out from its code: "au" is Australia, "im" is the Isle of
@@ -17,7 +18,7 @@ Feature: The countries there are
   with its version, and a country whose name changed under it would no longer
   be where a reader last found it. A list written down can leave a flag out
   by mistake, so the last rule holds the list to the flags: every flag there
-  is, but the European Union's, is a country there is.
+  is is a country there is.
 
   Two names given for one code are refused: a country is known by its code,
   and there is no saying which of the two it is called.
@@ -155,15 +156,11 @@ Feature: The countries there are
       When the countries are made
       Then it is refused for breaking "Countries.RegionsForNoCountry"
 
-  Rule: The countries there are are the flags there are, but the European Union's
+  Rule: The countries there are are the flags there are
 
-    Scenario: Every flag there is, but the European Union's, is a country there is
+    Scenario: Every flag there is is a country there is
       Given the countries there are
-      Then every flag there is but "europeanunion" is one of them
-
-    Scenario: The European Union is not a country
-      Given the countries there are
-      Then there is no country "europeanunion"
+      Then every flag there is is one of them
 
     Scenario Outline: A country there is is called by the name worked out from its code
       Given the countries there are
