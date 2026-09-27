@@ -282,6 +282,19 @@ export const happened = (
   scenarioOf(world).later.push(...tournament.handOver());
 };
 
+/**
+ * That the event `making` makes of the tournament the stream leaves happened
+ * after everything the stream holds already: for what no request to the
+ * tournament would record just so, such as a competition moved to an order
+ * the scenario names.
+ */
+export const happenedAs = (
+  world: SpecWorld,
+  making: (tournament: Tournament) => DomainEvent,
+): void => {
+  scenarioOf(world).later.push(making(rebuilt(world)));
+};
+
 export const tournamentOf = (world: SpecWorld): Tournament => {
   assert.ok(
     world.aggregate instanceof Tournament,
@@ -419,16 +432,24 @@ export const drawOfPlaces = (places: number): KnockoutDraw =>
     Array.from({ length: Math.log2(places) }, () => 1),
   );
 
+// The thing the tournament recorded at `index`, the first being 0, which has
+// to be of the kind `kind`.
+export const assertRecordedAt = <T extends DomainEvent>(
+  world: SpecWorld,
+  index: number,
+  kind: abstract new (...args: never[]) => T,
+): T => {
+  const event = tournamentOf(world).recorded[index];
+  assert.ok(event !== undefined, `It recorded nothing at ${String(index)}.`);
+  assert.ok(event instanceof kind, `It recorded ${inspect(event)}.`);
+  return event;
+};
+
 // The first thing the tournament recorded, which has to be of the kind `kind`.
 export const assertFirstRecorded = <T extends DomainEvent>(
   world: SpecWorld,
   kind: abstract new (...args: never[]) => T,
-): T => {
-  const event = tournamentOf(world).recorded[0];
-  assert.ok(event !== undefined, "It recorded nothing.");
-  assert.ok(event instanceof kind, `It recorded ${inspect(event)}.`);
-  return event;
-};
+): T => assertRecordedAt(world, 0, kind);
 
 // What the scenario's update says a block's name is, and what it is the best
 // of, and otherwise what `found` is already: for a knockout, which is the best
