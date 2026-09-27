@@ -86,7 +86,6 @@ Feature: The managers tab of a tournament's page
 
     Scenario: A forgotten account that manages the tournament is not listed
       Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
       And the account for "someone@example.com" has been forgotten
       When the managers of "Spring Open" are opened
       Then 1 manager is listed

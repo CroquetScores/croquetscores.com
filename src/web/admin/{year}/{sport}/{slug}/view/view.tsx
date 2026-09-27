@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
+import { ScorersTab } from "./tabs/scorers/scorers.js";
 import "./view.css";
 
 // A tournament's page (view.feature): headed by its name, with what there is
@@ -122,6 +123,9 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 tournament={asked.tournament.id}
                 address={asked.tournament.address}
               />
+            ) : null}
+            {chosen === "scorers" ? (
+              <ScorersTab tournament={asked.tournament.id} />
             ) : null}
           </div>
         </div>

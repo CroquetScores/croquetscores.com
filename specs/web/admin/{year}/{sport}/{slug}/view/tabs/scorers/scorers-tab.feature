@@ -79,7 +79,6 @@ Feature: The scorers tab of a tournament's page
 
     Scenario: A forgotten account that scores the tournament is not listed
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
       And the account for "someone@example.com" has been forgotten
       When the scorers of "Spring Open" are opened
       Then the tab says there are no scorers

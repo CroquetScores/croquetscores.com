@@ -333,6 +333,25 @@ export const english: Language = {
     "admin.competitions.restore": "Restore",
     "admin.competitions.archived": "Archived competitions",
     "admin.competitions.none": "No competitions",
+    // Every modal dialog's way out, since the page beneath cannot be reached.
+    "admin.modal.cancel": "Cancel",
+    // The Managers and Scorers tabs, each of which makes somebody one by their
+    // email address and takes one off.
+    "admin.people.emailAddress": "Email address",
+    "admin.people.remove": "Remove",
+    // Beside the reader's own name among the managers.
+    "admin.managers.you": "You",
+    "admin.scorers.add": "Add Scorer",
+    "admin.scorers.none": "No scorers",
+    "admin.scorers.removeTitle": "Remove Scorer",
+    "admin.scorers.removeExplanation":
+      "{name} will no longer be able to enter the scores of this tournament.",
+    // Beneath the field, for a refusal with no words of its own.
+    "admin.scorers.otherwise": "That address cannot be made a scorer.",
+    "AddScorer.NoSuchAccount":
+      "That address has no account that can be made a scorer.",
+    "Tournament.AlreadyAManager":
+      "That account manages the tournament already, and can do everything a scorer can.",
 
     // A tournament's refusals, keyed by their codes as every rule broken is.
     // Beneath the field each is about, or in place of the form where the page

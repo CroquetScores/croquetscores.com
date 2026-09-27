@@ -11,7 +11,10 @@ import { ArchiveCompetition } from "../../../application/operations/tournaments/
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { CreateTournament } from "../../../application/operations/tournaments/CreateTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
+import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
+import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
 import { RestoreCompetition } from "../../../application/operations/tournaments/RestoreCompetition.js";
+import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
 import type { TournamentRequest } from "../../../application/operations/tournaments/tournamentOperations.js";
 import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
@@ -313,6 +316,58 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
       },
     );
   }
+
+  // A tournament's scorers, as its manager lists them.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/scorers",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const scorers = await request.server.mediator.query(
+        new ScorersOfTournament(
+          reader.value,
+          `tournament/${request.params.id}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ scorers });
+    },
+  );
+
+  // Somebody made a scorer, by their email address.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/scorers",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new AddScorer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          textOf(request.body, "emailAddress"),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A scorer taken off, by the part of their account's id after "account/".
+  server.post<{ Params: { id: string; account: string } }>(
+    "/tournaments/:id/scorers/:account/remove",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new RemoveScorer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `account/${request.params.account}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
 
   done();
 };

@@ -309,6 +309,20 @@ export const spanish: Language = {
     "admin.competitions.restore": "Restaurar",
     "admin.competitions.archived": "Competiciones archivadas",
     "admin.competitions.none": "No hay competiciones",
+    "admin.modal.cancel": "Cancelar",
+    "admin.people.emailAddress": "Dirección de correo electrónico",
+    "admin.people.remove": "Quitar",
+    "admin.managers.you": "Tú",
+    "admin.scorers.add": "Añadir anotador",
+    "admin.scorers.none": "No hay anotadores",
+    "admin.scorers.removeTitle": "Quitar anotador",
+    "admin.scorers.removeExplanation":
+      "{name} ya no podrá anotar los resultados de este torneo.",
+    "admin.scorers.otherwise": "Esa dirección no se puede hacer anotadora.",
+    "AddScorer.NoSuchAccount":
+      "Esa dirección no tiene ninguna cuenta que se pueda hacer anotadora.",
+    "Tournament.AlreadyAManager":
+      "Esa cuenta ya gestiona el torneo, y puede hacer todo lo que hace un anotador.",
 
     "TournamentName.Missing": "Di cómo se llama el torneo.",
     "TournamentName.TooShort": "Ese nombre es demasiado corto.",

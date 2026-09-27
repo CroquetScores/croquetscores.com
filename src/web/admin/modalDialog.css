@@ -1,0 +1,17 @@
+/* A modal dialog (STYLE.md §5c), drawn as a dialog is and laid over the page:
+   centred, 32rem at most and the full width inside the gutter on a phone. A
+   dialog taller than the window scrolls within itself, and the page beneath
+   stays where it was. */
+.modal-dialog {
+  width: calc(100% - 2 * var(--space-4));
+  max-height: calc(100% - 2 * var(--space-4));
+  padding: 0;
+  overflow-y: auto;
+  background: var(--panel);
+  color: var(--ink);
+}
+
+/* The page behind it dimmed, so that what can be used is what stands out. */
+.modal-dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}

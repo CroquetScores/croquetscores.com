@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { Field, type Refusal } from "../Field.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
 
@@ -45,11 +46,6 @@ const fieldOfRefusal: Readonly<Record<string, string>> = {
 const wordsFor = (code: string): string =>
   say(knows(code) ? code : "admin.tournament.otherwise");
 
-interface Refusal {
-  readonly code: string;
-  readonly words: string;
-}
-
 const refusal = (code: string): Refusal => ({
   code,
   words: wordsFor(code),
@@ -79,68 +75,6 @@ const placed = (
     above.push(refusal("Unknown"));
   }
   return { byField, above };
-};
-
-interface FieldProps {
-  readonly name: string;
-  readonly label: string;
-  readonly refused: readonly Refusal[] | undefined;
-  /** A field whose label is always lifted: one that is never empty to look at. */
-  readonly lifted?: boolean;
-  readonly children: (said: {
-    id: string;
-    "aria-labelledby": string;
-    "aria-describedby"?: string;
-    "aria-invalid"?: true;
-  }) => React.JSX.Element;
-}
-
-// A field drawn as every dialog's is (STYLE.md §5b): the box is the label, the
-// label lies on the line until the field is in use, and what is wrong with it
-// is beneath it, tied to it so that it is read out with it.
-const Field = ({
-  name,
-  label,
-  refused,
-  lifted,
-  children,
-}: FieldProps): React.JSX.Element => {
-  const id = `field-${name}`;
-  const labelId = `${id}-label`;
-  const messageId = `${id}-message`;
-  const wrong = refused !== undefined && refused.length > 0;
-  return (
-    <div className="field">
-      <label
-        className={lifted === true ? "field-box field-box-lifted" : "field-box"}
-        htmlFor={id}
-      >
-        {/* Named by the label's words alone: a list inside the label would
-            otherwise take the choice it shows into its own name. */}
-        {children({
-          id,
-          "aria-labelledby": labelId,
-          ...(wrong
-            ? { "aria-describedby": messageId, "aria-invalid": true }
-            : {}),
-        })}
-        <span className="field-label" id={labelId}>
-          {label}
-        </span>
-      </label>
-      {wrong ? (
-        <p
-          className="field-message"
-          id={messageId}
-          data-refused={refused.map(({ code }) => code).join(" ")}
-        >
-          {refused.map(({ code, words }) => (
-            <span key={code}>{words}</span>
-          ))}
-        </p>
-      ) : null}
-    </div>
-  );
 };
 
 interface TickProps {

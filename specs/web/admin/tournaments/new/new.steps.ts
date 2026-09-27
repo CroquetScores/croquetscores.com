@@ -13,11 +13,16 @@ import { keptCalled } from "../../../support/tournaments.js";
 
 const newTournament = "/admin/tournaments/new";
 
+// The admin's forms: the one a page is for, a tab's own, and one in a modal
+// dialog, which is the only one that can be used while it is open.
+const forms =
+  "dialog[open] form, body:not(:has(dialog[open])) :is(form.dialog-form, form.tab-form)";
+
 // The form, or what the page says in its place where the reader cannot use
 // it (edit.feature): either is the page drawn.
 const drawn = async (world: SpecWorld): Promise<void> => {
   await world.browserPage
-    .locator("form.dialog-form, main .page-refused")
+    .locator(`${forms}, main .page-refused`)
     .first()
     .waitFor();
 };
@@ -44,9 +49,7 @@ const eventually = async (
 // A field by the words it is labelled with, which is how the reader and a
 // screen reader find it.
 const field = (world: SpecWorld, label: string): Locator =>
-  world.browserPage
-    .locator("form.dialog-form")
-    .getByLabel(label, { exact: true });
+  world.browserPage.locator(forms).getByLabel(label, { exact: true });
 
 const openNewTournament = async function (this: SpecWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${newTournament}`);
@@ -291,7 +294,49 @@ Given(
   },
 );
 
+Then(
+  "the tab asks for {string}",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.equal(await field(this, label).count(), 1);
+    });
+  },
+);
+
+Then("{string} has the focus", async function (this: SpecWorld, label: string) {
+  await eventually(this, async () => {
+    // By its id, which every field of the admin's has (Field.tsx).
+    const id = await field(this, label).getAttribute("id");
+    const focused = await this.browserPage.evaluate<string>(
+      "document.activeElement?.id ?? ''",
+    );
+    assert.equal(focused, id, `${label} does not have the focus.`);
+  });
+});
+
+Then(
+  "{string} says {string}",
+  async function (this: SpecWorld, label: string, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await field(this, label).inputValue(), words);
+    });
+  },
+);
+
 // What was refused -------------------------------------------------------------
+
+Then(
+  "nothing is said beneath {string}",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await field(this, label).getAttribute("aria-describedby"),
+        null,
+        `Something is said beneath ${label}.`,
+      );
+    });
+  },
+);
 
 // Read from what the field is described by, which is what a screen reader
 // reads out with it, so that a refusal said somewhere else on the page does
