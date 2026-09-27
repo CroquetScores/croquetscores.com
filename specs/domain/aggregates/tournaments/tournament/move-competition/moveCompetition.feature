@@ -35,7 +35,8 @@ Feature: Moving a tournament's competition up or down
   mistake worth refusing.
 
   An archived tournament can only be restored (`restore.feature`), so moving a
-  competition in one is refused.
+  competition in one is refused, and only its managers can move one
+  (`onlyManagers.feature`).
 
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
@@ -69,7 +70,17 @@ Feature: Moving a tournament's competition up or down
       When the competition "Block B" is moved up
       Then the tournament's competition "Block B" has the order 5000
 
-    Scenario: Halfway is rounded down
+    Scenario: Halfway between two is rounded down
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the block "Block B" was added to it
+      And the block "Block C" was added to it
+      And the competition "Block B" was moved to the order 20001
+      And the tournament is rebuilt from the stream
+      When the competition "Block C" is moved up
+      Then the tournament's competition "Block C" has the order 15000
+
+    Scenario: Half the order of the first is rounded down
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it

@@ -24,6 +24,9 @@ Feature: The players of a tournament, as a manager lists them
   `Tournament.NotAManager`. A tournament there is not is refused as
   `PlayersOfTournament.NoSuchTournament`.
 
+  A forgotten account lists nothing, and is refused with `Account.Forgotten`,
+  as it is when it asks to change the tournament.
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -37,37 +40,37 @@ Feature: The players of a tournament, as a manager lists them
 
     Scenario: A tournament with no players is answered with none
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then no players are listed
+      Then no players are answered
 
     Scenario: A player added is listed
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed
+      Then the player "Sam Someone" is answered
 
     Scenario: The players are in order of their names, whatever order they were added in
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the first player listed is "Alex Another"
+      Then the first player answered is "Alex Another"
 
     Scenario: A name in lower case comes where it would in capitals
       Given "organiser@example.com" has added the player "Edith Evans" to "Spring Open"
       And "organiser@example.com" has added the player "de Villiers" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the first player listed is "de Villiers"
+      Then the first player answered is "de Villiers"
 
     Scenario: A name with an accent comes where it would without one
       Given "organiser@example.com" has added the player "Frank Fisher" to "Spring Open"
       And "organiser@example.com" has added the player "Émile Dubois" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the first player listed is "Émile Dubois"
+      Then the first player answered is "Émile Dubois"
 
     Scenario: A renamed player comes where their new name does
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has renamed the player "Sam Someone" of "Spring Open" to "Aaron Someone"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the first player listed is "Aaron Someone"
+      Then the first player answered is "Aaron Someone"
 
   Rule: Each player is answered with what they are
 
@@ -75,24 +78,24 @@ Feature: The players of a tournament, as a manager lists them
       Given the player is to represent "Canterbury Croquet Club"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed representing "Canterbury Croquet Club"
+      Then the player "Sam Someone" is answered representing "Canterbury Croquet Club"
 
     Scenario: A player is listed with the flag they fly
       Given the player is to fly the flag "nz"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed flying the flag "nz"
+      Then the player "Sam Someone" is answered flying the flag "nz"
 
     Scenario: An archived player is listed as archived
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed as archived
+      Then the player "Sam Someone" is answered as archived
 
     Scenario: A player not archived is listed as not archived
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed as not archived
+      Then the player "Sam Someone" is answered as not archived
 
   Rule: The application's games say whether each player has played
 
@@ -100,12 +103,12 @@ Feature: The players of a tournament, as a manager lists them
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And games that say the player "Sam Someone" in "Spring Open" has played
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed as having played
+      Then the player "Sam Someone" is answered as having played
 
     Scenario: A player the games say nothing of is listed as not having played
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is listed as not having played
+      Then the player "Sam Someone" is answered as not having played
 
   Rule: Only a manager of a tournament there is can list them
 
@@ -123,3 +126,11 @@ Feature: The players of a tournament, as a manager lists them
       And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
       When the reader signed in to the account for "scorer@example.com" lists the players of "Spring Open"
       Then it is refused with "Tournament.NotAManager"
+
+  Rule: A forgotten account lists nothing
+
+    Scenario: A forgotten account is refused
+      Given the account for "organiser@example.com" is taken hold of
+      And the account for "organiser@example.com" has been forgotten
+      When the reader signed in to that account lists the players of "Spring Open"
+      Then it is refused with "Account.Forgotten"

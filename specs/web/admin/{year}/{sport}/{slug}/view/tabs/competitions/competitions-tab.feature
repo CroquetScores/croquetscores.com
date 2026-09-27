@@ -28,8 +28,11 @@ Feature: The competitions tab of a tournament's page
   first: each is undone by pressing the other way, and a question before
   something that can be put back is a question the reader learns to press
   through. Whatever is pressed, the list is asked for again, so that it says
-  what the competitions are now rather than what was pressed. A competition
-  with games cannot be archived; nothing records games yet, so none has any.
+  what the competitions are now rather than what was pressed.
+
+  Every competition in use is offered Archive, whether or not it has games,
+  which are kept with it and come back when it is restored
+  (`archiveCompetition.feature`).
 
   Adding a competition and changing one are done in the competition dialog,
   from Add Competition above the list and Edit on each competition in use.

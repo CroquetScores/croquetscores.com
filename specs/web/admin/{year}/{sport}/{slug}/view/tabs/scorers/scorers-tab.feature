@@ -21,10 +21,11 @@ Feature: The scorers tab of a tournament's page
   the field is emptied, and the reader is back in it, for the next.
 
   The scorers are listed by name, in the order they were made
-  (`ScorersOfTournament.feature`). A tournament need not have any, and one with
-  none says so. A forgotten account that was a scorer is listed as a
-  forgotten account, since its name can no longer be read, so that it can
-  still be taken off.
+  (`ScorersOfTournament.feature`). A tournament need not have any, and one
+  with none says so. A forgotten account is not listed, as no query answers
+  one unless it is expressly asked to. So a forgotten account cannot be taken
+  off from here either; it can never sign in again, so one left among the
+  scorers can do nothing.
 
   Each scorer offers Remove, which takes them off the scorers. Taking a scorer
   off is not archiving them: nothing is kept of them, so they are not listed
@@ -76,12 +77,12 @@ Feature: The scorers tab of a tournament's page
       When the scorers of "Spring Open" are opened
       Then the tab says there are no scorers
 
-    Scenario: A forgotten account that scores the tournament is listed as forgotten
+    Scenario: A forgotten account that scores the tournament is not listed
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       And the account for "someone@example.com" is taken hold of
       And the account for "someone@example.com" has been forgotten
       When the scorers of "Spring Open" are opened
-      Then the first scorer listed is a forgotten account
+      Then the tab says there are no scorers
 
   Rule: Somebody is made a scorer by their email address
 
@@ -227,14 +228,6 @@ Feature: The scorers tab of a tournament's page
       When "Remove" is pressed on the scorer "Sam Someone"
       Then the modal dialog's second button is "Cancel"
 
-    Scenario: Asking before removing a forgotten account says it is one
-      Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
-      And the scorers of "Spring Open" are open
-      When "Remove" is pressed on the first scorer
-      Then the modal dialog names a forgotten account
-
   Rule: Remove in the modal dialog takes the scorer off
 
     Scenario: Removing a scorer takes them off the list
@@ -266,15 +259,6 @@ Feature: The scorers tab of a tournament's page
       And "Remove" is pressed on the scorer "Sam Someone"
       When "Remove" is pressed in the modal dialog
       Then no modal dialog is open
-
-    Scenario: A forgotten account can be removed
-      Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
-      And the scorers of "Spring Open" are open
-      And "Remove" is pressed on the first scorer
-      When "Remove" is pressed in the modal dialog
-      Then the tab says there are no scorers
 
   Rule: Cancel in the modal dialog takes nobody off
 
@@ -314,14 +298,6 @@ Feature: The scorers tab of a tournament's page
 
     Scenario: A tournament with no scorers says so in the reader's language
       Given a browser that asks for "en-XA"
-      When the scorers of "Spring Open" are opened
-      Then every word in the tab but the scorers' names is in the test locale
-
-    Scenario: A forgotten scorer is listed in the reader's language
-      Given a browser that asks for "en-XA"
-      And "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
       When the scorers of "Spring Open" are opened
       Then every word in the tab but the scorers' names is in the test locale
 

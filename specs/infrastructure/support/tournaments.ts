@@ -80,14 +80,11 @@ Given("the application's tournaments", function (this: SpecWorld) {
   // which is what the application's own games say while nothing has been.
   const said = {
     playersWhoHavePlayed: new Set<string>(),
-    competitionsWithGames: new Set<string>(),
     knockoutsWhoseChangeMovesAPlayer: new Set<string>(),
   };
   const games: Games = {
     hasPlayed: (_tournament, player) =>
       Promise.resolve(said.playersWhoHavePlayed.has(player.value)),
-    hasGames: (_tournament, competition) =>
-      Promise.resolve(said.competitionsWithGames.has(competition.value)),
     movesAPlayerWhoHasPlayed: (_tournament, competition) =>
       Promise.resolve(
         said.knockoutsWhoseChangeMovesAPlayer.has(competition.value),
@@ -125,7 +122,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
-  mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
   mediator.handleCommand(new AddManagerHandler(...both, accounts.readModel));
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));

@@ -8,15 +8,19 @@ Feature: The scorers of a tournament, as a manager lists them
   (`RemoveScorer.feature`), and its name, which is what a reader knows
   somebody by.
 
-  A forgotten account's name can no longer be read, and a forgotten account
-  that was a scorer still is one until somebody takes it off. So it is
-  listed, with no name, and said to be forgotten, so that it can be taken off.
+  A forgotten account is not answered, though the tournament still counts it
+  among its scorers until somebody takes it off: no query answers a forgotten
+  account unless it is expressly asked to, and this one is not. Its name
+  could not be read in any case.
 
   It answers the account the reader is signed in to, and never one the reader
   chose. Only the tournament's managers can ask, since the list is for
   managing its scorers: anybody else, a scorer among them, is refused with
   `Tournament.NotAManager`. A tournament there is not is refused as
   `ScorersOfTournament.NoSuchTournament`.
+
+  A forgotten account lists nothing, and is refused with `Account.Forgotten`,
+  as it is when it asks to change the tournament.
 
   These scenarios run against Postgres, with the application's event store and
   read models.
@@ -33,50 +37,43 @@ Feature: The scorers of a tournament, as a manager lists them
 
     Scenario: A tournament with no scorers is answered with none
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then no scorers are listed
+      Then no scorers are answered
 
     Scenario: A scorer made is listed
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the scorer "Sam Someone" is listed
+      Then the scorer "Sam Someone" is answered
 
     Scenario: The first scorer made is listed first
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       And "organiser@example.com" has made "another@example.com" a scorer of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the first scorer listed is "Sam Someone"
+      Then the first scorer answered is "Sam Someone"
 
     Scenario: A scorer taken off is not listed
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       And "organiser@example.com" has taken "someone@example.com" off the scorers of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the scorer "Sam Someone" is not listed
+      Then the scorer "Sam Someone" is not answered
 
     Scenario: A scorer made a manager is not listed
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       And "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the scorer "Sam Someone" is not listed
+      Then the scorer "Sam Someone" is not answered
 
     Scenario: A manager is not listed
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the scorer "Ollie Organiser" is not listed
+      Then the scorer "Ollie Organiser" is not answered
 
-  Rule: A forgotten account that scores the tournament is listed as forgotten
+  Rule: A forgotten account is not answered
 
-    Scenario: A forgotten scorer is listed as forgotten
+    Scenario: A forgotten scorer is not answered
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       And the account for "someone@example.com" is taken hold of
       And the account for "someone@example.com" has been forgotten
       When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the first scorer listed is forgotten
-
-    Scenario: A forgotten scorer is listed with no name
-      Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
-      When the reader signed in to the account for "organiser@example.com" lists the scorers of "Spring Open"
-      Then the scorer "Sam Someone" is not listed
+      Then no scorers are answered
 
   Rule: Only a manager of a tournament there is can list them
 
@@ -92,3 +89,11 @@ Feature: The scorers of a tournament, as a manager lists them
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       When the reader signed in to the account for "someone@example.com" lists the scorers of "Spring Open"
       Then it is refused with "Tournament.NotAManager"
+
+  Rule: A forgotten account lists nothing
+
+    Scenario: A forgotten account is refused
+      Given the account for "organiser@example.com" is taken hold of
+      And the account for "organiser@example.com" has been forgotten
+      When the reader signed in to that account lists the scorers of "Spring Open"
+      Then it is refused with "Account.Forgotten"

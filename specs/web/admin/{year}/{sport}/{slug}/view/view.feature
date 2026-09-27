@@ -14,9 +14,9 @@ Feature: A tournament's page in the admin
   to the tournament, and the browser's back button leaves the page rather
   than going back through its tabs.
 
-  Each tab says what it holds in a feature of its own. The Competitions tab is
-  the first written (`competitions-tab.feature`); the others show nothing of
-  their own until theirs are.
+  Each tab says what it holds in a feature of its own
+  (`players-tab.feature`, `competitions-tab.feature`, `managers-tab.feature`
+  and `scorers-tab.feature`).
 
   Only a manager runs a tournament, so the page is refused as changing the
   tournament is (`edit.feature`), by the refusal's code in place of the tabs:

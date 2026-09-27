@@ -19,8 +19,9 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   where they pressed to open it.
 
   The dialog is on its Player tab, which is what this feature is about. What a
-  player is in each competition they play in is on the dialog's other tabs,
-  which are specified with the competitions (`competition-player.feature`).
+  player is in each competition they play in is to be on the dialog's other
+  tabs, which are to be specified with the competitions and are not written
+  yet (`TODO.md`), so until they are the dialog has only this one.
 
   Adding and changing are the one dialog, so that the two cannot come to ask
   different things. Opened by "Add Player", it is titled "Add Player", begins
@@ -376,7 +377,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And the page of "Spring Open" is open
       And the name of the player "Sam Someone" is pressed
-      And no flag is chosen
+      And none is chosen for the flag
       When "Save" is pressed
       Then the player "Sam Someone" of "Spring Open" flies no flag
 

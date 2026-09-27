@@ -385,18 +385,6 @@ Given(
 );
 
 Given(
-  "games that say the competition {string} in {string} has games",
-  async function (this: SpecWorld, competition: string, name: string) {
-    const id = await competitionIn(
-      this,
-      tournamentNamed(this, name),
-      competition,
-    );
-    inHandOf(this).games.competitionsWithGames.add(id.value);
-  },
-);
-
-Given(
   "games that say the change to the knockout {string} in {string} moves a player who has played",
   async function (this: SpecWorld, knockout: string, name: string) {
     const id = await competitionIn(this, tournamentNamed(this, name), knockout);

@@ -44,7 +44,6 @@ export const tournamentsThrough = (
     // browser scenario does records a game.
     games: {
       playersWhoHavePlayed: new Set(),
-      competitionsWithGames: new Set(),
       knockoutsWhoseChangeMovesAPlayer: new Set(),
     },
     accountFor: (address) =>

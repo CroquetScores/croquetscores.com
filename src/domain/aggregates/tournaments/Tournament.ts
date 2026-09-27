@@ -74,7 +74,6 @@ export type TournamentErrorCode =
   | "Tournament.CompetitionNameTaken"
   | "Tournament.NoSuchCompetition"
   | "Tournament.CompetitionArchived"
-  | "Tournament.CompetitionHasGames"
   | "Tournament.NotABlock"
   | "Tournament.NotAKnockout"
   | "Tournament.NotASwiss"
@@ -685,23 +684,14 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That the competition `id`, of whatever kind, is set aside. Whether it has
-   * any games is the competition's to know and not the tournament's, so
-   * whatever asks says, and one that has is refused. Archiving one that is
-   * archived records nothing.
+   * That the competition `id`, of whatever kind, is set aside, whether or not
+   * it has games: they are kept with it, and come back when it is restored.
+   * Archiving one that is archived records nothing.
    */
-  archiveCompetition(
-    id: CompetitionId,
-    hasGames: boolean,
-    by: AccountId,
-    at: ReadOnlyDate,
-  ): void {
+  archiveCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     if (this.#competitionFound(id).reference.archived) return;
-    if (hasGames) {
-      refuse("Tournament.CompetitionHasGames", "The competition has games.");
-    }
     this.record(new CompetitionArchived(id.value, by, at));
   }
 

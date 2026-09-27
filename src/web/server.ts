@@ -649,7 +649,7 @@ export const buildApplication = async (
   mediator.handleCommand(new UpdateKnockoutHandler(...both, noGamesYet));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
-  mediator.handleCommand(new ArchiveCompetitionHandler(...both, noGamesYet));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
   mediator.handleCommand(
     new AddManagerHandler(...both, accountsByEmailAddress),

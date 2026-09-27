@@ -34,7 +34,6 @@ export interface TournamentsInHand {
   /** What the games the operations ask say has been played, by id. */
   readonly games: {
     readonly playersWhoHavePlayed: Set<string>;
-    readonly competitionsWithGames: Set<string>;
     readonly knockoutsWhoseChangeMovesAPlayer: Set<string>;
   };
 }

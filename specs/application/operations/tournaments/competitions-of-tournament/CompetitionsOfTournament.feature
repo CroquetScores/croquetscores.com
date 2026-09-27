@@ -14,6 +14,9 @@ Feature: The competitions of a tournament, as its manager lists them
   `Tournament.NotAManager`. A tournament there is not is refused as
   `CompetitionsOfTournament.NoSuchTournament`.
 
+  A forgotten account lists nothing, and is refused with `Account.Forgotten`,
+  as it is when it asks to change the tournament.
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -27,35 +30,35 @@ Feature: The competitions of a tournament, as its manager lists them
 
     Scenario: A tournament with no competitions is answered with none
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then no competitions are listed
+      Then no competitions are answered
 
     Scenario: The first competition is the lowest in the tournament's order
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has moved the competition "Block B" in "Spring Open" up
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then the first competition listed is "Block B"
+      Then the first competition answered is "Block B"
 
     Scenario: An archived competition is listed
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then the competition "Block A" is listed as archived
+      Then the competition "Block A" is answered as archived
 
     Scenario: A competition not archived is listed as not archived
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then the competition "Block A" is listed as not archived
+      Then the competition "Block A" is answered as not archived
 
     Scenario: A competition is listed with its slug
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then the competition "Block A" is listed with the slug "block-a"
+      Then the competition "Block A" is answered with the slug "block-a"
 
     Scenario Outline: A competition is listed with its kind
       Given "organiser@example.com" has added the <kind> "Final Stage" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then the competition "Final Stage" is listed as a <kind>
+      Then the competition "Final Stage" is answered as a <kind>
 
       Examples:
         | kind     |
@@ -79,3 +82,11 @@ Feature: The competitions of a tournament, as its manager lists them
       And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
       When the reader signed in to the account for "scorer@example.com" lists the competitions of "Spring Open"
       Then it is refused with "Tournament.NotAManager"
+
+  Rule: A forgotten account lists nothing
+
+    Scenario: A forgotten account is refused
+      Given the account for "organiser@example.com" is taken hold of
+      And the account for "organiser@example.com" has been forgotten
+      When the reader signed in to that account lists the competitions of "Spring Open"
+      Then it is refused with "Account.Forgotten"

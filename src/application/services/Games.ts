@@ -16,12 +16,6 @@ export interface Games {
     player: TournamentPlayerId,
   ): Promise<boolean>;
 
-  /** Whether `competition` in `tournament` has any games. */
-  hasGames(
-    tournament: TournamentId,
-    competition: CompetitionId,
-  ): Promise<boolean>;
-
   /**
    * Whether changing the knockout `competition` in `tournament` to a draw of
    * `draw`'s shape moves a player who has played in it.
@@ -35,12 +29,11 @@ export interface Games {
 
 /**
  * The application's games, until something records them. There is nothing to
- * find, so nobody has played, no competition has any games, and no change to a
- * draw moves anybody who has played. Whatever records games replaces this, and
+ * find, so nobody has played, and no change to a draw moves anybody who has
+ * played. Whatever records games replaces this, and
  * is held to the same questions.
  */
 export const noGamesYet: Games = {
   hasPlayed: () => Promise.resolve(false),
-  hasGames: () => Promise.resolve(false),
   movesAPlayerWhoHasPlayed: () => Promise.resolve(false),
 };

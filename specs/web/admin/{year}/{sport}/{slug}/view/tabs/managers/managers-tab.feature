@@ -20,9 +20,10 @@ Feature: The managers tab of a tournament's page
 
   The managers are listed by name, in the order they were made, whoever
   created the tournament first (`ManagersOfTournament.feature`). The reader's
-  own name is said to be theirs. A forgotten account that was a manager is
-  listed as a forgotten account, since its name can no longer be read, so
-  that it can still be taken off.
+  own name is said to be theirs. A forgotten account is not listed, as no
+  query answers one unless it is expressly asked to. So a forgotten account
+  cannot be taken off from here either; it can never sign in again, so one
+  left among the managers can do nothing.
 
   Each manager offers Remove, which takes them off the managers. Taking a
   manager off is not archiving them: nothing is kept of them, so they are not
@@ -83,12 +84,12 @@ Feature: The managers tab of a tournament's page
       When the managers of "Spring Open" are opened
       Then the manager "Sam Someone" is not said to be the reader
 
-    Scenario: A forgotten account that manages the tournament is listed as forgotten
+    Scenario: A forgotten account that manages the tournament is not listed
       Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
       And the account for "someone@example.com" is taken hold of
       And the account for "someone@example.com" has been forgotten
       When the managers of "Spring Open" are opened
-      Then the second manager listed is a forgotten account
+      Then 1 manager is listed
 
   Rule: Somebody is made a manager by their email address
 
@@ -221,14 +222,6 @@ Feature: The managers tab of a tournament's page
       When "Remove" is pressed on the manager "Sam Someone"
       Then the modal dialog's second button is "Cancel"
 
-    Scenario: Asking before removing a forgotten account says it is one
-      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
-      And the managers of "Spring Open" are open
-      When "Remove" is pressed on the second manager
-      Then the modal dialog names a forgotten account
-
   Rule: Remove in the modal dialog takes the manager off
 
     Scenario: Removing a manager takes them off the list
@@ -252,15 +245,6 @@ Feature: The managers tab of a tournament's page
       And "Remove" is pressed on the manager "Sam Someone"
       When "Remove" is pressed in the modal dialog
       Then no modal dialog is open
-
-    Scenario: A forgotten account can be removed
-      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
-      And the managers of "Spring Open" are open
-      And "Remove" is pressed on the second manager
-      When "Remove" is pressed in the modal dialog
-      Then 1 manager is listed
 
   Rule: Cancel in the modal dialog takes nobody off
 
@@ -336,14 +320,6 @@ Feature: The managers tab of a tournament's page
     Scenario: The tab is in the reader's language
       Given a browser that asks for "en-XA"
       And "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
-      When the managers of "Spring Open" are opened
-      Then every word in the tab but the managers' names is in the test locale
-
-    Scenario: A forgotten manager is listed in the reader's language
-      Given a browser that asks for "en-XA"
-      And "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
-      And the account for "someone@example.com" is taken hold of
-      And the account for "someone@example.com" has been forgotten
       When the managers of "Spring Open" are opened
       Then every word in the tab but the managers' names is in the test locale
 
