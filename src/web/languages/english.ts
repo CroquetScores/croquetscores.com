@@ -313,6 +313,79 @@ export const english: Language = {
     "admin.editTournament.submit": "Update Tournament",
     // Said in place of the form, for a refusal with no words of its own.
     "admin.editTournament.otherwise": "This tournament cannot be changed.",
+    // A tournament's page, and the tabs what there is to run is in.
+    "admin.view.tabs": "Tournament",
+    "admin.view.players": "Players",
+    "admin.view.competitions": "Competitions",
+    "admin.view.managers": "Managers",
+    "admin.view.scorers": "Scorers",
+    // Said in place of the tabs, for a refusal with no words of its own.
+    "admin.view.otherwise": "This tournament cannot be run from here.",
+    // The Competitions tab: each competition's kind, what can be done with it,
+    // and the heading the archived ones are under.
+    "admin.competitions.block": "Block",
+    "admin.competitions.knockout": "Knockout",
+    "admin.competitions.swiss": "Swiss",
+    "admin.competitions.view": "View",
+    "admin.competitions.up": "Up",
+    "admin.competitions.down": "Down",
+    "admin.competitions.archive": "Archive",
+    "admin.competitions.restore": "Restore",
+    "admin.competitions.archived": "Archived competitions",
+    "admin.competitions.none": "No competitions",
+    // Every modal dialog's way out, since the page beneath cannot be reached.
+    "admin.modal.cancel": "Cancel",
+    // The Managers and Scorers tabs, each of which makes somebody one by their
+    // email address and takes one off.
+    "admin.people.emailAddress": "Email address",
+    "admin.people.remove": "Remove",
+    // Beside the reader's own name among the managers.
+    "admin.managers.you": "You",
+    "admin.managers.add": "Add Manager",
+    // Never said, since a tournament always has a manager, but a list says
+    // what it says when it is empty.
+    "admin.managers.none": "No managers",
+    "admin.managers.removeTitle": "Remove Manager",
+    "admin.managers.removeExplanation":
+      "{name} will no longer be able to run this tournament.",
+    "admin.managers.removeYourself.explanation":
+      "You will no longer be able to run this tournament, and nobody here can undo that for you. Another manager can make you one again.",
+    "admin.managers.otherwise": "That address cannot be made a manager.",
+    // The Players tab.
+    "admin.players.add": "Add Player",
+    "admin.players.none": "No players",
+    "admin.players.archive": "Archive",
+    "admin.players.restore": "Restore",
+    "admin.players.archived": "Archived players",
+    // Said to a screen reader, since a line through a name is not read out.
+    "admin.players.archivedSaid": "Archived",
+    // The player dialog.
+    "admin.player.addTitle": "Add Player",
+    "admin.player.editTitle": "Edit Player",
+    "admin.player.name": "Name",
+    "admin.player.representing": "Representing",
+    "admin.player.flag": "Flag",
+    "admin.player.add": "Add",
+    "admin.player.save": "Save",
+    "admin.player.added": "{name} was added.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.player.otherwise": "This player cannot be kept as they are.",
+    "Tournament.PlayerNameTaken":
+      "Another player in this tournament already has that name.",
+    "TournamentPlayer.NoSuchFlag": "Choose one of the flags there are.",
+    "AddManager.NoSuchAccount":
+      "That address has no account that can be made a manager.",
+    "admin.scorers.add": "Add Scorer",
+    "admin.scorers.none": "No scorers",
+    "admin.scorers.removeTitle": "Remove Scorer",
+    "admin.scorers.removeExplanation":
+      "{name} will no longer be able to enter the scores of this tournament.",
+    // Beneath the field, for a refusal with no words of its own.
+    "admin.scorers.otherwise": "That address cannot be made a scorer.",
+    "AddScorer.NoSuchAccount":
+      "That address has no account that can be made a scorer.",
+    "Tournament.AlreadyAManager":
+      "That account manages the tournament already, and can do everything a scorer can.",
 
     // A tournament's refusals, keyed by their codes as every rule broken is.
     // Beneath the field each is about, or in place of the form where the page

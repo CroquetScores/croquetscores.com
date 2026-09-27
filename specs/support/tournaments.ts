@@ -2,6 +2,7 @@
 // shape, put on the world by whatever stands the operations up, since that
 // names infrastructure and an application spec may not.
 import type { Command } from "../../src/application/common/Command.js";
+import type { Query } from "../../src/application/common/Query.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
@@ -11,6 +12,9 @@ import type { Tournament } from "../../src/domain/aggregates/tournaments/Tournam
 export interface TournamentsInHand {
   /** Sends `command` to the application. Throws what the mediator throws. */
   send<TResult>(command: Command<TResult>): Promise<TResult>;
+
+  /** Asks the application `query`. Throws what the mediator throws. */
+  ask<TResult>(query: Query<TResult>): Promise<TResult>;
 
   /** The tournament `id` as its stream reads now, or nothing if it has none. */
   load(id: TournamentId): Promise<Tournament | undefined>;
@@ -34,7 +38,6 @@ export interface TournamentsInHand {
   /** What the games the operations ask say has been played, by id. */
   readonly games: {
     readonly playersWhoHavePlayed: Set<string>;
-    readonly competitionsWithGames: Set<string>;
     readonly knockoutsWhoseChangeMovesAPlayer: Set<string>;
   };
 }

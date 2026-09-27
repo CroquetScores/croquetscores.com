@@ -1,0 +1,89 @@
+/* What each of a tournament's tabs lists: its players, competitions, managers
+   or scorers. One row to each, laid out for a phone first as the admin's list
+   of tournaments is: what it is on one line, what can be done with it beneath,
+   and only a screen with room for both sets them side by side. Written once
+   for the four tabs rather than once in each, so that they cannot come to
+   look different. */
+
+.listed {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listed-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.listed-item:last-child {
+  border-bottom: none;
+}
+
+/* The name is what the reader is looking for, so it wraps onto as many lines
+   as it needs rather than being cut short, and is as tall as a thumb. */
+.listed-name {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* What it is besides its name: a competition's kind, what a player represents. */
+.listed-about {
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
+/* Struck through so that something archived is not taken for something in
+   use. Its row says so in words too, for a reader who is not looking. */
+.listed-item[data-archived] .listed-name {
+  text-decoration: line-through;
+}
+
+.listed-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+@media (min-width: 40rem) {
+  .listed-item {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+}
+
+/* A name and what is shown beside it, such as a player's flag. */
+.listed-who {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* A name pressed to open something is a name first, drawn as the others are
+   rather than as a button. */
+button.listed-name {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+.listed-flag {
+  flex: none;
+}
+
+.listed-item[data-archived] .listed-about {
+  text-decoration: line-through;
+}

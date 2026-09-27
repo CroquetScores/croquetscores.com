@@ -35,16 +35,6 @@ When(
 );
 
 When(
-  "they are asked whether the competition {string} has any games",
-  async function (this: SpecWorld, competition: string) {
-    this.answer = await gamesOf(this).hasGames(
-      A_TOURNAMENT,
-      CompetitionId.from(competition),
-    );
-  },
-);
-
-When(
   "they are asked whether changing the draw of the knockout {string} to {int} places moves a player who has played",
   async function (this: SpecWorld, competition: string, places: number) {
     this.answer = await gamesOf(this).movesAPlayerWhoHasPlayed(

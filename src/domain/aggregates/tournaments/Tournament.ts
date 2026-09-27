@@ -10,7 +10,9 @@ import { CompetitionReference } from "./CompetitionReference.js";
 import { BlockAdded } from "./events/BlockAdded.js";
 import { BlockUpdated } from "./events/BlockUpdated.js";
 import { CompetitionArchived } from "./events/CompetitionArchived.js";
+import { CompetitionMoved } from "./events/CompetitionMoved.js";
 import { CompetitionRestored } from "./events/CompetitionRestored.js";
+import { CompetitionsSpacedOut } from "./events/CompetitionsSpacedOut.js";
 import { KnockoutAdded } from "./events/KnockoutAdded.js";
 import { KnockoutUpdated } from "./events/KnockoutUpdated.js";
 import { ManagerAdded } from "./events/ManagerAdded.js";
@@ -74,7 +76,6 @@ export type TournamentErrorCode =
   | "Tournament.CompetitionNameTaken"
   | "Tournament.NoSuchCompetition"
   | "Tournament.CompetitionArchived"
-  | "Tournament.CompetitionHasGames"
   | "Tournament.NotABlock"
   | "Tournament.NotAKnockout"
   | "Tournament.NotASwiss"
@@ -685,24 +686,66 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That the competition `id`, of whatever kind, is set aside. Whether it has
-   * any games is the competition's to know and not the tournament's, so
-   * whatever asks says, and one that has is refused. Archiving one that is
-   * archived records nothing.
+   * That the competition `id`, of whatever kind, is set aside, whether or not
+   * it has games: they are kept with it, and come back when it is restored.
+   * Archiving one that is archived records nothing.
    */
-  archiveCompetition(
+  archiveCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    if (this.#competitionFound(id).reference.archived) return;
+    this.record(new CompetitionArchived(id.value, by, at));
+  }
+
+  /**
+   * That the competition `id` is moved a place among those not archived: up to
+   * just before the one above it, or down to just after the one below. It is
+   * given the order halfway between the two it now comes between, rounded
+   * down, and nothing else moves, as a competition put anywhere in the list
+   * would be. Put first, it is given half the order of the one it comes
+   * before, and put last, 10,000 more than the highest order there is.
+   *
+   * An archived competition keeps its order and still counts, so the room
+   * between two competitions ends at one lying between them. Where there is
+   * no whole number left in the room, every competition is spaced out again
+   * first, 10,000 apart in the order they are in. Moving the first up or the
+   * last down records nothing, since there is nowhere for it to go.
+   */
+  moveCompetition(
     id: CompetitionId,
-    hasGames: boolean,
+    direction: "up" | "down",
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    if (this.#competitionFound(id).reference.archived) return;
-    if (hasGames) {
-      refuse("Tournament.CompetitionHasGames", "The competition has games.");
+    if (this.#competitionFound(id).reference.archived) {
+      refuse("Tournament.CompetitionArchived", "The competition is archived.");
     }
-    this.record(new CompetitionArchived(id.value, by, at));
+    const inUse = this.competitions.filter(
+      ({ reference }) => !reference.archived,
+    );
+    const place = inUse.findIndex(({ reference }) => reference.id.equals(id));
+    const passed = inUse[direction === "up" ? place - 1 : place + 1];
+    if (passed === undefined) return;
+
+    let order = this.#orderPast(passed.reference.id, direction);
+    if (order === undefined) {
+      this.record(
+        new CompetitionsSpacedOut(
+          this.competitions.map(({ reference }) => reference.id.value),
+          by,
+          at,
+        ),
+      );
+      order = this.#orderPast(passed.reference.id, direction);
+    }
+    // Spaced 10,000 apart, there is always room, so none here is a mistake in
+    // the spacing rather than something to refuse.
+    if (order === undefined) {
+      throw new Error("Spaced out, there was still no room to move into.");
+    }
+    this.record(new CompetitionMoved(id.value, order, by, at));
   }
 
   /**
@@ -784,6 +827,12 @@ export class Tournament extends AggregateRoot {
       this.#competitionIs(event.competitionId, true);
     } else if (event instanceof CompetitionRestored) {
       this.#competitionIs(event.competitionId, false);
+    } else if (event instanceof CompetitionMoved) {
+      this.#competitionAt(event.competitionId, event.order);
+    } else if (event instanceof CompetitionsSpacedOut) {
+      event.competitionIds.forEach((written, index) => {
+        this.#competitionAt(written, (index + 1) * ORDER_STEP);
+      });
     }
   }
 
@@ -1099,6 +1148,37 @@ export class Tournament extends AggregateRoot {
     });
   }
 
+  // The order a competition moved past `passed` is given: just before it when
+  // moving up, just after it when moving down, halfway into the room between
+  // it and whatever lies next to it, archived or not. Nothing, where there is
+  // no whole number left in the room.
+  #orderPast(
+    passed: CompetitionId,
+    direction: "up" | "down",
+  ): number | undefined {
+    const all = this.competitions;
+    const at = all.findIndex(({ reference }) => reference.id.equals(passed));
+    const orderAt = (index: number): number | undefined =>
+      all[index]?.reference.order;
+    const [lower, upper] =
+      direction === "up"
+        ? [orderAt(at - 1) ?? 0, orderAt(at)]
+        : [orderAt(at), orderAt(at + 1)];
+    if (lower === undefined) return undefined;
+    if (upper === undefined) return lower + ORDER_STEP;
+    const halfway = Math.floor((lower + upper) / 2);
+    return halfway > lower && halfway < upper ? halfway : undefined;
+  }
+
+  #competitionAt(written: string, order: number): void {
+    const found = this.#competitions.get(written);
+    if (found === undefined) return;
+    this.#competitions.set(written, {
+      ...found,
+      reference: referenceWith(found.reference, { order }),
+    });
+  }
+
   #competitionIs(written: string, archived: boolean): void {
     const found = this.#competitions.get(written);
     if (found === undefined) return;
@@ -1119,12 +1199,16 @@ const NOT_A: Readonly<Record<CompetitionShape["kind"], TournamentErrorCode>> = {
 // one and what changed.
 const referenceWith = (
   reference: CompetitionReference,
-  changed: { readonly name?: string; readonly archived?: boolean },
+  changed: {
+    readonly name?: string;
+    readonly archived?: boolean;
+    readonly order?: number;
+  },
 ): CompetitionReference =>
   CompetitionReference.from(reference.id, {
     name: changed.name ?? reference.name.toString(),
     slug: reference.slug.toString(),
-    order: reference.order,
+    order: changed.order ?? reference.order,
     archived: changed.archived ?? reference.archived,
   });
 

@@ -1,6 +1,6 @@
 // What every operation on a tournament shares: who asks, finding the
-// tournament, where tournaments are found, and making what a request carries
-// into what the tournament is given.
+// tournament, where tournaments are found, making what a request carries into
+// what the tournament is given, and naming the accounts a list answers.
 import {
   type Account,
   AccountRefused,
@@ -8,10 +8,11 @@ import {
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type {
-  AddressTaken,
-  Tournament,
-  TournamentDetails,
+import {
+  type AddressTaken,
+  type Tournament,
+  type TournamentDetails,
+  TournamentRefused,
 } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Countries } from "../../../domain/aggregates/tournaments/value-objects/Countries.js";
 import type { Country } from "../../../domain/aggregates/tournaments/value-objects/Country.js";
@@ -122,6 +123,48 @@ export const tournamentFor = async (
     );
   }
   return tournament;
+};
+
+/**
+ * The tournament `written`, once `account` is known to be asking and to
+ * manage it: refused as a command asking would be, in the order a command
+ * asks, so that a manager's list refuses as changing the tournament would.
+ * `operation` names what asks, as `tournamentFor` has it.
+ */
+export const managedBy = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  accounts: AggregateRepository<Account, AccountId>,
+  account: string,
+  written: string,
+  operation: string,
+): Promise<{ readonly by: AccountId; readonly tournament: Tournament }> => {
+  const by = await askedBy(accounts, account);
+  const tournament = await tournamentFor(tournaments, written, operation);
+  if (!tournament.manages(by)) {
+    throw new TournamentRefused(
+      "Tournament.NotAManager",
+      "Only a manager of the tournament can ask for this.",
+    );
+  }
+  return { by, tournament };
+};
+
+/**
+ * Each of `ids` with its account's name, in the order given. A forgotten
+ * account is left out, since no list answers one unless it is expressly asked
+ * to, and its name could not be read in any case.
+ */
+export const namesOf = async (
+  accounts: AggregateRepository<Account, AccountId>,
+  ids: readonly AccountId[],
+): Promise<{ readonly id: AccountId; readonly name: string }[]> => {
+  const named: { id: AccountId; name: string }[] = [];
+  for (const id of ids) {
+    const account = await accounts.load(id);
+    const name = account?.forgotten === false ? account.name : undefined;
+    if (name !== undefined) named.push({ id, name: name.toString() });
+  }
+  return named;
 };
 
 const countryCalled = (code: string): Country | undefined =>

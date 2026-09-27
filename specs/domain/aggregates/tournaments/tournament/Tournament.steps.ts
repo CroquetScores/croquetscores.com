@@ -141,7 +141,6 @@ Given(
     happened(this, (tournament) =>
       tournament.archiveCompetition(
         competitionNamed(tournament, name).reference.id,
-        false,
         byOf(this),
         now(this),
       ),

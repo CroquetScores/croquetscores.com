@@ -13,11 +13,20 @@ import { keptCalled } from "../../../support/tournaments.js";
 
 const newTournament = "/admin/tournaments/new";
 
+// The admin's forms: the one a page is for, a tab's own, and one in a modal
+// dialog, which is the only one that can be used while it is open.
+const forms =
+  "dialog[open] form, body:not(:has(dialog[open])) :is(form.dialog-form, form.tab-form)";
+
 // The form, or what the page says in its place where the reader cannot use
-// it (edit.feature): either is the page drawn.
+// it (edit.feature), or a tournament's tab once it has what it lists, which is
+// when its form is drawn where it has one, and which may have no form of its
+// own once its dialog is closed: any is the page drawn.
 const drawn = async (world: SpecWorld): Promise<void> => {
   await world.browserPage
-    .locator("form.dialog-form, main .page-refused")
+    .locator(
+      `${forms}, main .page-refused, #tab-panel section[aria-busy="false"]`,
+    )
     .first()
     .waitFor();
 };
@@ -44,9 +53,7 @@ const eventually = async (
 // A field by the words it is labelled with, which is how the reader and a
 // screen reader find it.
 const field = (world: SpecWorld, label: string): Locator =>
-  world.browserPage
-    .locator("form.dialog-form")
-    .getByLabel(label, { exact: true });
+  world.browserPage.locator(forms).getByLabel(label, { exact: true });
 
 const openNewTournament = async function (this: SpecWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${newTournament}`);
@@ -291,7 +298,62 @@ Given(
   },
 );
 
+Then(
+  "the tab asks for {string}",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.equal(await field(this, label).count(), 1);
+    });
+  },
+);
+
+Then("{string} has the focus", async function (this: SpecWorld, label: string) {
+  await eventually(this, async () => {
+    // A field by its label, and otherwise a button by its words, looked for
+    // again each time this is retried, and asked with a short wait of its own,
+    // so that one not drawn yet is retried rather than waited out.
+    const found =
+      (await field(this, label).count()) > 0
+        ? field(this, label)
+        : this.browserPage.getByRole("button", { name: label, exact: true });
+    assert.equal(
+      await found.evaluate(
+        (element) =>
+          element ===
+          (globalThis as unknown as { document: { activeElement: unknown } })
+            .document.activeElement,
+        undefined,
+        { timeout: 500 },
+      ),
+      true,
+      `${label} does not have the focus.`,
+    );
+  });
+});
+
+Then(
+  "{string} says {string}",
+  async function (this: SpecWorld, label: string, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await field(this, label).inputValue(), words);
+    });
+  },
+);
+
 // What was refused -------------------------------------------------------------
+
+Then(
+  "nothing is said beneath {string}",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await field(this, label).getAttribute("aria-describedby"),
+        null,
+        `Something is said beneath ${label}.`,
+      );
+    });
+  },
+);
 
 // Read from what the field is described by, which is what a screen reader
 // reads out with it, so that a refusal said somewhere else on the page does

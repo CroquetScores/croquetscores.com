@@ -2,7 +2,7 @@
 // tournament, over the event store the accounts support keeps and the
 // tournaments by address read model kept in step with it, behind a mediator
 // with the behaviours the application gives a command — validation, then a
-// transaction. The accounts the operations are asked by are stood up the way
+// transaction — and a query, whose transaction writes nothing. The accounts the operations are asked by are stood up the way
 // registering stands them up, since that is what the scenarios make them with.
 //
 // Here rather than beside the features because the features are the
@@ -34,7 +34,13 @@ import { ArchiveTournamentHandler } from "../../../src/application/operations/to
 import { CreateTournamentHandler } from "../../../src/application/operations/tournaments/CreateTournamentHandler.js";
 import { CreateTournamentValidator } from "../../../src/application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../../../src/application/operations/tournaments/RemoveManagerHandler.js";
+import { CompetitionsOfTournamentHandler } from "../../../src/application/operations/tournaments/CompetitionsOfTournamentHandler.js";
+import { ManagersOfTournamentHandler } from "../../../src/application/operations/tournaments/ManagersOfTournamentHandler.js";
+import { PlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../../../src/application/operations/tournaments/RemoveScorerHandler.js";
+import { ScorersOfTournamentHandler } from "../../../src/application/operations/tournaments/ScorersOfTournamentHandler.js";
+import { MoveCompetitionHandler } from "../../../src/application/operations/tournaments/MoveCompetitionHandler.js";
+import { MoveCompetitionValidator } from "../../../src/application/operations/tournaments/MoveCompetitionValidator.js";
 import { RestoreCompetitionHandler } from "../../../src/application/operations/tournaments/RestoreCompetitionHandler.js";
 import { RestorePlayerHandler } from "../../../src/application/operations/tournaments/RestorePlayerHandler.js";
 import { RestoreTournamentHandler } from "../../../src/application/operations/tournaments/RestoreTournamentHandler.js";
@@ -52,6 +58,7 @@ import type { Games } from "../../../src/application/services/Games.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
+import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import { TournamentsByAddress } from "../../../src/infrastructure/read-models/TournamentsByAddress.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
@@ -80,14 +87,11 @@ Given("the application's tournaments", function (this: SpecWorld) {
   // which is what the application's own games say while nothing has been.
   const said = {
     playersWhoHavePlayed: new Set<string>(),
-    competitionsWithGames: new Set<string>(),
     knockoutsWhoseChangeMovesAPlayer: new Set<string>(),
   };
   const games: Games = {
     hasPlayed: (_tournament, player) =>
       Promise.resolve(said.playersWhoHavePlayed.has(player.value)),
-    hasGames: (_tournament, competition) =>
-      Promise.resolve(said.competitionsWithGames.has(competition.value)),
     movesAPlayerWhoHasPlayed: (_tournament, competition) =>
       Promise.resolve(
         said.knockoutsWhoseChangeMovesAPlayer.has(competition.value),
@@ -98,6 +102,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   const validation = new ValidationBehaviour();
   mediator.addCommandBehaviour(validation);
   mediator.addCommandBehaviour(new TransactionBehaviour(unitOfWork));
+  // As the site asks them: checked, then in a transaction that writes nothing.
+  mediator.addQueryBehaviour(validation);
+  mediator.addQueryBehaviour(new ReadOnlyTransactionBehaviour(unitOfWork));
   validation.register(new CreateTournamentValidator());
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
@@ -108,6 +115,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new UpdateKnockoutValidator());
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
+  validation.register(new MoveCompetitionValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   const both = [tournaments, accountRepository] as const;
@@ -125,15 +133,21 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
-  mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(new AddManagerHandler(...both, accounts.readModel));
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
+  mediator.handleQuery(new ManagersOfTournamentHandler(...both));
+  mediator.handleQuery(new PlayersOfTournamentHandler(...both, games));
+  mediator.handleQuery(new ScorersOfTournamentHandler(...both));
 
   const inHand: TournamentsInHand = {
     send: (command) => mediator.send(command),
+    ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
     eventsOf: (id) => this.asARequest(() => accounts.store.getEvents(id)),
     kept: async () => {

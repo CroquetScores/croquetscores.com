@@ -187,7 +187,7 @@ Feature: The admin is served as the site it belongs to
       Given a viewport 1200 pixels wide
       And a browser that runs scripts
       And a browser that asks for "en-XA"
-      When the page at "/admin/2026/ac/spring-open" is opened
+      When the page at "/admin/2026/ac/spring-open/competitions" is opened
       Then every word in the admin's content is in the test locale
 
   Rule: The admin takes the reader at their word on light or dark

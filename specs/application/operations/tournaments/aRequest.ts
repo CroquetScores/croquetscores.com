@@ -1,6 +1,7 @@
 import { strict as assert } from "node:assert";
 
 import type { Command } from "../../../../src/application/common/Command.js";
+import type { Query } from "../../../../src/application/common/Query.js";
 import type { TournamentRequest } from "../../../../src/application/operations/tournaments/tournamentOperations.js";
 import type { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
@@ -143,6 +144,24 @@ export const send = async <TResult>(
       : undefined;
   }
   await lookAtAgain(world);
+};
+
+/**
+ * Asks `query`, and keeps its answer, or how it was refused, rather than
+ * throwing, as `send` keeps what came of a command. A query changes nothing,
+ * so there is no tournament to read back.
+ */
+export const ask = async <TResult>(
+  world: SpecWorld,
+  query: Query<TResult>,
+): Promise<void> => {
+  world.answer = undefined;
+  world.failure = undefined;
+  try {
+    world.answer = await inHandOf(world).ask(query);
+  } catch (failure) {
+    world.failure = failure;
+  }
 };
 
 /** The tournament the scenario is looking at, read back again. */

@@ -9,12 +9,9 @@ Feature: Archiving a tournament's competition
   the tournament's managers can: anybody else, a scorer among them, is refused
   with `Tournament.NotAManager` (`onlyManagers.feature`).
 
-  A competition that has any games cannot be archived, and whether it has is
-  not the tournament's to know (`archiveCompetition.feature`). The
-  application asks its games. Nothing records games yet, so the application's
-  games say that no competition has any (`Games.feature`); a scenario
-  about one that has stands in games that say so. Archiving a competition that
-  is archived records nothing.
+  A competition is archived whether or not it has games, which are kept with
+  it (`archiveCompetition.feature`), so the application does not ask its
+  games. Archiving a competition that is archived records nothing.
 
   A forgotten account archives nothing, and is refused with `Account.Forgotten`.
 
@@ -28,7 +25,7 @@ Feature: Archiving a tournament's competition
     And "organiser@example.com" has created the tournament "Spring Open"
     And "organiser@example.com" has added the block "Block A" to "Spring Open"
 
-  Rule: A competition that has no games is kept archived
+  Rule: A competition archived is kept archived
 
     Scenario: The competition is kept archived
       When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
@@ -42,13 +39,6 @@ Feature: Archiving a tournament's competition
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
       Then nothing more is recorded of the tournament
-
-  Rule: The application's games say whether a competition has any
-
-    Scenario: A competition the games say has games is refused as the tournament refuses it
-      Given games that say the competition "Block A" in "Spring Open" has games
-      When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
-      Then it is refused with "Tournament.CompetitionHasGames"
 
   Rule: Only a competition there is, in a tournament there is, can be archived
 

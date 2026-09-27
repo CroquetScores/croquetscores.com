@@ -725,10 +725,13 @@ Then(
 // Starting a new tournament ---------------------------------------------------------
 
 // What the list offers above its tournaments, rather than what any one of them
-// offers.
+// offers, and what a tab's form offers above what it lists. What a modal
+// dialog offers where one is open, since nothing beneath it can be pressed.
 const listOffers = (world: SpecWorld, option: string): Locator =>
   world.browserPage
-    .locator("main :is(a, button):not(.tournaments *)")
+    .locator(
+      "dialog[open] :is(a, button), body:not(:has(dialog[open])) main :is(a, button):not(.tournaments *):not(.listed *)",
+    )
     .filter({ hasText: exactly(option) });
 
 Then(
@@ -781,7 +784,39 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
     from === "/admin/tournaments/new" || from.endsWith("/edit")
       ? page.waitForResponse(sends)
       : undefined;
-  await listOffers(this, option).click();
+  // What a tab's form sends, on a tournament's page, which stays where it is
+  // and says what it made of the answer: waited on until it has, so that the
+  // next step does not type into a form still waiting to be told.
+  const pressing = listOffers(this, option);
+  // A tab's form, or a modal dialog's form, which each stay where they are.
+  const sendsATabsForm =
+    (await pressing
+      .and(
+        page.locator(
+          'form.tab-form button[type="submit"], dialog[open] form button[type="submit"]',
+        ),
+      )
+      .count()) === 1;
+  const sentFromATab = sendsATabsForm
+    ? page.waitForResponse(
+        (response) =>
+          ["POST", "PUT"].includes(response.request().method()) &&
+          new URL(response.url()).pathname.startsWith("/api/v1/tournaments/"),
+      )
+    : undefined;
+  await pressing.click();
+  if (sentFromATab !== undefined) {
+    await sentFromATab;
+    // Once the form has made what it will of the answer: a dialog says it is
+    // no longer busy, or has closed.
+    await page
+      .locator(
+        'dialog[open] form[aria-busy="false"], body:not(:has(dialog[open]))',
+      )
+      .first()
+      .waitFor();
+    await page.locator('#tab-panel section[aria-busy="false"]').waitFor();
+  }
   if (answered !== undefined) {
     const answer = await answered;
     if (answer.ok()) {
