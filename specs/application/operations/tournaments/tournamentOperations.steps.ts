@@ -9,6 +9,7 @@ import { AddScorer } from "../../../../src/application/operations/tournaments/Ad
 import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
 import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
 import { ArchivePlayer } from "../../../../src/application/operations/tournaments/ArchivePlayer.js";
+import { UpdatePlayer } from "../../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { ArchiveTournament } from "../../../../src/application/operations/tournaments/ArchiveTournament.js";
 import {
   type CreatedTournament,
@@ -21,6 +22,7 @@ import { UpdateTournament } from "../../../../src/application/operations/tournam
 import type { Command } from "../../../../src/application/common/Command.js";
 import type { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { scenarioOf as domainScenarioOf } from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
 import {
   competitionNamed,
   playerNamed,
@@ -187,6 +189,9 @@ Given(
   },
 );
 
+// Representing what the scenario said the player is to represent, and flying
+// the flag it said they are to fly, as adding one in the scenario's own
+// request does, so that a scenario can say what a player already added is.
 Given(
   "{string} has added the player {string} to {string}",
   async function (
@@ -195,12 +200,17 @@ Given(
     player: string,
     name: string,
   ) {
+    const { representing, flag } = domainScenarioOf(this).player;
     await doneTo(this, address, name, (account, tournament) =>
       Promise.resolve(
         new AddPlayer(
           account,
           tournament.value,
-          { name: player },
+          {
+            name: player,
+            ...(representing === undefined ? {} : { representing }),
+            ...(flag === undefined ? {} : { flag }),
+          },
           momentOf(this),
         ),
       ),
@@ -222,6 +232,34 @@ Given(
         account,
         tournament.value,
         found.id.value,
+        momentOf(this),
+      );
+    });
+  },
+);
+
+// Renamed and nothing else: what the player represents and the flag they fly
+// are said again as they are, since an update says everything again.
+Given(
+  "{string} has renamed the player {string} of {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    name: string,
+    renamed: string,
+  ) {
+    await doneTo(this, address, name, async (account, tournament) => {
+      const found = playerNamed(await load(this, tournament), player);
+      return new UpdatePlayer(
+        account,
+        tournament.value,
+        found.id.value,
+        {
+          name: renamed,
+          representing: found.representing,
+          flag: found.flag === undefined ? undefined : String(found.flag),
+        },
         momentOf(this),
       );
     });

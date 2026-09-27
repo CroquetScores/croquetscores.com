@@ -66,8 +66,8 @@ Feature: The players of a tournament, as a manager lists them
       Then the first player answered is "Émile Dubois"
 
     Scenario: A renamed player comes where their new name does
-      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
-      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      Given "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has renamed the player "Sam Someone" of "Spring Open" to "Aaron Someone"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
       Then the first player answered is "Aaron Someone"

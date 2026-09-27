@@ -35,6 +35,7 @@ import { CreateTournamentHandler } from "../../../src/application/operations/tou
 import { CreateTournamentValidator } from "../../../src/application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../../../src/application/operations/tournaments/RemoveManagerHandler.js";
 import { ManagersOfTournamentHandler } from "../../../src/application/operations/tournaments/ManagersOfTournamentHandler.js";
+import { PlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../../../src/application/operations/tournaments/RemoveScorerHandler.js";
 import { ScorersOfTournamentHandler } from "../../../src/application/operations/tournaments/ScorersOfTournamentHandler.js";
 import { RestoreCompetitionHandler } from "../../../src/application/operations/tournaments/RestoreCompetitionHandler.js";
@@ -135,6 +136,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
+  mediator.handleQuery(new PlayersOfTournamentHandler(...both, games));
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
 
   const inHand: TournamentsInHand = {

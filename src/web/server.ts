@@ -60,6 +60,7 @@ import { CreateTournamentHandler } from "../application/operations/tournaments/C
 import { CreateTournamentValidator } from "../application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../application/operations/tournaments/RemoveManagerHandler.js";
 import { ManagersOfTournamentHandler } from "../application/operations/tournaments/ManagersOfTournamentHandler.js";
+import { PlayersOfTournamentHandler } from "../application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../application/operations/tournaments/RemoveScorerHandler.js";
 import { ScorersOfTournamentHandler } from "../application/operations/tournaments/ScorersOfTournamentHandler.js";
 import { RestoreCompetitionHandler } from "../application/operations/tournaments/RestoreCompetitionHandler.js";
@@ -660,6 +661,7 @@ export const buildApplication = async (
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
+  mediator.handleQuery(new PlayersOfTournamentHandler(...both, noGamesYet));
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
   mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
   mediator.handleQuery(
