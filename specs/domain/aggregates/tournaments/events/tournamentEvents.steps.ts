@@ -5,7 +5,9 @@ import { inspect } from "node:util";
 import { BlockAdded } from "../../../../../src/domain/aggregates/tournaments/events/BlockAdded.js";
 import { BlockUpdated } from "../../../../../src/domain/aggregates/tournaments/events/BlockUpdated.js";
 import { CompetitionArchived } from "../../../../../src/domain/aggregates/tournaments/events/CompetitionArchived.js";
+import { CompetitionMoved } from "../../../../../src/domain/aggregates/tournaments/events/CompetitionMoved.js";
 import { CompetitionRestored } from "../../../../../src/domain/aggregates/tournaments/events/CompetitionRestored.js";
+import { CompetitionsSpacedOut } from "../../../../../src/domain/aggregates/tournaments/events/CompetitionsSpacedOut.js";
 import { KnockoutAdded } from "../../../../../src/domain/aggregates/tournaments/events/KnockoutAdded.js";
 import { KnockoutUpdated } from "../../../../../src/domain/aggregates/tournaments/events/KnockoutUpdated.js";
 import { ManagerAdded } from "../../../../../src/domain/aggregates/tournaments/events/ManagerAdded.js";
@@ -52,6 +54,7 @@ const A_TOURNAMENT: WrittenTournament = {
 const PLAYER = "tournament-player/123e4567-e89b-42d3-a456-426614174000";
 const ANOTHER_ACCOUNT = "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const COMPETITION = "competition/123e4567-e89b-42d3-a456-426614174000";
+const ANOTHER_COMPETITION = "competition/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 
 // One event of each kind a tournament records, as a feature names what
 // happened, and those an event can do without left out.
@@ -176,6 +179,15 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new ScorerRemoved(ANOTHER_ACCOUNT, causedBy, happenedAt),
   "a competition being restored": () =>
     new CompetitionRestored(COMPETITION, causedBy, happenedAt),
+  "a competition being moved": () =>
+    new CompetitionMoved(COMPETITION, 15000, causedBy, happenedAt),
+  // Two, so that one read back in the wrong order is found.
+  "the competitions being spaced out": () =>
+    new CompetitionsSpacedOut(
+      [ANOTHER_COMPETITION, COMPETITION],
+      causedBy,
+      happenedAt,
+    ),
 };
 
 // Matched by the happenings above alone, so that the steps the registry's own

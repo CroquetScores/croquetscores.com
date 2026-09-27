@@ -4,7 +4,9 @@ import type { EventRegistry } from "../../../common/EventRegistry.js";
 import { BlockAdded } from "./BlockAdded.js";
 import { BlockUpdated } from "./BlockUpdated.js";
 import { CompetitionArchived } from "./CompetitionArchived.js";
+import { CompetitionMoved } from "./CompetitionMoved.js";
 import { CompetitionRestored } from "./CompetitionRestored.js";
+import { CompetitionsSpacedOut } from "./CompetitionsSpacedOut.js";
 import { KnockoutAdded } from "./KnockoutAdded.js";
 import { KnockoutUpdated } from "./KnockoutUpdated.js";
 import { ManagerAdded } from "./ManagerAdded.js";
@@ -48,6 +50,14 @@ const optionalText = (said: Said, field: string): string | undefined =>
 const number = (said: Said, field: string): number => {
   const value = said[field];
   return typeof value === "number" ? value : unreadable(field);
+};
+
+const texts = (said: Said, field: string): string[] => {
+  const value = said[field];
+  return Array.isArray(value) &&
+    value.every((each): each is string => typeof each === "string")
+    ? value
+    : unreadable(field);
 };
 
 const numbers = (said: Said, field: string): number[] => {
@@ -278,6 +288,27 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new CompetitionRestored(
           text(said, "competitionId"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CompetitionMoved,
+      "tournament-competition-moved",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionMoved(
+          text(said, "competitionId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CompetitionsSpacedOut,
+      "tournament-competitions-spaced-out",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionsSpacedOut(
+          texts(said, "competitionIds"),
           createdBy,
           occurredAt,
         ),
