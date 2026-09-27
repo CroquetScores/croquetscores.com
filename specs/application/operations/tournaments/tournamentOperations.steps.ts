@@ -9,6 +9,7 @@ import { AddScorer } from "../../../../src/application/operations/tournaments/Ad
 import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
 import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
 import { ArchivePlayer } from "../../../../src/application/operations/tournaments/ArchivePlayer.js";
+import { MoveCompetition } from "../../../../src/application/operations/tournaments/MoveCompetition.js";
 import { UpdatePlayer } from "../../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { ArchiveTournament } from "../../../../src/application/operations/tournaments/ArchiveTournament.js";
 import {
@@ -337,6 +338,27 @@ Given(
         account,
         tournament.value,
         id.value,
+        momentOf(this),
+      );
+    });
+  },
+);
+
+Given(
+  "{string} has moved the competition {string} in {string} up",
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, async (account, tournament) => {
+      const id = await competitionIn(this, tournament, competition);
+      return new MoveCompetition(
+        account,
+        tournament.value,
+        id.value,
+        "up",
         momentOf(this),
       );
     });

@@ -34,6 +34,7 @@ import { ArchiveTournamentHandler } from "../../../src/application/operations/to
 import { CreateTournamentHandler } from "../../../src/application/operations/tournaments/CreateTournamentHandler.js";
 import { CreateTournamentValidator } from "../../../src/application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../../../src/application/operations/tournaments/RemoveManagerHandler.js";
+import { CompetitionsOfTournamentHandler } from "../../../src/application/operations/tournaments/CompetitionsOfTournamentHandler.js";
 import { ManagersOfTournamentHandler } from "../../../src/application/operations/tournaments/ManagersOfTournamentHandler.js";
 import { PlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../../../src/application/operations/tournaments/RemoveScorerHandler.js";
@@ -139,6 +140,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
   mediator.handleQuery(new PlayersOfTournamentHandler(...both, games));
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
