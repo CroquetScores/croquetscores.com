@@ -29,6 +29,7 @@ export const tournamentsThrough = (
     application.unitOfWork.inTransaction(work);
   return {
     send: (command) => application.mediator.send(command),
+    ask: (query) => application.mediator.query(query),
     load: (id) => asARequest(() => application.tournaments.load(id)),
     eventsOf: (id) => asARequest(() => application.eventStore.getEvents(id)),
     kept: async () => {

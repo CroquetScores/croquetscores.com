@@ -2,7 +2,7 @@
 // tournament, over the event store the accounts support keeps and the
 // tournaments by address read model kept in step with it, behind a mediator
 // with the behaviours the application gives a command — validation, then a
-// transaction. The accounts the operations are asked by are stood up the way
+// transaction — and a query, whose transaction writes nothing. The accounts the operations are asked by are stood up the way
 // registering stands them up, since that is what the scenarios make them with.
 //
 // Here rather than beside the features because the features are the
@@ -35,6 +35,7 @@ import { CreateTournamentHandler } from "../../../src/application/operations/tou
 import { CreateTournamentValidator } from "../../../src/application/operations/tournaments/CreateTournamentValidator.js";
 import { RemoveManagerHandler } from "../../../src/application/operations/tournaments/RemoveManagerHandler.js";
 import { RemoveScorerHandler } from "../../../src/application/operations/tournaments/RemoveScorerHandler.js";
+import { ScorersOfTournamentHandler } from "../../../src/application/operations/tournaments/ScorersOfTournamentHandler.js";
 import { RestoreCompetitionHandler } from "../../../src/application/operations/tournaments/RestoreCompetitionHandler.js";
 import { RestorePlayerHandler } from "../../../src/application/operations/tournaments/RestorePlayerHandler.js";
 import { RestoreTournamentHandler } from "../../../src/application/operations/tournaments/RestoreTournamentHandler.js";
@@ -52,6 +53,7 @@ import type { Games } from "../../../src/application/services/Games.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
+import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import { TournamentsByAddress } from "../../../src/infrastructure/read-models/TournamentsByAddress.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
@@ -95,6 +97,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   const validation = new ValidationBehaviour();
   mediator.addCommandBehaviour(validation);
   mediator.addCommandBehaviour(new TransactionBehaviour(unitOfWork));
+  // As the site asks them: checked, then in a transaction that writes nothing.
+  mediator.addQueryBehaviour(validation);
+  mediator.addQueryBehaviour(new ReadOnlyTransactionBehaviour(unitOfWork));
   validation.register(new CreateTournamentValidator());
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
@@ -128,9 +133,11 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleQuery(new ScorersOfTournamentHandler(...both));
 
   const inHand: TournamentsInHand = {
     send: (command) => mediator.send(command),
+    ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
     eventsOf: (id) => this.asARequest(() => accounts.store.getEvents(id)),
     kept: async () => {
