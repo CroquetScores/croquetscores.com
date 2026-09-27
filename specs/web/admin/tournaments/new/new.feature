@@ -39,8 +39,10 @@ Feature: A new tournament is created in the admin
 
   The form is a dialog, as every form that is a page's purpose is
   (`STYLE.md`): its title, its fields, and the one button that does what it
-  is for, with no button to cancel. The admin's words are not yet in any
-  catalogue (`admin.feature`), so they are in English whatever the language.
+  is for, with no button to cancel. Its words are in the reader's language, as
+  the rest of the admin's are (`admin.feature`), and so are the sports, the
+  formats and the countries it offers, which the site names in the reader's
+  language as it offers them.
 
   The admin draws the form itself, so every scenario here runs scripts, and
   it is read on a phone's width, as the rest of the admin is.
@@ -379,6 +381,47 @@ Feature: A new tournament is created in the admin
       And "Create Tournament" is pressed
       When the admin is opened
       Then the list says there are no tournaments
+
+  Rule: Every word the form says is in the reader's language
+
+    The test locale shows it (`language.feature`). The sports, the formats and
+    the countries are among the form's words: each is in a catalogue by its
+    code, and the API names them in the reader's language as it offers them,
+    so the form shows what it is given. English takes their names from the
+    tournament's own, rather than writing each out a second time to drift.
+
+    The countries are listed in order of their names as the reader's language
+    has them, since that is the order a reader looks for one in: Germany comes
+    after Argentina in English, and before it in Spanish, as Alemania.
+
+    The regions are the one thing on the form left as they are. There are
+    hundreds of them, most already named in their own country's language, and
+    they are named as the old site recorded them, so that what it recorded
+    still reads as it did.
+
+    Scenario: The form is in the reader's language
+      Given a browser that asks for "en-XA"
+      When the new tournament page is opened
+      Then every word in the form is in the test locale
+
+    Scenario: A refused form is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the new tournament page is open
+      When the form is sent as it is
+      Then the form says what it refused
+      And every word in the form is in the test locale
+
+    Scenario: The countries are in order of their names in the reader's language
+      Given a site offering the languages it is served with
+      And a browser that asks for "es"
+      When the new tournament page is opened
+      Then the country "Alemania" is offered before the country "Argentina"
+
+    Scenario: The countries are in order of their names in English
+      Given a site offering the languages it is served with
+      And a browser that asks for "en"
+      When the new tournament page is opened
+      Then the country "Argentina" is offered before the country "Germany"
 
   Rule: The form is laid out for a phone first
 

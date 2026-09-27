@@ -136,14 +136,12 @@ ${items}
 
 // Beneath the site bar rather than in it, so that it scrolls away once read
 // instead of taking a line of every screen for as long as the reader stays.
-// Said by the admin's page too (adminPage.ts), whose own words are in no
-// language yet, so it can say which language it is in where the page cannot.
+// Said by the admin's page too (adminPage.ts).
 export const tryWebsiteBanner = (
   speaking: Speaking,
   siteName: string,
-  lang?: string,
 ): string => `
-    <div class="try-banner"${lang === undefined ? "" : ` lang="${escape(lang)}"`}>
+    <div class="try-banner">
       <div class="page">
         <p>${escape(speaking.say("tryWebsite.banner", { siteName }))}</p>
       </div>
@@ -243,11 +241,6 @@ ${options}
           </form>`;
 };
 
-// A lang for the header and footer where the page around them is not in the
-// reader's language, as the admin's is not yet (adminPage.ts).
-const langOf = (lang: string | undefined): string =>
-  lang === undefined ? "" : ` lang="${escape(lang)}"`;
-
 /** What the header needs of the page it is drawn on. */
 export type SiteBar = Pick<
   Shell,
@@ -256,9 +249,9 @@ export type SiteBar = Pick<
 
 // Said by the admin's page too (adminPage.ts), so that there is one header
 // rather than a copy of it that drifts.
-export const siteBar = (bar: SiteBar, lang?: string): string => `
-    <a class="skip-link" href="#content"${langOf(lang)}>${escape(bar.speaking.say("site.skipToContent"))}</a>
-    <header class="site-bar"${langOf(lang)}>
+export const siteBar = (bar: SiteBar): string => `
+    <a class="skip-link" href="#content">${escape(bar.speaking.say("site.skipToContent"))}</a>
+    <header class="site-bar">
       <div class="page">
         <div class="site-bar-inner">
           <a class="site-name" href="/">${escape(bar.siteName)}</a>
@@ -275,8 +268,8 @@ export type SiteFooter = Pick<
 >;
 
 // Said by the admin's page too, for the reason the header is.
-export const siteFooter = (footer: SiteFooter, lang?: string): string => `
-    <footer class="site-footer"${langOf(lang)}>
+export const siteFooter = (footer: SiteFooter): string => `
+    <footer class="site-footer">
       <div class="page">
         <div class="site-footer-bar">
         <form

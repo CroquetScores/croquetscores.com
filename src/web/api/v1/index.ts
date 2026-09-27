@@ -24,6 +24,7 @@ import {
   croquetScoresFormats,
   gateballScoresFormats,
 } from "../../../domain/aggregates/tournaments/value-objects/tournamentFormats.js";
+import { speakingOf } from "../../common/language.js";
 import { readerOf } from "../../common/reader.js";
 import { websiteOf } from "../../common/site.js";
 
@@ -132,26 +133,41 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
   // What a new tournament can be on the website asked: the sports and formats
   // its site offers, in the site's order, and every country with its regions.
   // Asked of the domain rather than written out again here, so that the form
-  // offers exactly what creating a tournament accepts.
+  // offers exactly what creating a tournament accepts. Each is sent back by
+  // its code, and named in the reader's language: a format by the name the
+  // domain knows it by, since that is what creating one takes. The countries
+  // are in order of their names as the reader's language has them, which is
+  // the order a reader looks for one in. A region is named as it was recorded,
+  // since there are hundreds, most already in their own country's language.
   server.get("/tournaments/new", (request, reply) => {
     const reader = signedInOrRefused(request, reply);
     if (reader === undefined) return reply;
+    const speaking = speakingOf(request);
     const gateball = websiteOf(request).site === "gateballScores";
+    const byName = new Intl.Collator(speaking.language.tag);
     return reply.header("cache-control", "no-store").send({
       sports: (gateball ? gateballScoresSports : croquetScoresSports).map(
-        (sport) => ({ code: sport.code, name: sport.name }),
+        (sport) => ({
+          code: sport.code,
+          name: speaking.say(`sport.${sport.code}`),
+        }),
       ),
       formats: (gateball ? gateballScoresFormats : croquetScoresFormats).map(
-        (format) => format.name,
+        (format) => ({
+          code: format.name,
+          name: speaking.say(`format.${format.code}`),
+        }),
       ),
-      countries: Countries.thereAre.all.map((country) => ({
-        code: country.code,
-        name: country.name,
-        regions: country.regions.map((region) => ({
-          code: region.code,
-          name: region.name,
-        })),
-      })),
+      countries: Countries.thereAre.all
+        .map((country) => ({
+          code: country.code,
+          name: speaking.say(`country.${country.code}`),
+          regions: country.regions.map((region) => ({
+            code: region.code,
+            name: region.name,
+          })),
+        }))
+        .sort((one, other) => byName.compare(one.name, other.name)),
     });
   });
 

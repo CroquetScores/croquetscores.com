@@ -6,6 +6,7 @@ import {
   tournamentNamed,
 } from "../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../support/world.js";
+import { unmarkedWithin } from "../../../../../support/marks.js";
 import {
   changeTournament,
   keptCalled,
@@ -92,5 +93,23 @@ Then(
   "the tournament {string} is kept with the notes {string}",
   async function (this: SpecWorld, name: string, notes: string) {
     assert.equal((await keptCalled(this, name)).notes?.markdown, notes);
+  },
+);
+
+// The notes are the manager's words, in a box of their own, and the regions are
+// left as they were recorded (new.feature), so neither is read for marks.
+// Once the form is drawn and its lists filled, which is once the country the
+// tournament is in is chosen in its list.
+Then(
+  "every word in the form but the notes and the regions is in the test locale",
+  async function (this: SpecWorld) {
+    await this.browserPage
+      .locator("#field-region option:checked:not([value=''])")
+      .waitFor({ state: "attached" });
+    const stray = await unmarkedWithin(this, "section.dialog", [
+      "textarea",
+      "#field-region",
+    ]);
+    assert.deepEqual(stray, [], "Words in the form came from elsewhere.");
   },
 );

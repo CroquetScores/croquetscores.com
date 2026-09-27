@@ -14,8 +14,8 @@ Feature: The admin is served as the site it belongs to
 
   What the admin says is held to the same words as the pages it sits beside:
   the site's name as it is configured, and the try website's banner in the
-  reader's language. The admin's own words are not yet in any catalogue, and
-  that is not what this is about.
+  reader's language. The admin's own words are held to the reader's language
+  as well, and how they reach it is a rule of its own below.
 
   Scripting is off, as it is for every @browser scenario, except where what is
   looked at is drawn by the admin itself. Everything else here is on the page
@@ -158,6 +158,37 @@ Feature: The admin is served as the site it belongs to
       And a browser that asks for "en-XA"
       When the admin is opened
       Then every word in the try website's banner is in the test locale
+
+  Rule: The admin's own words are in the reader's language
+
+    The admin draws its own words in the browser once the page has arrived,
+    so it cannot look them up in a catalogue as a page drawn by the server
+    does, and it was written in English while that was so. The server now says
+    them into the page as it sends it, as it says the header and the footer:
+    every word the admin has, in the reader's language. So the admin reads its
+    words from the page it is on and asks for nothing more, and a language
+    added to the site by a catalogue is added to the admin by the same one.
+
+    Its words are its own and the refusals it passes on, which are keyed by
+    their codes as every form's are, so that a refusal is said the same way
+    wherever it is said. What it shows of a tournament is said by the page
+    that shows it (`tournaments.feature`, `new.feature`, `edit.feature`).
+
+    The tab names the site as well as the admin, and the site's name is nobody's
+    language, so it is the admin's own word in the tab that is looked at.
+
+    Scenario: The admin's tab is in the reader's language
+      Given a viewport 1200 pixels wide
+      And a browser that asks for "en-XA"
+      When the admin is opened
+      Then the tab names the admin in the test locale
+
+    Scenario: A screen the admin does not have yet is in the reader's language
+      Given a viewport 1200 pixels wide
+      And a browser that runs scripts
+      And a browser that asks for "en-XA"
+      When the page at "/admin/2026/ac/spring-open" is opened
+      Then every word in the admin's content is in the test locale
 
   Rule: The admin takes the reader at their word on light or dark
 

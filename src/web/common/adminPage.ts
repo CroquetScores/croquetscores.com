@@ -1,7 +1,7 @@
 // The admin's page, said into as it is sent. The file is built by Vite ahead of
 // time, so it cannot know what is only known once a request has come in: what
-// the site is called, whether it is a try website, who is reading, and whether
-// they chose light or dark. Every other page is told those as it is rendered (layout.ts),
+// the site is called, whether it is a try website, who is reading, which
+// language they read, and whether they chose light or dark. Every other page is told those as it is rendered (layout.ts),
 // and this one is told them here, into the built file, rather than the admin
 // asking for them once it is running — which would draw it once in the
 // machine's colours and then again in the reader's, and would need the theme
@@ -9,7 +9,7 @@
 import type { FastifyRequest } from "fastify";
 
 import { escape } from "./escape.js";
-import { speakingOf } from "./language.js";
+import { type Speaking, speakingOf } from "./language.js";
 import { siteBar, siteFooter, tryWebsiteBanner } from "./layout.js";
 import { hasPassword, signedIn } from "./reader.js";
 import { siteNameOf, websiteOf } from "./site.js";
@@ -23,6 +23,32 @@ const html = /<html([^>]*)>/;
 const title = /<title>([^<]*)<\/title>/;
 const body = /<body([^>]*)>/;
 const bodyEnd = "</body>";
+
+/** Where the admin finds its words, in the page it is served in. */
+export const adminWordsId = "admin-words";
+
+// What the admin says: its own words, and the refusals of the tournaments it
+// creates and changes, which are keyed by their codes as every form's are. Not
+// every word the site has, most of which are the public pages' and the
+// emails', and would be sent with every page of the admin for nothing. A
+// refusal the admin is not sent words for is said in its words for any.
+const saidByTheAdmin =
+  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.)/;
+
+// The admin's words in the reader's language, each one the site's first
+// language has, so that a word missing from the reader's is said in that one
+// as it is on every other page. As JSON in a script that is never run, with
+// every < written so that no word can close the script it is in.
+const adminWords = (speaking: Speaking): string => {
+  const first = speaking.offered[0];
+  const keys = Object.keys(first?.words ?? {}).filter((key) =>
+    saidByTheAdmin.test(key),
+  );
+  const words = Object.fromEntries(keys.map((key) => [key, speaking.say(key)]));
+  return `<script type="application/json" id="${adminWordsId}">${JSON.stringify(
+    words,
+  ).replace(/</g, "\\u003c")}</script>`;
+};
 
 /**
  * The built page, checked once, as the application starts, for everything it
@@ -67,38 +93,35 @@ export const adminPage = (built: string, request: FastifyRequest): string => {
       })
       .replace(
         title,
-        (_whole, words: string) =>
-          `<title>${escape(siteName)} — ${words}</title>`,
+        () =>
+          `<title>${escape(siteName)} — ${escape(speaking.say("admin.title"))}</title>`,
       )
       // The public pages' own header and footer, drawn by the code that draws
       // theirs, rather than a copy of each in the admin that would drift from
       // them. Outside what the admin draws, so that they are on the page before
       // a script runs and whether or not one does. In the reader's language, as
-      // on every other page, while the admin's own words are not yet in any: so
-      // each says which language it is in, rather than taking the page's word.
+      // on every other page, and so are the admin's own words, which it reads
+      // from the page rather than asking for them once it is running.
       .replace(body, (whole) => {
         const banner = websiteOf(request).isTry
-          ? tryWebsiteBanner(speaking, siteName, lang)
+          ? tryWebsiteBanner(speaking, siteName)
           : "";
-        return `${whole}${siteBar(
-          {
-            speaking,
-            siteName,
-            // Every page of the admin is the admin to the navigation, which
-            // has one way in to it however deep the reader has gone.
-            currentPath: "/admin/",
-            signedIn: signedIn(request),
-            hasPassword: hasPassword(request),
-          },
-          lang,
-        )}${banner}`;
+        return `${whole}${siteBar({
+          speaking,
+          siteName,
+          // Every page of the admin is the admin to the navigation, which
+          // has one way in to it however deep the reader has gone.
+          currentPath: "/admin/",
+          signedIn: signedIn(request),
+          hasPassword: hasPassword(request),
+        })}${banner}${adminWords(speaking)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.
       .replace(
         bodyEnd,
         () =>
-          `${siteFooter({ speaking, siteName, theme, path: request.url }, lang)}\n  ${bodyEnd}`,
+          `${siteFooter({ speaking, siteName, theme, path: request.url })}\n  ${bodyEnd}`,
       )
   );
 };

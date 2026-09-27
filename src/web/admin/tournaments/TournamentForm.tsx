@@ -1,17 +1,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { knows, say } from "../words.js";
 import "./tournamentForm.css";
 
 // The form a tournament is created with (new.feature) and changed with
 // (edit.feature): one form, so that the two cannot come to ask different
 // things. It asks for what the website offers, which it asks the API for
 // rather than knowing, so that it offers exactly what creating or changing a
-// tournament accepts. Its words are the admin's own, and in no catalogue yet,
-// so they are in English.
+// tournament accepts, and names each choice in the reader's language as it
+// offers it.
 
 interface Offered {
   readonly sports: readonly { readonly code: string; readonly name: string }[];
-  readonly formats: readonly string[];
+  readonly formats: readonly { readonly code: string; readonly name: string }[];
   readonly countries: readonly {
     readonly code: string;
     readonly name: string;
@@ -38,21 +39,11 @@ const fieldOfRefusal: Readonly<Record<string, string>> = {
   "Tournament.NationalAndInternational": "international",
 };
 
-// What each refusal says to the reader. The code is the contract; these are
-// only its words, and a code with none here is said in the words for any.
-const wordsFor: Readonly<Record<string, string>> = {
-  "TournamentName.Missing": "Say what the tournament is called.",
-  "TournamentName.TooShort": "That name is too short.",
-  "TournamentName.TooLong": "That name is too long.",
-  "TournamentName.AllLowerCase": "A name is not written all in lower case.",
-  "TournamentName.AllCapitals": "A name is not written all in capitals.",
-  "ReadOnlyDate.Unreadable": "Give the day.",
-  "Tournament.FinishesBeforeStarts":
-    "A tournament cannot finish before it starts.",
-  "CreateTournament.NoSuchCountry": "Choose the country.",
-  "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
-};
-const otherwise = "This cannot be accepted as it is.";
+// What a refusal says to the reader: its words, by its code, or the words for
+// any where it has none. The code is the contract; the words are only what it
+// says.
+const wordsFor = (code: string): string =>
+  say(knows(code) ? code : "admin.tournament.otherwise");
 
 interface Refusal {
   readonly code: string;
@@ -61,7 +52,7 @@ interface Refusal {
 
 const refusal = (code: string): Refusal => ({
   code,
-  words: wordsFor[code] ?? otherwise,
+  words: wordsFor(code),
 });
 
 // What the API refused, by the field each refusal is about, and what is about
@@ -254,7 +245,7 @@ export const TournamentForm = ({
         // begins as it is.
         if (begins !== undefined) return;
         setSport(answer.sports[0]?.code ?? "");
-        setFormat(answer.formats[0] ?? "");
+        setFormat(answer.formats[0]?.code ?? "");
       })
       .catch(() => {
         // Nothing to offer, and so no form: there is nothing it could create.
@@ -347,7 +338,11 @@ export const TournamentForm = ({
                   ))}
                 </div>
               ) : null}
-              <Field name="name" label="Name" refused={said("name")}>
+              <Field
+                name="name"
+                label={say("admin.tournament.name")}
+                refused={said("name")}
+              >
                 {(tied) => (
                   <input
                     {...tied}
@@ -366,7 +361,7 @@ export const TournamentForm = ({
               <div className="field-row">
                 <Field
                   name="starts"
-                  label="Starts"
+                  label={say("admin.tournament.starts")}
                   refused={said("starts")}
                   lifted
                 >
@@ -383,7 +378,7 @@ export const TournamentForm = ({
                 </Field>
                 <Field
                   name="finishes"
-                  label="Finishes"
+                  label={say("admin.tournament.finishes")}
                   refused={said("finishes")}
                   lifted
                 >
@@ -406,7 +401,7 @@ export const TournamentForm = ({
                   {offered.formats.length > 1 ? (
                     <Field
                       name="format"
-                      label="Format"
+                      label={say("admin.tournament.format")}
                       refused={said("format")}
                       lifted
                     >
@@ -418,8 +413,8 @@ export const TournamentForm = ({
                             setFormat(event.target.value);
                           }}
                         >
-                          {offered.formats.map((called) => (
-                            <option key={called} value={called}>
+                          {offered.formats.map(({ code, name: called }) => (
+                            <option key={code} value={code}>
                               {called}
                             </option>
                           ))}
@@ -430,7 +425,7 @@ export const TournamentForm = ({
                   {offered.sports.length > 1 ? (
                     <Field
                       name="sport"
-                      label="Sport"
+                      label={say("admin.tournament.sport")}
                       refused={said("sport")}
                       lifted
                     >
@@ -456,7 +451,7 @@ export const TournamentForm = ({
               <div className="field-row">
                 <Field
                   name="country"
-                  label="Country"
+                  label={say("admin.tournament.country")}
                   refused={said("country")}
                   lifted
                 >
@@ -481,7 +476,7 @@ export const TournamentForm = ({
                 {asksForRegion ? (
                   <Field
                     name="region"
-                    label="Region"
+                    label={say("admin.tournament.region")}
                     refused={said("region")}
                     lifted
                   >
@@ -504,7 +499,12 @@ export const TournamentForm = ({
                   </Field>
                 ) : null}
               </div>
-              <Field name="notes" label="Notes" refused={said("notes")} lifted>
+              <Field
+                name="notes"
+                label={say("admin.tournament.notes")}
+                refused={said("notes")}
+                lifted
+              >
                 {(tied) => (
                   <textarea
                     {...tied}
@@ -518,14 +518,14 @@ export const TournamentForm = ({
               </Field>
               <Tick
                 name="handicap"
-                label="Played under handicap"
+                label={say("admin.tournament.handicap")}
                 ticked={handicap}
                 tick={setHandicap}
               />
               {asksAboutWorldRankings ? (
                 <Tick
                   name="worldRankings"
-                  label="Counts towards the world rankings"
+                  label={say("admin.tournament.worldRankings")}
                   ticked={worldRankings}
                   tick={setWorldRankings}
                 />
@@ -535,7 +535,7 @@ export const TournamentForm = ({
                   tick both and then be told it cannot be done. */}
               <Tick
                 name="national"
-                label="Is national"
+                label={say("admin.tournament.national")}
                 ticked={national}
                 tick={(ticked) => {
                   setNational(ticked);
@@ -544,7 +544,7 @@ export const TournamentForm = ({
               />
               <Tick
                 name="international"
-                label="Is international"
+                label={say("admin.tournament.international")}
                 ticked={international}
                 tick={(ticked) => {
                   setInternational(ticked);

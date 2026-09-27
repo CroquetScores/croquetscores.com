@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../support/world.js";
+import { unmarkedWithin } from "../../../support/marks.js";
 import { keptCalled } from "../../../support/tournaments.js";
 
 // The admin draws the form itself, after asking the API what the website
@@ -383,6 +384,61 @@ Then(
       assert.ok(
         first.x < second.x,
         `${one} starts ${String(Math.round(first.x))} pixels across and ${other} ${String(Math.round(second.x))}.`,
+      );
+    });
+  },
+);
+
+// The form in the reader's language --------------------------------------------
+
+// What was typed is in the fields rather than among the form's words, and is
+// not read for marks. Asked again for a while, as the rest of the form is,
+// since the lists fill a moment after the form is drawn.
+Then(
+  "every word in the form is in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "section.dialog");
+      assert.deepEqual(stray, [], "Words in the form came from elsewhere.");
+    });
+  },
+);
+
+// Sent by its one button, found by what it is rather than by its words, which
+// are in whatever language the page is in.
+When("the form is sent as it is", async function (this: SpecWorld) {
+  await drawn(this);
+  await this.browserPage
+    .locator('form.dialog-form button[type="submit"]')
+    .click();
+});
+
+// Something said beside a field, which is where the form says what it refused.
+Then("the form says what it refused", async function (this: SpecWorld) {
+  await this.browserPage
+    .locator("form.dialog-form .field-message")
+    .first()
+    .waitFor();
+});
+
+// By the list's own id rather than by its label, which is in the language the
+// page is in, and a scenario about order may be read in any of them.
+Then(
+  "the country {string} is offered before the country {string}",
+  async function (this: SpecWorld, one: string, other: string) {
+    await eventually(this, async () => {
+      const countries = await this.browserPage
+        .locator("#field-country option")
+        .allTextContents();
+      const [first, second] = [
+        countries.indexOf(one),
+        countries.indexOf(other),
+      ];
+      assert.ok(first !== -1, `${one} is not offered.`);
+      assert.ok(second !== -1, `${other} is not offered.`);
+      assert.ok(
+        first < second,
+        `${one} is offered ${String(first + 1)}th and ${other} ${String(second + 1)}th.`,
       );
     });
   },

@@ -1,7 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { english } from "../../../../src/web/languages/english.js";
 import { withScripting } from "../../support/browser.js";
+import { closes, opens } from "../../support/languages.js";
+import { unmarkedWithin } from "../../support/marks.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 // The admin's front door. /admin itself only sends the reader here.
@@ -29,6 +32,29 @@ Then(
   async function (this: SpecWorld, siteName: string) {
     const title = await this.browserPage.title();
     assert.ok(title.includes(siteName), `The tab says "${title}".`);
+  },
+);
+
+// The admin's own word in the tab, after the site's name, which is nobody's
+// language and so is not marked.
+Then(
+  "the tab names the admin in the test locale",
+  async function (this: SpecWorld) {
+    const title = await this.browserPage.title();
+    const admin = `${opens}${english.words["admin.title"] ?? ""}${closes}`;
+    assert.ok(title.endsWith(admin), `The tab says "${title}".`);
+  },
+);
+
+// Once the admin has drawn a heading, which every screen of it has, whether it
+// is the screen asked for or what is said in its place: until then there are
+// no words of the admin's to read.
+Then(
+  "every word in the admin's content is in the test locale",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("main h1").first().waitFor();
+    const stray = await unmarkedWithin(this, "main");
+    assert.deepEqual(stray, [], "Words in the admin came from elsewhere.");
   },
 );
 
