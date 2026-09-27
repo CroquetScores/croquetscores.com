@@ -53,6 +53,26 @@ export const ModalDialog = ({
       className="modal-dialog dialog"
       ref={dialog}
       aria-labelledby="modal-dialog-title"
+      onKeyDown={(event) => {
+        // The keyboard goes round what the dialog has to press and nowhere
+        // else: a browser would otherwise take it from the last out to its own
+        // address bar, which is outside the dialog.
+        if (event.key !== "Tab") return;
+        const pressable = [
+          ...(dialog.current?.querySelectorAll<HTMLElement>(
+            "input, select, textarea, button, a[href]",
+          ) ?? []),
+        ].filter((element) => !element.hasAttribute("disabled"));
+        const first = pressable[0];
+        const last = pressable.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }}
       onCancel={(event) => {
         // Escape does what Cancel does, and the page says it is closed rather
         // than the browser alone.

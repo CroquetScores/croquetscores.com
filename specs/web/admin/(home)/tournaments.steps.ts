@@ -788,20 +788,33 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
   // and says what it made of the answer: waited on until it has, so that the
   // next step does not type into a form still waiting to be told.
   const pressing = listOffers(this, option);
+  // A tab's form, or a modal dialog's form, which each stay where they are.
   const sendsATabsForm =
     (await pressing
-      .and(page.locator('form.tab-form button[type="submit"]'))
+      .and(
+        page.locator(
+          'form.tab-form button[type="submit"], dialog[open] form button[type="submit"]',
+        ),
+      )
       .count()) === 1;
   const sentFromATab = sendsATabsForm
     ? page.waitForResponse(
         (response) =>
-          response.request().method() === "POST" &&
+          ["POST", "PUT"].includes(response.request().method()) &&
           new URL(response.url()).pathname.startsWith("/api/v1/tournaments/"),
       )
     : undefined;
   await pressing.click();
   if (sentFromATab !== undefined) {
     await sentFromATab;
+    // Once the form has made what it will of the answer: a dialog says it is
+    // no longer busy, or has closed.
+    await page
+      .locator(
+        'dialog[open] form[aria-busy="false"], body:not(:has(dialog[open]))',
+      )
+      .first()
+      .waitFor();
     await page.locator('#tab-panel section[aria-busy="false"]').waitFor();
   }
   if (answered !== undefined) {

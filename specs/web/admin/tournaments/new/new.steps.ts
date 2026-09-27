@@ -19,10 +19,14 @@ const forms =
   "dialog[open] form, body:not(:has(dialog[open])) :is(form.dialog-form, form.tab-form)";
 
 // The form, or what the page says in its place where the reader cannot use
-// it (edit.feature): either is the page drawn.
+// it (edit.feature), or a tournament's tab once it has what it lists, which is
+// when its form is drawn where it has one, and which may have no form of its
+// own once its dialog is closed: any is the page drawn.
 const drawn = async (world: SpecWorld): Promise<void> => {
   await world.browserPage
-    .locator(`${forms}, main .page-refused`)
+    .locator(
+      `${forms}, main .page-refused, #tab-panel section[aria-busy="false"]`,
+    )
     .first()
     .waitFor();
 };
@@ -305,12 +309,25 @@ Then(
 
 Then("{string} has the focus", async function (this: SpecWorld, label: string) {
   await eventually(this, async () => {
-    // By its id, which every field of the admin's has (Field.tsx).
-    const id = await field(this, label).getAttribute("id");
-    const focused = await this.browserPage.evaluate<string>(
-      "document.activeElement?.id ?? ''",
+    // A field by its label, and otherwise a button by its words, looked for
+    // again each time this is retried, and asked with a short wait of its own,
+    // so that one not drawn yet is retried rather than waited out.
+    const found =
+      (await field(this, label).count()) > 0
+        ? field(this, label)
+        : this.browserPage.getByRole("button", { name: label, exact: true });
+    assert.equal(
+      await found.evaluate(
+        (element) =>
+          element ===
+          (globalThis as unknown as { document: { activeElement: unknown } })
+            .document.activeElement,
+        undefined,
+        { timeout: 500 },
+      ),
+      true,
+      `${label} does not have the focus.`,
     );
-    assert.equal(focused, id, `${label} does not have the focus.`);
   });
 });
 

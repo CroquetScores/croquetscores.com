@@ -27,9 +27,12 @@ Then(
   },
 );
 
-Then("no modal dialog is open", async function (this: SpecWorld) {
-  await dialogOf(this).waitFor({ state: "detached" });
-});
+Then(
+  /^(?:no modal dialog is|the player dialog is not) open$/,
+  async function (this: SpecWorld) {
+    await dialogOf(this).waitFor({ state: "detached" });
+  },
+);
 
 Then(
   "the modal dialog names {string}",
@@ -43,7 +46,7 @@ Then(
 const places = ["first", "second"];
 
 Then(
-  /^the modal dialog's (first|second) button is "([^"]*)"$/,
+  /^the (?:modal|player) dialog's (first|second) button is "([^"]*)"$/,
   async function (this: SpecWorld, place: string, words: string) {
     await dialogOf(this).waitFor();
     const all = (await buttonsOf(this).allInnerTexts()).map((each) =>

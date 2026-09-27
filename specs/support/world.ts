@@ -228,6 +228,11 @@ export class SpecWorld extends World {
   public kept: KeptEvent | undefined;
   public readBackEvent: DomainEvent | undefined;
 
+  // Whether the focus stayed inside an open modal dialog all the while the
+  // keyboard took it round, for a scenario about what a modal dialog lets the
+  // keyboard reach.
+  public focusNeverLeft: boolean | undefined;
+
   // A password hasher, the password a scenario gives it, the hashes made of it
   // in order, what the last check found, and how long the checks took.
   public passwordHasher: PasswordHasher | undefined;
