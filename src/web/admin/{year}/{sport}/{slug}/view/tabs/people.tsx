@@ -176,7 +176,11 @@ export const PeopleTab = ({
       ) : (
         <ul className="listed" data-listed={part}>
           {listed.map((person) => (
-            <li key={person.id} className="listed-item">
+            <li
+              key={person.id}
+              className="listed-item"
+              data-reader={person.isReader === true ? "" : undefined}
+            >
               <span className="listed-name">{person.name}</span>
               {person.isReader === true ? (
                 <span className="listed-about">

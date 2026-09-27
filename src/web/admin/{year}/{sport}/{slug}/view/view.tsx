@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
+import { ManagersTab } from "./tabs/managers/managers.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
 import "./view.css";
 
@@ -123,6 +124,9 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 tournament={asked.tournament.id}
                 address={asked.tournament.address}
               />
+            ) : null}
+            {chosen === "managers" ? (
+              <ManagersTab tournament={asked.tournament.id} />
             ) : null}
             {chosen === "scorers" ? (
               <ScorersTab tournament={asked.tournament.id} />

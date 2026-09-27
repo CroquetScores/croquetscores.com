@@ -341,6 +341,18 @@ export const english: Language = {
     "admin.people.remove": "Remove",
     // Beside the reader's own name among the managers.
     "admin.managers.you": "You",
+    "admin.managers.add": "Add Manager",
+    // Never said, since a tournament always has a manager, but a list says
+    // what it says when it is empty.
+    "admin.managers.none": "No managers",
+    "admin.managers.removeTitle": "Remove Manager",
+    "admin.managers.removeExplanation":
+      "{name} will no longer be able to run this tournament.",
+    "admin.managers.removeYourself.explanation":
+      "You will no longer be able to run this tournament, and nobody here can undo that for you. Another manager can make you one again.",
+    "admin.managers.otherwise": "That address cannot be made a manager.",
+    "AddManager.NoSuchAccount":
+      "That address has no account that can be made a manager.",
     "admin.scorers.add": "Add Scorer",
     "admin.scorers.none": "No scorers",
     "admin.scorers.removeTitle": "Remove Scorer",

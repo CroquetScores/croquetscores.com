@@ -11,7 +11,10 @@ import { ArchiveCompetition } from "../../../application/operations/tournaments/
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { CreateTournament } from "../../../application/operations/tournaments/CreateTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
+import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
+import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
+import { RemoveManager } from "../../../application/operations/tournaments/RemoveManager.js";
 import { RemoveScorer } from "../../../application/operations/tournaments/RemoveScorer.js";
 import { RestoreCompetition } from "../../../application/operations/tournaments/RestoreCompetition.js";
 import { ScorersOfTournament } from "../../../application/operations/tournaments/ScorersOfTournament.js";
@@ -359,6 +362,58 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
       if (reader === undefined) return reply;
       await request.server.mediator.send(
         new RemoveScorer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `account/${request.params.account}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A tournament's managers, as its manager lists them.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/managers",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const managers = await request.server.mediator.query(
+        new ManagersOfTournament(
+          reader.value,
+          `tournament/${request.params.id}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ managers });
+    },
+  );
+
+  // Somebody made a manager, by their email address.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/managers",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new AddManager(
+          reader.value,
+          `tournament/${request.params.id}`,
+          textOf(request.body, "emailAddress"),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A manager taken off, by the part of their account's id after "account/".
+  server.post<{ Params: { id: string; account: string } }>(
+    "/tournaments/:id/managers/:account/remove",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new RemoveManager(
           reader.value,
           `tournament/${request.params.id}`,
           `account/${request.params.account}`,

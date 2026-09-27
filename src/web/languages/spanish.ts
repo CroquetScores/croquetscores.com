@@ -313,6 +313,16 @@ export const spanish: Language = {
     "admin.people.emailAddress": "Dirección de correo electrónico",
     "admin.people.remove": "Quitar",
     "admin.managers.you": "Tú",
+    "admin.managers.add": "Añadir gestor",
+    "admin.managers.none": "No hay gestores",
+    "admin.managers.removeTitle": "Quitar gestor",
+    "admin.managers.removeExplanation":
+      "{name} ya no podrá gestionar este torneo.",
+    "admin.managers.removeYourself.explanation":
+      "Ya no podrás gestionar este torneo, y nadie aquí puede deshacerlo por ti. Otro gestor puede volver a hacerte gestor.",
+    "admin.managers.otherwise": "Esa dirección no se puede hacer gestora.",
+    "AddManager.NoSuchAccount":
+      "Esa dirección no tiene ninguna cuenta que se pueda hacer gestora.",
     "admin.scorers.add": "Añadir anotador",
     "admin.scorers.none": "No hay anotadores",
     "admin.scorers.removeTitle": "Quitar anotador",
