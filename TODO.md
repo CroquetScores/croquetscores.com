@@ -18,6 +18,8 @@ Four kinds of thing, kept apart.
 
 - Feature files for api
 
+- One thing to consider: SETUP.md §7.2 still says a stored event's shape only ever gains optional fields, with no green-field exception. That rule is why the review flagged these changes, and it will keep misleading anyone who reads it. I could add a line there saying the rule starts applying once the site holds real data.
+
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
