@@ -321,6 +321,18 @@ export const english: Language = {
     "admin.view.scorers": "Scorers",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
+    // The Competitions tab: each competition's kind, what can be done with it,
+    // and the heading the archived ones are under.
+    "admin.competitions.block": "Block",
+    "admin.competitions.knockout": "Knockout",
+    "admin.competitions.swiss": "Swiss",
+    "admin.competitions.view": "View",
+    "admin.competitions.up": "Up",
+    "admin.competitions.down": "Down",
+    "admin.competitions.archive": "Archive",
+    "admin.competitions.restore": "Restore",
+    "admin.competitions.archived": "Archived competitions",
+    "admin.competitions.none": "No competitions",
 
     // A tournament's refusals, keyed by their codes as every rule broken is.
     // Beneath the field each is about, or in place of the form where the page

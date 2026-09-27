@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { knows, say } from "../../../../words.js";
+import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import "./view.css";
 
 // A tournament's page (view.feature): headed by its name, with what there is
@@ -116,6 +117,12 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
             aria-labelledby={`tab-${chosen}`}
           >
             <h1>{asked.tournament.name}</h1>
+            {chosen === "competitions" ? (
+              <CompetitionsTab
+                tournament={asked.tournament.id}
+                address={asked.tournament.address}
+              />
+            ) : null}
           </div>
         </div>
       </main>

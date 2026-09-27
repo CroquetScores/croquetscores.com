@@ -7,7 +7,11 @@ import type {
 } from "fastify";
 
 import { ArchiveTournament } from "../../../application/operations/tournaments/ArchiveTournament.js";
+import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
+import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { CreateTournament } from "../../../application/operations/tournaments/CreateTournament.js";
+import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
+import { RestoreCompetition } from "../../../application/operations/tournaments/RestoreCompetition.js";
 import type { TournamentRequest } from "../../../application/operations/tournaments/tournamentOperations.js";
 import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
@@ -253,6 +257,57 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
             `tournament/${request.params.id}`,
             request.requestedAt,
           ),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
+
+  // A tournament's competitions, as its manager lists them, in the
+  // tournament's order.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/competitions",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const competitions = await request.server.mediator.query(
+        new CompetitionsOfTournament(
+          reader.value,
+          `tournament/${request.params.id}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ competitions });
+    },
+  );
+
+  // A competition moved a place, archived or restored, named by the part of
+  // its id after "competition/", as the tournament is by its own.
+  for (const action of ["up", "down", "archive", "restore"] as const) {
+    server.post<{ Params: { id: string; competition: string } }>(
+      `/tournaments/:id/competitions/:competition/${action}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        const tournament = `tournament/${request.params.id}`;
+        const competition = `competition/${request.params.competition}`;
+        const at = request.requestedAt;
+        await request.server.mediator.send(
+          action === "archive"
+            ? new ArchiveCompetition(reader.value, tournament, competition, at)
+            : action === "restore"
+              ? new RestoreCompetition(
+                  reader.value,
+                  tournament,
+                  competition,
+                  at,
+                )
+              : new MoveCompetition(
+                  reader.value,
+                  tournament,
+                  competition,
+                  action,
+                  at,
+                ),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
