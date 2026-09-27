@@ -38,6 +38,8 @@ import { ManagersOfTournamentHandler } from "../../../src/application/operations
 import { PlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../../../src/application/operations/tournaments/RemoveScorerHandler.js";
 import { ScorersOfTournamentHandler } from "../../../src/application/operations/tournaments/ScorersOfTournamentHandler.js";
+import { MoveCompetitionHandler } from "../../../src/application/operations/tournaments/MoveCompetitionHandler.js";
+import { MoveCompetitionValidator } from "../../../src/application/operations/tournaments/MoveCompetitionValidator.js";
 import { RestoreCompetitionHandler } from "../../../src/application/operations/tournaments/RestoreCompetitionHandler.js";
 import { RestorePlayerHandler } from "../../../src/application/operations/tournaments/RestorePlayerHandler.js";
 import { RestoreTournamentHandler } from "../../../src/application/operations/tournaments/RestoreTournamentHandler.js";
@@ -112,6 +114,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new UpdateKnockoutValidator());
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
+  validation.register(new MoveCompetitionValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   const both = [tournaments, accountRepository] as const;
@@ -131,6 +134,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(new AddManagerHandler(...both, accounts.readModel));
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));
   mediator.handleCommand(new RemoveManagerHandler(...both));

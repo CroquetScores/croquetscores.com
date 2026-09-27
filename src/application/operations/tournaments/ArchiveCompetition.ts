@@ -2,8 +2,8 @@ import { Command } from "../../common/Command.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 
 /**
- * Archiving one of a tournament's competitions, of whatever kind. Whether it
- * has any games is asked of the application's games.
+ * Archiving one of a tournament's competitions, of whatever kind, whether or
+ * not it has games, which are kept with it.
  */
 export class ArchiveCompetition extends Command<void> {
   constructor(

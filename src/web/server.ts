@@ -63,6 +63,8 @@ import { ManagersOfTournamentHandler } from "../application/operations/tournamen
 import { PlayersOfTournamentHandler } from "../application/operations/tournaments/PlayersOfTournamentHandler.js";
 import { RemoveScorerHandler } from "../application/operations/tournaments/RemoveScorerHandler.js";
 import { ScorersOfTournamentHandler } from "../application/operations/tournaments/ScorersOfTournamentHandler.js";
+import { MoveCompetitionHandler } from "../application/operations/tournaments/MoveCompetitionHandler.js";
+import { MoveCompetitionValidator } from "../application/operations/tournaments/MoveCompetitionValidator.js";
 import { RestoreCompetitionHandler } from "../application/operations/tournaments/RestoreCompetitionHandler.js";
 import { RestorePlayerHandler } from "../application/operations/tournaments/RestorePlayerHandler.js";
 import { RestoreTournamentHandler } from "../application/operations/tournaments/RestoreTournamentHandler.js";
@@ -632,6 +634,7 @@ export const buildApplication = async (
   validation.register(new UpdateKnockoutValidator());
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
+  validation.register(new MoveCompetitionValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   mediator.handleCommand(
@@ -654,6 +657,7 @@ export const buildApplication = async (
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(
     new AddManagerHandler(...both, accountsByEmailAddress),
   );

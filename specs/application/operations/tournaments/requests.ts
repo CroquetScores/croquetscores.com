@@ -5,6 +5,7 @@ import { AddPlayer } from "../../../../src/application/operations/tournaments/Ad
 import { AddScorer } from "../../../../src/application/operations/tournaments/AddScorer.js";
 import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
 import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
+import { MoveCompetition } from "../../../../src/application/operations/tournaments/MoveCompetition.js";
 import { ArchivePlayer } from "../../../../src/application/operations/tournaments/ArchivePlayer.js";
 import { ArchiveTournament } from "../../../../src/application/operations/tournaments/ArchiveTournament.js";
 import {
@@ -405,6 +406,27 @@ export const archiveCompetition = async (
       account,
       tournament.value,
       id.value,
+      momentOf(world),
+    ),
+    tournament,
+  );
+};
+
+export const moveCompetition = async (
+  world: SpecWorld,
+  account: string,
+  tournament: About,
+  name: string | undefined,
+  direction: string,
+): Promise<void> => {
+  const id = await competitionIn(world, tournament, name);
+  await send(
+    world,
+    new MoveCompetition(
+      account,
+      tournament.value,
+      id.value,
+      direction,
       momentOf(world),
     ),
     tournament,
