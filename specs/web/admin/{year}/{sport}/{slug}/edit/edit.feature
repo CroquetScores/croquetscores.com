@@ -28,6 +28,10 @@ Feature: A tournament is changed in the admin
   found at is kept, and changing it at an address it has moved on from is
   changing it where it is now: the reader is sent there.
 
+  Every word the page says is in the reader's language, as the form's are when
+  it creates a tournament (`new.feature`), and so is what it says in place of
+  the form.
+
   Background:
     Given a viewport 375 pixels wide
     And a browser that runs scripts
@@ -255,6 +259,40 @@ Feature: A tournament is changed in the admin
     Scenario: An address no tournament has been found at says so
       When the page at "/admin/2026/ac/no-such-open/edit" is opened
       Then the page is refused with "UpdateTournament.NoSuchTournament"
+
+  Rule: Every word the page says is in the reader's language
+
+    The test locale shows it (`language.feature`). What the tournament is, it
+    is by what its manager typed, which is nobody's language and is in the
+    fields rather than among the page's words; the notes are the exception,
+    being words in a box, and are left out with the regions, which are left as
+    they were recorded (`new.feature`). Each refusal is looked at, since each
+    says something of its own in place of the form.
+
+    Scenario: The form begun as the tournament is is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the tournament "Spring Open" has the notes "Lawns open at nine."
+      When the page to edit "Spring Open" is opened
+      Then every word in the form but the notes and the regions is in the test locale
+
+    Scenario: An archived tournament is refused in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the page to edit "Spring Open" is opened
+      Then every word in the admin's content is in the test locale
+
+    Scenario: A scorer is refused in the reader's language
+      Given a browser that asks for "en-XA"
+      And "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page to edit "Spring Open" is opened
+      Then every word in the admin's content is in the test locale
+
+    Scenario: An address no tournament has been found at is refused in the reader's language
+      Given a browser that asks for "en-XA"
+      When the page at "/admin/2026/ac/no-such-open/edit" is opened
+      Then every word in the admin's content is in the test locale
 
   Rule: An address the tournament has moved on from sends the reader to where it is
 

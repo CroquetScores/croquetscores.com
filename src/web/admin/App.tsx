@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { Tournaments } from "./Tournaments.js";
+import { say } from "./words.js";
 
 // What goes between the public pages' header and footer, which the server
 // says in around the mount point (adminPage.ts). Which screen that is is read
@@ -59,7 +60,7 @@ export const App = (): React.JSX.Element => {
     <main id="content">
       <div className="page">
         <div className="panel stack">
-          <h1>Admin</h1>
+          <h1>{say("admin.title")}</h1>
         </div>
       </div>
     </main>

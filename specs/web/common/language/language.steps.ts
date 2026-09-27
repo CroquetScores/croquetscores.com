@@ -11,7 +11,8 @@ import {
   exampleFailedPath,
   exampleRefusedPath,
 } from "../../support/exampleFailures.js";
-import { closes, opens, unmarked } from "../../support/languages.js";
+import { unmarked } from "../../support/languages.js";
+import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
 
 // What the browser says its reader reads, on every request from here on. The
 // browser's own is replaced rather than added to, so the scenario says all of
@@ -74,50 +75,6 @@ Then(
     assert.equal(await this.browserPage.inputValue(list), tag);
   },
 );
-
-// Every piece of text a reader sees within `selector`, each of which must be
-// marked at both ends: one that is not came from somewhere other than a
-// catalogue. What the reader typed is in the fields rather than in the text,
-// and is not looked at.
-//
-// Anything matching `names` is left out, because a name is not a word of
-// anybody's language and so is in no catalogue to be marked: the site's own
-// name, and each language in the list, which is named in its own language.
-const unmarkedWithin = async (
-  world: SpecWorld,
-  selector: string,
-  names: readonly string[] = [],
-): Promise<string[]> => {
-  const found = await world.browserPage.evaluate<string[] | null>(`(() => {
-    const root = document.querySelector(${JSON.stringify(selector)});
-    if (!root) return null;
-    const named = [...root.querySelectorAll(${JSON.stringify(names.join(", ") || "nothing-at-all")})];
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    const texts = [];
-    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-      if (named.some((one) => one.contains(node))) continue;
-      const text = node.textContent.trim();
-      if (text !== "") texts.push(text);
-    }
-    return texts;
-  })()`);
-  assert.ok(
-    found !== null,
-    `There is nothing on the page matching ${selector}.`,
-  );
-  assert.ok(found.length > 0, `There are no words in ${selector}.`);
-
-  // A phrase still holding a place for something is a stray too, though it is
-  // marked at both ends like any other: what a reader sees is {siteName}, which
-  // is nobody's language, and the marks would otherwise say it came from a
-  // catalogue and leave it at that.
-  const leftToFill = /\{[A-Za-z]+\}/;
-  return found.filter(
-    (text) =>
-      leftToFill.test(text) ||
-      !(text.startsWith(opens) && text.endsWith(closes)),
-  );
-};
 
 Then(
   "every word in the dialog is in the test locale",
@@ -315,22 +272,6 @@ Then(
     assert.deepEqual(stray, [], "The way to the content came from elsewhere.");
   },
 );
-
-// What a reader who cannot see the bar hears it announced as, which is an
-// attribute rather than anything on the page.
-const announcedAs = async (
-  world: SpecWorld,
-  selector: string,
-): Promise<string | null> =>
-  world.browserPage.evaluate<string | null>(
-    `(() => {
-      const found = document.querySelector(${JSON.stringify(selector)});
-      return found ? found.getAttribute("aria-label") : null;
-    })()`,
-  );
-
-const isMarked = (text: string): boolean =>
-  text.startsWith(opens) && text.endsWith(closes);
 
 Then(
   "the navigation is named in the test locale",

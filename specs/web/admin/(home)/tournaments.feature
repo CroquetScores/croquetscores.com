@@ -36,9 +36,9 @@ Feature: The admin lists the reader's tournaments
   so they are kept by a projection as tournaments are created and changed,
   along with the list itself (`TournamentsByAccount.feature`).
 
-  The dates are in the reader's language, as the rest of the site's words
-  are. The admin's own words are not yet in any catalogue (`admin.feature`),
-  so the options on each row are in English whatever the language.
+  Every word the list says is in the reader's language, as the rest of the
+  admin's is (`admin.feature`), and so are the dates, whose months the browser
+  names in the language the page is in.
 
   The admin draws the list itself, so every scenario here runs scripts. It is
   laid out for a phone first, and so the scenarios are read on a phone's
@@ -486,6 +486,65 @@ Feature: The admin lists the reader's tournaments
       And the tournament "Spring Open" finishes on "2026-10-05"
       When the admin is opened
       Then the tournament "Spring Open" is dated "03-05 oct"
+
+  Rule: Every word the list says is in the reader's language
+
+    The test locale shows it (`language.feature`): every phrase from a
+    catalogue is marked, so a word that is not came from somewhere else. What
+    is nobody's language is left out: a tournament's name, which is what its
+    manager called it, its dates, whose months the browser names, and the
+    years, which are numbers. Each row is looked at for each part a reader can
+    have in it, since each offers different things, and a year with nothing in
+    it says so in words of its own.
+
+    Scenario: A tournament the reader manages is listed in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then every word in the list but the tournaments' own is in the test locale
+
+    Scenario: A tournament the reader scores is listed in the reader's language
+      Given a browser that asks for "en-XA"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And "other@example.com" has made "organiser@example.com" a scorer of "Autumn Open"
+      When the admin is opened
+      Then every word in the list but the tournaments' own is in the test locale
+
+    Scenario: An archived tournament is listed in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the admin is opened
+      Then every word in the list but the tournaments' own is in the test locale
+
+    Scenario: A year with no tournaments says so in the reader's language
+      Given a browser that asks for "en-XA"
+      When the admin is opened
+      Then every word in the list but the tournaments' own is in the test locale
+
+    Scenario: The years are named in the reader's language
+      Given a browser that asks for "en-XA"
+      When the admin is opened
+      Then the years are named in the test locale
+
+    Scenario: The drop-down list of years is named in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" manages a tournament in each year from 2015 to 2026
+      When the admin is opened
+      Then the drop-down list of years is named in the test locale
+
+    Scenario: The drop-down list of years says what it holds in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" manages a tournament in each year from 2015 to 2026
+      When the admin is opened
+      Then every word in the years but the years themselves is in the test locale
+
+    Scenario: The list is in Spanish for a reader of Spanish
+      Given a site offering the languages it is served with
+      And a browser that asks for "es"
+      When the admin is opened
+      Then the list offers "Nuevo torneo"
 
   Rule: A tournament's name leads to it
 

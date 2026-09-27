@@ -1,6 +1,9 @@
 // The site's words in English, and the language every other falls back to for
 // a word it has not got. Keyed by what each word is for; a rule broken is keyed
 // by its code, so that every form saying it says it the same way.
+import { countryNames } from "../../domain/aggregates/tournaments/value-objects/countryNames.js";
+import { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
+import { TournamentFormat } from "../../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { Language } from "../common/language.js";
 
 export const english: Language = {
@@ -273,6 +276,79 @@ export const english: Language = {
     "errors.sorryDetail": "That request could not be dealt with.",
     "errors.failed": "Something went wrong",
     "errors.reference": "Reference {reference}.",
+
+    // The admin's words. The admin draws them in the browser, so the server
+    // says them into its page as it sends it (adminPage.ts): these, and the
+    // tournament's refusals below.
+    "admin.title": "Admin",
+    "admin.tournaments.new": "New Tournament",
+    "admin.tournaments.none": "No tournaments",
+    // Said to a screen reader, since a line through a name is not read out.
+    "admin.tournaments.archived": "Archived",
+    "admin.tournaments.manage": "Manage",
+    "admin.tournaments.edit": "Edit",
+    "admin.tournaments.archive": "Archive",
+    "admin.tournaments.restore": "Restore",
+    "admin.tournaments.scores": "Scores",
+    "admin.years.label": "Years",
+    // What the drop-down list of years says while the year chosen is a tab.
+    "admin.years.earlier": "Earlier years",
+    "admin.tournament.name": "Name",
+    "admin.tournament.starts": "Starts",
+    "admin.tournament.finishes": "Finishes",
+    "admin.tournament.format": "Format",
+    "admin.tournament.sport": "Sport",
+    "admin.tournament.country": "Country",
+    "admin.tournament.region": "Region",
+    "admin.tournament.notes": "Notes",
+    "admin.tournament.handicap": "Played under handicap",
+    "admin.tournament.worldRankings": "Counts towards the world rankings",
+    "admin.tournament.national": "Is national",
+    "admin.tournament.international": "Is international",
+    // A refusal with no words of its own, above the fields.
+    "admin.tournament.otherwise": "This cannot be accepted as it is.",
+    "admin.newTournament.title": "New Tournament",
+    "admin.newTournament.submit": "Create Tournament",
+    "admin.editTournament.title": "Edit Tournament",
+    "admin.editTournament.submit": "Update Tournament",
+    // Said in place of the form, for a refusal with no words of its own.
+    "admin.editTournament.otherwise": "This tournament cannot be changed.",
+
+    // A tournament's refusals, keyed by their codes as every rule broken is.
+    // Beneath the field each is about, or in place of the form where the page
+    // itself is refused.
+    "TournamentName.Missing": "Say what the tournament is called.",
+    "TournamentName.TooShort": "That name is too short.",
+    "TournamentName.TooLong": "That name is too long.",
+    "TournamentName.AllLowerCase": "A name is not written all in lower case.",
+    "TournamentName.AllCapitals": "A name is not written all in capitals.",
+    "ReadOnlyDate.Unreadable": "Give the day.",
+    "Tournament.FinishesBeforeStarts":
+      "A tournament cannot finish before it starts.",
+    "CreateTournament.NoSuchCountry": "Choose the country.",
+    "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
+    "Tournament.NotAManager":
+      "Only a manager of this tournament can change it.",
+    "Tournament.Archived":
+      "This tournament is archived, and is restored before it can be changed.",
+    "UpdateTournament.NoSuchTournament":
+      "There is no tournament at this address.",
+
+    // What a tournament is played in and where, by code, as the API offers
+    // them to the admin's form. English takes the names the domain knows them
+    // by, rather than writing each out a second time to drift from it.
+    ...Object.fromEntries(
+      Sport.all.map((sport) => [`sport.${sport.code}`, sport.name]),
+    ),
+    ...Object.fromEntries(
+      TournamentFormat.all.map((format) => [
+        `format.${format.code}`,
+        format.name,
+      ]),
+    ),
+    ...Object.fromEntries(
+      countryNames.map(([code, name]) => [`country.${code}`, name]),
+    ),
 
     // An email is two entries: its subject, which is text, and its body, which
     // is the whole of its markup. This is the one place a catalogue holds

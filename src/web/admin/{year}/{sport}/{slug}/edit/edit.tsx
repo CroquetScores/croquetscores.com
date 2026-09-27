@@ -4,6 +4,7 @@ import {
   type Begins,
   TournamentForm,
 } from "../../../../tournaments/TournamentForm.js";
+import { knows, say } from "../../../../words.js";
 
 // Where a manager changes a tournament (edit.feature): the form every
 // tournament is created and changed with, beginning as the tournament is.
@@ -13,16 +14,11 @@ interface Props {
   readonly address: string;
 }
 
-// What each refusal of the page says in place of the form. The code is the
-// contract; these are only its words.
-const wordsFor: Readonly<Record<string, string>> = {
-  "Tournament.NotAManager": "Only a manager of this tournament can change it.",
-  "Tournament.Archived":
-    "This tournament is archived, and is restored before it can be changed.",
-  "UpdateTournament.NoSuchTournament":
-    "There is no tournament at this address.",
-};
-const otherwise = "This tournament cannot be changed.";
+// What a refusal of the page says in place of the form: its words, by its
+// code, or the words for any where it has none. The code is the contract; the
+// words are only what it says.
+const wordsFor = (code: string): string =>
+  say(knows(code) ? code : "admin.editTournament.otherwise");
 
 type Asked =
   | { readonly is: "asking" }
@@ -64,9 +60,9 @@ export const EditTournament = ({ address }: Props): React.JSX.Element => {
       <main id="content">
         <div className="page">
           <div className="panel stack">
-            <h1>Edit Tournament</h1>
+            <h1>{say("admin.editTournament.title")}</h1>
             <p className="page-refused" data-refused={asked.code}>
-              {wordsFor[asked.code] ?? otherwise}
+              {wordsFor(asked.code)}
             </p>
           </div>
         </div>
@@ -76,8 +72,8 @@ export const EditTournament = ({ address }: Props): React.JSX.Element => {
 
   return (
     <TournamentForm
-      title="Edit Tournament"
-      button="Update Tournament"
+      title={say("admin.editTournament.title")}
+      button={say("admin.editTournament.submit")}
       begins={asked.tournament}
       send={(said) =>
         fetch(at, {

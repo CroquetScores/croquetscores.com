@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { dated } from "./dates.js";
+import { say } from "./words.js";
 import { Years } from "./Years.js";
 import "./tournaments.css";
 
 // The admin's front door: the tournaments the reader manages or scores on this
-// website, one year at a time, and what they can do with each. Its words are
-// the admin's own, and in no catalogue yet, so they are in English whatever
-// the page's language; the months are the page's language, since the browser
-// names them.
+// website, one year at a time, and what they can do with each. The months are
+// in the page's language as its words are, since the browser names them.
 
 /** A tournament as the API lists it. */
 interface Listed {
@@ -120,7 +119,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         ? []
         : [
             <a key="scores" className="button" href={at}>
-              Scores
+              {say("admin.tournaments.scores")}
             </a>,
           ];
     }
@@ -132,16 +131,16 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
           className="button"
           onClick={() => void act(tournament, "restore")}
         >
-          Restore
+          {say("admin.tournaments.restore")}
         </button>,
       ];
     }
     return [
       <a key="manage" className="button" href={at}>
-        Manage
+        {say("admin.tournaments.manage")}
       </a>,
       <a key="edit" className="button" href={`${at}/edit`}>
-        Edit
+        {say("admin.tournaments.edit")}
       </a>,
       <button
         key="archive"
@@ -149,7 +148,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         className="button"
         onClick={() => void act(tournament, "archive")}
       >
-        Archive
+        {say("admin.tournaments.archive")}
       </button>,
     ];
   };
@@ -174,11 +173,13 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                 anybody signed in can create a tournament and manage it. */}
             <p>
               <a className="button" href="/admin/tournaments/new">
-                New Tournament
+                {say("admin.tournaments.new")}
               </a>
             </p>
             {listed === undefined ? null : listed.length === 0 ? (
-              <p className="tournaments-none">No tournaments</p>
+              <p className="tournaments-none">
+                {say("admin.tournaments.none")}
+              </p>
             ) : (
               <ul className="tournaments">
                 {listed.map((tournament) => (
@@ -199,7 +200,9 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                     {/* A line through a name is not read out, so an archived
                         tournament says so in words as well. */}
                     {tournament.archived ? (
-                      <span className="visually-hidden">Archived</span>
+                      <span className="visually-hidden">
+                        {say("admin.tournaments.archived")}
+                      </span>
                     ) : null}
                     <span className="tournament-options">
                       {options(tournament)}

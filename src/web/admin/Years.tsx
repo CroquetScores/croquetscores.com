@@ -1,5 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 
+import { say } from "./words.js";
+
 // The years to choose from, in the section bar. The newest are tabs, as many
 // as fit on one row of it, and the rest are in a drop-down list at the end of
 // the row. The bar's own tabs wrap rather than hide anything, because they are
@@ -17,11 +19,6 @@ interface Props {
   readonly chosen: number;
   readonly choose: (year: number) => void;
 }
-
-// What the drop-down list says while the year chosen is a tab, and what it is
-// called for a reader who is listening rather than looking. In English, as
-// every word of the admin's own is until the admin's words are in a catalogue.
-const earlier = "Earlier years";
 
 // How many of `widths` fit in `available`, `gap` apart, with room left for
 // `list` after them when not all of them do.
@@ -43,6 +40,9 @@ const howManyFit = (
 };
 
 export const Years = ({ years, chosen, choose }: Props): React.JSX.Element => {
+  // What the drop-down list says while the year chosen is a tab, and what it
+  // is called for a reader who is listening rather than looking.
+  const earlier = say("admin.years.earlier");
   const bar = useRef<HTMLDivElement>(null);
   const measuring = useRef<HTMLUListElement>(null);
   const [fit, setFit] = useState(years.length);
@@ -105,7 +105,7 @@ export const Years = ({ years, chosen, choose }: Props): React.JSX.Element => {
   );
 
   return (
-    <nav className="site-sections years" aria-label="Years">
+    <nav className="site-sections years" aria-label={say("admin.years.label")}>
       <div className="page">
         <div className="years-row" ref={bar}>
           <ul>

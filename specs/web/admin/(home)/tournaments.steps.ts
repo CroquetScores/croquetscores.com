@@ -16,6 +16,7 @@ import {
   momentOf,
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
 import { changeTournament } from "../../support/tournaments.js";
 
 // The admin draws the list itself, after asking the API for it, so nothing
@@ -851,6 +852,74 @@ Then(
         dates.x < called.x,
         `The dates start ${String(Math.round(dates.x))} pixels across and the name ${String(Math.round(called.x))}.`,
       );
+    });
+  },
+);
+
+// The list in the reader's language -------------------------------------------
+
+// A tournament's name is what its manager called it, and its dates are numbers
+// and the months the browser names, so neither is in a catalogue to be marked.
+Then(
+  "every word in the list but the tournaments' own is in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "main", [
+        ".tournament-name",
+        ".tournament-dates",
+      ]);
+      assert.deepEqual(stray, [], "Words in the list came from elsewhere.");
+    });
+  },
+);
+
+Then(
+  "the years are named in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const named = await announcedAs(this, "nav.years");
+      assert.ok(named !== null, "The years are not named.");
+      assert.ok(
+        isMarked(named),
+        `The years are named ${JSON.stringify(named)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "the drop-down list of years is named in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const named = await announcedAs(this, `${shownYears} select`);
+      assert.ok(named !== null, "No drop-down list of years is named.");
+      assert.ok(
+        isMarked(named),
+        `The drop-down list is named ${JSON.stringify(named)}.`,
+      );
+    });
+  },
+);
+
+// Each year is a number, whether it is a tab or a choice in the drop-down
+// list, so the years are left out; what is left is what the list says while
+// it selects none of them. Looked for in the list shown, which is only there
+// once there are more years than fit, so that a bar with no list in it fails
+// rather than passing on the copy it measures with.
+Then(
+  "every word in the years but the years themselves is in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.equal(
+        await dropDown(this).count(),
+        1,
+        "No drop-down list of years is offered.",
+      );
+      const stray = await unmarkedWithin(this, "nav.years", [
+        "a",
+        'option:not([value=""])',
+      ]);
+      assert.deepEqual(stray, [], "Words in the years came from elsewhere.");
     });
   },
 );
