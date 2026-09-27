@@ -126,7 +126,7 @@ export const addPlayer = (
   tournament: About,
   name: string,
 ): Promise<void> => {
-  const { represents, flag } = domainScenarioOf(world).player;
+  const { representing, flag } = domainScenarioOf(world).player;
   return send(
     world,
     new AddPlayer(
@@ -134,7 +134,7 @@ export const addPlayer = (
       tournament.value,
       {
         name,
-        ...(represents === undefined ? {} : { represents }),
+        ...(representing === undefined ? {} : { representing }),
         ...(flag === undefined ? {} : { flag }),
       },
       momentOf(world),
@@ -154,7 +154,7 @@ export const updatePlayer = async (
   const found = await world.tournamentsInHand?.load(tournament);
   const player = found?.players.find((each) => each.id.equals(id));
   const changed = domainScenarioOf(world).playerUpdate;
-  const represents = changed.represents ?? player?.represents;
+  const representing = changed.representing ?? player?.representing;
   const flag =
     changed.flag ??
     (player?.flag === undefined ? undefined : String(player.flag));
@@ -166,7 +166,7 @@ export const updatePlayer = async (
       id.value,
       {
         name: changed.name ?? player?.name.toString() ?? name ?? "Sam Someone",
-        ...(represents === undefined ? {} : { represents }),
+        ...(representing === undefined ? {} : { representing }),
         ...(flag === undefined ? {} : { flag }),
       },
       momentOf(world),

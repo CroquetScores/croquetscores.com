@@ -338,8 +338,11 @@ Then(
 
 Then(
   "the tournament's player {string} represents {string}",
-  function (this: SpecWorld, name: string, represents: string) {
-    assert.equal(playerNamed(tournamentOf(this), name).represents, represents);
+  function (this: SpecWorld, name: string, representing: string) {
+    assert.equal(
+      playerNamed(tournamentOf(this), name).representing,
+      representing,
+    );
   },
 );
 

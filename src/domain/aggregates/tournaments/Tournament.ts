@@ -1156,14 +1156,14 @@ const sameWriting = (
 
 const samePlayer = (one: TournamentPlayer, other: TournamentPlayer): boolean =>
   one.name.equals(other.name) &&
-  one.represents === other.represents &&
+  one.representing === other.representing &&
   String(one.flag) === String(other.flag);
 
 const playerEvent = <T extends DomainEvent>(
   Kind: new (
     playerId: string,
     name: string,
-    represents: string | undefined,
+    representing: string | undefined,
     flag: string | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
@@ -1175,7 +1175,7 @@ const playerEvent = <T extends DomainEvent>(
   new Kind(
     player.id.value,
     player.name.toString(),
-    player.represents,
+    player.representing,
     player.flag === undefined ? undefined : String(player.flag),
     by,
     at,

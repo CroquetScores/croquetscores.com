@@ -119,7 +119,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
         new TournamentPlayerAdded(
           text(said, "playerId"),
           text(said, "name"),
-          optionalText(said, "represents"),
+          optionalText(said, "representing"),
           optionalText(said, "flag"),
           createdBy,
           occurredAt,
@@ -132,7 +132,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
         new TournamentPlayerUpdated(
           text(said, "playerId"),
           text(said, "name"),
-          optionalText(said, "represents"),
+          optionalText(said, "representing"),
           optionalText(said, "flag"),
           createdBy,
           occurredAt,
