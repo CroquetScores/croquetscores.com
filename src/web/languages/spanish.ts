@@ -293,6 +293,12 @@ export const spanish: Language = {
     "admin.editTournament.title": "Editar torneo",
     "admin.editTournament.submit": "Actualizar torneo",
     "admin.editTournament.otherwise": "Este torneo no se puede cambiar.",
+    "admin.view.tabs": "Torneo",
+    "admin.view.players": "Jugadores",
+    "admin.view.competitions": "Competiciones",
+    "admin.view.managers": "Gestores",
+    "admin.view.scorers": "Anotadores",
+    "admin.view.otherwise": "Este torneo no se puede gestionar desde aquí.",
 
     "TournamentName.Missing": "Di cómo se llama el torneo.",
     "TournamentName.TooShort": "Ese nombre es demasiado corto.",

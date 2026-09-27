@@ -313,6 +313,14 @@ export const english: Language = {
     "admin.editTournament.submit": "Update Tournament",
     // Said in place of the form, for a refusal with no words of its own.
     "admin.editTournament.otherwise": "This tournament cannot be changed.",
+    // A tournament's page, and the tabs what there is to run is in.
+    "admin.view.tabs": "Tournament",
+    "admin.view.players": "Players",
+    "admin.view.competitions": "Competitions",
+    "admin.view.managers": "Managers",
+    "admin.view.scorers": "Scorers",
+    // Said in place of the tabs, for a refusal with no words of its own.
+    "admin.view.otherwise": "This tournament cannot be run from here.",
 
     // A tournament's refusals, keyed by their codes as every rule broken is.
     // Beneath the field each is about, or in place of the form where the page
