@@ -20,6 +20,8 @@ Four kinds of thing, kept apart.
 
 - One thing to consider: SETUP.md §7.2 still says a stored event's shape only ever gains optional fields, with no green-field exception. That rule is why the review flagged these changes, and it will keep misleading anyone who reads it. I could add a line there saying the rule starts applying once the site holds real data.
 
+- The admin's first modal dialog (STYLE.md §5c), adding players from a tournament's page, wants its behaviour in its feature file: focus goes to the first field (or first button) on opening and back to whatever opened it on closing; Cancel closes it keeping nothing the other buttons have not already kept, and Escape does the same; opening, closing and using it leave the address as it was; and where it stays open after doing something it says what it did in a live-region status message above the fields.
+
 ### Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.

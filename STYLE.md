@@ -17,7 +17,7 @@ One vocabulary for how this site looks, shared by the server-rendered public pag
 | Fluid type through `clamp()`                               | A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them                                                                                                         |
 | The public navigation is a `<details>` element             | `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all                                                          |
 | Breakpoints are written out, not tokenised                 | `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice                                                                              |
-| A modal dialog is a `<dialog>` opened with `showModal()`   | The browser then makes everything outside it unreachable, closes it on Escape, lays it over everything else and draws the backdrop, so none of that is scripting of the site's own to get wrong                           |
+| A modal dialog is a `<dialog>` opened with `showModal()`   | The browser then makes everything outside it unreachable, closes it on Escape and lays it over everything else, so none of that is scripting of the site's own to get wrong                                               |
 
 ---
 
@@ -111,19 +111,15 @@ Each part of the dialog carries its own background and the radius of its own cor
 
 ## 5c. Modal dialogs
 
-A modal dialog asks for something without leaving the page it was asked from: a player added to a tournament from the tournament's page, where the list of players is what the reader goes back to. Three things make it one, and each is required.
+A modal dialog asks for something without leaving the page it was asked from: a player added to a tournament from the tournament's page, where the list of players is what the reader goes back to. It sits over the page rather than being one, nothing outside it can be pressed while it is open, and since the page's own ways out cannot be reached, it carries a Cancel button of its own.
 
-- **Nothing outside it can be pressed.** While it is open, the page beneath it, the site's bars among it, cannot be pressed, focused or reached by the keyboard. Tab and Shift+Tab go round the dialog's own fields and buttons and nowhere else. A screen reader is told it is a modal dialog, named by its title, so that it does not read out the page beneath as though it could be used.
-- **It has a Cancel button.** The page's own ways out cannot be reached, so the dialog carries its own. Cancel closes it and keeps nothing that pressing the dialog's other buttons has not already kept. Escape does what Cancel does.
-- **It has no address.** Opening it leaves the address as it was, and so do closing it and whatever it does. It belongs to the page it was opened from, and a link to it would be a link to a page with something missing from it. So it cannot be bookmarked, and the back button goes back from the page, not from the dialog.
+It is a `<dialog>` element opened with `showModal()`, which makes the page beneath it unreachable and closes it on Escape for the browser rather than by scripting of the site's own (§1). Only the admin has one, since only the admin has scripting to open it with, and every public page has to work with none.
 
-It is drawn as a dialog is (§5b): the title bar, the fields on `--panel` with their labels and their messages, and the buttons stacked beneath them as wide as the fields. The button that does what it is for comes first, painted with `--action`. Cancel comes last, drawn as every other button is. It is centred over the page, `32rem` at most and the full width inside the gutter on a phone. The page behind it is dimmed by a backdrop, so that what can be used is what stands out. A dialog taller than the window scrolls within itself, and the page beneath it stays where it was.
+What it does — where focus goes, what Cancel and Escape keep, what happens to the address, what it says after doing something — is behaviour, and is specified in the feature file of the admin screen that opens it, as any behaviour is (`AI.md` §1). What follows is only how it is drawn.
 
-It is a `<dialog>` element opened with `showModal()`, which does the first rule and Escape for the browser rather than by scripting of the site's own (§1). Only the admin has one, since only the admin has scripting to open it with, and every public page has to work with none.
+It is drawn as a dialog is (§5b): the title bar, the fields on `--panel` with their labels and their messages, and the buttons stacked beneath them as wide as the fields. The button that does what it is for comes first, painted with `--action`. Cancel comes last, drawn as every other button is. It is centred over the page, `32rem` at most and the full width inside the gutter on a phone.
 
-Focus goes into it when it opens, to the first field, or to its first button where it has no fields. When it closes, focus goes back to whatever opened it, so that the reader is where they were.
-
-Where the dialog stays open after doing something, as one that adds players one after another does, it says what it did in a status message above the fields. The message is a live region, since unlike a dialog's notice (§5b) it arrives after the dialog is already open, and is read out only because it changed.
+The page behind it is dimmed, so that what can be used is what stands out. The browser's own backdrop is too faint to do that, so `::backdrop` is given a colour of the site's. A dialog taller than the window scrolls within itself, and the page beneath it stays where it was. `showModal()` stops the page being used but not being scrolled, so the stylesheet stops it too, with `overflow: hidden` on `html:has(dialog:modal)`.
 
 ---
 
