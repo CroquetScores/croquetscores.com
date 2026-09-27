@@ -83,7 +83,7 @@ import { TournamentsOfAccountHandler } from "../application/operations/tournamen
 import { TournamentToChangeHandler } from "../application/operations/tournaments/TournamentToChangeHandler.js";
 import { TournamentYearsOfAccountHandler } from "../application/operations/tournaments/TournamentYearsOfAccountHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
-import { noGamesYet } from "../application/services/Games.js";
+import { type Games, noGamesYet } from "../application/services/Games.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
@@ -391,6 +391,12 @@ export interface ApplicationOptions {
    * it checks what Google says.
    */
   readonly googleEndpoints?: GoogleEndpoints;
+  /**
+   * What says whether games have been played. Nothing records games yet, so
+   * the application's own say none have, unless a scenario stands in games
+   * that say otherwise, to see what is refused or held back where they have.
+   */
+  readonly games?: Games;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -619,7 +625,8 @@ export const buildApplication = async (
 
   // Every operation on a tournament, asked by the account the reader is
   // signed in to. Nothing records games yet, so whatever asks whether any have
-  // been played is told none have.
+  // been played is told none have, unless a scenario says otherwise.
+  const games = options.games ?? noGamesYet;
   const tournaments = new AggregateRepository(
     eventStore,
     (id: TournamentId, events) => Tournament.rebuiltFrom(id, events),
@@ -648,12 +655,12 @@ export const buildApplication = async (
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
-  mediator.handleCommand(new ArchivePlayerHandler(...both, noGamesYet));
+  mediator.handleCommand(new ArchivePlayerHandler(...both, games));
   mediator.handleCommand(new RestorePlayerHandler(...both));
   mediator.handleCommand(new AddBlockHandler(...both));
   mediator.handleCommand(new UpdateBlockHandler(...both));
   mediator.handleCommand(new AddKnockoutHandler(...both));
-  mediator.handleCommand(new UpdateKnockoutHandler(...both, noGamesYet));
+  mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both));
@@ -667,7 +674,7 @@ export const buildApplication = async (
   mediator.handleCommand(new RemoveScorerHandler(...both));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
-  mediator.handleQuery(new PlayersOfTournamentHandler(...both, noGamesYet));
+  mediator.handleQuery(new PlayersOfTournamentHandler(...both, games));
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
   mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
   mediator.handleQuery(
@@ -710,7 +717,7 @@ export const buildApplication = async (
   // another site by forgetting to ask.
   refuseCrossSite(server, config.canonicalHost);
 
-  await server.register(apiV1, { prefix: "/api/v1" });
+  await server.register(apiV1, { prefix: "/api/v1", assets });
   await server.register(
     auth({
       googleConfigured: config.google !== undefined,

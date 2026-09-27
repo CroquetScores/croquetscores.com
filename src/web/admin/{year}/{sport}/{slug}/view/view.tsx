@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
+import { PlayersTab } from "./tabs/players/players.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
 import "./view.css";
 
@@ -119,6 +120,9 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
             aria-labelledby={`tab-${chosen}`}
           >
             <h1>{asked.tournament.name}</h1>
+            {chosen === "players" ? (
+              <PlayersTab tournament={asked.tournament.id} />
+            ) : null}
             {chosen === "competitions" ? (
               <CompetitionsTab
                 tournament={asked.tournament.id}

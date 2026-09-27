@@ -38,7 +38,7 @@ import {
   standInGoogleFor,
 } from "../../infrastructure/support/google.js";
 import { readerTheScenariosSet } from "./reader.js";
-import { tournamentsThrough } from "./tournaments.js";
+import { standInGames, tournamentsThrough } from "./tournaments.js";
 
 let browser: Browser | undefined;
 let application: Application | undefined;
@@ -227,6 +227,7 @@ const itsOwn = async (
   loadEnvFile();
   const clock = clockFor(world);
   const google = await standInGoogleFor(world);
+  const games = standInGames();
   const scenario = await buildApplication(
     {
       ...loadConfig(),
@@ -260,6 +261,9 @@ const itsOwn = async (
       // Never Google, for the reason reCAPTCHA is never asked below: a stand-in
       // of the scenario's own, which says what the scenario has Google say.
       googleEndpoints: google.endpoints,
+      // Games that say what the scenario says has been played, and otherwise
+      // nothing, as the site's own do.
+      games: games.games,
       // Never the real service: a spec run has no business asking Have I Been
       // Pwned about a password, and what it would answer is not what any of
       // these scenarios is about. A scenario that is about a breached password
@@ -305,7 +309,7 @@ const itsOwn = async (
   const now = (): ReadOnlyDate =>
     ReadOnlyDate.from(new Date(clock.now.getTime()));
   world.accountsInHand = accountsThrough(scenario, now);
-  world.tournamentsInHand = tournamentsThrough(scenario, now);
+  world.tournamentsInHand = tournamentsThrough(scenario, now, games.said);
 
   // Closed with the scenario's database, before it is dropped, rather than by a
   // hook of its own that might run either side of the drop. The server and the

@@ -11,6 +11,13 @@ import { ArchiveCompetition } from "../../../application/operations/tournaments/
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { CreateTournament } from "../../../application/operations/tournaments/CreateTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
+import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
+import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
+import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
+import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
+import { UpdatePlayer } from "../../../application/operations/tournaments/UpdatePlayer.js";
+import { Flags } from "../../../domain/aggregates/tournaments/value-objects/Flags.js";
+import type { Assets } from "../../common/assets.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
@@ -103,7 +110,17 @@ interface AtAddress {
 const addressOf = ({ year, sport, slug }: AtAddress): string =>
   `${year}/${sport}/${slug}`;
 
-export const apiV1: FastifyPluginCallback = (server, _options, done) => {
+/** What the API is given besides its routes. */
+export interface ApiV1Options {
+  /** Where the site's own files are found, for the address of a flag's image. */
+  readonly assets: Assets;
+}
+
+export const apiV1: FastifyPluginCallback<ApiV1Options> = (
+  server,
+  { assets },
+  done,
+) => {
   server.get("/health", () => ({ status: "ok" }));
 
   // The reader's own, which is who "my" is. Nothing a caller sends can name
@@ -423,6 +440,129 @@ export const apiV1: FastifyPluginCallback = (server, _options, done) => {
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // A flag, as a reader sees it: its picture, and the name of the place it is
+  // the flag of, in the reader's language.
+  const flagAsSeen = (
+    request: FastifyRequest,
+    code: string,
+  ): { code: string; name: string; image: string } | undefined => {
+    const flag = Flags.thereAre.find(code);
+    if (flag === undefined) return undefined;
+    return {
+      code: String(flag),
+      name: speakingOf(request).say(`country.${String(flag)}`),
+      image: assets.url(`images/${flag.relativePath}`),
+    };
+  };
+
+  // Every flag a player can fly, in order of its name in the reader's
+  // language, which is the order a reader looks for one in.
+  server.get("/flags", (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const byName = new Intl.Collator(speakingOf(request).language.tag);
+    const flags = Flags.thereAre.all
+      .map((flag) => flagAsSeen(request, String(flag)))
+      .filter((flag) => flag !== undefined)
+      .sort((one, other) => byName.compare(one.name, other.name));
+    return reply.header("cache-control", "no-store").send({ flags });
+  });
+
+  // A tournament's players, as its manager lists them, each flag as it is seen.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const listed = await request.server.mediator.query(
+        new PlayersOfTournament(
+          reader.value,
+          `tournament/${request.params.id}`,
+        ),
+      );
+      const players = listed.map(({ flag, ...player }) => ({
+        ...player,
+        flag: flag === undefined ? undefined : flagAsSeen(request, flag),
+      }));
+      return reply.header("cache-control", "no-store").send({ players });
+    },
+  );
+
+  // What a player is, as the player dialog sends it. What they represent and
+  // their flag are left out where nothing was said.
+  const playerFrom = (body: unknown) => {
+    const representing = textOf(body, "representing");
+    const flag = textOf(body, "flag");
+    return {
+      name: textOf(body, "name"),
+      ...(representing === "" ? {} : { representing }),
+      ...(flag === "" ? {} : { flag }),
+    };
+  };
+
+  // A player added, and answered with their id.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const added = await request.server.mediator.send(
+        new AddPlayer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          playerFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
+  // A player changed, by the part of their id after "tournament-player/".
+  server.put<{ Params: { id: string; player: string } }>(
+    "/tournaments/:id/players/:player",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new UpdatePlayer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `tournament-player/${request.params.player}`,
+          playerFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A player archived or restored.
+  for (const [action, making] of [
+    ["archive", ArchivePlayer],
+    ["restore", RestorePlayer],
+  ] as const) {
+    server.post<{ Params: { id: string; player: string } }>(
+      `/tournaments/:id/players/:player/${action}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        await request.server.mediator.send(
+          new making(
+            reader.value,
+            `tournament/${request.params.id}`,
+            `tournament-player/${request.params.player}`,
+            request.requestedAt,
+          ),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
 
   done();
 };

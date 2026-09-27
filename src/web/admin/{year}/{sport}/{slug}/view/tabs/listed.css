@@ -58,3 +58,32 @@
     grid-template-columns: minmax(0, 1fr) auto auto;
   }
 }
+
+/* A name and what is shown beside it, such as a player's flag. */
+.listed-who {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* A name pressed to open something is a name first, drawn as the others are
+   rather than as a button. */
+button.listed-name {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+.listed-flag {
+  flex: none;
+}
+
+.listed-item[data-archived] .listed-about {
+  text-decoration: line-through;
+}

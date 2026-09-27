@@ -351,6 +351,28 @@ export const english: Language = {
     "admin.managers.removeYourself.explanation":
       "You will no longer be able to run this tournament, and nobody here can undo that for you. Another manager can make you one again.",
     "admin.managers.otherwise": "That address cannot be made a manager.",
+    // The Players tab.
+    "admin.players.add": "Add Player",
+    "admin.players.none": "No players",
+    "admin.players.archive": "Archive",
+    "admin.players.restore": "Restore",
+    "admin.players.archived": "Archived players",
+    // Said to a screen reader, since a line through a name is not read out.
+    "admin.players.archivedSaid": "Archived",
+    // The player dialog.
+    "admin.player.addTitle": "Add Player",
+    "admin.player.editTitle": "Edit Player",
+    "admin.player.name": "Name",
+    "admin.player.representing": "Representing",
+    "admin.player.flag": "Flag",
+    "admin.player.add": "Add",
+    "admin.player.save": "Save",
+    "admin.player.added": "{name} was added.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.player.otherwise": "This player cannot be kept as they are.",
+    "Tournament.PlayerNameTaken":
+      "Another player in this tournament already has that name.",
+    "TournamentPlayer.NoSuchFlag": "Choose one of the flags there are.",
     "AddManager.NoSuchAccount":
       "That address has no account that can be made a manager.",
     "admin.scorers.add": "Add Scorer",

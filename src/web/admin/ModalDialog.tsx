@@ -19,6 +19,8 @@ interface Props {
   readonly act: () => void;
   /** Closing it by Cancel or Escape, which keeps nothing. */
   readonly cancel: () => void;
+  /** Whether what the first button does is still being done. */
+  readonly busy?: boolean;
 }
 
 export const ModalDialog = ({
@@ -27,6 +29,7 @@ export const ModalDialog = ({
   action,
   act,
   cancel,
+  busy,
 }: Props): React.JSX.Element => {
   const dialog = useRef<HTMLDialogElement>(null);
 
@@ -60,15 +63,26 @@ export const ModalDialog = ({
       <h2 className="dialog-title" id="modal-dialog-title">
         {title}
       </h2>
-      <div className="dialog-content stack">{children}</div>
-      <div className="dialog-buttons">
-        <button className="button button-submit" type="button" onClick={act}>
-          {action}
-        </button>
-        <button className="button" type="button" onClick={cancel}>
-          {say("admin.modal.cancel")}
-        </button>
-      </div>
+      {/* A form, so that Enter in a field does what the first button does. */}
+      <form
+        className="dialog-form"
+        noValidate
+        aria-busy={busy === true}
+        onSubmit={(event) => {
+          event.preventDefault();
+          act();
+        }}
+      >
+        <div className="dialog-content stack">{children}</div>
+        <div className="dialog-buttons">
+          <button className="button button-submit" type="submit">
+            {action}
+          </button>
+          <button className="button" type="button" onClick={cancel}>
+            {say("admin.modal.cancel")}
+          </button>
+        </div>
+      </form>
     </dialog>
   );
 };
