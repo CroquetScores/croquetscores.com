@@ -20,15 +20,15 @@ import {
 const updateOf = (
   world: SpecWorld,
   player: TournamentPlayer | undefined,
-): { name: string; represents?: string; flag?: string } => {
+): { name: string; representing?: string; flag?: string } => {
   const changed = scenarioOf(world).playerUpdate;
-  const represents = changed.represents ?? player?.represents;
+  const representing = changed.representing ?? player?.representing;
   const flag =
     changed.flag ??
     (player?.flag === undefined ? undefined : String(player.flag));
   return {
     name: changed.name ?? player?.name.toString() ?? "Sam Someone",
-    ...(represents === undefined ? {} : { represents }),
+    ...(representing === undefined ? {} : { representing }),
     ...(flag === undefined ? {} : { flag }),
   };
 };
@@ -57,8 +57,8 @@ Given(
 
 Given(
   "the update has the player represent {string}",
-  function (this: SpecWorld, represents: string) {
-    scenarioOf(this).playerUpdate.represents = represents;
+  function (this: SpecWorld, representing: string) {
+    scenarioOf(this).playerUpdate.representing = representing;
   },
 );
 

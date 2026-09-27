@@ -56,10 +56,10 @@ Given("a player named {string}", function (this: SpecWorld, name: string) {
 
 Given(
   "a player named {string} representing {string}",
-  function (this: SpecWorld, name: string, represents: string) {
+  function (this: SpecWorld, name: string, representing: string) {
     this.tournamentPlayer = TournamentPlayer.from(TournamentPlayerId.create(), {
       name,
-      represents,
+      representing,
     });
   },
 );
@@ -112,13 +112,13 @@ When(
 
 When(
   "a player representing {string} is made",
-  function (this: SpecWorld, represents: string) {
-    tryToMake(this, { represents });
+  function (this: SpecWorld, representing: string) {
+    tryToMake(this, { representing });
   },
 );
 
 When("a player representing nothing is made", function (this: SpecWorld) {
-  tryToMake(this, { represents: undefined });
+  tryToMake(this, { representing: undefined });
 });
 
 When(
@@ -157,7 +157,7 @@ const updatedWith = (
   tryToChange(world, (player) =>
     player.update({
       name: player.name.toString(),
-      represents: player.represents,
+      representing: player.representing,
       flag: player.flag === undefined ? undefined : String(player.flag),
       ...changed,
     }),
@@ -173,8 +173,8 @@ When(
 
 When(
   "the player is updated to represent {string}",
-  function (this: SpecWorld, represents: string) {
-    updatedWith(this, { represents });
+  function (this: SpecWorld, representing: string) {
+    updatedWith(this, { representing });
   },
 );
 
@@ -206,13 +206,13 @@ Then("the player's name is {string}", function (this: SpecWorld, name: string) {
 
 Then(
   "the player represents {string}",
-  function (this: SpecWorld, represents: string) {
-    assert.equal(playerOfWorld(this).represents, represents);
+  function (this: SpecWorld, representing: string) {
+    assert.equal(playerOfWorld(this).representing, representing);
   },
 );
 
 Then("the player represents nothing", function (this: SpecWorld) {
-  assert.equal(playerOfWorld(this).represents, undefined);
+  assert.equal(playerOfWorld(this).representing, undefined);
 });
 
 Then(

@@ -14,7 +14,7 @@ export type TournamentPlayerErrorCode =
 export interface TournamentPlayerDetails {
   readonly name: string;
   /** The club, region or country they play for, if any. */
-  readonly represents?: string | undefined;
+  readonly representing?: string | undefined;
   /** The name of the flag they fly, if any. */
   readonly flag?: string | undefined;
 }
@@ -35,20 +35,20 @@ export interface TournamentPlayerDetails {
 export class TournamentPlayer {
   readonly #id: TournamentPlayerId;
   readonly #name: PersonName;
-  readonly #represents: string | undefined;
+  readonly #representing: string | undefined;
   readonly #flag: Flag | undefined;
   readonly #archived: boolean;
 
   private constructor(
     id: TournamentPlayerId,
     name: PersonName,
-    represents: string | undefined,
+    representing: string | undefined,
     flag: Flag | undefined,
     archived: boolean,
   ) {
     this.#id = id;
     this.#name = name;
-    this.#represents = represents;
+    this.#representing = representing;
     this.#flag = flag;
     this.#archived = archived;
   }
@@ -73,11 +73,11 @@ export class TournamentPlayer {
     const name = PersonName.from(details.name);
     // What is nothing but whitespace was left blank by whoever typed it, so it
     // is nothing represented rather than something called nothing.
-    const represents = details.represents?.trim() || undefined;
+    const representing = details.representing?.trim() || undefined;
     return new TournamentPlayer(
       id,
       name,
-      represents,
+      representing,
       TournamentPlayer.#flagNamed(details.flag),
       archived,
     );
@@ -104,8 +104,8 @@ export class TournamentPlayer {
   }
 
   /** The club, region or country they play for, or nothing. */
-  get represents(): string | undefined {
-    return this.#represents;
+  get representing(): string | undefined {
+    return this.#representing;
   }
 
   /** The flag shown beside their name, or nothing. */
@@ -164,7 +164,7 @@ export class TournamentPlayer {
     return new TournamentPlayer(
       this.#id,
       this.#name,
-      this.#represents,
+      this.#representing,
       this.#flag,
       archived,
     );

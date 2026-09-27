@@ -38,8 +38,8 @@ Given(
 
 Given(
   "the player is to represent {string}",
-  function (this: SpecWorld, represents: string) {
-    scenarioOf(this).player.represents = represents;
+  function (this: SpecWorld, representing: string) {
+    scenarioOf(this).player.representing = representing;
   },
 );
 
@@ -53,13 +53,13 @@ Given(
 // Making the player may be refused as well as adding them, and both are the
 // scenario's to expect.
 When("the player {string} is added", function (this: SpecWorld, name: string) {
-  const { id, represents, flag } = scenarioOf(this).player;
+  const { id, representing, flag } = scenarioOf(this).player;
   ask(this, (tournament) =>
     tournament.addPlayer(
       id === undefined
         ? TournamentPlayerId.create()
         : TournamentPlayerId.from(id),
-      { name, represents, flag },
+      { name, representing, flag },
       byOf(this),
       now(this),
     ),

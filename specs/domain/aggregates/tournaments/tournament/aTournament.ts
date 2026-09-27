@@ -58,7 +58,7 @@ export interface Said {
 interface PlayerSaid {
   id?: string;
   name?: string;
-  represents?: string;
+  representing?: string;
   flag?: string;
 }
 
