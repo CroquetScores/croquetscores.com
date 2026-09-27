@@ -14,8 +14,6 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- implement feature files in specs/web/admin/{year}/{sport}/{slug}/view
-
 - Tournament finish date can not be greater than current year + 1.
 
 - Feature files for api
@@ -65,24 +63,3 @@ Going to use SPA instead of /scripts.
 None.
 
 ---
-
-## Competition Players
-
-## Carry Forward tab
-
-Match Wins
-Match Losses
-Game Wins
-Game Losses
-Hoops For
-Hoops Against
-
-### Layout
-
-Match Wins [   ] Losses  [   ]
-Game  Wins [   ] Losses  [   ]
-Hoops For  [   ] Against [   ]
-
-### Validation
-
-All fields empty or >= 0
