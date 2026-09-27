@@ -97,21 +97,16 @@ Then("there are no more countries", function (this: SpecWorld) {
 
 // Named in full when it fails, so that whoever reads it knows which flags the
 // list of names left out.
-Then(
-  "every flag there is but {string} is one of them",
-  function (this: SpecWorld, notACountry: string) {
-    const countries = countriesOfWorld(this);
-    assert.deepEqual(
-      Flags.thereAre.all
-        .map(String)
-        .filter(
-          (name) => name !== notACountry && countries.find(name) === undefined,
-        ),
-      [],
-      "These flags are no country's.",
-    );
-  },
-);
+Then("every flag there is is one of them", function (this: SpecWorld) {
+  const countries = countriesOfWorld(this);
+  assert.deepEqual(
+    Flags.thereAre.all
+      .map(String)
+      .filter((name) => countries.find(name) === undefined),
+    [],
+    "These flags are no country's.",
+  );
+});
 
 // Named in full when it fails, so that whoever reads it knows which countries
 // have no region to put a tournament in.
