@@ -17,6 +17,7 @@ One vocabulary for how this site looks, shared by the server-rendered public pag
 | Fluid type through `clamp()`                               | A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them                                                                                                         |
 | The public navigation is a `<details>` element             | `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all                                                          |
 | Breakpoints are written out, not tokenised                 | `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice                                                                              |
+| A modal dialog is a `<dialog>` opened with `showModal()`   | The browser then makes everything outside it unreachable, closes it on Escape and lays it over everything else, so none of that is scripting of the site's own to get wrong                                               |
 
 ---
 
@@ -86,9 +87,11 @@ The site bar is `position: sticky; top: 0`. A sticky element only sticks within 
 
 ---
 
-## 5b. Forms
+## 5b. Dialogs
 
 Every form that is a page's purpose is a `.dialog`: a title bar in the section bar's colour, the fields beneath it on `--panel`, and its buttons beneath them. It stands on the page's own background in place of the panel, centred, `32rem` at most and the full width inside the gutter on a phone. It is a page region named by its title, not an ARIA dialog: it does not sit over the page, take focus or need dismissing, so claiming the role would describe something it is not.
+
+A dialog is the page. It has an address of its own, the site's bars are around it and can be pressed, and leaving it is going anywhere else. That is what tells it apart from a modal dialog (§5c), which sits over a page rather than being one, and which is drawn the same way and behaves differently.
 
 A field is one line tall, the height of the button beneath it. Its label rests inside the border, on the line where the typing will go, and when the field is focused or has something in it the label lifts onto the top border at `--text-sm`, with `--panel` behind it so the border does not run through the words. It moves in one step, never sliding. It comes back down only when the field is left empty, which the stylesheet knows from a blank placeholder of one space that nobody sees. The field does not grow to hold its label, so a label too long for it is cut short with an ellipsis rather than wrapping out over whatever is beside it. The label is still a `<label>`: what a screen reader announces for the field and what a click on it focuses. It is never placeholder text, which disappears the moment anyone types. The border and the focus ring belong to the box around the label and input together, because that box is what the reader sees as the field — and the box _is_ the `<label>`, so a press anywhere inside the border reaches the input, with no scripting asked for.
 
@@ -98,11 +101,25 @@ A notice at the top of a dialog is not a live region. It arrives with the page, 
 
 `.button` is anything to press, whether a `<button>` or a link that behaves like one, and is `44px` tall. `.button-submit` is the only one painted with `--action`, so there is never a second thing that looks like the way forward.
 
-A dialog's buttons are stacked, each as wide as the fields, so that however many a form has and however long their words, none is pushed onto a line of its own. The submit button is first, at the top where the eye starts, and first in reading and tab order; anything else to press — the way back in and the way to register, on the sign in page — comes beneath it, drawn as every button but the submit button is, in the order the page gives. No form has a cancel button: leaving a form changes nothing and goes nowhere the site's own bars do not, so the button did nothing for a reader, and took room from buttons that do.
+A dialog's buttons are stacked, each as wide as the fields, so that however many a form has and however long their words, none is pushed onto a line of its own. The submit button is first, at the top where the eye starts, and first in reading and tab order; anything else to press — the way back in and the way to register, on the sign in page — comes beneath it, drawn as every button but the submit button is, in the order the page gives. No dialog has a cancel button: leaving a dialog changes nothing and goes nowhere the site's own bars do not, so the button did nothing for a reader, and took room from buttons that do. A modal dialog is the exception, and must have one (§5c), because its bars cannot be reached.
 
 Where there is another way to do what a form is for — registering with Google rather than by email address — it is `.dialog-alternative`: a `.button` at the top of the content, beneath anything the reader needs telling and above the fields, as wide as they are, carrying the other way's own icon. It is drawn as the buttons other than the submit button are, because the way forward it is not is the form's. Beneath it, `.dialog-or` says "or", centred, in `--ink-muted`: written in lower case and drawn in capitals, because a screen reader can spell out a word written in capitals letter by letter.
 
 Each part of the dialog carries its own background and the radius of its own corners, rather than the dialog clipping them with `overflow: hidden`, which would also clip the focus ring of any control near its edge.
+
+---
+
+## 5c. Modal dialogs
+
+A modal dialog asks for something without leaving the page it was asked from: a player added to a tournament from the tournament's page, where the list of players is what the reader goes back to. It sits over the page rather than being one, nothing outside it can be pressed while it is open, and since the page's own ways out cannot be reached, it carries a Cancel button of its own.
+
+It is a `<dialog>` element opened with `showModal()`, which makes the page beneath it unreachable and closes it on Escape for the browser rather than by scripting of the site's own (§1). Only the admin has one, since only the admin has scripting to open it with, and every public page has to work with none.
+
+What it does — where focus goes, what Cancel and Escape keep, what happens to the address, what it says after doing something — is behaviour, and is specified in the feature file of the admin screen that opens it, as any behaviour is (`AI.md` §1). What follows is only how it is drawn.
+
+It is drawn as a dialog is (§5b): the title bar, the fields on `--panel` with their labels and their messages, and the buttons stacked beneath them as wide as the fields. The button that does what it is for comes first, painted with `--action`. Cancel comes last, drawn as every other button is. It is centred over the page, `32rem` at most and the full width inside the gutter on a phone.
+
+The page behind it is dimmed, so that what can be used is what stands out. The browser's own backdrop is too faint to do that, so `::backdrop` is given a colour of the site's. A dialog taller than the window scrolls within itself, and the page beneath it stays where it was. `showModal()` stops the page being used but not being scrolled, so the stylesheet stops it too, with `overflow: hidden` on `html:has(dialog:modal)`.
 
 ---
 
