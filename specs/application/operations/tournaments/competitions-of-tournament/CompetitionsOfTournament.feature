@@ -1,16 +1,21 @@
 @postgres
-Feature: The competitions of a tournament, as its manager lists them
+Feature: The competitions of a tournament, as its managers and scorers list them
 
   A manager lists a tournament's competitions to put them in order, archive
-  them and restore them, so the application answers with every competition
-  the tournament has, archived ones among them, in the tournament's order,
-  lowest first. Each is answered with its id, its name, its kind — a block, a
+  them and restore them, so a manager is answered with every competition the
+  tournament has, archived ones among them, in the tournament's order, lowest
+  first. Each is answered with its id, its name, its kind — a block, a
   knockout or a Swiss — its slug, which is where it is found under the
   tournament, and whether it is archived.
 
+  A scorer lists them to find the one whose scores they are entering
+  (`view.feature`). An archived competition is set aside, and there are no
+  scores to enter in it, so a scorer is answered with the competitions in use
+  alone, in the same order and with the same about each.
+
   It answers the account the reader is signed in to, and never one the reader
-  chose. Only the tournament's managers can ask: the list is for managing
-  them, so anybody else, a scorer among them, is refused with
+  chose. Only the tournament's managers and scorers can ask, since nobody else
+  has anything to do with its competitions: anybody else is refused with
   `Tournament.NotAManager`. A tournament there is not is refused as
   `CompetitionsOfTournament.NoSuchTournament`.
 
@@ -66,21 +71,41 @@ Feature: The competitions of a tournament, as its manager lists them
         | knockout |
         | Swiss    |
 
-  Rule: Only a manager of a tournament there is can list them
+  Rule: A scorer is answered the competitions in use alone
+
+    Scenario: A scorer is answered a competition in use
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as not archived
+
+    Scenario: A scorer is not answered an archived competition
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" lists the competitions of "Spring Open"
+      Then no competitions are answered
+
+    Scenario: A scorer is answered the competitions in the tournament's order
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has moved the competition "Block B" in "Spring Open" up
+      When the reader signed in to the account for "scorer@example.com" lists the competitions of "Spring Open"
+      Then the first competition answered is "Block B"
+
+  Rule: Only a manager or a scorer of a tournament there is can list them
 
     Scenario: A tournament there is not is refused
       When the reader signed in to the account for "organiser@example.com" lists the competitions of a tournament there is not
       Then it is refused with "CompetitionsOfTournament.NoSuchTournament"
 
-    Scenario: A reader who does not manage the tournament is refused
+    Scenario: A reader with no part in the tournament is refused
       Given "someone@example.com" has an account, confirmed, called "Sam Someone"
       When the reader signed in to the account for "someone@example.com" lists the competitions of "Spring Open"
-      Then it is refused with "Tournament.NotAManager"
-
-    Scenario: A scorer of the tournament is refused
-      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
-      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
-      When the reader signed in to the account for "scorer@example.com" lists the competitions of "Spring Open"
       Then it is refused with "Tournament.NotAManager"
 
   Rule: A forgotten account lists nothing

@@ -26,14 +26,3 @@ export interface Games {
     draw: KnockoutDraw,
   ): Promise<boolean>;
 }
-
-/**
- * The application's games, until something records them. There is nothing to
- * find, so nobody has played, and no change to a draw moves anybody who has
- * played. Whatever records games replaces this, and
- * is held to the same questions.
- */
-export const noGamesYet: Games = {
-  hasPlayed: () => Promise.resolve(false),
-  movesAPlayerWhoHasPlayed: () => Promise.resolve(false),
-};

@@ -8,12 +8,12 @@ Feature: Changing what a tournament's knockout is
   Only the tournament's managers can: anybody else, a scorer among them, is
   refused with `Tournament.NotAManager` (`onlyManagers.feature`).
 
-  A draw can be changed after games are played in it, but not so as to move a
-  player who has games (`updateKnockout.feature`), and whether it does is not
-  the tournament's to know. The application asks its games. Nothing records
-  games yet, so the application's games say that nothing in any knockout has
-  been played (`Games.feature`), and a change moves nobody who has; a
-  scenario about one that does stands in games that say so.
+  A draw cannot be changed so as to move a player who has games
+  (`updateKnockout.feature`), and whether it does is not the tournament's to
+  know. The application asks its games (`Games.feature`). A knockout's draw
+  is fixed once it has a game, archived or not (`addGame.feature`), so the
+  games say a change to the draw of a knockout that has one moves a player who
+  has played.
 
   This says again only enough of what updating a block says to show that it
   holds for a knockout.
@@ -48,15 +48,19 @@ Feature: Changing what a tournament's knockout is
       Then it is refused with "Request.Invalid"
       And the first rule broken is "KnockoutDraw.EvenBestOf"
 
-  Rule: A change to the draw may not move a player the games say has played
+  Rule: A change to the draw of a knockout that has a game is refused
 
-    Scenario: A change the games say moves a player who has played is refused as the tournament refuses it
-      Given games that say the change to the knockout "Main Event" in "Spring Open" moves a player who has played
+    Scenario: A change to the draw of a knockout with a game is refused as the tournament refuses it
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
       And the update gives the knockout a draw of 8 places
       When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
       Then it is refused with "Tournament.KnockoutPlayerHasGames"
 
-    Scenario: A change the games say moves nobody who has played is kept
+    Scenario: A change to the draw of a knockout with no games is kept
       Given the update gives the knockout a draw of 8 places
       When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
       Then the tournament's competition "Main Event" has a draw of 8 places

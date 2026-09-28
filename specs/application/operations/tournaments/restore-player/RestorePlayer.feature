@@ -10,6 +10,11 @@ Feature: Restoring a tournament's archived player
   among them, is refused with `Tournament.NotAManager`
   (`onlyManagers.feature`).
 
+  Archiving the player removed them from every competition they were in
+  (`ArchivePlayer.feature`), and nothing was kept of the places they had, so
+  restoring them does not put them back: they are entered again as anybody
+  is.
+
   A forgotten account restores nobody, and is refused with `Account.Forgotten`.
 
   These scenarios run against Postgres, with the application's event store and
@@ -37,6 +42,15 @@ Feature: Restoring a tournament's archived player
     Scenario: Restoring a player who is not archived records nothing
       When the reader signed in to the account for "organiser@example.com" restores the player "Sam Someone" in "Spring Open"
       Then nothing more is recorded of the tournament
+
+  Rule: A player restored is not put back in the competitions they were removed from
+
+    Scenario: A restored player is not in a competition they were in before being archived
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" restores the player "Sam Someone" in "Spring Open"
+      Then the competition "Block A" of "Spring Open" does not have the player "Sam Someone"
 
   Rule: Only a player there is, in a tournament there is, can be restored
 

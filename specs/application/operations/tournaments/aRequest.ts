@@ -31,8 +31,10 @@ interface Scenario {
   readonly byName: Map<string, TournamentId>;
   // The tournament the scenario is looking at: the last one asked about.
   looking: TournamentId | undefined;
-  // How many events it had before the request the scenario is about.
+  // How many events it had before the request the scenario is about, and how
+  // many each of its competitions had, by id.
   eventsBefore: number;
+  competitionEventsBefore: Map<string, number>;
   // Where the request came to, and what it says of a value, as typed, where
   // the scenario says something no step of the tournament's could make.
   website: string | undefined;
@@ -49,6 +51,7 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
       byName: new Map(),
       looking: undefined,
       eventsBefore: 0,
+      competitionEventsBefore: new Map(),
       website: undefined,
       says: {},
     };
@@ -133,6 +136,14 @@ export const send = async <TResult>(
   world.brokenRulesChecked = 0;
   scenario.eventsBefore =
     about === undefined ? 0 : (await inHand.eventsOf(about)).length;
+  scenario.competitionEventsBefore = new Map();
+  const before = about === undefined ? undefined : await inHand.load(about);
+  for (const { reference } of before?.competitions ?? []) {
+    scenario.competitionEventsBefore.set(
+      reference.id.value,
+      (await inHand.eventsOf(reference.id)).length,
+    );
+  }
   scenario.looking = about;
   try {
     world.answer = await inHand.send(command);

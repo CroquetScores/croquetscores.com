@@ -11,8 +11,8 @@ Feature: Changing what a tournament is
   An update says everything again: the name, when it starts and finishes, the
   format, the sport, the country, the region, the notes, and whether it is
   played under handicap, allows drawn games, counts towards the world
-  rankings, and is national or international. Each is asked its own rules on 
-  the way in, as creating asks them, and what the tournament asks of them 
+  rankings, and is national or international. Each is asked its own rules on
+  the way in, as creating asks them, and what the tournament asks of them
   together is the tournament's to refuse (`update.feature`). The website is
   not among them: a tournament keeps the one it was created on.
 

@@ -151,6 +151,31 @@ export const managedBy = async (
 };
 
 /**
+ * The tournament `written`, and the part `account` has in it, once it is known
+ * to be asking and to manage or score it: refused as a manager's list is, but
+ * letting a scorer in as well, for what a scorer is shown.
+ */
+export const managedOrScoredBy = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  accounts: AggregateRepository<Account, AccountId>,
+  account: string,
+  written: string,
+  operation: string,
+): Promise<{
+  readonly tournament: Tournament;
+  readonly part: "manager" | "scorer";
+}> => {
+  const by = await askedBy(accounts, account);
+  const tournament = await tournamentFor(tournaments, written, operation);
+  if (tournament.manages(by)) return { tournament, part: "manager" };
+  if (tournament.scores(by)) return { tournament, part: "scorer" };
+  throw new TournamentRefused(
+    "Tournament.NotAManager",
+    "Only a manager or a scorer of the tournament can ask for this.",
+  );
+};
+
+/**
  * Each of `ids` with its account's name, in the order given. A forgotten
  * account is left out, since no list answers one unless it is expressly asked
  * to, and its name could not be read in any case.

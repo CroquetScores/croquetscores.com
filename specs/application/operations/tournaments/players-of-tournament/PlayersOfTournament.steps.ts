@@ -133,3 +133,34 @@ Then(
     assert.equal(playerCalled(this, name).hasPlayed, false);
   },
 );
+
+Then(
+  "the player {string} is answered in no competitions",
+  function (this: SpecWorld, name: string) {
+    assert.deepEqual(playerCalled(this, name).competitions, []);
+  },
+);
+
+Then(
+  "the player {string} is answered in the competition {string}",
+  function (this: SpecWorld, name: string, competition: string) {
+    assert.ok(
+      playerCalled(this, name).competitions.includes(competition),
+      `${name} is answered in ${JSON.stringify(playerCalled(this, name).competitions)}.`,
+    );
+  },
+);
+
+Then(
+  "the player {string} is not answered in the competition {string}",
+  function (this: SpecWorld, name: string, competition: string) {
+    assert.ok(!playerCalled(this, name).competitions.includes(competition));
+  },
+);
+
+Then(
+  "the first competition the player {string} is answered in is {string}",
+  function (this: SpecWorld, name: string, competition: string) {
+    assert.equal(playerCalled(this, name).competitions[0], competition);
+  },
+);

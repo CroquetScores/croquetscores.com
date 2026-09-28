@@ -9,7 +9,7 @@ import {
   CompetitionsOfTournament,
   type ListedCompetition,
 } from "./CompetitionsOfTournament.js";
-import { managedBy } from "./tournamentOperations.js";
+import { managedOrScoredBy } from "./tournamentOperations.js";
 
 export class CompetitionsOfTournamentHandler extends QueryHandler<
   CompetitionsOfTournament,
@@ -28,20 +28,24 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
   async handle(
     query: CompetitionsOfTournament,
   ): Promise<readonly ListedCompetition[]> {
-    const { tournament } = await managedBy(
+    const { tournament, part } = await managedOrScoredBy(
       this.tournaments,
       this.accounts,
       query.account,
       query.tournament,
       "CompetitionsOfTournament",
     );
-    // In the tournament's own order, which it keeps lowest first.
-    return tournament.competitions.map(({ reference, shape }) => ({
-      id: reference.id.value,
-      name: reference.name.toString(),
-      kind: shape.kind,
-      slug: reference.slug.toString(),
-      archived: reference.archived,
-    }));
+    // In the tournament's own order, which it keeps lowest first. A scorer is
+    // answered the competitions in use alone: an archived one is set aside,
+    // and has no scores to enter.
+    return tournament.competitions
+      .filter(({ reference }) => part === "manager" || !reference.archived)
+      .map(({ reference, shape }) => ({
+        id: reference.id.value,
+        name: reference.name.toString(),
+        kind: shape.kind,
+        slug: reference.slug.toString(),
+        archived: reference.archived,
+      }));
   }
 }

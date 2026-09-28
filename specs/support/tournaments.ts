@@ -8,6 +8,7 @@ import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { DomainEvent } from "../../src/domain/common/DomainEvent.js";
 import type { TournamentId } from "../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
+import type { Games } from "../../src/application/services/Games.js";
 import type { Competition } from "../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionId } from "../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
 
@@ -43,9 +44,6 @@ export interface TournamentsInHand {
   /** The moment a request sent now is asked at, by the scenario's clock. */
   now(): ReadOnlyDate;
 
-  /** What the games the operations ask say has been played, by id. */
-  readonly games: {
-    readonly playersWhoHavePlayed: Set<string>;
-    readonly knockoutsWhoseChangeMovesAPlayer: Set<string>;
-  };
+  /** The application's games, as its operations ask them. */
+  readonly games: Games;
 }
