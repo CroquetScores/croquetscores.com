@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
+import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competition-slug}/view/view.js";
 import { ViewTournament } from "./{year}/{sport}/{slug}/view/view.js";
 import { Tournaments } from "./Tournaments.js";
 import { say } from "./words.js";
@@ -44,6 +45,16 @@ export const App = (): React.JSX.Element => {
     path,
   )?.[1];
   if (editing !== undefined) return <EditTournament address={editing} />;
+
+  // A competition's address beneath its tournament's, as
+  // /admin/2026/ac/spring-open/competitions/block-a, is its page.
+  const competition =
+    /^\/admin\/([1-9]\d{3}\/[^/]+\/[^/]+)\/competitions\/([^/]+)\/?$/.exec(
+      path,
+    );
+  if (competition?.[1] !== undefined && competition[2] !== undefined) {
+    return <ViewCompetition address={competition[1]} slug={competition[2]} />;
+  }
 
   // A tournament's own address, as /admin/2026/ac/spring-open, is its page.
   const viewing = /^\/admin\/([1-9]\d{3}\/[^/]+\/[^/]+)\/?$/.exec(path)?.[1];

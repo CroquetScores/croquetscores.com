@@ -1,0 +1,52 @@
+/* A tab control (STYLE.md §5d): tabs drawn as a folder's are, on a box
+   holding what the tab being read holds. The box's top line is the line
+   beneath the row, and the tab being read has a bar along its foot, just above
+   that line. Each tab's words keep to one line, and the row is never wider
+   than the box: on a window too narrow for every tab, it scrolls sideways. */
+.tab-control {
+  display: flex;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* What the tabs hold, set apart from the rest of the page, right up against
+   the row it belongs to. */
+.tabbed > [role="tabpanel"] {
+  padding: 1rem;
+  border: 1px solid var(--accent);
+  /* Square where the first tab stands on it, round everywhere else. */
+  border-radius: 0 var(--radius-1) var(--radius-1) var(--radius-1);
+}
+
+/* Each tab lined as the box is, round its top and sides, with the line
+   between two neighbours shared rather than doubled. */
+.tab-control [role="tab"] {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  flex: 0 0 auto;
+  padding: 0 var(--space-3);
+  margin-right: -1px;
+  border: 1px solid var(--accent);
+  border-bottom: 0;
+  border-radius: var(--radius-1) var(--radius-1) 0 0;
+  background: none;
+  color: var(--ink-muted);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab-control [role="tab"]:hover {
+  background: var(--surface);
+}
+
+/* On the panel's background, with a bar along its foot, just above the box's
+   line, that says it is the one being read. Inside the tab rather than over
+   the line, which a row that scrolls would cut off. */
+.tab-control [role="tab"][aria-selected="true"] {
+  border-bottom: 3px solid var(--action);
+  background: var(--panel);
+  color: var(--ink);
+}

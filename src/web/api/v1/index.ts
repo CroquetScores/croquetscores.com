@@ -6,11 +6,25 @@ import type {
   FastifyRequest,
 } from "fastify";
 
+import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
+import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
+import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.js";
 import { ArchiveTournament } from "../../../application/operations/tournaments/ArchiveTournament.js";
 import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
 import { CreateTournament } from "../../../application/operations/tournaments/CreateTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
+import { AddGame } from "../../../application/operations/competitions/AddGame.js";
+import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
+import { EnterPlayer } from "../../../application/operations/competitions/EnterPlayer.js";
+import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
+import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
+import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
+import { RemovePlayer } from "../../../application/operations/competitions/RemovePlayer.js";
+import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
+import { ReverseWithdrawal } from "../../../application/operations/competitions/ReverseWithdrawal.js";
+import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
+import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
 import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
@@ -29,6 +43,8 @@ import type { TournamentRequest } from "../../../application/operations/tourname
 import { RestoreTournament } from "../../../application/operations/tournaments/RestoreTournament.js";
 import { TournamentsOfAccount } from "../../../application/operations/tournaments/TournamentsOfAccount.js";
 import { TournamentYearsOfAccount } from "../../../application/operations/tournaments/TournamentYearsOfAccount.js";
+import { CompetitionPage } from "../../../application/operations/tournaments/CompetitionPage.js";
+import { TournamentPage } from "../../../application/operations/tournaments/TournamentPage.js";
 import { TournamentToChange } from "../../../application/operations/tournaments/TournamentToChange.js";
 import { UpdateTournament } from "../../../application/operations/tournaments/UpdateTournament.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
@@ -71,6 +87,22 @@ const signedInOrRefused = (
 const textOf = (body: unknown, field: string): string => {
   const value = (body as Record<string, unknown> | null)?.[field];
   return typeof value === "string" ? value : "";
+};
+
+// A number where one was sent, and otherwise one that is no number, which is
+// refused as a best-of or a draw's places are when they are not whole.
+const numberOf = (body: unknown, field: string): number => {
+  const value = (body as Record<string, unknown> | null)?.[field];
+  return typeof value === "number" ? value : Number.NaN;
+};
+
+// The numbers sent under `field`, each as `numberOf` reads one, and none where
+// no list was sent.
+const numbersOf = (body: unknown, field: string): number[] => {
+  const value = (body as Record<string, unknown> | null)?.[field];
+  return Array.isArray(value)
+    ? value.map((each) => (typeof each === "number" ? each : Number.NaN))
+    : [];
 };
 
 // Yes or no where it was said, and unsaid otherwise, which the tournament
@@ -235,6 +267,39 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     },
   );
 
+  // The tournament found at an address as its page shows it to the reader,
+  // with their part in it. Refused where they have no part in it, where it is
+  // archived, and where nothing has been found there.
+  server.get<{ Params: AtAddress }>(
+    "/tournaments/at/:year/:sport/:slug/page",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const tournament = await request.server.mediator.query(
+        new TournamentPage(reader.value, addressOf(request.params)),
+      );
+      return reply.header("cache-control", "no-store").send(tournament);
+    },
+  );
+
+  // A competition found beneath the tournament at an address, as its page
+  // shows it to the reader, with their part in the tournament.
+  server.get<{ Params: AtAddress & { competition: string } }>(
+    "/tournaments/at/:year/:sport/:slug/competitions/:competition/page",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const competition = await request.server.mediator.query(
+        new CompetitionPage(
+          reader.value,
+          addressOf(request.params),
+          request.params.competition,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send(competition);
+    },
+  );
+
   // The tournament found at an address changed, and answered with where it is
   // found afterwards, which is somewhere else when its year or its sport
   // changed. Found at the address it was asked at both times, which still
@@ -304,6 +369,51 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     },
   );
 
+  // A competition added, as the competition dialog sends it: its kind, its
+  // name, and the shape its kind has. Answered with its id.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/competitions",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const tournament = `tournament/${request.params.id}`;
+      const body = request.body;
+      const name = textOf(body, "name");
+      const at = request.requestedAt;
+      const kind = textOf(body, "kind");
+      const added = await request.server.mediator.send(
+        kind === "knockout"
+          ? new AddKnockout(
+              reader.value,
+              tournament,
+              name,
+              numberOf(body, "places"),
+              numbersOf(body, "rounds"),
+              at,
+            )
+          : kind === "swiss"
+            ? new AddSwiss(
+                reader.value,
+                tournament,
+                name,
+                numberOf(body, "bestOf"),
+                at,
+              )
+            : new AddBlock(
+                reader.value,
+                tournament,
+                name,
+                numberOf(body, "bestOf"),
+                at,
+              ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
   // A competition moved a place, archived or restored, named by the part of
   // its id after "competition/", as the tournament is by its own.
   for (const action of ["up", "down", "archive", "restore"] as const) {
@@ -332,6 +442,167 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                   action,
                   at,
                 ),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
+
+  // A competition's players, as its tournament's managers and scorers list
+  // them, each flag as it is seen. The competition is named by the part of
+  // its id after "competition/", as the tournament is by its own.
+  server.get<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const listed = await request.server.mediator.query(
+        new PlayersOfCompetition(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+        ),
+      );
+      const players = listed.map(({ flag, ...player }) => ({
+        ...player,
+        flag: flag === undefined ? undefined : flagAsSeen(request, flag),
+      }));
+      return reply.header("cache-control", "no-store").send({ players });
+    },
+  );
+
+  // One of the tournament's players entered, by the part of their id after
+  // "tournament-player/", and answered with their id in the competition.
+  server.post<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const entered = await request.server.mediator.send(
+        new EnterPlayer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          `tournament-player/${textOf(request.body, "player")}`,
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: entered });
+    },
+  );
+
+  // A competition's player moved a place, withdrawn, unwithdrawn or removed,
+  // by the part of their id after "competition-player/".
+  for (const action of [
+    "up",
+    "down",
+    "withdraw",
+    "unwithdraw",
+    "remove",
+  ] as const) {
+    server.post<{
+      Params: { id: string; competition: string; player: string };
+    }>(
+      `/tournaments/:id/competitions/:competition/players/:player/${action}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        const asked = [
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          `competition-player/${request.params.player}`,
+        ] as const;
+        const at = request.requestedAt;
+        await request.server.mediator.send(
+          action === "withdraw"
+            ? new WithdrawPlayer(...asked, at)
+            : action === "unwithdraw"
+              ? new ReverseWithdrawal(...asked, at)
+              : action === "remove"
+                ? new RemovePlayer(...asked, at)
+                : new MoveCompetitionPlayer(...asked, action, at),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
+
+  // A competition's games, as its tournament's managers and scorers list them.
+  server.get<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/games",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const games = await request.server.mediator.query(
+        new GamesOfCompetition(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ games });
+    },
+  );
+
+  // A game's score added, as the score dialog sends it, its players by the
+  // part of their ids after "competition-player/", and answered with the
+  // game's id. What was left empty is left out, for the game to refuse.
+  server.post<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/games",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const player = (field: string): string | undefined => {
+        const said = textOf(request.body, field);
+        return said === "" ? undefined : `competition-player/${said}`;
+      };
+      const score = (field: string): string | undefined => {
+        const said = textOf(request.body, field);
+        return said === "" ? undefined : said;
+      };
+      const added = await request.server.mediator.send(
+        new AddGame(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          {
+            winner: player("winner"),
+            winnerScore: score("winnerScore"),
+            loser: player("loser"),
+            loserScore: score("loserScore"),
+          },
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added });
+    },
+  );
+
+  // A game's score archived or restored, by the part of its id after "game/".
+  for (const action of ["archive", "restore"] as const) {
+    server.post<{ Params: { id: string; competition: string; game: string } }>(
+      `/tournaments/:id/competitions/:competition/games/:game/${action}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        const asked = [
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          `game/${request.params.game}`,
+          request.requestedAt,
+        ] as const;
+        await request.server.mediator.send(
+          action === "archive"
+            ? new ArchiveGame(...asked)
+            : new RestoreGame(...asked),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },
@@ -542,23 +813,22 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     },
   );
 
-  // A player archived or restored.
-  for (const [action, making] of [
-    ["archive", ArchivePlayer],
-    ["restore", RestorePlayer],
-  ] as const) {
+  // A player moved a place, archived or restored.
+  for (const action of ["up", "down", "archive", "restore"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
       `/tournaments/:id/players/:player/${action}`,
       async (request, reply) => {
         const reader = signedInOrRefused(request, reply);
         if (reader === undefined) return reply;
+        const tournament = `tournament/${request.params.id}`;
+        const player = `tournament-player/${request.params.player}`;
+        const at = request.requestedAt;
         await request.server.mediator.send(
-          new making(
-            reader.value,
-            `tournament/${request.params.id}`,
-            `tournament-player/${request.params.player}`,
-            request.requestedAt,
-          ),
+          action === "archive"
+            ? new ArchivePlayer(reader.value, tournament, player, at)
+            : action === "restore"
+              ? new RestorePlayer(reader.value, tournament, player, at)
+              : new MovePlayer(reader.value, tournament, player, action, at),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },

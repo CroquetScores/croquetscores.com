@@ -7,13 +7,17 @@ import {
   tournamentNamed,
 } from "../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../support/world.js";
-import { unmarkedWithin } from "../../../../../support/marks.js";
+import {
+  announcedAs,
+  isMarked,
+  unmarkedWithin,
+} from "../../../../../support/marks.js";
 
 // The admin draws the page itself, after asking the API for the tournament, so
 // the page is taken as open once it has drawn its heading: the tournament's
 // name, or what it says in its place where the reader cannot run it.
 
-const tabBar = "nav.tournament-tabs";
+const tabBar = ".tab-control";
 
 const openPageOf = async function (
   this: SpecWorld,
@@ -60,6 +64,17 @@ Then(
   },
 );
 
+// Once the page has drawn the tabs the reader is offered, which it does with
+// their part in the tournament, so that one missing is missing rather than
+// still to come.
+Then(
+  "the tab {string} is not offered",
+  async function (this: SpecWorld, tab: string) {
+    await this.browserPage.locator(tabBar).getByRole("tab").first().waitFor();
+    assert.equal(await tabCalled(this, tab).count(), 0, `${tab} is offered.`);
+  },
+);
+
 // Once the page has said why it was refused, which is when it has decided
 // what to draw.
 Then("no tab is offered", async function (this: SpecWorld) {
@@ -84,21 +99,48 @@ Then(
   },
 );
 
-// The section bar being the bar every page's sections are in, which is how a
-// reader knows the tabs for the page's sections.
+// The tabs are parts of the one page, so they are in its panel, beneath its
+// heading, rather than in the section bar, which is for moving between pages.
 Then(
-  "the tab {string} is in the section bar",
+  "the tab {string} is in the panel",
   async function (this: SpecWorld, tab: string) {
     await tabCalled(this, tab).waitFor();
     assert.equal(
       await this.browserPage
-        .locator("nav.site-sections")
+        .locator(".panel")
         .getByRole("tab", { name: tab, exact: true })
         .count(),
       1,
     );
   },
 );
+
+Then(
+  "the tab {string} is beneath the page's heading",
+  async function (this: SpecWorld, tab: string) {
+    await tabCalled(this, tab).waitFor();
+    const heading = await this.browserPage
+      .locator("main h1")
+      .first()
+      .boundingBox();
+    const box = await tabCalled(this, tab).boundingBox();
+    assert.ok(heading !== null && box !== null, "One is not laid out.");
+    assert.ok(heading.y + heading.height <= box.y, "The tab is not beneath.");
+  },
+);
+
+// Once the page has drawn its tabs, which is when it has decided what to draw.
+Then("the page has no section bar", async function (this: SpecWorld) {
+  await this.browserPage.locator(tabBar).waitFor();
+  assert.equal(await this.browserPage.locator("nav.site-sections").count(), 0);
+});
+
+Then("the tabs are named in the test locale", async function (this: SpecWorld) {
+  await this.browserPage.locator(tabBar).waitFor();
+  const named = await announcedAs(this, tabBar);
+  assert.ok(named !== null, "The tabs are not named.");
+  assert.ok(isMarked(named), `The tabs are named ${JSON.stringify(named)}.`);
+});
 
 Then("the tabs are on one row", async function (this: SpecWorld) {
   const tabs = this.browserPage.locator(tabBar).getByRole("tab");

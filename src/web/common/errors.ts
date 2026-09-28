@@ -10,7 +10,9 @@ import { randomUUID } from "node:crypto";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
+import { CompetitionRefused } from "../../domain/aggregates/tournaments/competitions/Competition.js";
 import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
+import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 import type { Assets } from "./assets.js";
 import { speakingOf } from "./language.js";
 import { siteNameOf, websiteOf } from "./site.js";
@@ -129,9 +131,16 @@ export const registerErrorMapping = (
     // Named kind by kind rather than as any refusal, because most refusals are
     // not the caller's: the mediator's, the event store's and the database's
     // are the server failing, and must reach the log as that below.
+    //
+    // So is a competition's refusal, and a rule the thing asked for broke once
+    // what it needed of the tournament was known — a game with a tie and no
+    // mark saying who won, a player who has withdrawn — which the score
+    // dialog says beside the field it is about.
     if (
       (error instanceof TournamentRefused ||
-        error instanceof TournamentOperationRefused) &&
+        error instanceof TournamentOperationRefused ||
+        error instanceof CompetitionRefused ||
+        error instanceof ValidationError) &&
       wantsJson(request)
     ) {
       request.log.info({ code: error.code }, "Request refused");

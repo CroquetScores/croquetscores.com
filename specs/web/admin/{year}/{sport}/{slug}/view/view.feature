@@ -2,15 +2,24 @@
 Feature: A tournament's page in the admin
 
   /admin/{year}/{sport}/{slug} is where a manager runs a tournament, having
-  pressed its name or Manage in their list (`tournaments.feature`). It is
-  headed by the tournament's name, and what there is to run is in four tabs,
-  in this order: Players, Competitions, Managers and Scorers.
+  pressed its name or Manage in their list, and where a scorer finds its
+  competitions, having pressed Scores (`tournaments.feature`). It is headed by
+  the tournament's name, and what there is to run is in four tabs, in this
+  order: Players, Competitions, Managers and Scorers.
 
-  The tabs are the page's sections, so they are in the section bar, as every
-  page's sections are (`LAYOUT.md`), and the tab being read is marked as a
-  section is. The tabs are parts of the one page rather than pages of their
-  own, so they have no addresses: the page opens on Players, the first, and
-  choosing another leaves the address as it was. A link to the page is a link
+  A scorer enters scores and does nothing else to a tournament
+  (`addScorer.feature`), and scores are entered in its competitions. So a
+  scorer is offered the Competitions tab alone, and the page opens on it: the
+  players, the managers and the scorers are the managers' to change, and a
+  tab a scorer could only look at would be a tab of things they cannot use.
+
+  The tabs are a tab control in the panel, beneath the tournament's name
+  (`STYLE.md` §5d), and the tab being read is marked. The tabs are parts of
+  the one page rather than pages of their own, so they are not in the section
+  bar, which is for moving between pages, and the page has none. Nor do they
+  have addresses: the page opens on Players, the first, and
+  choosing another leaves the address as it was, and a scorer's opens on
+  Competitions, the one tab they have. A link to the page is a link
   to the tournament, and the browser's back button leaves the page rather
   than going back through its tabs.
 
@@ -18,14 +27,14 @@ Feature: A tournament's page in the admin
   (`players-tab.feature`, `competitions-tab.feature`, `managers-tab.feature`
   and `scorers-tab.feature`).
 
-  Only a manager runs a tournament, so the page is refused as changing the
-  tournament is (`edit.feature`), by the refusal's code in place of the tabs:
-  `Tournament.NotAManager` for a scorer or anybody else, `Tournament.Archived`
-  for an archived tournament, which can only be restored, and
-  `UpdateTournament.NoSuchTournament` where no tournament has been found. A
-  scorer is sent here by Scores in their list, and is refused until the page
-  where scores are entered is written. An address the tournament has moved on
-  from sends the reader to where it is now.
+  Only a tournament's managers and scorers have anything to do here, so the
+  page is refused to anybody else, by the refusal's code in place of the tabs,
+  as changing the tournament is (`edit.feature`): `Tournament.NotAManager` for
+  a reader with no part in it, `Tournament.Archived` for an archived
+  tournament, which can only be restored, to a scorer as to a manager, and
+  `UpdateTournament.NoSuchTournament` where no tournament has been found. An
+  address the tournament has moved on from sends the reader to where it is
+  now.
 
   The admin draws the page itself, so every scenario here runs scripts, and it
   is read on a phone's width, as the rest of the admin is.
@@ -59,7 +68,7 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then the page is headed "Spring Open"
 
-  Rule: What there is to run is in four tabs, in the section bar
+  Rule: What there is to run is in four tabs, in the panel beneath the tournament's name
 
     Scenario Outline: The page has each tab
       When the page of "Spring Open" is opened
@@ -83,9 +92,17 @@ Feature: A tournament's page in the admin
         | Managers     | third  |
         | Scorers      | fourth |
 
-    Scenario: The tabs are in the section bar
+    Scenario: The tabs are in the panel
       When the page of "Spring Open" is opened
-      Then the tab "Players" is in the section bar
+      Then the tab "Players" is in the panel
+
+    Scenario: The tabs are beneath the tournament's name
+      When the page of "Spring Open" is opened
+      Then the tab "Players" is beneath the page's heading
+
+    Scenario: The page has no section bar
+      When the page of "Spring Open" is opened
+      Then the page has no section bar
 
     Scenario: The tabs keep to one row on a phone
       When the page of "Spring Open" is opened
@@ -95,7 +112,7 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then the tab "Players" is at least 44 pixels tall
 
-  Rule: The page opens on Players, and the tab chosen is marked
+  Rule: A manager's page opens on Players, and the tab chosen is marked
 
     Scenario: The page opens on the Players tab
       When the page of "Spring Open" is opened
@@ -132,14 +149,43 @@ Feature: A tournament's page in the admin
       When the page at "/admin/2026/ac/spring-open/competitions" is opened
       Then no tab is offered
 
-  Rule: Only a manager of a tournament there is sees the page
+  Rule: A scorer is offered the Competitions tab alone
 
-    Scenario: A scorer is told they cannot run the tournament
+    Scenario: A scorer is offered the Competitions tab
       Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
       And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
       And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the page of "Spring Open" is opened
-      Then the page is refused with "Tournament.NotAManager"
+      Then the tab "Competitions" is offered
+
+    Scenario Outline: A scorer is not offered the managers' tabs
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "<tab>" is not offered
+
+      Examples:
+        | tab      |
+        | Players  |
+        | Managers |
+        | Scorers  |
+
+    Scenario: A scorer's page opens on the Competitions tab
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Competitions" is the one being read
+
+    Scenario: A scorer's page is headed by the tournament's name
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the page is headed "Spring Open"
+
+  Rule: Only a manager or a scorer of a tournament there is sees the page
 
     Scenario: A reader with no part in the tournament is told they cannot run it
       Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
@@ -155,6 +201,14 @@ Feature: A tournament's page in the admin
 
     Scenario: An archived tournament says it can only be restored
       Given "organiser@example.com" has archived the tournament "Spring Open"
+      When the page of "Spring Open" is opened
+      Then the page is refused with "Tournament.Archived"
+
+    Scenario: An archived tournament says so to a scorer too
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the page of "Spring Open" is opened
       Then the page is refused with "Tournament.Archived"
 
@@ -182,7 +236,7 @@ Feature: A tournament's page in the admin
     Scenario: The tabs are named in the reader's language
       Given a browser that asks for "en-XA"
       When the page of "Spring Open" is opened
-      Then the section bar is named in the test locale
+      Then the tabs are named in the test locale
 
     Scenario: A refused page is in the reader's language
       Given a browser that asks for "en-XA"

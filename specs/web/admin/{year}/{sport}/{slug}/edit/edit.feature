@@ -136,6 +136,10 @@ Feature: A tournament is changed in the admin
       When the page to edit "Spring Open" is opened
       Then "Allows drawn games" is ticked
 
+    Scenario: A tournament not allowing drawn games is not ticked as one
+      When the page to edit "Spring Open" is opened
+      Then "Allows drawn games" is not ticked
+
     Scenario: A national tournament is ticked as one
       Given the tournament "Spring Open" is national
       When the page to edit "Spring Open" is opened

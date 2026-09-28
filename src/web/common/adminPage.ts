@@ -28,13 +28,14 @@ const bodyEnd = "</body>";
 export const adminWordsId = "admin-words";
 
 // What the admin says: its own words, and the refusals of the tournaments it
-// creates and changes and of the addresses it makes managers and scorers of,
-// which are keyed by their codes as every form's are. Not
-// every word the site has, most of which are the public pages' and the
-// emails', and would be sent with every page of the admin for nothing. A
-// refusal the admin is not sent words for is said in its words for any.
+// creates and changes, of the competitions it adds, and of the addresses it
+// makes managers and scorers of, which are keyed by their codes as every
+// form's are. Not every word the site has, most of which are the public
+// pages' and the emails', and would be sent with every page of the admin for
+// nothing. A refusal the admin is not sent words for is said in its words for
+// any.
 const saidByTheAdmin =
-  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.)/;
+  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|CompetitionName\.|BestOf\.|KnockoutDraw\.)/;
 
 // The admin's words in the reader's language, each one the site's first
 // language has, so that a word missing from the reader's is said in that one

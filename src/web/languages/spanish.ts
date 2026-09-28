@@ -300,6 +300,11 @@ export const spanish: Language = {
     "admin.view.managers": "Gestores",
     "admin.view.scorers": "Anotadores",
     "admin.view.otherwise": "Este torneo no se puede gestionar desde aquí.",
+    "admin.competitionView.tabs": "Competición",
+    "admin.competitionView.players": "Jugadores",
+    "admin.competitionView.scores": "Resultados",
+    "admin.competitionView.otherwise":
+      "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",
     "admin.competitions.knockout": "Eliminatoria",
     "admin.competitions.swiss": "Suizo",
@@ -310,6 +315,28 @@ export const spanish: Language = {
     "admin.competitions.restore": "Restaurar",
     "admin.competitions.archived": "Competiciones archivadas",
     "admin.competitions.none": "No hay competiciones",
+    "admin.competitions.add": "Añadir competición",
+    // The competition dialog.
+    "admin.competition.addTitle": "Añadir competición",
+    "admin.competition.name": "Nombre",
+    "admin.competition.kind": "Tipo",
+    "admin.competition.bestOf": "Al mejor de",
+    "admin.competition.places": "Plazas",
+    "admin.competition.round": "Ronda {number}",
+    "admin.competition.add": "Añadir",
+    "admin.competition.added": "Se ha añadido {name}.",
+    "admin.competition.otherwise":
+      "Esta competición no se puede guardar tal como está.",
+    "CompetitionName.Missing": "Introduce un nombre.",
+    "CompetitionName.TooLong":
+      "Un nombre puede tener como mucho 254 caracteres.",
+    "Tournament.CompetitionNameTaken":
+      "Otra competición de este torneo ya tiene ese nombre.",
+    "BestOf.NotWhole": "Introduce un número entero de partidas.",
+    "BestOf.TooSmall":
+      "Un encuentro tiene que ser al mejor de al menos 1 partida.",
+    "KnockoutDraw.EvenBestOf":
+      "Un encuentro de eliminatoria tiene que tener ganador, así que es al mejor de un número impar de partidas.",
     "admin.modal.cancel": "Cancelar",
     "admin.people.emailAddress": "Dirección de correo electrónico",
     "admin.people.remove": "Quitar",
@@ -322,10 +349,63 @@ export const spanish: Language = {
     "admin.managers.removeYourself.explanation":
       "Ya no podrás gestionar este torneo, y nadie aquí puede deshacerlo por ti. Otro gestor puede volver a hacerte gestor.",
     "admin.managers.otherwise": "Esa dirección no se puede hacer gestora.",
+    "admin.competitionPlayers.add": "Añadir jugador",
+    "admin.competitionPlayers.choose": "Jugador que añadir",
+    "admin.competitionPlayers.nobody": "Elige un jugador",
+    "admin.competitionPlayers.all":
+      "Todos los jugadores están en la competición",
+    "admin.competitionPlayers.none": "No hay jugadores",
+    "admin.competitionPlayers.up": "Subir",
+    "admin.competitionPlayers.down": "Bajar",
+    "admin.competitionPlayers.remove": "Quitar",
+    "admin.competitionPlayers.withdraw": "Retirar",
+    "admin.competitionPlayers.unwithdraw": "Deshacer la retirada",
+    "admin.competitionPlayers.withdrawn": "Jugadores retirados",
+    "admin.competitionPlayers.removeTitle": "Quitar jugador",
+    "admin.competitionPlayers.removeQuestion":
+      "{name} saldrá de la competición. No se puede deshacer.",
+    "admin.competitionPlayers.withdrawTitle": "Retirar jugador",
+    "admin.competitionPlayers.withdrawQuestion":
+      "{name} no jugará más en la competición, y las partidas que no ha jugado se decidirán sin su participación.",
+    "admin.scores.add": "Añadir resultado",
+    "admin.scores.none": "No hay resultados",
+    "admin.scores.archive": "Archivar",
+    "admin.scores.restore": "Restaurar",
+    "admin.scores.archived": "Resultados archivados",
+    "admin.scores.archivedSaid": "Archivado",
+    "admin.score.title": "Añadir resultado",
+    "admin.score.add": "Añadir partida",
+    "admin.score.winner": "Ganador",
+    "admin.score.winnerScore": "Puntos del ganador",
+    "admin.score.loser": "Perdedor",
+    "admin.score.loserScore": "Puntos del perdedor",
+    "admin.score.beat": "ganó a",
+    "admin.score.added": "Se añadió la partida que {winner} ganó a {loser}.",
+    "admin.score.otherwise": "No se pudo añadir la partida.",
+    "Game.WinnerMissing": "Elige el ganador.",
+    "Game.WinnerScoreMissing": "Escribe los puntos del ganador.",
+    "Game.LoserMissing": "Elige el perdedor.",
+    "Game.LoserScoreMissing": "Escribe los puntos del perdedor.",
+    "Score.NoPoints": "Los puntos empiezan por un número.",
+    "Game.SamePlayer": "Nadie juega contra sí mismo.",
+    "Game.WinnerNotAhead":
+      "El ganador tiene que tener más puntos que el perdedor, o marcarse como ganador.",
+    "Game.LoserMarked":
+      "Los puntos del perdedor no pueden marcarse como ganados.",
+    "Competition.MatchDecided": "Su partido ya está decidido.",
+    "Competition.NotDrawnToMeet": "No les toca jugar entre sí.",
+    "CompetitionPlayer.Withdrawn": "Un jugador retirado ya no juega.",
     "admin.players.add": "Añadir jugador",
     "admin.players.none": "No hay jugadores",
     "admin.players.archive": "Archivar",
     "admin.players.restore": "Restaurar",
+    "admin.players.up": "Subir",
+    "admin.players.down": "Bajar",
+    "admin.players.archiveTitle": "Archivar jugador",
+    "admin.players.archiveQuestion":
+      "{name} se quitará de estas competiciones:",
+    "admin.players.archive.explanation":
+      "Restaurar al jugador no lo devolverá a estas competiciones.",
     "admin.players.archived": "Jugadores archivados",
     "admin.players.archivedSaid": "Archivado",
     "admin.player.addTitle": "Añadir jugador",
@@ -367,6 +447,8 @@ export const spanish: Language = {
       "Las notas pueden tener como mucho 2000 caracteres.",
     "Tournament.NotAManager":
       "Solo quien gestiona este torneo puede cambiarlo.",
+    "Tournament.NotAManagerOrScorer":
+      "Solo quien gestiona o anota este torneo puede verlo.",
     "Tournament.Archived":
       "Este torneo está archivado, y hay que restaurarlo antes de poder cambiarlo.",
     "UpdateTournament.NoSuchTournament":

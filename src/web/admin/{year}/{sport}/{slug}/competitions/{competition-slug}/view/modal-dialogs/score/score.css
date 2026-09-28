@@ -1,0 +1,14 @@
+/* The score dialog reads as the result is said aloud, a row at a time: a
+   player and their score side by side, the score the narrower, since it is a
+   few characters and a name is many. */
+.score-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6rem;
+  gap: var(--space-2);
+  align-items: start;
+}
+
+.score-beat {
+  margin: 0;
+  color: var(--ink-muted);
+}

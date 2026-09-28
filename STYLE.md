@@ -121,6 +121,16 @@ It is drawn as a dialog is (§5b): the title bar, the fields on `--panel` with t
 
 The page behind it is dimmed, so that what can be used is what stands out. The browser's own backdrop is too faint to do that, so `::backdrop` is given a colour of the site's. A dialog taller than the window scrolls within itself, and the page beneath it stays where it was. `showModal()` stops the page being used but not being scrolled, so the stylesheet stops it too, with `overflow: hidden` on `html:has(dialog:modal)`.
 
+## 5d. Tabs
+
+A tab control divides what one page holds into parts the reader moves between without leaving the page: a tournament's players, competitions, managers and scorers, on the tournament's page in the admin. The parts are one page rather than pages of their own, so the control is inside the panel, beneath the page's heading, and not in the section bar, which is for moving between pages (`LAYOUT.md`). A page with a tab control and no pages to move between has no section bar.
+
+It is a row of tabs across the top of the panel's content, and what the tab being read holds beneath the row, in a box of its own: a `1px` line of `--accent` all round it, the full width of the panel, with `1rem` of room inside it, so that what the tabs hold reads as one thing apart from the rest of the page. The top of the box is the line beneath the row. Each tab is drawn with the same line around its top and sides, as a tab on a folder is, and is its words, as tall as a thumb (`44px`), with `--space-3` of room either side; neighbouring tabs share the line between them. The corners are rounded to `--radius-1`: each tab's top two, and the box's, all but the one the first tab stands on. The tab being read has its background the panel's, its words in `--ink`, and a `3px` bar of `--action` along its foot, just above the box's line. The others have the box's line beneath them, their words in `--ink-muted`, and `--surface` behind them when pointed at. Nothing else marks the one being read, so the row reads as tabs on what they hold rather than as buttons.
+
+Each tab's words keep to one line, and the row is never wider than the box beneath it: on a window too narrow for every tab, the row scrolls sideways rather than wrapping a tab away from what it holds or running past the box. A page's tabs are few and their words short, so a phone mostly holds them all.
+
+It is a `role="tablist"` of `role="tab"` buttons, each with `aria-selected`, and what they hold is the `role="tabpanel"` beneath them, labelled by the tab being read, so that a screen reader says what it is and which part is open. What each tab holds, and which the page opens on, is behaviour, and is specified in the feature file of the page that has them (`AI.md` §1).
+
 ---
 
 ## 6. What is required of every screen

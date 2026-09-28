@@ -1,0 +1,17 @@
+/* A score reads as it is said aloud: the winner and their score, then the
+   loser and theirs. A name wraps onto as many lines as it needs rather than
+   widening the page. */
+.listed-score {
+  overflow-wrap: anywhere;
+}
+
+.score-winner,
+.score-loser {
+  font-weight: 600;
+}
+
+/* Struck through so that an archived score is not taken for one in use. Its
+   row says so in words too, for a reader who is not looking. */
+.listed-item[data-archived] .listed-score {
+  text-decoration: line-through;
+}

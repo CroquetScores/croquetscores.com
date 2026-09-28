@@ -24,14 +24,17 @@ const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
 
 // Opened ------------------------------------------------------------------------
 
-Then("the player dialog is open", async function (this: SpecWorld) {
-  await dialogOf(this).waitFor();
-});
+Then(
+  /^the (?:player|score|competition) dialog is open$/,
+  async function (this: SpecWorld) {
+    await dialogOf(this).waitFor();
+  },
+);
 
 // A <dialog> shown by showModal() is modal: the browser says so to a screen
 // reader, and makes everything outside it unreachable.
 Then(
-  "the player dialog is announced as a modal dialog",
+  /^the (?:player|score|competition) dialog is announced as a modal dialog$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     assert.equal(
@@ -45,7 +48,7 @@ Then(
 );
 
 Then(
-  "the player dialog is named {string}",
+  /^the (?:player|score|competition) dialog is named "([^"]*)"$/,
   async function (this: SpecWorld, name: string) {
     await dialogOf(this).waitFor();
     const labelledBy = await dialogOf(this).getAttribute("aria-labelledby");
@@ -58,7 +61,7 @@ Then(
 );
 
 Then(
-  "the player dialog asks for {string}",
+  /^the (?:player|score|competition) dialog asks for "([^"]*)"$/,
   async function (this: SpecWorld, label: string) {
     await dialogOf(this).waitFor();
     assert.equal(
@@ -122,9 +125,12 @@ When(
   },
 );
 
-Then("the focus never left the player dialog", function (this: SpecWorld) {
-  assert.equal(this.focusNeverLeft, true, "The focus left the dialog.");
-});
+Then(
+  /^the focus never left the (?:player|score|competition) dialog$/,
+  function (this: SpecWorld) {
+    assert.equal(this.focusNeverLeft, true, "The focus left the dialog.");
+  },
+);
 
 // Its flag -------------------------------------------------------------------------
 
@@ -241,7 +247,7 @@ Then(
 );
 
 Then(
-  "the player dialog says what it refused",
+  /^the (?:player|score|competition) dialog says what it refused$/,
   async function (this: SpecWorld) {
     await dialogOf(this)
       .locator(".field-message, .dialog-problems")
@@ -252,9 +258,12 @@ Then(
 
 // Sent by its first button, found by what it is rather than by its words,
 // which are in whatever language the page is in.
-When("the player dialog is sent as it is", async function (this: SpecWorld) {
-  await dialogOf(this).locator('button[type="submit"]').click();
-});
+When(
+  /^the (?:player|score|competition) dialog is sent as it is$/,
+  async function (this: SpecWorld) {
+    await dialogOf(this).locator('button[type="submit"]').click();
+  },
+);
 
 When("the way to add a player is pressed", async function (this: SpecWorld) {
   await tabPanel(this).locator("section > p button").first().click();
@@ -292,7 +301,7 @@ Then(
 // Laid out ----------------------------------------------------------------------
 
 Then(
-  "the player dialog is no wider than the window",
+  /^the (?:player|score|competition) dialog is no wider than the window$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     const box = await dialogOf(this).boundingBox();
@@ -309,11 +318,16 @@ Then(
   "{string} is above {string}",
   async function (this: SpecWorld, one: string, other: string) {
     await dialogOf(this).waitFor();
-    const boxOf = async (words: string) =>
-      dialogOf(this)
-        .locator(".dialog-buttons button")
-        .filter({ hasText: new RegExp(`^${words}$`) })
-        .boundingBox();
+    // A field by its label, or otherwise a button by its words.
+    const boxOf = async (words: string) => {
+      const field = dialogOf(this).getByLabel(words, { exact: true });
+      return (await field.count()) > 0
+        ? field.boundingBox()
+        : dialogOf(this)
+            .locator(".dialog-buttons button")
+            .filter({ hasText: new RegExp(`^${words}$`) })
+            .boundingBox();
+    };
     const [first, second] = [await boxOf(one), await boxOf(other)];
     assert.ok(first !== null && second !== null, "One is not laid out.");
     assert.ok(first.y + first.height <= second.y, `${one} is not above.`);

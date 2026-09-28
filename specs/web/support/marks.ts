@@ -34,7 +34,9 @@ export const unmarkedWithin = async (
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       if (named.some((one) => one.contains(node))) continue;
       const text = node.textContent.trim();
-      if (text !== "") texts.push(text);
+      // Text with no letter in it, such as the arrows Up and Down are drawn
+      // as, is no word of any language.
+      if (/\\p{L}/u.test(text)) texts.push(text);
     }
     return texts;
   })()`);

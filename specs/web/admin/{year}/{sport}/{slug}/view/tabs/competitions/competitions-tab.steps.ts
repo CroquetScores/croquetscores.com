@@ -40,12 +40,14 @@ const allNames = async (world: SpecWorld): Promise<string[]> => [
   ...(await namesIn(world, "archived")),
 ];
 
-// A button or a link, whichever it is, by its words exactly.
-const optionOf = (world: SpecWorld, name: string, option: string): Locator =>
-  rowOf(world, name)
-    .locator(".listed-options")
-    .locator("button, a")
-    .filter({ hasText: exactly(option) });
+// A button or a link, whichever it is, by the name it is read out by exactly,
+// which for Up and Down is not what is shown: they are drawn as arrows.
+const optionOf = (world: SpecWorld, name: string, option: string): Locator => {
+  const options = rowOf(world, name).locator(".listed-options");
+  return options
+    .getByRole("button", { name: option, exact: true })
+    .or(options.getByRole("link", { name: option, exact: true }));
+};
 
 const openCompetitions = async function (
   this: SpecWorld,
@@ -97,6 +99,19 @@ Then(
         names.indexOf(earlier) !== -1 &&
           names.indexOf(later) > names.indexOf(earlier),
         `The competitions are ${JSON.stringify(names)}.`,
+      );
+    });
+  },
+);
+
+// Neither among those in use nor among the archived.
+Then(
+  "the competition {string} is not listed",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      assert.ok(
+        !(await allNames(this)).includes(name),
+        `The competitions are ${JSON.stringify(await allNames(this))}.`,
       );
     });
   },
@@ -192,6 +207,16 @@ Then(
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
+    });
+  },
+);
+
+Then(
+  "the tab does not say there are no competitions",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.ok((await allNames(this)).length > 0);
+      assert.equal(await tabPanel(this).locator(".listed-none").count(), 0);
     });
   },
 );

@@ -1,20 +1,30 @@
 import { useEffect, useState } from "react";
 
 import { say } from "../../../../../../words.js";
+import { CompetitionDialog } from "../../modal-dialogs/competition/competition.js";
+import { optionFace } from "../optionFace.js";
 import "../listed.css";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
-// the tournament's order, each offering View, Up, Down and Archive, and after
-// them the archived ones, offering Restore alone. Whatever is pressed, the list
-// is asked for again, so that it says what the competitions are now rather
-// than what was pressed. Adding a competition and changing one come with the
-// competition dialog.
+// the tournament's order, each offering View, Archive, Up and Down, and after
+// them the archived ones, offering Restore alone. Add Competition opens the
+// competition dialog. Whatever is pressed, and whenever the dialog adds a
+// competition, the list is asked for again, so that it says what the
+// competitions are now rather than what was pressed. Changing a competition
+// comes with the dialog's Edit.
 
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
   /** Where the tournament is found, as "2026/ac/spring-open". */
   readonly address: string;
+  /**
+   * The reader's part in the tournament. A scorer is shown the competitions in
+   * use alone, as the API answers them, and can only view them: adding them,
+   * putting them in order, archiving and restoring them are the managers' to
+   * do.
+   */
+  readonly part: "manager" | "scorer";
 }
 
 /** A competition as the API lists it. */
@@ -33,12 +43,14 @@ const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 export const CompetitionsTab = ({
   tournament,
   address,
+  part,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // Counted up to ask again, once something has been pressed.
   const [asking, setAsking] = useState(0);
   const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
+  const [adding, setAdding] = useState(false);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions`;
 
   useEffect(() => {
@@ -112,9 +124,8 @@ export const CompetitionsTab = ({
       type="button"
       className="button"
       onClick={() => void act(competition, action)}
-    >
-      {say(`admin.competitions.${action}`)}
-    </button>
+      {...optionFace(action, say(`admin.competitions.${action}`))}
+    />
   );
 
   return (
@@ -122,6 +133,21 @@ export const CompetitionsTab = ({
       className="stack competitions-tab"
       aria-busy={acting || answered !== asking}
     >
+      {/* Above the list rather than beneath it, where a long one would push
+          it off a phone's screen. */}
+      {part === "manager" ? (
+        <p>
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              setAdding(true);
+            }}
+          >
+            {say("admin.competitions.add")}
+          </button>
+        </p>
+      ) : null}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.competitions.none")}</p>
       ) : (
@@ -132,12 +158,17 @@ export const CompetitionsTab = ({
                 <a key="view" className="button" href={pageOf(competition)}>
                   {say("admin.competitions.view")}
                 </a>,
-                // Nowhere to go is nothing to press.
-                ...(place > 0 ? [button(competition, "up")] : []),
-                ...(place < inUse.length - 1
-                  ? [button(competition, "down")]
+                ...(part === "manager"
+                  ? [
+                      button(competition, "archive"),
+                      // Last, where they are in the same place on every row.
+                      // Nowhere to go is nothing to press.
+                      ...(place > 0 ? [button(competition, "up")] : []),
+                      ...(place < inUse.length - 1
+                        ? [button(competition, "down")]
+                        : []),
+                    ]
                   : []),
-                button(competition, "archive"),
               ]),
             )}
           </ul>
@@ -155,6 +186,17 @@ export const CompetitionsTab = ({
           ) : null}
         </>
       )}
+      {adding ? (
+        <CompetitionDialog
+          tournament={tournament}
+          added={() => {
+            setAsking((count) => count + 1);
+          }}
+          close={() => {
+            setAdding(false);
+          }}
+        />
+      ) : null}
     </section>
   );
 };
