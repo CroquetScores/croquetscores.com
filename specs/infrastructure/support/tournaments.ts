@@ -57,6 +57,7 @@ import { UpdateTournamentValidator } from "../../../src/application/operations/t
 import type { Games } from "../../../src/application/services/Games.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
+import { Competition } from "../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
@@ -77,6 +78,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   // a method separated from what it was declared on.
   const tournaments = new AggregateRepository(store, (id, events) =>
     Tournament.rebuiltFrom(id, events),
+  );
+  const competitions = new AggregateRepository(store, (id, events) =>
+    Competition.rebuiltFrom(id, events),
   );
   const accountRepository = new AggregateRepository(
     accounts.store,
@@ -149,6 +153,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
     send: (command) => mediator.send(command),
     ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
+    loadCompetition: (id) => this.asARequest(() => competitions.load(id)),
     eventsOf: (id) => this.asARequest(() => accounts.store.getEvents(id)),
     kept: async () => {
       const { rows } = await this.asARequest(() =>
