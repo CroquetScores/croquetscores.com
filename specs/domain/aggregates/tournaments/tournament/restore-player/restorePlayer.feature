@@ -1,9 +1,11 @@
 Feature: Restoring a tournament's archived player
 
   An archived player (`archivePlayer.feature`) can be restored, and is then as
-  they were before they were archived, in the same place in the list of
-  players. Their name was kept for them while they were archived, so nobody
-  else can have it.
+  they were before they were archived. Their name was kept for them while they
+  were archived, so nobody else can have it. They keep the order they were
+  given when they were archived, so they come back after the players who
+  stayed in use rather than in the place they had, which somebody else may
+  have been moved into since.
 
   Restoring a player who is not archived records nothing, because nothing
   happened.
@@ -42,14 +44,23 @@ Feature: Restoring a tournament's archived player
       When the tournament is rebuilt from the stream
       Then the tournament's player "Sam Someone" is not archived
 
-    Scenario: A restored player keeps their place in the list
+    Scenario: A restored player keeps the order they were given when archived
       Given a stream where a tournament was created as "Spring Open"
       And the player "Sam Someone" was added to it
       And the player "Alex Another" was added to it
       And the player "Sam Someone" was archived
       And the tournament is rebuilt from the stream
       When the player "Sam Someone" is restored
-      Then the tournament's first player is "Sam Someone"
+      Then the tournament's player "Sam Someone" has the order 30000
+
+    Scenario: A restored player comes after those that stayed in use
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the player "Alex Another" was added to it
+      And the player "Sam Someone" was archived
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is restored
+      Then the tournament's first player is "Alex Another"
 
   Rule: Only a player there is can be restored
 

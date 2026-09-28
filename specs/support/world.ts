@@ -40,7 +40,7 @@ import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/v
 import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
 import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/TournamentPlayer.js";
 import type { TournamentPlayerId } from "../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
-import type { CompetitionPlayer } from "../../src/domain/aggregates/competitions/CompetitionPlayer.js";
+import type { CompetitionPlayer } from "../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import type { CompetitionName } from "../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import type { TournamentName } from "../../src/domain/aggregates/tournaments/value-objects/TournamentName.js";
 import type { TournamentAddress } from "../../src/domain/aggregates/tournaments/value-objects/TournamentAddress.js";

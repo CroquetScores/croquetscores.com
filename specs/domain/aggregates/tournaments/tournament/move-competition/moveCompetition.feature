@@ -25,9 +25,11 @@ Feature: Moving a tournament's competition up or down
   An archived competition is out of the way (`archiveCompetition.feature`),
   and a list of the ones in use does not show it, so moving a place passes
   over it: the competition above or below is the nearest one that is not
-  archived. An archived competition keeps its order and still counts, so no
-  order is ever given twice, and one lying between two competitions in use
-  is where the room between them ends. An archived competition can only be
+  archived. An archived competition is put last when it is archived
+  (`archiveCompetition.feature`), but a competition added after it comes after
+  it, so one can lie between two in use. Its order still counts, so no order
+  is ever given twice, and one lying between two competitions in use is where
+  the room between them ends. An archived competition can only be
   restored, so moving one is refused.
 
   Moving the first competition up, or the last one down, records nothing,
@@ -232,14 +234,14 @@ Feature: Moving a tournament's competition up or down
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it
-      And the block "Block C" was added to it
-      And the competition "Block B" was moved to the order 10001
       And the competition "Block B" was archived
+      And the block "Block C" was added to it
+      And the competition "Block C" was moved to the order 30001
       And the block "Block D" was added to it
-      And the competition "Block D" was moved to the order 10002
       And the tournament is rebuilt from the stream
-      When the competition "Block C" is moved up
+      When the competition "Block D" is moved up
       Then the tournament's competition "Block B" has the order 20000
+
 
     Scenario: A tournament rebuilt after its competitions were spaced out has them spaced out
       Given a stream where a tournament was created as "Spring Open"
@@ -256,51 +258,56 @@ Feature: Moving a tournament's competition up or down
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it
-      And the block "Block C" was added to it
       And the competition "Block B" was archived
+      And the block "Block C" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block C" is moved up
       Then the tournament's competition "Block C" has the order 5000
+
 
     Scenario: The archived competition passed over keeps its order
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it
-      And the block "Block C" was added to it
       And the competition "Block B" was archived
+      And the block "Block C" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block C" is moved up
-      Then the tournament's competition "Block B" has the order 20000
+      Then the tournament's competition "Block B" has the order 30000
+
 
     Scenario: A competition moved down passes over an archived one below it
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it
-      And the block "Block C" was added to it
       And the competition "Block B" was archived
+      And the block "Block C" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block A" is moved down
-      Then the tournament's competition "Block A" has the order 40000
+      Then the tournament's competition "Block A" has the order 50000
+
 
     Scenario: The room between two competitions ends at an archived one between them
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it
       And the block "Block C" was added to it
-      And the block "Block D" was added to it
       And the competition "Block C" was archived
+      And the block "Block D" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block A" is moved down
-      Then the tournament's competition "Block A" has the order 25000
+      Then the tournament's competition "Block A" has the order 30000
+
 
     Scenario: A competition with only archived ones above it is already first
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
-      And the block "Block B" was added to it
       And the competition "Block A" was archived
+      And the block "Block B" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block B" is moved up
       Then it has recorded 0 events
+
 
   Rule: The first cannot go up, nor the last down, and trying records nothing
 

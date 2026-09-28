@@ -8,29 +8,46 @@ Feature: A player in a competition
   tournament, and not again in every competition they play in.
 
   A player in a competition has an order, which is where they come when the
-  competition lists its players, lowest first. The first player added to a
-  competition is given 10,000, and each one added after is given 10,000 more
-  than the highest order there is, so that a player can later be put between
-  two others without either of them moving. A player who is archived or has
-  withdrawn keeps their order and still counts, so that no order is ever given
-  twice in the one competition. An order is a whole number from 1 up.
+  competition lists its players, lowest first. A player entered is given the
+  order the tournament player has in the tournament, or the order just after
+  it where that is taken (`enterPlayer.feature`), so that the competition
+  starts with its players in the tournament's order. The orders are spaced
+  10,000 apart there, so that a player can later be put between two others
+  without either of them moving. A player who withdraws is put last: the
+  competition gives them the order after every player there, 10,000 more than
+  the highest order there is, so that they come after every player still
+  playing (`withdrawPlayer.feature`). Their order still counts, so that no
+  order is ever given twice to two players in the one competition. A player
+  removed is gone, and their order with them. An order is a whole number from
+  1 up.
 
   A player can withdraw: they stay in the competition, with their games, but
   play no more of it. A withdrawn player can have their withdrawal reversed,
   and that is all that can be done to them until it is.
 
-  A player can be archived: kept, but set aside, so that one added by mistake
-  is out of the way. A player who has any games in the competition cannot be
-  archived, since the games would then be against somebody who is no longer
-  there. The games are the competition's to know, not the player's, so the
-  competition says whether the player has any when it asks for them to be
-  archived. An archived player can be restored, and that is all that can be
-  done to them until they are.
+  A player entered by mistake is removed: taken out of the competition, and
+  not kept, set aside or able to be put back. Nothing is lost by it, since a
+  player who has no games in the competition has nothing in it but their
+  place, and the tournament's player they are is untouched, so they can be
+  entered again as anybody can. A player who has any games in the
+  competition cannot be removed, since the games would then be against
+  somebody who is no longer there; an archived game counts, since it can be
+  restored. A withdrawn player cannot be removed either, since withdrawing is
+  what is done to somebody who has played, and their withdrawal is reversed
+  first. The games are the competition's to know, not the player's, so the
+  competition says whether the player has any when it asks whether they can
+  be removed, and taking them out is the competition's to do.
 
-  Asking for what a player already is — archiving one who is archived,
-  restoring one who is not, withdrawing one who has withdrawn, reversing the
-  withdrawal of one who has not — leaves them as they are. Two people doing the
-  same thing at once, or a form sent twice, is not a mistake worth refusing.
+  A player whose tournament player is archived is removed from the
+  competition whether or not they have withdrawn, since an archived
+  tournament player is in no competition, and there is nobody to reverse the
+  withdrawal first (`removeArchivedPlayer.feature`). One with games still
+  cannot be.
+
+  Asking for what a player already is — withdrawing one who has withdrawn,
+  reversing the withdrawal of one who has not — leaves them as they are. Two
+  people doing the same thing at once, or a form sent twice, is not a mistake
+  worth refusing.
 
   Whether the same tournament player is in a competition twice is the
   competition's to refuse, since it is the one that knows who else is in it.
@@ -63,41 +80,31 @@ Feature: A player in a competition
       When a player in a competition with the order 1.5 is made
       Then it is refused for breaking "CompetitionPlayer.OrderNotWhole"
 
-  Rule: Each player added is given 10,000 more than the highest order there is
+  Rule: The order after every player is 10,000 more than the highest order there is
 
-    Scenario: The first player added to a competition is given 10,000
+    Scenario: The order after every player in a competition with none is 10,000
       Given a competition with no players
-      When the order for the next player is found
+      When the order after every player is found
       Then the order found is 10000
 
-    Scenario: The next player is given 10,000 more than the highest order
+    Scenario: The order after every player is 10,000 more than the highest order
       Given a competition with a player in the order 10000
       And a player in the order 30000
       And a player in the order 20000
-      When the order for the next player is found
+      When the order after every player is found
       Then the order found is 40000
-
-    Scenario: An archived player's order still counts
-      Given a competition with a player in the order 10000
-      And a player in the order 20000 who is archived
-      When the order for the next player is found
-      Then the order found is 30000
 
     Scenario: A withdrawn player's order still counts
       Given a competition with a player in the order 10000
       And a player in the order 20000 who has withdrawn
-      When the order for the next player is found
+      When the order after every player is found
       Then the order found is 30000
 
-  Rule: A new player in a competition has neither withdrawn nor been archived
+  Rule: A new player in a competition has not withdrawn
 
     Scenario: A new player has not withdrawn
       When a player in a competition is made
       Then the player has not withdrawn
-
-    Scenario: A new player is not archived
-      When a player in a competition is made
-      Then the player is not archived
 
   Rule: A player can withdraw, and have their withdrawal reversed
 
@@ -128,53 +135,41 @@ Feature: A player in a competition
       When the player withdraws
       Then the player has withdrawn
 
-  Rule: A player with no games can be archived, and restored
+  Rule: A player with no games can be removed
 
-    Scenario: A player with no games who is archived is archived
+    Scenario: A player with no games can be removed
       Given a player in a competition who has no games
-      When the competition archives the player
-      Then the player is archived
+      When the competition asks whether the player can be removed
+      Then it is not refused
 
-    Scenario: A player with games cannot be archived
+    Scenario: A player with games cannot be removed
       Given a player in a competition who has games
-      When the competition archives the player
+      When the competition asks whether the player can be removed
       Then it is refused for breaking "CompetitionPlayer.HasGames"
 
-    Scenario: An archived player who is restored is not archived
-      Given a player in a competition who is archived
-      When the player is restored
-      Then the player is not archived
-
-    Scenario: An archived player who is archived again is still archived
-      Given a player in a competition who is archived
-      When the competition archives the player
-      Then it is not refused
-      And the player is archived
-
-    Scenario: Restoring a player who is not archived leaves them not archived
-      Given a player in a competition
-      When the player is restored
-      Then it is not refused
-      And the player is not archived
-
-  Rule: A withdrawn player can only have their withdrawal reversed
-
-    Scenario: A withdrawn player cannot be archived
+    Scenario: A withdrawn player cannot be removed
       Given a player in a competition who has withdrawn
-      When the competition archives the player
+      And the player has no games
+      When the competition asks whether the player can be removed
       Then it is refused for breaking "CompetitionPlayer.Withdrawn"
 
-  Rule: An archived player can only be restored
+  Rule: A player whose tournament player is archived can be removed, withdrawn or not
 
-    Scenario: An archived player cannot withdraw
-      Given a player in a competition who is archived
-      When the player withdraws
-      Then it is refused for breaking "CompetitionPlayer.Archived"
+    Scenario: A withdrawn player with no games can be removed as archived
+      Given a player in a competition who has withdrawn
+      And the player has no games
+      When the competition asks whether the player can be removed as archived
+      Then it is not refused
 
-    Scenario: An archived player cannot have a withdrawal reversed
-      Given a player in a competition who is archived
-      When the player's withdrawal is reversed
-      Then it is refused for breaking "CompetitionPlayer.Archived"
+    Scenario: A player with no games can be removed as archived
+      Given a player in a competition who has no games
+      When the competition asks whether the player can be removed as archived
+      Then it is not refused
+
+    Scenario: A player with games cannot be removed as archived
+      Given a player in a competition who has games
+      When the competition asks whether the player can be removed as archived
+      Then it is refused for breaking "CompetitionPlayer.HasGames"
 
   Rule: Two players in a competition are the same when their ids are
 

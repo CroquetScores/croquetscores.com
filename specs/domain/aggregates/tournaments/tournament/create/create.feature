@@ -5,7 +5,8 @@ Feature: Creating a tournament
   finishes, the format and the sport it is played in, the country and the
   region of that country it is played in, and any notes. It also says whether
   it is played under handicap rules, whether its results count towards the
-  world rankings, and whether it is a national or an international event.
+  world rankings, whether it is a national or an international event, and
+  whether drawn games are allowed.
 
   The tournament's own id is given it by whatever creates it, and names its
   stream. Creating it is its first event. What it is given is refused as each
@@ -31,11 +32,17 @@ Feature: Creating a tournament
   unsaid. A tournament created without saying is not played under handicap,
   and is neither a national event nor an international one. The world
   rankings are kept for Association Croquet and Golf Croquet alone, so a
-  tournament in either counts towards them unless it is said not to, or it is
-  played under handicap: a handicap result says nothing about who is better.
+  tournament in either counts towards them unless it is said not to, it is
+  played under handicap, or it allows drawn games: a handicap result says
+  nothing about who is better, and neither does a drawn one.
   A tournament in any other sport never counts towards them. Saying one does
   when it cannot is refused rather than quietly undone, as is saying it is
   both national and international.
+
+  A game is won by one of its players, on more points or on equal points
+  marked as won (`Game.feature`), so a tournament does not allow drawn games
+  unless it is said to: few do. Where one does, a game on equal points is
+  kept as it was entered, without saying who won.
 
   A new tournament is not archived, and has no players and no competitions.
 
@@ -289,6 +296,18 @@ Feature: Creating a tournament
       When a tournament is created
       Then the tournament is found at "2026/ac/spring-open"
 
+  Rule: A tournament allows drawn games only when it is said to
+
+    Scenario: A tournament created without saying does not allow drawn games
+      Given nothing is said of drawn games
+      When a tournament is created
+      Then the tournament does not allow drawn games
+
+    Scenario: A tournament said to allow drawn games does
+      Given the tournament is said to allow drawn games
+      When a tournament is created
+      Then the tournament allows drawn games
+
   Rule: A tournament is played under handicap only when it is said to be
 
     Scenario: A tournament created without saying is not played under handicap
@@ -301,7 +320,7 @@ Feature: Creating a tournament
       When a tournament is created
       Then the tournament is played under handicap
 
-  Rule: Only an Association Croquet or Golf Croquet tournament not under handicap counts towards the world rankings
+  Rule: Only an Association Croquet or Golf Croquet tournament not under handicap and not allowing drawn games counts towards the world rankings
 
     Scenario Outline: A tournament in a sport with world rankings counts towards them unless it is said not to
       Given the sport "<sport>"
@@ -326,6 +345,20 @@ Feature: Creating a tournament
       And nothing is said of the world rankings
       When a tournament is created
       Then the tournament does not count towards the world rankings
+
+    Scenario: A tournament allowing drawn games created without saying does not count towards the world rankings
+      Given the sport "ac"
+      And the tournament is said to allow drawn games
+      And nothing is said of the world rankings
+      When a tournament is created
+      Then the tournament does not count towards the world rankings
+
+    Scenario: A tournament allowing drawn games said to count towards the world rankings is refused
+      Given the sport "ac"
+      And the tournament is said to allow drawn games
+      And the tournament is said to count towards the world rankings
+      When a tournament is created
+      Then it is refused with "Tournament.DrawsInWorldRankings"
 
     Scenario: A handicap tournament said to count towards the world rankings is refused
       Given the sport "ac"

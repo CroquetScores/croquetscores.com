@@ -194,7 +194,7 @@ Feature: Adding a block to a tournament
       And the competition "Block B" was archived
       And the tournament is rebuilt from the stream
       When the block "Block C" is added
-      Then the tournament's competition "Block C" has the order 30000
+      Then the tournament's competition "Block C" has the order 40000
 
     Scenario: Competitions are listed lowest order first
       Given a stream where a tournament was created as "Spring Open"

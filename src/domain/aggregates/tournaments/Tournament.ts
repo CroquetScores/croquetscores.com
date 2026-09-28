@@ -28,6 +28,8 @@ import {
 } from "./events/TournamentCreated.js";
 import { TournamentPlayerAdded } from "./events/TournamentPlayerAdded.js";
 import { TournamentPlayerArchived } from "./events/TournamentPlayerArchived.js";
+import { TournamentPlayerMoved } from "./events/TournamentPlayerMoved.js";
+import { TournamentPlayersSpacedOut } from "./events/TournamentPlayersSpacedOut.js";
 import { TournamentPlayerRestored } from "./events/TournamentPlayerRestored.js";
 import { TournamentPlayerUpdated } from "./events/TournamentPlayerUpdated.js";
 import { TournamentRestored } from "./events/TournamentRestored.js";
@@ -68,6 +70,7 @@ export type TournamentErrorCode =
   | "Tournament.RegionNotInCountry"
   | "Tournament.NoWorldRankings"
   | "Tournament.HandicapInWorldRankings"
+  | "Tournament.DrawsInWorldRankings"
   | "Tournament.NationalAndInternational"
   | "Tournament.PlayerAlreadyAdded"
   | "Tournament.PlayerNameTaken"
@@ -81,6 +84,7 @@ export type TournamentErrorCode =
   | "Tournament.NotASwiss"
   | "Tournament.KnockoutPlayerHasGames"
   | "Tournament.NotAManager"
+  | "Tournament.NotAManagerOrScorer"
   | "Tournament.LastManager"
   | "Tournament.AlreadyAManager";
 
@@ -107,6 +111,7 @@ export interface TournamentDetails {
   readonly region: string;
   readonly notes?: TournamentNotes | undefined;
   readonly handicap?: boolean | undefined;
+  readonly drawsAllowed?: boolean | undefined;
   readonly worldRankings?: boolean | undefined;
   readonly national?: boolean | undefined;
   readonly international?: boolean | undefined;
@@ -144,6 +149,7 @@ interface Settled {
   readonly region: Region;
   readonly notes: TournamentNotes | undefined;
   readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -168,8 +174,8 @@ const SPORTS_WITH_WORLD_RANKINGS: readonly Sport[] = [
   Sport.golfCroquet,
 ];
 
-// How far apart competitions are put when each is added, so that one can later
-// be put between two others without either of them moving.
+// How far apart competitions and players are put when each is added, so that
+// one can later be put between two others without either of them moving.
 const ORDER_STEP = 10_000;
 
 // A slug somebody else has is followed by a number from 1 to this, each
@@ -314,6 +320,14 @@ export class Tournament extends AggregateRoot {
     return this.#now.handicap;
   }
 
+  /**
+   * Whether a game on equal points with no mark saying who won is kept, which
+   * few tournaments allow. Not unless it is said to.
+   */
+  get drawsAllowed(): boolean {
+    return this.#now.drawsAllowed;
+  }
+
   get worldRankings(): boolean {
     return this.#now.worldRankings;
   }
@@ -343,9 +357,11 @@ export class Tournament extends AggregateRoot {
     return this.#archived;
   }
 
-  /** Its players, archived ones among them, in the order they were added. */
+  /** Its players, archived ones among them, lowest order first. */
   get players(): readonly TournamentPlayer[] {
-    return [...this.#players.values()];
+    return [...this.#players.values()].sort(
+      (one, other) => one.order - other.order,
+    );
   }
 
   /** Its competitions, archived ones among them, lowest order first. */
@@ -468,8 +484,9 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That a player was added, as `details` say. Refused when another player has
-   * the id, or the name, archived or not.
+   * That a player was added, as `details` say, given 10,000 more than the
+   * highest order there is. Refused when another player has the id, or the
+   * name, archived or not.
    */
   addPlayer(
     id: TournamentPlayerId,
@@ -479,12 +496,22 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    const player = TournamentPlayer.from(id, details);
+    const player = TournamentPlayer.from(id, details, this.#nextPlayerOrder);
     if (this.#players.has(id.value)) {
       refuse("Tournament.PlayerAlreadyAdded", "The player is already added.");
     }
     this.#refuseAPlayerNameTaken(player);
-    this.record(playerEvent(TournamentPlayerAdded, player, by, at));
+    this.record(
+      new TournamentPlayerAdded(
+        player.id.value,
+        player.name.toString(),
+        player.representing,
+        player.flag === undefined ? undefined : String(player.flag),
+        player.order,
+        by,
+        at,
+      ),
+    );
   }
 
   /**
@@ -510,7 +537,9 @@ export class Tournament extends AggregateRoot {
   /**
    * That the player `id` is set aside. Whether they have played any games is
    * not the tournament's to know, so whatever asks says, and the player
-   * refuses if they have. Archiving one who is archived records nothing.
+   * refuses if they have. They are out of the way, so they are put last, given
+   * 10,000 more than the highest order there is, and keep that order if they
+   * are restored. Archiving one who is archived records nothing.
    */
   archivePlayer(
     id: TournamentPlayerId,
@@ -522,7 +551,57 @@ export class Tournament extends AggregateRoot {
     this.#refuseOnceArchived();
     const found = this.#playerFound(id);
     if (found.archive({ hasGames: hasPlayedGames }) === found) return;
-    this.record(new TournamentPlayerArchived(id.value, by, at));
+    this.record(
+      new TournamentPlayerArchived(id.value, this.#nextPlayerOrder, by, at),
+    );
+  }
+
+  /**
+   * That the player `id` is moved a place among those not archived, as a
+   * competition is (`moveCompetition`): given the order halfway between the
+   * two they now come between, rounded down, with every player spaced out
+   * again first where there is no whole number left in the room. An archived
+   * player keeps their order and still counts. Moving the first up or the
+   * last down records nothing, since there is nowhere for them to go.
+   */
+  movePlayer(
+    id: TournamentPlayerId,
+    direction: "up" | "down",
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    this.#playerFound(id).ensureMovable();
+    const all = this.players;
+    const inUse = all.filter(({ archived }) => !archived);
+    const place = inUse.findIndex((player) => player.id.equals(id));
+    const passed = inUse[direction === "up" ? place - 1 : place + 1];
+    if (passed === undefined) return;
+
+    const orderPastPassed = (): number | undefined => {
+      const players = this.players;
+      return orderPast(
+        players.map(({ order }) => order),
+        players.findIndex((player) => player.equals(passed)),
+        direction,
+      );
+    };
+    let order = orderPastPassed();
+    if (order === undefined) {
+      this.record(
+        new TournamentPlayersSpacedOut(
+          all.map((player) => player.id.value),
+          by,
+          at,
+        ),
+      );
+      order = orderPastPassed();
+    }
+    if (order === undefined) {
+      throw new Error("Spaced out, there was still no room to move into.");
+    }
+    this.record(new TournamentPlayerMoved(id.value, order, by, at));
   }
 
   /** That the archived player `id` is restored. One who is not records nothing. */
@@ -688,13 +767,15 @@ export class Tournament extends AggregateRoot {
   /**
    * That the competition `id`, of whatever kind, is set aside, whether or not
    * it has games: they are kept with it, and come back when it is restored.
-   * Archiving one that is archived records nothing.
+   * It is out of the way, so it is put last, given 10,000 more than the
+   * highest order there is, and keeps that order if it is restored. Archiving
+   * one that is archived records nothing.
    */
   archiveCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     if (this.#competitionFound(id).reference.archived) return;
-    this.record(new CompetitionArchived(id.value, by, at));
+    this.record(new CompetitionArchived(id.value, this.#nextOrder, by, at));
   }
 
   /**
@@ -773,17 +854,30 @@ export class Tournament extends AggregateRoot {
       this.#archived = false;
     } else if (event instanceof TournamentPlayerAdded) {
       const id = TournamentPlayerId.from(event.playerId);
-      this.#players.set(id.value, TournamentPlayer.from(id, event));
+      this.#players.set(
+        id.value,
+        TournamentPlayer.from(id, event, event.order),
+      );
     } else if (event instanceof TournamentPlayerUpdated) {
       this.#playerBecomes(event.playerId, (player) => player.update(event));
     } else if (event instanceof TournamentPlayerArchived) {
       // Whether the player had games was asked when it was recorded, and a
       // player who had any was never archived.
       this.#playerBecomes(event.playerId, (player) =>
-        player.archive({ hasGames: false }),
+        player.archive({ hasGames: false }).withOrder(event.order),
       );
     } else if (event instanceof TournamentPlayerRestored) {
       this.#playerBecomes(event.playerId, (player) => player.restore());
+    } else if (event instanceof TournamentPlayerMoved) {
+      this.#playerBecomes(event.playerId, (player) =>
+        player.withOrder(event.order),
+      );
+    } else if (event instanceof TournamentPlayersSpacedOut) {
+      event.playerIds.forEach((written, index) => {
+        this.#playerBecomes(written, (player) =>
+          player.withOrder((index + 1) * ORDER_STEP),
+        );
+      });
     } else if (event instanceof BlockAdded) {
       this.#competitionAdded(event, {
         kind: "block",
@@ -825,6 +919,7 @@ export class Tournament extends AggregateRoot {
       this.#scorers.delete(event.account);
     } else if (event instanceof CompetitionArchived) {
       this.#competitionIs(event.competitionId, true);
+      this.#competitionAt(event.competitionId, event.order);
     } else if (event instanceof CompetitionRestored) {
       this.#competitionIs(event.competitionId, false);
     } else if (event instanceof CompetitionMoved) {
@@ -883,9 +978,11 @@ export class Tournament extends AggregateRoot {
         "The region is not one of the country's.",
       );
     const handicap = details.handicap ?? false;
+    const drawsAllowed = details.drawsAllowed ?? false;
     const worldRankings = this.#worldRankingsFor(
       sport,
       handicap,
+      drawsAllowed,
       details.worldRankings,
     );
     const national = details.national ?? false;
@@ -907,6 +1004,7 @@ export class Tournament extends AggregateRoot {
       region,
       notes: details.notes,
       handicap,
+      drawsAllowed,
       worldRankings,
       national,
       international,
@@ -914,13 +1012,14 @@ export class Tournament extends AggregateRoot {
     };
   }
 
-  // Only a tournament in a sport with world rankings, not under handicap,
-  // counts towards them, and does unless it is said not to. Saying one counts
+  // Only a tournament in a sport with world rankings, not under handicap and
+  // not allowing drawn games, counts towards them, and does unless it is said not to. Saying one counts
   // when it cannot is refused rather than quietly undone, since whoever said so
   // meant something the tournament cannot be.
   #worldRankingsFor(
     sport: Sport,
     handicap: boolean,
+    drawsAllowed: boolean,
     said: boolean | undefined,
   ): boolean {
     const hasRankings = SPORTS_WITH_WORLD_RANKINGS.some((ranked) =>
@@ -935,7 +1034,14 @@ export class Tournament extends AggregateRoot {
         "A handicap tournament does not count towards the world rankings.",
       );
     }
-    return said ?? (hasRankings && !handicap);
+    // Nor does a drawn one say who is better.
+    if (said === true && drawsAllowed) {
+      refuse(
+        "Tournament.DrawsInWorldRankings",
+        "A tournament allowing drawn games does not count towards the world rankings.",
+      );
+    }
+    return said ?? (hasRankings && !handicap && !drawsAllowed);
   }
 
   // Where a tournament named `name`, starting at `starts` and played in `sport`
@@ -985,6 +1091,7 @@ export class Tournament extends AggregateRoot {
           ? undefined
           : TournamentNotes.from(written.notes),
       handicap: written.handicap,
+      drawsAllowed: written.drawsAllowed,
       worldRankings: written.worldRankings,
       national: written.national,
       international: written.international,
@@ -1065,15 +1172,31 @@ export class Tournament extends AggregateRoot {
         break;
       }
     }
-    // Archived competitions keep their orders and still count, so that no
-    // order is ever given twice.
-    const highest = Math.max(
-      0,
-      ...[...this.#competitions.values()].map(
-        ({ reference }) => reference.order,
-      ),
+    return { slug: slug.toString(), order: this.#nextOrder };
+  }
+
+  // 10,000 more than the highest order there is, for a player put last: one
+  // added, or one archived. Archived players still count, so that no order is
+  // ever given twice.
+  get #nextPlayerOrder(): number {
+    return (
+      Math.max(0, ...[...this.#players.values()].map(({ order }) => order)) +
+      ORDER_STEP
     );
-    return { slug: slug.toString(), order: highest + ORDER_STEP };
+  }
+
+  // 10,000 more than the highest order there is, for a competition put last:
+  // one added, or one archived. Archived competitions still count, so that no
+  // order is ever given twice.
+  get #nextOrder(): number {
+    return (
+      Math.max(
+        0,
+        ...[...this.#competitions.values()].map(
+          ({ reference }) => reference.order,
+        ),
+      ) + ORDER_STEP
+    );
   }
 
   #refuseACompetitionNameTaken(id: CompetitionId, name: CompetitionName): void {
@@ -1148,26 +1271,17 @@ export class Tournament extends AggregateRoot {
     });
   }
 
-  // The order a competition moved past `passed` is given: just before it when
-  // moving up, just after it when moving down, halfway into the room between
-  // it and whatever lies next to it, archived or not. Nothing, where there is
-  // no whole number left in the room.
+  // The order a competition moved past `passed` is given (`orderPast`).
   #orderPast(
     passed: CompetitionId,
     direction: "up" | "down",
   ): number | undefined {
     const all = this.competitions;
-    const at = all.findIndex(({ reference }) => reference.id.equals(passed));
-    const orderAt = (index: number): number | undefined =>
-      all[index]?.reference.order;
-    const [lower, upper] =
-      direction === "up"
-        ? [orderAt(at - 1) ?? 0, orderAt(at)]
-        : [orderAt(at), orderAt(at + 1)];
-    if (lower === undefined) return undefined;
-    if (upper === undefined) return lower + ORDER_STEP;
-    const halfway = Math.floor((lower + upper) / 2);
-    return halfway > lower && halfway < upper ? halfway : undefined;
+    return orderPast(
+      all.map(({ reference }) => reference.order),
+      all.findIndex(({ reference }) => reference.id.equals(passed)),
+      direction,
+    );
   }
 
   #competitionAt(written: string, order: number): void {
@@ -1222,6 +1336,7 @@ const writtenFrom = (settled: Settled): WrittenTournament => ({
   region: settled.region.code,
   notes: settled.notes?.markdown,
   handicap: settled.handicap,
+  drawsAllowed: settled.drawsAllowed,
   worldRankings: settled.worldRankings,
   national: settled.national,
   international: settled.international,
@@ -1237,6 +1352,27 @@ const sameWriting = (
   (Object.keys(one) as (keyof WrittenTournament)[]).every(
     (field) => one[field] === other[field],
   );
+
+// The order something moved past the one at `at` in `orders`, lowest first, is
+// given: just before it when moving up, just after it when moving down,
+// halfway into the room between it and whatever lies next to it, archived or
+// not. Put first, half the order of the one it comes before; put last, 10,000
+// more than the highest. Nothing, where there is no whole number left in the
+// room.
+const orderPast = (
+  orders: readonly number[],
+  at: number,
+  direction: "up" | "down",
+): number | undefined => {
+  const [lower, upper] =
+    direction === "up"
+      ? [orders[at - 1] ?? 0, orders[at]]
+      : [orders[at], orders[at + 1]];
+  if (lower === undefined) return undefined;
+  if (upper === undefined) return lower + ORDER_STEP;
+  const halfway = Math.floor((lower + upper) / 2);
+  return halfway > lower && halfway < upper ? halfway : undefined;
+};
 
 const samePlayer = (one: TournamentPlayer, other: TournamentPlayer): boolean =>
   one.name.equals(other.name) &&

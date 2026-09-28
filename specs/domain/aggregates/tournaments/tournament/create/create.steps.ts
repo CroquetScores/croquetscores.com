@@ -91,6 +91,17 @@ Given(
   },
 );
 
+Given("nothing is said of drawn games", function (this: SpecWorld) {
+  delete scenarioOf(this).creating.drawsAllowed;
+});
+
+Given(
+  "the tournament is said to allow drawn games",
+  function (this: SpecWorld) {
+    scenarioOf(this).creating.drawsAllowed = true;
+  },
+);
+
 Given("nothing is said of the world rankings", function (this: SpecWorld) {
   delete scenarioOf(this).creating.worldRankings;
 });

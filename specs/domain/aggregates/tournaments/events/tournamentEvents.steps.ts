@@ -24,7 +24,9 @@ import {
 import { nameTournamentEvents } from "../../../../../src/domain/aggregates/tournaments/events/tournamentEvents.js";
 import { TournamentPlayerAdded } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayerAdded.js";
 import { TournamentPlayerArchived } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayerArchived.js";
+import { TournamentPlayerMoved } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayerMoved.js";
 import { TournamentPlayerRestored } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayerRestored.js";
+import { TournamentPlayersSpacedOut } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayersSpacedOut.js";
 import { TournamentPlayerUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayerUpdated.js";
 import { TournamentRestored } from "../../../../../src/domain/aggregates/tournaments/events/TournamentRestored.js";
 import { TournamentUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TournamentUpdated.js";
@@ -45,6 +47,8 @@ const A_TOURNAMENT: WrittenTournament = {
   region: "vic",
   notes: "Lunch is at noon.",
   handicap: false,
+  // Allowed, so that one read back as not allowing them is found.
+  drawsAllowed: true,
   worldRankings: true,
   national: true,
   international: false,
@@ -52,6 +56,7 @@ const A_TOURNAMENT: WrittenTournament = {
 };
 
 const PLAYER = "tournament-player/123e4567-e89b-42d3-a456-426614174000";
+const ANOTHER_PLAYER = "tournament-player/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const ANOTHER_ACCOUNT = "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const COMPETITION = "competition/123e4567-e89b-42d3-a456-426614174000";
 const ANOTHER_COMPETITION = "competition/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
@@ -66,6 +71,17 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       causedBy,
       happenedAt,
     ),
+  // As a tournament created before drawn games were asked about was kept.
+  "a tournament being created that says nothing of drawn games": () => {
+    const created = new TournamentCreated(
+      "croquetscores.com",
+      A_TOURNAMENT,
+      causedBy,
+      happenedAt,
+    );
+    Reflect.deleteProperty(created, "drawsAllowed");
+    return created;
+  },
   "a tournament being created with no notes": () =>
     new TournamentCreated(
       "croquetscores.com",
@@ -89,6 +105,7 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       "Sam Someone",
       "Canterbury Croquet Club",
       "nz",
+      10000,
       causedBy,
       happenedAt,
     ),
@@ -98,6 +115,7 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       "Sam Someone",
       undefined,
       "nz",
+      10000,
       causedBy,
       happenedAt,
     ),
@@ -107,6 +125,7 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       "Sam Someone",
       "Canterbury Croquet Club",
       undefined,
+      10000,
       causedBy,
       happenedAt,
     ),
@@ -120,9 +139,18 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       happenedAt,
     ),
   "a player being archived": () =>
-    new TournamentPlayerArchived(PLAYER, causedBy, happenedAt),
+    new TournamentPlayerArchived(PLAYER, 20000, causedBy, happenedAt),
   "a player being restored": () =>
     new TournamentPlayerRestored(PLAYER, causedBy, happenedAt),
+  "a tournament's player being moved": () =>
+    new TournamentPlayerMoved(PLAYER, 5000, causedBy, happenedAt),
+  // Two, so that one read back in the wrong order is found.
+  "the tournament's players being spaced out": () =>
+    new TournamentPlayersSpacedOut(
+      [ANOTHER_PLAYER, PLAYER],
+      causedBy,
+      happenedAt,
+    ),
   "a block being added": () =>
     new BlockAdded(
       COMPETITION,
@@ -168,7 +196,7 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
   "a Swiss being updated": () =>
     new SwissUpdated(COMPETITION, "Swiss Stage", 3, causedBy, happenedAt),
   "a competition being archived": () =>
-    new CompetitionArchived(COMPETITION, causedBy, happenedAt),
+    new CompetitionArchived(COMPETITION, 40000, causedBy, happenedAt),
   "an account being made a manager": () =>
     new ManagerAdded(ANOTHER_ACCOUNT, causedBy, happenedAt),
   "an account being taken off the managers": () =>
@@ -273,6 +301,15 @@ Given(
   },
 );
 
+Given(
+  "it was written down through the registry with its {word} as a list holding the number {int}",
+  function (this: SpecWorld, field: string, written: number) {
+    keptSpoilt(this, (data) => {
+      data[field] = [written];
+    });
+  },
+);
+
 Then(
   "what was read back is the kind of event that was written down",
   function (this: SpecWorld) {
@@ -293,5 +330,17 @@ Then(
       JSON.parse(JSON.stringify(readBackOf(this))),
       JSON.parse(JSON.stringify(writtenOf(this))),
     );
+  },
+);
+
+Then(
+  "what was read back does not allow drawn games",
+  function (this: SpecWorld) {
+    const read = readBackOf(this);
+    assert.ok(
+      read instanceof TournamentCreated,
+      `It was read back as ${inspect(read)}.`,
+    );
+    assert.equal(read.drawsAllowed, false);
   },
 );

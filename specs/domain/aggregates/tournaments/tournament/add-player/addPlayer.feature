@@ -14,7 +14,14 @@ Feature: Adding a player to a tournament
   so a player added with it is refused: the two could not be told apart if
   the archived one were restored.
 
-  A tournament lists its players in the order they were added.
+  A player is given an order, and the tournament lists its players lowest
+  first. The first player added is given 10,000, and each after them 10,000
+  more than the highest order there is, so that a player can later be put
+  between two others without either of them moving (`movePlayer.feature`). An
+  archived player keeps an order and it still counts, so no order is given
+  twice. A player entered in a competition takes their order there from this
+  one (`enterPlayer.feature`), so that a competition's players start in the
+  order the tournament has them in.
 
   An archived tournament can only be restored (`restore.feature`), so adding a
   player to one is refused.
@@ -71,7 +78,32 @@ Feature: Adding a player to a tournament
       When the tournament is rebuilt from the stream
       Then the tournament has the player "Sam Someone"
 
-    Scenario: Players are listed in the order they were added
+  Rule: Each player added is given 10,000 more than the highest order there is
+
+    Scenario: The first player added is given 10,000
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added
+      Then the tournament's player "Sam Someone" has the order 10000
+
+    Scenario: The next player is given 10,000 more than the highest order
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the player "Alex Another" was added to it
+      And the tournament is rebuilt from the stream
+      When the player "Pat Player" is added
+      Then the tournament's player "Pat Player" has the order 30000
+
+    Scenario: An archived player's order still counts
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the player "Alex Another" was added to it
+      And the player "Alex Another" was archived
+      And the tournament is rebuilt from the stream
+      When the player "Pat Player" is added
+      Then the tournament's player "Pat Player" has the order 40000
+
+    Scenario: Players are listed lowest order first
       Given a stream where a tournament was created as "Spring Open"
       And the player "Sam Someone" was added to it
       And the player "Alex Another" was added to it

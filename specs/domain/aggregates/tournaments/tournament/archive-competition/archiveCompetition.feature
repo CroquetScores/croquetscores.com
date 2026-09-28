@@ -6,10 +6,13 @@ Feature: Archiving a tournament's competition
   and not anything about its kind, so there is one way to archive any of them
   rather than one for each.
 
-  An archived competition keeps its name, its slug and its order, so that no
-  other competition can be given any of them (`addBlock.feature`), and it can
-  be restored (`restoreCompetition.feature`), which is all that can be done
-  to it until it is.
+  An archived competition keeps its name and its slug, so that no other
+  competition can be given either (`addBlock.feature`), and it can be
+  restored (`restoreCompetition.feature`), which is all that can be done to it
+  until it is. It is out of the way, so it is put last: it is given 10,000
+  more than the highest order in the tournament, as a competition added is,
+  so that it comes after every competition still in use. Its new order still
+  counts, so no order is given twice.
 
   A competition can be archived whether or not it has games. Archiving sets
   it aside rather than taking anything away, so its games are kept with it,
@@ -69,6 +72,32 @@ Feature: Archiving a tournament's competition
       And the competition "Block A" was archived
       When the tournament is rebuilt from the stream
       Then the tournament's competition "Block A" is archived
+
+  Rule: An archived competition is put last
+
+    Scenario: An archived competition is given 10,000 more than the highest order
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the block "Block B" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "Block A" is archived
+      Then the tournament's competition "Block A" has the order 30000
+
+    Scenario: An archived competition comes after those in use
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the block "Block B" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "Block A" is archived
+      Then the tournament's first competition is "Block B"
+
+    Scenario: A tournament rebuilt after a competition was archived has it last
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the block "Block B" was added to it
+      And the competition "Block A" was archived
+      When the tournament is rebuilt from the stream
+      Then the tournament's competition "Block A" has the order 30000
 
   Rule: Only a competition there is can be archived
 

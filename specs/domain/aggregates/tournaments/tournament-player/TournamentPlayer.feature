@@ -24,6 +24,15 @@ Feature: A player in a tournament
   which flag they fly are told apart, since a player can play for a club in one
   country and fly the flag of another.
 
+  A player has an order, which is where they come when the tournament lists
+  its players, lowest first. How the orders are given is the tournament's to
+  say (`addPlayer.feature`), since it is the one that knows every player's; a
+  player only asks that theirs is a whole number from 1 up. Moving a player
+  gives them a new order and archiving one puts them last, and the player is
+  the same player afterwards. An archived player is out of the way and can
+  only be restored, so the tournament asks whether a player can be moved
+  before it moves them, and an archived one cannot.
+
   A player can be archived: kept, with everything they are, but set aside, so
   that a player entered by mistake or who withdrew is out of the way. A player
   who has any games in the tournament cannot be archived, since the games
@@ -35,12 +44,14 @@ Feature: A player in a tournament
   A player can be updated: their name, what they represent and the flag they
   fly said again, each asked what it is asked of a new player. The player
   updated is the same player, with the same id, since a player whose name is
-  corrected is still the player who played.
+  corrected is still the player who played. Updating leaves their order as it
+  was.
 
-  A player is never altered: updating, archiving and restoring each give the
-  player as they are afterwards. Asking for what a player already is —
-  archiving one who is archived, restoring one who is not — gives them back as
-  they are, since a form sent twice is not a mistake worth refusing.
+  A player is never altered: updating, giving a new order, archiving and
+  restoring each give the player as they are afterwards. Asking for what a
+  player already is — archiving one who is archived, restoring one who is not
+  — gives them back as they are, since a form sent twice is not a mistake
+  worth refusing.
 
   Two players are the same player when their ids are, whatever they are
   called.
@@ -95,6 +106,47 @@ Feature: A player in a tournament
       When a player flying the flag "zz" is made
       Then it is refused for breaking "TournamentPlayer.NoSuchFlag"
 
+  Rule: A player's order is a whole number from 1 up
+
+    Scenario Outline: An order that is a whole number from 1 up is accepted
+      When a player in the order <order> is made
+      Then the player's order is <order>
+
+      Examples:
+        | order |
+        | 1     |
+        | 10000 |
+
+    Scenario: An order of 0 is refused
+      When a player in the order 0 is made
+      Then it is refused for breaking "TournamentPlayer.OrderTooSmall"
+
+    Scenario: An order that is not a whole number is refused
+      When a player in the order 1.5 is made
+      Then it is refused for breaking "TournamentPlayer.OrderNotWhole"
+
+  Rule: A player can be given a new order, and is the same player afterwards
+
+    Scenario: A player given a new order has it
+      Given a player named "Sam Someone" in the order 10000
+      When the player is given the order 5000
+      Then the player's order is 5000
+
+    Scenario: A player given a new order is the same player they were
+      Given a player named "Sam Someone" in the order 10000
+      When the player is given the order 5000
+      Then the player is the same player they were
+
+    Scenario: A player given a new order keeps who they are
+      Given a player named "Sam Someone" in the order 10000
+      When the player is given the order 5000
+      Then the player's name is "Sam Someone"
+
+    Scenario: A new order that is not a whole number from 1 up is refused
+      Given a player named "Sam Someone" in the order 10000
+      When the player is given the order 0
+      Then it is refused for breaking "TournamentPlayer.OrderTooSmall"
+
   Rule: A player can be updated, and is the same player afterwards
 
     Scenario: An updated player has the name they were updated to
@@ -116,6 +168,11 @@ Feature: A player in a tournament
       Given a player named "Sam Someone"
       When the player is updated to fly the flag "nz"
       Then the player flies the flag "nz"
+
+    Scenario: An updated player keeps their order
+      Given a player named "Sam Someone" in the order 20000
+      When the player is updated to be called "Samantha Someone"
+      Then the player's order is 20000
 
     Scenario: An updated player keeps what the update did not change
       Given a player named "Sam Someone" representing "Canterbury Croquet Club"
@@ -182,6 +239,16 @@ Feature: A player in a tournament
       Given a player named "Sam Someone" who is archived
       When the player is updated to be called "Samantha Someone"
       Then it is refused for breaking "TournamentPlayer.Archived"
+
+    Scenario: An archived player cannot be moved
+      Given a player named "Sam Someone" who is archived
+      When the tournament asks whether the player can be moved
+      Then it is refused for breaking "TournamentPlayer.Archived"
+
+    Scenario: A player who is not archived can be moved
+      Given a player named "Sam Someone"
+      When the tournament asks whether the player can be moved
+      Then it is not refused
 
   Rule: Two players are the same when their ids are
 

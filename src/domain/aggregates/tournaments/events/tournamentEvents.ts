@@ -22,7 +22,9 @@ import {
 } from "./TournamentCreated.js";
 import { TournamentPlayerAdded } from "./TournamentPlayerAdded.js";
 import { TournamentPlayerArchived } from "./TournamentPlayerArchived.js";
+import { TournamentPlayerMoved } from "./TournamentPlayerMoved.js";
 import { TournamentPlayerRestored } from "./TournamentPlayerRestored.js";
+import { TournamentPlayersSpacedOut } from "./TournamentPlayersSpacedOut.js";
 import { TournamentPlayerUpdated } from "./TournamentPlayerUpdated.js";
 import { TournamentRestored } from "./TournamentRestored.js";
 import { TournamentUpdated } from "./TournamentUpdated.js";
@@ -84,6 +86,10 @@ const tournament = (said: Said): WrittenTournament => ({
   region: text(said, "region"),
   notes: optionalText(said, "notes"),
   handicap: yesOrNo(said, "handicap"),
+  // Asked only since drawn games could be allowed, so a tournament kept before
+  // says nothing of it, and allowed none.
+  drawsAllowed:
+    said["drawsAllowed"] === undefined ? false : yesOrNo(said, "drawsAllowed"),
   worldRankings: yesOrNo(said, "worldRankings"),
   national: yesOrNo(said, "national"),
   international: yesOrNo(said, "international"),
@@ -131,6 +137,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           text(said, "name"),
           optionalText(said, "representing"),
           optionalText(said, "flag"),
+          number(said, "order"),
           createdBy,
           occurredAt,
         ),
@@ -154,6 +161,28 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new TournamentPlayerArchived(
           text(said, "playerId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TournamentPlayerMoved,
+      "tournament-player-moved",
+      (said, { createdBy, occurredAt }) =>
+        new TournamentPlayerMoved(
+          text(said, "playerId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TournamentPlayersSpacedOut,
+      "tournament-players-spaced-out",
+      (said, { createdBy, occurredAt }) =>
+        new TournamentPlayersSpacedOut(
+          texts(said, "playerIds"),
           createdBy,
           occurredAt,
         ),
@@ -278,6 +307,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new CompetitionArchived(
           text(said, "competitionId"),
+          number(said, "order"),
           createdBy,
           occurredAt,
         ),
