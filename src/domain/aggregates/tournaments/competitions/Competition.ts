@@ -262,18 +262,16 @@ export class Competition extends AggregateRoot {
     at: ReadOnlyDate,
   ): void {
     if (!this.#playerFound(id).withdrawn) return;
-    // In a knockout, an opponent who went through without playing may have
-    // played on since, and reversing it would leave that game played by
-    // somebody who had not got there.
+    // In a knockout, whoever went through in their place, or past a match
+    // the withdrawal left to nobody, may have played on since, and reversing
+    // it would leave that game played by somebody who had not got there.
     if (told.shape.kind === "knockout") {
-      const play = this.#knockoutPlay(told.shape.draw);
-      const walkedOver = play.filter(
-        (match) =>
-          !match.wonByPlaying &&
-          match.winner.is === "player" &&
-          match.sides.some((side) => isPlayer(side, id)),
+      const reversed = this.players.map((player) =>
+        player.id.equals(id) ? player.reverseWithdrawal() : player,
       );
-      if (walkedOver.some((match) => this.#hasPlayedOn(play, match))) {
+      if (
+        this.#leavesGamesBehind(told.shape.draw, reversed, this.#counting())
+      ) {
         refuse(
           "Competition.WinnerHasPlayedOn",
           "The opponent who went through has played on.",
@@ -361,8 +359,8 @@ export class Competition extends AggregateRoot {
 
   /**
    * That the game `id` is set aside, and no longer counts. In a knockout, a
-   * game of a match whose winner has since played in the next round is
-   * refused. Archiving one that is archived records nothing.
+   * game of a match whose winner has since played in a later round is
+   * refused, as is one whose match sent somebody else on to play. Archiving one that is archived records nothing.
    */
   archiveGame(id: GameId, told: Told, by: AccountId, at: ReadOnlyDate): void {
     const game = this.#gameFound(id);
@@ -516,22 +514,50 @@ export class Competition extends AggregateRoot {
     const match = play.find((each) =>
       each.games.some((played) => played.equals(game)),
     );
-    return match !== undefined && this.#hasPlayedOn(play, match);
+    if (match !== undefined && this.#hasPlayedOn(play, match)) return true;
+    // A winner who withdrew sent their next opponent through without
+    // playing, and that opponent may have played on.
+    return this.#leavesGamesBehind(
+      told.shape.draw,
+      this.players,
+      this.#counting().filter((counting) => !counting.equals(game)),
+    );
   }
 
-  // Whether the winner of `match` has a game that counts in the next round.
+  // Whether the winner of `match` has a game that counts in a later round.
+  // Any later round, since they can go through one without playing.
   #hasPlayedOn(play: readonly Match[], match: Match): boolean {
     const { winner } = match;
     if (winner.is !== "player") return false;
     return play.some(
-      (next) =>
-        next.round === match.round + 1 &&
-        next.games.some(
+      (later) =>
+        later.round > match.round &&
+        later.games.some(
           (game) =>
             game.winner.equals(winner.player.id) ||
             game.loser.equals(winner.player.id),
         ),
     );
+  }
+
+  // Whether the knockout played out afresh with `players` and `games` would
+  // leave one of those games, counting now, in none of its matches: played by
+  // somebody who had not got there.
+  #leavesGamesBehind(
+    draw: Parameters<typeof knockoutPlay>[0],
+    players: readonly CompetitionPlayer[],
+    games: readonly Game[],
+  ): boolean {
+    const countedAfter = knockoutPlay(draw, players, games).flatMap(
+      (match) => match.games,
+    );
+    return this.#knockoutPlay(draw)
+      .flatMap((match) => match.games)
+      .some(
+        (game) =>
+          games.some((kept) => kept.equals(game)) &&
+          !countedAfter.some((counted) => counted.equals(game)),
+      );
   }
 
   #gameFound(id: GameId): Game {

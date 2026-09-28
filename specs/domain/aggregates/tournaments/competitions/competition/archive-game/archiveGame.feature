@@ -8,9 +8,12 @@ Feature: Archiving a competition's game
 
   In a block or a Swiss, no game depends on another, so any game can be
   archived. In a knockout, the winner of a match goes through to the next
-  round, so a game of a match whose winner has since played in the next round
+  round, so a game of a match whose winner has since played in a later round
   cannot be archived: taking it away would leave that game played by
-  somebody who had not got there. It is the match that sends its winner on,
+  somebody who had not got there. A later round, not only the next, since a
+  winner can go through a round without playing. So too a game whose winner
+  has withdrawn since, once the opponent they would have met has gone through
+  without playing and played on. It is the match that sends its winner on,
   not the game, so every game of such a match is held, the games its loser
   won among them. The game in the next round is archived first, and then the
   ones before it can be; a next-round game that is archived holds nothing.
@@ -160,3 +163,40 @@ Feature: Archiving a competition's game
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 26 to 17 is archived
       Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 is not archived
+
+  Rule: In a knockout, no game can be archived where a later game would be left played by somebody who had not got there
+
+    A winner can go through a round without playing, by a bye or a
+    walkover, and play in the round after it; and a winner who withdraws
+    sends their next opponent through without playing. The knockout has eight
+    places, each round the best of 1, and six players, so Sam Someone meets
+    Alex Another, Chris Third meets Pat Fourth and Kim Fifth meets Lee Sixth
+    in the first round, and the last two places are empty. Chris Third
+    withdraws after winning, so Sam Someone goes through the second round
+    without playing, and Kim Fifth has a bye in it.
+
+    Background:
+      Given the tournament player "Kim Fifth" was entered in it
+      And the tournament player "Lee Sixth" was entered in it
+      And the competition is a knockout of 8 places, each round the best of 1
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Chris Third" beating "Pat Fourth" 26 to 3 was added to it
+      And the player "Chris Third" withdrew from it
+      And the game of "Kim Fifth" beating "Lee Sixth" 26 to 5 was added to it
+
+    Scenario: A game of a match whose winner went through the next round without playing can be archived
+      Given the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is archived
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 is archived
+
+    Scenario: A game of a match whose winner went through the next round without playing and played in the final cannot be archived
+      Given the game of "Sam Someone" beating "Kim Fifth" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is archived
+      Then it is refused with "Competition.WinnerHasPlayedOn"
+
+    Scenario: A game won by a player who withdrew, whose next opponent went through and played on, cannot be archived
+      Given the game of "Sam Someone" beating "Kim Fifth" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Chris Third" beating "Pat Fourth" 26 to 3 is archived
+      Then it is refused with "Competition.WinnerHasPlayedOn"

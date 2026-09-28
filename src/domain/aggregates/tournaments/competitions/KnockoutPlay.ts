@@ -46,6 +46,7 @@ const decided = (
   sides: readonly [Side, Side],
   games: readonly Game[],
   bestOf: number,
+  playedOn: (id: CompetitionPlayerId) => boolean,
 ): Match => {
   const [one, other] = sides;
   const match = (winner: Side, wonByPlaying: boolean, played: Game[] = []) => ({
@@ -58,9 +59,15 @@ const decided = (
   if (one.is === "not yet known" || other.is === "not yet known") {
     return match(notYetKnown, false);
   }
-  // A place with nobody in it is a bye, and two are nobody going through.
-  if (one.is === "nobody") return match(other, false);
-  if (other.is === "nobody") return match(one, false);
+  // A place with nobody in it is a bye, and two are nobody going through. A
+  // withdrawn player loses a bye they had not used when they withdrew, and
+  // goes through one they had, so that the games they played after it count.
+  const byeTo = (side: Side): Side =>
+    side.is === "player" && side.player.withdrawn && !playedOn(side.player.id)
+      ? nobody
+      : side;
+  if (one.is === "nobody") return match(byeTo(other), false);
+  if (other.is === "nobody") return match(byeTo(one), false);
 
   const played = games.filter((game) =>
     between(game, one.player.id, other.player.id),
@@ -99,6 +106,15 @@ export const knockoutPlay = (
     return player === undefined ? nobody : { is: "player", player };
   });
   const matches: Match[] = [];
+  // A game of a player's not counted in a match so far is of a later round,
+  // since the rounds are worked out in order and a player is in one match of
+  // each.
+  const playedOn = (id: CompetitionPlayerId): boolean =>
+    games.some(
+      (game) =>
+        (game.winner.equals(id) || game.loser.equals(id)) &&
+        !matches.some((match) => match.games.includes(game)),
+    );
   draw.rounds.forEach((bestOf, round) => {
     const next: Side[] = [];
     for (let place = 0; place < entrants.length; place += 2) {
@@ -107,6 +123,7 @@ export const knockoutPlay = (
         [entrants[place] ?? nobody, entrants[place + 1] ?? nobody],
         games,
         bestOf.games,
+        playedOn,
       );
       matches.push(match);
       next.push(match.winner);

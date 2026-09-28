@@ -13,11 +13,12 @@ Feature: Withdrawing a competition's player, and reversing it
   player who withdraws from one keeps their order, and with it their place in
   the draw: they lose every match of theirs not already decided, and their
   opponent goes through without playing. Their withdrawal can be reversed
-  until that opponent has played in the next round; after that, it is refused,
-  as archiving a game whose winner has played on is, since reversing it would
-  leave that game played by somebody who had not got there. Whatever asks says
-  what kind of competition it is; the scenarios here are about a block unless
-  they say otherwise.
+  until whoever went through because of it has played on, in whichever later
+  round, the player drawn next to two players who both withdrew among them;
+  after that, it is refused, as archiving a game whose winner has played on
+  is, since reversing it would leave that game played by somebody who had not
+  got there. Whatever asks says what kind of competition it is; the scenarios
+  here are about a block unless they say otherwise.
 
   Withdrawing a player who has withdrawn, or reversing the withdrawal of one
   who has not, records nothing, because nothing happened: two people doing the
@@ -179,3 +180,50 @@ Feature: Withdrawing a competition's player, and reversing it
       And the competition is rebuilt from its stream
       When the withdrawal of the player "Sam Someone" is reversed
       Then the competition's player "Sam Someone" has not withdrawn
+
+  Rule: In a knockout, a withdrawal is not reversed where a later game would be left played by somebody who had not got there
+
+    The knockout has eight places, each round the best of 1, and six players,
+    so Sam Someone meets Alex Another, Pat Player meets Kim Keeper and Lee
+    Fifth meets Jo Sixth in the first round, and the last two places are
+    empty, so the winner of Lee Fifth and Jo Sixth has a bye in the second
+    round.
+
+    Background:
+      Given the competition is a knockout of 8 places, each round the best of 1
+      And the tournament player "Alex Another" was entered in it
+      And the tournament player "Pat Player" was entered in it
+      And the tournament player "Kim Keeper" was entered in it
+      And the tournament player "Lee Fifth" was entered in it
+      And the tournament player "Jo Sixth" was entered in it
+
+    Scenario: Reversing a withdrawal once the opponent who went through has played in a later round is refused
+      Given the player "Alex Another" withdrew from it
+      And the game of "Pat Player" beating "Kim Keeper" 26 to 3 was added to it
+      And the player "Pat Player" withdrew from it
+      And the game of "Lee Fifth" beating "Jo Sixth" 26 to 5 was added to it
+      And the game of "Sam Someone" beating "Lee Fifth" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the withdrawal of the player "Alex Another" is reversed
+      Then it is refused with "Competition.WinnerHasPlayedOn"
+
+    Scenario: Reversing the withdrawal of one of two withdrawn opponents, once the player drawn next to them has played on, is refused
+      Given the player "Pat Player" withdrew from it
+      And the player "Kim Keeper" withdrew from it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Lee Fifth" beating "Jo Sixth" 26 to 5 was added to it
+      And the game of "Sam Someone" beating "Lee Fifth" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the withdrawal of the player "Pat Player" is reversed
+      Then it is refused with "Competition.WinnerHasPlayedOn"
+
+    Scenario: Reversing the withdrawal of a player who had a bye and played on is not refused
+      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Pat Player" beating "Kim Keeper" 26 to 3 was added to it
+      And the game of "Sam Someone" beating "Pat Player" 26 to 10 was added to it
+      And the game of "Lee Fifth" beating "Jo Sixth" 26 to 5 was added to it
+      And the game of "Lee Fifth" beating "Sam Someone" 26 to 20 was added to it
+      And the player "Lee Fifth" withdrew from it
+      And the competition is rebuilt from its stream
+      When the withdrawal of the player "Lee Fifth" is reversed
+      Then the competition's player "Lee Fifth" has not withdrawn
