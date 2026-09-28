@@ -83,10 +83,8 @@ Then(
   "the kind {string} is at least {int} pixels tall",
   async function (this: SpecWorld, kind: string, pixels: number) {
     await dialogOf(this).waitFor();
-    const box = await dialogOf(this)
-      .locator(".field-kinds label")
-      .filter({ has: fieldOf(this, kind) })
-      .boundingBox();
+    // The label the kind's button is in.
+    const box = await fieldOf(this, kind).locator("xpath=..").boundingBox();
     assert.ok(box !== null, "It is not laid out.");
     assert.ok(box.height >= pixels, `It is ${String(box.height)} pixels tall.`);
   },

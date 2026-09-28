@@ -257,11 +257,19 @@ Then(
 );
 
 // Sent by its first button, found by what it is rather than by its words,
-// which are in whatever language the page is in.
+// which are in whatever language the page is in, and waited on until it is
+// answered, so that the next step reads what the dialog made of the answer
+// rather than racing a server slowed by every other scenario running.
 When(
   /^the (?:player|score|competition) dialog is sent as it is$/,
   async function (this: SpecWorld) {
+    const answered = this.browserPage.waitForResponse(
+      (response) =>
+        ["POST", "PUT"].includes(response.request().method()) &&
+        new URL(response.url()).pathname.startsWith("/api/v1/tournaments/"),
+    );
     await dialogOf(this).locator('button[type="submit"]').click();
+    await answered;
   },
 );
 
