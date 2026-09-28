@@ -22,7 +22,7 @@ export interface GameDetails {
  * The winner made at least as many points as the loser. A game on equal
  * points says who won it by marking the winner's score, unless the tournament
  * allows drawn games, which few do; then it is kept as it was entered, and
- * nothing further is made of it.
+ * one with no mark is drawn, won by neither.
  *
  * A game is never altered: archiving and restoring each give the game as it
  * is afterwards. Two games are the same game when their ids are, since two
@@ -83,6 +83,13 @@ export class Game {
 
   get loserScore(): Score {
     return this.#details.loserScore;
+  }
+
+  /** Whether it is on equal points with no mark, and so won by neither. */
+  get drawn(): boolean {
+    return (
+      !this.winnerScore.isMoreThan(this.loserScore) && !this.winnerScore.marked
+    );
   }
 
   get archived(): boolean {

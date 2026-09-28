@@ -26,6 +26,8 @@ Feature: Adding a game to a competition
   match of the block's best-of. A match is decided once one of them has won
   more games than the other could still win, or every game of it has been
   played, so a game between two players whose match is decided is refused. A
+  drawn game (`Game.feature`) is one of the match's games played, but won by
+  neither of them. A
   Swiss pairs its players round by round, and two players can meet in more
   than one round, so a game in a Swiss is refused only for what any game is.
 
@@ -228,6 +230,35 @@ Feature: Adding a game to a competition
       And the competition is rebuilt from its stream
       When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
       Then the competition has 2 games
+
+    Scenario: A game of a match the best of 3 with two drawn games is added
+      Given drawn games are allowed
+      And the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 13 to 13 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 13 to 13 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
+      Then the competition has 3 games
+
+    Scenario: A game of a match the best of 3 with a win and a drawn game is added
+      Given drawn games are allowed
+      And the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 13 to 13 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
+      Then the competition has 3 games
+
+    Scenario: A game of a match the best of 5 won 2 to 0 with two drawn games is refused
+      Given drawn games are allowed
+      And the competition is a block, each match the best of 5
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 13 to 13 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 13 to 13 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
+      Then it is refused with "Competition.MatchDecided"
 
   Rule: In a Swiss, two players can meet more than once
 

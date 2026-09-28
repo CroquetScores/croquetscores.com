@@ -16,9 +16,10 @@ Feature: A game played in a competition
   (`Score.feature`), as "6w" beat "6", and one on equal points with no mark is
   refused, since it says of nobody that they won. Where the tournament allows
   drawn games, which few do, a game on equal points is kept whether or not it
-  is marked: its winner and loser are simply the players it was entered with,
-  and nothing further is made of it. The game is told whether drawn games are
-  allowed, since that is the tournament's. The loser did not win, so a loser's
+  is marked: its winner and loser are simply the players it was entered with.
+  One with no mark is drawn, won by neither, so that a match counts it as
+  played but as a win for nobody (`addGame.feature`). The game is told whether
+  drawn games are allowed, since that is the tournament's. The loser did not win, so a loser's
   score marked as the winner's is refused.
 
   A game entered by mistake is archived rather than taken away: kept, with
@@ -110,6 +111,23 @@ Feature: A game played in a competition
     Scenario: A game with more points needs no mark
       When a game of "Sam Someone" beating "Alex Another" 26 to 17 is made
       Then the game's winner's score is not marked as the winner's
+
+  Rule: A game on equal points with no mark is drawn
+
+    Scenario: A game on equal points with no mark is drawn
+      Given drawn games are allowed
+      When a game of "Sam Someone" beating "Alex Another" 6 to 6 is made
+      Then the game is drawn
+
+    Scenario: A game on equal points with the winner's score marked is not drawn
+      Given drawn games are allowed
+      When a game of "Sam Someone" beating "Alex Another" 6w to 6 is made
+      Then the game is not drawn
+
+    Scenario: A game with more points is not drawn
+      Given drawn games are allowed
+      When a game of "Sam Someone" beating "Alex Another" 26 to 17 is made
+      Then the game is not drawn
 
   Rule: The loser's score is not marked as the winner's
 

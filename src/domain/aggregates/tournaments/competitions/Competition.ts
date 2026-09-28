@@ -474,13 +474,18 @@ export class Competition extends AggregateRoot {
           (each.winner.equals(game.winner) && each.loser.equals(game.loser)) ||
           (each.winner.equals(game.loser) && each.loser.equals(game.winner)),
       );
-      const needed = Math.floor(shape.bestOf.games / 2) + 1;
+      // A drawn game is played, but won by neither.
       const won = (id: CompetitionPlayerId): number =>
-        played.filter((each) => each.winner.equals(id)).length;
+        played.filter((each) => !each.drawn && each.winner.equals(id)).length;
+      const left = shape.bestOf.games - played.length;
+      const beyondReach = (
+        one: CompetitionPlayerId,
+        other: CompetitionPlayerId,
+      ) => won(one) > won(other) + left;
       if (
-        played.length >= shape.bestOf.games ||
-        won(game.winner) >= needed ||
-        won(game.loser) >= needed
+        left <= 0 ||
+        beyondReach(game.winner, game.loser) ||
+        beyondReach(game.loser, game.winner)
       ) {
         refuse("Competition.MatchDecided", "Their match is decided.");
       }

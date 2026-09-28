@@ -202,6 +202,14 @@ Then(
   },
 );
 
+Then("the game is drawn", function (this: SpecWorld) {
+  assert.equal(gameOf(this).drawn, true);
+});
+
+Then("the game is not drawn", function (this: SpecWorld) {
+  assert.equal(gameOf(this).drawn, false);
+});
+
 Then("the game is archived", function (this: SpecWorld) {
   assert.equal(gameOf(this).archived, true);
 });
