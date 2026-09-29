@@ -2,6 +2,7 @@ import type { Pool } from "pg";
 
 import type { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
+import { dropTables } from "../infrastructure/database/dropTables.js";
 import { migrate } from "../infrastructure/database/migrate.js";
 
 /** Where a document the import refused is kept, with why. */
@@ -16,8 +17,7 @@ export interface ImportErrors {
  *
  * Emptied because an import is run over and over while it is being written,
  * and what the last run left would be imported a second time on top of
- * itself. The migration runner never drops anything, and must not, so the
- * dropping is here, where nothing but an import reaches it.
+ * itself.
  */
 export class ImportDatabase implements ImportErrors {
   readonly #pool: Pool;
@@ -33,25 +33,7 @@ export class ImportDatabase implements ImportErrors {
    * applies every migration, and makes `import_errors` and `imported_users`.
    */
   async reset(): Promise<void> {
-    const { rows } = await this.#pool.query<{
-      schemaname: string;
-      tablename: string;
-    }>(
-      `select schemaname, tablename from pg_tables
-       where schemaname not in ('pg_catalog', 'information_schema')
-         and not starts_with(schemaname, 'pg_')`,
-    );
-    // One statement, so that no table is left waiting on another's foreign key
-    // and none is dropped while the others stay.
-    if (rows.length > 0) {
-      await this.#pool.query(
-        `drop table ${rows
-          .map(({ schemaname, tablename }) =>
-            [schemaname, tablename].map(quoted).join("."),
-          )
-          .join(", ")} cascade`,
-      );
-    }
+    await dropTables(this.#pool);
 
     await migrate(this.#pool);
 
@@ -172,5 +154,3 @@ export class ImportDatabase implements ImportErrors {
       : this.#pool;
   }
 }
-
-const quoted = (name: string): string => `"${name.replaceAll('"', '""')}"`;

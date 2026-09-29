@@ -17,6 +17,7 @@
     "db:up": "docker compose up -d --wait && npm run dev:setup",
     "db:down": "docker compose down -v",
     "db:migrate": "tsx src/infrastructure/database/migrate-cli.ts",
+    "db:drop-tables": "tsx src/infrastructure/database/drop-tables-cli.ts",
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\"",
     "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\"",
     "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\"",
