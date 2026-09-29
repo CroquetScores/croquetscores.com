@@ -436,7 +436,8 @@ export const english: Language = {
     "Competition.MatchDecided": "Their match is already decided.",
     "Competition.DrawFull":
       "Cannot add the player because the knockout is full.",
-    "Competition.NotDrawnToMeet": "These players are not currently drawn to play each other in the knockout.",
+    "Competition.NotDrawnToMeet":
+      "These players are not currently drawn to play each other in the knockout.",
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",

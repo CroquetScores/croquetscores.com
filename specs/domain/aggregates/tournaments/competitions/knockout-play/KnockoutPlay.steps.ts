@@ -148,7 +148,10 @@ Then(
         match.sides.some((side) => isPlayer(side, winnerId)) &&
         match.sides.some((side) => isPlayer(side, loserId)),
     );
-    assert.ok(theirs !== undefined, "These players are not currently drawn to play each other in the knockout.");
+    assert.ok(
+      theirs !== undefined,
+      "These players are not currently drawn to play each other in the knockout.",
+    );
     assert.ok(
       isPlayer(theirs.winner, winnerId),
       `Their match goes to ${theirs.winner.is === "player" ? "the other" : theirs.winner.is}.`,

@@ -566,7 +566,10 @@ export class Competition extends AggregateRoot {
           match.sides.some((side) => isPlayer(side, game.loser)),
       );
       if (theirs === undefined) {
-        refuse("Competition.NotDrawnToMeet", "These players are not currently drawn to play each other in the knockout.");
+        refuse(
+          "Competition.NotDrawnToMeet",
+          "These players are not currently drawn to play each other in the knockout.",
+        );
       } else if (theirs.winner.is !== "not yet known") {
         refuse("Competition.MatchDecided", "Their match is decided.");
       }
