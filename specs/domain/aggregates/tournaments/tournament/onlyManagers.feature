@@ -3,8 +3,8 @@ Feature: Only a tournament's managers change it
   Any account can create a tournament, and whoever does is its first manager
   (`create.feature`). After that, only the tournament's managers can do
   anything to it: change what it is, archive or restore it, add, change,
-  archive or restore its players and its competitions, put its competitions
-  in order, and say who else manages it or scores it. Everything else that
+  archive or restore its players and its competitions, put its players and
+  its competitions in order, and say who else manages it or scores it. Everything else that
   asks is refused, a scorer as much as somebody the tournament has never
   heard of: a scorer enters scores, and nothing else.
 
@@ -47,6 +47,8 @@ Feature: Only a tournament's managers change it
         | the player "Sam Someone" is updated                                                  |
         | the player "Sam Someone" is archived                                                 |
         | the player "Sam Someone" is restored                                                 |
+        | the player "Sam Someone" is moved up                                                 |
+        | the player "Sam Someone" is moved down                                               |
         | the block "Block B" is added                                                         |
         | the block "Block A" is updated                                                       |
         | the knockout "Plate" is added                                                        |
@@ -85,6 +87,8 @@ Feature: Only a tournament's managers change it
         | the player "Sam Someone" is updated                                                  |
         | the player "Sam Someone" is archived                                                 |
         | the player "Sam Someone" is restored                                                 |
+        | the player "Sam Someone" is moved up                                                 |
+        | the player "Sam Someone" is moved down                                               |
         | the block "Block B" is added                                                         |
         | the block "Block A" is updated                                                       |
         | the knockout "Plate" is added                                                        |

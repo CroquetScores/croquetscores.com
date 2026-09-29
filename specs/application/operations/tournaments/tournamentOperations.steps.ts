@@ -114,6 +114,19 @@ Given(
   },
 );
 
+// Left to the tournament to decide it does not count towards the world
+// rankings, as one allowing drawn games cannot (create.feature).
+Given(
+  "{string} has created the tournament {string} allowing drawn games",
+  async function (this: SpecWorld, address: string, name: string) {
+    await createdBefore(
+      this,
+      address,
+      aTournament(name, { drawsAllowed: true }),
+    );
+  },
+);
+
 // The request to update `tournament` to what it is, with `changed`.
 const updated = async (
   world: SpecWorld,
@@ -140,6 +153,7 @@ const updated = async (
         // tournament is, and one without its notes would take them away.
         ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
         handicap: as.handicap,
+        drawsAllowed: as.drawsAllowed,
         worldRankings: as.worldRankings,
         national: as.national,
         international: as.international,

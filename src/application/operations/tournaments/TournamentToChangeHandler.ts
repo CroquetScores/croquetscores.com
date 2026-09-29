@@ -68,6 +68,7 @@ export class TournamentToChangeHandler extends QueryHandler<
       region: tournament.region.code,
       notes: tournament.notes?.markdown,
       handicap: tournament.handicap,
+      drawsAllowed: tournament.drawsAllowed,
       worldRankings: tournament.worldRankings,
       national: tournament.national,
       international: tournament.international,

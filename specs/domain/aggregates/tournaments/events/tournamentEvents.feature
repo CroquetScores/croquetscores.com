@@ -30,29 +30,31 @@ Feature: The names a tournament's events are kept under
       Then it was written down under the name "<name>"
 
       Examples:
-        | happening                               | name                               |
-        | a tournament being created              | tournament-created                 |
-        | a tournament being updated              | tournament-updated                 |
-        | a tournament being archived             | tournament-archived                |
-        | a tournament being restored             | tournament-restored                |
-        | a player being added                    | tournament-player-added            |
-        | a player being updated                  | tournament-player-updated          |
-        | a player being archived                 | tournament-player-archived         |
-        | a player being restored                 | tournament-player-restored         |
-        | a block being added                     | tournament-block-added             |
-        | a block being updated                   | tournament-block-updated           |
-        | a knockout being added                  | tournament-knockout-added          |
-        | a knockout being updated                | tournament-knockout-updated        |
-        | a Swiss being added                     | tournament-swiss-added             |
-        | a Swiss being updated                   | tournament-swiss-updated           |
-        | a competition being archived            | tournament-competition-archived    |
-        | a competition being restored            | tournament-competition-restored    |
-        | a competition being moved               | tournament-competition-moved       |
-        | the competitions being spaced out       | tournament-competitions-spaced-out |
-        | an account being made a manager         | tournament-manager-added           |
-        | an account being taken off the managers | tournament-manager-removed         |
-        | an account being made a scorer          | tournament-scorer-added            |
-        | an account being taken off the scorers  | tournament-scorer-removed          |
+        | happening                                 | name                               |
+        | a tournament being created                | tournament-created                 |
+        | a tournament being updated                | tournament-updated                 |
+        | a tournament being archived               | tournament-archived                |
+        | a tournament being restored               | tournament-restored                |
+        | a player being added                      | tournament-player-added            |
+        | a player being updated                    | tournament-player-updated          |
+        | a player being archived                   | tournament-player-archived         |
+        | a player being restored                   | tournament-player-restored         |
+        | a tournament's player being moved         | tournament-player-moved            |
+        | the tournament's players being spaced out | tournament-players-spaced-out      |
+        | a block being added                       | tournament-block-added             |
+        | a block being updated                     | tournament-block-updated           |
+        | a knockout being added                    | tournament-knockout-added          |
+        | a knockout being updated                  | tournament-knockout-updated        |
+        | a Swiss being added                       | tournament-swiss-added             |
+        | a Swiss being updated                     | tournament-swiss-updated           |
+        | a competition being archived              | tournament-competition-archived    |
+        | a competition being restored              | tournament-competition-restored    |
+        | a competition being moved                 | tournament-competition-moved       |
+        | the competitions being spaced out         | tournament-competitions-spaced-out |
+        | an account being made a manager           | tournament-manager-added           |
+        | an account being taken off the managers   | tournament-manager-removed         |
+        | an account being made a scorer            | tournament-scorer-added            |
+        | an account being taken off the scorers    | tournament-scorer-removed          |
 
   Rule: An event written down and read back is the event it was
 
@@ -63,29 +65,31 @@ Feature: The names a tournament's events are kept under
       Then what was read back is the kind of event that was written down
 
       Examples:
-        | happening                               |
-        | a tournament being created              |
-        | a tournament being updated              |
-        | a tournament being archived             |
-        | a tournament being restored             |
-        | a player being added                    |
-        | a player being updated                  |
-        | a player being archived                 |
-        | a player being restored                 |
-        | a block being added                     |
-        | a block being updated                   |
-        | a knockout being added                  |
-        | a knockout being updated                |
-        | a Swiss being added                     |
-        | a Swiss being updated                   |
-        | a competition being archived            |
-        | a competition being restored            |
-        | a competition being moved               |
-        | the competitions being spaced out       |
-        | an account being made a manager         |
-        | an account being taken off the managers |
-        | an account being made a scorer          |
-        | an account being taken off the scorers  |
+        | happening                                 |
+        | a tournament being created                |
+        | a tournament being updated                |
+        | a tournament being archived               |
+        | a tournament being restored               |
+        | a player being added                      |
+        | a player being updated                    |
+        | a player being archived                   |
+        | a player being restored                   |
+        | a tournament's player being moved         |
+        | the tournament's players being spaced out |
+        | a block being added                       |
+        | a block being updated                     |
+        | a knockout being added                    |
+        | a knockout being updated                  |
+        | a Swiss being added                       |
+        | a Swiss being updated                     |
+        | a competition being archived              |
+        | a competition being restored              |
+        | a competition being moved                 |
+        | the competitions being spaced out         |
+        | an account being made a manager           |
+        | an account being taken off the managers   |
+        | an account being made a scorer            |
+        | an account being taken off the scorers    |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -94,29 +98,31 @@ Feature: The names a tournament's events are kept under
       Then what was read back says everything the event said
 
       Examples:
-        | happening                               |
-        | a tournament being created              |
-        | a tournament being updated              |
-        | a tournament being archived             |
-        | a tournament being restored             |
-        | a player being added                    |
-        | a player being updated                  |
-        | a player being archived                 |
-        | a player being restored                 |
-        | a block being added                     |
-        | a block being updated                   |
-        | a knockout being added                  |
-        | a knockout being updated                |
-        | a Swiss being added                     |
-        | a Swiss being updated                   |
-        | a competition being archived            |
-        | a competition being restored            |
-        | a competition being moved               |
-        | the competitions being spaced out       |
-        | an account being made a manager         |
-        | an account being taken off the managers |
-        | an account being made a scorer          |
-        | an account being taken off the scorers  |
+        | happening                                 |
+        | a tournament being created                |
+        | a tournament being updated                |
+        | a tournament being archived               |
+        | a tournament being restored               |
+        | a player being added                      |
+        | a player being updated                    |
+        | a player being archived                   |
+        | a player being restored                   |
+        | a tournament's player being moved         |
+        | the tournament's players being spaced out |
+        | a block being added                       |
+        | a block being updated                     |
+        | a knockout being added                    |
+        | a knockout being updated                  |
+        | a Swiss being added                       |
+        | a Swiss being updated                     |
+        | a competition being archived              |
+        | a competition being restored              |
+        | a competition being moved                 |
+        | the competitions being spaced out         |
+        | an account being made a manager           |
+        | an account being taken off the managers   |
+        | an account being made a scorer            |
+        | an account being taken off the scorers    |
 
   Rule: What an event can do without is read back as nothing
 
@@ -125,6 +131,12 @@ Feature: The names a tournament's events are kept under
       When the event is written down through the registry
       And what was kept is read back through the registry
       Then what was read back says everything the event said
+
+    Scenario: A tournament created before drawn games were asked about is read back not allowing them
+      Given an event of a tournament being created that says nothing of drawn games
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back does not allow drawn games
 
     Scenario: A player added representing nothing is read back representing nothing
       Given an event of a player being added who represents nothing
@@ -147,16 +159,21 @@ Feature: The names a tournament's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                         | field          |
-        | a tournament being created        | website        |
-        | a tournament being updated        | address        |
-        | a player being added              | name           |
-        | a block being added               | order          |
-        | a knockout being added            | rounds         |
-        | a competition being archived      | competitionId  |
-        | a competition being moved         | order          |
-        | the competitions being spaced out | competitionIds |
-        | an account being made a manager   | account        |
+        | happening                                 | field          |
+        | a tournament being created                | website        |
+        | a tournament being updated                | address        |
+        | a player being added                      | name           |
+        | a player being added                      | order          |
+        | a player being archived                   | order          |
+        | a tournament's player being moved         | order          |
+        | the tournament's players being spaced out | playerIds      |
+        | a block being added                       | order          |
+        | a knockout being added                    | rounds         |
+        | a competition being archived              | competitionId  |
+        | a competition being archived              | order          |
+        | a competition being moved                 | order          |
+        | the competitions being spaced out         | competitionIds |
+        | an account being made a manager           | account        |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>
@@ -165,9 +182,11 @@ Feature: The names a tournament's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                  | field    | written                     |
-        | a tournament being created | handicap | the text "no"               |
-        | a block being added        | order    | the text "10000"            |
-        | a knockout being added     | rounds   | the text "1, 3"             |
-        | a knockout being added     | rounds   | a list holding the text "3" |
-        | a player being added       | flag     | the number 1                |
+        | happening                  | field        | written                     |
+        | a tournament being created | handicap     | the text "no"               |
+        | a tournament being created | drawsAllowed | the text "no"               |
+        | a block being added        | order        | the text "10000"            |
+        | a knockout being added     | rounds       | the text "1, 3"             |
+        | a knockout being added     | rounds       | a list holding the text "3" |
+        | a player being added       | flag         | the number 1                |
+        | a player being added       | order        | the text "10000"            |

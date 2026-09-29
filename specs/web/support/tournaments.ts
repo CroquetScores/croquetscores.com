@@ -10,6 +10,7 @@ import { UpdateTournament } from "../../../src/application/operations/tournament
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { TournamentId } from "../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
+import { Competition } from "../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import type { Games } from "../../../src/application/services/Games.js";
 import type { Application } from "../../../src/web/server.js";
@@ -62,6 +63,16 @@ export const tournamentsThrough = (
     send: (command) => application.mediator.send(command),
     ask: (query) => application.mediator.query(query),
     load: (id) => asARequest(() => application.tournaments.load(id)),
+    // Rebuilt from its stream, as the site would rebuild it, or nothing where
+    // it has none.
+    loadCompetition: async (id) => {
+      const events = await asARequest(() =>
+        application.eventStore.getEvents(id),
+      );
+      return events.length === 0
+        ? undefined
+        : Competition.rebuiltFrom(id, events);
+    },
     eventsOf: (id) => asARequest(() => application.eventStore.getEvents(id)),
     kept: async () => {
       const { rows } = await asARequest(() =>
@@ -108,6 +119,7 @@ export const changeTournament = async (
         region: as.region.code,
         ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
         handicap: as.handicap,
+        drawsAllowed: as.drawsAllowed,
         worldRankings: as.worldRankings,
         national: as.national,
         international: as.international,

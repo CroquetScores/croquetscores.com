@@ -23,9 +23,10 @@ Feature: The competitions tab of a tournament's page
   before the one above it or just after the one below
   (`moveCompetition.feature`). The first is not offered Up and the last is not
   offered Down, since there is nowhere for it to go, so a single competition
-  is offered neither. Archive moves a competition to the archived ones, and
-  Restore puts it back in the place its order gives it. None of the three asks
-  first: each is undone by pressing the other way, and a question before
+  is offered neither. Archive moves a competition to the archived ones, last,
+  and Restore puts it back among those in use, after those that stayed there
+  (`archiveCompetition.feature`, `restoreCompetition.feature`). None of the
+  three asks first: each is undone by pressing the other way, and a question before
   something that can be put back is a question the reader learns to press
   through. Whatever is pressed, the list is asked for again, so that it says
   what the competitions are now rather than what was pressed.
@@ -252,13 +253,13 @@ Feature: The competitions tab of a tournament's page
       When "Restore" is pressed on the competition "Block A"
       Then the competition "Block A" is not listed among the archived
 
-    Scenario: A restored competition is back in the place its order gives it
+    Scenario: A restored competition comes after those that stayed in use
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the competitions of "Spring Open" are open
       When "Restore" is pressed on the competition "Block A"
-      Then the first competition listed is "Block A"
+      Then the competition "Block A" is listed after "Block B"
 
     Scenario: A competition restored from the tab is kept restored
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"

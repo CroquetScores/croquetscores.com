@@ -1,7 +1,6 @@
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { TournamentPlayerId } from "../../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import { TournamentPlayer } from "../../../domain/aggregates/tournaments/TournamentPlayer.js";
 import { brokenBy } from "./tournamentOperations.js";
 import { UpdatePlayer } from "./UpdatePlayer.js";
@@ -15,7 +14,7 @@ export class UpdatePlayerValidator extends CommandValidator<UpdatePlayer> {
 
   validate(command: UpdatePlayer): readonly BrokenRule[] {
     return brokenBy("player", () =>
-      TournamentPlayer.from(TournamentPlayerId.create(), command.player),
+      TournamentPlayer.ensureValid(command.player),
     );
   }
 }

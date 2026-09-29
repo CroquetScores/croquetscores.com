@@ -10,11 +10,11 @@ Feature: Changing what a tournament is
 
   An update says everything again: the name, when it starts and finishes, the
   format, the sport, the country, the region, the notes, and whether it is
-  played under handicap, counts towards the world rankings, and is national
-  or international. Each is asked its own rules on the way in, as creating
-  asks them, and what the tournament asks of them together is the
-  tournament's to refuse (`update.feature`). The website is not among them:
-  a tournament keeps the one it was created on.
+  played under handicap, allows drawn games, counts towards the world
+  rankings, and is national or international. Each is asked its own rules on 
+  the way in, as creating asks them, and what the tournament asks of them 
+  together is the tournament's to refuse (`update.feature`). The website is
+  not among them: a tournament keeps the one it was created on.
 
   A tournament keeps its address unless the year it starts or its sport
   changes, and is then found at an address no other tournament has ever had.
@@ -78,6 +78,19 @@ Feature: Changing what a tournament is
       Given the update finishes it at "2026-10-02T00:00:00Z"
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
       Then it is refused with "Tournament.FinishesBeforeStarts"
+
+    Scenario: Allowing drawn games in a tournament counting towards the world rankings is refused as the tournament refuses it
+      Given the update allows drawn games
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then it is refused with "Tournament.DrawsInWorldRankings"
+
+  Rule: What the update leaves alone is said again as it was
+
+    Scenario: A tournament allowing drawn games still allows them after an update that changes something else
+      Given "organiser@example.com" has created the tournament "Autumn Open" allowing drawn games
+      And the update calls it "Autumn Open Championship"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Autumn Open"
+      Then the tournament allows drawn games
 
   Rule: A tournament moved is not found at an address any other tournament has had
 

@@ -80,6 +80,7 @@ export interface TournamentRequest {
   readonly region: string;
   readonly notes?: string | undefined;
   readonly handicap?: boolean | undefined;
+  readonly drawsAllowed?: boolean | undefined;
   readonly worldRankings?: boolean | undefined;
   readonly national?: boolean | undefined;
   readonly international?: boolean | undefined;
@@ -189,6 +190,7 @@ export const detailsFrom = (request: TournamentRequest): TournamentDetails => {
         ? undefined
         : TournamentNotes.from(request.notes),
     handicap: request.handicap,
+    drawsAllowed: request.drawsAllowed,
     worldRankings: request.worldRankings,
     national: request.national,
     international: request.international,

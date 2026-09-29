@@ -82,6 +82,11 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then the two tournaments have different ids
 
+    Scenario: A tournament asked to allow drawn games allows them
+      Given the tournament is said to allow drawn games
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the tournament allows drawn games
+
   Rule: A tournament is created on the website the request came to
 
     Scenario Outline: The tournament is on the website the request came to
@@ -137,6 +142,12 @@ Feature: Creating a tournament
       And the tournament is to finish at "2026-10-02T00:00:00Z"
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then it is refused with "Tournament.FinishesBeforeStarts"
+
+    Scenario: A tournament allowing drawn games said to count towards the world rankings is refused as the tournament refuses it
+      Given the tournament is said to allow drawn games
+      And the tournament is said to count towards the world rankings
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then it is refused with "Tournament.DrawsInWorldRankings"
 
     Scenario: A tournament the tournament refuses is not kept
       Given the tournament is to start at "2026-10-03T00:00:00Z"

@@ -23,6 +23,7 @@ export interface ChangingTournament {
   readonly region: string;
   readonly notes: string | undefined;
   readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;

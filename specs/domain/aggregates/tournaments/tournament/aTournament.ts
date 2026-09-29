@@ -48,6 +48,7 @@ export interface Said {
   region?: string;
   notes?: string | null;
   handicap?: boolean;
+  drawsAllowed?: boolean;
   worldRankings?: boolean;
   national?: boolean;
   international?: boolean;
@@ -126,6 +127,14 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
   return scenario;
 };
 
+/**
+ * Whether the scenario is about a tournament, having begun a tournament's
+ * stream: for the steps a tournament's features and a competition's share
+ * word for word, such as moving a player, which each does to its own.
+ */
+export const isAboutATournament = (world: SpecWorld): boolean =>
+  scenarios.get(world)?.created !== undefined;
+
 // The account the Background names, which created the tournament and so
 // manages it, and which is whoever does what the stream says was done.
 export const creatorOf = (world: SpecWorld): AccountId => {
@@ -200,6 +209,7 @@ export const detailsOf = (said: Said): TournamentDetails => {
         ? undefined
         : TournamentNotes.from(said.notes),
     handicap: said.handicap,
+    drawsAllowed: said.drawsAllowed,
     worldRankings: said.worldRankings,
     national: said.national,
     international: said.international,
@@ -339,6 +349,7 @@ export const updateOf = (
     region: tournament.region.code,
     notes: tournament.notes,
     handicap: tournament.handicap,
+    drawsAllowed: tournament.drawsAllowed,
     worldRankings:
       worldRankings === undefined ? undefined : tournament.worldRankings,
     national: tournament.national,
@@ -364,6 +375,9 @@ export const updateOf = (
       ? {}
       : { notes: TournamentNotes.from(changed.notes) }),
     ...(changed.handicap === undefined ? {} : { handicap: changed.handicap }),
+    ...(changed.drawsAllowed === undefined
+      ? {}
+      : { drawsAllowed: changed.drawsAllowed }),
     ...(changed.international === undefined
       ? {}
       : { international: changed.international }),

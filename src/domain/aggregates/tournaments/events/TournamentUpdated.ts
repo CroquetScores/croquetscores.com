@@ -21,6 +21,7 @@ export class TournamentUpdated
   readonly region: string;
   readonly notes: string | undefined;
   readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -41,6 +42,7 @@ export class TournamentUpdated
     this.region = written.region;
     this.notes = written.notes;
     this.handicap = written.handicap;
+    this.drawsAllowed = written.drawsAllowed;
     this.worldRankings = written.worldRankings;
     this.national = written.national;
     this.international = written.international;

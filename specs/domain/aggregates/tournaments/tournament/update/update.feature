@@ -4,8 +4,8 @@ Feature: Changing what a tournament is
   its id and the website it is run on (`create.feature`). Updating says all of
   it again: the name, when it starts and finishes, the format, the sport, the
   country, the region, the notes, and whether it is played under handicap,
-  counts towards the world rankings, and is a national or an international
-  event. What is asked of those together when a tournament is created is
+  counts towards the world rankings, is a national or an international event,
+  and allows drawn games. What is asked of those together when a tournament is created is
   asked again when it is updated, of the website it was created on.
 
   A tournament keeps its address when its name is corrected, so that a link
@@ -79,6 +79,20 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then the tournament is played under handicap
 
+    Scenario: An updated tournament allows drawn games when it was updated to
+      Given a stream where a tournament was created not allowing drawn games
+      And the tournament is rebuilt from the stream
+      And the update allows drawn games
+      When the tournament is updated
+      Then the tournament allows drawn games
+
+    Scenario: An updated tournament no longer allows drawn games when it was updated not to
+      Given a stream where a tournament was created allowing drawn games
+      And the tournament is rebuilt from the stream
+      And the update does not allow drawn games
+      When the tournament is updated
+      Then the tournament does not allow drawn games
+
     Scenario: An updated tournament is on the website it was created on
       Given a stream where a tournament was created on the website "gateballscores.com"
       And the tournament is rebuilt from the stream
@@ -129,6 +143,14 @@ Feature: Changing what a tournament is
       And the update plays it under handicap
       When the tournament is updated
       Then it is refused with "Tournament.HandicapInWorldRankings"
+
+    Scenario: Updating a tournament in world rankings to allow drawn games is refused
+      Given a stream where a tournament was created in the sport "ac"
+      And it was created counting towards the world rankings
+      And the tournament is rebuilt from the stream
+      And the update allows drawn games
+      When the tournament is updated
+      Then it is refused with "Tournament.DrawsInWorldRankings"
 
     Scenario: Updating to a sport without world rankings while counting towards them is refused
       Given a stream where a tournament was created in the sport "ac"

@@ -36,6 +36,7 @@ const fieldOfRefusal: Readonly<Record<string, string>> = {
   "Tournament.SportNotOffered": "sport",
   "Tournament.FormatNotOffered": "format",
   "Tournament.HandicapInWorldRankings": "worldRankings",
+  "Tournament.DrawsInWorldRankings": "worldRankings",
   "Tournament.NoWorldRankings": "worldRankings",
   "Tournament.NationalAndInternational": "international",
 };
@@ -111,6 +112,7 @@ export interface Begins {
   readonly region: string;
   readonly notes: string | undefined;
   readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -145,6 +147,9 @@ export const TournamentForm = ({
   const [region, setRegion] = useState(begins?.region ?? "");
   const [notes, setNotes] = useState(begins?.notes ?? "");
   const [handicap, setHandicap] = useState(begins?.handicap ?? false);
+  const [drawsAllowed, setDrawsAllowed] = useState(
+    begins?.drawsAllowed ?? false,
+  );
   // Counting unless the reader says it does not, as creating one has it.
   const [worldRankings, setWorldRankings] = useState(
     begins?.worldRankings ?? true,
@@ -201,7 +206,8 @@ export const TournamentForm = ({
   // A country that is not divided is its own one region, and there is
   // nothing to ask.
   const asksForRegion = regions.length > 1;
-  const asksAboutWorldRankings = withWorldRankings.includes(sport) && !handicap;
+  const asksAboutWorldRankings =
+    withWorldRankings.includes(sport) && !handicap && !drawsAllowed;
 
   const save = async (): Promise<void> => {
     // Each send of a new tournament is given an address of its own, so a
@@ -221,9 +227,10 @@ export const TournamentForm = ({
         region: asksForRegion ? region : (regions[0]?.code ?? ""),
         notes,
         handicap,
+        drawsAllowed,
         // Unsaid where it is not asked, which the tournament decides for
-        // itself: a sport without world rankings, or a handicap tournament,
-        // does not count towards them.
+        // itself: a sport without world rankings, a handicap tournament, or
+        // one allowing drawn games, does not count towards them.
         ...(asksAboutWorldRankings ? { worldRankings } : {}),
         national,
         international,
@@ -455,6 +462,12 @@ export const TournamentForm = ({
                 label={say("admin.tournament.handicap")}
                 ticked={handicap}
                 tick={setHandicap}
+              />
+              <Tick
+                name="drawsAllowed"
+                label={say("admin.tournament.drawsAllowed")}
+                ticked={drawsAllowed}
+                tick={setDrawsAllowed}
               />
               {asksAboutWorldRankings ? (
                 <Tick

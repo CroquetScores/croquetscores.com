@@ -1,6 +1,6 @@
-import { Validator } from "../../common/validation/Validator.js";
-import { ValidationError } from "../../common/validation/ValidationError.js";
-import type { TournamentPlayerId } from "../tournaments/primitives/TournamentPlayerId.js";
+import { Validator } from "../../../common/validation/Validator.js";
+import { ValidationError } from "../../../common/validation/ValidationError.js";
+import type { TournamentPlayerId } from "../primitives/TournamentPlayerId.js";
 import type { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
 
 /** Every rule a player in a competition can break. */
@@ -8,8 +8,7 @@ export type CompetitionPlayerErrorCode =
   | "CompetitionPlayer.OrderNotWhole"
   | "CompetitionPlayer.OrderTooSmall"
   | "CompetitionPlayer.HasGames"
-  | "CompetitionPlayer.Withdrawn"
-  | "CompetitionPlayer.Archived";
+  | "CompetitionPlayer.Withdrawn";
 
 // The gap left between one player's order and the next, so that a player can
 // later be put between two others without either of them moving.
@@ -45,11 +44,14 @@ export interface CompetitionPlayerDetails {
  * Everything about the person is the tournament player's, so it is said once
  * rather than again in every competition they play in.
  *
- * A player is never altered: withdrawing, archiving and undoing either give
- * the player as they are afterwards, and leave the one asked unchanged. Asking
- * for what a player already is gives them back as they are, since two people
- * doing the same thing at once, or a form sent twice, is not a mistake worth
- * refusing.
+ * A player is never altered: withdrawing and reversing it give the player as
+ * they are afterwards, and leave the one asked unchanged. Asking for what a
+ * player already is gives them back as they are, since two people doing the
+ * same thing at once, or a form sent twice, is not a mistake worth refusing.
+ *
+ * A player entered by mistake is removed rather than set aside, since with no
+ * games they have nothing in the competition but their place. Taking them out
+ * is the competition's to do; the player says only whether they can be.
  *
  * Two players are the same player when their ids are, whatever else differs.
  */
@@ -58,26 +60,22 @@ export class CompetitionPlayer {
   readonly #tournamentPlayerId: TournamentPlayerId;
   readonly #order: number;
   readonly #withdrawn: boolean;
-  readonly #archived: boolean;
 
   private constructor(
     id: CompetitionPlayerId,
     tournamentPlayerId: TournamentPlayerId,
     order: number,
     withdrawn: boolean,
-    archived: boolean,
   ) {
     this.#id = id;
     this.#tournamentPlayerId = tournamentPlayerId;
     this.#order = order;
     this.#withdrawn = withdrawn;
-    this.#archived = archived;
   }
 
   /**
-   * The new player known by `id` that `details` describe, neither withdrawn
-   * nor archived. Throws {@link ValidationError} naming the first rule the
-   * order breaks.
+   * The new player known by `id` that `details` describe, not withdrawn.
+   * Throws {@link ValidationError} naming the first rule the order breaks.
    */
   static from(
     id: CompetitionPlayerId,
@@ -89,14 +87,15 @@ export class CompetitionPlayer {
       details.tournamentPlayerId,
       details.order,
       false,
-      false,
     );
   }
 
   /**
-   * The order the next player added to a competition is given, when `players`
-   * are all it has. Archived and withdrawn players are among them and count,
-   * so that no order is ever given twice in the one competition.
+   * The order after every player there, when `players` are all a competition
+   * has: where a player who withdraws is put. Withdrawn players are among them
+   * and count, so that no order is ever given to two players in the one
+   * competition. A player removed is not among them, and their order went
+   * with them.
    */
   static orderAfter(players: readonly CompetitionPlayer[]): number {
     return (
@@ -122,41 +121,52 @@ export class CompetitionPlayer {
     return this.#withdrawn;
   }
 
-  get archived(): boolean {
-    return this.#archived;
-  }
-
   /**
    * The player, withdrawn. A player with games can withdraw, since that is
-   * what withdrawing part of the way through is. Throws
-   * {@link ValidationError} as `CompetitionPlayer.Archived` for an archived
-   * player.
+   * what withdrawing part of the way through is.
    */
   withdraw(): CompetitionPlayer {
-    this.#refuseIfArchived();
     if (this.#withdrawn) return this;
     return this.#with({ withdrawn: true });
   }
 
   /**
-   * The player, playing again. Throws {@link ValidationError} as
-   * `CompetitionPlayer.Archived` for an archived player.
+   * The player, given `order`, which is the competition's to work out: where
+   * a player withdrawn or moved now comes. Throws {@link ValidationError}
+   * naming the first rule the order breaks.
    */
+  withOrder(order: number): CompetitionPlayer {
+    orders.ensureValid(order);
+    return this.#with({ order });
+  }
+
+  /**
+   * Throws {@link ValidationError} where the player cannot be moved: as
+   * `CompetitionPlayer.Withdrawn` for a withdrawn player, who can only have
+   * their withdrawal reversed.
+   */
+  ensureMovable(): void {
+    if (this.#withdrawn)
+      throw new ValidationError<CompetitionPlayerErrorCode>(
+        "CompetitionPlayer.Withdrawn",
+      );
+  }
+
+  /** The player, playing again. */
   reverseWithdrawal(): CompetitionPlayer {
-    this.#refuseIfArchived();
     if (!this.#withdrawn) return this;
     return this.#with({ withdrawn: false });
   }
 
   /**
-   * The player, archived. Whether they have games is the competition's to
-   * know, so it says. Throws {@link ValidationError} as
-   * `CompetitionPlayer.Withdrawn` for a withdrawn player, and as
-   * `CompetitionPlayer.HasGames` for one with games, since the games would
-   * then be against somebody who is no longer there.
+   * Throws {@link ValidationError} where the player cannot be removed from the
+   * competition: as `CompetitionPlayer.Withdrawn` for a withdrawn player, whose
+   * withdrawal is reversed first, and as `CompetitionPlayer.HasGames` for one
+   * with games, since the games would then be against somebody who is no
+   * longer there. Whether they have games is the competition's to know, so it
+   * says, and an archived game is one of them, since it can be restored.
    */
-  archive({ hasGames }: { readonly hasGames: boolean }): CompetitionPlayer {
-    if (this.#archived) return this;
+  ensureRemovable({ hasGames }: { readonly hasGames: boolean }): void {
     if (this.#withdrawn)
       throw new ValidationError<CompetitionPlayerErrorCode>(
         "CompetitionPlayer.Withdrawn",
@@ -165,13 +175,24 @@ export class CompetitionPlayer {
       throw new ValidationError<CompetitionPlayerErrorCode>(
         "CompetitionPlayer.HasGames",
       );
-    return this.#with({ archived: true });
   }
 
-  /** The player, no longer archived. */
-  restore(): CompetitionPlayer {
-    if (!this.#archived) return this;
-    return this.#with({ archived: false });
+  /**
+   * Throws {@link ValidationError} where the player cannot be removed because
+   * their tournament player is archived: as `CompetitionPlayer.HasGames` for
+   * one with games. A withdrawn player is removed too, since an archived
+   * tournament player is in no competition, and there is nobody to reverse
+   * the withdrawal first.
+   */
+  ensureRemovableAsArchived({
+    hasGames,
+  }: {
+    readonly hasGames: boolean;
+  }): void {
+    if (hasGames)
+      throw new ValidationError<CompetitionPlayerErrorCode>(
+        "CompetitionPlayer.HasGames",
+      );
   }
 
   equals(other: CompetitionPlayer | undefined): boolean {
@@ -182,23 +203,15 @@ export class CompetitionPlayer {
     return String(this.#id);
   }
 
-  #refuseIfArchived(): void {
-    if (this.#archived)
-      throw new ValidationError<CompetitionPlayerErrorCode>(
-        "CompetitionPlayer.Archived",
-      );
-  }
-
   #with(changed: {
     readonly withdrawn?: boolean;
-    readonly archived?: boolean;
+    readonly order?: number;
   }): CompetitionPlayer {
     return new CompetitionPlayer(
       this.#id,
       this.#tournamentPlayerId,
-      this.#order,
+      changed.order ?? this.#order,
       changed.withdrawn ?? this.#withdrawn,
-      changed.archived ?? this.#archived,
     );
   }
 }

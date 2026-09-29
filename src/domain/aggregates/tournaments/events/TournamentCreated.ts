@@ -22,6 +22,7 @@ export interface WrittenTournament {
   // Nothing when there are no notes, which JSON leaves out.
   readonly notes: string | undefined;
   readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -50,6 +51,7 @@ export class TournamentCreated
   readonly region: string;
   readonly notes: string | undefined;
   readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -72,6 +74,7 @@ export class TournamentCreated
     this.region = written.region;
     this.notes = written.notes;
     this.handicap = written.handicap;
+    this.drawsAllowed = written.drawsAllowed;
     this.worldRankings = written.worldRankings;
     this.national = written.national;
     this.international = written.international;

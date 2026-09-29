@@ -4,6 +4,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json && npm run build:admin",
     "build:admin": "vite build",
+    "build:admin:alongside": "vite build --emptyOutDir=false",
     "dev": "tsx watch src/web/server.ts",
     "dev:admin": "vite",
     "dev:setup": "node scripts/dev-setup.mjs",
@@ -19,7 +20,12 @@
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\"",
     "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\"",
     "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\"",
-    "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts"
+    "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts",
+    "pretest:features": "npm run build:admin:alongside",
+    "pretest:nodb": "npm run build:admin:alongside",
+    "pretest:db": "npm run build:admin:alongside",
+    "pretest:browser": "npm run build:admin:alongside",
+    "pretest:changed": "npm run build:admin:alongside"
   },
   "repository": {
     "type": "git",

@@ -13,11 +13,13 @@ import type { SpecWorld } from "../../../../support/world.js";
 // every other part as nothing, or as a name that is well made, so that what is
 // refused is only ever what the scenario named.
 const A_NAME = "Sam Someone";
+const AN_ORDER = 10_000;
 
 // Making a player may be refused, and the scenario says which it expects.
 const tryToMake = (
   world: SpecWorld,
   details: Partial<TournamentPlayerDetails>,
+  order = AN_ORDER,
 ): void => {
   try {
     world.tournamentPlayer = TournamentPlayer.from(
@@ -26,6 +28,7 @@ const tryToMake = (
         name: A_NAME,
         ...details,
       },
+      order,
     );
   } catch (failure) {
     world.failure = failure;
@@ -49,27 +52,43 @@ const otherPlayerOfWorld = (world: SpecWorld): TournamentPlayer => {
 };
 
 Given("a player named {string}", function (this: SpecWorld, name: string) {
-  this.tournamentPlayer = TournamentPlayer.from(TournamentPlayerId.create(), {
-    name,
-  });
+  this.tournamentPlayer = TournamentPlayer.from(
+    TournamentPlayerId.create(),
+    { name },
+    AN_ORDER,
+  );
 });
+
+Given(
+  "a player named {string} in the order {int}",
+  function (this: SpecWorld, name: string, order: number) {
+    this.tournamentPlayer = TournamentPlayer.from(
+      TournamentPlayerId.create(),
+      { name },
+      order,
+    );
+  },
+);
 
 Given(
   "a player named {string} representing {string}",
   function (this: SpecWorld, name: string, representing: string) {
-    this.tournamentPlayer = TournamentPlayer.from(TournamentPlayerId.create(), {
-      name,
-      representing,
-    });
+    this.tournamentPlayer = TournamentPlayer.from(
+      TournamentPlayerId.create(),
+      { name, representing },
+      AN_ORDER,
+    );
   },
 );
 
 Given(
   "a player named {string} who is archived",
   function (this: SpecWorld, name: string) {
-    this.tournamentPlayer = TournamentPlayer.from(TournamentPlayerId.create(), {
-      name,
-    }).archive({ hasGames: false });
+    this.tournamentPlayer = TournamentPlayer.from(
+      TournamentPlayerId.create(),
+      { name },
+      AN_ORDER,
+    ).archive({ hasGames: false });
   },
 );
 
@@ -87,9 +106,11 @@ Given(
 Given(
   "another player with the same id named {string}",
   function (this: SpecWorld, name: string) {
-    this.otherTournamentPlayer = TournamentPlayer.from(playerOfWorld(this).id, {
-      name,
-    });
+    this.otherTournamentPlayer = TournamentPlayer.from(
+      playerOfWorld(this).id,
+      { name },
+      AN_ORDER,
+    );
   },
 );
 
@@ -99,6 +120,7 @@ Given(
     this.otherTournamentPlayer = TournamentPlayer.from(
       TournamentPlayerId.create(),
       { name },
+      AN_ORDER,
     );
   },
 );
@@ -131,6 +153,13 @@ When(
 When("a player flying no flag is made", function (this: SpecWorld) {
   tryToMake(this, { flag: undefined });
 });
+
+When(
+  "a player in the order {float} is made",
+  function (this: SpecWorld, order: number) {
+    tryToMake(this, {}, order);
+  },
+);
 
 // Changing a player may be refused, and the scenario says which it expects.
 // The player as they were is kept, so that what they are afterwards can be
@@ -194,6 +223,24 @@ When("the tournament restores the player", function (this: SpecWorld) {
   tryToChange(this, (player) => player.restore());
 });
 
+When(
+  "the player is given the order {int}",
+  function (this: SpecWorld, order: number) {
+    tryToChange(this, (player) => player.withOrder(order));
+  },
+);
+
+When(
+  "the tournament asks whether the player can be moved",
+  function (this: SpecWorld) {
+    try {
+      playerOfWorld(this).ensureMovable();
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
 When("the players are compared", function (this: SpecWorld) {
   this.sameTournamentPlayer = playerOfWorld(this).equals(
     otherPlayerOfWorld(this),
@@ -221,6 +268,10 @@ Then(
     assert.equal(String(playerOfWorld(this).flag), flag);
   },
 );
+
+Then("the player's order is {int}", function (this: SpecWorld, order: number) {
+  assert.equal(playerOfWorld(this).order, order);
+});
 
 Then("the player flies no flag", function (this: SpecWorld) {
   assert.equal(playerOfWorld(this).flag, undefined);

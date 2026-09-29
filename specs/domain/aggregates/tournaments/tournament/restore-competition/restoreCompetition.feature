@@ -1,9 +1,11 @@
 Feature: Restoring a tournament's archived competition
 
   An archived competition (`archiveCompetition.feature`) can be restored, of
-  whatever kind it is, and is then as it was before it was archived, with its
-  name, its slug and its order. Those were kept for it while it was archived,
-  so nothing else can have them.
+  whatever kind it is, and is then in use again, with its name and its slug,
+  which were kept for it while it was archived, so nothing else can have them.
+  It keeps the order it was given when it was archived, so it comes back after
+  the competitions that stayed in use rather than in the place it had, which
+  something else may have been moved into since.
 
   Restoring a competition that is not archived records nothing, because
   nothing happened.
@@ -41,14 +43,23 @@ Feature: Restoring a tournament's archived competition
         | knockout |
         | Swiss    |
 
-    Scenario: A restored competition keeps its order
+    Scenario: A restored competition keeps the order it was given when archived
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the block "Block B" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
       When the competition "Block A" is restored
-      Then the tournament's competition "Block A" has the order 10000
+      Then the tournament's competition "Block A" has the order 30000
+
+    Scenario: A restored competition comes after those that stayed in use
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the block "Block B" was added to it
+      And the competition "Block A" was archived
+      And the tournament is rebuilt from the stream
+      When the competition "Block A" is restored
+      Then the tournament's first competition is "Block B"
 
     Scenario: A tournament rebuilt after a competition was restored has it not archived
       Given a stream where a tournament was created as "Spring Open"

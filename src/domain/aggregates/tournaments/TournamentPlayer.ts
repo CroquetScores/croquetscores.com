@@ -1,3 +1,4 @@
+import { Validator } from "../../common/validation/Validator.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import { PersonName } from "../accounts/value-objects/PersonName.js";
 import type { TournamentPlayerId } from "./primitives/TournamentPlayerId.js";
@@ -7,8 +8,27 @@ import { Flags } from "./value-objects/Flags.js";
 /** Every rule a player can break, besides those of a person's name. */
 export type TournamentPlayerErrorCode =
   | "TournamentPlayer.NoSuchFlag"
+  | "TournamentPlayer.OrderNotWhole"
+  | "TournamentPlayer.OrderTooSmall"
   | "TournamentPlayer.HasGames"
   | "TournamentPlayer.Archived";
+
+// A whole number the platform holds exactly. One beyond that is not reliably
+// the number it was given, so two orders could be told apart by nothing.
+const orders = new Validator<number, TournamentPlayerErrorCode>({
+  fields: [
+    {
+      field: "order",
+      code: "TournamentPlayer.OrderNotWhole",
+      isBrokenBy: (order) => !Number.isSafeInteger(order),
+    },
+    {
+      field: "order",
+      code: "TournamentPlayer.OrderTooSmall",
+      isBrokenBy: (order) => order < 1,
+    },
+  ],
+});
 
 /** What a player is, as it is given, before anything is asked of it. */
 export interface TournamentPlayerDetails {
@@ -24,8 +44,12 @@ export interface TournamentPlayerDetails {
  * another tournament is another player, since what they are called, what they
  * play for and which flag they fly can differ between the two.
  *
- * A player is never altered: updating, archiving and restoring each give the
- * player as they are afterwards, and leave the one asked unchanged. Asking for
+ * A player has an order, which is where they come when the tournament lists
+ * its players, lowest first. How the orders are given is the tournament's to
+ * say, since it is the one that knows every player's.
+ *
+ * A player is never altered: updating, giving a new order, archiving and
+ * restoring each give the player as they are afterwards, and leave the one asked unchanged. Asking for
  * what a player already is gives them back as they are, since a form sent
  * twice is not a mistake worth refusing.
  *
@@ -37,6 +61,7 @@ export class TournamentPlayer {
   readonly #name: PersonName;
   readonly #representing: string | undefined;
   readonly #flag: Flag | undefined;
+  readonly #order: number;
   readonly #archived: boolean;
 
   private constructor(
@@ -44,43 +69,62 @@ export class TournamentPlayer {
     name: PersonName,
     representing: string | undefined,
     flag: Flag | undefined,
+    order: number,
     archived: boolean,
   ) {
     this.#id = id;
     this.#name = name;
     this.#representing = representing;
     this.#flag = flag;
+    this.#order = order;
     this.#archived = archived;
   }
 
   /**
-   * The new player known by `id` that `details` describe, not archived. Throws
-   * {@link ValidationError} naming the first rule the details break: the name
-   * first, then the flag.
+   * The new player known by `id` that `details` describe, in `order`, not
+   * archived. Throws {@link ValidationError} naming the first rule broken: the
+   * name first, then the flag, then the order.
    */
   static from(
     id: TournamentPlayerId,
     details: TournamentPlayerDetails,
+    order: number,
   ): TournamentPlayer {
-    return TournamentPlayer.#made(id, details, false);
+    return TournamentPlayer.#made(id, details, order, false);
+  }
+
+  /**
+   * Throws {@link ValidationError} naming the first rule `details` break, as
+   * making a player of them would, for whatever asks before the tournament
+   * has said where the player comes.
+   */
+  static ensureValid(details: TournamentPlayerDetails): void {
+    TournamentPlayer.#detailsOf(details);
   }
 
   static #made(
     id: TournamentPlayerId,
     details: TournamentPlayerDetails,
+    order: number,
     archived: boolean,
   ): TournamentPlayer {
-    const name = PersonName.from(details.name);
-    // What is nothing but whitespace was left blank by whoever typed it, so it
-    // is nothing represented rather than something called nothing.
-    const representing = details.representing?.trim() || undefined;
-    return new TournamentPlayer(
-      id,
-      name,
-      representing,
-      TournamentPlayer.#flagNamed(details.flag),
-      archived,
-    );
+    const { name, representing, flag } = TournamentPlayer.#detailsOf(details);
+    orders.ensureValid(order);
+    return new TournamentPlayer(id, name, representing, flag, order, archived);
+  }
+
+  static #detailsOf(details: TournamentPlayerDetails): {
+    readonly name: PersonName;
+    readonly representing: string | undefined;
+    readonly flag: Flag | undefined;
+  } {
+    return {
+      name: PersonName.from(details.name),
+      // What is nothing but whitespace was left blank by whoever typed it, so
+      // it is nothing represented rather than something called nothing.
+      representing: details.representing?.trim() || undefined,
+      flag: TournamentPlayer.#flagNamed(details.flag),
+    };
   }
 
   // Refused rather than kept as a name: a flag that is none of the flags there
@@ -113,6 +157,11 @@ export class TournamentPlayer {
     return this.#flag;
   }
 
+  /** Where the player comes when the tournament lists them, lowest first. */
+  get order(): number {
+    return this.#order;
+  }
+
   get archived(): boolean {
     return this.#archived;
   }
@@ -128,7 +177,29 @@ export class TournamentPlayer {
       throw new ValidationError<TournamentPlayerErrorCode>(
         "TournamentPlayer.Archived",
       );
-    return TournamentPlayer.#made(this.#id, details, false);
+    return TournamentPlayer.#made(this.#id, details, this.#order, false);
+  }
+
+  /**
+   * The player, given `order`, which is the tournament's to work out: where a
+   * player moved or archived now comes. Throws {@link ValidationError} naming
+   * the first rule the order breaks.
+   */
+  withOrder(order: number): TournamentPlayer {
+    orders.ensureValid(order);
+    return this.#with({ order });
+  }
+
+  /**
+   * Throws {@link ValidationError} where the player cannot be moved: as
+   * `TournamentPlayer.Archived` for an archived player, who can only be
+   * restored.
+   */
+  ensureMovable(): void {
+    if (this.#archived)
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.Archived",
+      );
   }
 
   /**
@@ -143,13 +214,13 @@ export class TournamentPlayer {
       throw new ValidationError<TournamentPlayerErrorCode>(
         "TournamentPlayer.HasGames",
       );
-    return this.#withArchived(true);
+    return this.#with({ archived: true });
   }
 
   /** The player, no longer archived. */
   restore(): TournamentPlayer {
     if (!this.#archived) return this;
-    return this.#withArchived(false);
+    return this.#with({ archived: false });
   }
 
   equals(other: TournamentPlayer | undefined): boolean {
@@ -160,13 +231,17 @@ export class TournamentPlayer {
     return String(this.#name);
   }
 
-  #withArchived(archived: boolean): TournamentPlayer {
+  #with(changed: {
+    readonly archived?: boolean;
+    readonly order?: number;
+  }): TournamentPlayer {
     return new TournamentPlayer(
       this.#id,
       this.#name,
       this.#representing,
       this.#flag,
-      archived,
+      changed.order ?? this.#order,
+      changed.archived ?? this.#archived,
     );
   }
 }

@@ -5,10 +5,10 @@ import { inspect } from "node:util";
 import {
   CompetitionPlayer,
   type CompetitionPlayerDetails,
-} from "../../../../../src/domain/aggregates/competitions/CompetitionPlayer.js";
-import { CompetitionPlayerId } from "../../../../../src/domain/aggregates/competitions/primitives/CompetitionPlayerId.js";
-import { TournamentPlayerId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
-import type { SpecWorld } from "../../../../support/world.js";
+} from "../../../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
+import { CompetitionPlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
+import { TournamentPlayerId } from "../../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
+import type { SpecWorld } from "../../../../../support/world.js";
 
 // What a scenario leaves unsaid. A scenario about one part of a player gives
 // every other part as one that is well made, so that what is refused is only
@@ -52,11 +52,9 @@ const otherPlayerOfWorld = (world: SpecWorld): CompetitionPlayer => {
 };
 
 // A player is changed only through what can be done to them, so a scenario's
-// withdrawn or archived player got that way as any other would.
+// withdrawn player got that way as any other would.
 const withdrawn = (player: CompetitionPlayer): CompetitionPlayer =>
   player.withdraw();
-const archived = (player: CompetitionPlayer): CompetitionPlayer =>
-  player.archive({ hasGames: false });
 
 Given(
   "the tournament player {string}",
@@ -76,10 +74,6 @@ Given(
   },
 );
 
-Given("a player in a competition who is archived", function (this: SpecWorld) {
-  this.competitionPlayer = archived(make());
-});
-
 Given("a player in a competition who has games", function (this: SpecWorld) {
   this.competitionPlayer = make();
   this.competitionPlayerHasGames = true;
@@ -87,6 +81,10 @@ Given("a player in a competition who has games", function (this: SpecWorld) {
 
 Given("a player in a competition who has no games", function (this: SpecWorld) {
   this.competitionPlayer = make();
+  this.competitionPlayerHasGames = false;
+});
+
+Given("the player has no games", function (this: SpecWorld) {
   this.competitionPlayerHasGames = false;
 });
 
@@ -122,9 +120,8 @@ Given(
   },
 );
 
-Given("a competition with no players", function (this: SpecWorld) {
-  this.competitionPlayers = [];
-});
+// "a competition with no players" is the competition's own step
+// (Competition.steps.ts), which begins these players empty as well.
 
 Given(
   "a competition with a player in the order {int}",
@@ -136,13 +133,6 @@ Given(
 Given("a player in the order {int}", function (this: SpecWorld, order: number) {
   this.competitionPlayers.push(make({ order }));
 });
-
-Given(
-  "a player in the order {int} who is archived",
-  function (this: SpecWorld, order: number) {
-    this.competitionPlayers.push(archived(make({ order })));
-  },
-);
 
 Given(
   "a player in the order {int} who has withdrawn",
@@ -168,7 +158,7 @@ When(
   },
 );
 
-When("the order for the next player is found", function (this: SpecWorld) {
+When("the order after every player is found", function (this: SpecWorld) {
   this.orderFound = CompetitionPlayer.orderAfter(this.competitionPlayers);
 });
 
@@ -182,16 +172,30 @@ When("the player's withdrawal is reversed", function (this: SpecWorld) {
   tryTo(this, () => player.reverseWithdrawal());
 });
 
-When("the competition archives the player", function (this: SpecWorld) {
-  const player = playerOfWorld(this);
-  const hasGames = this.competitionPlayerHasGames;
-  tryTo(this, () => player.archive({ hasGames }));
-});
+// Asking changes nothing, so the player asked about is the one kept.
+When(
+  "the competition asks whether the player can be removed",
+  function (this: SpecWorld) {
+    const player = playerOfWorld(this);
+    const hasGames = this.competitionPlayerHasGames;
+    tryTo(this, () => {
+      player.ensureRemovable({ hasGames });
+      return player;
+    });
+  },
+);
 
-When("the player is restored", function (this: SpecWorld) {
-  const player = playerOfWorld(this);
-  tryTo(this, () => player.restore());
-});
+When(
+  "the competition asks whether the player can be removed as archived",
+  function (this: SpecWorld) {
+    const player = playerOfWorld(this);
+    const hasGames = this.competitionPlayerHasGames;
+    tryTo(this, () => {
+      player.ensureRemovableAsArchived({ hasGames });
+      return player;
+    });
+  },
+);
 
 When("the players in the competition are compared", function (this: SpecWorld) {
   this.sameCompetitionPlayer = playerOfWorld(this).equals(
@@ -223,14 +227,6 @@ Then("the player has withdrawn", function (this: SpecWorld) {
 
 Then("the player has not withdrawn", function (this: SpecWorld) {
   assert.equal(playerOfWorld(this).withdrawn, false);
-});
-
-Then("the player is archived", function (this: SpecWorld) {
-  assert.equal(playerOfWorld(this).archived, true);
-});
-
-Then("the player is not archived", function (this: SpecWorld) {
-  assert.equal(playerOfWorld(this).archived, false);
 });
 
 Then("they are the same player in the competition", function (this: SpecWorld) {
