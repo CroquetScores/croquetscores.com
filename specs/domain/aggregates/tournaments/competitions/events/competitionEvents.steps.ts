@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import { nameCompetitionEvents } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/competitionEvents.js";
 import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
+import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
 import { CompetitionPlayerEntered } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerMoved.js";
@@ -67,6 +68,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new CompetitionGameArchived(GAME, causedBy, happenedAt),
   "a game being restored": () =>
     new CompetitionGameRestored(GAME, causedBy, happenedAt),
+  "a game being corrected": () =>
+    new CompetitionGameCorrected(GAME, "7w", true, "7tp", causedBy, happenedAt),
 };
 
 // Matched by these happenings alone, so that the steps for the tournament's

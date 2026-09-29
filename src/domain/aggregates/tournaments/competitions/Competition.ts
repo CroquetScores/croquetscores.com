@@ -13,6 +13,7 @@ import {
 } from "./CompetitionPlayer.js";
 import { CompetitionGameAdded } from "./events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "./events/CompetitionGameArchived.js";
+import { CompetitionGameCorrected } from "./events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "./events/CompetitionGameRestored.js";
 import { Game, type GameDetails } from "./Game.js";
 import { isPlayer, knockoutPlay, type Match } from "./KnockoutPlay.js";
@@ -404,6 +405,46 @@ export class Competition extends AggregateRoot {
     this.record(new CompetitionGameRestored(id.value, by, at));
   }
 
+  /**
+   * That the game `id` was played to `winnerScore` and `loserScore` rather
+   * than the scores it was entered with, its result kept: refused as the game
+   * refuses it, drawn games never being allowed in a knockout, as when adding
+   * one. Since the result is kept, no match is decided otherwise, so a game
+   * is corrected whatever has been played since. Correcting one not archived
+   * to the scores it has records nothing.
+   */
+  correctGame(
+    id: GameId,
+    winnerScore: Score,
+    loserScore: Score,
+    told: Told,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const game = this.#gameFound(id);
+    const corrected = game.correct(winnerScore, loserScore, {
+      drawsAllowed: told.drawsAllowed && told.shape.kind !== "knockout",
+    });
+    const same = (one: Score, other: Score): boolean =>
+      String(one) === String(other) && one.marked === other.marked;
+    if (
+      same(corrected.winnerScore, game.winnerScore) &&
+      same(corrected.loserScore, game.loserScore)
+    ) {
+      return;
+    }
+    this.record(
+      new CompetitionGameCorrected(
+        id.value,
+        String(corrected.winnerScore),
+        corrected.winnerScore.marked,
+        String(corrected.loserScore),
+        by,
+        at,
+      ),
+    );
+  }
+
   protected apply(event: DomainEvent): void {
     if (event instanceof CompetitionPlayerEntered) {
       const id = CompetitionPlayerId.from(event.playerId);
@@ -454,6 +495,15 @@ export class Competition extends AggregateRoot {
       this.#changeGame(event.gameId, (game) => game.archive());
     } else if (event instanceof CompetitionGameRestored) {
       this.#changeGame(event.gameId, (game) => game.restore());
+    } else if (event instanceof CompetitionGameCorrected) {
+      // Asked of the game when it was recorded, as a game added is.
+      this.#changeGame(event.gameId, (game) =>
+        game.correct(
+          Score.kept(event.winnerScore, event.winnerMarked),
+          Score.kept(event.loserScore, false),
+          { drawsAllowed: true },
+        ),
+      );
     }
   }
 

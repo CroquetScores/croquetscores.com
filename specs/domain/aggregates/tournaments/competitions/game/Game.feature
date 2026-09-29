@@ -27,8 +27,15 @@ Feature: A game played in a competition
   restored. Whether it can be archived, and restored, is the competition's to
   say (`archiveGame.feature`), since it depends on the games around it.
 
-  A game is never altered: archiving and restoring each give the game as it is
-  afterwards. Asking for what a game already is — archiving one that is
+  A game entered with the wrong score is corrected: given new scores, as
+  anything else is given them, and keeping its result, so that its winner
+  stays its winner and a drawn game stays drawn. A correction that would
+  change the result is refused, since a game whose result was wrong is
+  archived and added again (`correctGame.feature`). An archived game is not
+  changed in any way, so correcting one is refused.
+
+  A game is never altered: archiving, restoring and correcting each give the
+  game as it is afterwards. Asking for what a game already is — archiving one that is
   archived, restoring one that is not — gives it back as it is.
 
   Two games are the same game when their ids are, whatever they say, since two
@@ -134,6 +141,61 @@ Feature: A game played in a competition
     Scenario: A loser's score marked as the winner's is refused
       When a game of "Sam Someone" beating "Alex Another" 26 to 17w is made
       Then it is refused for breaking "Game.LoserMarked"
+
+  Rule: A game's scores can be corrected, keeping its result
+
+    Scenario: A corrected game has its new winner's score
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 25 to 17
+      Then the game's winner's score is 25
+
+    Scenario: A corrected game has its new loser's score
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 26 to 10
+      Then the game's loser's score is 10
+
+    Scenario: A corrected game keeps its winner
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 26 to 10
+      Then the game's winner is "Sam Someone"
+
+    Scenario: Correcting an archived game is refused
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17 that is archived
+      When the game is corrected to 26 to 10
+      Then it is refused for breaking "Game.Archived"
+
+    Scenario: A correction putting the loser ahead is refused
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 17 to 26
+      Then it is refused for breaking "Game.WinnerNotAhead"
+
+    Scenario: A correction to equal points with the winner's score marked is accepted
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 17w to 17
+      Then the game's winner's score is marked as the winner's
+
+    Scenario: A correction with the loser's score marked is refused
+      Given a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 26 to 17w
+      Then it is refused for breaking "Game.LoserMarked"
+
+    Scenario: A correction of a won game to a drawn one is refused where drawn games are allowed
+      Given drawn games are allowed
+      And a game of "Sam Someone" beating "Alex Another" 26 to 17
+      When the game is corrected to 17 to 17
+      Then it is refused for breaking "Game.ResultChanged"
+
+    Scenario: A correction of a drawn game to a won one is refused
+      Given drawn games are allowed
+      And a game of "Sam Someone" beating "Alex Another" 13 to 13
+      When the game is corrected to 26 to 13
+      Then it is refused for breaking "Game.ResultChanged"
+
+    Scenario: A correction of a drawn game to another draw is accepted
+      Given drawn games are allowed
+      And a game of "Sam Someone" beating "Alex Another" 13 to 13
+      When the game is corrected to 12 to 12
+      Then the game is drawn
 
   Rule: A game can be archived, and restored
 

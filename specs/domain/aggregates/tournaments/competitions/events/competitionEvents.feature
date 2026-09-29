@@ -38,6 +38,7 @@ Feature: The names a competition's events are kept under
         | a game being added                   | competition-game-added                 |
         | a game being archived                | competition-game-archived              |
         | a game being restored                | competition-game-restored              |
+        | a game being corrected               | competition-game-corrected             |
 
   Rule: An event written down and read back is the event it was
 
@@ -58,6 +59,7 @@ Feature: The names a competition's events are kept under
         | a game being added                   |
         | a game being archived                |
         | a game being restored                |
+        | a game being corrected               |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -76,6 +78,7 @@ Feature: The names a competition's events are kept under
         | a game being added                   |
         | a game being archived                |
         | a game being restored                |
+        | a game being corrected               |
 
   Rule: What was kept without what an event cannot do without is refused
 
@@ -102,6 +105,10 @@ Feature: The names a competition's events are kept under
         | a game being added           | winnerMarked       |
         | a game being archived        | gameId             |
         | a game being restored        | gameId             |
+        | a game being corrected       | gameId             |
+        | a game being corrected       | winnerScore        |
+        | a game being corrected       | winnerMarked       |
+        | a game being corrected       | loserScore         |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>
@@ -116,3 +123,6 @@ Feature: The names a competition's events are kept under
         | a game being added           | winnerScore  | the number 26               |
         | a game being added           | winnerMarked | the text "yes"              |
         | a game being added           | loserScore   | the number 17               |
+        | a game being corrected       | winnerScore  | the number 26               |
+        | a game being corrected       | winnerMarked | the text "yes"              |
+        | a game being corrected       | loserScore   | the number 17               |

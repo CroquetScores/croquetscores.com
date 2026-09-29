@@ -202,6 +202,22 @@ Then(
   },
 );
 
+When(
+  /^the game is corrected to (\S+) to (\S+)$/,
+  function (this: SpecWorld, winnerScore: string, loserScore: string) {
+    const scenario = scenarioOf(this);
+    try {
+      scenario.game = gameOf(this).correct(
+        Score.read(winnerScore, Website.croquetScores),
+        Score.read(loserScore, Website.croquetScores),
+        { drawsAllowed: scenario.drawsAllowed },
+      );
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
 Then("the game is drawn", function (this: SpecWorld) {
   assert.equal(gameOf(this).drawn, true);
 });

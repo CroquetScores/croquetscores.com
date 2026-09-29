@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import type { Competition } from "../../../../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
+import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
 import type { Game } from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
 import { CompetitionPlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
@@ -177,6 +178,86 @@ Given(
   },
 );
 
+// Corrected to scores as they were typed, on Croquet Scores.
+const correct = (
+  world: SpecWorld,
+  competition: Competition,
+  id: GameId,
+  winnerScore: string,
+  loserScore: string,
+): void => {
+  competition.correctGame(
+    id,
+    Score.read(winnerScore, Website.croquetScores),
+    Score.read(loserScore, Website.croquetScores),
+    toldOf(world),
+    byOf(world),
+    now(world),
+  );
+};
+
+When(
+  new RegExp(String.raw`^${GAME} is corrected to (\S+) to (\S+)$`),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    correctedWinnerScore: string,
+    correctedLoserScore: string,
+  ) {
+    const said = [winner, loser, winnerScore, loserScore];
+    ask(this, (competition) => {
+      correct(
+        this,
+        competition,
+        gameSaid(this, competition, said).id,
+        correctedWinnerScore,
+        correctedLoserScore,
+      );
+    });
+  },
+);
+
+Given(
+  new RegExp(String.raw`^${GAME} was corrected to (\S+) to (\S+)$`),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    correctedWinnerScore: string,
+    correctedLoserScore: string,
+  ) {
+    const said = [winner, loser, winnerScore, loserScore];
+    happened(this, (competition) => {
+      correct(
+        this,
+        competition,
+        gameSaid(this, competition, said).id,
+        correctedWinnerScore,
+        correctedLoserScore,
+      );
+    });
+  },
+);
+
+When(
+  /^the game "([^"]*)" is corrected to (\S+) to (\S+) by its id$/,
+  function (
+    this: SpecWorld,
+    id: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    ask(this, (competition) => {
+      correct(this, competition, GameId.from(id), winnerScore, loserScore);
+    });
+  },
+);
+
 for (const [verb, doing] of [
   ["archived", "archiveGame"],
   ["restored", "restoreGame"],
@@ -315,6 +396,7 @@ for (const [happening, kind] of [
   ["a game being added", CompetitionGameAdded],
   ["a game being archived", CompetitionGameArchived],
   ["a game being restored", CompetitionGameRestored],
+  ["a game being corrected", CompetitionGameCorrected],
 ] as const) {
   Then(
     `the first thing it recorded is ${happening}`,
