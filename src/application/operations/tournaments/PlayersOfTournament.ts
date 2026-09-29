@@ -14,12 +14,17 @@ export interface ListedPlayer {
    * since a player who has cannot be archived.
    */
   readonly hasPlayed: boolean;
+  /**
+   * The names of the competitions they are in, in the tournament's order,
+   * archived ones among them, since archiving the player removes them from
+   * each.
+   */
+  readonly competitions: readonly string[];
 }
 
 /**
- * The players of the tournament `tournament`, archived ones among them, in
- * order of their names as a reader looks for a name in a list, as the account
- * the reader is signed in to lists them. It names that account and never one
+ * The players of the tournament `tournament`, archived ones among them, in the
+ * tournament's order, as the account the reader is signed in to lists them. It names that account and never one
  * the reader chose.
  *
  * Only the tournament's managers can ask, since the list is for managing its

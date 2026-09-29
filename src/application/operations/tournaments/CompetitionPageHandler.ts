@@ -1,0 +1,82 @@
+import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import {
+  type Tournament,
+  TournamentRefused,
+} from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { RequestType } from "../../common/Mediator.js";
+import { QueryHandler } from "../../common/QueryHandler.js";
+import { type CompetitionAsPaged, CompetitionPage } from "./CompetitionPage.js";
+import {
+  type TournamentAddresses,
+  TournamentOperationRefused,
+} from "./tournamentOperations.js";
+
+export class CompetitionPageHandler extends QueryHandler<
+  CompetitionPage,
+  CompetitionAsPaged
+> {
+  readonly handles: RequestType<CompetitionPage> = CompetitionPage;
+
+  constructor(
+    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    private readonly addresses: TournamentAddresses,
+  ) {
+    super();
+  }
+
+  async handle(query: CompetitionPage): Promise<CompetitionAsPaged> {
+    const id = await this.addresses.tournamentAt(query.address);
+    const tournament =
+      id === undefined ? undefined : await this.tournaments.load(id);
+    if (tournament === undefined) {
+      throw new TournamentOperationRefused(
+        "UpdateTournament.NoSuchTournament",
+        "No tournament has been found at that address.",
+      );
+    }
+    const reader = AccountId.from(query.account);
+    const part = tournament.manages(reader)
+      ? "manager"
+      : tournament.scores(reader)
+        ? "scorer"
+        : undefined;
+    if (part === undefined) {
+      throw new TournamentRefused(
+        "Tournament.NotAManagerOrScorer",
+        "Only a manager or a scorer of the tournament sees its competitions.",
+      );
+    }
+    if (tournament.archived) {
+      throw new TournamentRefused(
+        "Tournament.Archived",
+        "An archived tournament can only be restored.",
+      );
+    }
+    const found = tournament.competitions.find(
+      ({ reference }) => reference.slug.toString() === query.slug,
+    );
+    if (found === undefined) {
+      throw new TournamentRefused(
+        "Tournament.NoSuchCompetition",
+        "The tournament has no competition at that address.",
+      );
+    }
+    if (found.reference.archived) {
+      throw new TournamentRefused(
+        "Tournament.CompetitionArchived",
+        "An archived competition can only be restored.",
+      );
+    }
+    return {
+      id: found.reference.id.value,
+      tournament: tournament.id.value,
+      name: found.reference.name.toString(),
+      kind: found.shape.kind,
+      tournamentAddress: tournament.address.toString(),
+      slug: found.reference.slug.toString(),
+      part,
+    };
+  }
+}

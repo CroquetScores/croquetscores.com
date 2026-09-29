@@ -11,13 +11,14 @@ export interface ListedCompetition {
 }
 
 /**
- * The competitions of the tournament `tournament`, archived ones among them,
- * in the tournament's order, lowest first, as the account the reader is signed
- * in to lists them. It names that account and never one the reader chose.
+ * The competitions of the tournament `tournament`, in the tournament's order,
+ * lowest first, as the account the reader is signed in to lists them: every
+ * one, archived ones among them, to a manager, and those in use alone to a
+ * scorer, since an archived one has no scores to enter. It names that account
+ * and never one the reader chose.
  *
- * Only the tournament's managers can ask, since the list is for managing its
- * competitions: anybody else, a scorer among them, is refused with
- * `Tournament.NotAManager`. A tournament there is not is refused as
+ * Only the tournament's managers and scorers can ask: anybody else is refused
+ * with `Tournament.NotAManager`. A tournament there is not is refused as
  * `CompetitionsOfTournament.NoSuchTournament`, and a forgotten account asking
  * is refused with `Account.Forgotten`.
  */

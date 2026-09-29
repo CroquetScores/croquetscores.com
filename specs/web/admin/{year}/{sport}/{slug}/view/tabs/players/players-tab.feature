@@ -11,8 +11,9 @@ Feature: The players tab of a tournament's page
   dialog adds a player or saves one, the list is asked for again, so that it
   says who the players are now.
 
-  The players in use come first, in order of their names as a reader looks
-  for a name (`PlayersOfTournament.feature`). Each says their name, what they
+  The players in use come first, in the tournament's order
+  (`PlayersOfTournament.feature`), which is the order they are entered in its
+  competitions in. Each says their name, what they
   represent and the flag they fly, where they have either, and offers
   Archive. The flag is shown as its picture, beside the name, and is named for
   a reader who cannot see it by the country it is the flag of, in the
@@ -20,11 +21,13 @@ Feature: The players tab of a tournament's page
 
   A player who has played any games cannot be archived, since the games would
   then be against somebody who is no longer there (`archivePlayer.feature`),
-  so such a player is not offered Archive. Nothing records games yet, so today
-  every player is offered it.
+  so such a player is not offered Archive. An archived game counts, since it
+  can be restored.
 
   The archived players come after those in use, under a heading of their own,
-  in order of their names. Each is struck through, and says in words that
+  in the order they were archived, since each is put last when archived
+  (`archivePlayer.feature`). A player restored is put back after those that
+  stayed in use (`restorePlayer.feature`). Each is struck through, and says in words that
   they are archived as well, since a line through a name is not read out.
   Each offers Restore alone, since an archived player can only be restored,
   and so their name does not open the dialog to change them.
@@ -46,18 +49,25 @@ Feature: The players tab of a tournament's page
     And the tournament "Spring Open" starts on "2026-10-03"
     And the tournament "Spring Open" is for the sport "ac"
 
-  Rule: The players in use are listed in order of their names
+  Rule: The players in use are listed in the tournament's order
 
     Scenario: A player added is listed
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" is listed
 
-    Scenario: The players are in order of their names
+    Scenario: The players are in the tournament's order
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has moved the player "Alex Another" in "Spring Open" up
+      When the players of "Spring Open" are opened
+      Then the first player listed is "Alex Another"
+
+    Scenario: The players are not in order of their names
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       When the players of "Spring Open" are opened
-      Then the first player listed is "Alex Another"
+      Then the first player listed is "Sam Someone"
 
     Scenario: A tournament with no players says so
       When the players of "Spring Open" are opened
@@ -154,7 +164,11 @@ Feature: The players tab of a tournament's page
 
     Scenario: A player who has played is not offered Archive
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
-      And games that say the player "Sam Someone" in "Spring Open" has played
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" does not offer "Archive"
 
@@ -184,11 +198,11 @@ Feature: The players tab of a tournament's page
       When the players of "Spring Open" are opened
       Then the player "Alex Another" is listed after "Sam Someone"
 
-    Scenario: The archived players are in order of their names
+    Scenario: The archived players are in the order they were archived
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
-      And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       And "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
+      And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       When the players of "Spring Open" are opened
       Then the player "Alex Another" is listed before "Sam Someone"
 
@@ -273,13 +287,13 @@ Feature: The players tab of a tournament's page
       When "Restore" is pressed on the player "Sam Someone"
       Then the player "Sam Someone" is not listed among the archived
 
-    Scenario: A restored player is back in order of their name
+    Scenario: A restored player comes after those that stayed in use
       Given "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
       And the players of "Spring Open" are open
       When "Restore" is pressed on the player "Alex Another"
-      Then the first player listed is "Alex Another"
+      Then the first player listed is "Sam Someone"
 
     Scenario: A player restored from the tab is kept restored
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

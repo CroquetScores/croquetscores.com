@@ -9,6 +9,7 @@ import { AddScorer } from "../../../../src/application/operations/tournaments/Ad
 import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
 import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
 import { ArchivePlayer } from "../../../../src/application/operations/tournaments/ArchivePlayer.js";
+import { RestorePlayer } from "../../../../src/application/operations/tournaments/RestorePlayer.js";
 import { MoveCompetition } from "../../../../src/application/operations/tournaments/MoveCompetition.js";
 import { UpdatePlayer } from "../../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { ArchiveTournament } from "../../../../src/application/operations/tournaments/ArchiveTournament.js";
@@ -22,6 +23,7 @@ import type { TournamentRequest } from "../../../../src/application/operations/t
 import { UpdateTournament } from "../../../../src/application/operations/tournaments/UpdateTournament.js";
 import type { Command } from "../../../../src/application/common/Command.js";
 import type { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { Tournament } from "../../../../src/domain/aggregates/tournaments/Tournament.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { scenarioOf as domainScenarioOf } from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
 import {
@@ -75,16 +77,12 @@ const createdBefore = async (
   world: SpecWorld,
   address: string,
   request: TournamentRequest,
+  website = "croquetscores.com",
 ): Promise<void> => {
   const account = await accountFor(world, address);
   const answer: CreatedTournament = await done(
     world,
-    new CreateTournament(
-      account.value,
-      "croquetscores.com",
-      request,
-      momentOf(world),
-    ),
+    new CreateTournament(account.value, website, request, momentOf(world)),
   );
   created(world, answer.id, request.name);
   await lookAt(world, answer.id);
@@ -94,6 +92,26 @@ Given(
   "{string} has created the tournament {string}",
   async function (this: SpecWorld, address: string, name: string) {
     await createdBefore(this, address, aTournament(name));
+  },
+);
+
+// On the website `website`, in the first sport its site offers.
+Given(
+  "{string} has created the tournament {string} on {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    website: string,
+  ) {
+    await createdBefore(
+      this,
+      address,
+      aTournament(name, {
+        sport: website.includes("gateball") ? "gb" : "ac",
+      }),
+      website,
+    );
   },
 );
 
@@ -127,6 +145,28 @@ Given(
   },
 );
 
+// What `as` is, said again with `changed`, since an update says everything the
+// tournament is, and one without its notes would take them away.
+const requestFor = (
+  as: Tournament,
+  changed: Partial<TournamentRequest>,
+): TournamentRequest => ({
+  name: as.name.toString(),
+  starts: as.starts.toISOString(),
+  finishes: as.finishes.toISOString(),
+  format: as.format.name,
+  sport: as.sport.code,
+  country: as.country.code,
+  region: as.region.code,
+  ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
+  handicap: as.handicap,
+  drawsAllowed: as.drawsAllowed,
+  worldRankings: as.worldRankings,
+  national: as.national,
+  international: as.international,
+  ...changed,
+});
+
 // The request to update `tournament` to what it is, with `changed`.
 const updated = async (
   world: SpecWorld,
@@ -135,30 +175,12 @@ const updated = async (
   changed: Partial<TournamentRequest>,
 ): Promise<void> => {
   const account = await accountFor(world, address);
-  const as = await load(world, tournament);
   await done(
     world,
     new UpdateTournament(
       account.value,
       tournament.value,
-      {
-        name: as.name.toString(),
-        starts: as.starts.toISOString(),
-        finishes: as.finishes.toISOString(),
-        format: as.format.name,
-        sport: as.sport.code,
-        country: as.country.code,
-        region: as.region.code,
-        // Said again as it is, since an update says everything the
-        // tournament is, and one without its notes would take them away.
-        ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
-        handicap: as.handicap,
-        drawsAllowed: as.drawsAllowed,
-        worldRankings: as.worldRankings,
-        national: as.national,
-        international: as.international,
-        ...changed,
-      },
+      requestFor(await load(world, tournament), changed),
       momentOf(world),
     ),
   );
@@ -253,10 +275,30 @@ Given(
   },
 );
 
+Given(
+  "{string} has restored the player {string} in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, async (account, tournament) => {
+      const found = playerNamed(await load(this, tournament), player);
+      return new RestorePlayer(
+        account,
+        tournament.value,
+        found.id.value,
+        momentOf(this),
+      );
+    });
+  },
+);
+
 // Renamed and nothing else: what the player represents and the flag they fly
 // are said again as they are, since an update says everything again.
 Given(
-  "{string} has renamed the player {string} of {string} to {string}",
+  /^"([^"]*)" has renamed the player "([^"]*)" (?:of|in) "([^"]*)" to "([^"]*)"$/,
   async function (
     this: SpecWorld,
     address: string,
@@ -293,7 +335,14 @@ Given(
   ) {
     await doneTo(this, address, name, (account, tournament) =>
       Promise.resolve(
-        new AddBlock(account, tournament.value, block, 1, momentOf(this)),
+        new AddBlock(
+          account,
+          tournament.value,
+          block,
+          // The best of 1, where the scenario says nothing else.
+          domainScenarioOf(this).competition.bestOf ?? 1,
+          momentOf(this),
+        ),
       ),
     );
   },
@@ -330,7 +379,8 @@ Given(
           tournament.value,
           knockout,
           4,
-          [1, 1],
+          // Each round the best of 1, where the scenario says nothing else.
+          [0, 1].map((round) => domainScenarioOf(this).drawRounds[round] ?? 1),
           momentOf(this),
         ),
       ),
@@ -442,27 +492,6 @@ Given(
         ),
       ),
     );
-  },
-);
-
-// What the games say -----------------------------------------------------------
-
-Given(
-  "games that say the player {string} in {string} has played",
-  async function (this: SpecWorld, player: string, name: string) {
-    const found = playerNamed(
-      await load(this, tournamentNamed(this, name)),
-      player,
-    );
-    inHandOf(this).games.playersWhoHavePlayed.add(found.id.value);
-  },
-);
-
-Given(
-  "games that say the change to the knockout {string} in {string} moves a player who has played",
-  async function (this: SpecWorld, knockout: string, name: string) {
-    const id = await competitionIn(this, tournamentNamed(this, name), knockout);
-    inHandOf(this).games.knockoutsWhoseChangeMovesAPlayer.add(id.value);
   },
 );
 

@@ -54,10 +54,26 @@ import { UpdateSwissHandler } from "../../../src/application/operations/tourname
 import { UpdateSwissValidator } from "../../../src/application/operations/tournaments/UpdateSwissValidator.js";
 import { UpdateTournamentHandler } from "../../../src/application/operations/tournaments/UpdateTournamentHandler.js";
 import { UpdateTournamentValidator } from "../../../src/application/operations/tournaments/UpdateTournamentValidator.js";
-import type { Games } from "../../../src/application/services/Games.js";
+import { AddGameHandler } from "../../../src/application/operations/competitions/AddGameHandler.js";
+import { AddGameValidator } from "../../../src/application/operations/competitions/AddGameValidator.js";
+import { ArchiveGameHandler } from "../../../src/application/operations/competitions/ArchiveGameHandler.js";
+import { CorrectGameHandler } from "../../../src/application/operations/competitions/CorrectGameHandler.js";
+import { CorrectGameValidator } from "../../../src/application/operations/competitions/CorrectGameValidator.js";
+import { GamesOfCompetitionHandler } from "../../../src/application/operations/competitions/GamesOfCompetitionHandler.js";
+import { RestoreGameHandler } from "../../../src/application/operations/competitions/RestoreGameHandler.js";
+import { EnterPlayerHandler } from "../../../src/application/operations/competitions/EnterPlayerHandler.js";
+import { MoveCompetitionPlayerHandler } from "../../../src/application/operations/competitions/MoveCompetitionPlayerHandler.js";
+import { MoveCompetitionPlayerValidator } from "../../../src/application/operations/competitions/MoveCompetitionPlayerValidator.js";
+import { PlayersOfCompetitionHandler } from "../../../src/application/operations/competitions/PlayersOfCompetitionHandler.js";
+import { RemovePlayerHandler } from "../../../src/application/operations/competitions/RemovePlayerHandler.js";
+import { ReverseWithdrawalHandler } from "../../../src/application/operations/competitions/ReverseWithdrawalHandler.js";
+import { WithdrawPlayerHandler } from "../../../src/application/operations/competitions/WithdrawPlayerHandler.js";
+import { MovePlayerHandler } from "../../../src/application/operations/tournaments/MovePlayerHandler.js";
+import { MovePlayerValidator } from "../../../src/application/operations/tournaments/MovePlayerValidator.js";
+import { Competition } from "../../../src/domain/aggregates/tournaments/competitions/Competition.js";
+import { gamesKeptByCompetitions } from "../../../src/application/operations/competitions/competitionGames.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
-import { Competition } from "../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
@@ -87,20 +103,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
     (id, events) => Account.rebuiltFrom(id, events),
   );
 
-  // The games say what the scenario says has been played, and nothing else,
-  // which is what the application's own games say while nothing has been.
-  const said = {
-    playersWhoHavePlayed: new Set<string>(),
-    knockoutsWhoseChangeMovesAPlayer: new Set<string>(),
-  };
-  const games: Games = {
-    hasPlayed: (_tournament, player) =>
-      Promise.resolve(said.playersWhoHavePlayed.has(player.value)),
-    movesAPlayerWhoHasPlayed: (_tournament, competition) =>
-      Promise.resolve(
-        said.knockoutsWhoseChangeMovesAPlayer.has(competition.value),
-      ),
-  };
+  // Whether games have been played is asked of the games the competitions
+  // keep, as the application asks it.
+  const games = gamesKeptByCompetitions(tournaments, competitions);
 
   const mediator = new Mediator();
   const validation = new ValidationBehaviour();
@@ -120,6 +125,10 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
   validation.register(new MoveCompetitionValidator());
+  validation.register(new MovePlayerValidator());
+  validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new AddGameValidator());
+  validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   const both = [tournaments, accountRepository] as const;
@@ -129,8 +138,11 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
-  mediator.handleCommand(new ArchivePlayerHandler(...both, games));
+  mediator.handleCommand(
+    new ArchivePlayerHandler(...both, competitions, games),
+  );
   mediator.handleCommand(new RestorePlayerHandler(...both));
+  mediator.handleCommand(new MovePlayerHandler(...both));
   mediator.handleCommand(new AddBlockHandler(...both));
   mediator.handleCommand(new UpdateBlockHandler(...both));
   mediator.handleCommand(new AddKnockoutHandler(...both));
@@ -144,9 +156,24 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleCommand(new EnterPlayerHandler(...both, competitions));
+  mediator.handleCommand(
+    new MoveCompetitionPlayerHandler(...both, competitions),
+  );
+  mediator.handleCommand(new WithdrawPlayerHandler(...both, competitions));
+  mediator.handleCommand(new ReverseWithdrawalHandler(...both, competitions));
+  mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
+  mediator.handleCommand(new AddGameHandler(...both, competitions));
+  mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
+  mediator.handleCommand(new RestoreGameHandler(...both, competitions));
+  mediator.handleCommand(new CorrectGameHandler(...both, competitions));
+  mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
+  mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
-  mediator.handleQuery(new PlayersOfTournamentHandler(...both, games));
+  mediator.handleQuery(
+    new PlayersOfTournamentHandler(...both, competitions, games),
+  );
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
 
   const inHand: TournamentsInHand = {
@@ -164,7 +191,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       );
       return Number(rows[0]?.kept ?? 0);
     },
-    games: said,
+    games,
     // Through registering, which makes every account the scenario said there
     // was the first time one is asked for, so that whatever the request finds
     // is there.

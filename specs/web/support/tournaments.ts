@@ -10,9 +10,8 @@ import { UpdateTournament } from "../../../src/application/operations/tournament
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { TournamentId } from "../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
-import { Competition } from "../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
-import type { Games } from "../../../src/application/services/Games.js";
+import { gamesKeptByCompetitions } from "../../../src/application/operations/competitions/competitionGames.js";
 import type { Application } from "../../../src/web/server.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -23,39 +22,9 @@ import {
   tournamentNamed,
 } from "../../application/operations/tournaments/aRequest.js";
 
-/** What a scenario says its site's games say has been played, by id. */
-export interface GamesSaid {
-  readonly playersWhoHavePlayed: Set<string>;
-  readonly knockoutsWhoseChangeMovesAPlayer: Set<string>;
-}
-
-/**
- * Games for a scenario's own site that say what the scenario says has been
- * played, and nothing else, which is what the site's own games say while
- * nothing has been.
- */
-export const standInGames = (): { said: GamesSaid; games: Games } => {
-  const said: GamesSaid = {
-    playersWhoHavePlayed: new Set(),
-    knockoutsWhoseChangeMovesAPlayer: new Set(),
-  };
-  return {
-    said,
-    games: {
-      hasPlayed: (_tournament, player) =>
-        Promise.resolve(said.playersWhoHavePlayed.has(player.value)),
-      movesAPlayerWhoHasPlayed: (_tournament, competition) =>
-        Promise.resolve(
-          said.knockoutsWhoseChangeMovesAPlayer.has(competition.value),
-        ),
-    },
-  };
-};
-
 export const tournamentsThrough = (
   application: Application,
   now: () => ReadOnlyDate,
-  games: GamesSaid = standInGames().said,
 ): TournamentsInHand => {
   const asARequest = <T>(work: () => Promise<T>): Promise<T> =>
     application.unitOfWork.inTransaction(work);
@@ -63,16 +32,8 @@ export const tournamentsThrough = (
     send: (command) => application.mediator.send(command),
     ask: (query) => application.mediator.query(query),
     load: (id) => asARequest(() => application.tournaments.load(id)),
-    // Rebuilt from its stream, as the site would rebuild it, or nothing where
-    // it has none.
-    loadCompetition: async (id) => {
-      const events = await asARequest(() =>
-        application.eventStore.getEvents(id),
-      );
-      return events.length === 0
-        ? undefined
-        : Competition.rebuiltFrom(id, events);
-    },
+    loadCompetition: (id) =>
+      asARequest(() => application.competitions.load(id)),
     eventsOf: (id) => asARequest(() => application.eventStore.getEvents(id)),
     kept: async () => {
       const { rows } = await asARequest(() =>
@@ -83,9 +44,10 @@ export const tournamentsThrough = (
       );
       return Number(rows[0]?.kept ?? 0);
     },
-    // What the site's games say has been played: nothing a browser scenario
-    // does records a game, so only what the scenario says.
-    games,
+    games: gamesKeptByCompetitions(
+      application.tournaments,
+      application.competitions,
+    ),
     accountFor: (address) =>
       asARequest(() =>
         application.accountsByEmailAddress.find(EmailAddress.from(address)),

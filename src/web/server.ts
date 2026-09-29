@@ -80,13 +80,34 @@ import { UpdateSwissValidator } from "../application/operations/tournaments/Upda
 import { UpdateTournamentHandler } from "../application/operations/tournaments/UpdateTournamentHandler.js";
 import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
 import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
+import { CompetitionPageHandler } from "../application/operations/tournaments/CompetitionPageHandler.js";
+import { TournamentPageHandler } from "../application/operations/tournaments/TournamentPageHandler.js";
 import { TournamentToChangeHandler } from "../application/operations/tournaments/TournamentToChangeHandler.js";
 import { TournamentYearsOfAccountHandler } from "../application/operations/tournaments/TournamentYearsOfAccountHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
-import { type Games, noGamesYet } from "../application/services/Games.js";
+import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
+import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
+import { ArchiveGameHandler } from "../application/operations/competitions/ArchiveGameHandler.js";
+import { CorrectGameHandler } from "../application/operations/competitions/CorrectGameHandler.js";
+import { CorrectGameValidator } from "../application/operations/competitions/CorrectGameValidator.js";
+import { GamesOfCompetitionHandler } from "../application/operations/competitions/GamesOfCompetitionHandler.js";
+import { RestoreGameHandler } from "../application/operations/competitions/RestoreGameHandler.js";
+import { EnterPlayerHandler } from "../application/operations/competitions/EnterPlayerHandler.js";
+import { MoveCompetitionPlayerHandler } from "../application/operations/competitions/MoveCompetitionPlayerHandler.js";
+import { MoveCompetitionPlayerValidator } from "../application/operations/competitions/MoveCompetitionPlayerValidator.js";
+import { PlayersOfCompetitionHandler } from "../application/operations/competitions/PlayersOfCompetitionHandler.js";
+import { RemovePlayerHandler } from "../application/operations/competitions/RemovePlayerHandler.js";
+import { ReverseWithdrawalHandler } from "../application/operations/competitions/ReverseWithdrawalHandler.js";
+import { WithdrawPlayerHandler } from "../application/operations/competitions/WithdrawPlayerHandler.js";
+import { MovePlayerHandler } from "../application/operations/tournaments/MovePlayerHandler.js";
+import { MovePlayerValidator } from "../application/operations/tournaments/MovePlayerValidator.js";
+import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
+import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
+import { gamesKeptByCompetitions } from "../application/operations/competitions/competitionGames.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
+import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
@@ -242,6 +263,8 @@ export interface Application {
   readonly sessions: PostgresSessions;
   /** Every tournament, by its id, as a command loads and saves one. */
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
+  /** Every competition's players, each competition under its own id. */
+  readonly competitions: AggregateRepository<Competition, CompetitionId>;
   /** The tournaments each account has a part in, as the read model keeps them. */
   readonly tournamentsByAccount: TournamentsByAccount;
 }
@@ -391,18 +414,14 @@ export interface ApplicationOptions {
    * it checks what Google says.
    */
   readonly googleEndpoints?: GoogleEndpoints;
-  /**
-   * What says whether games have been played. Nothing records games yet, so
-   * the application's own say none have, unless a scenario stands in games
-   * that say otherwise, to see what is refused or held back where they have.
-   */
-  readonly games?: Games;
 }
 
 // Every kind of event the application records, each named once by the name it
 // is kept under, and how it is read back.
 const events = (): EventRegistry =>
-  nameTournamentEvents(nameAccountEvents(new EventRegistry()));
+  nameCompetitionEvents(
+    nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+  );
 
 export const buildApplication = async (
   config: Config,
@@ -624,13 +643,18 @@ export const buildApplication = async (
   );
 
   // Every operation on a tournament, asked by the account the reader is
-  // signed in to. Nothing records games yet, so whatever asks whether any have
-  // been played is told none have, unless a scenario says otherwise.
-  const games = options.games ?? noGamesYet;
+  // signed in to.
   const tournaments = new AggregateRepository(
     eventStore,
     (id: TournamentId, events) => Tournament.rebuiltFrom(id, events),
   );
+  const competitions = new AggregateRepository(
+    eventStore,
+    (id: CompetitionId, events) => Competition.rebuiltFrom(id, events),
+  );
+  // Whether games have been played is asked of the games the competitions
+  // keep.
+  const games = gamesKeptByCompetitions(tournaments, competitions);
   const both = [tournaments, accounts] as const;
   validation.register(new CreateTournamentValidator());
   validation.register(new UpdateTournamentValidator());
@@ -643,6 +667,10 @@ export const buildApplication = async (
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
   validation.register(new MoveCompetitionValidator());
+  validation.register(new MovePlayerValidator());
+  validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new AddGameValidator());
+  validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   mediator.handleCommand(
@@ -655,8 +683,11 @@ export const buildApplication = async (
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
-  mediator.handleCommand(new ArchivePlayerHandler(...both, games));
+  mediator.handleCommand(
+    new ArchivePlayerHandler(...both, competitions, games),
+  );
   mediator.handleCommand(new RestorePlayerHandler(...both));
+  mediator.handleCommand(new MovePlayerHandler(...both));
   mediator.handleCommand(new AddBlockHandler(...both));
   mediator.handleCommand(new UpdateBlockHandler(...both));
   mediator.handleCommand(new AddKnockoutHandler(...both));
@@ -672,13 +703,34 @@ export const buildApplication = async (
   mediator.handleCommand(new AddScorerHandler(...both, accountsByEmailAddress));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleCommand(new EnterPlayerHandler(...both, competitions));
+  mediator.handleCommand(
+    new MoveCompetitionPlayerHandler(...both, competitions),
+  );
+  mediator.handleCommand(new WithdrawPlayerHandler(...both, competitions));
+  mediator.handleCommand(new ReverseWithdrawalHandler(...both, competitions));
+  mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
+  mediator.handleCommand(new AddGameHandler(...both, competitions));
+  mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
+  mediator.handleCommand(new RestoreGameHandler(...both, competitions));
+  mediator.handleCommand(new CorrectGameHandler(...both, competitions));
+  mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
+  mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
-  mediator.handleQuery(new PlayersOfTournamentHandler(...both, games));
+  mediator.handleQuery(
+    new PlayersOfTournamentHandler(...both, competitions, games),
+  );
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
   mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
   mediator.handleQuery(
     new TournamentToChangeHandler(tournaments, tournamentsByAddress),
+  );
+  mediator.handleQuery(
+    new TournamentPageHandler(tournaments, tournamentsByAddress),
+  );
+  mediator.handleQuery(
+    new CompetitionPageHandler(tournaments, tournamentsByAddress),
   );
   mediator.handleQuery(
     new TournamentYearsOfAccountHandler(tournamentsByAccount),
@@ -823,6 +875,7 @@ export const buildApplication = async (
     passwords,
     sessions,
     tournaments,
+    competitions,
     tournamentsByAccount,
   };
 };

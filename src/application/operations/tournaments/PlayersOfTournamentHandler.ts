@@ -10,13 +10,8 @@ import {
   type ListedPlayer,
   PlayersOfTournament,
 } from "./PlayersOfTournament.js";
+import type { Competitions } from "../competitions/competitionOperations.js";
 import { managedBy } from "./tournamentOperations.js";
-
-// As a reader looks for a name in a list: by its letters alone, so that
-// "de Villiers" comes among the Ds and "Émile" among the Es. The same for
-// every reader rather than by each one's language, since a list of people's
-// names is not in any one language.
-const byName = new Intl.Collator("en", { sensitivity: "base" });
 
 export class PlayersOfTournamentHandler extends QueryHandler<
   PlayersOfTournament,
@@ -27,6 +22,7 @@ export class PlayersOfTournamentHandler extends QueryHandler<
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly competitions: Competitions,
     private readonly games: Games,
   ) {
     super();
@@ -40,6 +36,20 @@ export class PlayersOfTournamentHandler extends QueryHandler<
       query.tournament,
       "PlayersOfTournament",
     );
+    // Each competition's players, asked of the competition once, in the
+    // tournament's order.
+    const entered: { name: string; players: Set<string> }[] = [];
+    for (const { reference } of tournament.competitions) {
+      const competition = await this.competitions.load(reference.id);
+      entered.push({
+        name: reference.name.toString(),
+        players: new Set(
+          competition?.players.map(
+            ({ tournamentPlayerId }) => tournamentPlayerId.value,
+          ),
+        ),
+      });
+    }
     const listed: ListedPlayer[] = [];
     for (const player of tournament.players) {
       listed.push({
@@ -51,8 +61,11 @@ export class PlayersOfTournamentHandler extends QueryHandler<
         // Asked of the games, as archiving a player asks, so that a list
         // offering to archive a player offers it only where it would be done.
         hasPlayed: await this.games.hasPlayed(tournament.id, player.id),
+        competitions: entered
+          .filter(({ players }) => players.has(player.id.value))
+          .map(({ name }) => name),
       });
     }
-    return listed.sort((one, other) => byName.compare(one.name, other.name));
+    return listed;
   }
 }
