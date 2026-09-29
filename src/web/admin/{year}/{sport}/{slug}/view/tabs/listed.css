@@ -59,9 +59,12 @@
   }
 }
 
-/* A name and what is shown beside it, such as a player's flag. */
+/* A name and what is shown beside it: a player's is their name, what they
+   represent in brackets, and their flag, wrapping where a line will not hold
+   them all. */
 .listed-who {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
@@ -84,6 +87,36 @@ button.listed-name {
   flex: none;
 }
 
+/* Drawn rather than written, so that what a player represents is exactly what
+   the manager typed, and nothing at all when they represent nothing. */
+.listed-who > .listed-about:not(:empty)::before {
+  content: "(";
+}
+
+.listed-who > .listed-about:not(:empty)::after {
+  content: ")";
+}
+
+.listed-who > .listed-about:empty {
+  display: none;
+}
+
 .listed-item[data-archived] .listed-about {
   text-decoration: line-through;
+}
+
+/* A competition's players are added by choosing one of the tournament's from
+   a drop-down, as tall as a thumb, with the button that adds them beside it
+   where there is room and beneath it where there is not. */
+.listed-adding {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.listed-choice {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 44px;
+  font: inherit;
 }

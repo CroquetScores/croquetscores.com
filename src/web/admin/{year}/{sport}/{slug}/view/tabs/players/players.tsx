@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 
+import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { say } from "../../../../../../words.js";
 import {
   PlayerDialog,
   type PlayerAsTheyAre,
 } from "../../modal-dialogs/player/player.js";
+import { optionFace } from "../optionFace.js";
 import "../listed.css";
 
-// The Players tab (players-tab.feature): the players in use in order of their
-// names, each with what they represent and the flag they fly, and after them
-// the archived ones, struck through. Add Player and a player's name open the
-// player dialog. A player who has played is not offered Archive, since the
-// games would then be against somebody who is no longer there. Whatever is
-// pressed, and whenever the dialog keeps a player, the list is asked for
-// again.
+// The Players tab (players-tab.feature): the players in use in the
+// tournament's order, each with what they represent and the flag they fly,
+// offering Up, Down and Archive, and after them the archived ones, struck
+// through. Add Player and a player's name open the player dialog. A player who
+// has played is not offered Archive, since the games would then be against
+// somebody who is no longer there, and archiving one who is in competitions
+// asks first, since it removes them from each. Whatever is pressed, and
+// whenever the dialog keeps a player, the list is asked for again.
 
 interface Props {
   /** The tournament's id. */
@@ -27,6 +30,8 @@ interface Listed extends PlayerAsTheyAre {
     | undefined;
   readonly archived: boolean;
   readonly hasPlayed: boolean;
+  /** The names of the competitions they are in, in the tournament's order. */
+  readonly competitions: readonly string[];
 }
 
 // The part of an id after its kind, which is how the API names a tournament
@@ -41,6 +46,8 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
   const [acting, setActing] = useState(false);
   // Which dialog is open: to add, or to change a player, or none.
   const [dialog, setDialog] = useState<"adding" | Listed | undefined>();
+  // The player a manager is asked about before they are archived.
+  const [archiving, setArchiving] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
 
   useEffect(() => {
@@ -66,10 +73,11 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
     setAsking((count) => count + 1);
   };
 
-  // Neither asks first: each is undone by the other, and nothing is lost.
+  // None asks first: each is undone by pressing the other way, and nothing is
+  // lost, but for archiving one who is in competitions, which asks.
   const act = async (
     player: Listed,
-    action: "archive" | "restore",
+    action: "up" | "down" | "archive" | "restore",
   ): Promise<void> => {
     setActing(true);
     try {
@@ -87,23 +95,33 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
   const inUse = listed?.filter(({ archived }) => !archived) ?? [];
   const archived = listed?.filter((player) => player.archived) ?? [];
 
-  const row = (player: Listed): React.JSX.Element => (
+  const button = (
+    player: Listed,
+    action: "up" | "down" | "archive" | "restore",
+  ): React.JSX.Element => (
+    <button
+      key={action}
+      type="button"
+      className="button"
+      data-action={action}
+      onClick={() => {
+        if (action === "archive" && player.competitions.length > 0) {
+          setArchiving(player);
+        } else {
+          void act(player, action);
+        }
+      }}
+      {...optionFace(action, say(`admin.players.${action}`))}
+    />
+  );
+
+  const row = (player: Listed, place: number): React.JSX.Element => (
     <li
       key={player.id}
       className="listed-item"
       data-archived={player.archived ? "" : undefined}
     >
       <span className="listed-who">
-        {/* Beside the name, named for a reader who cannot see it by the place
-            it is the flag of. */}
-        {player.flag === undefined ? null : (
-          <img
-            className="listed-flag"
-            src={player.flag.image}
-            alt={player.flag.name}
-            data-flag={player.flag.code}
-          />
-        )}
         {/* An archived player can only be restored, so their name opens
             nothing. */}
         {player.archived ? (
@@ -119,31 +137,33 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
             {player.name}
           </button>
         )}
+        <span className="listed-about">{player.representing ?? ""}</span>
+        {/* After the name and what they represent, named for a reader who
+            cannot see it by the place it is the flag of. */}
+        {player.flag === undefined ? null : (
+          <img
+            className="listed-flag"
+            src={player.flag.image}
+            alt={player.flag.name}
+            data-flag={player.flag.code}
+          />
+        )}
       </span>
       {player.archived ? (
         <span className="visually-hidden">
           {say("admin.players.archivedSaid")}
         </span>
       ) : null}
-      <span className="listed-about">{player.representing ?? ""}</span>
       <span className="listed-options">
-        {player.archived ? (
-          <button
-            type="button"
-            className="button"
-            onClick={() => void act(player, "restore")}
-          >
-            {say("admin.players.restore")}
-          </button>
-        ) : player.hasPlayed ? null : (
-          <button
-            type="button"
-            className="button"
-            onClick={() => void act(player, "archive")}
-          >
-            {say("admin.players.archive")}
-          </button>
-        )}
+        {player.archived
+          ? button(player, "restore")
+          : [
+              ...(player.hasPlayed ? [] : [button(player, "archive")]),
+              // Last, where they are in the same place on every row. Nowhere
+              // to go is nothing to press.
+              ...(place > 0 ? [button(player, "up")] : []),
+              ...(place < inUse.length - 1 ? [button(player, "down")] : []),
+            ]}
       </span>
     </li>
   );
@@ -186,6 +206,31 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
             </>
           ) : null}
         </>
+      )}
+      {archiving === undefined ? null : (
+        <ModalDialog
+          title={say("admin.players.archiveTitle")}
+          action={say("admin.players.archive")}
+          act={() => {
+            const player = archiving;
+            setArchiving(undefined);
+            void act(player, "archive");
+          }}
+          cancel={() => {
+            setArchiving(undefined);
+          }}
+        >
+          <p>
+            {say("admin.players.archiveQuestion", { name: archiving.name })}
+          </p>
+          {/* Their managers' names for them, and nobody's language. */}
+          <ul data-names="">
+            {archiving.competitions.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+          <p>{say("admin.players.archive.explanation")}</p>
+        </ModalDialog>
       )}
       {dialog === undefined ? null : (
         <PlayerDialog

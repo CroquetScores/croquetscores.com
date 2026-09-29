@@ -832,7 +832,16 @@ Then(
   "{string} is at least {int} pixels tall",
   async function (this: SpecWorld, option: string, least: number) {
     await eventually(this, async () => {
-      const { height } = await sizeAndPlaceOf(listOffers(this, option));
+      // A button or a link by its words, or a field of an open dialog by its
+      // label, which is drawn as the box around it and pressed anywhere in it.
+      const field = this.browserPage
+        .locator("dialog[open] label.field-box")
+        .filter({
+          has: this.browserPage.getByLabel(option, { exact: true }),
+        });
+      const { height } = await sizeAndPlaceOf(
+        (await field.count()) > 0 ? field : listOffers(this, option),
+      );
       assert.ok(height >= least, `It is ${String(height)} pixels tall.`);
     });
   },

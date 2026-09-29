@@ -1,0 +1,669 @@
+@browser @postgres
+Feature: The players tab of a competition's page
+
+  The Players tab is where a manager enters a tournament's players into one of
+  its competitions, puts them in order, removes the ones entered by mistake,
+  and withdraws the ones who will play no more of it (`view.feature` beneath
+  the competition). A player in a competition is one of the tournament's
+  players (`CompetitionPlayer.feature`), so they are added by choosing them
+  rather than by typing them, and everything about them but their place in
+  the competition is changed on the tournament's Players tab
+  (`players-tab.feature`).
+
+  Above the list, a drop-down offers every player of the tournament who is not
+  already in the competition, in the tournament's order, with Add Player
+  beside it. Archived players of the tournament are not offered, since they
+  are set aside. A player added is put in the tournament's order, just after
+  whoever already has their order where somebody does (`enterPlayer.feature`),
+  and is no longer offered in the drop-down. Where every player of the
+  tournament is in the competition, the drop-down and Add Player are not
+  shown, and the tab says so.
+
+  The players playing come first, in the competition's order, which is the
+  order a knockout is drawn in and a block is listed in. Each says their name,
+  what they represent and the flag they fly, where they have either, and
+  offers Remove, Withdraw, Up and Down. Up and Down move a player one place
+  among those playing; the first is not offered Up and the last is not offered
+  Down, since there is nowhere for it to go. Up and Down are shown as arrows
+  pointing up and down, and are named "Up" and "Down" for a reader who cannot
+  see them. They come last of what a row offers, so that they are in the same
+  place on every row. A player's name, what they
+  represent and their flag are said in that order, as "Sam Someone
+  (Canterbury Croquet Club)" and then the flag.
+
+  Remove takes out a player entered by mistake. They are not kept or set
+  aside, so there is nothing to restore (`CompetitionPlayer.feature`). A
+  player who has any games in the competition cannot be removed, since the
+  games would then be against somebody who is no longer there, so such a
+  player is not offered Remove; an archived game counts, since it can be
+  restored. A player removed is still one of the tournament's players, so
+  they are offered again in the drop-down, and adding them again enters them
+  as anybody new is, in the tournament's order.
+
+  Withdraw is for a player who will play no more of the competition: they
+  stay in it, with their games. A player who withdraws is put last
+  (`withdrawPlayer.feature`), so the withdrawn players come after those
+  playing, under a heading of their own, in the order they withdrew. Each says
+  their name, what they represent and the flag they fly, and offers
+  Unwithdraw alone, since a withdrawn player can only have their withdrawal
+  reversed. A player unwithdrawn keeps the order they were given when they
+  withdrew, so they come back after those who stayed playing.
+
+  In a knockout, the competition's order is its draw, so once a game has been
+  played in one its players are fixed (`addGame.feature`): the drop-down and
+  Add Player are not shown, and no player offers Up, Down or Remove. Withdraw
+  is still offered, since a player can stop playing at any time, and their
+  opponent in a match not yet decided goes through.
+
+  Remove and Withdraw ask first, where Archive elsewhere in the admin does
+  not. Remove cannot be undone: the player's place goes with them, and adding
+  them again is not the same as having kept them. Withdraw can be reversed,
+  but it changes the outcome of the competition — the games the player has
+  not played are decided without them, and who goes through or wins may
+  change with it — so it is not something to do by a slip of the thumb.
+  Unwithdraw, Up and Down do not ask: each is undone by pressing the other
+  way. Whatever is done, the list is asked for again, so that it says who the
+  players are now.
+
+  The tab has no address of its own, so a scenario opens the competition's
+  page, whose first tab this is, which is what opening the players of a
+  competition does.
+
+  Background:
+    Given a viewport 375 pixels wide
+    And a browser that runs scripts
+    And a site served as "croquetscores.com"
+    And "organiser@example.com" has an account, confirmed, with the password "correct horse battery staple"
+    And the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
+    And "organiser@example.com" has created the tournament "Spring Open"
+    And the tournament "Spring Open" starts on "2026-10-03"
+    And the tournament "Spring Open" is for the sport "ac"
+    And "organiser@example.com" has added the block "Block A" to "Spring Open"
+    And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+    And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+    And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+
+  Rule: The drop-down offers the tournament's players not already in the competition
+
+    Scenario: A player of the tournament not in the competition is offered
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is offered to add
+
+    Scenario: The players offered are in the tournament's order
+      When the players of "Block A" in "Spring Open" are opened
+      Then the first player offered to add is "Sam Someone"
+
+    Scenario: A player already in the competition is not offered
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is not offered to add
+
+    Scenario: A withdrawn player is not offered
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is not offered to add
+
+    Scenario: An archived player of the tournament is not offered
+      Given "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is not offered to add
+
+    Scenario: The tab offers Add Player
+      When the players of "Block A" in "Spring Open" are opened
+      Then the tab offers "Add Player"
+
+    Scenario: Add Player is above the players
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then "Add Player" is above the players
+
+    Scenario: A competition with every player in it offers nobody to add
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the tab does not offer "Add Player"
+
+    Scenario: A competition with every player in it says so
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the tab says every player is in the competition
+
+  Rule: Add Player enters the player chosen, in the tournament's order
+
+    Scenario: A player added is listed among those playing
+      Given the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Sam Someone" is listed among those playing
+
+    Scenario: A player added is no longer offered
+      Given the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Sam Someone" is not offered to add
+
+    Scenario: A player added comes where the tournament's order puts them
+      Given "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Sam Someone" is listed before "Alex Another"
+
+    Scenario: A player added from the tab is kept
+      Given the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      And "Add Player" is pressed
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is listed among those playing
+
+    Scenario: A player added no longer leaves the tab saying there are none
+      Given the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then the tab does not say there are no players
+
+    Scenario: A competition with no players says so
+      When the players of "Block A" in "Spring Open" are opened
+      Then the tab says there are no players
+
+  Rule: The players playing are listed in the competition's order
+
+    Scenario: The players are in the tournament's order, whatever order they were entered in
+      Given "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the first player listed is "Sam Someone"
+
+    Scenario: The players are in the competition's order after one is moved
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has moved the player "Alex Another" in "Block A" of "Spring Open" up
+      When the players of "Block A" in "Spring Open" are opened
+      Then the first player listed is "Alex Another"
+
+  Rule: Each player says what they represent and the flag they fly
+
+    Scenario: A player says what they represent
+      Given the player is to represent "Canterbury Croquet Club"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Pat Fourth" is shown representing "Canterbury Croquet Club"
+
+    Scenario: A player representing nothing says nothing of it
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is shown representing nothing
+
+    Scenario: A player shows the flag they fly
+      Given the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Pat Fourth" is shown flying the flag "nz"
+
+    Scenario: A flag is named by its country, for a reader who cannot see it
+      Given the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the flag of the player "Pat Fourth" is named "New Zealand"
+
+    Scenario: A player flying no flag shows none
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is shown flying no flag
+
+    Scenario: A player changed on the tournament's tab is shown as they are now
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has renamed the player "Sam Someone" in "Spring Open" to "Samantha Someone"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Samantha Someone" is listed among those playing
+
+  Rule: What a player offers is what can be done to them
+
+    Scenario Outline: A player playing offers what can be done to them
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Alex Another" offers "<option>"
+
+      Examples:
+        | option   |
+        | Up       |
+        | Down     |
+        | Remove   |
+        | Withdraw |
+
+    Scenario: A player playing does not offer Unwithdraw
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Unwithdraw"
+
+    Scenario: The first player does not offer Up
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Up"
+
+    Scenario: The last player does not offer Down
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Alex Another" does not offer "Down"
+
+    Scenario: The last playing does not offer Down though a withdrawn one comes after them
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Down"
+
+    Scenario: A player who has played is not offered Remove
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Remove"
+
+    Scenario: A player who has played is still offered Withdraw
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" offers "Withdraw"
+
+    Scenario: A player whose only game is archived is still not offered Remove
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Remove"
+
+    Scenario: A player who has not played is offered Remove
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" offers "Remove"
+
+    Scenario: A withdrawn player offers Unwithdraw
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" offers "Unwithdraw"
+
+    Scenario Outline: A withdrawn player offers nothing else
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Alex Another" does not offer "<option>"
+
+      Examples:
+        | option   |
+        | Up       |
+        | Down     |
+        | Remove   |
+        | Withdraw |
+
+  Rule: Up and Down move a player a place
+
+    Scenario: Up moves a player before the one above them
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Up" is pressed on the player "Alex Another"
+      Then the first player listed is "Alex Another"
+
+    Scenario: Down moves a player after the one below them
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Down" is pressed on the player "Sam Someone"
+      Then the first player listed is "Alex Another"
+
+    Scenario: Up passes over a withdrawn player
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Up" is pressed on the player "Chris Third"
+      Then the first player listed is "Chris Third"
+
+    Scenario: A player moved is kept in their new place
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Up" is pressed on the player "Alex Another"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the first player listed is "Alex Another"
+
+    Scenario: Moving does not ask first
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Up" is pressed on the player "Alex Another"
+      Then no modal dialog is open
+
+  Rule: Remove asks first, since it cannot be undone, then takes the player out
+
+    Scenario: Remove asks first
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Remove" is pressed on the player "Sam Someone"
+      Then a modal dialog asks to confirm
+
+    Scenario: The question names the player
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Remove" is pressed on the player "Sam Someone"
+      Then the question names "Sam Someone"
+
+    Scenario: A player removed is no longer listed
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Remove" is pressed on the player "Sam Someone"
+      When the question is confirmed
+      Then the player "Sam Someone" is not listed
+
+    Scenario: A player removed is offered again to add
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Remove" is pressed on the player "Sam Someone"
+      When the question is confirmed
+      Then the player "Sam Someone" is offered to add
+
+    Scenario: A player removed from the tab is kept removed
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Remove" is pressed on the player "Sam Someone"
+      And the question is confirmed
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is not listed
+
+    Scenario: A removal not confirmed leaves the player listed
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Remove" is pressed on the player "Sam Someone"
+      When the question is declined
+      Then the player "Sam Someone" is listed among those playing
+
+    Scenario: A player removed and added again comes back in the tournament's order
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has removed the player "Sam Someone" from "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Sam Someone" is listed before "Alex Another"
+
+  Rule: Withdraw asks first, since it changes the outcome, then lists the player among the withdrawn
+
+    Scenario: Withdraw asks first
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Withdraw" is pressed on the player "Sam Someone"
+      Then a modal dialog asks to confirm
+
+    Scenario: The question names the player
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Withdraw" is pressed on the player "Sam Someone"
+      Then the question names "Sam Someone"
+
+    Scenario: A player withdrawn is listed among the withdrawn
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Withdraw" is pressed on the player "Sam Someone"
+      When the question is confirmed
+      Then the player "Sam Someone" is listed among the withdrawn
+
+    Scenario: A player withdrawn is not listed among those playing
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Withdraw" is pressed on the player "Sam Someone"
+      When the question is confirmed
+      Then the player "Sam Someone" is not listed among those playing
+
+    Scenario: A player withdrawn from the tab is kept withdrawn
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Withdraw" is pressed on the player "Sam Someone"
+      And the question is confirmed
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is listed among the withdrawn
+
+    Scenario: A withdrawal not confirmed leaves the player playing
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Withdraw" is pressed on the player "Sam Someone"
+      When the question is declined
+      Then the player "Sam Someone" is listed among those playing
+
+  Rule: The withdrawn players are listed after those playing
+
+    Scenario: The withdrawn players come after those playing
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is listed after "Alex Another"
+
+    Scenario: The withdrawn players are in the order they withdrew
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Alex Another" is listed before "Sam Someone"
+
+    Scenario: The withdrawn players are under a heading of their own
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the withdrawn players are headed "Withdrawn players"
+
+    Scenario: No heading for the withdrawn is shown where none has withdrawn
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then no heading for the withdrawn players is shown
+
+    Scenario: A withdrawn player still shows what they represent
+      Given the player is to represent "Canterbury Croquet Club"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Pat Fourth" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Pat Fourth" is shown representing "Canterbury Croquet Club"
+
+    Scenario: A withdrawn player still shows the flag they fly
+      Given the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Pat Fourth" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Pat Fourth" is shown flying the flag "nz"
+
+  Rule: Unwithdraw puts a player back among those playing, without asking
+
+    Scenario: A player unwithdrawn is listed among those playing
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Unwithdraw" is pressed on the player "Sam Someone"
+      Then the player "Sam Someone" is listed among those playing
+
+    Scenario: Unwithdrawing does not ask first
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Unwithdraw" is pressed on the player "Sam Someone"
+      Then no modal dialog is open
+
+    Scenario: A player unwithdrawn comes after those who stayed playing
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Unwithdraw" is pressed on the player "Sam Someone"
+      Then the first player listed is "Alex Another"
+
+    Scenario: A player unwithdrawn from the tab is kept playing
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Unwithdraw" is pressed on the player "Sam Someone"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" is listed among those playing
+
+  Rule: Once a knockout has a game, its players are fixed
+
+    The knockout's draw is four places, each round the best of 1, so Sam
+    Someone plays Alex Another in the first round and Chris Third has a bye.
+    Pat Fourth is a player of the tournament who is not in it.
+
+    Scenario: A knockout with no games offers Add Player
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the tab offers "Add Player"
+
+    Scenario: A knockout with a game does not offer Add Player
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the tab does not offer "Add Player"
+
+    Scenario Outline: A player in a knockout with a game does not offer what would change the draw
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Chris Third" does not offer "<option>"
+
+      Examples:
+        | option |
+        | Up     |
+        | Remove |
+
+    Scenario: A player in a knockout with a game does not offer Down
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Alex Another" does not offer "Down"
+
+    Scenario: A player in a knockout with a game still offers Withdraw
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Chris Third" offers "Withdraw"
+
+    Scenario: A knockout whose only game is archived still has its players fixed
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the tab does not offer "Add Player"
+
+  Rule: Every word the tab says is in the reader's language
+
+    The test locale shows it (`language.feature`). A player's name and what
+    they represent are what the manager typed, and nobody's language. A
+    flag's name is a word of the reader's language, and is looked at.
+
+    Scenario: The players playing are in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then every word in the tab but the players' own is in the test locale
+
+    Scenario: The withdrawn players are in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then every word in the tab but the players' own is in the test locale
+
+    Scenario: The question before removing is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When the way to remove the player "Sam Someone" is pressed
+      Then every word in the question but the player's name is in the test locale
+
+    Scenario: The question before withdrawing is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When the way to withdraw the player "Sam Someone" is pressed
+      Then every word in the question but the player's name is in the test locale
+
+    Scenario: A competition with every player in it says so in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then every word in the tab but the players' own is in the test locale
+
+  Rule: The tab is laid out for a phone first
+
+    Scenario: Add Player can be pressed with a thumb
+      When the players of "Block A" in "Spring Open" are opened
+      Then the button "Add Player" is at least 44 pixels tall
+
+    Scenario: The drop-down can be pressed with a thumb
+      When the players of "Block A" in "Spring Open" are opened
+      Then the drop-down of players to add is at least 44 pixels tall
+
+    Scenario Outline: What a player offers can be pressed with a thumb
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Chris Third" from "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then "<option>" on the player "<player>" is at least 44 pixels tall
+
+      Examples:
+        | player       | option     |
+        | Sam Someone  | Down       |
+        | Alex Another | Up         |
+        | Sam Someone  | Remove     |
+        | Sam Someone  | Withdraw   |
+        | Chris Third  | Unwithdraw |
+
+    Scenario: A long name wraps rather than widening the page
+      Given the player is to represent "The Very Long Named Croquet And Lawn Bowls Club Of The Northern Districts"
+      And "organiser@example.com" has added the player "Maximilian Alexander Fitzwilliam-Worthington" to "Spring Open"
+      And "organiser@example.com" has entered the player "Maximilian Alexander Fitzwilliam-Worthington" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the page is no wider than the window

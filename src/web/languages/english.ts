@@ -322,6 +322,12 @@ export const english: Language = {
     "admin.view.scorers": "Scorers",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
+    // A competition's page, and the tabs what there is to run is in.
+    "admin.competitionView.tabs": "Competition",
+    "admin.competitionView.players": "Players",
+    "admin.competitionView.scores": "Scores",
+    "admin.competitionView.otherwise":
+      "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,
     // and the heading the archived ones are under.
     "admin.competitions.block": "Block",
@@ -334,6 +340,26 @@ export const english: Language = {
     "admin.competitions.restore": "Restore",
     "admin.competitions.archived": "Archived competitions",
     "admin.competitions.none": "No competitions",
+    "admin.competitions.add": "Add Competition",
+    // The competition dialog.
+    "admin.competition.addTitle": "Add Competition",
+    "admin.competition.name": "Name",
+    "admin.competition.kind": "Kind",
+    "admin.competition.bestOf": "Best of",
+    "admin.competition.places": "Places",
+    "admin.competition.round": "Round {number}",
+    "admin.competition.add": "Add",
+    "admin.competition.added": "{name} was added.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.competition.otherwise": "This competition cannot be kept as it is.",
+    "CompetitionName.Missing": "Enter a name.",
+    "CompetitionName.TooLong": "A name can be at most 254 characters.",
+    "Tournament.CompetitionNameTaken":
+      "Another competition in this tournament already has that name.",
+    "BestOf.NotWhole": "Enter a whole number of games.",
+    "BestOf.TooSmall": "A match has to be the best of at least 1 game.",
+    "KnockoutDraw.EvenBestOf":
+      "A knockout's match has to have a winner, so it is the best of an odd number of games.",
     // Every modal dialog's way out, since the page beneath cannot be reached.
     "admin.modal.cancel": "Cancel",
     // The Managers and Scorers tabs, each of which makes somebody one by their
@@ -353,10 +379,65 @@ export const english: Language = {
       "You will no longer be able to run this tournament, and nobody here can undo that for you. Another manager can make you one again.",
     "admin.managers.otherwise": "That address cannot be made a manager.",
     // The Players tab.
+    // A competition's Players tab.
+    "admin.competitionPlayers.add": "Add Player",
+    "admin.competitionPlayers.choose": "Player to add",
+    "admin.competitionPlayers.nobody": "Choose a player",
+    "admin.competitionPlayers.all": "Every player is in the competition",
+    "admin.competitionPlayers.none": "No players",
+    "admin.competitionPlayers.up": "Up",
+    "admin.competitionPlayers.down": "Down",
+    "admin.competitionPlayers.remove": "Remove",
+    "admin.competitionPlayers.withdraw": "Withdraw",
+    "admin.competitionPlayers.unwithdraw": "Unwithdraw",
+    "admin.competitionPlayers.withdrawn": "Withdrawn players",
+    "admin.competitionPlayers.removeTitle": "Remove Player",
+    "admin.competitionPlayers.removeQuestion":
+      "{name} will be taken out of the competition. This cannot be undone.",
+    "admin.competitionPlayers.withdrawTitle": "Withdraw Player",
+    "admin.competitionPlayers.withdrawQuestion":
+      "{name} will play no more of the competition, and the games they have not played will be decided without them.",
+    // A competition's Scores tab and the score dialog.
+    "admin.scores.add": "Add Score",
+    "admin.scores.none": "No scores",
+    "admin.scores.archive": "Archive",
+    "admin.scores.restore": "Restore",
+    "admin.scores.archived": "Archived scores",
+    "admin.scores.archivedSaid": "Archived",
+    "admin.score.title": "Add Score",
+    "admin.score.add": "Add Game",
+    "admin.score.winner": "Winner",
+    "admin.score.winnerScore": "Winner's score",
+    "admin.score.loser": "Loser",
+    "admin.score.loserScore": "Loser's score",
+    "admin.score.beat": "beat",
+    "admin.score.added": "The game {winner} won against {loser} was added.",
+    "admin.score.otherwise": "The game could not be added.",
+    "Game.WinnerMissing": "Choose the winner.",
+    "Game.WinnerScoreMissing": "Type the winner's score.",
+    "Game.LoserMissing": "Choose the loser.",
+    "Game.LoserScoreMissing": "Type the loser's score.",
+    "Score.NoPoints": "A score begins with its number of points.",
+    "Game.SamePlayer": "Nobody plays themselves.",
+    "Game.WinnerNotAhead":
+      "The winner's score has to be more than the loser's, or marked as won.",
+    "Game.LoserMarked": "The loser's score cannot be marked as won.",
+    "Competition.MatchDecided": "Their match is already decided.",
+    "Competition.NotDrawnToMeet": "They are not drawn to meet.",
+    "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",
     "admin.players.archive": "Archive",
     "admin.players.restore": "Restore",
+    "admin.players.up": "Up",
+    "admin.players.down": "Down",
+    // Asked before archiving a player who is in competitions, since archiving
+    // removes them from each, and restoring them does not put them back.
+    "admin.players.archiveTitle": "Archive Player",
+    "admin.players.archiveQuestion":
+      "{name} will be removed from these competitions:",
+    "admin.players.archive.explanation":
+      "Restoring them will not put them back in these competitions.",
     "admin.players.archived": "Archived players",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.players.archivedSaid": "Archived",
@@ -403,6 +484,8 @@ export const english: Language = {
     "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
     "Tournament.NotAManager":
       "Only a manager of this tournament can change it.",
+    "Tournament.NotAManagerOrScorer":
+      "Only a manager or a scorer of this tournament can see it.",
     "Tournament.Archived":
       "This tournament is archived, and is restored before it can be changed.",
     "UpdateTournament.NoSuchTournament":

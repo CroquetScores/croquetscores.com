@@ -18,13 +18,18 @@ import {
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
+// A competition's Players tab lists its players as the tournament's does, as
+// those playing and the withdrawn rather than those in use and the archived,
+// so these steps read either.
 type List = "in-use" | "archived";
 
 const rows = (world: SpecWorld, list?: List): Locator =>
   tabPanel(world).locator(
     list === undefined
       ? "ul[data-listed] > .listed-item"
-      : `ul[data-listed="${list}"] > .listed-item`,
+      : list === "in-use"
+        ? 'ul[data-listed="in-use"] > .listed-item, ul[data-listed="playing"] > .listed-item'
+        : `ul[data-listed="${list}"] > .listed-item`,
   );
 
 const rowOf = (world: SpecWorld, name: string): Locator =>
@@ -37,10 +42,12 @@ const namesIn = async (world: SpecWorld, list?: List): Promise<string[]> =>
     (name) => name.trim(),
   );
 
+// By the name it is read out by, which for Up and Down is not what is shown:
+// they are drawn as arrows.
 const optionOf = (world: SpecWorld, name: string, option: string): Locator =>
   rowOf(world, name)
-    .locator(".listed-options button")
-    .filter({ hasText: exactly(option) });
+    .locator(".listed-options")
+    .getByRole("button", { name: option, exact: true });
 
 When(
   /^the players of "([^"]*)" are open(?:ed)?$/,
@@ -67,6 +74,18 @@ When(
       assert.equal(await optionOf(this, name, option).count(), 1);
     });
     await optionOf(this, name, option).click();
+  },
+);
+
+// Whatever the button is called in the reader's language, by what it does.
+When(
+  "the way to archive the player {string} is pressed",
+  async function (this: SpecWorld, name: string) {
+    const archive = rowOf(this, name).locator(
+      '.listed-options button[data-action="archive"]',
+    );
+    await archive.waitFor();
+    await archive.click();
   },
 );
 
@@ -359,8 +378,9 @@ Then(
   },
 );
 
+// Above whichever the tab lists: its players, or its competitions.
 Then(
-  "{string} is above the players",
+  /^"([^"]*)" is above the (?:players|competitions)$/,
   async function (this: SpecWorld, option: string) {
     await eventually(this, async () => {
       const offer = await tabOffers(this, option).boundingBox();
@@ -413,6 +433,8 @@ Then(
       const stray = await unmarkedWithin(this, "#tab-panel section", [
         ".listed-name",
         ".listed-about",
+        // A competition's drop-down of players to add, by name.
+        'select.listed-choice option:not([value=""])',
       ]);
       assert.deepEqual(stray, [], "Words in the tab came from elsewhere.");
     });
@@ -421,7 +443,7 @@ Then(
 
 // The dialog open over the page, by its title.
 Then(
-  "the player dialog is titled {string}",
+  /^the (?:player|score|competition) dialog is titled "([^"]*)"$/,
   async function (this: SpecWorld, title: string) {
     const dialog = this.browserPage.locator("dialog[open]");
     await dialog.waitFor();

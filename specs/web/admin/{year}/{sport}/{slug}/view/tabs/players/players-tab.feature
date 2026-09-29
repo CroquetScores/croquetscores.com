@@ -2,8 +2,8 @@
 Feature: The players tab of a tournament's page
 
   The Players tab is where a manager sees a tournament's players, adds them,
-  corrects them, archives the ones entered by mistake or who withdrew, and
-  restores them (`view.feature`). It is the tab the page opens on, since
+  corrects them, puts them in order, archives the ones entered by mistake or
+  who withdrew, and restores them (`view.feature`). It is the tab the page opens on, since
   entering the players is the first thing done to a tournament.
 
   Add Player, above the list, opens the player dialog to add players, and a
@@ -13,11 +13,11 @@ Feature: The players tab of a tournament's page
 
   The players in use come first, in the tournament's order
   (`PlayersOfTournament.feature`), which is the order they are entered in its
-  competitions in. Each says their name, what they
-  represent and the flag they fly, where they have either, and offers
-  Archive. The flag is shown as its picture, beside the name, and is named for
-  a reader who cannot see it by the country it is the flag of, in the
-  reader's language.
+  competitions in. Each says their name, what they represent and the flag
+  they fly, where they have either, and offers Archive, Up and Down. They are
+  said in that order, as "Sam Someone (Canterbury Croquet Club)" and then the
+  flag. The flag is shown as its picture, and is named for a reader who cannot
+  see it by the country it is the flag of, in the reader's language.
 
   A player who has played any games cannot be archived, since the games would
   then be against somebody who is no longer there (`archivePlayer.feature`),
@@ -26,14 +26,35 @@ Feature: The players tab of a tournament's page
 
   The archived players come after those in use, under a heading of their own,
   in the order they were archived, since each is put last when archived
-  (`archivePlayer.feature`). A player restored is put back after those that
-  stayed in use (`restorePlayer.feature`). Each is struck through, and says in words that
+  (`archivePlayer.feature`). Each is struck through, and says in words that
   they are archived as well, since a line through a name is not read out.
   Each offers Restore alone, since an archived player can only be restored,
   and so their name does not open the dialog to change them.
 
-  Archive and Restore do not ask first: each is undone by the other, and
-  nothing is lost by either. Whatever is pressed, the list is asked for again.
+  Up and Down are shown as arrows pointing up and down, and are named "Up" and
+  "Down" for a reader who cannot see them. They come last of what a row offers,
+  so that they are in the same place on every row.
+
+  Up and Down move a player one place among those in use, putting them just
+  before the player above or just after the player below
+  (`movePlayer.feature`). The first is not offered Up and the last is not
+  offered Down, since there is nowhere for them to go, so a single player is
+  offered neither. Archive puts a player among the archived, last, and Restore
+  puts them back among those in use, after those that stayed there
+  (`restorePlayer.feature`).
+
+  Archiving a player removes them from every competition they are in,
+  archived competitions among them, and restoring them does not put them back
+  (`ArchivePlayer.feature`). So Archive on a player who is in any competition
+  asks first, in a modal dialog (`STYLE.md`) titled Archive Player, that names
+  the player, lists the competitions they will be removed from in the
+  tournament's order, says that restoring them will not put them back, and
+  offers Archive and Cancel. Cancel archives nobody. A player who is in no
+  competition loses nothing by being archived, so Archive does not ask.
+
+  Up, Down and Restore do not ask first either: each is undone by pressing
+  the other way, and nothing is lost by any of them. Whatever is pressed, the
+  list is asked for again.
 
   The tab has no address of its own (`view.feature`), so a scenario opens the
   tournament's page, whose first tab this is, which is what opening the
@@ -155,6 +176,53 @@ Feature: The players tab of a tournament's page
       When "Save" is pressed
       Then the player "Samantha Someone" is listed
 
+  Rule: What a player offers is what can be done to them
+
+    Scenario Outline: A player in use offers what can be done to them
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Player" to "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Alex Another" offers "<option>"
+
+      Examples:
+        | option  |
+        | Up      |
+        | Down    |
+        | Archive |
+
+    Scenario: The first player does not offer Up
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Up"
+
+    Scenario: The last player does not offer Down
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Alex Another" does not offer "Down"
+
+    Scenario: The last in use does not offer Down though an archived one comes after them
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Down"
+
+    Scenario Outline: An archived player does not offer to move
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Player" to "Spring Open"
+      And "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Alex Another" does not offer "<option>"
+
+      Examples:
+        | option |
+        | Up     |
+        | Down   |
+
   Rule: A player who has played is not offered Archive
 
     Scenario: A player who has not played is offered Archive
@@ -259,6 +327,44 @@ Feature: The players tab of a tournament's page
       When the players of "Spring Open" are opened
       Then the name of the player "Sam Someone" cannot be pressed
 
+  Rule: Up and Down move a player a place
+
+    Scenario: Up moves a player before the player above
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And the players of "Spring Open" are open
+      When "Up" is pressed on the player "Alex Another"
+      Then the first player listed is "Alex Another"
+
+    Scenario: Down moves a player after the player below
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And the players of "Spring Open" are open
+      When "Down" is pressed on the player "Sam Someone"
+      Then the first player listed is "Alex Another"
+
+    Scenario: A player moved is kept in their new place
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And the players of "Spring Open" are open
+      And "Up" is pressed on the player "Alex Another"
+      When the players of "Spring Open" are opened
+      Then the first player listed is "Alex Another"
+
+    Scenario: A player moved to the top no longer offers Up
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And the players of "Spring Open" are open
+      When "Up" is pressed on the player "Alex Another"
+      Then the player "Alex Another" does not offer "Up"
+
+    Scenario: Moving does not ask first
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And the players of "Spring Open" are open
+      When "Up" is pressed on the player "Alex Another"
+      Then no modal dialog is open
+
   Rule: Archive and Restore move a player between those in use and the archived
 
     Scenario: Archiving a player lists them among the archived
@@ -267,8 +373,9 @@ Feature: The players tab of a tournament's page
       When "Archive" is pressed on the player "Sam Someone"
       Then the player "Sam Someone" is listed among the archived
 
-    Scenario: Archiving does not ask first
+    Scenario: Archiving a player in no competition does not ask first
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
       And the players of "Spring Open" are open
       When "Archive" is pressed on the player "Sam Someone"
       Then no modal dialog is open
@@ -303,6 +410,164 @@ Feature: The players tab of a tournament's page
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" is not listed among the archived
 
+  Rule: Archiving a player who is in a competition asks first
+
+    Scenario: Archiving a player in a competition asks first
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog titled "Archive Player" is open
+
+    Scenario: Asking first names the player
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog names "Sam Someone"
+
+    Scenario: Asking first names the competition they will be removed from
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog names "Block A"
+
+    Scenario: Asking first names each competition they will be removed from
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog names "Block B"
+
+    Scenario: Asking first does not name a competition they are not in
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog does not name "Block B"
+
+    Scenario: Asking first names the competitions in the tournament's order
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has moved the competition "Block B" in "Spring Open" up
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog names "Block B" before "Block A"
+
+    Scenario: Asking first names an archived competition they will be removed from
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog names "Block A"
+
+    Scenario: Asking first names a competition they withdrew from
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog names "Block A"
+
+    Scenario: Asking first says restoring will not put them back
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog says the words for "admin.players.archive.explanation"
+
+    Scenario: Asking first offers Archive first
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog's first button is "Archive"
+
+    Scenario: Asking first offers Cancel
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the modal dialog's second button is "Cancel"
+
+  Rule: Archive in the modal dialog archives the player
+
+    Scenario: Archiving in the modal dialog lists the player among the archived
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      And "Archive" is pressed on the player "Sam Someone"
+      When "Archive" is pressed in the modal dialog
+      Then the player "Sam Someone" is listed among the archived
+
+    Scenario: A player archived in the modal dialog is kept archived
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      And "Archive" is pressed on the player "Sam Someone"
+      And "Archive" is pressed in the modal dialog
+      When the players of "Spring Open" are opened
+      Then the player "Sam Someone" is listed among the archived
+
+    Scenario: Archiving in the modal dialog closes it
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      And "Archive" is pressed on the player "Sam Someone"
+      When "Archive" is pressed in the modal dialog
+      Then no modal dialog is open
+
+  Rule: Cancel in the modal dialog archives nobody
+
+    Scenario: Cancelling leaves the player in use
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      And "Archive" is pressed on the player "Sam Someone"
+      When "Cancel" is pressed in the modal dialog
+      Then the player "Sam Someone" is not listed among the archived
+
+    Scenario: Cancelling leaves the player in use when the tab is opened again
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      And "Archive" is pressed on the player "Sam Someone"
+      And "Cancel" is pressed in the modal dialog
+      When the players of "Spring Open" are opened
+      Then the player "Sam Someone" is not listed among the archived
+
+    Scenario: Cancelling closes the modal dialog
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      And "Archive" is pressed on the player "Sam Someone"
+      When "Cancel" is pressed in the modal dialog
+      Then no modal dialog is open
+
   Rule: Every word the tab says is in the reader's language
 
     The test locale shows it (`language.feature`). A player's name and what
@@ -313,6 +578,7 @@ Feature: The players tab of a tournament's page
       Given a browser that asks for "en-XA"
       And the player is to fly the flag "nz"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       When the players of "Spring Open" are opened
       Then every word in the tab but the players' own is in the test locale
 
@@ -330,6 +596,15 @@ Feature: The players tab of a tournament's page
       When the players of "Spring Open" are opened
       Then every word in the tab but the players' own is in the test locale
 
+    Scenario: Asking before archiving is in the reader's language
+      Given a browser that asks for "en-XA"
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When the way to archive the player "Sam Someone" is pressed
+      Then every word in the modal dialog but the player's and the competitions' names is in the test locale
+
     Scenario: A tournament with no players says so in the reader's language
       Given a browser that asks for "en-XA"
       When the players of "Spring Open" are opened
@@ -343,6 +618,7 @@ Feature: The players tab of a tournament's page
 
     Scenario Outline: What a player offers can be pressed with a thumb
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Player" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
       When the players of "Spring Open" are opened
@@ -351,6 +627,8 @@ Feature: The players tab of a tournament's page
       Examples:
         | player       | option  |
         | Sam Someone  | Archive |
+        | Sam Someone  | Down    |
+        | Pat Player   | Up      |
         | Alex Another | Restore |
 
     Scenario: A player's name can be pressed with a thumb

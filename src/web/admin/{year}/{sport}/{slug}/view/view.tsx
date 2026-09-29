@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 
+import { TabControl } from "../../../../TabControl.js";
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
 import { PlayersTab } from "./tabs/players/players.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
-import "./view.css";
 
 // A tournament's page (view.feature): headed by its name, with what there is
 // to run in four tabs in the section bar. The tabs are parts of the one page
 // rather than pages of their own, so they have no addresses: the page opens on
-// Players, and choosing another leaves the address as it was. Each tab says
-// what it holds in a feature of its own.
+// the first the reader is offered, and choosing another leaves the address as
+// it was. A manager is offered all four, and a scorer the Competitions tab
+// alone. Each tab says what it holds in a feature of its own.
 
 interface Props {
   /** Where the tournament was asked for, as "2026/ac/spring-open". */
@@ -23,6 +24,8 @@ interface Found {
   readonly id: string;
   readonly name: string;
   readonly address: string;
+  /** The reader's part in it, which is what the page offers them. */
+  readonly part: "manager" | "scorer";
 }
 
 type Asked =
@@ -32,6 +35,12 @@ type Asked =
 
 const tabs = ["players", "competitions", "managers", "scorers"] as const;
 type Tab = (typeof tabs)[number];
+
+// What a reader is offered: every tab to a manager, and the competitions
+// alone to a scorer, since scores are entered in a tournament's competitions
+// and the rest is the managers' to change. The page opens on the first.
+const offeredTo = (part: Found["part"]): readonly Tab[] =>
+  part === "manager" ? tabs : ["competitions"];
 
 // What a refusal says in place of the tabs: its words, by its code, or the
 // words for any where it has none.
@@ -45,7 +54,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
   useEffect(() => {
     // Asked as the page that edits it asks, and refused the same way: only a
     // manager runs a tournament, and an archived one can only be restored.
-    void fetch(`/api/v1/tournaments/at/${address}`, {
+    void fetch(`/api/v1/tournaments/at/${address}/page`, {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
@@ -61,6 +70,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
           return;
         }
         setAsked({ is: "found", tournament: answer });
+        setChosen(offeredTo(answer.part)[0] ?? "competitions");
       })
       .catch(() => {
         setAsked({ is: "refused", code: "Unknown" });
@@ -86,55 +96,34 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
 
   return (
     <>
-      <nav
-        className="site-sections tournament-tabs"
-        aria-label={say("admin.view.tabs")}
-      >
-        <div className="page">
-          <ul role="tablist">
-            {tabs.map((tab) => (
-              <li key={tab} role="presentation">
-                <button
-                  type="button"
-                  role="tab"
-                  id={`tab-${tab}`}
-                  aria-controls="tab-panel"
-                  aria-selected={tab === chosen}
-                  onClick={() => {
-                    setChosen(tab);
-                  }}
-                >
-                  {say(`admin.view.${tab}`)}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </nav>
       <main id="content">
         <div className="page">
-          <div
-            className="panel stack"
-            id="tab-panel"
-            role="tabpanel"
-            aria-labelledby={`tab-${chosen}`}
-          >
+          <div className="panel stack">
             <h1>{asked.tournament.name}</h1>
-            {chosen === "players" ? (
-              <PlayersTab tournament={asked.tournament.id} />
-            ) : null}
-            {chosen === "competitions" ? (
-              <CompetitionsTab
-                tournament={asked.tournament.id}
-                address={asked.tournament.address}
-              />
-            ) : null}
-            {chosen === "managers" ? (
-              <ManagersTab tournament={asked.tournament.id} />
-            ) : null}
-            {chosen === "scorers" ? (
-              <ScorersTab tournament={asked.tournament.id} />
-            ) : null}
+            <TabControl
+              tabs={offeredTo(asked.tournament.part)}
+              chosen={chosen}
+              choose={setChosen}
+              wordsFor={(tab) => say(`admin.view.${tab}`)}
+              label={say("admin.view.tabs")}
+            >
+              {chosen === "players" ? (
+                <PlayersTab tournament={asked.tournament.id} />
+              ) : null}
+              {chosen === "competitions" ? (
+                <CompetitionsTab
+                  tournament={asked.tournament.id}
+                  address={asked.tournament.address}
+                  part={asked.tournament.part}
+                />
+              ) : null}
+              {chosen === "managers" ? (
+                <ManagersTab tournament={asked.tournament.id} />
+              ) : null}
+              {chosen === "scorers" ? (
+                <ScorersTab tournament={asked.tournament.id} />
+              ) : null}
+            </TabControl>
           </div>
         </div>
       </main>
