@@ -6,8 +6,8 @@ Feature: The database an import empties and fills
   begins by emptying the database it writes into, which is the site's
   (`loadImportConfig.feature`): every table in it is dropped, in whatever
   schema it is, and every migration is applied again. The migration runner
-  never drops anything, and must not, so the dropping is here, where nothing
-  but an import reaches it.
+  never drops anything, and must not, so the dropping is kept apart from it,
+  reached only by an import and by "npm run db:drop-tables".
 
   Two tables of the import's own are made with the rest: one keeping what
   could not be imported, and one keeping which account each of the old sites'

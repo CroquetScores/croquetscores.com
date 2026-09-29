@@ -657,6 +657,7 @@ npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucu
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
+npm pkg set scripts.db:drop-tables="tsx src/infrastructure/database/drop-tables-cli.ts"
 npm pkg set scripts.import:ravendb="tsx src/import-ravendb/import-ravendb.ts"
 npm pkg set scripts.pretest:features="npm run build:admin:alongside"
 npm pkg set scripts.pretest:nodb="npm run build:admin:alongside"
