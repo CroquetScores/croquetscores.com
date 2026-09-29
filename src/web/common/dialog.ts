@@ -268,11 +268,17 @@ const hidden = (values: Dialog["hidden"]): string =>
 
 // A form opened fresh has nothing needing attention, so the reader is taken to
 // where the typing starts — unless there is a notice, which is what they need
-// telling first and which takes them itself. Worked out here rather than asked
-// of each page, so that no form can be written that leaves the reader at the
-// top of the page to find its first field.
+// telling first and which takes them itself, or a message above the fields,
+// which a form arrives with when it has been refused before anything was typed.
+// Such a message does not always ask for the reader to be taken to it, and
+// taking them past it to a field would leave them never told why the form came
+// back; left at the top of the page, they read it on the way down. Worked out
+// here rather than asked of each page, so that no form can be written that
+// leaves the reader at the top of the page to find its first field.
 const withFirstFieldFocused = (dialog: Dialog): Dialog =>
-  dialog.notice !== undefined || attentionAskedFor(dialog)
+  dialog.notice !== undefined ||
+  (dialog.problems?.messages.length ?? 0) > 0 ||
+  attentionAskedFor(dialog)
     ? dialog
     : {
         ...dialog,

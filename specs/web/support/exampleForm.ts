@@ -12,6 +12,10 @@
 // a reader is taken when a form with a notice is refused; the form posts back
 // to the same address, so the notice is still there once it has been.
 //
+// Opened with ?refused=example, it arrives already saying something above its
+// fields, without asking for the reader to be taken there, as the sign in page
+// does when Google has refused the reader.
+//
 // Added to the application the @browser scenarios share, before it listens.
 // The scenarios only ever send it something that breaks a rule, so nothing it
 // sends gets as far as a transaction, and no database is needed.
@@ -39,14 +43,19 @@ import { type Range, ranges } from "../../support/exampleRange.js";
 
 export const exampleFormPath = "/example-form";
 export const exampleFormWithNoticePath = `${exampleFormPath}?notice=example`;
+export const exampleFormRefusedPath = `${exampleFormPath}?refused=example`;
 
 interface Opened {
   readonly notice?: string;
+  readonly refused?: string;
 }
 
 const withNotice = (
   request: FastifyRequest<{ Querystring: Opened }>,
 ): boolean => request.query.notice === "example";
+
+const refused = (request: FastifyRequest<{ Querystring: Opened }>): boolean =>
+  request.query.refused === "example";
 
 /**
  * What the example form sends: a range, which is its own fields, and a
@@ -145,6 +154,9 @@ const dialogFor = (
     title: say("example.title"),
     action: withNotice(request) ? exampleFormWithNoticePath : exampleFormPath,
     notice: withNotice(request) ? say("example.notice") : undefined,
+    problems: refused(request)
+      ? { messages: [say("example.refused")] }
+      : undefined,
     fields: [
       field("start"),
       field("end"),
