@@ -197,6 +197,7 @@ Feature: The players tab of a competition's page
       And "Jo Fifth" is chosen to add
       When "Add Player" is pressed
       Then the drop-down of players to add is refused with "Competition.DrawFull"
+      And the drop-down of players to add says the words for "Competition.DrawFull"
 
     Scenario: A player refused is not listed
       Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
