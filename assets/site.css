@@ -959,6 +959,31 @@ main {
   font-weight: 700;
 }
 
+/* What a dialog kept open says it did, as "Sam Someone beat Alex Another was
+   added": drawn as the notice is, but bold and with a tick, so that a scorer
+   entering a batch sees at a glance that the last one went in. Only while it
+   says something, since the region stays on the page, empty, for a screen
+   reader to be told when it changes. The side and the tick take --link, the
+   green that stands out in the dark as well as the light; the tick is left
+   unsaid, as the words say it. */
+.dialog-status:not(:empty) {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  padding: var(--space-3) var(--space-4);
+  border-inline-start: 4px solid var(--link);
+  margin-block-end: var(--space-4);
+  border-radius: var(--radius-1);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.dialog-status:not(:empty)::before {
+  content: "✓" / "";
+  color: var(--link);
+}
+
 /* A thing to press, whether it is a button or a link that behaves like one. */
 .button {
   display: inline-flex;
