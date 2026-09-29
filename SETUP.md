@@ -486,6 +486,8 @@ What the browser talks to depends on whether the scenario keeps anything:
 
 Every application listens on whatever port is free, and never on a fixed one. A fixed port would collide with a development server, or with another scenario's application, and the first person to run two at once would find out the hard way. The browser starts once, on the first `@browser` scenario, and each scenario gets a context of its own in it, so no cookie is carried from one scenario to the next. Nothing here starts in `BeforeAll`, because Cucumber runs `BeforeAll` ahead of tag filtering, and a run that wants neither should pay for neither.
 
+The admin a `@browser` scenario drives is the one built into `dist/admin/`, not its source, so a scenario run against a stale build tests yesterday's admin and fails, or worse passes, for reasons that are nowhere in the code. Every script that can run a `@browser` scenario — `test:features`, and through it `test`, `test:db`, `test:browser` and `test:changed` — has a `pre` script that builds the admin first, which npm runs on its own. The build takes about a second, so it is done every time rather than only when something changed: working out whether anything did would cost more to keep right than it saves. `test:nodb` has none, since every `@browser` scenario is `@postgres` too. CI builds it twice, once in `npm run build` and once before the scenarios, and a second is what that costs.
+
 The `@postgres` hooks have to run before the `@browser` ones, because a scenario's application is built over a database that must already exist. Cucumber runs hooks in the order they were defined, so the browser harness imports the database harness before it defines its own.
 
 That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
@@ -653,6 +655,10 @@ npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
 npm pkg set scripts.import:ravendb="tsx src/import-ravendb/import-ravendb.ts"
+npm pkg set scripts.pretest:features="npm run build:admin"
+npm pkg set scripts.pretest:db="npm run build:admin"
+npm pkg set scripts.pretest:browser="npm run build:admin"
+npm pkg set scripts.pretest:changed="npm run build:admin"
 ```
 
 Working on one feature:

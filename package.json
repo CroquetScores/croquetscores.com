@@ -19,7 +19,11 @@
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\"",
     "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\"",
     "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\"",
-    "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts"
+    "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts",
+    "pretest:features": "npm run build:admin",
+    "pretest:db": "npm run build:admin",
+    "pretest:browser": "npm run build:admin",
+    "pretest:changed": "npm run build:admin"
   },
   "repository": {
     "type": "git",
