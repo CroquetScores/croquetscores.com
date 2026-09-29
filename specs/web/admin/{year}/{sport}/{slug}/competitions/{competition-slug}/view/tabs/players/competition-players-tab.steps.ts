@@ -2,12 +2,14 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import { english } from "../../../../../../../../../../../src/web/languages/english.js";
 import {
   load,
   tournamentNamed,
 } from "../../../../../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
+import { unmarked } from "../../../../../../../../../support/languages.js";
 import {
   eventually,
   settled,
@@ -185,6 +187,22 @@ Then(
       assert.ok(
         refused.split(" ").includes(code),
         `The drop-down is refused with ${refused || "nothing"}.`,
+      );
+    });
+  },
+);
+
+// Its own words, in English, rather than the tab's words for any refusal,
+// which a refusal whose words the admin was not sent would be said in.
+Then(
+  "the drop-down of players to add says the words for {string}",
+  async function (this: SpecWorld, code: string) {
+    const words = english.words[code];
+    assert.ok(words !== undefined, `English has no words for ${code}.`);
+    await eventually(this, async () => {
+      assert.equal(
+        unmarked(await saidBeneath(this).innerText({ timeout: 500 })).trim(),
+        words,
       );
     });
   },

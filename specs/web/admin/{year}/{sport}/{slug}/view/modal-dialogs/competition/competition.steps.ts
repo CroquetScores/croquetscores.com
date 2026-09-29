@@ -253,9 +253,10 @@ Then(
   },
 );
 
-// What is said above the fields, about no one of them, by its code.
+// What is said above the fields, about no one of them, by its code. The score
+// dialog says it the same way, so the one step reads either.
 Then(
-  "the competition dialog says {string} above the fields",
+  /^the (?:competition|score) dialog says "([^"]*)" above the fields$/,
   async function (this: SpecWorld, code: string) {
     await eventually(this, async () => {
       const refused =

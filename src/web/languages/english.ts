@@ -391,7 +391,7 @@ export const english: Language = {
     // A competition's Players tab.
     "admin.competitionPlayers.add": "Add Player",
     // Beneath the drop-down, for a refusal with no words of its own.
-    "admin.competitionPlayers.knockoutFull": "This player cannot be added because the knockout already has the maximum number of players.",
+    "admin.competitionPlayers.otherwise": "This player cannot be added.",
     "admin.competitionPlayers.choose": "Player to add",
     "admin.competitionPlayers.nobody": "Choose a player",
     "admin.competitionPlayers.all": "Every player is in the competition",
@@ -436,7 +436,7 @@ export const english: Language = {
     "Competition.MatchDecided": "Their match is already decided.",
     "Competition.DrawFull":
       "Cannot add the player because the knockout is full.",
-    "Competition.NotDrawnToMeet": "They are not drawn to meet.",
+    "Competition.NotDrawnToMeet": "These players are not currently drawn to play each other in the knockout.",
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",

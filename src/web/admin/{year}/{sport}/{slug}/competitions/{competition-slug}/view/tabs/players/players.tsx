@@ -143,7 +143,7 @@ export const CompetitionPlayersTab = ({
   // A refusal by its code, in its own words or in the words for any.
   const refusal = (code: string) => ({
     code,
-    words: say(knows(code) ? code : "admin.competitionPlayers.knockoutFull"),
+    words: say(knows(code) ? code : "admin.competitionPlayers.otherwise"),
   });
 
   const add = (): Promise<void> =>

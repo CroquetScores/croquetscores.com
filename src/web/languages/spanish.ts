@@ -360,7 +360,7 @@ export const spanish: Language = {
     "admin.managers.otherwise": "Esa dirección no se puede hacer gestora.",
     "admin.competitionPlayers.add": "Añadir jugador",
     // Beneath the drop-down, for a refusal with no words of its own.
-    "admin.competitionPlayers.knockoutFull": "No se puede añadir a este jugador.",
+    "admin.competitionPlayers.otherwise": "No se puede añadir a este jugador.",
     "admin.competitionPlayers.choose": "Jugador que añadir",
     "admin.competitionPlayers.nobody": "Elige un jugador",
     "admin.competitionPlayers.all":
