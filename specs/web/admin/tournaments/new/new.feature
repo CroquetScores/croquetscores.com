@@ -102,6 +102,12 @@ Feature: A new tournament is created in the admin
       When the new tournament page is opened
       Then the form has 1 button
 
+  Rule: The reader is taken to the first field
+
+    Scenario: The name is where the reader is taken
+      When the new tournament page is opened
+      Then "Name" has the focus
+
   Rule: The sports and formats are the ones the website offers
 
     Scenario Outline: Croquet Scores offers its sports in its order
