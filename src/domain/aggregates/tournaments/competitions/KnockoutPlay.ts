@@ -4,8 +4,9 @@ import type { Game } from "./Game.js";
 import type { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
 
 // How a knockout has been played so far, worked out afresh from its draw, its
-// players in the competition's order and the games that count, rather than
-// kept, so that archiving or restoring a game is only ever the game changing.
+// players in the competition's order, the order its players withdrew in and
+// the games that count, rather than kept, so that archiving or restoring a
+// game is only ever the game changing.
 
 /**
  * One side of a match: a player; nobody, where a place is empty or nobody
@@ -47,6 +48,7 @@ const decided = (
   games: readonly Game[],
   bestOf: number,
   playedOn: (id: CompetitionPlayerId) => boolean,
+  withdrewAt: (id: CompetitionPlayerId) => number,
 ): Match => {
   const [one, other] = sides;
   const match = (winner: Side, wonByPlaying: boolean, played: Game[] = []) => ({
@@ -80,9 +82,13 @@ const decided = (
     ).length;
     if (won >= needed) return match(side, true, played);
   }
-  // A withdrawn player loses every match of theirs not already decided.
+  // A withdrawn player loses every match of theirs not already decided. Of
+  // two, the one who withdrew first lost it then, so the other had won it by
+  // the time they withdrew too.
   if (one.player.withdrawn && other.player.withdrawn) {
-    return match(nobody, false, played);
+    const later =
+      withdrewAt(one.player.id) > withdrewAt(other.player.id) ? one : other;
+    return match(later, false, played);
   }
   if (one.player.withdrawn) return match(other, false, played);
   if (other.player.withdrawn) return match(one, false, played);
@@ -91,14 +97,15 @@ const decided = (
 
 /**
  * Every match of a knockout with `draw`, round by round, given its `players`
- * in the competition's order, withdrawn ones among them, and the `games` that
- * count. The players fill the draw's places in order, the first meeting the
+ * in the competition's order, withdrawn ones among them, those withdrawn as
+ * `withdrawals` in the order they withdrew, and the `games` that count. The players fill the draw's places in order, the first meeting the
  * second, the third the fourth, and the winners of two matches drawn next to
  * each other meet in the next round.
  */
 export const knockoutPlay = (
   draw: KnockoutDraw,
   players: readonly CompetitionPlayer[],
+  withdrawals: readonly CompetitionPlayerId[],
   games: readonly Game[],
 ): readonly Match[] => {
   let entrants: Side[] = Array.from({ length: draw.places }, (_, place) => {
@@ -115,6 +122,8 @@ export const knockoutPlay = (
         (game.winner.equals(id) || game.loser.equals(id)) &&
         !matches.some((match) => match.games.includes(game)),
     );
+  const withdrewAt = (id: CompetitionPlayerId): number =>
+    withdrawals.findIndex((withdrawn) => withdrawn.equals(id));
   draw.rounds.forEach((bestOf, round) => {
     const next: Side[] = [];
     for (let place = 0; place < entrants.length; place += 2) {
@@ -124,6 +133,7 @@ export const knockoutPlay = (
         games,
         bestOf.games,
         playedOn,
+        withdrewAt,
       );
       matches.push(match);
       next.push(match.winner);

@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import { CompetitionPlayer } from "../../../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import { Game } from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
 import {
+  isPlayer,
   knockoutPlay,
   type Match,
 } from "../../../../../../src/domain/aggregates/tournaments/competitions/KnockoutPlay.js";
@@ -16,11 +17,13 @@ import { Website } from "../../../../../../src/domain/common/Website.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 
 // What a knockout's play is worked out from: its draw, its players by name in
-// the order drawn, and its games; and the matches worked out. Kept here rather
+// the order drawn, those withdrawn in the order they withdrew, and its games;
+// and the matches worked out. Kept here rather
 // than on the world, which has no business knowing what a knockout is.
 interface Scenario {
   draw: KnockoutDraw | undefined;
   readonly players: Map<string, CompetitionPlayer>;
+  readonly withdrawals: CompetitionPlayerId[];
   readonly games: Game[];
   play: readonly Match[] | undefined;
 }
@@ -33,6 +36,7 @@ const scenarioOf = (world: SpecWorld): Scenario => {
     scenario = {
       draw: undefined,
       players: new Map(),
+      withdrawals: [],
       games: [],
       play: undefined,
     };
@@ -87,7 +91,9 @@ Given(
 Given(
   "the drawn player {string} has withdrawn",
   function (this: SpecWorld, name: string) {
-    scenarioOf(this).players.set(name, drawnPlayer(this, name).withdraw());
+    const player = drawnPlayer(this, name);
+    scenarioOf(this).players.set(name, player.withdraw());
+    scenarioOf(this).withdrawals.push(player.id);
   },
 );
 
@@ -115,6 +121,7 @@ When("the knockout is played out", function (this: SpecWorld) {
   scenario.play = knockoutPlay(
     scenario.draw,
     [...scenario.players.values()],
+    scenario.withdrawals,
     scenario.games,
   );
 });
@@ -127,6 +134,24 @@ Then(
     assert.ok(
       winner.is === "player" && winner.player.id.equals(id),
       `The knockout is won by ${winner.is}.`,
+    );
+  },
+);
+
+Then(
+  "{string} goes through their match with {string}",
+  function (this: SpecWorld, winner: string, loser: string) {
+    const winnerId = drawnPlayer(this, winner).id;
+    const loserId = drawnPlayer(this, loser).id;
+    const theirs = playOf(this).find(
+      (match) =>
+        match.sides.some((side) => isPlayer(side, winnerId)) &&
+        match.sides.some((side) => isPlayer(side, loserId)),
+    );
+    assert.ok(theirs !== undefined, "They are not drawn to meet.");
+    assert.ok(
+      isPlayer(theirs.winner, winnerId),
+      `Their match goes to ${theirs.winner.is === "player" ? "the other" : theirs.winner.is}.`,
     );
   },
 );

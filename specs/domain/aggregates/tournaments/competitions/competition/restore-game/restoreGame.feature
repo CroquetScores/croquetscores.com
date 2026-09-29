@@ -5,7 +5,9 @@ Feature: Restoring a competition's archived game
   added counts (`addGame.feature`), so restoring it is refused where adding it
   would be: where both its players have since met in a match that is decided
   without it, where one of them has withdrawn, or, in a knockout, where they
-  are no longer drawn to meet.
+  are no longer drawn to meet. So in a knockout, a game of a match whose
+  winner has played on is never restored, as it is never archived
+  (`archiveGame.feature`): the match is decided without it.
 
   Restoring a game that is not archived records nothing, because nothing
   happened.
@@ -109,6 +111,19 @@ Feature: Restoring a competition's archived game
       And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 26 to 17 is restored
+      Then it is refused with "Competition.MatchDecided"
+
+    Scenario: A game in a knockout whose match's winner has played on is refused
+      Given the competition is a knockout of 4 places, its first round the best of 3 and its second the best of 1
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was archived
+      And the game of "Sam Someone" beating "Alex Another" 26 to 5 was added to it
+      And the game of "Chris Third" beating "Pat Fourth" 26 to 1 was added to it
+      And the game of "Chris Third" beating "Pat Fourth" 26 to 2 was added to it
+      And the game of "Sam Someone" beating "Chris Third" 26 to 3 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 20 is restored
       Then it is refused with "Competition.MatchDecided"
 
     Scenario: A refused game stays archived

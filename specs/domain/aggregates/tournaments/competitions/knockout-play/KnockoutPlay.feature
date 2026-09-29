@@ -15,6 +15,13 @@ Feature: How a knockout has been played so far
   and one they had not used sends nobody through. So a withdrawn player never
   wins a knockout they had not already won by the time they withdrew.
 
+  A match is decided by what had happened by the time each player withdrew,
+  in the order the withdrawals were recorded, and not by who has withdrawn
+  now. Where both players drawn to meet have withdrawn and neither won it by
+  playing, the one who withdrew first lost it then, so the one who withdrew
+  later goes through: they had won it before they withdrew, and a game they
+  have played since still counts.
+
   The scenarios here are about a knockout of four places, each round the best
   of 1, with three players, so that Sam Someone meets Alex Another in the
   first round and Chris Third has a bye.
@@ -65,3 +72,31 @@ Feature: How a knockout has been played so far
       And the drawn player "Chris Third" has withdrawn
       When the knockout is played out
       Then the game of "Chris Third" beating "Sam Someone" counts
+
+  Rule: Of two players drawn to meet who both withdrew, the one who withdrew later goes through
+
+    Scenario: The player who withdrew later goes through
+      Given the drawn player "Sam Someone" has withdrawn
+      And the drawn player "Alex Another" has withdrawn
+      When the knockout is played out
+      Then "Alex Another" goes through their match with "Sam Someone"
+
+    Scenario: The player who withdrew later goes through whichever of the two it is
+      Given the drawn player "Alex Another" has withdrawn
+      And the drawn player "Sam Someone" has withdrawn
+      When the knockout is played out
+      Then "Sam Someone" goes through their match with "Alex Another"
+
+    Scenario: A player who went through when their opponent withdrew, and won the final before withdrawing, still wins
+      Given the drawn player "Sam Someone" has withdrawn
+      And "Alex Another" beat "Chris Third" in the knockout
+      And the drawn player "Alex Another" has withdrawn
+      When the knockout is played out
+      Then the knockout is won by "Alex Another"
+
+    Scenario: The game a player played after going through, before withdrawing, still counts
+      Given the drawn player "Sam Someone" has withdrawn
+      And "Alex Another" beat "Chris Third" in the knockout
+      And the drawn player "Alex Another" has withdrawn
+      When the knockout is played out
+      Then the game of "Alex Another" beating "Chris Third" counts

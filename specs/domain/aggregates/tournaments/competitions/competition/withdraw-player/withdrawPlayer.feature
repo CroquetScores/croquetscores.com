@@ -11,8 +11,11 @@ Feature: Withdrawing a competition's player, and reversing it
 
   A knockout is drawn in the competition's order (`addGame.feature`), so a
   player who withdraws from one keeps their order, and with it their place in
-  the draw: they lose every match of theirs not already decided, and their
-  opponent goes through without playing. Their withdrawal can be reversed
+  the draw: they lose every match of theirs not already decided when they
+  withdraw, and their opponent goes through without playing. A match decided
+  before then stays decided, so a player who went through because their
+  opponent withdrew, and withdraws themselves later, keeps it
+  (`KnockoutPlay.feature`). Their withdrawal can be reversed
   until whoever went through because of it has played on, in whichever later
   round, the player drawn next to two players who both withdrew among them;
   after that, it is refused, as archiving a game whose winner has played on
@@ -227,3 +230,26 @@ Feature: Withdrawing a competition's player, and reversing it
       And the competition is rebuilt from its stream
       When the withdrawal of the player "Lee Fifth" is reversed
       Then the competition's player "Lee Fifth" has not withdrawn
+
+  Rule: In a knockout, a player who withdraws keeps the matches decided before they did
+
+    The knockout has eight places, each round the best of 1, and six players,
+    as in the rule before.
+
+    Background:
+      Given the competition is a knockout of 8 places, each round the best of 1
+      And the tournament player "Alex Another" was entered in it
+      And the tournament player "Pat Player" was entered in it
+      And the tournament player "Kim Keeper" was entered in it
+      And the tournament player "Lee Fifth" was entered in it
+      And the tournament player "Jo Sixth" was entered in it
+
+    Scenario: A player beaten by an opponent who went through by a withdrawal, and withdrew since, plays no more
+      Given the player "Sam Someone" withdrew from it
+      And the game of "Pat Player" beating "Kim Keeper" 26 to 3 was added to it
+      And the game of "Alex Another" beating "Pat Player" 26 to 20 was added to it
+      And the player "Alex Another" withdrew from it
+      And the game of "Lee Fifth" beating "Jo Sixth" 26 to 5 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Pat Player" beating "Lee Fifth" 26 to 20 is added
+      Then it is refused with "Competition.NotDrawnToMeet"

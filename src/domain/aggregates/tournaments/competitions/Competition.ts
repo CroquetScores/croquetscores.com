@@ -79,6 +79,9 @@ export class Competition extends AggregateRoot {
   readonly #players = new Map<string, CompetitionPlayer>();
   // By the written id, in the order they were added.
   readonly #games = new Map<string, Game>();
+  // Those withdrawn, in the order they withdrew, since a knockout's match
+  // between two of them went to whoever withdrew later.
+  #withdrawals: CompetitionPlayerId[] = [];
 
   private constructor(id: CompetitionId) {
     super(id);
@@ -270,7 +273,12 @@ export class Competition extends AggregateRoot {
         player.id.equals(id) ? player.reverseWithdrawal() : player,
       );
       if (
-        this.#leavesGamesBehind(told.shape.draw, reversed, this.#counting())
+        this.#leavesGamesBehind(
+          told.shape.draw,
+          reversed,
+          this.#withdrawals.filter((withdrawn) => !withdrawn.equals(id)),
+          this.#counting(),
+        )
       ) {
         refuse(
           "Competition.WinnerHasPlayedOn",
@@ -418,10 +426,13 @@ export class Competition extends AggregateRoot {
       this.#change(event.playerId, (player) =>
         player.withdraw().withOrder(event.order),
       );
+      this.#withdrawals.push(CompetitionPlayerId.from(event.playerId));
     } else if (event instanceof CompetitionPlayerWithdrawalReversed) {
       this.#change(event.playerId, (player) => player.reverseWithdrawal());
+      this.#forgetWithdrawal(event.playerId);
     } else if (event instanceof CompetitionPlayerRemoved) {
       this.#players.delete(event.playerId);
+      this.#forgetWithdrawal(event.playerId);
     } else if (event instanceof CompetitionGameAdded) {
       const id = GameId.from(event.gameId);
       // Asked of the game when it was recorded, so drawn games are let through
@@ -509,7 +520,18 @@ export class Competition extends AggregateRoot {
   }
 
   #knockoutPlay(draw: Parameters<typeof knockoutPlay>[0]): readonly Match[] {
-    return knockoutPlay(draw, this.players, this.#counting());
+    return knockoutPlay(
+      draw,
+      this.players,
+      this.#withdrawals,
+      this.#counting(),
+    );
+  }
+
+  #forgetWithdrawal(written: string): void {
+    this.#withdrawals = this.#withdrawals.filter(
+      (withdrawn) => withdrawn.value !== written,
+    );
   }
 
   // Whether `game` is of a knockout's match whose winner has played on.
@@ -525,6 +547,7 @@ export class Competition extends AggregateRoot {
     return this.#leavesGamesBehind(
       told.shape.draw,
       this.players,
+      this.#withdrawals,
       this.#counting().filter((counting) => !counting.equals(game)),
     );
   }
@@ -545,17 +568,21 @@ export class Competition extends AggregateRoot {
     );
   }
 
-  // Whether the knockout played out afresh with `players` and `games` would
-  // leave one of those games, counting now, in none of its matches: played by
-  // somebody who had not got there.
+  // Whether the knockout played out afresh with `players`, `withdrawals` and
+  // `games` would leave one of those games, counting now, in none of its
+  // matches: played by somebody who had not got there.
   #leavesGamesBehind(
     draw: Parameters<typeof knockoutPlay>[0],
     players: readonly CompetitionPlayer[],
+    withdrawals: readonly CompetitionPlayerId[],
     games: readonly Game[],
   ): boolean {
-    const countedAfter = knockoutPlay(draw, players, games).flatMap(
-      (match) => match.games,
-    );
+    const countedAfter = knockoutPlay(
+      draw,
+      players,
+      withdrawals,
+      games,
+    ).flatMap((match) => match.games);
     return this.#knockoutPlay(draw)
       .flatMap((match) => match.games)
       .some(
