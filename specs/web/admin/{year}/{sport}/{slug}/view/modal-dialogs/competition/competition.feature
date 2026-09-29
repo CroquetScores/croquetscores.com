@@ -1,5 +1,5 @@
 @browser @postgres
-Feature: A competition is added to a tournament in a modal dialog
+Feature: A competition is added to a tournament, and changed, in a modal dialog
 
   A manager adds the competitions to a tournament from its Competitions tab,
   by pressing "Add Competition" (`competitions-tab.feature`). It opens the
@@ -13,10 +13,20 @@ Feature: A competition is added to a tournament in a modal dialog
   Cancel button, which Escape does as well. Cancelling keeps nothing that was
   not already kept, and the reader is back on Add Competition.
 
-  Changing a competition is to be done in the same dialog, from Edit on each
-  competition in use, so that adding and changing cannot come to ask different
-  things. It is not written yet, so this feature is about adding alone, and
-  the dialog is titled "Add Competition" and its button is Add.
+  A competition in use is changed in the same dialog, from Edit on the
+  competition (`competitions-tab.feature`), so that adding and changing
+  cannot come to ask different things. Opened from Edit, it is titled "Edit
+  Competition", its button is Save, and it begins on what the competition is:
+  its name and its shape. Its kind is not asked: a block is not made a
+  knockout by changing it (`UpdateBlock.feature`, `UpdateKnockout.feature`,
+  `UpdateSwiss.feature`), so the dialog does not offer what it could only
+  refuse. Save keeps the change and closes the dialog, since a competition is
+  changed one at a time, and the reader is back on the Edit they pressed.
+
+  A knockout that has a game has players placed in its draw, and a change to
+  its places would move them, so it is refused with
+  `Tournament.KnockoutPlayerHasGames`. That is about the draw as a whole
+  rather than any one field, so it is said above the fields.
 
   The kind is a block, a knockout or a Swiss, and the dialog begins on a
   block, which most competitions are. A block and a Swiss ask what each match
@@ -533,6 +543,154 @@ Feature: A competition is added to a tournament in a modal dialog
       And "0" is typed as the "Best of"
       When "Add" is pressed
       Then "Best of" has the focus
+
+  Rule: Edit opens the dialog on the competition, to change it
+
+    Scenario: Edit opens the competition dialog
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog is open
+
+    Scenario: The dialog is titled for changing a competition
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog is titled "Edit Competition"
+
+    Scenario: The dialog changes with Save
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog's first button is "Save"
+
+    Scenario: The name begins as the competition's
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When "Edit" is pressed on the competition "Block A"
+      Then "Name" says "Block A"
+
+    Scenario: A block's best-of begins as the block's
+      Given the block's matches are to be the best of 3
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When "Edit" is pressed on the competition "Block A"
+      Then "Best of" says "3"
+
+    Scenario: A knockout's places begin as the knockout's
+      Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      When "Edit" is pressed on the competition "Main Event"
+      Then the places chosen are 4
+
+    Scenario: A knockout's rounds begin as the knockout's
+      Given the knockout's second round is to be the best of 3
+      And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      When "Edit" is pressed on the competition "Main Event"
+      Then "Final" says "3"
+
+    Scenario Outline: The kind is not offered
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog does not ask for "<kind>"
+
+      Examples:
+        | kind     |
+        | Block    |
+        | Knockout |
+        | Swiss    |
+
+  Rule: Save keeps the change and closes the dialog
+
+    Scenario: A name changed is kept
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      And "Block One" is typed as the "Name"
+      When "Save" is pressed
+      Then "Spring Open" has the competition "Block One"
+
+    Scenario: A block's best-of changed is kept
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      And "3" is typed as the "Best of"
+      When "Save" is pressed
+      Then each match of the competition "Block A" of "Spring Open" is the best of 3
+
+    Scenario: A knockout's places changed are kept
+      Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And "Edit" is pressed on the competition "Main Event"
+      And 8 places are chosen
+      When "Save" is pressed
+      Then the knockout "Main Event" of "Spring Open" has 8 places
+
+    Scenario: A knockout's round changed is kept
+      Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And "Edit" is pressed on the competition "Main Event"
+      And "3" is typed as the "Final"
+      When "Save" is pressed
+      Then the second round of the knockout "Main Event" of "Spring Open" is the best of 3
+
+    Scenario: Save closes the dialog
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      When "Save" is pressed
+      Then the competition dialog is not open
+
+    Scenario: The list says the change once the dialog is closed
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      And "Block One" is typed as the "Name"
+      When "Save" is pressed
+      Then the competition "Block One" is listed
+
+    Scenario: The reader is back on Edit once the change is kept
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      When "Save" is pressed
+      Then "Edit" on the competition "Block A" has the focus
+
+    Scenario: Cancelling keeps no change
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      And "Block One" is typed as the "Name"
+      When "Cancel" is pressed
+      Then "Spring Open" has the competition "Block A"
+
+    Scenario: The reader is back on Edit once the dialog is cancelled
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      When "Cancel" is pressed
+      Then "Edit" on the competition "Block A" has the focus
+
+  Rule: What Save refuses is said, and nothing is kept
+
+    Scenario: A name another competition has is refused beside the name
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "Edit" is pressed on the competition "Block B"
+      And "BLOCK A" is typed as the "Name"
+      When "Save" is pressed
+      Then "Name" is refused with "Tournament.CompetitionNameTaken"
+
+    Scenario: A change refused leaves the dialog open
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      And "" is typed as the "Name"
+      When "Save" is pressed
+      Then the competition dialog is open
+
+    Scenario: A change refused is not kept
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "Edit" is pressed on the competition "Block A"
+      And "" is typed as the "Name"
+      When "Save" is pressed
+      Then "Spring Open" has the competition "Block A"
+
+    Scenario: A change to the places of a knockout with a game is refused above the fields
+      Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And "Edit" is pressed on the competition "Main Event"
+      And 8 places are chosen
+      When "Save" is pressed
+      Then the competition dialog says "Tournament.KnockoutPlayerHasGames" above the fields
 
   Rule: Every word the dialog says is in the reader's language
 
