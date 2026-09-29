@@ -187,31 +187,6 @@ const updated = async (
   await lookAt(world, tournament);
 };
 
-// Done as the tournament's first manager, who created it.
-Given(
-  "the tournament {string} allows drawn games",
-  async function (this: SpecWorld, name: string) {
-    const tournament = tournamentNamed(this, name);
-    const manager = (await load(this, tournament)).managers[0];
-    assert.ok(manager !== undefined, `${name} has no manager.`);
-    await done(
-      this,
-      new UpdateTournament(
-        manager.value,
-        tournament.value,
-        // A tournament allowing drawn games does not count towards the world
-        // rankings, so it is said not to.
-        requestFor(await load(this, tournament), {
-          drawsAllowed: true,
-          worldRankings: false,
-        }),
-        momentOf(this),
-      ),
-    );
-    await lookAt(this, tournament);
-  },
-);
-
 Given(
   "{string} has moved the tournament {string} to the sport {string}",
   async function (
