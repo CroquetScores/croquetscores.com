@@ -110,7 +110,10 @@ export const knockoutPlay = (
 ): readonly Match[] => {
   let entrants: Side[] = Array.from({ length: draw.places }, (_, place) => {
     const player = players[place];
-    return player === undefined ? nobody : { is: "player", player };
+    // A bye fills a place, but is nobody.
+    return player === undefined || player.isBye
+      ? nobody
+      : { is: "player", player };
   });
   const matches: Match[] = [];
   // A game of a player's not counted in a match so far is of a later round,

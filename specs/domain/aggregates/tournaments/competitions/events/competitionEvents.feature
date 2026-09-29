@@ -35,6 +35,8 @@ Feature: The names a competition's events are kept under
         | a player withdrawing                 | competition-player-withdrawn           |
         | a player's withdrawal being reversed | competition-player-withdrawal-reversed |
         | a player being removed               | competition-player-removed             |
+        | a bye being moved                    | competition-bye-moved                  |
+        | a bye being removed                  | competition-bye-removed                |
         | a game being added                   | competition-game-added                 |
         | a game being archived                | competition-game-archived              |
         | a game being restored                | competition-game-restored              |
@@ -56,6 +58,8 @@ Feature: The names a competition's events are kept under
         | a player withdrawing                 |
         | a player's withdrawal being reversed |
         | a player being removed               |
+        | a bye being moved                    |
+        | a bye being removed                  |
         | a game being added                   |
         | a game being archived                |
         | a game being restored                |
@@ -75,6 +79,8 @@ Feature: The names a competition's events are kept under
         | a player withdrawing                 |
         | a player's withdrawal being reversed |
         | a player being removed               |
+        | a bye being moved                    |
+        | a bye being removed                  |
         | a game being added                   |
         | a game being archived                |
         | a game being restored                |
@@ -97,6 +103,9 @@ Feature: The names a competition's events are kept under
         | a player withdrawing         | playerId           |
         | a player withdrawing         | order              |
         | a player being removed       | playerId           |
+        | a bye being moved            | fromOrder          |
+        | a bye being moved            | order              |
+        | a bye being removed          | order              |
         | a game being added           | gameId             |
         | a game being added           | winnerId           |
         | a game being added           | winnerScore        |

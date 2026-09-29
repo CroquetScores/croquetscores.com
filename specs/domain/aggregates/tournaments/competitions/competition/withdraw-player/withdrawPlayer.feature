@@ -189,7 +189,7 @@ Feature: Withdrawing a competition's player, and reversing it
     The knockout has eight places, each round the best of 1, and six players,
     so Sam Someone meets Alex Another, Pat Player meets Kim Keeper and Lee
     Fifth meets Jo Sixth in the first round, and the last two places are
-    empty, so the winner of Lee Fifth and Jo Sixth has a bye in the second
+    byes, so the winner of Lee Fifth and Jo Sixth has a bye in the second
     round.
 
     Background:
@@ -199,6 +199,8 @@ Feature: Withdrawing a competition's player, and reversing it
       And the tournament player "Kim Keeper" was entered in it
       And the tournament player "Lee Fifth" was entered in it
       And the tournament player "Jo Sixth" was entered in it
+      And a bye was entered in it
+      And a bye was entered in it
 
     Scenario: Reversing a withdrawal once the opponent who went through has played in a later round is refused
       Given the player "Alex Another" withdrew from it
@@ -243,6 +245,8 @@ Feature: Withdrawing a competition's player, and reversing it
       And the tournament player "Kim Keeper" was entered in it
       And the tournament player "Lee Fifth" was entered in it
       And the tournament player "Jo Sixth" was entered in it
+      And a bye was entered in it
+      And a bye was entered in it
 
     Scenario: A player beaten by an opponent who went through by a withdrawal, and withdrew since, plays no more
       Given the player "Sam Someone" withdrew from it

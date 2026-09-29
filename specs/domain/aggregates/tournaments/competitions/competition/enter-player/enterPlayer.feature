@@ -292,6 +292,8 @@ Feature: Entering a tournament's player in one of its competitions
       Given the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Sam Someone" was entered in it
       And the tournament player "Alex Another" was entered in it
+      And a bye was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the tournament player "Pat Player" is entered
@@ -301,6 +303,8 @@ Feature: Entering a tournament's player in one of its competitions
       Given the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Sam Someone" was entered in it
       And the tournament player "Alex Another" was entered in it
+      And a bye was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
       And the competition is rebuilt from its stream
@@ -456,6 +460,8 @@ Feature: Entering a tournament's player in one of its competitions
       And the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Sam Someone" was entered in it
       And the tournament player "Alex Another" was entered in it
+      And a bye was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When a bye is entered

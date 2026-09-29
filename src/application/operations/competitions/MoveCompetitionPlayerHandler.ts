@@ -39,14 +39,21 @@ export class MoveCompetitionPlayerHandler extends CommandHandler<
       command,
       "MoveCompetitionPlayer",
     );
-    competition.movePlayer(
-      CompetitionPlayerId.from(command.playerId),
-      // Up or down, and nothing else, once the validator has let it in.
-      command.direction === "up" ? "up" : "down",
-      told,
-      by,
-      command.requestedAt,
-    );
+    const id = CompetitionPlayerId.from(command.playerId);
+    // Up or down, and nothing else, once the validator has let it in.
+    const direction = command.direction === "up" ? "up" : "down";
+    if (id.equals(CompetitionPlayerId.bye())) {
+      // A bye with no order said is one the competition does not have.
+      competition.moveBye(
+        command.byeOrder ?? 0,
+        direction,
+        told,
+        by,
+        command.requestedAt,
+      );
+    } else {
+      competition.movePlayer(id, direction, told, by, command.requestedAt);
+    }
     await this.competitions.save(competition);
   }
 }

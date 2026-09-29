@@ -1,6 +1,8 @@
 // The name each of a competition's events is kept under, and how each is read
 // back. A name is kept for good, and must never be given to anything else.
 import type { EventRegistry } from "../../../../common/EventRegistry.js";
+import { CompetitionByeMoved } from "./CompetitionByeMoved.js";
+import { CompetitionByeRemoved } from "./CompetitionByeRemoved.js";
 import { CompetitionGameAdded } from "./CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "./CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./CompetitionGameCorrected.js";
@@ -111,6 +113,23 @@ export const nameCompetitionEvents = (registry: EventRegistry): EventRegistry =>
           createdBy,
           occurredAt,
         ),
+    )
+    .name(
+      CompetitionByeMoved,
+      "competition-bye-moved",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionByeMoved(
+          number(said, "fromOrder"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CompetitionByeRemoved,
+      "competition-bye-removed",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionByeRemoved(number(said, "order"), createdBy, occurredAt),
     )
     .name(
       CompetitionGameAdded,

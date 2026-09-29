@@ -40,6 +40,16 @@ When(
   },
 );
 
+// Named by its order, since every bye has the same id.
+When(
+  "the bye with the order {int} is removed",
+  function (this: SpecWorld, order: number) {
+    ask(this, (competition) => {
+      competition.removeBye(order, toldOf(this), byOf(this), now(this));
+    });
+  },
+);
+
 Then(
   "the first thing it recorded is a player being removed",
   function (this: SpecWorld) {

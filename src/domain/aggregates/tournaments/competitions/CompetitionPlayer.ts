@@ -1,7 +1,7 @@
 import { Validator } from "../../../common/validation/Validator.js";
 import { ValidationError } from "../../../common/validation/ValidationError.js";
 import type { TournamentPlayerId } from "../primitives/TournamentPlayerId.js";
-import type { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
+import { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
 
 /** Every rule a player in a competition can break. */
 export type CompetitionPlayerErrorCode =
@@ -119,6 +119,11 @@ export class CompetitionPlayer {
 
   get withdrawn(): boolean {
     return this.#withdrawn;
+  }
+
+  /** Whether this is a knockout's bye, which fills a place but is nobody. */
+  get isBye(): boolean {
+    return this.#id.equals(CompetitionPlayerId.bye());
   }
 
   /**

@@ -543,7 +543,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Given a browser that asks for "en-XA"
       And the page of "Spring Open" is open
       And the way to add a player is pressed
-      And "Bye" is typed as the name in the player dialog
+      And "Bye" is typed into the player's name
       When the player dialog is sent as it is
       Then every word in the dialog about byes is in the test locale
 

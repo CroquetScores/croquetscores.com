@@ -11,7 +11,8 @@ export type TournamentPlayerErrorCode =
   | "TournamentPlayer.OrderNotWhole"
   | "TournamentPlayer.OrderTooSmall"
   | "TournamentPlayer.HasGames"
-  | "TournamentPlayer.Archived";
+  | "TournamentPlayer.Archived"
+  | "TournamentPlayer.NamedBye";
 
 // A whole number the platform holds exactly. One beyond that is not reliably
 // the number it was given, so two orders could be told apart by nothing.
@@ -118,8 +119,17 @@ export class TournamentPlayer {
     readonly representing: string | undefined;
     readonly flag: Flag | undefined;
   } {
+    const name = PersonName.from(details.name);
+    // A knockout's byes are entered as byes, so a player standing in for one
+    // would be drawn, and played, as a person. The word ends where anything
+    // but a letter comes, so "Bye 2" is a bye and "Byers" is a name.
+    if (/^bye(?!\p{L})/iu.test(details.name.trim())) {
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.NamedBye",
+      );
+    }
     return {
-      name: PersonName.from(details.name),
+      name,
       // What is nothing but whitespace was left blank by whoever typed it, so
       // it is nothing represented rather than something called nothing.
       representing: details.representing?.trim() || undefined,

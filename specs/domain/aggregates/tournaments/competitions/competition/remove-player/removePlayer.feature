@@ -117,6 +117,7 @@ Feature: Removing a competition's player
       Given the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Alex Another" was entered in it
       And the tournament player "Pat Player" was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the player "Pat Player" is removed
@@ -124,10 +125,11 @@ Feature: Removing a competition's player
 
   Rule: A bye is removed by its place in the order
 
+    Sam Someone is entered with the order 10,000, so the bye entered after them has
+    20,000.
+
     Background:
       Given the competition is a knockout of 4 places, each round the best of 1
-      And the tournament player "Sam Someone" has the order 10000
-      And the tournament player "Sam Someone" was entered in it
       And a bye was entered in it
 
     Scenario: A bye removed is no longer in the competition

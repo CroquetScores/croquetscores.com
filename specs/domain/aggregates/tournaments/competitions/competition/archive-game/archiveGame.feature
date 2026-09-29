@@ -171,7 +171,7 @@ Feature: Archiving a competition's game
     sends their next opponent through without playing. The knockout has eight
     places, each round the best of 1, and six players, so Sam Someone meets
     Alex Another, Chris Third meets Pat Fourth and Kim Fifth meets Lee Sixth
-    in the first round, and the last two places are empty. Chris Third
+    in the first round, and the last two places are byes. Chris Third
     withdraws after winning, so Sam Someone goes through the second round
     without playing, and Kim Fifth has a bye in it.
 
@@ -179,6 +179,8 @@ Feature: Archiving a competition's game
       Given the tournament player "Kim Fifth" was entered in it
       And the tournament player "Lee Sixth" was entered in it
       And the competition is a knockout of 8 places, each round the best of 1
+      And a bye was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Chris Third" beating "Pat Fourth" 26 to 3 was added to it
       And the player "Chris Third" withdrew from it

@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useId, useRef } from "react";
 
 import { say } from "./words.js";
 import "./modalDialog.css";
@@ -9,7 +9,9 @@ import "./modalDialog.css";
 // so that the browser makes the page beneath unreachable and closes it on
 // Escape, rather than scripting of the admin's own that could get either
 // wrong. It is drawn as a dialog is: its title, what it says, and its buttons
-// stacked, the one that does what it is for first and Cancel last.
+// stacked, the one that does what it is for first and Cancel last. One that
+// only tells the reader something has its one button alone, and Escape does
+// what that does.
 
 interface Props {
   readonly title: string;
@@ -21,6 +23,8 @@ interface Props {
   readonly cancel: () => void;
   /** Whether what the first button does is still being done. */
   readonly busy?: boolean;
+  /** Whether the one button is all it has, with no Cancel. */
+  readonly alone?: boolean;
 }
 
 export const ModalDialog = ({
@@ -30,8 +34,11 @@ export const ModalDialog = ({
   act,
   cancel,
   busy,
+  alone = false,
 }: Props): React.JSX.Element => {
   const dialog = useRef<HTMLDialogElement>(null);
+  // Its own, since one dialog can be open over another.
+  const titled = useId();
 
   useEffect(() => {
     const opened = dialog.current;
@@ -52,7 +59,7 @@ export const ModalDialog = ({
     <dialog
       className="modal-dialog dialog"
       ref={dialog}
-      aria-labelledby="modal-dialog-title"
+      aria-labelledby={titled}
       onKeyDown={(event) => {
         // The keyboard goes round what the dialog has to press and nowhere
         // else: a browser would otherwise take it from the last out to its own
@@ -77,10 +84,11 @@ export const ModalDialog = ({
         // Escape does what Cancel does, and the page says it is closed rather
         // than the browser alone.
         event.preventDefault();
-        cancel();
+        if (alone) act();
+        else cancel();
       }}
     >
-      <h2 className="dialog-title" id="modal-dialog-title">
+      <h2 className="dialog-title" id={titled}>
         {title}
       </h2>
       {/* A form, so that Enter in a field does what the first button does. */}
@@ -95,12 +103,25 @@ export const ModalDialog = ({
       >
         <div className="dialog-content stack">{children}</div>
         <div className="dialog-buttons">
-          <button className="button button-submit" type="submit">
-            {action}
-          </button>
-          <button className="button" type="button" onClick={cancel}>
-            {say("admin.modal.cancel")}
-          </button>
+          {/* One that only tells sends nothing, so its button only closes it. */}
+          {alone ? (
+            <button
+              className="button button-submit"
+              type="button"
+              onClick={act}
+            >
+              {action}
+            </button>
+          ) : (
+            <button className="button button-submit" type="submit">
+              {action}
+            </button>
+          )}
+          {alone ? null : (
+            <button className="button" type="button" onClick={cancel}>
+              {say("admin.modal.cancel")}
+            </button>
+          )}
         </div>
       </form>
     </dialog>

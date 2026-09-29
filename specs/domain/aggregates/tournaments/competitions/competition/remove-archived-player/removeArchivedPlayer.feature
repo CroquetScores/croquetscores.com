@@ -112,6 +112,7 @@ Feature: Removing a competition's player whose tournament player is archived
       Given the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Alex Another" was entered in it
       And the tournament player "Pat Player" was entered in it
+      And a bye was entered in it
       And the game of "Alex Another" beating "Sam Someone" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the archived tournament player "Pat Player" is removed

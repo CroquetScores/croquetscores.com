@@ -11,6 +11,8 @@ import {
   CompetitionPlayer,
   type CompetitionPlayerErrorCode,
 } from "./CompetitionPlayer.js";
+import { CompetitionByeMoved } from "./events/CompetitionByeMoved.js";
+import { CompetitionByeRemoved } from "./events/CompetitionByeRemoved.js";
 import { CompetitionGameAdded } from "./events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "./events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./events/CompetitionGameCorrected.js";
@@ -42,7 +44,9 @@ export type CompetitionErrorCode =
   | "Competition.NotDrawnToMeet"
   | "Competition.WinnerHasPlayedOn"
   | "Competition.DrawFixed"
-  | "Competition.DrawFull";
+  | "Competition.DrawFull"
+  | "Competition.DrawNotFilled"
+  | "Competition.ByeOutsideKnockout";
 
 /**
  * What a competition is told of itself by whatever asks, since the tournament
@@ -80,6 +84,8 @@ const ORDER_STEP = 10_000;
  *
  * A knockout is drawn in the competition's order, so once it has a game,
  * archived or not, its draw is fixed: nobody is entered, moved or removed.
+ * Its places left over are filled with byes, which are nobody, and it is
+ * played only once players and byes fill every place.
  */
 export class Competition extends AggregateRoot {
   // By the written id.
@@ -89,6 +95,10 @@ export class Competition extends AggregateRoot {
   // Those withdrawn, in the order they withdrew, since a knockout's match
   // between two of them went to whoever withdrew later.
   #withdrawals: CompetitionPlayerId[] = [];
+  // A knockout's byes, by their orders. Every bye has the same id, so its
+  // order, which no other player or bye in the competition has, is what tells
+  // one from another.
+  #byes: number[] = [];
 
   private constructor(id: CompetitionId) {
     super(id);
@@ -104,11 +114,17 @@ export class Competition extends AggregateRoot {
     return competition;
   }
 
-  /** Its players, the withdrawn among them, lowest order first. */
+  /** Its players, the withdrawn and a knockout's byes among them, lowest order first. */
   get players(): readonly CompetitionPlayer[] {
-    return [...this.#players.values()].sort(
-      (one, other) => one.order - other.order,
-    );
+    return [
+      ...this.#players.values(),
+      ...this.#byes.map((order) =>
+        CompetitionPlayer.from(CompetitionPlayerId.bye(), {
+          tournamentPlayerId: TournamentPlayerId.bye(),
+          order,
+        }),
+      ),
+    ].sort((one, other) => one.order - other.order);
   }
 
   /** Its games, archived ones among them, in the order they were added. */
@@ -166,29 +182,17 @@ export class Competition extends AggregateRoot {
         "The tournament player is already in the competition.",
       );
     }
-    // A withdrawn player keeps their place in the draw, so they count.
-    if (
-      told.shape.kind === "knockout" &&
-      this.#players.size >= told.shape.draw.places
-    ) {
-      refuse("Competition.DrawFull", "Every place in the draw is filled.");
-    }
+    this.#refuseOnceTheDrawIsFull(told);
     const id = CompetitionPlayerId.create();
-    const holder = this.players.find(
+    const holder = this.players.findIndex(
       (player) => player.order === tournamentOrder,
     );
     let order: number | undefined = tournamentOrder;
-    if (holder !== undefined) {
-      order = this.#orderPast(holder.id, "down");
+    if (holder >= 0) {
+      order = this.#orderPast(holder, "down");
       if (order === undefined) {
-        this.record(
-          new CompetitionPlayersSpacedOut(
-            this.players.map((player) => player.id.value),
-            by,
-            at,
-          ),
-        );
-        order = this.#orderPast(holder.id, "down");
+        this.#spaceOut(by, at);
+        order = this.#orderPast(holder, "down");
       }
       if (order === undefined) {
         throw new Error("Spaced out, there was still no room to enter into.");
@@ -199,6 +203,34 @@ export class Competition extends AggregateRoot {
         id.value,
         tournamentPlayer.value,
         order,
+        by,
+        at,
+      ),
+    );
+    return id;
+  }
+
+  /**
+   * That a bye is entered in a knockout, and answered with the id every bye
+   * has. It is put last, since it has no order in the tournament, and fills a
+   * place as a player does, so it is refused where a player would be: once
+   * the draw is fixed, or full. A block or a Swiss has no draw to put it in.
+   */
+  enterBye(told: Told, by: AccountId, at: ReadOnlyDate): CompetitionPlayerId {
+    if (told.shape.kind !== "knockout") {
+      return refuse(
+        "Competition.ByeOutsideKnockout",
+        "Only a knockout has a draw to put a bye in.",
+      );
+    }
+    this.#refuseOnceTheDrawIsFixed(told);
+    this.#refuseOnceTheDrawIsFull(told);
+    const id = CompetitionPlayerId.bye();
+    this.record(
+      new CompetitionPlayerEntered(
+        id.value,
+        TournamentPlayerId.bye().value,
+        CompetitionPlayer.orderAfter(this.players),
         by,
         at,
       ),
@@ -230,30 +262,31 @@ export class Competition extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
-    this.#playerFound(id).ensureMovable();
+    const player = this.#playerFound(id);
+    player.ensureMovable();
     this.#refuseOnceTheDrawIsFixed(told);
-    const playing = this.players.filter((player) => !player.withdrawn);
-    const place = playing.findIndex((player) => player.id.equals(id));
-    const passed = playing[direction === "up" ? place - 1 : place + 1];
-    if (passed === undefined) return;
+    const moved = this.#moved(player.order, direction, by, at);
+    if (moved === undefined) return;
+    this.record(new CompetitionPlayerMoved(id.value, moved.to, by, at));
+  }
 
-    let order = this.#orderPast(passed.id, direction);
-    if (order === undefined) {
-      this.record(
-        new CompetitionPlayersSpacedOut(
-          this.players.map((player) => player.id.value),
-          by,
-          at,
-        ),
-      );
-      order = this.#orderPast(passed.id, direction);
-    }
-    // Spaced 10,000 apart, there is always room, so none here is a mistake in
-    // the spacing rather than something to refuse.
-    if (order === undefined) {
-      throw new Error("Spaced out, there was still no room to move into.");
-    }
-    this.record(new CompetitionPlayerMoved(id.value, order, by, at));
+  /**
+   * That the bye with the order `order` is moved a place, as a player is.
+   * Every bye has the same id, so it is named by its order, which is refused
+   * where no bye has it.
+   */
+  moveBye(
+    order: number,
+    direction: "up" | "down",
+    told: Told,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#byeFound(order);
+    this.#refuseOnceTheDrawIsFixed(told);
+    const moved = this.#moved(order, direction, by, at);
+    if (moved === undefined) return;
+    this.record(new CompetitionByeMoved(moved.from, moved.to, by, at));
   }
 
   /**
@@ -332,6 +365,17 @@ export class Competition extends AggregateRoot {
     this.#playerFound(id).ensureRemovable({ hasGames: this.hasPlayed(id) });
     this.#refuseOnceTheDrawIsFixed(told);
     this.record(new CompetitionPlayerRemoved(id.value, by, at));
+  }
+
+  /**
+   * That the bye with the order `order`, entered by mistake, is taken out.
+   * Every bye has the same id, so it is named by its order, which is refused
+   * where no bye has it, and in a knockout whose draw is fixed.
+   */
+  removeBye(order: number, told: Told, by: AccountId, at: ReadOnlyDate): void {
+    this.#byeFound(order);
+    this.#refuseOnceTheDrawIsFixed(told);
+    this.record(new CompetitionByeRemoved(order, by, at));
   }
 
   /**
@@ -474,7 +518,12 @@ export class Competition extends AggregateRoot {
   }
 
   protected apply(event: DomainEvent): void {
-    if (event instanceof CompetitionPlayerEntered) {
+    if (
+      event instanceof CompetitionPlayerEntered &&
+      CompetitionPlayerId.from(event.playerId).equals(CompetitionPlayerId.bye())
+    ) {
+      this.#byes.push(event.order);
+    } else if (event instanceof CompetitionPlayerEntered) {
       const id = CompetitionPlayerId.from(event.playerId);
       this.#players.set(
         id.value,
@@ -485,12 +534,23 @@ export class Competition extends AggregateRoot {
       );
     } else if (event instanceof CompetitionPlayerMoved) {
       this.#change(event.playerId, (player) => player.withOrder(event.order));
+    } else if (event instanceof CompetitionByeMoved) {
+      this.#byes = this.#byes.map((order) =>
+        order === event.fromOrder ? event.order : order,
+      );
+    } else if (event instanceof CompetitionByeRemoved) {
+      this.#byes = this.#byes.filter((order) => order !== event.order);
     } else if (event instanceof CompetitionPlayersSpacedOut) {
-      event.playerIds.forEach((written, index) => {
-        this.#change(written, (player) =>
-          player.withOrder((index + 1) * ORDER_STEP),
-        );
+      // By place rather than by id, since every bye has the same id: the
+      // players were said in the order they were in, which is the order they
+      // are in now.
+      const byes: number[] = [];
+      this.players.forEach((player, index) => {
+        const order = (index + 1) * ORDER_STEP;
+        if (player.isBye) byes.push(order);
+        else this.#change(player.id.value, (kept) => kept.withOrder(order));
       });
+      this.#byes = byes;
     } else if (event instanceof CompetitionPlayerWithdrawn) {
       this.#change(event.playerId, (player) =>
         player.withdraw().withOrder(event.order),
@@ -543,6 +603,23 @@ export class Competition extends AggregateRoot {
     }
   }
 
+  // A withdrawn player keeps their place in the draw, and a bye fills one, so
+  // both count.
+  #refuseOnceTheDrawIsFull(told: Told): void {
+    if (
+      told.shape.kind === "knockout" &&
+      this.players.length >= told.shape.draw.places
+    ) {
+      refuse("Competition.DrawFull", "Every place in the draw is filled.");
+    }
+  }
+
+  #byeFound(order: number): void {
+    if (!this.#byes.includes(order)) {
+      refuse("Competition.NoSuchPlayer", "The competition has no such bye.");
+    }
+  }
+
   // A player the competition has, and who has not withdrawn.
   #ensurePlaying(id: CompetitionPlayerId): void {
     if (this.#playerFound(id).withdrawn) {
@@ -579,6 +656,14 @@ export class Competition extends AggregateRoot {
         refuse("Competition.MatchDecided", "Their match is decided.");
       }
     } else if (shape.kind === "knockout") {
+      // Who meets whom is not settled while a place is left empty, or while
+      // there are more players than places, as a draw made smaller can leave.
+      if (this.players.length !== shape.draw.places) {
+        refuse(
+          "Competition.DrawNotFilled",
+          "The knockout's draw is not filled.",
+        );
+      }
       const theirs = this.#knockoutPlay(shape.draw).find(
         (match) =>
           match.sides.some((side) => isPlayer(side, game.winner)) &&
@@ -685,16 +770,56 @@ export class Competition extends AggregateRoot {
     if (found !== undefined) this.#games.set(written, changing(found));
   }
 
-  // The order a player moved past `passed` is given: just before them when
-  // moving up, just after them when moving down, halfway into the room between
-  // them and whoever lies next to them, withdrawn or not. Nothing, where there
-  // is no whole number left in the room.
-  #orderPast(
-    passed: CompetitionPlayerId,
+  // Where the player or bye with `order` goes, moved a place among those who
+  // have not withdrawn: the order they have once any spacing out is done, and
+  // the order they are to be given. Nothing, where there is nowhere to go.
+  #moved(
+    order: number,
     direction: "up" | "down",
-  ): number | undefined {
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): { readonly from: number; readonly to: number } | undefined {
+    const playing = this.players.filter((player) => !player.withdrawn);
+    const place = playing.findIndex((player) => player.order === order);
+    const passed = playing[direction === "up" ? place - 1 : place + 1];
+    if (passed === undefined) return undefined;
+    // By place rather than by order, since spacing out changes the orders but
+    // not the places.
+    const mover = this.players.findIndex((player) => player.order === order);
+    const past = this.players.findIndex(
+      (player) => player.order === passed.order,
+    );
+    let to = this.#orderPast(past, direction);
+    if (to === undefined) {
+      this.#spaceOut(by, at);
+      to = this.#orderPast(past, direction);
+    }
+    // Spaced 10,000 apart, there is always room, so none here is a mistake in
+    // the spacing rather than something to refuse.
+    const from = this.players[mover]?.order;
+    if (to === undefined || from === undefined) {
+      throw new Error("Spaced out, there was still no room to move into.");
+    }
+    return { from, to };
+  }
+
+  // Every player and bye given an order 10,000 apart, in the order they are in.
+  #spaceOut(by: AccountId, at: ReadOnlyDate): void {
+    this.record(
+      new CompetitionPlayersSpacedOut(
+        this.players.map((player) => player.id.value),
+        by,
+        at,
+      ),
+    );
+  }
+
+  // The order a player moved past the one at `at` in the competition's order
+  // is given: just before them when moving up, just after them when moving
+  // down, halfway into the room between them and whoever lies next to them,
+  // withdrawn or not. Nothing, where there is no whole number left in the room.
+  #orderPast(at: number, direction: "up" | "down"): number | undefined {
     const all = this.players;
-    const at = all.findIndex((player) => player.id.equals(passed));
     const orderAt = (index: number): number | undefined => all[index]?.order;
     const [lower, upper] =
       direction === "up"

@@ -55,6 +55,8 @@ Feature: Changing what a tournament's knockout is
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
       And the update gives the knockout a draw of 8 places
       When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"

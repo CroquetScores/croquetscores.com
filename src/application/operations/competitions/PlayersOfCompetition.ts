@@ -22,6 +22,14 @@ export interface ListedCompetitionPlayer {
    * loser. Nobody where the competition has no draw, or they play nobody yet.
    */
   readonly drawnAgainst: string | undefined;
+  /**
+   * Whether this is a knockout's bye, which is nobody: its ids are those
+   * whose every digit is 0, and it has no name, since the tournament says
+   * nothing of it.
+   */
+  readonly bye: boolean;
+  /** Where they come in the competition, which is what names a bye. */
+  readonly order: number;
 }
 
 /**

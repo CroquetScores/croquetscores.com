@@ -42,6 +42,12 @@ export class EnterPlayerHandler extends CommandHandler<EnterPlayer, string> {
       "EnterPlayer",
     );
     const id = TournamentPlayerId.from(command.playerId);
+    // A bye is nobody, so the tournament has no such player to ask about.
+    if (id.equals(TournamentPlayerId.bye())) {
+      const bye = competition.enterBye(told, by, command.requestedAt);
+      await this.competitions.save(competition);
+      return bye.value;
+    }
     const player = tournament.players.find((each) => each.id.equals(id));
     if (player === undefined) {
       throw new TournamentRefused(

@@ -8,7 +8,10 @@ import {
   tournamentNamed,
 } from "../../../../../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../../../../../support/world.js";
-import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
+import {
+  isMarked,
+  unmarkedWithin,
+} from "../../../../../../../../../support/marks.js";
 import { unmarked } from "../../../../../../../../../support/languages.js";
 import {
   eventually,
@@ -255,6 +258,19 @@ Then(
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal((await offered(this))[0], name);
+    });
+  },
+);
+
+Then(
+  "the first player offered to add is in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const [first] = await offered(this);
+      assert.ok(
+        first !== undefined && isMarked(first),
+        `The first offered is ${String(first)}.`,
+      );
     });
   },
 );

@@ -10,10 +10,11 @@ import "../../../../../view/tabs/listed.css";
 // the players playing in the competition's order, each offering Up, Down,
 // Remove and Withdraw, and after them the withdrawn, offering Unwithdraw.
 // Remove and Withdraw ask first. A player Add Player cannot enter is said
-// beneath the drop-down, by the refusal's code, until another is chosen. Once
-// a knockout has a game its draw is fixed,
-// so nobody is added, moved or removed. Whatever is done, the list is asked
-// for again.
+// beneath the drop-down, by the refusal's code, until another is chosen. A
+// knockout offers Bye first, however many are added, and a bye is listed as
+// Bye, offering Up, Down and Remove. Once a knockout has a game its draw is
+// fixed, so nobody is added, moved or removed. Whatever is done, the list is
+// asked for again.
 
 interface Props {
   /** The tournament's id. */
@@ -39,6 +40,10 @@ interface Listed {
   readonly tournamentPlayer: string;
   readonly withdrawn: boolean;
   readonly hasPlayed: boolean;
+  /** Whether this is a knockout's bye, which is nobody. */
+  readonly bye: boolean;
+  /** Where they come in the competition, which is what names a bye. */
+  readonly order: number;
 }
 
 /** One of the tournament's players, as the tournament lists them. */
@@ -49,6 +54,9 @@ interface OfTheTournament {
 }
 
 type Action = "up" | "down" | "withdraw" | "unwithdraw" | "remove";
+
+// The tournament player a bye is entered as: every digit 0.
+const BYE = "tournament-player/00000000-0000-0000-0000-000000000000";
 
 // The part of an id after its kind, which is how the API names a thing, so
 // that each is one segment of an address.
@@ -133,12 +141,19 @@ export const CompetitionPlayersTab = ({
     }
   };
 
+  // Every bye has the same id, so a bye is named by its order as well.
   const act = (player: Listed, action: Action): Promise<void> =>
     done(() =>
-      fetch(`${at}/players/${idInAddress(player.id)}/${action}`, {
-        method: "POST",
-      }),
+      fetch(
+        `${at}/players/${idInAddress(player.id)}/${action}${
+          player.bye ? `?order=${String(player.order)}` : ""
+        }`,
+        { method: "POST" },
+      ),
     );
+
+  const nameOf = (player: Listed): string =>
+    player.bye ? say("admin.competitionPlayers.bye") : player.name;
 
   // A refusal by its code, in its own words or in the words for any.
   const refusal = (code: string) => ({
@@ -195,12 +210,14 @@ export const CompetitionPlayersTab = ({
 
   const row = (player: Listed, options: React.JSX.Element[]) => (
     <li
-      key={player.id}
+      // A bye's id is every bye's, so its order tells it apart.
+      key={`${player.id}@${String(player.order)}`}
       className="listed-item"
       data-withdrawn={player.withdrawn ? "" : undefined}
+      data-bye={player.bye ? "" : undefined}
     >
       <span className="listed-who">
-        <span className="listed-name">{player.name}</span>
+        <span className="listed-name">{nameOf(player)}</span>
         <span className="listed-about">{player.representing ?? ""}</span>
         {player.flag === undefined ? null : (
           <img
@@ -220,7 +237,8 @@ export const CompetitionPlayersTab = ({
       className="stack competition-players-tab"
       aria-busy={acting || answered !== asking}
     >
-      {listed === undefined || fixed ? null : offered.length > 0 ? (
+      {listed === undefined || fixed ? null : offered.length > 0 ||
+        kind === "knockout" ? (
         // Above the list rather than beneath it, where a long one would push
         // it off a phone's screen.
         <p className="listed-adding">
@@ -242,6 +260,11 @@ export const CompetitionPlayersTab = ({
             }}
           >
             <option value="">{say("admin.competitionPlayers.nobody")}</option>
+            {/* First, since a knockout's draw is filled with them, and as
+                often as it is wanted. */}
+            {kind === "knockout" ? (
+              <option value={BYE}>{say("admin.competitionPlayers.bye")}</option>
+            ) : null}
             {offered.map((player) => (
               <option key={player.id} value={player.id}>
                 {player.name}
@@ -284,7 +307,8 @@ export const CompetitionPlayersTab = ({
                   ...(!fixed && !player.hasPlayed
                     ? [button(player, "remove")]
                     : []),
-                  button(player, "withdraw"),
+                  // A bye plays nothing to withdraw from.
+                  ...(player.bye ? [] : [button(player, "withdraw")]),
                   // Last, where they are in the same place on every row.
                   // Nowhere to go is nothing to press.
                   ...(!fixed && place > 0 ? [button(player, "up")] : []),
@@ -324,7 +348,7 @@ export const CompetitionPlayersTab = ({
         >
           <p>
             {say(`admin.competitionPlayers.${confirming.action}Question`, {
-              name: confirming.player.name,
+              name: nameOf(confirming.player),
             })}
           </p>
         </ModalDialog>

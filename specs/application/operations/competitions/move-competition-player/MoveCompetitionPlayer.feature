@@ -69,6 +69,7 @@ Feature: Moving a competition's player up or down
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" moves the player "Chris Third" in "Final Stage" of "Spring Open" up
       Then it is refused with "Competition.DrawFixed"

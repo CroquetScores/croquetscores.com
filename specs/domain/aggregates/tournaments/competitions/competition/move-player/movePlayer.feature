@@ -240,6 +240,7 @@ Feature: Moving a competition's player up or down
       And the tournament player "Sam Someone" was entered in it
       And the tournament player "Alex Another" was entered in it
       And the tournament player "Pat Player" was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the player "Pat Player" is moved up
@@ -296,6 +297,7 @@ Feature: Moving a competition's player up or down
       Then it is refused with "Competition.NoSuchPlayer"
 
     Scenario: Moving a bye in a knockout with a game is refused
+      And a bye was entered in it
       Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the bye with the order 30000 is moved up

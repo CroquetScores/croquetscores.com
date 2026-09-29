@@ -27,6 +27,12 @@ When(
   },
 );
 
+When("a bye is entered", function (this: SpecWorld) {
+  ask(this, (competition) => {
+    competition.enterBye(toldOf(this), byOf(this), now(this));
+  });
+});
+
 Then(
   "the first thing it recorded is a player being entered",
   function (this: SpecWorld) {
