@@ -12,7 +12,9 @@ Feature: The players of a competition, as its tournament's managers and scorers 
   is also said to have withdrawn or not, and to have played or not, a game
   archived counting as played, since a player who has played cannot be
   removed (`removePlayer.feature`) and a list offering to remove one offers 
-  it only where removing would be done.
+  it only where removing would be done. In a knockout, each is answered with
+  who they are drawn to play now, so that a scorer who chooses the winner need
+  not choose the loser (`score-modal-dialog.feature`).
 
   Archiving a tournament player removes them from every competition they are
   in (`ArchivePlayer.feature`), so a tournament player archived after they
@@ -111,6 +113,41 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
       Then the competition's player "Sam Someone" is answered as not having played
+
+  Rule: In a knockout, each player is answered with who they are drawn to play now
+
+    Who a player of a knockout is drawn against is worked out from its draw
+    and the games that count (`KnockoutPlay.feature`). The knockout's draw is
+    four places, each round the best of 1, so Sam Someone meets Alex Another
+    in the first round and Chris Third has a bye.
+
+    Background:
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+
+    Scenario: A player of a knockout is answered with who they are drawn against
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered as drawn against "Alex Another"
+
+    Scenario: A player of a knockout who has won their match is answered with who they meet next
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered as drawn against "Chris Third"
+
+    Scenario: A player of a knockout waiting on a bye is answered as drawn against nobody
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then the competition's player "Chris Third" is answered as drawn against nobody
+
+    Scenario: A player of a block is answered as drawn against nobody
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered as drawn against nobody
 
   Rule: Each player is answered with what the tournament says of them
 

@@ -100,3 +100,43 @@ Feature: How a knockout has been played so far
       And the drawn player "Alex Another" has withdrawn
       When the knockout is played out
       Then the game of "Alex Another" beating "Chris Third" counts
+
+  Rule: A player is drawn against the other player of their match not yet decided
+
+    So that whoever scores a game can be told who the winner was playing
+    (`score-modal-dialog.feature`). A player waiting on a bye, or on the match
+    drawn next to theirs, is drawn against nobody yet, and so is a player who
+    is out or has won the knockout.
+
+    Scenario: A player is drawn against who they meet in the first round
+      When the knockout is played out
+      Then "Sam Someone" is drawn against "Alex Another"
+
+    Scenario: Either player of a match is drawn against the other
+      When the knockout is played out
+      Then "Alex Another" is drawn against "Sam Someone"
+
+    Scenario: A player with a bye is drawn against nobody while the match drawn next to them is undecided
+      When the knockout is played out
+      Then "Chris Third" is drawn against nobody
+
+    Scenario: A player who won their match is drawn against who they meet next
+      Given "Sam Someone" beat "Alex Another" in the knockout
+      When the knockout is played out
+      Then "Sam Someone" is drawn against "Chris Third"
+
+    Scenario: A player whose opponent withdrew is drawn against who they meet next
+      Given the drawn player "Alex Another" has withdrawn
+      When the knockout is played out
+      Then "Sam Someone" is drawn against "Chris Third"
+
+    Scenario: A player who lost their match is drawn against nobody
+      Given "Sam Someone" beat "Alex Another" in the knockout
+      When the knockout is played out
+      Then "Alex Another" is drawn against nobody
+
+    Scenario: The player who won the knockout is drawn against nobody
+      Given "Sam Someone" beat "Alex Another" in the knockout
+      And "Chris Third" beat "Sam Someone" in the knockout
+      When the knockout is played out
+      Then "Chris Third" is drawn against nobody
