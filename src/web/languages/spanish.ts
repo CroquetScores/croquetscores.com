@@ -323,6 +323,10 @@ export const spanish: Language = {
     "admin.competition.bestOf": "Al mejor de",
     "admin.competition.places": "Plazas",
     "admin.competition.round": "Ronda {number}",
+    "admin.competition.bestOfs": "Al mejor de",
+    "admin.competition.quarters": "Cuartos",
+    "admin.competition.semis": "Semis",
+    "admin.competition.final": "Final",
     "admin.competition.add": "Añadir",
     "admin.competition.added": "Se ha añadido {name}.",
     "admin.competition.otherwise":

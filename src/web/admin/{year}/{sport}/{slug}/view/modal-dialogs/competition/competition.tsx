@@ -67,6 +67,20 @@ const brokenByRound = (typed: string): readonly string[] => {
   ];
 };
 
+// A round named as a draw's rounds are spoken of: the last three by what they
+// are, and any before them by their number, counted from the first. Named from
+// the final back because the final is the same round however big the draw.
+const roundLabel = (round: number, count: number): string => {
+  const fromTheFinal = count - 1 - round;
+  return fromTheFinal === 0
+    ? say("admin.competition.final")
+    : fromTheFinal === 1
+      ? say("admin.competition.semis")
+      : fromTheFinal === 2
+        ? say("admin.competition.quarters")
+        : say("admin.competition.round", { number: String(round + 1) });
+};
+
 export const CompetitionDialog = ({
   tournament,
   added,
@@ -96,13 +110,19 @@ export const CompetitionDialog = ({
   };
 
   // As many rounds as halve the places to a final, those kept keeping what
-  // was typed in them and those added beginning on the best of 1.
+  // was typed in them and those added beginning on the best of 1. Rounds come
+  // and go at the start of the draw, so that the final is still the final and
+  // what was typed for it is still its own.
   const choosePlaces = (chosen: number): void => {
     setPlaces(chosen);
     const needed = Math.log2(chosen);
-    setRounds((typed) =>
-      Array.from({ length: needed }, (_, round) => typed[round] ?? "1"),
-    );
+    setRounds((typed) => {
+      const added = needed - typed.length;
+      return Array.from(
+        { length: needed },
+        (_, round) => typed[round - added] ?? "1",
+      );
+    });
   };
 
   const send = async (): Promise<void> => {
@@ -243,34 +263,43 @@ export const CompetitionDialog = ({
               </select>
             )}
           </Field>
-          {rounds.map((typed, round) => (
-            <Field
-              // Keyed by its place, so that a round kept keeps its field.
-              key={round}
-              name={`round-${String(round + 1)}`}
-              label={say("admin.competition.round", {
-                number: String(round + 1),
-              })}
-              refused={refusedForRound(round)}
-            >
-              {(tied) => (
-                <input
-                  {...tied}
-                  type="text"
-                  inputMode="numeric"
-                  placeholder=" "
-                  autoComplete="off"
-                  value={typed}
-                  onChange={(event) => {
-                    const now = event.target.value;
-                    setRounds((all) =>
-                      all.map((each, place) => (place === round ? now : each)),
-                    );
-                  }}
-                />
-              )}
-            </Field>
-          ))}
+          {/* One group, named for what every field in it asks, so that
+              each field need only say which round it is. */}
+          <fieldset className="field-best-ofs">
+            <legend>{say("admin.competition.bestOfs")}</legend>
+            <div className="field-best-ofs-rounds">
+              {rounds.map((typed, round) => (
+                <Field
+                  // Keyed by its place from the final, so that a round kept
+                  // keeps its field as rounds come and go before it.
+                  key={rounds.length - round}
+                  name={`round-${String(round + 1)}`}
+                  label={roundLabel(round, rounds.length)}
+                  refused={refusedForRound(round)}
+                  lifted
+                >
+                  {(tied) => (
+                    <input
+                      {...tied}
+                      type="text"
+                      inputMode="numeric"
+                      placeholder=" "
+                      autoComplete="off"
+                      value={typed}
+                      onChange={(event) => {
+                        const now = event.target.value;
+                        setRounds((all) =>
+                          all.map((each, place) =>
+                            place === round ? now : each,
+                          ),
+                        );
+                      }}
+                    />
+                  )}
+                </Field>
+              ))}
+            </div>
+          </fieldset>
         </>
       ) : (
         <Field

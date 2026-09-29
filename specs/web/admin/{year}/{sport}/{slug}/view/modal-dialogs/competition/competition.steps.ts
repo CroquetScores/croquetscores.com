@@ -132,6 +132,47 @@ Then(
   },
 );
 
+// Its rounds ----------------------------------------------------------------------
+
+// The group the rounds are asked for in, found as a screen reader finds it: a
+// group, by the words it is named with.
+const roundsUnder = (world: SpecWorld, heading: string): Locator =>
+  dialogOf(world).getByRole("group", { name: heading, exact: true });
+
+Then(
+  "the rounds are asked for under {string}",
+  async function (this: SpecWorld, heading: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await roundsUnder(this, heading).getByRole("textbox").count(),
+        3,
+        `The rounds are not asked for under ${heading}.`,
+      );
+    });
+  },
+);
+
+// The round in that place among the rounds, in the order a reader meets them,
+// is the field named `name`: one element found both ways.
+Then(
+  "round {int} is asked for as {string}",
+  async function (this: SpecWorld, round: number, name: string) {
+    await eventually(this, async () => {
+      const inPlace = dialogOf(this)
+        .locator(".field-best-ofs input")
+        .nth(round - 1);
+      assert.equal(
+        await inPlace.evaluate(
+          (element, named) => element === named,
+          await fieldOf(this, name).elementHandle({ timeout: 500 }),
+        ),
+        true,
+        `Round ${String(round)} is not asked for as ${name}.`,
+      );
+    });
+  },
+);
+
 // What it says -----------------------------------------------------------------------
 
 const status = (world: SpecWorld): Locator =>

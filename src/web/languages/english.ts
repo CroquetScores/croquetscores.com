@@ -348,6 +348,10 @@ export const english: Language = {
     "admin.competition.bestOf": "Best of",
     "admin.competition.places": "Places",
     "admin.competition.round": "Round {number}",
+    "admin.competition.bestOfs": "Best ofs",
+    "admin.competition.quarters": "Quarters",
+    "admin.competition.semis": "Semis",
+    "admin.competition.final": "Final",
     "admin.competition.add": "Add",
     "admin.competition.added": "{name} was added.",
     // Above the fields, for a refusal with no words of its own.
