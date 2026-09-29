@@ -253,6 +253,23 @@ Then(
   },
 );
 
+// What is said above the fields, about no one of them, by its code.
+Then(
+  "the competition dialog says {string} above the fields",
+  async function (this: SpecWorld, code: string) {
+    await eventually(this, async () => {
+      const refused =
+        (await dialogOf(this)
+          .locator(".dialog-problems")
+          .getAttribute("data-refused", { timeout: 500 })) ?? "";
+      assert.ok(
+        refused.split(" ").includes(code),
+        `Above the fields says ${refused || "nothing"}.`,
+      );
+    });
+  },
+);
+
 // What was kept ------------------------------------------------------------------
 
 const competitionsOf = async (

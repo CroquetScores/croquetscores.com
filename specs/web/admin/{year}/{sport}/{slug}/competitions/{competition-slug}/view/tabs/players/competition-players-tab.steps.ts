@@ -164,6 +164,56 @@ Given(
   },
 );
 
+When("nobody is chosen to add", async function (this: SpecWorld) {
+  await settled(this);
+  await dropDown(this).selectOption({ value: "" });
+});
+
+// What is said beneath the drop-down, by the codes it carries rather than the
+// words, which are the reader's language's to choose.
+const saidBeneath = (world: SpecWorld): Locator =>
+  tabPanel(world).locator("#competition-players-refused");
+
+Then(
+  "the drop-down of players to add is refused with {string}",
+  async function (this: SpecWorld, code: string) {
+    await eventually(this, async () => {
+      const refused =
+        (await saidBeneath(this).getAttribute("data-refused", {
+          timeout: 500,
+        })) ?? "";
+      assert.ok(
+        refused.split(" ").includes(code),
+        `The drop-down is refused with ${refused || "nothing"}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "what is refused is read out with the drop-down of players to add",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const described = await dropDown(this).getAttribute("aria-describedby", {
+        timeout: 500,
+      });
+      assert.equal(described, "competition-players-refused");
+      assert.equal(await saidBeneath(this).count(), 1);
+    });
+  },
+);
+
+Then(
+  "nothing is said beneath the drop-down of players to add",
+  async function (this: SpecWorld) {
+    await settled(this);
+    await eventually(this, async () => {
+      assert.equal(await saidBeneath(this).count(), 0);
+      assert.equal(await dropDown(this).getAttribute("aria-describedby"), null);
+    });
+  },
+);
+
 Then(
   "the player {string} is offered to add",
   async function (this: SpecWorld, name: string) {

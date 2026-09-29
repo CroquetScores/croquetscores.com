@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
-import { say } from "../../../../../../../../words.js";
+import { knows, say } from "../../../../../../../../words.js";
 import { optionFace } from "../../../../../view/tabs/optionFace.js";
 import "../../../../../view/tabs/listed.css";
 
@@ -9,7 +9,9 @@ import "../../../../../view/tabs/listed.css";
 // of the tournament's players not in the competition, with Add Player, above
 // the players playing in the competition's order, each offering Up, Down,
 // Remove and Withdraw, and after them the withdrawn, offering Unwithdraw.
-// Remove and Withdraw ask first. Once a knockout has a game its draw is fixed,
+// Remove and Withdraw ask first. A player Add Player cannot enter is said
+// beneath the drop-down, by the refusal's code, until another is chosen. Once
+// a knockout has a game its draw is fixed,
 // so nobody is added, moved or removed. Whatever is done, the list is asked
 // for again.
 
@@ -74,6 +76,11 @@ export const CompetitionPlayersTab = ({
   const [asking, setAsking] = useState(0);
   const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
+  // Why the player chosen was not entered, in the reader's language, until
+  // another is chosen: it was about that one.
+  const [refused, setRefused] = useState<
+    readonly { readonly code: string; readonly words: string }[]
+  >([]);
   // The player a manager is asked about before they are removed or withdrawn.
   const [confirming, setConfirming] = useState<
     | { readonly player: Listed; readonly action: "remove" | "withdraw" }
@@ -133,14 +140,36 @@ export const CompetitionPlayersTab = ({
       }),
     );
 
+  // A refusal by its code, in its own words or in the words for any.
+  const refusal = (code: string) => ({
+    code,
+    words: say(knows(code) ? code : "admin.competitionPlayers.knockoutFull"),
+  });
+
   const add = (): Promise<void> =>
-    done(() =>
-      fetch(`${at}/players`, {
+    done(async () => {
+      const response = await fetch(`${at}/players`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+        },
         body: JSON.stringify({ player: idInAddress(chosen) }),
-      }),
-    );
+      });
+      if (response.ok) {
+        setRefused([]);
+        return;
+      }
+      const answer = (await response.json().catch(() => ({}))) as {
+        error?: string;
+        broken?: { code: string }[];
+      };
+      setRefused(
+        answer.broken?.map(({ code }) => refusal(code)) ?? [
+          refusal(answer.error ?? "Unknown"),
+        ],
+      );
+    });
 
   // A knockout's players are its draw, fixed once it has a game.
   const fixed = kind === "knockout" && played;
@@ -198,9 +227,18 @@ export const CompetitionPlayersTab = ({
           <select
             className="listed-choice"
             aria-label={say("admin.competitionPlayers.choose")}
+            // Tied to what is said beneath it, so that a screen reader reads
+            // why with the drop-down rather than leaving it to be found.
+            {...(refused.length > 0
+              ? {
+                  "aria-describedby": "competition-players-refused",
+                  "aria-invalid": true,
+                }
+              : {})}
             value={chosen}
             onChange={(event) => {
               setChosen(event.target.value);
+              setRefused([]);
             }}
           >
             <option value="">{say("admin.competitionPlayers.nobody")}</option>
@@ -223,6 +261,18 @@ export const CompetitionPlayersTab = ({
       ) : (
         <p className="listed-all">{say("admin.competitionPlayers.all")}</p>
       )}
+      {/* Beneath the drop-down it is about, and gone once another is chosen. */}
+      {refused.length > 0 && listed !== undefined && !fixed ? (
+        <p
+          className="field-message"
+          id="competition-players-refused"
+          data-refused={refused.map(({ code }) => code).join(" ")}
+        >
+          {refused.map(({ code, words }) => (
+            <span key={code}>{words}</span>
+          ))}
+        </p>
+      ) : null}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.competitionPlayers.none")}</p>
       ) : (

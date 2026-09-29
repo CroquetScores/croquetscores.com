@@ -6,9 +6,12 @@ import { knows, say } from "../../../../../../words.js";
 import "./competition.css";
 
 // The competition dialog (competition.feature), over a tournament's page:
-// opened by Add Competition to add competitions one after another. Adding
-// keeps it open, says what was added and empties the name alone, since those
-// added together are mostly alike, so that the next is its name alone.
+// opened by Add Competition to add competitions one after another, and by Edit
+// to change one. Adding and changing are the one dialog, so that the two
+// cannot come to ask different things. Adding keeps it open, says what was
+// added and empties the name alone, since those added together are mostly
+// alike, so that the next is its name alone; saving closes it, since a
+// competition is changed one at a time.
 
 type Kind = "block" | "knockout" | "swiss";
 
@@ -18,11 +21,26 @@ const kinds: readonly Kind[] = ["block", "knockout", "swiss"];
 // other could not be drawn, so is not offered to be refused.
 const placesOffered = [2, 4, 8, 16, 32, 64, 128] as const;
 
+/** A competition as it is, when one is being changed. */
+export type CompetitionAsItIs = {
+  readonly id: string;
+  readonly name: string;
+} & (
+  | { readonly kind: "block" | "swiss"; readonly bestOf: number }
+  | {
+      readonly kind: "knockout";
+      readonly places: number;
+      readonly rounds: readonly number[];
+    }
+);
+
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
-  /** Once a competition is added, so that the list says so. */
-  readonly added: () => void;
+  /** Nothing when adding, and the competition when changing one. */
+  readonly competition?: CompetitionAsItIs | undefined;
+  /** Once a competition is kept, so that the list says so. */
+  readonly kept: () => void;
   readonly close: () => void;
 }
 
@@ -83,14 +101,27 @@ const roundLabel = (round: number, count: number): string => {
 
 export const CompetitionDialog = ({
   tournament,
-  added,
+  competition,
+  kept,
   close,
 }: Props): React.JSX.Element => {
-  const [name, setName] = useState("");
-  const [kind, setKind] = useState<Kind>("block");
-  const [bestOf, setBestOf] = useState("1");
-  const [places, setPlaces] = useState(8);
-  const [rounds, setRounds] = useState<readonly string[]>(["1", "1", "1"]);
+  // A competition being changed begins as it is; one being added begins as a
+  // block, the best of 1, or a knockout of 8 places each round the best of 1.
+  const [name, setName] = useState(competition?.name ?? "");
+  const [kind, setKind] = useState<Kind>(competition?.kind ?? "block");
+  const [bestOf, setBestOf] = useState(
+    competition !== undefined && competition.kind !== "knockout"
+      ? String(competition.bestOf)
+      : "1",
+  );
+  const [places, setPlaces] = useState(
+    competition?.kind === "knockout" ? competition.places : 8,
+  );
+  const [rounds, setRounds] = useState<readonly string[]>(
+    competition?.kind === "knockout"
+      ? competition.rounds.map(String)
+      : ["1", "1", "1"],
+  );
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   // What was last added, said until the next name is typed.
   const [said, setSaid] = useState<string | undefined>();
@@ -129,21 +160,28 @@ export const CompetitionDialog = ({
     if (sending) return;
     setSending(true);
     try {
-      const response = await fetch(at, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
+      const response = await fetch(
+        competition === undefined ? at : `${at}/${idInAddress(competition.id)}`,
+        {
+          method: competition === undefined ? "POST" : "PUT",
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(
+            kind === "knockout"
+              ? { kind, name, places, rounds: rounds.map(typedNumber) }
+              : { kind, name, bestOf: typedNumber(bestOf) },
+          ),
         },
-        body: JSON.stringify(
-          kind === "knockout"
-            ? { kind, name, places, rounds: rounds.map(typedNumber) }
-            : { kind, name, bestOf: typedNumber(bestOf) },
-        ),
-      });
+      );
       if (response.ok) {
         setRefused([]);
-        added();
+        kept();
+        if (competition !== undefined) {
+          close();
+          return;
+        }
         // The name emptied for the next, and the rest left as the next alike
         // will want it, with the reader back in the name.
         setSaid(name.trim());
@@ -180,8 +218,16 @@ export const CompetitionDialog = ({
 
   return (
     <ModalDialog
-      title={say("admin.competition.addTitle")}
-      action={say("admin.competition.add")}
+      title={say(
+        competition === undefined
+          ? "admin.competition.addTitle"
+          : "admin.competition.editTitle",
+      )}
+      action={say(
+        competition === undefined
+          ? "admin.competition.add"
+          : "admin.competition.save",
+      )}
       act={() => void send()}
       cancel={close}
       busy={sending}
@@ -194,7 +240,12 @@ export const CompetitionDialog = ({
           : say("admin.competition.added", { name: said })}
       </p>
       {above.length > 0 ? (
-        <div className="dialog-problems">
+        // The codes as well as the words, as a field's refusals carry them,
+        // so that what was refused can be told apart from how it is said.
+        <div
+          className="dialog-problems"
+          data-refused={above.map(({ code }) => code).join(" ")}
+        >
           {above.map(({ code, words }) => (
             <p key={code}>{words}</p>
           ))}
@@ -221,24 +272,28 @@ export const CompetitionDialog = ({
           />
         )}
       </Field>
-      <fieldset className="field-kinds">
-        <legend>{say("admin.competition.kind")}</legend>
-        {kinds.map((each) => (
-          <label key={each} htmlFor={`field-kind-${each}`}>
-            <input
-              id={`field-kind-${each}`}
-              type="radio"
-              name="kind"
-              value={each}
-              checked={kind === each}
-              onChange={() => {
-                setKind(each);
-              }}
-            />
-            <span>{say(`admin.competitions.${each}`)}</span>
-          </label>
-        ))}
-      </fieldset>
+      {/* Not asked of a competition being changed: no change makes a block a
+          knockout, so a choice here could only be refused. */}
+      {competition === undefined ? (
+        <fieldset className="field-kinds">
+          <legend>{say("admin.competition.kind")}</legend>
+          {kinds.map((each) => (
+            <label key={each} htmlFor={`field-kind-${each}`}>
+              <input
+                id={`field-kind-${each}`}
+                type="radio"
+                name="kind"
+                value={each}
+                checked={kind === each}
+                onChange={() => {
+                  setKind(each);
+                }}
+              />
+              <span>{say(`admin.competitions.${each}`)}</span>
+            </label>
+          ))}
+        </fieldset>
+      ) : null}
       {kind === "knockout" ? (
         <>
           <Field

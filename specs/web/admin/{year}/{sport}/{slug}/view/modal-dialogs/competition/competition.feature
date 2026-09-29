@@ -548,43 +548,51 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: Edit opens the competition dialog
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
       Then the competition dialog is open
 
     Scenario: The dialog is titled for changing a competition
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
       Then the competition dialog is titled "Edit Competition"
 
     Scenario: The dialog changes with Save
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
       Then the competition dialog's first button is "Save"
 
     Scenario: The name begins as the competition's
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
       Then "Name" says "Block A"
 
     Scenario: A block's best-of begins as the block's
       Given the block is to be the best of 3
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
       Then "Best of" says "3"
 
     Scenario: A knockout's places begin as the knockout's
       Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Main Event"
       Then the places chosen are 4
 
     Scenario: A knockout's rounds begin as the knockout's
       Given the knockout's second round is to be the best of 3
       And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Main Event"
       Then "Final" says "3"
 
     Scenario Outline: The kind is not offered
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
       Then the competition dialog does not ask for "<kind>"
 
@@ -598,6 +606,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A name changed is kept
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And "Block One" is typed as the "Name"
       When "Save" is pressed
@@ -605,6 +614,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A block's best-of changed is kept
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And "3" is typed as the "Best of"
       When "Save" is pressed
@@ -612,6 +622,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A knockout's places changed are kept
       Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Main Event"
       And 8 places are chosen
       When "Save" is pressed
@@ -619,6 +630,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A knockout's round changed is kept
       Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Main Event"
       And "3" is typed as the "Final"
       When "Save" is pressed
@@ -626,12 +638,14 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: Save closes the dialog
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       When "Save" is pressed
       Then the competition dialog is not open
 
     Scenario: The list says the change once the dialog is closed
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And "Block One" is typed as the "Name"
       When "Save" is pressed
@@ -639,12 +653,14 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: The reader is back on Edit once the change is kept
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       When "Save" is pressed
       Then "Edit" on the competition "Block A" has the focus
 
     Scenario: Cancelling keeps no change
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And "Block One" is typed as the "Name"
       When "Cancel" is pressed
@@ -652,6 +668,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: The reader is back on Edit once the dialog is cancelled
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       When "Cancel" is pressed
       Then "Edit" on the competition "Block A" has the focus
@@ -661,6 +678,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
     Scenario: A name another competition has is refused beside the name
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block B"
       And "BLOCK A" is typed as the "Name"
       When "Save" is pressed
@@ -668,6 +686,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A change refused leaves the dialog open
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And "" is typed as the "Name"
       When "Save" is pressed
@@ -675,6 +694,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A change refused is not kept
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Block A"
       And "" is typed as the "Name"
       When "Save" is pressed
@@ -687,6 +707,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Main Event"
       And 8 places are chosen
       When "Save" is pressed
