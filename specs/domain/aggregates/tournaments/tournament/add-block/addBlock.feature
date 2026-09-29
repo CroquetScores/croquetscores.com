@@ -30,7 +30,8 @@ Feature: Adding a block to a tournament
   lowest first. The first competition added is given 10,000, and each after it
   10,000 more than the highest order there is, so that a competition can later
   be put between two others without either of them moving. An archived
-  competition keeps its order and still counts, so no order is given twice.
+  competition is listed after them all (`archiveCompetition.feature`), but
+  keeps its order and still counts, so no order is given twice.
 
   An archived tournament can only be restored (`restore.feature`), so adding a
   competition to one is refused.

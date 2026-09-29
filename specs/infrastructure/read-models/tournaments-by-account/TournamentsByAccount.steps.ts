@@ -248,6 +248,7 @@ const updated = async (
         country: tournament.country.code,
         region: tournament.region.code,
         handicap: tournament.handicap,
+        drawsAllowed: tournament.drawsAllowed,
         worldRankings: tournament.worldRankings,
         national: tournament.national,
         international: tournament.international,

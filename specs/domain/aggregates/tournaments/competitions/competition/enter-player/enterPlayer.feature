@@ -40,9 +40,13 @@ Feature: Entering a tournament's player in one of its competitions
 
   A knockout is drawn in the competition's order (`addGame.feature`), so once
   it has a game, archived or not, entering a player, who would move others in
-  the draw, is refused. Whatever asks says what kind of competition it is, as
-  the tournament keeps that; the scenarios here are about a block unless they
-  say otherwise.
+  the draw, is refused. Its draw has a place for each player it can hold, so
+  entering a player once every place is filled is refused too, rather than
+  leaving somebody entered who could never play. A withdrawn player keeps
+  their place in the draw (`withdrawPlayer.feature`), so they still fill it; a
+  player removed does not. Whatever asks says what kind of competition it is,
+  as the tournament keeps that; the scenarios here are about a block unless
+  they say otherwise.
 
   A scenario that does not say what order a tournament player has gives the
   tournament players it names orders 10,000 apart, in the order it first
@@ -302,6 +306,57 @@ Feature: Entering a tournament's player in one of its competitions
       Given the tournament player "Sam Someone" was entered in it
       And the tournament player "Alex Another" was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then the competition has the tournament player "Pat Player"
+
+  Rule: A knockout holds no more players than its draw has places
+
+    Scenario: Entering a player in a knockout whose places are all filled is refused
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then it is refused with "Competition.DrawFull"
+
+    Scenario: A tournament player refused for a full draw is not entered
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then the competition does not have the tournament player "Pat Player"
+
+    Scenario: Entering the player who fills the last place is not refused
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then the competition has the tournament player "Pat Player"
+
+    Scenario: A withdrawn player still fills their place
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
+      And the player "Alex Another" withdrew from it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then it is refused with "Competition.DrawFull"
+
+    Scenario: A removed player's place can be filled again
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
+      And the player "Alex Another" was removed from it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then the competition has the tournament player "Pat Player"
+
+    Scenario: A block holds as many players as are entered
+      Given the competition is a block, each match the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
       And the competition is rebuilt from its stream
       When the tournament player "Pat Player" is entered
       Then the competition has the tournament player "Pat Player"

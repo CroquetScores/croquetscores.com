@@ -221,6 +221,7 @@ export const creationOf = (world: SpecWorld): TournamentRequest => {
         ? { notes: said.notes }
         : {}),
     handicap: said.handicap,
+    drawsAllowed: said.drawsAllowed,
     worldRankings: said.worldRankings,
     national: said.national,
     international: said.international,
@@ -249,6 +250,7 @@ export const updateOf = (
     region: changed.region ?? tournament.region.code,
     ...(typeof notes === "string" ? { notes } : {}),
     handicap: changed.handicap ?? tournament.handicap,
+    drawsAllowed: changed.drawsAllowed ?? tournament.drawsAllowed,
     worldRankings: tournament.worldRankings,
     national: tournament.national,
     international: changed.international ?? tournament.international,

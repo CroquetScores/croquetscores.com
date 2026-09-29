@@ -25,11 +25,11 @@ Feature: Moving a tournament's competition up or down
   An archived competition is out of the way (`archiveCompetition.feature`),
   and a list of the ones in use does not show it, so moving a place passes
   over it: the competition above or below is the nearest one that is not
-  archived. An archived competition is put last when it is archived
-  (`archiveCompetition.feature`), but a competition added after it comes after
-  it, so one can lie between two in use. Its order still counts, so no order
-  is ever given twice, and one lying between two competitions in use is where
-  the room between them ends. An archived competition can only be
+  archived. An archived competition is listed last whatever its order
+  (`archiveCompetition.feature`), but a competition added after it is given a
+  higher order, so by order one can lie between two in use. Its order still
+  counts, so no order is ever given twice, and one lying between two
+  competitions in use is where the room between them ends. An archived competition can only be
   restored, so moving one is refused.
 
   Moving the first competition up, or the last one down, records nothing,

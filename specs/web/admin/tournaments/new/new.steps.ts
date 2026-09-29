@@ -388,6 +388,13 @@ Then(
 );
 
 Then(
+  "the tournament {string} is kept allowing drawn games",
+  async function (this: SpecWorld, name: string) {
+    assert.equal((await keptCalled(this, name)).drawsAllowed, true);
+  },
+);
+
+Then(
   "the tournament {string} is kept as not national",
   async function (this: SpecWorld, name: string) {
     assert.equal((await keptCalled(this, name)).national, false);

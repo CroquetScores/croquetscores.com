@@ -36,7 +36,8 @@ export type CompetitionErrorCode =
   | "Competition.MatchDecided"
   | "Competition.NotDrawnToMeet"
   | "Competition.WinnerHasPlayedOn"
-  | "Competition.DrawFixed";
+  | "Competition.DrawFixed"
+  | "Competition.DrawFull";
 
 /**
  * What a competition is told of itself by whatever asks, since the tournament
@@ -125,7 +126,8 @@ export class Competition extends AggregateRoot {
    * that player, as a player moved down past them would be: halfway to the
    * next, withdrawn or not, or last where there is none, with the players
    * spaced out first where there is no room. One already in it, withdrawn or
-   * not, is refused.
+   * not, is refused, and in a knockout, one for whom the draw has no place
+   * left.
    */
   enterPlayer(
     tournamentPlayer: TournamentPlayerId,
@@ -144,6 +146,13 @@ export class Competition extends AggregateRoot {
         "Competition.PlayerAlreadyEntered",
         "The tournament player is already in the competition.",
       );
+    }
+    // A withdrawn player keeps their place in the draw, so they count.
+    if (
+      told.shape.kind === "knockout" &&
+      this.#players.size >= told.shape.draw.places
+    ) {
+      refuse("Competition.DrawFull", "Every place in the draw is filled.");
     }
     const id = CompetitionPlayerId.create();
     const holder = this.players.find(

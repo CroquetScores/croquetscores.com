@@ -119,6 +119,7 @@ export const changeTournament = async (
         region: as.region.code,
         ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
         handicap: as.handicap,
+        drawsAllowed: as.drawsAllowed,
         worldRankings: as.worldRankings,
         national: as.national,
         international: as.international,

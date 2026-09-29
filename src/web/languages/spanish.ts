@@ -284,6 +284,7 @@ export const spanish: Language = {
     "admin.tournament.region": "Región",
     "admin.tournament.notes": "Notas",
     "admin.tournament.handicap": "Se juega con hándicap",
+    "admin.tournament.drawsAllowed": "Se permiten empates",
     "admin.tournament.worldRankings": "Cuenta para el ranking mundial",
     "admin.tournament.national": "Es nacional",
     "admin.tournament.international": "Es internacional",

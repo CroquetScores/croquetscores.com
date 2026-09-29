@@ -41,8 +41,10 @@ Feature: Adding a game to a competition
   more than half its games. A draw has more places than there are players
   when not every place is filled (`KnockoutDraw.feature`): the players fill
   the places in the competition's order, and a player whose opponent's place
-  is empty has a bye, going through without playing. A player beyond the
-  draw's last place has no place in it, and plays in none of its matches.
+  is empty has a bye, going through without playing. A player cannot be
+  entered once every place is filled (`enterPlayer.feature`), but a draw made
+  smaller after they were entered can leave one beyond its last place, and a
+  player there has no place in it, and plays in none of its matches.
 
   A withdrawn player keeps their place in a knockout's draw
   (`withdrawPlayer.feature`), and loses every match of theirs not already

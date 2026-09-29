@@ -233,8 +233,7 @@ export class Tournament extends AggregateRoot {
   // Every address it has been found at, the first first, each once.
   readonly #addresses: TournamentAddress[] = [];
   #archived = false;
-  // By the written id, in the order they were added, which is the order they
-  // are listed in.
+  // By the written id. How they are listed is `players` and `competitions`.
   readonly #players = new Map<string, TournamentPlayer>();
   readonly #competitions = new Map<string, CompetitionInTournament>();
   // By the written id, in the order they were made.
@@ -357,17 +356,22 @@ export class Tournament extends AggregateRoot {
     return this.#archived;
   }
 
-  /** Its players, archived ones among them, lowest order first. */
+  /**
+   * Its players, lowest order first, the archived after all the others
+   * whatever their order.
+   */
   get players(): readonly TournamentPlayer[] {
-    return [...this.#players.values()].sort(
-      (one, other) => one.order - other.order,
-    );
+    return archivedLast(this.#playersByOrder, ({ archived }) => archived);
   }
 
-  /** Its competitions, archived ones among them, lowest order first. */
+  /**
+   * Its competitions, lowest order first, the archived after all the others
+   * whatever their order.
+   */
   get competitions(): readonly CompetitionInTournament[] {
-    return [...this.#competitions.values()].sort(
-      (one, other) => one.reference.order - other.reference.order,
+    return archivedLast(
+      this.#competitionsByOrder,
+      ({ reference }) => reference.archived,
     );
   }
 
@@ -573,14 +577,14 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     this.#playerFound(id).ensureMovable();
-    const all = this.players;
+    const all = this.#playersByOrder;
     const inUse = all.filter(({ archived }) => !archived);
     const place = inUse.findIndex((player) => player.id.equals(id));
     const passed = inUse[direction === "up" ? place - 1 : place + 1];
     if (passed === undefined) return;
 
     const orderPastPassed = (): number | undefined => {
-      const players = this.players;
+      const players = this.#playersByOrder;
       return orderPast(
         players.map(({ order }) => order),
         players.findIndex((player) => player.equals(passed)),
@@ -803,7 +807,7 @@ export class Tournament extends AggregateRoot {
     if (this.#competitionFound(id).reference.archived) {
       refuse("Tournament.CompetitionArchived", "The competition is archived.");
     }
-    const inUse = this.competitions.filter(
+    const inUse = this.#competitionsByOrder.filter(
       ({ reference }) => !reference.archived,
     );
     const place = inUse.findIndex(({ reference }) => reference.id.equals(id));
@@ -814,7 +818,7 @@ export class Tournament extends AggregateRoot {
     if (order === undefined) {
       this.record(
         new CompetitionsSpacedOut(
-          this.competitions.map(({ reference }) => reference.id.value),
+          this.#competitionsByOrder.map(({ reference }) => reference.id.value),
           by,
           at,
         ),
@@ -1175,6 +1179,23 @@ export class Tournament extends AggregateRoot {
     return { slug: slug.toString(), order: this.#nextOrder };
   }
 
+  // Every player lowest order first, archived or not: the order that room to
+  // move into and spacing out are reckoned in, since an archived player's
+  // order still counts, wherever they are listed.
+  get #playersByOrder(): TournamentPlayer[] {
+    return [...this.#players.values()].sort(
+      (one, other) => one.order - other.order,
+    );
+  }
+
+  // Every competition lowest order first, archived or not, as the players are
+  // (`#playersByOrder`).
+  get #competitionsByOrder(): CompetitionInTournament[] {
+    return [...this.#competitions.values()].sort(
+      (one, other) => one.reference.order - other.reference.order,
+    );
+  }
+
   // 10,000 more than the highest order there is, for a player put last: one
   // added, or one archived. Archived players still count, so that no order is
   // ever given twice.
@@ -1276,7 +1297,7 @@ export class Tournament extends AggregateRoot {
     passed: CompetitionId,
     direction: "up" | "down",
   ): number | undefined {
-    const all = this.competitions;
+    const all = this.#competitionsByOrder;
     return orderPast(
       all.map(({ reference }) => reference.order),
       all.findIndex(({ reference }) => reference.id.equals(passed)),
@@ -1308,6 +1329,18 @@ const NOT_A: Readonly<Record<CompetitionShape["kind"], TournamentErrorCode>> = {
   knockout: "Tournament.NotAKnockout",
   swiss: "Tournament.NotASwiss",
 };
+
+// `inOrder` with the archived moved after all the others, each keeping its
+// place among its own. Sorting on whether it is archived rather than giving it
+// an order past everybody else's means a player or competition added after it
+// needs no room made for it.
+const archivedLast = <T>(
+  inOrder: readonly T[],
+  isArchived: (each: T) => boolean,
+): T[] => [
+  ...inOrder.filter((each) => !isArchived(each)),
+  ...inOrder.filter(isArchived),
+];
 
 // A reference is never altered, so a changed one is made again from the old
 // one and what changed.

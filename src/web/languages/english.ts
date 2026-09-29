@@ -302,6 +302,7 @@ export const english: Language = {
     "admin.tournament.region": "Region",
     "admin.tournament.notes": "Notes",
     "admin.tournament.handicap": "Played under handicap",
+    "admin.tournament.drawsAllowed": "Allows drawn games",
     "admin.tournament.worldRankings": "Counts towards the world rankings",
     "admin.tournament.national": "Is national",
     "admin.tournament.international": "Is international",

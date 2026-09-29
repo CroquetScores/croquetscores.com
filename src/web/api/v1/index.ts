@@ -94,6 +94,7 @@ const tournamentFrom = (body: unknown): TournamentRequest => {
     region: textOf(body, "region"),
     ...(notes === "" ? {} : { notes }),
     handicap: yesOrNoOf(body, "handicap"),
+    drawsAllowed: yesOrNoOf(body, "drawsAllowed"),
     worldRankings: yesOrNoOf(body, "worldRankings"),
     national: yesOrNoOf(body, "national"),
     international: yesOrNoOf(body, "international"),

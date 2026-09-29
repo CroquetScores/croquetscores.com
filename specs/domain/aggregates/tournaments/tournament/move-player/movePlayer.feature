@@ -21,8 +21,9 @@ Feature: Moving a tournament's player up or down
   An archived player is out of the way (`archivePlayer.feature`), and a list of
   the players in use does not show them, so moving a place passes over them:
   the player above or below is the nearest one who is not archived. An
-  archived player is put last when they are archived, but a player added after
-  them comes after them, so one can lie between two in use. Their order still
+  archived player is listed last whatever their order
+  (`archivePlayer.feature`), but a player added after them is given a higher
+  order, so by order one can lie between two in use. Their order still
   counts, so no order is ever given twice, and one lying between two players
   in use is where the room between them ends. An archived player can only be
   restored (`TournamentPlayer.feature`), so moving one is refused.

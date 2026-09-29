@@ -72,6 +72,7 @@ Feature: A tournament is changed in the admin
         | Country                           |
         | Notes                             |
         | Played under handicap             |
+        | Allows drawn games                |
         | Counts towards the world rankings |
         | Is national                       |
         | Is international                  |
@@ -129,6 +130,11 @@ Feature: A tournament is changed in the admin
       Given the tournament "Spring Open" is played under handicap
       When the page to edit "Spring Open" is opened
       Then "Played under handicap" is ticked
+
+    Scenario: A tournament allowing drawn games is ticked as one
+      Given the tournament "Spring Open" allows drawn games
+      When the page to edit "Spring Open" is opened
+      Then "Allows drawn games" is ticked
 
     Scenario: A national tournament is ticked as one
       Given the tournament "Spring Open" is national
