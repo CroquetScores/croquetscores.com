@@ -146,3 +146,21 @@ export const knockoutPlay = (
 /** Whether `side` is the player `id`. */
 export const isPlayer = (side: Side, id: CompetitionPlayerId): boolean =>
   side.is === "player" && side.player.id.equals(id);
+
+/**
+ * Who the player `id` is drawn to play now, in `play`: the other player of
+ * their match not yet decided. Nobody where they are waiting on a bye or on a
+ * match still to be decided, or are out.
+ */
+export const drawnAgainst = (
+  play: readonly Match[],
+  id: CompetitionPlayerId,
+): CompetitionPlayer | undefined => {
+  const theirs = play.find(
+    (match) =>
+      match.winner.is === "not yet known" &&
+      match.sides.some((side) => isPlayer(side, id)),
+  );
+  const other = theirs?.sides.find((side) => !isPlayer(side, id));
+  return other?.is === "player" ? other.player : undefined;
+};

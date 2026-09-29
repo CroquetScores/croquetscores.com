@@ -25,6 +25,8 @@ interface Player {
   readonly id: string;
   readonly name: string;
   readonly withdrawn: boolean;
+  /** In a knockout, who they are drawn to play now, by their id. */
+  readonly drawnAgainst?: string;
 }
 
 type Part = "winner" | "winnerScore" | "loser" | "loserScore";
@@ -165,7 +167,18 @@ export const ScoreDialog = ({
           ref={fields[part]}
           value={said[part]}
           onChange={(event) => {
-            setSaid({ ...said, [part]: event.target.value });
+            const chosen = event.target.value;
+            // In a knockout the winner's opponent is known, so it is chosen as
+            // the loser, where the reader sees it and can choose another.
+            const opponent =
+              part === "winner"
+                ? players.find((player) => player.id === chosen)?.drawnAgainst
+                : undefined;
+            setSaid({
+              ...said,
+              [part]: chosen,
+              ...(opponent === undefined ? {} : { loser: opponent }),
+            });
             // Which game was added is no longer the news once the next winner
             // is chosen.
             if (part === "winner") setAdded(undefined);

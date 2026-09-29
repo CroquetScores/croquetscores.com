@@ -16,6 +16,12 @@ export interface ListedCompetitionPlayer {
    * player who has cannot be removed.
    */
   readonly hasPlayed: boolean;
+  /**
+   * In a knockout, the player they are drawn to play now, by their id in the
+   * competition, so that a scorer who chooses the winner need not choose the
+   * loser. Nobody where the competition has no draw, or they play nobody yet.
+   */
+  readonly drawnAgainst: string | undefined;
 }
 
 /**
