@@ -74,6 +74,24 @@ Feature: Removing a competition's player
       When the reader signed in to the account for "organiser@example.com" removes a player "Block A" of "Spring Open" does not have
       Then it is refused with "Competition.NoSuchPlayer"
 
+  Rule: A bye is removed by its place in the order
+
+    A bye has the id whose every digit is 0, as every bye does, so it is named
+    by its order in the competition (`removePlayer.feature`).
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+
+    Scenario: A bye removed is no longer in the competition
+      When the reader signed in to the account for "organiser@example.com" removes the second player of "Final Stage" of "Spring Open"
+      Then the competition "Final Stage" of "Spring Open" has 0 byes
+
+    Scenario: A bye no longer at that place is refused
+      When the reader signed in to the account for "organiser@example.com" removes the bye with the order 15000 in "Final Stage" of "Spring Open"
+      Then it is refused with "Competition.NoSuchPlayer"
+
   Rule: Only a competition there is, and one not archived, in a tournament there is and not archived, can have this done
 
     Scenario: A competition the tournament does not have is refused

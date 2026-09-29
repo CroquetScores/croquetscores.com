@@ -19,8 +19,8 @@ Feature: A game's score is added to a competition in a modal dialog
   one chosen to begin with, so that a game is never put down against a
   player the reader did not choose. In a knockout, choosing the winner
   chooses who they are drawn against as the loser, where the reader sees it
-  and can choose another. A withdrawn player is not offered, since
-  they play no more of the competition. A score is typed as the scorer wrote
+  and can choose another. A withdrawn player is not offered, since they play
+  no more of the competition, and nor is a bye, which is nobody. A score is typed as the scorer wrote
   it down: its number of points, and whatever follows, which is kept, as
   "26tp" (`Score.feature`). A game won on equal points says who won it by a
   mark after the winner's score, as "6w". So each score is typed on a
@@ -41,7 +41,8 @@ Feature: A game's score is added to a competition in a modal dialog
   than the loser's, or equal to it with no mark where the tournament does 
   not allow drawn games (`Game.feature`). A refusal about no one field, such 
   as a knockout refusing two players who are not drawn to meet, is said above 
-  the fields. Nothing refused is kept, and the dialog stays open.
+  the fields, and so is a knockout refusing any game while a place in its
+  draw is left empty. Nothing refused is kept, and the dialog stays open.
 
   The admin draws the dialog itself, so every scenario here runs scripts, and
   it is read on a phone's width, as the rest of the admin is.
@@ -174,6 +175,16 @@ Feature: A game's score is added to a competition in a modal dialog
       When "Add Score" is pressed
       Then "Pat Fourth" is not offered as the "Winner"
 
+    Scenario: A bye is not offered
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then "Bye" is not offered as the "Winner"
+
     Scenario: No player is the first choice
       Given the scores of "Block A" in "Spring Open" are open
       When "Add Score" is pressed
@@ -192,7 +203,9 @@ Feature: A game's score is added to a competition in a modal dialog
 
     The knockout's draw is four places, each round the best of 1: Sam
     Someone plays Alex Another in the first round, and Chris Third plays
-    whoever is in the fourth place, or has a bye while it is empty.
+    whoever is in the fourth place. A game is added only once every place is
+    filled (`addGame.feature`), so where one is played, a bye fills the
+    fourth.
 
     Background:
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
@@ -221,7 +234,8 @@ Feature: A game's score is added to a competition in a modal dialog
       Then the "Loser" chosen is "Pat Fourth"
 
     Scenario: A winner who has won their round is drawn against who they play next
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Sam Someone" is chosen as the "Winner"
@@ -250,21 +264,24 @@ Feature: A game's score is added to a competition in a modal dialog
       When "Chris Third" is chosen as the "Loser"
       Then the "Loser" chosen is "Chris Third"
 
-    Scenario: A winner waiting on a bye leaves the loser empty
-      Given the scores of "Final Stage" in "Spring Open" are open
+    Scenario: A winner drawn against a bye leaves the loser empty
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Chris Third" is chosen as the "Winner"
       Then "Loser" is empty
 
-    Scenario: A winner waiting on a bye leaves the loser as it was chosen
-      Given the scores of "Final Stage" in "Spring Open" are open
+    Scenario: A winner drawn against a bye leaves the loser as it was chosen
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       And "Alex Another" is chosen as the "Loser"
       When "Chris Third" is chosen as the "Winner"
       Then the "Loser" chosen is "Alex Another"
 
     Scenario: A winner who is out of the knockout leaves the loser empty
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Alex Another" is chosen as the "Winner"
@@ -445,8 +462,9 @@ Feature: A game's score is added to a competition in a modal dialog
     own words show that it was sent them.
 
     The knockout's draw is four places, each round the best of 1, so Sam
-    Someone plays Alex Another in the first round and Chris Third has a bye:
-    Sam Someone and Chris Third are not drawn to meet.
+    Someone plays Alex Another in the first round and Chris Third is drawn
+    against a bye: Sam Someone and Chris Third are not drawn to meet. Without
+    the bye, a place is left empty, and no game is added.
 
     Scenario Outline: A game with a field left empty is refused beside that field
       Given the scores of "Block A" in "Spring Open" are open
@@ -546,6 +564,7 @@ Feature: A game's score is added to a competition in a modal dialog
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       And "Sam Someone" is chosen as the "Winner"
@@ -555,6 +574,21 @@ Feature: A game's score is added to a competition in a modal dialog
       When "Add Game" is pressed
       Then the score dialog says "Competition.NotDrawnToMeet" above the fields
       And the modal dialog says the words for "Competition.NotDrawnToMeet"
+
+    Scenario: A game in a knockout with a place left empty is refused above the fields
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "26" is typed as the "Winner's score"
+      And "Alex Another" is chosen as the "Loser"
+      And "17" is typed as the "Loser's score"
+      When "Add Game" is pressed
+      Then the score dialog says "Competition.DrawNotFilled" above the fields
+      And the modal dialog says the words for "Competition.DrawNotFilled"
 
     Scenario: A winner's score equal to the loser's with no mark is added where the tournament allows drawn games
       Given the tournament "Spring Open" allows drawn games

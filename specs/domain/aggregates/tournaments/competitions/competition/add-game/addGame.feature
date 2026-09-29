@@ -38,13 +38,20 @@ Feature: Adding a game to a competition
   the match drawn next to theirs, until one player is left. So a game in a
   knockout is refused unless its two players are the two drawn to meet in a
   match not yet decided, the match being decided once one of them has won
-  more than half its games. A draw has more places than there are players
-  when not every place is filled (`KnockoutDraw.feature`): the players fill
-  the places in the competition's order, and a player whose opponent's place
-  is empty has a bye, going through without playing. A player cannot be
-  entered once every place is filled (`enterPlayer.feature`), but a draw made
-  smaller after they were entered can leave one beyond its last place, and a
-  player there has no place in it, and plays in none of its matches.
+  more than half its games.
+
+  A knockout is played only once its draw is filled: once it has as many
+  players as places, counting the byes entered in it (`enterPlayer.feature`)
+  and the withdrawn players, who keep their places. Until then a game in it
+  is refused with `Competition.DrawNotFilled`, since who meets whom is not
+  settled while a place is left empty, and the manager is to say where the
+  byes go rather than have them fall at the end. A draw made smaller after
+  its players were entered can leave more players than places, and a game in
+  it is refused for the same reason. A player removed from the competition
+  fills no place, and nor does a tournament player archived, since archiving
+  removes them from it. A player drawn against a bye goes through without
+  playing, and a bye is nobody, so a game with one is refused as a game with
+  a player the competition does not have is.
 
   A withdrawn player keeps their place in a knockout's draw
   (`withdrawPlayer.feature`), and loses every match of theirs not already
@@ -134,12 +141,14 @@ Feature: Adding a game to a competition
     Scenario: A game on equal points with no mark in a knockout is refused where the tournament allows drawn games
       Given drawn games are allowed
       And the competition is a knockout of 4 places, each round the best of 1
+      And a bye was entered in it
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 6 to 6 is added
       Then it is refused for breaking "Game.WinnerNotAhead"
 
     Scenario: A game on equal points with the winner's score marked in a knockout is kept
       Given the competition is a knockout of 4 places, each round the best of 1
+      And a bye was entered in it
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 6w to 6 is added
       Then the competition has the game of "Sam Someone" beating "Alex Another" 6w to 6
@@ -377,40 +386,100 @@ Feature: Adding a game to a competition
       When the game of "Alex Another" beating "Chris Third" 26 to 3 is added
       Then the competition has 6 games
 
-  Rule: In a knockout, a player whose opponent's place is empty has a bye
+  Rule: In a knockout, a game waits until the draw is filled
 
-    The knockout has four places, each round the best of 1, and only three
-    players, so the fourth place is empty and Chris Third has a bye.
+    Scenario: A game in a knockout with a place left empty is refused
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then it is refused with "Competition.DrawNotFilled"
+
+    Scenario: A game in a knockout with two places left empty and one bye is refused
+      Given the competition is a knockout of 8 places, each round the best of 1
+      And the tournament player "Pat Fourth" was entered in it
+      And the tournament player "Jo Fifth" was entered in it
+      And the tournament player "Lee Sixth" was entered in it
+      And a bye was entered in it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then it is refused with "Competition.DrawNotFilled"
+
+    Scenario: A game in a knockout whose places the players and byes fill is added
+      Given the competition is a knockout of 8 places, each round the best of 1
+      And the tournament player "Pat Fourth" was entered in it
+      And the tournament player "Jo Fifth" was entered in it
+      And the tournament player "Lee Sixth" was entered in it
+      And a bye was entered in it
+      And a bye was entered in it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then the competition has 1 game
+
+    Scenario: A game in a knockout whose places the players fill is added
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Pat Fourth" was entered in it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then the competition has 1 game
+
+    Scenario: A withdrawn player still fills their place
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Pat Fourth" was entered in it
+      And the player "Pat Fourth" withdrew from it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then the competition has 1 game
+
+    Scenario: A removed player's place is left empty
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Pat Fourth" was entered in it
+      And the player "Pat Fourth" was removed from it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then it is refused with "Competition.DrawNotFilled"
+
+    Scenario: A game in a knockout with more players than places is refused
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then it is refused with "Competition.DrawNotFilled"
+
+    Scenario: A game refused for a draw not filled is not added
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then the competition has 0 games
+
+    Scenario: A block is played whatever number of players it has
+      Given the competition is a block, each match the best of 1
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then the competition has 1 game
+
+  Rule: In a knockout, a player drawn against a bye goes through without playing
+
+    The knockout has four places, each round the best of 1, and a bye is
+    entered after the three players, so Chris Third is drawn against it.
 
     Background:
       Given the competition is a knockout of 4 places, each round the best of 1
+      And a bye was entered in it
 
-    Scenario: A player with a bye has nobody to meet in the first round
+    Scenario: A player drawn against a bye has nobody to meet in the first round
       Given the competition is rebuilt from its stream
       When the game of "Chris Third" beating "Sam Someone" 26 to 3 is added
       Then it is refused with "Competition.NotDrawnToMeet"
 
-    Scenario: A player with a bye meets the winner of the match drawn next to theirs
+    Scenario: A player drawn against a bye meets the winner of the match drawn next to theirs
       Given the game of "Alex Another" beating "Sam Someone" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the game of "Chris Third" beating "Alex Another" 26 to 3 is added
       Then the competition has 2 games
 
-  Rule: In a knockout, a player beyond the draw's last place plays in none of its matches
-
-    Background:
-      Given the tournament player "Pat Fourth" was entered in it
-      And the competition is a knockout of 2 places, each round the best of 1
-
-    Scenario: A player beyond the last place is refused a game
+    Scenario: A game with a bye is refused as a game with nobody the competition has is
       Given the competition is rebuilt from its stream
-      When the game of "Chris Third" beating "Pat Fourth" 26 to 3 is added
-      Then it is refused with "Competition.NotDrawnToMeet"
-
-    Scenario: The players in the draw's places meet
-      Given the competition is rebuilt from its stream
-      When the game of "Sam Someone" beating "Alex Another" 26 to 3 is added
-      Then the competition has 1 game
+      When the game of "Chris Third" beating a bye 26 to 0 is added
+      Then it is refused with "Competition.NoSuchPlayer"
 
   Rule: In a knockout, a withdrawn player's opponent goes through without playing
 

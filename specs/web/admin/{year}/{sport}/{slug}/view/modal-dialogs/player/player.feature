@@ -47,6 +47,16 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   no one field is said above the fields. Nothing refused is kept, and the
   dialog stays open.
 
+  A player is never a bye (`TournamentPlayer.feature`): a knockout's byes are
+  offered wherever its players are entered (`competition-players-tab.feature`),
+  and a manager who types one in as a player has not yet found them there. So
+  a name whose first word is "bye" is refused, and rather than a line beneath the
+  name, the reader is told why in a dialog of its own over the player dialog:
+  that byes need no adding, since a knockout offers them when its players are
+  entered. It has one button, OK, and Escape does what OK does. Either closes
+  it and leaves the player dialog as it was, with what was typed still typed
+  and the reader back in the name, to put it right or cancel.
+
   The admin draws the dialog itself, so every scenario here runs scripts, and
   it is read on a phone's width, as the rest of the admin is.
 
@@ -420,6 +430,122 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And the page of "Spring Open" is open
       When "Añadir jugador" is pressed
       Then the flag "Alemania" is offered before the flag "Argentina"
+
+  Rule: A name whose first word is "bye" is explained in a dialog of its own
+
+    Scenario: Adding a player named as a bye opens the dialog about byes
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then the dialog about byes is open
+
+    Scenario: The dialog about byes says why
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then the dialog about byes says the words for "admin.player.byes"
+
+    Scenario: The dialog about byes is announced as a modal dialog
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then the dialog about byes is announced as a modal dialog
+
+    Scenario: The dialog about byes offers OK alone
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then the dialog about byes offers "OK" alone
+
+    Scenario: The reader is put on OK when the dialog about byes opens
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then "OK" has the focus
+
+    Scenario: A player named as a bye is not added
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then "Spring Open" has no players
+
+    Scenario: OK closes the dialog about byes
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      And "Add" is pressed
+      When "OK" is pressed
+      Then the dialog about byes is not open
+
+    Scenario: Escape closes the dialog about byes
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      And "Add" is pressed
+      When Escape is pressed
+      Then the dialog about byes is not open
+
+    Scenario: Closing the dialog about byes leaves the player dialog open
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      And "Add" is pressed
+      When "OK" is pressed
+      Then the player dialog is open
+
+    Scenario: Escape on the dialog about byes leaves the player dialog open
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      And "Add" is pressed
+      When Escape is pressed
+      Then the player dialog is open
+
+    Scenario: Closing the dialog about byes keeps what was typed
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      And "Add" is pressed
+      When "OK" is pressed
+      Then "Name" says "Bye"
+
+    Scenario: Closing the dialog about byes puts the reader back in the name
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      And "Add" is pressed
+      When "OK" is pressed
+      Then "Name" has the focus
+
+    Scenario: Renaming a player as a bye opens the dialog about byes
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Bye 2" is typed as the "Name"
+      When "Save" is pressed
+      Then the dialog about byes is open
+
+    Scenario: A player renamed as a bye keeps their name
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Bye 2" is typed as the "Name"
+      When "Save" is pressed
+      Then "Spring Open" has the player "Sam Someone"
+
+    Scenario: The dialog about byes is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the page of "Spring Open" is open
+      And the way to add a player is pressed
+      And "Bye" is typed as the name in the player dialog
+      When the player dialog is sent as it is
+      Then every word in the dialog about byes is in the test locale
 
   Rule: What is refused is said beside the field it is about
 

@@ -48,6 +48,18 @@ Feature: Entering a tournament's player in one of its competitions
   as the tournament keeps that; the scenarios here are about a block unless
   they say otherwise.
 
+  A knockout's draw has to be filled before it is played (`addGame.feature`),
+  and where there are fewer players than places, the places left over are
+  filled with byes: a player drawn against a bye goes through without playing.
+  A bye is entered as a player is, but is nobody: its tournament player and its
+  id in the competition are both the id whose every digit is 0, so a draw can
+  have as many byes as it needs, all alike. A bye is entered last, 10,000
+  after the highest order there is, since it has no order in the tournament.
+  It fills a place as a player does, so a bye entered once every place is
+  filled, or once the knockout has a game, is refused as a player is. A block
+  or a Swiss has no draw, and nowhere for a bye, so a bye entered in one is
+  refused with `Competition.ByeOutsideKnockout`.
+
   A scenario that does not say what order a tournament player has gives the
   tournament players it names orders 10,000 apart, in the order it first
   names them, as a tournament that added them in that order and moved none of
@@ -360,3 +372,102 @@ Feature: Entering a tournament's player in one of its competitions
       And the competition is rebuilt from its stream
       When the tournament player "Pat Player" is entered
       Then the competition has the tournament player "Pat Player"
+
+  Rule: In a knockout, a bye fills a place as a player does
+
+    Scenario: Entering a bye in a knockout records a player being entered
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      When a bye is entered
+      Then it has recorded 1 event
+      And the first thing it recorded is a player being entered
+
+    Scenario: A bye entered is in the competition
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      When a bye is entered
+      Then the competition has 1 bye
+
+    Scenario: A bye is known by the id whose every digit is 0
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      When a bye is entered
+      Then the competition's bye has the id "competition-player/00000000-0000-0000-0000-000000000000"
+
+    Scenario: A bye is the tournament player whose every digit is 0
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      When a bye is entered
+      Then the competition's bye is the tournament player "tournament-player/00000000-0000-0000-0000-000000000000"
+
+    Scenario: A second bye can be entered
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      And a bye was entered in it
+      And the competition is rebuilt from its stream
+      When a bye is entered
+      Then the competition has 2 byes
+
+    Scenario: A bye is entered after the players there are
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Sam Someone" has the order 10000
+      And the tournament player "Sam Someone" was entered in it
+      And the competition is rebuilt from its stream
+      When a bye is entered
+      Then the competition's second player is a bye
+
+    Scenario: A bye is given 10,000 after the highest order there is
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Sam Someone" has the order 10000
+      And the tournament player "Sam Someone" was entered in it
+      And the competition is rebuilt from its stream
+      When a bye is entered
+      Then the competition's bye has the order 20000
+
+    Scenario: A competition rebuilt after a bye was entered has it
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      And a bye was entered in it
+      When the competition is rebuilt from its stream
+      Then the competition has 1 bye
+
+    Scenario: A bye entered in a knockout whose places are all filled is refused
+      Given a competition with no players
+      And the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And a bye was entered in it
+      And the competition is rebuilt from its stream
+      When a bye is entered
+      Then it is refused with "Competition.DrawFull"
+
+    Scenario: A player entered in a knockout whose last place a bye fills is refused
+      Given a competition with no players
+      And the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And a bye was entered in it
+      And the competition is rebuilt from its stream
+      When the tournament player "Pat Player" is entered
+      Then it is refused with "Competition.DrawFull"
+
+    Scenario: A bye entered in a knockout with a game is refused
+      Given a competition with no players
+      And the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When a bye is entered
+      Then it is refused with "Competition.DrawFixed"
+
+    Scenario Outline: A bye entered in a competition with no draw is refused
+      Given a competition with no players
+      And the competition is <kind>
+      When a bye is entered
+      Then it is refused with "Competition.ByeOutsideKnockout"
+
+      Examples:
+        | kind                              |
+        | a block, each match the best of 1 |
+        | a Swiss                           |
