@@ -956,6 +956,23 @@ Then(
   },
 );
 
+Then(
+  "the competition's player {string} is answered as drawn against {string}",
+  function (this: SpecWorld, name: string, other: string) {
+    assert.equal(
+      listedCalled(this, name).drawnAgainst,
+      listedCalled(this, other).id,
+    );
+  },
+);
+
+Then(
+  "the competition's player {string} is answered as drawn against nobody",
+  function (this: SpecWorld, name: string) {
+    assert.equal(listedCalled(this, name).drawnAgainst, undefined);
+  },
+);
+
 // Games ------------------------------------------------------------------------
 
 // What a scenario names a game by: its players, by the tournament's names for

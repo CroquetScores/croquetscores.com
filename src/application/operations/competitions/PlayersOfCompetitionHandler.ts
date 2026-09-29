@@ -10,7 +10,11 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import { askedBy, tournamentFor } from "../tournaments/tournamentOperations.js";
-import { type Competitions, competitionOf } from "./competitionOperations.js";
+import {
+  type Competitions,
+  competitionOf,
+  toldOf,
+} from "./competitionOperations.js";
 import {
   type ListedCompetitionPlayer,
   PlayersOfCompetition,
@@ -56,6 +60,7 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
       );
     }
     const competition = await competitionOf(this.competitions, id);
+    const told = toldOf(tournament, id);
     // What the person is, said once, by the tournament.
     const people = new Map(
       tournament.players.map((player) => [player.id.value, player]),
@@ -73,6 +78,7 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
               flag: person.flag === undefined ? undefined : String(person.flag),
               withdrawn: player.withdrawn,
               hasPlayed: competition.hasPlayed(player.id),
+              drawnAgainst: competition.drawnAgainst(player.id, told)?.value,
             },
           ];
     });

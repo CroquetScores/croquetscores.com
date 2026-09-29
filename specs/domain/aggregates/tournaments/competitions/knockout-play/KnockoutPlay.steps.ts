@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import { CompetitionPlayer } from "../../../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import { Game } from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
 import {
+  drawnAgainst,
   isPlayer,
   knockoutPlay,
   type Match,
@@ -179,6 +180,27 @@ Then(
         ),
       ),
       "The game counts in none of the knockout's matches.",
+    );
+  },
+);
+
+Then(
+  "{string} is drawn against {string}",
+  function (this: SpecWorld, name: string, other: string) {
+    const against = drawnAgainst(playOf(this), drawnPlayer(this, name).id);
+    assert.ok(
+      against?.id.equals(drawnPlayer(this, other).id),
+      `${name} is drawn against ${against === undefined ? "nobody" : "another"}.`,
+    );
+  },
+);
+
+Then(
+  "{string} is drawn against nobody",
+  function (this: SpecWorld, name: string) {
+    assert.equal(
+      drawnAgainst(playOf(this), drawnPlayer(this, name).id),
+      undefined,
     );
   },
 );

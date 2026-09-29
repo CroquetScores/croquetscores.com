@@ -16,7 +16,12 @@ import { CompetitionGameArchived } from "./events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "./events/CompetitionGameRestored.js";
 import { Game, type GameDetails } from "./Game.js";
-import { isPlayer, knockoutPlay, type Match } from "./KnockoutPlay.js";
+import {
+  drawnAgainst,
+  isPlayer,
+  knockoutPlay,
+  type Match,
+} from "./KnockoutPlay.js";
 import { GameId } from "./primitives/GameId.js";
 import { Score } from "./value-objects/Score.js";
 import { CompetitionPlayerEntered } from "./events/CompetitionPlayerEntered.js";
@@ -116,6 +121,20 @@ export class Competition extends AggregateRoot {
     return this.games.some(
       (game) => game.winner.equals(id) || game.loser.equals(id),
     );
+  }
+
+  /**
+   * Who the player `id` is drawn to play now, in a knockout: the other player
+   * of their match not yet decided. Nobody in a block or a Swiss, which have
+   * no draw, nor where they are waiting on a bye or a match, or are out.
+   */
+  drawnAgainst(
+    id: CompetitionPlayerId,
+    told: Told,
+  ): CompetitionPlayerId | undefined {
+    const { shape } = told;
+    if (shape.kind !== "knockout") return undefined;
+    return drawnAgainst(this.#knockoutPlay(shape.draw), id)?.id;
   }
 
   /**

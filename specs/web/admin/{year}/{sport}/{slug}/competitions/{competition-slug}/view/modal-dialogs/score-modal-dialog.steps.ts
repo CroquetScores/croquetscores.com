@@ -43,6 +43,20 @@ Given(
   },
 );
 
+Then(
+  "the {string} chosen is {string}",
+  async function (this: SpecWorld, label: string, name: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (
+          await fieldOf(this, label).locator("option:checked").innerText()
+        ).trim(),
+        name,
+      );
+    });
+  },
+);
+
 Given("{string} is emptied", async function (this: SpecWorld, label: string) {
   const field = fieldOf(this, label);
   if (
