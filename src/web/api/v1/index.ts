@@ -9,6 +9,9 @@ import type {
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
 import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
 import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.js";
+import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
+import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
+import { UpdateSwiss } from "../../../application/operations/tournaments/UpdateSwiss.js";
 import { ArchiveTournament } from "../../../application/operations/tournaments/ArchiveTournament.js";
 import { ArchiveCompetition } from "../../../application/operations/tournaments/ArchiveCompetition.js";
 import { CompetitionsOfTournament } from "../../../application/operations/tournaments/CompetitionsOfTournament.js";
@@ -411,6 +414,55 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         .code(201)
         .header("cache-control", "no-store")
         .send({ id: added.value });
+    },
+  );
+
+  // A competition changed, as the competition dialog sends it opened from
+  // Edit: its name and the shape its kind has. The kind is said rather than
+  // looked up, so that the command is the one the dialog meant, and a kind
+  // that is not the competition's is refused by the tournament as any other
+  // mistaken update is.
+  server.put<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const tournament = `tournament/${request.params.id}`;
+      const competition = `competition/${request.params.competition}`;
+      const body = request.body;
+      const name = textOf(body, "name");
+      const at = request.requestedAt;
+      const kind = textOf(body, "kind");
+      await request.server.mediator.send(
+        kind === "knockout"
+          ? new UpdateKnockout(
+              reader.value,
+              tournament,
+              competition,
+              name,
+              numberOf(body, "places"),
+              numbersOf(body, "rounds"),
+              at,
+            )
+          : kind === "swiss"
+            ? new UpdateSwiss(
+                reader.value,
+                tournament,
+                competition,
+                name,
+                numberOf(body, "bestOf"),
+                at,
+              )
+            : new UpdateBlock(
+                reader.value,
+                tournament,
+                competition,
+                name,
+                numberOf(body, "bestOf"),
+                at,
+              ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 

@@ -40,12 +40,21 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
     // and has no scores to enter.
     return tournament.competitions
       .filter(({ reference }) => part === "manager" || !reference.archived)
-      .map(({ reference, shape }) => ({
-        id: reference.id.value,
-        name: reference.name.toString(),
-        kind: shape.kind,
-        slug: reference.slug.toString(),
-        archived: reference.archived,
-      }));
+      .map(({ reference, shape }): ListedCompetition => {
+        const listed = {
+          id: reference.id.value,
+          name: reference.name.toString(),
+          slug: reference.slug.toString(),
+          archived: reference.archived,
+        };
+        return shape.kind === "knockout"
+          ? {
+              ...listed,
+              kind: shape.kind,
+              places: shape.draw.places,
+              rounds: shape.draw.rounds.map((round) => round.games),
+            }
+          : { ...listed, kind: shape.kind, bestOf: shape.bestOf.games };
+      });
   }
 }

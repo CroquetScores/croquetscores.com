@@ -19,6 +19,15 @@ Feature: The players tab of a competition's page
   tournament is in the competition, the drop-down and Add Player are not
   shown, and the tab says so.
 
+  A player Add Player cannot enter is not entered, and the tab says why
+  beneath the drop-down, by the refusal's code, in the reader's language: a
+  knockout whose every place is filled is refused with
+  `Competition.DrawFull` (`enterPlayer.feature`). What it says is tied to the
+  drop-down, so that a screen reader reads it with it, and it goes once
+  another player is chosen, since it was about the one chosen before. A
+  refusal with no words of its own is still said, in the words for one the
+  tab cannot name, rather than the tab going on as though nothing were wrong.
+
   The players playing come first, in the competition's order, which is the
   order a knockout is drawn in and a block is listed in. Each says their name,
   what they represent and the flag they fly, where they have either, and
@@ -169,6 +178,71 @@ Feature: The players tab of a competition's page
     Scenario: A competition with no players says so
       When the players of "Block A" in "Spring Open" are opened
       Then the tab says there are no players
+
+  Rule: What Add Player refuses is said beneath the drop-down
+
+    The knockout's draw is four places, and Sam Someone, Alex Another, Chris
+    Third and Pat Fourth fill them. Jo Fifth is a player of the tournament
+    who is not in it.
+
+    Scenario: A player added to a full knockout is refused beneath the drop-down
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the player "Jo Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And the players of "Final Stage" in "Spring Open" are open
+      And "Jo Fifth" is chosen to add
+      When "Add Player" is pressed
+      Then the drop-down of players to add is refused with "Competition.DrawFull"
+
+    Scenario: A player refused is not listed
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the player "Jo Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And the players of "Final Stage" in "Spring Open" are open
+      And "Jo Fifth" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Jo Fifth" is not listed
+
+    Scenario: What is refused is read out with the drop-down
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the player "Jo Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And the players of "Final Stage" in "Spring Open" are open
+      And "Jo Fifth" is chosen to add
+      When "Add Player" is pressed
+      Then what is refused is read out with the drop-down of players to add
+
+    Scenario: Choosing another player takes away what was refused
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the player "Jo Fifth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And the players of "Final Stage" in "Spring Open" are open
+      And "Jo Fifth" is chosen to add
+      And "Add Player" is pressed
+      When nobody is chosen to add
+      Then nothing is said beneath the drop-down of players to add
+
+    Scenario: A player entered says nothing beneath the drop-down
+      Given the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then nothing is said beneath the drop-down of players to add
 
   Rule: The players playing are listed in the competition's order
 

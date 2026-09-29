@@ -122,3 +122,46 @@ Then(
     assert.equal(competitionCalled(this, name).kind, kind.toLowerCase());
   },
 );
+
+// Its shape --------------------------------------------------------------------
+
+Then(
+  "the competition {string} is answered as the best of {int}",
+  function (this: SpecWorld, name: string, games: number) {
+    const competition = competitionCalled(this, name);
+    assert.ok(
+      competition.kind !== "knockout",
+      `${name} is answered as a knockout.`,
+    );
+    assert.equal(competition.bestOf, games);
+  },
+);
+
+const knockoutCalled = (
+  world: SpecWorld,
+  name: string,
+): Extract<ListedCompetition, { kind: "knockout" }> => {
+  const competition = competitionCalled(world, name);
+  assert.ok(
+    competition.kind === "knockout",
+    `${name} is answered as a ${competition.kind}.`,
+  );
+  return competition;
+};
+
+Then(
+  "the knockout {string} is answered with {int} places",
+  function (this: SpecWorld, name: string, places: number) {
+    assert.equal(knockoutCalled(this, name).places, places);
+  },
+);
+
+Then(
+  /^the (first|second) round of the knockout "([^"]*)" is answered as the best of (\d+)$/,
+  function (this: SpecWorld, round: string, name: string, games: string) {
+    assert.equal(
+      knockoutCalled(this, name).rounds[round === "first" ? 0 : 1],
+      Number(games),
+    );
+  },
+);

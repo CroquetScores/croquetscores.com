@@ -79,7 +79,7 @@ Feature: The competitions of a tournament, as its managers and scorers list them
   Rule: Every competition is answered with its shape
 
     Scenario: A block is answered with what each match is the best of
-      Given the block's matches are to be the best of 3
+      Given the block is to be the best of 3
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
       Then the competition "Block A" is answered as the best of 3

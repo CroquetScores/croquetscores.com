@@ -567,7 +567,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       Then "Name" says "Block A"
 
     Scenario: A block's best-of begins as the block's
-      Given the block's matches are to be the best of 3
+      Given the block is to be the best of 3
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       When "Edit" is pressed on the competition "Block A"
       Then "Best of" says "3"
