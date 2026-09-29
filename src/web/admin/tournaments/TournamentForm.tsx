@@ -290,6 +290,10 @@ export const TournamentForm = ({
                     type="text"
                     placeholder=" "
                     autoComplete="off"
+                    // The first field, where the reader is taken when the
+                    // form arrives, as every form that is a page's purpose
+                    // takes them (form.feature).
+                    autoFocus
                     value={name}
                     onChange={(event) => {
                       setName(event.target.value);

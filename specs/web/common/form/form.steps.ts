@@ -36,6 +36,13 @@ When("the example form is opened", async function (this: SpecWorld) {
   await openExampleForm(this, exampleFormPath);
 });
 
+When(
+  "the example form is opened with a notice",
+  async function (this: SpecWorld) {
+    await openExampleForm(this, exampleFormWithNoticePath);
+  },
+);
+
 Given(
   "the example form is open with a notice",
   async function (this: SpecWorld) {
@@ -202,6 +209,18 @@ Then(
     );
   },
 );
+
+Then("the reader is taken to the notice", async function (this: SpecWorld) {
+  await autofocusSettled(this);
+  const focused = await this.browserPage.evaluate<string | null>(
+    "document.activeElement && document.activeElement.id",
+  );
+  assert.equal(
+    focused,
+    "dialog-notice",
+    `The reader was taken to ${focused || "nothing"}.`,
+  );
+});
 
 Then(
   "the reader is taken to the message above the fields",

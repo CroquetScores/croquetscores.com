@@ -266,7 +266,25 @@ const hidden = (values: Dialog["hidden"]): string =>
         )
         .join("");
 
-export const renderDialog = (
+// A form opened fresh has nothing needing attention, so the reader is taken to
+// where the typing starts — unless there is a notice, which is what they need
+// telling first and which takes them itself. Worked out here rather than asked
+// of each page, so that no form can be written that leaves the reader at the
+// top of the page to find its first field.
+const withFirstFieldFocused = (dialog: Dialog): Dialog =>
+  dialog.notice !== undefined || attentionAskedFor(dialog)
+    ? dialog
+    : {
+        ...dialog,
+        fields: dialog.fields.map((field, index): Field =>
+          index === 0 ? { ...field, autofocus: true } : field,
+        ),
+      };
+
+export const renderDialog = (dialog: Dialog): string =>
+  renderFocused(withFirstFieldFocused(dialog));
+
+const renderFocused = (
   dialog: Dialog,
 ): string => `        <section class="dialog" aria-labelledby="dialog-title">
           <h1 class="dialog-title" id="dialog-title">${escape(dialog.title)}</h1>
