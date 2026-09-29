@@ -17,7 +17,9 @@ Feature: A game's score is added to a competition in a modal dialog
   Game, then Cancel. The winner and the loser are each chosen from the
   competition's players who are playing, in the competition's order, with no
   one chosen to begin with, so that a game is never put down against a
-  player the reader did not choose. A withdrawn player is not offered, since
+  player the reader did not choose. In a knockout, choosing the winner
+  chooses who they are drawn against as the loser, where the reader sees it
+  and can choose another. A withdrawn player is not offered, since
   they play no more of the competition. A score is typed as the scorer wrote
   it down: its number of points, and whatever follows, which is kept, as
   "26tp" (`Score.feature`). A game won on equal points says who won it by a
@@ -176,6 +178,103 @@ Feature: A game's score is added to a competition in a modal dialog
       Given the scores of "Block A" in "Spring Open" are open
       When "Add Score" is pressed
       Then the first choice offered as the "Winner" is nobody
+
+  Rule: In a knockout, choosing the winner chooses who they are playing as the loser
+
+    A knockout's draw says who each player is playing now, so once the
+    winner is chosen the loser is already known: it is who the winner is
+    drawn against in the round they have reached. Choosing the winner chooses
+    that player as the loser, in place of whoever was chosen before, and the
+    reader can still choose someone else. A winner who is playing nobody yet,
+    waiting on a bye or on a game still to be played, or who is out, leaves
+    the loser as it was. A block or a Swiss has no draw, so nothing is chosen
+    for the reader there.
+
+    The knockout's draw is four places, each round the best of 1: Sam
+    Someone plays Alex Another in the first round, and Chris Third plays
+    whoever is in the fourth place, or has a bye while it is empty.
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+
+    Scenario: Choosing the winner chooses who they are drawn against as the loser
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Sam Someone" is chosen as the "Winner"
+      Then the "Loser" chosen is "Alex Another"
+
+    Scenario: Either player of a game chosen as the winner chooses the other as the loser
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Alex Another" is chosen as the "Winner"
+      Then the "Loser" chosen is "Sam Someone"
+
+    Scenario: The loser chosen is from the winner's own game
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Chris Third" is chosen as the "Winner"
+      Then the "Loser" chosen is "Pat Fourth"
+
+    Scenario: A winner who has won their round is drawn against who they play next
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Sam Someone" is chosen as the "Winner"
+      Then the "Loser" chosen is "Chris Third"
+
+    Scenario: The loser chosen before is replaced by who the winner is playing
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Chris Third" is chosen as the "Loser"
+      When "Sam Someone" is chosen as the "Winner"
+      Then the "Loser" chosen is "Alex Another"
+
+    Scenario: Choosing another winner chooses who that winner is playing
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      When "Chris Third" is chosen as the "Winner"
+      Then the "Loser" chosen is "Pat Fourth"
+
+    Scenario: The reader can choose another loser once the winner is chosen
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      When "Chris Third" is chosen as the "Loser"
+      Then the "Loser" chosen is "Chris Third"
+
+    Scenario: A winner waiting on a bye leaves the loser empty
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Chris Third" is chosen as the "Winner"
+      Then "Loser" is empty
+
+    Scenario: A winner waiting on a bye leaves the loser as it was chosen
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Alex Another" is chosen as the "Loser"
+      When "Chris Third" is chosen as the "Winner"
+      Then the "Loser" chosen is "Alex Another"
+
+    Scenario: A winner who is out of the knockout leaves the loser empty
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Alex Another" is chosen as the "Winner"
+      Then "Loser" is empty
+
+    Scenario: A block chooses no loser for the reader
+      Given the scores of "Block A" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "Sam Someone" is chosen as the "Winner"
+      Then "Loser" is empty
 
   Rule: A score can be typed with what follows its number
 
