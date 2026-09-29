@@ -1,14 +1,29 @@
 import { Query } from "../../common/Query.js";
 
-/** One of a tournament's competitions, as a manager lists them. */
-export interface ListedCompetition {
+/**
+ * One of a tournament's competitions, as a manager lists them, with its shape,
+ * so that a change to it can start from what it is.
+ */
+export type ListedCompetition = {
   readonly id: string;
   readonly name: string;
-  readonly kind: "block" | "knockout" | "swiss";
   /** Where it is found under the tournament. */
   readonly slug: string;
   readonly archived: boolean;
-}
+} & (
+  | {
+      readonly kind: "block" | "swiss";
+      /** What each match is the best of. */
+      readonly bestOf: number;
+    }
+  | {
+      readonly kind: "knockout";
+      /** How many places the draw has. */
+      readonly places: number;
+      /** What each round is the best of, the first round first. */
+      readonly rounds: readonly number[];
+    }
+);
 
 /**
  * The competitions of the tournament `tournament`, in the tournament's order,

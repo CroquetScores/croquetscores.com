@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 
 import { say } from "../../../../../../words.js";
-import { CompetitionDialog } from "../../modal-dialogs/competition/competition.js";
+import {
+  CompetitionDialog,
+  type CompetitionAsItIs,
+} from "../../modal-dialogs/competition/competition.js";
 import { optionFace } from "../optionFace.js";
 import "../listed.css";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
-// the tournament's order, each offering View, Archive, Up and Down, and after
-// them the archived ones, offering Restore alone. Add Competition opens the
-// competition dialog. Whatever is pressed, and whenever the dialog adds a
-// competition, the list is asked for again, so that it says what the
-// competitions are now rather than what was pressed. Changing a competition
-// comes with the dialog's Edit.
+// the tournament's order, each offering Edit, View, Archive, Up and Down, and
+// after them the archived ones, offering Restore alone. Add Competition and
+// Edit open the competition dialog. Whatever is pressed, and whenever the
+// dialog keeps a competition, the list is asked for again, so that it says
+// what the competitions are now rather than what was pressed.
 
 interface Props {
   /** The tournament's id. */
@@ -27,14 +29,11 @@ interface Props {
   readonly part: "manager" | "scorer";
 }
 
-/** A competition as the API lists it. */
-interface Listed {
-  readonly id: string;
-  readonly name: string;
-  readonly kind: "block" | "knockout" | "swiss";
+/** A competition as the API lists it, with its shape. */
+type Listed = CompetitionAsItIs & {
   readonly slug: string;
   readonly archived: boolean;
-}
+};
 
 // The part of an id after its kind, which is how the API names a tournament
 // or a competition, so that each is one segment of an address.
@@ -51,6 +50,7 @@ export const CompetitionsTab = ({
   const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions`;
 
   useEffect(() => {
@@ -155,6 +155,22 @@ export const CompetitionsTab = ({
           <ul className="listed" data-listed="in-use">
             {inUse.map((competition, place) =>
               row(competition, [
+                // Before View, so that what is done to a competition is
+                // offered ahead of going to it.
+                ...(part === "manager"
+                  ? [
+                      <button
+                        key="edit"
+                        type="button"
+                        className="button"
+                        onClick={() => {
+                          setEditing(competition);
+                        }}
+                      >
+                        {say("admin.competitions.edit")}
+                      </button>,
+                    ]
+                  : []),
                 <a key="view" className="button" href={pageOf(competition)}>
                   {say("admin.competitions.view")}
                 </a>,
@@ -186,14 +202,16 @@ export const CompetitionsTab = ({
           ) : null}
         </>
       )}
-      {adding ? (
+      {adding || editing !== undefined ? (
         <CompetitionDialog
           tournament={tournament}
-          added={() => {
+          competition={editing}
+          kept={() => {
             setAsking((count) => count + 1);
           }}
           close={() => {
             setAdding(false);
+            setEditing(undefined);
           }}
         />
       ) : null}

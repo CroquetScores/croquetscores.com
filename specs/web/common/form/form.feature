@@ -244,6 +244,28 @@ Feature: A form whose request breaks its rules is shown again, saying what is wr
       When a body that is not a form's is sent to the example form
       Then the sender is answered with the form, refused
 
+  Rule: A form opened fresh takes the reader to its first field
+
+    Nothing on a form nobody has filled in yet needs attention, so the reader
+    is taken to where the typing starts rather than left to find it. A notice
+    still comes first, because it is what the reader needs telling before
+    anything else; the first field is a Tab away beneath it. So does a message
+    above the fields, which a page that has already been refused arrives with:
+    the reader is left at the top of the page to read it on the way down, rather
+    than taken past it to a field and never told why the form came back.
+
+    Scenario: The first field is where the reader is taken
+      When the example form is opened
+      Then the reader is taken to the start field
+
+    Scenario: A notice is where the reader is taken before the first field
+      When the example form is opened with a notice
+      Then the reader is taken to the notice
+
+    Scenario: A message above the fields keeps the reader from the first field
+      When the example form is opened already refused
+      Then the reader is taken nowhere
+
   Rule: The reader is taken to the first thing that needs attention
 
     A form can carry a notice, something the reader needs telling before

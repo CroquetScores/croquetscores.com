@@ -2,12 +2,14 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import { english } from "../../../../../../../../../../../src/web/languages/english.js";
 import {
   load,
   tournamentNamed,
 } from "../../../../../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
+import { unmarked } from "../../../../../../../../../support/languages.js";
 import {
   eventually,
   settled,
@@ -161,6 +163,72 @@ Given(
   async function (this: SpecWorld, name: string) {
     await settled(this);
     await dropDown(this).selectOption({ label: name });
+  },
+);
+
+When("nobody is chosen to add", async function (this: SpecWorld) {
+  await settled(this);
+  await dropDown(this).selectOption({ value: "" });
+});
+
+// What is said beneath the drop-down, by the codes it carries rather than the
+// words, which are the reader's language's to choose.
+const saidBeneath = (world: SpecWorld): Locator =>
+  tabPanel(world).locator("#competition-players-refused");
+
+Then(
+  "the drop-down of players to add is refused with {string}",
+  async function (this: SpecWorld, code: string) {
+    await eventually(this, async () => {
+      const refused =
+        (await saidBeneath(this).getAttribute("data-refused", {
+          timeout: 500,
+        })) ?? "";
+      assert.ok(
+        refused.split(" ").includes(code),
+        `The drop-down is refused with ${refused || "nothing"}.`,
+      );
+    });
+  },
+);
+
+// Its own words, in English, rather than the tab's words for any refusal,
+// which a refusal whose words the admin was not sent would be said in.
+Then(
+  "the drop-down of players to add says the words for {string}",
+  async function (this: SpecWorld, code: string) {
+    const words = english.words[code];
+    assert.ok(words !== undefined, `English has no words for ${code}.`);
+    await eventually(this, async () => {
+      assert.equal(
+        unmarked(await saidBeneath(this).innerText({ timeout: 500 })).trim(),
+        words,
+      );
+    });
+  },
+);
+
+Then(
+  "what is refused is read out with the drop-down of players to add",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const described = await dropDown(this).getAttribute("aria-describedby", {
+        timeout: 500,
+      });
+      assert.equal(described, "competition-players-refused");
+      assert.equal(await saidBeneath(this).count(), 1);
+    });
+  },
+);
+
+Then(
+  "nothing is said beneath the drop-down of players to add",
+  async function (this: SpecWorld) {
+    await settled(this);
+    await eventually(this, async () => {
+      assert.equal(await saidBeneath(this).count(), 0);
+      assert.equal(await dropDown(this).getAttribute("aria-describedby"), null);
+    });
   },
 );
 

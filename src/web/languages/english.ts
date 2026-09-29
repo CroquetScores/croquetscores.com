@@ -301,11 +301,11 @@ export const english: Language = {
     "admin.tournament.country": "Country",
     "admin.tournament.region": "Region",
     "admin.tournament.notes": "Notes",
-    "admin.tournament.handicap": "Played under handicap",
-    "admin.tournament.drawsAllowed": "Allows drawn games",
-    "admin.tournament.worldRankings": "Counts towards the world rankings",
-    "admin.tournament.national": "Is national",
-    "admin.tournament.international": "Is international",
+    "admin.tournament.handicap": "Played with handicaps",
+    "admin.tournament.drawsAllowed": "Allows drawn results",
+    "admin.tournament.worldRankings": "Counts toward world rankings",
+    "admin.tournament.national": "National‑level event",
+    "admin.tournament.international": "International‑level event",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "This cannot be accepted as it is.",
     "admin.newTournament.title": "New Tournament",
@@ -334,6 +334,7 @@ export const english: Language = {
     "admin.competitions.knockout": "Knockout",
     "admin.competitions.swiss": "Swiss",
     "admin.competitions.view": "View",
+    "admin.competitions.edit": "Edit",
     "admin.competitions.up": "Up",
     "admin.competitions.down": "Down",
     "admin.competitions.archive": "Archive",
@@ -343,17 +344,25 @@ export const english: Language = {
     "admin.competitions.add": "Add Competition",
     // The competition dialog.
     "admin.competition.addTitle": "Add Competition",
+    "admin.competition.editTitle": "Edit Competition",
     "admin.competition.name": "Name",
     "admin.competition.kind": "Kind",
     "admin.competition.bestOf": "Best of",
     "admin.competition.places": "Places",
     "admin.competition.round": "Round {number}",
+    "admin.competition.bestOfs": "Best ofs",
+    "admin.competition.quarters": "Quarters",
+    "admin.competition.semis": "Semis",
+    "admin.competition.final": "Final",
     "admin.competition.add": "Add",
+    "admin.competition.save": "Save",
     "admin.competition.added": "{name} was added.",
     // Above the fields, for a refusal with no words of its own.
     "admin.competition.otherwise": "This competition cannot be kept as it is.",
     "CompetitionName.Missing": "Enter a name.",
     "CompetitionName.TooLong": "A name can be at most 254 characters.",
+    "Tournament.KnockoutPlayerHasGames":
+      "Players in this draw have games, so its places cannot change.",
     "Tournament.CompetitionNameTaken":
       "Another competition in this tournament already has that name.",
     "BestOf.NotWhole": "Enter a whole number of games.",
@@ -381,6 +390,8 @@ export const english: Language = {
     // The Players tab.
     // A competition's Players tab.
     "admin.competitionPlayers.add": "Add Player",
+    // Beneath the drop-down, for a refusal with no words of its own.
+    "admin.competitionPlayers.otherwise": "This player cannot be added.",
     "admin.competitionPlayers.choose": "Player to add",
     "admin.competitionPlayers.nobody": "Choose a player",
     "admin.competitionPlayers.all": "Every player is in the competition",
@@ -423,7 +434,10 @@ export const english: Language = {
       "The winner's score has to be more than the loser's, or marked as won.",
     "Game.LoserMarked": "The loser's score cannot be marked as won.",
     "Competition.MatchDecided": "Their match is already decided.",
-    "Competition.NotDrawnToMeet": "They are not drawn to meet.",
+    "Competition.DrawFull":
+      "Cannot add the player because the knockout is full.",
+    "Competition.NotDrawnToMeet":
+      "These players are not currently drawn to play each other in the knockout.",
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",

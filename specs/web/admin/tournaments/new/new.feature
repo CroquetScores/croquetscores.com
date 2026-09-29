@@ -27,7 +27,7 @@ Feature: A new tournament is created in the admin
   they can be counted, which is Association Croquet or Golf Croquet neither
   played under handicap nor allowing drawn games, and there it counts unless
   the reader says it does not, as creating one has it.
-  Is national and is international are asked separately, and cannot both be
+  National and international are asked separately, and cannot both be
   true: a tournament said to be both is refused (`create.feature`). So the
   form never lets them be ticked together, rather than letting the reader
   tick both and then telling them it cannot be done. Ticking one unticks the
@@ -76,19 +76,19 @@ Feature: A new tournament is created in the admin
       Then the form asks for "<field>"
 
       Examples:
-        | field                             |
-        | Name                              |
-        | Starts                            |
-        | Finishes                          |
-        | Sport                             |
-        | Format                            |
-        | Country                           |
-        | Notes                             |
-        | Played under handicap             |
-        | Allows drawn games                |
-        | Counts towards the world rankings |
-        | Is national                       |
-        | Is international                  |
+        | field                        |
+        | Name                         |
+        | Starts                       |
+        | Finishes                     |
+        | Sport                        |
+        | Format                       |
+        | Country                      |
+        | Notes                        |
+        | Played with handicaps        |
+        | Allows drawn results         |
+        | Counts toward world rankings |
+        | National‑level event         |
+        | International‑level event    |
 
     Scenario: The form is titled for what it does
       When the new tournament page is opened
@@ -101,6 +101,12 @@ Feature: A new tournament is created in the admin
     Scenario: The form offers no way to cancel
       When the new tournament page is opened
       Then the form has 1 button
+
+  Rule: The reader is taken to the first field
+
+    Scenario: The name is where the reader is taken
+      When the new tournament page is opened
+      Then "Name" has the focus
 
   Rule: The sports and formats are the ones the website offers
 
@@ -198,19 +204,19 @@ Feature: A new tournament is created in the admin
 
     Scenario: A new tournament is not played under handicap to begin with
       When the new tournament page is opened
-      Then "Played under handicap" is not ticked
+      Then "Played with handicaps" is not ticked
 
     Scenario: A new tournament does not allow drawn games to begin with
       When the new tournament page is opened
-      Then "Allows drawn games" is not ticked
+      Then "Allows drawn results" is not ticked
 
     Scenario: A new tournament is not national to begin with
       When the new tournament page is opened
-      Then "Is national" is not ticked
+      Then "National‑level event" is not ticked
 
     Scenario: A new tournament is not international to begin with
       When the new tournament page is opened
-      Then "Is international" is not ticked
+      Then "International‑level event" is not ticked
 
     Scenario: Nothing else is filled in to begin with
       When the new tournament page is opened
@@ -220,17 +226,17 @@ Feature: A new tournament is created in the admin
 
     Scenario: A tournament that can count towards them counts to begin with
       When the new tournament page is opened
-      Then "Counts towards the world rankings" is ticked
+      Then "Counts toward world rankings" is ticked
 
     Scenario: Golf Croquet is asked about the world rankings
       Given the new tournament page is open
       When the sport "Golf Croquet" is chosen
-      Then the form asks for "Counts towards the world rankings"
+      Then the form asks for "Counts toward world rankings"
 
     Scenario Outline: A sport without world rankings is not asked about them
       Given the new tournament page is open
       When the sport "<sport>" is chosen
-      Then the form does not ask for "Counts towards the world rankings"
+      Then the form does not ask for "Counts toward world rankings"
 
       Examples:
         | sport             |
@@ -239,13 +245,13 @@ Feature: A new tournament is created in the admin
 
     Scenario: A tournament played under handicap is not asked about them
       Given the new tournament page is open
-      When the reader ticks "Played under handicap"
-      Then the form does not ask for "Counts towards the world rankings"
+      When the reader ticks "Played with handicaps"
+      Then the form does not ask for "Counts toward world rankings"
 
     Scenario: A tournament allowing drawn games is not asked about them
       Given the new tournament page is open
-      When the reader ticks "Allows drawn games"
-      Then the form does not ask for "Counts towards the world rankings"
+      When the reader ticks "Allows drawn results"
+      Then the form does not ask for "Counts toward world rankings"
 
     Scenario: A tournament allowing drawn games is created allowing them
       Given the new tournament page is open
@@ -253,7 +259,7 @@ Feature: A new tournament is created in the admin
       And "2026-10-03" is typed as the "Starts"
       And "2026-10-05" is typed as the "Finishes"
       And the country "Fiji" is chosen
-      And the reader ticks "Allows drawn games"
+      And the reader ticks "Allows drawn results"
       When "Create Tournament" is pressed
       Then the tournament "Spring Open" is kept allowing drawn games
 
@@ -261,31 +267,31 @@ Feature: A new tournament is created in the admin
 
     Scenario: A tournament can be national
       Given the new tournament page is open
-      When the reader ticks "Is national"
-      Then "Is national" is ticked
+      When the reader ticks "National‑level event"
+      Then "National‑level event" is ticked
 
     Scenario: A tournament can be international
       Given the new tournament page is open
-      When the reader ticks "Is international"
-      Then "Is international" is ticked
+      When the reader ticks "International‑level event"
+      Then "International‑level event" is ticked
 
     Scenario: Ticking national unticks international
       Given the new tournament page is open
-      And the reader ticks "Is international"
-      When the reader ticks "Is national"
-      Then "Is international" is not ticked
+      And the reader ticks "International‑level event"
+      When the reader ticks "National‑level event"
+      Then "International‑level event" is not ticked
 
     Scenario: Ticking international unticks national
       Given the new tournament page is open
-      And the reader ticks "Is national"
-      When the reader ticks "Is international"
-      Then "Is national" is not ticked
+      And the reader ticks "National‑level event"
+      When the reader ticks "International‑level event"
+      Then "National‑level event" is not ticked
 
     Scenario: Unticking one leaves the other unticked
       Given the new tournament page is open
-      And the reader ticks "Is national"
-      When the reader unticks "Is national"
-      Then "Is international" is not ticked
+      And the reader ticks "National‑level event"
+      When the reader unticks "National‑level event"
+      Then "International‑level event" is not ticked
 
     Scenario: A tournament that is neither is created as neither
       Given the new tournament page is open

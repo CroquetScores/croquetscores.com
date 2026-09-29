@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import type { SpecWorld } from "../../../support/world.js";
 import {
   exampleFormPath,
+  exampleFormRefusedPath,
   exampleFormWithNoticePath,
 } from "../../support/exampleForm.js";
 import { autofocusSettled } from "../../support/autofocus.js";
@@ -35,6 +36,20 @@ Given("the example form is open", async function (this: SpecWorld) {
 When("the example form is opened", async function (this: SpecWorld) {
   await openExampleForm(this, exampleFormPath);
 });
+
+When(
+  "the example form is opened with a notice",
+  async function (this: SpecWorld) {
+    await openExampleForm(this, exampleFormWithNoticePath);
+  },
+);
+
+When(
+  "the example form is opened already refused",
+  async function (this: SpecWorld) {
+    await openExampleForm(this, exampleFormRefusedPath);
+  },
+);
 
 Given(
   "the example form is open with a notice",
@@ -202,6 +217,27 @@ Then(
     );
   },
 );
+
+Then("the reader is taken to the notice", async function (this: SpecWorld) {
+  await autofocusSettled(this);
+  const focused = await this.browserPage.evaluate<string | null>(
+    "document.activeElement && document.activeElement.id",
+  );
+  assert.equal(
+    focused,
+    "dialog-notice",
+    `The reader was taken to ${focused || "nothing"}.`,
+  );
+});
+
+// Nothing on the page has the focus, so a reader starts from the top of it.
+Then("the reader is taken nowhere", async function (this: SpecWorld) {
+  await autofocusSettled(this);
+  const focused = await this.browserPage.evaluate<string | null>(
+    "document.activeElement && document.activeElement !== document.body ? document.activeElement.id || document.activeElement.tagName : null",
+  );
+  assert.equal(focused, null, `The reader was taken to ${focused}.`);
+});
 
 Then(
   "the reader is taken to the message above the fields",

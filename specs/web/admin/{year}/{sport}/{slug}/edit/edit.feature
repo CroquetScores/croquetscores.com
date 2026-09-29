@@ -63,19 +63,19 @@ Feature: A tournament is changed in the admin
       Then the form asks for "<field>"
 
       Examples:
-        | field                             |
-        | Name                              |
-        | Starts                            |
-        | Finishes                          |
-        | Sport                             |
-        | Format                            |
-        | Country                           |
-        | Notes                             |
-        | Played under handicap             |
-        | Allows drawn games                |
-        | Counts towards the world rankings |
-        | Is national                       |
-        | Is international                  |
+        | field                        |
+        | Name                         |
+        | Starts                       |
+        | Finishes                     |
+        | Sport                        |
+        | Format                       |
+        | Country                      |
+        | Notes                        |
+        | Played with handicaps        |
+        | Allows drawn results         |
+        | Counts toward world rankings |
+        | National‑level event         |
+        | International‑level event    |
 
     Scenario: The form is titled for what it does
       When the page to edit "Spring Open" is opened
@@ -91,9 +91,9 @@ Feature: A tournament is changed in the admin
 
     Scenario: Ticking national unticks international here too
       Given the page to edit "Spring Open" is open
-      And the reader ticks "Is international"
-      When the reader ticks "Is national"
-      Then "Is international" is not ticked
+      And the reader ticks "International‑level event"
+      When the reader ticks "National‑level event"
+      Then "International‑level event" is not ticked
 
     Scenario: The start and the finish are on one row here too
       When the page to edit "Spring Open" is opened
@@ -129,26 +129,26 @@ Feature: A tournament is changed in the admin
     Scenario: A tournament played under handicap is ticked as one
       Given the tournament "Spring Open" is played under handicap
       When the page to edit "Spring Open" is opened
-      Then "Played under handicap" is ticked
+      Then "Played with handicaps" is ticked
 
     Scenario: A tournament allowing drawn games is ticked as one
       Given the tournament "Spring Open" allows drawn games
       When the page to edit "Spring Open" is opened
-      Then "Allows drawn games" is ticked
+      Then "Allows drawn results" is ticked
 
     Scenario: A tournament not allowing drawn games is not ticked as one
       When the page to edit "Spring Open" is opened
-      Then "Allows drawn games" is not ticked
+      Then "Allows drawn results" is not ticked
 
     Scenario: A national tournament is ticked as one
       Given the tournament "Spring Open" is national
       When the page to edit "Spring Open" is opened
-      Then "Is national" is ticked
+      Then "National‑level event" is ticked
 
     Scenario: A tournament that does not count towards the world rankings is not ticked as counting
       Given the tournament "Spring Open" does not count towards the world rankings
       When the page to edit "Spring Open" is opened
-      Then "Counts towards the world rankings" is not ticked
+      Then "Counts toward world rankings" is not ticked
 
     Scenario: The notes are the tournament's
       Given the tournament "Spring Open" has the notes "Lawns open at nine."

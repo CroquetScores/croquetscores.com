@@ -220,7 +220,12 @@ export const ScoreDialog = ({
         {added === undefined ? null : say("admin.score.added", added)}
       </p>
       {above.length > 0 ? (
-        <div className="dialog-problems">
+        // The codes as well as the words, as a field's refusals carry them,
+        // so that what was refused can be told apart from how it is said.
+        <div
+          className="dialog-problems"
+          data-refused={above.map(({ code }) => code).join(" ")}
+        >
           {above.map(({ code, words }) => (
             <p key={code}>{words}</p>
           ))}

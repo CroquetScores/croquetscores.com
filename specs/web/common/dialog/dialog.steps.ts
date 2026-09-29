@@ -777,13 +777,6 @@ Then(
 );
 
 Then(
-  "every label in the dialog rests where its field is typed in",
-  async function (this: SpecWorld) {
-    for (const seen of await labelsOf(this)) assertResting(seen);
-  },
-);
-
-Then(
   /^the (.+) field's label rests where its field is typed in$/,
   async function (this: SpecWorld, field: string) {
     assertResting(await labelOf(this, field));

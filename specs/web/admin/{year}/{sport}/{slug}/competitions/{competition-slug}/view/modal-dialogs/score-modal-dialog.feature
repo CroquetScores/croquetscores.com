@@ -339,6 +339,16 @@ Feature: A game's score is added to a competition in a modal dialog
 
   Rule: What is refused is said beside the field it is about
 
+    Each refusal is said in its own words as well as by its code. The admin
+    is sent the words it says rather than every word the site has
+    (`admin.feature`), and a refusal whose words it was not sent is said in
+    its words for any, which are in the reader's language too, so only its
+    own words show that it was sent them.
+
+    The knockout's draw is four places, each round the best of 1, so Sam
+    Someone plays Alex Another in the first round and Chris Third has a bye:
+    Sam Someone and Chris Third are not drawn to meet.
+
     Scenario Outline: A game with a field left empty is refused beside that field
       Given the scores of "Block A" in "Spring Open" are open
       And "Add Score" is pressed
@@ -349,6 +359,7 @@ Feature: A game's score is added to a competition in a modal dialog
       And "<field>" is emptied
       When "Add Game" is pressed
       Then "<field>" is refused with "<code>"
+      And the modal dialog says the words for "<code>"
 
       Examples:
         | field          | code                    |
@@ -366,6 +377,7 @@ Feature: A game's score is added to a competition in a modal dialog
       And "<score>" is typed as the "Loser's score"
       When "Add Game" is pressed
       Then "Loser's score" is refused with "<code>"
+      And the modal dialog says the words for "<code>"
 
       Examples:
         | score | code           |
@@ -381,6 +393,7 @@ Feature: A game's score is added to a competition in a modal dialog
       And "17" is typed as the "Loser's score"
       When "Add Game" is pressed
       Then "Loser" is refused with "Game.SamePlayer"
+      And the modal dialog says the words for "Game.SamePlayer"
 
     Scenario Outline: A winner's score not more than the loser's is refused beside the winner's score
       Given the scores of "Block A" in "Spring Open" are open
@@ -391,6 +404,7 @@ Feature: A game's score is added to a competition in a modal dialog
       And "<loser>" is typed as the "Loser's score"
       When "Add Game" is pressed
       Then "Winner's score" is refused with "Game.WinnerNotAhead"
+      And the modal dialog says the words for "Game.WinnerNotAhead"
 
       Examples:
         | winner | loser |
@@ -426,6 +440,22 @@ Feature: A game's score is added to a competition in a modal dialog
       And "17w" is typed as the "Loser's score"
       When "Add Game" is pressed
       Then "Loser's score" is refused with "Game.LoserMarked"
+      And the modal dialog says the words for "Game.LoserMarked"
+
+    Scenario: Two players of a knockout who are not drawn to meet are refused above the fields
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "26" is typed as the "Winner's score"
+      And "Chris Third" is chosen as the "Loser"
+      And "17" is typed as the "Loser's score"
+      When "Add Game" is pressed
+      Then the score dialog says "Competition.NotDrawnToMeet" above the fields
+      And the modal dialog says the words for "Competition.NotDrawnToMeet"
 
     Scenario: A winner's score equal to the loser's with no mark is added where the tournament allows drawn games
       Given the tournament "Spring Open" allows drawn games

@@ -28,3 +28,31 @@
   height: 1.25rem;
   margin: 0;
 }
+
+/* A knockout's best-ofs, one to a round, side by side in the order they are
+   played, as a draw is read from left to right. Each needs room only for a
+   number and its round's name, so a phone's width holds five; a draw of 64
+   or 128 places, with six or seven, wraps onto a second line rather than
+   narrowing every field past its name. */
+.field-best-ofs {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field-best-ofs legend {
+  padding: 0;
+  margin-bottom: var(--space-3);
+  color: var(--ink-muted);
+}
+
+.field-best-ofs-rounds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.field-best-ofs-rounds > .field {
+  flex: 1 1 5rem;
+  min-width: 0;
+}

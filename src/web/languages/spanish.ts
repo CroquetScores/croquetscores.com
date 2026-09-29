@@ -283,11 +283,11 @@ export const spanish: Language = {
     "admin.tournament.country": "País",
     "admin.tournament.region": "Región",
     "admin.tournament.notes": "Notas",
-    "admin.tournament.handicap": "Se juega con hándicap",
-    "admin.tournament.drawsAllowed": "Se permiten empates",
+    "admin.tournament.handicap": "Jugado con hándicap",
+    "admin.tournament.drawsAllowed": "Permite empates",
     "admin.tournament.worldRankings": "Cuenta para el ranking mundial",
-    "admin.tournament.national": "Es nacional",
-    "admin.tournament.international": "Es internacional",
+    "admin.tournament.national": "Evento de nivel nacional",
+    "admin.tournament.international": "Evento de nivel internacional",
     "admin.tournament.otherwise": "Esto no se puede aceptar tal como está.",
     "admin.newTournament.title": "Nuevo torneo",
     "admin.newTournament.submit": "Crear torneo",
@@ -309,6 +309,7 @@ export const spanish: Language = {
     "admin.competitions.knockout": "Eliminatoria",
     "admin.competitions.swiss": "Suizo",
     "admin.competitions.view": "Ver",
+    "admin.competitions.edit": "Editar",
     "admin.competitions.up": "Subir",
     "admin.competitions.down": "Bajar",
     "admin.competitions.archive": "Archivar",
@@ -318,18 +319,26 @@ export const spanish: Language = {
     "admin.competitions.add": "Añadir competición",
     // The competition dialog.
     "admin.competition.addTitle": "Añadir competición",
+    "admin.competition.editTitle": "Editar competición",
     "admin.competition.name": "Nombre",
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Al mejor de",
     "admin.competition.places": "Plazas",
     "admin.competition.round": "Ronda {number}",
+    "admin.competition.bestOfs": "Al mejor de",
+    "admin.competition.quarters": "Cuartos",
+    "admin.competition.semis": "Semis",
+    "admin.competition.final": "Final",
     "admin.competition.add": "Añadir",
+    "admin.competition.save": "Guardar",
     "admin.competition.added": "Se ha añadido {name}.",
     "admin.competition.otherwise":
       "Esta competición no se puede guardar tal como está.",
     "CompetitionName.Missing": "Introduce un nombre.",
     "CompetitionName.TooLong":
       "Un nombre puede tener como mucho 254 caracteres.",
+    "Tournament.KnockoutPlayerHasGames":
+      "Hay jugadores de este cuadro con partidos, así que sus plazas no pueden cambiar.",
     "Tournament.CompetitionNameTaken":
       "Otra competición de este torneo ya tiene ese nombre.",
     "BestOf.NotWhole": "Introduce un número entero de partidas.",
@@ -350,6 +359,8 @@ export const spanish: Language = {
       "Ya no podrás gestionar este torneo, y nadie aquí puede deshacerlo por ti. Otro gestor puede volver a hacerte gestor.",
     "admin.managers.otherwise": "Esa dirección no se puede hacer gestora.",
     "admin.competitionPlayers.add": "Añadir jugador",
+    // Beneath the drop-down, for a refusal with no words of its own.
+    "admin.competitionPlayers.otherwise": "No se puede añadir a este jugador.",
     "admin.competitionPlayers.choose": "Jugador que añadir",
     "admin.competitionPlayers.nobody": "Elige un jugador",
     "admin.competitionPlayers.all":
@@ -393,6 +404,8 @@ export const spanish: Language = {
     "Game.LoserMarked":
       "Los puntos del perdedor no pueden marcarse como ganados.",
     "Competition.MatchDecided": "Su partido ya está decidido.",
+    "Competition.DrawFull":
+      "No se puede añadir el jugador porque el cuadro está lleno.",
     "Competition.NotDrawnToMeet": "No les toca jugar entre sí.",
     "CompetitionPlayer.Withdrawn": "Un jugador retirado ya no juega.",
     "admin.players.add": "Añadir jugador",

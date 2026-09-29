@@ -225,6 +225,50 @@ const leadsTo = async (link: Locator, path: string): Promise<void> => {
   assert.equal(await link.getAttribute("href"), path);
 };
 
+// In the order the row offers them, read by what each shows: Edit and View are
+// words, where Up and Down are arrows with nothing shown.
+Then(
+  "{string} on the competition {string} comes before {string}",
+  async function (
+    this: SpecWorld,
+    option: string,
+    name: string,
+    after: string,
+  ) {
+    await eventually(this, async () => {
+      const shown = (
+        await rowOf(this, name).locator(".listed-options > *").allInnerTexts()
+      ).map((text) => text.trim());
+      const first = shown.indexOf(option);
+      const second = shown.indexOf(after);
+      assert.ok(
+        first !== -1 && second !== -1 && first < second,
+        `The competition ${name} offers ${JSON.stringify(shown)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "{string} on the competition {string} has the focus",
+  async function (this: SpecWorld, option: string, name: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await optionOf(this, name, option).evaluate(
+          (element) =>
+            element ===
+            (globalThis as unknown as { document: { activeElement: unknown } })
+              .document.activeElement,
+          undefined,
+          { timeout: 500 },
+        ),
+        true,
+        `${option} on ${name} does not have the focus.`,
+      );
+    });
+  },
+);
+
 Then(
   "the name of the competition {string} leads to {string}",
   async function (this: SpecWorld, name: string, path: string) {

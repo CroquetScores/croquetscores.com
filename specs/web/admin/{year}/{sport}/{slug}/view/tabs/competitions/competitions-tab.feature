@@ -7,8 +7,8 @@ Feature: The competitions tab of a tournament's page
   (`CompetitionsOfTournament.feature`).
 
   The competitions in use come first, in the tournament's order. Each says its
-  name and its kind — a block, a knockout or a Swiss — and offers View, Up,
-  Down and Archive. The archived ones come after them, under a heading of
+  name and its kind — a block, a knockout or a Swiss — and offers Edit, View,
+  Up, Down and Archive. The archived ones come after them, under a heading of
   their own, since they are out of the way rather than gone. Each says its
   name and its kind, and offers Restore alone: an archived competition can
   only be restored (`archiveCompetition.feature`).
@@ -50,11 +50,12 @@ Feature: The competitions tab of a tournament's page
   A competition is added in the competition dialog, from Add Competition
   above the list, where a long list does not push it off a phone's screen
   (`competition.feature`). Whenever the dialog adds one, the list is asked for
-  again, so that it says what the competitions are now. Changing a
-  competition is to be done in the same dialog, from Edit on each competition
-  in use, and is not offered until the dialog does it, since a button that did
-  nothing would be worse than none. Adding is the managers' to do, as putting
-  in order and archiving are, so a scorer is not offered Add Competition.
+  again, so that it says what the competitions are now. A competition in use
+  is changed in the same dialog, from Edit, which comes before View so that
+  what is done to a competition is offered ahead of going to it; whenever the
+  dialog keeps a change, the list is asked for again too. Adding and changing
+  are the managers' to do, as putting in order and archiving are, so a scorer
+  is offered neither Add Competition nor Edit.
 
   The tab has no address of its own (`view.feature`), so a scenario opens the
   tournament's page and chooses the tab, which is what opening the
@@ -186,10 +187,16 @@ Feature: The competitions tab of a tournament's page
 
       Examples:
         | option  |
+        | Edit    |
         | View    |
         | Up      |
         | Down    |
         | Archive |
+
+    Scenario: Edit comes before View
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the competitions of "Spring Open" are opened
+      Then "Edit" on the competition "Block A" comes before "View"
 
     Scenario: A competition in use does not offer to restore it
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
@@ -231,6 +238,7 @@ Feature: The competitions tab of a tournament's page
 
       Examples:
         | option  |
+        | Edit    |
         | View    |
         | Up      |
         | Down    |
@@ -392,6 +400,7 @@ Feature: The competitions tab of a tournament's page
 
       Examples:
         | option  |
+        | Edit    |
         | Up      |
         | Down    |
         | Archive |

@@ -8,6 +8,11 @@ Feature: The competitions of a tournament, as its managers and scorers list them
   knockout or a Swiss — its slug, which is where it is found under the
   tournament, and whether it is archived.
 
+  Each is answered with its shape too, so that a manager can change it
+  starting from what it is (`competition.feature`): what each match of a
+  block or a Swiss is the best of, and how many places a knockout's draw has
+  and what each of its rounds is the best of, the first round first.
+
   A scorer lists them to find the one whose scores they are entering
   (`view.feature`). An archived competition is set aside, and there are no
   scores to enter in it, so a scorer is answered with the competitions in use
@@ -70,6 +75,25 @@ Feature: The competitions of a tournament, as its managers and scorers list them
         | block    |
         | knockout |
         | Swiss    |
+
+  Rule: Every competition is answered with its shape
+
+    Scenario: A block is answered with what each match is the best of
+      Given the block is to be the best of 3
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as the best of 3
+
+    Scenario: A knockout is answered with its places
+      Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the knockout "Main Event" is answered with 4 places
+
+    Scenario: A knockout is answered with what each round is the best of
+      Given the knockout's second round is to be the best of 3
+      And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the second round of the knockout "Main Event" is answered as the best of 3
 
   Rule: A scorer is answered the competitions in use alone
 

@@ -215,7 +215,7 @@ Feature: Forms are shown in a dialog
     Scenario: A label rests where the typing will go
       Given a viewport 1200 pixels wide
       When the sign in page is opened
-      Then every label in the dialog rests where its field is typed in
+      Then the password field's label rests where its field is typed in
 
     Scenario: Focusing a field lifts its label
       Given a viewport 1200 pixels wide
