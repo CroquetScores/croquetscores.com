@@ -2,7 +2,8 @@
 Feature: Archiving a score entered by mistake
 
   A manager or a scorer of the tournament archives the score of a game entered
-  by mistake, and the account they are signed in to is who archived it. The
+  by mistake, whoever entered it, since a score is the tournament's and not
+  the scorer's, and the account they are signed in to is who archived it. The
   tournament, the competition and the game are each named by their id. An
   archived game no longer counts, and can be restored (`archiveGame.feature`).
   Archiving one that is archived records nothing. What the competition refuses
@@ -40,9 +41,11 @@ Feature: Archiving a score entered by mistake
       When the reader signed in to the account for "organiser@example.com" archives the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       Then the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" is archived
 
-    Scenario: Archiving the score is recorded as done by whoever asked
-      When the reader signed in to the account for "organiser@example.com" archives the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
-      Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "organiser@example.com"
+    Scenario: Archiving a score another entered is recorded as done by whoever asked
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" archives the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "scorer@example.com"
 
     Scenario: A scorer of the tournament archives a score
       Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"

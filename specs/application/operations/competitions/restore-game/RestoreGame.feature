@@ -2,9 +2,11 @@
 Feature: Restoring an archived score
 
   A manager or a scorer of the tournament restores the score of an archived
-  game, and the account they are signed in to is who restored it. The
-  tournament, the competition and the game are each named by their id. A game
-  restored counts again, in the place it was added in (`restoreGame.feature`).
+  game, whoever entered or archived it, since a score is the tournament's and
+  not the scorer's, and the account they are signed in to is who restored it.
+  The tournament, the competition and the game are each named by their id. A
+  game restored counts again, in the place it was added in
+  (`restoreGame.feature`).
   Restoring one that is not archived records nothing. What the competition
   refuses — a game it does not have, or one that could not be added now, such
   as a game of a match decided without it since — is the competition's to
@@ -41,9 +43,11 @@ Feature: Restoring an archived score
       When the reader signed in to the account for "organiser@example.com" restores the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       Then the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" is not archived
 
-    Scenario: Restoring the score is recorded as done by whoever asked
-      When the reader signed in to the account for "organiser@example.com" restores the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
-      Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "organiser@example.com"
+    Scenario: Restoring a score another entered is recorded as done by whoever asked
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" restores the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "scorer@example.com"
 
     Scenario: A scorer of the tournament restores a score
       Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"

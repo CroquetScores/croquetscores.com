@@ -2,7 +2,8 @@
 Feature: Correcting a game's score entered wrongly
 
   A manager or a scorer of the tournament corrects the score of a game entered
-  wrongly, and the account they are signed in to is who corrected it. The
+  wrongly, whoever entered it, since a score is the tournament's and not the
+  scorer's, and the account they are signed in to is who corrected it. The
   tournament, the competition and the game are each named by their id, and the
   winner's score and the loser's are given as they were typed, as a game's
   are when it is added (`AddGame.feature`). The game keeps its players and its
@@ -66,9 +67,11 @@ Feature: Correcting a game's score entered wrongly
       When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 17w to 17
       Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 17w to 17
 
-    Scenario: Correcting the score is recorded as done by whoever asked
-      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 26 to 10
-      Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "organiser@example.com"
+    Scenario: Correcting a score another entered is recorded as done by whoever asked
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 26 to 10
+      Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "scorer@example.com"
 
     Scenario: A scorer of the tournament corrects a score
       Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
