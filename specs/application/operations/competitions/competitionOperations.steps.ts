@@ -6,6 +6,10 @@ import type { Command } from "../../../../src/application/common/Command.js";
 import { AddGame } from "../../../../src/application/operations/competitions/AddGame.js";
 import { ArchiveGame } from "../../../../src/application/operations/competitions/ArchiveGame.js";
 import {
+  CorrectGame,
+  type CorrectedScores,
+} from "../../../../src/application/operations/competitions/CorrectGame.js";
+import {
   GamesOfCompetition,
   type ListedGame,
 } from "../../../../src/application/operations/competitions/GamesOfCompetition.js";
@@ -1404,6 +1408,169 @@ for (const [verb, making] of [
   );
 }
 
+// Correcting a game's scores ------------------------------------------------------
+
+// A game's scores corrected, found as archiving and restoring find it: by its
+// winner and its loser, or a game that names nothing where the scenario says
+// the competition does not have it.
+const correctingTo =
+  (scores: CorrectedScores): GameMaking =>
+  (account, tournament, competition, game, at) =>
+    new CorrectGame(
+      account,
+      tournament.value,
+      competition.value,
+      game.value,
+      scores,
+      at,
+    );
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in "([^"]*)" of "([^"]*)" to ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      correctingTo({ winnerScore, loserScore }),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in "([^"]*)" of "([^"]*)" to ${SCORES} without its (winner|loser) score$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    winnerScore: string,
+    loserScore: string,
+    without: "winner" | "loser",
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      correctingTo(without === "winner" ? { loserScore } : { winnerScore }),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to that account corrects the score of ${GAME} in "([^"]*)" of "([^"]*)" to ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await gameSent(
+      this,
+      heldAccount(this),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      correctingTo({ winnerScore, loserScore }),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects a score "([^"]*)" of "([^"]*)" does not have to ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      undefined,
+      correctingTo({ winnerScore, loserScore }),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in a competition "([^"]*)" does not have to ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    name: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      undefined,
+      { winner, loser },
+      correctingTo({ winnerScore, loserScore }),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in "([^"]*)" of a tournament there is not to ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      noTournament(),
+      competition,
+      { winner, loser },
+      correctingTo({ winnerScore, loserScore }),
+    );
+  },
+);
+
 // What the competition's games are afterwards ----------------------------------
 
 Then(
@@ -1442,6 +1609,36 @@ Then(
           String(game.loserScore) === loserScore,
       ),
       `${competition} has ${JSON.stringify(games.map(String))}.`,
+    );
+  },
+);
+
+Then(
+  new RegExp(
+    `^"([^"]*)" of "([^"]*)" does not have the score of ${GAME} ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const about = await theCompetition(this, competition, name);
+    const game = await gameCalled(
+      this,
+      about.tournament,
+      about.competition,
+      winner,
+      loser,
+    );
+    assert.ok(
+      game === undefined ||
+        String(game.winnerScore) !== winnerScore ||
+        String(game.loserScore) !== loserScore,
+      `${competition} has ${String(game)}.`,
     );
   },
 );

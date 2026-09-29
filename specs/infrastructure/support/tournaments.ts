@@ -57,6 +57,8 @@ import { UpdateTournamentValidator } from "../../../src/application/operations/t
 import { AddGameHandler } from "../../../src/application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../../../src/application/operations/competitions/AddGameValidator.js";
 import { ArchiveGameHandler } from "../../../src/application/operations/competitions/ArchiveGameHandler.js";
+import { CorrectGameHandler } from "../../../src/application/operations/competitions/CorrectGameHandler.js";
+import { CorrectGameValidator } from "../../../src/application/operations/competitions/CorrectGameValidator.js";
 import { GamesOfCompetitionHandler } from "../../../src/application/operations/competitions/GamesOfCompetitionHandler.js";
 import { RestoreGameHandler } from "../../../src/application/operations/competitions/RestoreGameHandler.js";
 import { EnterPlayerHandler } from "../../../src/application/operations/competitions/EnterPlayerHandler.js";
@@ -126,6 +128,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
   validation.register(new AddGameValidator());
+  validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   const both = [tournaments, accountRepository] as const;
@@ -163,6 +166,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
+  mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));

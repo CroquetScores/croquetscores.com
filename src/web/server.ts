@@ -88,6 +88,8 @@ import type { BreachedPasswords } from "../application/services/BreachedPassword
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
 import { ArchiveGameHandler } from "../application/operations/competitions/ArchiveGameHandler.js";
+import { CorrectGameHandler } from "../application/operations/competitions/CorrectGameHandler.js";
+import { CorrectGameValidator } from "../application/operations/competitions/CorrectGameValidator.js";
 import { GamesOfCompetitionHandler } from "../application/operations/competitions/GamesOfCompetitionHandler.js";
 import { RestoreGameHandler } from "../application/operations/competitions/RestoreGameHandler.js";
 import { EnterPlayerHandler } from "../application/operations/competitions/EnterPlayerHandler.js";
@@ -668,6 +670,7 @@ export const buildApplication = async (
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
   validation.register(new AddGameValidator());
+  validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
   mediator.handleCommand(
@@ -710,6 +713,7 @@ export const buildApplication = async (
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
+  mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));

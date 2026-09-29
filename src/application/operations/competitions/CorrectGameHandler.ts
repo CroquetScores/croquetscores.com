@@ -1,0 +1,55 @@
+import type { Account } from "../../../domain/aggregates/accounts/Account.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import { GameId } from "../../../domain/aggregates/tournaments/competitions/primitives/GameId.js";
+import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
+import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { CommandHandler } from "../../common/CommandHandler.js";
+import type { RequestType } from "../../common/Mediator.js";
+import {
+  type Competitions,
+  competitionManagedBy,
+} from "./competitionOperations.js";
+import { CorrectGame } from "./CorrectGame.js";
+
+/**
+ * Correcting a game's scores, by a manager or a scorer, once the tournament
+ * has said the reader may, and what the competition needs of it: which of a
+ * score's endings are marks is the website's the tournament is run on, and
+ * whether drawn games are allowed is the tournament's. Whether it can be is
+ * the competition's and the game's to say.
+ */
+export class CorrectGameHandler extends CommandHandler<CorrectGame, void> {
+  readonly handles: RequestType<CorrectGame> = CorrectGame;
+
+  constructor(
+    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly competitions: Competitions,
+  ) {
+    super();
+  }
+
+  async handle(command: CorrectGame): Promise<void> {
+    const { by, tournament, competition, told } = await competitionManagedBy(
+      this.tournaments,
+      this.accounts,
+      this.competitions,
+      command,
+      "CorrectGame",
+      { scorers: true },
+    );
+    // Each is there, once the validator has let it in.
+    const { winnerScore, loserScore } = command.scores;
+    competition.correctGame(
+      GameId.from(command.gameId),
+      Score.read(winnerScore ?? "", tournament.website),
+      Score.read(loserScore ?? "", tournament.website),
+      told,
+      by,
+      command.requestedAt,
+    );
+    await this.competitions.save(competition);
+  }
+}
