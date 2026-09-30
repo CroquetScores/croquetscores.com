@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { go } from "../../../../navigation.js";
 import { TabControl } from "../../../../TabControl.js";
+import { HeldPage } from "../HeldPage.js";
 import { TournamentSections } from "../TournamentSections.js";
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
@@ -69,7 +71,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
         // An address the tournament has moved on from sends the reader to
         // where it is now.
         if (answer.address !== address) {
-          window.location.replace(`/admin/${answer.address}`);
+          go(`/admin/${answer.address}`, "replace");
           return;
         }
         setAsked({ is: "found", tournament: answer });
@@ -80,7 +82,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
       });
   }, [address]);
 
-  if (asked.is === "asking") return <main id="content" />;
+  if (asked.is === "asking") return <HeldPage />;
 
   if (asked.is === "refused") {
     return (

@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../Field.js";
+import { go } from "../navigation.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
 
@@ -238,11 +239,9 @@ export const TournamentForm = ({
       });
       const answer: unknown = await response.json();
       if (response.ok) {
-        // Still sending as far as the reader can tell, and still refusing a
-        // second send, until the browser has left for the tournament.
-        window.location.assign(
-          `/admin/${(answer as { address: string }).address}`,
-        );
+        // Left sending, and refusing a second send, since the form is gone
+        // once the admin has moved to the tournament.
+        go(`/admin/${(answer as { address: string }).address}`);
         return;
       }
       setRefused(placed(answer));

@@ -1,3 +1,4 @@
+import { go } from "../../../../../../navigation.js";
 import { say } from "../../../../../../words.js";
 import { PeopleTab } from "../people.js";
 
@@ -21,7 +22,7 @@ export const ManagersTab = ({
         : say("admin.managers.removeExplanation", { name: manager.name })
     }
     removed={(manager) => {
-      if (manager.isReader === true) window.location.assign("/admin/");
+      if (manager.isReader === true) go("/admin/");
     }}
   />
 );

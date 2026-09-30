@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
 import { say } from "../../../words.js";
+import "./tournamentSections.css";
 
 // The section bar of a tournament's page and its competitions' pages
 // (TournamentSections.feature): Tournament first, then each competition in
 // use, in the tournament's order, the page being read marked. An archived
 // competition is left out, since its page refuses to open.
 //
-// Its links are plain links, as the Competitions tab's are, rather than
-// changing the address in place as the years do: each page asks for what it
-// shows as it opens, so opening it afresh is what it is built for.
+// Its links are plain links, which the admin follows in place as it does
+// every link to one of its pages (App.tsx).
 
 interface Props {
   /** The tournament's id, as the API names it. */
@@ -31,11 +31,30 @@ interface Listed {
 // so that it is one segment of an address.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
+/**
+ * The bar's room, one row of tabs tall and empty, while what goes in it is
+ * still being asked for. Without it the bar arrived after the page beneath it
+ * and pushed the page down, which read as the page being loaded again. It is
+ * not a nav, so that nothing mistakes it for the bar itself, and it is hidden
+ * from a screen reader, which has nothing in it to read.
+ */
+export const HeldSections = (): React.JSX.Element => (
+  <div className="site-sections site-sections-held" aria-hidden="true">
+    <div className="page">
+      <ul>
+        <li>
+          <span>{" "}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+);
+
 export const TournamentSections = ({
   tournament,
   address,
   reading,
-}: Props): React.JSX.Element | null => {
+}: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
 
   useEffect(() => {
@@ -57,9 +76,10 @@ export const TournamentSections = ({
     };
   }, [tournament]);
 
-  // Drawn once the competitions are known, so that the bar does not appear
-  // with Tournament alone and then grow as the rest arrive.
-  if (listed === undefined) return null;
+  // Its tabs are drawn once the competitions are known, so that the bar does
+  // not appear with Tournament alone and then grow as the rest arrive. Its
+  // room is held meanwhile.
+  if (listed === undefined) return <HeldSections />;
 
   const tournamentPage = `/admin/${address}`;
   const current = (isIt: boolean): "page" | undefined =>

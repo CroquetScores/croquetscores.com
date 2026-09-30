@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { go } from "../../../../navigation.js";
 import {
   type Begins,
   TournamentForm,
@@ -43,7 +44,7 @@ export const EditTournament = ({ address }: Props): React.JSX.Element => {
         // An address the tournament has moved on from sends the reader to
         // where it is now, rather than changing it under an old name.
         if (answer.address !== undefined && answer.address !== address) {
-          window.location.replace(`/admin/${answer.address}/edit`);
+          go(`/admin/${answer.address}/edit`, "replace");
           return;
         }
         setAsked({ is: "found", tournament: answer });

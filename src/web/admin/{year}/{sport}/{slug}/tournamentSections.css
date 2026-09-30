@@ -1,0 +1,16 @@
+/* The section bar's room while its tabs are asked for (TournamentSections.tsx).
+   Its one placeholder is padded as a tab is and holds a line of text as a tab
+   does, so the bar is exactly as tall as one row of tabs and does not move
+   when they arrive. */
+.site-sections-held span {
+  display: block;
+  padding-block: var(--space-1);
+}
+
+/* A heading's room while the page asks what it is headed (HeldPage.tsx): as
+   tall as one line of a page's heading. It is not a heading, since a heading
+   is what tells the page has arrived. */
+.heading-held {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+}
