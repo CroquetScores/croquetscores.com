@@ -18,9 +18,10 @@ import type { SpecWorld } from "../../support/world.js";
 // that made it, so that a run that was interrupted can be cleaned up by the
 // next one without the next one also dropping the databases of a run that is
 // still going. The prefix sorts them after every real database in a list of
-// them, and says to whoever finds one there what it is for.
+// them, and says to whoever finds one there what it is for. The run's template
+// is named the same way, so that one left behind is cleaned up with the rest.
 const prefix = "zzz_delete_me_spec_";
-const named = new RegExp(`^${prefix}(\\d+)_[0-9a-f]+$`);
+const named = new RegExp(`^${prefix}(\\d+)_(?:[0-9a-f]+|template)$`);
 
 // A run says it is still going by holding an advisory lock on its number for
 // as long as it lasts, on a connection kept open for nothing else. Postgres lets
@@ -35,6 +36,7 @@ let maintenance: pg.Pool | undefined;
 let held: pg.PoolClient | undefined;
 let run: number | undefined;
 let serverUrl: string | undefined;
+let template: string | undefined;
 
 // Opened by the first @postgres scenario and not before. Cucumber runs
 // BeforeAll ahead of any tag filtering, so connecting there would mean every
@@ -108,12 +110,15 @@ const connect = async (): Promise<pg.Pool> => {
         await pool.query(`drop database if exists "${datname}" with (force)`);
       }
     }
+
+    template = await migrateATemplate(pool, run);
   } catch (cause) {
     // Not kept, so that nothing later mistakes a pool that never worked for one
     // that did.
     held?.release();
     held = undefined;
     run = undefined;
+    template = undefined;
     await pool.end().catch(() => undefined);
     throw explain(serverUrl, cause);
   }
@@ -137,6 +142,30 @@ const claimARun = async (client: pg.PoolClient): Promise<number> => {
     );
     if (claimed?.taken === true) return candidate;
   }
+};
+
+// Migrated once for the run, and copied for each scenario. Copying a database
+// is a fraction of the cost of running every migration into an empty one, and
+// the migrations were run once for every @postgres scenario: with six scenarios
+// at a time, making and migrating each database took 407 milliseconds on
+// average, and a fifth of all the time the suite spent in its steps. The copy
+// is exact, so a scenario starts on the same tables either way. Made at the
+// start of every run rather than kept between them, so that it is never behind
+// the migrations it was made from.
+const migrateATemplate = async (
+  server: pg.Pool,
+  number: number,
+): Promise<string> => {
+  const databaseName = `${prefix}${number}_template`;
+  await server.query(`create database "${databaseName}"`);
+  const pool = createPool(nameFor(databaseName));
+  try {
+    await migrate(pool);
+  } finally {
+    // Postgres copies a database only while nobody is connected to it.
+    await pool.end();
+  }
+  return databaseName;
 };
 
 // Left behind by a run that is over: one whose lock can be taken, or one named
@@ -170,6 +199,12 @@ const nameFor = (databaseName: string): string => {
 };
 
 AfterAll(async () => {
+  if (template !== undefined) {
+    await maintenance?.query(
+      `drop database if exists "${template}" with (force)`,
+    );
+    template = undefined;
+  }
   // Released rather than unlocked first: ending the pool closes the connection,
   // and the lock goes with it.
   held?.release();
@@ -183,10 +218,11 @@ Before({ tags: "@postgres" }, async function (this: SpecWorld) {
   const server = await connect();
 
   this.databaseName = `${prefix}${run!}_${randomBytes(8).toString("hex")}`;
-  await server.query(`create database "${this.databaseName}"`);
+  await server.query(
+    `create database "${this.databaseName}" template "${template!}"`,
+  );
 
   this.pool = createPool(nameFor(this.databaseName));
-  await migrate(this.pool);
 });
 
 After({ tags: "@postgres" }, async function (this: SpecWorld) {
