@@ -67,6 +67,7 @@ export type TournamentErrorCode =
   | "Tournament.SportNotOffered"
   | "Tournament.FormatNotOffered"
   | "Tournament.FinishesBeforeStarts"
+  | "Tournament.StartsAfterNextYear"
   | "Tournament.RegionNotInCountry"
   | "Tournament.NoWorldRankings"
   | "Tournament.HandicapInWorldRankings"
@@ -258,7 +259,7 @@ export class Tournament extends AggregateRoot {
     at: ReadOnlyDate,
   ): Tournament {
     const tournament = new Tournament(id);
-    const settled = tournament.#settle(website, details, taken);
+    const settled = tournament.#settle(website, details, taken, at);
     tournament.record(
       new TournamentCreated(website.host, writtenFrom(settled), by, at),
     );
@@ -464,7 +465,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    const settled = this.#settle(this.#now.website, details, taken);
+    const settled = this.#settle(this.#now.website, details, taken, at);
     const written = writtenFrom(settled);
     if (sameWriting(written, writtenFrom(this.#now))) return;
     this.record(new TournamentUpdated(written, by, at));
@@ -945,12 +946,14 @@ export class Tournament extends AggregateRoot {
     return this.#settled;
   }
 
-  // What `details` make of a tournament on `website`, refused on the first
-  // thing asked of them together that they do not hold to.
+  // What `details` make of a tournament on `website`, asked for at `at`,
+  // refused on the first thing asked of them together that they do not hold
+  // to.
   #settle(
     website: Website,
     details: TournamentDetails,
     taken: AddressTaken,
+    at: ReadOnlyDate,
   ): Settled {
     const { sport, format, starts, finishes, country } = details;
     if (
@@ -973,6 +976,15 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.FinishesBeforeStarts",
         "The tournament finishes before it starts.",
+      );
+    }
+    // Counted in UTC, as the year of the tournament's address is, so that the
+    // year a tournament may be found at is the year it may start in.
+    const yearAfterNext = Date.UTC(at.toDate().getUTCFullYear() + 2, 0, 1);
+    if (starts.toDate().getTime() >= yearAfterNext) {
+      refuse(
+        "Tournament.StartsAfterNextYear",
+        "The tournament starts after next year.",
       );
     }
     const region =

@@ -506,6 +506,8 @@ export const english: Language = {
     "ReadOnlyDate.Unreadable": "Give the day.",
     "Tournament.FinishesBeforeStarts":
       "A tournament cannot finish before it starts.",
+    "Tournament.StartsAfterNextYear":
+      "A tournament cannot start after next year.",
     "CreateTournament.NoSuchCountry": "Choose the country.",
     "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
     "Tournament.NotAManager":

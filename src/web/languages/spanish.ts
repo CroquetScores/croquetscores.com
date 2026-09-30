@@ -464,6 +464,8 @@ export const spanish: Language = {
     "ReadOnlyDate.Unreadable": "Indica el día.",
     "Tournament.FinishesBeforeStarts":
       "Un torneo no puede terminar antes de empezar.",
+    "Tournament.StartsAfterNextYear":
+      "Un torneo no puede empezar después del año que viene.",
     "CreateTournament.NoSuchCountry": "Elige el país.",
     "TournamentNotes.TooLong":
       "Las notas pueden tener como mucho 2000 caracteres.",
