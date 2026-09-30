@@ -451,6 +451,7 @@ export const english: Language = {
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",
+    "admin.players.edit": "Edit",
     "admin.players.archive": "Archive",
     "admin.players.restore": "Restore",
     "admin.players.up": "Up",

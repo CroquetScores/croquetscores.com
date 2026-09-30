@@ -181,6 +181,38 @@ Then(
   },
 );
 
+// By the names they are read out by, as optionOf finds them, since Up and
+// Down are drawn as arrows and say nothing as text.
+Then(
+  "{string} on the player {string} comes before {string}",
+  async function (
+    this: SpecWorld,
+    option: string,
+    name: string,
+    after: string,
+  ) {
+    await eventually(this, async () => {
+      const buttons = await rowOf(this, name)
+        .locator(".listed-options")
+        .getByRole("button")
+        .all();
+      const offered = await Promise.all(
+        buttons.map(
+          async (button) =>
+            (await button.getAttribute("aria-label")) ??
+            (await button.innerText()).trim(),
+        ),
+      );
+      const first = offered.indexOf(option);
+      const second = offered.indexOf(after);
+      assert.ok(
+        first !== -1 && second !== -1 && first < second,
+        `The player ${name} offers ${JSON.stringify(offered)}.`,
+      );
+    });
+  },
+);
+
 Then(
   "the player {string} does not offer {string}",
   async function (this: SpecWorld, name: string, option: string) {

@@ -417,6 +417,7 @@ export const spanish: Language = {
     "CompetitionPlayer.Withdrawn": "Un jugador retirado ya no juega.",
     "admin.players.add": "Añadir jugador",
     "admin.players.none": "No hay jugadores",
+    "admin.players.edit": "Editar",
     "admin.players.archive": "Archivar",
     "admin.players.restore": "Restaurar",
     "admin.players.up": "Subir",

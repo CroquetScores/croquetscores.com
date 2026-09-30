@@ -11,8 +11,8 @@ import "../listed.css";
 
 // The Players tab (players-tab.feature): the players in use in the
 // tournament's order, each with what they represent and the flag they fly,
-// offering Up, Down and Archive, and after them the archived ones, struck
-// through. Add Player and a player's name open the player dialog. A player who
+// offering Edit, Archive, Up and Down, and after them the archived ones, struck
+// through. Add Player, a player's name and Edit open the player dialog. A player who
 // has played is not offered Archive, since the games would then be against
 // somebody who is no longer there, and archiving one who is in competitions
 // asks first, since it removes them from each. Whatever is pressed, and
@@ -97,7 +97,7 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
 
   const button = (
     player: Listed,
-    action: "up" | "down" | "archive" | "restore",
+    action: "edit" | "up" | "down" | "archive" | "restore",
   ): React.JSX.Element => (
     <button
       key={action}
@@ -105,7 +105,11 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
       className="button"
       data-action={action}
       onClick={() => {
-        if (action === "archive" && player.competitions.length > 0) {
+        // What the name does, said in a button for a reader who does not
+        // think to press a name.
+        if (action === "edit") {
+          setDialog(player);
+        } else if (action === "archive" && player.competitions.length > 0) {
           setArchiving(player);
         } else {
           void act(player, action);
@@ -158,6 +162,9 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
         {player.archived
           ? button(player, "restore")
           : [
+              // Before Archive, as a competition's Edit is, so that changing
+              // a player is offered ahead of setting them aside.
+              button(player, "edit"),
               ...(player.hasPlayed ? [] : [button(player, "archive")]),
               // Last, where they are in the same place on every row. Nowhere
               // to go is nothing to press.
