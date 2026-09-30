@@ -253,6 +253,20 @@ services:
       POSTGRES_DB: croquet_scores
       POSTGRES_USER: croquet_scores
       POSTGRES_PASSWORD: croquet_scores
+    # Nothing written here is kept past npm run db:down, so none of it is worth
+    # waiting on the disk for. Making and dropping a database for every
+    # @postgres scenario is mostly that waiting: with these off, dropping one
+    # went from 256 milliseconds to 48 and the database scenarios from eleven
+    # minutes to nine. What is given up is surviving a crash of the machine or
+    # of Docker, after which the database may be unreadable and is made again
+    # with db:down and db:up.
+    command:
+      - -c
+      - fsync=off
+      - -c
+      - synchronous_commit=off
+      - -c
+      - full_page_writes=off
     ports:
       - "5432:5432"
     healthcheck:
@@ -263,6 +277,8 @@ services:
 ```
 
 The credentials here are not a secret: they reach a development container on a developer's own machine, and writing them down is what lets a fresh clone run the specs without anyone being told anything first. Anything real is configured per environment (§6.1). A Postgres already listening on 5432 must be stopped before bringing this one up.
+
+Postgres is told not to wait for the disk: `fsync`, `synchronous_commit` and `full_page_writes` are off. Every `@postgres` scenario makes a database and drops it (§8.1), and with six at a time most of that was Postgres waiting on writes being made safe against a crash, for databases that last one scenario. Dropping one went from 256 milliseconds to 48, and the `@postgres` scenarios from 11 minutes to 9. The development database runs the same way, since it is the same container, and after a crash of the machine or of Docker it may not come back; `npm run db:down` and `npm run db:up` make it again, as they would anyway. Anything real runs on a Postgres configured for its environment, never this one.
 
 ### 6.1 Configuration
 
@@ -434,28 +450,20 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 ## 8. Cucumber
 
-`cucumber.json`:
+`cucumber.mjs` holds a profile for each npm script that runs scenarios. What they share is written once and spread into each; what tells them apart is which features they run and where they report:
 
-```json
-{
-  "default": {
-    "import": [
-      "specs/**/*.steps.ts",
-      "specs/support/**/*.ts",
-      "specs/infrastructure/support/**/*.ts",
-      "specs/web/support/**/*.ts"
-    ],
-    "paths": ["specs/**/*.feature"],
-    "format": ["progress-bar", "html:reports/cucumber.html"],
-    "loader": ["./cucumber-loader.mjs"],
-    "parallel": 6,
-    "formatOptions": {
-      "snippetInterface": "async-await"
-    }
-  }
-}
-```
+| Profile   | Script                              | Runs                                          | Reports under              |
+| --------- | ----------------------------------- | --------------------------------------------- | -------------------------- |
+| `default` | `npm test`, `npm run test:features` | every feature                                 | `reports/cucumber`         |
+| `nodb`    | `npm run test:nodb`                 | every feature, less `@postgres`               | `reports/cucumber-nodb`    |
+| `db`      | `npm run test:db`                   | every feature, only `@postgres`               | `reports/cucumber-db`      |
+| `browser` | `npm run test:browser`              | every feature, only `@browser`                | `reports/cucumber-browser` |
+| `changed` | `npm run test:changed`              | the features `scripts/test-changed.mjs` names | `reports/cucumber-changed` |
 
+- JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Five copies of them in JSON would be five things to keep in step, and a support folder added to four and missed in the fifth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
+- Every profile writes three reports, each named after the profile, so running one script does not overwrite what another last reported: `.html`, the whole run to be read in a browser; `-timing.txt`, how long each step definition and hook took over the run — in all, how many times it ran, on average and at the longest — the most time first, which is where to look first when making the suite faster; and `-summary.txt`, the count of scenarios and steps and the time the run took as a whole, which the progress bar prints and then scrolls away, so one run's time can be set against the next.
+- The timing report is written by `cucumber-timing.mjs` rather than by Cucumber's own `usage` formatter, which reports much the same thing. Cucumber's works it out once the run is over, by matching every step definition against every step of every scenario, and over the whole suite that added more than two minutes to a run that takes five. Ours adds each step's time up as the step finishes, so there is nothing left to do at the end. It is sorted by total time rather than by mean, because what it answers is where the suite's time goes, and a step that runs in every scenario can cost more than a slow one that runs once.
+- A tag given on the command line is added to the profile's rather than replacing it: `npm run test:nodb -- --tags @browser` runs the scenarios that are both.
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
 - Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:features -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
@@ -465,7 +473,7 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 Most scenarios reach nothing outside the process and run on a machine with no Postgres anywhere near them. Those that do are tagged `@postgres`, so `npm run test:nodb` is the fast loop while working on anything else.
 
-Each `@postgres` scenario runs in isolation, over a database of its own: made under a name no other scenario has, migrated in a `Before` hook, used by that scenario and nothing else, and dropped in an `After` hook. Scenarios cannot share one: two of them writing the same tables would pass or fail according to the order they ran in. Anything the scenario opens on its database — a pool, an application — is closed before the database is dropped.
+Each `@postgres` scenario runs in isolation, over a database of its own: made under a name no other scenario has, copied in a `Before` hook from a template the run migrated once, used by that scenario and nothing else, and dropped in an `After` hook. Scenarios cannot share one: two of them writing the same tables would pass or fail according to the order they ran in. Anything the scenario opens on its database — a pool, an application — is closed before the database is dropped. The template is made and migrated when a worker's first `@postgres` scenario starts, and dropped when the run ends. Copying it takes a fraction of the time that running every migration into an empty database did, which was a fifth of all the time the suite spent in its steps.
 
 Runs are kept apart the same way. A second terminal, or an editor running one scenario while the suite runs, is a second run against the same Postgres, and neither may touch what the other made. So a database's name carries the run that made it as well as the `zzz_delete_me_spec_` prefix, which sorts them after every real database in a list and says what they are to whoever finds one there, and a run holds a Postgres advisory lock on its own number for as long as it lasts. A database left behind by a run that was interrupted is dropped at the start of the next one; one whose run still holds its lock is left alone. Postgres lets go of the lock when the connection holding it closes, however the run ended, so this needs no clean shutdown, and it works whether or not the run and Postgres are on one machine, which asking the operating system about a process would not.
 
@@ -651,9 +659,9 @@ npm pkg set scripts.lint="eslint ."
 npm pkg set scripts.format="prettier --write ."
 npm pkg set scripts.test="npm run test:features"
 npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js"
-npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\""
-npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\""
-npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\""
+npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nodb"
+npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile db"
+npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile browser"
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"

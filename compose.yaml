@@ -5,6 +5,20 @@ services:
       POSTGRES_DB: croquet_scores
       POSTGRES_USER: croquet_scores
       POSTGRES_PASSWORD: croquet_scores
+    # Nothing written here is kept past npm run db:down, so none of it is worth
+    # waiting on the disk for. Making and dropping a database for every
+    # @postgres scenario is mostly that waiting: with these off, dropping one
+    # went from 256 milliseconds to 48 and the database scenarios from eleven
+    # minutes to nine. What is given up is surviving a crash of the machine or
+    # of Docker, after which the database may be unreadable and is made again
+    # with db:down and db:up.
+    command:
+      - -c
+      - fsync=off
+      - -c
+      - synchronous_commit=off
+      - -c
+      - full_page_writes=off
     ports:
       - "5432:5432"
     healthcheck:

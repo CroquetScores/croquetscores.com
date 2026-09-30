@@ -167,7 +167,7 @@ const listed = (files) => {
 const code = changedIn("src/*", "specs/*.ts");
 
 // AI.md asks for the whole suite by hand where a change reaches further than
-// its own feature, and names a spec's support as exactly that: cucumber.json
+// its own feature, and names a spec's support as exactly that: cucumber.mjs
 // imports every support folder on every run, so there is no one feature to
 // name. All three are counted, not specs/support alone — specs/web/support and
 // specs/infrastructure/support are loaded just as widely, and a change to one
