@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+    # Whether the scenarios are run. Not on main: it is only ever reached by
+    # squash-merging a pull request whose scenarios passed on its own branch,
+    # so running them again there says nothing new and costs a full run.
+    env:
+      RUN_TESTS: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -21,19 +26,22 @@ jobs:
       - run: npm ci
       # The browser the @browser scenarios drive. Only Chromium: a second engine
       # is a second download on every run, and wants a reason.
-      - run: npx playwright install --with-deps chromium
+      - if: env.RUN_TESTS == 'true'
+        run: npx playwright install --with-deps chromium
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
-      - run: npm run db:up
+      - if: env.RUN_TESTS == 'true'
+        run: npm run db:up
       # Two workers rather than the six cucumber.json asks for: the runner has
       # two cores, and workers beyond them only wait their turn for one. Asked
       # of test:features rather than test, because test runs it through a
       # second npm run, and npm keeps what follows the -- for itself.
-      - run: npm run test:features -- --parallel 2
-      - if: always()
+      - if: env.RUN_TESTS == 'true'
+        run: npm run test:features -- --parallel 2
+      - if: always() && env.RUN_TESTS == 'true'
         run: npm run db:down
-      - if: always()
+      - if: always() && env.RUN_TESTS == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: cucumber-report
