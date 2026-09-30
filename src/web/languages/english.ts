@@ -326,6 +326,9 @@ export const english: Language = {
     "admin.competitionView.tabs": "Competition",
     "admin.competitionView.players": "Players",
     "admin.competitionView.scores": "Scores",
+    // The section bar of a tournament's page and its competitions' pages.
+    "admin.sections.label": "The tournament and its competitions",
+    "admin.sections.tournament": "Tournament",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,

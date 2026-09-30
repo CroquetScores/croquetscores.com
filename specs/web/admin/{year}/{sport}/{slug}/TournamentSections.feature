@@ -164,9 +164,13 @@ Feature: The section bar of a tournament and its competitions
 
   Rule: The bar is laid out for a phone first
 
+    The bar is as tall as every section bar is, its words with a little
+    above and below (`LAYOUT.md`), which clears the 24 pixels WCAG 2.2 asks
+    of anything pressed.
+
     Scenario: A section can be pressed
       When the page of "Spring Open" is opened
-      Then the section "Block A" is at least 36 pixels tall
+      Then the section "Block A" is at least 24 pixels tall
 
     Scenario: Many competitions wrap rather than widening the page
       Given "organiser@example.com" has added the block "The Very Long Named Championship Block" to "Spring Open"

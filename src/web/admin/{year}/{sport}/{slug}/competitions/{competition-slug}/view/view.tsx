@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { TabControl } from "../../../../../../TabControl.js";
+import { TournamentSections } from "../../../TournamentSections.js";
 import { knows, say } from "../../../../../../words.js";
 import { CompetitionPlayersTab } from "./tabs/players/players.js";
 import { ScoresTab } from "./tabs/scores/scores.js";
@@ -10,7 +11,8 @@ import { ScoresTab } from "./tabs/scores/scores.js";
 // tournament's page's are, so they share its stylesheet. A manager is offered
 // Players and Scores, and a scorer Scores alone, since who plays is the
 // manager's to say; the page opens on the first the reader is offered. Each tab
-// says what it holds in a feature of its own.
+// says what it holds in a feature of its own. Above it is its tournament's
+// section bar, with the competition marked (TournamentSections.feature).
 
 interface Props {
   /** Where its tournament was asked for, as "2026/ac/spring-open". */
@@ -98,6 +100,11 @@ export const ViewCompetition = ({
 
   return (
     <>
+      <TournamentSections
+        tournament={asked.competition.tournament}
+        address={asked.competition.tournamentAddress}
+        reading={{ competition: asked.competition.slug }}
+      />
       <main id="content">
         <div className="page">
           <div className="panel stack">

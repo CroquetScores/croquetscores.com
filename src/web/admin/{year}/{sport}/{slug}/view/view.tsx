@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { TabControl } from "../../../../TabControl.js";
+import { TournamentSections } from "../TournamentSections.js";
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
@@ -8,7 +9,9 @@ import { PlayersTab } from "./tabs/players/players.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
-// to run in four tabs in the section bar. The tabs are parts of the one page
+// to run in four tabs beneath it, and the section bar leading to its
+// competitions' pages above (TournamentSections.feature). The tabs are parts
+// of the one page
 // rather than pages of their own, so they have no addresses: the page opens on
 // the first the reader is offered, and choosing another leaves the address as
 // it was. A manager is offered all four, and a scorer the Competitions tab
@@ -96,6 +99,11 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
 
   return (
     <>
+      <TournamentSections
+        tournament={asked.tournament.id}
+        address={asked.tournament.address}
+        reading="tournament"
+      />
       <main id="content">
         <div className="page">
           <div className="panel stack">

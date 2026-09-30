@@ -303,6 +303,8 @@ export const spanish: Language = {
     "admin.competitionView.tabs": "Competición",
     "admin.competitionView.players": "Jugadores",
     "admin.competitionView.scores": "Resultados",
+    "admin.sections.label": "El torneo y sus competiciones",
+    "admin.sections.tournament": "Torneo",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",
