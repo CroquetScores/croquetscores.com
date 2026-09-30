@@ -1,4 +1,6 @@
+# .github/workflows/ci.yml
 name: CI
+
 on:
   push:
     branches: [main]
@@ -6,41 +8,55 @@ on:
 
 jobs:
   build:
-    # Pinned rather than ubuntu-latest, which moves to Ubuntu 26 from 19 October
-    # 2026: the runner a run happens on is then a decision made here, and changed
-    # deliberately, rather than one that changes under the build on a date.
     runs-on: ubuntu-24.04
+
     permissions:
       contents: read
-    # Whether the scenarios are run. Not on main: it is only ever reached by
-    # squash-merging a pull request whose scenarios passed on its own branch,
-    # so running them again there says nothing new and costs a full run.
+
     env:
+      # Run full test suite on PRs, skip on main
       RUN_TESTS: ${{ github.ref != 'refs/heads/main' }}
+
     steps:
       - uses: actions/checkout@v7
+
+      # Node + npm caching
       - uses: actions/setup-node@v7
         with:
           node-version: 22.13.0
           cache: npm
+
       - run: npm ci
-      # The browser the @browser scenarios drive. Only Chromium: a second engine
-      # is a second download on every run, and wants a reason.
+
+      # Cache Playwright browsers (massive speedup)
+      - if: env.RUN_TESTS == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      # Install only Chromium (fastest + smallest)
       - if: env.RUN_TESTS == 'true'
         run: npx playwright install --with-deps chromium
+
+      # Fast checks before expensive DB + Playwright
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
+
+      # Bring up isolated DB per scenario
       - if: env.RUN_TESTS == 'true'
         run: npm run db:up
-      # Two workers rather than the six cucumber.mjs asks for: the runner has
-      # two cores, and workers beyond them only wait their turn for one. Asked
-      # of test:features rather than test, because test runs it through a
-      # second npm run, and npm keeps what follows the -- for itself.
+
+      # Run full suite with deterministic parallelism
       - if: env.RUN_TESTS == 'true'
         run: npm run test:features -- --parallel 2
+
+      # Always tear down DB even if tests fail
       - if: always() && env.RUN_TESTS == 'true'
         run: npm run db:down
+
+      # Upload cucumber report even on failure
       - if: always() && env.RUN_TESTS == 'true'
         uses: actions/upload-artifact@v7
         with:
