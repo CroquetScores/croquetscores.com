@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
+import { go } from "../../../../../../navigation.js";
 import { TabControl } from "../../../../../../TabControl.js";
+import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { knows, say } from "../../../../../../words.js";
 import { CompetitionPlayersTab } from "./tabs/players/players.js";
@@ -68,8 +70,9 @@ export const ViewCompetition = ({
         // An address the tournament has moved on from sends the reader to the
         // competition where it is now.
         if (answer.tournamentAddress !== address) {
-          window.location.replace(
+          go(
             `/admin/${answer.tournamentAddress}/competitions/${answer.slug}`,
+            "replace",
           );
           return;
         }
@@ -81,7 +84,7 @@ export const ViewCompetition = ({
       });
   }, [address, slug]);
 
-  if (asked.is === "asking") return <main id="content" />;
+  if (asked.is === "asking") return <HeldPage />;
 
   if (asked.is === "refused") {
     return (

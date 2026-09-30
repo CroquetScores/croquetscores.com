@@ -7,6 +7,7 @@ import { unmarkedWithin } from "../../../../../../../support/marks.js";
 import {
   eventually,
   openTab,
+  settled,
   tabPanel,
 } from "../../../../../../../support/tournamentPage.js";
 
@@ -275,6 +276,14 @@ Then(
     await eventually(this, async () => {
       await leadsTo(rowOf(this, name).locator(".listed-name"), path);
     });
+  },
+);
+
+When(
+  "the name of the competition {string} is pressed",
+  async function (this: SpecWorld, name: string) {
+    await settled(this);
+    await rowOf(this, name).locator(".listed-name").click();
   },
 );
 
