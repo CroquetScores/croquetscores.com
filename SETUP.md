@@ -434,28 +434,20 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 ## 8. Cucumber
 
-`cucumber.json`:
+`cucumber.mjs` holds a profile for each npm script that runs scenarios. What they share is written once and spread into each; what tells them apart is which features they run and where they report:
 
-```json
-{
-  "default": {
-    "import": [
-      "specs/**/*.steps.ts",
-      "specs/support/**/*.ts",
-      "specs/infrastructure/support/**/*.ts",
-      "specs/web/support/**/*.ts"
-    ],
-    "paths": ["specs/**/*.feature"],
-    "format": ["progress-bar", "html:reports/cucumber.html"],
-    "loader": ["./cucumber-loader.mjs"],
-    "parallel": 6,
-    "formatOptions": {
-      "snippetInterface": "async-await"
-    }
-  }
-}
-```
+| Profile   | Script                              | Runs                                          | Reports under              |
+| --------- | ----------------------------------- | --------------------------------------------- | -------------------------- |
+| `default` | `npm test`, `npm run test:features` | every feature                                 | `reports/cucumber`         |
+| `nodb`    | `npm run test:nodb`                 | every feature, less `@postgres`               | `reports/cucumber-nodb`    |
+| `db`      | `npm run test:db`                   | every feature, only `@postgres`               | `reports/cucumber-db`      |
+| `browser` | `npm run test:browser`              | every feature, only `@browser`                | `reports/cucumber-browser` |
+| `changed` | `npm run test:changed`              | the features `scripts/test-changed.mjs` names | `reports/cucumber-changed` |
 
+- JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Five copies of them in JSON would be five things to keep in step, and a support folder added to four and missed in the fifth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
+- Every profile writes three reports, each named after the profile, so running one script does not overwrite what another last reported: `.html`, the whole run to be read in a browser; `-timing.txt`, how long each step definition and hook took over the run — in all, how many times it ran, on average and at the longest — the most time first, which is where to look first when making the suite faster; and `-summary.txt`, the count of scenarios and steps and the time the run took as a whole, which the progress bar prints and then scrolls away, so one run's time can be set against the next.
+- The timing report is written by `cucumber-timing.mjs` rather than by Cucumber's own `usage` formatter, which reports much the same thing. Cucumber's works it out once the run is over, by matching every step definition against every step of every scenario, and over the whole suite that added more than two minutes to a run that takes five. Ours adds each step's time up as the step finishes, so there is nothing left to do at the end. It is sorted by total time rather than by mean, because what it answers is where the suite's time goes, and a step that runs in every scenario can cost more than a slow one that runs once.
+- A tag given on the command line is added to the profile's rather than replacing it: `npm run test:nodb -- --tags @browser` runs the scenarios that are both.
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
 - Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:features -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
@@ -651,9 +643,9 @@ npm pkg set scripts.lint="eslint ."
 npm pkg set scripts.format="prettier --write ."
 npm pkg set scripts.test="npm run test:features"
 npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js"
-npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"not @postgres\""
-npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@postgres\""
-npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --tags \"@browser\""
+npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nodb"
+npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile db"
+npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile browser"
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"

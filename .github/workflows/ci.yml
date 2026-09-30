@@ -33,7 +33,7 @@ jobs:
       - run: npm run build
       - if: env.RUN_TESTS == 'true'
         run: npm run db:up
-      # Two workers rather than the six cucumber.json asks for: the runner has
+      # Two workers rather than the six cucumber.mjs asks for: the runner has
       # two cores, and workers beyond them only wait their turn for one. Asked
       # of test:features rather than test, because test runs it through a
       # second npm run, and npm keeps what follows the -- for itself.
