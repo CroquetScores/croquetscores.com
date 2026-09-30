@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
@@ -94,6 +94,7 @@ export const CompetitionPlayersTab = ({
     | { readonly player: Listed; readonly action: "remove" | "withdraw" }
     | undefined
   >();
+  const choice = useRef<HTMLSelectElement>(null);
   const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
   const at = `${ofTournament}/competitions/${idInAddress(competition)}`;
 
@@ -173,6 +174,11 @@ export const CompetitionPlayersTab = ({
       });
       if (response.ok) {
         setRefused([]);
+        // Back to the drop-down, so that the next can be chosen and added
+        // from the keyboard without going back up to find it. It stays drawn
+        // while the list is asked for again, so it can be given the focus
+        // now rather than once the list has come back.
+        choice.current?.focus();
         return;
       }
       const answer = (await response.json().catch(() => ({}))) as {
@@ -261,6 +267,7 @@ export const CompetitionPlayersTab = ({
         // it off a phone's screen.
         <p className="listed-adding">
           <select
+            ref={choice}
             className="listed-choice"
             aria-label={say("admin.competitionPlayers.choose")}
             // Tied to what is said beneath it, so that a screen reader reads

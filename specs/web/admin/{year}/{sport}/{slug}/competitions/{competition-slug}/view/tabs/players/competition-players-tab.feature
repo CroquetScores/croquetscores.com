@@ -15,8 +15,10 @@ Feature: The players tab of a competition's page
   beside it. Archived players of the tournament are not offered, since they
   are set aside. A player added is put in the tournament's order, just after
   whoever already has their order where somebody does (`enterPlayer.feature`),
-  and is no longer offered in the drop-down. Where every player of the
-  tournament is in the competition, the drop-down and Add Player are not
+  and is no longer offered in the drop-down. Once a player is added, the
+  focus goes back to the drop-down, so that the next can be chosen and added
+  from the keyboard without going back up to find it. Where every player of
+  the tournament is in the competition, the drop-down and Add Player are not
   shown, and the tab says so.
 
   A knockout is played only once its draw is filled (`addGame.feature`), and
@@ -196,6 +198,12 @@ Feature: The players tab of a competition's page
       When "Add Player" is pressed
       Then the player "Bye" is offered to add
 
+    Scenario: The drop-down has the focus once a bye is added
+      Given the players of "Final Stage" in "Spring Open" are open
+      And "Bye" is chosen to add
+      When "Add Player" is pressed
+      Then the drop-down of players to add has the focus
+
     Scenario: A second bye is added
       Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And the players of "Final Stage" in "Spring Open" are open
@@ -318,6 +326,12 @@ Feature: The players tab of a competition's page
       And "Sam Someone" is chosen to add
       When "Add Player" is pressed
       Then the player "Sam Someone" is not offered to add
+
+    Scenario: The drop-down has the focus once a player is added
+      Given the players of "Block A" in "Spring Open" are open
+      And "Sam Someone" is chosen to add
+      When "Add Player" is pressed
+      Then the drop-down of players to add has the focus
 
     Scenario: A player added comes where the tournament's order puts them
       Given "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
