@@ -8,8 +8,8 @@ Feature: Moving a competition's player up or down
   `Request.Invalid` and `MoveCompetitionPlayer.NoSuchDirection`. What the
   competition refuses — a player it does not have, one who has withdrawn, or
   anybody in a knockout that has a game — is the competition's to refuse
-  (`movePlayer.feature`). The tournament says what kind of competition it 
-  is. Moving the first up or the last down records nothing, since there is 
+  (`movePlayer.feature`). The tournament says what kind of competition it
+  is. Moving the first up or the last down records nothing, since there is
   nowhere for them to go.
 
   It is called moving a competition's player, rather than moving a player, so

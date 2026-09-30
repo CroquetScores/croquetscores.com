@@ -96,7 +96,7 @@ Feature: Confirming an account's email address
   Whether the account is confirmed already is looked at here, before the
   account is asked to confirm, because the account itself says nothing about
   it: confirming a confirmed account records nothing and is refused with
-  nothing (`Account.feature`). So `Account.AlreadyConfirmed` is this
+  nothing (`confirm.feature`). So `Account.AlreadyConfirmed` is this
   operation's, and without it a second submission would be answered as though
   it had confirmed the address, under a name and a password that were thrown
   away.

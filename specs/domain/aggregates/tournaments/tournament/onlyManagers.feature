@@ -64,7 +64,7 @@ Feature: Only a tournament's managers change it
         | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a scorer          |
         | the account "account/5f0c7a2e-3b1d-4c8e-9f6a-2d4b8e1c7a3f" is taken off the scorers  |
 
-    Scenario: A refused request records nothing
+    Scenario: A refused request changes nothing
       Given the tournament is rebuilt from the stream
       And it is asked for by "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a"
       When somebody archives the tournament

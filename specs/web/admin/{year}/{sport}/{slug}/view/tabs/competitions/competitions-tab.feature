@@ -14,10 +14,8 @@ Feature: The competitions tab of a tournament's page
   only be restored (`archiveCompetition.feature`).
 
   A competition's name and View both lead to its own page, beneath the
-  tournament's, at /admin/{year}/{sport}/{slug}/competitions/{competition slug}.
-  That page is not written yet, and shows the admin's empty shell until a
-  feature says what it is, as New Tournament's did before the form it leads
-  to.
+  tournament's, at /admin/{year}/{sport}/{slug}/competitions/{competition slug}
+  (`view.feature` under `competitions/{competition-slug}`).
 
   Up and Down are shown as arrows pointing up and down, and are named "Up" and
   "Down" for a reader who cannot see them. They come last of what a row offers,

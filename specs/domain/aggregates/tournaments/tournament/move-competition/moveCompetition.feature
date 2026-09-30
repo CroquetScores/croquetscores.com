@@ -242,7 +242,6 @@ Feature: Moving a tournament's competition up or down
       When the competition "Block D" is moved up
       Then the tournament's competition "Block B" has the order 20000
 
-
     Scenario: A tournament rebuilt after its competitions were spaced out has them spaced out
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
@@ -264,7 +263,6 @@ Feature: Moving a tournament's competition up or down
       When the competition "Block C" is moved up
       Then the tournament's competition "Block C" has the order 5000
 
-
     Scenario: The archived competition passed over keeps its order
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
@@ -275,7 +273,6 @@ Feature: Moving a tournament's competition up or down
       When the competition "Block C" is moved up
       Then the tournament's competition "Block B" has the order 30000
 
-
     Scenario: A competition moved down passes over an archived one below it
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
@@ -285,7 +282,6 @@ Feature: Moving a tournament's competition up or down
       And the tournament is rebuilt from the stream
       When the competition "Block A" is moved down
       Then the tournament's competition "Block A" has the order 50000
-
 
     Scenario: The room between two competitions ends at an archived one between them
       Given a stream where a tournament was created as "Spring Open"
@@ -298,7 +294,6 @@ Feature: Moving a tournament's competition up or down
       When the competition "Block A" is moved down
       Then the tournament's competition "Block A" has the order 30000
 
-
     Scenario: A competition with only archived ones above it is already first
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
@@ -307,7 +302,6 @@ Feature: Moving a tournament's competition up or down
       And the tournament is rebuilt from the stream
       When the competition "Block B" is moved up
       Then it has recorded 0 events
-
 
   Rule: The first cannot go up, nor the last down, and trying records nothing
 

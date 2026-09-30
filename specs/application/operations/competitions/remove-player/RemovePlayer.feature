@@ -7,7 +7,7 @@ Feature: Removing a competition's player
   player removed is gone, and can be entered again (`removePlayer.feature`).
   What the competition refuses — a player it does not have, one who has
   withdrawn, one who has games, or anybody in a knockout that has a game — is
-  the competition's to refuse. The tournament says what kind of competition 
+  the competition's to refuse. The tournament says what kind of competition
   it is.
 
   It is asked of the tournament first, as entering a player is
