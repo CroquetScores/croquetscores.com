@@ -253,6 +253,20 @@ services:
       POSTGRES_DB: croquet_scores
       POSTGRES_USER: croquet_scores
       POSTGRES_PASSWORD: croquet_scores
+    # Nothing written here is kept past npm run db:down, so none of it is worth
+    # waiting on the disk for. Making and dropping a database for every
+    # @postgres scenario is mostly that waiting: with these off, dropping one
+    # went from 256 milliseconds to 48 and the database scenarios from eleven
+    # minutes to nine. What is given up is surviving a crash of the machine or
+    # of Docker, after which the database may be unreadable and is made again
+    # with db:down and db:up.
+    command:
+      - -c
+      - fsync=off
+      - -c
+      - synchronous_commit=off
+      - -c
+      - full_page_writes=off
     ports:
       - "5432:5432"
     healthcheck:
@@ -263,6 +277,8 @@ services:
 ```
 
 The credentials here are not a secret: they reach a development container on a developer's own machine, and writing them down is what lets a fresh clone run the specs without anyone being told anything first. Anything real is configured per environment (§6.1). A Postgres already listening on 5432 must be stopped before bringing this one up.
+
+Postgres is told not to wait for the disk: `fsync`, `synchronous_commit` and `full_page_writes` are off. Every `@postgres` scenario makes a database and drops it (§8.1), and with six at a time most of that was Postgres waiting on writes being made safe against a crash, for databases that last one scenario. Dropping one went from 256 milliseconds to 48, and the `@postgres` scenarios from 11 minutes to 9. The development database runs the same way, since it is the same container, and after a crash of the machine or of Docker it may not come back; `npm run db:down` and `npm run db:up` make it again, as they would anyway. Anything real runs on a Postgres configured for its environment, never this one.
 
 ### 6.1 Configuration
 
