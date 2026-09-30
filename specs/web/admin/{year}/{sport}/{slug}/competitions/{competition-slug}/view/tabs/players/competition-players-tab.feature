@@ -62,12 +62,13 @@ Feature: The players tab of a competition's page
 
   Remove takes out a player entered by mistake. They are not kept or set
   aside, so there is nothing to restore (`CompetitionPlayer.feature`). A
-  player who has any games in the competition cannot be removed, since the
-  games would then be against somebody who is no longer there, so such a
-  player is not offered Remove; an archived game counts, since it can be
-  restored. A player removed is still one of the tournament's players, so
-  they are offered again in the drop-down, and adding them again enters them
-  as anybody new is, in the tournament's order.
+  player who has any games in use in the competition cannot be removed, since
+  the games would then be against somebody who is no longer there, so such a
+  player is not offered Remove. An archived game counts for nothing, so a
+  player whose only games are archived is offered Remove, and their archived
+  scores go with them (`removePlayer.feature`). A player removed is still one 
+  of the tournament's players, so they are offered again in the drop-down, and 
+  adding them again enters them as anybody new is, in the tournament's order.
 
   Withdraw is for a player who will play no more of the competition: they
   stay in it, with their games. A player who withdraws is put last
@@ -78,9 +79,11 @@ Feature: The players tab of a competition's page
   reversed. A player unwithdrawn keeps the order they were given when they
   withdrew, so they come back after those who stayed playing.
 
-  In a knockout, the competition's order is its draw, so once a game has been
-  played in one its players are fixed (`addGame.feature`): the drop-down and
-  Add Player are not shown, and no player offers Up, Down or Remove. Withdraw
+  In a knockout, the competition's order is its draw, so once it has a game in
+  use its players are fixed (`addGame.feature`): the drop-down and Add Player
+  are not shown, and no player offers Up, Down or Remove. An archived game
+  fixes nothing, so a knockout whose only games are archived offers them as
+  one with no games does. Withdraw
   is still offered, since a player can stop playing at any time, and their
   opponent in a match not yet decided goes through.
 
@@ -531,11 +534,20 @@ Feature: The players tab of a competition's page
       When the players of "Block A" in "Spring Open" are opened
       Then the player "Sam Someone" offers "Withdraw"
 
-    Scenario: A player whose only game is archived is still not offered Remove
+    Scenario: A player whose only game is archived is offered Remove
       Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" offers "Remove"
+
+    Scenario: A player with a game in use as well as one archived is not offered Remove
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 10 in "Block A" of "Spring Open"
       When the players of "Block A" in "Spring Open" are opened
       Then the player "Sam Someone" does not offer "Remove"
 
@@ -640,6 +652,17 @@ Feature: The players tab of a competition's page
       And the question is confirmed
       When the players of "Block A" in "Spring Open" are opened
       Then the player "Sam Someone" is not listed
+
+    Scenario: A player removed whose only score was archived takes it from the Scores tab
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      And "Remove" is pressed on the player "Sam Someone"
+      And the question is confirmed
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the tab says there are no scores
 
     Scenario: A removal not confirmed leaves the player listed
       Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
@@ -776,7 +799,7 @@ Feature: The players tab of a competition's page
       When the players of "Block A" in "Spring Open" are opened
       Then the player "Sam Someone" is listed among those playing
 
-  Rule: Once a knockout has a game, its players are fixed
+  Rule: Once a knockout has a game in use, its players are fixed
 
     The knockout's draw is four places, each round the best of 1, so Sam
     Someone plays Alex Another in the first round and Chris Third is drawn
@@ -842,7 +865,7 @@ Feature: The players tab of a competition's page
       When the players of "Final Stage" in "Spring Open" are opened
       Then the player "Chris Third" offers "Withdraw"
 
-    Scenario: A knockout whose only game is archived still has its players fixed
+    Scenario: A knockout whose only game is archived offers Add Player
       Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
       And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
@@ -852,7 +875,39 @@ Feature: The players tab of a competition's page
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened
-      Then the tab does not offer "Add Player"
+      Then the tab offers "Add Player"
+
+    Scenario Outline: Either player of a knockout of two whose only game is archived offers Remove
+      Given the knockout is to have a draw of 2 places
+      And "organiser@example.com" has added the knockout "Final" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final" of "Spring Open"
+      When the players of "Final" in "Spring Open" are opened
+      Then the player "<player>" offers "Remove"
+
+      Examples:
+        | player       |
+        | Sam Someone  |
+        | Alex Another |
+
+    Scenario Outline: Either player of a knockout of two whose only game is archived is removed
+      Given the knockout is to have a draw of 2 places
+      And "organiser@example.com" has added the knockout "Final" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final" of "Spring Open"
+      And the players of "Final" in "Spring Open" are open
+      And "Remove" is pressed on the player "<player>"
+      When the question is confirmed
+      Then the player "<player>" is not listed
+
+      Examples:
+        | player       |
+        | Sam Someone  |
+        | Alex Another |
 
   Rule: Every word the tab says is in the reader's language
 

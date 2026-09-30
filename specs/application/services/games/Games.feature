@@ -13,10 +13,11 @@ Feature: Asking whether games have been played
   about it: refusing is the tournament's, and is specified with it.
 
   The games are the ones the tournament's competitions keep, archived
-  competitions among them, and an archived game counts as much as any other,
-  since it can be restored. A player has played if they won or lost any game
-  in any of them. A knockout's draw is fixed once it has a game
-  (`addGame.feature`), so a change to the draw of a knockout that has a game
+  competitions among them. An archived game counts for nothing, here as
+  anywhere games are counted (`archiveGame.feature`), so only the games in
+  use are asked about. A player has played if they won or lost any game in
+  use in any of them. A knockout's draw is fixed once it has a game in use
+  (`addGame.feature`), so a change to the draw of a knockout that has one
   moves a player who has played, and a change to one that has none moves
   nobody.
 
@@ -57,9 +58,16 @@ Feature: Asking whether games have been played
       When the games are asked whether the player "Chris Third" of "Spring Open" has played
       Then they say no
 
-    Scenario: A player whose only game is archived has played
+    Scenario: A player whose only game is archived has not played
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the games are asked whether the player "Sam Someone" of "Spring Open" has played
+      Then they say no
+
+    Scenario: A player with a game in use as well as one archived has played
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 10 in "Block A" of "Spring Open"
       When the games are asked whether the player "Sam Someone" of "Spring Open" has played
       Then they say yes
 
@@ -80,7 +88,7 @@ Feature: Asking whether games have been played
       When the games are asked whether the player "Sam Someone" of "Spring Open" has played
       Then they say no
 
-  Rule: A change to the draw of a knockout that has a game moves a player who has played
+  Rule: A change to the draw of a knockout that has a game in use moves a player who has played
 
     Background:
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
@@ -98,13 +106,13 @@ Feature: Asking whether games have been played
       When the games are asked whether changing the draw of "Final Stage" of "Spring Open" to 8 places moves a player who has played
       Then they say yes
 
-    Scenario: A change to the draw of a knockout whose only game is archived moves a player who has played
+    Scenario: A change to the draw of a knockout whose only game is archived moves nobody who has played
       Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
       When the games are asked whether changing the draw of "Final Stage" of "Spring Open" to 8 places moves a player who has played
-      Then they say yes
+      Then they say no
 
     Scenario: A game in another competition moves nobody in the knockout
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"

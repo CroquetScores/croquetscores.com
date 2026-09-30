@@ -1,4 +1,4 @@
-import { When, Then } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 
 import { CompetitionPlayerId } from "../../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import type { SpecWorld } from "../../../../../../support/world.js";
@@ -6,6 +6,7 @@ import {
   ask,
   assertRecordedAt,
   byOf,
+  happened,
   now,
   playerNamed,
   toldOf,
@@ -45,6 +46,17 @@ When(
   "the bye with the order {int} is removed",
   function (this: SpecWorld, order: number) {
     ask(this, (competition) => {
+      competition.removeBye(order, toldOf(this), byOf(this), now(this));
+    });
+  },
+);
+
+// Before the scenario's own request, as the draw a knockout's game was added
+// to is freed of a place.
+Given(
+  "the bye with the order {int} was removed from it",
+  function (this: SpecWorld, order: number) {
+    happened(this, (competition) => {
       competition.removeBye(order, toldOf(this), byOf(this), now(this));
     });
   },

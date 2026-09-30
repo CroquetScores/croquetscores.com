@@ -12,10 +12,10 @@ export interface ListedCompetitionPlayer {
   readonly flag: string | undefined;
   readonly withdrawn: boolean;
   /**
-   * Whether they have won or lost a game, an archived one among them, since a
-   * player who has cannot be removed.
+   * Whether they have won or lost a game in use, since a player who has
+   * cannot be removed. An archived game counts for nothing.
    */
-  readonly hasPlayed: boolean;
+  readonly hasGamesInUse: boolean;
   /**
    * In a knockout, the player they are drawn to play now, by their id in the
    * competition, so that a scorer who chooses the winner need not choose the

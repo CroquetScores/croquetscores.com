@@ -9,14 +9,20 @@ Feature: Removing a competition's player
 
   A withdrawn player cannot be removed, since withdrawing is what is done to
   somebody who has played, and their withdrawal is reversed first. A player
-  who has any games in the competition cannot be removed either, since the
-  games would then be against somebody who is no longer there. The games are
-  the competition's own (`addGame.feature`), so it knows, and an archived game
-  counts, since it can be restored.
+  who has any games in use in the competition cannot be removed either, since
+  the games would then be against somebody who is no longer there. The games
+  are the competition's own (`addGame.feature`), so it knows.
 
-  A knockout is drawn in the competition's order, so once it has a game,
-  archived or not, removing a player, who would move others in the draw, is
-  refused. Whatever asks says what kind of competition it is; the scenarios
+  Only the games in use count. An archived game counts for nothing
+  (`archiveGame.feature`), so it does not keep a player in. A player removed
+  takes their archived games with them: each would be against somebody who is
+  no longer there, and could never be restored, since restoring a game is
+  refused where one of its players is not playing (`restoreGame.feature`).
+
+  A knockout is drawn in the competition's order, so once it has a game in
+  use, removing a player, who would move others in the draw, is refused. An
+  archived game fixes nothing (`addGame.feature`), so a knockout whose only
+  games are archived has its players removed as a block does. Whatever asks says what kind of competition it is; the scenarios
   here are about a block unless they say otherwise.
 
   A scenario that does not say what order a tournament player has gives the
@@ -79,7 +85,7 @@ Feature: Removing a competition's player
       When the player "competition-player/123e4567-e89b-42d3-a456-426614174000" is removed by their id
       Then it is refused with "Competition.NoSuchPlayer"
 
-  Rule: A player with games cannot be removed
+  Rule: A player with games in use cannot be removed
 
     Scenario: Removing a player who has won a game is refused
       Given the tournament player "Alex Another" was entered in it
@@ -95,10 +101,19 @@ Feature: Removing a competition's player
       When the player "Sam Someone" is removed
       Then it is refused with "CompetitionPlayer.HasGames"
 
-    Scenario: Removing a player whose only game is archived is refused
+    Scenario: Removing a player whose only game is archived is not refused
       Given the tournament player "Alex Another" was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+      When the player "Sam Someone" is removed
+      Then the competition does not have the tournament player "Sam Someone"
+
+    Scenario: Removing a player with a game in use as well as one archived is refused
+      Given the tournament player "Alex Another" was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the game of "Alex Another" beating "Sam Someone" 26 to 10 was added to it
       And the competition is rebuilt from its stream
       When the player "Sam Someone" is removed
       Then it is refused with "CompetitionPlayer.HasGames"
@@ -111,7 +126,38 @@ Feature: Removing a competition's player
       When the player "Sam Someone" is removed
       Then the competition does not have the tournament player "Sam Someone"
 
-  Rule: A knockout with a game has its draw fixed
+  Rule: A player removed takes their archived games with them
+
+    Background:
+      Given the tournament player "Alex Another" was entered in it
+      And the tournament player "Pat Player" was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+
+    Scenario: The archived game of a player removed is no longer the competition's
+      Given the competition is rebuilt from its stream
+      When the player "Sam Someone" is removed
+      Then the competition has 0 games
+
+    Scenario: The games of the players left are kept
+      Given the game of "Alex Another" beating "Pat Player" 26 to 3 was added to it
+      And the competition is rebuilt from its stream
+      When the player "Sam Someone" is removed
+      Then the competition has the game of "Alex Another" beating "Pat Player" 26 to 3
+
+    Scenario: The archived games of the players left are kept
+      Given the game of "Alex Another" beating "Pat Player" 26 to 3 was added to it
+      And the game of "Alex Another" beating "Pat Player" 26 to 3 was archived
+      And the competition is rebuilt from its stream
+      When the player "Sam Someone" is removed
+      Then the competition has 1 game
+
+    Scenario: A competition rebuilt after a player was removed does not have their archived games
+      Given the player "Sam Someone" was removed from it
+      When the competition is rebuilt from its stream
+      Then the competition has 0 games
+
+  Rule: A knockout with a game in use has its draw fixed
 
     Scenario: Removing a player with no games from a knockout with a game is refused
       Given the competition is a knockout of 4 places, each round the best of 1
@@ -122,6 +168,47 @@ Feature: Removing a competition's player
       And the competition is rebuilt from its stream
       When the player "Pat Player" is removed
       Then it is refused with "Competition.DrawFixed"
+
+    Scenario: Removing a player with no games from a knockout whose only game is archived is not refused
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Alex Another" was entered in it
+      And the tournament player "Pat Player" was entered in it
+      And a bye was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+      When the player "Pat Player" is removed
+      Then the competition does not have the tournament player "Pat Player"
+
+  Rule: Either player of a knockout's only game, archived, can be removed
+
+    The knockout has two places, its one round the best of 1, and the game
+    between its two players has been archived.
+
+    Background:
+      Given the competition is a knockout of 2 places, each round the best of 1
+      And the tournament player "Alex Another" was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+
+    Scenario Outline: Either player is removed
+      When the player "<player>" is removed
+      Then the competition does not have the tournament player "<player>"
+
+      Examples:
+        | player       |
+        | Sam Someone  |
+        | Alex Another |
+
+    Scenario Outline: The archived game goes with whichever is removed
+      When the player "<player>" is removed
+      Then the competition has 0 games
+
+      Examples:
+        | player       |
+        | Sam Someone  |
+        | Alex Another |
 
   Rule: A bye is removed by its place in the order
 
@@ -155,3 +242,12 @@ Feature: Removing a competition's player
       And the competition is rebuilt from its stream
       When the bye with the order 20000 is removed
       Then it is refused with "Competition.DrawFixed"
+
+    Scenario: Removing a bye in a knockout whose only game is archived is not refused
+      Given the tournament player "Alex Another" was entered in it
+      And a bye was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+      When the bye with the order 20000 is removed
+      Then the competition has 1 bye

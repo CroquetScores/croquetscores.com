@@ -1902,9 +1902,9 @@ Then(
 );
 
 Then(
-  /^the competition's player "([^"]*)" is answered as (not )?having played$/,
-  function (this: SpecWorld, name: string, not: string | null) {
-    assert.equal(listedCalled(this, name).hasPlayed, not === null);
+  /^the competition's player "([^"]*)" is answered as having (a|no) game in use$/,
+  function (this: SpecWorld, name: string, which: string) {
+    assert.equal(listedCalled(this, name).hasGamesInUse, which === "a");
   },
 );
 

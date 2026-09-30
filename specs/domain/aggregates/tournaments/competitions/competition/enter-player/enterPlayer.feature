@@ -299,7 +299,7 @@ Feature: Entering a tournament's player in one of its competitions
       When the tournament player "Pat Player" is entered
       Then it is refused with "Competition.DrawFixed"
 
-    Scenario: Entering a player in a knockout whose only game is archived is refused
+    Scenario: Entering a player in a knockout whose only game is archived is not refused
       Given the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Sam Someone" was entered in it
       And the tournament player "Alex Another" was entered in it
@@ -307,9 +307,10 @@ Feature: Entering a tournament's player in one of its competitions
       And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the bye with the order 40000 was removed from it
       And the competition is rebuilt from its stream
       When the tournament player "Pat Player" is entered
-      Then it is refused with "Competition.DrawFixed"
+      Then the competition has the tournament player "Pat Player"
 
     Scenario: Entering a player in a knockout with no games is not refused
       Given the competition is a knockout of 4 places, each round the best of 1

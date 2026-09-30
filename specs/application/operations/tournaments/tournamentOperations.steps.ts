@@ -378,9 +378,13 @@ Given(
           account,
           tournament.value,
           knockout,
-          4,
-          // Each round the best of 1, where the scenario says nothing else.
-          [0, 1].map((round) => domainScenarioOf(this).drawRounds[round] ?? 1),
+          // Four places, and each round the best of 1, where the scenario
+          // says nothing else.
+          domainScenarioOf(this).drawPlaces ?? 4,
+          Array.from(
+            { length: Math.log2(domainScenarioOf(this).drawPlaces ?? 4) },
+            (_, round) => domainScenarioOf(this).drawRounds[round] ?? 1,
+          ),
           momentOf(this),
         ),
       ),

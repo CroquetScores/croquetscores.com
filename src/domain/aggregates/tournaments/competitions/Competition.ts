@@ -58,6 +58,10 @@ export interface Told {
   readonly drawsAllowed: boolean;
 }
 
+// Whether the player `id` won or lost `game`.
+const isIn = (game: Game, id: CompetitionPlayerId): boolean =>
+  game.winner.equals(id) || game.loser.equals(id);
+
 /** A competition's refusal, named by its code. */
 export class CompetitionRefused extends Refused<CompetitionErrorCode> {}
 
@@ -82,8 +86,8 @@ const ORDER_STEP = 10_000;
  * as are what kind of competition it is and whether drawn games are allowed.
  * What it knows is who is in it, and the games they have played.
  *
- * A knockout is drawn in the competition's order, so once it has a game,
- * archived or not, its draw is fixed: nobody is entered, moved or removed.
+ * A knockout is drawn in the competition's order, so once it has a game in
+ * use, its draw is fixed: nobody is entered, moved or removed.
  * Its places left over are filled with byes, which are nobody, and it is
  * played only once players and byes fill every place.
  */
@@ -132,11 +136,13 @@ export class Competition extends AggregateRoot {
     return [...this.#games.values()];
   }
 
-  /** Whether the player `id` won or lost any game, an archived one among them. */
-  hasPlayed(id: CompetitionPlayerId): boolean {
-    return this.games.some(
-      (game) => game.winner.equals(id) || game.loser.equals(id),
-    );
+  /**
+   * Whether the player `id` won or lost any game in use. Only those count: an
+   * archived game counts for nothing, so it keeps nobody in the competition
+   * or the tournament.
+   */
+  hasGamesInUse(id: CompetitionPlayerId): boolean {
+    return this.#counting().some((game) => isIn(game, id));
   }
 
   /**
@@ -352,9 +358,11 @@ export class Competition extends AggregateRoot {
   }
 
   /**
-   * That the player `id`, entered by mistake, is taken out. A withdrawn player
-   * and one with games, an archived one among them, are refused, as the player
-   * says, and anybody in a knockout whose draw is fixed.
+   * That the player `id`, entered by mistake, is taken out, with their
+   * archived games, which would be against somebody no longer there and
+   * could never be restored. A withdrawn player and one with games in use are
+   * refused, as the player says, and anybody in a knockout whose draw is
+   * fixed.
    */
   removePlayer(
     id: CompetitionPlayerId,
@@ -362,7 +370,9 @@ export class Competition extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
-    this.#playerFound(id).ensureRemovable({ hasGames: this.hasPlayed(id) });
+    this.#playerFound(id).ensureRemovable({
+      hasGames: this.hasGamesInUse(id),
+    });
     this.#refuseOnceTheDrawIsFixed(told);
     this.record(new CompetitionPlayerRemoved(id.value, by, at));
   }
@@ -381,9 +391,10 @@ export class Competition extends AggregateRoot {
   /**
    * That the tournament player `tournamentPlayer`, archived, is taken out of
    * the competition, withdrawn or not, since an archived tournament player is
-   * in no competition. One with games, an archived one among them, is
-   * refused, as the player says, and anybody in a knockout whose draw is
-   * fixed. A tournament player not in it records nothing.
+   * in no competition, with their archived games, as a player removed by
+   * mistake is. One with games in use is refused, as the player says, and
+   * anybody in a knockout whose draw is fixed. A tournament player not in it
+   * records nothing.
    */
   removeArchivedPlayer(
     tournamentPlayer: TournamentPlayerId,
@@ -395,7 +406,9 @@ export class Competition extends AggregateRoot {
       player.tournamentPlayerId.equals(tournamentPlayer),
     );
     if (found === undefined) return;
-    found.ensureRemovableAsArchived({ hasGames: this.hasPlayed(found.id) });
+    found.ensureRemovableAsArchived({
+      hasGames: this.hasGamesInUse(found.id),
+    });
     this.#refuseOnceTheDrawIsFixed(told);
     this.record(new CompetitionPlayerRemoved(found.id.value, by, at));
   }
@@ -593,6 +606,12 @@ export class Competition extends AggregateRoot {
     } else if (event instanceof CompetitionPlayerRemoved) {
       this.#players.delete(event.playerId);
       this.#forgetWithdrawal(event.playerId);
+      // Only archived ones are left, since a player with a game in use is not
+      // removed, and they go with the player.
+      const removed = CompetitionPlayerId.from(event.playerId);
+      for (const game of this.games) {
+        if (isIn(game, removed)) this.#games.delete(game.id.value);
+      }
     } else if (event instanceof CompetitionGameAdded) {
       const id = GameId.from(event.gameId);
       // Asked of the game when it was recorded, so drawn games are let through
@@ -638,9 +657,11 @@ export class Competition extends AggregateRoot {
   }
 
   // A knockout's draw is its players in the competition's order, so once it
-  // has a game, archived or not, nobody is entered, moved or removed.
+  // has a game in use, nobody is entered, moved or removed. An archived game
+  // fixes nothing: it counts for nothing, and restoring it is refused where
+  // its players are no longer drawn to meet.
   #refuseOnceTheDrawIsFixed(told: Told): void {
-    if (told.shape.kind === "knockout" && this.#games.size > 0) {
+    if (told.shape.kind === "knockout" && this.#counting().length > 0) {
       refuse("Competition.DrawFixed", "The knockout's draw is fixed.");
     }
   }

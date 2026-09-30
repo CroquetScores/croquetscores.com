@@ -29,14 +29,14 @@ Feature: A player in a competition
   not kept, set aside or able to be put back. Nothing is lost by it, since a
   player who has no games in the competition has nothing in it but their
   place, and the tournament's player they are is untouched, so they can be
-  entered again as anybody can. A player who has any games in the
+  entered again as anybody can. A player who has any games in use in the
   competition cannot be removed, since the games would then be against
-  somebody who is no longer there; an archived game counts, since it can be
-  restored. A withdrawn player cannot be removed either, since withdrawing is
-  what is done to somebody who has played, and their withdrawal is reversed
-  first. The games are the competition's to know, not the player's, so the
-  competition says whether the player has any when it asks whether they can
-  be removed, and taking them out is the competition's to do.
+  somebody who is no longer there; an archived game does not count
+  (`removePlayer.feature`). A withdrawn player cannot be removed either, since 
+  withdrawing is what is done to somebody who has played, and their withdrawal
+  is reversed9 first. The games are the competition's to know, not the 
+  player's, so the competition says whether the player has any when it asks 
+  whether they can be removed, and taking them out is the competition's to do.
 
   A player whose tournament player is archived is removed from the
   competition whether or not they have withdrawn, since an archived
