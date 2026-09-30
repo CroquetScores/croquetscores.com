@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
-import { optionFace } from "../../../../../view/tabs/optionFace.js";
+import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import "../../../../../view/tabs/listed.css";
 
 // A competition's Players tab (competition-players-tab.feature): a drop-down
@@ -208,6 +208,24 @@ export const CompetitionPlayersTab = ({
     />
   );
 
+  // A button where `offered`, and its room where not, so that what comes after
+  // it lines up with the rows that do offer it (optionFace.tsx).
+  const buttonOrRoom = (
+    offered: boolean,
+    player: Listed,
+    action: Action,
+  ): React.JSX.Element =>
+    offered
+      ? button(player, action)
+      : noOption(action, say(`admin.competitionPlayers.${action}`));
+  // Room is kept only for what some row offers: a gap no row fills would be
+  // space and nothing else. A fixed draw removes and moves nobody, a lone
+  // player moves nowhere, and a list of byes withdraws nobody.
+  const removable = (player: Listed): boolean => !fixed && !player.hasPlayed;
+  const anyRemove = playing.some(removable);
+  const anyWithdraw = playing.some(({ bye }) => !bye);
+  const anyMove = !fixed && playing.length > 1;
+
   const row = (player: Listed, options: React.JSX.Element[]) => (
     <li
       // A bye's id is every bye's, so its order tells it apart.
@@ -304,16 +322,24 @@ export const CompetitionPlayersTab = ({
             <ul className="listed" data-listed="playing">
               {playing.map((player, place) =>
                 row(player, [
-                  ...(!fixed && !player.hasPlayed
-                    ? [button(player, "remove")]
+                  ...(anyRemove
+                    ? [buttonOrRoom(removable(player), player, "remove")]
                     : []),
                   // A bye plays nothing to withdraw from.
-                  ...(player.bye ? [] : [button(player, "withdraw")]),
+                  ...(anyWithdraw
+                    ? [buttonOrRoom(!player.bye, player, "withdraw")]
+                    : []),
                   // Last, where they are in the same place on every row.
                   // Nowhere to go is nothing to press.
-                  ...(!fixed && place > 0 ? [button(player, "up")] : []),
-                  ...(!fixed && place < playing.length - 1
-                    ? [button(player, "down")]
+                  ...(anyMove
+                    ? [
+                        buttonOrRoom(place > 0, player, "up"),
+                        buttonOrRoom(
+                          place < playing.length - 1,
+                          player,
+                          "down",
+                        ),
+                      ]
                     : []),
                 ]),
               )}

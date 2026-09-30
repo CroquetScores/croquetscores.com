@@ -6,7 +6,7 @@ import {
   PlayerDialog,
   type PlayerAsTheyAre,
 } from "../../modal-dialogs/player/player.js";
-import { optionFace } from "../optionFace.js";
+import { noOption, optionFace } from "../optionFace.js";
 import "../listed.css";
 
 // The Players tab (players-tab.feature): the players in use in the
@@ -119,6 +119,22 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
     />
   );
 
+  // A button where `offered`, and its room where not, so that what comes after
+  // it lines up with the rows that do offer it (optionFace.tsx).
+  const buttonOrRoom = (
+    offered: boolean,
+    player: Listed,
+    action: "up" | "down" | "archive",
+  ): React.JSX.Element =>
+    offered
+      ? button(player, action)
+      : noOption(action, say(`admin.players.${action}`));
+  // Room is kept only for what some row offers: a gap no row fills would be
+  // space and nothing else. A lone player moves nowhere, and a list where
+  // everybody has played archives nobody.
+  const anyArchive = inUse.some(({ hasPlayed }) => !hasPlayed);
+  const anyMove = inUse.length > 1;
+
   const row = (player: Listed, place: number): React.JSX.Element => (
     <li
       key={player.id}
@@ -165,11 +181,17 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
               // Before Archive, as a competition's Edit is, so that changing
               // a player is offered ahead of setting them aside.
               button(player, "edit"),
-              ...(player.hasPlayed ? [] : [button(player, "archive")]),
+              ...(anyArchive
+                ? [buttonOrRoom(!player.hasPlayed, player, "archive")]
+                : []),
               // Last, where they are in the same place on every row. Nowhere
               // to go is nothing to press.
-              ...(place > 0 ? [button(player, "up")] : []),
-              ...(place < inUse.length - 1 ? [button(player, "down")] : []),
+              ...(anyMove
+                ? [
+                    buttonOrRoom(place > 0, player, "up"),
+                    buttonOrRoom(place < inUse.length - 1, player, "down"),
+                  ]
+                : []),
             ]}
       </span>
     </li>

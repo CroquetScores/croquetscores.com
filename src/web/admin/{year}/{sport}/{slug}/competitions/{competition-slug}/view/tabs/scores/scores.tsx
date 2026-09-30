@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { say } from "../../../../../../../../words.js";
+import { noOption } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
 import "../../../../../view/tabs/listed.css";
 import "./scores.css";
@@ -122,6 +123,10 @@ export const ScoresTab = ({
           >
             {say("admin.scores.archive")}
           </button>
+        ) : inUse.some(({ archivable }) => archivable) ? (
+          // Its room, where other games offer Archive, so that what is beside
+          // it lines up with theirs (optionFace.tsx).
+          noOption("archive", say("admin.scores.archive"))
         ) : null}
       </span>
     </li>
