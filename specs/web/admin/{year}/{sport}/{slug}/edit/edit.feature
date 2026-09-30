@@ -206,6 +206,14 @@ Feature: A tournament is changed in the admin
         | spring open | 2026-10-03 | 2026-10-05 | Name     | TournamentName.AllLowerCase     |
         | Spring Open | 2026-10-05 | 2026-10-03 | Finishes | Tournament.FinishesBeforeStarts |
 
+    Scenario: A start in the year after next is refused beside the start
+      Given the server's clock reads "2026-09-17T09:00:00Z"
+      And the page to edit "Spring Open" is open
+      And "2028-01-01" is typed as the "Starts"
+      And "2028-01-02" is typed as the "Finishes"
+      When "Update Tournament" is pressed
+      Then "Starts" is refused with "Tournament.StartsAfterNextYear"
+
     Scenario: A refused form keeps what was typed
       Given the page to edit "Spring Open" is open
       And "spring open" is typed as the "Name"
