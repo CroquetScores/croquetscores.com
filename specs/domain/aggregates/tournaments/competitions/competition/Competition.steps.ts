@@ -54,6 +54,12 @@ Given(
   },
 );
 
+Given("a bye was entered in it", function (this: SpecWorld) {
+  happened(this, (competition) =>
+    competition.enterBye(toldOf(this), byOf(this), now(this)),
+  );
+});
+
 Given(
   "the player {string} withdrew from it",
   function (this: SpecWorld, name: string) {
@@ -145,7 +151,54 @@ Then(
   },
 );
 
+const byesOf = (world: SpecWorld) =>
+  competitionOf(world).players.filter((player) => player.isBye);
+
+// The one bye a scenario that has one looks at.
+const theBye = (world: SpecWorld) => {
+  const byes = byesOf(world);
+  assert.equal(byes.length, 1, "The competition has no one bye.");
+  return byes[0] as NonNullable<(typeof byes)[0]>;
+};
+
+Then(
+  /^the competition has (\d+) byes?$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(byesOf(this).length, Number(count));
+  },
+);
+
+Then(
+  "the competition's bye has the id {string}",
+  function (this: SpecWorld, id: string) {
+    assert.equal(theBye(this).id.value, id);
+  },
+);
+
+Then(
+  "the competition's bye is the tournament player {string}",
+  function (this: SpecWorld, id: string) {
+    assert.equal(theBye(this).tournamentPlayerId.value, id);
+  },
+);
+
+Then(
+  "the competition's bye has the order {int}",
+  function (this: SpecWorld, order: number) {
+    assert.equal(theBye(this).order, order);
+  },
+);
+
 const places = ["first", "second", "third", "fourth"];
+
+Then(
+  /^the competition's (first|second|third|fourth) player is a bye$/,
+  function (this: SpecWorld, place: string) {
+    const player = competitionOf(this).players[places.indexOf(place)];
+    assert.ok(player !== undefined, `The competition has no ${place} player.`);
+    assert.ok(player.isBye, `The ${place} player is not a bye.`);
+  },
+);
 
 Then(
   /^the competition's (first|second|third|fourth) player is "([^"]*)"$/,

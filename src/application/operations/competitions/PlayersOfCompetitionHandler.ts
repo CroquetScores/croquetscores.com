@@ -65,7 +65,23 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
     const people = new Map(
       tournament.players.map((player) => [player.id.value, player]),
     );
-    return competition.players.flatMap((player) => {
+    return competition.players.flatMap((player): ListedCompetitionPlayer[] => {
+      if (player.isBye) {
+        return [
+          {
+            id: player.id.value,
+            tournamentPlayer: player.tournamentPlayerId.value,
+            name: "",
+            representing: undefined,
+            flag: undefined,
+            withdrawn: false,
+            hasPlayed: false,
+            drawnAgainst: undefined,
+            bye: true,
+            order: player.order,
+          },
+        ];
+      }
       const person = people.get(player.tournamentPlayerId.value);
       return person === undefined
         ? []
@@ -79,6 +95,8 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
               withdrawn: player.withdrawn,
               hasPlayed: competition.hasPlayed(player.id),
               drawnAgainst: competition.drawnAgainst(player.id, told)?.value,
+              bye: false,
+              order: player.order,
             },
           ];
     });

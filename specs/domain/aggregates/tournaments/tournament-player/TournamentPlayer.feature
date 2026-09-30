@@ -11,6 +11,16 @@ Feature: A player in a tournament
   specified with it, and a player's name is refused wherever a person's would
   be.
 
+  A player is a person, and never a bye. A knockout's byes are entered in it
+  as byes (`enterPlayer.feature`), offered wherever players are entered in a
+  knockout, so a tournament player standing in for one would be a bye the
+  knockout could not tell was one: it would be drawn, and played, as a
+  person. So a name whose first word is "bye", in capitals or not, once the
+  whitespace at either end is taken off, is refused with
+  `TournamentPlayer.NamedBye`, whether the player is made with it or updated
+  to it. The word ends where anything but a letter comes, so "Bye 2" and
+  "Bye-1" are byes, but "Byers" is a name like any other.
+
   A player may represent something: the club, the region or the country they
   play for, written as a reader would say it, such as "Canterbury Croquet
   Club". It is optional, since many players represent nothing but themselves.
@@ -69,6 +79,39 @@ Feature: A player in a tournament
     Scenario: A name that could not be a person's is refused as a person's is
       When a player named "Sa" is made
       Then it is refused for breaking "PersonName.TooShort"
+
+  Rule: A player is not named as a bye
+
+    Scenario Outline: A name whose first word is "bye" is refused
+      When a player named "<name>" is made
+      Then it is refused for breaking "TournamentPlayer.NamedBye"
+
+      Examples:
+        | name      |
+        | Bye       |
+        | bye       |
+        | BYE       |
+        | Bye 2     |
+        | Bye-1     |
+
+    Scenario: A name whose first word is "bye" after spaces is refused
+      When a player named "  Bye" is made
+      Then it is refused for breaking "TournamentPlayer.NamedBye"
+
+    Scenario Outline: A name with "bye" in it but not as its first word is kept
+      When a player named "<name>" is made
+      Then the player's name is "<name>"
+
+      Examples:
+        | name        |
+        | Byers Kim   |
+        | Sam Goodbye |
+        | Sam Bye     |
+
+    Scenario: A player updated to a name whose first word is "bye" is refused
+      Given a player named "Sam Someone"
+      When the player is updated to be called "Bye"
+      Then it is refused for breaking "TournamentPlayer.NamedBye"
 
   Rule: A player may represent something
 

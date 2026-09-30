@@ -547,7 +547,8 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   );
 
   // A competition's player moved a place, withdrawn, unwithdrawn or removed,
-  // by the part of their id after "competition-player/".
+  // by the part of their id after "competition-player/", and a bye by its
+  // order as well.
   for (const action of [
     "up",
     "down",
@@ -557,6 +558,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   ] as const) {
     server.post<{
       Params: { id: string; competition: string; player: string };
+      Querystring: { order?: string };
     }>(
       `/tournaments/:id/competitions/:competition/players/:player/${action}`,
       async (request, reply) => {
@@ -569,14 +571,17 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
           `competition-player/${request.params.player}`,
         ] as const;
         const at = request.requestedAt;
+        // Every bye has the same id, so a bye is named by its order too.
+        const { order } = request.query;
+        const byeOrder = order === undefined ? undefined : Number(order);
         await request.server.mediator.send(
           action === "withdraw"
             ? new WithdrawPlayer(...asked, at)
             : action === "unwithdraw"
               ? new ReverseWithdrawal(...asked, at)
               : action === "remove"
-                ? new RemovePlayer(...asked, at)
-                : new MoveCompetitionPlayer(...asked, action, at),
+                ? new RemovePlayer(...asked, at, byeOrder)
+                : new MoveCompetitionPlayer(...asked, action, at, byeOrder),
         );
         return reply.code(204).header("cache-control", "no-store").send();
       },

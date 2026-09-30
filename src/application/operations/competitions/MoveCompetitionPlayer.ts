@@ -23,6 +23,11 @@ export class MoveCompetitionPlayer extends Command<void> {
     /** Which way they are moved: "up" or "down", and nothing else. */
     readonly direction: string,
     requestedAt: ReadOnlyDate,
+    /**
+     * Where the player is a bye, its order in the competition, since every
+     * bye has the same id.
+     */
+    readonly byeOrder?: number,
   ) {
     super(requestedAt);
   }

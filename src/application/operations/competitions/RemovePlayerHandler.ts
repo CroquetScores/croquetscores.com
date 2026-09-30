@@ -35,12 +35,18 @@ export class RemovePlayerHandler extends CommandHandler<RemovePlayer, void> {
       command,
       "RemovePlayer",
     );
-    competition.removePlayer(
-      CompetitionPlayerId.from(command.playerId),
-      told,
-      by,
-      command.requestedAt,
-    );
+    const id = CompetitionPlayerId.from(command.playerId);
+    if (id.equals(CompetitionPlayerId.bye())) {
+      // A bye with no order said is one the competition does not have.
+      competition.removeBye(
+        command.byeOrder ?? 0,
+        told,
+        by,
+        command.requestedAt,
+      );
+    } else {
+      competition.removePlayer(id, told, by, command.requestedAt);
+    }
     await this.competitions.save(competition);
   }
 }

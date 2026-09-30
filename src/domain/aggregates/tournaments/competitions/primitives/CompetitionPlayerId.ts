@@ -7,6 +7,16 @@ const kind = "competition-player";
  * {@link Id}.
  */
 export class CompetitionPlayerId extends Id {
+  /**
+   * What a knockout's bye is known by: every digit 0, so that every bye is
+   * known by the same id, and none is ever mistaken for a player's.
+   */
+  static bye(): CompetitionPlayerId {
+    return new CompetitionPlayerId(
+      `${kind}/00000000-0000-0000-0000-000000000000`,
+    );
+  }
+
   static create(): CompetitionPlayerId {
     return new CompetitionPlayerId(Id.mint(kind));
   }

@@ -162,6 +162,32 @@ When(
   },
 );
 
+// A bye is nobody, but has an id, which a game can be sent with.
+When(
+  /^the game of "([^"]*)" beating a bye (\S+) to (\S+) is added$/,
+  function (
+    this: SpecWorld,
+    winner: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    ask(this, (competition) => {
+      competition.addGame(
+        nextId(this),
+        {
+          winner: playerIn(this, competition, winner),
+          winnerScore: Score.read(winnerScore, Website.croquetScores),
+          loser: CompetitionPlayerId.bye(),
+          loserScore: Score.read(loserScore, Website.croquetScores),
+        },
+        toldOf(this),
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
+
 Given(
   new RegExp(`^${GAME} was added to it$`),
   function (

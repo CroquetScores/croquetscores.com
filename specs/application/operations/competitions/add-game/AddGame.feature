@@ -182,8 +182,45 @@ Feature: Adding a game's score to a competition
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Chris Third" 26 to 17 in "Final Stage" of "Spring Open"
       Then it is refused with "Competition.NotDrawnToMeet"
+
+  Rule: A knockout's game waits until its draw is filled
+
+    The knockout's draw is four places, each round the best of 1. Players and
+    byes fill its places, the withdrawn among them, and a tournament player
+    archived is removed from it (`ArchivePlayer.feature`), so fills none.
+
+    Background:
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+
+    Scenario: A game in a knockout with a place left empty is refused
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then it is refused with "Competition.DrawNotFilled"
+
+    Scenario: A game in a knockout whose last place a bye fills is kept
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then "Final Stage" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: A withdrawn player still fills their place
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Pat Fourth" from "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then "Final Stage" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: An archived tournament player fills no place
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has archived the player "Pat Fourth" in "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then it is refused with "Competition.DrawNotFilled"
 
   Rule: Only a competition there is, and one not archived, in a tournament there is and not archived, has a game added
 

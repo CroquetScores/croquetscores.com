@@ -19,6 +19,24 @@ Feature: The players tab of a competition's page
   tournament is in the competition, the drop-down and Add Player are not
   shown, and the tab says so.
 
+  A knockout is played only once its draw is filled (`addGame.feature`), and
+  the places its players leave over are filled with byes
+  (`enterPlayer.feature`). So in a knockout the drop-down offers Bye first,
+  before the players, and goes on offering it however many byes are added,
+  since a draw can need several; a block or a Swiss has no draw, and does not
+  offer it. A bye added is listed among the players, in its place in the
+  draw, called Bye, in the reader's language. It is nobody, so it says
+  nothing of what it represents or the flag it flies. In a knockout with
+  every player of the tournament in it, the drop-down is still shown while a
+  place is left, offering Bye alone.
+
+  A bye is put in its place in the draw as a player is: it offers Up, Down and
+  Remove, and Remove asks first, as it does for a player. It does not offer
+  Withdraw, since it plays nothing to withdraw from. Every bye has the same id,
+  so what is pressed on a bye acts on that bye by its place in the order
+  (`movePlayer.feature`, `removePlayer.feature`), and the other byes stay
+  where they are.
+
   A player Add Player cannot enter is not entered, and the tab says why
   beneath the drop-down, by the refusal's code, in the reader's language: a
   knockout whose every place is filled is refused with
@@ -140,6 +158,152 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
       When the players of "Block A" in "Spring Open" are opened
       Then the tab says every player is in the competition
+
+  Rule: In a knockout, Bye is offered first, and as often as it is wanted
+
+    The knockout's draw is four places, each round the best of 1.
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+
+    Scenario: A knockout offers Bye
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Bye" is offered to add
+
+    Scenario: Bye is offered before the players
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the first player offered to add is "Bye"
+
+    Scenario: A block does not offer Bye
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Bye" is not offered to add
+
+    Scenario: A bye added is listed among the players
+      Given the players of "Final Stage" in "Spring Open" are open
+      And "Bye" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Bye" is listed
+
+    Scenario: A bye added is kept
+      Given the players of "Final Stage" in "Spring Open" are open
+      And "Bye" is chosen to add
+      When "Add Player" is pressed
+      Then the competition "Final Stage" of "Spring Open" has 1 bye
+
+    Scenario: Bye is still offered once a bye is added
+      Given the players of "Final Stage" in "Spring Open" are open
+      And "Bye" is chosen to add
+      When "Add Player" is pressed
+      Then the player "Bye" is offered to add
+
+    Scenario: A second bye is added
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the players of "Final Stage" in "Spring Open" are open
+      And "Bye" is chosen to add
+      When "Add Player" is pressed
+      Then the competition "Final Stage" of "Spring Open" has 2 byes
+
+    Scenario: A bye is listed after the players entered before it
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Bye" is listed after "Sam Someone"
+
+    Scenario: A knockout with every player of the tournament in it still offers Bye
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Bye" is offered to add
+
+    Scenario: A bye added to a full knockout is refused beneath the drop-down
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the players of "Final Stage" in "Spring Open" are open
+      And "Bye" is chosen to add
+      When "Add Player" is pressed
+      Then the drop-down of players to add is refused with "Competition.DrawFull"
+
+    Scenario: Bye is offered in the reader's language
+      Given a browser that asks for "en-XA"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the first player offered to add is in the test locale
+
+    Scenario: A bye listed is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the first player listed is in the test locale
+
+  Rule: A bye is put in its place and taken out as a player is
+
+    The knockout's draw is four places. Sam Someone is entered, then a bye,
+    then Alex Another, then another bye.
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+
+    Scenario Outline: A bye offers what can be done to it
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the second player listed offers "<option>"
+
+      Examples:
+        | option |
+        | Up     |
+        | Down   |
+        | Remove |
+
+    Scenario: A bye does not offer Withdraw
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the second player listed does not offer "Withdraw"
+
+    Scenario: Up moves a bye before the one above it
+      Given the players of "Final Stage" in "Spring Open" are open
+      When "Up" is pressed on the second player listed
+      Then the first player listed is "Bye"
+
+    Scenario: Down moves a bye after the one below it
+      Given the players of "Final Stage" in "Spring Open" are open
+      When "Down" is pressed on the second player listed
+      Then the third player listed is "Bye"
+
+    Scenario: Only the bye moved moves
+      Given the players of "Final Stage" in "Spring Open" are open
+      When "Up" is pressed on the fourth player listed
+      Then the second player listed is "Bye"
+
+    Scenario: A bye moved is kept in its new place
+      Given the players of "Final Stage" in "Spring Open" are open
+      When "Up" is pressed on the second player listed
+      Then the first player of "Final Stage" of "Spring Open" is a bye
+
+    Scenario: Remove on a bye asks first
+      Given the players of "Final Stage" in "Spring Open" are open
+      When "Remove" is pressed on the second player listed
+      Then a modal dialog asks to confirm
+
+    Scenario: The question names the bye
+      Given the players of "Final Stage" in "Spring Open" are open
+      When "Remove" is pressed on the second player listed
+      Then the question names "Bye"
+
+    Scenario: A bye removed is kept removed
+      Given the players of "Final Stage" in "Spring Open" are open
+      And "Remove" is pressed on the second player listed
+      When the question is confirmed
+      Then the competition "Final Stage" of "Spring Open" has 1 bye
+
+    Scenario: Only the bye removed goes
+      Given the players of "Final Stage" in "Spring Open" are open
+      And "Remove" is pressed on the fourth player listed
+      When the question is confirmed
+      Then the second player listed is "Bye"
 
   Rule: Add Player enters the player chosen, in the tournament's order
 
@@ -601,7 +765,8 @@ Feature: The players tab of a competition's page
   Rule: Once a knockout has a game, its players are fixed
 
     The knockout's draw is four places, each round the best of 1, so Sam
-    Someone plays Alex Another in the first round and Chris Third has a bye.
+    Someone plays Alex Another in the first round and Chris Third is drawn
+    against a bye.
     Pat Fourth is a player of the tournament who is not in it.
 
     Scenario: A knockout with no games offers Add Player
@@ -610,6 +775,7 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened
       Then the tab offers "Add Player"
 
@@ -619,6 +785,7 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened
       Then the tab does not offer "Add Player"
@@ -629,6 +796,7 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened
       Then the player "Chris Third" does not offer "<option>"
@@ -644,6 +812,7 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened
       Then the player "Alex Another" does not offer "Down"
@@ -654,6 +823,7 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened
       Then the player "Chris Third" offers "Withdraw"
@@ -664,6 +834,7 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
       When the players of "Final Stage" in "Spring Open" are opened

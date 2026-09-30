@@ -347,6 +347,7 @@ export const spanish: Language = {
     "KnockoutDraw.EvenBestOf":
       "Un encuentro de eliminatoria tiene que tener ganador, así que es al mejor de un número impar de partidas.",
     "admin.modal.cancel": "Cancelar",
+    "admin.modal.ok": "Aceptar",
     "admin.people.emailAddress": "Dirección de correo electrónico",
     "admin.people.remove": "Quitar",
     "admin.managers.you": "Tú",
@@ -363,6 +364,7 @@ export const spanish: Language = {
     "admin.competitionPlayers.otherwise": "No se puede añadir a este jugador.",
     "admin.competitionPlayers.choose": "Jugador que añadir",
     "admin.competitionPlayers.nobody": "Elige un jugador",
+    "admin.competitionPlayers.bye": "Bye",
     "admin.competitionPlayers.all":
       "Todos los jugadores están en la competición",
     "admin.competitionPlayers.none": "No hay jugadores",
@@ -406,6 +408,9 @@ export const spanish: Language = {
     "Competition.MatchDecided": "Su partido ya está decidido.",
     "Competition.DrawFull":
       "No se puede añadir el jugador porque el cuadro está lleno.",
+    "Competition.DrawNotFilled":
+      "No se pueden añadir resultados hasta que cada puesto del cuadro tenga un jugador o un bye.",
+    "Competition.ByeOutsideKnockout": "Solo una eliminatoria puede tener byes.",
     "Competition.NotDrawnToMeet": "No les toca jugar entre sí.",
     "CompetitionPlayer.Withdrawn": "Un jugador retirado ya no juega.",
     "admin.players.add": "Añadir jugador",
@@ -433,6 +438,10 @@ export const spanish: Language = {
     "Tournament.PlayerNameTaken":
       "Otro jugador de este torneo ya tiene ese nombre.",
     "TournamentPlayer.NoSuchFlag": "Elige una de las banderas que hay.",
+    "TournamentPlayer.NamedBye": "Un jugador no puede llamarse Bye.",
+    "admin.player.byesTitle": "Los byes no se añaden",
+    "admin.player.byes":
+      "Un bye no es un jugador del torneo. Una eliminatoria ofrece Bye cuando se añaden sus jugadores, tantas veces como necesite su cuadro.",
     "AddManager.NoSuchAccount":
       "Esa dirección no tiene ninguna cuenta que se pueda hacer gestora.",
     "admin.scorers.add": "Añadir anotador",

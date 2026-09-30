@@ -38,6 +38,9 @@ interface Props {
 // or a player, so that each is one segment of an address.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
+// What a name that makes a player a bye is refused with.
+const BYE = "TournamentPlayer.NamedBye";
+
 // The field each refusal is about. One about no one field is said above them.
 const fieldOf = (code: string): "name" | "flag" | undefined =>
   code.startsWith("PersonName.") || code === "Tournament.PlayerNameTaken"
@@ -60,6 +63,8 @@ export const PlayerDialog = ({
   // Who was last added, said until the next name is typed.
   const [added, setAdded] = useState<string | undefined>();
   const [sending, setSending] = useState(false);
+  // Whether the reader is being told why a player is never a bye.
+  const [explaining, setExplaining] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
 
@@ -76,6 +81,13 @@ export const PlayerDialog = ({
     code,
     words: say(knows(code) ? code : "admin.player.otherwise"),
   });
+  // Back in the name, with what was typed still typed, to put it right. After
+  // the dialog about byes has given the focus back to what opened it.
+  const explained = (): void => {
+    setExplaining(false);
+    setTimeout(() => nameField.current?.focus());
+  };
+
   const refusedFor = (field: "name" | "flag" | undefined): Refusal[] =>
     refused.filter(({ code }) => fieldOf(code) === field);
 
@@ -113,11 +125,18 @@ export const PlayerDialog = ({
           broken?: { code: string }[];
         };
         setAdded(undefined);
-        setRefused(
-          answer.broken?.map(({ code }) => refusal(code)) ?? [
-            refusal(answer.error ?? "Unknown"),
-          ],
-        );
+        // Told in a dialog of its own rather than beneath the name: what a
+        // bye is, and where they are found, is more than a line can say.
+        if (answer.broken?.some(({ code }) => code === BYE)) {
+          setRefused([]);
+          setExplaining(true);
+        } else {
+          setRefused(
+            answer.broken?.map(({ code }) => refusal(code)) ?? [
+              refusal(answer.error ?? "Unknown"),
+            ],
+          );
+        }
       }
     } catch {
       setRefused([refusal("Unknown")]);
@@ -136,96 +155,109 @@ export const PlayerDialog = ({
   const above = refusedFor(undefined);
 
   return (
-    <ModalDialog
-      title={say(
-        player === undefined
-          ? "admin.player.addTitle"
-          : "admin.player.editTitle",
-      )}
-      action={say(
-        player === undefined ? "admin.player.add" : "admin.player.save",
-      )}
-      act={() => void send()}
-      cancel={close}
-      busy={sending}
-    >
-      {/* Told to a screen reader as it changes, since nothing else on the
+    <>
+      <ModalDialog
+        title={say(
+          player === undefined
+            ? "admin.player.addTitle"
+            : "admin.player.editTitle",
+        )}
+        action={say(
+          player === undefined ? "admin.player.add" : "admin.player.save",
+        )}
+        act={() => void send()}
+        cancel={close}
+        busy={sending}
+      >
+        {/* Told to a screen reader as it changes, since nothing else on the
           dialog changes where the reader is. */}
-      <p className="dialog-status" role="status">
-        {added === undefined
-          ? null
-          : say("admin.player.added", { name: added })}
-      </p>
-      {above.length > 0 ? (
-        <div className="dialog-problems">
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
-      <Field
-        name="name"
-        label={say("admin.player.name")}
-        refused={refusedFor("name")}
-      >
-        {(tied) => (
-          <input
-            {...tied}
-            ref={nameField}
-            type="text"
-            placeholder=" "
-            autoComplete="off"
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value);
-              // Who was added is no longer the news once the next is typed.
-              setAdded(undefined);
-            }}
-          />
-        )}
-      </Field>
-      <Field
-        name="representing"
-        label={say("admin.player.representing")}
-        refused={undefined}
-      >
-        {(tied) => (
-          <input
-            {...tied}
-            type="text"
-            placeholder=" "
-            autoComplete="off"
-            value={representing}
-            onChange={(event) => {
-              setRepresenting(event.target.value);
-            }}
-          />
-        )}
-      </Field>
-      <Field
-        name="flag"
-        label={say("admin.player.flag")}
-        refused={refusedFor("flag")}
-        lifted
-      >
-        {(tied) => (
-          <select
-            {...tied}
-            value={flag}
-            onChange={(event) => {
-              setFlag(event.target.value);
-            }}
-          >
-            {/* None first, since most players fly none. */}
-            <option value="" />
-            {flags.map(({ code, name: called }) => (
-              <option key={code} value={code}>
-                {called}
-              </option>
+        <p className="dialog-status" role="status">
+          {added === undefined
+            ? null
+            : say("admin.player.added", { name: added })}
+        </p>
+        {above.length > 0 ? (
+          <div className="dialog-problems">
+            {above.map(({ code, words }) => (
+              <p key={code}>{words}</p>
             ))}
-          </select>
-        )}
-      </Field>
-    </ModalDialog>
+          </div>
+        ) : null}
+        <Field
+          name="name"
+          label={say("admin.player.name")}
+          refused={refusedFor("name")}
+        >
+          {(tied) => (
+            <input
+              {...tied}
+              ref={nameField}
+              type="text"
+              placeholder=" "
+              autoComplete="off"
+              value={name}
+              onChange={(event) => {
+                setName(event.target.value);
+                // Who was added is no longer the news once the next is typed.
+                setAdded(undefined);
+              }}
+            />
+          )}
+        </Field>
+        <Field
+          name="representing"
+          label={say("admin.player.representing")}
+          refused={undefined}
+        >
+          {(tied) => (
+            <input
+              {...tied}
+              type="text"
+              placeholder=" "
+              autoComplete="off"
+              value={representing}
+              onChange={(event) => {
+                setRepresenting(event.target.value);
+              }}
+            />
+          )}
+        </Field>
+        <Field
+          name="flag"
+          label={say("admin.player.flag")}
+          refused={refusedFor("flag")}
+          lifted
+        >
+          {(tied) => (
+            <select
+              {...tied}
+              value={flag}
+              onChange={(event) => {
+                setFlag(event.target.value);
+              }}
+            >
+              {/* None first, since most players fly none. */}
+              <option value="" />
+              {flags.map(({ code, name: called }) => (
+                <option key={code} value={code}>
+                  {called}
+                </option>
+              ))}
+            </select>
+          )}
+        </Field>
+      </ModalDialog>
+      {explaining ? (
+        <ModalDialog
+          title={say("admin.player.byesTitle")}
+          action={say("admin.modal.ok")}
+          act={explained}
+          cancel={explained}
+          alone
+        >
+          <p className="dialog-byes">{say("admin.player.byes")}</p>
+        </ModalDialog>
+      ) : null}
+    </>
   );
 };

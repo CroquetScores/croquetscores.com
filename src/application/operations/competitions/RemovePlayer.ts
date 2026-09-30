@@ -13,6 +13,11 @@ export class RemovePlayer extends Command<void> {
     /** The player, by their id in the competition. */
     readonly playerId: string,
     requestedAt: ReadOnlyDate,
+    /**
+     * Where the player is a bye, its order in the competition, since every
+     * bye has the same id.
+     */
+    readonly byeOrder?: number,
   ) {
     super(requestedAt);
   }

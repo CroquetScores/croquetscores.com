@@ -453,3 +453,71 @@ Then(
     );
   },
 );
+
+// A row by its place in the list, since a knockout's byes are all called Bye.
+const PLACES = ["first", "second", "third", "fourth"];
+const PLACE = "(first|second|third|fourth)";
+
+const rowAt = (world: SpecWorld, place: string): Locator =>
+  rows(world).nth(PLACES.indexOf(place));
+
+const optionAt = (world: SpecWorld, place: string, option: string): Locator =>
+  rowAt(world, place)
+    .locator(".listed-options")
+    .getByRole("button", { name: option, exact: true });
+
+// The first has a step of its own, which reads only those in use.
+Then(
+  /^the (second|third|fourth) player listed is "([^"]*)"$/,
+  async function (this: SpecWorld, place: string, name: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await namesIn(this))[PLACES.indexOf(place)],
+        name,
+        `The players are ${JSON.stringify(await namesIn(this))}.`,
+      );
+    });
+  },
+);
+
+Then(
+  new RegExp(`^the ${PLACE} player listed offers "([^"]*)"$`),
+  async function (this: SpecWorld, place: string, option: string) {
+    await eventually(this, async () => {
+      assert.equal(await optionAt(this, place, option).count(), 1);
+    });
+  },
+);
+
+Then(
+  new RegExp(`^the ${PLACE} player listed does not offer "([^"]*)"$`),
+  async function (this: SpecWorld, place: string, option: string) {
+    await eventually(this, async () => {
+      assert.equal(await rowAt(this, place).count(), 1);
+      assert.equal(await optionAt(this, place, option).count(), 0);
+    });
+  },
+);
+
+When(
+  new RegExp(`^"([^"]*)" is pressed on the ${PLACE} player listed$`),
+  async function (this: SpecWorld, option: string, place: string) {
+    await eventually(this, async () => {
+      assert.equal(await optionAt(this, place, option).count(), 1);
+    });
+    await optionAt(this, place, option).click();
+  },
+);
+
+Then(
+  "the first player listed is in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const [first] = await namesIn(this);
+      assert.ok(
+        first !== undefined && isMarked(first),
+        `The first player is ${String(first)}.`,
+      );
+    });
+  },
+);

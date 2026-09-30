@@ -23,6 +23,11 @@ Feature: Removing a competition's player
   tournament players it names orders 10,000 apart, in the order it first
   names them (`enterPlayer.feature`).
 
+  A bye is removed by its place in the competition's order, since every bye
+  has the same id (`enterPlayer.feature`): the bye with the order it has.
+  Nothing is lost with it, since it is nobody and has no games, but a
+  knockout with a game has its byes fixed as it has its players.
+
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-26T10:00:00Z"
@@ -112,7 +117,41 @@ Feature: Removing a competition's player
       Given the competition is a knockout of 4 places, each round the best of 1
       And the tournament player "Alex Another" was entered in it
       And the tournament player "Pat Player" was entered in it
+      And a bye was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the player "Pat Player" is removed
+      Then it is refused with "Competition.DrawFixed"
+
+  Rule: A bye is removed by its place in the order
+
+    Sam Someone is entered with the order 10,000, so the bye entered after them has
+    20,000.
+
+    Background:
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And a bye was entered in it
+
+    Scenario: A bye removed is no longer in the competition
+      Given the competition is rebuilt from its stream
+      When the bye with the order 20000 is removed
+      Then the competition has 0 byes
+
+    Scenario: Of two byes, only the one removed goes
+      Given a bye was entered in it
+      And the competition is rebuilt from its stream
+      When the bye with the order 30000 is removed
+      Then the competition's bye has the order 20000
+
+    Scenario: A bye with no such order is refused
+      Given the competition is rebuilt from its stream
+      When the bye with the order 15000 is removed
+      Then it is refused with "Competition.NoSuchPlayer"
+
+    Scenario: Removing a bye in a knockout with a game is refused
+      Given the tournament player "Alex Another" was entered in it
+      And a bye was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the bye with the order 20000 is removed
       Then it is refused with "Competition.DrawFixed"

@@ -27,6 +27,8 @@ interface Player {
   readonly withdrawn: boolean;
   /** In a knockout, who they are drawn to play now, by their id. */
   readonly drawnAgainst?: string;
+  /** Whether this is a knockout's bye, which is nobody. */
+  readonly bye: boolean;
 }
 
 type Part = "winner" | "winnerScore" | "loser" | "loserScore";
@@ -89,8 +91,8 @@ export const ScoreDialog = ({
     fields.winner.current?.focus();
   }, [at]);
 
-  // A withdrawn player plays no more of the competition.
-  const playing = players.filter(({ withdrawn }) => !withdrawn);
+  // A withdrawn player plays no more of the competition, and a bye is nobody.
+  const playing = players.filter(({ withdrawn, bye }) => !withdrawn && !bye);
   const nameOf = (id: string): string =>
     players.find((player) => player.id === id)?.name ?? "";
 

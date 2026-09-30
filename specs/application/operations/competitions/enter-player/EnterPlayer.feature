@@ -28,6 +28,14 @@ Feature: Entering a tournament's player in one of its competitions
   (`enterPlayer.feature`). The competition's players start in the order the
   tournament has them in, whatever order they are entered in.
 
+  A bye is entered as a tournament player is, by the tournament player whose
+  id's every digit is 0, and is answered with the id in the competition whose
+  every digit is 0 (`enterPlayer.feature`). The tournament has no such player,
+  and none is asked of it: the bye is nobody, so it has no order in the
+  tournament either, and the competition puts it last. Whether the
+  competition can have a bye is the competition's to say, since only a
+  knockout has a draw.
+
   A forgotten account enters nobody, and is refused with `Account.Forgotten`.
 
   These scenarios run against Postgres, with the application's event store and
@@ -92,9 +100,44 @@ Feature: Entering a tournament's player in one of its competitions
       And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" enters the player "Chris Third" in "Final Stage" of "Spring Open"
       Then it is refused with "Competition.DrawFixed"
+
+  Rule: A bye is entered in a knockout by the tournament player whose every digit is 0
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+
+    Scenario: A bye entered is one of the knockout's players
+      When the reader signed in to the account for "organiser@example.com" enters a bye in "Final Stage" of "Spring Open"
+      Then the competition "Final Stage" of "Spring Open" has 1 bye
+
+    Scenario: The answer is the id in the competition whose every digit is 0
+      When the reader signed in to the account for "organiser@example.com" enters a bye in "Final Stage" of "Spring Open"
+      Then it is answered with "competition-player/00000000-0000-0000-0000-000000000000"
+
+    Scenario: A second bye is entered
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" enters a bye in "Final Stage" of "Spring Open"
+      Then the competition "Final Stage" of "Spring Open" has 2 byes
+
+    Scenario: A bye is entered after the players there are
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" enters a bye in "Final Stage" of "Spring Open"
+      Then the second player of "Final Stage" of "Spring Open" is a bye
+
+    Scenario: A bye entered in a block is refused as the competition refuses it
+      When the reader signed in to the account for "organiser@example.com" enters a bye in "Block A" of "Spring Open"
+      Then it is refused with "Competition.ByeOutsideKnockout"
+
+    Scenario: A scorer entering a bye is refused
+      Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" enters a bye in "Final Stage" of "Spring Open"
+      Then it is refused with "Tournament.NotAManager"
 
   Rule: Only a tournament player there is, and one not archived, can be entered
 

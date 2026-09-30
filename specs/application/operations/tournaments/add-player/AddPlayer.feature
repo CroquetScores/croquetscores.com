@@ -62,6 +62,7 @@ Feature: Adding a player to a tournament
         |             | nz   | PersonName.Missing          |
         | Sa          | nz   | PersonName.TooShort         |
         | Sam Someone | zz   | TournamentPlayer.NoSuchFlag |
+        | Bye         | nz   | TournamentPlayer.NamedBye   |
 
     Scenario: A player who breaks a rule is not added
       When the reader signed in to the account for "organiser@example.com" adds the player "Sa" to "Spring Open"

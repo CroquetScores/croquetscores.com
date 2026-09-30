@@ -119,7 +119,7 @@ Feature: The players of a competition, as its tournament's managers and scorers 
     Who a player of a knockout is drawn against is worked out from its draw
     and the games that count (`KnockoutPlay.feature`). The knockout's draw is
     four places, each round the best of 1, so Sam Someone meets Alex Another
-    in the first round and Chris Third has a bye.
+    in the first round and Chris Third is drawn against a bye.
 
     Background:
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -129,6 +129,7 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
 
     Scenario: A player of a knockout is answered with who they are drawn against
       When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
@@ -139,7 +140,7 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
       Then the competition's player "Sam Someone" is answered as drawn against "Chris Third"
 
-    Scenario: A player of a knockout waiting on a bye is answered as drawn against nobody
+    Scenario: A player of a knockout drawn against a bye is answered as drawn against nobody
       When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
       Then the competition's player "Chris Third" is answered as drawn against nobody
 
@@ -148,6 +149,35 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
       Then the competition's player "Sam Someone" is answered as drawn against nobody
+
+  Rule: A bye in a knockout is answered as a bye
+
+    A bye is nobody (`enterPlayer.feature`), so the tournament says nothing of
+    it: it is answered with the id whose every digit is 0, as a bye, with no
+    name, and in its place in the competition's order.
+
+    Background:
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+
+    Scenario: A bye is answered as a bye
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then the second player of the competition answered is a bye
+
+    Scenario: A bye is answered with the id whose every digit is 0
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then the second player of the competition answered has the id "competition-player/00000000-0000-0000-0000-000000000000"
+
+    Scenario: Every bye is answered
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then 2 byes of the competition are answered
+
+    Scenario: A player is answered as not a bye
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Final Stage" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered as not a bye
 
   Rule: Each player is answered with what the tournament says of them
 

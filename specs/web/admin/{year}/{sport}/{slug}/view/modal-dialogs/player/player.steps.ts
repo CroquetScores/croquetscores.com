@@ -2,6 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import { english } from "../../../../../../../../../src/web/languages/english.js";
 import type { TournamentPlayer } from "../../../../../../../../../src/domain/aggregates/tournaments/TournamentPlayer.js";
 import {
   load,
@@ -460,5 +461,67 @@ Then(
         undefined,
       );
     });
+  },
+);
+
+// The dialog about byes ---------------------------------------------------------
+
+// Over the player dialog, which stays open beneath it, so found by what it
+// says rather than by being the dialog open.
+const byesDialog = "dialog[open]:has(.dialog-byes)";
+
+const byesDialogOf = (world: SpecWorld): Locator =>
+  world.browserPage.locator(byesDialog);
+
+Then("the dialog about byes is open", async function (this: SpecWorld) {
+  await byesDialogOf(this).waitFor();
+});
+
+Then("the dialog about byes is not open", async function (this: SpecWorld) {
+  await byesDialogOf(this).waitFor({ state: "detached" });
+});
+
+Then(
+  "the dialog about byes is announced as a modal dialog",
+  async function (this: SpecWorld) {
+    await byesDialogOf(this).waitFor();
+    assert.equal(
+      await byesDialogOf(this).evaluate(
+        (element: { matches(selector: string): boolean }) =>
+          element.matches(":modal"),
+      ),
+      true,
+    );
+  },
+);
+
+Then(
+  "the dialog about byes says the words for {string}",
+  async function (this: SpecWorld, key: string) {
+    const words = english.words[key];
+    assert.ok(words !== undefined, `English has no words for ${key}.`);
+    await byesDialogOf(this).waitFor();
+    const said = await byesDialogOf(this).innerText();
+    assert.ok(said.includes(words), `The dialog says ${said}.`);
+  },
+);
+
+Then(
+  "the dialog about byes offers {string} alone",
+  async function (this: SpecWorld, name: string) {
+    await byesDialogOf(this).waitFor();
+    const buttons = (
+      await byesDialogOf(this).locator("button").allInnerTexts()
+    ).map((words) => words.trim());
+    assert.deepEqual(buttons, [name]);
+  },
+);
+
+Then(
+  "every word in the dialog about byes is in the test locale",
+  async function (this: SpecWorld) {
+    await byesDialogOf(this).waitFor();
+    const stray = await unmarkedWithin(this, byesDialog);
+    assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
   },
 );

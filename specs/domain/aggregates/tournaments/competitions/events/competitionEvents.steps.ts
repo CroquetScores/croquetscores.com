@@ -2,6 +2,8 @@ import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { nameCompetitionEvents } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/competitionEvents.js";
+import { CompetitionByeMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionByeMoved.js";
+import { CompetitionByeRemoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionByeRemoved.js";
 import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
@@ -53,6 +55,10 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new CompetitionPlayerWithdrawalReversed(PLAYER, causedBy, happenedAt),
   "a player being removed": () =>
     new CompetitionPlayerRemoved(PLAYER, causedBy, happenedAt),
+  "a bye being moved": () =>
+    new CompetitionByeMoved(20000, 15000, causedBy, happenedAt),
+  "a bye being removed": () =>
+    new CompetitionByeRemoved(20000, causedBy, happenedAt),
   "a game being added": () =>
     new CompetitionGameAdded(
       GAME,

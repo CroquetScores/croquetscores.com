@@ -706,6 +706,8 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
       And the competitions of "Spring Open" are open
       And "Edit" is pressed on the competition "Main Event"

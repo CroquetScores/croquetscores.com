@@ -66,12 +66,31 @@ Feature: Removing a competition's player
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" removes the player "Chris Third" in "Final Stage" of "Spring Open"
       Then it is refused with "Competition.DrawFixed"
 
     Scenario: A player the competition does not have is refused as the competition refuses them
       When the reader signed in to the account for "organiser@example.com" removes a player "Block A" of "Spring Open" does not have
+      Then it is refused with "Competition.NoSuchPlayer"
+
+  Rule: A bye is removed by its place in the order
+
+    A bye has the id whose every digit is 0, as every bye does, so it is named
+    by its order in the competition (`removePlayer.feature`).
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+
+    Scenario: A bye removed is no longer in the competition
+      When the reader signed in to the account for "organiser@example.com" removes the second player of "Final Stage" of "Spring Open"
+      Then the competition "Final Stage" of "Spring Open" has 0 byes
+
+    Scenario: A bye no longer at that place is refused
+      When the reader signed in to the account for "organiser@example.com" removes the bye with the order 15000 in "Final Stage" of "Spring Open"
       Then it is refused with "Competition.NoSuchPlayer"
 
   Rule: Only a competition there is, and one not archived, in a tournament there is and not archived, can have this done

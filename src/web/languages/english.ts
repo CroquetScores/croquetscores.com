@@ -371,6 +371,8 @@ export const english: Language = {
       "A knockout's match has to have a winner, so it is the best of an odd number of games.",
     // Every modal dialog's way out, since the page beneath cannot be reached.
     "admin.modal.cancel": "Cancel",
+    // The one button of a modal dialog that only tells the reader something.
+    "admin.modal.ok": "OK",
     // The Managers and Scorers tabs, each of which makes somebody one by their
     // email address and takes one off.
     "admin.people.emailAddress": "Email address",
@@ -394,6 +396,8 @@ export const english: Language = {
     "admin.competitionPlayers.otherwise": "This player cannot be added.",
     "admin.competitionPlayers.choose": "Player to add",
     "admin.competitionPlayers.nobody": "Choose a player",
+    // Offered in a knockout's drop-down, and what a bye is listed as.
+    "admin.competitionPlayers.bye": "Bye",
     "admin.competitionPlayers.all": "Every player is in the competition",
     "admin.competitionPlayers.none": "No players",
     "admin.competitionPlayers.up": "Up",
@@ -436,6 +440,9 @@ export const english: Language = {
     "Competition.MatchDecided": "Their match is already decided.",
     "Competition.DrawFull":
       "Cannot add the player because the knockout is full.",
+    "Competition.DrawNotFilled":
+      "Scores cannot be added until every place in the knockout is filled with a player or a bye.",
+    "Competition.ByeOutsideKnockout": "Only a knockout can have a bye.",
     "Competition.NotDrawnToMeet":
       "These players are not currently drawn to play each other in the knockout.",
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
@@ -469,6 +476,11 @@ export const english: Language = {
     "Tournament.PlayerNameTaken":
       "Another player in this tournament already has that name.",
     "TournamentPlayer.NoSuchFlag": "Choose one of the flags there are.",
+    "TournamentPlayer.NamedBye": "A player cannot be called Bye.",
+    // The dialog over the player dialog when a player is named as a bye.
+    "admin.player.byesTitle": "Byes need no adding",
+    "admin.player.byes":
+      "A bye is not one of the tournament's players. A knockout offers Bye whenever its players are added, as many times as its draw needs.",
     "AddManager.NoSuchAccount":
       "That address has no account that can be made a manager.",
     "admin.scorers.add": "Add Scorer",

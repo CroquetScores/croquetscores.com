@@ -1868,3 +1868,291 @@ Then(
     assert.equal(listedCalled(this, name).hasPlayed, not === null);
   },
 );
+
+// Byes -------------------------------------------------------------------------
+
+// A bye is entered as the tournament player whose every digit is 0, and moved
+// and removed by its order, since every bye has the same id.
+
+const enteringABye = async (
+  world: SpecWorld,
+  account: string,
+  tournament: TournamentId,
+  competition: string,
+): Promise<void> => {
+  const competitionId = await competitionIn(world, tournament, competition);
+  await send(
+    world,
+    new EnterPlayer(
+      account,
+      tournament.value,
+      competitionId.value,
+      TournamentPlayerId.bye().value,
+      momentOf(world),
+    ),
+    tournament,
+  );
+};
+
+Given(
+  "{string} has entered a bye in {string} of {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+  ) {
+    await enteringABye(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+    );
+    doneAs(this);
+  },
+);
+
+When(
+  "the reader signed in to the account for {string} enters a bye in {string} of {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+  ) {
+    await enteringABye(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+    );
+  },
+);
+
+Then("it is answered with {string}", function (this: SpecWorld, id: string) {
+  assert.equal(this.answer, id, `It was refused: ${inspect(this.failure)}`);
+});
+
+// Asked again for a moment where the scenario pressed something on a page
+// that does not wait for its answer, as a tab's buttons do not: what is kept
+// is what the scenario reads, once it has been kept.
+const keptSoon = async (checking: () => Promise<void>): Promise<void> => {
+  for (let tries = 1; ; tries += 1) {
+    try {
+      await checking();
+      return;
+    } catch (failure) {
+      if (tries >= 30) throw failure;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+  }
+};
+
+const playersNow = async (
+  world: SpecWorld,
+  competition: string,
+  name: string,
+): Promise<readonly CompetitionPlayer[]> =>
+  (
+    await competitionNow(
+      world,
+      (await theCompetition(world, competition, name)).competition,
+    )
+  )?.players ?? [];
+
+Then(
+  /^the competition "([^"]*)" of "([^"]*)" has (\d+) byes?$/,
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    count: string,
+  ) {
+    await keptSoon(async () => {
+      const byes = (await playersNow(this, competition, name)).filter(
+        (player) => player.isBye,
+      );
+      assert.equal(byes.length, Number(count));
+    });
+  },
+);
+
+Then(
+  /^the (first|second|third) player of "([^"]*)" of "([^"]*)" is a bye$/,
+  async function (
+    this: SpecWorld,
+    place: string,
+    competition: string,
+    name: string,
+  ) {
+    await keptSoon(async () => {
+      const player = (await playersNow(this, competition, name))[
+        PLACES[place] ?? -1
+      ];
+      assert.equal(player?.isBye, true, `The ${place} player is not a bye.`);
+    });
+  },
+);
+
+const byeMaking =
+  (action: "up" | "down" | "remove", order: number): Making =>
+  (account, about, at) =>
+    action === "remove"
+      ? new RemovePlayer(
+          account,
+          about.tournament.value,
+          about.competition.value,
+          CompetitionPlayerId.bye().value,
+          at,
+          order,
+        )
+      : new MoveCompetitionPlayer(
+          account,
+          about.tournament.value,
+          about.competition.value,
+          CompetitionPlayerId.bye().value,
+          action,
+          at,
+          order,
+        );
+
+// The order of the bye at `place` in the competition, which names it.
+const byeOrderAt = async (
+  world: SpecWorld,
+  place: string,
+  competition: string,
+  name: string,
+): Promise<number> => {
+  const player = (await playersNow(world, competition, name))[
+    PLACES[place] ?? -1
+  ];
+  assert.ok(player?.isBye === true, `The ${place} player is not a bye.`);
+  return player.order;
+};
+
+const sendingForABye = async (
+  world: SpecWorld,
+  address: string,
+  competition: string,
+  name: string,
+  making: Making,
+): Promise<void> => {
+  const tournament = tournamentNamed(world, name);
+  await sent(
+    world,
+    await asTheReader(world, address),
+    await named(world, tournament, competition, undefined),
+    making,
+  );
+};
+
+When(
+  /^the reader signed in to the account for "([^"]*)" moves the (first|second|third) player of "([^"]*)" of "([^"]*)" (up|down)$/,
+  async function (
+    this: SpecWorld,
+    address: string,
+    place: string,
+    competition: string,
+    name: string,
+    direction: "up" | "down",
+  ) {
+    const order = await byeOrderAt(this, place, competition, name);
+    await sendingForABye(
+      this,
+      address,
+      competition,
+      name,
+      byeMaking(direction, order),
+    );
+  },
+);
+
+When(
+  /^the reader signed in to the account for "([^"]*)" moves the bye with the order (\d+) in "([^"]*)" of "([^"]*)" (up|down)$/,
+  async function (
+    this: SpecWorld,
+    address: string,
+    order: string,
+    competition: string,
+    name: string,
+    direction: "up" | "down",
+  ) {
+    await sendingForABye(
+      this,
+      address,
+      competition,
+      name,
+      byeMaking(direction, Number(order)),
+    );
+  },
+);
+
+When(
+  /^the reader signed in to the account for "([^"]*)" removes the (first|second|third) player of "([^"]*)" of "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    address: string,
+    place: string,
+    competition: string,
+    name: string,
+  ) {
+    const order = await byeOrderAt(this, place, competition, name);
+    await sendingForABye(
+      this,
+      address,
+      competition,
+      name,
+      byeMaking("remove", order),
+    );
+  },
+);
+
+When(
+  /^the reader signed in to the account for "([^"]*)" removes the bye with the order (\d+) in "([^"]*)" of "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    address: string,
+    order: string,
+    competition: string,
+    name: string,
+  ) {
+    await sendingForABye(
+      this,
+      address,
+      competition,
+      name,
+      byeMaking("remove", Number(order)),
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) player of the competition answered is a bye$/,
+  function (this: SpecWorld, place: string) {
+    assert.equal(listed(this)[PLACES[place] ?? -1]?.bye, true);
+  },
+);
+
+Then(
+  /^the (first|second|third) player of the competition answered has the id "([^"]*)"$/,
+  function (this: SpecWorld, place: string, id: string) {
+    assert.equal(listed(this)[PLACES[place] ?? -1]?.id, id);
+  },
+);
+
+Then(
+  /^(\d+) byes? of the competition (?:is|are) answered$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(
+      listed(this).filter((player) => player.bye).length,
+      Number(count),
+    );
+  },
+);
+
+Then(
+  "the competition's player {string} is answered as not a bye",
+  function (this: SpecWorld, name: string) {
+    assert.equal(listedCalled(this, name).bye, false);
+  },
+);
