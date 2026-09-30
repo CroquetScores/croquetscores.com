@@ -288,6 +288,9 @@ Then(
 Then(
   "the section bar is named in the test locale",
   async function (this: SpecWorld) {
+    // Waited for, since the admin draws its bars once it knows what is in
+    // them, and a public page's is there from the start.
+    await this.browserPage.locator("nav.site-sections").first().waitFor();
     const named = await announcedAs(this, "nav.site-sections");
     assert.ok(named !== null, "The section bar is not named.");
     assert.ok(

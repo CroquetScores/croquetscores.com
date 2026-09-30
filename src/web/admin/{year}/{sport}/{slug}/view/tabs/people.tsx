@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../Field.js";
 import { ModalDialog } from "../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../words.js";
+import { noOption } from "./optionFace.js";
 import "./listed.css";
 
 // The Managers and Scorers tabs (managers-tab.feature, scorers-tab.feature),
@@ -198,6 +199,10 @@ export const PeopleTab = ({
                   >
                     {say("admin.people.remove")}
                   </button>
+                ) : listed.some((other) => removable(other, listed)) ? (
+                  // Its room, where others offer Remove, so that what is
+                  // beside it lines up with theirs (optionFace.tsx).
+                  noOption("remove", say("admin.people.remove"))
                 ) : null}
               </span>
             </li>

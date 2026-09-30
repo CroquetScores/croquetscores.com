@@ -9,7 +9,8 @@ Feature: A competition's page in the admin
 
   The tabs are laid out and chosen as the tournament's are (`view.feature`
   beneath the tournament): they are a tab control in the panel, beneath the
-  competition's name, the page has no section bar, the one being read is
+  competition's name, not in the section bar, which leads to the tournament
+  and its competitions (`TournamentSections.feature`), the one being read is
   marked, and they have no addresses, so the page opens on Players and
   choosing Scores leaves the address as it was. Players is first because the
   players are entered before anything is played.
@@ -89,10 +90,6 @@ Feature: A competition's page in the admin
     Scenario: The tabs are beneath the competition's name
       When the page of the competition "Block A" in "Spring Open" is opened
       Then the tab "Players" is beneath the page's heading
-
-    Scenario: The page has no section bar
-      When the page of the competition "Block A" in "Spring Open" is opened
-      Then the page has no section bar
 
     Scenario: A tab can be pressed with a thumb
       When the page of the competition "Block A" in "Spring Open" is opened

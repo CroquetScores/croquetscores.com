@@ -16,7 +16,8 @@ Feature: Creating a tournament
   A tournament is run on one website, and keeps it: the sports and formats it
   may be played in are the ones that website's site offers, and a tournament
   that was not one of them would be played by rules its site has not written.
-  It finishes no earlier than it starts. Its region is one of its country's.
+  It finishes no earlier than it starts, and starts before the year after
+  next begins. Its region is one of its country's.
 
   A tournament is found at an address made from the year it starts, the code
   of its sport and a slug made from its name, as "2026/ac/spring-open". The
@@ -189,6 +190,33 @@ Feature: Creating a tournament
       And the tournament is to finish at "2026-10-02T23:59:59Z"
       When a tournament is created
       Then it is refused with "Tournament.FinishesBeforeStarts"
+
+  Rule: A tournament starts before the year after next begins
+
+    Next year is as far ahead as anybody plans a tournament. One that starts
+    further ahead than that is a year typed wrongly, and would be found at
+    that year's address, where nobody would look for it. The years are
+    counted from the one the tournament is created in, as it is written in
+    UTC, as the year of its address is.
+
+    Scenario: A tournament that starts on the last day of next year is accepted
+      Given the tournament is to start at "2027-12-31T00:00:00Z"
+      And the tournament is to finish at "2027-12-31T00:00:00Z"
+      When a tournament is created
+      Then it is not refused
+
+    Scenario: A tournament that starts on the first day of the year after next is refused
+      Given the tournament is to start at "2028-01-01T00:00:00Z"
+      And the tournament is to finish at "2028-01-01T00:00:00Z"
+      When a tournament is created
+      Then it is refused with "Tournament.StartsAfterNextYear"
+
+    Scenario: The years are counted from the year it is created in as it is written in UTC
+      Given the moment "2026-12-31T23:30:00-05:00"
+      And the tournament is to start at "2028-06-01T00:00:00Z"
+      And the tournament is to finish at "2028-06-01T00:00:00Z"
+      When a tournament is created
+      Then it is not refused
 
   Rule: A tournament's region is one of its country's
 

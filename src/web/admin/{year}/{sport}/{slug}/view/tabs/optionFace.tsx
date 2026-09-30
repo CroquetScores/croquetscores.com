@@ -23,3 +23,17 @@ export const optionFace = (
         children: <span aria-hidden="true">{arrows[action]}</span>,
       }
     : { children: words };
+
+/**
+ * The room the button for `action` would take, on a row that does not offer
+ * it where others in the same list do: the first row has no Up, a player who
+ * has played no Archive. Taken up rather than left, so that the rest of what
+ * a row offers lines up with the rows above and below it. Drawn as the button
+ * would be, with its words or its arrow, so that it is exactly as wide, and
+ * never seen, pressed or read out.
+ */
+export const noOption = (action: string, words: string): React.JSX.Element => (
+  <span key={`no-${action}`} className="button option-space" aria-hidden="true">
+    {optionFace(action, words).children}
+  </span>
+);

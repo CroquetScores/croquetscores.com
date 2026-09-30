@@ -7,14 +7,18 @@ Feature: The players tab of a tournament's page
   entering the players is the first thing done to a tournament.
 
   Add Player, above the list, opens the player dialog to add players, and a
-  player's name opens it to change them (`player.feature`). Whenever the
+  player's name or their Edit opens it to change them (`player.feature`).
+  Edit says in a button what the name does as a link, for a reader who does
+  not think to press a name, and comes before Archive, as it does for a
+  competition, so that changing a player is offered ahead of setting them
+  aside. Whenever the
   dialog adds a player or saves one, the list is asked for again, so that it
   says who the players are now.
 
   The players in use come first, in the tournament's order
   (`PlayersOfTournament.feature`), which is the order they are entered in its
   competitions in. Each says their name, what they represent and the flag
-  they fly, where they have either, and offers Archive, Up and Down. They are
+  they fly, where they have either, and offers Edit, Archive, Up and Down. They are
   said in that order, as "Sam Someone (Canterbury Croquet Club)" and then the
   flag. The flag is shown as its picture, and is named for a reader who cannot
   see it by the country it is the flag of, in the reader's language.
@@ -132,7 +136,7 @@ Feature: The players tab of a tournament's page
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" is shown flying no flag
 
-  Rule: Add Player and a player's name open the player dialog
+  Rule: Add Player, a player's name and Edit open the player dialog
 
     Scenario: The tab offers Add Player
       When the players of "Spring Open" are opened
@@ -153,6 +157,20 @@ Feature: The players tab of a tournament's page
       And the players of "Spring Open" are open
       When the name of the player "Sam Someone" is pressed
       Then the player dialog is titled "Edit Player"
+
+    Scenario: Edit opens the dialog to change them
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the players of "Spring Open" are open
+      When "Edit" is pressed on the player "Sam Someone"
+      Then the player dialog is titled "Edit Player"
+
+    Scenario: A player renamed from Edit is listed by their new name
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the players of "Spring Open" are open
+      And "Edit" is pressed on the player "Sam Someone"
+      And "Samantha Someone" is typed as the "Name"
+      When "Save" is pressed
+      Then the player "Samantha Someone" is listed
 
     Scenario: A player added in the dialog is listed
       Given the players of "Spring Open" are open
@@ -187,9 +205,15 @@ Feature: The players tab of a tournament's page
 
       Examples:
         | option  |
+        | Edit    |
         | Up      |
         | Down    |
         | Archive |
+
+    Scenario: Edit comes before Archive
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the players of "Spring Open" are opened
+      Then "Edit" on the player "Sam Someone" comes before "Archive"
 
     Scenario: The first player does not offer Up
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -320,6 +344,12 @@ Feature: The players tab of a tournament's page
       And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" does not offer "Archive"
+
+    Scenario: An archived player does not offer Edit
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Edit"
 
     Scenario: An archived player's name does not open the dialog
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

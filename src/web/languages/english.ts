@@ -326,6 +326,9 @@ export const english: Language = {
     "admin.competitionView.tabs": "Competition",
     "admin.competitionView.players": "Players",
     "admin.competitionView.scores": "Scores",
+    // The section bar of a tournament's page and its competitions' pages.
+    "admin.sections.label": "The tournament and its competitions",
+    "admin.sections.tournament": "Tournament",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,
@@ -448,6 +451,7 @@ export const english: Language = {
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",
+    "admin.players.edit": "Edit",
     "admin.players.archive": "Archive",
     "admin.players.restore": "Restore",
     "admin.players.up": "Up",
@@ -506,6 +510,8 @@ export const english: Language = {
     "ReadOnlyDate.Unreadable": "Give the day.",
     "Tournament.FinishesBeforeStarts":
       "A tournament cannot finish before it starts.",
+    "Tournament.StartsAfterNextYear":
+      "A tournament cannot start after next year.",
     "CreateTournament.NoSuchCountry": "Choose the country.",
     "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
     "Tournament.NotAManager":

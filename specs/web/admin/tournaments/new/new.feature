@@ -364,6 +364,16 @@ Feature: A new tournament is created in the admin
         | Spring Open | 2026-10-03 |            | Finishes | ReadOnlyDate.Unreadable          |
         | Spring Open | 2026-10-05 | 2026-10-03 | Finishes | Tournament.FinishesBeforeStarts  |
 
+    Scenario: A start in the year after next is refused beside the start
+      Given the server's clock reads "2026-09-17T09:00:00Z"
+      And the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And "2028-01-01" is typed as the "Starts"
+      And "2028-01-02" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      When "Create Tournament" is pressed
+      Then "Starts" is refused with "Tournament.StartsAfterNextYear"
+
     Scenario: A tournament with no country is refused beside the country
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"

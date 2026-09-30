@@ -129,12 +129,6 @@ Then(
   },
 );
 
-// Once the page has drawn its tabs, which is when it has decided what to draw.
-Then("the page has no section bar", async function (this: SpecWorld) {
-  await this.browserPage.locator(tabBar).waitFor();
-  assert.equal(await this.browserPage.locator("nav.site-sections").count(), 0);
-});
-
 Then("the tabs are named in the test locale", async function (this: SpecWorld) {
   await this.browserPage.locator(tabBar).waitFor();
   const named = await announcedAs(this, tabBar);

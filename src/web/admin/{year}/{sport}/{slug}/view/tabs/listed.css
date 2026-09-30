@@ -53,6 +53,11 @@
   gap: var(--space-2);
 }
 
+/* Where a button would be on a row that does not offer it (optionFace.tsx). */
+.option-space {
+  visibility: hidden;
+}
+
 @media (min-width: 40rem) {
   .listed-item {
     grid-template-columns: minmax(0, 1fr) auto auto;

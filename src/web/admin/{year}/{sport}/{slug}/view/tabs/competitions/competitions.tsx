@@ -5,7 +5,7 @@ import {
   CompetitionDialog,
   type CompetitionAsItIs,
 } from "../../modal-dialogs/competition/competition.js";
-import { optionFace } from "../optionFace.js";
+import { noOption, optionFace } from "../optionFace.js";
 import "../listed.css";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
@@ -178,11 +178,22 @@ export const CompetitionsTab = ({
                   ? [
                       button(competition, "archive"),
                       // Last, where they are in the same place on every row.
-                      // Nowhere to go is nothing to press.
-                      ...(place > 0 ? [button(competition, "up")] : []),
-                      ...(place < inUse.length - 1
-                        ? [button(competition, "down")]
-                        : []),
+                      // Nowhere to go is nothing to press, but its room is
+                      // kept, so the rest lines up (optionFace.tsx); a lone
+                      // competition has nothing to line up with.
+                      ...(inUse.length < 2
+                        ? []
+                        : [
+                            place > 0
+                              ? button(competition, "up")
+                              : noOption("up", say("admin.competitions.up")),
+                            place < inUse.length - 1
+                              ? button(competition, "down")
+                              : noOption(
+                                  "down",
+                                  say("admin.competitions.down"),
+                                ),
+                          ]),
                     ]
                   : []),
               ]),

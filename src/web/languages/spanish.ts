@@ -303,6 +303,8 @@ export const spanish: Language = {
     "admin.competitionView.tabs": "Competición",
     "admin.competitionView.players": "Jugadores",
     "admin.competitionView.scores": "Resultados",
+    "admin.sections.label": "El torneo y sus competiciones",
+    "admin.sections.tournament": "Torneo",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",
@@ -415,6 +417,7 @@ export const spanish: Language = {
     "CompetitionPlayer.Withdrawn": "Un jugador retirado ya no juega.",
     "admin.players.add": "Añadir jugador",
     "admin.players.none": "No hay jugadores",
+    "admin.players.edit": "Editar",
     "admin.players.archive": "Archivar",
     "admin.players.restore": "Restaurar",
     "admin.players.up": "Subir",
@@ -464,6 +467,8 @@ export const spanish: Language = {
     "ReadOnlyDate.Unreadable": "Indica el día.",
     "Tournament.FinishesBeforeStarts":
       "Un torneo no puede terminar antes de empezar.",
+    "Tournament.StartsAfterNextYear":
+      "Un torneo no puede empezar después del año que viene.",
     "CreateTournament.NoSuchCountry": "Elige el país.",
     "TournamentNotes.TooLong":
       "Las notas pueden tener como mucho 2000 caracteres.",
