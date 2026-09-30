@@ -3,12 +3,16 @@
 // Signing in is done by filling the form in and pressing its button, as a
 // reader does, so that what these scenarios prove is that the page works and
 // not that the operation behind it does — which is proved with the operation.
+// Having signed in, as what a scenario about something else starts from, is
+// the exception, and says why where it is done.
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { createHash } from "node:crypto";
 
+import { SignIn } from "../../../../src/application/operations/accounts/SignIn.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
+import { sessionCookie } from "../../../../src/web/common/session.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { applicationFor, withScripting } from "../../support/browser.js";
 import { clockFor } from "../../support/clock.js";
@@ -16,6 +20,9 @@ import { drawnBesideAButton } from "../../support/buttons.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 const signIn = "/account/sign-in";
+// Where the form sends a reader who came to it from nowhere in particular
+// (goBackTo in src/web/public/signIn.ts).
+const whereSigningInGoesBack = "/admin/";
 const dialog = "section.dialog";
 
 const nowIn = (world: SpecWorld): ReadOnlyDate =>
@@ -121,11 +128,43 @@ When(
   },
 );
 
+// Not through the form. Over a thousand scenarios start signed in, and going
+// through the form cost each of them two pages and a post — 666 milliseconds
+// on average, and a sixth of all the time the suite spent in its steps — to
+// prove again what the scenarios above already prove. The rest of signing in
+// is done as the form's own handler does it: the same command, so the password
+// is checked, the signing in recorded on the account, and an old site's hash
+// made again today's way; then a session, kept in the same place, with its id
+// in the same cookie. The reader then lands where the form would have sent
+// them, so a step that acts on the page in front of it finds the same page.
 Given(
   "the reader has signed in as {string} with the password {string}",
   async function (this: SpecWorld, address: string, password: string) {
-    await open(this);
-    await fillIn(this, address, password);
+    const application = applicationFor(this);
+    const at = nowIn(this);
+    const account = await application.mediator.send(
+      new SignIn(address, password, at),
+    );
+    const id = await application.unitOfWork.inTransaction(() =>
+      application.sessions.start(account, at),
+    );
+    // As the site sets it (src/web/common/session.ts), 90 days and all: a
+    // cookie with no end is one a browser drops when it is closed, and a
+    // scenario that closes the browser and opens it again would find itself
+    // signed out. Counted from the machine's clock, not the scenario's,
+    // because that is the clock the browser counts it by.
+    await this.browserPage.context().addCookies([
+      {
+        name: sessionCookie,
+        value: id,
+        url: this.baseUrl!,
+        httpOnly: true,
+        secure: true,
+        sameSite: "Lax",
+        expires: Math.floor(Date.now() / 1000) + 90 * 24 * 60 * 60,
+      },
+    ]);
+    await this.browserPage.goto(`${this.baseUrl!}${whereSigningInGoesBack}`);
   },
 );
 
