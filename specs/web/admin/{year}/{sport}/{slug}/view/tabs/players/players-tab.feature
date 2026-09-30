@@ -628,7 +628,7 @@ Feature: The players tab of a tournament's page
 
     Scenario: Asking before archiving is in the reader's language
       Given a browser that asks for "en-XA"
-      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And the players of "Spring Open" are open

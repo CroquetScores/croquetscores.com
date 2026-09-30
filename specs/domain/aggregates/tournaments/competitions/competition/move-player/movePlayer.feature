@@ -297,8 +297,8 @@ Feature: Moving a competition's player up or down
       Then it is refused with "Competition.NoSuchPlayer"
 
     Scenario: Moving a bye in a knockout with a game is refused
-      And a bye was entered in it
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given a bye was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the bye with the order 30000 is moved up
       Then it is refused with "Competition.DrawFixed"

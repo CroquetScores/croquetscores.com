@@ -92,16 +92,16 @@ Feature: Asking whether games have been played
       Then they say no
 
     Scenario: A change to the draw of a knockout with a game moves a player who has played
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
-      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the games are asked whether changing the draw of "Final Stage" of "Spring Open" to 8 places moves a player who has played
       Then they say yes
 
     Scenario: A change to the draw of a knockout whose only game is archived moves a player who has played
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
-      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
       When the games are asked whether changing the draw of "Final Stage" of "Spring Open" to 8 places moves a player who has played
       Then they say yes

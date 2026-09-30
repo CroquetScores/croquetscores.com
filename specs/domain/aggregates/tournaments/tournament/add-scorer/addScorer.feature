@@ -1,11 +1,10 @@
 Feature: Making an account a scorer of a tournament
 
-  A tournament's scorers enter the scores of its games: they can create,
-  update and archive scores, and nothing else. Nothing records scores yet, so
-  there is nothing a scorer can do today that another reader cannot, and what
-  they can do is specified with the scores when they arrive. What a scorer
-  cannot do is anything else to the tournament (`onlyManagers.feature`). A
-  manager can make any account a scorer.
+  A tournament's scorers enter the scores of its games: they can add, correct,
+  archive and restore scores (`addGame.feature`, `correctGame.feature`,
+  `archiveGame.feature`, `restoreGame.feature`), and nothing else. What a
+  scorer cannot do is anything else to the tournament
+  (`onlyManagers.feature`). A manager can make any account a scorer.
 
   A manager is not made a scorer: a manager can already do everything a scorer
   can, and a manager who wants to do less is taken off the managers

@@ -1,8 +1,8 @@
 Feature: The part of an address that names a thing
 
   A tournament and each of its competitions are found at an address a reader
-  can read, such as "/2026/ac/spring-open/competitions/block-a", rather than 
-  at an id. The part of the address that names one thing is its slug, and a 
+  can read, such as "/2026/ac/spring-open/competitions/block-a", rather than
+  at an id. The part of the address that names one thing is its slug, and a
   slug is made from the thing's name.
 
   A slug keeps the letters and digits of the name, in lower case, and turns

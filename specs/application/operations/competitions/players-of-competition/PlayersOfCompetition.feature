@@ -11,7 +11,7 @@ Feature: The players of a competition, as its tournament's managers and scorers 
   are said once, by the tournament, and not again in every competition. Each
   is also said to have withdrawn or not, and to have played or not, a game
   archived counting as played, since a player who has played cannot be
-  removed (`removePlayer.feature`) and a list offering to remove one offers 
+  removed (`removePlayer.feature`) and a list offering to remove one offers
   it only where removing would be done. In a knockout, each is answered with
   who they are drawn to play now, so that a scorer who chooses the winner need
   not choose the loser (`score-modal-dialog.feature`).

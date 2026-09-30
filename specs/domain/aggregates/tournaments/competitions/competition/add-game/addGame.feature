@@ -394,7 +394,7 @@ Feature: Adding a game to a competition
       When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
       Then it is refused with "Competition.DrawNotFilled"
 
-    Scenario: A game in a knockout with two places left empty and one bye is refused
+    Scenario: A game in a knockout with one place left empty beside a bye is refused
       Given the competition is a knockout of 8 places, each round the best of 1
       And the tournament player "Pat Fourth" was entered in it
       And the tournament player "Jo Fifth" was entered in it

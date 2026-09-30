@@ -13,8 +13,8 @@ Feature: Making somebody a scorer of a tournament
   to have none. A manager is not made a scorer, and is refused as the
   tournament refuses it (`addScorer.feature`). Nothing is emailed.
 
-  A scorer enters scores, and nothing records scores yet, so what a scorer can
-  do is specified with the scores when they arrive.
+  A scorer enters scores (`AddGame.feature`), and the Scores tab of a
+  competition's page (`scores-tab.feature`) is where they do it.
 
   A forgotten account makes nobody a scorer, and is refused with
   `Account.Forgotten`.

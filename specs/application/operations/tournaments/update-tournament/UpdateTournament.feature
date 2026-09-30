@@ -100,7 +100,7 @@ Feature: Changing what a tournament is
 
   Rule: A tournament moved is not found at an address any other tournament has had
 
-    Scenario: A tournament moved keeps its address when nobody else has the new one
+    Scenario: A tournament moved keeps its slug when nobody else has the new address
       Given the update plays it in the sport "gc"
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
       Then the tournament is found at "2026/gc/spring-open"

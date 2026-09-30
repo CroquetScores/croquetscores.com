@@ -36,11 +36,11 @@ Feature: A game's score is added to a competition in a modal dialog
   Everything is required. What is refused is said beneath the field it is
   about, by the refusal's code, and what was chosen and typed stays so that
   it can be put right: a winner or a loser not chosen, a score not typed, a
-  score that does not begin with a digit, the same player chosen as both, a 
-  loser's score marked as the winner's, and a winner's score that is fewer 
-  than the loser's, or equal to it with no mark where the tournament does 
-  not allow drawn games (`Game.feature`). A refusal about no one field, such 
-  as a knockout refusing two players who are not drawn to meet, is said above 
+  score that does not begin with a digit, the same player chosen as both, a
+  loser's score marked as the winner's, and a winner's score that is fewer
+  than the loser's, or equal to it with no mark where the tournament does
+  not allow drawn games (`Game.feature`). A refusal about no one field, such
+  as a knockout refusing two players who are not drawn to meet, is said above
   the fields, and so is a knockout refusing any game while a place in its
   draw is left empty. Nothing refused is kept, and the dialog stays open.
 
