@@ -42,6 +42,11 @@ const number = (said: Said, field: string): number => {
   return typeof value === "number" ? value : unreadable(field);
 };
 
+// A field an event can do without, which is nothing where it is not there,
+// and refused as any is where it is there but is not text.
+const optionalText = (said: Said, field: string): string | undefined =>
+  said[field] === undefined ? undefined : text(said, field);
+
 const yesOrNo = (said: Said, field: string): boolean => {
   const value = said[field];
   return typeof value === "boolean" ? value : unreadable(field);
@@ -175,6 +180,8 @@ export const nameCompetitionEvents = (registry: EventRegistry): EventRegistry =>
           text(said, "winnerScore"),
           yesOrNo(said, "winnerMarked"),
           text(said, "loserScore"),
+          optionalText(said, "winnerId"),
+          optionalText(said, "loserId"),
           createdBy,
           occurredAt,
         ),

@@ -19,6 +19,7 @@ import { CreateTournament } from "../../../application/operations/tournaments/Cr
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
 import { AddGame } from "../../../application/operations/competitions/AddGame.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
+import { CorrectGame } from "../../../application/operations/competitions/CorrectGame.js";
 import { EnterPlayer } from "../../../application/operations/competitions/EnterPlayer.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
@@ -639,6 +640,42 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         .code(201)
         .header("cache-control", "no-store")
         .send({ id: added });
+    },
+  );
+
+  // A game's scores corrected, as the score dialog sends them, by the part of
+  // its id after "game/", and its players where they are sent, by the part of
+  // their ids after "competition-player/". A player not sent is the game's
+  // own. A score left empty is left out, for the command to refuse.
+  server.post<{ Params: { id: string; competition: string; game: string } }>(
+    "/tournaments/:id/competitions/:competition/games/:game/correct",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const score = (field: string): string | undefined => {
+        const said = textOf(request.body, field);
+        return said === "" ? undefined : said;
+      };
+      const player = (field: string): string | undefined => {
+        const said = textOf(request.body, field);
+        return said === "" ? undefined : `competition-player/${said}`;
+      };
+      await request.server.mediator.send(
+        new CorrectGame(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          `game/${request.params.game}`,
+          {
+            winnerScore: score("winnerScore"),
+            loserScore: score("loserScore"),
+            winner: player("winner"),
+            loser: player("loser"),
+          },
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
     },
   );
 

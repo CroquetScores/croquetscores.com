@@ -64,8 +64,10 @@ export class GamesOfCompetitionHandler extends QueryHandler<
     return competition.games.map((game) => ({
       id: game.id.value,
       winner: people.get(game.winner.value) ?? "",
+      winnerId: game.winner.value,
       winnerScore: String(game.winnerScore),
       loser: people.get(game.loser.value) ?? "",
+      loserId: game.loser.value,
       loserScore: String(game.loserScore),
       archived: game.archived,
       archivable: competition.canBeArchived(game.id, told),

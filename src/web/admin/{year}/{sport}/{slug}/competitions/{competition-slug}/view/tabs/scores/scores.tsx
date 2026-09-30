@@ -8,10 +8,10 @@ import "./scores.css";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
 // in use, in the order they were entered, each saying the winner and their
-// score, then the loser and theirs, and offering Archive where it can be
-// archived; after them the archived, struck through, offering Restore.
-// Whatever is pressed, and whenever the dialog adds a game, the list is asked
-// for again.
+// score, then the loser and theirs, and offering Edit, and Archive where it
+// can be archived; after them the archived, struck through, offering Restore.
+// Whatever is pressed, and whenever the dialog adds or corrects a game, the
+// list is asked for again.
 
 interface Props {
   /** The tournament's id. */
@@ -24,8 +24,10 @@ interface Props {
 interface Listed {
   readonly id: string;
   readonly winner: string;
+  readonly winnerId: string;
   readonly winnerScore: string;
   readonly loser: string;
+  readonly loserId: string;
   readonly loserScore: string;
   readonly archived: boolean;
   readonly archivable: boolean;
@@ -43,6 +45,8 @@ export const ScoresTab = ({
   const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
+  // The game Edit was pressed on, which the dialog corrects.
+  const [correcting, setCorrecting] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
 
   useEffect(() => {
@@ -107,6 +111,22 @@ export const ScoresTab = ({
         </span>
       ) : null}
       <span className="listed-options">
+        {/* Every game in use, first, as Edit is on every list in the admin:
+            its scores can always be corrected, and its players where it could
+            be archived, which the dialog is told. An archived game is
+            restored before it is corrected. */}
+        {game.archived ? null : (
+          <button
+            type="button"
+            className="button"
+            data-action="edit"
+            onClick={() => {
+              setCorrecting(game);
+            }}
+          >
+            {say("admin.scores.edit")}
+          </button>
+        )}
         {game.archived ? (
           <button
             type="button"
@@ -171,13 +191,15 @@ export const ScoresTab = ({
           ) : null}
         </>
       )}
-      {adding ? (
+      {adding || correcting !== undefined ? (
         <ScoreDialog
           tournament={tournament}
           competition={competition}
+          correcting={correcting}
           kept={askAgain}
           close={() => {
             setAdding(false);
+            setCorrecting(undefined);
           }}
         />
       ) : null}

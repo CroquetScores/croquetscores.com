@@ -5,9 +5,12 @@ export interface ListedGame {
   readonly id: string;
   /** What the tournament calls the winner now. */
   readonly winner: string;
+  /** The winner by their id in the competition, for choosing them again. */
+  readonly winnerId: string;
   /** The winner's score as it was typed, as "26tp". */
   readonly winnerScore: string;
   readonly loser: string;
+  readonly loserId: string;
   readonly loserScore: string;
   readonly archived: boolean;
   /** Whether it could be archived now, as the competition would say. */

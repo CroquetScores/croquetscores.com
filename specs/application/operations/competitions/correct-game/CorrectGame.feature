@@ -6,12 +6,15 @@ Feature: Correcting a game's score entered wrongly
   scorer's, and the account they are signed in to is who corrected it. The
   tournament, the competition and the game are each named by their id, and the
   winner's score and the loser's are given as they were typed, as a game's
-  are when it is added (`AddGame.feature`). The game keeps its players and its
-  place among the games, and its winner stays its winner
-  (`correctGame.feature`), so a game is corrected whatever has been played
-  since, even in a knockout whose next round it sent its winner to. A game
-  whose winner was wrong is archived and added again. Correcting a game to
-  the scores it has records nothing.
+  are when it is added (`AddGame.feature`). The game keeps its place among
+  the games, and its players unless others are given, so a game is corrected
+  whatever has been played since, even in a knockout whose next round it
+  sent its winner to. Its winner and its loser can be given as well, each by
+  their id in the competition, as a game added names them, where the game
+  could be archived (`correctGame.feature`): one of a knockout's match whose
+  winner has played on keeps its players, and giving it others is refused
+  with `Competition.WinnerHasPlayedOn`. Correcting a game to the scores and
+  the players it has records nothing.
 
   What corrected scores must be that needs nothing of the tournament is asked
   on the way in, as it is for a game added, each rule saying the field it is
@@ -96,6 +99,32 @@ Feature: Correcting a game's score entered wrongly
       And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open" to 26 to 10
       Then "Final Stage" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 10
+
+  Rule: A score that could be archived can be corrected to other players
+
+    Scenario: A score corrected to another winner has them
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to "Chris Third" beating "Alex Another" 26 to 17
+      Then "Block A" of "Spring Open" has the score of "Chris Third" beating "Alex Another" 26 to 17
+
+    Scenario: A score corrected to its players the other way round has them so
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to "Alex Another" beating "Sam Someone" 26 to 17
+      Then "Block A" of "Spring Open" has the score of "Alex Another" beating "Sam Someone" 26 to 17
+
+    Scenario: A score of a knockout's match whose winner has played on is not corrected to other players
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "Chris Third" has beaten "Pat Fourth" 26 to 20 in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open" to "Alex Another" beating "Sam Someone" 26 to 17
+      Then it is refused with "Competition.WinnerHasPlayedOn"
 
   Rule: What corrected scores must be that needs nothing of the tournament is asked on the way in
 

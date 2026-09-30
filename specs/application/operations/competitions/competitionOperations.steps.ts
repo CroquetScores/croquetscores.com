@@ -1467,6 +1467,45 @@ When(
   },
 );
 
+// To other players, each named by their id in the competition, as the
+// request names them.
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in "([^"]*)" of "([^"]*)" to ${GAME} ${SCORES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    correctedWinner: string,
+    correctedLoser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const competitionId = await competitionIn(this, tournament, competition);
+    const player = async (called: string) =>
+      (await competitionPlayerIn(this, tournament, competitionId, called))
+        .value;
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournament,
+      competition,
+      { winner, loser },
+      correctingTo({
+        winnerScore,
+        loserScore,
+        winner: await player(correctedWinner),
+        loser: await player(correctedLoser),
+      }),
+    );
+  },
+);
+
 When(
   new RegExp(
     `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in "([^"]*)" of "([^"]*)" to ${SCORES} without its (winner|loser) score$`,

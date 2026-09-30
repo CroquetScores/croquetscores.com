@@ -2,19 +2,23 @@
 Feature: The scores tab of a competition's page
 
   The Scores tab is where a manager or a scorer sees the games played in one
-  of a tournament's competitions, adds the score of another, archives a score
-  entered by mistake and restores it (`view.feature` beneath the
+  of a tournament's competitions, adds the score of another, corrects a score
+  entered wrongly, archives a score entered by mistake and restores it (`view.feature` beneath the
   competition). A scorer sees this tab alone, and can do on it all that a
   manager can, since putting right a score entered wrongly is part of
   entering scores.
 
-  Add Score, above the list, opens the score dialog to enter a game's score
-  (`score-modal-dialog.feature`). Whenever the dialog adds a score, the list is asked for
-  again, so that it says what has been played now.
+  Add Score, above the list, opens the score dialog to enter a game's score,
+  and a score's Edit opens it to correct that score
+  (`score-modal-dialog.feature`). Whenever the dialog adds or corrects a
+  score, the list is asked for again, so that it says what has been played
+  now.
 
   The scores in use come first, in the order they were entered, oldest first,
   so that the list reads as the competition was played. Each says the winner
-  and their score, then the loser and their score, and offers Archive. A
+  and their score, then the loser and their score, and offers Edit and
+  Archive, Edit first, as it is for a player and a competition, so that
+  putting a score right is offered ahead of setting it aside. A
   score is shown exactly as it was typed, whatever follows its number, as
   "26tp" or "6w" (`Score.feature`).
 
@@ -28,12 +32,15 @@ Feature: The scores tab of a competition's page
   next round is archived first, and then the ones before it can be. A block
   and a Swiss have
   no rounds that depend on one another, so every score in them is offered
-  Archive.
+  Archive. Every score in use is offered Edit, in a knockout as anywhere.
+  Where a score could be archived, Edit lets its players be changed as well
+  as its scores; where it cannot, it keeps its players, so that nobody who
+  went through changes (`score-modal-dialog.feature`).
 
   The archived scores come after those in use, under a heading of their own,
   in the same order. Each is struck through, and says in words that it is
   archived as well, since a line through a score is not read out. Each offers
-  Restore alone.
+  Restore alone: an archived score is restored before it is corrected.
 
   Archive and Restore do not ask first: each is undone by the other, and
   nothing is lost by either. Whatever is pressed, the list is asked for again.
@@ -129,6 +136,32 @@ Feature: The scores tab of a competition's page
       When "Add Score" is pressed
       Then the score dialog is titled "Add Score"
 
+  Rule: Edit opens the score dialog to correct a score
+
+    Scenario: A score in use offers Edit
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Edit"
+
+    Scenario: Edit comes before Archive
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then "Edit" on the score of "Sam Someone" beating "Alex Another" comes before "Archive"
+
+    Scenario: Edit opens the dialog to correct the score
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score dialog is titled "Edit Score"
+
+    Scenario: A score corrected from Edit is listed with its new score
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "10" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then the first score listed shows "10" as its loser's score
+
   Rule: A score in a block or a Swiss can always be archived
 
     Scenario: A score in use offers Archive
@@ -189,6 +222,11 @@ Feature: The scores tab of a competition's page
       Given "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
       When the scores of "Final Stage" in "Spring Open" are opened
       Then the score of "Chris Third" beating "Pat Fourth" does not offer "Archive"
+
+    Scenario: A score whose winner has played in the next round still offers Edit
+      Given "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
+      When the scores of "Final Stage" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Edit"
 
     Scenario: The score in the next round offers Archive
       Given "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
@@ -416,6 +454,12 @@ Feature: The scores tab of a competition's page
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
       Then the score of "Sam Someone" beating "Alex Another" does not offer "Archive"
+
+    Scenario: An archived score does not offer Edit
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" does not offer "Edit"
 
   Rule: Archive and Restore move a score between those in use and the archived
 

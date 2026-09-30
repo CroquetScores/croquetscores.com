@@ -28,19 +28,20 @@ Feature: The names a competition's events are kept under
       Then it was written down under the name "<name>"
 
       Examples:
-        | happening                            | name                                   |
-        | a player being entered               | competition-player-entered             |
-        | a player being moved                 | competition-player-moved               |
-        | the players being spaced out         | competition-players-spaced-out         |
-        | a player withdrawing                 | competition-player-withdrawn           |
-        | a player's withdrawal being reversed | competition-player-withdrawal-reversed |
-        | a player being removed               | competition-player-removed             |
-        | a bye being moved                    | competition-bye-moved                  |
-        | a bye being removed                  | competition-bye-removed                |
-        | a game being added                   | competition-game-added                 |
-        | a game being archived                | competition-game-archived              |
-        | a game being restored                | competition-game-restored              |
-        | a game being corrected               | competition-game-corrected             |
+        | happening                               | name                                   |
+        | a player being entered                  | competition-player-entered             |
+        | a player being moved                    | competition-player-moved               |
+        | the players being spaced out            | competition-players-spaced-out         |
+        | a player withdrawing                    | competition-player-withdrawn           |
+        | a player's withdrawal being reversed    | competition-player-withdrawal-reversed |
+        | a player being removed                  | competition-player-removed             |
+        | a bye being moved                       | competition-bye-moved                  |
+        | a bye being removed                     | competition-bye-removed                |
+        | a game being added                      | competition-game-added                 |
+        | a game being archived                   | competition-game-archived              |
+        | a game being restored                   | competition-game-restored              |
+        | a game being corrected                  | competition-game-corrected             |
+        | a game being corrected to other players | competition-game-corrected             |
 
   Rule: An event written down and read back is the event it was
 
@@ -72,19 +73,32 @@ Feature: The names a competition's events are kept under
       Then what was read back says everything the event said
 
       Examples:
-        | happening                            |
-        | a player being entered               |
-        | a player being moved                 |
-        | the players being spaced out         |
-        | a player withdrawing                 |
-        | a player's withdrawal being reversed |
-        | a player being removed               |
-        | a bye being moved                    |
-        | a bye being removed                  |
-        | a game being added                   |
-        | a game being archived                |
-        | a game being restored                |
-        | a game being corrected               |
+        | happening                               |
+        | a player being entered                  |
+        | a player being moved                    |
+        | the players being spaced out            |
+        | a player withdrawing                    |
+        | a player's withdrawal being reversed    |
+        | a player being removed                  |
+        | a bye being moved                       |
+        | a bye being removed                     |
+        | a game being added                      |
+        | a game being archived                   |
+        | a game being restored                   |
+        | a game being corrected                  |
+        | a game being corrected to other players |
+
+  Rule: What a correction can do without is read back as nothing
+
+    A correction says its players only where it changed them, so one that
+    kept them, as every correction did before they could be changed, says
+    none, and is read back saying none.
+
+    Scenario: A correction that kept its players is read back saying none
+      Given an event of a game being corrected
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says nothing of the game's players
 
   Rule: What was kept without what an event cannot do without is refused
 
@@ -126,12 +140,14 @@ Feature: The names a competition's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                    | field        | written                     |
-        | a player being entered       | order        | the text "10000"            |
-        | the players being spaced out | playerIds    | a list holding the number 1 |
-        | a game being added           | winnerScore  | the number 26               |
-        | a game being added           | winnerMarked | the text "yes"              |
-        | a game being added           | loserScore   | the number 17               |
-        | a game being corrected       | winnerScore  | the number 26               |
-        | a game being corrected       | winnerMarked | the text "yes"              |
-        | a game being corrected       | loserScore   | the number 17               |
+        | happening                               | field        | written                     |
+        | a player being entered                  | order        | the text "10000"            |
+        | the players being spaced out            | playerIds    | a list holding the number 1 |
+        | a game being added                      | winnerScore  | the number 26               |
+        | a game being added                      | winnerMarked | the text "yes"              |
+        | a game being added                      | loserScore   | the number 17               |
+        | a game being corrected                  | winnerScore  | the number 26               |
+        | a game being corrected                  | winnerMarked | the text "yes"              |
+        | a game being corrected                  | loserScore   | the number 17               |
+        | a game being corrected to other players | winnerId     | the number 1                |
+        | a game being corrected to other players | loserId      | the number 1                |

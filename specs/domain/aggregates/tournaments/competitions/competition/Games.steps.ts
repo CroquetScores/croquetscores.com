@@ -204,13 +204,15 @@ Given(
   },
 );
 
-// Corrected to scores as they were typed, on Croquet Scores.
+// Corrected to scores as they were typed, on Croquet Scores, and to the
+// players named where there are any.
 const correct = (
   world: SpecWorld,
   competition: Competition,
   id: GameId,
   winnerScore: string,
   loserScore: string,
+  players?: { readonly winner: string; readonly loser: string },
 ): void => {
   competition.correctGame(
     id,
@@ -219,8 +221,49 @@ const correct = (
     toldOf(world),
     byOf(world),
     now(world),
+    players === undefined
+      ? undefined
+      : {
+          winner: playerIn(world, competition, players.winner),
+          loser: playerIn(world, competition, players.loser),
+        },
   );
 };
+
+// The same, to other players: the game said, and what it is corrected to.
+const OTHER_PLAYERS = String.raw`"([^"]*)" beating "([^"]*)" (\S+) to (\S+)`;
+
+for (const [step, doing] of [
+  [When, "is"],
+  [Given, "was"],
+] as const) {
+  step(
+    new RegExp(String.raw`^${GAME} ${doing} corrected to ${OTHER_PLAYERS}$`),
+    function (
+      this: SpecWorld,
+      winner: string,
+      loser: string,
+      winnerScore: string,
+      loserScore: string,
+      correctedWinner: string,
+      correctedLoser: string,
+      correctedWinnerScore: string,
+      correctedLoserScore: string,
+    ) {
+      const said = [winner, loser, winnerScore, loserScore];
+      (doing === "is" ? ask : happened)(this, (competition) => {
+        correct(
+          this,
+          competition,
+          gameSaid(this, competition, said).id,
+          correctedWinnerScore,
+          correctedLoserScore,
+          { winner: correctedWinner, loser: correctedLoser },
+        );
+      });
+    },
+  );
+}
 
 When(
   new RegExp(String.raw`^${GAME} is corrected to (\S+) to (\S+)$`),
