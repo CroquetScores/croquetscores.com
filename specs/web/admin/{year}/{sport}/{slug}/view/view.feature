@@ -16,7 +16,8 @@ Feature: A tournament's page in the admin
   The tabs are a tab control in the panel, beneath the tournament's name
   (`STYLE.md` §5d), and the tab being read is marked. The tabs are parts of
   the one page rather than pages of their own, so they are not in the section
-  bar, which is for moving between pages, and the page has none. Nor do they
+  bar, which is for moving between pages: it leads to the tournament and its
+  competitions (`TournamentSections.feature`). Nor do they
   have addresses: the page opens on Players, the first, and
   choosing another leaves the address as it was, and a scorer's opens on
   Competitions, the one tab they have. A link to the page is a link
@@ -99,10 +100,6 @@ Feature: A tournament's page in the admin
     Scenario: The tabs are beneath the tournament's name
       When the page of "Spring Open" is opened
       Then the tab "Players" is beneath the page's heading
-
-    Scenario: The page has no section bar
-      When the page of "Spring Open" is opened
-      Then the page has no section bar
 
     Scenario: The tabs keep to one row on a phone
       When the page of "Spring Open" is opened
