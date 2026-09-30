@@ -14,6 +14,18 @@ Feature: The scores tab of a competition's page
   score, the list is asked for again, so that it says what has been played
   now.
 
+  A knockout is played only once every place in its draw is filled with a
+  player or a bye, and no more are in it than it has places
+  (`addGame.feature`). So in a knockout, Add Score first counts who is in the
+  draw, as the knockout counts them: its players, withdrawn ones among them,
+  since a withdrawn player keeps their place, and its byes. Where that is not
+  the number of places, Add Score does not open the score dialog, which could
+  only have every game refused. It says why in a modal dialog of its own,
+  with OK alone, in the words for `Competition.DrawNotFilled`, and OK puts
+  the reader back on Add Score. It counts when it is pressed, so a place
+  filled since the tab was opened is counted. A block and a Swiss have no
+  draw, and Add Score always opens the score dialog in them.
+
   The scores in use come first, in the order they were entered, oldest first,
   so that the list reads as the competition was played. Each says the winner
   and their score, then the loser and their score, and offers Edit and
@@ -135,6 +147,68 @@ Feature: The scores tab of a competition's page
       Given the scores of "Block A" in "Spring Open" are open
       When "Add Score" is pressed
       Then the score dialog is titled "Add Score"
+
+  Rule: In a knockout, Add Score says why scores cannot be added until the draw is filled
+
+    The knockout's draw is four places.
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+
+    Scenario: Add Score in a knockout with a place left empty does not open the score dialog
+      Given the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is not open
+
+    Scenario: Add Score in a knockout with a place left empty says why scores cannot be added
+      Given the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the modal dialog says the words for "Competition.DrawNotFilled"
+
+    Scenario: What Add Score says has OK alone
+      Given the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the modal dialog's first button is "OK"
+
+    Scenario: OK puts the reader back on Add Score
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "OK" is pressed
+      Then "Add Score" has the focus
+
+    Scenario: OK closes what Add Score said
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "OK" is pressed
+      Then no modal dialog is open
+
+    Scenario: Add Score in a knockout with every place filled opens the score dialog
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is titled "Add Score"
+
+    Scenario: A withdrawn player keeps their place in the count
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Chris Third" from "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is titled "Add Score"
+
+    Scenario: A place filled after the tab was opened is counted
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When "Add Score" is pressed
+      Then the score dialog is titled "Add Score"
+
+    Scenario: What Add Score says is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When the way to add a score is pressed
+      Then every word in the modal dialog is in the test locale
 
   Rule: Edit opens the score dialog to correct a score
 

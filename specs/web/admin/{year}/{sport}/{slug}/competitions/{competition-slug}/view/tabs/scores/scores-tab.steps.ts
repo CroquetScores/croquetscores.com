@@ -378,6 +378,18 @@ Then(
   },
 );
 
+// Every word in whatever modal dialog is open, which says nothing typed.
+Then(
+  "every word in the modal dialog is in the test locale",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("dialog[open]").waitFor();
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "dialog[open]", []);
+      assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+    });
+  },
+);
+
 When("the way to add a score is pressed", async function (this: SpecWorld) {
   await settled(this);
   await tabPanel(this).locator("section > p button").first().click();

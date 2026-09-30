@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { say } from "../../../../../../../../words.js";
 import { noOption } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
@@ -11,13 +12,16 @@ import "./scores.css";
 // score, then the loser and theirs, and offering Edit, and Archive where it
 // can be archived; after them the archived, struck through, offering Restore.
 // Whatever is pressed, and whenever the dialog adds or corrects a game, the
-// list is asked for again.
+// list is asked for again. In a knockout whose draw is not filled, Add Score
+// says why scores cannot be added rather than opening the dialog.
 
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
   /** The competition's id. */
   readonly competition: string;
+  /** A knockout's draw has to be filled before any game can be added. */
+  readonly kind: "block" | "knockout" | "swiss";
 }
 
 /** A game as the API lists it. */
@@ -36,15 +40,49 @@ interface Listed {
 // The part of an id after its kind, which is how the API names a thing.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
+// Whether the knockout `competition` has as many players and byes as its draw
+// has places, counted as the knockout counts them: a withdrawn player keeps
+// their place, so they count, and a bye fills one. Asked when Add Score is
+// pressed, so that a place filled since the tab was opened is counted. Where
+// either answer does not come, it is left to the knockout to refuse.
+const drawFilled = async (
+  tournament: string,
+  competition: string,
+): Promise<boolean> => {
+  const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
+  const asked = async <T,>(path: string): Promise<T | undefined> =>
+    fetch(path, { headers: { accept: "application/json" } })
+      .then(async (response) =>
+        response.ok ? ((await response.json()) as T) : undefined,
+      )
+      .catch(() => undefined);
+  const [competitions, players] = await Promise.all([
+    asked<{
+      competitions: { readonly id: string; readonly places?: number }[];
+    }>(`${ofTournament}/competitions`),
+    asked<{ players: unknown[] }>(
+      `${ofTournament}/competitions/${idInAddress(competition)}/players`,
+    ),
+  ]);
+  const places = competitions?.competitions.find(
+    ({ id }) => id === competition,
+  )?.places;
+  if (places === undefined || players === undefined) return true;
+  return players.players.length === places;
+};
+
 export const ScoresTab = ({
   tournament,
   competition,
+  kind,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   const [asking, setAsking] = useState(0);
   const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
+  // Why Add Score did not open the dialog, said until OK is pressed.
+  const [unfilled, setUnfilled] = useState(false);
   // The game Edit was pressed on, which the dialog corrects.
   const [correcting, setCorrecting] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
@@ -164,7 +202,16 @@ export const ScoresTab = ({
           type="button"
           className="button"
           onClick={() => {
-            setAdding(true);
+            if (kind !== "knockout") {
+              setAdding(true);
+              return;
+            }
+            setActing(true);
+            void drawFilled(tournament, competition).then((filled) => {
+              setActing(false);
+              if (filled) setAdding(true);
+              else setUnfilled(true);
+            });
           }}
         >
           {say("admin.scores.add")}
@@ -191,6 +238,23 @@ export const ScoresTab = ({
           ) : null}
         </>
       )}
+      {unfilled ? (
+        // The knockout's own words for refusing a game, since this is that
+        // refusal said before anything is typed that it would throw away.
+        <ModalDialog
+          title={say("admin.scores.drawNotFilledTitle")}
+          action={say("admin.modal.ok")}
+          act={() => {
+            setUnfilled(false);
+          }}
+          cancel={() => {
+            setUnfilled(false);
+          }}
+          alone
+        >
+          <p>{say("Competition.DrawNotFilled")}</p>
+        </ModalDialog>
+      ) : null}
       {adding || correcting !== undefined ? (
         <ScoreDialog
           tournament={tournament}

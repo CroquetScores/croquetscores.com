@@ -63,8 +63,13 @@ When(
 );
 
 // Pressed as a reader asks for a new tab: with Control, or Command on a Mac.
+// Given longer than a step's usual five seconds, since the browser starts a
+// page of its own for the tab. With every scenario's browser running at once
+// in the whole suite, that start alone ran past five seconds, and the
+// scenario failed while the tab it was waiting for was on its way.
 When(
   "the section {string} is pressed to open it in a new tab",
+  { timeout: 20_000 },
   async function (this: SpecWorld, label: string) {
     const opened = this.browserContext!.waitForEvent("page");
     await this.browserPage.click(`nav.site-sections a:text-is("${label}")`, {

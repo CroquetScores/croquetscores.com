@@ -42,7 +42,10 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
   not allow drawn games (`Game.feature`). A refusal about no one field, such
   as a knockout refusing two players who are not drawn to meet, is said above
   the fields, and so is a knockout refusing any game while a place in its
-  draw is left empty. Nothing refused is kept, and the dialog stays open.
+  draw is left empty. Add Score does not open the dialog on a knockout whose
+  draw is not filled (`scores-tab.feature`), so that is met only where a
+  place is emptied while the dialog is open. Nothing refused is kept, and the
+  dialog stays open.
 
   A score entered wrongly is corrected from its Edit on the Scores tab, which
   opens the same dialog titled "Edit Score". It begins with the winner and
@@ -231,8 +234,8 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
     The knockout's draw is four places, each round the best of 1: Sam
     Someone plays Alex Another in the first round, and Chris Third plays
     whoever is in the fourth place. A game is added only once every place is
-    filled (`addGame.feature`), so where one is played, a bye fills the
-    fourth.
+    filled (`addGame.feature`), and Add Score opens the dialog only then
+    (`scores-tab.feature`), so a bye fills the fourth where nobody else does.
 
     Background:
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
@@ -241,13 +244,15 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
 
     Scenario: Choosing the winner chooses who they are drawn against as the loser
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Sam Someone" is chosen as the "Winner"
       Then the "Loser" chosen is "Alex Another"
 
     Scenario: Either player of a game chosen as the winner chooses the other as the loser
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Alex Another" is chosen as the "Winner"
       Then the "Loser" chosen is "Sam Someone"
@@ -269,7 +274,8 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       Then the "Loser" chosen is "Chris Third"
 
     Scenario: The loser chosen before is replaced by who the winner is playing
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       And "Chris Third" is chosen as the "Loser"
       When "Sam Someone" is chosen as the "Winner"
@@ -285,7 +291,8 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       Then the "Loser" chosen is "Pat Fourth"
 
     Scenario: The reader can choose another loser once the winner is chosen
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       And "Sam Someone" is chosen as the "Winner"
       When "Chris Third" is chosen as the "Loser"
@@ -602,13 +609,15 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       Then the score dialog says "Competition.NotDrawnToMeet" above the fields
       And the modal dialog says the words for "Competition.NotDrawnToMeet"
 
-    Scenario: A game in a knockout with a place left empty is refused above the fields
+    Scenario: A game in a knockout with a place emptied while the dialog is open is refused above the fields
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
+      And "organiser@example.com" has removed the player "Chris Third" from "Final Stage" of "Spring Open"
       And "Sam Someone" is chosen as the "Winner"
       And "26" is typed as the "Winner's score"
       And "Alex Another" is chosen as the "Loser"

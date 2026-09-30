@@ -419,6 +419,7 @@ export const english: Language = {
     "admin.scores.add": "Add Score",
     "admin.scores.none": "No scores",
     "admin.scores.edit": "Edit",
+    "admin.scores.drawNotFilledTitle": "Draw Not Filled",
     "admin.scores.archive": "Archive",
     "admin.scores.restore": "Restore",
     "admin.scores.archived": "Archived scores",

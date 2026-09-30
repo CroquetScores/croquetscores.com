@@ -385,6 +385,7 @@ export const spanish: Language = {
     "admin.scores.add": "Añadir resultado",
     "admin.scores.none": "No hay resultados",
     "admin.scores.edit": "Editar",
+    "admin.scores.drawNotFilledTitle": "Cuadro incompleto",
     "admin.scores.archive": "Archivar",
     "admin.scores.restore": "Restaurar",
     "admin.scores.archived": "Resultados archivados",
