@@ -9,12 +9,12 @@ Feature: The players of a competition, as its tournament's managers and scorers 
   and with what the tournament says of the person they are: their name, what
   they represent and the flag they fly, where they have either, so that those
   are said once, by the tournament, and not again in every competition. Each
-  is also said to have withdrawn or not, and to have played or not, a game
-  archived counting as played, since a player who has played cannot be
-  removed (`removePlayer.feature`) and a list offering to remove one offers
-  it only where removing would be done. In a knockout, each is answered with
-  who they are drawn to play now, so that a scorer who chooses the winner need
-  not choose the loser (`score-modal-dialog.feature`).
+  is also said to have withdrawn or not, and to have a game in use or not,
+  since a player who has one cannot be removed (`removePlayer.feature`) and
+  a list offering to remove one offers it only where removing would be done.
+  An archived game is not in use, so it does not count. In a knockout, each is 
+  answered with who they are drawn to play now, so that a scorer who chooses 
+  the winner need not choose the loser (`score-modal-dialog.feature`).
 
   Archiving a tournament player removes them from every competition they are
   in (`ArchivePlayer.feature`), so a tournament player archived after they
@@ -87,18 +87,18 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
       Then no players of the competition are answered
 
-  Rule: Each player is answered with whether they have played
+  Rule: Each player is answered with whether they have a game in use
 
-    Scenario: A player who has played is answered as having played
+    Scenario: A player who has played is answered as having a game in use
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
-      Then the competition's player "Alex Another" is answered as having played
+      Then the competition's player "Alex Another" is answered as having a game in use
 
-    Scenario: A player whose only game is archived is answered as having played
+    Scenario: A player whose only game is archived is answered as having none in use
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
@@ -106,13 +106,13 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
-      Then the competition's player "Sam Someone" is answered as having played
+      Then the competition's player "Sam Someone" is answered as having no game in use
 
-    Scenario: A player who has not played is answered as not having played
+    Scenario: A player who has not played is answered as having no game in use
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
-      Then the competition's player "Sam Someone" is answered as not having played
+      Then the competition's player "Sam Someone" is answered as having no game in use
 
   Rule: In a knockout, each player is answered with who they are drawn to play now
 

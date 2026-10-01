@@ -384,6 +384,8 @@ export const spanish: Language = {
       "{name} no jugará más en la competición, y las partidas que no ha jugado se decidirán sin su participación.",
     "admin.scores.add": "Añadir resultado",
     "admin.scores.none": "No hay resultados",
+    "admin.scores.edit": "Editar",
+    "admin.scores.drawNotFilledTitle": "Cuadro incompleto",
     "admin.scores.archive": "Archivar",
     "admin.scores.restore": "Restaurar",
     "admin.scores.archived": "Resultados archivados",
@@ -397,6 +399,9 @@ export const spanish: Language = {
     "admin.score.beat": "ganó a",
     "admin.score.added": "Se añadió la partida que {winner} ganó a {loser}.",
     "admin.score.otherwise": "No se pudo añadir la partida.",
+    "admin.score.correctTitle": "Editar resultado",
+    "admin.score.save": "Guardar",
+    "admin.score.notCorrected": "No se pudo corregir el resultado.",
     "Game.WinnerMissing": "Elige el ganador.",
     "Game.WinnerScoreMissing": "Escribe los puntos del ganador.",
     "Game.LoserMissing": "Elige el perdedor.",
@@ -407,6 +412,8 @@ export const spanish: Language = {
       "El ganador tiene que tener más puntos que el perdedor, o marcarse como ganador.",
     "Game.LoserMarked":
       "Los puntos del perdedor no pueden marcarse como ganados.",
+    "Game.ResultChanged":
+      "Una corrección mantiene el resultado: una partida ganada sigue ganada, y una empatada sigue empatada.",
     "Competition.MatchDecided": "Su partido ya está decidido.",
     "Competition.DrawFull":
       "No se puede añadir el jugador porque el cuadro está lleno.",

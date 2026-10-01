@@ -1,5 +1,5 @@
 @browser @postgres
-Feature: A game's score is added to a competition in a modal dialog
+Feature: A game's score is added to a competition, or corrected, in a modal dialog
 
   A manager or a scorer adds the scores of a competition's games from its
   Scores tab, by pressing "Add Score" (`scores-tab.feature`). That opens the
@@ -42,7 +42,37 @@ Feature: A game's score is added to a competition in a modal dialog
   not allow drawn games (`Game.feature`). A refusal about no one field, such
   as a knockout refusing two players who are not drawn to meet, is said above
   the fields, and so is a knockout refusing any game while a place in its
-  draw is left empty. Nothing refused is kept, and the dialog stays open.
+  draw is left empty. Add Score does not open the dialog on a knockout whose
+  draw is not filled (`scores-tab.feature`), so that is met only where a
+  place is emptied while the dialog is open. Nothing refused is kept, and the
+  dialog stays open.
+
+  A score entered wrongly is corrected from its Edit on the Scores tab, which
+  opens the same dialog titled "Edit Score". It begins with the winner and
+  the loser chosen as they are, and each score as it was typed. Its button
+  is Save rather than Add Game.
+
+  Whether its players can be changed is whether the score could be archived
+  (`scores-tab.feature`). A score that could be archived could be taken away
+  and added again with other players, so the dialog lets them be chosen
+  again, from those playing, as when adding, and the reader begins on the
+  winner. A score that cannot be archived is one in a knockout whose winner
+  has played on, and changing who won it would leave that next game played
+  by somebody who had not got there. So its players are shown as they are
+  and cannot be changed, its scores alone can be, and the reader begins on
+  the winner's score. A correction is
+  one score, not a batch, so Save closes the dialog, and the Scores tab
+  beneath asks for its list again. Cancelling keeps the score as it was.
+  Either way the reader is back on the Edit they pressed.
+
+  What a correction refuses is said as what adding refuses is: a score left
+  empty, one that does not begin with a digit, the same player chosen as
+  both, a loser's score marked, and a winner's score not ahead of the
+  loser's, each beside its field, and in a knockout two players not drawn to
+  meet, above the fields. Scores
+  that would make a game won into a drawn one, where the tournament allows
+  drawn games, are about neither field alone, and are said above the fields
+  (`Game.ResultChanged`). Nothing refused is kept, and the dialog stays open.
 
   The admin draws the dialog itself, so every scenario here runs scripts, and
   it is read on a phone's width, as the rest of the admin is.
@@ -204,8 +234,8 @@ Feature: A game's score is added to a competition in a modal dialog
     The knockout's draw is four places, each round the best of 1: Sam
     Someone plays Alex Another in the first round, and Chris Third plays
     whoever is in the fourth place. A game is added only once every place is
-    filled (`addGame.feature`), so where one is played, a bye fills the
-    fourth.
+    filled (`addGame.feature`), and Add Score opens the dialog only then
+    (`scores-tab.feature`), so a bye fills the fourth where nobody else does.
 
     Background:
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
@@ -214,13 +244,15 @@ Feature: A game's score is added to a competition in a modal dialog
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
 
     Scenario: Choosing the winner chooses who they are drawn against as the loser
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Sam Someone" is chosen as the "Winner"
       Then the "Loser" chosen is "Alex Another"
 
     Scenario: Either player of a game chosen as the winner chooses the other as the loser
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       When "Alex Another" is chosen as the "Winner"
       Then the "Loser" chosen is "Sam Someone"
@@ -242,7 +274,8 @@ Feature: A game's score is added to a competition in a modal dialog
       Then the "Loser" chosen is "Chris Third"
 
     Scenario: The loser chosen before is replaced by who the winner is playing
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       And "Chris Third" is chosen as the "Loser"
       When "Sam Someone" is chosen as the "Winner"
@@ -258,7 +291,8 @@ Feature: A game's score is added to a competition in a modal dialog
       Then the "Loser" chosen is "Pat Fourth"
 
     Scenario: The reader can choose another loser once the winner is chosen
-      Given the scores of "Final Stage" in "Spring Open" are open
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
       And "Sam Someone" is chosen as the "Winner"
       When "Chris Third" is chosen as the "Loser"
@@ -575,13 +609,15 @@ Feature: A game's score is added to a competition in a modal dialog
       Then the score dialog says "Competition.NotDrawnToMeet" above the fields
       And the modal dialog says the words for "Competition.NotDrawnToMeet"
 
-    Scenario: A game in a knockout with a place left empty is refused above the fields
+    Scenario: A game in a knockout with a place emptied while the dialog is open is refused above the fields
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
       And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
+      And "organiser@example.com" has removed the player "Chris Third" from "Final Stage" of "Spring Open"
       And "Sam Someone" is chosen as the "Winner"
       And "26" is typed as the "Winner's score"
       And "Alex Another" is chosen as the "Loser"
@@ -671,6 +707,321 @@ Feature: A game's score is added to a competition in a modal dialog
       When "Add Game" is pressed
       Then "Loser" has the focus
 
+  Rule: A score's Edit opens the dialog on that score, to correct it
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+
+    Scenario: Edit opens the score dialog
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score dialog is open
+
+    Scenario: The dialog to correct a score is titled for what it does
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score dialog is titled "Edit Score"
+
+    Scenario: The dialog to correct a score saves with Save
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score dialog's first button is "Save"
+
+    Scenario Outline: The dialog begins with the score's players chosen
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the "<field>" chosen is "<player>"
+
+      Examples:
+        | field  | player       |
+        | Winner | Sam Someone  |
+        | Loser  | Alex Another |
+
+    Scenario Outline: The dialog begins with the score's scores
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "<field>" says "<score>"
+
+      Examples:
+        | field          | score |
+        | Winner's score | 26    |
+        | Loser's score  | 17    |
+
+  Rule: A score that could be archived can have its players changed
+
+    Every score in a block can be archived.
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+
+    Scenario Outline: The score's players can be changed
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "<field>" can be changed
+
+      Examples:
+        | field  |
+        | Winner |
+        | Loser  |
+
+    Scenario Outline: Every player playing is offered
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "Chris Third" is offered as the "<field>"
+
+      Examples:
+        | field  |
+        | Winner |
+        | Loser  |
+
+    Scenario: The reader begins on the winner
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "Winner" has the focus
+
+    Scenario: A score given another winner is kept with them
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Chris Third" is chosen as the "Winner"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Chris Third" beating "Alex Another" 26 to 17
+
+    Scenario: A score given another winner no longer has the one it had
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Chris Third" is chosen as the "Winner"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" does not have the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: A score given another loser is kept with them
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Chris Third" is chosen as the "Loser"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Chris Third" 26 to 17
+
+    Scenario: A score whose winner and loser are swapped is kept the other way round
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Alex Another" is chosen as the "Winner"
+      And "Sam Someone" is chosen as the "Loser"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Alex Another" beating "Sam Someone" 26 to 17
+
+    Scenario: A score given another winner is listed with them
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Chris Third" is chosen as the "Winner"
+      When "Save" is pressed
+      Then the first score listed shows "Chris Third" as its winner
+
+    Scenario: The same player as winner and loser is refused beside the loser
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Alex Another" is chosen as the "Winner"
+      When "Save" is pressed
+      Then "Loser" is refused with "Game.SamePlayer"
+      And the modal dialog says the words for "Game.SamePlayer"
+
+    Scenario: A refused change of players keeps the score it had
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Alex Another" is chosen as the "Winner"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+  Rule: In a knockout, a score that could be archived can be given players drawn to meet
+
+    The knockout's draw is four places, each round the best of 1, so Sam
+    Someone plays Alex Another and Chris Third plays Pat Fourth in the first
+    round. Nobody has played on, so the score can be archived.
+
+    Background:
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And the knockout's first round is to be the best of 1
+      And the knockout's second round is to be the best of 1
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+
+    Scenario Outline: The score's players can be changed
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "<field>" can be changed
+
+      Examples:
+        | field  |
+        | Winner |
+        | Loser  |
+
+    Scenario: A score in a knockout whose winner and loser are swapped is kept the other way round
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Alex Another" is chosen as the "Winner"
+      And "Sam Someone" is chosen as the "Loser"
+      When "Save" is pressed
+      Then "Final Stage" of "Spring Open" has the score of "Alex Another" beating "Sam Someone" 26 to 17
+
+    Scenario: Players not drawn to meet are refused above the fields
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Chris Third" is chosen as the "Loser"
+      When "Save" is pressed
+      Then the score dialog says "Competition.NotDrawnToMeet" above the fields
+      And the modal dialog says the words for "Competition.NotDrawnToMeet"
+
+  Rule: A score that cannot be archived keeps its players
+
+    The knockout is drawn as above, and Sam Someone has gone on to beat Chris
+    Third in the second round, so the first round's score cannot be archived.
+
+    Background:
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And the knockout's first round is to be the best of 1
+      And the knockout's second round is to be the best of 1
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "Chris Third" has beaten "Pat Fourth" 26 to 20 in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+
+    Scenario Outline: The score's players cannot be changed
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "<field>" cannot be changed
+
+      Examples:
+        | field  |
+        | Winner |
+        | Loser  |
+
+    Scenario Outline: The score's players are shown as they are
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the "<field>" chosen is "<player>"
+
+      Examples:
+        | field  | player       |
+        | Winner | Sam Someone  |
+        | Loser  | Alex Another |
+
+    Scenario: The reader begins on the winner's score
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "Winner's score" has the focus
+
+    Scenario: Its scores can still be corrected
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "10" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Final Stage" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 10
+
+  Rule: A score begins as it was typed
+
+    Scenario: What follows a score's number is there to correct
+      Given "Sam Someone" has beaten "Alex Another" 26tp to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "Winner's score" says "26tp"
+
+  Rule: Save corrects the score and closes the dialog
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "10" is typed as the "Loser's score"
+
+    Scenario: The game has its corrected score
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 10
+
+    Scenario: The game no longer has the score it had
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" does not have the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: The corrected score is listed on the Scores tab beneath
+      When "Save" is pressed
+      Then the first score listed shows "10" as its loser's score
+
+    Scenario: Save closes the dialog
+      When "Save" is pressed
+      Then the score dialog is not open
+
+    Scenario: The reader is back on the score's Edit once it is saved
+      When "Save" is pressed
+      Then "Edit" on the score of "Sam Someone" beating "Alex Another" has the focus
+
+  Rule: Cancel keeps the score as it was
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "10" is typed as the "Loser's score"
+
+    Scenario: Cancelling keeps the score it had
+      When "Cancel" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: The reader is back on the score's Edit once the dialog is cancelled
+      When "Cancel" is pressed
+      Then "Edit" on the score of "Sam Someone" beating "Alex Another" has the focus
+
+  Rule: What a correction refuses is said where adding would say it
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+
+    Scenario Outline: A score emptied is refused beside it
+      Given "<field>" is emptied
+      When "Save" is pressed
+      Then "<field>" is refused with "<code>"
+      And the modal dialog says the words for "<code>"
+
+      Examples:
+        | field          | code                    |
+        | Winner's score | Game.WinnerScoreMissing |
+        | Loser's score  | Game.LoserScoreMissing  |
+
+    Scenario: A score that does not begin with a digit is refused beside it
+      Given "w" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Loser's score" is refused with "Score.NoPoints"
+      And the modal dialog says the words for "Score.NoPoints"
+
+    Scenario Outline: A winner's score not more than the loser's is refused beside the winner's score
+      Given "<winner>" is typed as the "Winner's score"
+      And "<loser>" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Winner's score" is refused with "Game.WinnerNotAhead"
+      And the modal dialog says the words for "Game.WinnerNotAhead"
+
+      Examples:
+        | winner | loser |
+        | 10     | 26    |
+        | 17     | 17    |
+
+    Scenario: A loser's score marked is refused beside the loser's score
+      Given "17w" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Loser's score" is refused with "Game.LoserMarked"
+      And the modal dialog says the words for "Game.LoserMarked"
+
+    Scenario: Scores that would draw a game won are refused above the fields
+      Given the tournament "Spring Open" allows drawn games
+      And "17" is typed as the "Winner's score"
+      And "17" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then the score dialog says "Game.ResultChanged" above the fields
+      And the modal dialog says the words for "Game.ResultChanged"
+
+    Scenario: A refused correction keeps the score it had
+      Given "w" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
+
+    Scenario: A refused correction leaves the dialog open
+      Given "w" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then the score dialog is open
+
+    Scenario: A refused correction keeps what was typed
+      Given "w" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Loser's score" says "w"
+
   Rule: Every word the dialog says is in the reader's language
 
     The test locale shows it (`language.feature`). The players' names are
@@ -705,6 +1056,13 @@ Feature: A game's score is added to a competition in a modal dialog
       And "Alex Another" is chosen as the loser in the score dialog
       And "17" is typed as the loser's score in the score dialog
       When the score dialog is sent as it is
+      Then every word in the score dialog but the players' names is in the test locale
+
+    Scenario: The dialog to correct a score is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When the way to correct the score of "Sam Someone" beating "Alex Another" is pressed
       Then every word in the score dialog but the players' names is in the test locale
 
   Rule: The dialog is laid out for a phone first

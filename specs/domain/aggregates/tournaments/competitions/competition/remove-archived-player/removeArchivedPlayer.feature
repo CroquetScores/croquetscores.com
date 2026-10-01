@@ -10,15 +10,16 @@ Feature: Removing a competition's player whose tournament player is archived
 
   The competition is told which tournament player is archived, since it names
   its players by the tournament player they are. It knows whether they have
-  any games in it, since the games are its own (`addGame.feature`), and a
-  player with games cannot be removed, since the games would then be against
-  somebody who is no longer there; an archived game counts, since it can be
-  restored. The tournament archives only a player with no games in any of its
-  competitions, so this is a mistake caught rather than a refusal a manager
+  any games in use in it, since the games are its own (`addGame.feature`),
+  and a player with games in use cannot be removed, since the games would
+  then be against somebody who is no longer there. An archived game counts
+  for nothing, and goes with the player removed, as it does when a player is
+  removed by mistake (`removePlayer.feature`). The tournament archives only a
+  player with no games in use in any of its competitions, so this is a mistake caught rather than a refusal a manager
   meets.
 
-  A knockout is drawn in the competition's order, so once it has a game,
-  archived or not, removing anybody from it is refused, and archiving a
+  A knockout is drawn in the competition's order, so once it has a game in
+  use, removing anybody from it is refused, and archiving a
   tournament player who is in one is refused with it. Whatever asks says what
   kind of competition it is; the scenarios here are about a block unless they
   say otherwise.
@@ -82,7 +83,7 @@ Feature: Removing a competition's player whose tournament player is archived
       When the archived tournament player "Sam Someone" is removed
       Then the competition does not have the tournament player "Sam Someone"
 
-  Rule: A player with games is not removed
+  Rule: A player with games in use is not removed
 
     Scenario: Removing a player with games is refused
       Given the tournament player "Alex Another" was entered in it
@@ -91,13 +92,21 @@ Feature: Removing a competition's player whose tournament player is archived
       When the archived tournament player "Sam Someone" is removed
       Then it is refused for breaking "CompetitionPlayer.HasGames"
 
-    Scenario: Removing a player whose only game is archived is refused
+    Scenario: Removing a player whose only game is archived is not refused
       Given the tournament player "Alex Another" was entered in it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
       And the competition is rebuilt from its stream
       When the archived tournament player "Sam Someone" is removed
-      Then it is refused for breaking "CompetitionPlayer.HasGames"
+      Then the competition does not have the tournament player "Sam Someone"
+
+    Scenario: The archived game of a player removed as archived goes with them
+      Given the tournament player "Alex Another" was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+      When the archived tournament player "Sam Someone" is removed
+      Then the competition has 0 games
 
     Scenario: A player refused is still in the competition
       Given the tournament player "Alex Another" was entered in it

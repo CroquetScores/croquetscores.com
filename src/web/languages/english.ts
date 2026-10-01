@@ -418,6 +418,8 @@ export const english: Language = {
     // A competition's Scores tab and the score dialog.
     "admin.scores.add": "Add Score",
     "admin.scores.none": "No scores",
+    "admin.scores.edit": "Edit",
+    "admin.scores.drawNotFilledTitle": "Draw Not Filled",
     "admin.scores.archive": "Archive",
     "admin.scores.restore": "Restore",
     "admin.scores.archived": "Archived scores",
@@ -431,6 +433,9 @@ export const english: Language = {
     "admin.score.beat": "beat",
     "admin.score.added": "The game {winner} won against {loser} was added.",
     "admin.score.otherwise": "The game could not be added.",
+    "admin.score.correctTitle": "Edit Score",
+    "admin.score.save": "Save",
+    "admin.score.notCorrected": "The score could not be corrected.",
     "Game.WinnerMissing": "Choose the winner.",
     "Game.WinnerScoreMissing": "Type the winner's score.",
     "Game.LoserMissing": "Choose the loser.",
@@ -440,6 +445,8 @@ export const english: Language = {
     "Game.WinnerNotAhead":
       "The winner's score has to be more than the loser's, or marked as won.",
     "Game.LoserMarked": "The loser's score cannot be marked as won.",
+    "Game.ResultChanged":
+      "A correction keeps the result: a game won stays won, and a drawn game stays drawn.",
     "Competition.MatchDecided": "Their match is already decided.",
     "Competition.DrawFull":
       "Cannot add the player because the knockout is full.",

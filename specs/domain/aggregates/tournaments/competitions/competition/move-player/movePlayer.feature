@@ -30,7 +30,8 @@ Feature: Moving a competition's player up or down
   is nowhere for them to go.
 
   A knockout is drawn in the competition's order (`addGame.feature`), so once
-  it has a game, archived or not, moving a player is refused. Whatever asks
+  it has a game in use, moving a player is refused. An archived game fixes
+  nothing. Whatever asks
   says what kind of competition it is; the scenarios here are about a block
   unless they say otherwise.
 
@@ -245,6 +246,18 @@ Feature: Moving a competition's player up or down
       And the competition is rebuilt from its stream
       When the player "Pat Player" is moved up
       Then it is refused with "Competition.DrawFixed"
+
+    Scenario: Moving a player in a knockout whose only game is archived is not refused
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Sam Someone" was entered in it
+      And the tournament player "Alex Another" was entered in it
+      And the tournament player "Pat Player" was entered in it
+      And a bye was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+      When the player "Pat Player" is moved up
+      Then the competition's second player is "Pat Player"
 
     Scenario: Moving a player in a knockout with no games is not refused
       Given the competition is a knockout of 4 places, each round the best of 1

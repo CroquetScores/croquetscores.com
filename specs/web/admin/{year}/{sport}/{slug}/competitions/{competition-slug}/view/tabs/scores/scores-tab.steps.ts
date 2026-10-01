@@ -378,10 +378,87 @@ Then(
   },
 );
 
+// Every word in whatever modal dialog is open, which says nothing typed.
+Then(
+  "every word in the modal dialog is in the test locale",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("dialog[open]").waitFor();
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "dialog[open]", []);
+      assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+    });
+  },
+);
+
 When("the way to add a score is pressed", async function (this: SpecWorld) {
   await settled(this);
   await tabPanel(this).locator("section > p button").first().click();
 });
+
+// By what it does rather than its words, which are the reader's language's.
+When(
+  "the way to correct the score of {string} beating {string} is pressed",
+  async function (this: SpecWorld, winner: string, loser: string) {
+    await settled(this);
+    await (
+      await rowOf(this, winner, loser)
+    )
+      .locator('.listed-options button[data-action="edit"]')
+      .click();
+  },
+);
+
+Then(
+  "{string} on the score of {string} beating {string} comes before {string}",
+  async function (
+    this: SpecWorld,
+    option: string,
+    winner: string,
+    loser: string,
+    after: string,
+  ) {
+    await eventually(this, async () => {
+      const offered = (
+        await (
+          await rowOf(this, winner, loser)
+        )
+          .locator(".listed-options")
+          .getByRole("button")
+          .allInnerTexts()
+      ).map((each) => each.trim());
+      const first = offered.indexOf(option);
+      const second = offered.indexOf(after);
+      assert.ok(
+        first !== -1 && second !== -1 && first < second,
+        `The score offers ${JSON.stringify(offered)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "{string} on the score of {string} beating {string} has the focus",
+  async function (
+    this: SpecWorld,
+    option: string,
+    winner: string,
+    loser: string,
+  ) {
+    await eventually(this, async () => {
+      assert.ok(
+        await (
+          await optionOf(this, option, winner, loser)
+        ).evaluate(
+          (element) =>
+            element ===
+            (globalThis as unknown as { document: { activeElement: unknown } })
+              .document.activeElement,
+        ),
+        "Something else has the focus.",
+      );
+    });
+  },
+);
 
 // What a knockout added before the scenario is to be ---------------------------
 

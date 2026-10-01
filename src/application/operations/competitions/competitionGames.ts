@@ -9,9 +9,10 @@ import type { Competitions } from "./competitionOperations.js";
 
 /**
  * The application's games: the ones its tournaments' competitions keep,
- * archived competitions and archived games among them, since an archived game
- * can be restored. A knockout's draw is fixed once it has a game, so a change
- * to the draw of one that has a game moves a player who has played.
+ * archived competitions among them. Only the games in use count: an archived
+ * game counts for nothing. A knockout's draw is fixed once it has a game in
+ * use, so a change to the draw of one that has one moves a player who has
+ * played.
  */
 export const gamesKeptByCompetitions = (
   tournaments: AggregateRepository<Tournament, TournamentId>,
@@ -34,12 +35,15 @@ export const gamesKeptByCompetitions = (
         competition.players.some(
           (each) =>
             each.tournamentPlayerId.equals(player) &&
-            competition.hasPlayed(each.id),
+            competition.hasGamesInUse(each.id),
         ),
       ),
     movesAPlayerWhoHasPlayed: async (
       _tournament: TournamentId,
       competition: CompetitionId,
-    ) => ((await competitions.load(competition))?.games.length ?? 0) > 0,
+    ) =>
+      (await competitions.load(competition))?.games.some(
+        (game) => !game.archived,
+      ) ?? false,
   };
 };

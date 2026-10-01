@@ -8,16 +8,36 @@ import "./score.css";
 // The score dialog (score-modal-dialog.feature), over a competition's Scores
 // tab: the winner and their score, "beat", the loser and theirs, as the result
 // is said aloud. Scores come in a batch, so adding a game keeps it open, says
-// which game was added and empties it for the next.
+// which game was added and empties it for the next. Opened on a game, it
+// corrects that game, and Save closes it, since a correction is one score and
+// not a batch. Its players can be chosen again where the game could be
+// archived; where it cannot, they are shown as they are and cannot be
+// changed, since changing who won would leave a later game played by
+// somebody who had not got there.
 
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
   /** The competition's id. */
   readonly competition: string;
-  /** Once a game is added, so that the list says so. */
+  /** The game to correct, as the Scores tab lists it, where one is. */
+  readonly correcting?: Correcting | undefined;
+  /** Once a game is added or corrected, so that the list says so. */
   readonly kept: () => void;
   readonly close: () => void;
+}
+
+/** A game as the Scores tab lists it, with as much as correcting it needs. */
+export interface Correcting {
+  readonly id: string;
+  readonly winner: string;
+  readonly winnerId: string;
+  readonly winnerScore: string;
+  readonly loser: string;
+  readonly loserId: string;
+  readonly loserScore: string;
+  /** Whether it could be archived, which is whether its players can change. */
+  readonly archivable: boolean;
 }
 
 /** One of the competition's players, as the API lists them. */
@@ -55,15 +75,20 @@ interface Refused extends Refusal {
 export const ScoreDialog = ({
   tournament,
   competition,
+  correcting,
   kept,
   close,
 }: Props): React.JSX.Element => {
   const [players, setPlayers] = useState<readonly Player[]>([]);
+  // Whether the players are chosen, as they are when adding, rather than
+  // shown as the game has them.
+  const choosingPlayers = correcting === undefined || correcting.archivable;
+  // A game corrected begins as it is, each score as it was typed.
   const [said, setSaid] = useState<Record<Part, string>>({
-    winner: "",
-    winnerScore: "",
-    loser: "",
-    loserScore: "",
+    winner: correcting?.winnerId ?? "",
+    winnerScore: correcting?.winnerScore ?? "",
+    loser: correcting?.loserId ?? "",
+    loserScore: correcting?.loserScore ?? "",
   });
   const [refused, setRefused] = useState<readonly Refused[]>([]);
   // The game last added, said until the next winner is chosen.
@@ -80,6 +105,12 @@ export const ScoreDialog = ({
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}`;
 
   useEffect(() => {
+    // A game that keeps its players has none to choose from, and begins on
+    // what can be changed.
+    if (!choosingPlayers) {
+      fields.winnerScore.current?.focus();
+      return;
+    }
     void fetch(`${at}/players`, { headers: { accept: "application/json" } })
       .then(async (response) =>
         response.ok
@@ -89,7 +120,7 @@ export const ScoreDialog = ({
       .catch(() => [])
       .then(setPlayers);
     fields.winner.current?.focus();
-  }, [at]);
+  }, [at, choosingPlayers]);
 
   // A withdrawn player plays no more of the competition, and a bye is nobody.
   const playing = players.filter(({ withdrawn, bye }) => !withdrawn && !bye);
@@ -99,26 +130,57 @@ export const ScoreDialog = ({
   const refusal = (code: string, part: Part | undefined): Refused => ({
     code,
     part,
-    words: say(knows(code) ? code : "admin.score.otherwise"),
+    words: say(
+      knows(code)
+        ? code
+        : correcting === undefined
+          ? "admin.score.otherwise"
+          : "admin.score.notCorrected",
+    ),
   });
 
   const send = async (): Promise<void> => {
     if (sending) return;
     setSending(true);
     try {
-      const response = await fetch(`${at}/games`, {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "content-type": "application/json",
+      const response = await fetch(
+        correcting === undefined
+          ? `${at}/games`
+          : `${at}/games/${idInAddress(correcting.id)}/correct`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(
+            correcting === undefined
+              ? {
+                  winner: idInAddress(said.winner),
+                  winnerScore: said.winnerScore,
+                  loser: idInAddress(said.loser),
+                  loserScore: said.loserScore,
+                }
+              : {
+                  winnerScore: said.winnerScore,
+                  loserScore: said.loserScore,
+                  // Sent only where they can change: the game's own
+                  // otherwise, which the correction keeps.
+                  ...(choosingPlayers
+                    ? {
+                        winner: idInAddress(said.winner),
+                        loser: idInAddress(said.loser),
+                      }
+                    : {}),
+                },
+          ),
         },
-        body: JSON.stringify({
-          winner: idInAddress(said.winner),
-          winnerScore: said.winnerScore,
-          loser: idInAddress(said.loser),
-          loserScore: said.loserScore,
-        }),
-      });
+      );
+      if (response.ok && correcting !== undefined) {
+        kept();
+        close();
+        return;
+      }
       if (response.ok) {
         setRefused([]);
         kept();
@@ -161,7 +223,22 @@ export const ScoreDialog = ({
   const refusedFor = (part: Part | undefined): Refusal[] =>
     refused.filter((each) => each.part === part);
 
-  const choosing = (part: "winner" | "loser", label: string) => (
+  const choosing = (part: "winner" | "loser", label: string) =>
+    choosingPlayers ? (
+      choosable(part, label)
+    ) : (
+      // Shown as the drop-down it is when adding, so that the dialog reads
+      // the same either way, with the one player it has and nothing else.
+      <Field name={part} label={say(label)} refused={refusedFor(part)} lifted>
+        {(tied) => (
+          <select {...tied} ref={fields[part]} disabled value="chosen">
+            <option value="chosen">{correcting?.[part]}</option>
+          </select>
+        )}
+      </Field>
+    );
+
+  const choosable = (part: "winner" | "loser", label: string) => (
     <Field name={part} label={say(label)} refused={refusedFor(part)} lifted>
       {(tied) => (
         <select
@@ -171,9 +248,12 @@ export const ScoreDialog = ({
           onChange={(event) => {
             const chosen = event.target.value;
             // In a knockout the winner's opponent is known, so it is chosen as
-            // the loser, where the reader sees it and can choose another.
+            // the loser, where the reader sees it and can choose another. Not
+            // when correcting: who a player is drawn against is said with the
+            // game being corrected counting, and its own loser is already
+            // chosen.
             const opponent =
-              part === "winner"
+              part === "winner" && correcting === undefined
                 ? players.find((player) => player.id === chosen)?.drawnAgainst
                 : undefined;
             setSaid({
@@ -223,8 +303,14 @@ export const ScoreDialog = ({
 
   return (
     <ModalDialog
-      title={say("admin.score.title")}
-      action={say("admin.score.add")}
+      title={say(
+        correcting === undefined
+          ? "admin.score.title"
+          : "admin.score.correctTitle",
+      )}
+      action={say(
+        correcting === undefined ? "admin.score.add" : "admin.score.save",
+      )}
       act={() => void send()}
       cancel={close}
       busy={sending}

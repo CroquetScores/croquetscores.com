@@ -23,10 +23,12 @@ Feature: The players tab of a tournament's page
   flag. The flag is shown as its picture, and is named for a reader who cannot
   see it by the country it is the flag of, in the reader's language.
 
-  A player who has played any games cannot be archived, since the games would
-  then be against somebody who is no longer there (`archivePlayer.feature`),
-  so such a player is not offered Archive. An archived game counts, since it
-  can be restored.
+  A player who has played any games in use cannot be archived, since the
+  games would then be against somebody who is no longer there
+  (`archivePlayer.feature`), so such a player is not offered Archive. An
+  archived game counts for nothing, so a player whose only games are archived
+  is offered Archive, and their archived games go with them
+  (`ArchivePlayer.feature`).
 
   The archived players come after those in use, under a heading of their own,
   in the order they were archived, since each is put last when archived
@@ -247,7 +249,7 @@ Feature: The players tab of a tournament's page
         | Up     |
         | Down   |
 
-  Rule: A player who has played is not offered Archive
+  Rule: A player who has played a game in use is not offered Archive
 
     Scenario: A player who has not played is offered Archive
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -263,6 +265,17 @@ Feature: The players tab of a tournament's page
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" does not offer "Archive"
+
+    Scenario: A player whose only game is archived is offered Archive
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the players of "Spring Open" are opened
+      Then the player "Sam Someone" offers "Archive"
 
     Scenario: A player in use does not offer Restore
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

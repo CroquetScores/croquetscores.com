@@ -5,7 +5,7 @@ Feature: The players of a tournament, as a manager lists them
   them and restore them, so the application answers with every player the
   tournament has, archived ones among them. Each is answered with their id,
   their name, what they represent and the flag they fly, if either, whether
-  they are archived, and whether they have played any games.
+  they are archived, and whether they have played any games in use.
 
   They are answered in the tournament's order, lowest first
   (`addPlayer.feature`), since that is the order a manager puts them in by
@@ -25,7 +25,8 @@ Feature: The players of a tournament, as a manager lists them
   (`archivePlayer.feature`). The application asks its games, as archiving a
   player does (`ArchivePlayer.feature`), so that a list offering to archive a
   player offers it only where archiving would be done. The games are those its
-  competitions keep (`Games.feature`), and an archived game counts.
+  competitions keep (`Games.feature`), and an archived game counts for
+  nothing.
 
   It answers the account the reader is signed in to, and never one the reader
   chose. Only the tournament's managers can ask, since the list is for
@@ -176,6 +177,17 @@ Feature: The players of a tournament, as a manager lists them
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
       Then the player "Sam Someone" is answered as having played
+
+    Scenario: A player whose only game is archived is listed as not having played
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
+      Then the player "Sam Someone" is answered as not having played
 
     Scenario: A player who has not played is listed as not having played
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

@@ -43,6 +43,22 @@ Given(
   },
 );
 
+// Whether a game corrected lets its players be chosen again, which is
+// whether their drop-downs can be used.
+for (const [said, can] of [
+  ["can", true],
+  ["cannot", false],
+] as const) {
+  Then(
+    `{string} ${said} be changed`,
+    async function (this: SpecWorld, label: string) {
+      await eventually(this, async () => {
+        assert.equal(await fieldOf(this, label).isEnabled(), can);
+      });
+    },
+  );
+}
+
 Then(
   "the {string} chosen is {string}",
   async function (this: SpecWorld, label: string, name: string) {

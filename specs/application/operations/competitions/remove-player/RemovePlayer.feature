@@ -6,9 +6,10 @@ Feature: Removing a competition's player
   tournament, the competition and the player are each named by their id. A
   player removed is gone, and can be entered again (`removePlayer.feature`).
   What the competition refuses — a player it does not have, one who has
-  withdrawn, one who has games, or anybody in a knockout that has a game — is
-  the competition's to refuse. The tournament says what kind of competition
-  it is.
+  withdrawn, one who has games in use, or anybody in a knockout that has a
+  game — is the competition's to refuse. A player whose only scores are
+  archived is removed, and their archived scores go with them. The tournament 
+  says what kind of competition it is.
 
   It is asked of the tournament first, as entering a player is
   (`EnterPlayer.feature`): only a manager can, anybody else, a scorer among
@@ -44,6 +45,18 @@ Feature: Removing a competition's player
       When the reader signed in to the account for "organiser@example.com" enters the player "Sam Someone" in "Block A" of "Spring Open"
       Then the competition "Block A" of "Spring Open" has the player "Sam Someone"
 
+    Scenario: A player whose only score is archived is removed
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" removes the player "Sam Someone" in "Block A" of "Spring Open"
+      Then the competition "Block A" of "Spring Open" does not have the player "Sam Someone"
+
+    Scenario: The archived score of a player removed goes with them
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" removes the player "Sam Someone" in "Block A" of "Spring Open"
+      Then "Block A" of "Spring Open" has no scores
+
     Scenario: Removing the player is recorded as done by whoever asked
       When the reader signed in to the account for "organiser@example.com" removes the player "Sam Someone" in "Block A" of "Spring Open"
       Then the last thing the competition "Block A" of "Spring Open" recorded was caused by the account for "organiser@example.com"
@@ -70,6 +83,21 @@ Feature: Removing a competition's player
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" removes the player "Chris Third" in "Final Stage" of "Spring Open"
       Then it is refused with "Competition.DrawFixed"
+
+    Scenario Outline: Either player of a knockout whose only score is archived is removed
+      Given the knockout is to have a draw of 2 places
+      And "organiser@example.com" has added the knockout "Final" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" removes the player "<player>" in "Final" of "Spring Open"
+      Then the competition "Final" of "Spring Open" does not have the player "<player>"
+
+      Examples:
+        | player       |
+        | Sam Someone  |
+        | Alex Another |
 
     Scenario: A player the competition does not have is refused as the competition refuses them
       When the reader signed in to the account for "organiser@example.com" removes a player "Block A" of "Spring Open" does not have

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
@@ -39,7 +39,8 @@ interface Listed {
   readonly flag: Seen | undefined;
   readonly tournamentPlayer: string;
   readonly withdrawn: boolean;
-  readonly hasPlayed: boolean;
+  /** Whether they have a game in use, which keeps them from being removed. */
+  readonly hasGamesInUse: boolean;
   /** Whether this is a knockout's bye, which is nobody. */
   readonly bye: boolean;
   /** Where they come in the competition, which is what names a bye. */
@@ -94,6 +95,7 @@ export const CompetitionPlayersTab = ({
     | { readonly player: Listed; readonly action: "remove" | "withdraw" }
     | undefined
   >();
+  const choice = useRef<HTMLSelectElement>(null);
   const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
   const at = `${ofTournament}/competitions/${idInAddress(competition)}`;
 
@@ -104,7 +106,7 @@ export const CompetitionPlayersTab = ({
       asked<OfTheTournament>(`${ofTournament}/players`, "players"),
       // Only a knockout's draw is fixed by its games.
       kind === "knockout"
-        ? asked<unknown>(`${at}/games`, "games")
+        ? asked<{ readonly archived: boolean }>(`${at}/games`, "games")
         : Promise.resolve([]),
     ]).then(([players, ofTheTournament, games]) => {
       if (!current) return;
@@ -118,7 +120,8 @@ export const CompetitionPlayersTab = ({
             ),
         ),
       );
-      setPlayed((games ?? []).length > 0);
+      // Only a game in use fixes the draw: an archived one counts for nothing.
+      setPlayed((games ?? []).some(({ archived }) => !archived));
       setChosen("");
       setAnswered(asking);
     });
@@ -173,6 +176,11 @@ export const CompetitionPlayersTab = ({
       });
       if (response.ok) {
         setRefused([]);
+        // Back to the drop-down, so that the next can be chosen and added
+        // from the keyboard without going back up to find it. It stays drawn
+        // while the list is asked for again, so it can be given the focus
+        // now rather than once the list has come back.
+        choice.current?.focus();
         return;
       }
       const answer = (await response.json().catch(() => ({}))) as {
@@ -221,7 +229,8 @@ export const CompetitionPlayersTab = ({
   // Room is kept only for what some row offers: a gap no row fills would be
   // space and nothing else. A fixed draw removes and moves nobody, a lone
   // player moves nowhere, and a list of byes withdraws nobody.
-  const removable = (player: Listed): boolean => !fixed && !player.hasPlayed;
+  const removable = (player: Listed): boolean =>
+    !fixed && !player.hasGamesInUse;
   const anyRemove = playing.some(removable);
   const anyWithdraw = playing.some(({ bye }) => !bye);
   const anyMove = !fixed && playing.length > 1;
@@ -261,6 +270,7 @@ export const CompetitionPlayersTab = ({
         // it off a phone's screen.
         <p className="listed-adding">
           <select
+            ref={choice}
             className="listed-choice"
             aria-label={say("admin.competitionPlayers.choose")}
             // Tied to what is said beneath it, so that a screen reader reads

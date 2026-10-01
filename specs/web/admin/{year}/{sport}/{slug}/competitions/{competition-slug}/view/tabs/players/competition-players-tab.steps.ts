@@ -253,6 +253,25 @@ Then(
   },
 );
 
+// Asked of the drop-down itself rather than found by its label, as the
+// admin's forms' fields are, since it is not in a form.
+Then(
+  "the drop-down of players to add has the focus",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.ok(
+        await dropDown(this).evaluate(
+          (element) =>
+            element ===
+            (globalThis as unknown as { document: { activeElement: unknown } })
+              .document.activeElement,
+        ),
+        "Something other than the drop-down has the focus.",
+      );
+    });
+  },
+);
+
 Then(
   "the first player offered to add is {string}",
   async function (this: SpecWorld, name: string) {

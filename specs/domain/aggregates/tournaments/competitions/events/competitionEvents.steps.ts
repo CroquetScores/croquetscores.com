@@ -1,4 +1,4 @@
-import { Given } from "@cucumber/cucumber";
+import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { nameCompetitionEvents } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/competitionEvents.js";
@@ -74,8 +74,29 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new CompetitionGameArchived(GAME, causedBy, happenedAt),
   "a game being restored": () =>
     new CompetitionGameRestored(GAME, causedBy, happenedAt),
+  // Keeping its players, so saying none.
   "a game being corrected": () =>
-    new CompetitionGameCorrected(GAME, "7w", true, "7tp", causedBy, happenedAt),
+    new CompetitionGameCorrected(
+      GAME,
+      "7w",
+      true,
+      "7tp",
+      undefined,
+      undefined,
+      causedBy,
+      happenedAt,
+    ),
+  "a game being corrected to other players": () =>
+    new CompetitionGameCorrected(
+      GAME,
+      "7w",
+      true,
+      "7tp",
+      ANOTHER_PLAYER,
+      PLAYER,
+      causedBy,
+      happenedAt,
+    ),
 };
 
 // Matched by these happenings alone, so that the steps for the tournament's
@@ -98,3 +119,16 @@ Given(HAPPENINGS, function (this: SpecWorld, happening: string) {
   assert.ok(make !== undefined, `There is no event of ${happening}.`);
   this.pendingEvents.push(make());
 });
+
+Then(
+  "what was read back says nothing of the game's players",
+  function (this: SpecWorld) {
+    const read = this.readBackEvent;
+    assert.ok(
+      read instanceof CompetitionGameCorrected,
+      "What was read back is not a correction.",
+    );
+    assert.equal(read.winnerId, undefined);
+    assert.equal(read.loserId, undefined);
+  },
+);

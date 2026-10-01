@@ -59,9 +59,11 @@ Feature: Adding a game to a competition
   bye.
 
   Every one of a knockout's games depends on where its players are drawn, so
-  once it has a game, archived or not, its draw is fixed: entering, moving or
-  removing a player in it is refused (`enterPlayer.feature`,
-  `movePlayer.feature`, `removePlayer.feature`).
+  once it has a game in use, its draw is fixed: entering, moving or removing
+  a player in it is refused (`enterPlayer.feature`, `movePlayer.feature`,
+  `removePlayer.feature`). An archived game fixes nothing, since it counts
+  for nothing, and one whose players are no longer drawn to meet is refused
+  if it is restored, as adding it would be (`restoreGame.feature`).
 
   An archived game no longer counts (`archiveGame.feature`): it decides no
   match and sends nobody through.

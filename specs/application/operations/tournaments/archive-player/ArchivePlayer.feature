@@ -9,11 +9,13 @@ Feature: Archiving a tournament's player
   else, a scorer among them, is refused with `Tournament.NotAManager`
   (`onlyManagers.feature`).
 
-  A player who has played any games, in any of the tournament's competitions,
-  archived ones among them, cannot be archived, and whether they have is not
-  the tournament's to know (`archivePlayer.feature`). The application asks
-  its games (`Games.feature`), which are the games its competitions keep, an
-  archived game counting, since it can be restored. Archiving a player who is
+  A player who has played any games in use, in any of the tournament's
+  competitions, archived competitions among them, cannot be archived, and
+  whether they have is not the tournament's to know (`archivePlayer.feature`).
+  The application asks its games (`Games.feature`), which are the games its
+  competitions keep. An archived game counts for nothing, so a player whose
+  only games are archived is archived, and removed from each competition with
+  those games (`removeArchivedPlayer.feature`). Archiving a player who is
   archived records nothing.
 
   A player archived is in no competition, so archiving one removes them from
@@ -25,8 +27,8 @@ Feature: Archiving a tournament's player
   archived while still in a competition, nor removed from one while not
   archived. A player the tournament refuses to archive is left in every
   competition they are in, and a player one of the competitions refuses to
-  remove is not archived. A knockout that has a game has its draw fixed
-  (`addGame.feature`), so a player in one cannot be archived; they can be
+  remove is not archived. A knockout that has a game in use has its draw
+  fixed (`addGame.feature`), so a player in one cannot be archived; they can be
   withdrawn from it instead. Nothing is kept of the places they had:
   restoring the player does not put them back (`RestorePlayer.feature`). The tab asks the manager first,
   naming the competitions (`players-tab.feature`); the application does not,
@@ -162,7 +164,7 @@ Feature: Archiving a tournament's player
       When the reader signed in to the account for "organiser@example.com" archives the player "Sam Someone" in "Spring Open"
       Then the competition "Block A" of "Spring Open" has the player "Sam Someone"
 
-    Scenario: A player whose only game is archived is refused
+    Scenario: A player whose only game is archived is archived
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
@@ -170,7 +172,17 @@ Feature: Archiving a tournament's player
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" archives the player "Sam Someone" in "Spring Open"
-      Then it is refused for breaking "TournamentPlayer.HasGames"
+      Then the tournament's player "Sam Someone" is archived
+
+    Scenario: The archived score of a player archived goes with them
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" archives the player "Sam Someone" in "Spring Open"
+      Then "Block A" of "Spring Open" has no scores
 
     Scenario: A player who has played in only one of the competitions is refused
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
@@ -204,7 +216,7 @@ Feature: Archiving a tournament's player
       When the reader signed in to the account for "organiser@example.com" archives the player "Chris Third" in "Spring Open"
       Then the tournament's player "Chris Third" is archived
 
-  Rule: A player in a knockout that has a game cannot be archived
+  Rule: A player in a knockout that has a game in use cannot be archived
 
     Scenario: A player in a knockout with a game is refused as the knockout refuses to remove them
       Given "organiser@example.com" has added the player "Alex Another" to "Spring Open"
@@ -229,6 +241,19 @@ Feature: Archiving a tournament's player
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" archives the player "Chris Third" in "Spring Open"
       Then the tournament's player "Chris Third" is not archived
+
+    Scenario: A player in a knockout whose only game is archived is archived
+      Given "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" archives the player "Chris Third" in "Spring Open"
+      Then the tournament's player "Chris Third" is archived
 
   Rule: Only a player there is, in a tournament there is, can be archived
 

@@ -11,9 +11,10 @@ Feature: Changing what a tournament's knockout is
   A draw cannot be changed so as to move a player who has games
   (`updateKnockout.feature`), and whether it does is not the tournament's to
   know. The application asks its games (`Games.feature`). A knockout's draw
-  is fixed once it has a game, archived or not (`addGame.feature`), so the
-  games say a change to the draw of a knockout that has one moves a player who
-  has played.
+  is fixed once it has a game in use (`addGame.feature`), so the games say a
+  change to the draw of a knockout that has one moves a player who has
+  played. An archived game counts for nothing, so a knockout whose only games
+  are archived can have its draw changed.
 
   This says again only enough of what updating a block says to show that it
   holds for a knockout.
@@ -48,7 +49,7 @@ Feature: Changing what a tournament's knockout is
       Then it is refused with "Request.Invalid"
       And the first rule broken is "KnockoutDraw.EvenBestOf"
 
-  Rule: A change to the draw of a knockout that has a game is refused
+  Rule: A change to the draw of a knockout that has a game in use is refused
 
     Scenario: A change to the draw of a knockout with a game is refused as the tournament refuses it
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -61,6 +62,19 @@ Feature: Changing what a tournament's knockout is
       And the update gives the knockout a draw of 8 places
       When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
       Then it is refused with "Tournament.KnockoutPlayerHasGames"
+
+    Scenario: A change to the draw of a knockout whose only game is archived is kept
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Main Event" of "Spring Open"
+      And the update gives the knockout a draw of 8 places
+      When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
+      Then the tournament's competition "Main Event" has a draw of 8 places
 
     Scenario: A change to the draw of a knockout with no games is kept
       Given the update gives the knockout a draw of 8 places

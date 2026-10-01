@@ -2,19 +2,35 @@
 Feature: The scores tab of a competition's page
 
   The Scores tab is where a manager or a scorer sees the games played in one
-  of a tournament's competitions, adds the score of another, archives a score
-  entered by mistake and restores it (`view.feature` beneath the
+  of a tournament's competitions, adds the score of another, corrects a score
+  entered wrongly, archives a score entered by mistake and restores it (`view.feature` beneath the
   competition). A scorer sees this tab alone, and can do on it all that a
   manager can, since putting right a score entered wrongly is part of
   entering scores.
 
-  Add Score, above the list, opens the score dialog to enter a game's score
-  (`score-modal-dialog.feature`). Whenever the dialog adds a score, the list is asked for
-  again, so that it says what has been played now.
+  Add Score, above the list, opens the score dialog to enter a game's score,
+  and a score's Edit opens it to correct that score
+  (`score-modal-dialog.feature`). Whenever the dialog adds or corrects a
+  score, the list is asked for again, so that it says what has been played
+  now.
+
+  A knockout is played only once every place in its draw is filled with a
+  player or a bye, and no more are in it than it has places
+  (`addGame.feature`). So in a knockout, Add Score first counts who is in the
+  draw, as the knockout counts them: its players, withdrawn ones among them,
+  since a withdrawn player keeps their place, and its byes. Where that is not
+  the number of places, Add Score does not open the score dialog, which could
+  only have every game refused. It says why in a modal dialog of its own,
+  with OK alone, in the words for `Competition.DrawNotFilled`, and OK puts
+  the reader back on Add Score. It counts when it is pressed, so a place
+  filled since the tab was opened is counted. A block and a Swiss have no
+  draw, and Add Score always opens the score dialog in them.
 
   The scores in use come first, in the order they were entered, oldest first,
   so that the list reads as the competition was played. Each says the winner
-  and their score, then the loser and their score, and offers Archive. A
+  and their score, then the loser and their score, and offers Edit and
+  Archive, Edit first, as it is for a player and a competition, so that
+  putting a score right is offered ahead of setting it aside. A
   score is shown exactly as it was typed, whatever follows its number, as
   "26tp" or "6w" (`Score.feature`).
 
@@ -28,12 +44,15 @@ Feature: The scores tab of a competition's page
   next round is archived first, and then the ones before it can be. A block
   and a Swiss have
   no rounds that depend on one another, so every score in them is offered
-  Archive.
+  Archive. Every score in use is offered Edit, in a knockout as anywhere.
+  Where a score could be archived, Edit lets its players be changed as well
+  as its scores; where it cannot, it keeps its players, so that nobody who
+  went through changes (`score-modal-dialog.feature`).
 
   The archived scores come after those in use, under a heading of their own,
   in the same order. Each is struck through, and says in words that it is
   archived as well, since a line through a score is not read out. Each offers
-  Restore alone.
+  Restore alone: an archived score is restored before it is corrected.
 
   Archive and Restore do not ask first: each is undone by the other, and
   nothing is lost by either. Whatever is pressed, the list is asked for again.
@@ -129,6 +148,94 @@ Feature: The scores tab of a competition's page
       When "Add Score" is pressed
       Then the score dialog is titled "Add Score"
 
+  Rule: In a knockout, Add Score says why scores cannot be added until the draw is filled
+
+    The knockout's draw is four places.
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+
+    Scenario: Add Score in a knockout with a place left empty does not open the score dialog
+      Given the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is not open
+
+    Scenario: Add Score in a knockout with a place left empty says why scores cannot be added
+      Given the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the modal dialog says the words for "Competition.DrawNotFilled"
+
+    Scenario: What Add Score says has OK alone
+      Given the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the modal dialog's first button is "OK"
+
+    Scenario: OK puts the reader back on Add Score
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "OK" is pressed
+      Then "Add Score" has the focus
+
+    Scenario: OK closes what Add Score said
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "Add Score" is pressed
+      When "OK" is pressed
+      Then no modal dialog is open
+
+    Scenario: Add Score in a knockout with every place filled opens the score dialog
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is titled "Add Score"
+
+    Scenario: A withdrawn player keeps their place in the count
+      Given "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Chris Third" from "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is titled "Add Score"
+
+    Scenario: A place filled after the tab was opened is counted
+      Given the scores of "Final Stage" in "Spring Open" are open
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When "Add Score" is pressed
+      Then the score dialog is titled "Add Score"
+
+    Scenario: What Add Score says is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When the way to add a score is pressed
+      Then every word in the modal dialog is in the test locale
+
+  Rule: Edit opens the score dialog to correct a score
+
+    Scenario: A score in use offers Edit
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Edit"
+
+    Scenario: Edit comes before Archive
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then "Edit" on the score of "Sam Someone" beating "Alex Another" comes before "Archive"
+
+    Scenario: Edit opens the dialog to correct the score
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score dialog is titled "Edit Score"
+
+    Scenario: A score corrected from Edit is listed with its new score
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "10" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then the first score listed shows "10" as its loser's score
+
   Rule: A score in a block or a Swiss can always be archived
 
     Scenario: A score in use offers Archive
@@ -189,6 +296,11 @@ Feature: The scores tab of a competition's page
       Given "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
       When the scores of "Final Stage" in "Spring Open" are opened
       Then the score of "Chris Third" beating "Pat Fourth" does not offer "Archive"
+
+    Scenario: A score whose winner has played in the next round still offers Edit
+      Given "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
+      When the scores of "Final Stage" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Edit"
 
     Scenario: The score in the next round offers Archive
       Given "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
@@ -416,6 +528,12 @@ Feature: The scores tab of a competition's page
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
       Then the score of "Sam Someone" beating "Alex Another" does not offer "Archive"
+
+    Scenario: An archived score does not offer Edit
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" does not offer "Edit"
 
   Rule: Archive and Restore move a score between those in use and the archived
 

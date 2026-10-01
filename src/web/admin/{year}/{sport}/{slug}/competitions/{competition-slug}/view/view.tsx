@@ -129,6 +129,7 @@ export const ViewCompetition = ({
                 <ScoresTab
                   tournament={asked.competition.tournament}
                   competition={asked.competition.id}
+                  kind={asked.competition.kind}
                 />
               )}
             </TabControl>
