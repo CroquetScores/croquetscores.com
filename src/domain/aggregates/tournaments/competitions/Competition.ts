@@ -5,7 +5,10 @@ import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
 import { Refused } from "../../../common/Refused.js";
 import { ValidationError } from "../../../common/validation/ValidationError.js";
 import type { CompetitionId } from "../primitives/CompetitionId.js";
+import type { TeamId } from "../primitives/TeamId.js";
+import type { TeamPlayerId } from "../primitives/TeamPlayerId.js";
 import { TournamentPlayerId } from "../primitives/TournamentPlayerId.js";
+import type { TeamPlayerErrorCode } from "../TeamPlayer.js";
 import type { CompetitionShape } from "../Tournament.js";
 import {
   CompetitionPlayer,
@@ -17,7 +20,12 @@ import { CompetitionGameAdded } from "./events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "./events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "./events/CompetitionGameRestored.js";
-import { Game, type GameDetails } from "./Game.js";
+import {
+  Game,
+  type GameDetails,
+  type GamePlayerId,
+  gamePlayerIdFrom,
+} from "./Game.js";
 import {
   drawnAgainst,
   isPlayer,
@@ -46,20 +54,30 @@ export type CompetitionErrorCode =
   | "Competition.DrawFixed"
   | "Competition.DrawFull"
   | "Competition.DrawNotFilled"
-  | "Competition.ByeOutsideKnockout";
+  | "Competition.ByeOutsideKnockout"
+  | "Competition.SameTeam";
+
+/** A player of one of a test's teams, as the tournament says they are. */
+export interface TeamPlayerInTest {
+  readonly id: TeamPlayerId;
+  readonly team: TeamId;
+  readonly archived: boolean;
+}
 
 /**
  * What a competition is told of itself by whatever asks, since the tournament
  * keeps it: what kind of competition it is, with a knockout's draw, and
- * whether the tournament allows drawn games.
+ * whether the tournament allows drawn games. A test has no players entered in
+ * it, so it is told who plays for its teams, which is the tournament's too.
  */
 export interface Told {
   readonly shape: CompetitionShape;
   readonly drawsAllowed: boolean;
+  readonly teamPlayers?: readonly TeamPlayerInTest[] | undefined;
 }
 
 // Whether the player `id` won or lost `game`.
-const isIn = (game: Game, id: CompetitionPlayerId): boolean =>
+const isIn = (game: Game, id: GamePlayerId): boolean =>
   game.winner.equals(id) || game.loser.equals(id);
 
 /** A competition's refusal, named by its code. */
@@ -90,6 +108,10 @@ const ORDER_STEP = 10_000;
  * use, its draw is fixed: nobody is entered, moved or removed.
  * Its places left over are filled with byes, which are nobody, and it is
  * played only once players and byes fill every place.
+ *
+ * A test, in a tournament played by teams, has no players entered in it: its
+ * games are between the players of its two teams, one of each, whom it is
+ * told of, and two who meet play a match of its best-of, as in a block.
  */
 export class Competition extends AggregateRoot {
   // By the written id.
@@ -431,8 +453,7 @@ export class Competition extends AggregateRoot {
     if (this.#games.has(id.value)) {
       refuse("Competition.GameAlreadyAdded", "The game is already added.");
     }
-    this.#ensurePlaying(details.winner);
-    this.#ensurePlaying(details.loser);
+    this.#ensureBothPlaying(details.winner, details.loser, told);
     const game = Game.from(id, details, {
       drawsAllowed: told.drawsAllowed && told.shape.kind !== "knockout",
     });
@@ -484,8 +505,7 @@ export class Competition extends AggregateRoot {
   restoreGame(id: GameId, told: Told, by: AccountId, at: ReadOnlyDate): void {
     const game = this.#gameFound(id);
     if (!game.archived) return;
-    this.#ensurePlaying(game.winner);
-    this.#ensurePlaying(game.loser);
+    this.#ensureBothPlaying(game.winner, game.loser, told);
     this.#ensureItCounts(game, told);
     this.record(new CompetitionGameRestored(id.value, by, at));
   }
@@ -511,8 +531,8 @@ export class Competition extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
     players?: {
-      readonly winner?: CompetitionPlayerId | undefined;
-      readonly loser?: CompetitionPlayerId | undefined;
+      readonly winner?: GamePlayerId | undefined;
+      readonly loser?: GamePlayerId | undefined;
     },
   ): void {
     const game = this.#gameFound(id);
@@ -534,8 +554,7 @@ export class Competition extends AggregateRoot {
           "The winner of the game's match has played on.",
         );
       }
-      this.#ensurePlaying(winner);
-      this.#ensurePlaying(loser);
+      this.#ensureBothPlaying(winner, loser, told);
       this.#ensureItCounts(corrected, told, game);
     }
     const same = (one: Score, other: Score): boolean =>
@@ -621,9 +640,9 @@ export class Competition extends AggregateRoot {
         Game.from(
           id,
           {
-            winner: CompetitionPlayerId.from(event.winnerId),
+            winner: gamePlayerIdFrom(event.winnerId),
             winnerScore: Score.kept(event.winnerScore, event.winnerMarked),
-            loser: CompetitionPlayerId.from(event.loserId),
+            loser: gamePlayerIdFrom(event.loserId),
             loserScore: Score.kept(event.loserScore, false),
           },
           { drawsAllowed: true },
@@ -645,11 +664,11 @@ export class Competition extends AggregateRoot {
             winner:
               event.winnerId === undefined
                 ? game.winner
-                : CompetitionPlayerId.from(event.winnerId),
+                : gamePlayerIdFrom(event.winnerId),
             loser:
               event.loserId === undefined
                 ? game.loser
-                : CompetitionPlayerId.from(event.loserId),
+                : gamePlayerIdFrom(event.loserId),
           },
         ),
       );
@@ -683,8 +702,49 @@ export class Competition extends AggregateRoot {
     }
   }
 
+  // Two players the competition has, and who are playing: in a test, players
+  // in use of each of its two teams; anywhere else, players entered in it who
+  // have not withdrawn.
+  #ensureBothPlaying(
+    winner: GamePlayerId,
+    loser: GamePlayerId,
+    told: Told,
+  ): void {
+    const { shape } = told;
+    if (shape.kind !== "test") {
+      this.#ensurePlaying(winner);
+      this.#ensurePlaying(loser);
+      return;
+    }
+    const sides = [shape.firstTeam, shape.secondTeam];
+    const teamOf = (id: GamePlayerId): TeamId => {
+      const found = (told.teamPlayers ?? []).find((player) =>
+        player.id.equals(id),
+      );
+      if (
+        found === undefined ||
+        !sides.some((side) => side.equals(found.team))
+      ) {
+        return refuse(
+          "Competition.NoSuchPlayer",
+          "The player plays for neither of the test's teams.",
+        );
+      }
+      if (found.archived) {
+        throw new ValidationError<TeamPlayerErrorCode>("TeamPlayer.Archived");
+      }
+      return found.team;
+    };
+    if (teamOf(winner).equals(teamOf(loser))) {
+      refuse(
+        "Competition.SameTeam",
+        "A game in a test is between a player of each of its teams.",
+      );
+    }
+  }
+
   // A player the competition has, and who has not withdrawn.
-  #ensurePlaying(id: CompetitionPlayerId): void {
+  #ensurePlaying(id: GamePlayerId): void {
     if (this.#playerFound(id).withdrawn) {
       throw new ValidationError<CompetitionPlayerErrorCode>(
         "CompetitionPlayer.Withdrawn",
@@ -700,20 +760,19 @@ export class Competition extends AggregateRoot {
   #ensureItCounts(game: Game, told: Told, without?: Game): void {
     const { shape } = told;
     const counting = this.#counting().filter((each) => !each.equals(without));
-    if (shape.kind === "block") {
+    // A test's two players meet in a match of its best-of, as a block's do.
+    if (shape.kind === "block" || shape.kind === "test") {
       const played = counting.filter(
         (each) =>
           (each.winner.equals(game.winner) && each.loser.equals(game.loser)) ||
           (each.winner.equals(game.loser) && each.loser.equals(game.winner)),
       );
       // A drawn game is played, but won by neither.
-      const won = (id: CompetitionPlayerId): number =>
+      const won = (id: GamePlayerId): number =>
         played.filter((each) => !each.drawn && each.winner.equals(id)).length;
       const left = shape.bestOf.games - played.length;
-      const beyondReach = (
-        one: CompetitionPlayerId,
-        other: CompetitionPlayerId,
-      ) => won(one) > won(other) + left;
+      const beyondReach = (one: GamePlayerId, other: GamePlayerId) =>
+        won(one) > won(other) + left;
       if (
         left <= 0 ||
         beyondReach(game.winner, game.loser) ||
@@ -902,7 +961,7 @@ export class Competition extends AggregateRoot {
     return halfway > lower && halfway < upper ? halfway : undefined;
   }
 
-  #playerFound(id: CompetitionPlayerId): CompetitionPlayer {
+  #playerFound(id: GamePlayerId): CompetitionPlayer {
     return (
       this.#players.get(id.value) ??
       refuse("Competition.NoSuchPlayer", "The competition has no such player.")

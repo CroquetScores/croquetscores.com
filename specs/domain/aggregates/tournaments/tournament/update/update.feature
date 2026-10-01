@@ -18,6 +18,18 @@ Feature: Changing what a tournament is
   leads to it, and whatever says which addresses are taken does not count it
   as somebody else's.
 
+  Whether a tournament is played by teams is in its format
+  (`TournamentFormat.feature`), and it decides what the tournament holds: a
+  Standard tournament has players and blocks, knockouts and Swiss, and one
+  played by teams has teams and tests (`addTeam.feature`, `addTest.feature`).
+  So once a tournament holds any of them, archived ones counting, an update
+  that would change whether it is played by teams is refused: what it held
+  would be things it could no longer have. One format played by teams can be
+  changed for another, since the tournament holds the same things in each,
+  and a tournament that holds nothing yet can be changed to any format its
+  website's site offers. A tournament's days changed leave its tests as they
+  were (`addTest.feature`).
+
   An update that changes nothing records nothing, because nothing happened.
 
   An archived tournament can only be restored (`restore.feature`), so
@@ -255,6 +267,84 @@ Feature: Changing what a tournament is
       And the update plays it in the sport "ac"
       When the tournament is updated
       Then the tournament has been found at 2 addresses
+
+  Rule: A tournament that holds anything keeps whether it is played by teams
+
+    Scenario: A Standard tournament with no players or competitions can be played by teams
+      Given a stream where a tournament was created in the format "Standard"
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Teams"
+      When the tournament is updated
+      Then the tournament is played in the format "Teams"
+
+    Scenario: A Standard tournament with a player cannot be played by teams
+      Given a stream where a tournament was created in the format "Standard"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Teams"
+      When the tournament is updated
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
+
+    Scenario: A Standard tournament with an archived player cannot be played by teams
+      Given a stream where a tournament was created in the format "Standard"
+      And the player "Sam Someone" was added to it
+      And the player "Sam Someone" was archived
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Teams"
+      When the tournament is updated
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
+
+    Scenario: A Standard tournament with a competition cannot be played by teams
+      Given a stream where a tournament was created in the format "Standard"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Teams"
+      When the tournament is updated
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
+
+    Scenario: A tournament with a team cannot be made Standard
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Standard"
+      When the tournament is updated
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
+
+    Scenario: A tournament with a team can be played in another format played by teams
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Eire Cup"
+      When the tournament is updated
+      Then the tournament is played in the format "Eire Cup"
+
+    Scenario: A tournament with a team keeps it when played in another format played by teams
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Eire Cup"
+      When the tournament is updated
+      Then the tournament has the team "Australia"
+
+    Scenario: A tournament played by teams with no teams can be made Standard
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Standard"
+      When the tournament is updated
+      Then the tournament is played in the format "Standard"
+
+  Rule: A tournament's days changed leave its tests as they were
+
+    Scenario: A tournament made to start after its test starts keeps the test
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the update starts it at "2026-10-04T00:00:00Z"
+      And the update finishes it at "2026-10-05T00:00:00Z"
+      When the tournament is updated
+      Then the test "AUS v ENG" starts on "2026-10-03"
 
   Rule: An update that changes nothing records nothing
 

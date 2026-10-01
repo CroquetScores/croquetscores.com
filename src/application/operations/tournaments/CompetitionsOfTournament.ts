@@ -12,7 +12,9 @@ export type ListedCompetition = {
   readonly archived: boolean;
 } & (
   | {
-      readonly kind: "block" | "swiss";
+      // A test is answered as far as it is a competition: what each of its
+      // matches is the best of. Its teams and its days are not answered yet.
+      readonly kind: "block" | "swiss" | "test";
       /** What each match is the best of. */
       readonly bestOf: number;
     }

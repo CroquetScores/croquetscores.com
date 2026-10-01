@@ -14,7 +14,7 @@ export interface CompetitionAsPaged {
    * What kind of competition it is, since a knockout's players are fixed once
    * it has a game.
    */
-  readonly kind: "block" | "knockout" | "swiss";
+  readonly kind: "block" | "knockout" | "swiss" | "test";
   /** Where its tournament is found now, as "2026/ac/spring-open". */
   readonly tournamentAddress: string;
   /** Where it is found beneath its tournament. */

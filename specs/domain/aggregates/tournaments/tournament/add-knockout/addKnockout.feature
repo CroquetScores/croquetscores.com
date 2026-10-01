@@ -83,3 +83,11 @@ Feature: Adding a knockout to a tournament
       And the tournament is rebuilt from the stream
       When the knockout "Main Event" is added
       Then it is refused with "Tournament.Archived"
+
+  Rule: A knockout cannot be added to a tournament played by teams
+
+    Scenario: Adding a knockout to a tournament played by teams is refused
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      When the knockout "Main Event" is added
+      Then it is refused with "Tournament.PlayedByTeams"

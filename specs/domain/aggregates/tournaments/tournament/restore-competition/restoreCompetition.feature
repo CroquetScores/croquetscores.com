@@ -7,6 +7,11 @@ Feature: Restoring a tournament's archived competition
   the competitions that stayed in use rather than in the place it had, which
   something else may have been moved into since.
 
+  A test is between two teams (`addTest.feature`), and a team whose only tests
+  are archived can itself be archived (`archiveTeam.feature`). A test restored
+  while one of its teams is archived would be against a team that is out of
+  the way, so it is refused: the team is restored first.
+
   Restoring a competition that is not archived records nothing, because
   nothing happened.
 
@@ -68,6 +73,29 @@ Feature: Restoring a tournament's archived competition
       And the competition "Block A" was restored
       When the tournament is rebuilt from the stream
       Then the tournament's competition "Block A" is not archived
+
+  Rule: A test cannot be restored while one of its teams is archived
+
+    Scenario: Restoring a test whose team is archived is refused
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the competition "AUS v ENG" was archived
+      And the team "Australia" was archived
+      And the tournament is rebuilt from the stream
+      When the competition "AUS v ENG" is restored
+      Then it is refused for breaking "Team.Archived"
+
+    Scenario: Restoring a test whose teams are in use restores it
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the competition "AUS v ENG" was archived
+      And the tournament is rebuilt from the stream
+      When the competition "AUS v ENG" is restored
+      Then the tournament's competition "AUS v ENG" is not archived
 
   Rule: Only a competition there is can be restored
 
