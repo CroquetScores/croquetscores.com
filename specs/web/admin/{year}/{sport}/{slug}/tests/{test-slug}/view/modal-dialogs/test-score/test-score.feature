@@ -25,7 +25,10 @@ Feature: A game's score is added to a test, or corrected, in a modal dialog
   offered.
 
   A test has no draw, so choosing the winner chooses nobody as the loser, as
-  in a block. Two players who meet play a match of the test's best-of
+  in a block. A test starts no more matches than it is expected to have
+  (`gamesInATest.feature`), and a game that would start another is about the
+  test rather than either player, so `Competition.ExpectedMatchesReached` is
+  said above the fields too. Two players who meet play a match of the test's best-of
   (`gamesInATest.feature`), and a game of a match already decided is about
   neither player alone, so `Competition.MatchDecided` is said above the
   fields, as a knockout's refusal of two players not drawn to meet is. Edit can change a
@@ -223,6 +226,17 @@ Feature: A game's score is added to a test, or corrected, in a modal dialog
       And "20" is typed as the "Loser's score"
       When "Add Game" is pressed
       Then the score dialog says "Competition.MatchDecided" above the fields
+
+    Scenario: A game that would start a match beyond those expected is refused above the fields
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the page of the test "AUS v ENG" in "Spring Tests" is open
+      And "Add Score" is pressed
+      And "Alex Another" is chosen as the "Winner"
+      And "26" is typed as the "Winner's score"
+      And "Pat Fourth" is chosen as the "Loser"
+      And "20" is typed as the "Loser's score"
+      When "Add Game" is pressed
+      Then the score dialog says "Competition.ExpectedMatchesReached" above the fields
 
   Rule: Edit can change a score's players, from the teams as when adding
 

@@ -112,6 +112,8 @@ import type { BreachedPasswords } from "../application/services/BreachedPassword
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
 import { ArchiveGameHandler } from "../application/operations/competitions/ArchiveGameHandler.js";
+import { MoveGameHandler } from "../application/operations/competitions/MoveGameHandler.js";
+import { MoveGameValidator } from "../application/operations/competitions/MoveGameValidator.js";
 import { CorrectGameHandler } from "../application/operations/competitions/CorrectGameHandler.js";
 import { CorrectGameValidator } from "../application/operations/competitions/CorrectGameValidator.js";
 import { GamesOfCompetitionHandler } from "../application/operations/competitions/GamesOfCompetitionHandler.js";
@@ -693,6 +695,7 @@ export const buildApplication = async (
   validation.register(new MoveCompetitionValidator());
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new MoveGameValidator());
   validation.register(new AddGameValidator());
   validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
@@ -726,7 +729,7 @@ export const buildApplication = async (
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
-  mediator.handleCommand(new ArchiveCompetitionHandler(...both));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(
@@ -756,6 +759,7 @@ export const buildApplication = async (
   mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
+  mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));

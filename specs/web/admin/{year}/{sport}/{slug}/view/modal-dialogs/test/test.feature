@@ -14,15 +14,19 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
   Cancel button, which Escape does as well. Cancelling keeps nothing that was
   not already kept, and the reader is back on Add Test.
 
-  The dialog reads as a test is said aloud: Team A, then "v", then Team B,
+  The dialog reads in the order a test is said aloud: Team A, then Team B,
   each a drop-down, then Starts and Finishes, then Expected Matches, Best Of
   and Group. Each drop-down offers the
   tournament's teams in use, in the tournament's order
   (`TeamsOfTournament.feature`), by name, since a reader choosing a team
   knows it by its name; an archived team is not offered, since a test with
-  one is refused. Neither has a team chosen to begin with, so that a test is
-  never added between teams the reader did not choose. A test has no name of
-  its own to type: it is called by its teams' short names.
+  one is refused. Team B offers every team but the one chosen as Team A,
+  since a team does not play a test against itself (`addTest.feature`), and
+  choosing as Team A the team chosen as Team B leaves no team chosen as Team
+  B, as choosing a score's winner leaves no loser of their own team
+  (`test-score.feature`). Neither has a team chosen to begin with, so that a
+  test is never added between teams the reader did not choose. A test has no
+  name of its own to type: it is called by its teams' short names.
 
   A test is played within its tournament, so Starts and Finishes begin on the
   tournament's first day, and offer only its days where the browser's picker
@@ -66,8 +70,8 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
 
   Everything is required. What is refused is said beneath the field it is
   about, by the refusal's code, and what was chosen stays chosen so that it
-  can be put right: a team not chosen, beneath it; the same team chosen as
-  both, beneath Team B; a test that starts before the tournament, beneath
+  can be put right: a team not chosen, beneath it; a test that starts before
+  the tournament, beneath
   Starts; one that finishes after the tournament, or before it starts,
   beneath Finishes; expected matches or a best-of that is not a whole number
   of at least one, beneath each; and a group too long, beneath it. A refusal about no one field is said above the fields.
@@ -155,17 +159,12 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Add Test" is pressed
       Then the test dialog does not ask for "Name"
 
-  Rule: The dialog reads as a test is said aloud
+  Rule: The dialog reads in the order a test is said aloud
 
     Scenario: Team A comes first
       Given the tests of "Spring Tests" are open
       When "Add Test" is pressed
       Then "Team A" is the first thing the test dialog asks for
-
-    Scenario: "v" comes between the teams
-      Given the tests of "Spring Tests" are open
-      When "Add Test" is pressed
-      Then the test dialog says "v" between "Team A" and "Team B"
 
     Scenario: Starts comes after the teams
       Given the tests of "Spring Tests" are open
@@ -212,6 +211,46 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       And the tests of "Spring Tests" are open
       When "Add Test" is pressed
       Then the team "Australia A" is offered as "Team A"
+
+  Rule: Team B offers every team but the one chosen as Team A
+
+    Scenario: The team chosen as Team A is not offered as Team B
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the team "Australia" is chosen as "Team A"
+      Then the team "Australia" is not offered as "Team B"
+
+    Scenario: Every other team is offered as Team B
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the team "Australia" is chosen as "Team A"
+      Then the team "England" is offered as "Team B"
+
+    Scenario: Team A offers every team whatever is chosen as Team B
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the team "Australia" is chosen as "Team B"
+      Then the team "Australia" is offered as "Team A"
+
+    Scenario: Choosing as Team A the team chosen as Team B leaves none chosen as Team B
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      And the team "Australia" is chosen as "Team B"
+      When the team "Australia" is chosen as "Team A"
+      Then no team is chosen as "Team B"
+
+    Scenario: Another team chosen as Team B stays chosen
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      And the team "England" is chosen as "Team B"
+      When the team "Australia" is chosen as "Team A"
+      Then the "Team B" chosen is "England"
+
+    Scenario: A test being changed does not offer its Team A as Team B
+      Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the tests of "Spring Tests" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      Then the team "Australia" is not offered as "Team B"
 
   Rule: The days begin on the tournament's first day, and offer only its days
 
@@ -482,14 +521,6 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Add" is pressed
       Then "Team B" is refused with "AddTest.SecondTeamMissing"
 
-    Scenario: The same team chosen as both is refused beside Team B
-      Given the tests of "Spring Tests" are open
-      And "Add Test" is pressed
-      And the team "Australia" is chosen as "Team A"
-      And the team "Australia" is chosen as "Team B"
-      When "Add" is pressed
-      Then "Team B" is refused with "Tournament.TestAgainstItself"
-
     Scenario: A test that finishes before it starts is refused beside Finishes
       Given the tests of "Spring Tests" are open
       And "Add Test" is pressed
@@ -752,14 +783,6 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
 
   Rule: What Save refuses is said, and nothing is kept
 
-    Scenario: The same team chosen as both is refused beside Team B
-      Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
-      And the tests of "Spring Tests" are open
-      And "Edit" is pressed on the test "AUS v ENG"
-      And the team "Australia" is chosen as "Team B"
-      When "Save" is pressed
-      Then "Team B" is refused with "Tournament.TestAgainstItself"
-
     Scenario: A test given a game while the dialog is open is refused above the fields
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Chris Third" to the team "England" of "Spring Tests"
@@ -775,7 +798,8 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And the tests of "Spring Tests" are open
       And "Edit" is pressed on the test "AUS v ENG"
-      And the team "Australia" is chosen as "Team B"
+      And the team "Scotland" is chosen as "Team B"
+      And "0" is typed as the "Best Of"
       When "Save" is pressed
       Then "Spring Tests" has the test "AUS v ENG"
 
@@ -783,7 +807,7 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And the tests of "Spring Tests" are open
       And "Edit" is pressed on the test "AUS v ENG"
-      And the team "Australia" is chosen as "Team B"
+      And "0" is typed as the "Best Of"
       When "Save" is pressed
       Then the test dialog is open
 

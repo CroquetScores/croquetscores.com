@@ -66,10 +66,15 @@ When(
   },
 );
 
+// A name that can be pressed is a button where it opens a dialog, as a
+// player's does, and a link where it leads to a page, as a team's does.
+const pressableName = (world: SpecWorld, name: string): Locator =>
+  rowOf(world, name).locator(":is(button, a).listed-name");
+
 When(
   said("the name of the WHO Q is pressed"),
   async function (this: SpecWorld, name: string) {
-    const button = rowOf(this, name).locator("button.listed-name");
+    const button = pressableName(this, name);
     await eventually(this, async () => {
       assert.equal(await button.count(), 1);
     });
@@ -359,6 +364,39 @@ Then(
   },
 );
 
+Then(
+  "the name of the team {string} leads to {string}",
+  async function (this: SpecWorld, name: string, path: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await rowOf(this, name).locator("a.listed-name").getAttribute("href"),
+        path,
+      );
+    });
+  },
+);
+
+// Where the reader is put back once a dialog opened from a team closes.
+Then(
+  "{string} on the team {string} has the focus",
+  async function (this: SpecWorld, option: string, name: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await optionOf(this, name, option).evaluate(
+          (element) =>
+            element ===
+            (globalThis as unknown as { document: { activeElement: unknown } })
+              .document.activeElement,
+          undefined,
+          { timeout: 500 },
+        ),
+        true,
+        `${option} on ${name} does not have the focus.`,
+      );
+    });
+  },
+);
+
 // In words beside the name, for a reader who is not looking, since a line
 // through a name is not read out.
 Then(
@@ -378,10 +416,7 @@ Then(
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
-      assert.equal(
-        await rowOf(this, name).locator("button.listed-name").count(),
-        0,
-      );
+      assert.equal(await pressableName(this, name).count(), 0);
     });
   },
 );

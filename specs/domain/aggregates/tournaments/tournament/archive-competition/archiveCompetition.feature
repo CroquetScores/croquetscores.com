@@ -18,10 +18,19 @@ Feature: Archiving a tournament's competition
   (`restoreCompetition.feature`). Its new order still counts, so no order is
   given twice.
 
-  A competition can be archived whether or not it has games. Archiving sets
-  it aside rather than taking anything away, so its games are kept with it,
-  and come back with it when it is restored. So whether it has any is not
-  asked.
+  A block, a knockout or a Swiss can be archived whether or not it has games.
+  Archiving sets it aside rather than taking anything away, so its games are
+  kept with it, and come back with it when it is restored. So whether it has
+  any is not asked.
+
+  A test is different: it is a meeting of two teams, and once its players
+  have games in use it has been played, so it is not set aside as though it
+  were a mistake. Archiving a test with any match started is refused with
+  `Tournament.TestHasGamesInUse`; its games are archived first, should it
+  really be one added by mistake. An archived game counts for nothing, here as
+  anywhere games are counted (`archiveGame.feature`). What has been played in
+  a test is not the tournament's to know, so whatever asks says, as it does
+  when a test is updated (`updateTest.feature`).
 
   Archiving a competition that is already archived records nothing, because
   nothing happened.
@@ -123,6 +132,38 @@ Feature: Archiving a tournament's competition
       Then the tournament's first competition is "Block C"
       And the tournament's second competition is "Block B"
       And the tournament's third competition is "Block A"
+
+  Rule: A test with games in use cannot be archived
+
+    Scenario: Archiving a test with a match started is refused
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has 1 match started
+      When the competition "AUS v ENG" is archived
+      Then it is refused with "Tournament.TestHasGamesInUse"
+
+    Scenario: A test refused for its games is not archived
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has 1 match started
+      When the competition "AUS v ENG" is archived
+      Then the tournament's competition "AUS v ENG" is not archived
+
+    Scenario: Archiving a test with no games archives it
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has no games
+      When the competition "AUS v ENG" is archived
+      Then the tournament's competition "AUS v ENG" is archived
 
   Rule: Only a competition there is can be archived
 

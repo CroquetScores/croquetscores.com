@@ -65,21 +65,6 @@ const about = (world: SpecWorld): Locator =>
   world.browserPage.locator("main .page-about");
 
 Then(
-  "the heading says {string}",
-  async function (this: SpecWorld, words: string) {
-    await about(this).first().waitFor();
-    assert.equal(
-      await about(this)
-        .locator("span")
-        .filter({ hasText: exactly(words) })
-        .count(),
-      1,
-      `Beside the heading is ${await about(this).first().innerText()}.`,
-    );
-  },
-);
-
-Then(
   "the heading shows the flag {string}",
   async function (this: SpecWorld, flag: string) {
     await about(this).first().waitFor();
@@ -116,15 +101,14 @@ Then(
   },
 );
 
-// The team's name and short name are what the manager typed, and so are its
-// players' names: none is anybody's language.
+// The team's name and short name, which head the page, are what the manager
+// typed, and so are its players' names: none is anybody's language.
 Then(
   "every word in the admin's content but the team's and its players' own is in the test locale",
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "main", [
         "main h1",
-        ".page-short",
         ".listed-name",
       ]);
       assert.deepEqual(stray, [], "Words in the admin came from elsewhere.");

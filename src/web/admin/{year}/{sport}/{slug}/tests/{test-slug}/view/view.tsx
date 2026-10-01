@@ -5,16 +5,16 @@ import { knows, say } from "../../../../../../words.js";
 import { ScoresTab } from "../../../competitions/{competition-slug}/view/tabs/scores/scores.js";
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
-import { TestDays, TestPlayed } from "../../../view/tabs/tests/tests.js";
+import { TestPlayed } from "../../../view/tabs/tests/tests.js";
 import "../../../teams/{team-slug}/view/view.css";
 
-// A test's page (view.feature beneath the test): headed by its name, its
-// teams' short names, and beneath that its teams' names, its days, how it is
-// played and its group, as the Tests tab writes them, so that a reader who has
-// come to the wrong test sees so at once. A test has no players entered in it,
-// so its scores are the one thing it shows, and it has no tabs: the scores are
-// listed as a competition's Scores tab lists them. Managers and scorers see
-// the same page. Its tournament's section bar is above, with the test marked.
+// A test's page (view.feature beneath the test): headed by its teams' names,
+// as "Australia v England", and beneath that how it is played, as the Tests
+// tab writes it, so that a reader who has come to the wrong test sees so at
+// once. A test has no players entered in it, so its scores are the one thing
+// it shows, and it has no tabs: the scores are listed as a competition's
+// Scores tab lists them, set out by team. Managers and scorers see the same
+// page. Its tournament's section bar is above, with the test marked.
 
 interface Props {
   /** Where its tournament was asked for, as "2026/ac/spring-tests". */
@@ -36,12 +36,13 @@ interface Found {
 /** The test as its tournament lists it, with what the heading says of it. */
 interface Listed {
   readonly id: string;
-  readonly teams: readonly { readonly name: string }[];
-  readonly starts: string;
-  readonly finishes: string;
+  readonly teams: readonly {
+    readonly id: string;
+    readonly name: string;
+    readonly shortName: string;
+  }[];
   readonly expectedMatches: number;
   readonly bestOf: number;
-  readonly group: string | undefined;
 }
 
 type Asked =
@@ -127,6 +128,7 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
   }
 
   const { test, listed } = asked;
+  const [first, second] = listed.teams;
   return (
     <>
       <TournamentSections
@@ -137,27 +139,27 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
       <main id="content">
         <div className="page">
           <div className="panel stack">
-            <h1>{test.name}</h1>
+            {/* By its teams' names, where the section bar and the Tests tab
+                call it by their short names. */}
+            <h1>
+              {first?.name} {say("admin.test.versus")} {second?.name}
+            </h1>
             <p className="page-about">
-              <span className="page-team">{listed.teams[0]?.name}</span>
-              <span>{say("admin.test.versus")}</span>
-              <span className="page-team">{listed.teams[1]?.name}</span>
-            </p>
-            <p className="page-about">
-              <TestDays starts={listed.starts} finishes={listed.finishes} />
               <TestPlayed
                 expectedMatches={listed.expectedMatches}
                 bestOf={listed.bestOf}
               />
-              {listed.group === undefined ? null : (
-                <span className="test-group">{listed.group}</span>
-              )}
             </p>
             <div id="page-list">
               <ScoresTab
                 tournament={test.tournament}
                 competition={test.id}
                 kind="test"
+                teams={
+                  first === undefined || second === undefined
+                    ? undefined
+                    : [first, second]
+                }
               />
             </div>
           </div>

@@ -14,6 +14,7 @@ import {
   type ListedGame,
 } from "../../../../src/application/operations/competitions/GamesOfCompetition.js";
 import { RestoreGame } from "../../../../src/application/operations/competitions/RestoreGame.js";
+import { MoveGame } from "../../../../src/application/operations/competitions/MoveGame.js";
 import { EnterPlayer } from "../../../../src/application/operations/competitions/EnterPlayer.js";
 import { MoveCompetitionPlayer } from "../../../../src/application/operations/competitions/MoveCompetitionPlayer.js";
 import {
@@ -1483,6 +1484,143 @@ for (const [verb, making] of [
   );
 }
 
+// Moving a test's score up or down ----------------------------------------------
+
+// The way to move it, as said: up or down, or anything else in quotes.
+const WAY = String.raw`(up|down|"[^"]*")`;
+const wayOf = (said: string): string => said.replace(/^"|"$/g, "");
+
+const movingGame =
+  (direction: string): GameMaking =>
+  (account, tournament, competition, game, at) =>
+    new MoveGame(
+      account,
+      tournament.value,
+      competition.value,
+      game.value,
+      direction,
+      at,
+    );
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" moves the score of ${GAME} in "([^"]*)" of "([^"]*)" ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to that account moves the score of ${GAME} in "([^"]*)" of "([^"]*)" ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      heldAccount(this),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" moves a score "([^"]*)" of "([^"]*)" does not have ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      undefined,
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" moves the score of ${GAME} in "([^"]*)" of a tournament there is not ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      noTournament(),
+      competition,
+      { winner, loser },
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+// The competition's own stream, read back: the order its games are kept in.
+Then(
+  new RegExp(`^the first score of "([^"]*)" of "([^"]*)" is of ${GAME}$`),
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    winner: string,
+    loser: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const competitionId = await competitionIn(this, tournament, competition);
+    const first = (await competitionNow(this, competitionId))?.games[0];
+    const expected = await gameCalled(
+      this,
+      tournament,
+      competitionId,
+      winner,
+      loser,
+    );
+    assert.ok(
+      first !== undefined && expected !== undefined && first.equals(expected),
+      `The first score is ${inspect(first)}.`,
+    );
+  },
+);
+
 // Correcting a game's scores ------------------------------------------------------
 
 // A game's scores corrected, found as archiving and restoring find it: by its
@@ -1933,6 +2071,50 @@ Then(
       assert.equal(game.archivable, true);
     if (as === " as one that cannot be archived")
       assert.equal(game.archivable, false);
+  },
+);
+
+// The team a test's player plays for, by its id, as whichever tournament the
+// scenario made has a team called that.
+Then(
+  new RegExp(
+    `^the score of ${GAME} ${SCORES} is answered with the (winner|loser) playing for "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    side: string,
+    team: string,
+  ) {
+    const game = gameListed(this, winner, loser, winnerScore, loserScore);
+    const tournaments = await Promise.all(
+      [...scenarioOf(this).byName.values()].map((id) => load(this, id)),
+    );
+    const id = tournaments
+      .flatMap((each) => each.teams)
+      .find((each) => each.name.toString() === team)?.id.value;
+    assert.ok(id !== undefined, `There is no team ${team}.`);
+    assert.equal(side === "winner" ? game.winnerTeam : game.loserTeam, id);
+  },
+);
+
+Then(
+  new RegExp(
+    `^the score of ${GAME} ${SCORES} is answered with neither player playing for a team$`,
+  ),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const game = gameListed(this, winner, loser, winnerScore, loserScore);
+    assert.equal(game.winnerTeam, undefined);
+    assert.equal(game.loserTeam, undefined);
   },
 );
 

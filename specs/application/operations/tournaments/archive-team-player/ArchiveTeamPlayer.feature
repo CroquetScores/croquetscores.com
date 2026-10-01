@@ -10,7 +10,8 @@ Feature: Archiving a player in a tournament's team
   with `Tournament.NotAManager` (`onlyManagers.feature`).
 
   A player who has played any games in use, in any of the tournament's tests,
-  archived tests among them, cannot be archived, and whether they have is not
+  cannot be archived (a test with games in use is never archived, so none of
+  them is in an archived test: `archiveCompetition.feature`), and whether they have is not
   the tournament's to know (`archiveTeamPlayer.feature`). The application asks
   its games (`Games.feature`), as it does for a tournament's player
   (`ArchivePlayer.feature`). An archived game counts for nothing, so a player
@@ -69,12 +70,6 @@ Feature: Archiving a player in a tournament's team
 
     Scenario: A player who has lost a game is refused
       Given "Chris Third" has beaten "Sam Someone" 26 to 17 in "AUS v ENG" of "Spring Tests"
-      When the reader signed in to the account for "organiser@example.com" archives the player "Sam Someone" of the team "Australia" of "Spring Tests"
-      Then it is refused for breaking "TeamPlayer.HasGames"
-
-    Scenario: A player who has played in an archived test is refused
-      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
-      And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       When the reader signed in to the account for "organiser@example.com" archives the player "Sam Someone" of the team "Australia" of "Spring Tests"
       Then it is refused for breaking "TeamPlayer.HasGames"
 

@@ -6,9 +6,11 @@ Feature: How many matches a test is expected to have
   through it is. It is a whole number from 1 up, since a test of no matches is
   no test.
 
-  It is what is expected, not a limit. A test is cut short by rain or a team
-  conceding, and a match is replayed, so a test is not refused a game for
-  having had as many matches as it was expected to have.
+  It is a limit on the matches a test starts: once as many as it is expected
+  to have have started, a game that would start another is refused
+  (`gamesInATest.feature`), while the matches already started are played out
+  to their best-of. A test that is to have more is changed to expect them
+  (`updateTest.feature`).
 
   Rule: Expected matches are a whole number from 1 up
 

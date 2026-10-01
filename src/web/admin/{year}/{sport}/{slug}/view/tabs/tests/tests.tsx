@@ -10,8 +10,8 @@ import "../listed.css";
 // does for its tests what the Competitions tab does for a Standard
 // tournament's competitions: the tests in use in the tournament's order, each
 // with its days, how it is played and its group, offering Edit, View,
-// Archive, Up and Down, and after them the archived ones, offering Restore
-// alone. Add Test and Edit open the test dialog. A test is between two teams,
+// Archive where it has not been played, Up and Down, and after them the
+// archived ones, offering Restore alone. Add Test and Edit open the test dialog. A test is between two teams,
 // so where the tournament has fewer than two in use the tab says so where Add
 // Test would be, and leads to the Teams tab. What the tournament refuses of
 // what was pressed is said above the list, by its code. Whatever is pressed,
@@ -49,7 +49,7 @@ const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
  * one where it starts and finishes on it, and the first and the last where it
  * does not. Each is written as the reader's language writes a day.
  */
-export const TestDays = ({
+const TestDays = ({
   starts,
   finishes,
 }: {
@@ -277,7 +277,14 @@ export const TestsTab = ({
                 </a>,
                 ...(part === "manager"
                   ? [
-                      button(test, "archive"),
+                      // Not a test that has been played (archiveCompetition
+                      // .feature); its room is kept where another offers it,
+                      // so that what comes after lines up.
+                      ...(test.hasGames
+                        ? inUse.some(({ hasGames }) => !hasGames)
+                          ? [noOption("archive", say("admin.tests.archive"))]
+                          : []
+                        : [button(test, "archive")]),
                       // Last, where they are in the same place on every row.
                       ...(inUse.length < 2
                         ? []

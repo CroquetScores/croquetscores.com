@@ -10,13 +10,14 @@ Feature: The teams tab of a tournament's page
   It does what the Players tab does (`players-tab.feature`), for teams rather
   than players, and what is said there is said here unless this says
   otherwise. Add Team, above the list, opens the team dialog to add teams,
-  and a team's name or its Edit opens it to change the team
-  (`team.feature`). Whenever the dialog adds a team or saves one, the list is
-  asked for again.
+  and a team's Edit opens it to change the team (`team.feature`). Whenever
+  the dialog adds a team or saves one, the list is asked for again.
 
   A team has players of its own, which are on a page of its own
   (`view.feature` beneath the team), so each team in use offers View as well,
-  which leads to that page. Edit comes before View, as it does for a
+  which leads to that page, and its name leads there too, as a test's name
+  leads to its page (`tests-tab.feature`), since going to a team's players is
+  what a team is mostly pressed for. Edit comes before View, as it does for a
   competition (`competitions-tab.feature`), so that what is done to a team is
   offered ahead of going to it.
 
@@ -37,8 +38,8 @@ Feature: The teams tab of a tournament's page
   The archived teams come after those in use, under a heading of their own, in
   the order they were archived. Each is struck through, and says in words
   that it is archived as well. Each offers Restore alone, since an archived
-  team can only be restored, so its name does not open the dialog and it does
-  not offer View: its page refuses to open while it is archived.
+  team can only be restored, so its name leads nowhere and it does not offer
+  View: its page refuses to open while it is archived.
 
   The tab has no address of its own (`view.feature`), so a scenario opens the
   tournament's page, whose first tab this is, which is what opening the teams
@@ -105,7 +106,7 @@ Feature: The teams tab of a tournament's page
       When the teams of "Spring Tests" are opened
       Then the team "Australia" is shown flying no flag
 
-  Rule: Add Team, a team's name and Edit open the team dialog
+  Rule: Add Team and Edit open the team dialog
 
     Scenario: The tab offers Add Team
       When the teams of "Spring Tests" are opened
@@ -124,12 +125,6 @@ Feature: The teams tab of a tournament's page
       Given the teams of "Spring Tests" are open
       When "Add Team" is pressed
       Then the team dialog is titled "Add Team"
-
-    Scenario: A team's name opens the dialog to change it
-      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
-      And the teams of "Spring Tests" are open
-      When the name of the team "Australia" is pressed
-      Then the team dialog is titled "Edit Team"
 
     Scenario: Edit opens the dialog to change it
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
@@ -153,7 +148,24 @@ Feature: The teams tab of a tournament's page
       When "Save" is pressed
       Then the team "Australia A" is listed
 
-  Rule: View leads to the team's page
+  Rule: A team's name and View lead to the team's page
+
+    Scenario: A team's name leads to the team's page
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      When the teams of "Spring Tests" are opened
+      Then the name of the team "Australia" leads to "/admin/2026/ac/spring-tests/teams/aus"
+
+    Scenario: Pressing a team's name opens the team's page
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the teams of "Spring Tests" are open
+      When the name of the team "Australia" is pressed
+      Then the address is "/admin/2026/ac/spring-tests/teams/aus"
+
+    Scenario: Pressing a team's name opens no dialog
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the teams of "Spring Tests" are open
+      When the name of the team "Australia" is pressed
+      Then no modal dialog is open
 
     Scenario: View leads to the team's page
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
@@ -287,7 +299,7 @@ Feature: The teams tab of a tournament's page
         | Up      |
         | Down    |
 
-    Scenario: An archived team's name does not open the dialog
+    Scenario: An archived team's name leads nowhere
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "organiser@example.com" has archived the team "Australia" in "Spring Tests"
       When the teams of "Spring Tests" are opened

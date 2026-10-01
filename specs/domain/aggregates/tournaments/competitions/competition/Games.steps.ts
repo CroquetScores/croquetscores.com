@@ -5,6 +5,7 @@ import type { Competition } from "../../../../../../src/domain/aggregates/tourna
 import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
+import { CompetitionGameMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
 import type {
   Game,
@@ -395,6 +396,75 @@ for (const [verb, doing] of [
     },
   );
 }
+
+// A test's game moved a place, up or down.
+for (const direction of ["up", "down"] as const) {
+  When(
+    new RegExp(`^${GAME} is moved ${direction}$`),
+    function (
+      this: SpecWorld,
+      winner: string,
+      loser: string,
+      winnerScore: string,
+      loserScore: string,
+    ) {
+      const said = [winner, loser, winnerScore, loserScore];
+      ask(this, (competition) => {
+        competition.moveGame(
+          gameSaid(this, competition, said).id,
+          direction,
+          toldOf(this),
+          byOf(this),
+          now(this),
+        );
+      });
+    },
+  );
+
+  Given(
+    new RegExp(`^${GAME} was moved ${direction}$`),
+    function (
+      this: SpecWorld,
+      winner: string,
+      loser: string,
+      winnerScore: string,
+      loserScore: string,
+    ) {
+      const said = [winner, loser, winnerScore, loserScore];
+      happened(this, (competition) => {
+        competition.moveGame(
+          gameSaid(this, competition, said).id,
+          direction,
+          toldOf(this),
+          byOf(this),
+          now(this),
+        );
+      });
+    },
+  );
+
+  When(
+    `the game {string} is moved ${direction} by its id`,
+    function (this: SpecWorld, id: string) {
+      ask(this, (competition) => {
+        competition.moveGame(
+          GameId.from(id),
+          direction,
+          toldOf(this),
+          byOf(this),
+          now(this),
+        );
+      });
+    },
+  );
+}
+
+Then(
+  "the first thing it recorded is a game being moved",
+  function (this: SpecWorld) {
+    assertRecordedAt(this, 0, CompetitionGameMoved);
+  },
+);
 
 // What the competition has afterwards -----------------------------------------
 

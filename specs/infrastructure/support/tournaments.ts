@@ -80,6 +80,8 @@ import { UpdateTournamentValidator } from "../../../src/application/operations/t
 import { AddGameHandler } from "../../../src/application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../../../src/application/operations/competitions/AddGameValidator.js";
 import { ArchiveGameHandler } from "../../../src/application/operations/competitions/ArchiveGameHandler.js";
+import { MoveGameHandler } from "../../../src/application/operations/competitions/MoveGameHandler.js";
+import { MoveGameValidator } from "../../../src/application/operations/competitions/MoveGameValidator.js";
 import { CorrectGameHandler } from "../../../src/application/operations/competitions/CorrectGameHandler.js";
 import { CorrectGameValidator } from "../../../src/application/operations/competitions/CorrectGameValidator.js";
 import { GamesOfCompetitionHandler } from "../../../src/application/operations/competitions/GamesOfCompetitionHandler.js";
@@ -150,6 +152,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new MoveCompetitionValidator());
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new MoveGameValidator());
   validation.register(new AddGameValidator());
   validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
@@ -180,7 +183,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
-  mediator.handleCommand(new ArchiveCompetitionHandler(...both));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(new AddManagerHandler(...both, accounts.readModel));
@@ -208,6 +211,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
+  mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));

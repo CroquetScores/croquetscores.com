@@ -31,9 +31,12 @@ Feature: The tests tab of a tournament's page
   Whenever the dialog keeps a change, the list is asked for again. A test's
   name leads to its page, as a competition's does.
 
-  Every test in use is offered Archive, whether or not it has games, which
-  are kept with it and come back when it is restored, as a competition's are.
-  The archived tests come after those in use, under a heading of their own,
+  A test with games in use has been played, and cannot be archived
+  (`archiveCompetition.feature`), so it is not offered Archive; one whose
+  games are all archived is, since an archived game counts for nothing. Where
+  some tests are offered Archive and others not, the room it would take is
+  kept, so that what comes after lines up. The archived tests come after
+  those in use, under a heading of their own,
   each struck through and offering Restore alone. A test whose team has been
   archived since it was is not restored until the team is
   (`restoreCompetition.feature`), and Restore says so above the list, by the
@@ -259,11 +262,20 @@ Feature: The tests tab of a tournament's page
       When "Save" is pressed
       Then the test "AUS v SCO" is listed
 
-    Scenario: A test with games is offered Archive
+    Scenario: A test with a game is not offered Archive
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Chris Third" to the team "England" of "Spring Tests"
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the tests of "Spring Tests" are opened
+      Then the test "AUS v ENG" does not offer "Archive"
+
+    Scenario: A test whose only game is archived is offered Archive
+      Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Chris Third" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Chris Third" in "AUS v ENG" of "Spring Tests"
       When the tests of "Spring Tests" are opened
       Then the test "AUS v ENG" offers "Archive"
 

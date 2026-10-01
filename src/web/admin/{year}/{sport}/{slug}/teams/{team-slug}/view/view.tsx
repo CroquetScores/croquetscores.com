@@ -7,12 +7,11 @@ import { TournamentSections } from "../../../TournamentSections.js";
 import { TeamPlayers } from "./players/players.js";
 import "./view.css";
 
-// A team's page (view.feature beneath the team): headed by the team's name,
-// with its short name and its flag beside it, and its players beneath, which
-// are the one thing it shows, so it has no tabs. A team is part of its
-// tournament rather than a section of its own, so the section bar marks
-// Tournament. Only a manager sees it, since a team's players are theirs to
-// say.
+// A team's page (view.feature beneath the team): headed by the team's name
+// with its short name in brackets, as the Teams tab shows a team, its flag
+// beside it, and its players beneath, which are the one thing it shows, so it
+// has no tabs. The section bar leads to every team in use as well, and marks
+// this one. Only a manager sees it, since a team's players are theirs to say.
 
 interface Props {
   /** Where its tournament was asked for, as "2026/ac/spring-tests". */
@@ -96,25 +95,24 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
       <TournamentSections
         tournament={team.tournament}
         address={team.tournamentAddress}
-        reading="tournament"
+        reading={{ team: team.slug }}
       />
       <main id="content">
         <div className="page">
           <div className="panel stack">
-            <h1>{team.name}</h1>
-            {/* Beside the name rather than in it, so that the heading is the
-                team's name and nothing else. */}
-            <p className="page-about">
-              <span className="page-short">{team.shortName}</span>
-              {team.flag === undefined ? null : (
+            <h1>
+              {team.name} ({team.shortName})
+            </h1>
+            {team.flag === undefined ? null : (
+              <p className="page-about">
                 <img
                   className="page-flag"
                   src={team.flag.image}
                   alt={team.flag.name}
                   data-flag={team.flag.code}
                 />
-              )}
-            </p>
+              </p>
+            )}
             <div id="page-list">
               <TeamPlayers tournament={team.tournament} team={team.id} />
             </div>

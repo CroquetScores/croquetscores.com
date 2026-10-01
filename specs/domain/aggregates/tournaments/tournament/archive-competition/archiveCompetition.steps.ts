@@ -10,6 +10,7 @@ import {
   competitionNamed,
   now,
 } from "../aTournament.js";
+import { playedIn } from "../aTeamTournament.js";
 
 When(
   "the competition {string} is archived",
@@ -19,6 +20,8 @@ When(
         competitionNamed(tournament, name).reference.id,
         byOf(this),
         now(this),
+        // What whatever asks says has been played, were it a test.
+        playedIn(this, name),
       ),
     );
   },

@@ -38,7 +38,7 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
     });
 
 /** The days a row says the test is played, as each <time> says it. */
-export const daysOf = async (within: Locator): Promise<string[]> =>
+const daysOf = async (within: Locator): Promise<string[]> =>
   Promise.all(
     (await within.locator(".test-days time").all()).map(
       async (time) => (await time.getAttribute("datetime")) ?? "",

@@ -17,7 +17,11 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
 
   A test's games are between its teams' players (`gamesInATest.feature`), and
   each of them is answered by what their team calls them now, as a
-  tournament's player is by what the tournament calls them.
+  tournament's player is by what the tournament calls them. Each is answered
+  with the team they play for as well, by its id, so that a test's page can
+  set each team's players on that team's side whichever of them won
+  (`view.feature` beneath the test). A player of a block, a knockout or a
+  Swiss plays for no team, and is answered with none.
 
   It answers the account the reader is signed in to, and never one the reader
   chose. Only the tournament's managers and scorers can ask: anybody else is
@@ -200,3 +204,34 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
       And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
       When the reader signed in to the account for "organiser@example.com" lists the scores of "AUS v ENG" of "Spring Tests"
       Then the score of "Pat Player" beating "Kim Keeper" 26 to 17 is answered as one that can be archived
+
+  Rule: A test's game is answered with the team each player plays for
+
+    Scenario: A test's game is answered with its winner's team
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "AUS v ENG" of "Spring Tests"
+      Then the score of "Kim Keeper" beating "Pat Player" 26 to 17 is answered with the winner playing for "England"
+
+    Scenario: A test's game is answered with its loser's team
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "AUS v ENG" of "Spring Tests"
+      Then the score of "Kim Keeper" beating "Pat Player" 26 to 17 is answered with the loser playing for "Australia"
+
+    Scenario: A block's game is answered with its players playing for no team
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Open"
+      Then the score of "Sam Someone" beating "Alex Another" 26 to 17 is answered with neither player playing for a team

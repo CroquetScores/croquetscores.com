@@ -19,10 +19,12 @@ import { CompetitionByeRemoved } from "./events/CompetitionByeRemoved.js";
 import { CompetitionGameAdded } from "./events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "./events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./events/CompetitionGameCorrected.js";
+import { CompetitionGameMoved } from "./events/CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "./events/CompetitionGameRestored.js";
 import {
   Game,
   type GameDetails,
+  type GameErrorCode,
   type GamePlayerId,
   gamePlayerIdFrom,
 } from "./Game.js";
@@ -55,7 +57,9 @@ export type CompetitionErrorCode =
   | "Competition.DrawFull"
   | "Competition.DrawNotFilled"
   | "Competition.ByeOutsideKnockout"
-  | "Competition.SameTeam";
+  | "Competition.SameTeam"
+  | "Competition.NotATest"
+  | "Competition.ExpectedMatchesReached";
 
 /** A player of one of a test's teams, as the tournament says they are. */
 export interface TeamPlayerInTest {
@@ -116,7 +120,8 @@ const ORDER_STEP = 10_000;
 export class Competition extends AggregateRoot {
   // By the written id.
   readonly #players = new Map<string, CompetitionPlayer>();
-  // By the written id, in the order they were added.
+  // By the written id, in the order they are listed: the order they were
+  // added, but for a test's moved since.
   readonly #games = new Map<string, Game>();
   // Those withdrawn, in the order they withdrew, since a knockout's match
   // between two of them went to whoever withdrew later.
@@ -153,7 +158,10 @@ export class Competition extends AggregateRoot {
     ].sort((one, other) => one.order - other.order);
   }
 
-  /** Its games, archived ones among them, in the order they were added. */
+  /**
+   * Its games, archived ones among them, in the order they were added, but
+   * for a test's, which can be moved.
+   */
   get games(): readonly Game[] {
     return [...this.#games.values()];
   }
@@ -499,6 +507,32 @@ export class Competition extends AggregateRoot {
   }
 
   /**
+   * That the test's game `id` swaps places with the game in use next to it,
+   * up or down, archived games being passed over, since the order of a test's
+   * games is only how they are listed. Any other competition's games keep the
+   * order they were added in, which can decide a knockout, and are refused.
+   * An archived game is out of the way, and is refused as the game refuses
+   * it. Moving the first up or the last down records nothing.
+   */
+  moveGame(
+    id: GameId,
+    direction: "up" | "down",
+    told: Told,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    if (told.shape.kind !== "test") {
+      refuse("Competition.NotATest", "Only a test's games are moved.");
+    }
+    const game = this.#gameFound(id);
+    if (game.archived) {
+      throw new ValidationError<GameErrorCode>("Game.Archived");
+    }
+    if (this.#swappedWith(id.value, direction) === undefined) return;
+    this.record(new CompetitionGameMoved(id.value, direction, by, at));
+  }
+
+  /**
    * That the archived game `id` counts again, where it could be added now:
    * refused as adding it would be. Restoring one not archived records nothing.
    */
@@ -650,6 +684,9 @@ export class Competition extends AggregateRoot {
       );
     } else if (event instanceof CompetitionGameArchived) {
       this.#changeGame(event.gameId, (game) => game.archive());
+    } else if (event instanceof CompetitionGameMoved) {
+      const other = this.#swappedWith(event.gameId, event.direction);
+      if (other !== undefined) this.#swap(event.gameId, other);
     } else if (event instanceof CompetitionGameRestored) {
       this.#changeGame(event.gameId, (game) => game.restore());
     } else if (event instanceof CompetitionGameCorrected) {
@@ -756,7 +793,8 @@ export class Competition extends AggregateRoot {
   // of them, which is a game being corrected to other players and would no
   // longer count as it was: in a block, in a match not yet decided; in a
   // knockout, between the two drawn to meet in one not yet decided. A Swiss
-  // asks nothing more of it.
+  // asks nothing more of it. In a test, a game that would start a match
+  // beyond those it is expected to have is refused too.
   #ensureItCounts(game: Game, told: Told, without?: Game): void {
     const { shape } = told;
     const counting = this.#counting().filter((each) => !each.equals(without));
@@ -779,6 +817,22 @@ export class Competition extends AggregateRoot {
         beyondReach(game.loser, game.winner)
       ) {
         refuse("Competition.MatchDecided", "Their match is decided.");
+      }
+      // A match is started once its two players have a game that counts.
+      const started = new Set(
+        counting.map((each) =>
+          [each.winner.value, each.loser.value].sort().join(" "),
+        ),
+      );
+      if (
+        shape.kind === "test" &&
+        played.length === 0 &&
+        started.size >= shape.expectedMatches.count
+      ) {
+        refuse(
+          "Competition.ExpectedMatchesReached",
+          "The test has started as many matches as it is expected to have.",
+        );
       }
     } else if (shape.kind === "knockout") {
       // Who meets whom is not settled while a place is left empty, or while
@@ -893,6 +947,30 @@ export class Competition extends AggregateRoot {
       this.#games.get(id.value) ??
       refuse("Competition.NoSuchGame", "The competition has no such game.")
     );
+  }
+
+  // The game in use next to the game `written`, above it or below it, which a
+  // move swaps it with: archived games are passed over. Nothing, where there
+  // is none.
+  #swappedWith(written: string, direction: "up" | "down"): string | undefined {
+    const inUse = this.#counting().map((game) => game.id.value);
+    const at = inUse.indexOf(written);
+    return at === -1 ? undefined : inUse[direction === "up" ? at - 1 : at + 1];
+  }
+
+  // The games `one` and `other` in each other's places, the rest where they
+  // were, since the games are kept in the order they are listed.
+  #swap(one: string, other: string): void {
+    const listed = [...this.#games.entries()];
+    const first = listed.findIndex(([written]) => written === one);
+    const second = listed.findIndex(([written]) => written === other);
+    const kept = listed[first];
+    const moved = listed[second];
+    if (kept === undefined || moved === undefined) return;
+    listed[first] = moved;
+    listed[second] = kept;
+    this.#games.clear();
+    for (const [written, game] of listed) this.#games.set(written, game);
   }
 
   #changeGame(written: string, changing: (game: Game) => Game): void {

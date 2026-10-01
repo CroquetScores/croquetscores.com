@@ -9,9 +9,12 @@ Feature: Archiving a tournament's competition
   the tournament's managers can: anybody else, a scorer among them, is refused
   with `Tournament.NotAManager` (`onlyManagers.feature`).
 
-  A competition is archived whether or not it has games, which are kept with
-  it (`archiveCompetition.feature`), so the application does not ask its
-  games. Archiving a competition that is archived records nothing.
+  A block, a knockout or a Swiss is archived whether or not it has games,
+  which are kept with it (`archiveCompetition.feature`). A test with any game
+  in use is not: it is refused with `Tournament.TestHasGamesInUse`, so the
+  application asks its games what has been played in a test (`Games.feature`),
+  as it does to update one. An archived game counts for nothing. Archiving a
+  competition that is archived records nothing.
 
   A forgotten account archives nothing, and is refused with `Account.Forgotten`.
 
@@ -39,6 +42,44 @@ Feature: Archiving a tournament's competition
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
       Then nothing more is recorded of the tournament
+
+  Rule: A test with games in use is not archived
+
+    Scenario: A test with a game is refused
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" archives the competition "AUS v ENG" in "Spring Tests"
+      Then it is refused with "Tournament.TestHasGamesInUse"
+
+    Scenario: A test whose only game is archived is archived
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" archives the competition "AUS v ENG" in "Spring Tests"
+      Then the tournament's competition "AUS v ENG" is archived
+
+  Rule: A block with games is archived
+
+    Scenario: A block with a game is archived
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
+      Then the tournament's competition "Block A" is archived
 
   Rule: Only a competition there is, in a tournament there is, can be archived
 

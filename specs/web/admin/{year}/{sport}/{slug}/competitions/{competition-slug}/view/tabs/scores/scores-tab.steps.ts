@@ -25,11 +25,13 @@ When(
 
 type List = "in-use" | "archived";
 
+// A list, or a test's table, whose rows are its body's (view.feature beneath
+// the test).
 const rows = (world: SpecWorld, list?: List): Locator =>
   tabPanel(world).locator(
     list === undefined
-      ? "ul[data-listed] > .listed-item"
-      : `ul[data-listed="${list}"] > .listed-item`,
+      ? "[data-listed] > .listed-item"
+      : `[data-listed="${list}"] > .listed-item`,
   );
 
 const partOf = async (row: Locator, part: string): Promise<string> =>
@@ -209,11 +211,11 @@ const optionOf = async (
   loser: string,
   scores?: string,
 ): Promise<Locator> =>
+  // By the name it is read out by, which for Up and Down is not what is
+  // shown: they are drawn as arrows.
   (await rowOf(world, winner, loser, scores))
-    .locator(".listed-options button")
-    .filter({
-      hasText: new RegExp(`^${option.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
-    });
+    .locator(".listed-options")
+    .getByRole("button", { name: option, exact: true });
 
 Then(
   new RegExp(`^${SCORE} (offers|does not offer) "([^"]*)"$`),
@@ -339,7 +341,7 @@ Then(
         .filter({ hasText: option })
         .boundingBox();
       const list = await tabPanel(this)
-        .locator("ul[data-listed]")
+        .locator("[data-listed]")
         .first()
         .boundingBox();
       assert.ok(offer !== null && list !== null, "One is not laid out.");
@@ -422,14 +424,21 @@ Then(
     after: string,
   ) {
     await eventually(this, async () => {
-      const offered = (
-        await (
-          await rowOf(this, winner, loser)
-        )
-          .locator(".listed-options")
-          .getByRole("button")
-          .allInnerTexts()
-      ).map((each) => each.trim());
+      // By the names they are read out by, since Up and Down are drawn as
+      // arrows and say nothing as text.
+      const buttons = await (
+        await rowOf(this, winner, loser)
+      )
+        .locator(".listed-options")
+        .getByRole("button")
+        .all();
+      const offered = await Promise.all(
+        buttons.map(
+          async (button) =>
+            (await button.getAttribute("aria-label")) ??
+            (await button.innerText()).trim(),
+        ),
+      );
       const first = offered.indexOf(option);
       const second = offered.indexOf(after);
       assert.ok(

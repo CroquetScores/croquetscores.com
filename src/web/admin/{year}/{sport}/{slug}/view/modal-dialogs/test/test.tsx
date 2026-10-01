@@ -6,9 +6,10 @@ import { knows, say } from "../../../../../../words.js";
 import "./test.css";
 
 // The test dialog (test.feature), over a tournament's Tests tab: opened by Add
-// Test to add tests a round at a time, and by Edit to change one. It reads as
-// a test is said aloud: Team A, "v", Team B, then its days and how it is
-// played. Adding keeps it open, says which test was added and empties the
+// Test to add tests a round at a time, and by Edit to change one. It reads in
+// the order a test is said aloud: Team A, Team B, then its days and how it is
+// played. Team B offers every team but Team A's, since a team does not play
+// itself. Adding keeps it open, says which test was added and empties the
 // teams alone, since the tests of a round are alike but for who plays them;
 // saving closes it. A test with games keeps its teams, so they are shown as
 // they are rather than offered.
@@ -275,7 +276,16 @@ export const TestDialog = ({
             ref={part === "firstTeam" ? firstTeamField : undefined}
             value={said[part]}
             onChange={(event) => {
-              setSaid({ ...said, [part]: event.target.value });
+              const chosen = event.target.value;
+              setSaid({
+                ...said,
+                [part]: chosen,
+                // Team A's team is not Team B's to offer, so a Team B that
+                // is now Team A's is no longer chosen.
+                ...(part === "firstTeam" && chosen === said.secondTeam
+                  ? { secondTeam: "" }
+                  : {}),
+              });
               // Which test was added is no longer the news once the next
               // team is chosen.
               setAdded(undefined);
@@ -284,11 +294,13 @@ export const TestDialog = ({
             {/* Nobody to begin with, so that a test is never added between
                 teams the reader did not choose. */}
             <option value="" />
-            {offered.map((each) => (
-              <option key={each.id} value={each.id}>
-                {each.name}
-              </option>
-            ))}
+            {offered
+              .filter(({ id }) => part === "firstTeam" || id !== said.firstTeam)
+              .map((each) => (
+                <option key={each.id} value={each.id}>
+                  {each.name}
+                </option>
+              ))}
           </select>
         )
       }
@@ -366,7 +378,6 @@ export const TestDialog = ({
         </div>
       ) : null}
       {team("firstTeam", "admin.test.firstTeam", 0)}
-      <p className="test-versus">{say("admin.test.versus")}</p>
       {team("secondTeam", "admin.test.secondTeam", 1)}
       {day("starts", "admin.test.starts")}
       {day("finishes", "admin.test.finishes")}

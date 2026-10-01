@@ -26,8 +26,13 @@ Feature: The games of a test
   `Competition.MatchDecided`. A drawn game is one of the match's games
   played, won by neither, and drawn games are the tournament's to allow, as
   anywhere (`Game.feature`). A best-of may be even, so a match can be shared.
-  How many matches a test is expected to have is not a limit
-  (`ExpectedMatches.feature`), so a game is never refused for it.
+  How many matches a test is expected to have is a limit on the matches it
+  starts (`ExpectedMatches.feature`), a match being started once its two
+  players have a game in use. Once as many have started as it is expected to
+  have, a game between two players who have not met is refused with
+  `Competition.ExpectedMatchesReached`, while a game of a match already
+  started is asked only what its match asks. An archived game starts no
+  match. Restoring a game, and correcting one to other players, ask it too.
 
   Correcting a game can change who played it (`correctGame.feature`), and a
   correction in a test asks of its players what adding asks. Restoring an
@@ -37,12 +42,14 @@ Feature: The games of a test
   (`updateTest.feature`), is not restored at all.
 
   A scenario that does not say what a test's matches are the best of has
-  them each the best of 1.
+  them each the best of 1, and one that does not say how many matches it is
+  expected to have has it expected to have 21.
 
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-26T10:00:00Z"
     And a test between the teams "Australia" and "England"
+    And the test is expected to have 21 matches
     And "Sam Someone" plays for "Australia"
     And "Alex Another" plays for "Australia"
     And "Chris Third" plays for "England"
@@ -140,13 +147,53 @@ Feature: The games of a test
       When the game of "Chris Third" beating "Sam Someone" 26 to 20 is added
       Then the competition has 2 games
 
-    Scenario: Games beyond the matches a test was expected to have are added
+  Rule: A test starts no more matches than it is expected to have
+
+    Scenario: A game that would start a match beyond those expected is refused
       Given the test is expected to have 1 match
-      And the test's matches are each the best of 1
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Pat Fourth" 26 to 20 is added
+      Then it is refused with "Competition.ExpectedMatchesReached"
+
+    Scenario: A game that starts the last match expected is added
+      Given the test is expected to have 2 matches
       And the game of "Sam Someone" beating "Chris Third" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the game of "Alex Another" beating "Pat Fourth" 26 to 20 is added
       Then the competition has 2 games
+
+    Scenario: Another game of a match already started is added
+      Given the test is expected to have 1 match
+      And the test's matches are each the best of 3
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Chris Third" beating "Sam Someone" 26 to 20 is added
+      Then the competition has 2 games
+
+    Scenario: An archived game starts no match
+      Given the test is expected to have 1 match
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was archived
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Pat Fourth" 26 to 20 is added
+      Then the competition has 2 games
+
+    Scenario: A game restored that would start a match beyond those expected is refused
+      Given the test is expected to have 1 match
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was archived
+      And the game of "Alex Another" beating "Pat Fourth" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Chris Third" 26 to 17 is restored
+      Then it is refused with "Competition.ExpectedMatchesReached"
+
+    Scenario: A game corrected to the players of the only match started is corrected
+      Given the test is expected to have 1 match
+      And the game of "Sam Someone" beating "Chris Third" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Chris Third" 26 to 17 is corrected to "Alex Another" beating "Pat Fourth" 26 to 17
+      Then the competition has the game of "Alex Another" beating "Pat Fourth" 26 to 17
 
   Rule: What any game asks is asked of a game in a test
 

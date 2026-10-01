@@ -23,6 +23,7 @@ import { CorrectGame } from "../../../application/operations/competitions/Correc
 import { EnterPlayer } from "../../../application/operations/competitions/EnterPlayer.js";
 import { GamesOfCompetition } from "../../../application/operations/competitions/GamesOfCompetition.js";
 import { MoveCompetitionPlayer } from "../../../application/operations/competitions/MoveCompetitionPlayer.js";
+import { MoveGame } from "../../../application/operations/competitions/MoveGame.js";
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
 import { RemovePlayer } from "../../../application/operations/competitions/RemovePlayer.js";
 import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
@@ -703,6 +704,29 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // A test's score moved a place, up or down, by the part of its id after
+  // "game/".
+  for (const direction of ["up", "down"] as const) {
+    server.post<{ Params: { id: string; competition: string; game: string } }>(
+      `/tournaments/:id/competitions/:competition/games/:game/${direction}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        await request.server.mediator.send(
+          new MoveGame(
+            reader.value,
+            `tournament/${request.params.id}`,
+            `competition/${request.params.competition}`,
+            `game/${request.params.game}`,
+            direction,
+            request.requestedAt,
+          ),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
 
   // A game's score archived or restored, by the part of its id after "game/".
   for (const action of ["archive", "restore"] as const) {

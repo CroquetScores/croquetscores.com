@@ -3,8 +3,8 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
 
   A manager adds the teams to a tournament played by teams from its Teams
   tab, by pressing "Add Team", and changes one they have added by pressing its
-  name or its Edit (`teams-tab.feature`). Either opens the team dialog over
-  the page. It asks for what a team is (`Team.feature`): its name, its short
+  Edit (`teams-tab.feature`); its name leads to its page instead. Either opens
+  the team dialog over the page. It asks for what a team is (`Team.feature`): its name, its short
   name, and the flag it flies, if any.
 
   It is a modal dialog, as the player dialog is (`player.feature`): it sits
@@ -97,38 +97,38 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
       When "Add Team" is pressed
       Then "Short Name" is described by the words for "admin.team.shortName.explanation"
 
-  Rule: A team opened from the page opens the dialog to change it
+  Rule: Edit on a team opens the dialog to change it
 
     Scenario: The dialog to change a team is titled for what it does
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      When the name of the team "Australia" is pressed
+      When "Edit" is pressed on the team "Australia"
       Then the team dialog is titled "Edit Team"
 
     Scenario: The dialog to change a team saves with Save
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      When the name of the team "Australia" is pressed
+      When "Edit" is pressed on the team "Australia"
       Then the team dialog's first button is "Save"
 
     Scenario: The name is the team's
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      When the name of the team "Australia" is pressed
+      When "Edit" is pressed on the team "Australia"
       Then "Name" says "Australia"
 
     Scenario: The short name is the team's
       Given the team is to be known for short as "Oz"
       And "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      When the name of the team "Australia" is pressed
+      When "Edit" is pressed on the team "Australia"
       Then "Short Name" says "Oz"
 
     Scenario: The flag is the team's
       Given the team is to fly the flag "au"
       And "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      When the name of the team "Australia" is pressed
+      When "Edit" is pressed on the team "Australia"
       Then the flag chosen is "Australia"
 
   Rule: The dialog sits over the page, and nothing outside it can be reached
@@ -195,7 +195,7 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
     Scenario: Cancelling changes nothing
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       And "Australia A" is typed as the "Name"
       When "Cancel" is pressed
       Then "Spring Tests" has the team "Australia"
@@ -218,9 +218,9 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
     Scenario: The reader is back on the team once the dialog is cancelled
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       When "Cancel" is pressed
-      Then the name of the team "Australia" has the focus
+      Then "Edit" on the team "Australia" has the focus
 
   Rule: Add adds the team and empties the dialog for the next
 
@@ -325,7 +325,7 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
     Scenario: A renamed team is kept by its new name
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       And "Australia A" is typed as the "Name"
       When "Save" is pressed
       Then "Spring Tests" has the team "Australia A"
@@ -333,7 +333,7 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
     Scenario: A new short name is kept
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       And "Oz" is typed as the "Short Name"
       When "Save" is pressed
       Then the team "Australia" of "Spring Tests" is known for short as "Oz"
@@ -342,7 +342,7 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
       Given the team is to fly the flag "au"
       And "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       And none is chosen for the flag
       When "Save" is pressed
       Then the team "Australia" of "Spring Tests" flies no flag
@@ -350,7 +350,7 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
     Scenario: Saving closes the dialog
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       And "Australia A" is typed as the "Name"
       When "Save" is pressed
       Then the team dialog is not open
@@ -358,10 +358,10 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
     Scenario: The reader is back on the team once it is saved
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "Australia" is pressed
+      And "Edit" is pressed on the team "Australia"
       And "Australia A" is typed as the "Name"
       When "Save" is pressed
-      Then the name of the team "Australia A" has the focus
+      Then "Edit" on the team "Australia A" has the focus
 
   Rule: The flags are named in the reader's language, in order of their names
 
@@ -430,7 +430,7 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "organiser@example.com" has added the team "England" to "Spring Tests"
       And the page of "Spring Tests" is open
-      And the name of the team "England" is pressed
+      And "Edit" is pressed on the team "England"
       And "AUS" is typed as the "Short Name"
       When "Save" is pressed
       Then "Short Name" is refused with "Tournament.TeamShortNameTaken"

@@ -179,19 +179,6 @@ Feature: Asking whether games have been played
       When the games are asked whether the player "Pat Player" of the team "Australia" of "Spring Tests" has played
       Then they say no
 
-    Scenario: A player in a team who played in an archived test says yes
-      Given the tournament is to be played in the format "Teams"
-      And "organiser@example.com" has created the tournament "Spring Tests"
-      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
-      And "organiser@example.com" has added the team "England" to "Spring Tests"
-      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
-      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
-      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
-      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
-      And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
-      When the games are asked whether the player "Pat Player" of the team "Australia" of "Spring Tests" has played
-      Then they say yes
-
   Rule: A test has games if it has any game in use
 
     Scenario: A test with no games says no
@@ -261,6 +248,7 @@ Feature: Asking whether games have been played
       And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Jo Jones" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And the test is to be expected to have 21 matches
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
       And "Jo Jones" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
@@ -290,6 +278,7 @@ Feature: Asking whether games have been played
       And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Jo Jones" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And the test is to be expected to have 21 matches
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
       And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"

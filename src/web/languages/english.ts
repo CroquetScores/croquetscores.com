@@ -421,6 +421,8 @@ export const english: Language = {
     "admin.scores.edit": "Edit",
     "admin.scores.drawNotFilledTitle": "Draw Not Filled",
     "admin.scores.archive": "Archive",
+    "admin.scores.up": "Up",
+    "admin.scores.down": "Down",
     "admin.scores.restore": "Restore",
     "admin.scores.archived": "Archived scores",
     "admin.scores.archivedSaid": "Archived",
@@ -595,12 +597,16 @@ export const english: Language = {
       "A test cannot start before its tournament does.",
     "Tournament.TestFinishesAfterTournament":
       "A test cannot finish after its tournament does.",
+    "Tournament.TestHasGamesInUse":
+      "This test has games, so it cannot be archived until they are.",
     "Tournament.TestHasGames":
       "This test has games now, so its teams can no longer be changed.",
     "Tournament.ExpectedMatchesBelowStarted":
       "More matches than that have started already.",
     "Tournament.BestOfBelowGamesPlayed":
       "Two players have already played more games than that.",
+    "Competition.ExpectedMatchesReached":
+      "This test has started as many matches as it is expected to have.",
     "Competition.SameTeam":
       "Two players of the same team do not play each other.",
     "AddManager.NoSuchAccount":

@@ -8,9 +8,9 @@ import "../listed.css";
 // The Teams tab (teams-tab.feature) of a tournament played by teams: the teams
 // in use in the tournament's order, each with its short name and the flag it
 // flies, offering Edit, View, Archive, Up and Down, and after them the
-// archived ones, struck through, offering Restore alone. Add Team, a team's
-// name and Edit open the team dialog, and View leads to the team's page, where
-// its players are. A team playing in a test in use is not offered Archive,
+// archived ones, struck through, offering Restore alone. Add Team and Edit
+// open the team dialog, and a team's name and View lead to the team's page,
+// where its players are. A team playing in a test in use is not offered Archive,
 // since the test would be left a team short. Nothing asks first: archiving a
 // team loses nothing, its players coming back with it. Whatever is pressed,
 // and whenever the dialog keeps a team, the list is asked for again.
@@ -125,20 +125,15 @@ export const TeamsTab = ({ tournament, address }: Props): React.JSX.Element => {
       data-archived={team.archived ? "" : undefined}
     >
       <span className="listed-who">
-        {/* An archived team can only be restored, so its name opens
-            nothing. */}
+        {/* To the team's page, where its players are, which is what a team
+            is mostly pressed for. An archived team's page refuses to open,
+            so its name leads nowhere. */}
         {team.archived ? (
           <span className="listed-name">{team.name}</span>
         ) : (
-          <button
-            type="button"
-            className="listed-name"
-            onClick={() => {
-              setDialog(team);
-            }}
-          >
+          <a className="listed-name" href={pageOf(team)}>
             {team.name}
-          </button>
+          </a>
         )}
         <span className="listed-about">{team.shortName}</span>
         {/* Named for a reader who cannot see it by the place it is the flag

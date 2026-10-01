@@ -125,6 +125,7 @@ export type TournamentErrorCode =
   | "Tournament.TestStartsBeforeTournament"
   | "Tournament.TestFinishesAfterTournament"
   | "Tournament.TestHasGames"
+  | "Tournament.TestHasGamesInUse"
   | "Tournament.ExpectedMatchesBelowStarted"
   | "Tournament.BestOfBelowGamesPlayed";
 
@@ -867,16 +868,31 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That the competition `id`, of whatever kind, is set aside, whether or not
-   * it has games: they are kept with it, and come back when it is restored.
-   * It is out of the way, so it is put last, given 10,000 more than the
+   * That the competition `id` is set aside. A block, a knockout or a Swiss is,
+   * whether or not it has games: they are kept with it, and come back when it
+   * is restored. A test is not once any of its matches has started, since it
+   * has then been played; what has been played in it is not the tournament's
+   * to know, so whatever asks says, as `played`, and says nothing of any other
+   * kind. It is out of the way, so it is put last, given 10,000 more than the
    * highest order there is, and keeps that order if it is restored. Archiving
    * one that is archived records nothing.
    */
-  archiveCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
+  archiveCompetition(
+    id: CompetitionId,
+    by: AccountId,
+    at: ReadOnlyDate,
+    played?: TestPlayed,
+  ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    if (this.#competitionFound(id).reference.archived) return;
+    const found = this.#competitionFound(id);
+    if (found.reference.archived) return;
+    if (found.shape.kind === "test" && (played?.matchesStarted ?? 0) > 0) {
+      refuse(
+        "Tournament.TestHasGamesInUse",
+        "The test has games in use between its teams' players.",
+      );
+    }
     this.record(new CompetitionArchived(id.value, this.#nextOrder, by, at));
   }
 

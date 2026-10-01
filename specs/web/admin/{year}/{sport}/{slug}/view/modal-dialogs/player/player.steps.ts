@@ -358,7 +358,7 @@ Then(
 );
 
 Then(
-  /^the name of the (?:player|team) "([^"]*)" has the focus$/,
+  "the name of the player {string} has the focus",
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       const focused = await this.browserPage.evaluate<string>(

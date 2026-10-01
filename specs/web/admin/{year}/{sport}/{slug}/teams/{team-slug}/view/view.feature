@@ -2,18 +2,19 @@
 Feature: A team's page in the admin
 
   /admin/{year}/{sport}/{slug}/teams/{team slug} is where a manager sees one
-  of a tournament's teams and its players, having pressed View on the team on
-  the tournament's Teams tab (`teams-tab.feature`). It is headed by the team's
-  name, with its short name and its flag beside it, so that a manager who
-  came to the wrong team sees so at once.
+  of a tournament's teams and its players, having pressed the team's name or
+  its View on the tournament's Teams tab (`teams-tab.feature`). It is headed
+  by the team's name with its short name after it in brackets, as "Australia
+  (AUS)", as the Teams tab shows a team, and its flag beside it, so that a
+  manager who came to the wrong team sees so at once.
 
   It has one thing to show, the team's players (`team-players.feature`), so it
   has no tabs: the list is the page.
 
-  A team is part of its tournament rather than a section of its own, so the
-  page has the tournament's section bar (`TournamentSections.feature`), with
-  Tournament marked as the section being read, as it is on the tournament's
-  page, and Tournament leads back to it.
+  The page has the tournament's section bar (`TournamentSections.feature`),
+  which on a team's page is Tournament and then each team in use, by its
+  short name, with this team marked as the section being read, and
+  Tournament leads back to the tournament's page.
 
   A team's players are the managers' to say, and a scorer has no part in
   them: a scorer enters a test's scores, and is offered the test's players
@@ -58,15 +59,17 @@ Feature: A team's page in the admin
       When the reader signs in as "organiser@example.com" with the password "correct horse battery staple"
       Then the address is "/admin/2026/ac/spring-tests/teams/aus"
 
-  Rule: The page is headed by the team's name, with its short name and its flag
+  Rule: The page is headed by the team's name and its short name, with its flag
 
-    Scenario: The page is headed by the team's name
+    Scenario: The page is headed by the team's name and its short name
       When the page of the team "Australia" in "Spring Tests" is opened
-      Then the page is headed "Australia"
+      Then the page is headed "Australia (AUS)"
 
-    Scenario: The heading says the team's short name
-      When the page of the team "Australia" in "Spring Tests" is opened
-      Then the heading says "AUS"
+    Scenario: The heading says the team's own short name
+      Given the team is to be known for short as "Kiwis"
+      And "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
+      When the page of the team "New Zealand" in "Spring Tests" is opened
+      Then the page is headed "New Zealand (Kiwis)"
 
     Scenario: The heading shows the team's flag
       When the page of the team "Australia" in "Spring Tests" is opened
@@ -80,15 +83,15 @@ Feature: A team's page in the admin
       When the page of the team "Australia" in "Spring Tests" is opened
       Then the page offers "Add Player"
 
-  Rule: The page is part of the tournament in the section bar
+  Rule: The page has the tournament's section bar, with the team marked
 
     Scenario: The page has a section bar
       When the page of the team "Australia" in "Spring Tests" is opened
       Then the page has a section bar
 
-    Scenario: Tournament is marked on a team's page
+    Scenario: The team is marked on its page
       When the page of the team "Australia" in "Spring Tests" is opened
-      Then the section "Tournament" is marked as current
+      Then the section "AUS" is marked as current
 
     Scenario: Pressing Tournament goes back to the tournament's page
       Given the page of the team "Australia" in "Spring Tests" is open

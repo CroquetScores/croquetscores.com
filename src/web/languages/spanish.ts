@@ -387,6 +387,8 @@ export const spanish: Language = {
     "admin.scores.edit": "Editar",
     "admin.scores.drawNotFilledTitle": "Cuadro incompleto",
     "admin.scores.archive": "Archivar",
+    "admin.scores.up": "Subir",
+    "admin.scores.down": "Bajar",
     "admin.scores.restore": "Restaurar",
     "admin.scores.archived": "Resultados archivados",
     "admin.scores.archivedSaid": "Archivado",
@@ -551,12 +553,16 @@ export const spanish: Language = {
       "Un test no puede empezar antes que su torneo.",
     "Tournament.TestFinishesAfterTournament":
       "Un test no puede terminar después que su torneo.",
+    "Tournament.TestHasGamesInUse":
+      "Este test tiene partidas, así que no se puede archivar hasta que se archiven.",
     "Tournament.TestHasGames":
       "Este test ya tiene partidas, así que sus equipos ya no se pueden cambiar.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Ya han empezado más partidos que esos.",
     "Tournament.BestOfBelowGamesPlayed":
       "Dos jugadores ya han jugado más partidas que esas.",
+    "Competition.ExpectedMatchesReached":
+      "Este test ya ha empezado todos los partidos que tiene previstos.",
     "Competition.SameTeam":
       "Dos jugadores del mismo equipo no juegan entre sí.",
     "AddManager.NoSuchAccount":

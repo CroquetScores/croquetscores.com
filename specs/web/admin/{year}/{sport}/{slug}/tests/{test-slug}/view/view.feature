@@ -4,11 +4,12 @@ Feature: A test's page in the admin
   /admin/{year}/{sport}/{slug}/tests/{test slug} is where a manager or a
   scorer enters a test's scores, having pressed its name or View on the
   tournament's Tests tab (`tests-tab.feature`) or the test in the section bar
-  (`TournamentSections.feature`). It is headed by the test's name, its teams'
-  short names, as "AUS v ENG", and beneath that its teams' names, the days it
-  is played, how many matches it is expected to have and what each is the
-  best of, and its group where it is in one, written as the Tests tab writes
-  them, so that a reader who has come to the wrong test sees so at once.
+  (`TournamentSections.feature`). It is headed by its teams' names, as
+  "Australia v England", rather than its name, their short names, which is
+  what the section bar and the Tests tab call it, and beneath that by how many
+  matches it is expected to have and what each is the best of, as "21
+  matches, best of 3", written as the Tests tab writes them, so that a reader
+  who has come to the wrong test sees so at once.
 
   A test has no players entered in it (`gamesInATest.feature`), so it has no
   Players tab, as a competition's page has, and its scores are the one thing
@@ -17,8 +18,21 @@ Feature: A test's page in the admin
   a block is said here unless this says otherwise. Add Score, above the list,
   opens the score dialog (`test-score.feature`), and a score's Edit opens it
   to correct that score. The scores in use come first, in the order they were
-  entered, each saying the winner and their score, then the loser and theirs,
-  and offering Edit and Archive. A test has no rounds that depend on one
+  entered, offering Edit and Archive.
+
+  A test is between two teams, so its scores are set out by team rather than
+  by who won: in a table whose columns are headed by the first team's short
+  name, "v", and the second team's short name, each score a row with the
+  first team's player, then both scores, the first team's player's first, as
+  "17 - 26", then the second team's player, whoever of them won
+  (`GamesOfCompetition.feature`), and what it offers last. The archived
+  scores are set out the same way. The players' and the scores' columns are
+  each as wide as what is in them and no wider, and nothing in the table
+  wraps, so that every score reads along one line. The table reaches across
+  the whole of the page's width, and what each score offers is at its right
+  edge, so that the buttons are in the one place however long the names are;
+  a table too wide for the screen scrolls across within itself rather than
+  widening the page. A test has no rounds that depend on one
   another, so every score in it is offered Archive. The archived scores come
   after, under a heading of their own, struck through, each offering Restore
   alone. Archive and Restore do not ask first, and whatever is pressed, the
@@ -43,7 +57,8 @@ Feature: A test's page in the admin
   is read on a phone's width, as the rest of the admin is. Unless a scenario
   says otherwise, a team's short name is the first three letters of its name
   in capitals (`Team.feature`), and a test starts and finishes on the
-  tournament's first day.
+  tournament's first day and is expected to have 21 matches, so that it can
+  have as many as a scenario needs (`gamesInATest.feature`).
 
   Background:
     Given a viewport 375 pixels wide
@@ -62,6 +77,7 @@ Feature: A test's page in the admin
     And "organiser@example.com" has added the player "Alex Another" to the team "Australia" of "Spring Tests"
     And "organiser@example.com" has added the player "Chris Third" to the team "England" of "Spring Tests"
     And "organiser@example.com" has added the player "Pat Fourth" to the team "England" of "Spring Tests"
+    And the test is to be expected to have 21 matches
     And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
 
   Rule: Only a reader signed in sees the page
@@ -77,27 +93,15 @@ Feature: A test's page in the admin
       When the reader signs in as "organiser@example.com" with the password "correct horse battery staple"
       Then the address is "/admin/2026/ac/spring-tests/tests/aus-v-eng"
 
-  Rule: The page is headed by the test's name, its teams and its days
+  Rule: The page is headed by the test's teams, and how it is played
 
-    Scenario: The page is headed by the test's name
+    Scenario: The page is headed by the test's teams' names
       When the page of the test "AUS v ENG" in "Spring Tests" is opened
-      Then the page is headed "AUS v ENG"
-
-    Scenario: The page names the first team
-      When the page of the test "AUS v ENG" in "Spring Tests" is opened
-      Then the page names the team "Australia"
-
-    Scenario: The page names the second team
-      When the page of the test "AUS v ENG" in "Spring Tests" is opened
-      Then the page names the team "England"
-
-    Scenario: The page says the day the test is played
-      When the page of the test "AUS v ENG" in "Spring Tests" is opened
-      Then the page says the test is played on "2026-10-03"
+      Then the page is headed "Australia v England"
 
     Scenario: The page says how many matches the test is expected to have
       When the page of the test "AUS v ENG" in "Spring Tests" is opened
-      Then the page says the test is expected to have 1 match
+      Then the page says the test is expected to have 21 matches
 
     Scenario: The page says what each match is the best of
       When the page of the test "AUS v ENG" in "Spring Tests" is opened
@@ -133,6 +137,52 @@ Feature: A test's page in the admin
       And "organiser@example.com" has renamed the player "Sam Someone" of the team "Australia" of "Spring Tests" to "Samantha Someone"
       When the page of the test "AUS v ENG" in "Spring Tests" is opened
       Then the score of "Samantha Someone" beating "Chris Third" 26 to 17 is listed
+
+  Rule: The scores are set out by team, the first team's on the left
+
+    Scenario: The scores are headed by the teams' short names
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the scores are headed "AUS", "v" and "ENG"
+
+    Scenario: A score won by the first team's player reads from the first team's side
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the first score listed reads "Sam Someone", "26 - 17" and "Chris Third"
+
+    Scenario: A score won by the second team's player reads from the first team's side
+      Given "Chris Third" has beaten "Sam Someone" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the first score listed reads "Sam Someone", "17 - 26" and "Chris Third"
+
+    Scenario: An archived score reads from the first team's side
+      Given "Chris Third" has beaten "Sam Someone" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Chris Third" beating "Sam Someone" in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the first archived score reads "Sam Someone", "17 - 26" and "Chris Third"
+
+    Scenario: No part of a score wraps
+      Given "organiser@example.com" has added the player "Maximilian Alexander Fitzwilliam-Worthington" to the team "Australia" of "Spring Tests"
+      And "Maximilian Alexander Fitzwilliam-Worthington" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then no part of the first score listed wraps
+
+    Scenario: On a wide screen the players and the scores take no more room across than they need
+      Given a viewport 1280 pixels wide
+      And "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the players and the scores of the first score listed are no wider than what is in them
+
+    Scenario: On a wide screen what a score offers is at the right edge of the page
+      Given a viewport 1280 pixels wide
+      And "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then what the first score listed offers ends at the right edge of the page
+
+    Scenario: Each part of a score lines up under its heading
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then each part of the first score listed lines up under its heading
 
   Rule: Add Score opens the score dialog
 
@@ -173,6 +223,89 @@ Feature: A test's page in the admin
       And the page of the test "AUS v ENG" in "Spring Tests" is open
       When "Edit" is pressed on the score of "Sam Someone" beating "Chris Third"
       Then the score dialog is titled "Edit Score"
+
+  Rule: Up and Down move a score a place, to list the scores as they were played
+
+    Scores come in whatever order they are entered, so each score in use
+    offers Up and Down, last and shown as arrows, as a team's do
+    (`teams-tab.feature`), and moving one swaps it with the score in use next
+    to it (`MoveGame.feature`). Neither asks first, and the list is asked for
+    again. A scorer can, as they can do all else to a score.
+
+    Scenario Outline: A score between two others offers Up and Down
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      And "Chris Third" has beaten "Alex Another" 26 to 20 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the score of "Alex Another" beating "Pat Fourth" offers "<option>"
+
+      Examples:
+        | option |
+        | Up     |
+        | Down   |
+
+    Scenario: The first score does not offer Up
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the score of "Sam Someone" beating "Chris Third" does not offer "Up"
+
+    Scenario: The last score does not offer Down
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the score of "Alex Another" beating "Pat Fourth" does not offer "Down"
+
+    Scenario: Up moves a score before the one above
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      And the page of the test "AUS v ENG" in "Spring Tests" is open
+      When "Up" is pressed on the score of "Alex Another" beating "Pat Fourth"
+      Then the first score listed is of "Alex Another" beating "Pat Fourth"
+
+    Scenario: Down moves a score after the one below
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      And the page of the test "AUS v ENG" in "Spring Tests" is open
+      When "Down" is pressed on the score of "Sam Someone" beating "Chris Third"
+      Then the first score listed is of "Alex Another" beating "Pat Fourth"
+
+    Scenario: A score moved is kept in its new place
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      And the page of the test "AUS v ENG" in "Spring Tests" is open
+      And "Up" is pressed on the score of "Alex Another" beating "Pat Fourth"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the first score listed is of "Alex Another" beating "Pat Fourth"
+
+    Scenario: Up comes after Archive
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then "Archive" on the score of "Alex Another" beating "Pat Fourth" comes before "Up"
+
+    Scenario Outline: An archived score is not offered Up or Down
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      And "Chris Third" has beaten "Alex Another" 26 to 20 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Alex Another" beating "Pat Fourth" in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the score of "Alex Another" beating "Pat Fourth" does not offer "<option>"
+
+      Examples:
+        | option |
+        | Up     |
+        | Down   |
+
+    Scenario: A scorer moves a score
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Tests"
+      And "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      And the page of the test "AUS v ENG" in "Spring Tests" is open
+      When "Up" is pressed on the score of "Alex Another" beating "Pat Fourth"
+      Then the first score listed is of "Alex Another" beating "Pat Fourth"
 
   Rule: Archive and Restore move a score between those in use and the archived
 
@@ -281,6 +414,7 @@ Feature: A test's page in the admin
 
     Scenario Outline: What a score offers can be pressed with a thumb
       Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Alex Another" has beaten "Pat Fourth" 26 to 3 in "AUS v ENG" of "Spring Tests"
       When the page of the test "AUS v ENG" in "Spring Tests" is opened
       Then "<option>" on the score of "Sam Someone" beating "Chris Third" is at least 44 pixels tall
 
@@ -288,3 +422,11 @@ Feature: A test's page in the admin
         | option  |
         | Edit    |
         | Archive |
+        | Down    |
+
+    Scenario: Long names do not widen the page
+      Given "organiser@example.com" has added the player "Maximilian Alexander Fitzwilliam-Worthington" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Bartholomew Montgomery Featherstonehaugh" to the team "England" of "Spring Tests"
+      And "Maximilian Alexander Fitzwilliam-Worthington" has beaten "Bartholomew Montgomery Featherstonehaugh" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the page is no wider than the window
