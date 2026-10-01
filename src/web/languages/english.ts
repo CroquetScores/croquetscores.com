@@ -455,6 +455,8 @@ export const english: Language = {
     "Competition.ByeOutsideKnockout": "Only a knockout can have a bye.",
     "Competition.NotDrawnToMeet":
       "These players are not currently drawn to play each other in the knockout.",
+    "Competition.WinnerHasPlayedOn":
+      "The winner of this match has already played their next game, so who won it cannot change.",
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
     "admin.players.none": "No players",

@@ -158,6 +158,24 @@ Then(
   },
 );
 
+// Asked once the players have arrived, since until then the drop-down has no
+// choice of nobody for want of having anything at all.
+Then(
+  "nobody is not offered as the {string}",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.ok(
+        (await offered(this, label)).length > 0,
+        "No player has arrived yet.",
+      );
+    });
+    assert.equal(
+      await fieldOf(this, label).locator('option[value=""]').count(),
+      0,
+    );
+  },
+);
+
 const boxOf = async (thing: Locator) => {
   const box = await thing.boundingBox();
   assert.ok(box !== null, "It is not laid out.");

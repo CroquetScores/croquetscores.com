@@ -123,7 +123,14 @@ export const ScoreDialog = ({
   }, [at, choosingPlayers]);
 
   // A withdrawn player plays no more of the competition, and a bye is nobody.
-  const playing = players.filter(({ withdrawn, bye }) => !withdrawn && !bye);
+  // A game corrected keeps its own players on offer even once they have
+  // withdrawn, since it is still theirs, and its drop-downs would otherwise
+  // begin on nobody while the correction kept them.
+  const playing = players.filter(
+    ({ id, withdrawn, bye }) =>
+      !bye &&
+      (!withdrawn || id === correcting?.winnerId || id === correcting?.loserId),
+  );
   const nameOf = (id: string): string =>
     players.find((player) => player.id === id)?.name ?? "";
 
@@ -267,8 +274,10 @@ export const ScoreDialog = ({
           }}
         >
           {/* Nobody to begin with, so that a game is never put down against a
-              player the reader did not choose. */}
-          <option value="" />
+              player the reader did not choose. Not when correcting: the game
+              already has its players, and the correction would keep its own
+              in place of nobody. */}
+          {correcting === undefined ? <option value="" /> : null}
           {playing.map((player) => (
             <option key={player.id} value={player.id}>
               {player.name}

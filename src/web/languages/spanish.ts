@@ -421,6 +421,8 @@ export const spanish: Language = {
       "No se pueden añadir resultados hasta que cada puesto del cuadro tenga un jugador o un bye.",
     "Competition.ByeOutsideKnockout": "Solo una eliminatoria puede tener byes.",
     "Competition.NotDrawnToMeet": "No les toca jugar entre sí.",
+    "Competition.WinnerHasPlayedOn":
+      "El ganador de este partido ya ha jugado su siguiente partida, así que no puede cambiar quién lo ganó.",
     "CompetitionPlayer.Withdrawn": "Un jugador retirado ya no juega.",
     "admin.players.add": "Añadir jugador",
     "admin.players.none": "No hay jugadores",
