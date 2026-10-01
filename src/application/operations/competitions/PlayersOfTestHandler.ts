@@ -38,6 +38,14 @@ export class PlayersOfTestHandler extends QueryHandler<
         "Only a manager or a scorer of the tournament can ask for this.",
       );
     }
+    // Listed to enter its scores, which an archived tournament and an
+    // archived test take none of.
+    if (tournament.archived) {
+      throw new TournamentRefused(
+        "Tournament.Archived",
+        "An archived tournament can only be restored.",
+      );
+    }
     const id = CompetitionId.from(query.test);
     const found = tournament.competitions.find(({ reference }) =>
       reference.id.equals(id),
@@ -46,6 +54,12 @@ export class PlayersOfTestHandler extends QueryHandler<
       throw new TournamentRefused(
         "Tournament.NoSuchCompetition",
         "The tournament has no such competition.",
+      );
+    }
+    if (found.reference.archived) {
+      throw new TournamentRefused(
+        "Tournament.CompetitionArchived",
+        "An archived competition can only be restored.",
       );
     }
     const { shape } = found;

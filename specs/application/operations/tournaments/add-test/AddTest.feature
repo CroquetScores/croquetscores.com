@@ -16,7 +16,9 @@ Feature: Adding a test to a tournament
   refused with `Request.Invalid` and the first rule it breaks. A team not said is refused with `Request.Invalid` and
   `AddTest.FirstTeamMissing` or `AddTest.SecondTeamMissing`, and a day that
   cannot be read as one with `ReadOnlyDate.Unreadable`, as a tournament's are
-  (`CreateTournament.feature`). What the tournament asks of a test — two
+  (`CreateTournament.feature`): a day the calendar has not got, as 30
+  February, among them, rather than being taken for the day it would run on
+  to. What the tournament asks of a test — two
   different teams, both its own and in use, days within its own, and that it
   is played by teams — is the tournament's to refuse (`addTest.feature`), and
   so is its name and its slug.
@@ -110,9 +112,11 @@ Feature: Adding a test to a tournament
       And the first rule broken is "ReadOnlyDate.Unreadable"
 
       Examples:
-        | when   | day   |
-        | start  | soon  |
-        | finish | later |
+        | when   | day        |
+        | start  | soon       |
+        | finish | later      |
+        | start  | 2026-02-30 |
+        | finish | 2026-09-31 |
 
     Scenario: Expected matches of none are refused
       Given the test is to be expected to have 0 matches

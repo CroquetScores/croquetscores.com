@@ -14,7 +14,11 @@ Feature: The players of a test, as its tournament's managers and scorers list th
   tournament does not have is refused with `Tournament.NoSuchCompetition`, and
   one that is not a test, which has no teams to answer, with
   `Tournament.NotATest`. A tournament there is not is refused as
-  `PlayersOfTest.NoSuchTournament`.
+  `PlayersOfTest.NoSuchTournament`. Its players are listed to enter its
+  scores, which an archived tournament and an archived test have none of, so
+  an archived tournament is refused with `Tournament.Archived` and an archived
+  test with `Tournament.CompetitionArchived`, as entering a score in either
+  is (`AddGame.feature`).
 
   It answers the account the reader is signed in to, and never one the reader
   chose. Only the tournament's managers and scorers can ask, since a scorer
@@ -111,6 +115,18 @@ Feature: The players of a test, as its tournament's managers and scorers list th
     Scenario: A tournament there is not is refused
       When the reader signed in to the account for "organiser@example.com" lists the players of "AUS v ENG" of a tournament there is not
       Then it is refused with "PlayersOfTest.NoSuchTournament"
+
+  Rule: Only a test in use, in a tournament in use, has its players listed
+
+    Scenario: An archived tournament is refused
+      Given "organiser@example.com" has archived the tournament "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "AUS v ENG" of "Spring Tests"
+      Then it is refused with "Tournament.Archived"
+
+    Scenario: An archived test is refused
+      Given "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "AUS v ENG" of "Spring Tests"
+      Then it is refused with "Tournament.CompetitionArchived"
 
   Rule: A forgotten account lists nothing
 

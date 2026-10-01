@@ -25,9 +25,15 @@ export interface TestRequest {
 }
 
 // The start of the day `written` in UTC, which is what a test's day is. A
-// writing that is no day is refused as a moment that cannot be read.
-const dayFrom = (written: string): ReadOnlyDate =>
-  ReadOnlyDate.from(new Date(`${written}T00:00:00Z`));
+// writing that is no day is refused as a moment that cannot be read, and so
+// is a day the calendar has not got, as 30 February, which a Date would
+// otherwise run on into the next month.
+const dayFrom = (written: string): ReadOnlyDate => {
+  const day = new Date(`${written}T00:00:00Z`);
+  const isThatDay =
+    !Number.isNaN(day.getTime()) && day.toISOString().slice(0, 10) === written;
+  return ReadOnlyDate.from(isThatDay ? day : new Date(Number.NaN));
+};
 
 const chosen = (team: string | undefined): team is string =>
   team !== undefined && team.trim() !== "";

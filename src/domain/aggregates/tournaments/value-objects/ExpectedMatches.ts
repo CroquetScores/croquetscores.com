@@ -22,9 +22,9 @@ const counts = new Validator<number, ExpectedMatchesErrorCode>({
 
 /**
  * How many matches a test is expected to have, so that whoever reads its
- * scores can see how far through it is. It is what is expected rather than a
- * limit: a test cut short or with a match replayed is not refused a game for
- * it.
+ * scores can see how far through it is. It is a limit on the matches the test
+ * starts: a game that would start another is refused (Competition.ts), while
+ * those started are played out to their best-of.
  */
 export class ExpectedMatches {
   readonly #count: number;

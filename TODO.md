@@ -32,7 +32,13 @@ Four kinds of thing, kept apart.
 
 ## Known problems
 
-None.
+### A test's games and its tournament are saved apart
+
+**What goes wrong.** A test's games are kept in the competition's own stream, and whether it has any decides what can be done to the tournament: a test with games in use is not archived, keeps its teams, and keeps its expected matches and best-of from going below what has been played; a team player who has played is not archived. Archiving a test (`ArchiveCompetitionHandler`), updating one (`UpdateTestHandler`) and archiving a team player (`ArchiveTeamPlayerHandler`) read the competition's games and then save the tournament. Adding a game (`AddGameHandler`) reads the tournament and then saves the competition. Neither waits for the other, so a manager archiving a test as a scorer adds its first game can leave an archived test with a game in use, and the same goes for changing its teams or archiving the player who has just played.
+
+**Why it has not happened.** It needs the two to land within the same moment, and a test is set up before its games are entered.
+
+**What to do when it does.** Restore the test, or put the player or the teams back, and archive the game first. To stop it, either take a lock on the tournament's stream in `AddGame` (and in correcting and restoring a game) so that it waits for any change to the tournament, or have those three handlers append to the competition's stream as well, so that its version check refuses one of the two.
 
 ---
 
