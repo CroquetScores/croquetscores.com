@@ -59,6 +59,7 @@ export class TournamentPageHandler extends QueryHandler<
       address: tournament.address.toString(),
       name: tournament.name.toString(),
       part,
+      playedByTeams: tournament.format.isTeamFormat,
     };
   }
 }

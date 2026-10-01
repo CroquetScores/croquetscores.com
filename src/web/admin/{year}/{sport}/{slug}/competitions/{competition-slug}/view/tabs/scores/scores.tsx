@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
-import { say } from "../../../../../../../../words.js";
+import { knows, say } from "../../../../../../../../words.js";
 import { noOption } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
 import "../../../../../view/tabs/listed.css";
@@ -20,8 +20,11 @@ interface Props {
   readonly tournament: string;
   /** The competition's id. */
   readonly competition: string;
-  /** A knockout's draw has to be filled before any game can be added. */
-  readonly kind: "block" | "knockout" | "swiss";
+  /**
+   * A knockout's draw has to be filled before any game can be added, and a
+   * test's players are its teams'.
+   */
+  readonly kind: "block" | "knockout" | "swiss" | "test";
 }
 
 /** A game as the API lists it. */
@@ -83,6 +86,9 @@ export const ScoresTab = ({
   const [adding, setAdding] = useState(false);
   // Why Add Score did not open the dialog, said until OK is pressed.
   const [unfilled, setUnfilled] = useState(false);
+  // What was refused of what was last pressed, by its code: a game whose
+  // player has been archived since is not restored until they are.
+  const [refused, setRefused] = useState<string | undefined>();
   // The game Edit was pressed on, which the dialog corrects.
   const [correcting, setCorrecting] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
@@ -116,12 +122,17 @@ export const ScoresTab = ({
     action: "archive" | "restore",
   ): Promise<void> => {
     setActing(true);
+    setRefused(undefined);
     try {
-      await fetch(`${at}/${idInAddress(game.id)}/${action}`, {
+      const response = await fetch(`${at}/${idInAddress(game.id)}/${action}`, {
         method: "POST",
       });
+      if (!response.ok) {
+        const answer = (await response.json()) as { error?: string };
+        setRefused(answer.error ?? "Unknown");
+      }
     } catch {
-      // A request that never arrived is said by the list asked for again.
+      setRefused("Unknown");
     } finally {
       askAgain();
       setActing(false);
@@ -217,6 +228,11 @@ export const ScoresTab = ({
           {say("admin.scores.add")}
         </button>
       </p>
+      {refused === undefined ? null : (
+        <p className="listed-refused" data-refused={refused}>
+          {say(knows(refused) ? refused : "admin.scores.otherwise")}
+        </p>
+      )}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.scores.none")}</p>
       ) : (
@@ -259,6 +275,7 @@ export const ScoresTab = ({
         <ScoreDialog
           tournament={tournament}
           competition={competition}
+          inATest={kind === "test"}
           correcting={correcting}
           kept={askAgain}
           close={() => {

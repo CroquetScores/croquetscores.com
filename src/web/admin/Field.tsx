@@ -14,6 +14,9 @@ interface FieldProps {
   readonly refused: readonly Refusal[] | undefined;
   /** A field whose label is always lifted: one that is never empty to look at. */
   readonly lifted?: boolean;
+  /** What the field is for, said beneath it where its label alone would leave
+      a reader wondering, and read out with it. */
+  readonly explanation?: string | undefined;
   readonly children: (said: {
     id: string;
     "aria-labelledby": string;
@@ -30,12 +33,19 @@ export const Field = ({
   label,
   refused,
   lifted,
+  explanation,
   children,
 }: FieldProps): React.JSX.Element => {
   const id = `field-${name}`;
   const labelId = `${id}-label`;
   const messageId = `${id}-message`;
+  const explanationId = `${id}-explanation`;
   const wrong = refused !== undefined && refused.length > 0;
+  // What is wrong first, since it is what the reader most needs to hear.
+  const describedBy = [
+    ...(wrong ? [messageId] : []),
+    ...(explanation === undefined ? [] : [explanationId]),
+  ].join(" ");
   return (
     <div className="field">
       <label
@@ -47,9 +57,8 @@ export const Field = ({
         {children({
           id,
           "aria-labelledby": labelId,
-          ...(wrong
-            ? { "aria-describedby": messageId, "aria-invalid": true }
-            : {}),
+          ...(describedBy === "" ? {} : { "aria-describedby": describedBy }),
+          ...(wrong ? { "aria-invalid": true as const } : {}),
         })}
         <span className="field-label" id={labelId}>
           {label}
@@ -66,6 +75,11 @@ export const Field = ({
           ))}
         </p>
       ) : null}
+      {explanation === undefined ? null : (
+        <p className="field-explanation" id={explanationId}>
+          {explanation}
+        </p>
+      )}
     </div>
   );
 };

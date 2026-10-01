@@ -9,6 +9,8 @@ import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
 import { PlayersTab } from "./tabs/players/players.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
+import { TeamsTab } from "./tabs/teams/teams.js";
+import { TestsTab } from "./tabs/tests/tests.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
 // to run in four tabs beneath it, and the section bar leading to its
@@ -17,7 +19,10 @@ import { ScorersTab } from "./tabs/scorers/scorers.js";
 // rather than pages of their own, so they have no addresses: the page opens on
 // the first the reader is offered, and choosing another leaves the address as
 // it was. A manager is offered all four, and a scorer the Competitions tab
-// alone. Each tab says what it holds in a feature of its own.
+// alone. A tournament played by teams has teams and tests where a Standard
+// one has players and competitions, so its tabs are Teams, Tests, Managers and
+// Scorers, and a scorer is offered Tests alone. Each tab says what it holds in
+// a feature of its own.
 
 interface Props {
   /** Where the tournament was asked for, as "2026/ac/spring-open". */
@@ -31,6 +36,8 @@ interface Found {
   readonly address: string;
   /** The reader's part in it, which is what the page offers them. */
   readonly part: "manager" | "scorer";
+  /** Whether it is played by teams, which gives it other tabs. */
+  readonly playedByTeams: boolean;
 }
 
 type Asked =
@@ -38,14 +45,29 @@ type Asked =
   | { readonly is: "refused"; readonly code: string }
   | { readonly is: "found"; readonly tournament: Found };
 
-const tabs = ["players", "competitions", "managers", "scorers"] as const;
-type Tab = (typeof tabs)[number];
+const standardTabs = [
+  "players",
+  "competitions",
+  "managers",
+  "scorers",
+] as const;
+const teamTabs = ["teams", "tests", "managers", "scorers"] as const;
+type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
 
 // What a reader is offered: every tab to a manager, and the competitions
 // alone to a scorer, since scores are entered in a tournament's competitions
 // and the rest is the managers' to change. The page opens on the first.
-const offeredTo = (part: Found["part"]): readonly Tab[] =>
-  part === "manager" ? tabs : ["competitions"];
+const offeredTo = ({
+  part,
+  playedByTeams,
+}: Pick<Found, "part" | "playedByTeams">): readonly Tab[] =>
+  playedByTeams
+    ? part === "manager"
+      ? teamTabs
+      : ["tests"]
+    : part === "manager"
+      ? standardTabs
+      : ["competitions"];
 
 // What a refusal says in place of the tabs: its words, by its code, or the
 // words for any where it has none.
@@ -75,7 +97,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
           return;
         }
         setAsked({ is: "found", tournament: answer });
-        setChosen(offeredTo(answer.part)[0] ?? "competitions");
+        setChosen(offeredTo(answer)[0] ?? "competitions");
       })
       .catch(() => {
         setAsked({ is: "refused", code: "Unknown" });
@@ -111,7 +133,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
           <div className="panel stack">
             <h1>{asked.tournament.name}</h1>
             <TabControl
-              tabs={offeredTo(asked.tournament.part)}
+              tabs={offeredTo(asked.tournament)}
               chosen={chosen}
               choose={setChosen}
               wordsFor={(tab) => say(`admin.view.${tab}`)}
@@ -125,6 +147,22 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                   tournament={asked.tournament.id}
                   address={asked.tournament.address}
                   part={asked.tournament.part}
+                />
+              ) : null}
+              {chosen === "teams" ? (
+                <TeamsTab
+                  tournament={asked.tournament.id}
+                  address={asked.tournament.address}
+                />
+              ) : null}
+              {chosen === "tests" ? (
+                <TestsTab
+                  tournament={asked.tournament.id}
+                  address={asked.tournament.address}
+                  part={asked.tournament.part}
+                  toTeams={() => {
+                    setChosen("teams");
+                  }}
                 />
               ) : null}
               {chosen === "managers" ? (

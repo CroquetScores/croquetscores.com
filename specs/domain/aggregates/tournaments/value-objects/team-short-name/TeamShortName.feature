@@ -22,6 +22,10 @@ Feature: The short name a team is known by
   two typed the wrong way round. The short name does not know its team's
   name, so that is the team's to refuse (`Team.feature`).
 
+  A team is found at an address made from its short name (`addTeam.feature`),
+  and an address is made of letters and digits, so a short name with neither,
+  as "***", is refused rather than leaving the team nowhere to be found.
+
   Whitespace at either end is taken off before anything is asked of it, and
   the short name is kept without it. A short name that is nothing but
   whitespace is missing.
@@ -49,6 +53,27 @@ Feature: The short name a team is known by
     Scenario: No short name at all is refused
       When the team short name "" is made
       Then it is refused for breaking "TeamShortName.Missing"
+
+  Rule: A short name has a letter or a digit in it
+
+    Scenario Outline: A short name with neither a letter nor a digit is refused
+      When the team short name "<short name>" is made
+      Then it is refused for breaking "TeamShortName.NoLetterOrDigit"
+
+      Examples:
+        | short name |
+        | ***        |
+        | —          |
+
+    Scenario Outline: A short name with a letter or a digit is accepted
+      When the team short name "<short name>" is made
+      Then it is not refused
+
+      Examples:
+        | short name |
+        | A-1        |
+        | 2          |
+        | É          |
 
   Rule: Characters are counted as a reader counts them
 

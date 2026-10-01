@@ -319,12 +319,16 @@ Then(
   },
 );
 
-Then("the tab says there are no scores", async function (this: SpecWorld) {
-  await eventually(this, async () => {
-    assert.equal(await rows(this).count(), 0);
-    assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
-  });
-});
+// The tab's own list, or a test's page's, which is its scores.
+Then(
+  /^the (?:tab|page) says there are no scores$/,
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.equal(await rows(this).count(), 0);
+      assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
+    });
+  },
+);
 
 Then(
   "{string} is above the scores",

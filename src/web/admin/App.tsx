@@ -4,6 +4,8 @@ import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competition-slug}/view/view.js";
 import { ViewTournament } from "./{year}/{sport}/{slug}/view/view.js";
+import { ViewTeam } from "./{year}/{sport}/{slug}/teams/{team-slug}/view/view.js";
+import { ViewTest } from "./{year}/{sport}/{slug}/tests/{test-slug}/view/view.js";
 import { go, here, inPlace } from "./navigation.js";
 import { Tournaments } from "./Tournaments.js";
 import { say } from "./words.js";
@@ -86,6 +88,20 @@ export const App = (): React.JSX.Element => {
         address={competition[1]}
         slug={competition[2]}
       />
+    );
+  }
+
+  // A team's or a test's address beneath its tournament's, as
+  // /admin/2026/ac/spring-tests/teams/aus or .../tests/aus-v-eng, is its page.
+  const beneath =
+    /^\/admin\/([1-9]\d{3}\/[^/]+\/[^/]+)\/(teams|tests)\/([^/]+)\/?$/.exec(
+      path,
+    );
+  if (beneath?.[1] !== undefined && beneath[3] !== undefined) {
+    return beneath[2] === "teams" ? (
+      <ViewTeam key={path} address={beneath[1]} slug={beneath[3]} />
+    ) : (
+      <ViewTest key={path} address={beneath[1]} slug={beneath[3]} />
     );
   }
 

@@ -43,20 +43,15 @@ export class PlayersOfTeamHandler extends QueryHandler<
         "The tournament has no such team.",
       );
     }
-    const listed: ListedTeamPlayer[] = [];
-    for (const player of team.players) {
-      listed.push({
-        id: player.id.value,
-        name: player.name.toString(),
-        archived: player.archived,
-        // Asked of the games, as archiving a player asks, so that a list
-        // offering to archive a player offers it only where it would be done.
-        hasPlayed: await this.games.teamPlayerHasPlayed(
-          tournament.id,
-          player.id,
-        ),
-      });
-    }
-    return listed;
+    // Asked of the games, as archiving a player asks, so that a list offering
+    // to archive a player offers it only where it would be done. Asked once
+    // for the whole team, since each asking reads every test.
+    const played = await this.games.teamPlayersWhoHavePlayed(tournament.id);
+    return team.players.map((player) => ({
+      id: player.id.value,
+      name: player.name.toString(),
+      archived: player.archived,
+      hasPlayed: played.has(player.id.value),
+    }));
   }
 }

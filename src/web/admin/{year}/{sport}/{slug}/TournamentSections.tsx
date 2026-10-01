@@ -6,7 +6,9 @@ import "./tournamentSections.css";
 // The section bar of a tournament's page and its competitions' pages
 // (TournamentSections.feature): Tournament first, then each competition in
 // use, in the tournament's order, the page being read marked. An archived
-// competition is left out, since its page refuses to open.
+// competition is left out, since its page refuses to open. A tournament played
+// by teams has tests where a Standard one has competitions, and a test is one
+// of its competitions, found under "tests" rather than "competitions".
 //
 // Its links are plain links, which the admin follows in place as it does
 // every link to one of its pages (App.tsx).
@@ -24,6 +26,7 @@ interface Props {
 interface Listed {
   readonly name: string;
   readonly slug: string;
+  readonly kind: string;
   readonly archived: boolean;
 }
 
@@ -102,7 +105,7 @@ export const TournamentSections = ({
             .map((competition) => (
               <li key={competition.slug}>
                 <a
-                  href={`${tournamentPage}/competitions/${competition.slug}`}
+                  href={`${tournamentPage}/${competition.kind === "test" ? "tests" : "competitions"}/${competition.slug}`}
                   aria-current={current(
                     reading !== "tournament" &&
                       reading.competition === competition.slug,

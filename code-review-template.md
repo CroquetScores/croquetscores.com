@@ -1,4 +1,4 @@
-# Code Review - {timestamp}
+# Code Review - {dd MMM yyyy hh:mm:ss}
 
 ## {relative path}
 

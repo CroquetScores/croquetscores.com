@@ -90,16 +90,18 @@ for (const [said, list] of [
   );
 }
 
+// In none of the lists, whatever they are: those playing and the withdrawn
+// here, and those in use and the archived on a team's page.
 Then(
   "the player {string} is not listed",
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
-      assert.ok(
-        ![
-          ...(await namesIn(this, "playing")),
-          ...(await namesIn(this, "withdrawn")),
-        ].includes(name),
-      );
+      const listed = (
+        await tabPanel(this)
+          .locator("ul[data-listed] > .listed-item .listed-name")
+          .allInnerTexts()
+      ).map((each) => each.trim());
+      assert.ok(!listed.includes(name), `${name} is listed.`);
     });
   },
 );

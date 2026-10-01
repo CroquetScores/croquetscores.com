@@ -123,6 +123,13 @@ Given(
   },
 );
 
+Given(
+  "it was updated with the days {string} to {string}",
+  function (this: SpecWorld, starts: string, finishes: string) {
+    updatedWith(this, { starts, finishes });
+  },
+);
+
 // What the update says -------------------------------------------------------
 
 Given(

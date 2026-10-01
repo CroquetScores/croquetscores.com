@@ -38,6 +38,15 @@ export interface Games {
   ): Promise<boolean>;
 
   /**
+   * The ids of every player of a team who has played any games in any of the
+   * tests of `tournament`, asked at once, so that a list of a team's players
+   * reads the tests once rather than once for each player.
+   */
+  teamPlayersWhoHavePlayed(
+    tournament: TournamentId,
+  ): Promise<ReadonlySet<string>>;
+
+  /**
    * What has been played in the test `test`: how many of its matches have
    * started, and the most games any two of its players have played.
    */

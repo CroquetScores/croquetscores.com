@@ -26,7 +26,7 @@ const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
 // Opened ------------------------------------------------------------------------
 
 Then(
-  /^the (?:player|score|competition) dialog is open$/,
+  /^the (?:player|score|competition|team player|team|test) dialog is open$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
   },
@@ -35,7 +35,7 @@ Then(
 // A <dialog> shown by showModal() is modal: the browser says so to a screen
 // reader, and makes everything outside it unreachable.
 Then(
-  /^the (?:player|score|competition) dialog is announced as a modal dialog$/,
+  /^the (?:player|score|competition|team player|team|test) dialog is announced as a modal dialog$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     assert.equal(
@@ -49,7 +49,7 @@ Then(
 );
 
 Then(
-  /^the (?:player|score|competition) dialog is named "([^"]*)"$/,
+  /^the (?:player|score|competition|team player|team|test) dialog is named "([^"]*)"$/,
   async function (this: SpecWorld, name: string) {
     await dialogOf(this).waitFor();
     const labelledBy = await dialogOf(this).getAttribute("aria-labelledby");
@@ -62,7 +62,7 @@ Then(
 );
 
 Then(
-  /^the (?:player|score|competition) dialog asks for "([^"]*)"$/,
+  /^the (?:player|score|competition|team player|team|test) dialog asks for "([^"]*)"$/,
   async function (this: SpecWorld, label: string) {
     await dialogOf(this).waitFor();
     assert.equal(
@@ -127,7 +127,7 @@ When(
 );
 
 Then(
-  /^the focus never left the (?:player|score|competition) dialog$/,
+  /^the focus never left the (?:player|score|competition|team player|team|test) dialog$/,
   function (this: SpecWorld) {
     assert.equal(this.focusNeverLeft, true, "The focus left the dialog.");
   },
@@ -216,7 +216,7 @@ const status = (world: SpecWorld): Locator =>
   dialogOf(world).locator('[role="status"]');
 
 Then(
-  "the player dialog says {string} was added",
+  /^the (?:player|team player|team|test) dialog says "([^"]*)" was added$/,
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
@@ -228,7 +228,7 @@ Then(
 );
 
 Then(
-  "the player dialog says nobody was added",
+  /^the (?:player dialog says nobody|team dialog says no team|test dialog says no test) was added$/,
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       assert.equal((await status(this).innerText()).trim(), "");
@@ -239,7 +239,7 @@ Then(
 // A status is read out when what it says changes, without the reader being
 // taken to it.
 Then(
-  "what the player dialog says about who was added is announced",
+  /^what the (?:player dialog says about who|team dialog says about which team|test dialog says about which test) was added is announced$/,
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       assert.ok((await status(this).innerText()).trim() !== "");
@@ -248,7 +248,7 @@ Then(
 );
 
 Then(
-  /^the (?:player|score|competition) dialog says what it refused$/,
+  /^the (?:player|score|competition|team player|team|test) dialog says what it refused$/,
   async function (this: SpecWorld) {
     await dialogOf(this)
       .locator(".field-message, .dialog-problems")
@@ -262,7 +262,7 @@ Then(
 // answered, so that the next step reads what the dialog made of the answer
 // rather than racing a server slowed by every other scenario running.
 When(
-  /^the (?:player|score|competition) dialog is sent as it is$/,
+  /^the (?:player|score|competition|team player|team|test) dialog is sent as it is$/,
   async function (this: SpecWorld) {
     const answered = this.browserPage.waitForResponse(
       (response) =>
@@ -274,9 +274,12 @@ When(
   },
 );
 
-When("the way to add a player is pressed", async function (this: SpecWorld) {
-  await tabPanel(this).locator("section > p button").first().click();
-});
+When(
+  /^the way to add a (?:player|team|test) is pressed$/,
+  async function (this: SpecWorld) {
+    await tabPanel(this).locator("section > p button").first().click();
+  },
+);
 
 When(
   "{string} is typed into the player's name",
@@ -286,10 +289,21 @@ When(
 );
 
 Then(
-  "every word in the player dialog is in the test locale",
+  /^every word in the (?:player|team player|team) dialog is in the test locale$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open);
+    assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+  },
+);
+
+// The teams are offered by their names, which are what the manager typed,
+// and nobody's language.
+Then(
+  "every word in the test dialog but the teams' names is in the test locale",
+  async function (this: SpecWorld) {
+    await dialogOf(this).waitFor();
+    const stray = await unmarkedWithin(this, open, ["select option"]);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
   },
 );
@@ -310,7 +324,7 @@ Then(
 // Laid out ----------------------------------------------------------------------
 
 Then(
-  /^the (?:player|score|competition) dialog is no wider than the window$/,
+  /^the (?:player|score|competition|team player|team|test) dialog is no wider than the window$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     const box = await dialogOf(this).boundingBox();
@@ -344,7 +358,7 @@ Then(
 );
 
 Then(
-  "the name of the player {string} has the focus",
+  /^the name of the (?:player|team) "([^"]*)" has the focus$/,
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       const focused = await this.browserPage.evaluate<string>(

@@ -5,7 +5,11 @@ Feature: Changing a test
   what it is asked when a test is added (`addTest.feature`): two different
   teams, both the tournament's and in use, days within the tournament's with
   the start no later than the finish, expected matches and a best-of that
-  are whole numbers from 1 up, and a group no longer than a group may be. The
+  are whole numbers from 1 up, and a group no longer than a group may be. A
+  tournament whose days are changed leaves its tests as they were
+  (`update.feature`), so a test is not refused for what the tournament became
+  after it was added: a day it starts or finishes on that the update leaves
+  as it was is not asked again whether it is within the tournament's. The
   test keeps its id, its order and its slug, so that its address still finds
   it, as a competition renamed keeps its own. Its name is its teams' short
   names, so a test given other teams is called by theirs.
@@ -311,6 +315,33 @@ Feature: Changing a test
       And the update has the test expected to have 0 matches
       When the test "AUS v ENG" is updated
       Then it is refused for breaking "ExpectedMatches.TooSmall"
+
+  Rule: A day left as it was is not refused for what the tournament became
+
+    Scenario: A test on a day the tournament no longer has can be given a group
+      Given it was updated with the days "2026-10-04T00:00:00Z" to "2026-10-05T00:00:00Z"
+      And the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has no games
+      And the update has the test in the group "Group A"
+      When the test "AUS v ENG" is updated
+      Then the test "AUS v ENG" is in the group "Group A"
+
+    Scenario: A test on a day the tournament no longer has can be moved within it
+      Given it was updated with the days "2026-10-04T00:00:00Z" to "2026-10-05T00:00:00Z"
+      And the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has no games
+      And the update has the test start on "2026-10-04"
+      And the update has the test finish on "2026-10-04"
+      When the test "AUS v ENG" is updated
+      Then the test "AUS v ENG" starts on "2026-10-04"
+
+    Scenario: A test on a day the tournament no longer has cannot be moved to another day outside it
+      Given it was updated with the days "2026-10-04T00:00:00Z" to "2026-10-04T00:00:00Z"
+      And the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has no games
+      And the update has the test finish on "2026-10-05"
+      When the test "AUS v ENG" is updated
+      Then it is refused with "Tournament.TestFinishesAfterTournament"
 
   Rule: Only a test there is, and one in use, can be updated
 

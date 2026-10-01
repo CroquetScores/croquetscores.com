@@ -3,7 +3,9 @@ import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a team's short name can break. */
 export type TeamShortNameErrorCode =
-  "TeamShortName.Missing" | "TeamShortName.TooLong";
+  | "TeamShortName.Missing"
+  | "TeamShortName.TooLong"
+  | "TeamShortName.NoLetterOrDigit";
 
 // Enough for a country's code or a short word, and two of them either side of
 // " v " still fit the section bar on a phone.
@@ -22,6 +24,14 @@ const shortNames = new Validator<string, TeamShortNameErrorCode>({
       field: "shortName",
       code: "TeamShortName.TooLong",
       isBrokenBy: (given) => charactersIn(given) > MOST_CHARACTERS,
+    },
+    // The team is found at an address made from its short name, and an
+    // address is made of letters and digits (Slug.ts): one with neither
+    // would leave the team nowhere to be found.
+    {
+      field: "shortName",
+      code: "TeamShortName.NoLetterOrDigit",
+      isBrokenBy: (given) => given !== "" && !/[\p{L}\p{N}]/u.test(given),
     },
   ],
 });

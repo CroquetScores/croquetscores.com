@@ -424,6 +424,8 @@ export const english: Language = {
     "admin.scores.restore": "Restore",
     "admin.scores.archived": "Archived scores",
     "admin.scores.archivedSaid": "Archived",
+    // Above the list, for a refusal with no words of its own.
+    "admin.scores.otherwise": "That could not be done.",
     "admin.score.title": "Add Score",
     "admin.score.add": "Add Game",
     "admin.score.winner": "Winner",
@@ -494,6 +496,113 @@ export const english: Language = {
     "admin.player.byesTitle": "Byes need no adding",
     "admin.player.byes":
       "A bye is not one of the tournament's players. A knockout offers Bye whenever its players are added, as many times as its draw needs.",
+    // A tournament played by teams (view.feature): its Teams and Tests tabs,
+    // a team's page, and their dialogs.
+    "admin.view.teams": "Teams",
+    "admin.view.tests": "Tests",
+    "admin.teams.add": "Add Team",
+    "admin.teams.none": "No teams",
+    "admin.teams.edit": "Edit",
+    "admin.teams.view": "View",
+    "admin.teams.archive": "Archive",
+    "admin.teams.restore": "Restore",
+    "admin.teams.up": "Up",
+    "admin.teams.down": "Down",
+    "admin.teams.archived": "Archived teams",
+    "admin.teams.archivedSaid": "Archived",
+    "admin.team.addTitle": "Add Team",
+    "admin.team.editTitle": "Edit Team",
+    "admin.team.name": "Name",
+    "admin.team.shortName": "Short Name",
+    "admin.team.shortName.explanation":
+      "What the team's tests are called by, as AUS v ENG.",
+    "admin.team.flag": "Flag",
+    "admin.team.add": "Add",
+    "admin.team.save": "Save",
+    "admin.team.added": "{name} was added.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.team.otherwise": "This team cannot be kept as it is.",
+    "admin.teamView.otherwise": "This team cannot be seen from here.",
+    "admin.teamView.players": "Players",
+    "TeamName.Missing": "Say what the team is called.",
+    "TeamName.TooLong": "That name is too long.",
+    "TeamShortName.Missing": "Give the team a short name.",
+    "TeamShortName.TooLong": "A short name can be at most 10 characters.",
+    "TeamShortName.NoLetterOrDigit":
+      "A short name needs a letter or a digit in it.",
+    "Team.ShortNameLongerThanName":
+      "A short name cannot be longer than the team's name.",
+    "Team.NoSuchFlag": "Choose one of the flags there are.",
+    "Team.Archived": "That team is archived, and is restored first.",
+    "Team.InATest": "That team plays in a test, and cannot be archived.",
+    "Team.PlayerNameTaken":
+      "Another player in this team already has that name.",
+    "TeamPlayer.NamedBye": "A player cannot be called Bye.",
+    "TeamPlayer.Archived": "That player is archived, and is restored first.",
+    "TeamPlayer.HasGames": "That player has played, and cannot be archived.",
+    "Tournament.TeamNameTaken":
+      "Another team in this tournament already has that name.",
+    "Tournament.TeamShortNameTaken":
+      "Another team in this tournament already has that short name.",
+    "Tournament.NoSuchTeam": "This tournament has no team at this address.",
+    "Tournament.TeamArchived":
+      "This team is archived, and can only be restored from the Teams tab.",
+    "admin.tests.add": "Add Test",
+    "admin.tests.none": "No tests",
+    "admin.tests.edit": "Edit",
+    "admin.tests.view": "View",
+    "admin.tests.archive": "Archive",
+    "admin.tests.restore": "Restore",
+    "admin.tests.up": "Up",
+    "admin.tests.down": "Down",
+    "admin.tests.archived": "Archived tests",
+    "admin.tests.twoTeamsNeeded":
+      "A test is between two teams, so two teams are needed first.",
+    "admin.tests.toTeams": "Go to Teams",
+    "admin.tests.matches.one": "{count} match",
+    "admin.tests.matches.other": "{count} matches",
+    "admin.tests.bestOf": "best of {games}",
+    // Beside the list, for a refusal with no words of its own.
+    "admin.tests.otherwise": "That could not be done.",
+    "admin.test.addTitle": "Add Test",
+    "admin.test.editTitle": "Edit Test",
+    "admin.test.firstTeam": "Team A",
+    "admin.test.secondTeam": "Team B",
+    "admin.test.versus": "v",
+    "admin.test.starts": "Starts",
+    "admin.test.finishes": "Finishes",
+    "admin.test.expectedMatches": "Expected Matches",
+    "admin.test.bestOf": "Best Of",
+    "admin.test.group": "Group",
+    "admin.test.add": "Add",
+    "admin.test.save": "Save",
+    "admin.test.added": "{name} was added.",
+    "admin.test.otherwise": "This test cannot be kept as it is.",
+    "admin.testView.otherwise": "This test cannot be seen from here.",
+    "AddTest.FirstTeamMissing": "Choose the first team.",
+    "AddTest.SecondTeamMissing": "Choose the second team.",
+    "UpdateTest.FirstTeamMissing": "Choose the first team.",
+    "UpdateTest.SecondTeamMissing": "Choose the second team.",
+    "ExpectedMatches.NotWhole": "Enter a whole number of matches.",
+    "ExpectedMatches.TooSmall":
+      "A test has to be expected to have at least 1 match.",
+    "TestGroup.TooLong": "That group is too long.",
+    "Tournament.TestAgainstItself":
+      "A team does not play a test against itself.",
+    "Tournament.TestFinishesBeforeStarts":
+      "A test cannot finish before it starts.",
+    "Tournament.TestStartsBeforeTournament":
+      "A test cannot start before its tournament does.",
+    "Tournament.TestFinishesAfterTournament":
+      "A test cannot finish after its tournament does.",
+    "Tournament.TestHasGames":
+      "This test has games now, so its teams can no longer be changed.",
+    "Tournament.ExpectedMatchesBelowStarted":
+      "More matches than that have started already.",
+    "Tournament.BestOfBelowGamesPlayed":
+      "Two players have already played more games than that.",
+    "Competition.SameTeam":
+      "Two players of the same team do not play each other.",
     "AddManager.NoSuchAccount":
       "That address has no account that can be made a manager.",
     "admin.scorers.add": "Add Scorer",

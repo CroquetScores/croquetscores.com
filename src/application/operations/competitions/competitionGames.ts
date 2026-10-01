@@ -52,6 +52,21 @@ export const gamesKeptByCompetitions = (
     }
     return kept;
   };
+  // A test names its players by their ids in their teams, so a game of
+  // theirs is found by that id alone.
+  const teamPlayersWhoHavePlayed = async (
+    tournament: TournamentId,
+  ): Promise<ReadonlySet<string>> => {
+    const played = new Set<string>();
+    for (const competition of await competitionsOf(tournament)) {
+      for (const game of competition.games) {
+        if (game.archived) continue;
+        played.add(game.winner.value);
+        played.add(game.loser.value);
+      }
+    }
+    return played;
+  };
   return {
     hasPlayed: async (tournament: TournamentId, player: TournamentPlayerId) =>
       (await competitionsOf(tournament)).some((competition) =>
@@ -68,19 +83,11 @@ export const gamesKeptByCompetitions = (
       (await competitions.load(competition))?.games.some(
         (game) => !game.archived,
       ) ?? false,
-    // A test names its players by their ids in their teams, so a game of
-    // theirs is found by that id alone.
     teamPlayerHasPlayed: async (
       tournament: TournamentId,
       player: TeamPlayerId,
-    ) =>
-      (await competitionsOf(tournament)).some((competition) =>
-        competition.games.some(
-          (game) =>
-            !game.archived &&
-            (game.winner.equals(player) || game.loser.equals(player)),
-        ),
-      ),
+    ) => (await teamPlayersWhoHavePlayed(tournament)).has(player.value),
+    teamPlayersWhoHavePlayed,
     playedIn: async (_tournament: TournamentId, test: CompetitionId) =>
       playedInTest(await competitions.load(test)),
   };

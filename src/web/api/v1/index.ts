@@ -34,6 +34,23 @@ import { ArchivePlayer } from "../../../application/operations/tournaments/Archi
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
 import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
 import { UpdatePlayer } from "../../../application/operations/tournaments/UpdatePlayer.js";
+import { AddTeam } from "../../../application/operations/tournaments/AddTeam.js";
+import { AddTeamPlayer } from "../../../application/operations/tournaments/AddTeamPlayer.js";
+import { AddTest } from "../../../application/operations/tournaments/AddTest.js";
+import { ArchiveTeam } from "../../../application/operations/tournaments/ArchiveTeam.js";
+import { ArchiveTeamPlayer } from "../../../application/operations/tournaments/ArchiveTeamPlayer.js";
+import { MoveTeam } from "../../../application/operations/tournaments/MoveTeam.js";
+import { MoveTeamPlayer } from "../../../application/operations/tournaments/MoveTeamPlayer.js";
+import { PlayersOfTeam } from "../../../application/operations/tournaments/PlayersOfTeam.js";
+import { PlayersOfTest } from "../../../application/operations/competitions/PlayersOfTest.js";
+import { RestoreTeam } from "../../../application/operations/tournaments/RestoreTeam.js";
+import { RestoreTeamPlayer } from "../../../application/operations/tournaments/RestoreTeamPlayer.js";
+import { TeamPage } from "../../../application/operations/tournaments/TeamPage.js";
+import { TeamsOfTournament } from "../../../application/operations/tournaments/TeamsOfTournament.js";
+import type { TestRequest } from "../../../application/operations/tournaments/testOperations.js";
+import { UpdateTeam } from "../../../application/operations/tournaments/UpdateTeam.js";
+import { UpdateTeamPlayer } from "../../../application/operations/tournaments/UpdateTeamPlayer.js";
+import { UpdateTest } from "../../../application/operations/tournaments/UpdateTest.js";
 import { Flags } from "../../../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Assets } from "../../common/assets.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
@@ -115,6 +132,18 @@ const yesOrNoOf = (body: unknown, field: string): boolean | undefined => {
   const value = (body as Record<string, unknown> | null)?.[field];
   return typeof value === "boolean" ? value : undefined;
 };
+
+// A game's player as the score dialog sends them: a competition's player by
+// the part of their id after "competition-player/", and a test's, who is a
+// player in one of its teams, by their whole id, since a test's players are
+// not its own (gamesInATest.feature). Nothing where nobody was chosen, for
+// the game to refuse.
+const gamePlayerOf = (said: string): string | undefined =>
+  said === ""
+    ? undefined
+    : said.startsWith("team-player/")
+      ? said
+      : `competition-player/${said}`;
 
 // What a tournament is to be, as a form sends it to create one or to change
 // one. Notes left empty are no notes.
@@ -607,17 +636,15 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   );
 
   // A game's score added, as the score dialog sends it, its players by the
-  // part of their ids after "competition-player/", and answered with the
-  // game's id. What was left empty is left out, for the game to refuse.
+  // part of their ids after "competition-player/", or a test's by their whole
+  // ids (gamePlayerOf), and answered with the game's id. What was left empty is left out, for the game to refuse.
   server.post<{ Params: { id: string; competition: string } }>(
     "/tournaments/:id/competitions/:competition/games",
     async (request, reply) => {
       const reader = signedInOrRefused(request, reply);
       if (reader === undefined) return reply;
-      const player = (field: string): string | undefined => {
-        const said = textOf(request.body, field);
-        return said === "" ? undefined : `competition-player/${said}`;
-      };
+      const player = (field: string): string | undefined =>
+        gamePlayerOf(textOf(request.body, field));
       const score = (field: string): string | undefined => {
         const said = textOf(request.body, field);
         return said === "" ? undefined : said;
@@ -644,8 +671,8 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   );
 
   // A game's scores corrected, as the score dialog sends them, by the part of
-  // its id after "game/", and its players where they are sent, by the part of
-  // their ids after "competition-player/". A player not sent is the game's
+  // its id after "game/", and its players where they are sent, as adding a
+  // game sends them. A player not sent is the game's
   // own. A score left empty is left out, for the command to refuse.
   server.post<{ Params: { id: string; competition: string; game: string } }>(
     "/tournaments/:id/competitions/:competition/games/:game/correct",
@@ -656,10 +683,8 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         const said = textOf(request.body, field);
         return said === "" ? undefined : said;
       };
-      const player = (field: string): string | undefined => {
-        const said = textOf(request.body, field);
-        return said === "" ? undefined : `competition-player/${said}`;
-      };
+      const player = (field: string): string | undefined =>
+        gamePlayerOf(textOf(request.body, field));
       await request.server.mediator.send(
         new CorrectGame(
           reader.value,
@@ -928,6 +953,281 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       },
     );
   }
+
+  // A team's page, found beneath the tournament at an address, as its manager
+  // sees it, its flag as it is seen.
+  server.get<{ Params: AtAddress & { team: string } }>(
+    "/tournaments/at/:year/:sport/:slug/teams/:team/page",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const { flag, ...team } = await request.server.mediator.query(
+        new TeamPage(
+          reader.value,
+          addressOf(request.params),
+          request.params.team,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({
+        ...team,
+        flag: flag === undefined ? undefined : flagAsSeen(request, flag),
+      });
+    },
+  );
+
+  // A tournament's teams, as its manager lists them, each flag as it is seen.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/teams",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const listed = await request.server.mediator.query(
+        new TeamsOfTournament(reader.value, `tournament/${request.params.id}`),
+      );
+      const teams = listed.map(({ flag, ...team }) => ({
+        ...team,
+        flag: flag === undefined ? undefined : flagAsSeen(request, flag),
+      }));
+      return reply.header("cache-control", "no-store").send({ teams });
+    },
+  );
+
+  // What a team is, as the team dialog sends it. Its flag is left out where
+  // none was chosen.
+  const teamFrom = (body: unknown) => {
+    const flag = textOf(body, "flag");
+    return {
+      name: textOf(body, "name"),
+      shortName: textOf(body, "shortName"),
+      ...(flag === "" ? {} : { flag }),
+    };
+  };
+
+  // A team added, and answered with its id.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/teams",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const added = await request.server.mediator.send(
+        new AddTeam(
+          reader.value,
+          `tournament/${request.params.id}`,
+          teamFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
+  // A team changed, by the part of its id after "team/".
+  server.put<{ Params: { id: string; team: string } }>(
+    "/tournaments/:id/teams/:team",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new UpdateTeam(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `team/${request.params.team}`,
+          teamFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A team moved a place, archived or restored.
+  for (const action of ["up", "down", "archive", "restore"] as const) {
+    server.post<{ Params: { id: string; team: string } }>(
+      `/tournaments/:id/teams/:team/${action}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        const tournament = `tournament/${request.params.id}`;
+        const team = `team/${request.params.team}`;
+        const at = request.requestedAt;
+        await request.server.mediator.send(
+          action === "archive"
+            ? new ArchiveTeam(reader.value, tournament, team, at)
+            : action === "restore"
+              ? new RestoreTeam(reader.value, tournament, team, at)
+              : new MoveTeam(reader.value, tournament, team, action, at),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
+
+  // A team's players, as its manager lists them.
+  server.get<{ Params: { id: string; team: string } }>(
+    "/tournaments/:id/teams/:team/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const players = await request.server.mediator.query(
+        new PlayersOfTeam(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `team/${request.params.team}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ players });
+    },
+  );
+
+  // A player added to a team, as the team player dialog sends them: their
+  // name, which is all a player in a team has. Answered with their id.
+  server.post<{ Params: { id: string; team: string } }>(
+    "/tournaments/:id/teams/:team/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const added = await request.server.mediator.send(
+        new AddTeamPlayer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `team/${request.params.team}`,
+          { name: textOf(request.body, "name") },
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
+  // A team's player changed, by the part of their id after "team-player/".
+  server.put<{ Params: { id: string; team: string; player: string } }>(
+    "/tournaments/:id/teams/:team/players/:player",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new UpdateTeamPlayer(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `team/${request.params.team}`,
+          `team-player/${request.params.player}`,
+          { name: textOf(request.body, "name") },
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A team's player moved a place, archived or restored.
+  for (const action of ["up", "down", "archive", "restore"] as const) {
+    server.post<{ Params: { id: string; team: string; player: string } }>(
+      `/tournaments/:id/teams/:team/players/:player/${action}`,
+      async (request, reply) => {
+        const reader = signedInOrRefused(request, reply);
+        if (reader === undefined) return reply;
+        const asked = [
+          reader.value,
+          `tournament/${request.params.id}`,
+          `team/${request.params.team}`,
+          `team-player/${request.params.player}`,
+        ] as const;
+        const at = request.requestedAt;
+        await request.server.mediator.send(
+          action === "archive"
+            ? new ArchiveTeamPlayer(...asked, at)
+            : action === "restore"
+              ? new RestoreTeamPlayer(...asked, at)
+              : new MoveTeamPlayer(...asked, action, at),
+        );
+        return reply.code(204).header("cache-control", "no-store").send();
+      },
+    );
+  }
+
+  // What a test is, as the test dialog sends it: its teams by the part of
+  // their ids after "team/", nothing where none was chosen, for the request
+  // to refuse.
+  const testFrom = (body: unknown): TestRequest => {
+    const team = (field: string): string | undefined => {
+      const said = textOf(body, field);
+      return said === "" ? undefined : `team/${said}`;
+    };
+    return {
+      firstTeam: team("firstTeam"),
+      secondTeam: team("secondTeam"),
+      starts: textOf(body, "starts"),
+      finishes: textOf(body, "finishes"),
+      expectedMatches: numberOf(body, "expectedMatches"),
+      bestOf: numberOf(body, "bestOf"),
+      group: textOf(body, "group"),
+    };
+  };
+
+  // A test added, and answered with its id, which is a competition's. It is
+  // moved, archived and restored as any competition is.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/tests",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const added = await request.server.mediator.send(
+        new AddTest(
+          reader.value,
+          `tournament/${request.params.id}`,
+          testFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
+  // A test changed, by the part of its id after "competition/".
+  server.put<{ Params: { id: string; test: string } }>(
+    "/tournaments/:id/tests/:test",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new UpdateTest(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.test}`,
+          testFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A test's two teams and their players in use, as its managers and scorers
+  // choose a game's players from them.
+  server.get<{ Params: { id: string; competition: string } }>(
+    "/tournaments/:id/competitions/:competition/teams",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const teams = await request.server.mediator.query(
+        new PlayersOfTest(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ teams });
+    },
+  );
 
   done();
 };

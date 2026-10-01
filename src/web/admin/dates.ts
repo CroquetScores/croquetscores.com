@@ -31,3 +31,10 @@ export const dated = (
   }
   return `${dayOf(starts)} ${month(starts)}-${dayOf(finishes)} ${month(finishes)}`;
 };
+
+/**
+ * The one day `day`, as "04 Oct", with its month named in `language`, as each
+ * day in the list is written.
+ */
+export const dayWritten = (day: string, language: string): string =>
+  dated(day, day, language);

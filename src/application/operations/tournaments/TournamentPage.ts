@@ -15,6 +15,11 @@ export interface TournamentAsPaged {
    * to a manager, and its competitions alone to a scorer.
    */
   readonly part: "manager" | "scorer";
+  /**
+   * Whether it is played by teams, which have tests where a Standard
+   * tournament's players have competitions, and so other tabs.
+   */
+  readonly playedByTeams: boolean;
 }
 
 /**

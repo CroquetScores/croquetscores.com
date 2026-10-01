@@ -115,6 +115,7 @@ export type TournamentErrorCode =
   | "Tournament.TeamNameTaken"
   | "Tournament.TeamShortNameTaken"
   | "Tournament.NoSuchTeam"
+  | "Tournament.TeamArchived"
   | "Tournament.TeamPlayerAlreadyAdded"
   | "Team.PlayerNameTaken"
   | "Team.NoSuchPlayer"
@@ -1293,7 +1294,12 @@ export class Tournament extends AggregateRoot {
     if (found.reference.archived) {
       refuse("Tournament.CompetitionArchived", "The competition is archived.");
     }
-    this.#refuseUnlessATestCanBe(details);
+    // A day left as it was is not asked again: the tournament's days changed
+    // since leave its tests as they were (update.feature).
+    this.#refuseUnlessATestCanBe(details, {
+      starts: dayOf(shape.starts),
+      finishes: dayOf(shape.finishes),
+    });
     const sameTeams =
       details.firstTeam.equals(shape.firstTeam) &&
       details.secondTeam.equals(shape.secondTeam);
@@ -2052,8 +2058,14 @@ export class Tournament extends AggregateRoot {
   // What is asked of a test, added or updated, of the tournament as it is:
   // two different teams of its own in use, played within its days, starting
   // no later than it finishes. Days are compared as the days the tournament's
-  // starts and finishes fall on in UTC, as the year of its address is.
-  #refuseUnlessATestCanBe(details: TestDetails): void {
+  // starts and finishes fall on in UTC, as the year of its address is. A day
+  // an updated test `had` already is not asked whether it is within the
+  // tournament's, since a test is not refused for what the tournament became
+  // after it was added.
+  #refuseUnlessATestCanBe(
+    details: TestDetails,
+    had?: { readonly starts: string; readonly finishes: string },
+  ): void {
     if (details.firstTeam.equals(details.secondTeam)) {
       refuse("Tournament.TestAgainstItself", "A team does not play itself.");
     }
@@ -2069,13 +2081,13 @@ export class Tournament extends AggregateRoot {
         "The test finishes before it starts.",
       );
     }
-    if (starts < dayOf(this.starts)) {
+    if (starts !== had?.starts && starts < dayOf(this.starts)) {
       refuse(
         "Tournament.TestStartsBeforeTournament",
         "The test starts before the tournament does.",
       );
     }
-    if (finishes > dayOf(this.finishes)) {
+    if (finishes !== had?.finishes && finishes > dayOf(this.finishes)) {
       refuse(
         "Tournament.TestFinishesAfterTournament",
         "The test finishes after the tournament does.",

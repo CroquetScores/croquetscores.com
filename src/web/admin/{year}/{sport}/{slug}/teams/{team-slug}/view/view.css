@@ -1,0 +1,16 @@
+/* What a page says of what it is headed by, beside the heading: a team's
+   short name and its flag, a test's teams, days and how it is played. Quieter
+   than the heading, and wrapping rather than widening the page. */
+.page-about {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.page-flag {
+  flex: none;
+}

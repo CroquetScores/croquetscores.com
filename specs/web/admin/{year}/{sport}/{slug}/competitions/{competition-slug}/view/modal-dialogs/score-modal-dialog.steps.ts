@@ -183,7 +183,9 @@ const boxOf = async (thing: Locator) => {
 };
 
 Then(
-  "the score dialog says {string} between {string} and {string}",
+  // The score dialog's "beat" between the players, or the test dialog's "v"
+  // between the teams.
+  /^the (?:score|test) dialog says "([^"]*)" between "([^"]*)" and "([^"]*)"$/,
   async function (
     this: SpecWorld,
     words: string,
@@ -191,7 +193,7 @@ Then(
     below: string,
   ) {
     await dialogOf(this).waitFor();
-    const between = dialogOf(this).locator(".score-beat");
+    const between = dialogOf(this).locator(".score-beat, .test-versus");
     assert.equal((await between.innerText()).trim(), words);
     const [top, middle, bottom] = [
       await boxOf(fieldOf(this, above)),

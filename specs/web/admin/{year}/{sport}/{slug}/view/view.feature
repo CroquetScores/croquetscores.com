@@ -28,6 +28,15 @@ Feature: A tournament's page in the admin
   (`players-tab.feature`, `competitions-tab.feature`, `managers-tab.feature`
   and `scorers-tab.feature`).
 
+  A tournament whose format is played by teams (`TournamentFormat.feature`)
+  is found at the same address, and is run in the same page, but has teams
+  and tests where a Standard tournament has players and competitions
+  (`addTeam.feature`, `addTest.feature`). So its four tabs are Teams, Tests,
+  Managers and Scorers, in that order (`teams-tab.feature`,
+  `tests-tab.feature`), and the page opens on Teams. A scorer is offered
+  Tests alone, as they are offered Competitions alone in a Standard
+  tournament, and their page opens on it.
+
   Only a tournament's managers and scorers have anything to do here, so the
   page is refused to anybody else, by the refusal's code in place of the tabs,
   as changing the tournament is (`edit.feature`): `Tournament.NotAManager` for
@@ -181,6 +190,85 @@ Feature: A tournament's page in the admin
       And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the page of "Spring Open" is opened
       Then the page is headed "Spring Open"
+
+  Rule: A tournament played by teams has Teams, Tests, Managers and Scorers
+
+    Scenario Outline: The tabs of a tournament played by teams are in their order
+      Given the tournament "Spring Open" is played in the format "Teams"
+      When the page of "Spring Open" is opened
+      Then the tab "<tab>" is the <place> tab
+
+      Examples:
+        | tab      | place  |
+        | Teams    | first  |
+        | Tests    | second |
+        | Managers | third  |
+        | Scorers  | fourth |
+
+    Scenario Outline: A tournament played by teams has no tab of a Standard tournament's own
+      Given the tournament "Spring Open" is played in the format "Teams"
+      When the page of "Spring Open" is opened
+      Then the tab "<tab>" is not offered
+
+      Examples:
+        | tab          |
+        | Players      |
+        | Competitions |
+
+    Scenario Outline: Every format played by teams has the Teams tab
+      Given the tournament "Spring Open" is played in the format "<format>"
+      When the page of "Spring Open" is opened
+      Then the tab "Teams" is offered
+
+      Examples:
+        | format                     |
+        | Teams                      |
+        | Eire Cup                   |
+        | Interstate Shield          |
+        | GC World Team Championship |
+
+    Scenario: A Standard tournament has no Teams tab
+      When the page of "Spring Open" is opened
+      Then the tab "Teams" is not offered
+
+    Scenario: The page of a tournament played by teams opens on Teams
+      Given the tournament "Spring Open" is played in the format "Teams"
+      When the page of "Spring Open" is opened
+      Then the tab "Teams" is the one being read
+
+    Scenario: Choosing Tests leaves the address as it was
+      Given the tournament "Spring Open" is played in the format "Teams"
+      And the page of "Spring Open" is open
+      When the tab "Tests" is chosen
+      Then the address is "/admin/2026/ac/spring-open"
+
+    Scenario: A scorer of a tournament played by teams is offered Tests
+      Given the tournament "Spring Open" is played in the format "Teams"
+      And "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Tests" is the one being read
+
+    Scenario Outline: A scorer of a tournament played by teams is not offered the managers' tabs
+      Given the tournament "Spring Open" is played in the format "Teams"
+      And "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "<tab>" is not offered
+
+      Examples:
+        | tab      |
+        | Teams    |
+        | Managers |
+        | Scorers  |
+
+    Scenario: The tabs of a tournament played by teams are named in the reader's language
+      Given a browser that asks for "en-XA"
+      And the tournament "Spring Open" is played in the format "Teams"
+      When the page of "Spring Open" is opened
+      Then the tabs are named in the test locale
 
   Rule: Only a manager or a scorer of a tournament there is sees the page
 
