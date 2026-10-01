@@ -12,11 +12,31 @@ export type ListedCompetition = {
   readonly archived: boolean;
 } & (
   | {
-      // A test is answered as far as it is a competition: what each of its
-      // matches is the best of. Its teams and its days are not answered yet.
-      readonly kind: "block" | "swiss" | "test";
+      readonly kind: "block" | "swiss";
       /** What each match is the best of. */
       readonly bestOf: number;
+    }
+  | {
+      readonly kind: "test";
+      /** What each match is the best of. */
+      readonly bestOf: number;
+      /** The two teams it is between, the first first. */
+      readonly teams: readonly {
+        readonly id: string;
+        readonly name: string;
+        readonly shortName: string;
+      }[];
+      /** The days it starts and finishes, each as "2026-10-03". */
+      readonly starts: string;
+      readonly finishes: string;
+      readonly expectedMatches: number;
+      /** Its group, if it is in one. */
+      readonly group: string | undefined;
+      /**
+       * Whether it has any games in use, as the application's games say,
+       * since a test that has keeps its teams.
+       */
+      readonly hasGames: boolean;
     }
   | {
       readonly kind: "knockout";

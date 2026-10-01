@@ -58,7 +58,9 @@ export const competitionOf = async (
 /**
  * What `tournament` tells its competition `id` of itself: what kind of
  * competition it is, with a knockout's draw, and whether drawn games are
- * allowed.
+ * allowed. A test is told who plays for which team too, every team's players
+ * among them, so that it can say of one who plays for neither of its own that
+ * the test does not have them.
  */
 export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
   const found = tournament.competitions.find(({ reference }) =>
@@ -70,7 +72,20 @@ export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
       "The tournament has no such competition.",
     );
   }
-  return { shape: found.shape, drawsAllowed: tournament.drawsAllowed };
+  if (found.shape.kind !== "test") {
+    return { shape: found.shape, drawsAllowed: tournament.drawsAllowed };
+  }
+  return {
+    shape: found.shape,
+    drawsAllowed: tournament.drawsAllowed,
+    teamPlayers: tournament.teams.flatMap((team) =>
+      team.players.map((player) => ({
+        id: player.id,
+        team: team.id,
+        archived: player.archived,
+      })),
+    ),
+  };
 };
 
 /**

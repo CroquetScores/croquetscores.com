@@ -207,6 +207,16 @@ Then(
 );
 
 Then(
+  "the team {string} has no players",
+  function (this: SpecWorld, team: string) {
+    assert.deepEqual(
+      teamNamed(tournamentOf(this), team).players.map(String),
+      [],
+    );
+  },
+);
+
+Then(
   "the team {string} has no player {string}",
   function (this: SpecWorld, team: string, name: string) {
     const names = teamNamed(tournamentOf(this), team).players.map(String);
@@ -282,7 +292,7 @@ Then(
 );
 
 Then(
-  "the test {string} is expected to have {int} matches",
+  "the test {string} is expected to have {int} match(es)",
   function (this: SpecWorld, name: string, count: number) {
     assert.equal(
       testNamed(tournamentOf(this), name).shape.expectedMatches.count,

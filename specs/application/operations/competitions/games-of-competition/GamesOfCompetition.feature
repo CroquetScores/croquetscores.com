@@ -15,6 +15,10 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
   (`archiveGame.feature`), so that a list offering to archive a score offers
   it only where archiving would be done.
 
+  A test's games are between its teams' players (`gamesInATest.feature`), and
+  each of them is answered by what their team calls them now, as a
+  tournament's player is by what the tournament calls them.
+
   It answers the account the reader is signed in to, and never one the reader
   chose. Only the tournament's managers and scorers can ask: anybody else is
   refused with `Tournament.NotAManagerOrScorer`. A competition the tournament
@@ -157,3 +161,42 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
       And the account for "organiser@example.com" has been forgotten
       When the reader signed in to that account lists the scores of "Block A" of "Spring Open"
       Then it is refused with "Account.Forgotten"
+
+  Rule: A test's game is answered with its players as their teams call them now
+
+    Scenario: A game in a test is answered
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "AUS v ENG" of "Spring Tests"
+      Then the score of "Pat Player" beating "Kim Keeper" 26 to 17 is answered
+
+    Scenario: A game's player in a test is answered by what their team calls them now
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has renamed the player "Pat Player" of the team "Australia" of "Spring Tests" to "Patricia Player"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "AUS v ENG" of "Spring Tests"
+      Then the score of "Patricia Player" beating "Kim Keeper" 26 to 17 is answered
+
+    Scenario: A game in a test is answered as one that can be archived
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "AUS v ENG" of "Spring Tests"
+      Then the score of "Pat Player" beating "Kim Keeper" 26 to 17 is answered as one that can be archived

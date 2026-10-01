@@ -117,7 +117,7 @@ Then(
 // Said as the features say a kind, "a Swiss" among them, and answered as the
 // application writes one.
 Then(
-  /^the competition "([^"]*)" is answered as a (block|knockout|Swiss)$/,
+  /^the competition "([^"]*)" is answered as a (block|knockout|Swiss|test)$/,
   function (this: SpecWorld, name: string, kind: string) {
     assert.equal(competitionCalled(this, name).kind, kind.toLowerCase());
   },
@@ -163,5 +163,69 @@ Then(
       knockoutCalled(this, name).rounds[round === "first" ? 0 : 1],
       Number(games),
     );
+  },
+);
+
+// A test ------------------------------------------------------------------------
+
+const testCalled = (
+  world: SpecWorld,
+  name: string,
+): Extract<ListedCompetition, { kind: "test" }> => {
+  const competition = competitionCalled(world, name);
+  assert.ok(
+    competition.kind === "test",
+    `${name} is answered as a ${competition.kind}.`,
+  );
+  return competition;
+};
+
+Then(
+  /^the test "([^"]*)" is answered with the (first|second) team "([^"]*)"$/,
+  function (this: SpecWorld, name: string, which: string, team: string) {
+    const { teams } = testCalled(this, name);
+    assert.equal(teams[which === "first" ? 0 : 1]?.name, team);
+  },
+);
+
+Then(
+  "the test {string} is answered starting on {string}",
+  function (this: SpecWorld, name: string, day: string) {
+    assert.equal(testCalled(this, name).starts, day);
+  },
+);
+
+Then(
+  "the test {string} is answered finishing on {string}",
+  function (this: SpecWorld, name: string, day: string) {
+    assert.equal(testCalled(this, name).finishes, day);
+  },
+);
+
+Then(
+  "the test {string} is answered expected to have {int} matches",
+  function (this: SpecWorld, name: string, count: number) {
+    assert.equal(testCalled(this, name).expectedMatches, count);
+  },
+);
+
+Then(
+  "the test {string} is answered in the group {string}",
+  function (this: SpecWorld, name: string, group: string) {
+    assert.equal(testCalled(this, name).group, group);
+  },
+);
+
+Then(
+  "the test {string} is answered in no group",
+  function (this: SpecWorld, name: string) {
+    assert.equal(testCalled(this, name).group, undefined);
+  },
+);
+
+Then(
+  /^the test "([^"]*)" is answered as having (no )?games$/,
+  function (this: SpecWorld, name: string, no: string | null) {
+    assert.equal(testCalled(this, name).hasGames, no === null);
   },
 );

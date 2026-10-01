@@ -1,6 +1,6 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { CompetitionPlayerId } from "../../../domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
+import { gamePlayerIdFrom } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import { GameId } from "../../../domain/aggregates/tournaments/competitions/primitives/GameId.js";
 import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
@@ -45,9 +45,9 @@ export class AddGameHandler extends CommandHandler<AddGame, string> {
     competition.addGame(
       id,
       {
-        winner: CompetitionPlayerId.from(winner ?? ""),
+        winner: gamePlayerIdFrom(winner ?? ""),
         winnerScore: Score.read(winnerScore ?? "", tournament.website),
-        loser: CompetitionPlayerId.from(loser ?? ""),
+        loser: gamePlayerIdFrom(loser ?? ""),
         loserScore: Score.read(loserScore ?? "", tournament.website),
       },
       told,

@@ -2,14 +2,20 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { Games } from "../../services/Games.js";
 import {
   CompetitionsOfTournament,
   type ListedCompetition,
 } from "./CompetitionsOfTournament.js";
 import { managedOrScoredBy } from "./tournamentOperations.js";
+
+// The day a moment falls on in UTC, written as "2026-10-03".
+const dayOf = (moment: ReadOnlyDate): string =>
+  moment.toISOString().slice(0, 10);
 
 export class CompetitionsOfTournamentHandler extends QueryHandler<
   CompetitionsOfTournament,
@@ -21,6 +27,7 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly games: Games,
   ) {
     super();
   }
@@ -38,23 +45,47 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
     // In the tournament's own order, which it keeps lowest first. A scorer is
     // answered the competitions in use alone: an archived one is set aside,
     // and has no scores to enter.
-    return tournament.competitions
-      .filter(({ reference }) => part === "manager" || !reference.archived)
-      .map(({ reference, shape }): ListedCompetition => {
-        const listed = {
-          id: reference.id.value,
-          name: reference.name.toString(),
-          slug: reference.slug.toString(),
-          archived: reference.archived,
-        };
-        return shape.kind === "knockout"
-          ? {
-              ...listed,
-              kind: shape.kind,
-              places: shape.draw.places,
-              rounds: shape.draw.rounds.map((round) => round.games),
-            }
-          : { ...listed, kind: shape.kind, bestOf: shape.bestOf.games };
-      });
+    const listed: ListedCompetition[] = [];
+    for (const { reference, shape } of tournament.competitions) {
+      if (part !== "manager" && reference.archived) continue;
+      const about = {
+        id: reference.id.value,
+        name: reference.name.toString(),
+        slug: reference.slug.toString(),
+        archived: reference.archived,
+      };
+      if (shape.kind === "knockout") {
+        listed.push({
+          ...about,
+          kind: shape.kind,
+          places: shape.draw.places,
+          rounds: shape.draw.rounds.map((round) => round.games),
+        });
+      } else if (shape.kind === "test") {
+        const played = await this.games.playedIn(tournament.id, reference.id);
+        listed.push({
+          ...about,
+          kind: shape.kind,
+          bestOf: shape.bestOf.games,
+          teams: [shape.firstTeam, shape.secondTeam].flatMap((id) =>
+            tournament.teams
+              .filter((team) => team.id.equals(id))
+              .map((team) => ({
+                id: team.id.value,
+                name: team.name.toString(),
+                shortName: team.shortName.toString(),
+              })),
+          ),
+          starts: dayOf(shape.starts),
+          finishes: dayOf(shape.finishes),
+          expectedMatches: shape.expectedMatches.count,
+          group: shape.group?.toString(),
+          hasGames: played.matchesStarted > 0,
+        });
+      } else {
+        listed.push({ ...about, kind: shape.kind, bestOf: shape.bestOf.games });
+      }
+    }
+    return listed;
   }
 }

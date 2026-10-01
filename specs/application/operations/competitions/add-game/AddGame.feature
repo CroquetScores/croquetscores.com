@@ -38,6 +38,14 @@ Feature: Adding a game's score to a competition
   for them — a player it does not have or who has withdrawn, a match already
   decided, two players not drawn to meet — is the competition's to refuse.
 
+  A test is a competition too (`addTest.feature`), and has no players entered
+  in it: its players are its teams', named by their ids in their teams
+  (`TeamPlayer.feature`). Which team each plays for, and whether either is
+  archived, is the tournament's, so the application asks the tournament for
+  them and says them to the test, which refuses a game between two players of
+  one team, or with a player of neither (`gamesInATest.feature`). The
+  tournament is asked whether the test is archived as any competition is.
+
   A forgotten account adds nothing, and is refused with `Account.Forgotten`.
 
   These scenarios run against Postgres, with the application's event store and
@@ -256,3 +264,76 @@ Feature: Adding a game's score to a competition
       And the account for "organiser@example.com" has been forgotten
       When the reader signed in to that account adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       Then it is refused with "Account.Forgotten"
+
+  Rule: In a test, a game is between a player of each of its teams
+
+    Scenario: A game in a test is kept as one of the test's
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      Then the competition "AUS v ENG" of "Spring Tests" has the game of "Pat Player" beating "Kim Keeper" 26 to 17
+
+    Scenario: A game in a test is added by a scorer
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
+      And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Tests"
+      When the reader signed in to the account for "scorer@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      Then the competition "AUS v ENG" of "Spring Tests" has the game of "Pat Player" beating "Kim Keeper" 26 to 17
+
+    Scenario: A game between two players of one team is refused as the test refuses it
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Jo Jones" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Jo Jones" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      Then it is refused with "Competition.SameTeam"
+
+    Scenario: A game with a player of a team not in the test is refused as the test refuses it
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the team "Scotland" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Jo Jones" to the team "Scotland" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Jo Jones" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      Then it is refused with "Competition.NoSuchPlayer"
+
+    Scenario: A game with an archived player is refused as the player refuses it
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has archived the player "Kim Keeper" of the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      Then it is refused for breaking "TeamPlayer.Archived"
+
+    Scenario: A game in an archived test is refused as the tournament refuses it
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      Then it is refused with "Tournament.CompetitionArchived"

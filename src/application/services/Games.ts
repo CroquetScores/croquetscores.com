@@ -1,5 +1,7 @@
 import type { CompetitionId } from "../../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import type { TeamPlayerId } from "../../domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import type { TournamentId } from "../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { TestPlayed } from "../../domain/aggregates/tournaments/Tournament.js";
 import type { TournamentPlayerId } from "../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { KnockoutDraw } from "../../domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 
@@ -25,4 +27,19 @@ export interface Games {
     competition: CompetitionId,
     draw: KnockoutDraw,
   ): Promise<boolean>;
+
+  /**
+   * Whether the player of a team `player` has played any games in any of the
+   * tests of `tournament`.
+   */
+  teamPlayerHasPlayed(
+    tournament: TournamentId,
+    player: TeamPlayerId,
+  ): Promise<boolean>;
+
+  /**
+   * What has been played in the test `test`: how many of its matches have
+   * started, and the most games any two of its players have played.
+   */
+  playedIn(tournament: TournamentId, test: CompetitionId): Promise<TestPlayed>;
 }

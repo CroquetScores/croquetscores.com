@@ -74,7 +74,7 @@ Given(
 );
 
 Given(
-  "the update has the test expected to have {int} matches",
+  "the update has the test expected to have {int} match(es)",
   function (this: SpecWorld, count: number) {
     teamScenarioOf(this).testUpdate.expectedMatches = count;
   },

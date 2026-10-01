@@ -55,12 +55,22 @@ export class GamesOfCompetitionHandler extends QueryHandler<
         player.name.toString(),
       ]),
     );
-    const people = new Map(
-      competition.players.map((player) => [
-        player.id.value,
-        names.get(player.tournamentPlayerId.value) ?? "",
-      ]),
-    );
+    // A test's games are between its teams' players, each by what their team
+    // calls them now.
+    const people = new Map([
+      ...competition.players.map(
+        (player) =>
+          [
+            player.id.value,
+            names.get(player.tournamentPlayerId.value) ?? "",
+          ] as const,
+      ),
+      ...tournament.teams.flatMap((team) =>
+        team.players.map(
+          (player) => [player.id.value, player.name.toString()] as const,
+        ),
+      ),
+    ]);
     return competition.games.map((game) => ({
       id: game.id.value,
       winner: people.get(game.winner.value) ?? "",

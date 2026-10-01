@@ -23,6 +23,29 @@ import { AddKnockoutValidator } from "../../../src/application/operations/tourna
 import { AddManagerHandler } from "../../../src/application/operations/tournaments/AddManagerHandler.js";
 import { AddManagerValidator } from "../../../src/application/operations/tournaments/AddManagerValidator.js";
 import { AddPlayerHandler } from "../../../src/application/operations/tournaments/AddPlayerHandler.js";
+import { AddTeamValidator } from "../../../src/application/operations/tournaments/AddTeamValidator.js";
+import { UpdateTeamValidator } from "../../../src/application/operations/tournaments/UpdateTeamValidator.js";
+import { MoveTeamValidator } from "../../../src/application/operations/tournaments/MoveTeamValidator.js";
+import { AddTeamPlayerValidator } from "../../../src/application/operations/tournaments/AddTeamPlayerValidator.js";
+import { UpdateTeamPlayerValidator } from "../../../src/application/operations/tournaments/UpdateTeamPlayerValidator.js";
+import { MoveTeamPlayerValidator } from "../../../src/application/operations/tournaments/MoveTeamPlayerValidator.js";
+import { AddTestValidator } from "../../../src/application/operations/tournaments/AddTestValidator.js";
+import { UpdateTestValidator } from "../../../src/application/operations/tournaments/UpdateTestValidator.js";
+import { AddTeamHandler } from "../../../src/application/operations/tournaments/AddTeamHandler.js";
+import { UpdateTeamHandler } from "../../../src/application/operations/tournaments/UpdateTeamHandler.js";
+import { ArchiveTeamHandler } from "../../../src/application/operations/tournaments/ArchiveTeamHandler.js";
+import { RestoreTeamHandler } from "../../../src/application/operations/tournaments/RestoreTeamHandler.js";
+import { MoveTeamHandler } from "../../../src/application/operations/tournaments/MoveTeamHandler.js";
+import { AddTeamPlayerHandler } from "../../../src/application/operations/tournaments/AddTeamPlayerHandler.js";
+import { UpdateTeamPlayerHandler } from "../../../src/application/operations/tournaments/UpdateTeamPlayerHandler.js";
+import { RestoreTeamPlayerHandler } from "../../../src/application/operations/tournaments/RestoreTeamPlayerHandler.js";
+import { MoveTeamPlayerHandler } from "../../../src/application/operations/tournaments/MoveTeamPlayerHandler.js";
+import { AddTestHandler } from "../../../src/application/operations/tournaments/AddTestHandler.js";
+import { ArchiveTeamPlayerHandler } from "../../../src/application/operations/tournaments/ArchiveTeamPlayerHandler.js";
+import { UpdateTestHandler } from "../../../src/application/operations/tournaments/UpdateTestHandler.js";
+import { TeamsOfTournamentHandler } from "../../../src/application/operations/tournaments/TeamsOfTournamentHandler.js";
+import { PlayersOfTeamHandler } from "../../../src/application/operations/tournaments/PlayersOfTeamHandler.js";
+import { PlayersOfTestHandler } from "../../../src/application/operations/competitions/PlayersOfTestHandler.js";
 import { AddPlayerValidator } from "../../../src/application/operations/tournaments/AddPlayerValidator.js";
 import { AddScorerHandler } from "../../../src/application/operations/tournaments/AddScorerHandler.js";
 import { AddScorerValidator } from "../../../src/application/operations/tournaments/AddScorerValidator.js";
@@ -131,6 +154,14 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
+  validation.register(new AddTeamValidator());
+  validation.register(new UpdateTeamValidator());
+  validation.register(new MoveTeamValidator());
+  validation.register(new AddTeamPlayerValidator());
+  validation.register(new UpdateTeamPlayerValidator());
+  validation.register(new MoveTeamPlayerValidator());
+  validation.register(new AddTestValidator());
+  validation.register(new UpdateTestValidator());
   const both = [tournaments, accountRepository] as const;
   mediator.handleCommand(new CreateTournamentHandler(...both, byAddress));
   mediator.handleCommand(new UpdateTournamentHandler(...both, byAddress));
@@ -156,6 +187,18 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleCommand(new AddTeamHandler(...both));
+  mediator.handleCommand(new UpdateTeamHandler(...both));
+  mediator.handleCommand(new ArchiveTeamHandler(...both));
+  mediator.handleCommand(new RestoreTeamHandler(...both));
+  mediator.handleCommand(new MoveTeamHandler(...both));
+  mediator.handleCommand(new AddTeamPlayerHandler(...both));
+  mediator.handleCommand(new UpdateTeamPlayerHandler(...both));
+  mediator.handleCommand(new RestoreTeamPlayerHandler(...both));
+  mediator.handleCommand(new MoveTeamPlayerHandler(...both));
+  mediator.handleCommand(new AddTestHandler(...both));
+  mediator.handleCommand(new ArchiveTeamPlayerHandler(...both, games));
+  mediator.handleCommand(new UpdateTestHandler(...both, games));
   mediator.handleCommand(new EnterPlayerHandler(...both, competitions));
   mediator.handleCommand(
     new MoveCompetitionPlayerHandler(...both, competitions),
@@ -169,7 +212,10 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
-  mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
+  mediator.handleQuery(new CompetitionsOfTournamentHandler(...both, games));
+  mediator.handleQuery(new TeamsOfTournamentHandler(...both));
+  mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
+  mediator.handleQuery(new PlayersOfTestHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
   mediator.handleQuery(
     new PlayersOfTournamentHandler(...both, competitions, games),

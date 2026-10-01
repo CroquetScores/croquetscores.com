@@ -24,9 +24,13 @@ import { RemovePlayer } from "../../../../src/application/operations/competition
 import { ReverseWithdrawal } from "../../../../src/application/operations/competitions/ReverseWithdrawal.js";
 import { WithdrawPlayer } from "../../../../src/application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../../src/application/operations/tournaments/MovePlayer.js";
+import { PlayersOfTest } from "../../../../src/application/operations/competitions/PlayersOfTest.js";
 import type { Competition } from "../../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionPlayer } from "../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
-import type { Game } from "../../../../src/domain/aggregates/tournaments/competitions/Game.js";
+import type {
+  Game,
+  GamePlayerId,
+} from "../../../../src/domain/aggregates/tournaments/competitions/Game.js";
 import { GameId } from "../../../../src/domain/aggregates/tournaments/competitions/primitives/GameId.js";
 import { CompetitionPlayerId } from "../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import type { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
@@ -38,6 +42,7 @@ import { playerNamed } from "../../../domain/aggregates/tournaments/tournament/a
 import {
   accountFor,
   ask,
+  everyCreated,
   heldAccount,
   inHandOf,
   load,
@@ -105,6 +110,40 @@ const competitionPlayerIn = async (
     ? undefined
     : (await competitionPlayerCalled(world, tournament, competition, name))
         ?.id) ?? CompetitionPlayerId.create();
+
+// Who the player called `name` is in a game of the competition: in a test,
+// which has no players entered, the player of one of the tournament's teams
+// with that name; anywhere else, the competition's player who is the
+// tournament player of that name. Nothing where there is nobody of that name.
+const gamePlayerCalled = async (
+  world: SpecWorld,
+  tournament: TournamentId,
+  competition: CompetitionId,
+  name: string,
+): Promise<{ readonly id: GamePlayerId } | undefined> => {
+  const found = await inHandOf(world).load(tournament);
+  const isATest = found?.competitions.some(
+    ({ reference, shape }) =>
+      reference.id.equals(competition) && shape.kind === "test",
+  );
+  if (found === undefined || isATest !== true) {
+    return competitionPlayerCalled(world, tournament, competition, name);
+  }
+  return found.teams
+    .flatMap((team) => team.players)
+    .find((player) => player.name.toString() === name);
+};
+
+// A game's player's id where there is one called `name`, as
+// `gamePlayerCalled` finds them, and one that names nobody where there is not.
+const gamePlayerIn = async (
+  world: SpecWorld,
+  tournament: TournamentId,
+  competition: CompetitionId,
+  name: string,
+): Promise<GamePlayerId> =>
+  (await gamePlayerCalled(world, tournament, competition, name))?.id ??
+  CompetitionPlayerId.create();
 
 // What a request about a competition's player names: the tournament, the
 // competition and the player, each as the scenario says it, or nothing that
@@ -643,6 +682,27 @@ When(
 
 // Listing a competition's players ---------------------------------------------
 
+// Whether a competition the scenario names is a test, in any tournament it
+// created: a test's players are listed in the words a competition's are
+// (`PlayersOfTest.feature`), and are asked for of the test's own list.
+const isATest = async (
+  world: SpecWorld,
+  competition: string | undefined,
+): Promise<boolean> => {
+  for (const id of everyCreated(world)) {
+    const tournament = await inHandOf(world).load(id);
+    if (
+      tournament?.competitions.some(
+        ({ reference, shape }) =>
+          reference.name.toString() === competition && shape.kind === "test",
+      )
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const listing = async (
   world: SpecWorld,
   account: string,
@@ -650,10 +710,14 @@ const listing = async (
   competition: string | undefined,
 ): Promise<void> => {
   const id = await competitionIn(world, tournament, competition);
-  await ask(
-    world,
-    new PlayersOfCompetition(account, tournament.value, id.value),
-  );
+  if (await isATest(world, competition)) {
+    await ask(world, new PlayersOfTest(account, tournament.value, id.value));
+  } else {
+    await ask(
+      world,
+      new PlayersOfCompetition(account, tournament.value, id.value),
+    );
+  }
 };
 
 When(
@@ -996,8 +1060,7 @@ const addingAs = async (
   const player = async (name: string | undefined) =>
     name === undefined
       ? undefined
-      : (await competitionPlayerIn(world, tournament, competitionId, name))
-          .value;
+      : (await gamePlayerIn(world, tournament, competitionId, name)).value;
   await send(
     world,
     new AddGame(
@@ -1221,18 +1284,13 @@ const gameCalled = async (
 ): Promise<Game | undefined> => {
   const found = await competitionNow(world, competition);
   if (found === undefined) return undefined;
-  const winnerId = await competitionPlayerCalled(
+  const winnerId = await gamePlayerCalled(
     world,
     tournament,
     competition,
     winner,
   );
-  const loserId = await competitionPlayerCalled(
-    world,
-    tournament,
-    competition,
-    loser,
-  );
+  const loserId = await gamePlayerCalled(world, tournament, competition, loser);
   return found.games.find(
     (game) =>
       winnerId !== undefined &&
@@ -1488,8 +1546,7 @@ When(
     const tournament = tournamentNamed(this, name);
     const competitionId = await competitionIn(this, tournament, competition);
     const player = async (called: string) =>
-      (await competitionPlayerIn(this, tournament, competitionId, called))
-        .value;
+      (await gamePlayerIn(this, tournament, competitionId, called)).value;
     await gameSent(
       this,
       await asTheReader(this, address),
@@ -1642,13 +1699,13 @@ Then(
   ) {
     const about = await theCompetition(this, competition, name);
     const games = (await competitionNow(this, about.competition))?.games ?? [];
-    const winnerId = await competitionPlayerCalled(
+    const winnerId = await gamePlayerCalled(
       this,
       about.tournament,
       about.competition,
       winner,
     );
-    const loserId = await competitionPlayerCalled(
+    const loserId = await gamePlayerCalled(
       this,
       about.tournament,
       about.competition,

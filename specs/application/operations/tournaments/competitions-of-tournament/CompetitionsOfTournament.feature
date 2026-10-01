@@ -13,6 +13,17 @@ Feature: The competitions of a tournament, as its managers and scorers list them
   block or a Swiss is the best of, and how many places a knockout's draw has
   and what each of its rounds is the best of, the first round first.
 
+  A tournament played by teams has tests (`addTest.feature`), and each is
+  answered as a test, with its two teams, the first first, each by its name
+  and its short name, the days it starts and finishes, how many matches it
+  is expected to have, what each is the best of, and its group, if any, so
+  that the Tests tab can say who meets whom, when and how
+  (`tests-tab.feature`). Each is answered with whether it has any games in
+  use, as the games say (`Games.feature`), since a test that has keeps its
+  teams (`updateTest.feature`), so that the test dialog shows them as they
+  are rather than offering to change them. Its name is
+  answered as the tournament calls it now, from its teams' short names.
+
   A scorer lists them to find the one whose scores they are entering
   (`view.feature`). An archived competition is set aside, and there are no
   scores to enter in it, so a scorer is answered with the competitions in use
@@ -94,6 +105,126 @@ Feature: The competitions of a tournament, as its managers and scorers list them
       And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
       Then the second round of the knockout "Main Event" is answered as the best of 3
+
+  Rule: A test is answered with its teams and its days
+
+    Scenario: A test is answered as a test
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the competition "AUS v ENG" is answered as a test
+
+    Scenario: A test is answered with its first team
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered with the first team "Australia"
+
+    Scenario: A test is answered with its second team
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered with the second team "England"
+
+    Scenario: A test is answered with the day it starts
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the test is to start on "2026-10-04"
+      And the test is to finish on "2026-10-05"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered starting on "2026-10-04"
+
+    Scenario: A test is answered with the day it finishes
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the test is to start on "2026-10-04"
+      And the test is to finish on "2026-10-05"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered finishing on "2026-10-05"
+
+    Scenario: A test is answered with the matches it is expected to have
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the test is to be expected to have 21 matches
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered expected to have 21 matches
+
+    Scenario: A test is answered with what each match is the best of
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And each match of the test is to be the best of 3
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the competition "AUS v ENG" is answered as the best of 3
+
+    Scenario: A test is answered with its group
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the test is to be in the group "Group A"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered in the group "Group A"
+
+    Scenario: A test in no group is answered in none
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered in no group
+
+    Scenario: A test with no games is answered as having none
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered as having no games
+
+    Scenario: A test with a game is answered as having games
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the test "AUS v ENG" is answered as having games
+
+    Scenario: A test is answered with the slug it was added with
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Tests"
+      Then the competition "AUS v ENG" is answered with the slug "aus-v-eng"
 
   Rule: A scorer is answered the competitions in use alone
 

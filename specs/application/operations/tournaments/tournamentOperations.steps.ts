@@ -88,10 +88,16 @@ const createdBefore = async (
   await lookAt(world, answer.id);
 };
 
+// In the format the scenario said the next tournament is to be played in,
+// where it said one.
 Given(
   "{string} has created the tournament {string}",
   async function (this: SpecWorld, address: string, name: string) {
-    await createdBefore(this, address, aTournament(name));
+    await createdBefore(
+      this,
+      address,
+      aTournament(name, { format: this.tournamentFormat?.name ?? "Standard" }),
+    );
   },
 );
 
