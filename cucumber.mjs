@@ -25,15 +25,11 @@ const shared = {
 };
 
 // Each profile writes its reports under its own name, so running one script
-// does not overwrite what another last reported. The timing report is how
-// long each step took, the most time first: where to look when making the
-// suite faster. cucumber-timing.mjs says why it is not Cucumber's own. The
-// summary is how long the run took as a whole, which the progress bar prints
-// and then scrolls away.
+// does not overwrite what another last reported. The summary is how long the
+// run took as a whole, which the progress bar prints and then scrolls away.
 const reports = (name) => [
   "progress-bar",
   `html:reports/${name}.html`,
-  `./cucumber-timing.mjs:reports/${name}-timing.txt`,
   `summary:reports/${name}-summary.txt`,
 ];
 
