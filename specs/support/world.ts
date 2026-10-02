@@ -297,10 +297,11 @@ export class SpecWorld extends World {
   // another. A failure to make one is kept in `failure`.
   public website: Website | undefined;
   public sameWebsite: boolean | undefined;
-  // The sport a scenario makes, and whether it was found the same as another;
-  // and the sports found for the site it names, and how many of those in order
-  // the scenario has named so far.
+  // The sport a scenario makes or names, the code it named it by, and whether
+  // it was found the same as another; and the sports found for the site it
+  // names, and how many of those in order the scenario has named so far.
   public sport: Sport | undefined;
+  public sportSaid: string | undefined;
   public sameSport: boolean | undefined;
   public offeredSports: readonly Sport[] | undefined;
   public offeredSportsChecked = 0;

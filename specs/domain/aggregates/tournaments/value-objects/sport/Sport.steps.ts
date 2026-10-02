@@ -13,8 +13,11 @@ const sportOfWorld = (world: SpecWorld): Sport => {
   return world.sport;
 };
 
+// The code is kept as it was written, and the sport only where there is one,
+// so that a scenario can give a sport there is not to whatever refuses it.
 Given("the sport {string}", function (this: SpecWorld, code: string) {
-  this.sport = Sport.from(code);
+  this.sportSaid = code;
+  this.sport = Sport.all.find((known) => known.code === code);
 });
 
 // Making a sport may be refused, and the scenario says which it expects.
