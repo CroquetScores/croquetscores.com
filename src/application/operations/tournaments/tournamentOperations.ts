@@ -33,6 +33,7 @@ export type TournamentOperationErrorCode =
   | "UpdateTournament.NoSuchCountry"
   | "RecentResults.NoSuchCountry"
   | "UpcomingTournaments.NoSuchCountry"
+  | "TournamentsInYear.NoSuchCountry"
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

@@ -75,7 +75,7 @@ export interface FilterChosen {
 export const filterFor = (
   website: Website,
   chosen: FilterChosen,
-  operation: "RecentResults" | "UpcomingTournaments",
+  operation: "RecentResults" | "UpcomingTournaments" | "TournamentsInYear",
 ): TournamentFilter => {
   const country =
     chosen.country === undefined

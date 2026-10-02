@@ -62,39 +62,36 @@ When(
   },
 );
 
+// Whether the last press for a new tab was stopped, by the scenario it was in.
+const pressesStopped = new WeakMap<SpecWorld, boolean>();
+
 // Pressed as a reader asks for a new tab: with Control, or Command on a Mac.
-// Given longer than a step's usual five seconds, since the browser starts a
-// page of its own for the tab. With every scenario's browser running at once
-// in the whole suite, that start alone ran past five seconds, and the
-// scenario failed while the tab it was waiting for was on its way.
+// What the admin does with the press is told by whether anything it listens
+// with stopped the browser following the link, read once every listener has
+// had it, since the window hears a click last. Whether the browser then opens
+// a tab is not waited on: a headless browser does not do it every time.
 When(
   "the section {string} is pressed to open it in a new tab",
-  { timeout: 20_000 },
   async function (this: SpecWorld, label: string) {
-    const opened = this.browserContext!.waitForEvent("page");
-    await this.browserPage.click(`nav.site-sections a:text-is("${label}")`, {
+    const page = this.browserPage;
+    await page.evaluate(`(() => {
+      window.addEventListener("click", (event) => {
+        window.pressStopped = event.defaultPrevented;
+      }, { once: true });
+    })()`);
+    await page.click(`nav.site-sections a:text-is("${label}")`, {
       modifiers: ["ControlOrMeta"],
     });
-    await opened;
+    const stopped = await page.evaluate<boolean | undefined>(
+      "window.pressStopped",
+    );
+    assert.ok(stopped !== undefined, "The press was not heard.");
+    pressesStopped.set(this, stopped);
   },
 );
 
-Then(
-  "the new tab's address is {string}",
-  async function (this: SpecWorld, path: string) {
-    const tab = this.browserContext!.pages().find(
-      (page) => page !== this.browserPage,
-    );
-    assert.ok(tab !== undefined, "No new tab was opened.");
-    // Once the tab is at the address, and not once it has loaded, which a tab
-    // opened behind the one being read can be slow to do.
-    await tab
-      .waitForURL((url) => url.pathname === path, {
-        timeout: 3000,
-        waitUntil: "commit",
-      })
-      .catch(() => {
-        assert.fail(`The new tab is at ${tab.url()}.`);
-      });
-  },
-);
+Then("the press is left to the browser", function (this: SpecWorld) {
+  const stopped = pressesStopped.get(this);
+  assert.ok(stopped !== undefined, "Nothing was pressed for a new tab.");
+  assert.equal(stopped, false, "The admin stopped the browser following it.");
+});

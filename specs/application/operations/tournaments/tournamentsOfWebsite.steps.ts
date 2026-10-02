@@ -5,9 +5,10 @@ import { inspect } from "node:util";
 import type { TournamentOfWebsite } from "../../../../src/application/operations/tournaments/tournamentsOfWebsite.js";
 import type { SpecWorld } from "../../../support/world.js";
 
-// What the recent results and the upcoming tournaments both say of what they
-// answered, since each answers a list of a website's tournaments and says the
-// same of each one. What each asks is beside its own feature.
+// What the recent results, the upcoming tournaments and the tournaments in a
+// year all say of what they answered, since each answers a list of a website's
+// tournaments and says the same of each one. What each asks is beside its own
+// feature.
 
 const answered = (world: SpecWorld): readonly TournamentOfWebsite[] => {
   assert.ok(
