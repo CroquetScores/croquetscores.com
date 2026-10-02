@@ -40,6 +40,16 @@ Feature: Putting each tournament's competitions in the order the old sites liste
       When the tournament's competitions are put in order
       Then the last competition of the tournament kept for "tournaments/12" on "croquetscores.com" is "A Block"
 
+    Scenario: A competition listed first is first however far it has to move
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com" is imported as "Block A"
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com" is imported as "Block B"
+      And the block "blocks/32" of "tournaments/12" on "croquetscores.com" is imported as "Block C"
+      And the tournament "tournaments/12" on "croquetscores.com" lists "blocks/32"
+      And the tournament "tournaments/12" on "croquetscores.com" lists "blocks/31"
+      And the tournament "tournaments/12" on "croquetscores.com" lists "blocks/30"
+      When the tournament's competitions are put in order
+      Then the first competition of the tournament kept for "tournaments/12" on "croquetscores.com" is "Block C"
+
     Scenario: A test is put where its team match was listed
       Given a tournament "tournaments/13" on "croquetscores.com" of the type "teams" is imported
       And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com" is imported between "Australia" and "England"

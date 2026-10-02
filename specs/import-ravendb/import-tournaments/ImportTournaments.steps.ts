@@ -24,7 +24,7 @@ Given(
       kind: "tournament",
       website,
       id,
-      document: aTournament(website),
+      document: aTournament(website, id),
     });
   },
 );
@@ -51,7 +51,7 @@ Given(
 );
 
 Given(
-  "the tournament is called {string}",
+  "the tournament was called {string}",
   function (this: SpecWorld, name: string) {
     tournamentWritten(this).Name = name;
   },
@@ -104,13 +104,13 @@ Given("the tournament has no time zone", function (this: SpecWorld) {
 });
 
 Given(
-  "the tournament's notes are {string}",
+  "the tournament's notes were {string}",
   function (this: SpecWorld, notes: string) {
     tournamentWritten(this).Notes = notes;
   },
 );
 
-Given("the tournament has no notes", function (this: SpecWorld) {
+Given("the tournament had no notes", function (this: SpecWorld) {
   tournamentWritten(this).Notes = null;
 });
 

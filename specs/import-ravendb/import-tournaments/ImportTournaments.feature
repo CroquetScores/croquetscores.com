@@ -47,7 +47,7 @@ Feature: Importing the old sites' tournaments
 
     Scenario: The tournament is called what it was called
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "Canterbury Open"
+      And the tournament was called "Canterbury Open"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Canterbury Open"
@@ -98,6 +98,10 @@ Feature: Importing the old sites' tournaments
 
   Rule: A tournament is played in the sport and the format the old site named
 
+    The old sites kept a sport and a tournament type in whatever case they
+    were written in, "AC" in one tournament and "ac" in another, and read them
+    in any case. So they are read here in any case too.
+
     Scenario Outline: The old site's sport is the site's sport
       Given a tournament "tournaments/12" on "<website>"
       And the tournament is in the sport "<old sport>"
@@ -113,6 +117,21 @@ Feature: Importing the old sites' tournaments
         | croquetscores.com  | rc        | Ricochet            |
         | gateballscores.com | GB        | Gateball            |
 
+    Scenario Outline: The old site's sport in another case is the same sport
+      Given a tournament "tournaments/12" on "<website>"
+      And the tournament is in the sport "<old sport>"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "<website>" is played in "<sport>"
+
+      Examples:
+        | website            | old sport | sport               |
+        | croquetscores.com  | ac        | Association Croquet |
+        | croquetscores.com  | gc        | Golf Croquet        |
+        | croquetscores.com  | A6W       | American 6 Wicket   |
+        | croquetscores.com  | RC        | Ricochet            |
+        | gateballscores.com | gb        | Gateball            |
+
     Scenario Outline: The old site's tournament type is the site's format
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament is of the type "<type>"
@@ -127,6 +146,13 @@ Feature: Importing the old sites' tournaments
         | eirecup          | Eire Cup                   |
         | interstateshield | Interstate Shield          |
         | gcwtc            | GC World Team Championship |
+
+    Scenario: The old site's tournament type in another case is the same format
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament is of the type "EireCup"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the format "Eire Cup"
 
     Scenario: A sport the old site never offered is refused
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -153,7 +179,7 @@ Feature: Importing the old sites' tournaments
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament started on "2014-03-01T00:00:00.0000000"
       And the tournament is in the sport "AC"
-      And the tournament is called "Canterbury Open"
+      And the tournament was called "Canterbury Open"
       And the tournament's slug is "canterbury-championships"
       And the tournament was created by "users/1"
       When the tournament is imported
@@ -216,21 +242,21 @@ Feature: Importing the old sites' tournaments
 
     Scenario: Notes are kept
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament's notes are "Play starts at 9am."
+      And the tournament's notes were "Play starts at 9am."
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has the notes "Play starts at 9am."
 
     Scenario: Angle brackets written as the old site wrote them are read as angle brackets
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament's notes are "Handicaps &lt; 2 play first."
+      And the tournament's notes were "Handicaps &lt; 2 play first."
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has the notes "Handicaps < 2 play first."
 
     Scenario: A tournament with no notes has none
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament has no notes
+      And the tournament had no notes
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has no notes
@@ -333,21 +359,21 @@ Feature: Importing the old sites' tournaments
 
     Scenario: A name all in capitals is written in title case
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "CANTERBURY OPEN"
+      And the tournament was called "CANTERBURY OPEN"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Canterbury Open"
 
     Scenario: A name all in small letters is written in title case
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "canterbury open"
+      And the tournament was called "canterbury open"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Canterbury Open"
 
     Scenario: A name with capitals and small letters is left as it was
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "NSW Open"
+      And the tournament was called "NSW Open"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "NSW Open"
@@ -362,21 +388,21 @@ Feature: Importing the old sites' tournaments
 
     Scenario: A name shorter than 3 characters says it was imported
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "Ok"
+      And the tournament was called "Ok"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Imported"
 
     Scenario: A name shorter than 3 characters in capitals is written in title case first
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "OK"
+      And the tournament was called "OK"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Imported"
 
     Scenario: A name of 3 characters is left as it was
       Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is called "Cup"
+      And the tournament was called "Cup"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Cup"

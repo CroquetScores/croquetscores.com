@@ -122,7 +122,8 @@ Then(
   async function (
     this: SpecWorld,
     name: string,
-    not: string | undefined,
+    // Null, as Cucumber passes a group that matched nothing.
+    not: string | null,
     id: string,
     website: string,
   ) {
@@ -132,7 +133,7 @@ Then(
       website,
     );
     const player = competitionPlayerCalled(tournament, competition, name);
-    assert.equal(player.withdrawn, not === undefined);
+    assert.equal(player.withdrawn, not === null);
   },
 );
 

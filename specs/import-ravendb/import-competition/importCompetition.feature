@@ -208,7 +208,9 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       And player 3 is in the competition
       And game 2 was won by player 3
+      And game 2 was lost by player 7
       And game 1 was won by player 7
+      And game 1 was lost by player 3
       When the competition is imported
       Then the first game of the competition kept for "blocks/30" on "croquetscores.com" was won by "Sam Someone"
 

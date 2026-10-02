@@ -24,16 +24,20 @@ import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { countryOfTimeZone } from "./timeZones.js";
 
-// The site's sport for each the old sites named, by the code they kept.
+// The site's sport for each the old sites named, by the code they kept, in
+// small letters. The old sites kept a code in whatever case it was written
+// in, "AC" in one tournament and "ac" in another, and read it in any case, so
+// it is looked for here in small letters.
 const sportCodes: Readonly<Record<string, string>> = {
-  AC: "ac",
-  GC: "gc",
-  GB: "gb",
+  ac: "ac",
+  gc: "gc",
+  gb: "gb",
   a6w: "a6w",
   rc: "rc",
 };
 
-// The site's format for each tournament type the old sites named.
+// The site's format for each tournament type the old sites named, looked for
+// in small letters as a sport is.
 const formats: Readonly<Record<string, TournamentFormat>> = {
   standard: TournamentFormat.standard,
   teams: TournamentFormat.teams,
@@ -48,7 +52,7 @@ const formats: Readonly<Record<string, TournamentFormat>> = {
 const FORGOTTEN_NAME = "Account Forgotten";
 
 const sportOf = (code: string): Sport => {
-  const known = sportCodes[code];
+  const known = sportCodes[code.trim().toLowerCase()];
   if (known === undefined) {
     throw new ImportRefused(
       "ImportTournaments.UnknownSport",
@@ -59,7 +63,7 @@ const sportOf = (code: string): Sport => {
 };
 
 const formatOf = (type: string): TournamentFormat => {
-  const known = formats[type];
+  const known = formats[type.trim().toLowerCase()];
   if (known === undefined) {
     throw new ImportRefused(
       "ImportTournaments.UnknownType",

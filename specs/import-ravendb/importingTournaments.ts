@@ -199,13 +199,22 @@ const keyOf = (website: string, id: string): string =>
 /**
  * A tournament that is well made, so that what is refused is only ever what
  * the scenario named: the Spring Open, from 1 to 3 March 2014, the first sport
- * its website offered, in the Standard format, kept in Sydney's time zone.
+ * its website offered, in the Standard format, kept in Sydney's time zone. Its
+ * slug is made from the document `id`, as "spring-open-12", since the old
+ * sites never gave two tournaments of one year and one sport the same slug,
+ * and the site refuses a second tournament at an address another has.
  */
-export const aTournament = (website: string): WrittenTournament => ({
+export const aTournament = (
+  website: string,
+  id: string,
+): WrittenTournament => ({
   Name: "Spring Open",
   Start: "2014-03-01T00:00:00.0000000",
   Finish: "2014-03-03T00:00:00.0000000",
-  Slug: "spring-open",
+  Slug: `spring-open-${id
+    .slice(id.indexOf("/") + 1)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")}`,
   CreatedBy: { Id: "users/1" },
   Managers: [],
   Scorers: [],
@@ -498,7 +507,7 @@ const tournamentImported = async (
     kind: "tournament",
     website,
     id,
-    document: { ...aTournament(website), ...fields },
+    document: { ...aTournament(website, id), ...fields },
   });
   importingOf(world).ordering = { website, id };
 };
@@ -830,7 +839,7 @@ export const orderedDocument = (
   return {
     ...ordering,
     document: asKept({
-      ...aTournament(ordering.website),
+      ...aTournament(ordering.website, ordering.id),
       Competitions: listOf(world, ordering.website, ordering.id).map((Id) => ({
         Id,
       })),
