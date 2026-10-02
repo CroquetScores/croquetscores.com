@@ -110,6 +110,7 @@ import { TournamentsByWebsite } from "../../../src/infrastructure/read-models/To
 import { RecentResultsHandler } from "../../../src/application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../../../src/application/operations/tournaments/TournamentYearsHandler.js";
+import { TournamentsInYearHandler } from "../../../src/application/operations/tournaments/TournamentsInYearHandler.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
@@ -241,6 +242,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleQuery(new RecentResultsHandler(byWebsite));
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
+  mediator.handleQuery(new TournamentsInYearHandler(byWebsite));
 
   const inHand: TournamentsInHand = {
     send: (command) => mediator.send(command),

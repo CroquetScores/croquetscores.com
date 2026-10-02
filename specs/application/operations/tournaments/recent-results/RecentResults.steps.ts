@@ -6,7 +6,7 @@ import type { SpecWorld } from "../../../../support/world.js";
 import { inHandOf } from "../aRequest.js";
 
 // Asked with nobody signed in, with the filter the scenario chose. What was
-// answered is said in the words both lists' features share
+// answered is said in the words every list's feature shares
 // (tournamentsOfWebsite.steps.ts).
 const ask = async (
   world: SpecWorld,

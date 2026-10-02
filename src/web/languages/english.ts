@@ -277,28 +277,34 @@ export const english: Language = {
     "errors.failed": "Something went wrong",
     "errors.reference": "Reference {reference}.",
 
-    // The home page: its two lists, the columns each is a table of, what each
-    // says when it has nothing in it, what narrows them, and the years.
+    // The home page's two lists, what each says when it has nothing in it,
+    // and the way beneath them to every tournament this year.
     "home.recentResults": "Recent Results",
     "home.recentResults.none":
       "No games have been added in the last seven days.",
     "home.upcomingTournaments": "Upcoming Tournaments",
     "home.upcomingTournaments.none":
       "No tournaments start in the next sixty days.",
-    "home.column.date": "Date",
-    "home.column.name": "Name",
-    "home.column.country": "Country",
-    "home.filter.country": "Country",
-    "home.filter.anyCountry": "Any country",
-    "home.filter.region": "Region",
-    "home.filter.anyRegion": "Any region",
-    "home.filter.sport": "Sport",
-    "home.filter.anySport": "Any sport",
-    "home.filter.submit": "Filter",
     "home.allTournaments": "All tournaments in {year}",
-    "home.years.label": "Years",
+    // A year's page: its heading, and what it says when it has nothing in it.
+    "year.heading": "Tournaments in {year}",
+    "year.none": "No tournaments start in {year}.",
+    // What every list of tournaments shares, on the home page and a year's:
+    // the columns each is a table of, and what narrows them.
+    "tournamentList.column.date": "Date",
+    "tournamentList.column.name": "Name",
+    "tournamentList.column.country": "Country",
+    "tournamentList.filter.country": "Country",
+    "tournamentList.filter.anyCountry": "Any country",
+    "tournamentList.filter.region": "Region",
+    "tournamentList.filter.anyRegion": "Any region",
+    "tournamentList.filter.sport": "Sport",
+    "tournamentList.filter.anySport": "Any sport",
+    "tournamentList.filter.submit": "Filter",
+    // The years there are tournaments in, the secondary navigation of both.
+    "years.label": "Years",
     // The drop-down list holding the years that do not fit as tabs.
-    "home.years.earlier": "Earlier years",
+    "years.earlier": "Earlier years",
 
     // The admin's words. The admin draws them in the browser, so the server
     // says them into its page as it sends it (adminPage.ts): these, and the

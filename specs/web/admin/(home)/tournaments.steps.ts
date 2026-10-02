@@ -74,9 +74,9 @@ const nameOf = (world: SpecWorld, name: string): Locator =>
 // What `expression` makes of the name of the tournament `name`, called
 // element there. Written as an expression, as the other steps write what they
 // run in the page, since the specs are typed without the browser's own types.
-// The home page's among them, whose lists are tables.
+// The public lists' among them, the home page's and a year's, which are tables.
 const names =
-  ":is(.tournaments > .tournament, .home-list tbody tr) .tournament-name";
+  ":is(.tournaments > .tournament, .tournament-list tbody tr) .tournament-name";
 const inNameOf = async <T>(
   world: SpecWorld,
   name: string,
@@ -548,7 +548,17 @@ Then(
   },
 );
 
-// Marked as a tab is, or selected in the drop-down list, whichever it is in.
+// Marked as a tab is, or chosen in the drop-down list, whichever it is in: in
+// a list to choose from, the year it selects, and in a disclosure of links,
+// the one it marks as a tab is marked among those it holds.
+const chosenInDropDown = (world: SpecWorld): Promise<string | null> =>
+  dropDown(world).evaluate((element) => {
+    const list = element as unknown as Shown & { value: string };
+    return list.localName === "select"
+      ? list.value
+      : (list.querySelector('a[aria-current="page"]')?.textContent ?? null);
+  });
+
 Then(
   "the year chosen is {int}",
   async function (this: SpecWorld, year: number) {
@@ -559,7 +569,7 @@ Then(
       const chosen =
         (await marked.count()) === 1
           ? Number(await marked.textContent())
-          : Number(await dropDown(this).inputValue());
+          : Number(await chosenInDropDown(this));
       assert.equal(chosen, year);
     });
   },

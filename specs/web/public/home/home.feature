@@ -56,9 +56,9 @@ Feature: The home page lists recent results and upcoming tournaments
   refused as one (`errors.feature`).
 
   The secondary navigation is the years there are tournaments in, newest
-  first (`TournamentYears.feature`), each leading to that year's tournaments
-  at its own address, which also answers `404` until its feature lands. They
-  are fitted to the window as the admin's years are (`tournaments.feature`):
+  first (`TournamentYears.feature`), each leading to that year's page, which
+  lists its tournaments (`year.feature`). They are fitted to the window as
+  the admin's years are (`tournaments.feature`):
   as many of the newest as fit on one row are tabs, and the rest are in a
   drop-down list at the end of the row, named "Earlier years". With no
   scripting the drop-down list is a disclosure of links rather than a list

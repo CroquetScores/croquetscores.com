@@ -15,10 +15,10 @@ const newTournament = "/admin/tournaments/new";
 
 // The admin's forms: the one a page is for, a tab's own, and one in a modal
 // dialog, which is the only one that can be used while it is open.
-// The home page's filter among them, which says what was chosen in the same
-// words a dialog's form does.
+// The public lists' filter among them, which says what was chosen in the
+// same words a dialog's form does.
 const forms =
-  "dialog[open] form, body:not(:has(dialog[open])) :is(form.dialog-form, form.tab-form, form.home-filter)";
+  "dialog[open] form, body:not(:has(dialog[open])) :is(form.dialog-form, form.tab-form, form.tournament-filter)";
 
 // The form, or what the page says in its place where the reader cannot use
 // it (edit.feature), or a tournament's tab once it has what it lists, which is

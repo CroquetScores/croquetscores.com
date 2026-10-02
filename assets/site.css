@@ -1062,8 +1062,8 @@ main {
   overflow-wrap: anywhere;
 }
 
-/* The home page's years, fitted to the window with no scripting to measure
-   them (home.ts). Every tab is as wide as every other and so is the drop-down
+/* The years of the home page and of a year's page, fitted to the window with
+   no scripting to measure them (tournamentLists.ts). Every tab is as wide as every other and so is the drop-down
    list, so how many fit is known from the bar's width alone: the newest is
    always a tab and never in the list, and the page's own rules show each
    further tab, and leave it out of the list, once the bar is wide enough. */
@@ -1126,8 +1126,8 @@ main {
   min-height: 44px;
 }
 
-/* The two lists: side by side where there is room for both, the recent
-   results first, and one above the other on a phone. */
+/* The home page's two lists: side by side where there is room for both, the
+   recent results first, and one above the other on a phone. */
 .home-lists {
   display: grid;
   gap: var(--space-6) var(--space-5);
@@ -1140,7 +1140,8 @@ main {
   }
 }
 
-.home-list {
+/* A list of tournaments, on the home page or a year's. */
+.tournament-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -1150,68 +1151,68 @@ main {
 /* Headed in the secondary navigation's colours, every other row on a colour
    of its own so that a row is followed across, and no lines between the
    cells, which the colours already part. */
-.home-list table {
+.tournament-list table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.home-list th,
-.home-list td {
+.tournament-list th,
+.tournament-list td {
   padding: var(--space-2) var(--space-3);
   border: 0;
   text-align: start;
   vertical-align: middle;
 }
 
-.home-list th {
+.tournament-list th {
   background: var(--accent-strong);
   color: var(--accent-ink);
   font-weight: 600;
 }
 
-.home-list th a {
+.tournament-list th a {
   display: flex;
   gap: var(--space-1);
   color: inherit;
   text-decoration: none;
 }
 
-.home-list tbody tr:nth-child(even) {
+.tournament-list tbody tr:nth-child(even) {
   background: var(--surface);
 }
 
 /* A row is read as one thing, so it is pressed as one: the name's link
    reaches over the whole of it. Pressed with a thumb, so as tall as anything
    else that is. */
-.home-list tbody tr {
+.tournament-list tbody tr {
   position: relative;
 }
 
-.home-list td {
+.tournament-list td {
   height: 44px;
 }
 
-.home-list .tournament-name::after {
+.tournament-list .tournament-name::after {
   position: absolute;
   inset: 0;
   content: "";
 }
 
-.home-list .tournament-dates {
+.tournament-list .tournament-dates {
   white-space: nowrap;
 }
 
 /* A long name wraps rather than being cut short or pushing out past the
    panel. */
-.home-list .tournament-name {
+.tournament-list .tournament-name {
   overflow-wrap: anywhere;
 }
 
-.home-list .tournament-flag img {
+.tournament-list .tournament-flag img {
   display: block;
 }
 
-.home-filter {
+.tournament-filter {
   display: flex;
   flex-wrap: wrap;
   align-items: end;
@@ -1219,19 +1220,19 @@ main {
 }
 
 /* No wider than the form, however long the longest country's name is. */
-.home-filter-field {
+.tournament-filter-field {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
   max-width: 100%;
 }
 
-.home-filter-field label {
+.tournament-filter-field label {
   font-weight: 600;
 }
 
-.home-filter select,
-.home-filter button {
+.tournament-filter select,
+.tournament-filter button {
   max-width: 100%;
   min-height: 44px;
   padding: var(--space-1) var(--space-3);
@@ -1240,7 +1241,7 @@ main {
   background: var(--panel);
 }
 
-.home-filter button {
+.tournament-filter button {
   border-color: var(--action);
   background: var(--action);
   color: var(--action-ink);
