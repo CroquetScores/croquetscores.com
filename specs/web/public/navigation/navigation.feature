@@ -14,6 +14,10 @@ Feature: Finding your way around the public site
   So the scenarios about how the navigation is shown watch "Help", which every
   reader is offered, rather than anything of an account's.
 
+  The secondary navigation is not here. The home page's is the years there are
+  tournaments in, which are fitted to the window rather than wrapped, since
+  they grow by one every season, and are specified with it (`home.feature`).
+
   Rule: The primary navigation suits the width it is shown at
 
     Scenario: On a wide screen the links are in the open
@@ -158,26 +162,3 @@ Feature: Finding your way around the public site
       And the home page is open
       When the menu button is pressed
       Then the link "Help" is at least 44 pixels tall
-
-  Rule: A page's own sections are never hidden
-
-    The sections are the page. Collapsing them behind a control would hide what
-    the reader came for, so they wrap onto as many rows as they need instead.
-
-    Scenario: The sections are shown on a wide screen
-      Given a viewport 1200 pixels wide
-      When the home page is opened
-      Then the section "AC" is visible
-
-    Scenario: The sections are still shown on a narrow screen
-      Given a viewport 375 pixels wide
-      When the home page is opened
-      Then the section "AC" is visible
-
-  Rule: A page says which section is being read
-
-    Scenario: The current section is marked
-      Given a viewport 1200 pixels wide
-      When the home page is opened
-      Then the section "All" is marked as current
-      And the section "AC" is not marked as current
