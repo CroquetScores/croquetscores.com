@@ -618,16 +618,25 @@ Then(
 Then(
   "the upcoming tournaments have no lines between their cells",
   async function (this: SpecWorld) {
+    // Every side of every cell read at once, since one question of the page
+    // for each would take longer than a step is given on a busy machine.
     const cells = list(this, "upcoming tournaments").locator("th, td");
-    for (const cell of await cells.all()) {
-      for (const side of ["top", "right", "bottom", "left"]) {
-        assert.equal(
-          await drawnAs(cell, `border-${side}-width`),
-          "0px",
-          `A cell has a line on its ${side}.`,
-        );
-      }
-    }
+    assert.ok((await cells.count()) > 0, "There are no cells.");
+    const lined = await cells.evaluateAll((cells) =>
+      cells.flatMap((cell) =>
+        ["top", "right", "bottom", "left"].filter(
+          (side) =>
+            (globalThis as unknown as InThePage)
+              .getComputedStyle(cell)
+              .getPropertyValue(`border-${side}-width`) !== "0px",
+        ),
+      ),
+    );
+    assert.deepEqual(
+      lined,
+      [],
+      `Cells have lines on their ${lined.join(", ")}.`,
+    );
   },
 );
 
