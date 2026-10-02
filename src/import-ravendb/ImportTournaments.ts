@@ -93,9 +93,12 @@ const countryOf = (timeZone: string | null): Country => {
 };
 
 // The notes as the old sites showed them, which wrote "<" and ">" as "&lt;"
-// and "&gt;" and showed them as the characters.
-const notesOf = (notes: string | null): TournamentNotes | undefined =>
-  notes === null
+// and "&gt;" and showed them as the characters. None where the document says
+// none, or leaves them out, as RavenDB left out a field never set.
+const notesOf = (
+  notes: string | null | undefined,
+): TournamentNotes | undefined =>
+  notes === null || notes === undefined
     ? undefined
     : TournamentNotes.from(
         notes.replaceAll("&lt;", "<").replaceAll("&gt;", ">"),

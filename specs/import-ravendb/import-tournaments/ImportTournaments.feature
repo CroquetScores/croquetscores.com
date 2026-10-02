@@ -240,6 +240,9 @@ Feature: Importing the old sites' tournaments
     a manager editing the notes sees what they wrote. The notes are then
     whatever the site makes of them, which takes out anything that is HTML.
 
+    A tournament with no notes was kept in either of two ways: with notes of
+    nothing, or with no notes in its document at all. Either has none here.
+
     Scenario: Notes are kept
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament's notes were "Play starts at 9am."
@@ -257,6 +260,13 @@ Feature: Importing the old sites' tournaments
     Scenario: A tournament with no notes has none
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament had no notes
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has no notes
+
+    Scenario: A tournament whose document holds no notes has none
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's document held no notes
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has no notes

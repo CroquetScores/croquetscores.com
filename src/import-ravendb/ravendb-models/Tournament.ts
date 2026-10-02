@@ -35,8 +35,11 @@ export interface Tournament {
   readonly TournamentType: string;
   /** A Windows time zone, such as "AUS Eastern Standard Time". */
   readonly TimeZoneId: string | null;
-  /** With "<" and ">" written as "&lt;" and "&gt;". */
-  readonly Notes: string | null;
+  /**
+   * With "<" and ">" written as "&lt;" and "&gt;". Nothing, or left out of the
+   * document altogether, where there are none.
+   */
+  readonly Notes?: string | null;
   /** That a test level on matches is drawn rather than decided by net games and hoops. */
   readonly DrawnMatchesAreNotDecidedByNetHoops: boolean;
   readonly IsArchived: boolean;

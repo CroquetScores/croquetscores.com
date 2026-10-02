@@ -114,6 +114,12 @@ Given("the tournament had no notes", function (this: SpecWorld) {
   tournamentWritten(this).Notes = null;
 });
 
+// Left out of the document altogether, as RavenDB left out a field the old
+// sites never set.
+Given("the tournament's document held no notes", function (this: SpecWorld) {
+  Reflect.deleteProperty(tournamentWritten(this), "Notes");
+});
+
 Given(
   /^the tournament (drew|did not draw) level tests$/,
   function (this: SpecWorld, drew: string) {
