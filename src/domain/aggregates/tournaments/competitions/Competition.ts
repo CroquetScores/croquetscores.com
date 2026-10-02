@@ -35,7 +35,12 @@ import {
   type Match,
 } from "./KnockoutPlay.js";
 import { GameId } from "./primitives/GameId.js";
+import {
+  CarryForward,
+  type CarryForwardCounts,
+} from "./value-objects/CarryForward.js";
 import { Score } from "./value-objects/Score.js";
+import { CompetitionPlayerCarryForwardChanged } from "./events/CompetitionPlayerCarryForwardChanged.js";
 import { CompetitionPlayerEntered } from "./events/CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "./events/CompetitionPlayerMoved.js";
 import { CompetitionPlayerRemoved } from "./events/CompetitionPlayerRemoved.js";
@@ -59,7 +64,8 @@ export type CompetitionErrorCode =
   | "Competition.ByeOutsideKnockout"
   | "Competition.SameTeam"
   | "Competition.NotATest"
-  | "Competition.ExpectedMatchesReached";
+  | "Competition.ExpectedMatchesReached"
+  | "Competition.NoStandings";
 
 /** A player of one of a test's teams, as the tournament says they are. */
 export interface TeamPlayerInTest {
@@ -388,6 +394,41 @@ export class Competition extends AggregateRoot {
   }
 
   /**
+   * That the player `id` carries `counts` forward, in place of whatever they
+   * did, so a count left out is taken away. A knockout has no standings for a
+   * carry forward to count in, since it is decided by its draw, so it is
+   * refused there rather than kept where nothing would ever count it. A
+   * withdrawn player is refused, as the player says, and a carry forward that
+   * breaks a rule as the carry forward says. One the player already has is
+   * left as it is.
+   */
+  changeCarryForward(
+    id: CompetitionPlayerId,
+    counts: CarryForwardCounts,
+    told: Told,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    if (told.shape.kind === "knockout") {
+      refuse(
+        "Competition.NoStandings",
+        "A knockout has no standings to carry anything forward into.",
+      );
+    }
+    const player = this.#playerFound(id);
+    const carryForward = CarryForward.from(counts);
+    if (player.withCarryForward(carryForward) === player) return;
+    this.record(
+      new CompetitionPlayerCarryForwardChanged(
+        id.value,
+        carryForward.counts,
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
    * That the player `id`, entered by mistake, is taken out, with their
    * archived games, which would be against somebody no longer there and
    * could never be restored. A withdrawn player and one with games in use are
@@ -656,6 +697,10 @@ export class Competition extends AggregateRoot {
     } else if (event instanceof CompetitionPlayerWithdrawalReversed) {
       this.#change(event.playerId, (player) => player.reverseWithdrawal());
       this.#forgetWithdrawal(event.playerId);
+    } else if (event instanceof CompetitionPlayerCarryForwardChanged) {
+      this.#change(event.playerId, (player) =>
+        player.withCarryForward(CarryForward.from(event.counts)),
+      );
     } else if (event instanceof CompetitionPlayerRemoved) {
       this.#players.delete(event.playerId);
       this.#forgetWithdrawal(event.playerId);

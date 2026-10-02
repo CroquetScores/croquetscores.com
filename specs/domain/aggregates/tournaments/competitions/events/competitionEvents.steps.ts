@@ -8,6 +8,7 @@ import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/to
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
+import { CompetitionPlayerCarryForwardChanged } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerCarryForwardChanged.js";
 import { CompetitionPlayerEntered } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerMoved.js";
 import { CompetitionPlayerRemoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerRemoved.js";
@@ -31,6 +32,27 @@ const GAME = "game/123e4567-e89b-42d3-a456-426614174000";
 const TOURNAMENT_PLAYER =
   "tournament-player/123e4567-e89b-42d3-a456-426614174000";
 
+// Something in every count, and no two the same, so that one read back into
+// another's place is found.
+const EVERY_COUNT = {
+  matchWins: 3,
+  matchLosses: 1,
+  gameWins: 7,
+  gameLosses: 4,
+  hoopsFor: 112,
+  hoopsAgainst: 86,
+};
+
+const carryForwardChanged = (
+  counts: ConstructorParameters<typeof CompetitionPlayerCarryForwardChanged>[1],
+) =>
+  new CompetitionPlayerCarryForwardChanged(
+    PLAYER,
+    counts,
+    causedBy,
+    happenedAt,
+  );
+
 const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
   "a player being entered": () =>
     new CompetitionPlayerEntered(
@@ -53,6 +75,15 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new CompetitionPlayerWithdrawn(PLAYER, 30000, causedBy, happenedAt),
   "a player's withdrawal being reversed": () =>
     new CompetitionPlayerWithdrawalReversed(PLAYER, causedBy, happenedAt),
+  "a player's carry forward being changed": () =>
+    carryForwardChanged(EVERY_COUNT),
+  "a player's carry forward being changed to every count": () =>
+    carryForwardChanged(EVERY_COUNT),
+  "a player's carry forward being changed to no counts": () =>
+    carryForwardChanged({}),
+  // A count of 0 is something, and must not be read back as nothing.
+  "a player's carry forward being changed to match wins of 0": () =>
+    carryForwardChanged({ matchWins: 0 }),
   "a player being removed": () =>
     new CompetitionPlayerRemoved(PLAYER, causedBy, happenedAt),
   "a bye being moved": () =>

@@ -11,7 +11,10 @@ Feature: The names a competition's events are kept under
   be true. Every one begins with "competition-", so that no name of a
   competition's could ever be one another kind of thing wants for its own.
 
-  What an event cannot do without, it is refused without. What was kept comes
+  What an event can do without, such as any of the counts a player carries
+  forward, is left out when it is nothing, and is read back as nothing. A
+  count of 0 is something, and is read back as 0. What an event cannot do
+  without, it is refused without. What was kept comes
   back from a table something else could have written to, and an event read
   back as something it never said is worse than none, so a field that is there
   but is not what the event says there, such as an order written as text, is
@@ -28,20 +31,21 @@ Feature: The names a competition's events are kept under
       Then it was written down under the name "<name>"
 
       Examples:
-        | happening                               | name                                   |
-        | a player being entered                  | competition-player-entered             |
-        | a player being moved                    | competition-player-moved               |
-        | the players being spaced out            | competition-players-spaced-out         |
-        | a player withdrawing                    | competition-player-withdrawn           |
-        | a player's withdrawal being reversed    | competition-player-withdrawal-reversed |
-        | a player being removed                  | competition-player-removed             |
-        | a bye being moved                       | competition-bye-moved                  |
-        | a bye being removed                     | competition-bye-removed                |
-        | a game being added                      | competition-game-added                 |
-        | a game being archived                   | competition-game-archived              |
-        | a game being restored                   | competition-game-restored              |
-        | a game being corrected                  | competition-game-corrected             |
-        | a game being corrected to other players | competition-game-corrected             |
+        | happening                               | name                                     |
+        | a player being entered                  | competition-player-entered               |
+        | a player being moved                    | competition-player-moved                 |
+        | the players being spaced out            | competition-players-spaced-out           |
+        | a player withdrawing                    | competition-player-withdrawn             |
+        | a player's withdrawal being reversed    | competition-player-withdrawal-reversed   |
+        | a player's carry forward being changed  | competition-player-carry-forward-changed |
+        | a player being removed                  | competition-player-removed               |
+        | a bye being moved                       | competition-bye-moved                    |
+        | a bye being removed                     | competition-bye-removed                  |
+        | a game being added                      | competition-game-added                   |
+        | a game being archived                   | competition-game-archived                |
+        | a game being restored                   | competition-game-restored                |
+        | a game being corrected                  | competition-game-corrected               |
+        | a game being corrected to other players | competition-game-corrected               |
 
   Rule: An event written down and read back is the event it was
 
@@ -52,19 +56,20 @@ Feature: The names a competition's events are kept under
       Then what was read back is the kind of event that was written down
 
       Examples:
-        | happening                            |
-        | a player being entered               |
-        | a player being moved                 |
-        | the players being spaced out         |
-        | a player withdrawing                 |
-        | a player's withdrawal being reversed |
-        | a player being removed               |
-        | a bye being moved                    |
-        | a bye being removed                  |
-        | a game being added                   |
-        | a game being archived                |
-        | a game being restored                |
-        | a game being corrected               |
+        | happening                              |
+        | a player being entered                 |
+        | a player being moved                   |
+        | the players being spaced out           |
+        | a player withdrawing                   |
+        | a player's withdrawal being reversed   |
+        | a player's carry forward being changed |
+        | a player being removed                 |
+        | a bye being moved                      |
+        | a bye being removed                    |
+        | a game being added                     |
+        | a game being archived                  |
+        | a game being restored                  |
+        | a game being corrected                 |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -79,6 +84,7 @@ Feature: The names a competition's events are kept under
         | the players being spaced out            |
         | a player withdrawing                    |
         | a player's withdrawal being reversed    |
+        | a player's carry forward being changed  |
         | a player being removed                  |
         | a bye being moved                       |
         | a bye being removed                     |
@@ -87,6 +93,26 @@ Feature: The names a competition's events are kept under
         | a game being restored                   |
         | a game being corrected                  |
         | a game being corrected to other players |
+
+  Rule: What a carry forward can do without is read back as nothing
+
+    Scenario: A player carrying every count forward is read back carrying it all
+      Given an event of a player's carry forward being changed to every count
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
+    Scenario: A player carrying nothing forward is read back carrying nothing
+      Given an event of a player's carry forward being changed to no counts
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
+    Scenario: A count of 0 is read back as 0
+      Given an event of a player's carry forward being changed to match wins of 0
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
 
   Rule: What a correction can do without is read back as nothing
 
@@ -109,29 +135,30 @@ Feature: The names a competition's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                    | field              |
-        | a player being entered       | tournamentPlayerId |
-        | a player being entered       | order              |
-        | a player being moved         | order              |
-        | the players being spaced out | playerIds          |
-        | a player withdrawing         | playerId           |
-        | a player withdrawing         | order              |
-        | a player being removed       | playerId           |
-        | a bye being moved            | fromOrder          |
-        | a bye being moved            | order              |
-        | a bye being removed          | order              |
-        | a game being added           | gameId             |
-        | a game being added           | winnerId           |
-        | a game being added           | winnerScore        |
-        | a game being added           | loserId            |
-        | a game being added           | loserScore         |
-        | a game being added           | winnerMarked       |
-        | a game being archived        | gameId             |
-        | a game being restored        | gameId             |
-        | a game being corrected       | gameId             |
-        | a game being corrected       | winnerScore        |
-        | a game being corrected       | winnerMarked       |
-        | a game being corrected       | loserScore         |
+        | happening                              | field              |
+        | a player being entered                 | tournamentPlayerId |
+        | a player being entered                 | order              |
+        | a player being moved                   | order              |
+        | the players being spaced out           | playerIds          |
+        | a player withdrawing                   | playerId           |
+        | a player withdrawing                   | order              |
+        | a player being removed                 | playerId           |
+        | a player's carry forward being changed | playerId           |
+        | a bye being moved                      | fromOrder          |
+        | a bye being moved                      | order              |
+        | a bye being removed                    | order              |
+        | a game being added                     | gameId             |
+        | a game being added                     | winnerId           |
+        | a game being added                     | winnerScore        |
+        | a game being added                     | loserId            |
+        | a game being added                     | loserScore         |
+        | a game being added                     | winnerMarked       |
+        | a game being archived                  | gameId             |
+        | a game being restored                  | gameId             |
+        | a game being corrected                 | gameId             |
+        | a game being corrected                 | winnerScore        |
+        | a game being corrected                 | winnerMarked       |
+        | a game being corrected                 | loserScore         |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>
@@ -142,6 +169,8 @@ Feature: The names a competition's events are kept under
       Examples:
         | happening                               | field        | written                     |
         | a player being entered                  | order        | the text "10000"            |
+        | a player's carry forward being changed  | matchWins    | the text "3"                |
+        | a player's carry forward being changed  | hoopsAgainst | the text "86"               |
         | the players being spaced out            | playerIds    | a list holding the number 1 |
         | a game being added                      | winnerScore  | the number 26               |
         | a game being added                      | winnerMarked | the text "yes"              |

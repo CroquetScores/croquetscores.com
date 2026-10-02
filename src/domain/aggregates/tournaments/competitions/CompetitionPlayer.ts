@@ -2,6 +2,7 @@ import { Validator } from "../../../common/validation/Validator.js";
 import { ValidationError } from "../../../common/validation/ValidationError.js";
 import type { TournamentPlayerId } from "../primitives/TournamentPlayerId.js";
 import { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
+import { CarryForward } from "./value-objects/CarryForward.js";
 
 /** Every rule a player in a competition can break. */
 export type CompetitionPlayerErrorCode =
@@ -44,8 +45,11 @@ export interface CompetitionPlayerDetails {
  * Everything about the person is the tournament player's, so it is said once
  * rather than again in every competition they play in.
  *
- * A player is never altered: withdrawing and reversing it give the player as
- * they are afterwards, and leave the one asked unchanged. Asking for what a
+ * A player may carry results forward into the competition, which is theirs
+ * in this competition and no other. One entered carries nothing forward.
+ *
+ * A player is never altered: withdrawing and reversing it, and giving them a
+ * carry forward, give the player as they are afterwards, and leave the one asked unchanged. Asking for what a
  * player already is gives them back as they are, since two people doing the
  * same thing at once, or a form sent twice, is not a mistake worth refusing.
  *
@@ -60,21 +64,25 @@ export class CompetitionPlayer {
   readonly #tournamentPlayerId: TournamentPlayerId;
   readonly #order: number;
   readonly #withdrawn: boolean;
+  readonly #carryForward: CarryForward;
 
   private constructor(
     id: CompetitionPlayerId,
     tournamentPlayerId: TournamentPlayerId,
     order: number,
     withdrawn: boolean,
+    carryForward: CarryForward,
   ) {
     this.#id = id;
     this.#tournamentPlayerId = tournamentPlayerId;
     this.#order = order;
     this.#withdrawn = withdrawn;
+    this.#carryForward = carryForward;
   }
 
   /**
-   * The new player known by `id` that `details` describe, not withdrawn.
+   * The new player known by `id` that `details` describe, not withdrawn and
+   * carrying nothing forward.
    * Throws {@link ValidationError} naming the first rule the order breaks.
    */
   static from(
@@ -87,6 +95,7 @@ export class CompetitionPlayer {
       details.tournamentPlayerId,
       details.order,
       false,
+      CarryForward.none(),
     );
   }
 
@@ -119,6 +128,11 @@ export class CompetitionPlayer {
 
   get withdrawn(): boolean {
     return this.#withdrawn;
+  }
+
+  /** What they bring into the competition from play it did not score. */
+  get carryForward(): CarryForward {
+    return this.#carryForward;
   }
 
   /** Whether this is a knockout's bye, which fills a place but is nobody. */
@@ -155,6 +169,21 @@ export class CompetitionPlayer {
       throw new ValidationError<CompetitionPlayerErrorCode>(
         "CompetitionPlayer.Withdrawn",
       );
+  }
+
+  /**
+   * The player, carrying `carryForward` forward in place of whatever they did,
+   * so a count it leaves out is taken away. Throws {@link ValidationError} as
+   * `CompetitionPlayer.Withdrawn` for a withdrawn player, who can only have
+   * their withdrawal reversed.
+   */
+  withCarryForward(carryForward: CarryForward): CompetitionPlayer {
+    if (this.#withdrawn)
+      throw new ValidationError<CompetitionPlayerErrorCode>(
+        "CompetitionPlayer.Withdrawn",
+      );
+    if (this.#carryForward.equals(carryForward)) return this;
+    return this.#with({ carryForward });
   }
 
   /** The player, playing again. */
@@ -211,12 +240,14 @@ export class CompetitionPlayer {
   #with(changed: {
     readonly withdrawn?: boolean;
     readonly order?: number;
+    readonly carryForward?: CarryForward;
   }): CompetitionPlayer {
     return new CompetitionPlayer(
       this.#id,
       this.#tournamentPlayerId,
       changed.order ?? this.#order,
       changed.withdrawn ?? this.#withdrawn,
+      changed.carryForward ?? this.#carryForward,
     );
   }
 }
