@@ -13,6 +13,7 @@ import { RestorePlayer } from "../../../../src/application/operations/tournament
 import { MoveCompetition } from "../../../../src/application/operations/tournaments/MoveCompetition.js";
 import { UpdatePlayer } from "../../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { ArchiveTournament } from "../../../../src/application/operations/tournaments/ArchiveTournament.js";
+import { RestoreTournament } from "../../../../src/application/operations/tournaments/RestoreTournament.js";
 import {
   type CreatedTournament,
   CreateTournament,
@@ -24,6 +25,7 @@ import { UpdateTournament } from "../../../../src/application/operations/tournam
 import type { Command } from "../../../../src/application/common/Command.js";
 import type { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../../src/domain/aggregates/tournaments/Tournament.js";
+import { Sport } from "../../../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { scenarioOf as domainScenarioOf } from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
 import {
@@ -88,16 +90,62 @@ const createdBefore = async (
   await lookAt(world, answer.id);
 };
 
+// What the scenario said the next tournament it creates is to be, where it
+// said: its days, its sport, and where it is played. A start said with no
+// finish is a tournament of one day, and a country said with no region is a
+// tournament in none of its regions, so that saying one never makes the other
+// wrong.
+const saidOfNext = (world: SpecWorld): Partial<TournamentRequest> => {
+  const said = domainScenarioOf(world).creating;
+  return {
+    ...(said.starts === undefined
+      ? {}
+      : { starts: said.starts, finishes: said.finishes ?? said.starts }),
+    ...(said.finishes === undefined ? {} : { finishes: said.finishes }),
+    ...(world.sport === undefined ? {} : { sport: world.sport.code }),
+    ...(said.country === undefined
+      ? {}
+      : { country: said.country, region: said.region ?? undefined }),
+  };
+};
+
 // In the format the scenario said the next tournament is to be played in,
-// where it said one.
+// where it said one, and as it said otherwise.
 Given(
   "{string} has created the tournament {string}",
   async function (this: SpecWorld, address: string, name: string) {
     await createdBefore(
       this,
       address,
-      aTournament(name, { format: this.tournamentFormat?.name ?? "Standard" }),
+      aTournament(name, {
+        format: this.tournamentFormat?.name ?? "Standard",
+        ...saidOfNext(this),
+      }),
     );
+  },
+);
+
+// Each said of the next tournament the scenario creates, in the words the
+// tournament's own features say it in.
+Given(
+  "the tournament is to be for the sport {string}",
+  function (this: SpecWorld, code: string) {
+    this.sportSaid = code;
+    this.sport = Sport.from(code);
+  },
+);
+
+Given(
+  "the tournament is to be played in the country {string}",
+  function (this: SpecWorld, code: string) {
+    domainScenarioOf(this).creating.country = code;
+  },
+);
+
+Given(
+  "the tournament is to be played in the region {string}",
+  function (this: SpecWorld, code: string) {
+    domainScenarioOf(this).creating.region = code;
   },
 );
 
@@ -228,6 +276,17 @@ Given(
     await doneTo(this, address, name, (account, tournament) =>
       Promise.resolve(
         new ArchiveTournament(account, tournament.value, momentOf(this)),
+      ),
+    );
+  },
+);
+
+Given(
+  "{string} has restored the tournament {string}",
+  async function (this: SpecWorld, address: string, name: string) {
+    await doneTo(this, address, name, (account, tournament) =>
+      Promise.resolve(
+        new RestoreTournament(account, tournament.value, momentOf(this)),
       ),
     );
   },

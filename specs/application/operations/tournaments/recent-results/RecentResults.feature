@@ -41,6 +41,7 @@ Feature: The tournaments with recent results
     And "organiser@example.com" has created the tournament "Spring Open"
     And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
     And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+    And the block is to be the best of 3
     And "organiser@example.com" has added the block "Block A" to "Spring Open"
     And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
     And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"

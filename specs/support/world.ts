@@ -399,6 +399,13 @@ export class SpecWorld extends World {
   public tournamentsInHand: TournamentsInHand | undefined;
   public games:
     import("../../src/application/services/Games.js").Games | undefined;
+  // What a scenario narrows a website's tournaments by, each by its code as
+  // the scenario names it, for whatever asks to see them to make a filter of.
+  public filterChosen: {
+    country?: string;
+    region?: string;
+    sport?: string;
+  } = {};
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;
