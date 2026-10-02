@@ -14,6 +14,7 @@ import {
   type ListedGame,
 } from "../../../../src/application/operations/competitions/GamesOfCompetition.js";
 import { RestoreGame } from "../../../../src/application/operations/competitions/RestoreGame.js";
+import { MoveGame } from "../../../../src/application/operations/competitions/MoveGame.js";
 import { EnterPlayer } from "../../../../src/application/operations/competitions/EnterPlayer.js";
 import { MoveCompetitionPlayer } from "../../../../src/application/operations/competitions/MoveCompetitionPlayer.js";
 import {
@@ -24,9 +25,13 @@ import { RemovePlayer } from "../../../../src/application/operations/competition
 import { ReverseWithdrawal } from "../../../../src/application/operations/competitions/ReverseWithdrawal.js";
 import { WithdrawPlayer } from "../../../../src/application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../../src/application/operations/tournaments/MovePlayer.js";
+import { PlayersOfTest } from "../../../../src/application/operations/competitions/PlayersOfTest.js";
 import type { Competition } from "../../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionPlayer } from "../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
-import type { Game } from "../../../../src/domain/aggregates/tournaments/competitions/Game.js";
+import type {
+  Game,
+  GamePlayerId,
+} from "../../../../src/domain/aggregates/tournaments/competitions/Game.js";
 import { GameId } from "../../../../src/domain/aggregates/tournaments/competitions/primitives/GameId.js";
 import { CompetitionPlayerId } from "../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import type { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
@@ -38,6 +43,7 @@ import { playerNamed } from "../../../domain/aggregates/tournaments/tournament/a
 import {
   accountFor,
   ask,
+  everyCreated,
   heldAccount,
   inHandOf,
   load,
@@ -105,6 +111,40 @@ const competitionPlayerIn = async (
     ? undefined
     : (await competitionPlayerCalled(world, tournament, competition, name))
         ?.id) ?? CompetitionPlayerId.create();
+
+// Who the player called `name` is in a game of the competition: in a test,
+// which has no players entered, the player of one of the tournament's teams
+// with that name; anywhere else, the competition's player who is the
+// tournament player of that name. Nothing where there is nobody of that name.
+const gamePlayerCalled = async (
+  world: SpecWorld,
+  tournament: TournamentId,
+  competition: CompetitionId,
+  name: string,
+): Promise<{ readonly id: GamePlayerId } | undefined> => {
+  const found = await inHandOf(world).load(tournament);
+  const isATest = found?.competitions.some(
+    ({ reference, shape }) =>
+      reference.id.equals(competition) && shape.kind === "test",
+  );
+  if (found === undefined || isATest !== true) {
+    return competitionPlayerCalled(world, tournament, competition, name);
+  }
+  return found.teams
+    .flatMap((team) => team.players)
+    .find((player) => player.name.toString() === name);
+};
+
+// A game's player's id where there is one called `name`, as
+// `gamePlayerCalled` finds them, and one that names nobody where there is not.
+const gamePlayerIn = async (
+  world: SpecWorld,
+  tournament: TournamentId,
+  competition: CompetitionId,
+  name: string,
+): Promise<GamePlayerId> =>
+  (await gamePlayerCalled(world, tournament, competition, name))?.id ??
+  CompetitionPlayerId.create();
 
 // What a request about a competition's player names: the tournament, the
 // competition and the player, each as the scenario says it, or nothing that
@@ -643,6 +683,27 @@ When(
 
 // Listing a competition's players ---------------------------------------------
 
+// Whether a competition the scenario names is a test, in any tournament it
+// created: a test's players are listed in the words a competition's are
+// (`PlayersOfTest.feature`), and are asked for of the test's own list.
+const isATest = async (
+  world: SpecWorld,
+  competition: string | undefined,
+): Promise<boolean> => {
+  for (const id of everyCreated(world)) {
+    const tournament = await inHandOf(world).load(id);
+    if (
+      tournament?.competitions.some(
+        ({ reference, shape }) =>
+          reference.name.toString() === competition && shape.kind === "test",
+      )
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const listing = async (
   world: SpecWorld,
   account: string,
@@ -650,10 +711,14 @@ const listing = async (
   competition: string | undefined,
 ): Promise<void> => {
   const id = await competitionIn(world, tournament, competition);
-  await ask(
-    world,
-    new PlayersOfCompetition(account, tournament.value, id.value),
-  );
+  if (await isATest(world, competition)) {
+    await ask(world, new PlayersOfTest(account, tournament.value, id.value));
+  } else {
+    await ask(
+      world,
+      new PlayersOfCompetition(account, tournament.value, id.value),
+    );
+  }
 };
 
 When(
@@ -996,8 +1061,7 @@ const addingAs = async (
   const player = async (name: string | undefined) =>
     name === undefined
       ? undefined
-      : (await competitionPlayerIn(world, tournament, competitionId, name))
-          .value;
+      : (await gamePlayerIn(world, tournament, competitionId, name)).value;
   await send(
     world,
     new AddGame(
@@ -1221,18 +1285,13 @@ const gameCalled = async (
 ): Promise<Game | undefined> => {
   const found = await competitionNow(world, competition);
   if (found === undefined) return undefined;
-  const winnerId = await competitionPlayerCalled(
+  const winnerId = await gamePlayerCalled(
     world,
     tournament,
     competition,
     winner,
   );
-  const loserId = await competitionPlayerCalled(
-    world,
-    tournament,
-    competition,
-    loser,
-  );
+  const loserId = await gamePlayerCalled(world, tournament, competition, loser);
   return found.games.find(
     (game) =>
       winnerId !== undefined &&
@@ -1425,6 +1484,143 @@ for (const [verb, making] of [
   );
 }
 
+// Moving a test's score up or down ----------------------------------------------
+
+// The way to move it, as said: up or down, or anything else in quotes.
+const WAY = String.raw`(up|down|"[^"]*")`;
+const wayOf = (said: string): string => said.replace(/^"|"$/g, "");
+
+const movingGame =
+  (direction: string): GameMaking =>
+  (account, tournament, competition, game, at) =>
+    new MoveGame(
+      account,
+      tournament.value,
+      competition.value,
+      game.value,
+      direction,
+      at,
+    );
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" moves the score of ${GAME} in "([^"]*)" of "([^"]*)" ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to that account moves the score of ${GAME} in "([^"]*)" of "([^"]*)" ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      heldAccount(this),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" moves a score "([^"]*)" of "([^"]*)" does not have ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      undefined,
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" moves the score of ${GAME} in "([^"]*)" of a tournament there is not ${WAY}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    way: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      noTournament(),
+      competition,
+      { winner, loser },
+      movingGame(wayOf(way)),
+    );
+  },
+);
+
+// The competition's own stream, read back: the order its games are kept in.
+Then(
+  new RegExp(`^the first score of "([^"]*)" of "([^"]*)" is of ${GAME}$`),
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    winner: string,
+    loser: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const competitionId = await competitionIn(this, tournament, competition);
+    const first = (await competitionNow(this, competitionId))?.games[0];
+    const expected = await gameCalled(
+      this,
+      tournament,
+      competitionId,
+      winner,
+      loser,
+    );
+    assert.ok(
+      first !== undefined && expected !== undefined && first.equals(expected),
+      `The first score is ${inspect(first)}.`,
+    );
+  },
+);
+
 // Correcting a game's scores ------------------------------------------------------
 
 // A game's scores corrected, found as archiving and restoring find it: by its
@@ -1488,8 +1684,7 @@ When(
     const tournament = tournamentNamed(this, name);
     const competitionId = await competitionIn(this, tournament, competition);
     const player = async (called: string) =>
-      (await competitionPlayerIn(this, tournament, competitionId, called))
-        .value;
+      (await gamePlayerIn(this, tournament, competitionId, called)).value;
     await gameSent(
       this,
       await asTheReader(this, address),
@@ -1642,13 +1837,13 @@ Then(
   ) {
     const about = await theCompetition(this, competition, name);
     const games = (await competitionNow(this, about.competition))?.games ?? [];
-    const winnerId = await competitionPlayerCalled(
+    const winnerId = await gamePlayerCalled(
       this,
       about.tournament,
       about.competition,
       winner,
     );
-    const loserId = await competitionPlayerCalled(
+    const loserId = await gamePlayerCalled(
       this,
       about.tournament,
       about.competition,
@@ -1876,6 +2071,50 @@ Then(
       assert.equal(game.archivable, true);
     if (as === " as one that cannot be archived")
       assert.equal(game.archivable, false);
+  },
+);
+
+// The team a test's player plays for, by its id, as whichever tournament the
+// scenario made has a team called that.
+Then(
+  new RegExp(
+    `^the score of ${GAME} ${SCORES} is answered with the (winner|loser) playing for "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    side: string,
+    team: string,
+  ) {
+    const game = gameListed(this, winner, loser, winnerScore, loserScore);
+    const tournaments = await Promise.all(
+      [...scenarioOf(this).byName.values()].map((id) => load(this, id)),
+    );
+    const id = tournaments
+      .flatMap((each) => each.teams)
+      .find((each) => each.name.toString() === team)?.id.value;
+    assert.ok(id !== undefined, `There is no team ${team}.`);
+    assert.equal(side === "winner" ? game.winnerTeam : game.loserTeam, id);
+  },
+);
+
+Then(
+  new RegExp(
+    `^the score of ${GAME} ${SCORES} is answered with neither player playing for a team$`,
+  ),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const game = gameListed(this, winner, loser, winnerScore, loserScore);
+    assert.equal(game.winnerTeam, undefined);
+    assert.equal(game.loserTeam, undefined);
   },
 );
 

@@ -175,3 +175,15 @@ Feature: Adding a player to a tournament
       And the tournament is rebuilt from the stream
       When the player "Sam Someone" is added
       Then it is refused with "Tournament.Archived"
+
+  Rule: A player cannot be added to a tournament played by teams
+
+    A tournament played by teams is played between its teams' players
+    (`addTeamPlayer.feature`), and a player of the tournament's own would play
+    for nobody in it.
+
+    Scenario: Adding a player to a tournament played by teams is refused
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added
+      Then it is refused with "Tournament.PlayedByTeams"

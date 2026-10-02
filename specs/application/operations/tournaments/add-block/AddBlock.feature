@@ -75,6 +75,12 @@ Feature: Adding a block to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the block "block a" to "Spring Open"
       Then it is refused with "Tournament.CompetitionNameTaken"
 
+    Scenario: Adding a block to a tournament played by teams is refused as the tournament refuses it
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Tests"
+      Then it is refused with "Tournament.PlayedByTeams"
+
     Scenario: Adding a block to an archived tournament is refused as the tournament refuses it
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"

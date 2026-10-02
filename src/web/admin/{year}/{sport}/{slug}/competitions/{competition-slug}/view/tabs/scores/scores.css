@@ -15,3 +15,63 @@
 .listed-item[data-archived] .listed-score {
   text-decoration: line-through;
 }
+
+/* A test's scores, set out by team: each team's player under its short name,
+   the scores between them, and what each offers last. The players' and the
+   scores' columns are as wide as what is in them and no wider, and nothing
+   wraps, so that a score reads along one line. The table reaches across the
+   page, the last column taking what is left, so that what each score offers
+   is at the right edge. Where it is wider than the screen, the box the table
+   is in scrolls across rather than the page widening. */
+.test-scores-box {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.test-scores {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* As narrow as what is in them, which a cell asking for less than it needs
+   is, so that the last column takes the rest. */
+.test-scores tr > :not(:last-child) {
+  width: 1%;
+}
+
+.test-scores .listed-options {
+  justify-content: flex-end;
+}
+
+.test-scores th,
+.test-scores td {
+  padding-block: var(--space-2);
+  padding-inline: var(--space-2);
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: start;
+}
+
+/* A row of a table, whose cells line up under the headings, rather than the
+   grid every other list's row is (listed.css). */
+.test-scores .listed-item {
+  display: table-row;
+  border-top: 1px solid var(--border);
+}
+
+.test-scores th:nth-child(2),
+.test-scores .listed-score {
+  text-align: center;
+}
+
+.test-scores .score-player {
+  font-weight: 600;
+}
+
+.test-scores .listed-options {
+  flex-wrap: nowrap;
+}
+
+.listed-item[data-archived] .score-player {
+  text-decoration: line-through;
+}

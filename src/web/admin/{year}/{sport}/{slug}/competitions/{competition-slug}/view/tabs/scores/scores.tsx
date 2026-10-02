@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
-import { say } from "../../../../../../../../words.js";
-import { noOption } from "../../../../../view/tabs/optionFace.js";
+import { knows, say } from "../../../../../../../../words.js";
+import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
 import "../../../../../view/tabs/listed.css";
 import "./scores.css";
@@ -14,14 +14,32 @@ import "./scores.css";
 // Whatever is pressed, and whenever the dialog adds or corrects a game, the
 // list is asked for again. In a knockout whose draw is not filled, Add Score
 // says why scores cannot be added rather than opening the dialog.
+//
+// A test's page lists its scores here too, set out by team rather than by who
+// won (view.feature beneath the test): a table headed by the first team's
+// short name, "v" and the second's, each score a row with the first team's
+// player, both scores the first team's player's first, then the second team's
+// player, and Up and Down after what else it offers, to list them as they
+// were played.
 
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
   /** The competition's id. */
   readonly competition: string;
-  /** A knockout's draw has to be filled before any game can be added. */
-  readonly kind: "block" | "knockout" | "swiss";
+  /**
+   * A knockout's draw has to be filled before any game can be added, and a
+   * test's players are its teams'.
+   */
+  readonly kind: "block" | "knockout" | "swiss" | "test";
+  /** A test's two teams, which its scores are set out by. */
+  readonly teams?: readonly [TeamSide, TeamSide] | undefined;
+}
+
+/** One of a test's teams, as its scores are set out by. */
+export interface TeamSide {
+  readonly id: string;
+  readonly shortName: string;
 }
 
 /** A game as the API lists it. */
@@ -35,6 +53,9 @@ interface Listed {
   readonly loserScore: string;
   readonly archived: boolean;
   readonly archivable: boolean;
+  /** In a test, the team each player plays for, by its id. */
+  readonly winnerTeam?: string;
+  readonly loserTeam?: string;
 }
 
 // The part of an id after its kind, which is how the API names a thing.
@@ -75,6 +96,7 @@ export const ScoresTab = ({
   tournament,
   competition,
   kind,
+  teams,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   const [asking, setAsking] = useState(0);
@@ -83,6 +105,9 @@ export const ScoresTab = ({
   const [adding, setAdding] = useState(false);
   // Why Add Score did not open the dialog, said until OK is pressed.
   const [unfilled, setUnfilled] = useState(false);
+  // What was refused of what was last pressed, by its code: a game whose
+  // player has been archived since is not restored until they are.
+  const [refused, setRefused] = useState<string | undefined>();
   // The game Edit was pressed on, which the dialog corrects.
   const [correcting, setCorrecting] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
@@ -113,15 +138,20 @@ export const ScoresTab = ({
   // Neither asks first: each is undone by the other, and nothing is lost.
   const act = async (
     game: Listed,
-    action: "archive" | "restore",
+    action: "archive" | "restore" | "up" | "down",
   ): Promise<void> => {
     setActing(true);
+    setRefused(undefined);
     try {
-      await fetch(`${at}/${idInAddress(game.id)}/${action}`, {
+      const response = await fetch(`${at}/${idInAddress(game.id)}/${action}`, {
         method: "POST",
       });
+      if (!response.ok) {
+        const answer = (await response.json()) as { error?: string };
+        setRefused(answer.error ?? "Unknown");
+      }
     } catch {
-      // A request that never arrived is said by the list asked for again.
+      setRefused("Unknown");
     } finally {
       askAgain();
       setActing(false);
@@ -130,6 +160,13 @@ export const ScoresTab = ({
 
   const inUse = listed?.filter(({ archived }) => !archived) ?? [];
   const archived = listed?.filter((game) => game.archived) ?? [];
+
+  const archivedSaid = (game: Listed): React.JSX.Element | null =>
+    game.archived ? (
+      <span className="visually-hidden">
+        {say("admin.scores.archivedSaid")}
+      </span>
+    ) : null;
 
   const row = (game: Listed): React.JSX.Element => (
     <li
@@ -143,51 +180,134 @@ export const ScoresTab = ({
         <span className="score-loser">{game.loser}</span>{" "}
         <span className="score-loser-score">{game.loserScore}</span>
       </span>
-      {game.archived ? (
-        <span className="visually-hidden">
-          {say("admin.scores.archivedSaid")}
-        </span>
-      ) : null}
-      <span className="listed-options">
-        {/* Every game in use, first, as Edit is on every list in the admin:
+      {archivedSaid(game)}
+      {options(game)}
+    </li>
+  );
+
+  // A test's score from the first team's side, whoever won: the first team's
+  // player, both scores theirs first, then the second team's player. Each part
+  // keeps its winner's or loser's class, so that it is read as either is.
+  const testRow = (game: Listed, first: TeamSide): React.JSX.Element => {
+    const firstWon = game.winnerTeam === first.id;
+    const [left, right] = firstWon
+      ? (["winner", "loser"] as const)
+      : (["loser", "winner"] as const);
+    return (
+      <tr
+        key={game.id}
+        className="listed-item"
+        data-archived={game.archived ? "" : undefined}
+      >
+        <td className={`score-player score-${left}`}>{game[left]}</td>
+        <td className="listed-score">
+          <span className={`score-${left}-score`}>{game[`${left}Score`]}</span>
+          {" - "}
+          <span className={`score-${right}-score`}>
+            {game[`${right}Score`]}
+          </span>
+        </td>
+        <td className={`score-player score-${right}`}>{game[right]}</td>
+        <td>
+          {archivedSaid(game)}
+          {options(game)}
+        </td>
+      </tr>
+    );
+  };
+
+  const testTable = (
+    games: readonly Listed[],
+    listing: "in-use" | "archived",
+    [first, second]: readonly [TeamSide, TeamSide],
+  ): React.JSX.Element => (
+    // Within a box of its own, which scrolls across where the table is wider
+    // than the screen, since nothing in it wraps.
+    <div className="test-scores-box">
+      <table className="test-scores">
+        <thead>
+          <tr>
+            <th scope="col" className="test-team">
+              {first.shortName}
+            </th>
+            <th scope="col">{say("admin.test.versus")}</th>
+            <th scope="col" className="test-team">
+              {second.shortName}
+            </th>
+            {/* What each score offers, which needs no heading to be read. */}
+            <td />
+          </tr>
+        </thead>
+        <tbody data-listed={listing}>
+          {games.map((game) => testRow(game, first))}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const options = (game: Listed): React.JSX.Element => (
+    <span className="listed-options">
+      {/* Every game in use, first, as Edit is on every list in the admin:
             its scores can always be corrected, and its players where it could
             be archived, which the dialog is told. An archived game is
             restored before it is corrected. */}
-        {game.archived ? null : (
-          <button
-            type="button"
-            className="button"
-            data-action="edit"
-            onClick={() => {
-              setCorrecting(game);
-            }}
-          >
-            {say("admin.scores.edit")}
-          </button>
-        )}
-        {game.archived ? (
-          <button
-            type="button"
-            className="button"
-            onClick={() => void act(game, "restore")}
-          >
-            {say("admin.scores.restore")}
-          </button>
-        ) : game.archivable ? (
-          <button
-            type="button"
-            className="button"
-            onClick={() => void act(game, "archive")}
-          >
-            {say("admin.scores.archive")}
-          </button>
-        ) : inUse.some(({ archivable }) => archivable) ? (
-          // Its room, where other games offer Archive, so that what is beside
-          // it lines up with theirs (optionFace.tsx).
-          noOption("archive", say("admin.scores.archive"))
-        ) : null}
-      </span>
-    </li>
+      {game.archived ? null : (
+        <button
+          type="button"
+          className="button"
+          data-action="edit"
+          onClick={() => {
+            setCorrecting(game);
+          }}
+        >
+          {say("admin.scores.edit")}
+        </button>
+      )}
+      {game.archived ? (
+        <button
+          type="button"
+          className="button"
+          onClick={() => void act(game, "restore")}
+        >
+          {say("admin.scores.restore")}
+        </button>
+      ) : game.archivable ? (
+        <button
+          type="button"
+          className="button"
+          onClick={() => void act(game, "archive")}
+        >
+          {say("admin.scores.archive")}
+        </button>
+      ) : inUse.some(({ archivable }) => archivable) ? (
+        // Its room, where other games offer Archive, so that what is beside
+        // it lines up with theirs (optionFace.tsx).
+        noOption("archive", say("admin.scores.archive"))
+      ) : null}
+      {/* A test's scores, last and drawn as arrows, as a list's Up and Down
+          are, so that the scores can be listed as they were played. Nowhere
+          to go is nothing to press, but its room is kept. */}
+      {teams === undefined || game.archived || inUse.length < 2
+        ? null
+        : (["up", "down"] as const).map((direction) => {
+            const place = inUse.indexOf(game);
+            const offered =
+              direction === "up" ? place > 0 : place < inUse.length - 1;
+            const words = say(`admin.scores.${direction}`);
+            return offered ? (
+              <button
+                key={direction}
+                type="button"
+                className="button"
+                data-action={direction}
+                onClick={() => void act(game, direction)}
+                {...optionFace(direction, words)}
+              />
+            ) : (
+              noOption(direction, words)
+            );
+          })}
+    </span>
   );
 
   return (
@@ -217,23 +337,36 @@ export const ScoresTab = ({
           {say("admin.scores.add")}
         </button>
       </p>
+      {refused === undefined ? null : (
+        <p className="listed-refused" data-refused={refused}>
+          {say(knows(refused) ? refused : "admin.scores.otherwise")}
+        </p>
+      )}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.scores.none")}</p>
       ) : (
         <>
           {inUse.length > 0 ? (
-            <ul className="listed" data-listed="in-use">
-              {inUse.map(row)}
-            </ul>
+            teams === undefined ? (
+              <ul className="listed" data-listed="in-use">
+                {inUse.map(row)}
+              </ul>
+            ) : (
+              testTable(inUse, "in-use", teams)
+            )
           ) : null}
           {archived.length > 0 ? (
             <>
               <h2 className="listed-archived-heading">
                 {say("admin.scores.archived")}
               </h2>
-              <ul className="listed" data-listed="archived">
-                {archived.map(row)}
-              </ul>
+              {teams === undefined ? (
+                <ul className="listed" data-listed="archived">
+                  {archived.map(row)}
+                </ul>
+              ) : (
+                testTable(archived, "archived", teams)
+              )}
             </>
           ) : null}
         </>
@@ -259,6 +392,7 @@ export const ScoresTab = ({
         <ScoreDialog
           tournament={tournament}
           competition={competition}
+          inATest={kind === "test"}
           correcting={correcting}
           kept={askAgain}
           close={() => {

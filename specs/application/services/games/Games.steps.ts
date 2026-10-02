@@ -3,6 +3,11 @@ import { strict as assert } from "node:assert";
 
 import { KnockoutDraw } from "../../../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import type { SpecWorld } from "../../../support/world.js";
+import {
+  teamNamed,
+  teamPlayerNamed,
+  testNamed,
+} from "../../../domain/aggregates/tournaments/tournament/aTeamTournament.js";
 import { playerNamed } from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
 import {
   inHandOf,
@@ -47,6 +52,56 @@ When(
     );
   },
 );
+
+When(
+  "the games are asked whether the player {string} of the team {string} of {string} has played",
+  async function (this: SpecWorld, player: string, team: string, name: string) {
+    const tournament = tournamentNamed(this, name);
+    const found = teamPlayerNamed(
+      teamNamed(await load(this, tournament), team),
+      player,
+    );
+    this.answer = await this.asARequest(() =>
+      inHandOf(this).games.teamPlayerHasPlayed(tournament, found.id),
+    );
+  },
+);
+
+// What has been played in the test `test` of the tournament `name`.
+const playedIn = async (world: SpecWorld, test: string, name: string) => {
+  const tournament = tournamentNamed(world, name);
+  const { reference } = testNamed(await load(world, tournament), test);
+  return world.asARequest(() =>
+    inHandOf(world).games.playedIn(tournament, reference.id),
+  );
+};
+
+// A test has games where it has a match started, since a match is started by
+// a game in use between its two players.
+When(
+  "the games are asked whether {string} of {string} has any games",
+  async function (this: SpecWorld, test: string, name: string) {
+    this.answer = (await playedIn(this, test, name)).matchesStarted > 0;
+  },
+);
+
+When(
+  "the games are asked how many matches of {string} of {string} have started",
+  async function (this: SpecWorld, test: string, name: string) {
+    this.answer = (await playedIn(this, test, name)).matchesStarted;
+  },
+);
+
+When(
+  "the games are asked the most games two players have played in {string} of {string}",
+  async function (this: SpecWorld, test: string, name: string) {
+    this.answer = (await playedIn(this, test, name)).mostGamesBetweenTwo;
+  },
+);
+
+Then("they say {int}", function (this: SpecWorld, count: number) {
+  assert.equal(this.answer, count);
+});
 
 Then("they say yes", function (this: SpecWorld) {
   assert.equal(this.answer, true);

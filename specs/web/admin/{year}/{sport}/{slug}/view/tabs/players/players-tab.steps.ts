@@ -43,11 +43,21 @@ const namesIn = async (world: SpecWorld, list?: List): Promise<string[]> =>
   );
 
 // By the name it is read out by, which for Up and Down is not what is shown:
-// they are drawn as arrows.
-const optionOf = (world: SpecWorld, name: string, option: string): Locator =>
-  rowOf(world, name)
-    .locator(".listed-options")
-    .getByRole("button", { name: option, exact: true });
+// they are drawn as arrows. A button or a link, whichever it is: a team's View
+// is a link.
+const optionOf = (world: SpecWorld, name: string, option: string): Locator => {
+  const options = rowOf(world, name).locator(".listed-options");
+  return options
+    .getByRole("button", { name: option, exact: true })
+    .or(options.getByRole("link", { name: option, exact: true }));
+};
+
+// A team's list is drawn as a player's is, its rows, options and archived
+// alike, so each step that reads a player's row reads a team's too.
+const WHO = "(?:player|team)";
+const QUOTED = '"([^"]*)"';
+const said = (pattern: string): RegExp =>
+  new RegExp(`^${pattern.replaceAll("WHO", WHO).replaceAll("Q", QUOTED)}$`);
 
 When(
   /^the players of "([^"]*)" are open(?:ed)?$/,
@@ -56,10 +66,15 @@ When(
   },
 );
 
+// A name that can be pressed is a button where it opens a dialog, as a
+// player's does, and a link where it leads to a page, as a team's does.
+const pressableName = (world: SpecWorld, name: string): Locator =>
+  rowOf(world, name).locator(":is(button, a).listed-name");
+
 When(
-  "the name of the player {string} is pressed",
+  said("the name of the WHO Q is pressed"),
   async function (this: SpecWorld, name: string) {
-    const button = rowOf(this, name).locator("button.listed-name");
+    const button = pressableName(this, name);
     await eventually(this, async () => {
       assert.equal(await button.count(), 1);
     });
@@ -68,7 +83,7 @@ When(
 );
 
 When(
-  "{string} is pressed on the player {string}",
+  said("Q is pressed on the WHO Q"),
   async function (this: SpecWorld, option: string, name: string) {
     await eventually(this, async () => {
       assert.equal(await optionOf(this, name, option).count(), 1);
@@ -90,7 +105,7 @@ When(
 );
 
 Then(
-  "the player {string} is listed",
+  said("the WHO Q is listed"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
@@ -102,7 +117,7 @@ Then(
 );
 
 Then(
-  "the first player listed is {string}",
+  said("the first WHO listed is Q"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(
@@ -128,7 +143,7 @@ const assertOrder = async (
 };
 
 Then(
-  "the player {string} is listed after {string}",
+  said("the WHO Q is listed after Q"),
   async function (this: SpecWorld, later: string, earlier: string) {
     await eventually(this, async () => {
       await assertOrder(this, earlier, later);
@@ -146,7 +161,7 @@ Then(
 );
 
 Then(
-  "the player {string} is listed among the archived",
+  said("the WHO Q is listed among the archived"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok((await namesIn(this, "archived")).includes(name));
@@ -155,7 +170,7 @@ Then(
 );
 
 Then(
-  "the player {string} is not listed among the archived",
+  said("the WHO Q is not listed among the archived"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(!(await namesIn(this, "archived")).includes(name));
@@ -173,7 +188,7 @@ Then(
 );
 
 Then(
-  "the player {string} offers {string}",
+  said("the WHO Q offers Q"),
   async function (this: SpecWorld, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await optionOf(this, name, option).count(), 1);
@@ -184,7 +199,7 @@ Then(
 // By the names they are read out by, as optionOf finds them, since Up and
 // Down are drawn as arrows and say nothing as text.
 Then(
-  "{string} on the player {string} comes before {string}",
+  said("Q on the WHO Q comes before Q"),
   async function (
     this: SpecWorld,
     option: string,
@@ -192,9 +207,10 @@ Then(
     after: string,
   ) {
     await eventually(this, async () => {
+      // Buttons and links alike, a team's View being a link, and none of the
+      // room kept where an option is not offered.
       const buttons = await rowOf(this, name)
-        .locator(".listed-options")
-        .getByRole("button")
+        .locator(".listed-options > :is(button, a)")
         .all();
       const offered = await Promise.all(
         buttons.map(
@@ -214,7 +230,7 @@ Then(
 );
 
 Then(
-  "the player {string} does not offer {string}",
+  said("the WHO Q does not offer Q"),
   async function (this: SpecWorld, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
@@ -248,11 +264,22 @@ Then(
   },
 );
 
+// Drawn in brackets beside the name, where a player's would say what they
+// represent.
+Then(
+  "the team {string} is shown known for short as {string}",
+  async function (this: SpecWorld, name: string, shortName: string) {
+    await eventually(this, async () => {
+      assert.equal(await representingOf(this, name), shortName);
+    });
+  },
+);
+
 const flagOf = (world: SpecWorld, name: string): Locator =>
   rowOf(world, name).locator("img.listed-flag");
 
 Then(
-  "the player {string} is shown flying the flag {string}",
+  said("the WHO Q is shown flying the flag Q"),
   async function (this: SpecWorld, name: string, flag: string) {
     await eventually(this, async () => {
       assert.equal(await flagOf(this, name).getAttribute("data-flag"), flag);
@@ -261,7 +288,7 @@ Then(
 );
 
 Then(
-  "the player {string} is shown flying no flag",
+  said("the WHO Q is shown flying no flag"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
@@ -271,7 +298,7 @@ Then(
 );
 
 Then(
-  "the flag of the player {string} is named {string}",
+  said("the flag of the WHO Q is named Q"),
   async function (this: SpecWorld, name: string, called: string) {
     await eventually(this, async () => {
       assert.equal(await flagOf(this, name).getAttribute("alt"), called);
@@ -307,7 +334,7 @@ const struckThrough = async (
   ).includes("line-through");
 
 Then(
-  "the player {string} is struck through",
+  said("the WHO Q is struck through"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await struckThrough(this, name), true);
@@ -324,10 +351,56 @@ Then(
   },
 );
 
+// Where a link a row offers goes: a team's View, to its page.
+Then(
+  "{string} on the team {string} leads to {string}",
+  async function (this: SpecWorld, option: string, name: string, path: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await optionOf(this, name, option).getAttribute("href"),
+        path,
+      );
+    });
+  },
+);
+
+Then(
+  "the name of the team {string} leads to {string}",
+  async function (this: SpecWorld, name: string, path: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await rowOf(this, name).locator("a.listed-name").getAttribute("href"),
+        path,
+      );
+    });
+  },
+);
+
+// Where the reader is put back once a dialog opened from a team closes.
+Then(
+  "{string} on the team {string} has the focus",
+  async function (this: SpecWorld, option: string, name: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await optionOf(this, name, option).evaluate(
+          (element) =>
+            element ===
+            (globalThis as unknown as { document: { activeElement: unknown } })
+              .document.activeElement,
+          undefined,
+          { timeout: 500 },
+        ),
+        true,
+        `${option} on ${name} does not have the focus.`,
+      );
+    });
+  },
+);
+
 // In words beside the name, for a reader who is not looking, since a line
 // through a name is not read out.
 Then(
-  "the player {string} is announced as archived",
+  said("the WHO Q is announced as archived"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(
@@ -339,20 +412,17 @@ Then(
 );
 
 Then(
-  "the name of the player {string} cannot be pressed",
+  said("the name of the WHO Q cannot be pressed"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
-      assert.equal(
-        await rowOf(this, name).locator("button.listed-name").count(),
-        0,
-      );
+      assert.equal(await pressableName(this, name).count(), 0);
     });
   },
 );
 
 Then(
-  "the archived players are headed {string}",
+  /^the archived (?:players|teams) are headed "([^"]*)"$/,
   async function (this: SpecWorld, heading: string) {
     await eventually(this, async () => {
       assert.equal(
@@ -366,7 +436,7 @@ Then(
 );
 
 Then(
-  "no heading for the archived players is shown",
+  /^no heading for the archived (?:players|teams) is shown$/,
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       assert.ok((await rows(this).count()) > 0);
@@ -378,12 +448,16 @@ Then(
   },
 );
 
-Then("the tab says there are no players", async function (this: SpecWorld) {
-  await eventually(this, async () => {
-    assert.equal(await rows(this).count(), 0);
-    assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
-  });
-});
+// The tab's own list, or a team's page's, which is its players.
+Then(
+  /^the (?:tab|page) says there are no (?:players|teams)$/,
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.equal(await rows(this).count(), 0);
+      assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
+    });
+  },
+);
 
 Then(
   "the tab does not say there are no players",
@@ -410,9 +484,10 @@ Then(
   },
 );
 
-// Above whichever the tab lists: its players, or its competitions.
+// Above whichever the tab lists: its players, its teams, its competitions or
+// its tests.
 Then(
-  /^"([^"]*)" is above the (?:players|competitions)$/,
+  /^"([^"]*)" is above the (?:players|teams|competitions|tests)$/,
   async function (this: SpecWorld, option: string) {
     await eventually(this, async () => {
       const offer = await tabOffers(this, option).boundingBox();
@@ -442,15 +517,15 @@ Then(
 );
 
 Then(
-  "{string} on the player {string} is at least {int} pixels tall",
+  said("Q on the WHO Q is at least (\\d+) pixels tall"),
   async function (
     this: SpecWorld,
     option: string,
     name: string,
-    pixels: number,
+    pixels: string,
   ) {
     await eventually(this, async () => {
-      await tallEnough(optionOf(this, name, option), pixels);
+      await tallEnough(optionOf(this, name, option), Number(pixels));
     });
   },
 );
@@ -459,7 +534,7 @@ Then(
 // nobody's language. A flag's name is a word of the reader's, and is looked at
 // by its own step.
 Then(
-  "every word in the tab but the players' own is in the test locale",
+  /^every word in the tab but the (?:players|teams)' own is in the test locale$/,
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "#tab-panel section", [
@@ -475,7 +550,7 @@ Then(
 
 // The dialog open over the page, by its title.
 Then(
-  /^the (?:player|score|competition) dialog is titled "([^"]*)"$/,
+  /^the (?:player|score|competition|team|team player|test) dialog is titled "([^"]*)"$/,
   async function (this: SpecWorld, title: string) {
     const dialog = this.browserPage.locator("dialog[open]");
     await dialog.waitFor();

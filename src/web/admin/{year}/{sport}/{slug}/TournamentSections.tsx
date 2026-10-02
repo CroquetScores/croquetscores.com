@@ -6,7 +6,12 @@ import "./tournamentSections.css";
 // The section bar of a tournament's page and its competitions' pages
 // (TournamentSections.feature): Tournament first, then each competition in
 // use, in the tournament's order, the page being read marked. An archived
-// competition is left out, since its page refuses to open.
+// competition is left out, since its page refuses to open. A tournament played
+// by teams has tests where a Standard one has competitions, and a test is one
+// of its competitions, found under "tests" rather than "competitions". On a
+// team's page the bar is Tournament and then each team in use in place of the
+// tests, by its short name, since a manager there is moving between the
+// teams; the team being read is marked.
 //
 // Its links are plain links, which the admin follows in place as it does
 // every link to one of its pages (App.tsx).
@@ -16,13 +21,25 @@ interface Props {
   readonly tournament: string;
   /** Where the tournament is found, as "2026/ac/spring-open". */
   readonly address: string;
-  /** The page being read: the tournament's, or a competition's by its slug. */
-  readonly reading: "tournament" | { readonly competition: string };
+  /**
+   * The page being read: the tournament's, or a competition's or a team's by
+   * its slug.
+   */
+  readonly reading:
+    "tournament" | { readonly competition: string } | { readonly team: string };
 }
 
 /** A competition as the API lists it, with as much as the bar needs. */
 interface Listed {
   readonly name: string;
+  readonly slug: string;
+  readonly kind: string;
+  readonly archived: boolean;
+}
+
+/** A team as the API lists it, with as much as the bar needs. */
+interface Team {
+  readonly shortName: string;
   readonly slug: string;
   readonly archived: boolean;
 }
@@ -55,26 +72,43 @@ export const TournamentSections = ({
   address,
   reading,
 }: Props): React.JSX.Element => {
-  const [listed, setListed] = useState<readonly Listed[] | undefined>();
+  const [listed, setListed] = useState<
+    | {
+        readonly competitions: readonly Listed[];
+        readonly teams: readonly Team[];
+      }
+    | undefined
+  >();
+  const onATeam = typeof reading === "object" && "team" in reading;
 
   useEffect(() => {
     let current = true;
-    void fetch(`/api/v1/tournaments/${idInAddress(tournament)}/competitions`, {
-      headers: { accept: "application/json" },
-    })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { competitions: Listed[] }).competitions
-          : [],
-      )
-      .catch(() => [])
-      .then((competitions) => {
-        if (current) setListed(competitions);
-      });
+    const asked = async <T,>(path: string, empty: T): Promise<T> =>
+      fetch(`/api/v1/tournaments/${idInAddress(tournament)}/${path}`, {
+        headers: { accept: "application/json" },
+      })
+        .then(async (response) =>
+          response.ok ? ((await response.json()) as T) : empty,
+        )
+        .catch(() => empty);
+    // A team's page leads to the teams in place of the tests, and only a
+    // manager has one.
+    void Promise.all([
+      onATeam
+        ? Promise.resolve({ competitions: [] })
+        : asked<{ competitions: Listed[] }>("competitions", {
+            competitions: [],
+          }),
+      onATeam
+        ? asked<{ teams: Team[] }>("teams", { teams: [] })
+        : Promise.resolve({ teams: [] }),
+    ]).then(([{ competitions }, { teams }]) => {
+      if (current) setListed({ competitions, teams });
+    });
     return () => {
       current = false;
     };
-  }, [tournament]);
+  }, [tournament, onATeam]);
 
   // Its tabs are drawn once the competitions are known, so that the bar does
   // not appear with Tournament alone and then grow as the rest arrive. Its
@@ -97,18 +131,35 @@ export const TournamentSections = ({
               {say("admin.sections.tournament")}
             </a>
           </li>
-          {listed
+          {listed.competitions
             .filter(({ archived }) => !archived)
             .map((competition) => (
               <li key={competition.slug}>
                 <a
-                  href={`${tournamentPage}/competitions/${competition.slug}`}
+                  href={`${tournamentPage}/${competition.kind === "test" ? "tests" : "competitions"}/${competition.slug}`}
                   aria-current={current(
-                    reading !== "tournament" &&
+                    typeof reading === "object" &&
+                      "competition" in reading &&
                       reading.competition === competition.slug,
                   )}
                 >
                   {competition.name}
+                </a>
+              </li>
+            ))}
+          {listed.teams
+            .filter(({ archived }) => !archived)
+            .map((team) => (
+              <li key={`team-${team.slug}`}>
+                <a
+                  href={`${tournamentPage}/teams/${team.slug}`}
+                  aria-current={current(
+                    typeof reading === "object" &&
+                      "team" in reading &&
+                      reading.team === team.slug,
+                  )}
+                >
+                  {team.shortName}
                 </a>
               </li>
             ))}

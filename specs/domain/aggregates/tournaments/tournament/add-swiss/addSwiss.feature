@@ -76,3 +76,11 @@ Feature: Adding a Swiss to a tournament
       And the tournament is rebuilt from the stream
       When the Swiss "Swiss" is added
       Then it is refused with "Tournament.Archived"
+
+  Rule: A Swiss cannot be added to a tournament played by teams
+
+    Scenario: Adding a Swiss to a tournament played by teams is refused
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      When the Swiss "Swiss" is added
+      Then it is refused with "Tournament.PlayedByTeams"

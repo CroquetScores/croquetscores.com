@@ -55,11 +55,27 @@ export class GamesOfCompetitionHandler extends QueryHandler<
         player.name.toString(),
       ]),
     );
-    const people = new Map(
-      competition.players.map((player) => [
-        player.id.value,
-        names.get(player.tournamentPlayerId.value) ?? "",
-      ]),
+    // A test's games are between its teams' players, each by what their team
+    // calls them now.
+    const people = new Map([
+      ...competition.players.map(
+        (player) =>
+          [
+            player.id.value,
+            names.get(player.tournamentPlayerId.value) ?? "",
+          ] as const,
+      ),
+      ...tournament.teams.flatMap((team) =>
+        team.players.map(
+          (player) => [player.id.value, player.name.toString()] as const,
+        ),
+      ),
+    ]);
+    // The team each of a test's players plays for.
+    const teams = new Map(
+      tournament.teams.flatMap((team) =>
+        team.players.map((player) => [player.id.value, team.id.value] as const),
+      ),
     );
     return competition.games.map((game) => ({
       id: game.id.value,
@@ -71,6 +87,8 @@ export class GamesOfCompetitionHandler extends QueryHandler<
       loserScore: String(game.loserScore),
       archived: game.archived,
       archivable: competition.canBeArchived(game.id, told),
+      winnerTeam: teams.get(game.winner.value),
+      loserTeam: teams.get(game.loser.value),
     }));
   }
 }

@@ -12,6 +12,16 @@ Feature: Asking whether games have been played
   Each answer is yes or no, and only that. The games are never told what to do
   about it: refusing is the tournament's, and is specified with it.
 
+  A player in a team who has played any game in use in a test cannot be
+  archived either (`archiveTeamPlayer.feature`), and a test's games are kept
+  by the test as any competition's are (`gamesInATest.feature`).
+
+  A test with any games in use keeps its teams, and how far it has been
+  played bounds what its expected matches and its best-of can be changed to
+  (`updateTest.feature`): so the games say how many of a test's matches have
+  started, a match starting once its two players have a game in use, and the
+  most games in use any two of its players have played.
+
   The games are the ones the tournament's competitions keep, archived
   competitions among them. An archived game counts for nothing, here as
   anywhere games are counted (`archiveGame.feature`), so only the games in
@@ -118,3 +128,176 @@ Feature: Asking whether games have been played
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the games are asked whether changing the draw of "Final Stage" of "Spring Open" to 8 places moves a player who has played
       Then they say no
+
+  Rule: A player in a team has played if they won or lost a game in any of the tournament's tests
+
+    Scenario: A player in a team who has not played says no
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the games are asked whether the player "Pat Player" of the team "Australia" of "Spring Tests" has played
+      Then they say no
+
+    Scenario: A player in a team who won a game says yes
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the games are asked whether the player "Pat Player" of the team "Australia" of "Spring Tests" has played
+      Then they say yes
+
+    Scenario: A player in a team who lost a game says yes
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the games are asked whether the player "Kim Keeper" of the team "England" of "Spring Tests" has played
+      Then they say yes
+
+    Scenario: A player in a team whose only game is archived says no
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
+      When the games are asked whether the player "Pat Player" of the team "Australia" of "Spring Tests" has played
+      Then they say no
+
+  Rule: A test has games if it has any game in use
+
+    Scenario: A test with no games says no
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the games are asked whether "AUS v ENG" of "Spring Tests" has any games
+      Then they say no
+
+    Scenario: A test with a game says yes
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the games are asked whether "AUS v ENG" of "Spring Tests" has any games
+      Then they say yes
+
+    Scenario: A test whose only game is archived says no
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
+      When the games are asked whether "AUS v ENG" of "Spring Tests" has any games
+      Then they say no
+
+  Rule: A test's matches started are the pairs of players with a game in use
+
+    Scenario: A test with no games has no matches started
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the games are asked how many matches of "AUS v ENG" of "Spring Tests" have started
+      Then they say 0
+
+    Scenario: Two games between the same players are one match started
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the games are asked how many matches of "AUS v ENG" of "Spring Tests" have started
+      Then they say 1
+
+    Scenario: Games between different pairs are a match started each
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Jo Jones" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And the test is to be expected to have 21 matches
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Jo Jones" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the games are asked how many matches of "AUS v ENG" of "Spring Tests" have started
+      Then they say 2
+
+    Scenario: A match whose only game is archived has not started
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
+      When the games are asked how many matches of "AUS v ENG" of "Spring Tests" have started
+      Then they say 0
+
+  Rule: The most games two players have played in a test counts the games in use alone
+
+    Scenario: The most games is the games of the pair who have played most
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Jo Jones" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And the test is to be expected to have 21 matches
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Jo Jones" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the games are asked the most games two players have played in "AUS v ENG" of "Spring Tests"
+      Then they say 2
+
+    Scenario: An archived game is not counted
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the score of "Kim Keeper" beating "Pat Player" in "AUS v ENG" of "Spring Tests"
+      When the games are asked the most games two players have played in "AUS v ENG" of "Spring Tests"
+      Then they say 1

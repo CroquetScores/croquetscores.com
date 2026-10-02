@@ -30,14 +30,15 @@ export const adminWordsId = "admin-words";
 // What the admin says: its own words, and the refusals of the tournaments it
 // creates and changes, of the competitions it adds and the players it enters
 // in them, of the games and scores it keeps, and of the addresses it makes
-// managers and scorers of, which are keyed by their codes as every form's
-// are. Not every word the site has, most of which are the public pages' and
+// managers and scorers of, and of the teams, their players and the tests a
+// tournament played by teams has, which are keyed by their codes as every
+// form's are. Not every word the site has, most of which are the public pages' and
 // the emails', and would be sent with every page of the admin for nothing. A
 // refusal the admin is not sent words for is said in its words for any, which
 // is why each screen's scenarios read a refusal's own words and not only its
 // code: the words for any would pass for it otherwise.
 const saidByTheAdmin =
-  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.)/;
+  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.)/;
 
 // The admin's words in the reader's language, each one the site's first
 // language has, so that a word missing from the reader's is said in that one

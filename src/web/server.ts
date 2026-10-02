@@ -48,6 +48,29 @@ import { AddKnockoutValidator } from "../application/operations/tournaments/AddK
 import { AddManagerHandler } from "../application/operations/tournaments/AddManagerHandler.js";
 import { AddManagerValidator } from "../application/operations/tournaments/AddManagerValidator.js";
 import { AddPlayerHandler } from "../application/operations/tournaments/AddPlayerHandler.js";
+import { AddTeamValidator } from "../application/operations/tournaments/AddTeamValidator.js";
+import { UpdateTeamValidator } from "../application/operations/tournaments/UpdateTeamValidator.js";
+import { MoveTeamValidator } from "../application/operations/tournaments/MoveTeamValidator.js";
+import { AddTeamPlayerValidator } from "../application/operations/tournaments/AddTeamPlayerValidator.js";
+import { UpdateTeamPlayerValidator } from "../application/operations/tournaments/UpdateTeamPlayerValidator.js";
+import { MoveTeamPlayerValidator } from "../application/operations/tournaments/MoveTeamPlayerValidator.js";
+import { AddTestValidator } from "../application/operations/tournaments/AddTestValidator.js";
+import { UpdateTestValidator } from "../application/operations/tournaments/UpdateTestValidator.js";
+import { AddTeamHandler } from "../application/operations/tournaments/AddTeamHandler.js";
+import { UpdateTeamHandler } from "../application/operations/tournaments/UpdateTeamHandler.js";
+import { ArchiveTeamHandler } from "../application/operations/tournaments/ArchiveTeamHandler.js";
+import { RestoreTeamHandler } from "../application/operations/tournaments/RestoreTeamHandler.js";
+import { MoveTeamHandler } from "../application/operations/tournaments/MoveTeamHandler.js";
+import { AddTeamPlayerHandler } from "../application/operations/tournaments/AddTeamPlayerHandler.js";
+import { UpdateTeamPlayerHandler } from "../application/operations/tournaments/UpdateTeamPlayerHandler.js";
+import { RestoreTeamPlayerHandler } from "../application/operations/tournaments/RestoreTeamPlayerHandler.js";
+import { MoveTeamPlayerHandler } from "../application/operations/tournaments/MoveTeamPlayerHandler.js";
+import { AddTestHandler } from "../application/operations/tournaments/AddTestHandler.js";
+import { ArchiveTeamPlayerHandler } from "../application/operations/tournaments/ArchiveTeamPlayerHandler.js";
+import { UpdateTestHandler } from "../application/operations/tournaments/UpdateTestHandler.js";
+import { TeamsOfTournamentHandler } from "../application/operations/tournaments/TeamsOfTournamentHandler.js";
+import { PlayersOfTeamHandler } from "../application/operations/tournaments/PlayersOfTeamHandler.js";
+import { PlayersOfTestHandler } from "../application/operations/competitions/PlayersOfTestHandler.js";
 import { AddPlayerValidator } from "../application/operations/tournaments/AddPlayerValidator.js";
 import { AddScorerHandler } from "../application/operations/tournaments/AddScorerHandler.js";
 import { AddScorerValidator } from "../application/operations/tournaments/AddScorerValidator.js";
@@ -81,6 +104,7 @@ import { UpdateTournamentHandler } from "../application/operations/tournaments/U
 import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
 import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
 import { CompetitionPageHandler } from "../application/operations/tournaments/CompetitionPageHandler.js";
+import { TeamPageHandler } from "../application/operations/tournaments/TeamPageHandler.js";
 import { TournamentPageHandler } from "../application/operations/tournaments/TournamentPageHandler.js";
 import { TournamentToChangeHandler } from "../application/operations/tournaments/TournamentToChangeHandler.js";
 import { TournamentYearsOfAccountHandler } from "../application/operations/tournaments/TournamentYearsOfAccountHandler.js";
@@ -88,6 +112,8 @@ import type { BreachedPasswords } from "../application/services/BreachedPassword
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
 import { ArchiveGameHandler } from "../application/operations/competitions/ArchiveGameHandler.js";
+import { MoveGameHandler } from "../application/operations/competitions/MoveGameHandler.js";
+import { MoveGameValidator } from "../application/operations/competitions/MoveGameValidator.js";
 import { CorrectGameHandler } from "../application/operations/competitions/CorrectGameHandler.js";
 import { CorrectGameValidator } from "../application/operations/competitions/CorrectGameValidator.js";
 import { GamesOfCompetitionHandler } from "../application/operations/competitions/GamesOfCompetitionHandler.js";
@@ -669,10 +695,19 @@ export const buildApplication = async (
   validation.register(new MoveCompetitionValidator());
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new MoveGameValidator());
   validation.register(new AddGameValidator());
   validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
+  validation.register(new AddTeamValidator());
+  validation.register(new UpdateTeamValidator());
+  validation.register(new MoveTeamValidator());
+  validation.register(new AddTeamPlayerValidator());
+  validation.register(new UpdateTeamPlayerValidator());
+  validation.register(new MoveTeamPlayerValidator());
+  validation.register(new AddTestValidator());
+  validation.register(new UpdateTestValidator());
   mediator.handleCommand(
     new CreateTournamentHandler(...both, tournamentsByAddress),
   );
@@ -694,7 +729,7 @@ export const buildApplication = async (
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
-  mediator.handleCommand(new ArchiveCompetitionHandler(...both));
+  mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
   mediator.handleCommand(new RestoreCompetitionHandler(...both));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(
@@ -703,6 +738,18 @@ export const buildApplication = async (
   mediator.handleCommand(new AddScorerHandler(...both, accountsByEmailAddress));
   mediator.handleCommand(new RemoveManagerHandler(...both));
   mediator.handleCommand(new RemoveScorerHandler(...both));
+  mediator.handleCommand(new AddTeamHandler(...both));
+  mediator.handleCommand(new UpdateTeamHandler(...both));
+  mediator.handleCommand(new ArchiveTeamHandler(...both));
+  mediator.handleCommand(new RestoreTeamHandler(...both));
+  mediator.handleCommand(new MoveTeamHandler(...both));
+  mediator.handleCommand(new AddTeamPlayerHandler(...both));
+  mediator.handleCommand(new UpdateTeamPlayerHandler(...both));
+  mediator.handleCommand(new RestoreTeamPlayerHandler(...both));
+  mediator.handleCommand(new MoveTeamPlayerHandler(...both));
+  mediator.handleCommand(new AddTestHandler(...both));
+  mediator.handleCommand(new ArchiveTeamPlayerHandler(...both, games));
+  mediator.handleCommand(new UpdateTestHandler(...both, games));
   mediator.handleCommand(new EnterPlayerHandler(...both, competitions));
   mediator.handleCommand(
     new MoveCompetitionPlayerHandler(...both, competitions),
@@ -712,11 +759,15 @@ export const buildApplication = async (
   mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
+  mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
-  mediator.handleQuery(new CompetitionsOfTournamentHandler(...both));
+  mediator.handleQuery(new CompetitionsOfTournamentHandler(...both, games));
+  mediator.handleQuery(new TeamsOfTournamentHandler(...both));
+  mediator.handleQuery(new PlayersOfTeamHandler(...both, games));
+  mediator.handleQuery(new PlayersOfTestHandler(...both));
   mediator.handleQuery(new ManagersOfTournamentHandler(...both));
   mediator.handleQuery(
     new PlayersOfTournamentHandler(...both, competitions, games),
@@ -732,6 +783,7 @@ export const buildApplication = async (
   mediator.handleQuery(
     new CompetitionPageHandler(tournaments, tournamentsByAddress),
   );
+  mediator.handleQuery(new TeamPageHandler(tournaments, tournamentsByAddress));
   mediator.handleQuery(
     new TournamentYearsOfAccountHandler(tournamentsByAccount),
   );

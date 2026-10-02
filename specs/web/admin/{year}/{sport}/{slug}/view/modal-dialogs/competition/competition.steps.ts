@@ -31,7 +31,7 @@ const fieldOf = (world: SpecWorld, label: string): Locator =>
   dialogOf(world).getByLabel(label, { exact: true });
 
 Then(
-  "the competition dialog does not ask for {string}",
+  /^the (?:competition|team player|test) dialog does not ask for "([^"]*)"$/,
   async function (this: SpecWorld, label: string) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {

@@ -1,0 +1,9 @@
+/* A day is chosen in the box its label draws, as the tournament form's are. */
+.field-box input[type="date"] {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+}

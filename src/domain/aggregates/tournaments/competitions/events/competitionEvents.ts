@@ -6,6 +6,7 @@ import { CompetitionByeRemoved } from "./CompetitionByeRemoved.js";
 import { CompetitionGameAdded } from "./CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "./CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./CompetitionGameCorrected.js";
+import { CompetitionGameMoved } from "./CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "./CompetitionGameRestored.js";
 import { CompetitionPlayerEntered } from "./CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "./CompetitionPlayerMoved.js";
@@ -160,6 +161,21 @@ export const nameCompetitionEvents = (registry: EventRegistry): EventRegistry =>
           createdBy,
           occurredAt,
         ),
+    )
+    .name(
+      CompetitionGameMoved,
+      "competition-game-moved",
+      (said, { createdBy, occurredAt }) => {
+        const direction = text(said, "direction");
+        return new CompetitionGameMoved(
+          text(said, "gameId"),
+          direction === "up" || direction === "down"
+            ? direction
+            : unreadable("direction"),
+          createdBy,
+          occurredAt,
+        );
+      },
     )
     .name(
       CompetitionGameRestored,

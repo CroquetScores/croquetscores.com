@@ -1,6 +1,6 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { CompetitionPlayerId } from "../../../domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
+import { gamePlayerIdFrom } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import { GameId } from "../../../domain/aggregates/tournaments/competitions/primitives/GameId.js";
 import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
@@ -43,8 +43,9 @@ export class CorrectGameHandler extends CommandHandler<CorrectGame, void> {
     );
     // Each is there, once the validator has let it in.
     const { winnerScore, loserScore, winner, loser } = command.scores;
+    // A competition's player, or in a test a player of one of its teams.
     const player = (id: string | undefined) =>
-      id === undefined ? undefined : CompetitionPlayerId.from(id);
+      id === undefined ? undefined : gamePlayerIdFrom(id);
     competition.correctGame(
       GameId.from(command.gameId),
       Score.read(winnerScore ?? "", tournament.website),

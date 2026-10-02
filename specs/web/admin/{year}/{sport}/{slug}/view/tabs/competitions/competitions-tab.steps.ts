@@ -50,6 +50,14 @@ const optionOf = (world: SpecWorld, name: string, option: string): Locator => {
     .or(options.getByRole("link", { name: option, exact: true }));
 };
 
+// A tournament played by teams lists its tests as a Standard one lists its
+// competitions, a test being one of its competitions, so each step that reads
+// a competition's row reads a test's too.
+const WHAT = "(?:competition|test)";
+const QUOTED = '"([^"]*)"';
+const said = (pattern: string): RegExp =>
+  new RegExp(`^${pattern.replaceAll("WHAT", WHAT).replaceAll("Q", QUOTED)}$`);
+
 const openCompetitions = async function (
   this: SpecWorld,
   name: string,
@@ -61,7 +69,7 @@ When("the competitions of {string} are open", openCompetitions);
 When("the competitions of {string} are opened", openCompetitions);
 
 When(
-  "{string} is pressed on the competition {string}",
+  said("Q is pressed on the WHAT Q"),
   async function (this: SpecWorld, option: string, name: string) {
     await eventually(this, async () => {
       assert.equal(await optionOf(this, name, option).count(), 1);
@@ -71,7 +79,7 @@ When(
 );
 
 Then(
-  "the competition {string} is listed",
+  said("the WHAT Q is listed"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
@@ -83,7 +91,7 @@ Then(
 );
 
 Then(
-  "the first competition listed is {string}",
+  said("the first WHAT listed is Q"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.equal((await namesIn(this, "in-use"))[0], name);
@@ -92,7 +100,7 @@ Then(
 );
 
 Then(
-  "the competition {string} is listed after {string}",
+  said("the WHAT Q is listed after Q"),
   async function (this: SpecWorld, later: string, earlier: string) {
     await eventually(this, async () => {
       const names = await allNames(this);
@@ -107,7 +115,7 @@ Then(
 
 // Neither among those in use nor among the archived.
 Then(
-  "the competition {string} is not listed",
+  said("the WHAT Q is not listed"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
@@ -119,7 +127,7 @@ Then(
 );
 
 Then(
-  "the competition {string} is listed among the archived",
+  said("the WHAT Q is listed among the archived"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok((await namesIn(this, "archived")).includes(name));
@@ -128,7 +136,7 @@ Then(
 );
 
 Then(
-  "the competition {string} is not listed among the archived",
+  said("the WHAT Q is not listed among the archived"),
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(!(await namesIn(this, "archived")).includes(name));
@@ -158,7 +166,7 @@ Then(
 );
 
 Then(
-  "the competition {string} offers {string}",
+  said("the WHAT Q offers Q"),
   async function (this: SpecWorld, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await optionOf(this, name, option).count(), 1);
@@ -167,7 +175,7 @@ Then(
 );
 
 Then(
-  "the competition {string} does not offer {string}",
+  said("the WHAT Q does not offer Q"),
   async function (this: SpecWorld, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
@@ -176,8 +184,28 @@ Then(
   },
 );
 
+// Struck through so that one archived is not taken for one in use.
 Then(
-  "the archived competitions are headed {string}",
+  said("the WHAT Q is struck through"),
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const line = await rowOf(this, name)
+        .locator(".listed-name")
+        .evaluate(
+          (element) =>
+            (
+              globalThis as unknown as {
+                getComputedStyle(of: unknown): { textDecorationLine: string };
+              }
+            ).getComputedStyle(element).textDecorationLine,
+        );
+      assert.ok(line.includes("line-through"), `It is drawn ${line}.`);
+    });
+  },
+);
+
+Then(
+  said("the archived WHATs are headed Q"),
   async function (this: SpecWorld, heading: string) {
     await eventually(this, async () => {
       assert.equal(
@@ -204,7 +232,7 @@ Then(
 );
 
 Then(
-  "the tab says there are no competitions",
+  /^the tab says there are no (?:competitions|tests)$/,
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
@@ -229,7 +257,7 @@ const leadsTo = async (link: Locator, path: string): Promise<void> => {
 // In the order the row offers them, read by what each shows: Edit and View are
 // words, where Up and Down are arrows with nothing shown.
 Then(
-  "{string} on the competition {string} comes before {string}",
+  said("Q on the WHAT Q comes before Q"),
   async function (
     this: SpecWorld,
     option: string,
@@ -251,7 +279,7 @@ Then(
 );
 
 Then(
-  "{string} on the competition {string} has the focus",
+  said("Q on the WHAT Q has the focus"),
   async function (this: SpecWorld, option: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
@@ -271,7 +299,7 @@ Then(
 );
 
 Then(
-  "the name of the competition {string} leads to {string}",
+  said("the name of the WHAT Q leads to Q"),
   async function (this: SpecWorld, name: string, path: string) {
     await eventually(this, async () => {
       await leadsTo(rowOf(this, name).locator(".listed-name"), path);
@@ -288,7 +316,7 @@ When(
 );
 
 Then(
-  "{string} on the competition {string} leads to {string}",
+  said("Q on the WHAT Q leads to Q"),
   async function (this: SpecWorld, option: string, name: string, path: string) {
     await eventually(this, async () => {
       await leadsTo(optionOf(this, name, option), path);
@@ -312,15 +340,15 @@ Then(
 );
 
 Then(
-  "{string} on the competition {string} is at least {int} pixels tall",
+  said("Q on the WHAT Q is at least (\\d+) pixels tall"),
   async function (
     this: SpecWorld,
     option: string,
     name: string,
-    pixels: number,
+    pixels: string,
   ) {
     await eventually(this, async () => {
-      await tallEnough(optionOf(this, name, option), pixels);
+      await tallEnough(optionOf(this, name, option), Number(pixels));
     });
   },
 );

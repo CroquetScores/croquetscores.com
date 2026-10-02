@@ -8,6 +8,9 @@ import {
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import type { CompetitionPlayer } from "../../../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import { CompetitionId } from "../../../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
+import type { GamePlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
+import { TeamId } from "../../../../../../src/domain/aggregates/tournaments/primitives/TeamId.js";
+import { TeamPlayerId } from "../../../../../../src/domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import { TournamentPlayerId } from "../../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { DomainEvent } from "../../../../../../src/domain/common/DomainEvent.js";
 import { byOf, now } from "../../tournament/aTournament.js";
@@ -29,6 +32,10 @@ interface Scenario {
   readonly tournamentPlayers: Map<string, TournamentPlayerId>;
   // The orders in the tournament the scenario gives, by name.
   readonly tournamentOrders: Map<string, number>;
+  // In a test, each team the scenario names, by name, and each player of
+  // theirs, by name, so that a name means the same team or player throughout.
+  readonly teams: Map<string, TeamId>;
+  readonly teamPlayers: Map<string, TeamPlayerId>;
   // What the competition is told of itself: a block, each match the best of
   // 1, in a tournament that does not allow drawn games, unless the scenario
   // says otherwise.
@@ -45,6 +52,8 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
       stream: [],
       tournamentPlayers: new Map(),
       tournamentOrders: new Map(),
+      teams: new Map(),
+      teamPlayers: new Map(),
       told: {
         shape: { kind: "block", bestOf: BestOf.from(1) },
         drawsAllowed: false,
@@ -72,6 +81,49 @@ export const tournamentPlayerNamed = (
 // the order it first names them, as a tournament that added them in that order
 // and moved none of them would have them (enterPlayer.feature).
 const ORDER_STEP = 10_000;
+
+/** The team called `name`, in a test. */
+export const teamNamed = (world: SpecWorld, name: string): TeamId => {
+  const { teams } = scenarioOf(world);
+  let id = teams.get(name);
+  if (id === undefined) {
+    id = TeamId.create();
+    teams.set(name, id);
+  }
+  return id;
+};
+
+/** The player of a team called `name`, in a test. */
+export const teamPlayerNamed = (
+  world: SpecWorld,
+  name: string,
+): TeamPlayerId => {
+  const { teamPlayers } = scenarioOf(world);
+  let id = teamPlayers.get(name);
+  if (id === undefined) {
+    id = TeamPlayerId.create();
+    teamPlayers.set(name, id);
+  }
+  return id;
+};
+
+/** Whether the competition is a test, whose players are its teams'. */
+export const isATest = (world: SpecWorld): boolean =>
+  scenarioOf(world).told.shape.kind === "test";
+
+/**
+ * Who the player called `name` is in a game of `competition`: the player of a
+ * team, in a test, which has no players entered; anywhere else, the
+ * competition's player who is that tournament player.
+ */
+export const gamePlayerNamed = (
+  world: SpecWorld,
+  competition: Competition,
+  name: string,
+): GamePlayerId =>
+  isATest(world)
+    ? teamPlayerNamed(world, name)
+    : playerNamed(world, competition, name).id;
 
 /** The order in the tournament of the tournament player called `name`. */
 export const tournamentOrderOf = (world: SpecWorld, name: string): number => {

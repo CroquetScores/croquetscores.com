@@ -193,6 +193,15 @@ Given(
   },
 );
 
+// Before anything is added to it, since a tournament's teams and tests, or its
+// players and competitions, fix whether it is played by teams.
+Given(
+  "the tournament {string} is played in the format {string}",
+  async function (this: SpecWorld, name: string, format: string) {
+    await changeTournament(this, name, { format });
+  },
+);
+
 // Created on a website in the first sport it offers, since a tournament on
 // Gateball Scores is a game of gateball whatever else it is.
 const createdAs = async (
@@ -815,7 +824,9 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
       )
       .first()
       .waitFor();
-    await page.locator('#tab-panel section[aria-busy="false"]').waitFor();
+    await page
+      .locator(':is(#tab-panel, #page-list) section[aria-busy="false"]')
+      .waitFor();
   }
   if (answered !== undefined) {
     const answer = await answered;

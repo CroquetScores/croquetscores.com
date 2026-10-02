@@ -1,5 +1,6 @@
 import { ValidationError } from "../../../common/validation/ValidationError.js";
-import type { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
+import { TeamPlayerId } from "../primitives/TeamPlayerId.js";
+import { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
 import type { GameId } from "./primitives/GameId.js";
 import type { Score } from "./value-objects/Score.js";
 
@@ -11,11 +12,23 @@ export type GameErrorCode =
   | "Game.ResultChanged"
   | "Game.Archived";
 
+/**
+ * Who played a game: a player of the competition, or in a test, which has no
+ * players entered in it, a player of one of its teams.
+ */
+export type GamePlayerId = CompetitionPlayerId | TeamPlayerId;
+
+/** The player of a game written as `written`, of whichever kind it is written as. */
+export const gamePlayerIdFrom = (written: string): GamePlayerId =>
+  TeamPlayerId.isWriting(written)
+    ? TeamPlayerId.from(written)
+    : CompetitionPlayerId.from(written);
+
 /** What a game is, as it is given. */
 export interface GameDetails {
-  readonly winner: CompetitionPlayerId;
+  readonly winner: GamePlayerId;
   readonly winnerScore: Score;
-  readonly loser: CompetitionPlayerId;
+  readonly loser: GamePlayerId;
   readonly loserScore: Score;
 }
 
@@ -77,7 +90,7 @@ export class Game {
     return this.#id;
   }
 
-  get winner(): CompetitionPlayerId {
+  get winner(): GamePlayerId {
     return this.#details.winner;
   }
 
@@ -85,7 +98,7 @@ export class Game {
     return this.#details.winnerScore;
   }
 
-  get loser(): CompetitionPlayerId {
+  get loser(): GamePlayerId {
     return this.#details.loser;
   }
 
@@ -118,8 +131,8 @@ export class Game {
     loserScore: Score,
     { drawsAllowed }: { readonly drawsAllowed: boolean },
     players?: {
-      readonly winner: CompetitionPlayerId;
-      readonly loser: CompetitionPlayerId;
+      readonly winner: GamePlayerId;
+      readonly loser: GamePlayerId;
     },
   ): Game {
     if (this.#archived) refuse("Game.Archived");

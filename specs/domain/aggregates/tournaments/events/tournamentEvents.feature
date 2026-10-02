@@ -55,6 +55,20 @@ Feature: The names a tournament's events are kept under
         | an account being taken off the managers   | tournament-manager-removed         |
         | an account being made a scorer            | tournament-scorer-added            |
         | an account being taken off the scorers    | tournament-scorer-removed          |
+        | a team being added                        | tournament-team-added              |
+        | a team being updated                      | tournament-team-updated            |
+        | a team being archived                     | tournament-team-archived           |
+        | a team being restored                     | tournament-team-restored           |
+        | a team being moved                        | tournament-team-moved              |
+        | the teams being spaced out                | tournament-teams-spaced-out        |
+        | a player being added to a team            | tournament-team-player-added       |
+        | a player in a team being updated          | tournament-team-player-updated     |
+        | a player in a team being archived         | tournament-team-player-archived    |
+        | a player in a team being restored         | tournament-team-player-restored    |
+        | a player in a team being moved            | tournament-team-player-moved       |
+        | a team's players being spaced out         | tournament-team-players-spaced-out |
+        | a test being added                        | tournament-test-added              |
+        | a test being updated                      | tournament-test-updated            |
 
   Rule: An event written down and read back is the event it was
 
@@ -90,6 +104,20 @@ Feature: The names a tournament's events are kept under
         | an account being taken off the managers   |
         | an account being made a scorer            |
         | an account being taken off the scorers    |
+        | a team being added                        |
+        | a team being updated                      |
+        | a team being archived                     |
+        | a team being restored                     |
+        | a team being moved                        |
+        | the teams being spaced out                |
+        | a player being added to a team            |
+        | a player in a team being updated          |
+        | a player in a team being archived         |
+        | a player in a team being restored         |
+        | a player in a team being moved            |
+        | a team's players being spaced out         |
+        | a test being added                        |
+        | a test being updated                      |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -123,6 +151,20 @@ Feature: The names a tournament's events are kept under
         | an account being taken off the managers   |
         | an account being made a scorer            |
         | an account being taken off the scorers    |
+        | a team being added                        |
+        | a team being updated                      |
+        | a team being archived                     |
+        | a team being restored                     |
+        | a team being moved                        |
+        | the teams being spaced out                |
+        | a player being added to a team            |
+        | a player in a team being updated          |
+        | a player in a team being archived         |
+        | a player in a team being restored         |
+        | a player in a team being moved            |
+        | a team's players being spaced out         |
+        | a test being added                        |
+        | a test being updated                      |
 
   Rule: What an event can do without is read back as nothing
 
@@ -150,6 +192,18 @@ Feature: The names a tournament's events are kept under
       And what was kept is read back through the registry
       Then what was read back says everything the event said
 
+    Scenario: A team added flying no flag is read back flying none
+      Given an event of a team being added that flies no flag
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
+    Scenario: A test added in no group is read back in none
+      Given an event of a test being added in no group
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
   Rule: What was kept without what an event cannot do without is refused
 
     Scenario Outline: What was kept without a field its event needs is refused
@@ -159,21 +213,39 @@ Feature: The names a tournament's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                                 | field          |
-        | a tournament being created                | website        |
-        | a tournament being updated                | address        |
-        | a player being added                      | name           |
-        | a player being added                      | order          |
-        | a player being archived                   | order          |
-        | a tournament's player being moved         | order          |
-        | the tournament's players being spaced out | playerIds      |
-        | a block being added                       | order          |
-        | a knockout being added                    | rounds         |
-        | a competition being archived              | competitionId  |
-        | a competition being archived              | order          |
-        | a competition being moved                 | order          |
-        | the competitions being spaced out         | competitionIds |
-        | an account being made a manager           | account        |
+        | happening                                 | field           |
+        | a tournament being created                | website         |
+        | a tournament being updated                | address         |
+        | a player being added                      | name            |
+        | a player being added                      | order           |
+        | a player being archived                   | order           |
+        | a tournament's player being moved         | order           |
+        | the tournament's players being spaced out | playerIds       |
+        | a block being added                       | order           |
+        | a knockout being added                    | rounds          |
+        | a competition being archived              | competitionId   |
+        | a competition being archived              | order           |
+        | a competition being moved                 | order           |
+        | the competitions being spaced out         | competitionIds  |
+        | an account being made a manager           | account         |
+        | a team being added                        | shortName       |
+        | a team being added                        | slug            |
+        | a team being added                        | order           |
+        | a team being archived                     | order           |
+        | a team being moved                        | order           |
+        | the teams being spaced out                | teamIds         |
+        | a player being added to a team            | teamId          |
+        | a player being added to a team            | name            |
+        | a player in a team being archived         | order           |
+        | a player in a team being moved            | order           |
+        | a team's players being spaced out         | playerIds       |
+        | a test being added                        | firstTeamId     |
+        | a test being added                        | secondTeamId    |
+        | a test being added                        | starts          |
+        | a test being added                        | finishes        |
+        | a test being added                        | slug            |
+        | a test being added                        | expectedMatches |
+        | a test being added                        | bestOf          |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>
@@ -190,3 +262,7 @@ Feature: The names a tournament's events are kept under
         | a knockout being added     | rounds       | a list holding the text "3" |
         | a player being added       | flag         | the number 1                |
         | a player being added       | order        | the text "10000"            |
+        | a team being added         | order        | the text "10000"            |
+        | a team being added         | flag         | the number 1                |
+        | a test being added         | starts       | the number 20261004         |
+        | a test being added         | bestOf       | the text "3"                |

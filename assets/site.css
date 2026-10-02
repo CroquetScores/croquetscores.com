@@ -947,6 +947,12 @@ main {
   display: block;
 }
 
+/* What a field is for, beneath it, quieter than what is wrong with it. */
+.field-explanation {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
 /* What is wrong with a refused form as a whole, above its fields: said as a
    field's message is, since it is one, with the danger colour down its side as
    the notice has the accent's. On the content's own colour rather than the

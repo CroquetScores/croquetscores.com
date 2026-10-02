@@ -28,6 +28,20 @@ import { TournamentPlayersSpacedOut } from "./TournamentPlayersSpacedOut.js";
 import { TournamentPlayerUpdated } from "./TournamentPlayerUpdated.js";
 import { TournamentRestored } from "./TournamentRestored.js";
 import { TournamentUpdated } from "./TournamentUpdated.js";
+import { TeamAdded } from "./TeamAdded.js";
+import { TeamArchived } from "./TeamArchived.js";
+import { TeamMoved } from "./TeamMoved.js";
+import { TeamPlayerAdded } from "./TeamPlayerAdded.js";
+import { TeamPlayerArchived } from "./TeamPlayerArchived.js";
+import { TeamPlayerMoved } from "./TeamPlayerMoved.js";
+import { TeamPlayerRestored } from "./TeamPlayerRestored.js";
+import { TeamPlayersSpacedOut } from "./TeamPlayersSpacedOut.js";
+import { TeamPlayerUpdated } from "./TeamPlayerUpdated.js";
+import { TeamRestored } from "./TeamRestored.js";
+import { TeamsSpacedOut } from "./TeamsSpacedOut.js";
+import { TeamUpdated } from "./TeamUpdated.js";
+import { TestAdded } from "./TestAdded.js";
+import { TestUpdated } from "./TestUpdated.js";
 
 type Said = Readonly<Record<string, unknown>>;
 
@@ -339,6 +353,175 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new CompetitionsSpacedOut(
           texts(said, "competitionIds"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamAdded,
+      "tournament-team-added",
+      (said, { createdBy, occurredAt }) =>
+        new TeamAdded(
+          text(said, "teamId"),
+          text(said, "name"),
+          text(said, "shortName"),
+          optionalText(said, "flag"),
+          text(said, "slug"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamUpdated,
+      "tournament-team-updated",
+      (said, { createdBy, occurredAt }) =>
+        new TeamUpdated(
+          text(said, "teamId"),
+          text(said, "name"),
+          text(said, "shortName"),
+          optionalText(said, "flag"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamArchived,
+      "tournament-team-archived",
+      (said, { createdBy, occurredAt }) =>
+        new TeamArchived(
+          text(said, "teamId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamRestored,
+      "tournament-team-restored",
+      (said, { createdBy, occurredAt }) =>
+        new TeamRestored(text(said, "teamId"), createdBy, occurredAt),
+    )
+    .name(
+      TeamMoved,
+      "tournament-team-moved",
+      (said, { createdBy, occurredAt }) =>
+        new TeamMoved(
+          text(said, "teamId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamsSpacedOut,
+      "tournament-teams-spaced-out",
+      (said, { createdBy, occurredAt }) =>
+        new TeamsSpacedOut(texts(said, "teamIds"), createdBy, occurredAt),
+    )
+    .name(
+      TeamPlayerAdded,
+      "tournament-team-player-added",
+      (said, { createdBy, occurredAt }) =>
+        new TeamPlayerAdded(
+          text(said, "teamId"),
+          text(said, "playerId"),
+          text(said, "name"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamPlayerUpdated,
+      "tournament-team-player-updated",
+      (said, { createdBy, occurredAt }) =>
+        new TeamPlayerUpdated(
+          text(said, "teamId"),
+          text(said, "playerId"),
+          text(said, "name"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamPlayerArchived,
+      "tournament-team-player-archived",
+      (said, { createdBy, occurredAt }) =>
+        new TeamPlayerArchived(
+          text(said, "teamId"),
+          text(said, "playerId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamPlayerRestored,
+      "tournament-team-player-restored",
+      (said, { createdBy, occurredAt }) =>
+        new TeamPlayerRestored(
+          text(said, "teamId"),
+          text(said, "playerId"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamPlayerMoved,
+      "tournament-team-player-moved",
+      (said, { createdBy, occurredAt }) =>
+        new TeamPlayerMoved(
+          text(said, "teamId"),
+          text(said, "playerId"),
+          number(said, "order"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TeamPlayersSpacedOut,
+      "tournament-team-players-spaced-out",
+      (said, { createdBy, occurredAt }) =>
+        new TeamPlayersSpacedOut(
+          text(said, "teamId"),
+          texts(said, "playerIds"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TestAdded,
+      "tournament-test-added",
+      (said, { createdBy, occurredAt }) =>
+        new TestAdded(
+          text(said, "competitionId"),
+          text(said, "firstTeamId"),
+          text(said, "secondTeamId"),
+          text(said, "slug"),
+          number(said, "order"),
+          text(said, "starts"),
+          text(said, "finishes"),
+          number(said, "expectedMatches"),
+          number(said, "bestOf"),
+          optionalText(said, "group"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TestUpdated,
+      "tournament-test-updated",
+      (said, { createdBy, occurredAt }) =>
+        new TestUpdated(
+          text(said, "competitionId"),
+          text(said, "firstTeamId"),
+          text(said, "secondTeamId"),
+          text(said, "starts"),
+          text(said, "finishes"),
+          number(said, "expectedMatches"),
+          number(said, "bestOf"),
+          optionalText(said, "group"),
           createdBy,
           occurredAt,
         ),

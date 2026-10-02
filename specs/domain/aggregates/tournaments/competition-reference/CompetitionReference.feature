@@ -1,6 +1,7 @@
 Feature: What a tournament knows of each of its competitions
 
-  A tournament is played as competitions — blocks, knockouts, Swiss — and each
+  A tournament is played as competitions — blocks, knockouts, Swiss, and in a
+  tournament played by teams, tests (`addTest.feature`) — and each
   competition is a thing of its own, with its players and its games. The
   tournament does not hold all of that. It holds a reference to each: enough
   to list its competitions, in order, and to link to each one, without reading

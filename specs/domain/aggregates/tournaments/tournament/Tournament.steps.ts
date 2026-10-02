@@ -396,6 +396,7 @@ const KINDS: Readonly<Record<string, string>> = {
   block: "block",
   knockout: "knockout",
   Swiss: "swiss",
+  test: "test",
 };
 
 Then(

@@ -20,6 +20,8 @@ Four kinds of thing, kept apart.
 
 - SETUP.md §7.2 says a stored event's shape only ever gains optional fields, with no exception while no site keeps events. Until one does, event shapes can still change, and the rule as written has already led a review to flag such a change as breaking stored data. Add that the rule starts applying once the site holds real data.
 
+- An open admin tab keeps running the build it loaded, since moving between the admin's pages happens in place (App.tsx), so after a deploy it can talk to a newer API with older code and show the wrong screens until reloaded (a team tournament showed a Standard one's tabs). The admin could notice a newer build, say by the API answering the build it serves, and offer to reload.
+
 - The admin's first modal dialog (STYLE.md §5c), adding players from a tournament's page, wants its behaviour in its feature file: focus goes to the first field (or first button) on opening and back to whatever opened it on closing; Cancel closes it keeping nothing the other buttons have not already kept, and Escape does the same; opening, closing and using it leave the address as it was; and where it stays open after doing something it says what it did in a live-region status message above the fields.
 
 ### Sending email
@@ -30,7 +32,13 @@ Four kinds of thing, kept apart.
 
 ## Known problems
 
-None.
+### A test's games and its tournament are saved apart
+
+**What goes wrong.** A test's games are kept in the competition's own stream, and whether it has any decides what can be done to the tournament: a test with games in use is not archived, keeps its teams, and keeps its expected matches and best-of from going below what has been played; a team player who has played is not archived. Archiving a test (`ArchiveCompetitionHandler`), updating one (`UpdateTestHandler`) and archiving a team player (`ArchiveTeamPlayerHandler`) read the competition's games and then save the tournament. Adding a game (`AddGameHandler`) reads the tournament and then saves the competition. Neither waits for the other, so a manager archiving a test as a scorer adds its first game can leave an archived test with a game in use, and the same goes for changing its teams or archiving the player who has just played.
+
+**Why it has not happened.** It needs the two to land within the same moment, and a test is set up before its games are entered.
+
+**What to do when it does.** Restore the test, or put the player or the teams back, and archive the game first. To stop it, either take a lock on the tournament's stream in `AddGame` (and in correcting and restoring a game) so that it waits for any change to the tournament, or have those three handlers append to the competition's stream as well, so that its version check refuses one of the two.
 
 ---
 
@@ -63,3 +71,57 @@ Going to use SPA instead of /scripts.
 None.
 
 ---
+
+## Team Competitions
+
+A tournament who's format is not `Standard` its a team tournament.
+
+The address for viewing/editing a team in /admin is the same but they tabs are different. The tabs are:
+
+- Teams
+- Tests
+- Managers
+- Scorers
+
+The secondary nav bar is:
+
+Tournament
+then a link per test
+
+### Teams tab
+
+Has the same behaviours as Players tab for Standard tournament with these changes:
+
+- Add Player button is Add Team button
+
+#### Add/Edit Team
+
+The Add Team dialog has the following fields:
+
+Name (required: the full name of the team)
+Short Name (required: the short name for the team which is used by the secondary nav bar)
+Flag (optional)
+
+#### View Team
+
+Viewing a team shows the list of players and works in the same way as the Players tab in a Standard tournament.
+
+#### Tests tab
+
+Add Test button
+List of tests in defined order
+
+##### Add Test
+
+This creates a test between two teams:
+
+Team A (drop down list)
+VS
+Team B (drop down list)
+Starts (date: must be within date range of tournament)
+Finishes (date: must be within date range of tournament)
+
+##### View Test
+
+Add Score button
+Lists the scores

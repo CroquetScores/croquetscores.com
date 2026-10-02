@@ -56,7 +56,9 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
   (`scores-tab.feature`). A score that could be archived could be taken away
   and added again with other players, so the dialog lets them be chosen
   again, from those playing, as when adding, and the reader begins on the
-  winner. A score that cannot be archived is one in a knockout whose winner
+  winner. The score's own players are offered too, even one who has
+  withdrawn since, so that the dialog begins on the score as it is. Nobody
+  is not offered, since the score already has its players. A score that cannot be archived is one in a knockout whose winner
   has played on, and changing who won it would leave that next game played
   by somebody who had not got there. So its players are shown as they are
   and cannot be changed, its scores alone can be, and the reader begins on
@@ -69,7 +71,10 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
   empty, one that does not begin with a digit, the same player chosen as
   both, a loser's score marked, and a winner's score not ahead of the
   loser's, each beside its field, and in a knockout two players not drawn to
-  meet, above the fields. Scores
+  meet, above the fields. So is other players for a score whose winner has
+  played on since the dialog was opened (`Competition.WinnerHasPlayedOn`),
+  which is met only then, since the dialog does not let its players be
+  chosen once they have. Scores
   that would make a game won into a drawn one, where the tournament allows
   drawn games, are about neither field alone, and are said above the fields
   (`Game.ResultChanged`). Nothing refused is kept, and the dialog stays open.
@@ -817,6 +822,62 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       When "Save" is pressed
       Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 17
 
+  Rule: A score's own players are offered even once they have withdrawn
+
+    A player who withdraws after playing keeps the games they played, and
+    their scores can still be corrected. So the dialog begins on them as on
+    anybody, rather than on nobody, and a correction that keeps them keeps
+    them. A withdrawn player who is not one of the score's is still not
+    offered, since they play no more of the competition.
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+
+    Scenario: The score's winner who has withdrawn begins chosen
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the "Winner" chosen is "Sam Someone"
+
+    Scenario Outline: The score's player who has withdrawn is offered
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "Sam Someone" is offered as the "<field>"
+
+      Examples:
+        | field  |
+        | Winner |
+        | Loser  |
+
+    Scenario: A withdrawn player who is not one of the score's is not offered
+      Given "organiser@example.com" has withdrawn the player "Chris Third" from "Block A" of "Spring Open"
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then "Chris Third" is not offered as the "Winner"
+
+    Scenario: The scores of a score whose winner has withdrawn can be corrected
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "10" is typed as the "Loser's score"
+      When "Save" is pressed
+      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 26 to 10
+
+  Rule: A score corrected is never given nobody as a player
+
+    Adding begins on nobody, so that a game is never put down against a
+    player the reader did not choose. A score being corrected already has
+    its players, and nobody is not a player, so it is not offered.
+
+    Background:
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+
+    Scenario Outline: Nobody is not offered
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then nobody is not offered as the "<field>"
+
+      Examples:
+        | field  |
+        | Winner |
+        | Loser  |
+
   Rule: In a knockout, a score that could be archived can be given players drawn to meet
 
     The knockout's draw is four places, each round the best of 1, so Sam
@@ -857,6 +918,16 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       When "Save" is pressed
       Then the score dialog says "Competition.NotDrawnToMeet" above the fields
       And the modal dialog says the words for "Competition.NotDrawnToMeet"
+
+    Scenario: A winner who has played on while the dialog is open is refused above the fields
+      Given "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "Chris Third" has beaten "Pat Fourth" 26 to 20 in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Final Stage" of "Spring Open"
+      And "Alex Another" is chosen as the "Winner"
+      And "Sam Someone" is chosen as the "Loser"
+      When "Save" is pressed
+      Then the score dialog says "Competition.WinnerHasPlayedOn" above the fields
+      And the modal dialog says the words for "Competition.WinnerHasPlayedOn"
 
   Rule: A score that cannot be archived keeps its players
 

@@ -10,11 +10,16 @@ import {
 } from "../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../support/world.js";
 
-export type Tab = "players" | "competitions" | "managers" | "scorers";
+export type Tab =
+  "players" | "competitions" | "teams" | "tests" | "managers" | "scorers";
 
-/** Where a tab lists what it holds, once it has been asked for. */
+/**
+ * Where a tab lists what it holds, once it has been asked for, or where a page
+ * with one list and no tabs does — a team's players, a test's scores — since
+ * the list is drawn the same either way.
+ */
 export const tabPanel = (world: SpecWorld): Locator =>
-  world.browserPage.locator("#tab-panel");
+  world.browserPage.locator("#tab-panel, #page-list");
 
 /** The page of the tournament the scenario calls `name`, on `tab`. */
 export const openTab = async (

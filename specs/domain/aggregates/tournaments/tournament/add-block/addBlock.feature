@@ -213,3 +213,17 @@ Feature: Adding a block to a tournament
       And the tournament is rebuilt from the stream
       When the block "Block A" is added
       Then it is refused with "Tournament.Archived"
+
+  Rule: A block cannot be added to a tournament played by teams
+
+    A tournament played by teams is played as tests (`addTest.feature`), whose
+    games are between teams' players, and a block's players are the
+    tournament's own, which it has none of (`addPlayer.feature`). The same is
+    said of a knockout (`addKnockout.feature`) and a Swiss
+    (`addSwiss.feature`).
+
+    Scenario: Adding a block to a tournament played by teams is refused
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      When the block "Block A" is added
+      Then it is refused with "Tournament.PlayedByTeams"

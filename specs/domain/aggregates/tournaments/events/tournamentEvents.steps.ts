@@ -30,6 +30,20 @@ import { TournamentPlayersSpacedOut } from "../../../../../src/domain/aggregates
 import { TournamentPlayerUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TournamentPlayerUpdated.js";
 import { TournamentRestored } from "../../../../../src/domain/aggregates/tournaments/events/TournamentRestored.js";
 import { TournamentUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TournamentUpdated.js";
+import { TeamAdded } from "../../../../../src/domain/aggregates/tournaments/events/TeamAdded.js";
+import { TeamArchived } from "../../../../../src/domain/aggregates/tournaments/events/TeamArchived.js";
+import { TeamMoved } from "../../../../../src/domain/aggregates/tournaments/events/TeamMoved.js";
+import { TeamPlayerAdded } from "../../../../../src/domain/aggregates/tournaments/events/TeamPlayerAdded.js";
+import { TeamPlayerArchived } from "../../../../../src/domain/aggregates/tournaments/events/TeamPlayerArchived.js";
+import { TeamPlayerMoved } from "../../../../../src/domain/aggregates/tournaments/events/TeamPlayerMoved.js";
+import { TeamPlayerRestored } from "../../../../../src/domain/aggregates/tournaments/events/TeamPlayerRestored.js";
+import { TeamPlayersSpacedOut } from "../../../../../src/domain/aggregates/tournaments/events/TeamPlayersSpacedOut.js";
+import { TeamPlayerUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TeamPlayerUpdated.js";
+import { TeamRestored } from "../../../../../src/domain/aggregates/tournaments/events/TeamRestored.js";
+import { TeamsSpacedOut } from "../../../../../src/domain/aggregates/tournaments/events/TeamsSpacedOut.js";
+import { TeamUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TeamUpdated.js";
+import { TestAdded } from "../../../../../src/domain/aggregates/tournaments/events/TestAdded.js";
+import { TestUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TestUpdated.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { EventRegistry } from "../../../../../src/domain/common/EventRegistry.js";
 import { causedBy, happenedAt } from "../../../../support/exampleEvents.js";
@@ -60,6 +74,10 @@ const ANOTHER_PLAYER = "tournament-player/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const ANOTHER_ACCOUNT = "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const COMPETITION = "competition/123e4567-e89b-42d3-a456-426614174000";
 const ANOTHER_COMPETITION = "competition/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
+const TEAM = "team/123e4567-e89b-42d3-a456-426614174000";
+const ANOTHER_TEAM = "team/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
+const TEAM_PLAYER = "team-player/123e4567-e89b-42d3-a456-426614174000";
+const ANOTHER_TEAM_PLAYER = "team-player/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 
 // One event of each kind a tournament records, as a feature names what
 // happened, and those an event can do without left out.
@@ -213,6 +231,110 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
   "the competitions being spaced out": () =>
     new CompetitionsSpacedOut(
       [ANOTHER_COMPETITION, COMPETITION],
+      causedBy,
+      happenedAt,
+    ),
+  "a team being added": () =>
+    new TeamAdded(
+      TEAM,
+      "Australia",
+      "AUS",
+      "au",
+      "aus",
+      10000,
+      causedBy,
+      happenedAt,
+    ),
+  "a team being added that flies no flag": () =>
+    new TeamAdded(
+      TEAM,
+      "Australia",
+      "AUS",
+      undefined,
+      "aus",
+      10000,
+      causedBy,
+      happenedAt,
+    ),
+  "a team being updated": () =>
+    new TeamUpdated(TEAM, "Australia A", "AUS A", "au", causedBy, happenedAt),
+  "a team being archived": () =>
+    new TeamArchived(TEAM, 30000, causedBy, happenedAt),
+  "a team being restored": () => new TeamRestored(TEAM, causedBy, happenedAt),
+  "a team being moved": () => new TeamMoved(TEAM, 15000, causedBy, happenedAt),
+  // Two, so that one read back in the wrong order is found.
+  "the teams being spaced out": () =>
+    new TeamsSpacedOut([ANOTHER_TEAM, TEAM], causedBy, happenedAt),
+  "a player being added to a team": () =>
+    new TeamPlayerAdded(
+      TEAM,
+      TEAM_PLAYER,
+      "Sam Someone",
+      10000,
+      causedBy,
+      happenedAt,
+    ),
+  "a player in a team being updated": () =>
+    new TeamPlayerUpdated(
+      TEAM,
+      TEAM_PLAYER,
+      "Samantha Someone",
+      causedBy,
+      happenedAt,
+    ),
+  "a player in a team being archived": () =>
+    new TeamPlayerArchived(TEAM, TEAM_PLAYER, 30000, causedBy, happenedAt),
+  "a player in a team being restored": () =>
+    new TeamPlayerRestored(TEAM, TEAM_PLAYER, causedBy, happenedAt),
+  "a player in a team being moved": () =>
+    new TeamPlayerMoved(TEAM, TEAM_PLAYER, 15000, causedBy, happenedAt),
+  "a team's players being spaced out": () =>
+    new TeamPlayersSpacedOut(
+      TEAM,
+      [ANOTHER_TEAM_PLAYER, TEAM_PLAYER],
+      causedBy,
+      happenedAt,
+    ),
+  "a test being added": () =>
+    new TestAdded(
+      COMPETITION,
+      TEAM,
+      ANOTHER_TEAM,
+      "aus-v-eng",
+      10000,
+      "2026-10-03",
+      "2026-10-05",
+      21,
+      3,
+      "Group A",
+      causedBy,
+      happenedAt,
+    ),
+  "a test being added in no group": () =>
+    new TestAdded(
+      COMPETITION,
+      TEAM,
+      ANOTHER_TEAM,
+      "aus-v-eng",
+      10000,
+      "2026-10-03",
+      "2026-10-05",
+      21,
+      3,
+      undefined,
+      causedBy,
+      happenedAt,
+    ),
+  "a test being updated": () =>
+    new TestUpdated(
+      COMPETITION,
+      ANOTHER_TEAM,
+      TEAM,
+      "2026-10-04",
+      "2026-10-05",
+      9,
+      2,
+      "Group B",
       causedBy,
       happenedAt,
     ),

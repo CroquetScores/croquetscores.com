@@ -34,15 +34,35 @@ import { TournamentPlayerRestored } from "./events/TournamentPlayerRestored.js";
 import { TournamentPlayerUpdated } from "./events/TournamentPlayerUpdated.js";
 import { TournamentRestored } from "./events/TournamentRestored.js";
 import { TournamentUpdated } from "./events/TournamentUpdated.js";
+import { TeamAdded } from "./events/TeamAdded.js";
+import { TeamArchived } from "./events/TeamArchived.js";
+import { TeamMoved } from "./events/TeamMoved.js";
+import { TeamPlayerAdded } from "./events/TeamPlayerAdded.js";
+import { TeamPlayerArchived } from "./events/TeamPlayerArchived.js";
+import { TeamPlayerMoved } from "./events/TeamPlayerMoved.js";
+import { TeamPlayerRestored } from "./events/TeamPlayerRestored.js";
+import { TeamPlayersSpacedOut } from "./events/TeamPlayersSpacedOut.js";
+import { TeamPlayerUpdated } from "./events/TeamPlayerUpdated.js";
+import { TeamRestored } from "./events/TeamRestored.js";
+import { TeamsSpacedOut } from "./events/TeamsSpacedOut.js";
+import { TeamUpdated } from "./events/TeamUpdated.js";
+import { TestAdded } from "./events/TestAdded.js";
+import { TestUpdated } from "./events/TestUpdated.js";
 import { CompetitionId } from "./primitives/CompetitionId.js";
+import { TeamId } from "./primitives/TeamId.js";
+import { TeamPlayerId } from "./primitives/TeamPlayerId.js";
 import type { TournamentId } from "./primitives/TournamentId.js";
 import { TournamentPlayerId } from "./primitives/TournamentPlayerId.js";
+import { Team, type TeamDetails } from "./Team.js";
+import { TeamPlayer, type TeamPlayerDetails } from "./TeamPlayer.js";
 import {
   TournamentPlayer,
   type TournamentPlayerDetails,
 } from "./TournamentPlayer.js";
 import { BestOf } from "./value-objects/BestOf.js";
 import { CompetitionName } from "./value-objects/CompetitionName.js";
+import { ExpectedMatches } from "./value-objects/ExpectedMatches.js";
+import { TestGroup } from "./value-objects/TestGroup.js";
 import { Countries } from "./value-objects/Countries.js";
 import type { Country } from "./value-objects/Country.js";
 import { KnockoutDraw } from "./value-objects/KnockoutDraw.js";
@@ -87,7 +107,27 @@ export type TournamentErrorCode =
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.LastManager"
-  | "Tournament.AlreadyAManager";
+  | "Tournament.AlreadyAManager"
+  | "Tournament.PlayedByTeams"
+  | "Tournament.NotPlayedByTeams"
+  | "Tournament.PlayedByTeamsFixed"
+  | "Tournament.TeamAlreadyAdded"
+  | "Tournament.TeamNameTaken"
+  | "Tournament.TeamShortNameTaken"
+  | "Tournament.NoSuchTeam"
+  | "Tournament.TeamArchived"
+  | "Tournament.TeamPlayerAlreadyAdded"
+  | "Team.PlayerNameTaken"
+  | "Team.NoSuchPlayer"
+  | "Tournament.NotATest"
+  | "Tournament.TestAgainstItself"
+  | "Tournament.TestFinishesBeforeStarts"
+  | "Tournament.TestStartsBeforeTournament"
+  | "Tournament.TestFinishesAfterTournament"
+  | "Tournament.TestHasGames"
+  | "Tournament.TestHasGamesInUse"
+  | "Tournament.ExpectedMatchesBelowStarted"
+  | "Tournament.BestOfBelowGamesPlayed";
 
 /**
  * A tournament's refusal, named by its code. The code is what whoever asked
@@ -125,11 +165,47 @@ export interface TournamentDetails {
  */
 export type AddressTaken = (address: TournamentAddress) => boolean;
 
+/**
+ * What a test is asked for as: the two teams it is between, the first first,
+ * the days it starts and finishes, each the start of its day in UTC, how many
+ * matches it is expected to have, what each is the best of, and its group, if
+ * any.
+ */
+export interface TestDetails {
+  readonly firstTeam: TeamId;
+  readonly secondTeam: TeamId;
+  readonly starts: ReadOnlyDate;
+  readonly finishes: ReadOnlyDate;
+  readonly expectedMatches: ExpectedMatches;
+  readonly bestOf: BestOf;
+  readonly group?: TestGroup | undefined;
+}
+
+/**
+ * What a test has had played in it, which is not the tournament's to know: the
+ * matches started, a match starting once its two players have a game in use,
+ * and the most games in use any two players have played.
+ */
+export interface TestPlayed {
+  readonly matchesStarted: number;
+  readonly mostGamesBetweenTwo: number;
+}
+
 /** What each kind of competition is besides what every competition is. */
 export type CompetitionShape =
   | { readonly kind: "block"; readonly bestOf: BestOf }
   | { readonly kind: "knockout"; readonly draw: KnockoutDraw }
-  | { readonly kind: "swiss"; readonly bestOf: BestOf };
+  | { readonly kind: "swiss"; readonly bestOf: BestOf }
+  | {
+      readonly kind: "test";
+      readonly firstTeam: TeamId;
+      readonly secondTeam: TeamId;
+      readonly starts: ReadOnlyDate;
+      readonly finishes: ReadOnlyDate;
+      readonly expectedMatches: ExpectedMatches;
+      readonly bestOf: BestOf;
+      readonly group: TestGroup | undefined;
+    };
 
 /** One of a tournament's competitions: its reference, and its shape. */
 export interface CompetitionInTournament {
@@ -237,6 +313,7 @@ export class Tournament extends AggregateRoot {
   // By the written id. How they are listed is `players` and `competitions`.
   readonly #players = new Map<string, TournamentPlayer>();
   readonly #competitions = new Map<string, CompetitionInTournament>();
+  readonly #teams = new Map<string, Team>();
   // By the written id, in the order they were made.
   readonly #managers = new Set<string>();
   readonly #scorers = new Set<string>();
@@ -376,6 +453,14 @@ export class Tournament extends AggregateRoot {
     );
   }
 
+  /**
+   * Its teams, lowest order first, the archived after all the others whatever
+   * their order. A Standard tournament has none.
+   */
+  get teams(): readonly Team[] {
+    return archivedLast(this.#teamsByOrder, ({ archived }) => archived);
+  }
+
   /** Its managers, in the order they were made, the one who created it first. */
   get managers(): readonly AccountId[] {
     return [...this.#managers].map((written) => AccountId.from(written));
@@ -466,6 +551,18 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const settled = this.#settle(this.#now.website, details, taken, at);
+    // What a tournament holds depends on whether it is played by teams, so
+    // once it holds anything, a change to that would leave it holding what it
+    // could no longer have.
+    if (
+      settled.format.isTeamFormat !== this.#now.format.isTeamFormat &&
+      this.#holdsAnything
+    ) {
+      refuse(
+        "Tournament.PlayedByTeamsFixed",
+        "The tournament holds what only its format can have.",
+      );
+    }
     const written = writtenFrom(settled);
     if (sameWriting(written, writtenFrom(this.#now))) return;
     this.record(new TournamentUpdated(written, by, at));
@@ -501,6 +598,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
+    this.#refuseOncePlayedByTeams();
     const player = TournamentPlayer.from(id, details, this.#nextPlayerOrder);
     if (this.#players.has(id.value)) {
       refuse("Tournament.PlayerAlreadyAdded", "The player is already added.");
@@ -770,16 +868,31 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That the competition `id`, of whatever kind, is set aside, whether or not
-   * it has games: they are kept with it, and come back when it is restored.
-   * It is out of the way, so it is put last, given 10,000 more than the
+   * That the competition `id` is set aside. A block, a knockout or a Swiss is,
+   * whether or not it has games: they are kept with it, and come back when it
+   * is restored. A test is not once any of its matches has started, since it
+   * has then been played; what has been played in it is not the tournament's
+   * to know, so whatever asks says, as `played`, and says nothing of any other
+   * kind. It is out of the way, so it is put last, given 10,000 more than the
    * highest order there is, and keeps that order if it is restored. Archiving
    * one that is archived records nothing.
    */
-  archiveCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
+  archiveCompetition(
+    id: CompetitionId,
+    by: AccountId,
+    at: ReadOnlyDate,
+    played?: TestPlayed,
+  ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    if (this.#competitionFound(id).reference.archived) return;
+    const found = this.#competitionFound(id);
+    if (found.reference.archived) return;
+    if (found.shape.kind === "test" && (played?.matchesStarted ?? 0) > 0) {
+      refuse(
+        "Tournament.TestHasGamesInUse",
+        "The test has games in use between its teams' players.",
+      );
+    }
     this.record(new CompetitionArchived(id.value, this.#nextOrder, by, at));
   }
 
@@ -841,8 +954,413 @@ export class Tournament extends AggregateRoot {
   restoreCompetition(id: CompetitionId, by: AccountId, at: ReadOnlyDate): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    if (!this.#competitionFound(id).reference.archived) return;
+    const found = this.#competitionFound(id);
+    if (!found.reference.archived) return;
+    // A test is between two teams, and one archived since the test was would
+    // leave it against a team that is out of the way.
+    if (found.shape.kind === "test") {
+      this.#teamFound(found.shape.firstTeam).ensureInUse();
+      this.#teamFound(found.shape.secondTeam).ensureInUse();
+    }
     this.record(new CompetitionRestored(id.value, by, at));
+  }
+
+  /**
+   * That a team was added, as `details` say, found at a slug of its short
+   * name no other team has, and given 10,000 more than the highest order
+   * there is. Only a tournament played by teams has teams. Refused when
+   * another team has the id, or the name or the short name however it is
+   * capitalised, archived or not.
+   */
+  addTeam(
+    id: TeamId,
+    details: TeamDetails,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    this.#refuseUnlessPlayedByTeams();
+    Team.ensureValid(details);
+    if (this.#teams.has(id.value)) {
+      refuse("Tournament.TeamAlreadyAdded", "The team is already added.");
+    }
+    const slug = firstFree(
+      Slug.fromName(details.shortName),
+      id,
+      [...this.#teams.values()].map((team) => team.slug.toString()),
+    );
+    const team = Team.from(id, details, { slug, order: this.#nextTeamOrder });
+    this.#refuseATeamNameTaken(team);
+    this.record(
+      new TeamAdded(
+        id.value,
+        team.name.toString(),
+        team.shortName.toString(),
+        team.flag === undefined ? undefined : String(team.flag),
+        slug.toString(),
+        team.order,
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the team `id` is now as `details` say, keeping its slug, its order
+   * and its players. Its tests are called by its new short name. Refused as
+   * adding a team is, and as the team refuses an update. An update that
+   * changes nothing records nothing.
+   */
+  updateTeam(
+    id: TeamId,
+    details: TeamDetails,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    const found = this.#teamFound(id);
+    const team = found.update(details);
+    this.#refuseATeamNameTaken(team);
+    if (
+      team.name.equals(found.name) &&
+      team.shortName.equals(found.shortName) &&
+      String(team.flag) === String(found.flag)
+    ) {
+      return;
+    }
+    this.record(
+      new TeamUpdated(
+        id.value,
+        team.name.toString(),
+        team.shortName.toString(),
+        team.flag === undefined ? undefined : String(team.flag),
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the team `id` is set aside, with its players. A team in a test in
+   * use is refused, as the team says: the tournament knows its tests, so it
+   * asks itself. It is put last, as an archived player is. Archiving one that
+   * is archived records nothing.
+   */
+  archiveTeam(id: TeamId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    const found = this.#teamFound(id);
+    const inATest = [...this.#competitions.values()].some(
+      ({ reference, shape }) =>
+        !reference.archived &&
+        shape.kind === "test" &&
+        (shape.firstTeam.equals(id) || shape.secondTeam.equals(id)),
+    );
+    if (found.archive({ inATest }) === found) return;
+    this.record(new TeamArchived(id.value, this.#nextTeamOrder, by, at));
+  }
+
+  /** That the archived team `id` is restored. One that is not records nothing. */
+  restoreTeam(id: TeamId, by: AccountId, at: ReadOnlyDate): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    const found = this.#teamFound(id);
+    if (found.restore() === found) return;
+    this.record(new TeamRestored(id.value, by, at));
+  }
+
+  /**
+   * That the team `id` is moved a place among those not archived, as a player
+   * is (`movePlayer`), with every team spaced out again first where there is
+   * no room. Moving the first up or the last down records nothing.
+   */
+  moveTeam(
+    id: TeamId,
+    direction: "up" | "down",
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    this.#teamFound(id).ensureMovable();
+    const order = this.#movedAmong(
+      () => this.#teamsByOrder,
+      id,
+      direction,
+      () => {
+        this.record(
+          new TeamsSpacedOut(
+            this.#teamsByOrder.map((team) => team.id.value),
+            by,
+            at,
+          ),
+        );
+      },
+    );
+    if (order === undefined) return;
+    this.record(new TeamMoved(id.value, order, by, at));
+  }
+
+  /**
+   * That a player was added to the team `teamId`, as `details` say, given
+   * 10,000 more than the highest order in the team. Refused when the team is
+   * archived, when a player in any team has the id, and when another player
+   * in the team has the name, however it is capitalised, archived or not.
+   */
+  addTeamPlayer(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    details: TeamPlayerDetails,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    const team = this.#teamFound(teamId);
+    team.ensureInUse();
+    const player = TeamPlayer.from(id, details, nextOrderIn(team.players));
+    // Unique in every team, since a game in a test is between two teams and
+    // names its players by their ids alone.
+    if (
+      [...this.#teams.values()].some(
+        (each) => each.playerWritten(id.value) !== undefined,
+      )
+    ) {
+      refuse(
+        "Tournament.TeamPlayerAlreadyAdded",
+        "A player in a team already has the id.",
+      );
+    }
+    refuseATeamPlayerNameTaken(team, player);
+    this.record(
+      new TeamPlayerAdded(
+        teamId.value,
+        id.value,
+        player.name.toString(),
+        player.order,
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the player `id` of the team `teamId` now has the name `details` say.
+   * Refused as adding a player to the team is, and as the player refuses an
+   * update. An update that changes nothing records nothing.
+   */
+  updateTeamPlayer(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    details: TeamPlayerDetails,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const { team, player: found } = this.#teamPlayerToChange(teamId, id, by);
+    const player = found.update(details);
+    refuseATeamPlayerNameTaken(team, player);
+    if (player.name.equals(found.name)) return;
+    this.record(
+      new TeamPlayerUpdated(
+        teamId.value,
+        id.value,
+        player.name.toString(),
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the player `id` of the team `teamId` is set aside. Whether they have
+   * played any games is not the tournament's to know, so whatever asks says,
+   * and the player refuses if they have. They are put last in their team.
+   * Archiving one who is archived records nothing.
+   */
+  archiveTeamPlayer(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    hasPlayedGames: boolean,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const { team, player } = this.#teamPlayerToChange(teamId, id, by);
+    if (player.archive({ hasGames: hasPlayedGames }) === player) return;
+    this.record(
+      new TeamPlayerArchived(
+        teamId.value,
+        id.value,
+        nextOrderIn(team.players),
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the archived player `id` of the team `teamId` is restored. One who
+   * is not records nothing.
+   */
+  restoreTeamPlayer(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const { player } = this.#teamPlayerToChange(teamId, id, by);
+    if (player.restore() === player) return;
+    this.record(new TeamPlayerRestored(teamId.value, id.value, by, at));
+  }
+
+  /**
+   * That the player `id` of the team `teamId` is moved a place among the
+   * team's players not archived, as a tournament's player is (`movePlayer`).
+   * Another team's players are no part of it.
+   */
+  moveTeamPlayer(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    direction: "up" | "down",
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const { player } = this.#teamPlayerToChange(teamId, id, by);
+    player.ensureInUse();
+    const byOrder = (): TeamPlayer[] => this.#teamFound(teamId).playersByOrder;
+    const order = this.#movedAmong(byOrder, id, direction, () => {
+      this.record(
+        new TeamPlayersSpacedOut(
+          teamId.value,
+          byOrder().map((each) => each.id.value),
+          by,
+          at,
+        ),
+      );
+    });
+    if (order === undefined) return;
+    this.record(new TeamPlayerMoved(teamId.value, id.value, order, by, at));
+  }
+
+  /**
+   * That a test was added, as `details` say: called by its teams' short
+   * names, the first team's first, found at a slug of that name no other
+   * competition has, and given an order as every competition is. Refused
+   * unless the tournament is played by teams, the teams are two different
+   * teams of its own in use, and the test is played within the tournament's
+   * days, starting no later than it finishes.
+   */
+  addTest(
+    id: CompetitionId,
+    details: TestDetails,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    this.#refuseUnlessPlayedByTeams();
+    if (this.#competitions.has(id.value)) {
+      refuse(
+        "Tournament.CompetitionAlreadyAdded",
+        "The competition is already added.",
+      );
+    }
+    this.#refuseUnlessATestCanBe(details);
+    this.record(
+      new TestAdded(
+        id.value,
+        details.firstTeam.value,
+        details.secondTeam.value,
+        this.#competitionSlugFor(id, this.#testNameFor(details)),
+        this.#nextOrder,
+        dayOf(details.starts),
+        dayOf(details.finishes),
+        details.expectedMatches.count,
+        details.bestOf.games,
+        details.group?.toString(),
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the test `id` is now as `details` say, asked what a test added is
+   * asked, keeping its slug and its order. What has been played in it is not
+   * the tournament's to know, so whatever asks says, and once it has games in
+   * use its teams are fixed, its expected matches are no fewer than the
+   * matches started, and its best-of no fewer than the most games any two
+   * players have played. An update that changes nothing records nothing.
+   */
+  updateTest(
+    id: CompetitionId,
+    details: TestDetails,
+    played: TestPlayed,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    const found = this.#competitionFound(id);
+    const { shape } = found;
+    if (shape.kind !== "test") {
+      return refuse("Tournament.NotATest", "The competition is not a test.");
+    }
+    if (found.reference.archived) {
+      refuse("Tournament.CompetitionArchived", "The competition is archived.");
+    }
+    // A day left as it was is not asked again: the tournament's days changed
+    // since leave its tests as they were (update.feature).
+    this.#refuseUnlessATestCanBe(details, {
+      starts: dayOf(shape.starts),
+      finishes: dayOf(shape.finishes),
+    });
+    const sameTeams =
+      details.firstTeam.equals(shape.firstTeam) &&
+      details.secondTeam.equals(shape.secondTeam);
+    if (!sameTeams && played.matchesStarted > 0) {
+      refuse(
+        "Tournament.TestHasGames",
+        "The test has games between its teams' players.",
+      );
+    }
+    if (details.expectedMatches.count < played.matchesStarted) {
+      refuse(
+        "Tournament.ExpectedMatchesBelowStarted",
+        "More matches have started than the test would be expected to have.",
+      );
+    }
+    if (details.bestOf.games < played.mostGamesBetweenTwo) {
+      refuse(
+        "Tournament.BestOfBelowGamesPlayed",
+        "Two players have played more games than a match would be the best of.",
+      );
+    }
+    if (
+      sameTeams &&
+      dayOf(details.starts) === dayOf(shape.starts) &&
+      dayOf(details.finishes) === dayOf(shape.finishes) &&
+      details.expectedMatches.equals(shape.expectedMatches) &&
+      details.bestOf.equals(shape.bestOf) &&
+      String(details.group) === String(shape.group)
+    ) {
+      return;
+    }
+    this.record(
+      new TestUpdated(
+        id.value,
+        details.firstTeam.value,
+        details.secondTeam.value,
+        dayOf(details.starts),
+        dayOf(details.finishes),
+        details.expectedMatches.count,
+        details.bestOf.games,
+        details.group?.toString(),
+        by,
+        at,
+      ),
+    );
   }
 
   protected apply(event: DomainEvent): void {
@@ -933,6 +1451,86 @@ export class Tournament extends AggregateRoot {
       event.competitionIds.forEach((written, index) => {
         this.#competitionAt(written, (index + 1) * ORDER_STEP);
       });
+    } else {
+      this.#applyToTeamsOrTests(event);
+    }
+  }
+
+  // The events of a tournament played by teams, kept apart from the rest only
+  // so that neither list of them is too long to read.
+  #applyToTeamsOrTests(event: DomainEvent): void {
+    if (event instanceof TeamAdded) {
+      const id = TeamId.from(event.teamId);
+      this.#teams.set(
+        id.value,
+        Team.from(id, event, {
+          slug: Slug.from(event.slug),
+          order: event.order,
+        }),
+      );
+    } else if (event instanceof TeamUpdated) {
+      this.#teamBecomes(event.teamId, (team) => team.update(event));
+      this.#renameTestsOf(event.teamId);
+    } else if (event instanceof TeamArchived) {
+      // Whether the team was in a test was asked when it was recorded.
+      this.#teamBecomes(event.teamId, (team) =>
+        team.archive({ inATest: false }).withOrder(event.order),
+      );
+    } else if (event instanceof TeamRestored) {
+      this.#teamBecomes(event.teamId, (team) => team.restore());
+    } else if (event instanceof TeamMoved) {
+      this.#teamBecomes(event.teamId, (team) => team.withOrder(event.order));
+    } else if (event instanceof TeamsSpacedOut) {
+      event.teamIds.forEach((written, index) => {
+        this.#teamBecomes(written, (team) =>
+          team.withOrder((index + 1) * ORDER_STEP),
+        );
+      });
+    } else if (event instanceof TeamPlayerAdded) {
+      this.#teamBecomes(event.teamId, (team) =>
+        team.withPlayer(
+          TeamPlayer.from(
+            TeamPlayerId.from(event.playerId),
+            event,
+            event.order,
+          ),
+        ),
+      );
+    } else if (event instanceof TeamPlayerUpdated) {
+      this.#teamPlayerBecomes(event, (player) => player.update(event));
+    } else if (event instanceof TeamPlayerArchived) {
+      // Whether the player had games was asked when it was recorded.
+      this.#teamPlayerBecomes(event, (player) =>
+        player.archive({ hasGames: false }).withOrder(event.order),
+      );
+    } else if (event instanceof TeamPlayerRestored) {
+      this.#teamPlayerBecomes(event, (player) => player.restore());
+    } else if (event instanceof TeamPlayerMoved) {
+      this.#teamPlayerBecomes(event, (player) => player.withOrder(event.order));
+    } else if (event instanceof TeamPlayersSpacedOut) {
+      event.playerIds.forEach((playerId, index) => {
+        this.#teamPlayerBecomes({ teamId: event.teamId, playerId }, (player) =>
+          player.withOrder((index + 1) * ORDER_STEP),
+        );
+      });
+    } else if (event instanceof TestAdded) {
+      const id = CompetitionId.from(event.competitionId);
+      const shape = testShapeOf(event);
+      this.#competitions.set(id.value, {
+        reference: CompetitionReference.from(id, {
+          name: this.#testNameFor(shape),
+          slug: event.slug,
+          order: event.order,
+        }),
+        shape,
+      });
+    } else if (event instanceof TestUpdated) {
+      const shape = testShapeOf(event);
+      this.#competitionUpdated(
+        event.competitionId,
+        this.#testNameFor(shape),
+        shape,
+      );
     }
   }
 
@@ -1170,6 +1768,7 @@ export class Tournament extends AggregateRoot {
     name: CompetitionName,
   ): { slug: string; order: number } {
     this.#refuseOnceArchived();
+    this.#refuseOncePlayedByTeams();
     if (this.#competitions.has(id.value)) {
       refuse(
         "Tournament.CompetitionAlreadyAdded",
@@ -1177,18 +1776,22 @@ export class Tournament extends AggregateRoot {
       );
     }
     this.#refuseACompetitionNameTaken(id, name);
-    const slugs = [...this.#competitions.values()].map(({ reference }) =>
-      reference.slug.toString(),
-    );
-    const base = Slug.fromName(name.toString());
-    let slug = lastOf(slugsFor(base, id));
-    for (const candidate of slugsFor(base, id)) {
-      if (!slugs.includes(candidate.toString())) {
-        slug = candidate;
-        break;
-      }
-    }
-    return { slug: slug.toString(), order: this.#nextOrder };
+    return {
+      slug: this.#competitionSlugFor(id, name.toString()),
+      order: this.#nextOrder,
+    };
+  }
+
+  // The first slug a competition `named` may be found at that no other
+  // competition has, archived or not.
+  #competitionSlugFor(id: CompetitionId, named: string): string {
+    return firstFree(
+      Slug.fromName(named),
+      id,
+      [...this.#competitions.values()].map(({ reference }) =>
+        reference.slug.toString(),
+      ),
+    ).toString();
   }
 
   // Every player lowest order first, archived or not: the order that room to
@@ -1334,13 +1937,277 @@ export class Tournament extends AggregateRoot {
       reference: referenceWith(found.reference, { archived }),
     });
   }
+
+  // Teams and tests ------------------------------------------------------------
+
+  // A Standard tournament is played between its own players, so it has
+  // neither teams nor tests.
+  #refuseUnlessPlayedByTeams(): void {
+    if (!this.#now.format.isTeamFormat) {
+      refuse(
+        "Tournament.NotPlayedByTeams",
+        "The tournament is not played by teams.",
+      );
+    }
+  }
+
+  // A tournament played by teams is played between its teams' players, so it
+  // has neither players of its own nor blocks, knockouts or Swiss.
+  #refuseOncePlayedByTeams(): void {
+    if (this.#now.format.isTeamFormat) {
+      refuse("Tournament.PlayedByTeams", "The tournament is played by teams.");
+    }
+  }
+
+  // Whether it holds anything whose having depends on its format, archived
+  // or not.
+  get #holdsAnything(): boolean {
+    return (
+      this.#players.size > 0 ||
+      this.#competitions.size > 0 ||
+      this.#teams.size > 0
+    );
+  }
+
+  #teamFound(id: TeamId): Team {
+    return (
+      this.#teams.get(id.value) ??
+      refuse("Tournament.NoSuchTeam", "The tournament has no such team.")
+    );
+  }
+
+  // The team `teamId` and its player `id`, once it is known that the player
+  // may be changed: asked by a manager, of a tournament and a team not
+  // archived, and a player the team has.
+  #teamPlayerToChange(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    by: AccountId,
+  ): { readonly team: Team; readonly player: TeamPlayer } {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+    const team = this.#teamFound(teamId);
+    team.ensureInUse();
+    const player =
+      team.playerWritten(id.value) ??
+      refuse("Team.NoSuchPlayer", "The team has no such player.");
+    return { team, player };
+  }
+
+  // Another team's name or short name, archived or not, however it is
+  // capitalised: two teams called alike could not be told apart, nor two tests
+  // called by the same short names.
+  #refuseATeamNameTaken(team: Team): void {
+    for (const other of this.#teams.values()) {
+      if (other.equals(team)) continue;
+      if (sameName(other.name.toString(), team.name.toString())) {
+        refuse("Tournament.TeamNameTaken", "Another team has the name.");
+      }
+      if (sameName(other.shortName.toString(), team.shortName.toString())) {
+        refuse(
+          "Tournament.TeamShortNameTaken",
+          "Another team has the short name.",
+        );
+      }
+    }
+  }
+
+  // Every team lowest order first, archived or not, as the players are
+  // (`#playersByOrder`).
+  get #teamsByOrder(): Team[] {
+    return [...this.#teams.values()].sort(
+      (one, other) => one.order - other.order,
+    );
+  }
+
+  get #nextTeamOrder(): number {
+    return nextOrderIn([...this.#teams.values()]);
+  }
+
+  // The order the thing `id` is given, moved a place among `byOrder()` not
+  // archived, as a player is (`movePlayer`), `spacingOut` first where there is
+  // no room. Nothing, where there is nowhere for it to go.
+  #movedAmong(
+    byOrder: () => readonly Ordered[],
+    id: Id,
+    direction: "up" | "down",
+    spacingOut: () => void,
+  ): number | undefined {
+    const inUse = byOrder().filter(({ archived }) => !archived);
+    const place = inUse.findIndex((each) => each.id.equals(id));
+    const passed = inUse[direction === "up" ? place - 1 : place + 1];
+    if (passed === undefined) return undefined;
+    const orderPastPassed = (): number | undefined => {
+      const all = byOrder();
+      return orderPast(
+        all.map(({ order }) => order),
+        all.findIndex((each) => each.id.equals(passed.id)),
+        direction,
+      );
+    };
+    let order = orderPastPassed();
+    if (order === undefined) {
+      spacingOut();
+      order = orderPastPassed();
+    }
+    if (order === undefined) {
+      throw new Error("Spaced out, there was still no room to move into.");
+    }
+    return order;
+  }
+
+  #teamBecomes(written: string, becoming: (team: Team) => Team): void {
+    const found = this.#teams.get(written);
+    if (found !== undefined) this.#teams.set(written, becoming(found));
+  }
+
+  #teamPlayerBecomes(
+    named: { readonly teamId: string; readonly playerId: string },
+    becoming: (player: TeamPlayer) => TeamPlayer,
+  ): void {
+    this.#teamBecomes(named.teamId, (team) => {
+      const found = team.playerWritten(named.playerId);
+      return found === undefined ? team : team.withPlayer(becoming(found));
+    });
+  }
+
+  // What is asked of a test, added or updated, of the tournament as it is:
+  // two different teams of its own in use, played within its days, starting
+  // no later than it finishes. Days are compared as the days the tournament's
+  // starts and finishes fall on in UTC, as the year of its address is. A day
+  // an updated test `had` already is not asked whether it is within the
+  // tournament's, since a test is not refused for what the tournament became
+  // after it was added.
+  #refuseUnlessATestCanBe(
+    details: TestDetails,
+    had?: { readonly starts: string; readonly finishes: string },
+  ): void {
+    if (details.firstTeam.equals(details.secondTeam)) {
+      refuse("Tournament.TestAgainstItself", "A team does not play itself.");
+    }
+    const first = this.#teamFound(details.firstTeam);
+    const second = this.#teamFound(details.secondTeam);
+    first.ensureInUse();
+    second.ensureInUse();
+    const starts = dayOf(details.starts);
+    const finishes = dayOf(details.finishes);
+    if (finishes < starts) {
+      refuse(
+        "Tournament.TestFinishesBeforeStarts",
+        "The test finishes before it starts.",
+      );
+    }
+    if (starts !== had?.starts && starts < dayOf(this.starts)) {
+      refuse(
+        "Tournament.TestStartsBeforeTournament",
+        "The test starts before the tournament does.",
+      );
+    }
+    if (finishes !== had?.finishes && finishes > dayOf(this.finishes)) {
+      refuse(
+        "Tournament.TestFinishesAfterTournament",
+        "The test finishes after the tournament does.",
+      );
+    }
+  }
+
+  // What a test between two of the tournament's teams is called: their short
+  // names as they are now, the first team's first.
+  #testNameFor(teams: {
+    readonly firstTeam: TeamId;
+    readonly secondTeam: TeamId;
+  }): string {
+    const first = this.#teamFound(teams.firstTeam);
+    const second = this.#teamFound(teams.secondTeam);
+    return `${first.shortName.toString()} v ${second.shortName.toString()}`;
+  }
+
+  // A team called by another short name gives every test it is in another
+  // name with it. The tests keep their slugs, as a competition renamed does.
+  #renameTestsOf(written: string): void {
+    for (const { reference, shape } of this.#competitions.values()) {
+      if (
+        shape.kind === "test" &&
+        (shape.firstTeam.value === written ||
+          shape.secondTeam.value === written)
+      ) {
+        this.#competitions.set(reference.id.value, {
+          reference: referenceWith(reference, {
+            name: this.#testNameFor(shape),
+          }),
+          shape,
+        });
+      }
+    }
+  }
 }
 
 const NOT_A: Readonly<Record<CompetitionShape["kind"], TournamentErrorCode>> = {
   block: "Tournament.NotABlock",
   knockout: "Tournament.NotAKnockout",
   swiss: "Tournament.NotASwiss",
+  test: "Tournament.NotATest",
 };
+
+// What can be moved a place among others like it: a team, or a player in a
+// team.
+interface Ordered {
+  readonly id: Id;
+  readonly order: number;
+  readonly archived: boolean;
+}
+
+// 10,000 more than the highest order among `ordered`, archived or not, for
+// something put last: one added, or one archived.
+const nextOrderIn = (ordered: readonly { readonly order: number }[]): number =>
+  Math.max(0, ...ordered.map(({ order }) => order)) + ORDER_STEP;
+
+// The first slug a thing named `slug` may be found at that none of `taken` is
+// (`slugsFor`).
+const firstFree = (slug: Slug, id: Id, taken: readonly string[]): Slug => {
+  for (const candidate of slugsFor(slug, id)) {
+    if (!taken.includes(candidate.toString())) return candidate;
+  }
+  return lastOf(slugsFor(slug, id));
+};
+
+// Another player in `team` with the player's name, archived or not, however
+// it is capitalised. A player in another team may have it, since a player is
+// always chosen from their team.
+const refuseATeamPlayerNameTaken = (team: Team, player: TeamPlayer): void => {
+  const name = player.name.toString();
+  for (const other of team.players) {
+    if (!other.equals(player) && sameName(other.name.toString(), name)) {
+      refuse(
+        "Team.PlayerNameTaken",
+        "Another player in the team has the name.",
+      );
+    }
+  }
+};
+
+// The day a moment falls on in UTC, written as "2026-10-03", which compares
+// as the days do.
+const dayOf = (moment: ReadOnlyDate): string =>
+  moment.toISOString().slice(0, 10);
+
+// The start of the day `written` in UTC.
+const dayWritten = (written: string): ReadOnlyDate =>
+  ReadOnlyDate.from(new Date(`${written}T00:00:00Z`));
+
+// A test as an event that added or updated it says it is.
+const testShapeOf = (
+  said: TestAdded | TestUpdated,
+): Extract<CompetitionShape, { readonly kind: "test" }> => ({
+  kind: "test",
+  firstTeam: TeamId.from(said.firstTeamId),
+  secondTeam: TeamId.from(said.secondTeamId),
+  starts: dayWritten(said.starts),
+  finishes: dayWritten(said.finishes),
+  expectedMatches: ExpectedMatches.from(said.expectedMatches),
+  bestOf: BestOf.from(said.bestOf),
+  group: said.group === undefined ? undefined : TestGroup.from(said.group),
+});
 
 // `inOrder` with the archived moved after all the others, each keeping its
 // place among its own. Sorting on whether it is archived rather than giving it

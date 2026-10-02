@@ -17,6 +17,28 @@ export type ListedCompetition = {
       readonly bestOf: number;
     }
   | {
+      readonly kind: "test";
+      /** What each match is the best of. */
+      readonly bestOf: number;
+      /** The two teams it is between, the first first. */
+      readonly teams: readonly {
+        readonly id: string;
+        readonly name: string;
+        readonly shortName: string;
+      }[];
+      /** The days it starts and finishes, each as "2026-10-03". */
+      readonly starts: string;
+      readonly finishes: string;
+      readonly expectedMatches: number;
+      /** Its group, if it is in one. */
+      readonly group: string | undefined;
+      /**
+       * Whether it has any games in use, as the application's games say,
+       * since a test that has keeps its teams.
+       */
+      readonly hasGames: boolean;
+    }
+  | {
       readonly kind: "knockout";
       /** How many places the draw has. */
       readonly places: number;

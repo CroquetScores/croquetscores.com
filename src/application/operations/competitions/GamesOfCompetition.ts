@@ -15,6 +15,12 @@ export interface ListedGame {
   readonly archived: boolean;
   /** Whether it could be archived now, as the competition would say. */
   readonly archivable: boolean;
+  /**
+   * In a test, the id of the team each player plays for, so that a list can
+   * set each team's players on its side whoever won; nothing elsewhere.
+   */
+  readonly winnerTeam?: string | undefined;
+  readonly loserTeam?: string | undefined;
 }
 
 /**

@@ -25,7 +25,7 @@ const forms =
 const drawn = async (world: SpecWorld): Promise<void> => {
   await world.browserPage
     .locator(
-      `${forms}, main .page-refused, #tab-panel section[aria-busy="false"]`,
+      `${forms}, main .page-refused, :is(#tab-panel, #page-list) section[aria-busy="false"]`,
     )
     .first()
     .waitFor();
@@ -366,10 +366,21 @@ Then(
         "aria-describedby",
       );
       assert.ok(described !== null, `Nothing is said beside ${label}.`);
-      const refused =
-        (await this.browserPage
-          .locator(`#${described}`)
-          .getAttribute("data-refused")) ?? "";
+      // A field may be described by what it is for as well as by what is
+      // wrong with it, and only what is wrong says what was refused.
+      const refused = (
+        await Promise.all(
+          described
+            .split(" ")
+            .map((id) =>
+              this.browserPage
+                .locator(`#${id}`)
+                .getAttribute("data-refused", { timeout: 500 }),
+            ),
+        )
+      )
+        .filter((codes) => codes !== null)
+        .join(" ");
       assert.ok(
         refused.split(" ").includes(code),
         `${label} is refused with ${refused}.`,

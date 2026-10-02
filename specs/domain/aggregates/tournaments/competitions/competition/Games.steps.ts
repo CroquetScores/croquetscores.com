@@ -5,8 +5,12 @@ import type { Competition } from "../../../../../../src/domain/aggregates/tourna
 import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
+import { CompetitionGameMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
-import type { Game } from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
+import type {
+  Game,
+  GamePlayerId,
+} from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
 import { CompetitionPlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import { GameId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/GameId.js";
 import { Score } from "../../../../../../src/domain/aggregates/tournaments/competitions/value-objects/Score.js";
@@ -19,10 +23,12 @@ import {
   assertRecordedAt,
   byOf,
   competitionOf,
+  gamePlayerNamed,
   happened,
+  isATest,
   now,
-  playerNamed,
   scenarioOf,
+  teamPlayerNamed,
   toldOf,
   tournamentPlayerNamed,
 } from "./aCompetition.js";
@@ -95,15 +101,18 @@ const nextId = (world: SpecWorld): GameId =>
 
 // The competition's player who is the tournament player called `name`, or an
 // id that names nobody where it has none, for a game with a player it does
-// not have.
+// not have. In a test, which has no players entered, the player of a team
+// called `name`.
 const playerIn = (
   world: SpecWorld,
   competition: Competition,
   name: string,
-): CompetitionPlayerId =>
-  competition.players.find((player) =>
-    player.tournamentPlayerId.equals(tournamentPlayerNamed(world, name)),
-  )?.id ?? CompetitionPlayerId.create();
+): GamePlayerId =>
+  isATest(world)
+    ? teamPlayerNamed(world, name)
+    : (competition.players.find((player) =>
+        player.tournamentPlayerId.equals(tournamentPlayerNamed(world, name)),
+      )?.id ?? CompetitionPlayerId.create());
 
 const GAME = String.raw`the game of "([^"]*)" beating "([^"]*)" (\S+) to (\S+)`;
 
@@ -134,8 +143,8 @@ const gameSaid = (
 ): Game => {
   const found = competition.games.find(
     (game) =>
-      game.winner.equals(playerNamed(world, competition, winner ?? "").id) &&
-      game.loser.equals(playerNamed(world, competition, loser ?? "").id) &&
+      game.winner.equals(gamePlayerNamed(world, competition, winner ?? "")) &&
+      game.loser.equals(gamePlayerNamed(world, competition, loser ?? "")) &&
       (winnerScore === undefined || String(game.winnerScore) === winnerScore) &&
       (loserScore === undefined || String(game.loserScore) === loserScore),
   );
@@ -387,6 +396,75 @@ for (const [verb, doing] of [
     },
   );
 }
+
+// A test's game moved a place, up or down.
+for (const direction of ["up", "down"] as const) {
+  When(
+    new RegExp(`^${GAME} is moved ${direction}$`),
+    function (
+      this: SpecWorld,
+      winner: string,
+      loser: string,
+      winnerScore: string,
+      loserScore: string,
+    ) {
+      const said = [winner, loser, winnerScore, loserScore];
+      ask(this, (competition) => {
+        competition.moveGame(
+          gameSaid(this, competition, said).id,
+          direction,
+          toldOf(this),
+          byOf(this),
+          now(this),
+        );
+      });
+    },
+  );
+
+  Given(
+    new RegExp(`^${GAME} was moved ${direction}$`),
+    function (
+      this: SpecWorld,
+      winner: string,
+      loser: string,
+      winnerScore: string,
+      loserScore: string,
+    ) {
+      const said = [winner, loser, winnerScore, loserScore];
+      happened(this, (competition) => {
+        competition.moveGame(
+          gameSaid(this, competition, said).id,
+          direction,
+          toldOf(this),
+          byOf(this),
+          now(this),
+        );
+      });
+    },
+  );
+
+  When(
+    `the game {string} is moved ${direction} by its id`,
+    function (this: SpecWorld, id: string) {
+      ask(this, (competition) => {
+        competition.moveGame(
+          GameId.from(id),
+          direction,
+          toldOf(this),
+          byOf(this),
+          now(this),
+        );
+      });
+    },
+  );
+}
+
+Then(
+  "the first thing it recorded is a game being moved",
+  function (this: SpecWorld) {
+    assertRecordedAt(this, 0, CompetitionGameMoved);
+  },
+);
 
 // What the competition has afterwards -----------------------------------------
 

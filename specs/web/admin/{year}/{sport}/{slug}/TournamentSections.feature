@@ -24,6 +24,23 @@ Feature: The section bar of a tournament and its competitions
   bar wraps rather than widening the page, as every section bar does, since
   the competitions are the tournament's own and hiding any would hide them.
 
+  A tournament played by teams has tests where a Standard one has
+  competitions (`addTest.feature`), and a test is one of its competitions, so
+  its bar is the same bar: Tournament, then each test in use, in the
+  tournament's order, by its name, its teams' short names, as "AUS v ENG",
+  which is what a short name is for (`TeamShortName.feature`). Each leads to
+  the test's page, under "tests" rather than "competitions" (`view.feature`
+  beneath the test), and the test is marked there.
+
+  A team's page has the bar too (`view.feature` beneath the team), and a
+  manager on one is moving between the teams, entering each one's players, so
+  there the bar is Tournament and then each team in use in place of the
+  tests, in the tournament's order, by its short name, as "AUS", which keeps
+  the bar short on a phone, and the team being read is marked. An archived
+  team's page refuses to open, so it is not there. The teams are on a team's
+  page alone: a scorer has no team's page to go to, and the tournament's and
+  the tests' pages are for moving between the tests.
+
   The admin draws the pages itself, so every scenario here runs scripts, and
   they are read on a phone's width, as the rest of the admin is.
 
@@ -177,3 +194,206 @@ Feature: The section bar of a tournament and its competitions
       And "organiser@example.com" has added the block "The Other Long Named Plate Block" to "Spring Open"
       When the page of "Spring Open" is opened
       Then the page is no wider than the window
+
+  Rule: A tournament played by teams leads to the tournament and each of its tests
+
+    Scenario: The section bar offers each test by its teams' short names
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of "Spring Tests" is opened
+      Then the section "AUS v ENG" is offered
+
+    Scenario: Tournament comes first in a tournament played by teams
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of "Spring Tests" is opened
+      Then the first section is "Tournament"
+
+    Scenario: The tests follow in the tournament's order
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "England" and "Australia" to "Spring Tests"
+      And "organiser@example.com" has moved the competition "ENG v AUS" in "Spring Tests" up
+      When the page of "Spring Tests" is opened
+      Then the second section is "ENG v AUS"
+
+    Scenario: A test leads to its page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of "Spring Tests" is opened
+      Then the section "AUS v ENG" leads to "/admin/2026/ac/spring-tests/tests/aus-v-eng"
+
+    Scenario: A test is called by a team's new short name
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has given the team "Australia" of "Spring Tests" the short name "Oz"
+      When the page of "Spring Tests" is opened
+      Then the section "Oz v ENG" is offered
+
+    Scenario: An archived test is not offered
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
+      When the page of "Spring Tests" is opened
+      Then the section "AUS v ENG" is not offered
+
+    Scenario: A team is not offered
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      When the page of "Spring Tests" is opened
+      Then the section "Australia" is not offered
+
+  Rule: A test's page marks the test
+
+    Scenario: The test is marked on its own page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the section "AUS v ENG" is marked as current
+
+  Rule: A team's page leads to each team in use as well, and marks its team
+
+    Scenario: A team's page offers each team by its short name
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the section "ENG" is offered
+
+    Scenario: The teams follow Tournament
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the second section is "AUS"
+
+    Scenario: The tests are not offered on a team's page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the section "AUS v ENG" is not offered
+
+    Scenario: The teams are in the tournament's order
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has moved the team "England" in "Spring Tests" up
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the second section is "ENG"
+
+    Scenario: A team leads to its page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the section "ENG" leads to "/admin/2026/ac/spring-tests/teams/eng"
+
+    Scenario: The team is marked on its own page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the section "AUS" is marked as current
+
+    Scenario: Tournament is not marked on a team's page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the section "Tournament" is not marked as current
+
+    Scenario: An archived team is not offered on a team's page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has archived the team "England" in "Spring Tests"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the section "ENG" is not offered
+
+    Scenario: The teams are not offered on a test's page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the section "AUS" is not offered
+
+    Scenario: Pressing another team opens its page
+      Given "organiser@example.com" has created the tournament "Spring Tests"
+      And the tournament "Spring Tests" starts on "2026-10-03"
+      And the tournament "Spring Tests" is for the sport "ac"
+      And the tournament "Spring Tests" is played in the format "Teams"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the page of the team "Australia" in "Spring Tests" is open
+      When the section "ENG" is pressed
+      Then the address is "/admin/2026/ac/spring-tests/teams/eng"
+
