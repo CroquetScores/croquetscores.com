@@ -173,9 +173,13 @@ Feature: A reader is spoken to in their own language
       When the home page is opened
       Then the navigation is named in the test locale
 
+    @postgres
     Scenario: The section bar is named for a reader who cannot see it
       Given a viewport 1200 pixels wide
+      And a site served as "croquetscores.com"
       And a browser that asks for "en-XA"
+      And "organiser@example.com" has an account, confirmed
+      And "organiser@example.com" has created the tournament "Spring Open"
       When the home page is opened
       Then the section bar is named in the test locale
 
