@@ -297,10 +297,11 @@ export class SpecWorld extends World {
   // another. A failure to make one is kept in `failure`.
   public website: Website | undefined;
   public sameWebsite: boolean | undefined;
-  // The sport a scenario makes, and whether it was found the same as another;
-  // and the sports found for the site it names, and how many of those in order
-  // the scenario has named so far.
+  // The sport a scenario makes or names, the code it named it by, and whether
+  // it was found the same as another; and the sports found for the site it
+  // names, and how many of those in order the scenario has named so far.
   public sport: Sport | undefined;
+  public sportSaid: string | undefined;
   public sameSport: boolean | undefined;
   public offeredSports: readonly Sport[] | undefined;
   public offeredSportsChecked = 0;
@@ -398,6 +399,13 @@ export class SpecWorld extends World {
   public tournamentsInHand: TournamentsInHand | undefined;
   public games:
     import("../../src/application/services/Games.js").Games | undefined;
+  // What a scenario narrows a website's tournaments by, each by its code as
+  // the scenario names it, for whatever asks to see them to make a filter of.
+  public filterChosen: {
+    country?: string;
+    region?: string;
+    sport?: string;
+  } = {};
 
   // Set by the @browser hooks, for the same reason and in the same way.
   public browserContext: BrowserContext | undefined;

@@ -1,6 +1,8 @@
-// How a tournament is dated in the list: the days it runs, with the month said
-// once where both days are in it, so that the dates take as little of a
-// phone's width as they can. A tournament of one day is dated by that day.
+// How a tournament is dated in a list, the admin's and the home page's: the
+// days it runs, with the month said once where both days are in it, so that
+// the dates take as little of a phone's width as they can. A tournament of one
+// day is dated by that day. Here rather than in the admin, which drew it
+// first, so that both lists say a tournament's dates the same way.
 
 // Each day is written as the year, the month and the day, which is how the API
 // sends it, so the day is read off the writing rather than through a moment

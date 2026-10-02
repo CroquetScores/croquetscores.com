@@ -31,6 +31,8 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 export type TournamentOperationErrorCode =
   | "CreateTournament.NoSuchCountry"
   | "UpdateTournament.NoSuchCountry"
+  | "RecentResults.NoSuchCountry"
+  | "UpcomingTournaments.NoSuchCountry"
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

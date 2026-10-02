@@ -1,8 +1,9 @@
 // What stands behind "the application's tournaments": every operation on a
 // tournament, over the event store the accounts support keeps and the
-// tournaments by address read model kept in step with it, behind a mediator
-// with the behaviours the application gives a command — validation, then a
-// transaction — and a query, whose transaction writes nothing. The accounts the operations are asked by are stood up the way
+// tournaments by address and by website read models kept in step with it,
+// behind a mediator with the behaviours the application gives a command —
+// validation, then a transaction — and a query, whose transaction writes
+// nothing. The accounts the operations are asked by are stood up the way
 // registering stands them up, since that is what the scenarios make them with.
 //
 // Here rather than beside the features because the features are the
@@ -105,6 +106,10 @@ import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import { TournamentsByAddress } from "../../../src/infrastructure/read-models/TournamentsByAddress.js";
+import { TournamentsByWebsite } from "../../../src/infrastructure/read-models/TournamentsByWebsite.js";
+import { RecentResultsHandler } from "../../../src/application/operations/tournaments/RecentResultsHandler.js";
+import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
+import { TournamentYearsHandler } from "../../../src/application/operations/tournaments/TournamentYearsHandler.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
@@ -116,7 +121,11 @@ Given("the application's tournaments", function (this: SpecWorld) {
   const unitOfWork = unitOfWorkOf(this);
   const accounts = accountsOf(this);
   const byAddress = new TournamentsByAddress(unitOfWork);
-  const store = new ProjectingEventStore(accounts.store, [byAddress]);
+  const byWebsite = new TournamentsByWebsite(unitOfWork);
+  const store = new ProjectingEventStore(accounts.store, [
+    byAddress,
+    byWebsite,
+  ]);
   // Wrapped rather than handed over as they are: a static passed on its own is
   // a method separated from what it was declared on.
   const tournaments = new AggregateRepository(store, (id, events) =>
@@ -229,6 +238,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
     new PlayersOfTournamentHandler(...both, competitions, games),
   );
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
+  mediator.handleQuery(new RecentResultsHandler(byWebsite));
+  mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
+  mediator.handleQuery(new TournamentYearsHandler(byWebsite));
 
   const inHand: TournamentsInHand = {
     send: (command) => mediator.send(command),
