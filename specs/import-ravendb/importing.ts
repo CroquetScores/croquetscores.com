@@ -98,10 +98,17 @@ Then(
 Then(
   "{string} on {string} is not kept as any account",
   async function (this: SpecWorld, documentId: string, website: string) {
-    const kept = await importDatabaseOf(this).findAccountOf(
+    const database = importDatabaseOf(this);
+    const kept = await database.findAccountOf(website, documentId);
+    assert.equal(kept, undefined, `${documentId} is kept as an account.`);
+    const forgotten = await database.findForgottenAccountOf(
       website,
       documentId,
     );
-    assert.equal(kept, undefined, `${documentId} is kept as an account.`);
+    assert.equal(
+      forgotten,
+      undefined,
+      `${documentId} is kept as a forgotten account.`,
+    );
   },
 );

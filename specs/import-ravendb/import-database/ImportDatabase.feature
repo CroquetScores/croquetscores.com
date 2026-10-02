@@ -41,31 +41,31 @@ Feature: The database an import empties and fills
 
     Scenario: A tournament kept before emptying is gone after it
       Given the import's database is emptied
-      And "tournaments/12" on "croquetscores.com" is kept as a tournament
+      And "tournaments/12" on "croquetscores.com" was kept as a tournament
       When the import's database is emptied
       Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
 
     Scenario: A tournament left behind before emptying is gone after it
       Given the import's database is emptied
-      And "tournaments/14" on "croquetscores.com" is kept as left behind
+      And "tournaments/14" on "croquetscores.com" was kept as left behind
       When the import's database is emptied
       Then "tournaments/14" on "croquetscores.com" is not kept as left behind
 
     Scenario: A forgotten account kept before emptying is gone after it
       Given the import's database is emptied
-      And "users/4" on "croquetscores.com" is kept as a forgotten account
+      And "users/4" on "croquetscores.com" was kept as a forgotten account
       When the import's database is emptied
       Then "users/4" on "croquetscores.com" is not kept as any account
 
     Scenario: A tournament player kept before emptying is gone after it
       Given the import's database is emptied
-      And player 7 of "tournaments/12" on "croquetscores.com" is kept as a tournament player
+      And player 7 of "tournaments/12" on "croquetscores.com" was kept as a tournament player
       When the import's database is emptied
       Then player 7 of "tournaments/12" on "croquetscores.com" is not kept as any player
 
     Scenario: A competition kept before emptying is gone after it
       Given the import's database is emptied
-      And "blocks/30" on "croquetscores.com" is kept as a competition
+      And "blocks/30" on "croquetscores.com" was kept as a competition
       When the import's database is emptied
       Then "blocks/30" on "croquetscores.com" is not kept as any competition
 
