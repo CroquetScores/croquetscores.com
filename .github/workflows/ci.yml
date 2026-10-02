@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: CI
 
 on:
@@ -5,21 +6,21 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  # Whether the scenarios are run. Not on main: it is only ever reached by
+  # squash-merging a pull request whose scenarios passed on its own branch,
+  # so running them again there says nothing new and costs a full run.
+  RUN_TESTS: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
+  # ---------------------------------------------------------------------------
+  # Job A: Build (lint, typecheck, build)
+  # ---------------------------------------------------------------------------
   build:
-    # Pinned rather than ubuntu-latest, which moves to Ubuntu 26 from 19 October
-    # 2026: the runner a run happens on is then a decision made here, and changed
-    # deliberately, rather than one that changes under the build on a date.
     runs-on: ubuntu-24.04
 
     permissions:
       contents: read
-
-    # Whether the scenarios are run. Not on main: it is only ever reached by
-    # squash-merging a pull request whose scenarios passed on its own branch,
-    # so running them again there says nothing new and costs a full run.
-    env:
-      RUN_TESTS: ${{ github.ref != 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v7
@@ -37,50 +38,65 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
+  # ---------------------------------------------------------------------------
+  # Job B: Full test suite (browser + db), sharded
+  # ---------------------------------------------------------------------------
+  tests:
+    needs: build
+    if: env.RUN_TESTS == 'true'
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.13.0
+          cache: npm
+
+      - run: npm ci
+
       # Which browser build Playwright wants is fixed by the version of
-      # playwright-core, so that is what the cache is keyed on. Keyed on the
-      # whole of package-lock.json, any change to any dependency would throw
-      # away a browser that had not changed.
-      - if: env.RUN_TESTS == 'true'
-        id: playwright
+      # playwright-core, so that is what the cache is keyed on.
+      - id: playwright
         run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - if: env.RUN_TESTS == 'true'
-        uses: actions/cache@v6
+      - uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
 
-      # The browser the @browser scenarios drive. Only Chromium: a second engine
-      # is a second download on every run, and wants a reason. Run whether or
-      # not the cache held the browser, because --with-deps also installs the
-      # system packages Chromium needs, which live outside the cache; with the
-      # browser already there, those are all it has left to do.
-      - if: env.RUN_TESTS == 'true'
-        run: npx playwright install --with-deps chromium
+      # Chromium only: a second engine is a second download on every run.
+      - run: npx playwright install --with-deps chromium
 
-      # Postgres, from the same compose.yaml a developer uses. Each @postgres
-      # scenario makes a database of its own on it.
-      - if: env.RUN_TESTS == 'true'
-        run: npm run db:up
+      # Postgres, from the same compose.yaml a developer uses. Each scenario
+      # already creates a unique database, so each shard can safely run the
+      # full suite without contention.
+      - run: npm run db:up
 
       # Two workers rather than the six cucumber.mjs asks for: the runner has
-      # two cores, and workers beyond them only wait their turn for one. Asked
-      # of test:features rather than test, because test runs it through a
-      # second npm run, and npm keeps what follows the -- for itself.
-      - if: env.RUN_TESTS == 'true'
-        run: npm run test:features -- --parallel 2
+      # two cores, and workers beyond them only wait their turn for one.
+      # Sharded across four runners: each shard runs a quarter of the suite.
+      - run: npm run test:features -- --parallel 2 --shard ${{ matrix.shard }}/4
 
-      - if: always() && env.RUN_TESTS == 'true'
+      - if: always()
         run: npm run db:down
 
       # Kept whether or not the run passed: a failure is what the HTML report is
       # most wanted for, and the timing and summary are how one run's time is
       # set against the next.
-      - if: always() && env.RUN_TESTS == 'true'
+      - if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: cucumber-report
+          name: cucumber-report-shard-${{ matrix.shard }}
           path: |
             reports/cucumber.html
             reports/cucumber-timing.txt
