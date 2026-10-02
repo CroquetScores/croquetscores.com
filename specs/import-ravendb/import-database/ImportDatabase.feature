@@ -9,10 +9,13 @@ Feature: The database an import empties and fills
   never drops anything, and must not, so the dropping is kept apart from it,
   reached only by an import and by "npm run db:drop-tables".
 
-  Two tables of the import's own are made with the rest: one keeping what
-  could not be imported, and one keeping which account each of the old sites'
-  users became. Neither is a migration's, because the site has no use for
-  them, and both go when importing is finished.
+  Tables of the import's own are made with the rest: one keeping what could
+  not be imported, and one each keeping what the old sites' users,
+  tournaments, tournament players and competitions became, so that whatever
+  is imported after them can find them. A user may have become a forgotten
+  account, and a tournament may have been left behind as archived, and each
+  of those is kept too. None is a migration's, because the
+  site has no use for them, and all go when importing is finished.
 
   Background:
     Given an import's database
@@ -35,6 +38,36 @@ Feature: The database an import empties and fills
       And "users/1" on "croquetscores.com" is kept as an account at "someone@example.com"
       When the import's database is emptied
       Then "users/1" on "croquetscores.com" is not kept as any account
+
+    Scenario: A tournament kept before emptying is gone after it
+      Given the import's database is emptied
+      And "tournaments/12" on "croquetscores.com" is kept as a tournament
+      When the import's database is emptied
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: A tournament left behind before emptying is gone after it
+      Given the import's database is emptied
+      And "tournaments/14" on "croquetscores.com" is kept as left behind
+      When the import's database is emptied
+      Then "tournaments/14" on "croquetscores.com" is not kept as left behind
+
+    Scenario: A forgotten account kept before emptying is gone after it
+      Given the import's database is emptied
+      And "users/4" on "croquetscores.com" is kept as a forgotten account
+      When the import's database is emptied
+      Then "users/4" on "croquetscores.com" is not kept as any account
+
+    Scenario: A tournament player kept before emptying is gone after it
+      Given the import's database is emptied
+      And player 7 of "tournaments/12" on "croquetscores.com" is kept as a tournament player
+      When the import's database is emptied
+      Then player 7 of "tournaments/12" on "croquetscores.com" is not kept as any player
+
+    Scenario: A competition kept before emptying is gone after it
+      Given the import's database is emptied
+      And "blocks/30" on "croquetscores.com" is kept as a competition
+      When the import's database is emptied
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
 
     Scenario: A table no migration made is gone after emptying
       Given a table "left_over" nobody migrated
