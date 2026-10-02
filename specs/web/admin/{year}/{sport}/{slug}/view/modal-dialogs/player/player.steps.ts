@@ -26,7 +26,7 @@ const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
 // Opened ------------------------------------------------------------------------
 
 Then(
-  /^the (?:player|score|competition|team player|team|test) dialog is open$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog is open$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
   },
@@ -35,7 +35,7 @@ Then(
 // A <dialog> shown by showModal() is modal: the browser says so to a screen
 // reader, and makes everything outside it unreachable.
 Then(
-  /^the (?:player|score|competition|team player|team|test) dialog is announced as a modal dialog$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog is announced as a modal dialog$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     assert.equal(
@@ -49,7 +49,7 @@ Then(
 );
 
 Then(
-  /^the (?:player|score|competition|team player|team|test) dialog is named "([^"]*)"$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog is named "([^"]*)"$/,
   async function (this: SpecWorld, name: string) {
     await dialogOf(this).waitFor();
     const labelledBy = await dialogOf(this).getAttribute("aria-labelledby");
@@ -62,7 +62,7 @@ Then(
 );
 
 Then(
-  /^the (?:player|score|competition|team player|team|test) dialog asks for "([^"]*)"$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog asks for "([^"]*)"$/,
   async function (this: SpecWorld, label: string) {
     await dialogOf(this).waitFor();
     assert.equal(
@@ -127,7 +127,7 @@ When(
 );
 
 Then(
-  /^the focus never left the (?:player|score|competition|team player|team|test) dialog$/,
+  /^the focus never left the (?:player|score|competition|team player|team|test|carry forward) dialog$/,
   function (this: SpecWorld) {
     assert.equal(this.focusNeverLeft, true, "The focus left the dialog.");
   },
@@ -216,7 +216,7 @@ const status = (world: SpecWorld): Locator =>
   dialogOf(world).locator('[role="status"]');
 
 Then(
-  /^the (?:player|team player|team|test) dialog says "([^"]*)" was added$/,
+  /^the (?:player|team player|team|test|carry forward) dialog says "([^"]*)" was added$/,
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
@@ -248,7 +248,7 @@ Then(
 );
 
 Then(
-  /^the (?:player|score|competition|team player|team|test) dialog says what it refused$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog says what it refused$/,
   async function (this: SpecWorld) {
     await dialogOf(this)
       .locator(".field-message, .dialog-problems")
@@ -262,7 +262,7 @@ Then(
 // answered, so that the next step reads what the dialog made of the answer
 // rather than racing a server slowed by every other scenario running.
 When(
-  /^the (?:player|score|competition|team player|team|test) dialog is sent as it is$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog is sent as it is$/,
   async function (this: SpecWorld) {
     const answered = this.browserPage.waitForResponse(
       (response) =>
@@ -324,7 +324,7 @@ Then(
 // Laid out ----------------------------------------------------------------------
 
 Then(
-  /^the (?:player|score|competition|team player|team|test) dialog is no wider than the window$/,
+  /^the (?:player|score|competition|team player|team|test|carry forward) dialog is no wider than the window$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     const box = await dialogOf(this).boundingBox();

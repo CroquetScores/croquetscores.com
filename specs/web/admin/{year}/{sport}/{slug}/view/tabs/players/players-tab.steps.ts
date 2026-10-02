@@ -229,6 +229,23 @@ Then(
   },
 );
 
+// By the name it is read out by, as optionOf finds an option, and none of the
+// room kept where one is not offered.
+Then(
+  said("the first thing the WHO Q offers is Q"),
+  async function (this: SpecWorld, name: string, option: string) {
+    await eventually(this, async () => {
+      const first = rowOf(this, name)
+        .locator(".listed-options > :is(button, a)")
+        .first();
+      const offered =
+        (await first.getAttribute("aria-label")) ??
+        (await first.innerText()).trim();
+      assert.equal(offered, option);
+    });
+  },
+);
+
 Then(
   said("the WHO Q does not offer Q"),
   async function (this: SpecWorld, name: string, option: string) {
@@ -376,9 +393,10 @@ Then(
   },
 );
 
-// Where the reader is put back once a dialog opened from a team closes.
+// Where the reader is put back once a dialog opened from a row closes: a
+// team's Edit, or a competition's player's Carry Forward.
 Then(
-  "{string} on the team {string} has the focus",
+  said("Q on the WHO Q has the focus"),
   async function (this: SpecWorld, option: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
@@ -550,7 +568,7 @@ Then(
 
 // The dialog open over the page, by its title.
 Then(
-  /^the (?:player|score|competition|team|team player|test) dialog is titled "([^"]*)"$/,
+  /^the (?:player|score|competition|team|team player|test|carry forward) dialog is titled "([^"]*)"$/,
   async function (this: SpecWorld, title: string) {
     const dialog = this.browserPage.locator("dialog[open]");
     await dialog.waitFor();

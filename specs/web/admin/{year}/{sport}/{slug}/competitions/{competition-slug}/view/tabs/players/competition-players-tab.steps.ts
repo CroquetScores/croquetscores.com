@@ -333,6 +333,16 @@ Then("a modal dialog asks to confirm", async function (this: SpecWorld) {
   await question(this).waitFor();
 });
 
+// What opened is the dialog it opens, if any, not a question about it: one
+// that asks has the button that does it and Cancel, and nothing to type in.
+Then("no modal dialog asks to confirm", async function (this: SpecWorld) {
+  await question(this).waitFor();
+  assert.ok(
+    (await question(this).locator("input").count()) > 0,
+    "A modal dialog asks to confirm.",
+  );
+});
+
 Then(
   "the question names {string}",
   async function (this: SpecWorld, name: string) {

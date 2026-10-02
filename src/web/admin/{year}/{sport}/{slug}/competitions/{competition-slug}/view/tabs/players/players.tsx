@@ -2,13 +2,16 @@ import { useEffect, useRef, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
+import { CarryForwardDialog } from "../../modal-dialogs/carry-forward/carry-forward.js";
 import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import "../../../../../view/tabs/listed.css";
 
 // A competition's Players tab (competition-players-tab.feature): a drop-down
 // of the tournament's players not in the competition, with Add Player, above
-// the players playing in the competition's order, each offering Up, Down,
-// Remove and Withdraw, and after them the withdrawn, offering Unwithdraw.
+// the players playing in the competition's order, each offering Carry
+// Forward, Remove, Withdraw, Up and Down, and after them the withdrawn,
+// offering Unwithdraw. Carry Forward opens its own dialog, in a block or a
+// Swiss, which have standings for it to count in.
 // Remove and Withdraw ask first. A player Add Player cannot enter is said
 // beneath the drop-down, by the refusal's code, until another is chosen. A
 // knockout offers Bye first, however many are added, and a bye is listed as
@@ -45,6 +48,8 @@ interface Listed {
   readonly bye: boolean;
   /** Where they come in the competition, which is what names a bye. */
   readonly order: number;
+  /** What they carry forward, nothing in a count they carry nothing in. */
+  readonly carryForward: Readonly<Record<string, number | undefined>>;
 }
 
 /** One of the tournament's players, as the tournament lists them. */
@@ -54,7 +59,8 @@ interface OfTheTournament {
   readonly archived: boolean;
 }
 
-type Action = "up" | "down" | "withdraw" | "unwithdraw" | "remove";
+type Action =
+  "carryForward" | "up" | "down" | "withdraw" | "unwithdraw" | "remove";
 
 // The tournament player a bye is entered as: every digit 0.
 const BYE = "tournament-player/00000000-0000-0000-0000-000000000000";
@@ -95,6 +101,8 @@ export const CompetitionPlayersTab = ({
     | { readonly player: Listed; readonly action: "remove" | "withdraw" }
     | undefined
   >();
+  // The player whose carry forward is being changed, in its dialog.
+  const [carrying, setCarrying] = useState<Listed | undefined>();
   const choice = useRef<HTMLSelectElement>(null);
   const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
   const at = `${ofTournament}/competitions/${idInAddress(competition)}`;
@@ -206,7 +214,9 @@ export const CompetitionPlayersTab = ({
       className="button"
       data-action={action}
       onClick={() => {
-        if (action === "remove" || action === "withdraw") {
+        if (action === "carryForward") {
+          setCarrying(player);
+        } else if (action === "remove" || action === "withdraw") {
           setConfirming({ player, action });
         } else {
           void act(player, action);
@@ -234,6 +244,9 @@ export const CompetitionPlayersTab = ({
   const anyRemove = playing.some(removable);
   const anyWithdraw = playing.some(({ bye }) => !bye);
   const anyMove = !fixed && playing.length > 1;
+  // A knockout is decided by its draw, so has no standings to carry anything
+  // forward into, and a bye, which is only ever in one, is nobody.
+  const anyCarryForward = kind !== "knockout";
 
   const row = (player: Listed, options: React.JSX.Element[]) => (
     <li
@@ -332,6 +345,11 @@ export const CompetitionPlayersTab = ({
             <ul className="listed" data-listed="playing">
               {playing.map((player, place) =>
                 row(player, [
+                  // First, so that it is in the same place on every row,
+                  // whether or not the player can still be removed.
+                  ...(anyCarryForward
+                    ? [buttonOrRoom(!player.bye, player, "carryForward")]
+                    : []),
                   ...(anyRemove
                     ? [buttonOrRoom(removable(player), player, "remove")]
                     : []),
@@ -368,6 +386,19 @@ export const CompetitionPlayersTab = ({
             </>
           ) : null}
         </>
+      )}
+      {carrying === undefined ? null : (
+        <CarryForwardDialog
+          tournament={tournament}
+          competition={competition}
+          player={carrying}
+          kept={() => {
+            setAsking((count) => count + 1);
+          }}
+          close={() => {
+            setCarrying(undefined);
+          }}
+        />
       )}
       {confirming === undefined ? null : (
         <ModalDialog

@@ -18,6 +18,7 @@ import { CompetitionsOfTournament } from "../../../application/operations/tourna
 import { CreateTournament } from "../../../application/operations/tournaments/CreateTournament.js";
 import { MoveCompetition } from "../../../application/operations/tournaments/MoveCompetition.js";
 import { AddGame } from "../../../application/operations/competitions/AddGame.js";
+import { ChangeCarryForward } from "../../../application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../application/operations/competitions/ArchiveGame.js";
 import { CorrectGame } from "../../../application/operations/competitions/CorrectGame.js";
 import { EnterPlayer } from "../../../application/operations/competitions/EnterPlayer.js";
@@ -125,6 +126,22 @@ const numbersOf = (body: unknown, field: string): number[] => {
   return Array.isArray(value)
     ? value.map((each) => (typeof each === "number" ? each : Number.NaN))
     : [];
+};
+
+// A count of a carry forward, which is nothing where nothing was typed, the
+// number typed where it is text, as a dialog's field sends it, and one that is
+// no number where it is anything else, so that it is refused as not whole.
+// Only digits, with a sign and a fraction, are read as a number: Number()
+// alone would read "1e2" as 100 and "0x10" as 16, and keep a count nobody
+// typed.
+const countOf = (body: unknown, field: string): number | undefined => {
+  const value = (body as Record<string, unknown> | null)?.[field];
+  if (value === undefined || value === null) return undefined;
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return Number.NaN;
+  const typed = value.trim();
+  if (typed === "") return undefined;
+  return /^-?\d+(?:\.\d+)?$/.test(typed) ? Number(typed) : Number.NaN;
 };
 
 // Yes or no where it was said, and unsaid otherwise, which the tournament
@@ -618,6 +635,34 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       },
     );
   }
+
+  // What a competition's player carries forward, by the part of their id after
+  // "competition-player/": all six counts said again, each as it was typed.
+  server.put<{ Params: { id: string; competition: string; player: string } }>(
+    "/tournaments/:id/competitions/:competition/players/:player/carry-forward",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new ChangeCarryForward(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `competition/${request.params.competition}`,
+          `competition-player/${request.params.player}`,
+          {
+            matchWins: countOf(request.body, "matchWins"),
+            matchLosses: countOf(request.body, "matchLosses"),
+            gameWins: countOf(request.body, "gameWins"),
+            gameLosses: countOf(request.body, "gameLosses"),
+            hoopsFor: countOf(request.body, "hoopsFor"),
+            hoopsAgainst: countOf(request.body, "hoopsAgainst"),
+          },
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
 
   // A competition's games, as its tournament's managers and scorers list them.
   server.get<{ Params: { id: string; competition: string } }>(

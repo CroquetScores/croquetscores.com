@@ -415,6 +415,31 @@ export const english: Language = {
     "admin.competitionPlayers.withdrawTitle": "Withdraw Player",
     "admin.competitionPlayers.withdrawQuestion":
       "{name} will play no more of the competition, and the games they have not played will be decided without them.",
+    "admin.competitionPlayers.carryForward": "Carry Forward",
+    // The carry forward dialog, over a competition's Players tab.
+    "admin.carryForward.title": "Carry Forward - {name}",
+    "admin.carryForward.save": "Save",
+    // Above the counts, for a refusal with no words of its own.
+    "admin.carryForward.otherwise": "This carry forward cannot be kept.",
+    "admin.carryForward.matchWins": "Match wins",
+    "admin.carryForward.matchLosses": "Match losses",
+    "admin.carryForward.gameWins": "Game wins",
+    "admin.carryForward.gameLosses": "Game losses",
+    "admin.carryForward.hoopsFor": "Hoops for",
+    "admin.carryForward.hoopsAgainst": "Hoops against",
+    "CarryForward.MatchWinsNotWhole": "Enter a whole number of match wins.",
+    "CarryForward.MatchWinsBelowZero": "Enter 0 or more match wins.",
+    "CarryForward.MatchLossesNotWhole": "Enter a whole number of match losses.",
+    "CarryForward.MatchLossesBelowZero": "Enter 0 or more match losses.",
+    "CarryForward.GameWinsNotWhole": "Enter a whole number of game wins.",
+    "CarryForward.GameWinsBelowZero": "Enter 0 or more game wins.",
+    "CarryForward.GameLossesNotWhole": "Enter a whole number of game losses.",
+    "CarryForward.GameLossesBelowZero": "Enter 0 or more game losses.",
+    "CarryForward.HoopsForNotWhole": "Enter a whole number of hoops for.",
+    "CarryForward.HoopsForBelowZero": "Enter 0 or more hoops for.",
+    "CarryForward.HoopsAgainstNotWhole":
+      "Enter a whole number of hoops against.",
+    "CarryForward.HoopsAgainstBelowZero": "Enter 0 or more hoops against.",
     // A competition's Scores tab and the score dialog.
     "admin.scores.add": "Add Score",
     "admin.scores.none": "No scores",

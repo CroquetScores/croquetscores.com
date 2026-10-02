@@ -1,0 +1,9 @@
+/* The six counts two to a row, what was won beside what was lost: matches,
+   then games, then hoops. Two halves, since the counts are a few digits each
+   and a phone has room for two of them side by side. */
+.carry-forward-counts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: start;
+}
