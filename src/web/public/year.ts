@@ -29,10 +29,12 @@ import {
   yearsOf,
 } from "./tournamentLists.js";
 
-// A year is four digits, as it is in a tournament's address. Anything else is
-// left to whatever else the address could be, and is not found where it is
-// nothing.
-const yearPath = "/:year(^\\d{4}$)";
+// A year is four digits, the first not a nought, as it is in a tournament's
+// address (TournamentAddress.ts), since no tournament can start in any other.
+// Anything else is left to whatever else the address could be, and is not
+// found where it is nothing. "0000" in particular is no year Postgres has, and
+// asking it for the days of one would fail rather than find none.
+const yearPath = "/:year(^[1-9]\\d{3}$)";
 
 export const registerYearPage = (
   server: FastifyInstance,

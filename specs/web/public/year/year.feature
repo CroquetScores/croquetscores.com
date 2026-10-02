@@ -31,7 +31,9 @@ Feature: A year's page lists every tournament starting in it
   tabs, within the drop-down list. A year with no tournaments in it still has
   a page, saying there are none, since a link to it may have been kept from a
   year that had some; it is not among the years, so no year is marked. An
-  address that is not a year is not a page.
+  address that is not a year is not a page. A year is four digits, the first
+  of them not a nought, as it is in a tournament's address, since no
+  tournament can start in any other.
 
   Where a scenario says nothing else, a tournament is for the sport "ac" and
   is played in the region "vic" of the country "au".
@@ -125,6 +127,8 @@ Feature: A year's page lists every tournament starting in it
         | /twenty |
         | /202    |
         | /20266  |
+        | /0000   |
+        | /0999   |
 
   Rule: Each row says when, what and where
 
