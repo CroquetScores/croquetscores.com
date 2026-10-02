@@ -31,6 +31,7 @@ import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswor
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
+import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportDatabase } from "./ImportDatabase.js";
@@ -91,6 +92,7 @@ try {
       ),
       new TournamentsByAddress(unitOfWork),
       new TournamentsByAccount(unitOfWork),
+      new TournamentsByWebsite(unitOfWork),
     ],
   );
   const accounts = new AggregateRepository(
