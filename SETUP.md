@@ -750,41 +750,12 @@ code-review.md
 
 ## 13. CI
 
-`.github/workflows/ci.yml`:
+`.github/workflows/ci.yml` is two jobs, and the file itself is where what each does is said, with why beside it:
 
-```yaml
-name: CI
-on:
-  push:
-    branches: [main]
-  pull_request:
+- `build` installs, lints, typechecks and builds, on every pull request and every push to `main`.
+- `tests` waits on it, and runs every scenario in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others. It does not run on `main`, which is only reached by squash-merging a pull request whose scenarios passed on its own branch.
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.13.0
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run build
-      - run: npm run db:up
-      - run: npm test
-      - if: always()
-        run: npm run db:down
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cucumber-report
-          path: reports/cucumber.html
-```
+Nothing is kept of a run but what GitHub shows of it: a failing scenario is read off the log of the shard it failed in, and run again locally.
 
 CI brings up the same `compose.yaml` a developer does, rather than declaring a `services:` block. A second description of the database is a second thing to keep in step.
 
