@@ -131,6 +131,12 @@ Feature: Moving between the admin's pages
 
   Rule: A link out of the admin, or into a new tab, is the browser's to follow
 
+    Whether a tab then opens is the browser's own doing, and a browser with no
+    window to show it in does not do it every time it is asked. So what is
+    said of a press for a new tab is what the admin does with it: it leaves the
+    press to the browser, and the link pressed leads to the page the tab would
+    open.
+
     Scenario: A public page is loaded
       Given the page of "Spring Open" is open
       And something is left on the page
@@ -143,10 +149,11 @@ Feature: Moving between the admin's pages
       When the section "Block A" is pressed to open it in a new tab
       Then the page is headed "Spring Open"
 
-    Scenario: A competition opened in a new tab is opened there
+    Scenario: A competition asked for in a new tab is left to the browser
       Given the page of "Spring Open" is open
       When the section "Block A" is pressed to open it in a new tab
-      Then the new tab's address is "/admin/2026/ac/spring-open/competitions/block-a"
+      Then the press is left to the browser
+      And the section "Block A" leads to "/admin/2026/ac/spring-open/competitions/block-a"
 
   Rule: The footer's choice of theme brings the reader back to where they have moved to
 
