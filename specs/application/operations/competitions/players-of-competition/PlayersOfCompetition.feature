@@ -12,7 +12,12 @@ Feature: The players of a competition, as its tournament's managers and scorers 
   is also said to have withdrawn or not, and to have a game in use or not,
   since a player who has one cannot be removed (`removePlayer.feature`) and
   a list offering to remove one offers it only where removing would be done.
-  An archived game is not in use, so it does not count. In a knockout, each is 
+  An archived game is not in use, so it does not count. Each is answered with
+  what they carry forward into the competition, count by count
+  (`CompetitionPlayer.feature`), since that is the competition's and not the
+  tournament's, and a count they carry nothing forward in is answered as
+  nothing rather than as 0, so that the dialog changing it shows it as it was
+  left (`carry-forward.feature`). In a knockout, each is
   answered with who they are drawn to play now, so that a scorer who chooses 
   the winner need not choose the loser (`score-modal-dialog.feature`).
 
@@ -113,6 +118,42 @@ Feature: The players of a competition, as its tournament's managers and scorers 
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
       Then the competition's player "Sam Someone" is answered as having no game in use
+
+  Rule: Each player is answered with what they carry forward
+
+    Background:
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+
+    Scenario Outline: A player is answered with each count they carry forward
+      Given "organiser@example.com" has given the player "Sam Someone" in "Block A" of "Spring Open" a carry forward of <count> of <number>
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered carrying forward <count> of <number>
+
+      Examples:
+        | count         | number |
+        | match wins    | 3      |
+        | match losses  | 1      |
+        | game wins     | 7      |
+        | game losses   | 4      |
+        | hoops for     | 112    |
+        | hoops against | 86     |
+
+    Scenario: A count of 0 is answered as 0
+      Given "organiser@example.com" has given the player "Sam Someone" in "Block A" of "Spring Open" a carry forward of match wins of 0
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered carrying forward match wins of 0
+
+    Scenario: A player carrying nothing forward is answered carrying nothing
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Block A" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered carrying nothing forward
+
+    Scenario: A carry forward is the competition's, not every competition's
+      Given "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has given the player "Sam Someone" in "Block A" of "Spring Open" a carry forward of match wins of 3
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Block B" of "Spring Open"
+      Then the competition's player "Sam Someone" is answered carrying nothing forward
 
   Rule: In a knockout, each player is answered with who they are drawn to play now
 

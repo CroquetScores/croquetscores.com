@@ -8,7 +8,14 @@ import {
 } from "../../../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import { CompetitionPlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import { TournamentPlayerId } from "../../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
+import { CarryForward } from "../../../../../../src/domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
 import type { SpecWorld } from "../../../../../support/world.js";
+import {
+  COUNT,
+  NUMBER,
+  countCalled,
+  pendingCounts,
+} from "../value-objects/carry-forward/aCarryForward.js";
 
 // What a scenario leaves unsaid. A scenario about one part of a player gives
 // every other part as one that is well made, so that what is refused is only
@@ -56,6 +63,10 @@ const otherPlayerOfWorld = (world: SpecWorld): CompetitionPlayer => {
 const withdrawn = (player: CompetitionPlayer): CompetitionPlayer =>
   player.withdraw();
 
+// The player before they were given a carry forward, so that the one given it
+// can be compared with who they were.
+const before = new WeakMap<SpecWorld, CompetitionPlayer>();
+
 Given(
   "the tournament player {string}",
   function (this: SpecWorld, written: string) {
@@ -71,6 +82,17 @@ Given(
   "a player in a competition who has withdrawn",
   function (this: SpecWorld) {
     this.competitionPlayer = withdrawn(make());
+  },
+);
+
+Given(
+  new RegExp(
+    `^a player in a competition who carries forward ${COUNT} of ${NUMBER}$`,
+  ),
+  function (this: SpecWorld, count: string, value: string) {
+    this.competitionPlayer = make().withCarryForward(
+      CarryForward.from({ [countCalled(count)]: Number(value) }),
+    );
   },
 );
 
@@ -167,6 +189,14 @@ When("the player withdraws", function (this: SpecWorld) {
   tryTo(this, () => player.withdraw());
 });
 
+When("the player is given the carry forward", function (this: SpecWorld) {
+  const player = playerOfWorld(this);
+  before.set(this, player);
+  tryTo(this, () =>
+    player.withCarryForward(CarryForward.from(pendingCounts(this))),
+  );
+});
+
 When("the player's withdrawal is reversed", function (this: SpecWorld) {
   const player = playerOfWorld(this);
   tryTo(this, () => player.reverseWithdrawal());
@@ -228,6 +258,39 @@ Then("the player has withdrawn", function (this: SpecWorld) {
 Then("the player has not withdrawn", function (this: SpecWorld) {
   assert.equal(playerOfWorld(this).withdrawn, false);
 });
+
+Then("the player carries nothing forward", function (this: SpecWorld) {
+  assert.equal(playerOfWorld(this).carryForward.carriesAnything, false);
+});
+
+Then(
+  new RegExp(`^the player carries forward ${COUNT} of ${NUMBER}$`),
+  function (this: SpecWorld, count: string, value: string) {
+    assert.equal(
+      playerOfWorld(this).carryForward.of(countCalled(count)),
+      Number(value),
+    );
+  },
+);
+
+Then(
+  new RegExp(`^the player carries forward nothing in ${COUNT}$`),
+  function (this: SpecWorld, count: string) {
+    assert.equal(
+      playerOfWorld(this).carryForward.of(countCalled(count)),
+      undefined,
+    );
+  },
+);
+
+Then(
+  "the player is the same player in the competition they were",
+  function (this: SpecWorld) {
+    const was = before.get(this);
+    assert.ok(was !== undefined, "The player was given no carry forward.");
+    assert.equal(playerOfWorld(this).equals(was), true);
+  },
+);
 
 Then("they are the same player in the competition", function (this: SpecWorld) {
   assert.equal(this.sameCompetitionPlayer, true);

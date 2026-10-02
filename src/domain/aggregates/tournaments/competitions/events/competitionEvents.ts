@@ -8,6 +8,7 @@ import { CompetitionGameArchived } from "./CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./CompetitionGameCorrected.js";
 import { CompetitionGameMoved } from "./CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "./CompetitionGameRestored.js";
+import { CompetitionPlayerCarryForwardChanged } from "./CompetitionPlayerCarryForwardChanged.js";
 import { CompetitionPlayerEntered } from "./CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "./CompetitionPlayerMoved.js";
 import { CompetitionPlayerRemoved } from "./CompetitionPlayerRemoved.js";
@@ -47,6 +48,10 @@ const number = (said: Said, field: string): number => {
 // and refused as any is where it is there but is not text.
 const optionalText = (said: Said, field: string): string | undefined =>
   said[field] === undefined ? undefined : text(said, field);
+
+// The same, for a field that is a number when it is there.
+const optionalNumber = (said: Said, field: string): number | undefined =>
+  said[field] === undefined ? undefined : number(said, field);
 
 const yesOrNo = (said: Said, field: string): boolean => {
   const value = said[field];
@@ -106,6 +111,24 @@ export const nameCompetitionEvents = (registry: EventRegistry): EventRegistry =>
       (said, { createdBy, occurredAt }) =>
         new CompetitionPlayerWithdrawalReversed(
           text(said, "playerId"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CompetitionPlayerCarryForwardChanged,
+      "competition-player-carry-forward-changed",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionPlayerCarryForwardChanged(
+          text(said, "playerId"),
+          {
+            matchWins: optionalNumber(said, "matchWins"),
+            matchLosses: optionalNumber(said, "matchLosses"),
+            gameWins: optionalNumber(said, "gameWins"),
+            gameLosses: optionalNumber(said, "gameLosses"),
+            hoopsFor: optionalNumber(said, "hoopsFor"),
+            hoopsAgainst: optionalNumber(said, "hoopsAgainst"),
+          },
           createdBy,
           occurredAt,
         ),

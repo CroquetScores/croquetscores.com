@@ -21,9 +21,20 @@ Feature: A player in a competition
   removed is gone, and their order with them. An order is a whole number from
   1 up.
 
+  A player may carry results forward into the competition: the matches, games
+  and hoops they bring from play it did not score (`CarryForward.feature`).
+  It is the player's in this competition and no other, since the same person
+  can bring something to one competition and nothing to the next. A player
+  entered carries nothing forward, and is given a carry forward afterwards,
+  which says all six counts again, so a count left out of it is taken away.
+  The player given one is the same player, with the same order. Whether a
+  competition has any standings for a carry forward to begin is the
+  competition's to say (`changeCarryForward.feature`).
+
   A player can withdraw: they stay in the competition, with their games, but
   play no more of it. A withdrawn player can have their withdrawal reversed,
-  and that is all that can be done to them until it is.
+  and that is all that can be done to them until it is, so a withdrawn player
+  cannot be given a carry forward.
 
   A player entered by mistake is removed: taken out of the competition, and
   not kept, set aside or able to be put back. Nothing is lost by it, since a
@@ -34,7 +45,7 @@ Feature: A player in a competition
   somebody who is no longer there; an archived game does not count
   (`removePlayer.feature`). A withdrawn player cannot be removed either, since 
   withdrawing is what is done to somebody who has played, and their withdrawal
-  is reversed9 first. The games are the competition's to know, not the 
+  is reversed first. The games are the competition's to know, not the 
   player's, so the competition says whether the player has any when it asks 
   whether they can be removed, and taking them out is the competition's to do.
 
@@ -45,7 +56,8 @@ Feature: A player in a competition
   cannot be.
 
   Asking for what a player already is — withdrawing one who has withdrawn,
-  reversing the withdrawal of one who has not — leaves them as they are. Two
+  reversing the withdrawal of one who has not, giving one the carry forward
+  they already have — leaves them as they are. Two
   people doing the same thing at once, or a form sent twice, is not a mistake
   worth refusing.
 
@@ -105,6 +117,60 @@ Feature: A player in a competition
     Scenario: A new player has not withdrawn
       When a player in a competition is made
       Then the player has not withdrawn
+
+  Rule: A player can be given a carry forward, and is the same player afterwards
+
+    Scenario: A new player carries nothing forward
+      When a player in a competition is made
+      Then the player carries nothing forward
+
+    Scenario: A player given a carry forward carries it forward
+      Given a player in a competition
+      And the carry forward is to have match wins of 3
+      When the player is given the carry forward
+      Then the player carries forward match wins of 3
+
+    Scenario: A player given a carry forward is the same player they were
+      Given a player in a competition
+      And the carry forward is to have match wins of 3
+      When the player is given the carry forward
+      Then the player is the same player in the competition they were
+
+    Scenario: A player given a carry forward keeps their order
+      Given a player in a competition with the order 20000
+      And the carry forward is to have match wins of 3
+      When the player is given the carry forward
+      Then the player's order in the competition is 20000
+
+    Scenario: A player given a carry forward of no counts carries nothing forward
+      Given a player in a competition who carries forward match wins of 3
+      And the carry forward is to have no counts
+      When the player is given the carry forward
+      Then the player carries nothing forward
+
+    Scenario: A player given a carry forward without a count they had carries nothing forward in it
+      Given a player in a competition who carries forward match wins of 3
+      And the carry forward is to have game wins of 7
+      When the player is given the carry forward
+      Then the player carries forward nothing in match wins
+
+    Scenario: A player given the carry forward they have is left as they are
+      Given a player in a competition who carries forward match wins of 3
+      And the carry forward is to have match wins of 3
+      When the player is given the carry forward
+      Then it is not refused
+      And the player carries forward match wins of 3
+
+    Scenario: A withdrawn player cannot be given a carry forward
+      Given a player in a competition who has withdrawn
+      And the carry forward is to have match wins of 3
+      When the player is given the carry forward
+      Then it is refused for breaking "CompetitionPlayer.Withdrawn"
+
+    Scenario: A player keeps their carry forward when they withdraw
+      Given a player in a competition who carries forward match wins of 3
+      When the player withdraws
+      Then the player carries forward match wins of 3
 
   Rule: A player can withdraw, and have their withdrawal reversed
 

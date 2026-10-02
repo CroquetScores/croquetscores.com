@@ -88,6 +88,8 @@ import { GamesOfCompetitionHandler } from "../../../src/application/operations/c
 import { RestoreGameHandler } from "../../../src/application/operations/competitions/RestoreGameHandler.js";
 import { EnterPlayerHandler } from "../../../src/application/operations/competitions/EnterPlayerHandler.js";
 import { MoveCompetitionPlayerHandler } from "../../../src/application/operations/competitions/MoveCompetitionPlayerHandler.js";
+import { ChangeCarryForwardHandler } from "../../../src/application/operations/competitions/ChangeCarryForwardHandler.js";
+import { ChangeCarryForwardValidator } from "../../../src/application/operations/competitions/ChangeCarryForwardValidator.js";
 import { MoveCompetitionPlayerValidator } from "../../../src/application/operations/competitions/MoveCompetitionPlayerValidator.js";
 import { PlayersOfCompetitionHandler } from "../../../src/application/operations/competitions/PlayersOfCompetitionHandler.js";
 import { RemovePlayerHandler } from "../../../src/application/operations/competitions/RemovePlayerHandler.js";
@@ -152,6 +154,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new MoveCompetitionValidator());
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new ChangeCarryForwardValidator());
   validation.register(new MoveGameValidator());
   validation.register(new AddGameValidator());
   validation.register(new CorrectGameValidator());
@@ -208,6 +211,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   );
   mediator.handleCommand(new WithdrawPlayerHandler(...both, competitions));
   mediator.handleCommand(new ReverseWithdrawalHandler(...both, competitions));
+  mediator.handleCommand(new ChangeCarryForwardHandler(...both, competitions));
   mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));

@@ -78,6 +78,7 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
             hasGamesInUse: false,
             drawnAgainst: undefined,
             bye: true,
+            carryForward: {},
             order: player.order,
           },
         ];
@@ -96,6 +97,7 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
               hasGamesInUse: competition.hasGamesInUse(player.id),
               drawnAgainst: competition.drawnAgainst(player.id, told)?.value,
               bye: false,
+              carryForward: player.carryForward.counts,
               order: player.order,
             },
           ];

@@ -2,100 +2,110 @@
 Feature: The players tab of a competition's page
 
   The Players tab is where a manager enters a tournament's players into one of
-  its competitions, puts them in order, removes the ones entered by mistake,
-  and withdraws the ones who will play no more of it (`view.feature` beneath
-  the competition). A player in a competition is one of the tournament's
-  players (`CompetitionPlayer.feature`), so they are added by choosing them
-  rather than by typing them, and everything about them but their place in
-  the competition is changed on the tournament's Players tab
-  (`players-tab.feature`).
+  its competitions, puts them in order, says what each carries forward into it,
+  removes the ones entered by mistake, and withdraws the ones who will play no
+  more of it (`view.feature` beneath the competition). A player in a
+  competition is one of the tournament's players (`CompetitionPlayer.feature`),
+  so they are added by choosing them rather than by typing them, and everything
+  about them but their place in the competition and what they carry forward
+  into it is changed on the tournament's Players tab (`players-tab.feature`).
 
   Above the list, a drop-down offers every player of the tournament who is not
-  already in the competition, in the tournament's order, with Add Player
-  beside it. Archived players of the tournament are not offered, since they
-  are set aside. A player added is put in the tournament's order, just after
-  whoever already has their order where somebody does (`enterPlayer.feature`),
-  and is no longer offered in the drop-down. Once a player is added, the
-  focus goes back to the drop-down, so that the next can be chosen and added
-  from the keyboard without going back up to find it. Where every player of
-  the tournament is in the competition, the drop-down and Add Player are not
-  shown, and the tab says so.
+  already in the competition, in the tournament's order, with Add Player beside
+  it. Archived players of the tournament are not offered, since they are set
+  aside. A player added is put in the tournament's order, just after whoever
+  already has their order where somebody does (`enterPlayer.feature`), and is
+  no longer offered in the drop-down. Once a player is added, the focus goes
+  back to the drop-down, so that the next can be chosen and added from the
+  keyboard without going back up to find it. Where every player of the
+  tournament is in the competition, the drop-down and Add Player are not shown,
+  and the tab says so.
 
   A knockout is played only once its draw is filled (`addGame.feature`), and
   the places its players leave over are filled with byes
   (`enterPlayer.feature`). So in a knockout the drop-down offers Bye first,
   before the players, and goes on offering it however many byes are added,
   since a draw can need several; a block or a Swiss has no draw, and does not
-  offer it. A bye added is listed among the players, in its place in the
-  draw, called Bye, in the reader's language. It is nobody, so it says
-  nothing of what it represents or the flag it flies. In a knockout with
-  every player of the tournament in it, the drop-down is still shown while a
-  place is left, offering Bye alone.
+  offer it. A bye added is listed among the players, in its place in the draw,
+  called Bye, in the reader's language. It is nobody, so it says nothing of
+  what it represents or the flag it flies. In a knockout with every player of
+  the tournament in it, the drop-down is still shown while a place is left,
+  offering Bye alone.
 
   A bye is put in its place in the draw as a player is: it offers Up, Down and
   Remove, and Remove asks first, as it does for a player. It does not offer
   Withdraw, since it plays nothing to withdraw from. Every bye has the same id,
   so what is pressed on a bye acts on that bye by its place in the order
-  (`movePlayer.feature`, `removePlayer.feature`), and the other byes stay
-  where they are.
+  (`movePlayer.feature`, `removePlayer.feature`), and the other byes stay where
+  they are.
 
-  A player Add Player cannot enter is not entered, and the tab says why
-  beneath the drop-down, by the refusal's code, in the reader's language: a
-  knockout whose every place is filled is refused with
-  `Competition.DrawFull` (`enterPlayer.feature`). What it says is tied to the
-  drop-down, so that a screen reader reads it with it, and it goes once
-  another player is chosen, since it was about the one chosen before. A
-  refusal with no words of its own is still said, in the words for one the
-  tab cannot name, rather than the tab going on as though nothing were wrong.
+  A player Add Player cannot enter is not entered, and the tab says why beneath
+  the drop-down, by the refusal's code, in the reader's language: a knockout
+  whose every place is filled is refused with `Competition.DrawFull`
+  (`enterPlayer.feature`). What it says is tied to the drop-down, so that a
+  screen reader reads it with it, and it goes once another player is chosen,
+  since it was about the one chosen before. A refusal with no words of its own
+  is still said, in the words for one the tab cannot name, rather than the tab
+  going on as though nothing were wrong.
 
   The players playing come first, in the competition's order, which is the
   order a knockout is drawn in and a block is listed in. Each says their name,
-  what they represent and the flag they fly, where they have either, and
-  offers Remove, Withdraw, Up and Down. Up and Down move a player one place
-  among those playing; the first is not offered Up and the last is not offered
-  Down, since there is nowhere for it to go. Up and Down are shown as arrows
-  pointing up and down, and are named "Up" and "Down" for a reader who cannot
-  see them. They come last of what a row offers, so that they are in the same
-  place on every row. A player's name, what they
-  represent and their flag are said in that order, as "Sam Someone
-  (Canterbury Croquet Club)" and then the flag.
+  what they represent and the flag they fly, where they have either, and offers
+  Carry Forward, Remove, Withdraw, Up and Down. Up and Down move a player one
+  place among those playing; the first is not offered Up and the last is not
+  offered Down, since there is nowhere for it to go. Up and Down are shown as
+  arrows pointing up and down, and are named "Up" and "Down" for a reader who
+  cannot see them. They come last of what a row offers, so that they are in the
+  same place on every row. A player's name, what they represent and their flag
+  are said in that order, as "Sam Someone (Canterbury Croquet Club)" and then
+  the flag.
 
-  Remove takes out a player entered by mistake. They are not kept or set
-  aside, so there is nothing to restore (`CompetitionPlayer.feature`). A
-  player who has any games in use in the competition cannot be removed, since
-  the games would then be against somebody who is no longer there, so such a
-  player is not offered Remove. An archived game counts for nothing, so a
-  player whose only games are archived is offered Remove, and their archived
-  scores go with them (`removePlayer.feature`). A player removed is still one 
-  of the tournament's players, so they are offered again in the drop-down, and 
-  adding them again enters them as anybody new is, in the tournament's order.
+  Carry Forward opens the carry forward dialog over the page
+  (`carry-forward.feature`), to say what the player brings into the competition
+  from play it did not score (`CompetitionPlayer.feature`). It comes first of
+  what a row offers, before Remove, and is offered whether or not the player
+  has played, since what they brought is what it was whatever has been played
+  since. Only a block and a Swiss have standings for it to count in, so a
+  knockout offers it on no row (`changeCarryForward.feature`), and a bye, which
+  is only ever in a knockout, never offers it. A withdrawn player offers
+  Unwithdraw alone, so not Carry Forward either. Once a carry forward is saved,
+  the list is asked for again, as it is after anything else is done.
 
-  Withdraw is for a player who will play no more of the competition: they
-  stay in it, with their games. A player who withdraws is put last
+  Remove takes out a player entered by mistake. They are not kept or set aside,
+  so there is nothing to restore (`CompetitionPlayer.feature`). A player who
+  has any games in use in the competition cannot be removed, since the games
+  would then be against somebody who is no longer there, so such a player is
+  not offered Remove. An archived game counts for nothing, so a player whose
+  only games are archived is offered Remove, and their archived scores go with
+  them (`removePlayer.feature`). A player removed is still one of the
+  tournament's players, so they are offered again in the drop-down, and adding
+  them again enters them as anybody new is, in the tournament's order.
+
+  Withdraw is for a player who will play no more of the competition: they stay
+  in it, with their games. A player who withdraws is put last
   (`withdrawPlayer.feature`), so the withdrawn players come after those
   playing, under a heading of their own, in the order they withdrew. Each says
-  their name, what they represent and the flag they fly, and offers
-  Unwithdraw alone, since a withdrawn player can only have their withdrawal
-  reversed. A player unwithdrawn keeps the order they were given when they
-  withdrew, so they come back after those who stayed playing.
+  their name, what they represent and the flag they fly, and offers Unwithdraw
+  alone, since a withdrawn player can only have their withdrawal reversed. A
+  player unwithdrawn keeps the order they were given when they withdrew, so
+  they come back after those who stayed playing.
 
   In a knockout, the competition's order is its draw, so once it has a game in
   use its players are fixed (`addGame.feature`): the drop-down and Add Player
   are not shown, and no player offers Up, Down or Remove. An archived game
-  fixes nothing, so a knockout whose only games are archived offers them as
-  one with no games does. Withdraw
-  is still offered, since a player can stop playing at any time, and their
-  opponent in a match not yet decided goes through.
+  fixes nothing, so a knockout whose only games are archived offers them as one
+  with no games does. Withdraw is still offered, since a player can stop
+  playing at any time, and their opponent in a match not yet decided goes
+  through.
 
-  Remove and Withdraw ask first, where Archive elsewhere in the admin does
-  not. Remove cannot be undone: the player's place goes with them, and adding
-  them again is not the same as having kept them. Withdraw can be reversed,
-  but it changes the outcome of the competition — the games the player has
-  not played are decided without them, and who goes through or wins may
-  change with it — so it is not something to do by a slip of the thumb.
-  Unwithdraw, Up and Down do not ask: each is undone by pressing the other
-  way. Whatever is done, the list is asked for again, so that it says who the
-  players are now.
+  Remove and Withdraw ask first, where Archive elsewhere in the admin does not.
+  Remove cannot be undone: the player's place goes with them, and adding them
+  again is not the same as having kept them. Withdraw can be reversed, but it
+  changes the outcome of the competition — the games the player has not played
+  are decided without them, and who goes through or wins may change with it —
+  so it is not something to do by a slip of the thumb. Unwithdraw, Up and Down
+  do not ask: each is undone by pressing the other way. Whatever is done, the
+  list is asked for again, so that it says who the players are now.
 
   The tab has no address of its own, so a scenario opens the competition's
   page, whose first tab this is, which is what opening the players of a
@@ -363,8 +373,8 @@ Feature: The players tab of a competition's page
   Rule: What Add Player refuses is said beneath the drop-down
 
     The knockout's draw is four places, and Sam Someone, Alex Another, Chris
-    Third and Pat Fourth fill them. Jo Fifth is a player of the tournament
-    who is not in it.
+    Third and Pat Fourth fill them. Jo Fifth is a player of the tournament who
+    is not in it.
 
     Scenario: A player added to a full knockout is refused beneath the drop-down
       Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
@@ -490,11 +500,12 @@ Feature: The players tab of a competition's page
       Then the player "Alex Another" offers "<option>"
 
       Examples:
-        | option   |
-        | Up       |
-        | Down     |
-        | Remove   |
-        | Withdraw |
+        | option        |
+        | Carry Forward |
+        | Up            |
+        | Down          |
+        | Remove        |
+        | Withdraw      |
 
     Scenario: A player playing does not offer Unwithdraw
       Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
@@ -571,11 +582,68 @@ Feature: The players tab of a competition's page
       Then the player "Alex Another" does not offer "<option>"
 
       Examples:
-        | option   |
-        | Up       |
-        | Down     |
-        | Remove   |
-        | Withdraw |
+        | option        |
+        | Carry Forward |
+        | Up            |
+        | Down          |
+        | Remove        |
+        | Withdraw      |
+
+  Rule: Carry Forward comes first, and is offered where standings can begin from it
+
+    Scenario: Carry Forward comes before Remove
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then "Carry Forward" on the player "Sam Someone" comes before "Remove"
+
+    Scenario: Carry Forward is the first thing a player offers
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the first thing the player "Sam Someone" offers is "Carry Forward"
+
+    Scenario: A player who has played is still offered Carry Forward
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the player "Sam Someone" offers "Carry Forward"
+
+    Scenario: Carry Forward is first though Remove is not offered
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then the first thing the player "Sam Someone" offers is "Carry Forward"
+
+    Scenario: A player in a Swiss is offered Carry Forward
+      Given "organiser@example.com" has added the Swiss "Swiss A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Swiss A" of "Spring Open"
+      When the players of "Swiss A" in "Spring Open" are opened
+      Then the player "Sam Someone" offers "Carry Forward"
+
+    Scenario: A player in a knockout is not offered Carry Forward
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the player "Sam Someone" does not offer "Carry Forward"
+
+    Scenario: A bye is not offered Carry Forward
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      When the players of "Final Stage" in "Spring Open" are opened
+      Then the first player listed does not offer "Carry Forward"
+
+    Scenario: Carry Forward opens the carry forward dialog
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Carry Forward" is pressed on the player "Sam Someone"
+      Then the carry forward dialog is open
+
+    Scenario: Carry Forward does not ask first
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Carry Forward" is pressed on the player "Sam Someone"
+      Then no modal dialog asks to confirm
 
   Rule: Up and Down move a player a place
 
@@ -803,8 +871,7 @@ Feature: The players tab of a competition's page
 
     The knockout's draw is four places, each round the best of 1, so Sam
     Someone plays Alex Another in the first round and Chris Third is drawn
-    against a bye.
-    Pat Fourth is a player of the tournament who is not in it.
+    against a bye. Pat Fourth is a player of the tournament who is not in it.
 
     Scenario: A knockout with no games offers Add Player
       Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
@@ -912,8 +979,8 @@ Feature: The players tab of a competition's page
   Rule: Every word the tab says is in the reader's language
 
     The test locale shows it (`language.feature`). A player's name and what
-    they represent are what the manager typed, and nobody's language. A
-    flag's name is a word of the reader's language, and is looked at.
+    they represent are what the manager typed, and nobody's language. A flag's
+    name is a word of the reader's language, and is looked at.
 
     Scenario: The players playing are in the reader's language
       Given a browser that asks for "en-XA"
@@ -969,12 +1036,13 @@ Feature: The players tab of a competition's page
       Then "<option>" on the player "<player>" is at least 44 pixels tall
 
       Examples:
-        | player       | option     |
-        | Sam Someone  | Down       |
-        | Alex Another | Up         |
-        | Sam Someone  | Remove     |
-        | Sam Someone  | Withdraw   |
-        | Chris Third  | Unwithdraw |
+        | player       | option        |
+        | Sam Someone  | Carry Forward |
+        | Sam Someone  | Down          |
+        | Alex Another | Up            |
+        | Sam Someone  | Remove        |
+        | Sam Someone  | Withdraw      |
+        | Chris Third  | Unwithdraw    |
 
     Scenario: A long name wraps rather than widening the page
       Given the player is to represent "The Very Long Named Croquet And Lawn Bowls Club Of The Northern Districts"

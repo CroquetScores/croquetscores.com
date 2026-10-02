@@ -382,6 +382,34 @@ export const spanish: Language = {
     "admin.competitionPlayers.withdrawTitle": "Retirar jugador",
     "admin.competitionPlayers.withdrawQuestion":
       "{name} no jugará más en la competición, y las partidas que no ha jugado se decidirán sin su participación.",
+    "admin.competitionPlayers.carryForward": "Arrastre",
+    "admin.carryForward.title": "Arrastre - {name}",
+    "admin.carryForward.save": "Guardar",
+    "admin.carryForward.otherwise": "No se puede guardar este arrastre.",
+    "admin.carryForward.matchWins": "Partidos ganados",
+    "admin.carryForward.matchLosses": "Partidos perdidos",
+    "admin.carryForward.gameWins": "Juegos ganados",
+    "admin.carryForward.gameLosses": "Juegos perdidos",
+    "admin.carryForward.hoopsFor": "Aros a favor",
+    "admin.carryForward.hoopsAgainst": "Aros en contra",
+    "CarryForward.MatchWinsNotWhole":
+      "Escribe un número entero de partidos ganados.",
+    "CarryForward.MatchWinsBelowZero": "Escribe 0 o más partidos ganados.",
+    "CarryForward.MatchLossesNotWhole":
+      "Escribe un número entero de partidos perdidos.",
+    "CarryForward.MatchLossesBelowZero": "Escribe 0 o más partidos perdidos.",
+    "CarryForward.GameWinsNotWhole":
+      "Escribe un número entero de juegos ganados.",
+    "CarryForward.GameWinsBelowZero": "Escribe 0 o más juegos ganados.",
+    "CarryForward.GameLossesNotWhole":
+      "Escribe un número entero de juegos perdidos.",
+    "CarryForward.GameLossesBelowZero": "Escribe 0 o más juegos perdidos.",
+    "CarryForward.HoopsForNotWhole":
+      "Escribe un número entero de aros a favor.",
+    "CarryForward.HoopsForBelowZero": "Escribe 0 o más aros a favor.",
+    "CarryForward.HoopsAgainstNotWhole":
+      "Escribe un número entero de aros en contra.",
+    "CarryForward.HoopsAgainstBelowZero": "Escribe 0 o más aros en contra.",
     "admin.scores.add": "Añadir resultado",
     "admin.scores.none": "No hay resultados",
     "admin.scores.edit": "Editar",
