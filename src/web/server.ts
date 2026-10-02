@@ -108,6 +108,9 @@ import { TeamPageHandler } from "../application/operations/tournaments/TeamPageH
 import { TournamentPageHandler } from "../application/operations/tournaments/TournamentPageHandler.js";
 import { TournamentToChangeHandler } from "../application/operations/tournaments/TournamentToChangeHandler.js";
 import { TournamentYearsOfAccountHandler } from "../application/operations/tournaments/TournamentYearsOfAccountHandler.js";
+import { RecentResultsHandler } from "../application/operations/tournaments/RecentResultsHandler.js";
+import { UpcomingTournamentsHandler } from "../application/operations/tournaments/UpcomingTournamentsHandler.js";
+import { TournamentYearsHandler } from "../application/operations/tournaments/TournamentYearsHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
@@ -170,6 +173,7 @@ import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
+import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import {
   GoogleOpenIdConnect,
@@ -214,7 +218,7 @@ import { registerSetPasswordPage } from "./public/setPassword.js";
 import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspended.js";
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
-import { registerPublicPages } from "./public/pages.js";
+import { registerHomePage } from "./public/home.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
@@ -488,6 +492,7 @@ export const buildApplication = async (
 
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
+  const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
 
   // Every read model's projection, each given every event as it is appended.
   const projections: readonly Projection[] = [
@@ -495,6 +500,7 @@ export const buildApplication = async (
     accountsByGoogleAccount,
     tournamentsByAddress,
     tournamentsByAccount,
+    tournamentsByWebsite,
   ];
 
   // On the unit of work the mediator's transactions use, so that what a
@@ -791,6 +797,9 @@ export const buildApplication = async (
   mediator.handleQuery(
     new TournamentYearsOfAccountHandler(tournamentsByAccount),
   );
+  mediator.handleQuery(new RecentResultsHandler(tournamentsByWebsite));
+  mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));
+  mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -908,7 +917,7 @@ export const buildApplication = async (
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);
   registerJavaScriptRequiredPage(server, assets);
-  registerPublicPages(server, assets);
+  registerHomePage(server, assets);
 
   // What is queued is sent while the server is listening, and the pool is
   // still open while the last round finishes: the server is closed before the

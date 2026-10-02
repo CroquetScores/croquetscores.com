@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { dayWritten } from "../../../../../../dates.js";
+import { dayWritten } from "../../../../../../../common/dates.js";
 import { knows, say } from "../../../../../../words.js";
 import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
 import { noOption, optionFace } from "../optionFace.js";

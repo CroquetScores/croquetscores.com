@@ -1,4 +1,4 @@
-@browser
+@browser @postgres
 Feature: Finding your way around the public site
 
   The public pages are required to work with JavaScript switched off, so the

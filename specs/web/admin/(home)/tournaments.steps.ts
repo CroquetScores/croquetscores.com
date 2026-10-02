@@ -74,7 +74,9 @@ const nameOf = (world: SpecWorld, name: string): Locator =>
 // What `expression` makes of the name of the tournament `name`, called
 // element there. Written as an expression, as the other steps write what they
 // run in the page, since the specs are typed without the browser's own types.
-const names = ".tournaments > .tournament .tournament-name";
+// The home page's among them, whose lists are tables.
+const names =
+  ":is(.tournaments > .tournament, .home-list tbody tr) .tournament-name";
 const inNameOf = async <T>(
   world: SpecWorld,
   name: string,
@@ -94,24 +96,67 @@ const optionOf = (world: SpecWorld, name: string, option: string): Locator =>
     .locator(".tournament-options")
     .locator("a, button", { hasText: exactly(option) });
 
-// The years bar, the one seen rather than the copy it measures with.
+// The years bar, the one seen rather than the copy it measures with. The
+// admin's and the home page's: the admin fits the years to the window by
+// measuring them, and draws the drop-down list as a list to choose from; the
+// home page fits them with no scripting, drawing every year both as a tab and
+// in the drop-down list and showing each in one of them, and its drop-down list
+// is a disclosure of links. So a tab or a drop-down list is only one the
+// reader can see.
 const shownYears = "nav.years .years-row > ul:not(.years-measuring)";
 const tabs = (world: SpecWorld): Locator =>
-  world.browserPage.locator(`${shownYears} > li > a`);
+  world.browserPage.locator(`${shownYears} > li > a`).filter({ visible: true });
 const dropDown = (world: SpecWorld): Locator =>
-  world.browserPage.locator(`${shownYears} select`);
+  world.browserPage
+    .locator(`${shownYears} :is(select, details)`)
+    .filter({ visible: true });
 
 const tabYears = async (world: SpecWorld): Promise<number[]> =>
   (await tabs(world).allTextContents()).map(Number);
 
+// What the browser has of its own that these ask of it, since the specs are
+// typed without the browser's own types.
+interface Shown {
+  readonly localName: string;
+  readonly textContent: string | null;
+  getAttribute(name: string): string | null;
+  querySelector(selector: string): Shown | null;
+  querySelectorAll(selector: string): ArrayLike<Shown>;
+}
+
+interface InThePage {
+  getComputedStyle(element: Shown): { readonly display: string };
+}
+
+// A disclosure's years are those it would show opened, which is every one not
+// left out of it, open or not.
 const dropDownYears = async (world: SpecWorld): Promise<number[]> => {
-  const values = await Promise.all(
-    (await dropDown(world).locator("option").all()).map((option) =>
-      option.getAttribute("value"),
-    ),
-  );
-  return values.filter((value) => value !== null && value !== "").map(Number);
+  if ((await dropDown(world).count()) === 0) return [];
+  const values = await dropDown(world).evaluate((element) => {
+    const list = element as unknown as Shown;
+    const page = globalThis as unknown as InThePage;
+    return list.localName === "select"
+      ? Array.from(list.querySelectorAll("option"), (option) =>
+          option.getAttribute("value"),
+        )
+      : Array.from(list.querySelectorAll("li"))
+          .filter((item) => page.getComputedStyle(item).display !== "none")
+          .map((item) => (item.textContent ?? "").trim());
+  });
+  return values
+    .filter((value): value is string => value !== null && value !== "")
+    .map(Number);
 };
+
+// What the drop-down list is called for a reader who is listening rather than
+// looking: a list to choose from by its label, and a disclosure by its summary.
+const dropDownNamed = (world: SpecWorld): Promise<string | null> =>
+  dropDown(world).evaluate((element) => {
+    const list = element as unknown as Shown;
+    return list.localName === "select"
+      ? list.getAttribute("aria-label")
+      : (list.querySelector("summary")?.textContent?.trim() ?? null);
+  });
 
 const yearsOffered = async (world: SpecWorld): Promise<number[]> => [
   ...(await tabYears(world)),
@@ -572,6 +617,7 @@ Then("the years take one row of the bar", async function (this: SpecWorld) {
     const tops: number[] = [];
     for (const item of await this.browserPage
       .locator(`${shownYears} > li`)
+      .filter({ visible: true })
       .all()) {
       const box = await item.boundingBox();
       assert.ok(box !== null, "A year in the bar is not on the page.");
@@ -644,12 +690,7 @@ Then(
   "the drop-down list is named {string}",
   async function (this: SpecWorld, name: string) {
     await eventually(this, async () => {
-      assert.equal(
-        await this.browserPage
-          .getByRole("combobox", { name, exact: true })
-          .count(),
-        1,
-      );
+      assert.equal(await dropDownNamed(this), name);
     });
   },
 );
@@ -946,7 +987,12 @@ Then(
   "the drop-down list of years is named in the test locale",
   async function (this: SpecWorld) {
     await eventually(this, async () => {
-      const named = await announcedAs(this, `${shownYears} select`);
+      assert.equal(
+        await dropDown(this).count(),
+        1,
+        "No drop-down list of years is offered.",
+      );
+      const named = await dropDownNamed(this);
       assert.ok(named !== null, "No drop-down list of years is named.");
       assert.ok(
         isMarked(named),

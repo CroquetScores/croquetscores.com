@@ -1062,6 +1062,192 @@ main {
   overflow-wrap: anywhere;
 }
 
+/* The home page's years, fitted to the window with no scripting to measure
+   them (home.ts). Every tab is as wide as every other and so is the drop-down
+   list, so how many fit is known from the bar's width alone: the newest is
+   always a tab and never in the list, and the page's own rules show each
+   further tab, and leave it out of the list, once the bar is wide enough. */
+.years-fitted {
+  container: years / inline-size;
+}
+
+.years-fitted .year-tab {
+  display: none;
+}
+
+.years-fitted .year-tab:first-child {
+  display: flex;
+}
+
+.years-fitted .year-tab a {
+  justify-content: center;
+  width: 4.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.years-fitted .years-earlier {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 12rem;
+}
+
+.years-fitted .years-earlier-list li:first-child {
+  display: none;
+}
+
+/* Pressed with a thumb, so as tall as anything else that is, and drawn as the
+   admin draws its drop-down list of years. */
+.years-earlier-list summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-2);
+  border: 1px solid var(--accent-ink);
+  border-radius: var(--radius-1);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Hanging beneath the bar rather than pushing it open, as the account menu's
+   items do, in the bar's own colours since they are its years. */
+.years-earlier-list[open] > ul {
+  position: absolute;
+  top: 100%;
+  inset-inline-start: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: var(--accent-strong);
+}
+
+.years-earlier-list li a {
+  min-height: 44px;
+}
+
+/* The two lists: side by side where there is room for both, the recent
+   results first, and one above the other on a phone. */
+.home-lists {
+  display: grid;
+  gap: var(--space-6) var(--space-5);
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .home-lists {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.home-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* Headed in the secondary navigation's colours, every other row on a colour
+   of its own so that a row is followed across, and no lines between the
+   cells, which the colours already part. */
+.home-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.home-list th,
+.home-list td {
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  text-align: start;
+  vertical-align: middle;
+}
+
+.home-list th {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.home-list th a {
+  display: flex;
+  gap: var(--space-1);
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-list tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+/* A row is read as one thing, so it is pressed as one: the name's link
+   reaches over the whole of it. Pressed with a thumb, so as tall as anything
+   else that is. */
+.home-list tbody tr {
+  position: relative;
+}
+
+.home-list td {
+  height: 44px;
+}
+
+.home-list .tournament-name::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.home-list .tournament-dates {
+  white-space: nowrap;
+}
+
+/* A long name wraps rather than being cut short or pushing out past the
+   panel. */
+.home-list .tournament-name {
+  overflow-wrap: anywhere;
+}
+
+.home-list .tournament-flag img {
+  display: block;
+}
+
+.home-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+/* No wider than the form, however long the longest country's name is. */
+.home-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 100%;
+}
+
+.home-filter-field label {
+  font-weight: 600;
+}
+
+.home-filter select,
+.home-filter button {
+  max-width: 100%;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--ink-muted);
+  border-radius: var(--radius-1);
+  background: var(--panel);
+}
+
+.home-filter button {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--action-ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+
 /* --- Utilities ----------------------------------------------------------- */
 
 .lead {

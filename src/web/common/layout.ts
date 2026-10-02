@@ -31,6 +31,14 @@ export interface Shell {
       has nowhere to move between. */
   readonly sections?: readonly Section[] | undefined;
   readonly currentSection?: string | undefined;
+  /** A secondary navigation of the page's own making, already escaped, drawn
+      where the section bar is, for a page whose bar is more than a row of
+      sections to move between. */
+  readonly secondary?: string | undefined;
+  /** Rules of the page's own, for what depends on what only the page knows,
+      such as how many of something it has. Set after the site's stylesheet,
+      so that each wins over the site's rule for the same thing. */
+  readonly styles?: string | undefined;
   /** Where in the primary navigation the reader is, if anywhere. */
   readonly currentPath?: string | undefined;
   /** Which theme the reader has asked for, if they have asked. */
@@ -308,9 +316,16 @@ export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${escape(shell.title)}</title>${sendAwayWithoutScripting(shell.withoutScripting)}
-    <link rel="stylesheet" href="${assets.url("site.css")}" />
+    <link rel="stylesheet" href="${assets.url("site.css")}" />${
+      shell.styles === undefined
+        ? ""
+        : `
+    <style>
+${shell.styles}
+    </style>`
+    }
   </head>
-  <body>${siteBar(shell)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+  <body>${siteBar(shell)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${

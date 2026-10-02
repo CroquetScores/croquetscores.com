@@ -172,11 +172,23 @@ Then(
   },
 );
 
+// The colour a current section is drawn on, read off one drawn for the purpose
+// as the section bar draws it, since the page being read need have no sections
+// of its own: the home page's are years, and none of them is current.
 Then(
   "the link {string} is on the colour the current section is on",
   async function (this: SpecWorld, label: string) {
     const section = await this.browserPage.evaluate<string>(
-      `getComputedStyle(document.querySelector('.site-sections a[aria-current="page"]')).backgroundColor`,
+      `(() => {
+        const bar = document.createElement("nav");
+        bar.className = "site-sections";
+        const current = bar.appendChild(document.createElement("a"));
+        current.setAttribute("aria-current", "page");
+        document.body.appendChild(bar);
+        const colour = getComputedStyle(current).backgroundColor;
+        bar.remove();
+        return colour;
+      })()`,
     );
     assert.equal(await drawn(this, label, "backgroundColor"), section);
   },

@@ -264,6 +264,26 @@ export const spanish: Language = {
     "errors.failed": "Algo ha ido mal",
     "errors.reference": "Referencia {reference}.",
 
+    "home.recentResults": "Resultados recientes",
+    "home.recentResults.none":
+      "No se ha añadido ninguna partida en los últimos siete días.",
+    "home.upcomingTournaments": "Próximos torneos",
+    "home.upcomingTournaments.none":
+      "Ningún torneo empieza en los próximos sesenta días.",
+    "home.column.date": "Fecha",
+    "home.column.name": "Nombre",
+    "home.column.country": "País",
+    "home.filter.country": "País",
+    "home.filter.anyCountry": "Cualquier país",
+    "home.filter.region": "Región",
+    "home.filter.anyRegion": "Cualquier región",
+    "home.filter.sport": "Deporte",
+    "home.filter.anySport": "Cualquier deporte",
+    "home.filter.submit": "Filtrar",
+    "home.allTournaments": "Todos los torneos de {year}",
+    "home.years.label": "Años",
+    "home.years.earlier": "Años anteriores",
+
     "admin.title": "Administración",
     "admin.tournaments.new": "Nuevo torneo",
     "admin.tournaments.none": "No hay torneos",

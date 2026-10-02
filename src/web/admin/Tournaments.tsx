@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { dated } from "./dates.js";
+import { dated } from "../common/dates.js";
 import { say } from "./words.js";
 import { Years } from "./Years.js";
 import "./tournaments.css";
