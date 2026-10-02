@@ -8,7 +8,9 @@ Feature: Importing the old sites' users as accounts
 
   A user who never confirmed their email address never finished signing up,
   and is left behind. Nobody has shown the address is theirs, and bringing it
-  over would give somebody an account they never asked for.
+  over would give somebody an account they never asked for. Where they ran a
+  tournament, it is brought over as run by a forgotten account in their place
+  (`ImportTournaments.feature`), which holds nothing of them.
 
   The old sites kept a hash of each password, and it is imported as the
   password hasher imports one (`ImportedPasswordHasher.feature`), which is how
@@ -108,21 +110,22 @@ Feature: Importing the old sites' users as accounts
       When the user is imported
       Then importing the user is not refused
 
-  Rule: A name too short to be accepted says so, and is otherwise left as it was
+  Rule: A name too short to be accepted says it was imported, and is otherwise left as it was
 
     A name shorter than 3 characters is refused here, and the old sites
-    accepted some. Rather than leave the user behind, the name is lengthened
-    by saying what is wrong with it, which the account's owner reads the next
-    time they look at their profile and can put right. Nothing else about a
+    accepted some. Rather than leave the user behind, " - Imported" is added
+    to the name, as it is to every name the import brings over that is too
+    short, which makes it long enough and tells the account's owner where it
+    came from the next time they look at their profile. Nothing else about a
     name is changed: the case it was written in is its owner's.
 
-    Scenario: A name shorter than 3 characters says it must be longer
+    Scenario: A name shorter than 3 characters says it was imported
       Given a user "users/1" on "croquetscores.com"
       And the user is called "Al"
       And the user's email address is "al@example.com"
       And the user confirmed their email address at "2014-03-01T09:00:00Z"
       When the user is imported
-      Then the account at "al@example.com" is called "Al (name must be 3 characters or more)"
+      Then the account at "al@example.com" is called "Al - Imported"
 
     Scenario: A name of 3 characters is left as it was
       Given a user "users/1" on "croquetscores.com"

@@ -125,6 +125,51 @@ Given(
   },
 );
 
+// Users brought over to set a scene, which other features' scenarios name by
+// their documents: a user who confirmed their email address, and became an
+// account, and one who never did, and became none.
+
+Given(
+  "a user {string} on {string} is imported as {string}",
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    address: string,
+  ) {
+    const state = importingOf(this);
+    state.user = {
+      website,
+      id,
+      document: {
+        Name: "Sam Someone",
+        EmailAddress: address,
+        Password: asTheOldSitesKeptIt("a password nobody gave"),
+        ConfirmedAt: "2014-01-01T09:00:00Z",
+      },
+    };
+    await state.importer.importDocument(state.user);
+  },
+);
+
+Given(
+  "a user {string} on {string} who never confirmed their email address",
+  async function (this: SpecWorld, id: string, website: string) {
+    const state = importingOf(this);
+    state.user = {
+      website,
+      id,
+      document: {
+        Name: "Sam Someone",
+        EmailAddress: `${id.replace("/", "-")}@example.com`,
+        Password: asTheOldSitesKeptIt("a password nobody gave"),
+        ConfirmedAt: null,
+      },
+    };
+    await state.importer.importDocument(state.user);
+  },
+);
+
 Given("the user is called {string}", function (this: SpecWorld, name: string) {
   change(this, { Name: name });
 });

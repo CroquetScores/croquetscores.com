@@ -82,6 +82,77 @@ Given(
   },
 );
 
+// What the import keeps of what each document became, each with an id nothing
+// else has, since only whether it is kept is asked.
+
+Given(
+  "{string} on {string} was kept as a tournament",
+  async function (this: SpecWorld, documentId: string, website: string) {
+    await importDatabaseOf(this).recordImportedTournament(
+      website,
+      documentId,
+      `tournament/${randomUUID()}`,
+    );
+  },
+);
+
+Given(
+  "{string} on {string} was kept as left behind",
+  async function (this: SpecWorld, documentId: string, website: string) {
+    await importDatabaseOf(this).recordLeftBehind(website, documentId);
+  },
+);
+
+Given(
+  "{string} on {string} was kept as a forgotten account",
+  async function (this: SpecWorld, documentId: string, website: string) {
+    await importDatabaseOf(this).recordForgottenUser(
+      website,
+      documentId,
+      `account/${randomUUID()}`,
+    );
+  },
+);
+
+Given(
+  "player {int} of {string} on {string} was kept as a tournament player",
+  async function (
+    this: SpecWorld,
+    number: number,
+    tournament: string,
+    website: string,
+  ) {
+    await importDatabaseOf(this).recordImportedPlayer(
+      website,
+      tournament,
+      number,
+      `tournament-player/${randomUUID()}`,
+    );
+  },
+);
+
+Given(
+  "{string} on {string} was kept as a competition",
+  async function (this: SpecWorld, documentId: string, website: string) {
+    await importDatabaseOf(this).recordImportedCompetition(
+      website,
+      documentId,
+      `tournament/${randomUUID()}`,
+      `competition/${randomUUID()}`,
+    );
+  },
+);
+
+Then(
+  "{string} on {string} is not kept as left behind",
+  async function (this: SpecWorld, documentId: string, website: string) {
+    assert.equal(
+      await importDatabaseOf(this).isLeftBehind(website, documentId),
+      false,
+    );
+  },
+);
+
 Given("a schema {string}", async function (this: SpecWorld, schema: string) {
   await this.database.query(`create schema "${schema}"`);
 });

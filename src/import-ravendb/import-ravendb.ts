@@ -1,5 +1,7 @@
 // "npm run import:ravendb". Empties the site's database, then brings the
-// old sites' users over into it from RavenDB.
+// old sites over into it from RavenDB: their users, their tournaments and the
+// players of each, their blocks, knockouts, Swisses and team matches, and last
+// the order each tournament listed its competitions in.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -9,6 +11,12 @@ import { ProjectingEventStore } from "../application/common/ProjectingEventStore
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
+import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
+import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
+import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
+import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
 import { loadEnvFile } from "../infrastructure/config/Config.js";
 import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
@@ -22,11 +30,25 @@ import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPassw
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
+import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
+import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
+import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportDatabase } from "./ImportDatabase.js";
+import { ImportKnockouts } from "./ImportKnockouts.js";
+import { ImportSwisses } from "./ImportSwisses.js";
+import { ImportTeamMatches } from "./ImportTeamMatches.js";
+import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
+import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
-import { minutesAndSeconds, numbers, runImporter } from "./runImporter.js";
+import { OrderCompetitions } from "./OrderCompetitions.js";
+import {
+  type Importer,
+  minutesAndSeconds,
+  numbers,
+  runImporter,
+} from "./runImporter.js";
 
 // Where the import writes, without the credentials that got it there.
 const where = (url: string): string => {
@@ -51,12 +73,14 @@ try {
   const emailAddresses = new KeyedEmailAddressHasher(
     config.accountEmailAddressHashKey,
   );
-  // Both of the site's read models over accounts, kept in step with every
-  // account brought over, as the site keeps them with every one registered.
+  // Every one of the site's read models, kept in step with everything
+  // brought over, as the site keeps them with everything it records.
   const eventStore = new ProjectingEventStore(
     new PostgresEventStore(
       unitOfWork,
-      nameAccountEvents(new EventRegistry()),
+      nameCompetitionEvents(
+        nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+      ),
       new AccountEventSealing(accountKeys),
     ),
     [
@@ -65,6 +89,8 @@ try {
         unitOfWork,
         config.accountEmailAddressHashKey,
       ),
+      new TournamentsByAddress(unitOfWork),
+      new TournamentsByAccount(unitOfWork),
     ],
   );
   const accounts = new AggregateRepository(
@@ -76,8 +102,34 @@ try {
     new OldSitePasswordHasher(config.oldSitePasswordSalt),
   );
 
-  const importers = [
+  const tournaments = new AggregateRepository(
+    eventStore,
+    (id: TournamentId, events) => Tournament.rebuiltFrom(id, events),
+  );
+  const competitions = new AggregateRepository(
+    eventStore,
+    (id: CompetitionId, events) => Competition.rebuiltFrom(id, events),
+  );
+  const importing = { unitOfWork, tournaments, competitions, database };
+
+  // In the order each needs what the one before brought over: a tournament
+  // its users, its players and competitions the tournament, and the order of
+  // its competitions every competition.
+  const importers: readonly Importer<object>[] = [
     new ImportUsers(unitOfWork, accounts, emailAddresses, passwords, database),
+    new ImportTournaments(
+      unitOfWork,
+      tournaments,
+      accounts,
+      emailAddresses,
+      database,
+    ),
+    new ImportTournamentPlayers(unitOfWork, tournaments, database),
+    new ImportBlocks(importing),
+    new ImportKnockouts(importing),
+    new ImportSwisses(importing),
+    new ImportTeamMatches(importing),
+    new OrderCompetitions(unitOfWork, tournaments, database),
   ];
 
   for (const website of config.ravenDbDatabases) {

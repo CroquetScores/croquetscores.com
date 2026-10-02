@@ -13,7 +13,7 @@ export interface ImportErrors {
 
 /**
  * The Postgres database an import writes into: emptied, migrated again, and
- * given the two tables of the import's own (ImportDatabase.feature).
+ * given the tables of the import's own (ImportDatabase.feature).
  *
  * Emptied because an import is run over and over while it is being written,
  * and what the last run left would be imported a second time on top of
@@ -30,7 +30,7 @@ export class ImportDatabase implements ImportErrors {
 
   /**
    * Drops every table in the database, in every schema but Postgres's own,
-   * applies every migration, and makes `import_errors` and `imported_users`.
+   * applies every migration, and makes the import's own tables.
    */
   async reset(): Promise<void> {
     await dropTables(this.#pool);
@@ -68,6 +68,62 @@ export class ImportDatabase implements ImportErrors {
       create index imported_users_by_email_address
           on imported_users (comparable_email_address)
     `);
+
+    // The forgotten account made for each user who became none and ran a
+    // tournament, so that a user is one forgotten account however many
+    // tournaments they ran.
+    await this.#pool.query(`
+      create table forgotten_users (
+          website     text not null,
+          document_id text not null,
+          account_id  text not null,
+          primary key (website, document_id)
+      )
+    `);
+
+    // What each document became, by the website and the document, so that
+    // whatever is imported after it can find it. The old sites wrote a key in
+    // more than one case, "TeamMatches/513" in one place and "teammatches/513"
+    // in another, so each is kept, and looked for, in small letters, as a
+    // user's is in the tables above.
+    await this.#pool.query(`
+      create table imported_tournaments (
+          website       text not null,
+          document_id   text not null,
+          tournament_id text not null,
+          primary key (website, document_id)
+      )
+    `);
+    // A tournament archived on the old sites, left behind, so that its players
+    // and its competitions are left behind with it rather than each refused.
+    await this.#pool.query(`
+      create table left_behind_tournaments (
+          website     text not null,
+          document_id text not null,
+          primary key (website, document_id)
+      )
+    `);
+    // A player by the number the old sites gave them in their tournament, which
+    // is how a competition names them: the tournament player they became, the
+    // player of a team in a tournament played by teams, or a bye.
+    await this.#pool.query(`
+      create table imported_players (
+          website                text not null,
+          tournament_document_id text not null,
+          player_number          integer not null,
+          player_id              text not null,
+          primary key (website, tournament_document_id, player_number)
+      )
+    `);
+    await this.#pool.query(`
+      create table imported_competitions (
+          website        text not null,
+          document_id    text not null,
+          tournament_id  text not null,
+          competition_id text not null,
+          primary key (website, document_id)
+      )
+    `);
   }
 
   /** Keeps which account a user from one of the old sites became. */
@@ -83,7 +139,7 @@ export class ImportDatabase implements ImportErrors {
        values ($1, $2, $3, $4, $5)`,
       [
         website,
-        documentId,
+        documentId.toLowerCase(),
         accountId,
         emailAddress.toString(),
         emailAddress.comparable,
@@ -118,12 +174,149 @@ export class ImportDatabase implements ImportErrors {
     }>(
       `select account_id, email_address from imported_users
        where website = $1 and document_id = $2`,
-      [website, documentId],
+      [website, documentId.toLowerCase()],
     );
     const row = rows[0];
     return row === undefined
       ? undefined
       : { accountId: row.account_id, emailAddress: row.email_address };
+  }
+
+  /** Keeps the forgotten account a user who became none was brought over as. */
+  async recordForgottenUser(
+    website: string,
+    documentId: string,
+    accountId: string,
+  ): Promise<void> {
+    await this.#queryable().query(
+      `insert into forgotten_users (website, document_id, account_id)
+       values ($1, $2, $3)`,
+      [website, documentId.toLowerCase(), accountId],
+    );
+  }
+
+  /** The forgotten account the user `documentId` on `website` was brought over as, if any. */
+  async findForgottenAccountOf(
+    website: string,
+    documentId: string,
+  ): Promise<string | undefined> {
+    const { rows } = await this.#queryable().query<{ account_id: string }>(
+      `select account_id from forgotten_users
+       where website = $1 and document_id = $2`,
+      [website, documentId.toLowerCase()],
+    );
+    return rows[0]?.account_id;
+  }
+
+  /** Keeps which tournament a tournament of the old sites became. */
+  async recordImportedTournament(
+    website: string,
+    documentId: string,
+    tournamentId: string,
+  ): Promise<void> {
+    await this.#queryable().query(
+      `insert into imported_tournaments (website, document_id, tournament_id)
+       values ($1, $2, $3)`,
+      [website, documentId.toLowerCase(), tournamentId],
+    );
+  }
+
+  /** The tournament `documentId` on `website` became, if it became one. */
+  async findTournamentOf(
+    website: string,
+    documentId: string,
+  ): Promise<string | undefined> {
+    const { rows } = await this.#queryable().query<{ tournament_id: string }>(
+      `select tournament_id from imported_tournaments
+       where website = $1 and document_id = $2`,
+      [website, documentId.toLowerCase()],
+    );
+    return rows[0]?.tournament_id;
+  }
+
+  /** Keeps that the tournament `documentId` on `website` was left behind. */
+  async recordLeftBehind(website: string, documentId: string): Promise<void> {
+    await this.#queryable().query(
+      `insert into left_behind_tournaments (website, document_id)
+       values ($1, $2)`,
+      [website, documentId.toLowerCase()],
+    );
+  }
+
+  /** Whether the tournament `documentId` on `website` was left behind. */
+  async isLeftBehind(website: string, documentId: string): Promise<boolean> {
+    const { rows } = await this.#queryable().query(
+      `select 1 from left_behind_tournaments
+       where website = $1 and document_id = $2`,
+      [website, documentId.toLowerCase()],
+    );
+    return rows.length > 0;
+  }
+
+  /**
+   * Keeps what the player numbered `playerNumber` in the tournament
+   * `tournamentDocumentId` on `website` became.
+   */
+  async recordImportedPlayer(
+    website: string,
+    tournamentDocumentId: string,
+    playerNumber: number,
+    playerId: string,
+  ): Promise<void> {
+    await this.#queryable().query(
+      `insert into imported_players
+           (website, tournament_document_id, player_number, player_id)
+       values ($1, $2, $3, $4)`,
+      [website, tournamentDocumentId.toLowerCase(), playerNumber, playerId],
+    );
+  }
+
+  /** What the player numbered `playerNumber` in a tournament became, if anything. */
+  async findPlayerOf(
+    website: string,
+    tournamentDocumentId: string,
+    playerNumber: number,
+  ): Promise<string | undefined> {
+    const { rows } = await this.#queryable().query<{ player_id: string }>(
+      `select player_id from imported_players
+       where website = $1 and tournament_document_id = $2 and player_number = $3`,
+      [website, tournamentDocumentId.toLowerCase(), playerNumber],
+    );
+    return rows[0]?.player_id;
+  }
+
+  /** Keeps which competition of which tournament a competition of the old sites became. */
+  async recordImportedCompetition(
+    website: string,
+    documentId: string,
+    tournamentId: string,
+    competitionId: string,
+  ): Promise<void> {
+    await this.#queryable().query(
+      `insert into imported_competitions
+           (website, document_id, tournament_id, competition_id)
+       values ($1, $2, $3, $4)`,
+      [website, documentId.toLowerCase(), tournamentId, competitionId],
+    );
+  }
+
+  /** The competition `documentId` on `website` became, if it became one. */
+  async findCompetitionOf(
+    website: string,
+    documentId: string,
+  ): Promise<{ tournamentId: string; competitionId: string } | undefined> {
+    const { rows } = await this.#queryable().query<{
+      tournament_id: string;
+      competition_id: string;
+    }>(
+      `select tournament_id, competition_id from imported_competitions
+       where website = $1 and document_id = $2`,
+      [website, documentId.toLowerCase()],
+    );
+    const row = rows[0];
+    return row === undefined
+      ? undefined
+      : { tournamentId: row.tournament_id, competitionId: row.competition_id };
   }
 
   /**
