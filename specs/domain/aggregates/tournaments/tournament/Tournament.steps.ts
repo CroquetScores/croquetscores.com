@@ -270,7 +270,7 @@ Then(
 Then(
   "the tournament is played in the region {string}",
   function (this: SpecWorld, code: string) {
-    assert.equal(tournamentOf(this).region.code, code);
+    assert.equal(tournamentOf(this).region?.code, code);
   },
 );
 

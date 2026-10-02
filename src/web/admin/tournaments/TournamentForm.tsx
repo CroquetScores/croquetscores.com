@@ -14,7 +14,14 @@ import "./tournamentForm.css";
 
 interface Offered {
   readonly sports: readonly { readonly code: string; readonly name: string }[];
-  readonly formats: readonly { readonly code: string; readonly name: string }[];
+  readonly formats: readonly {
+    readonly code: string;
+    readonly name: string;
+    /** Whether it is played by teams, and so has tests to draw. */
+    readonly teams: boolean;
+    /** Whether a tournament in it draws a level test unless said not to. */
+    readonly drawsLevelTests: boolean;
+  }[];
   readonly countries: readonly {
     readonly code: string;
     readonly name: string;
@@ -111,10 +118,12 @@ export interface Begins {
   readonly format: string;
   readonly sport: string;
   readonly country: string;
-  readonly region: string;
+  /** Nothing where the tournament is in no region. */
+  readonly region: string | undefined;
   readonly notes: string | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
+  readonly levelTestsDrawn: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -151,6 +160,11 @@ export const TournamentForm = ({
   const [handicap, setHandicap] = useState(begins?.handicap ?? false);
   const [drawsAllowed, setDrawsAllowed] = useState(
     begins?.drawsAllowed ?? false,
+  );
+  // Unsaid until the reader ticks or unticks it, when it is whatever the
+  // format draws to begin with; a tournament being changed has said already.
+  const [levelTestsSaid, setLevelTestsSaid] = useState<boolean | undefined>(
+    begins?.levelTestsDrawn,
   );
   // Counting unless the reader says it does not, as creating one has it.
   const [worldRankings, setWorldRankings] = useState(
@@ -210,6 +224,12 @@ export const TournamentForm = ({
   const asksForRegion = regions.length > 1;
   const asksAboutWorldRankings =
     withWorldRankings.includes(sport) && !handicap && !drawsAllowed;
+  // Only a tournament played by teams has tests, and saying one that is not
+  // draws them is refused (create.feature), so the form does not ask.
+  const formatChosen = offered.formats.find(({ code }) => code === format);
+  const asksAboutLevelTests = formatChosen?.teams ?? false;
+  const levelTestsDrawn =
+    levelTestsSaid ?? formatChosen?.drawsLevelTests ?? false;
 
   const save = async (): Promise<void> => {
     // Each send of a new tournament is given an address of its own, so a
@@ -230,6 +250,7 @@ export const TournamentForm = ({
         notes,
         handicap,
         drawsAllowed,
+        ...(asksAboutLevelTests ? { levelTestsDrawn } : {}),
         // Unsaid where it is not asked, which the tournament decides for
         // itself: a sport without world rankings, a handicap tournament, or
         // one allowing drawn games, does not count towards them.
@@ -356,6 +377,9 @@ export const TournamentForm = ({
                           value={format}
                           onChange={(event) => {
                             setFormat(event.target.value);
+                            // Each format draws level tests as it does until
+                            // the reader says otherwise for the one chosen.
+                            setLevelTestsSaid(undefined);
                           }}
                         >
                           {offered.formats.map(({ code, name: called }) => (
@@ -473,6 +497,14 @@ export const TournamentForm = ({
                 ticked={drawsAllowed}
                 tick={setDrawsAllowed}
               />
+              {asksAboutLevelTests ? (
+                <Tick
+                  name="levelTestsDrawn"
+                  label={say("admin.tournament.levelTestsDrawn")}
+                  ticked={levelTestsDrawn}
+                  tick={setLevelTestsSaid}
+                />
+              ) : null}
               {asksAboutWorldRankings ? (
                 <Tick
                   name="worldRankings"

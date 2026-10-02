@@ -126,6 +126,11 @@ Feature: A tournament is changed in the admin
       When the page to edit "Spring Open" is opened
       Then the region chosen is "Victoria"
 
+    Scenario: A tournament in no region has no region chosen
+      Given the tournament "Spring Open" is in no region
+      When the page to edit "Spring Open" is opened
+      Then no region is chosen
+
     Scenario: A tournament played under handicap is ticked as one
       Given the tournament "Spring Open" is played under handicap
       When the page to edit "Spring Open" is opened
@@ -149,6 +154,12 @@ Feature: A tournament is changed in the admin
       Given the tournament "Spring Open" does not count towards the world rankings
       When the page to edit "Spring Open" is opened
       Then "Counts toward world rankings" is not ticked
+
+    Scenario: A tournament played by teams drawing level tests is ticked as one
+      Given the tournament "Spring Open" is played in the format "Teams"
+      And the tournament "Spring Open" draws a level test
+      When the page to edit "Spring Open" is opened
+      Then "Level tests are drawn" is ticked
 
     Scenario: The notes are the tournament's
       Given the tournament "Spring Open" has the notes "Lawns open at nine."
@@ -182,6 +193,12 @@ Feature: A tournament is changed in the admin
       And "2027-03-07" is typed as the "Finishes"
       When "Update Tournament" is pressed
       Then the address is "/admin/2027/ac/spring-open"
+
+    Scenario: A tournament whose region is taken away is kept in no region
+      Given the page to edit "Spring Open" is open
+      And none is chosen for the region
+      When "Update Tournament" is pressed
+      Then the tournament "Spring Open" is kept in no region
 
     Scenario: What is left alone is kept as it was
       Given the tournament "Spring Open" has the notes "Lawns open at nine."

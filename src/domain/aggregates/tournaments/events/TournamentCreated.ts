@@ -14,15 +14,19 @@ export interface WrittenTournament {
   readonly starts: string;
   readonly finishes: string;
   // The format by its name, the sport, the country and the region by their
-  // codes.
+  // codes, the region nothing when the tournament is in none, which JSON
+  // leaves out.
   readonly format: string;
   readonly sport: string;
   readonly country: string;
-  readonly region: string;
+  readonly region: string | undefined;
   // Nothing when there are no notes, which JSON leaves out.
   readonly notes: string | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
+  // Whether a test level on matches is drawn rather than decided by net games
+  // and hoops, which only a tournament played by teams can say.
+  readonly levelTestsDrawn: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -48,10 +52,11 @@ export class TournamentCreated
   readonly format: string;
   readonly sport: string;
   readonly country: string;
-  readonly region: string;
+  readonly region: string | undefined;
   readonly notes: string | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
+  readonly levelTestsDrawn: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -75,6 +80,7 @@ export class TournamentCreated
     this.notes = written.notes;
     this.handicap = written.handicap;
     this.drawsAllowed = written.drawsAllowed;
+    this.levelTestsDrawn = written.levelTestsDrawn;
     this.worldRankings = written.worldRankings;
     this.national = written.national;
     this.international = written.international;

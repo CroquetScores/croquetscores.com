@@ -88,6 +88,15 @@ export class TournamentFormat {
     return this.#isTeamFormat;
   }
 
+  /**
+   * Whether a tournament in it draws a test level on matches unless it is
+   * said not to, rather than deciding one on net games and hoops. Only the GC
+   * World Team Championship does, as it always has.
+   */
+  get drawsLevelTests(): boolean {
+    return this === TournamentFormat.gcWorldTeamChampionship;
+  }
+
   /** Two formats are the same when their names are. */
   equals(other: TournamentFormat | undefined): boolean {
     return other instanceof TournamentFormat && this.name === other.name;

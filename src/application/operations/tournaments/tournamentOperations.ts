@@ -75,12 +75,13 @@ export interface TournamentRequest {
   readonly finishes: string;
   readonly format: string;
   readonly sport: string;
-  /** The country's code, and the code of one of its regions. */
+  /** The country's code, and the code of one of its regions, if any. */
   readonly country: string;
-  readonly region: string;
+  readonly region?: string | undefined;
   readonly notes?: string | undefined;
   readonly handicap?: boolean | undefined;
   readonly drawsAllowed?: boolean | undefined;
+  readonly levelTestsDrawn?: boolean | undefined;
   readonly worldRankings?: boolean | undefined;
   readonly national?: boolean | undefined;
   readonly international?: boolean | undefined;
@@ -216,6 +217,7 @@ export const detailsFrom = (request: TournamentRequest): TournamentDetails => {
         : TournamentNotes.from(request.notes),
     handicap: request.handicap,
     drawsAllowed: request.drawsAllowed,
+    levelTestsDrawn: request.levelTestsDrawn,
     worldRankings: request.worldRankings,
     national: request.national,
     international: request.international,

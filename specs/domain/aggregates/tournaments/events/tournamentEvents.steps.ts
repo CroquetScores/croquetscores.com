@@ -63,6 +63,8 @@ const A_TOURNAMENT: WrittenTournament = {
   handicap: false,
   // Allowed, so that one read back as not allowing them is found.
   drawsAllowed: true,
+  // Drawn, for the same reason.
+  levelTestsDrawn: true,
   worldRankings: true,
   national: true,
   international: false,

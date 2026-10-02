@@ -17,7 +17,10 @@ Feature: Creating a tournament
   may be played in are the ones that website's site offers, and a tournament
   that was not one of them would be played by rules its site has not written.
   It finishes no earlier than it starts, and starts before the year after
-  next begins. Its region is one of its country's.
+  next begins. Its region, where it has one, is one of its country's. It need
+  have none: a tournament brought over from the old sites
+  (`ImportTournaments.feature`) is known to be in a country, from the time
+  zone it was kept in, but not in which of its regions.
 
   A tournament is found at an address made from the year it starts, the code
   of its sport and a slug made from its name, as "2026/ac/spring-open". The
@@ -44,6 +47,14 @@ Feature: Creating a tournament
   marked as won (`Game.feature`), so a tournament does not allow drawn games
   unless it is said to: few do. Where one does, a game on equal points is
   kept as it was entered, without saying who won.
+
+  A test between two teams is won by the team that wins more of its matches.
+  One level on matches is decided by net games, then by net hoops, unless the
+  tournament says a test level on matches is drawn, as some team events have
+  it. That is a thing only a tournament played by teams can say, so saying it
+  of a Standard tournament is refused. The GC World Team Championship has
+  always drawn a level test, so one in that format draws them unless it is
+  said not to.
 
   A new tournament is not archived, and has no players and no competitions.
 
@@ -232,6 +243,25 @@ Feature: Creating a tournament
       When a tournament is created
       Then the tournament is played in the region "vic"
 
+  Rule: A tournament need be in no region
+
+    Scenario: A tournament created in no region is in none
+      Given the country "au"
+      And no region
+      When a tournament is created
+      Then the tournament is played in no region
+
+    Scenario: A tournament created in no region is in its country
+      Given the country "au"
+      And no region
+      When a tournament is created
+      Then the tournament is played in the country "au"
+
+    Scenario: A tournament rebuilt from its creation in no region is in none
+      Given a stream where a tournament was created in no region of "au"
+      When the tournament is rebuilt from the stream
+      Then the tournament is played in no region
+
   Rule: A tournament is found at its year, its sport and a slug of its name
 
     Scenario: A tournament is found at the year it starts, its sport and its name's slug
@@ -411,6 +441,49 @@ Feature: Creating a tournament
       And the tournament is said to count towards the world rankings
       When a tournament is created
       Then it is refused with "Tournament.NoWorldRankings"
+
+  Rule: A test level on matches is drawn only when a tournament played by teams says so
+
+    Scenario: A tournament played by teams created without saying decides a level test on net games and hoops
+      Given the format "Teams"
+      And nothing is said of level tests
+      When a tournament is created
+      Then the tournament decides a level test on net games and hoops
+
+    Scenario: A tournament played by teams said to draw a level test does
+      Given the format "Teams"
+      And the tournament is said to draw a level test
+      When a tournament is created
+      Then the tournament draws a level test
+
+    Scenario: A GC World Team Championship created without saying draws a level test
+      Given the format "GC World Team Championship"
+      And nothing is said of level tests
+      When a tournament is created
+      Then the tournament draws a level test
+
+    Scenario: A GC World Team Championship said not to draw a level test does not
+      Given the format "GC World Team Championship"
+      And the tournament is said not to draw a level test
+      When a tournament is created
+      Then the tournament decides a level test on net games and hoops
+
+    Scenario: A Standard tournament created without saying decides a level test on net games and hoops
+      Given the format "Standard"
+      And nothing is said of level tests
+      When a tournament is created
+      Then the tournament decides a level test on net games and hoops
+
+    Scenario: A Standard tournament said to draw a level test is refused
+      Given the format "Standard"
+      And the tournament is said to draw a level test
+      When a tournament is created
+      Then it is refused with "Tournament.DrawnTestsWithoutTeams"
+
+    Scenario: A tournament rebuilt from its creation draws a level test as it was created to
+      Given a stream where a tournament was created in the format "Teams" drawing a level test
+      When the tournament is rebuilt from the stream
+      Then the tournament draws a level test
 
   Rule: A tournament may be national or international, but not both
 

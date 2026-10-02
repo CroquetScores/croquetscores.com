@@ -52,6 +52,28 @@ Given(
 );
 
 Given(
+  "a stream where a tournament was created in no region of {string}",
+  function (this: SpecWorld, country: string) {
+    createdAs(this, { country, region: null });
+  },
+);
+
+Given(
+  "a stream where a tournament was created in the format {string} drawing a level test",
+  function (this: SpecWorld, format: string) {
+    createdAs(this, { format, levelTestsDrawn: true });
+  },
+);
+
+Given("the update puts it in no region", function (this: SpecWorld) {
+  scenarioOf(this).updating.region = null;
+});
+
+Given("the update draws a level test", function (this: SpecWorld) {
+  scenarioOf(this).updating.levelTestsDrawn = true;
+});
+
+Given(
   "a stream where a tournament was created with no notes",
   function (this: SpecWorld) {
     createdAs(this, { notes: null });

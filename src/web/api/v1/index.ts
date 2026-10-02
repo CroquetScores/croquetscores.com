@@ -164,9 +164,10 @@ const gamePlayerOf = (said: string): string | undefined =>
       : `competition-player/${said}`;
 
 // What a tournament is to be, as a form sends it to create one or to change
-// one. Notes left empty are no notes.
+// one. Notes left empty are no notes, and a region left empty is none.
 const tournamentFrom = (body: unknown): TournamentRequest => {
   const notes = textOf(body, "notes");
+  const region = textOf(body, "region");
   return {
     name: textOf(body, "name"),
     starts: textOf(body, "starts"),
@@ -174,10 +175,11 @@ const tournamentFrom = (body: unknown): TournamentRequest => {
     format: textOf(body, "format"),
     sport: textOf(body, "sport"),
     country: textOf(body, "country"),
-    region: textOf(body, "region"),
+    ...(region === "" ? {} : { region }),
     ...(notes === "" ? {} : { notes }),
     handicap: yesOrNoOf(body, "handicap"),
     drawsAllowed: yesOrNoOf(body, "drawsAllowed"),
+    levelTestsDrawn: yesOrNoOf(body, "levelTestsDrawn"),
     worldRankings: yesOrNoOf(body, "worldRankings"),
     national: yesOrNoOf(body, "national"),
     international: yesOrNoOf(body, "international"),
@@ -243,6 +245,9 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
 
   // What a new tournament can be on the website asked: the sports and formats
   // its site offers, in the site's order, and every country with its regions.
+  // Each format says whether it is played by teams and whether it draws a
+  // level test unless said not to, so that the form asks about level tests as
+  // creating one decides them.
   // Asked of the domain rather than written out again here, so that the form
   // offers exactly what creating a tournament accepts. Each is sent back by
   // its code, and named in the reader's language: a format by the name the
@@ -267,6 +272,8 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         (format) => ({
           code: format.name,
           name: speaking.say(`format.${format.code}`),
+          teams: format.isTeamFormat,
+          drawsLevelTests: format.drawsLevelTests,
         }),
       ),
       countries: Countries.thereAre.all

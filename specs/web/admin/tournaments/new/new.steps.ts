@@ -198,6 +198,12 @@ Then(
   },
 );
 
+Then("no region is chosen", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(await field(this, "Region").inputValue(), "");
+  });
+});
+
 Then(
   "the format chosen is {string}",
   async function (this: SpecWorld, format: string) {
@@ -259,10 +265,22 @@ Given(
   },
 );
 
+Given("none is chosen for the region", async function (this: SpecWorld) {
+  await drawn(this);
+  await field(this, "Region").selectOption({ value: "" });
+});
+
 Given(
   "the sport {string} is chosen",
   async function (this: SpecWorld, sport: string) {
     await choose(this, "Sport", sport);
+  },
+);
+
+Given(
+  "the format {string} is chosen",
+  async function (this: SpecWorld, format: string) {
+    await choose(this, "Format", format);
   },
 );
 
@@ -395,6 +413,20 @@ Then(
   "the tournament {string} is kept in the format {string}",
   async function (this: SpecWorld, name: string, format: string) {
     assert.equal((await keptCalled(this, name)).format.name, format);
+  },
+);
+
+Then(
+  "the tournament {string} is kept in no region",
+  async function (this: SpecWorld, name: string) {
+    assert.equal((await keptCalled(this, name)).region, undefined);
+  },
+);
+
+Then(
+  "the tournament {string} is kept drawing a level test",
+  async function (this: SpecWorld, name: string) {
+    assert.equal((await keptCalled(this, name)).levelTestsDrawn, true);
   },
 );
 

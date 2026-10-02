@@ -8,7 +8,7 @@ export type ScoreErrorCode = "Score.NoPoints";
 // sport writes its own.
 const MARKS: Readonly<Record<Site, readonly string[]>> = {
   croquetScores: ["w", "won", "winner"],
-  gateballScores: ["w", "won", "winner", "cb"],
+  gateballScores: ["w", "won", "winner", "cb", "so"],
 };
 
 // The digits a score begins with, and whatever follows them.
