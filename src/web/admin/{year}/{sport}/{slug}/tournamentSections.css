@@ -4,7 +4,7 @@
    when they arrive. */
 .site-sections-held span {
   display: block;
-  padding-block: var(--space-1);
+  padding-block: calc(var(--space-1) / 2);
 }
 
 /* A heading's room while the page asks what it is headed (HeldPage.tsx): as

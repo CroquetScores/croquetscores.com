@@ -634,11 +634,14 @@ a:hover {
   list-style: none;
 }
 
+/* Half the scale's smallest step above and below its words, so that the bar
+   takes as little of a phone's height as it can and is still pointed at
+   easily. */
 .site-sections a {
   display: flex;
   align-items: center;
   align-self: stretch;
-  padding: var(--space-1) var(--space-3);
+  padding: calc(var(--space-1) / 2) var(--space-3);
   color: var(--accent-ink);
   text-decoration: none;
 }
