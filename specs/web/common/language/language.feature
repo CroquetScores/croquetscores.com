@@ -36,30 +36,35 @@ Feature: A reader is spoken to in their own language
 
   Rule: The browser decides until the reader says otherwise
 
+    @postgres
     Scenario: A browser asking for a language the site has gets it
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
       When the home page is opened
       Then the page is in "en-XA"
 
+    @postgres
     Scenario: A browser asking for a language the site does not have gets English
       Given a viewport 1200 pixels wide
       And a browser that asks for "fr"
       When the home page is opened
       Then the page is in "en"
 
+    @postgres
     Scenario: The first language the browser asks for that the site has is the one given
       Given a viewport 1200 pixels wide
       And a browser that asks for "fr, en;q=0.5, en-XA;q=0.8"
       When the home page is opened
       Then the page is in "en-XA"
 
+    @postgres
     Scenario: A regional form of a language the site has gets that language
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-AU, en-XA;q=0.5"
       When the home page is opened
       Then the page is in "en"
 
+    @postgres
     Scenario: A browser asking for no language gets English
       Given a viewport 1200 pixels wide
       And a browser that asks for no language
@@ -68,6 +73,7 @@ Feature: A reader is spoken to in their own language
 
   Rule: A choice overrules the browser
 
+    @postgres
     Scenario: Choosing a language the browser did not ask for
       Given a viewport 1200 pixels wide
       And a browser that asks for "en"
@@ -75,6 +81,7 @@ Feature: A reader is spoken to in their own language
       When the language "en-XA" is chosen
       Then the page is in "en-XA"
 
+    @postgres
     Scenario: The list opens on the language in force
       Given a viewport 1200 pixels wide
       And a browser that asks for "en"
@@ -82,6 +89,7 @@ Feature: A reader is spoken to in their own language
       When the language "en-XA" is chosen
       Then the language "en-XA" is the one in force
 
+    @postgres
     Scenario: The choice outlasts the page it was made on
       Given a viewport 1200 pixels wide
       And a browser that asks for "en"
@@ -149,24 +157,28 @@ Feature: A reader is spoken to in their own language
     feature with real sections will bring; the bar's own word is the one it is
     announced by to a reader who cannot see it.
 
+    @postgres
     Scenario: Every word in the header
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
       When the home page is opened
       Then every word in the header is in the test locale
 
+    @postgres
     Scenario: Every word in the footer
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
       When the home page is opened
       Then every word in the footer is in the test locale
 
+    @postgres
     Scenario: The way to the content, for a reader coming by keyboard
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
       When the home page is opened
       Then the way to skip to the content is in the test locale
 
+    @postgres
     Scenario: The navigation is named for a reader who cannot see it
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
@@ -183,6 +195,7 @@ Feature: A reader is spoken to in their own language
       When the home page is opened
       Then the section bar is named in the test locale
 
+    @postgres
     Scenario: A site configured under another name calls itself that
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
@@ -264,6 +277,7 @@ Feature: A reader is spoken to in their own language
       Then the reader is told their email address is confirmed
       And the way back to the home page names the site "Gateball Scores"
 
+    @postgres
     Scenario: The site's name is not translated for a reader of another language
       Given a viewport 1200 pixels wide
       And a site called "Gateball Scores"
@@ -366,6 +380,7 @@ Feature: A reader is spoken to in their own language
     A reader looking for their own language looks for its name as they would
     write it, which is not necessarily how the page they are on would.
 
+    @postgres
     Scenario: English is offered as English on a page in the test locale
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"

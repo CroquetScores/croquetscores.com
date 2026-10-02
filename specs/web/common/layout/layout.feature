@@ -24,6 +24,7 @@ Feature: What every page is set in
     and development is Croquet Scores as readers have it, so that a page
     worked on there looks as it will where it is served.
 
+    @postgres
     Scenario Outline: A try website says so on its home page
       Given a viewport 1200 pixels wide
       And a site served as "<host>"
@@ -47,6 +48,7 @@ Feature: What every page is set in
       When a page that is not there is opened
       Then the page carries the try website's banner
 
+    @postgres
     Scenario Outline: Any other website does not
       Given a viewport 1200 pixels wide
       And a site served as "<host>"
@@ -59,6 +61,7 @@ Feature: What every page is set in
         | gateballscores.com |
         | localhost:3000     |
 
+    @postgres
     Scenario: The banner is in the reader's language
       Given a viewport 1200 pixels wide
       And a site served as "try.croquetscores.com"

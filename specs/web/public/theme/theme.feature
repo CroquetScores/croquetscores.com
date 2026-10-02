@@ -9,6 +9,7 @@ Feature: Choosing a theme
 
   Rule: The machine decides until somebody says otherwise
 
+    @postgres
     Scenario: A reader who has chosen nothing gets what their machine asks for
       Given a viewport 1200 pixels wide
       And a machine that prefers dark
@@ -16,6 +17,7 @@ Feature: Choosing a theme
       Then the page is dark
       And the theme "System" is the one in force
 
+    @postgres
     Scenario: The same reader on a machine that prefers light
       Given a viewport 1200 pixels wide
       And a machine that prefers light
@@ -24,6 +26,7 @@ Feature: Choosing a theme
 
   Rule: A choice overrules the machine
 
+    @postgres
     Scenario: Wanting light on a machine that prefers dark
       Given a viewport 1200 pixels wide
       And a machine that prefers dark
@@ -32,6 +35,7 @@ Feature: Choosing a theme
       Then the page is light
       And the theme "Light" is the one in force
 
+    @postgres
     Scenario: Wanting dark on a machine that prefers light
       Given a viewport 1200 pixels wide
       And a machine that prefers light
@@ -41,6 +45,7 @@ Feature: Choosing a theme
 
   Rule: A choice outlasts the page it was made on
 
+    @postgres
     Scenario: The choice holds on a page that does not exist
       Given a viewport 1200 pixels wide
       And a machine that prefers light
@@ -49,6 +54,7 @@ Feature: Choosing a theme
       When a page that is not there is opened
       Then the page is dark
 
+    @postgres
     Scenario: Choosing System hands the decision back to the machine
       Given a viewport 1200 pixels wide
       And a machine that prefers dark
@@ -65,12 +71,14 @@ Feature: Choosing a theme
     site sets will be one, and the way this one is set is the way that one will
     be copied.
 
+    @postgres
     Scenario: The cookie is never sent in the clear
       Given a viewport 1200 pixels wide
       And the home page is open
       When the theme "Dark" is chosen
       Then the choice is kept in a cookie marked Secure
 
+    @postgres
     Scenario: The cookie cannot be read by a script on the page
       Given a viewport 1200 pixels wide
       And the home page is open
@@ -79,6 +87,7 @@ Feature: Choosing a theme
 
   Rule: The choice can be made with a thumb
 
+    @postgres
     Scenario: The theme buttons are big enough to press on a phone
       Given a viewport 375 pixels wide
       When the home page is opened
@@ -91,6 +100,7 @@ Feature: Choosing a theme
     site. The reader's browser would carry the result straight back here and
     keep it for a year.
 
+    @postgres
     Scenario: A button on another site does not change the theme
       Given a viewport 1200 pixels wide
       And a machine that prefers light

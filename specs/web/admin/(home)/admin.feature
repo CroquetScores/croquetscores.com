@@ -198,6 +198,7 @@ Feature: The admin is served as the site it belongs to
     into every other, which also means the admin is never drawn once in the
     machine's colours and then again in the reader's.
 
+    @postgres
     Scenario: Wanting dark on a machine that prefers light
       Given a viewport 1200 pixels wide
       And a machine that prefers light
@@ -206,6 +207,7 @@ Feature: The admin is served as the site it belongs to
       When the admin is opened
       Then the page is dark
 
+    @postgres
     Scenario: Wanting light on a machine that prefers dark
       Given a viewport 1200 pixels wide
       And a machine that prefers dark
@@ -261,6 +263,7 @@ Feature: The admin is served as the site it belongs to
       When the theme "Light" is chosen
       Then the theme "Light" is the one in force
 
+    @postgres
     Scenario: A choice made in the admin holds on the public pages
       Given a viewport 1200 pixels wide
       And a machine that prefers light

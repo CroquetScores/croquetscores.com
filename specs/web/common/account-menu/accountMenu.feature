@@ -42,11 +42,13 @@ Feature: The way to a reader's account is the last thing in the header
 
   Rule: The menu is the last thing in the header navigation
 
+    @postgres
     Scenario: The header's last item is the account menu
       Given a viewport 1200 pixels wide
       When the home page is opened
       Then the last item in the header navigation is the account menu
 
+    @postgres
     Scenario Outline: The navigation beside it offers nothing of an account's
       Given a viewport 1200 pixels wide
       When the home page is opened
@@ -58,6 +60,7 @@ Feature: The way to a reader's account is the last thing in the header
         | Sign In         |
         | Forgot Password |
 
+    @postgres
     Scenario: The account menu shows a person
       Given a viewport 1200 pixels wide
       When the home page is opened
@@ -65,17 +68,20 @@ Feature: The way to a reader's account is the last thing in the header
 
   Rule: The menu opens and closes without scripting
 
+    @postgres
     Scenario: The menu is closed when a page is opened
       Given a viewport 1200 pixels wide
       When the home page is opened
       Then the account menu is closed
 
+    @postgres
     Scenario: The menu opens when it is pressed
       Given a viewport 1200 pixels wide
       And the home page is open
       When the account menu is pressed
       Then the account menu is open
 
+    @postgres
     Scenario: The menu closes when it is pressed again
       Given a viewport 1200 pixels wide
       And the home page is open
@@ -85,6 +91,7 @@ Feature: The way to a reader's account is the last thing in the header
 
   Rule: A reader who is not signed in is offered the ways in
 
+    @postgres
     Scenario Outline: The menu offers each way in
       Given a viewport 1200 pixels wide
       And nobody is signed in
@@ -98,6 +105,7 @@ Feature: The way to a reader's account is the last thing in the header
         | Sign In         | /account/sign-in         |
         | Forgot Password | /account/forgot-password |
 
+    @postgres
     Scenario Outline: The menu offers nothing that belongs to an account
       Given a viewport 1200 pixels wide
       And nobody is signed in
@@ -131,6 +139,7 @@ Feature: The way to a reader's account is the last thing in the header
         | Change Email Address | /account/change-email-address |
         | Change Name          | /account/change-name          |
 
+    @postgres
     Scenario Outline: The menu offers an account with no password nothing that asks for one
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed, with no password
@@ -144,6 +153,7 @@ Feature: The way to a reader's account is the last thing in the header
         | Change Password      |
         | Change Email Address |
 
+    @postgres
     Scenario: The menu offers an account with no password setting one
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed, with no password
@@ -160,6 +170,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the menu does not offer "Set Password"
 
+    @postgres
     Scenario: The menu does not offer forgetting the account
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
@@ -168,6 +179,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the menu does not offer "Forget Account"
 
+    @postgres
     Scenario Outline: The menu offers no way in to a reader who is in
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
@@ -192,6 +204,7 @@ Feature: The way to a reader's account is the last thing in the header
 
   Rule: Signing out is a button that posts, not a link
 
+    @postgres
     Scenario: The menu offers signing out
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
@@ -200,6 +213,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the menu offers a button to sign out
 
+    @postgres
     Scenario: Signing out is not a link
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
@@ -208,6 +222,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the menu offers no link to sign out
 
+    @postgres
     Scenario: The button's form asks to post
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
@@ -216,6 +231,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the form the button is in asks to post
 
+    @postgres
     Scenario: The button's form posts to the sign out path
       Given a viewport 1200 pixels wide
       And an account for "someone@example.com", confirmed
@@ -267,6 +283,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the menu does not underline "Register"
 
+    @postgres
     Scenario: Nothing is marked on a page the menu does not offer
       Given a viewport 1200 pixels wide
       And nobody is signed in
@@ -276,6 +293,7 @@ Feature: The way to a reader's account is the last thing in the header
 
   Rule: The menu is in the reader's language
 
+    @postgres
     Scenario: Every word in the menu is in the test locale
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"
@@ -284,6 +302,7 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then every word in the account menu is in the test locale
 
+    @postgres
     Scenario: The menu says in words what the person stands for
       Given a viewport 1200 pixels wide
       And a browser that asks for "en-XA"

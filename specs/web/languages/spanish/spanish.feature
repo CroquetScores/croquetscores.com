@@ -37,7 +37,7 @@ Feature: The site can be read in Spanish
     languages it is served with, which is the only way to see that Spanish is
     among them.
 
-    @browser
+    @browser @postgres
     Scenario: A browser asking for Spanish gets it
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
@@ -45,7 +45,7 @@ Feature: The site can be read in Spanish
       When the home page is opened
       Then the page is in "es"
 
-    @browser
+    @browser @postgres
     Scenario: A regional form of Spanish gets Spanish
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
@@ -53,7 +53,7 @@ Feature: The site can be read in Spanish
       When the home page is opened
       Then the page is in "es"
 
-    @browser
+    @browser @postgres
     Scenario: A browser asking for neither still gets English
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
@@ -61,7 +61,7 @@ Feature: The site can be read in Spanish
       When the home page is opened
       Then the page is in "en"
 
-    @browser
+    @browser @postgres
     Scenario: The site's bars are in Spanish
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
@@ -69,7 +69,7 @@ Feature: The site can be read in Spanish
       When the home page is opened
       Then the link "Ayuda" is visible
 
-    @browser
+    @browser @postgres
     Scenario: The footer offers Spanish by its own name
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
@@ -77,7 +77,7 @@ Feature: The site can be read in Spanish
       When the home page is opened
       Then the language "es" is offered as "Español"
 
-    @browser
+    @browser @postgres
     Scenario: Choosing Spanish
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
