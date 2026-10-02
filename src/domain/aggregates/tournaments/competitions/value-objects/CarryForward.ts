@@ -1,4 +1,7 @@
-import { Validator } from "../../../../common/validation/Validator.js";
+import {
+  type BrokenRule,
+  Validator,
+} from "../../../../common/validation/Validator.js";
 
 /** The six counts, in the order they are asked. */
 export const CARRY_FORWARD_COUNTS = [
@@ -77,6 +80,14 @@ export class CarryForward {
   static from(given: CarryForwardCounts): CarryForward {
     counts.ensureValid(given);
     return new CarryForward(given);
+  }
+
+  /**
+   * Every rule `given` breaks, in the order the counts are named, each with
+   * the count it is about, for whatever asks before making one.
+   */
+  static check(given: CarryForwardCounts): BrokenRule<CarryForwardErrorCode>[] {
+    return counts.check(given);
   }
 
   /** Nothing carried forward in any count. */

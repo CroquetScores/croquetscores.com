@@ -4,6 +4,7 @@ import { inspect } from "node:util";
 
 import type { Command } from "../../../../src/application/common/Command.js";
 import { AddGame } from "../../../../src/application/operations/competitions/AddGame.js";
+import { ChangeCarryForward } from "../../../../src/application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../../src/application/operations/competitions/ArchiveGame.js";
 import {
   CorrectGame,
@@ -54,6 +55,12 @@ import {
   tournamentNamed,
 } from "../tournaments/aRequest.js";
 import { competitionIn } from "../tournaments/requests.js";
+import {
+  COUNT,
+  NUMBER,
+  countCalled,
+  pendingCounts,
+} from "../../../domain/aggregates/tournaments/competitions/value-objects/carry-forward/aCarryForward.js";
 
 // The steps of the operations on a competition's players, and of moving a
 // tournament's player, which a competition's features say in the same breath.
@@ -202,6 +209,20 @@ const reversing: Making = (account, about, at) =>
     at,
   );
 
+// The counts the scenario says the carry forward is to have
+// (`aCarryForward.ts`), which is why it is made for the scenario.
+const changingTheCarryForward =
+  (world: SpecWorld): Making =>
+  (account, about, at) =>
+    new ChangeCarryForward(
+      account,
+      about.tournament.value,
+      about.competition.value,
+      about.player.value,
+      pendingCounts(world),
+      at,
+    );
+
 const removing: Making = (account, about, at) =>
   new RemovePlayer(
     account,
@@ -313,6 +334,39 @@ Given(
       await asTheReader(this, address),
       await named(this, tournament, competition, player),
       withdrawing,
+    );
+    doneAs(this);
+  },
+);
+
+Given(
+  new RegExp(
+    `^"([^"]*)" has given the player "([^"]*)" in "([^"]*)" of "([^"]*)" a carry forward of ${COUNT} of ${NUMBER}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    competition: string,
+    name: string,
+    count: string,
+    value: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const counts = { [countCalled(count)]: Number(value) };
+    await sent(
+      this,
+      await asTheReader(this, address),
+      await named(this, tournament, competition, player),
+      (account, about, at) =>
+        new ChangeCarryForward(
+          account,
+          about.tournament.value,
+          about.competition.value,
+          about.player.value,
+          counts,
+          at,
+        ),
     );
     doneAs(this);
   },
@@ -540,29 +594,41 @@ When(
 // as the account for somebody or as the account held; to a player the
 // competition does not have; in a competition the tournament does not have;
 // and in a tournament there is not.
+// Each makes its request for the scenario, since changing a carry forward
+// sends what the scenario said it is to have.
 const sayings: readonly {
   readonly verb: string;
   readonly preposition: string;
-  readonly making: Making;
+  readonly makingFor: (world: SpecWorld) => Making;
   readonly after?: string;
 }[] = [
-  { verb: "withdraws", preposition: "in", making: withdrawing },
+  { verb: "withdraws", preposition: "in", makingFor: () => withdrawing },
   {
     verb: "reverses the withdrawal of",
     preposition: "in",
-    making: reversing,
+    makingFor: () => reversing,
   },
-  { verb: "removes", preposition: "in", making: removing },
-  { verb: "moves", preposition: "in", making: moving("up"), after: " up" },
+  {
+    verb: "changes the carry forward of",
+    preposition: "in",
+    makingFor: changingTheCarryForward,
+  },
+  { verb: "removes", preposition: "in", makingFor: () => removing },
   {
     verb: "moves",
     preposition: "in",
-    making: moving("down"),
+    makingFor: () => moving("up"),
+    after: " up",
+  },
+  {
+    verb: "moves",
+    preposition: "in",
+    makingFor: () => moving("down"),
     after: " down",
   },
 ];
 
-for (const { verb, preposition, making, after = "" } of sayings) {
+for (const { verb, preposition, makingFor, after = "" } of sayings) {
   When(
     `the reader signed in to the account for {string} ${verb} the player {string} ${preposition} {string} of {string}${after}`,
     async function (
@@ -577,7 +643,7 @@ for (const { verb, preposition, making, after = "" } of sayings) {
         this,
         await asTheReader(this, address),
         await named(this, tournament, competition, player),
-        making,
+        makingFor(this),
       );
     },
   );
@@ -596,7 +662,7 @@ for (const { verb, preposition, making, after = "" } of sayings) {
           this,
           heldAccount(this),
           await named(this, tournament, competition, player),
-          making,
+          makingFor(this),
         );
       },
     );
@@ -617,7 +683,7 @@ for (const { verb, preposition, making, after = "" } of sayings) {
         this,
         await asTheReader(this, address),
         await named(this, tournament, competition, undefined),
-        making,
+        makingFor(this),
       );
     },
   );
@@ -637,7 +703,7 @@ for (const { verb, preposition, making, after = "" } of sayings) {
         this,
         await asTheReader(this, address),
         await named(this, tournament, undefined, player),
-        making,
+        makingFor(this),
       );
     },
   );
@@ -654,7 +720,7 @@ for (const { verb, preposition, making, after = "" } of sayings) {
         this,
         await asTheReader(this, address),
         await named(this, noTournament(), competition, player),
-        making,
+        makingFor(this),
       );
     },
   );
@@ -868,6 +934,69 @@ Then(
   },
 );
 
+const carryForwardOf = async (
+  world: SpecWorld,
+  player: string,
+  competition: string,
+  name: string,
+) => (await playerOf(world, player, competition, name)).carryForward;
+
+Then(
+  new RegExp(
+    `^the player "([^"]*)" in "([^"]*)" of "([^"]*)" carries forward ${COUNT} of ${NUMBER}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    player: string,
+    competition: string,
+    name: string,
+    count: string,
+    value: string,
+  ) {
+    assert.equal(
+      (await carryForwardOf(this, player, competition, name)).of(
+        countCalled(count),
+      ),
+      Number(value),
+    );
+  },
+);
+
+Then(
+  new RegExp(
+    `^the player "([^"]*)" in "([^"]*)" of "([^"]*)" carries forward nothing in ${COUNT}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    player: string,
+    competition: string,
+    name: string,
+    count: string,
+  ) {
+    assert.equal(
+      (await carryForwardOf(this, player, competition, name)).of(
+        countCalled(count),
+      ),
+      undefined,
+    );
+  },
+);
+
+Then(
+  "the player {string} in {string} of {string} carries nothing forward",
+  async function (
+    this: SpecWorld,
+    player: string,
+    competition: string,
+    name: string,
+  ) {
+    assert.equal(
+      (await carryForwardOf(this, player, competition, name)).carriesAnything,
+      false,
+    );
+  },
+);
+
 Then(
   "the player {string} in {string} of {string} has not withdrawn",
   async function (
@@ -1004,6 +1133,30 @@ Then(
   "the competition's player {string} is answered flying the flag {string}",
   function (this: SpecWorld, name: string, flag: string) {
     assert.equal(listedCalled(this, name).flag, flag);
+  },
+);
+
+Then(
+  new RegExp(
+    `^the competition's player "([^"]*)" is answered carrying forward ${COUNT} of ${NUMBER}$`,
+  ),
+  function (this: SpecWorld, name: string, count: string, value: string) {
+    assert.equal(
+      listedCalled(this, name).carryForward[countCalled(count)],
+      Number(value),
+    );
+  },
+);
+
+// Every count answered as nothing, rather than as 0.
+Then(
+  "the competition's player {string} is answered carrying nothing forward",
+  function (this: SpecWorld, name: string) {
+    const { carryForward } = listedCalled(this, name);
+    assert.ok(
+      Object.values(carryForward).every((count) => count === undefined),
+      `It was answered carrying ${JSON.stringify(carryForward)}.`,
+    );
   },
 );
 

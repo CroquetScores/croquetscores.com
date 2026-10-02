@@ -1,3 +1,4 @@
+import type { CarryForwardCounts } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
 import { Query } from "../../common/Query.js";
 
 /** One of a competition's players, as its tournament's managers and scorers list them. */
@@ -28,6 +29,12 @@ export interface ListedCompetitionPlayer {
    * nothing of it.
    */
   readonly bye: boolean;
+  /**
+   * What they carry forward into the competition, count by count, nothing in
+   * a count where they carry nothing forward in it, rather than 0, so that
+   * whatever changes it shows it as it was left. A bye carries nothing.
+   */
+  readonly carryForward: CarryForwardCounts;
   /** Where they come in the competition, which is what names a bye. */
   readonly order: number;
 }

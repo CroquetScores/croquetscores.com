@@ -120,6 +120,8 @@ import { GamesOfCompetitionHandler } from "../application/operations/competition
 import { RestoreGameHandler } from "../application/operations/competitions/RestoreGameHandler.js";
 import { EnterPlayerHandler } from "../application/operations/competitions/EnterPlayerHandler.js";
 import { MoveCompetitionPlayerHandler } from "../application/operations/competitions/MoveCompetitionPlayerHandler.js";
+import { ChangeCarryForwardHandler } from "../application/operations/competitions/ChangeCarryForwardHandler.js";
+import { ChangeCarryForwardValidator } from "../application/operations/competitions/ChangeCarryForwardValidator.js";
 import { MoveCompetitionPlayerValidator } from "../application/operations/competitions/MoveCompetitionPlayerValidator.js";
 import { PlayersOfCompetitionHandler } from "../application/operations/competitions/PlayersOfCompetitionHandler.js";
 import { RemovePlayerHandler } from "../application/operations/competitions/RemovePlayerHandler.js";
@@ -695,6 +697,7 @@ export const buildApplication = async (
   validation.register(new MoveCompetitionValidator());
   validation.register(new MovePlayerValidator());
   validation.register(new MoveCompetitionPlayerValidator());
+  validation.register(new ChangeCarryForwardValidator());
   validation.register(new MoveGameValidator());
   validation.register(new AddGameValidator());
   validation.register(new CorrectGameValidator());
@@ -756,6 +759,7 @@ export const buildApplication = async (
   );
   mediator.handleCommand(new WithdrawPlayerHandler(...both, competitions));
   mediator.handleCommand(new ReverseWithdrawalHandler(...both, competitions));
+  mediator.handleCommand(new ChangeCarryForwardHandler(...both, competitions));
   mediator.handleCommand(new RemovePlayerHandler(...both, competitions));
   mediator.handleCommand(new AddGameHandler(...both, competitions));
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
