@@ -1,9 +1,9 @@
 // What the pages that list a website's tournaments share: the home page's two
 // lists (home.ts) and a year's (year.ts). Each list is a table of the
-// tournaments' dates, names and flags that can be sorted by any of its
-// columns; every list on a page is narrowed together by a country, a region of
-// it and a sport; and the years there are tournaments in are the secondary
-// navigation.
+// tournaments' dates, flags and names that can be sorted by its dates or its
+// names; every list on a page is narrowed together by a country, a region of
+// it and a sport, which a tournament's flag narrows to its own country; and
+// the years there are tournaments in are the secondary navigation.
 //
 // None of it needs scripting. A column is sorted by a link and the lists
 // narrowed by a form sent with GET, so that everything the reader chose is in
@@ -38,7 +38,9 @@ const SPORTS_OFFERED = {
 
 // Sorting ------------------------------------------------------------------------
 
-type Column = "date" | "name" | "country";
+// The flags' column is not among them: a flag says what it is, so its column
+// has no heading to press.
+type Column = "date" | "name";
 type Order = "up" | "down";
 
 export interface Sorting {
@@ -46,12 +48,11 @@ export interface Sorting {
   readonly order: Order;
 }
 
-const columns: readonly Column[] = ["date", "name", "country"];
+const columns: readonly Column[] = ["date", "name"];
 
 const columnWords: Readonly<Record<Column, string>> = {
   date: "tournamentList.column.date",
   name: "tournamentList.column.name",
-  country: "tournamentList.column.country",
 };
 
 // Written into the address as the column and which way, as "name-up".
@@ -96,13 +97,6 @@ const sorted = (
     date: (one, other) =>
       one.starts < other.starts ? -1 : one.starts > other.starts ? 1 : 0,
     name: (one, other) => byName.compare(one.name, other.name),
-    // By the country's name in the reader's language, which is how a reader
-    // looks for one.
-    country: (one, other) =>
-      byName.compare(
-        speaking.say(`country.${one.country}`),
-        speaking.say(`country.${other.country}`),
-      ),
   };
   const by = compare[sorting.column];
   return [...listed].sort((one, other) =>
@@ -162,16 +156,18 @@ export const askedOf = (
   };
 };
 
-// The page's address with `changed` said of it, and everything else as asked.
+// The page's address with the sorting `changed` and the filter `chose` said
+// of it, and everything else as asked.
 const addressWith = (
   asked: Asked,
   changed: Readonly<Record<string, string>>,
+  chose: FilterChosen = asked.chose,
 ): string => {
   const said = new URLSearchParams();
   const each: [string, string | undefined][] = [
-    ["country", asked.chose.country],
-    ["region", asked.chose.region],
-    ["sport", asked.chose.sport],
+    ["country", chose.country],
+    ["region", chose.region],
+    ["sport", chose.sport],
     ...Object.entries({ ...asked.sorting, ...changed }),
   ];
   for (const [name, value] of each) {
@@ -221,32 +217,48 @@ export const table = (
   const { say } = speaking;
   const sorting =
     sortingRead(asked.sorting[listing.table]) ?? listing.sortedAtFirst;
-  const headings = columns
-    .map((column) => {
-      const marked = sorting?.column === column ? sorting.order : undefined;
-      const href = addressWith(asked, {
-        [listing.table]: sortingWritten(pressed(column, sorting)),
-      });
-      return `                <th scope="col"${marked === undefined ? "" : ` aria-sort="${ariaSort[marked]}"`}><a href="${escape(href)}">${
-        marked === undefined
-          ? ""
-          : `<span class="sort-arrow" aria-hidden="true">${arrows[marked]}</span>`
-      }${escape(say(columnWords[column]))}</a></th>`;
-    })
-    .join("\n");
+  const heading = (column: Column): string => {
+    const marked = sorting?.column === column ? sorting.order : undefined;
+    const href = addressWith(asked, {
+      [listing.table]: sortingWritten(pressed(column, sorting)),
+    });
+    return `                <th scope="col"${marked === undefined ? "" : ` aria-sort="${ariaSort[marked]}"`}><a href="${escape(href)}">${
+      marked === undefined
+        ? ""
+        : `<span class="sort-arrow" aria-hidden="true">${arrows[marked]}</span>`
+    }${escape(say(columnWords[column]))}</a></th>`;
+  };
+  // The flags' column between the dates and the names, with nothing over it.
+  const headings = [
+    heading("date"),
+    `                <td></td>`,
+    heading("name"),
+  ].join("\n");
+  // A flag leads to the page narrowed to its country, keeping how each list is
+  // sorted and the sport chosen. A region chosen is dropped, since the flag is
+  // the whole country's. It is named by what pressing it does, and the
+  // picture in it by nothing, so that a screen reader says it once.
+  const flagOf = (tournament: TournamentOfWebsite): string => {
+    const flag = Countries.thereAre.find(tournament.country)?.flag;
+    if (flag === undefined) return "";
+    const narrowed = addressWith(
+      asked,
+      {},
+      { ...asked.chose, country: tournament.country, region: undefined },
+    );
+    const only = say("tournamentList.onlyIn", {
+      country: say(`country.${tournament.country}`),
+    });
+    return `<a href="${escape(narrowed)}" aria-label="${escape(only)}"><img src="${escape(assets.url(`images/${flag.relativePath}`))}" alt="" /></a>`;
+  };
   const rows = sorted(listing.listed, sorting, speaking)
-    .map((tournament) => {
-      const flag = Countries.thereAre.find(tournament.country)?.flag;
-      return `                <tr>
+    .map(
+      (tournament) => `                <tr>
                   <td class="tournament-dates">${escape(dated(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
+                  <td class="tournament-flag">${flagOf(tournament)}</td>
                   <td><a class="tournament-name" href="/${escape(tournament.address)}">${escape(tournament.name)}</a></td>
-                  <td class="tournament-flag">${
-                    flag === undefined
-                      ? ""
-                      : `<img src="${escape(assets.url(`images/${flag.relativePath}`))}" alt="${escape(say(`country.${tournament.country}`))}" />`
-                  }</td>
-                </tr>`;
-    })
+                </tr>`,
+    )
     .join("\n");
   const id = `${listing.table}-heading`;
   return `          <section class="tournament-list" data-list="${escape(listing.table)}" aria-labelledby="${id}">

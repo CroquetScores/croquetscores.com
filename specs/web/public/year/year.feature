@@ -10,13 +10,15 @@ Feature: A year's page lists every tournament starting in it
   (`TournamentsInYear.feature`).
 
   The list looks and behaves as the home page's lists do: a table of the
-  tournament's dates, its name and the flag of the country it is played in; a
-  row that leads to the tournament wherever it is pressed; a column heading
-  that sorts the table by that column, and turns it round where it is sorted
-  by it already; and a filter of a country, a region of it and a sport. All of
-  it needs no scripting, and what was chosen is in the page's address. The
-  tournament's public page does not exist yet, so a row leads to an address
-  that answers `404` until the feature that provides it lands.
+  tournament's dates, the flag of the country it is played in, and its name,
+  the flags' column with no heading; a row that leads to the tournament
+  wherever it is pressed but its flag; a flag that narrows the list to its
+  country; a column heading that sorts the table by that column, and turns it
+  round where it is sorted by it already; and a filter of a country, a region
+  of it and a sport. All of it needs no scripting, and what was chosen is in
+  the page's address. The tournament's public page does not exist yet, so a
+  row leads to an address that answers `404` until the feature that provides
+  it lands.
 
   Where the home page's recent results begin in the order they were played,
   which no column shows, a year begins sorted by date, earliest first, as a
@@ -133,15 +135,18 @@ Feature: A year's page lists every tournament starting in it
       And the tournament "Spring Open" is played in the country "nz"
       And the tournament "Spring Open" is played in the region "can"
 
-    Scenario Outline: The columns are the dates, the name and the country
+    Scenario Outline: The columns are the dates, the country and the name
       When the page for 2026 is opened
       Then the <place> column of the year's tournaments is "<column>"
 
       Examples:
-        | place  | column  |
-        | first  | Date    |
-        | second | Name    |
-        | third  | Country |
+        | place | column |
+        | first | Date   |
+        | third | Name   |
+
+    Scenario: The country's column has no heading
+      When the page for 2026 is opened
+      Then the second column of the year's tournaments has no heading
 
     Scenario: A tournament is dated from its start to its finish
       When the page for 2026 is opened
@@ -151,9 +156,9 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then "Spring Open" shows the flag of "nz" in the year's tournaments
 
-    Scenario: The flag is named for a screen reader by its country
+    Scenario: The flag is named for a screen reader by what pressing it does
       When the page for 2026 is opened
-      Then the flag of "Spring Open" in the year's tournaments is named "New Zealand"
+      Then the flag of "Spring Open" in the year's tournaments is named "Only tournaments in New Zealand"
 
     Scenario: The month is named in the reader's language
       Given a site offering the languages it is served with
@@ -194,23 +199,18 @@ Feature: A year's page lists every tournament starting in it
     Background:
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2026-11-07"
-      And the tournament "Autumn Open" is played in the country "nz"
-      And the tournament "Autumn Open" is played in the region "can"
       And "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-03-07"
-      And the tournament "Spring Open" is played in the country "au"
-      And the tournament "Spring Open" is played in the region "vic"
 
-    Scenario Outline: A column not sorted by sorts from the smallest
+    Scenario: A column not sorted by sorts from the smallest
       Given the page for 2026 is open
-      When the column "<column>" of the year's tournaments is pressed
-      Then the first of the year's tournaments is "<first>"
-      And the second of the year's tournaments is "<second>"
+      When the column "Name" of the year's tournaments is pressed
+      Then the first of the year's tournaments is "Autumn Open"
+      And the second of the year's tournaments is "Spring Open"
 
-      Examples:
-        | column  | first       | second      |
-        | Name    | Autumn Open | Spring Open |
-        | Country | Spring Open | Autumn Open |
+    Scenario: The country's column cannot be pressed to sort by it
+      When the page for 2026 is opened
+      Then the second column of the year's tournaments cannot be pressed
 
     Scenario: The column sorted by is turned round when pressed
       Given the page for 2026 is open
@@ -255,7 +255,7 @@ Feature: A year's page lists every tournament starting in it
       When the column "Name" of the year's tournaments is pressed
       Then the address is "/2026"
 
-  Rule: Pressing anywhere on a row leads to the tournament
+  Rule: Pressing anywhere on a row but its flag leads to the tournament
 
     Background:
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -271,11 +271,10 @@ Feature: A year's page lists every tournament starting in it
         | part |
         | date |
         | name |
-        | flag |
 
-    Scenario: The row offers one link
+    Scenario: The row offers a link to the tournament and one to its country
       When the page for 2026 is opened
-      Then the row of "Spring Open" in the year's tournaments holds 1 link
+      Then the row of "Spring Open" in the year's tournaments holds 2 links
 
     Scenario: A row can be pressed with a thumb
       Given a viewport 375 pixels wide
@@ -381,6 +380,67 @@ Feature: A year's page lists every tournament starting in it
     Scenario: The sports offered are the website's
       When the page for 2026 is opened
       Then "Gateball" is not offered as a sport
+
+  Rule: Pressing a flag narrows the list to its country
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the tournament "Spring Open" is for the sport "ac"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-17"
+      And the tournament "Autumn Open" is played in the country "nz"
+      And the tournament "Autumn Open" is played in the region "auc"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And the tournament "Summer Open" starts on "2026-12-05"
+      And the tournament "Summer Open" is played in the country "au"
+      And the tournament "Summer Open" is played in the region "vic"
+      And the tournament "Summer Open" is for the sport "ac"
+
+    Scenario: A flag pressed lists its country's tournaments
+      Given the page for 2026 is open
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then "Autumn Open" is in the year's tournaments
+
+    Scenario: A flag pressed does not list another country's tournaments
+      Given the page for 2026 is open
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then "Summer Open" is not in the year's tournaments
+
+    Scenario: A flag pressed chooses its country in the filter
+      Given the page for 2026 is open
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then the country chosen is "New Zealand"
+
+    Scenario: A flag pressed stays on the year's page
+      Given the page for 2026 is open
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then the address is "/2026"
+
+    Scenario: A flag pressed keeps the sorting
+      Given the page for 2026 is open
+      And the column "Name" of the year's tournaments is pressed
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then the first of the year's tournaments is "Autumn Open"
+
+    Scenario: A flag pressed keeps the sport chosen
+      Given the page for 2026 is open
+      And "Association Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then "Autumn Open" is not in the year's tournaments
+
+    Scenario: A flag pressed drops a region chosen
+      Given the page for 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      When the flag of "Spring Open" in the year's tournaments is pressed
+      Then "Autumn Open" is in the year's tournaments
 
   Rule: A filter that cannot be is the reader's mistake
 

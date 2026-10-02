@@ -293,7 +293,8 @@ export const english: Language = {
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",
     "tournamentList.column.name": "Name",
-    "tournamentList.column.country": "Country",
+    // A flag, which narrows the lists to its country, named by what it does.
+    "tournamentList.onlyIn": "Only tournaments in {country}",
     "tournamentList.filter.country": "Country",
     "tournamentList.filter.anyCountry": "Any country",
     "tournamentList.filter.region": "Region",

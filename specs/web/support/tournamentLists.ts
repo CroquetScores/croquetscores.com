@@ -59,8 +59,9 @@ const rowOf = (world: SpecWorld, name: List, tournament: string): Locator =>
     }),
   });
 
+// Every cell of the heading row, the flags' among them, which has no heading.
 const headings = (world: SpecWorld, name: List): Locator =>
-  list(world, name).locator("thead th");
+  list(world, name).locator("thead tr > *");
 
 // A column's heading by its words, which follow the arrow where it has one.
 const headingOf = (world: SpecWorld, name: List, column: string): Locator =>
@@ -88,14 +89,19 @@ const follow = async (world: SpecWorld, link: Locator): Promise<void> => {
 
 // Pressed where the reader would press it, in the middle of what they can see,
 // rather than on whatever element is there: a row's link reaches over the
-// whole of it, so it is the link that is pressed wherever on the row that is.
+// whole of it, so it is the link that is pressed wherever on the row that is,
+// but for its flag's, which is above it. Waited on until the browser has left
+// the page, since a press made with the mouse is not waited on as a link
+// clicked is.
 const pressAt = async (world: SpecWorld, found: Locator): Promise<void> => {
   const box = await found.boundingBox();
   assert.ok(box !== null, "It is not on the page.");
+  const from = world.browserPage.url();
   await world.browserPage.mouse.click(
     box.x + box.width / 2,
     box.y + box.height / 2,
   );
+  await world.browserPage.waitForURL((url) => url.toString() !== from);
   await world.browserPage.waitForLoadState();
 };
 
@@ -298,6 +304,29 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments) has no heading$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    assert.equal(
+      await words(headings(this, listNamed(name)).nth(placeOf(which))),
+      "",
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments) cannot be pressed$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    assert.equal(
+      await headings(this, listNamed(name))
+        .nth(placeOf(which))
+        .locator("a")
+        .count(),
+      0,
+    );
+  },
+);
+
+Then(
   /^"(.*)" is dated "(.*)" in the (recent results|upcoming tournaments|year's tournaments)$/,
   async function (
     this: SpecWorld,
@@ -348,7 +377,9 @@ Then(
     country: string,
   ) {
     assert.equal(
-      await flagOf(this, name, tournament).getAttribute("alt"),
+      await rowOf(this, listNamed(name), tournament)
+        .locator(".tournament-flag a")
+        .getAttribute("aria-label"),
       country,
     );
   },
@@ -566,8 +597,10 @@ Then(
   /^the column headings of the (recent results|upcoming tournaments|year's tournaments) are in the colour the secondary navigation's words are in$/,
   async function (this: SpecWorld, name: string) {
     const words = await drawnAs(secondary(this).locator("a").first(), "color");
-    for (const heading of await headings(this, listNamed(name)).all()) {
-      assert.equal(await drawnAs(heading.locator("a"), "color"), words);
+    for (const heading of await headings(this, listNamed(name))
+      .locator("a")
+      .all()) {
+      assert.equal(await drawnAs(heading, "color"), words);
     }
   },
 );

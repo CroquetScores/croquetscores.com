@@ -1164,7 +1164,7 @@ main {
   vertical-align: middle;
 }
 
-.tournament-list th {
+.tournament-list thead :is(th, td) {
   background: var(--accent-strong);
   color: var(--accent-ink);
   font-weight: 600;
@@ -1208,8 +1208,37 @@ main {
   overflow-wrap: anywhere;
 }
 
+/* A flag is a link of its own, to the lists narrowed to its country, so it is
+   lifted above the name's link that reaches over the row, and fills its cell
+   so that it is pressed with a thumb as easily as the row is. */
+.tournament-list .tournament-flag {
+  padding: 0;
+}
+
+.tournament-list .tournament-flag a {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: var(--space-3);
+}
+
+/* At twice the size they were drawn at, which is the only size there is of
+   them: 16 pixels across is too small to tell one flag from another at a
+   glance. Twice exactly, and each pixel kept square, so that they are as sharp
+   as they were rather than blurred by being stretched. Never narrower, or
+   the cell, which is only as wide as what is in it, lets the reset's
+   max-width squeeze it across while its height stays, and a flag comes out
+   taller than it is wide. */
 .tournament-list .tournament-flag img {
   display: block;
+  flex: none;
+  width: 32px;
+  max-width: none;
+  height: 22px;
+  image-rendering: pixelated;
 }
 
 .tournament-filter {

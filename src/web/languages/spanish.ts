@@ -272,7 +272,7 @@ export const spanish: Language = {
       "Ningún torneo empieza en los próximos sesenta días.",
     "tournamentList.column.date": "Fecha",
     "tournamentList.column.name": "Nombre",
-    "tournamentList.column.country": "País",
+    "tournamentList.onlyIn": "Solo torneos en {country}",
     "tournamentList.filter.country": "País",
     "tournamentList.filter.anyCountry": "Cualquier país",
     "tournamentList.filter.region": "Región",

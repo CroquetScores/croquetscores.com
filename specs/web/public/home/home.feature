@@ -11,23 +11,30 @@ Feature: The home page lists recent results and upcoming tournaments
   to every tournament this year, for a reader after one further off or long
   finished.
 
-  Each list is a table of three columns: the tournament's dates, its name,
-  and the flag of the country it is played in. The dates are said as the
-  admin says them (`tournaments.feature`), the month once where both days are
-  in it. The flag is named for a reader who cannot see it by the country it
-  is the flag of, in the reader's language.
+  Each list is a table of three columns: the tournament's dates, the flag of
+  the country it is played in, and its name. The dates are said as the admin
+  says them (`tournaments.feature`), the month once where both days are in
+  it. The flag is named for a reader who cannot see it by what pressing it
+  does, "Only tournaments in New Zealand", with the country it is the flag of
+  named in the reader's language. The flags' column has no heading, since a
+  flag says what it is, and so it is not sorted by.
 
   A row leads to the tournament's page, at its year, its sport and its
-  name, wherever on the row it is pressed, since a row is read as one thing.
-  The name is a link in its own right, so that a reader moving by keyboard or
-  listening is offered one way into each tournament rather than three. The
-  tournament's public page does not exist yet, so the row leads to an address
-  that answers `404` until the feature that provides it lands.
+  name, wherever on the row it is pressed but its flag, since a row is read
+  as one thing. The name is a link in its own right, so that a reader moving
+  by keyboard or listening is offered one way into each tournament rather
+  than two. The tournament's public page does not exist yet, so the row leads
+  to an address that answers `404` until the feature that provides it lands.
+
+  A flag is a link of its own, to the lists narrowed to its country, which is
+  the quickest way for a reader to see what else is being played there. It
+  narrows both lists, as choosing the country in the filter does, and keeps
+  how each is sorted and the sport chosen. A region chosen is dropped, since
+  the flag is the whole country's.
 
   A column heading sorts its table by that column. A column the table is not
-  sorted by sorts from the smallest up — the earliest dates, A to Z, the
-  countries by their names in the reader's language — and pressing the
-  column the table is sorted by turns it round. An arrow before the heading
+  sorted by sorts from the smallest up — the earliest dates, A to Z — and
+  pressing the column the table is sorted by turns it round. An arrow before the heading
   points up or down to say which way the table is sorted, and the column says
   so in words for a reader who is listening rather than looking. The
   upcoming tournaments begin sorted by date, soonest first, so their dates
@@ -242,18 +249,25 @@ Feature: The home page lists recent results and upcoming tournaments
       And the tournament "Spring Open" is played in the country "nz"
       And the tournament "Spring Open" is played in the region "can"
 
-    Scenario Outline: The columns are the dates, the name and the country
+    Scenario Outline: The columns are the dates, the country and the name
       When the home page is opened
       Then the <place> column of the <list> is "<column>"
 
       Examples:
-        | list                 | place  | column  |
-        | recent results       | first  | Date    |
-        | recent results       | second | Name    |
-        | recent results       | third  | Country |
-        | upcoming tournaments | first  | Date    |
-        | upcoming tournaments | second | Name    |
-        | upcoming tournaments | third  | Country |
+        | list                 | place | column |
+        | recent results       | first | Date   |
+        | recent results       | third | Name   |
+        | upcoming tournaments | first | Date   |
+        | upcoming tournaments | third | Name   |
+
+    Scenario Outline: The country's column has no heading
+      When the home page is opened
+      Then the second column of the <list> has no heading
+
+      Examples:
+        | list                 |
+        | recent results       |
+        | upcoming tournaments |
 
     Scenario: A tournament is dated from its start to its finish
       When the home page is opened
@@ -269,9 +283,9 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then "Spring Open" shows the flag of "nz" in the upcoming tournaments
 
-    Scenario: The flag is named for a screen reader by its country
+    Scenario: The flag is named for a screen reader by what pressing it does
       When the home page is opened
-      Then the flag of "Spring Open" in the upcoming tournaments is named "New Zealand"
+      Then the flag of "Spring Open" in the upcoming tournaments is named "Only tournaments in New Zealand"
 
     Scenario: The month is named in the reader's language
       Given a site offering the languages it is served with
@@ -283,19 +297,15 @@ Feature: The home page lists recent results and upcoming tournaments
       Given a site offering the languages it is served with
       And a browser that asks for "es"
       When the home page is opened
-      Then the flag of "Spring Open" in the upcoming tournaments is named "Nueva Zelanda"
+      Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos en Nueva Zelanda"
 
   Rule: Pressing a column heading sorts the table by it
 
     Background:
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2026-11-07"
-      And the tournament "Autumn Open" is played in the country "nz"
-      And the tournament "Autumn Open" is played in the region "can"
       And "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
-      And the tournament "Spring Open" is played in the country "au"
-      And the tournament "Spring Open" is played in the region "vic"
 
     Scenario: The upcoming tournaments begin sorted by date
       When the home page is opened
@@ -305,26 +315,20 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the column "Name" of the upcoming tournaments is not marked as sorted
 
-    Scenario Outline: A column not sorted by sorts from the smallest
+    Scenario: A column not sorted by sorts from the smallest
       Given the home page is open
-      When the column "<column>" of the upcoming tournaments is pressed
-      Then the first of the upcoming tournaments is "<first>"
-      And the second of the upcoming tournaments is "<second>"
+      When the column "Name" of the upcoming tournaments is pressed
+      Then the first of the upcoming tournaments is "Autumn Open"
+      And the second of the upcoming tournaments is "Spring Open"
 
-      Examples:
-        | column  | first       | second      |
-        | Name    | Autumn Open | Spring Open |
-        | Country | Spring Open | Autumn Open |
-
-    Scenario Outline: A column pressed is marked as sorted from the smallest
+    Scenario: A column pressed is marked as sorted from the smallest
       Given the home page is open
-      When the column "<column>" of the upcoming tournaments is pressed
-      Then the column "<column>" of the upcoming tournaments is marked as sorted from the smallest
+      When the column "Name" of the upcoming tournaments is pressed
+      Then the column "Name" of the upcoming tournaments is marked as sorted from the smallest
 
-      Examples:
-        | column  |
-        | Name    |
-        | Country |
+    Scenario: The country's column cannot be pressed to sort by it
+      When the home page is opened
+      Then the second column of the upcoming tournaments cannot be pressed
 
     Scenario: The column sorted by is turned round when pressed
       Given the home page is open
@@ -385,24 +389,11 @@ Feature: The home page lists recent results and upcoming tournaments
 
     Scenario: Rows alike in the column sorted by keep the order the list began in
       Given "organiser@example.com" has created the tournament "Summer Open"
-      And the tournament "Summer Open" starts on "2026-10-20"
-      And the tournament "Summer Open" is played in the country "nz"
-      And the tournament "Summer Open" is played in the region "auc"
+      And the tournament "Summer Open" starts on "2026-10-10"
       And the home page is open
-      When the column "Country" of the upcoming tournaments is pressed
-      Then the second of the upcoming tournaments is "Summer Open"
-      And the third of the upcoming tournaments is "Autumn Open"
-
-    Scenario: The countries are sorted by their names in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
-      And "organiser@example.com" has created the tournament "Summer Open"
-      And the tournament "Summer Open" starts on "2026-10-20"
-      And the tournament "Summer Open" is played in the country "de"
-      And the home page is open
-      When the third column of the upcoming tournaments is pressed
-      Then the first of the upcoming tournaments is "Summer Open"
-      And the second of the upcoming tournaments is "Spring Open"
+      When the column "Date" of the upcoming tournaments is pressed
+      Then the second of the upcoming tournaments is "Spring Open"
+      And the third of the upcoming tournaments is "Summer Open"
 
     Scenario: A table sorted stays sorted when the page is opened again at its address
       Given the home page is open
@@ -475,7 +466,7 @@ Feature: The home page lists recent results and upcoming tournaments
       When the column "Name" of the upcoming tournaments is pressed
       Then the first of the recent results is "Autumn Open"
 
-  Rule: Pressing anywhere on a row leads to the tournament
+  Rule: Pressing anywhere on a row but its flag leads to the tournament
 
     Background:
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -488,18 +479,17 @@ Feature: The home page lists recent results and upcoming tournaments
       Then the address is "/2026/gc/spring-open"
 
       Examples:
-        | part  |
-        | date  |
-        | name  |
-        | flag  |
+        | part |
+        | date |
+        | name |
 
     Scenario: The name is a link
       When the home page is opened
       Then the name of "Spring Open" in the upcoming tournaments is a link
 
-    Scenario: The row offers one link
+    Scenario: The row offers a link to the tournament and one to its country
       When the home page is opened
-      Then the row of "Spring Open" in the upcoming tournaments holds 1 link
+      Then the row of "Spring Open" in the upcoming tournaments holds 2 links
 
     Scenario: A row of the recent results leads to the tournament
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -639,6 +629,78 @@ Feature: The home page lists recent results and upcoming tournaments
     Scenario: A sport another website plays is not offered
       When the home page is opened
       Then "Gateball" is not offered as a sport
+
+  Rule: Pressing a flag narrows the lists to its country
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the tournament "Spring Open" is for the sport "ac"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-17"
+      And the tournament "Autumn Open" is played in the country "nz"
+      And the tournament "Autumn Open" is played in the region "auc"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And the tournament "Summer Open" starts on "2026-10-24"
+      And the tournament "Summer Open" is played in the country "au"
+      And the tournament "Summer Open" is played in the region "vic"
+      And the tournament "Summer Open" is for the sport "ac"
+
+    Scenario: A flag pressed lists its country's tournaments
+      Given the home page is open
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then "Autumn Open" is in the upcoming tournaments
+
+    Scenario: A flag pressed does not list another country's tournaments
+      Given the home page is open
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then "Summer Open" is not in the upcoming tournaments
+
+    Scenario: A flag pressed chooses its country in the filter
+      Given the home page is open
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then the country chosen is "New Zealand"
+
+    Scenario: A flag pressed stays on the home page
+      Given the home page is open
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then the address is "/"
+
+    Scenario: A flag pressed narrows the recent results as well
+      Given "organiser@example.com" has added the player "Sam Someone" to "Summer Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Summer Open"
+      And "organiser@example.com" has added the block "Block A" to "Summer Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Summer Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Summer Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Summer Open"
+      And the home page is open
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then "Summer Open" is not in the recent results
+
+    Scenario: A flag pressed keeps the sorting
+      Given the home page is open
+      And the column "Name" of the upcoming tournaments is pressed
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then the first of the upcoming tournaments is "Autumn Open"
+
+    Scenario: A flag pressed keeps the sport chosen
+      Given the home page is open
+      And "Association Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then "Autumn Open" is not in the upcoming tournaments
+
+    Scenario: A flag pressed drops a region chosen
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      When the flag of "Spring Open" in the upcoming tournaments is pressed
+      Then "Autumn Open" is in the upcoming tournaments
 
   Rule: A region is offered once a country divided into regions is chosen
 
