@@ -1203,9 +1203,19 @@ main {
 }
 
 /* A long name wraps rather than being cut short or pushing out past the
-   panel. */
+   panel. It is underlined only while the pointer is on its row, since the
+   whole row is pressed to reach the tournament, and not while it is on the
+   flag, which leads somewhere else. */
 .tournament-list .tournament-name {
   overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.tournament-list
+  tbody
+  tr:hover:not(:has(.tournament-flag a:hover))
+  .tournament-name {
+  text-decoration: underline;
 }
 
 /* A flag is a link of its own, to the lists narrowed to its country, so it is
