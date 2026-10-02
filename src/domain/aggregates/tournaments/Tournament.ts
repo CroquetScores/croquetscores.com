@@ -93,6 +93,7 @@ export type TournamentErrorCode =
   | "Tournament.HandicapInWorldRankings"
   | "Tournament.DrawsInWorldRankings"
   | "Tournament.NationalAndInternational"
+  | "Tournament.DrawnTestsWithoutTeams"
   | "Tournament.PlayerAlreadyAdded"
   | "Tournament.PlayerNameTaken"
   | "Tournament.NoSuchPlayer"
@@ -136,11 +137,12 @@ export type TournamentErrorCode =
 export class TournamentRefused extends Refused<TournamentErrorCode> {}
 
 /**
- * What creating a tournament says, and updating it says again. Its region is
- * given by its code and found among its country's, so that a region of
- * another country is the tournament's to refuse. Handicap, world rankings,
- * national and international may each be left unsaid, and what a tournament
- * is when they are is its own to decide.
+ * What creating a tournament says, and updating it says again. Its region, if
+ * it has one, is given by its code and found among its country's, so that a
+ * region of another country is the tournament's to refuse. Handicap, world
+ * rankings, national, international and whether a level test is drawn may
+ * each be left unsaid, and what a tournament is when they are is its own to
+ * decide.
  */
 export interface TournamentDetails {
   readonly name: TournamentName;
@@ -149,10 +151,11 @@ export interface TournamentDetails {
   readonly format: TournamentFormat;
   readonly sport: Sport;
   readonly country: Country;
-  readonly region: string;
+  readonly region?: string | undefined;
   readonly notes?: TournamentNotes | undefined;
   readonly handicap?: boolean | undefined;
   readonly drawsAllowed?: boolean | undefined;
+  readonly levelTestsDrawn?: boolean | undefined;
   readonly worldRankings?: boolean | undefined;
   readonly national?: boolean | undefined;
   readonly international?: boolean | undefined;
@@ -223,10 +226,11 @@ interface Settled {
   readonly format: TournamentFormat;
   readonly sport: Sport;
   readonly country: Country;
-  readonly region: Region;
+  readonly region: Region | undefined;
   readonly notes: TournamentNotes | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
+  readonly levelTestsDrawn: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
@@ -336,7 +340,35 @@ export class Tournament extends AggregateRoot {
     at: ReadOnlyDate,
   ): Tournament {
     const tournament = new Tournament(id);
-    const settled = tournament.#settle(website, details, taken, at);
+    const settled = tournament.#settle(website, details, at, (year, sport) =>
+      tournament.#addressFor(details.name, year, sport, taken),
+    );
+    tournament.record(
+      new TournamentCreated(website.host, writtenFrom(settled), by, at),
+    );
+    return tournament;
+  }
+
+  /**
+   * A tournament brought over from the old sites, as `create` would make it
+   * but found at the year it starts, its sport and `slug`, the slug the old
+   * site gave it, so that links to it still find it (bringOver.feature).
+   * Nothing is asked of whether the address is taken: the old sites never
+   * gave one twice, and the site has no tournament of its own when they are
+   * brought over.
+   */
+  static bringOver(
+    id: TournamentId,
+    website: Website,
+    details: TournamentDetails,
+    slug: Slug,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): Tournament {
+    const tournament = new Tournament(id);
+    const settled = tournament.#settle(website, details, at, (year, sport) =>
+      TournamentAddress.from(year, sport, slug),
+    );
     tournament.record(
       new TournamentCreated(website.host, writtenFrom(settled), by, at),
     );
@@ -385,7 +417,8 @@ export class Tournament extends AggregateRoot {
     return this.#now.country;
   }
 
-  get region(): Region {
+  /** The region of its country it is played in, or nothing when it is in none. */
+  get region(): Region | undefined {
     return this.#now.region;
   }
 
@@ -403,6 +436,14 @@ export class Tournament extends AggregateRoot {
    */
   get drawsAllowed(): boolean {
     return this.#now.drawsAllowed;
+  }
+
+  /**
+   * Whether a test level on matches is drawn, rather than decided by net
+   * games and then net hoops. Only a tournament played by teams draws one.
+   */
+  get levelTestsDrawn(): boolean {
+    return this.#now.levelTestsDrawn;
   }
 
   get worldRankings(): boolean {
@@ -550,7 +591,12 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    const settled = this.#settle(this.#now.website, details, taken, at);
+    const settled = this.#settle(
+      this.#now.website,
+      details,
+      at,
+      (year, sport) => this.#addressFor(details.name, year, sport, taken),
+    );
     // What a tournament holds depends on whether it is played by teams, so
     // once it holds anything, a change to that would leave it holding what it
     // could no longer have.
@@ -1546,12 +1592,12 @@ export class Tournament extends AggregateRoot {
 
   // What `details` make of a tournament on `website`, asked for at `at`,
   // refused on the first thing asked of them together that they do not hold
-  // to.
+  // to, and found where `addressIn` says for the year and the sport it is in.
   #settle(
     website: Website,
     details: TournamentDetails,
-    taken: AddressTaken,
     at: ReadOnlyDate,
+    addressIn: (year: number, sport: Sport) => TournamentAddress,
   ): Settled {
     const { sport, format, starts, finishes, country } = details;
     if (
@@ -1586,11 +1632,13 @@ export class Tournament extends AggregateRoot {
       );
     }
     const region =
-      country.findRegion(details.region) ??
-      refuse(
-        "Tournament.RegionNotInCountry",
-        "The region is not one of the country's.",
-      );
+      details.region === undefined
+        ? undefined
+        : (country.findRegion(details.region) ??
+          refuse(
+            "Tournament.RegionNotInCountry",
+            "The region is not one of the country's.",
+          ));
     const handicap = details.handicap ?? false;
     const drawsAllowed = details.drawsAllowed ?? false;
     const worldRankings = this.#worldRankingsFor(
@@ -1607,6 +1655,7 @@ export class Tournament extends AggregateRoot {
         "A tournament is not both national and international.",
       );
     }
+    const levelTestsDrawn = levelTestsDrawnFor(format, details.levelTestsDrawn);
     return {
       website,
       name: details.name,
@@ -1619,10 +1668,11 @@ export class Tournament extends AggregateRoot {
       notes: details.notes,
       handicap,
       drawsAllowed,
+      levelTestsDrawn,
       worldRankings,
       national,
       international,
-      address: this.#addressFor(details.name, starts, sport, taken),
+      address: addressIn(TournamentAddress.yearOf(starts), sport),
     };
   }
 
@@ -1665,11 +1715,10 @@ export class Tournament extends AggregateRoot {
   // else's, since it is what knows which tournament an address leads to.
   #addressFor(
     name: TournamentName,
-    starts: ReadOnlyDate,
+    year: number,
     sport: Sport,
     taken: AddressTaken,
   ): TournamentAddress {
-    const year = TournamentAddress.yearOf(starts);
     const current = this.#settled?.address;
     if (current?.year === year && current.sport.equals(sport)) return current;
     const slug = Slug.fromName(name.toString());
@@ -1684,10 +1733,16 @@ export class Tournament extends AggregateRoot {
 
   #becomes(website: Website, written: WrittenTournament): void {
     const country = Countries.thereAre.find(written.country);
-    const region = country?.findRegion(written.region);
-    if (country === undefined || region === undefined) {
+    const region =
+      written.region === undefined
+        ? undefined
+        : country?.findRegion(written.region);
+    if (
+      country === undefined ||
+      (written.region !== undefined && region === undefined)
+    ) {
       throw new Error(
-        `The tournament's stream names a place there is not: ${written.country}/${written.region}.`,
+        `The tournament's stream names a place there is not: ${written.country}/${String(written.region)}.`,
       );
     }
     const address = TournamentAddress.read(written.address);
@@ -1706,6 +1761,7 @@ export class Tournament extends AggregateRoot {
           : TournamentNotes.from(written.notes),
       handicap: written.handicap,
       drawsAllowed: written.drawsAllowed,
+      levelTestsDrawn: written.levelTestsDrawn,
       worldRankings: written.worldRankings,
       national: written.national,
       international: written.international,
@@ -2238,6 +2294,23 @@ const referenceWith = (
     archived: changed.archived ?? reference.archived,
   });
 
+// Whether a tournament in `format` draws a test level on matches, as `said`
+// or, unsaid, as the format has it (`TournamentFormat.drawsLevelTests`). Only
+// a tournament played by teams has tests, so saying one that is not draws them
+// is refused rather than quietly undone.
+const levelTestsDrawnFor = (
+  format: TournamentFormat,
+  said: boolean | undefined,
+): boolean => {
+  if (said === true && !format.isTeamFormat) {
+    refuse(
+      "Tournament.DrawnTestsWithoutTeams",
+      "Only a tournament played by teams has tests to draw.",
+    );
+  }
+  return said ?? format.drawsLevelTests;
+};
+
 const writtenFrom = (settled: Settled): WrittenTournament => ({
   name: settled.name.toString(),
   starts: settled.starts.toISOString(),
@@ -2245,10 +2318,11 @@ const writtenFrom = (settled: Settled): WrittenTournament => ({
   format: settled.format.name,
   sport: settled.sport.code,
   country: settled.country.code,
-  region: settled.region.code,
+  region: settled.region?.code,
   notes: settled.notes?.markdown,
   handicap: settled.handicap,
   drawsAllowed: settled.drawsAllowed,
+  levelTestsDrawn: settled.levelTestsDrawn,
   worldRankings: settled.worldRankings,
   national: settled.national,
   international: settled.international,

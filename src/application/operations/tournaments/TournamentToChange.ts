@@ -16,14 +16,18 @@ export interface ChangingTournament {
   /** Each a day, written as the year, the month and the day. */
   readonly starts: string;
   readonly finishes: string;
-  /** The format by its name, the sport, the country and the region by their codes. */
+  /**
+   * The format by its name, the sport, the country and the region by their
+   * codes, the region nothing when the tournament is in none.
+   */
   readonly format: string;
   readonly sport: string;
   readonly country: string;
-  readonly region: string;
+  readonly region: string | undefined;
   readonly notes: string | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
+  readonly levelTestsDrawn: boolean;
   readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;

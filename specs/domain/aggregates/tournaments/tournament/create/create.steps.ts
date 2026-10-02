@@ -49,6 +49,10 @@ Given("the region {string}", function (this: SpecWorld, code: string) {
   scenarioOf(this).creating.region = code;
 });
 
+Given("no region", function (this: SpecWorld) {
+  scenarioOf(this).creating.region = null;
+});
+
 Given("the notes {string}", function (this: SpecWorld, notes: string) {
   scenarioOf(this).creating.notes = notes;
 });
@@ -99,6 +103,17 @@ Given(
   "the tournament is said to allow drawn games",
   function (this: SpecWorld) {
     scenarioOf(this).creating.drawsAllowed = true;
+  },
+);
+
+Given("nothing is said of level tests", function (this: SpecWorld) {
+  delete scenarioOf(this).creating.levelTestsDrawn;
+});
+
+Given(
+  /^the tournament is said (not )?to draw a level test$/,
+  function (this: SpecWorld, not: string | null) {
+    scenarioOf(this).creating.levelTestsDrawn = not === null;
   },
 );
 
@@ -201,6 +216,21 @@ Then(
   "the tournament is played in the country {string}",
   function (this: SpecWorld, code: string) {
     assert.equal(tournamentOf(this).country.code, code);
+  },
+);
+
+Then("the tournament is played in no region", function (this: SpecWorld) {
+  assert.equal(tournamentOf(this).region, undefined);
+});
+
+Then("the tournament draws a level test", function (this: SpecWorld) {
+  assert.equal(tournamentOf(this).levelTestsDrawn, true);
+});
+
+Then(
+  "the tournament decides a level test on net games and hoops",
+  function (this: SpecWorld) {
+    assert.equal(tournamentOf(this).levelTestsDrawn, false);
   },
 );
 

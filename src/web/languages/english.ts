@@ -303,6 +303,7 @@ export const english: Language = {
     "admin.tournament.notes": "Notes",
     "admin.tournament.handicap": "Played with handicaps",
     "admin.tournament.drawsAllowed": "Allows drawn results",
+    "admin.tournament.levelTestsDrawn": "Level tests are drawn",
     "admin.tournament.worldRankings": "Counts toward world rankings",
     "admin.tournament.national": "National‑level event",
     "admin.tournament.international": "International‑level event",

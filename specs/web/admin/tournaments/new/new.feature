@@ -14,7 +14,9 @@ Feature: A new tournament is created in the admin
   are the ones its site offers, in the order the site gives them, since a
   tournament in any other would be refused (`CreateTournament.feature`). A
   region is asked for only where the country chosen is divided into regions:
-  one that is not is its own one region, and there is nothing to choose. For
+  one that is not is its own one region, and there is nothing to choose. A
+  region asked for need not be chosen, since a tournament need be in no
+  region (`create.feature`). For
   the same reason Gateball Scores asks for neither a sport nor a format:
   gateball is the only sport its site offers and Standard the only format, and
   every tournament created there is a Standard tournament of gateball.
@@ -192,6 +194,20 @@ Feature: A new tournament is created in the admin
       When the new tournament page is opened
       Then the form does not ask for "Region"
 
+    Scenario: No region is chosen to begin with
+      Given the new tournament page is open
+      When the country "Australia" is chosen
+      Then no region is chosen
+
+    Scenario: A tournament with no region chosen is kept in no region
+      Given the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Australia" is chosen
+      When "Create Tournament" is pressed
+      Then the tournament "Spring Open" is kept in no region
+
   Rule: What can be decided for the reader is decided to begin with
 
     Scenario: The first sport the site offers is chosen to begin with
@@ -262,6 +278,43 @@ Feature: A new tournament is created in the admin
       And the reader ticks "Allows drawn results"
       When "Create Tournament" is pressed
       Then the tournament "Spring Open" is kept allowing drawn games
+
+  Rule: Drawing a level test is asked about only where the format is played by teams
+
+    Only a tournament played by teams has tests, and saying a Standard one
+    draws them is refused (`create.feature`), so the form asks only once a
+    format played by teams is chosen, ticked to begin with only for the GC
+    World Team Championship, which has always drawn them.
+
+    Scenario: The Standard format is not asked about level tests
+      When the new tournament page is opened
+      Then the form does not ask for "Level tests are drawn"
+
+    Scenario: A format played by teams is asked about level tests
+      Given the new tournament page is open
+      When the format "Teams" is chosen
+      Then the form asks for "Level tests are drawn"
+
+    Scenario: Teams does not draw level tests to begin with
+      Given the new tournament page is open
+      When the format "Teams" is chosen
+      Then "Level tests are drawn" is not ticked
+
+    Scenario: The GC World Team Championship draws level tests to begin with
+      Given the new tournament page is open
+      When the format "GC World Team Championship" is chosen
+      Then "Level tests are drawn" is ticked
+
+    Scenario: A tournament said to draw level tests is created drawing them
+      Given the new tournament page is open
+      And "Spring Shield" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the format "Teams" is chosen
+      And the country "Fiji" is chosen
+      And the reader ticks "Level tests are drawn"
+      When "Create Tournament" is pressed
+      Then the tournament "Spring Shield" is kept drawing a level test
 
   Rule: A tournament may be national, international or neither, but never both
 

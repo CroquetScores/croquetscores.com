@@ -97,13 +97,19 @@ const tournament = (said: Said): WrittenTournament => ({
   format: text(said, "format"),
   sport: text(said, "sport"),
   country: text(said, "country"),
-  region: text(said, "region"),
+  region: optionalText(said, "region"),
   notes: optionalText(said, "notes"),
   handicap: yesOrNo(said, "handicap"),
   // Asked only since drawn games could be allowed, so a tournament kept before
   // says nothing of it, and allowed none.
   drawsAllowed:
     said["drawsAllowed"] === undefined ? false : yesOrNo(said, "drawsAllowed"),
+  // Asked only since a level test could be drawn, so a tournament kept before
+  // says nothing of it, and drew none.
+  levelTestsDrawn:
+    said["levelTestsDrawn"] === undefined
+      ? false
+      : yesOrNo(said, "levelTestsDrawn"),
   worldRankings: yesOrNo(said, "worldRankings"),
   national: yesOrNo(said, "national"),
   international: yesOrNo(said, "international"),

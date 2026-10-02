@@ -23,6 +23,7 @@ import { TournamentName } from "../../../../../src/domain/aggregates/tournaments
 import { TournamentNotes } from "../../../../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
+import { Slug } from "../../../../../src/domain/common/Slug.js";
 import { Website } from "../../../../../src/domain/common/Website.js";
 import type { SpecWorld } from "../../../../support/world.js";
 
@@ -34,8 +35,8 @@ import type { SpecWorld } from "../../../../support/world.js";
 /**
  * What a scenario says of a tournament, each part written as the feature
  * writes it. What it leaves unsaid is a tournament that is well made, so that
- * what is refused is only ever what the scenario named. Notes are nothing when
- * a scenario says there are none, and left unsaid otherwise.
+ * what is refused is only ever what the scenario named. Notes and the region
+ * are nothing when a scenario says there are none, and left unsaid otherwise.
  */
 export interface Said {
   website?: string;
@@ -45,10 +46,11 @@ export interface Said {
   format?: string;
   sport?: string;
   country?: string;
-  region?: string;
+  region?: string | null;
   notes?: string | null;
   handicap?: boolean;
   drawsAllowed?: boolean;
+  levelTestsDrawn?: boolean;
   worldRankings?: boolean;
   national?: boolean;
   international?: boolean;
@@ -78,6 +80,9 @@ interface Scenario {
   // What a tournament the scenario creates is to be created as, and what an
   // update of it says.
   creating: Said;
+  // The slug the tournament the stream begins with was brought over at, when
+  // it was brought over rather than created (bringOver.feature).
+  broughtOverAt: string | undefined;
   updating: Said;
   taken: Set<string>;
   player: PlayerSaid;
@@ -110,6 +115,7 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
       created: undefined,
       later: [],
       creating: {},
+      broughtOverAt: undefined,
       updating: {},
       taken: new Set(),
       player: {},
@@ -167,8 +173,13 @@ const countryCalled = (code: string): Country => {
 };
 
 // A tournament's first region, when a scenario names its country and not its
-// region, so that the region is always the country's.
-const regionOf = (country: Country, said: string | undefined): string => {
+// region, so that the region is always the country's, and none when it says
+// there is none.
+const regionOf = (
+  country: Country,
+  said: string | null | undefined,
+): string | undefined => {
+  if (said === null) return undefined;
   if (said !== undefined) return said;
   if (country.code === "au") return "vic";
   const first = country.regions[0];
@@ -210,6 +221,7 @@ export const detailsOf = (said: Said): TournamentDetails => {
         : TournamentNotes.from(said.notes),
     handicap: said.handicap,
     drawsAllowed: said.drawsAllowed,
+    levelTestsDrawn: said.levelTestsDrawn,
     worldRankings: said.worldRankings,
     national: said.national,
     international: said.international,
@@ -217,18 +229,28 @@ export const detailsOf = (said: Said): TournamentDetails => {
 };
 
 // The creating of the tournament a stream begins with, as the stream says it
-// was created: made by the tournament itself, so that what the stream holds is
-// only ever what a tournament could have recorded.
+// was created, or brought over: made by the tournament itself, so that what
+// the stream holds is only ever what a tournament could have recorded.
 const creationOf = (world: SpecWorld, said: Said): DomainEvent => {
   const scenario = scenarioOf(world);
-  const tournament = Tournament.create(
-    scenario.id,
-    websiteOf(said),
-    detailsOf(said),
-    () => false,
-    creatorOf(world),
-    now(world),
-  );
+  const tournament =
+    scenario.broughtOverAt === undefined
+      ? Tournament.create(
+          scenario.id,
+          websiteOf(said),
+          detailsOf(said),
+          () => false,
+          creatorOf(world),
+          now(world),
+        )
+      : Tournament.bringOver(
+          scenario.id,
+          websiteOf(said),
+          detailsOf(said),
+          Slug.from(scenario.broughtOverAt),
+          creatorOf(world),
+          now(world),
+        );
   const [created] = tournament.handOver();
   assert.ok(created !== undefined, "Creating the tournament recorded nothing.");
   return created;
@@ -329,9 +351,9 @@ export const ask = (
 
 /**
  * What `tournament` is, said again with `changed`. What an update says of the
- * world rankings is what the tournament was created saying of them, and left
- * unsaid when it was created without saying, so that whether it counts is
- * decided again by the update as it was by creating it.
+ * world rankings, and of level tests, is what the tournament was created
+ * saying of them, and left unsaid when it was created without saying, so that
+ * each is decided again by the update as it was by creating it.
  */
 export const updateOf = (
   world: SpecWorld,
@@ -339,6 +361,7 @@ export const updateOf = (
   changed: Said,
 ): TournamentDetails => {
   const worldRankings = scenarioOf(world).created?.worldRankings;
+  const levelTestsDrawn = scenarioOf(world).created?.levelTestsDrawn;
   const said: TournamentDetails = {
     name: tournament.name,
     starts: tournament.starts,
@@ -346,10 +369,12 @@ export const updateOf = (
     format: tournament.format,
     sport: tournament.sport,
     country: tournament.country,
-    region: tournament.region.code,
+    region: tournament.region?.code,
     notes: tournament.notes,
     handicap: tournament.handicap,
     drawsAllowed: tournament.drawsAllowed,
+    levelTestsDrawn:
+      levelTestsDrawn === undefined ? undefined : tournament.levelTestsDrawn,
     worldRankings:
       worldRankings === undefined ? undefined : tournament.worldRankings,
     national: tournament.national,
@@ -370,7 +395,9 @@ export const updateOf = (
     ...(changed.sport === undefined
       ? {}
       : { sport: Sport.from(changed.sport) }),
-    ...(changed.region === undefined ? {} : { region: changed.region }),
+    ...(changed.region === undefined
+      ? {}
+      : { region: changed.region ?? undefined }),
     ...(changed.notes === undefined || changed.notes === null
       ? {}
       : { notes: TournamentNotes.from(changed.notes) }),
@@ -378,6 +405,9 @@ export const updateOf = (
     ...(changed.drawsAllowed === undefined
       ? {}
       : { drawsAllowed: changed.drawsAllowed }),
+    ...(changed.levelTestsDrawn === undefined
+      ? {}
+      : { levelTestsDrawn: changed.levelTestsDrawn }),
     ...(changed.international === undefined
       ? {}
       : { international: changed.international }),

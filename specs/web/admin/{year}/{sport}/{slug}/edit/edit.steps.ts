@@ -65,6 +65,22 @@ Given(
 );
 
 Given(
+  "the tournament {string} is in no region",
+  async function (this: SpecWorld, name: string) {
+    await changeTournament(this, name, { region: undefined });
+  },
+);
+
+// Only a tournament played by teams draws a level test, so the scenario says
+// first that it is played by teams.
+Given(
+  "the tournament {string} draws a level test",
+  async function (this: SpecWorld, name: string) {
+    await changeTournament(this, name, { levelTestsDrawn: true });
+  },
+);
+
+Given(
   "the tournament {string} is national",
   async function (this: SpecWorld, name: string) {
     await changeTournament(this, name, {

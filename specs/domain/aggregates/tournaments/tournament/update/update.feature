@@ -5,7 +5,7 @@ Feature: Changing what a tournament is
   it again: the name, when it starts and finishes, the format, the sport, the
   country, the region, the notes, and whether it is played under handicap,
   counts towards the world rankings, is a national or an international event,
-  and allows drawn games. What is asked of those together when a tournament is created is
+  allows drawn games, and draws a test level on matches. What is asked of those together when a tournament is created is
   asked again when it is updated, of the website it was created on.
 
   A tournament keeps its address when its name is corrected, so that a link
@@ -72,6 +72,20 @@ Feature: Changing what a tournament is
 
     Scenario: An updated tournament is in the region it was updated to
       Given a stream where a tournament was created in the region "vic" of "au"
+      And the tournament is rebuilt from the stream
+      And the update puts it in the region "nsw"
+      When the tournament is updated
+      Then the tournament is played in the region "nsw"
+
+    Scenario: An updated tournament is in no region where the update puts it in none
+      Given a stream where a tournament was created in the region "vic" of "au"
+      And the tournament is rebuilt from the stream
+      And the update puts it in no region
+      When the tournament is updated
+      Then the tournament is played in no region
+
+    Scenario: A tournament in no region is in the region it was updated to
+      Given a stream where a tournament was created in no region of "au"
       And the tournament is rebuilt from the stream
       And the update puts it in the region "nsw"
       When the tournament is updated
@@ -148,6 +162,20 @@ Feature: Changing what a tournament is
       And the update finishes it at "2028-01-02T00:00:00Z"
       When the tournament is updated
       Then it is refused with "Tournament.StartsAfterNextYear"
+
+    Scenario: A tournament played by teams updated to draw a level test does
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      And the update draws a level test
+      When the tournament is updated
+      Then the tournament draws a level test
+
+    Scenario: A tournament updated to the Standard format while drawing a level test is refused
+      Given a stream where a tournament was created in the format "Teams" drawing a level test
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Standard"
+      When the tournament is updated
+      Then it is refused with "Tournament.DrawnTestsWithoutTeams"
 
     Scenario: Updating to a region of another country is refused
       Given a stream where a tournament was created in the region "vic" of "au"

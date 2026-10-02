@@ -20,7 +20,7 @@ Feature: A player's score in a game
   it is one of the website's marks and nothing else, with or without a space
   before it, however it is capitalised, since each sport writes its own: on
   Croquet Scores a mark is "w", "won" or "winner", and on Gateball Scores
-  "cb" as well. Anything else that follows marks nothing.
+  "cb" and "so" as well. Anything else that follows marks nothing.
 
   Background:
     Given the website "croquetscores.com"
@@ -122,6 +122,8 @@ Feature: A player's score in a game
         | 6won  |
         | 6cb   |
         | 6 CB  |
+        | 6so   |
+        | 6 SO  |
 
     Scenario Outline: A score ending in anything else is not marked
       When the score "<typed>" is read
@@ -131,5 +133,6 @@ Feature: A player's score in a game
         | typed |
         | 26tp  |
         | 6cb   |
+        | 6so   |
         | 6wtp  |
         | 6 w!  |
