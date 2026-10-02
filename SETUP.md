@@ -452,15 +452,16 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 `cucumber.mjs` holds a profile for each npm script that runs scenarios. What they share is written once and spread into each; what tells them apart is which features they run and where they report:
 
-| Profile   | Script                              | Runs                                          | Reports under              |
-| --------- | ----------------------------------- | --------------------------------------------- | -------------------------- |
-| `default` | `npm test`, `npm run test:features` | every feature                                 | `reports/cucumber`         |
-| `nodb`    | `npm run test:nodb`                 | every feature, less `@postgres`               | `reports/cucumber-nodb`    |
-| `db`      | `npm run test:db`                   | every feature, only `@postgres`               | `reports/cucumber-db`      |
-| `browser` | `npm run test:browser`              | every feature, only `@browser`                | `reports/cucumber-browser` |
-| `changed` | `npm run test:changed`              | the features `scripts/test-changed.mjs` names | `reports/cucumber-changed` |
+| Profile     | Script                              | Runs                                          | Reports under                |
+| ----------- | ----------------------------------- | --------------------------------------------- | ---------------------------- |
+| `default`   | `npm test`, `npm run test:features` | every feature                                 | `reports/cucumber`           |
+| `nodb`      | `npm run test:nodb`                 | every feature, less `@postgres`               | `reports/cucumber-nodb`      |
+| `db`        | `npm run test:db`                   | every feature, only `@postgres`               | `reports/cucumber-db`        |
+| `browser`   | `npm run test:browser`              | every feature, only `@browser`                | `reports/cucumber-browser`   |
+| `nobrowser` | `npm run test:nobrowser`            | every feature, less `@browser`                | `reports/cucumber-nobrowser` |
+| `changed`   | `npm run test:changed`              | the features `scripts/test-changed.mjs` names | `reports/cucumber-changed`   |
 
-- JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Five copies of them in JSON would be five things to keep in step, and a support folder added to four and missed in the fifth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
+- JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Six copies of them in JSON would be six things to keep in step, and a support folder added to five and missed in the sixth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
 - Every profile writes three reports, each named after the profile, so running one script does not overwrite what another last reported: `.html`, the whole run to be read in a browser; `-timing.txt`, how long each step definition and hook took over the run — in all, how many times it ran, on average and at the longest — the most time first, which is where to look first when making the suite faster; and `-summary.txt`, the count of scenarios and steps and the time the run took as a whole, which the progress bar prints and then scrolls away, so one run's time can be set against the next.
 - The timing report is written by `cucumber-timing.mjs` rather than by Cucumber's own `usage` formatter, which reports much the same thing. Cucumber's works it out once the run is over, by matching every step definition against every step of every scenario, and over the whole suite that added more than two minutes to a run that takes five. Ours adds each step's time up as the step finishes, so there is nothing left to do at the end. It is sorted by total time rather than by mean, because what it answers is where the suite's time goes, and a step that runs in every scenario can cost more than a slow one that runs once.
 - A tag given on the command line is added to the profile's rather than replacing it: `npm run test:nodb -- --tags @browser` runs the scenarios that are both.
@@ -494,7 +495,7 @@ What the browser talks to depends on whether the scenario keeps anything:
 
 Every application listens on whatever port is free, and never on a fixed one. A fixed port would collide with a development server, or with another scenario's application, and the first person to run two at once would find out the hard way. The browser starts once, on the first `@browser` scenario, and each scenario gets a context of its own in it, so no cookie is carried from one scenario to the next. Nothing here starts in `BeforeAll`, because Cucumber runs `BeforeAll` ahead of tag filtering, and a run that wants neither should pay for neither.
 
-The admin a `@browser` scenario drives is the one built into `dist/admin/`, not its source, so a scenario run against a stale build tests yesterday's admin and fails, or worse passes, for reasons that are nowhere in the code. Every script that runs scenarios — `test:features`, and through it `test`, as well as `test:nodb`, `test:db`, `test:browser` and `test:changed` — has a `pre` script that builds the admin first, which npm runs on its own. `test:nodb` needs one as much as the others, since a `@browser` scenario that keeps nothing is not `@postgres` (`admin.feature` among them). The build takes about a second, so it is done every time rather than only when something changed: working out whether anything did would cost more to keep right than it saves. CI builds it twice, once in `npm run build` and once before the scenarios, and a second is what that costs.
+The admin a `@browser` scenario drives is the one built into `dist/admin/`, not its source, so a scenario run against a stale build tests yesterday's admin and fails, or worse passes, for reasons that are nowhere in the code. Every script that runs scenarios — `test:features`, and through it `test`, as well as `test:nodb`, `test:db`, `test:browser`, `test:nobrowser` and `test:changed` — has a `pre` script that builds the admin first, which npm runs on its own. `test:nodb` needs one as much as the others, since a `@browser` scenario that keeps nothing is not `@postgres` (`admin.feature` among them). The build takes about a second, so it is done every time rather than only when something changed: working out whether anything did would cost more to keep right than it saves. CI builds it twice, once in `npm run build` and once before the scenarios, and a second is what that costs.
 
 Those builds are `build:admin:alongside`, which writes the new build beside the old one rather than emptying `dist/admin/` first, as `build:admin` does. Two runs at once are expected, which is why every application listens on a port of its own, and a run starting while another is under way would otherwise delete the admin that the first one's applications are serving. It does no harm to them: an application reads the page once, when it starts, and lists the assets there are then, and an asset's name changes with its content, so the new build only adds files beside the ones already being served. What it costs is that old assets pile up in `dist/admin/` until the next `npm run build`, which empties it, and is what anything deployed is built with.
 
@@ -662,6 +663,7 @@ npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cuc
 npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nodb"
 npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile db"
 npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile browser"
+npm pkg set scripts.test:nobrowser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nobrowser"
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
@@ -671,6 +673,7 @@ npm pkg set scripts.pretest:features="npm run build:admin:alongside"
 npm pkg set scripts.pretest:nodb="npm run build:admin:alongside"
 npm pkg set scripts.pretest:db="npm run build:admin:alongside"
 npm pkg set scripts.pretest:browser="npm run build:admin:alongside"
+npm pkg set scripts.pretest:nobrowser="npm run build:admin:alongside"
 npm pkg set scripts.pretest:changed="npm run build:admin:alongside"
 ```
 

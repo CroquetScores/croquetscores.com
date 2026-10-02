@@ -66,6 +66,13 @@ export const browser = {
   format: reports("cucumber-browser"),
 };
 
+export const nobrowser = {
+  ...shared,
+  paths: everyFeature,
+  tags: "not @browser",
+  format: reports("cucumber-nobrowser"),
+};
+
 // No paths: scripts/test-changed.mjs names the features to run.
 export const changed = {
   ...shared,
