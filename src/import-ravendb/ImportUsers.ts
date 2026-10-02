@@ -4,37 +4,13 @@ import { Account } from "../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
-import { charactersIn } from "../domain/common/charactersIn.js";
-import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
+import { nameToImport } from "./names.js";
+import { momentOf } from "./newtonsoft.js";
 import type { User } from "./ravendb-models/User.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
-
-/** Shorter than this, a name is refused. `PersonName` says why. */
-const FEWEST_CHARACTERS = 3;
-
-const TOO_SHORT = " (name must be 3 characters or more)";
-
-/**
- * A name the old sites accepted, changed only as far as it must be to be
- * accepted here: one shorter than 3 characters says so, which also makes it
- * long enough. A name with none is left with none, and refused.
- */
-export const nameToImport = (name: string): string => {
-  const trimmed = name.trim();
-  return trimmed !== "" && charactersIn(trimmed) < FEWEST_CHARACTERS
-    ? trimmed + TOO_SHORT
-    : trimmed;
-};
-
-// Newtonsoft wrote a DateTime with no zone, and a moment written with none is
-// read as the machine's local time. The old sites kept their moments in UTC,
-// so one without a zone is read as UTC, wherever the import runs.
-const hasAZone = /(?:Z|[+-]\d\d:\d\d)$/;
-const momentOf = (written: string): ReadOnlyDate =>
-  ReadOnlyDate.from(new Date(hasAZone.test(written) ? written : `${written}Z`));
 
 /**
  * Brings every user who confirmed their email address over as an account, and
