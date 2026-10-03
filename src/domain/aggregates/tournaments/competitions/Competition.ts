@@ -724,7 +724,8 @@ export class Competition extends AggregateRoot {
             loser: gamePlayerIdFrom(event.loserId),
             loserScore: Score.kept(event.loserScore, false),
           },
-          { drawsAllowed: true },
+          // When it was added is when the event adding it happened.
+          { drawsAllowed: true, addedAt: event.occurredAt },
         ),
       );
     } else if (event instanceof CompetitionGameArchived) {

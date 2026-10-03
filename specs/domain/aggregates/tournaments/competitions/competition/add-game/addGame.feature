@@ -115,6 +115,34 @@ Feature: Adding a game to a competition
       When the competition is rebuilt from its stream
       Then the competition's first game is of "Chris Third" beating "Sam Someone"
 
+  Rule: A game keeps the moment it was added
+
+    A tournament's page lists its games most recently added first, and says
+    how long ago each was added (`tournament.feature`), so a game keeps the
+    moment whatever added it was asked to. It is the moment the game was
+    entered, not the moment it was played, which nobody records. Correcting a
+    game changes its scores, not when it was added.
+
+    Scenario: A game added keeps the moment it was added
+      Given the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is added
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 was added at "2026-09-26T10:00:00Z"
+
+    Scenario: A competition rebuilt keeps the moment each game was added
+      Given the moment "2026-09-20T10:00:00Z"
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the moment "2026-09-26T10:00:00Z"
+      When the competition is rebuilt from its stream
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 was added at "2026-09-20T10:00:00Z"
+
+    Scenario: A game corrected keeps the moment it was added
+      Given the moment "2026-09-20T10:00:00Z"
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the moment "2026-09-26T10:00:00Z"
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was corrected to 26 to 10
+      When the competition is rebuilt from its stream
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 10 was added at "2026-09-20T10:00:00Z"
+
   Rule: What a game must be is refused as it is for a game
 
     Scenario: The same player as winner and loser is refused as a game refuses it

@@ -14,7 +14,7 @@ import { isMarked } from "../../../../support/marks.js";
 const bar = "nav.site-sections";
 const sections = `${bar} a`;
 const section = (label: string): string => `${sections}:text-is("${label}")`;
-const places = ["first", "second", "third"];
+const places = ["first", "second", "third", "fourth", "fifth"];
 
 const drawn = async (world: SpecWorld): Promise<void> => {
   await world.browserPage.locator(bar).waitFor();
@@ -57,7 +57,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) section is "([^"]*)"$/,
+  /^the (first|second|third|fourth|fifth) section is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, label: string) {
     assert.equal((await labels(this))[places.indexOf(which)], label);
   },
