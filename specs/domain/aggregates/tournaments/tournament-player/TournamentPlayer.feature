@@ -21,6 +21,13 @@ Feature: A player in a tournament
   to it. The word ends where anything but a letter comes, so "Bye 2" and
   "Bye-1" are byes, but "Byers" is a name like any other.
 
+  A player is found at an address made from their name (`addPlayer.feature`),
+  and an address is made of letters and digits (`Slug.feature`), so a name
+  with neither in it, in any script, such as "— ! —", would leave the player
+  nowhere to be found. It is refused with `TournamentPlayer.NoLetterOrDigit`,
+  whether the player is made with it or updated to it. A person's name is not
+  asked this, since an account is not found at an address made from it.
+
   A player may represent something: the club, the region or the country they
   play for, written as a reader would say it, such as "Canterbury Croquet
   Club". It is optional, since many players represent nothing but themselves.
@@ -112,6 +119,31 @@ Feature: A player in a tournament
       Given a player named "Sam Someone"
       When the player is updated to be called "Bye"
       Then it is refused for breaking "TournamentPlayer.NamedBye"
+
+  Rule: A player's name has a letter or a digit in it
+
+    Scenario Outline: A name with neither a letter nor a digit is refused
+      When a player named "<name>" is made
+      Then it is refused for breaking "TournamentPlayer.NoLetterOrDigit"
+
+      Examples:
+        | name  |
+        | — ! — |
+        | ***   |
+
+    Scenario Outline: A name with a letter or a digit in any script is kept
+      When a player named "<name>" is made
+      Then the player's name is "<name>"
+
+      Examples:
+        | name   |
+        | 李小龍 |
+        | 007    |
+
+    Scenario: A player updated to a name with neither a letter nor a digit is refused
+      Given a player named "Sam Someone"
+      When the player is updated to be called "— ! —"
+      Then it is refused for breaking "TournamentPlayer.NoLetterOrDigit"
 
   Rule: A player may represent something
 

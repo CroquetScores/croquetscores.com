@@ -58,11 +58,12 @@ Feature: Adding a player to a tournament
       And the first rule broken is "<code>"
 
       Examples:
-        | name        | flag | code                        |
-        |             | nz   | PersonName.Missing          |
-        | Sa          | nz   | PersonName.TooShort         |
-        | Sam Someone | zz   | TournamentPlayer.NoSuchFlag |
-        | Bye         | nz   | TournamentPlayer.NamedBye   |
+        | name        | flag | code                             |
+        |             | nz   | PersonName.Missing               |
+        | Sa          | nz   | PersonName.TooShort              |
+        | Sam Someone | zz   | TournamentPlayer.NoSuchFlag      |
+        | Bye         | nz   | TournamentPlayer.NamedBye        |
+        | — ! —       | nz   | TournamentPlayer.NoLetterOrDigit |
 
     Scenario: A player who breaks a rule is not added
       When the reader signed in to the account for "organiser@example.com" adds the player "Sa" to "Spring Open"
