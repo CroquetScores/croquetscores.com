@@ -19,10 +19,7 @@ import type {
 } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
 import { Countries } from "../../domain/aggregates/tournaments/value-objects/Countries.js";
 import type { Country } from "../../domain/aggregates/tournaments/value-objects/Country.js";
-import {
-  croquetScoresSports,
-  gateballScoresSports,
-} from "../../domain/aggregates/tournaments/value-objects/sports.js";
+import { sportsOffered } from "../../domain/aggregates/tournaments/value-objects/sports.js";
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 import type { Assets } from "../common/assets.js";
 import { dated } from "../common/dates.js";
@@ -30,11 +27,6 @@ import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
-
-const SPORTS_OFFERED = {
-  croquetScores: croquetScoresSports,
-  gateballScores: gateballScoresSports,
-} as const;
 
 // Sorting ------------------------------------------------------------------------
 
@@ -113,6 +105,11 @@ const sorted = (
  */
 export interface Asked {
   readonly path: string;
+  /**
+   * Whether the reader chooses the sport, or the page has one of its own, as
+   * a sport's page in a year has, and offers none to choose.
+   */
+  readonly offersSport: boolean;
   readonly chose: FilterChosen;
   readonly sorting: Readonly<Record<string, string | undefined>>;
 }
@@ -136,6 +133,7 @@ export const askedOf = (
   request: FastifyRequest,
   path: string,
   tables: readonly string[],
+  { offersSport = true }: { readonly offersSport?: boolean } = {},
 ): Asked => {
   const country = oneOf(request.query, "country");
   const region = oneOf(request.query, "region");
@@ -145,10 +143,11 @@ export const askedOf = (
     Countries.thereAre.find(country)?.findRegion(region) !== undefined;
   return {
     path,
+    offersSport,
     chose: {
       country,
       region: kept ? region : undefined,
-      sport: oneOf(request.query, "sport"),
+      sport: offersSport ? oneOf(request.query, "sport") : undefined,
     },
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
@@ -336,7 +335,7 @@ export const filter = (
     asked.chose.country === undefined
       ? undefined
       : Countries.thereAre.find(asked.chose.country);
-  const sports = SPORTS_OFFERED[websiteOf(request).site].map((sport) => ({
+  const sports = sportsOffered[websiteOf(request).site].map((sport) => ({
     value: sport.code,
     words: say(`sport.${sport.code}`),
   }));
@@ -376,11 +375,19 @@ ${[
           ),
         ),
       ]),
-  field(
-    "sport",
-    say("tournamentList.filter.sport"),
-    options(sports, say("tournamentList.filter.anySport"), asked.chose.sport),
-  ),
+  ...(asked.offersSport
+    ? [
+        field(
+          "sport",
+          say("tournamentList.filter.sport"),
+          options(
+            sports,
+            say("tournamentList.filter.anySport"),
+            asked.chose.sport,
+          ),
+        ),
+      ]
+    : []),
 ].join("\n")}
             <button type="submit">${escape(say("tournamentList.filter.submit"))}</button>
           </form>`;
@@ -428,17 +435,19 @@ export const yearsFitted = (count: number): string => {
  * list as well, and the page's rules show each in one or the other, so the
  * year chosen is marked in both. With no scripting the drop-down list is a
  * disclosure of links rather than a list to choose from, which needs a script
- * to go anywhere.
+ * to go anywhere. Each leads to the year's page, or to wherever `leadsTo`
+ * says, as a sport's page leads to the sport's page in each year.
  */
 export const yearsBar = (
   years: readonly number[],
   speaking: Speaking,
   chosen?: number,
+  leadsTo: (year: number) => string = (year) => `/${String(year)}`,
 ): string => {
   const { say } = speaking;
   const links = years.map(
     (year) =>
-      `<a href="/${String(year)}"${year === chosen ? ' aria-current="page"' : ""}>${String(year)}</a>`,
+      `<a href="${escape(leadsTo(year))}"${year === chosen ? ' aria-current="page"' : ""}>${String(year)}</a>`,
   );
   return `
     <nav class="site-sections years" aria-label="${escape(say("years.label"))}">
@@ -465,11 +474,12 @@ export const yearsOf = (
   years: readonly number[],
   speaking: Speaking,
   chosen?: number,
+  leadsTo?: (year: number) => string,
 ): Pick<Shell, "secondary" | "styles"> =>
   years.length === 0
     ? {}
     : {
-        secondary: yearsBar(years, speaking, chosen),
+        secondary: yearsBar(years, speaking, chosen, leadsTo),
         styles: yearsFitted(years.length),
       };
 

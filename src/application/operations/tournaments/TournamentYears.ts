@@ -5,13 +5,20 @@ import { Query } from "../../common/Query.js";
 export type TournamentYearsRefusedCode = "TournamentYears.NotText";
 
 /**
- * The years the website being read has a tournament starting in, the newest
- * first, each once. For anybody, so it names nobody.
+ * The years the website being read has a tournament starting in, of the sport
+ * whose code is `sport` where one is given, the newest first, each once. For
+ * anybody, so it names nobody.
  */
 export class TournamentYears extends Query<readonly number[]> {
-  constructor(readonly website: string) {
+  constructor(
+    readonly website: string,
+    readonly sport?: string,
+  ) {
     super();
-    if (typeof website !== "string") {
+    if (
+      typeof website !== "string" ||
+      (sport !== undefined && typeof sport !== "string")
+    ) {
       throw new ValidationError<TournamentYearsRefusedCode>(
         "TournamentYears.NotText",
       );

@@ -221,6 +221,7 @@ import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
 import { registerHomePage } from "./public/home.js";
 import { registerYearPage } from "./public/year.js";
+import { registerYearSportPage } from "./public/yearSport.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
@@ -922,6 +923,7 @@ export const buildApplication = async (
   registerJavaScriptRequiredPage(server, assets);
   registerHomePage(server, assets);
   registerYearPage(server, assets);
+  registerYearSportPage(server, assets);
 
   // What is queued is sent while the server is listening, and the pool is
   // still open while the last round finishes: the server is closed before the

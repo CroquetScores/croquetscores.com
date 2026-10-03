@@ -24,6 +24,7 @@ import { CompetitionName } from "../../../../src/domain/aggregates/tournaments/v
 import { Countries } from "../../../../src/domain/aggregates/tournaments/value-objects/Countries.js";
 import { ExpectedMatches } from "../../../../src/domain/aggregates/tournaments/value-objects/ExpectedMatches.js";
 import { KnockoutDraw } from "../../../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
+import { Sport } from "../../../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import { TournamentFilter } from "../../../../src/domain/aggregates/tournaments/value-objects/TournamentFilter.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import { Website } from "../../../../src/domain/common/Website.js";
@@ -534,6 +535,15 @@ When(
   async function (this: SpecWorld, website: string) {
     scenarioOf(this).years = await this.asARequest(() =>
       readModelOf(this).yearsOf(Website.from(website)),
+    );
+  },
+);
+
+When(
+  "the years of {string} for the sport {string} are looked for",
+  async function (this: SpecWorld, website: string, sport: string) {
+    scenarioOf(this).years = await this.asARequest(() =>
+      readModelOf(this).yearsOf(Website.from(website), Sport.from(sport)),
     );
   },
 );

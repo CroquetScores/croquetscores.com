@@ -25,7 +25,9 @@ Feature: The tournaments starting in a year
   The list is of the website asked about, and can be narrowed to a country, a
   region of it and a sport (`TournamentFilter.feature`). A country is named by
   its code, and one there is not is refused as `TournamentsInYear.NoSuchCountry`.
-  Anything else a filter cannot be is the filter's to refuse.
+  Anything else a filter cannot be is the filter's to refuse. A sport's page
+  in a year asks the same, narrowed to the sport its address names
+  (`yearSport.feature`).
 
   The tournaments in a year are for anybody, so nobody need be signed in to
   ask, and every scenario here asks with nobody signed in.

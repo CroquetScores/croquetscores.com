@@ -34,6 +34,7 @@ export type TournamentOperationErrorCode =
   | "RecentResults.NoSuchCountry"
   | "UpcomingTournaments.NoSuchCountry"
   | "TournamentsInYear.NoSuchCountry"
+  | "TournamentYears.SportNotOffered"
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

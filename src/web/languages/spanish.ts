@@ -283,6 +283,8 @@ export const spanish: Language = {
     "home.allTournaments": "Todos los torneos de {year}",
     "year.heading": "Torneos de {year}",
     "year.none": "Ningún torneo empieza en {year}.",
+    "yearSport.heading": "Torneos de {sport} en {year}",
+    "yearSport.none": "Ningún torneo de {sport} empieza en {year}.",
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 

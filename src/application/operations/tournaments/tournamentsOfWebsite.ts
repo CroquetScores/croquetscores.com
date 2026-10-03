@@ -3,6 +3,7 @@
 // by, made from what the request names.
 import { Countries } from "../../../domain/aggregates/tournaments/value-objects/Countries.js";
 import { TournamentFilter } from "../../../domain/aggregates/tournaments/value-objects/TournamentFilter.js";
+import type { Sport } from "../../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { Website } from "../../../domain/common/Website.js";
 import { TournamentOperationRefused } from "./tournamentOperations.js";
@@ -56,8 +57,11 @@ export interface TournamentsByWebsite {
     filter: TournamentFilter,
   ): Promise<readonly TournamentOfWebsite[]>;
 
-  /** The years it has a tournament starting in, the newest first, each once. */
-  yearsOf(website: Website): Promise<readonly number[]>;
+  /**
+   * The years it has a tournament starting in, of `sport` where one is given,
+   * the newest first, each once.
+   */
+  yearsOf(website: Website, sport?: Sport): Promise<readonly number[]>;
 }
 
 /** What a reader chose to narrow the tournaments by, each by its code. */
