@@ -16,13 +16,14 @@ Feature: A tournament's page lists its games, the most recent first
   the names are what a reader is looking for. A drawn game says "drew with"
   where a game won says "beat".
 
-  Beside the two lines, on a screen of medium width or wider, is a column of
-  what the game was part of: the competition it was played in, which leads to
-  the competition's page, beside the winner, and how long ago it was added
-  beside the loser, against the column's right edge. On a phone there is no
-  room beside the names, so the column comes beneath them. The games are no
-  wider than a medium browser is, so that on a wide screen the column stays
-  within a glance of the names.
+  Beside the two lines, on a screen at least 38rem wide, is a column of what
+  the game was part of: the competition it was played in, which leads to the
+  competition's page, beside the winner, and how long ago it was added beside
+  the loser, against the column's right edge. On a phone there is no room
+  beside the names, so the column comes beneath them. The games are no wider
+  than 38rem, so that on a wide screen the column stays within a glance of the
+  names, and a light line runs between one game and the next, so that a pair
+  of lines is read as one game rather than run on into the next.
 
   How long ago is said as a reader would say it: in seconds under a minute,
   "20 sec"; in minutes under an hour, "12 min"; in hours under a day, "1 hour"
@@ -251,12 +252,12 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-open" is opened
       Then the first game was added "03 oct 2026" ago
 
-  Rule: The column beside the games is beside them from a medium width, and beneath them on a phone
+  Rule: The column beside the games is beside them from a width of 38rem, and beneath them on a phone
 
     Background:
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
 
-    Scenario: On a screen of medium width the competition is to the right of the winner
+    Scenario: On a screen wider than 38rem the competition is to the right of the winner
       Given a viewport 800 pixels wide
       When the page at "/2026/ac/spring-open" is opened
       Then the competition of the first game is to the right of its winner

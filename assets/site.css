@@ -1291,11 +1291,10 @@ main {
   cursor: pointer;
 }
 
-/* A tournament's games, the most recent first, no wider than a medium
-   browser is, so that the column beside the names stays within a glance of
-   them on a wide screen. A game is the winner on one line and the loser on
-   the next, with what the game was part of beside them from a medium width
-   up: the competition beside the winner, and how long ago it was added beside
+/* A tournament's games, the most recent first, no wider than 38rem, so that
+   the column beside the names stays within a glance of them on a wide screen.
+   A game is the winner on one line and the loser on the next, with what the
+   game was part of beside them from that width up: the competition beside the winner, and how long ago it was added beside
    the loser. On a phone there is no room beside the names, so those come
    beneath them. */
 .games {
