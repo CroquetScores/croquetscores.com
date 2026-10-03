@@ -307,6 +307,16 @@ export const english: Language = {
     "tournament.none": "No games have been played yet.",
     // A tournament's players' page, when it has none.
     "players.none": "No players have been added yet.",
+    // A player's page: its two parts, how a game is said as the player played
+    // it, and what each part says when it has nothing in it.
+    "player.games": "Games",
+    "player.competitions": "Competitions",
+    "player.beat": "beat",
+    "player.lostTo": "lost to",
+    "player.drewWith": "drew with",
+    "player.score": "{score} to {opponent}",
+    "player.noGames": "No games have been played yet.",
+    "player.noCompetitions": "Not entered in any competition yet.",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

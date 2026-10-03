@@ -113,6 +113,7 @@ import { TournamentYearsHandler } from "../../../src/application/operations/tour
 import { TournamentsInYearHandler } from "../../../src/application/operations/tournaments/TournamentsInYearHandler.js";
 import { GamesOfTournamentHandler } from "../../../src/application/operations/tournaments/GamesOfTournamentHandler.js";
 import { PublicPlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicPlayersOfTournamentHandler.js";
+import { PublicPlayerOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicPlayerOfTournamentHandler.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
@@ -250,6 +251,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   );
   mediator.handleQuery(
     new PublicPlayersOfTournamentHandler(tournaments, byAddress),
+  );
+  mediator.handleQuery(
+    new PublicPlayerOfTournamentHandler(tournaments, competitions, byAddress),
   );
 
   const inHand: TournamentsInHand = {
