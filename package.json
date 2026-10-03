@@ -21,11 +21,13 @@
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nodb",
     "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile db",
     "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile browser",
+    "test:nobrowser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nobrowser",
     "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts",
     "pretest:features": "npm run build:admin:alongside",
     "pretest:nodb": "npm run build:admin:alongside",
     "pretest:db": "npm run build:admin:alongside",
     "pretest:browser": "npm run build:admin:alongside",
+    "pretest:nobrowser": "npm run build:admin:alongside",
     "pretest:changed": "npm run build:admin:alongside"
   },
   "repository": {
