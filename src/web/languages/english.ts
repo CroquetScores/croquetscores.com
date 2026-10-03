@@ -305,6 +305,8 @@ export const english: Language = {
     "tournament.ago.hour": "1 hour",
     "tournament.ago.hours": "{count} hours",
     "tournament.none": "No games have been played yet.",
+    // A tournament's players' page, when it has none.
+    "players.none": "No players have been added yet.",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

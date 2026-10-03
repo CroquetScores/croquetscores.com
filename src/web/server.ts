@@ -113,6 +113,7 @@ import { UpcomingTournamentsHandler } from "../application/operations/tournament
 import { TournamentYearsHandler } from "../application/operations/tournaments/TournamentYearsHandler.js";
 import { TournamentsInYearHandler } from "../application/operations/tournaments/TournamentsInYearHandler.js";
 import { GamesOfTournamentHandler } from "../application/operations/tournaments/GamesOfTournamentHandler.js";
+import { PublicPlayersOfTournamentHandler } from "../application/operations/tournaments/PublicPlayersOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
@@ -224,6 +225,7 @@ import { registerHomePage } from "./public/home.js";
 import { registerYearPage } from "./public/year.js";
 import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
+import { registerPlayersPage } from "./public/players.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
@@ -813,6 +815,9 @@ export const buildApplication = async (
       tournamentsByAddress,
     ),
   );
+  mediator.handleQuery(
+    new PublicPlayersOfTournamentHandler(tournaments, tournamentsByAddress),
+  );
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -934,6 +939,7 @@ export const buildApplication = async (
   registerYearPage(server, assets);
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);
+  registerPlayersPage(server, assets);
 
   // What is queued is sent while the server is listening, and the pool is
   // still open while the last round finishes: the server is closed before the

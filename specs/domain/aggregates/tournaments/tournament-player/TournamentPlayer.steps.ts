@@ -7,6 +7,7 @@ import {
   type TournamentPlayerDetails,
 } from "../../../../../src/domain/aggregates/tournaments/TournamentPlayer.js";
 import { TournamentPlayerId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
+import { Slug } from "../../../../../src/domain/common/Slug.js";
 import type { SpecWorld } from "../../../../support/world.js";
 
 // What a scenario leaves unsaid. A scenario about one part of a player gives
@@ -14,6 +15,9 @@ import type { SpecWorld } from "../../../../support/world.js";
 // refused is only ever what the scenario named.
 const A_NAME = "Sam Someone";
 const AN_ORDER = 10_000;
+// What finds a player within their tournament, which is the tournament's to
+// give and nothing these scenarios are about.
+const A_SLUG = Slug.from("sam-someone");
 
 // Making a player may be refused, and the scenario says which it expects.
 const tryToMake = (
@@ -28,7 +32,7 @@ const tryToMake = (
         name: A_NAME,
         ...details,
       },
-      order,
+      { slug: A_SLUG, order: order },
     );
   } catch (failure) {
     world.failure = failure;
@@ -55,7 +59,7 @@ Given("a player named {string}", function (this: SpecWorld, name: string) {
   this.tournamentPlayer = TournamentPlayer.from(
     TournamentPlayerId.create(),
     { name },
-    AN_ORDER,
+    { slug: A_SLUG, order: AN_ORDER },
   );
 });
 
@@ -65,7 +69,7 @@ Given(
     this.tournamentPlayer = TournamentPlayer.from(
       TournamentPlayerId.create(),
       { name },
-      order,
+      { slug: A_SLUG, order: order },
     );
   },
 );
@@ -76,7 +80,7 @@ Given(
     this.tournamentPlayer = TournamentPlayer.from(
       TournamentPlayerId.create(),
       { name, representing },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     );
   },
 );
@@ -87,7 +91,7 @@ Given(
     this.tournamentPlayer = TournamentPlayer.from(
       TournamentPlayerId.create(),
       { name },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     ).archive({ hasGames: false });
   },
 );
@@ -109,7 +113,7 @@ Given(
     this.otherTournamentPlayer = TournamentPlayer.from(
       playerOfWorld(this).id,
       { name },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     );
   },
 );
@@ -120,7 +124,7 @@ Given(
     this.otherTournamentPlayer = TournamentPlayer.from(
       TournamentPlayerId.create(),
       { name },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     );
   },
 );

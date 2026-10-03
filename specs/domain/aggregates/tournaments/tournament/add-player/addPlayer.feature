@@ -23,6 +23,16 @@ Feature: Adding a player to a tournament
   one (`enterPlayer.feature`), so that a competition's players start in the
   order the tournament has them in.
 
+  A player is found within their tournament by a slug made from their name,
+  as "2026/ac/spring-open/players/sam-someone" (`players.feature`). Two names
+  that are not the same can still make the same slug, as "Sam Someoné" and
+  "Sam Someone" do, and a slug another player has, archived or not, is
+  followed by "-01", then "-02", up to "-99", as a team's is
+  (`addTeam.feature`); should all of them be taken, the slug is followed by
+  the player id's own characters. A player keeps their slug when their name is
+  corrected (`updatePlayer.feature`), so that a link to them still finds them,
+  and an archived player keeps theirs.
+
   An archived tournament can only be restored (`restore.feature`), so adding a
   player to one is refused.
 
@@ -77,6 +87,43 @@ Feature: Adding a player to a tournament
       And the player "Sam Someone" was added to it
       When the tournament is rebuilt from the stream
       Then the tournament has the player "Sam Someone"
+
+  Rule: A player is found by a slug of their name that no other player in the tournament has
+
+    Scenario: A player's slug is made from their name
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added
+      Then the tournament's player "Sam Someone" has the slug "sam-someone"
+
+    Scenario: A slug another player has is followed by "-01"
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someoné" is added
+      Then the tournament's player "Sam Someoné" has the slug "sam-someone-01"
+
+    Scenario: A slug an archived player has is followed by "-01"
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the player "Sam Someone" was archived
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someoné" is added
+      Then the tournament's player "Sam Someoné" has the slug "sam-someone-01"
+
+    Scenario: A slug "-01" follows is followed by "-02" when "-01" is taken too
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the player "Sam Someoné" was added to it
+      And the tournament is rebuilt from the stream
+      When the player "Sam Sómeone" is added
+      Then the tournament's player "Sam Sómeone" has the slug "sam-someone-02"
+
+    Scenario: A tournament rebuilt after a player was added keeps the player's slug
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someoné" was added to it
+      When the tournament is rebuilt from the stream
+      Then the tournament's player "Sam Someoné" has the slug "sam-someone"
 
   Rule: Each player added is given 10,000 more than the highest order there is
 

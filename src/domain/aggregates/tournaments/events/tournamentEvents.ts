@@ -157,6 +157,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           text(said, "name"),
           optionalText(said, "representing"),
           optionalText(said, "flag"),
+          text(said, "slug"),
           number(said, "order"),
           createdBy,
           occurredAt,

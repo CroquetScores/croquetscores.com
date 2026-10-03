@@ -35,9 +35,12 @@ Feature: A tournament's page lists its games, the most recent first
   The secondary navigation is the tournament's sections: Recent, which is
   this page and is marked as the section being read, then Players, Notes and
   Commentary, then each of its competitions in use, in the tournament's
-  order. A test is among the competitions, by its name. The pages of the
-  sections besides this one do not exist yet, so each leads to an address
-  that answers `404` until the feature that provides it lands.
+  order. A test is among the competitions, by its name. A tournament played
+  by teams has no players of its own, only its teams', so it offers no
+  Players section. The players' page lists the players
+  (`players.feature`); the pages of the other sections besides this one do
+  not exist yet, so each leads to an address that answers `404` until the
+  feature that provides it lands.
 
   An address a tournament has moved on from leads to where it is found now,
   so that a link kept from before still works. An address no tournament of
@@ -311,6 +314,12 @@ Feature: A tournament's page lists its games, the most recent first
       And "organiser@example.com" has archived the competition "Block B" in "Spring Open"
       When the page at "/2026/ac/spring-open" is opened
       Then the section "Block B" is not offered
+
+    Scenario: A tournament played by teams offers no Players section
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "Players" is not offered
 
     Scenario: A test leads to its page under the tests
       Given the tournament is to be played in the format "Teams"

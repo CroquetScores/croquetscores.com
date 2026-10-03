@@ -15,6 +15,8 @@ export class TournamentPlayerAdded extends DomainEvent {
     readonly representing: string | undefined,
     // The name of the flag the player flies, or nothing when they fly none.
     readonly flag: string | undefined,
+    // What finds the player within the tournament, as the tournament gave it.
+    readonly slug: string,
     // Where the player comes when the tournament lists them, lowest first.
     readonly order: number,
     createdBy: AccountId,

@@ -1,6 +1,7 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
+import type { CompetitionOfTournament } from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's games can be refused where it is asked. */
 export type GamesOfTournamentRefusedCode = "GamesOfTournament.NotText";
@@ -13,13 +14,6 @@ export interface PlayerInGame {
   readonly representing?: string | undefined;
   /** The name of the flag they fly, or nothing where they fly none. */
   readonly flag?: string | undefined;
-}
-
-/** A competition as a tournament's page leads to it. */
-export interface CompetitionOfTournament {
-  readonly name: string;
-  /** Where it is found, as "2026/ac/spring-open/competitions/block-a". */
-  readonly address: string;
 }
 
 /** One of a tournament's games, as its page shows it. */
@@ -40,6 +34,11 @@ export interface TournamentGames {
   readonly name: string;
   /** Where it is found now, as "2026/ac/spring-open". */
   readonly address: string;
+  /**
+   * Whether it is played by teams, whose players are their teams' and have
+   * no players' page of the tournament's own.
+   */
+  readonly playedByTeams: boolean;
   /** Its competitions in use, in the tournament's order. */
   readonly competitions: readonly CompetitionOfTournament[];
   /** Every game in use, the most recently added first. */

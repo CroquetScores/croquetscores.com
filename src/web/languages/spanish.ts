@@ -296,6 +296,7 @@ export const spanish: Language = {
     "tournament.ago.hour": "1 hora",
     "tournament.ago.hours": "{count} horas",
     "tournament.none": "Aún no se ha jugado ninguna partida.",
+    "players.none": "Aún no se ha añadido ningún jugador.",
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 

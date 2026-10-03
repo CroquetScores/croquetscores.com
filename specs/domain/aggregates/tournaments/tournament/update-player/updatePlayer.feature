@@ -2,10 +2,12 @@ Feature: Changing what a tournament's player is
 
   A player's name, what they represent and the flag they fly can each be
   corrected. Updating a player says all three again, and the player keeps
-  their id and their place in the list of players. What is asked of each is
-  asked of a new player (`addPlayer.feature`), and a name another player has,
-  archived or not, is refused as it is when a player is added. A player's own
-  name, written with other capitals, is theirs, and not another player's.
+  their id, their slug and their place in the list of players, so that a link
+  to the player still finds them once their name is corrected. What is asked
+  of each is asked of a new player (`addPlayer.feature`), and a name another
+  player has, archived or not, is refused as it is when a player is added. A
+  player's own name, written with other capitals, is theirs, and not another
+  player's.
 
   The player is found by their id. An id that is no player's in the tournament
   is refused rather than taken as a new player, since adding a player is a
@@ -79,6 +81,16 @@ Feature: Changing what a tournament's player is
       And the player "Sam Someone" was updated to be called "Samantha Someone"
       When the tournament is rebuilt from the stream
       Then the tournament has the player "Samantha Someone"
+
+  Rule: A player keeps their slug when their name is corrected
+
+    Scenario: A player renamed keeps their slug
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      When the player "Sam Someone" is updated
+      Then the tournament's player "Samantha Someone" has the slug "sam-someone"
 
   Rule: What is asked of a player added is asked of a player updated
 
