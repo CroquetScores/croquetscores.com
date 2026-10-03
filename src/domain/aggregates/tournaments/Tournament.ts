@@ -645,7 +645,20 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     this.#refuseOncePlayedByTeams();
-    const player = TournamentPlayer.from(id, details, this.#nextPlayerOrder);
+    // Asked what a player is first, so that a name that is no name is refused
+    // as one rather than as a slug that cannot be made of it.
+    TournamentPlayer.ensureValid(details);
+    // Found by a slug of their name no other player has, archived or not, as
+    // a team is by its short name.
+    const slug = firstFree(
+      Slug.fromName(details.name),
+      id,
+      [...this.#players.values()].map((each) => each.slug.toString()),
+    );
+    const player = TournamentPlayer.from(id, details, {
+      slug,
+      order: this.#nextPlayerOrder,
+    });
     if (this.#players.has(id.value)) {
       refuse("Tournament.PlayerAlreadyAdded", "The player is already added.");
     }
@@ -656,6 +669,7 @@ export class Tournament extends AggregateRoot {
         player.name.toString(),
         player.representing,
         player.flag === undefined ? undefined : String(player.flag),
+        player.slug.toString(),
         player.order,
         by,
         at,
@@ -1425,7 +1439,10 @@ export class Tournament extends AggregateRoot {
       const id = TournamentPlayerId.from(event.playerId);
       this.#players.set(
         id.value,
-        TournamentPlayer.from(id, event, event.order),
+        TournamentPlayer.from(id, event, {
+          slug: Slug.from(event.slug),
+          order: event.order,
+        }),
       );
     } else if (event instanceof TournamentPlayerUpdated) {
       this.#playerBecomes(event.playerId, (player) => player.update(event));

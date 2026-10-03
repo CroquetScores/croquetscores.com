@@ -360,6 +360,13 @@ Then(
 );
 
 Then(
+  "the tournament's player {string} has the slug {string}",
+  function (this: SpecWorld, name: string, slug: string) {
+    assert.equal(String(playerNamed(tournamentOf(this), name).slug), slug);
+  },
+);
+
+Then(
   "the tournament's player {string} is archived",
   function (this: SpecWorld, name: string) {
     assert.equal(playerNamed(tournamentOf(this), name).archived, true);

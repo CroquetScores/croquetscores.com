@@ -217,6 +217,7 @@ Feature: The names a tournament's events are kept under
         | a tournament being created                | website         |
         | a tournament being updated                | address         |
         | a player being added                      | name            |
+        | a player being added                      | slug            |
         | a player being added                      | order           |
         | a player being archived                   | order           |
         | a tournament's player being moved         | order           |
@@ -261,6 +262,7 @@ Feature: The names a tournament's events are kept under
         | a knockout being added     | rounds       | the text "1, 3"             |
         | a knockout being added     | rounds       | a list holding the text "3" |
         | a player being added       | flag         | the number 1                |
+        | a player being added       | slug         | the number 1                |
         | a player being added       | order        | the text "10000"            |
         | a team being added         | order        | the text "10000"            |
         | a team being added         | flag         | the number 1                |

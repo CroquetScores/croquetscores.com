@@ -65,6 +65,17 @@ Then(
 );
 
 Then(
+  /^the tournament answered is (not )?played by teams$/,
+  function (this: SpecWorld, not: string | null) {
+    assert.equal(
+      (answered(this) as TournamentGames & { playedByTeams: boolean })
+        .playedByTeams,
+      not === null,
+    );
+  },
+);
+
+Then(
   "the tournament answered is found at {string}",
   function (this: SpecWorld, address: string) {
     assert.equal(answered(this).address, address);

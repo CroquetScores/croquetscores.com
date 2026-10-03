@@ -1,3 +1,4 @@
+import type { Slug } from "../../common/Slug.js";
 import { Validator } from "../../common/validation/Validator.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import { PersonName } from "../accounts/value-objects/PersonName.js";
@@ -46,8 +47,10 @@ export interface TournamentPlayerDetails {
  * play for and which flag they fly can differ between the two.
  *
  * A player has an order, which is where they come when the tournament lists
- * its players, lowest first. How the orders are given is the tournament's to
- * say, since it is the one that knows every player's.
+ * its players, lowest first, and a slug, which finds them within the
+ * tournament. How each is given is the tournament's to say, since it is the
+ * one that knows every player's. A player keeps their slug whatever else
+ * changes, so that a link to them still finds them.
  *
  * A player is never altered: updating, giving a new order, archiving and
  * restoring each give the player as they are afterwards, and leave the one asked unchanged. Asking for
@@ -62,6 +65,7 @@ export class TournamentPlayer {
   readonly #name: PersonName;
   readonly #representing: string | undefined;
   readonly #flag: Flag | undefined;
+  readonly #slug: Slug;
   readonly #order: number;
   readonly #archived: boolean;
 
@@ -70,6 +74,7 @@ export class TournamentPlayer {
     name: PersonName,
     representing: string | undefined,
     flag: Flag | undefined,
+    slug: Slug,
     order: number,
     archived: boolean,
   ) {
@@ -77,21 +82,22 @@ export class TournamentPlayer {
     this.#name = name;
     this.#representing = representing;
     this.#flag = flag;
+    this.#slug = slug;
     this.#order = order;
     this.#archived = archived;
   }
 
   /**
-   * The new player known by `id` that `details` describe, in `order`, not
-   * archived. Throws {@link ValidationError} naming the first rule broken: the
-   * name first, then the flag, then the order.
+   * The new player known by `id` that `details` describe, found at `slug` and
+   * in `order`, not archived. Throws {@link ValidationError} naming the first
+   * rule broken: the name first, then the flag, then the order.
    */
   static from(
     id: TournamentPlayerId,
     details: TournamentPlayerDetails,
-    order: number,
+    { slug, order }: { readonly slug: Slug; readonly order: number },
   ): TournamentPlayer {
-    return TournamentPlayer.#made(id, details, order, false);
+    return TournamentPlayer.#made(id, details, slug, order, false);
   }
 
   /**
@@ -106,12 +112,21 @@ export class TournamentPlayer {
   static #made(
     id: TournamentPlayerId,
     details: TournamentPlayerDetails,
+    slug: Slug,
     order: number,
     archived: boolean,
   ): TournamentPlayer {
     const { name, representing, flag } = TournamentPlayer.#detailsOf(details);
     orders.ensureValid(order);
-    return new TournamentPlayer(id, name, representing, flag, order, archived);
+    return new TournamentPlayer(
+      id,
+      name,
+      representing,
+      flag,
+      slug,
+      order,
+      archived,
+    );
   }
 
   static #detailsOf(details: TournamentPlayerDetails): {
@@ -167,6 +182,11 @@ export class TournamentPlayer {
     return this.#flag;
   }
 
+  /** What finds them within the tournament, made from their name when added. */
+  get slug(): Slug {
+    return this.#slug;
+  }
+
   /** Where the player comes when the tournament lists them, lowest first. */
   get order(): number {
     return this.#order;
@@ -187,7 +207,13 @@ export class TournamentPlayer {
       throw new ValidationError<TournamentPlayerErrorCode>(
         "TournamentPlayer.Archived",
       );
-    return TournamentPlayer.#made(this.#id, details, this.#order, false);
+    return TournamentPlayer.#made(
+      this.#id,
+      details,
+      this.#slug,
+      this.#order,
+      false,
+    );
   }
 
   /**
@@ -250,6 +276,7 @@ export class TournamentPlayer {
       this.#name,
       this.#representing,
       this.#flag,
+      this.#slug,
       changed.order ?? this.#order,
       changed.archived ?? this.#archived,
     );

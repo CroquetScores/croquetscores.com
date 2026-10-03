@@ -5,7 +5,9 @@ Feature: The games of a tournament, for anybody to read
   played in it, the most recently added first (`tournament.feature`). The
   application answers them, with what the page shows of the tournament and
   where its sections lead: the tournament's name and where it is found now,
-  and its competitions in use, each with its name and where it is found.
+  whether it is played by teams, which have no players' page of their own
+  (`PublicPlayersOfTournament.feature`), and its competitions in use, each
+  with its name and where it is found.
 
   Each game is answered with its winner and its loser, each with the name the
   tournament calls them now, what they represent and the flag they fly where
@@ -54,6 +56,10 @@ Feature: The games of a tournament, for anybody to read
     Scenario: Where the tournament is found is answered
       When the games of the tournament at "2026/ac/spring-open" are asked for
       Then the tournament answered is found at "2026/ac/spring-open"
+
+    Scenario: A Standard tournament is answered as not played by teams
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered is not played by teams
 
     Scenario: A tournament with no games answers none
       When the games of the tournament at "2026/ac/spring-open" are asked for
@@ -251,6 +257,10 @@ Feature: The games of a tournament, for anybody to read
     Scenario: A player in a test flies their team's flag
       When the games of the tournament at "2026/ac/spring-tests" are asked for
       Then the first game answered was lost by a player flying the flag "england"
+
+    Scenario: A tournament played by teams is answered as played by teams
+      When the games of the tournament at "2026/ac/spring-tests" are asked for
+      Then the tournament answered is played by teams
 
     Scenario: A test is answered with where it is found
       When the games of the tournament at "2026/ac/spring-tests" are asked for

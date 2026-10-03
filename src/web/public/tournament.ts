@@ -11,10 +11,8 @@ import type { FastifyInstance } from "fastify";
 import {
   type GameOfTournament,
   GamesOfTournament,
-  type PlayerInGame,
 } from "../../application/operations/tournaments/GamesOfTournament.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
-import { Flags } from "../../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
@@ -24,6 +22,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
+import { playerShown, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
 // How long ago `then` was, as a reader would say it: seconds under a minute,
@@ -61,28 +60,6 @@ const ago = (then: ReadOnlyDate, now: Date, speaking: Speaking): string => {
   return `<span class="game-day">${escape(written)}</span>`;
 };
 
-// A player as a line of a game names them: their name, what they represent in
-// brackets, and the flag they fly, named by what it is the flag of. Nothing is
-// left in the place of what they have none of.
-const player = (
-  { name, representing, flag }: PlayerInGame,
-  speaking: Speaking,
-  assets: Assets,
-): string => {
-  const flown = flag === undefined ? undefined : Flags.thereAre.find(flag);
-  return [
-    `<span class="game-name">${escape(name)}</span>`,
-    ...(representing === undefined
-      ? []
-      : [`<span class="game-representing">(${escape(representing)})</span>`]),
-    ...(flown === undefined
-      ? []
-      : [
-          `<img class="game-flag" src="${escape(assets.url(`images/${flown.relativePath}`))}" alt="${escape(speaking.say(`country.${String(flown)}`))}" />`,
-        ]),
-  ].join(" ");
-};
-
 const game = (
   played: GameOfTournament,
   now: Date,
@@ -92,9 +69,9 @@ const game = (
   const { say } = speaking;
   const result = say(played.drawn ? "tournament.drewWith" : "tournament.beat");
   return `            <li class="game">
-              <p class="game-line game-winner">${player(played.winner, speaking, assets)} <span class="game-score">${escape(played.winnerScore)}</span> <span class="game-result">${escape(result)}</span></p>
+              <p class="game-line game-winner">${playerShown(played.winner, "game", speaking, assets)} <span class="game-score">${escape(played.winnerScore)}</span> <span class="game-result">${escape(result)}</span></p>
               <p class="game-beside game-competition"><a href="/${escape(played.competition.address)}">${escape(played.competition.name)}</a></p>
-              <p class="game-line game-loser">${player(played.loser, speaking, assets)} <span class="game-score">${escape(played.loserScore)}</span></p>
+              <p class="game-line game-loser">${playerShown(played.loser, "game", speaking, assets)} <span class="game-score">${escape(played.loserScore)}</span></p>
               <p class="game-beside game-ago">${ago(played.addedAt, now, speaking)}</p>
             </li>`;
 };
@@ -133,18 +110,8 @@ export const registerTournamentPage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const here = `/${asked.address}`;
       const recent = say("tournament.recent");
-      const sections = [
-        { href: here, label: recent },
-        { href: `${here}/players`, label: say("tournament.players") },
-        { href: `${here}/notes`, label: say("tournament.notes") },
-        { href: `${here}/commentary`, label: say("tournament.commentary") },
-        ...asked.competitions.map((competition) => ({
-          href: `/${competition.address}`,
-          label: competition.name,
-        })),
-      ];
+      const sections = sectionsOf(asked, speaking);
       const now = request.requestedAt.toDate();
       const games =
         asked.games.length === 0

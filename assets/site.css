@@ -1361,14 +1361,40 @@ main {
   overflow-wrap: anywhere;
 }
 
-/* Lighter than the name, since the names are what a reader is looking for. */
-.game-representing {
+/* Lighter than the name, since the names are what a reader is looking for,
+   on a tournament's page and its players' alike. */
+.game-representing,
+.player-representing {
   color: var(--ink-muted);
 }
 
-.game-flag {
+.game-flag,
+.player-flag {
   display: inline;
   vertical-align: middle;
+}
+
+/* A tournament's players, one to a line, each name leading to the player's
+   own page. */
+.players {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Wraps rather than pushing out past the panel. */
+.player {
+  overflow-wrap: anywhere;
+}
+
+/* As tall as anything else pressed with a thumb. */
+.player-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* --- Utilities ----------------------------------------------------------- */

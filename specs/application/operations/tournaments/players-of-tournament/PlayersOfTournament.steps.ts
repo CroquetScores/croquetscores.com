@@ -16,14 +16,20 @@ import {
 
 // The players answered, once the list was not refused: a step reading them
 // from a refused list would say there are none when the truth is that nobody
-// was told.
+// was told. Either the list itself, as the tournament's managers have it, or
+// the players of a page that answers more than its players, as a reader's
+// players' page does (PublicPlayersOfTournament.feature), whose players have
+// what the steps reading both ask of them: a name, what they represent and the
+// flag they fly.
 const answered = (world: SpecWorld): readonly ListedPlayer[] => {
   assert.equal(
     world.failure,
     undefined,
     `The list was refused: ${String(world.failure)}`,
   );
-  return world.answer as readonly ListedPlayer[];
+  return Array.isArray(world.answer)
+    ? (world.answer as readonly ListedPlayer[])
+    : (world.answer as { players: readonly ListedPlayer[] }).players;
 };
 
 const names = (world: SpecWorld): string[] =>
@@ -75,6 +81,13 @@ Then("no players are answered", function (this: SpecWorld) {
 });
 
 Then(
+  /^(\d+) players? (?:is|are) answered$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(names(this).length, Number(count));
+  },
+);
+
+Then(
   "the player {string} is answered",
   function (this: SpecWorld, name: string) {
     playerCalled(this, name);
@@ -82,10 +95,10 @@ Then(
 );
 
 Then(
-  "the first player answered is {string}",
-  function (this: SpecWorld, name: string) {
+  /^the (first|second|third) player answered is "(.*)"$/,
+  function (this: SpecWorld, which: string, name: string) {
     assert.equal(
-      names(this)[0],
+      names(this)[["first", "second", "third"].indexOf(which)],
       name,
       `The players answered are ${JSON.stringify(names(this))}.`,
     );

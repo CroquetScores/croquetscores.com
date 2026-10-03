@@ -1,0 +1,70 @@
+import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import { Website } from "../../../domain/common/Website.js";
+import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { RequestType } from "../../common/Mediator.js";
+import { QueryHandler } from "../../common/QueryHandler.js";
+import {
+  PublicPlayersOfTournament,
+  type TournamentPlayersToRead,
+} from "./PublicPlayersOfTournament.js";
+import {
+  competitionsInUse,
+  tournamentForReaders,
+} from "./tournamentForReaders.js";
+import {
+  type TournamentAddresses,
+  TournamentOperationRefused,
+} from "./tournamentOperations.js";
+
+// In the order a reader looks for a name in a list, capitals or none.
+const byName = new Intl.Collator("en");
+
+export class PublicPlayersOfTournamentHandler extends QueryHandler<
+  PublicPlayersOfTournament,
+  TournamentPlayersToRead
+> {
+  readonly handles: RequestType<PublicPlayersOfTournament> =
+    PublicPlayersOfTournament;
+
+  constructor(
+    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    private readonly addresses: TournamentAddresses,
+  ) {
+    super();
+  }
+
+  async handle(
+    query: PublicPlayersOfTournament,
+  ): Promise<TournamentPlayersToRead> {
+    const tournament = await tournamentForReaders(
+      this.tournaments,
+      this.addresses,
+      Website.from(query.website),
+      query.address,
+      "PublicPlayersOfTournament",
+    );
+    // Its players are its teams', who have their teams' pages.
+    if (tournament.format.isTeamFormat) {
+      throw new TournamentOperationRefused(
+        "PublicPlayersOfTournament.PlayedByTeams",
+        "The tournament is played by teams.",
+      );
+    }
+    const address = tournament.address.toString();
+    return {
+      name: tournament.name.toString(),
+      address,
+      competitions: competitionsInUse(tournament),
+      players: tournament.players
+        .filter((player) => !player.archived)
+        .map((player) => ({
+          name: player.name.toString(),
+          representing: player.representing,
+          flag: player.flag === undefined ? undefined : String(player.flag),
+          address: `${address}/players/${player.slug.toString()}`,
+        }))
+        .sort((one, other) => byName.compare(one.name, other.name)),
+    };
+  }
+}

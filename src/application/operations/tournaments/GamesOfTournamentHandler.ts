@@ -9,23 +9,16 @@ import {
   competitionOf,
 } from "../competitions/competitionOperations.js";
 import {
-  type CompetitionOfTournament,
   type GameOfTournament,
   GamesOfTournament,
   type PlayerInGame,
   type TournamentGames,
 } from "./GamesOfTournament.js";
 import {
-  type TournamentAddresses,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
-
-const noSuchTournament = (): never => {
-  throw new TournamentOperationRefused(
-    "GamesOfTournament.NoSuchTournament",
-    "There is no such tournament.",
-  );
-};
+  competitionsInUse,
+  tournamentForReaders,
+} from "./tournamentForReaders.js";
+import type { TournamentAddresses } from "./tournamentOperations.js";
 
 // Each of the tournament's players by their id, as a game names them: a
 // player entered in a competition by what the tournament calls them now, what
@@ -75,29 +68,17 @@ export class GamesOfTournamentHandler extends QueryHandler<
   }
 
   async handle(query: GamesOfTournament): Promise<TournamentGames> {
-    const website = Website.from(query.website);
-    const id = await this.addresses.tournamentAt(query.address);
-    const tournament =
-      id === undefined ? undefined : await this.tournaments.load(id);
-    // An address is a website's own, so one of another website's tournaments
-    // is no tournament of this one.
-    if (
-      tournament === undefined ||
-      !tournament.website.equals(website) ||
-      tournament.archived
-    ) {
-      return noSuchTournament();
-    }
-    const address = tournament.address.toString();
+    const tournament = await tournamentForReaders(
+      this.tournaments,
+      this.addresses,
+      Website.from(query.website),
+      query.address,
+      "GamesOfTournament",
+    );
     const inUse = tournament.competitions.filter(
       ({ reference }) => !reference.archived,
     );
-    const competitions: CompetitionOfTournament[] = inUse.map(
-      ({ reference, shape }) => ({
-        name: reference.name.toString(),
-        address: `${address}/${shape.kind === "test" ? "tests" : "competitions"}/${reference.slug.toString()}`,
-      }),
-    );
+    const competitions = competitionsInUse(tournament);
     const players = playersOf(tournament);
     const playerFor = (
       competition: Awaited<ReturnType<typeof competitionOf>>,
@@ -132,7 +113,8 @@ export class GamesOfTournamentHandler extends QueryHandler<
     // the one listed later first, so that the list reads back from now.
     return {
       name: tournament.name.toString(),
-      address,
+      address: tournament.address.toString(),
+      playedByTeams: tournament.format.isTeamFormat,
       competitions,
       games: games
         .reverse()
