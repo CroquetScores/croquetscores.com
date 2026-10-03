@@ -56,6 +56,8 @@
   --current-ink: #ffffff;
   --link: #078600;
   --border: #cfe0cf;
+  /* The line round a row of tabs and what they hold. */
+  --tab-line: #398639;
   --focus: #0b2e17;
   --action: #066b00;
   --action-ink: #ffffff;
@@ -84,24 +86,30 @@
    colours rather than landed on light. A browser that cannot answer this query
    skips the whole block and keeps the light values instead.
 
-   Dark is not light inverted: the bars keep the brand's hue and lose the
-   lightness that makes a full-width band of it glare at night, the tile marking
-   the current section turns pale because black on a dark bar reads as a hole,
-   and links take a colour of their own because the dark green that works on
-   white disappears on a dark panel. */
+   Dark is not light inverted: the bars give up the brand's green for black,
+   the section bar the darker and the header and footer a black a little
+   lighter, as in light the section bar is the darker green, since a
+   full-width band of green glares at night; the tile marking the current
+   section turns pale because black on a dark bar reads as a hole; and links
+   take a colour of their own because the dark green that works on white
+   disappears on a dark panel. */
 @supports (color: light-dark(#000, #fff)) {
   :root {
     --surface: light-dark(#e6f2e6, #10140f);
     --panel: light-dark(#ffffff, #191e18);
     --ink: light-dark(#16181c, #e7ece5);
     --ink-muted: light-dark(#5b6069, #a6b0a3);
-    --accent: light-dark(#398639, #2f6b37);
-    --accent-strong: light-dark(#066b00, #1e4f26);
+    --accent: light-dark(#398639, #20201f);
+    --accent-strong: light-dark(#066b00, #111111);
     --accent-ink: light-dark(#ffffff, #f3f7f1);
     --current: light-dark(#000000, #e7ece5);
     --current-ink: light-dark(#ffffff, #10140f);
     --link: light-dark(#078600, #7fd08d);
     --border: light-dark(#cfe0cf, #2c332b);
+    /* The header's green in light; in dark, where the header is black and a
+       black line is lost on the dark panel, the line every other border is
+       drawn in. */
+    --tab-line: light-dark(#398639, #2c332b);
     --focus: light-dark(#0b2e17, #8fd99b);
     /* The button that does what a form is for. The section navigation's colour
        in light; pale in dark, because the section navigation's dark green on a

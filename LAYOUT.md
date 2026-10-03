@@ -107,7 +107,7 @@ As the window narrows, the bars stay and their contents wrap. The current site w
 
 Light was settled first, so that every change was checked against the theme somebody was actually looking at. It is settled, so dark is here, and so is a way to ask for it.
 
-Dark is not light inverted. Three things change beyond lightness. The bars keep the brand's hue and lose the lightness that makes a full-width band of green glare at night. The tile marking the current section turns pale — black on a dark bar reads as a hole rather than as a selection. And links take a colour of their own, because the dark green that works on white disappears on a dark panel.
+Dark is not light inverted. Three things change beyond lightness. The bars give up the brand's green for black, since a full-width band of green glares at night: the section bar is the darker black, and the header and footer a black a little lighter, as in light the section bar is the darker green. The tile marking the current section turns pale — black on a dark bar reads as a hole rather than as a selection. And links take a colour of their own, because the dark green that works on white disappears on a dark panel.
 
 **The two palettes are one block.** Each token pairs its light and dark value in a single `light-dark()` declaration, and which one applies follows `color-scheme`. A second palette kept in step with the first is a thing that goes out of step, so there is not one.
 
