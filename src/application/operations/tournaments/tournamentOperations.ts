@@ -38,6 +38,8 @@ export type TournamentOperationErrorCode =
   | "PublicPlayersOfTournament.PlayedByTeams"
   | "PublicPlayerOfTournament.PlayedByTeams"
   | "PublicPlayerOfTournament.NoSuchPlayer"
+  | "PublicBlockOfTournament.NoSuchCompetition"
+  | "PublicBlockOfTournament.NotABlock"
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

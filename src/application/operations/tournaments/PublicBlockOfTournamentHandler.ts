@@ -1,0 +1,139 @@
+import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
+import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import { Website } from "../../../domain/common/Website.js";
+import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { RequestType } from "../../common/Mediator.js";
+import { QueryHandler } from "../../common/QueryHandler.js";
+import {
+  type Competitions,
+  competitionOf,
+} from "../competitions/competitionOperations.js";
+import {
+  type BlockToRead,
+  type PlayerOfBlock,
+  PublicBlockOfTournament,
+} from "./PublicBlockOfTournament.js";
+import {
+  competitionsInUse,
+  tournamentForReaders,
+} from "./tournamentForReaders.js";
+import {
+  type TournamentAddresses,
+  TournamentOperationRefused,
+} from "./tournamentOperations.js";
+
+export class PublicBlockOfTournamentHandler extends QueryHandler<
+  PublicBlockOfTournament,
+  BlockToRead
+> {
+  readonly handles: RequestType<PublicBlockOfTournament> =
+    PublicBlockOfTournament;
+
+  constructor(
+    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    private readonly competitions: Competitions,
+    private readonly addresses: TournamentAddresses,
+  ) {
+    super();
+  }
+
+  async handle(query: PublicBlockOfTournament): Promise<BlockToRead> {
+    const tournament = await tournamentForReaders(
+      this.tournaments,
+      this.addresses,
+      Website.from(query.website),
+      query.address,
+      "PublicBlockOfTournament",
+    );
+    const found = tournament.competitions.find(
+      ({ reference }) =>
+        !reference.archived && reference.slug.toString() === query.slug,
+    );
+    if (found === undefined) {
+      throw new TournamentOperationRefused(
+        "PublicBlockOfTournament.NoSuchCompetition",
+        "The tournament has no such competition.",
+      );
+    }
+    const { reference, shape } = found;
+    if (shape.kind !== "block") {
+      throw new TournamentOperationRefused(
+        "PublicBlockOfTournament.NotABlock",
+        "The competition is not a block.",
+      );
+    }
+    const competition = await competitionOf(this.competitions, reference.id);
+    const games = competition.games.filter((game) => !game.archived);
+    const bestOf = shape.bestOf.games;
+    const address = tournament.address.toString();
+    const players = competition.players.flatMap((entered): PlayerOfBlock[] => {
+      const player = tournament.players.find((each) =>
+        each.id.equals(entered.tournamentPlayerId),
+      );
+      if (player === undefined) return [];
+      const theirs = games.filter(
+        (game) =>
+          game.winner.equals(entered.id) || game.loser.equals(entered.id),
+      );
+      const won = theirs.filter(
+        (game) => !game.drawn && game.winner.equals(entered.id),
+      );
+      const lost = theirs.filter(
+        (game) => !game.drawn && game.loser.equals(entered.id),
+      );
+      // What is not carried forward counts as nothing carried.
+      const carried = (count: CarryForwardCount): number =>
+        entered.carryForward.of(count) ?? 0;
+      const hoops = theirs.reduce((net, game) => {
+        const margin = game.winnerScore.points - game.loserScore.points;
+        return net + (game.winner.equals(entered.id) ? margin : -margin);
+      }, 0);
+      return [
+        {
+          id: entered.id.value,
+          name: player.name.toString(),
+          representing: player.representing,
+          flag: player.flag === undefined ? undefined : String(player.flag),
+          address: `${address}/players/${player.slug.toString()}`,
+          withdrawn: entered.withdrawn,
+          matchesWon: matchesWonIn(won, bestOf) + carried("matchWins"),
+          gamesWon: won.length + carried("gameWins"),
+          netGames:
+            won.length -
+            lost.length +
+            carried("gameWins") -
+            carried("gameLosses"),
+          netHoops: hoops + carried("hoopsFor") - carried("hoopsAgainst"),
+        },
+      ];
+    });
+    return {
+      name: tournament.name.toString(),
+      address,
+      competitions: competitionsInUse(tournament),
+      block: { name: reference.name.toString(), bestOf },
+      players,
+      games: games.map((game) => ({
+        winner: game.winner.value,
+        winnerScore: game.winnerScore.toString(),
+        loser: game.loser.value,
+        loserScore: game.loserScore.toString(),
+        drawn: game.drawn,
+      })),
+    };
+  }
+}
+
+// The matches won among the games `won` by one player, a match being won by
+// whoever wins more than half the games it is the best of: so a match not yet
+// decided, or shared in a best of an even number, is won by neither.
+const matchesWonIn = (won: readonly Game[], bestOf: number): number => {
+  const byOpponent = new Map<string, number>();
+  for (const game of won) {
+    const opponent = game.loser.value;
+    byOpponent.set(opponent, (byOpponent.get(opponent) ?? 0) + 1);
+  }
+  return [...byOpponent.values()].filter((wins) => wins * 2 > bestOf).length;
+};

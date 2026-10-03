@@ -317,6 +317,17 @@ export const english: Language = {
     "player.score": "{score} to {opponent}",
     "player.noGames": "No games have been played yet.",
     "player.noCompetitions": "Not entered in any competition yet.",
+    // A block's page: its grid's totals, what a score is for the row's player,
+    // said aloud rather than shown, and a player who has withdrawn.
+    "block.wins": "Wins",
+    "block.matches": "Matches",
+    "block.netGames": "Net Games",
+    "block.games": "Games",
+    "block.netHoops": "Net Hoops",
+    "block.won": "won",
+    "block.lost": "lost",
+    "block.drawn": "drawn",
+    "block.withdrawn": "withdrawn",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",
