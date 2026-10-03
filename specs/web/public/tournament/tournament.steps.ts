@@ -254,8 +254,8 @@ Then(
 
 // Its words ----------------------------------------------------------------------------
 
-// The tournament's own words are left out, on its page and its players' page
-// alike: its name, its players' names and what they represent, its competitions' names and the scores, which are what
+// The tournament's own words are left out, on its page, its players' page and
+// a player's alike: its name, its players' names and what they represent, its competitions' names and the scores, which are what
 // whoever entered them typed, and the day a game was added, which is numbers
 // and a month the browser names.
 Then(
@@ -270,6 +270,8 @@ Then(
       ".game-day",
       ".player-name",
       ".player-representing",
+      ".player-game-opponent",
+      ".player-competition",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

@@ -1405,6 +1405,54 @@ main {
   min-height: 44px;
 }
 
+/* A player's page: their competitions first on a phone, since they are short
+   and say where the player is playing before the games say how, and from the
+   tournament's page's width up the games first, with the competitions in a
+   narrower column beside them. */
+.player-page {
+  display: grid;
+  grid-template-areas:
+    "competitions"
+    "games";
+  gap: var(--space-6) var(--space-5);
+  align-items: start;
+}
+
+@media (min-width: 38rem) {
+  .player-page {
+    grid-template-areas: "games competitions";
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.player-games {
+  grid-area: games;
+  min-width: 0;
+}
+
+.player-competitions {
+  grid-area: competitions;
+  min-width: 0;
+}
+
+.player-games-list,
+.player-competitions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+/* As tall as anything else pressed with a thumb. */
+.player-competition {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 /* --- Utilities ----------------------------------------------------------- */
 
 .lead {
