@@ -1291,6 +1291,87 @@ main {
   cursor: pointer;
 }
 
+/* A tournament's games, the most recent first, no wider than a medium
+   browser is, so that the column beside the names stays within a glance of
+   them on a wide screen. A game is the winner on one line and the loser on
+   the next, with what the game was part of beside them from a medium width
+   up: the competition beside the winner, and how long ago it was added beside
+   the loser. On a phone there is no room beside the names, so those come
+   beneath them. */
+.games {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 38rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A light line between one game and the next, so that a pair of lines is read
+   as one game rather than run on into the next. */
+.game + .game {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.game {
+  display: grid;
+  grid-template-areas:
+    "winner"
+    "loser"
+    "competition"
+    "ago";
+  gap: 0 var(--space-4);
+}
+
+@media (min-width: 38rem) {
+  .game {
+    grid-template-areas:
+      "winner competition"
+      "loser ago";
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.game p {
+  margin: 0;
+}
+
+.game-winner {
+  grid-area: winner;
+}
+
+.game-loser {
+  grid-area: loser;
+}
+
+.game-competition {
+  grid-area: competition;
+}
+
+/* Against the right edge, where a reader's eye goes down the list to see how
+   recent each game is. */
+.game-ago {
+  grid-area: ago;
+  text-align: end;
+}
+
+/* Wraps rather than pushing out past the panel. */
+.game-line {
+  overflow-wrap: anywhere;
+}
+
+/* Lighter than the name, since the names are what a reader is looking for. */
+.game-representing {
+  color: var(--ink-muted);
+}
+
+.game-flag {
+  display: inline;
+  vertical-align: middle;
+}
+
 /* --- Utilities ----------------------------------------------------------- */
 
 .lead {

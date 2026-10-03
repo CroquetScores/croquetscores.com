@@ -1,3 +1,4 @@
+import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
 import { ValidationError } from "../../../common/validation/ValidationError.js";
 import { TeamPlayerId } from "../primitives/TeamPlayerId.js";
 import { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
@@ -46,29 +47,41 @@ export interface GameDetails {
  * not changed in any way, so it is not corrected.
  *
  * A game is never altered: archiving, restoring and correcting each give the
- * game as it is afterwards. Two games are the same game when their ids are,
- * since two games between the same players can have the same scores.
+ * game as it is afterwards, still added when it was. Two games are the same
+ * game when their ids are, since two games between the same players can have
+ * the same scores.
  */
 export class Game {
   readonly #id: GameId;
   readonly #details: GameDetails;
   readonly #archived: boolean;
+  readonly #addedAt: ReadOnlyDate | undefined;
 
-  private constructor(id: GameId, details: GameDetails, archived: boolean) {
+  private constructor(
+    id: GameId,
+    details: GameDetails,
+    archived: boolean,
+    addedAt: ReadOnlyDate | undefined,
+  ) {
     this.#id = id;
     this.#details = details;
     this.#archived = archived;
+    this.#addedAt = addedAt;
   }
 
   /**
-   * The game known by `id` that `details` describe, not archived. Whether
-   * drawn games are allowed is the tournament's, so whatever makes the game
-   * says. Throws {@link ValidationError} naming the first rule broken.
+   * The game known by `id` that `details` describe, not archived, added at
+   * `addedAt` where it was added. Whether drawn games are allowed is the
+   * tournament's, so whatever makes the game says. Throws
+   * {@link ValidationError} naming the first rule broken.
    */
   static from(
     id: GameId,
     details: GameDetails,
-    { drawsAllowed }: { readonly drawsAllowed: boolean },
+    {
+      drawsAllowed,
+      addedAt,
+    }: { readonly drawsAllowed: boolean; readonly addedAt?: ReadOnlyDate },
   ): Game {
     const { winner, winnerScore, loser, loserScore } = details;
     if (winner.equals(loser)) refuse("Game.SamePlayer");
@@ -83,7 +96,7 @@ export class Game {
     ) {
       refuse("Game.WinnerNotAhead");
     }
-    return new Game(id, details, false);
+    return new Game(id, details, false, addedAt);
   }
 
   get id(): GameId {
@@ -118,6 +131,14 @@ export class Game {
   }
 
   /**
+   * The moment it was added, as the competition recorded it, or nothing for a
+   * game that has not been: one made only to ask whether it could be added.
+   */
+  get addedAt(): ReadOnlyDate | undefined {
+    return this.#addedAt;
+  }
+
+  /**
    * The game, with `winnerScore` and `loserScore` in place of its own, and
    * `players` in place of its own where they are given, its result kept: a
    * game won still won, and a drawn game still drawn. Whether its players
@@ -140,7 +161,10 @@ export class Game {
     const corrected = Game.from(
       this.#id,
       { ...this.#details, ...players, winnerScore, loserScore },
-      { drawsAllowed },
+      {
+        drawsAllowed,
+        ...(this.#addedAt === undefined ? {} : { addedAt: this.#addedAt }),
+      },
     );
     if (corrected.drawn !== this.drawn) refuse("Game.ResultChanged");
     return corrected;
@@ -148,12 +172,16 @@ export class Game {
 
   /** The game, archived. */
   archive(): Game {
-    return this.#archived ? this : new Game(this.#id, this.#details, true);
+    return this.#archived
+      ? this
+      : new Game(this.#id, this.#details, true, this.#addedAt);
   }
 
   /** The game, no longer archived. */
   restore(): Game {
-    return this.#archived ? new Game(this.#id, this.#details, false) : this;
+    return this.#archived
+      ? new Game(this.#id, this.#details, false, this.#addedAt)
+      : this;
   }
 
   equals(other: Game | undefined): boolean {

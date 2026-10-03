@@ -292,6 +292,19 @@ export const english: Language = {
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{sport} Tournaments in {year}",
     "yearSport.none": "No {sport} tournaments start in {year}.",
+    // A tournament's page: its sections, what it says of a game, how long ago
+    // one was added, and what it says when it has none.
+    "tournament.recent": "Recent",
+    "tournament.players": "Players",
+    "tournament.notes": "Notes",
+    "tournament.commentary": "Commentary",
+    "tournament.beat": "beat",
+    "tournament.drewWith": "drew with",
+    "tournament.ago.seconds": "{count} sec",
+    "tournament.ago.minutes": "{count} min",
+    "tournament.ago.hour": "1 hour",
+    "tournament.ago.hours": "{count} hours",
+    "tournament.none": "No games have been played yet.",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

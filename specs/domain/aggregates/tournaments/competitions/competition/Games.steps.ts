@@ -521,6 +521,26 @@ Then(
 
 Then(
   new RegExp(
+    `^the competition's ${GAME.replace("the game", "game")} was added at "([^"]*)"$`,
+  ),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    moment: string,
+  ) {
+    const said = [winner, loser, winnerScore, loserScore];
+    assert.equal(
+      gameSaid(this, competitionOf(this), said).addedAt?.toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  new RegExp(
     `^the competition's ${GAME.replace("the game", "game")} is (not )?archived$`,
   ),
   function (
