@@ -42,7 +42,8 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
 
   What is refused is said beneath the field it is about, by the refusal's
   code, and what was typed stays typed so that it can be put right: a name
-  that could not be a person's, and a name another player in the tournament
+  that could not be a person's, a name with neither a letter nor a digit in
+  it (`TournamentPlayer.feature`), and a name another player in the tournament
   already has, however it is capitalised (`addPlayer.feature`). A refusal about
   no one field is said above the fields. Nothing refused is kept, and the
   dialog stays open.
@@ -557,9 +558,10 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Then "Name" is refused with "<code>"
 
       Examples:
-        | name | code                |
-        |      | PersonName.Missing  |
-        | Sa   | PersonName.TooShort |
+        | name  | code                             |
+        |       | PersonName.Missing               |
+        | Sa    | PersonName.TooShort              |
+        | — ! — | TournamentPlayer.NoLetterOrDigit |
 
     Scenario: A name another player has is refused beside the name
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

@@ -13,7 +13,8 @@ export type TournamentPlayerErrorCode =
   | "TournamentPlayer.OrderTooSmall"
   | "TournamentPlayer.HasGames"
   | "TournamentPlayer.Archived"
-  | "TournamentPlayer.NamedBye";
+  | "TournamentPlayer.NamedBye"
+  | "TournamentPlayer.NoLetterOrDigit";
 
 // A whole number the platform holds exactly. One beyond that is not reliably
 // the number it was given, so two orders could be told apart by nothing.
@@ -141,6 +142,15 @@ export class TournamentPlayer {
     if (/^bye(?!\p{L})/iu.test(details.name.trim())) {
       throw new ValidationError<TournamentPlayerErrorCode>(
         "TournamentPlayer.NamedBye",
+      );
+    }
+    // The player is found at an address made from their name, and an address
+    // is made of letters and digits (Slug.ts): a name with neither would leave
+    // the player nowhere to be found. Asked here rather than of a person's
+    // name, since an account is found at no address made from its name.
+    if (!/[\p{L}\p{N}]/u.test(details.name)) {
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.NoLetterOrDigit",
       );
     }
     return {

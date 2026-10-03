@@ -527,6 +527,8 @@ export const spanish: Language = {
       "Otro jugador de este torneo ya tiene ese nombre.",
     "TournamentPlayer.NoSuchFlag": "Elige una de las banderas que hay.",
     "TournamentPlayer.NamedBye": "Un jugador no puede llamarse Bye.",
+    "TournamentPlayer.NoLetterOrDigit":
+      "Un nombre necesita una letra o un número.",
     "admin.player.byesTitle": "Los byes no se añaden",
     "admin.player.byes":
       "Un bye no es un jugador del torneo. Una eliminatoria ofrece Bye cuando se añaden sus jugadores, tantas veces como necesite su cuadro.",

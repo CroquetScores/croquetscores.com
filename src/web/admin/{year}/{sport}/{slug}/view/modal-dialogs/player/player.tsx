@@ -43,7 +43,9 @@ const BYE = "TournamentPlayer.NamedBye";
 
 // The field each refusal is about. One about no one field is said above them.
 const fieldOf = (code: string): "name" | "flag" | undefined =>
-  code.startsWith("PersonName.") || code === "Tournament.PlayerNameTaken"
+  code.startsWith("PersonName.") ||
+  code === "TournamentPlayer.NoLetterOrDigit" ||
+  code === "Tournament.PlayerNameTaken"
     ? "name"
     : code === "TournamentPlayer.NoSuchFlag"
       ? "flag"

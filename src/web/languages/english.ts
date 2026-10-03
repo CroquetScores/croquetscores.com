@@ -578,6 +578,8 @@ export const english: Language = {
       "Another player in this tournament already has that name.",
     "TournamentPlayer.NoSuchFlag": "Choose one of the flags there are.",
     "TournamentPlayer.NamedBye": "A player cannot be called Bye.",
+    "TournamentPlayer.NoLetterOrDigit":
+      "A name needs a letter or a digit in it.",
     // The dialog over the player dialog when a player is named as a bye.
     "admin.player.byesTitle": "Byes need no adding",
     "admin.player.byes":
