@@ -34,7 +34,8 @@ import {
 // Anything else is left to whatever else the address could be, and is not
 // found where it is nothing. "0000" in particular is no year Postgres has, and
 // asking it for the days of one would fail rather than find none.
-const yearPath = "/:year(^[1-9]\\d{3}$)";
+export const yearInPath = ":year(^[1-9]\\d{3}$)";
+const yearPath = `/${yearInPath}`;
 
 export const registerYearPage = (
   server: FastifyInstance,

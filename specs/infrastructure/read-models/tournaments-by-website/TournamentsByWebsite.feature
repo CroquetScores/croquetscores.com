@@ -7,7 +7,9 @@ Feature: Finding a website's tournaments by when they were played and when they 
   find out, so a read model keeps the answers: a table of tournaments by
   website, kept by a projection as tournaments and their competitions are
   changed, and asked by the queries (`RecentResults.feature`,
-  `UpcomingTournaments.feature`, `TournamentYears.feature`).
+  `UpcomingTournaments.feature`, `TournamentYears.feature`), and by the
+  pages of a year's tournaments, and of a sport's in a year (`year.feature`,
+  `yearSport.feature`), which can ask for the years of one sport.
 
   A tournament has a row holding what the home page shows of it: its name,
   its dates, its country, its region, its sport, where it is found, and when
@@ -557,6 +559,40 @@ Feature: Finding a website's tournaments by when they were played and when they 
 
     Scenario: A website with no tournaments has no years
       When the years of "croquetscores.com" are looked for
+      Then no year is found
+
+  Rule: A website's years can be those it has tournaments of one sport in
+
+    Scenario: The year of a tournament of the sport is one of the sport's years
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" to be for the sport "gc"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the years of "croquetscores.com" for the sport "gc" are looked for
+      Then the first year is 2024
+
+    Scenario: The year of another sport's tournament alone is not one of the sport's years
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the years of "croquetscores.com" for the sport "gc" are looked for
+      Then no year is found
+
+    Scenario: A year is found once however many of the sport's tournaments are in it
+      Given a tournament "Spring Open" to start on "2026-03-07"
+      And "Spring Open" to be for the sport "gc"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And a tournament "Autumn Open" to start on "2026-10-03"
+      And "Autumn Open" to be for the sport "gc"
+      And "Autumn Open" is created by the account for "organiser@example.com"
+      When the years of "croquetscores.com" for the sport "gc" are looked for
+      Then 1 year is found
+
+    Scenario: The year of an archived tournament of the sport alone is not one of its years
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" to be for the sport "gc"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      When the years of "croquetscores.com" for the sport "gc" are looked for
       Then no year is found
 
   Rule: Projecting the same events again changes nothing

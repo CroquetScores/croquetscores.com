@@ -17,6 +17,13 @@ Feature: The years a website has tournaments in
   This year is not answered unless there is a tournament in it: the home page
   offers the years there are tournaments in, and no others.
 
+  The years can be asked for one sport, for a page of that sport's
+  tournaments in a year (`yearSport.feature`), whose secondary navigation is
+  the years there are tournaments of the sport in. A sport there is not is
+  refused as the sport refuses it, and one the website does not offer as
+  `TournamentYears.SportNotOffered`, since no tournament of it could be on
+  the website.
+
   The years are for anybody, so nobody need be signed in to ask, and every
   scenario here asks with nobody signed in.
 
@@ -112,3 +119,36 @@ Feature: The years a website has tournaments in
       And "organiser@example.com" has created the tournament "Spring Open"
       When the years of tournaments on "gateballscores.com" are asked for
       Then no year is answered
+
+  Rule: The years can be of one sport
+
+    Scenario: A year with a tournament of the sport is answered
+      Given the tournament is to start at "2024-10-03T00:00:00Z"
+      And the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the years of tournaments for the sport "gc" are asked for
+      Then the year 2024 is answered
+
+    Scenario: A year with only another sport's tournaments is not answered
+      Given the tournament is to start at "2024-10-03T00:00:00Z"
+      And the tournament is to be for the sport "ac"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the years of tournaments for the sport "gc" are asked for
+      Then the year 2024 is not answered
+
+    Scenario: A year with tournaments of the sport and of another is answered
+      Given the tournament is to start at "2024-10-03T00:00:00Z"
+      And the tournament is to be for the sport "ac"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      When the years of tournaments for the sport "gc" are asked for
+      Then the year 2024 is answered
+
+    Scenario: A sport there is not is refused
+      When the years of tournaments for the sport "xx" are asked for
+      Then it is refused with "Sport.Unknown"
+
+    Scenario: A sport the website does not offer is refused
+      When the years of tournaments for the sport "gb" are asked for
+      Then it is refused with "TournamentYears.SportNotOffered"

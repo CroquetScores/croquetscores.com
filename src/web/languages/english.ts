@@ -289,6 +289,9 @@ export const english: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "Tournaments in {year}",
     "year.none": "No tournaments start in {year}.",
+    // A sport's page in a year: the same, of the sport alone.
+    "yearSport.heading": "{sport} Tournaments in {year}",
+    "yearSport.none": "No {sport} tournaments start in {year}.",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

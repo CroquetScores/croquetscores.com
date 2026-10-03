@@ -3,18 +3,13 @@ import { ValidationError } from "../../../common/validation/ValidationError.js";
 import type { Country } from "./Country.js";
 import type { Region } from "./Region.js";
 import { Sport } from "./Sport.js";
-import { croquetScoresSports, gateballScoresSports } from "./sports.js";
+import { sportsOffered } from "./sports.js";
 
 /** Every rule a filter can break, besides those of its sport. */
 export type TournamentFilterErrorCode =
   | "TournamentFilter.RegionWithoutCountry"
   | "TournamentFilter.RegionNotInCountry"
   | "TournamentFilter.SportNotOffered";
-
-const SPORTS_OFFERED = {
-  croquetScores: croquetScoresSports,
-  gateballScores: gateballScoresSports,
-} as const;
 
 /** What a reader chose: each of the three, or nothing where they chose none. */
 export interface Chosen {
@@ -72,9 +67,7 @@ export class TournamentFilter {
     let sport: Sport | undefined;
     if (chosen.sport !== undefined) {
       const named = Sport.from(chosen.sport);
-      if (
-        !SPORTS_OFFERED[website.site].some((offered) => offered.equals(named))
-      )
+      if (!sportsOffered[website.site].some((offered) => offered.equals(named)))
         refuse("TournamentFilter.SportNotOffered");
       sport = named;
     }

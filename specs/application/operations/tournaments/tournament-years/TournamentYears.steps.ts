@@ -15,9 +15,15 @@ const yearsAnswered = (world: SpecWorld): readonly number[] => {
 };
 
 // Asked with nobody signed in.
-const ask = async (world: SpecWorld, website: string): Promise<void> => {
+const ask = async (
+  world: SpecWorld,
+  website: string,
+  sport?: string,
+): Promise<void> => {
   try {
-    world.answer = await inHandOf(world).ask(new TournamentYears(website));
+    world.answer = await inHandOf(world).ask(
+      new TournamentYears(website, sport),
+    );
   } catch (failure) {
     world.failure = failure;
   }
@@ -34,6 +40,13 @@ When(
   "the years of tournaments on {string} are asked for",
   async function (this: SpecWorld, website: string) {
     await ask(this, website);
+  },
+);
+
+When(
+  "the years of tournaments for the sport {string} are asked for",
+  async function (this: SpecWorld, sport: string) {
+    await ask(this, "croquetscores.com", sport);
   },
 );
 

@@ -17,6 +17,7 @@ import { TournamentArchived } from "../../domain/aggregates/tournaments/events/T
 import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
 import { TournamentRestored } from "../../domain/aggregates/tournaments/events/TournamentRestored.js";
 import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
+import type { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFilter } from "../../domain/aggregates/tournaments/value-objects/TournamentFilter.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
@@ -155,13 +156,14 @@ export class TournamentsByWebsite implements Projection, Asked {
     return rows.map(listed);
   }
 
-  async yearsOf(website: Website): Promise<readonly number[]> {
+  async yearsOf(website: Website, sport?: Sport): Promise<readonly number[]> {
     const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
       `select distinct extract(year from starts)::int as year
            from tournaments_by_website
           where website = $1 and not archived
+            and ($2::text is null or sport = $2)
           order by year desc`,
-      [website.host],
+      [website.host, sport?.code ?? null],
     );
     return rows.map(({ year }) => year);
   }
