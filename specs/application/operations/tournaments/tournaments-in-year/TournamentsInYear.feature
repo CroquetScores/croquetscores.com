@@ -199,6 +199,36 @@ Feature: The tournaments starting in a year
       When the tournaments in 2026 are asked for
       Then "Spring Open" is not answered
 
+  Rule: A year is one a tournament can start in
+
+    A tournament's address holds the year it starts to four digits, the first
+    not a nought (`TournamentAddress.feature`), so no tournament can start in
+    any other year. Any other is refused as `TournamentsInYear.YearOutOfRange`
+    rather than asked of the read model, which has no day before the year 1
+    to ask for, and would fail rather than answer none. The year's page takes
+    no other year from its address (`year.feature`), so this is for whatever
+    else asks.
+
+    Scenario Outline: A year a tournament cannot start in is refused
+      When the tournaments in <year> are asked for
+      Then it is refused with "TournamentsInYear.YearOutOfRange"
+
+      Examples:
+        | year  |
+        | 0     |
+        | -5    |
+        | 999   |
+        | 10000 |
+
+    Scenario Outline: The first and the last year a tournament can start in are asked for
+      When the tournaments in <year> are asked for
+      Then 0 tournaments are answered
+
+      Examples:
+        | year |
+        | 1000 |
+        | 9999 |
+
   Rule: A filter there cannot be is refused
 
     Scenario: A country there is not is refused
