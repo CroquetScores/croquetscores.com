@@ -283,6 +283,8 @@ Then(
       ".block-grid-initials",
       ".block-grid-points",
       ".swiss-result-opponent",
+      ".team-summary-team",
+      ".team-summary-corner",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

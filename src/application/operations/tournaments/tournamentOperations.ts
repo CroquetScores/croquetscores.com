@@ -44,6 +44,7 @@ export type TournamentOperationErrorCode =
   | "PublicKnockoutOfTournament.NotAKnockout"
   | "PublicSwissOfTournament.NoSuchCompetition"
   | "PublicSwissOfTournament.NotASwiss"
+  | "PublicTeamSummaryOfTournament.NotPlayedByTeams"
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

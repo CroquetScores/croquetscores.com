@@ -296,6 +296,16 @@ export const english: Language = {
     // one was added, and what it says when it has none.
     "tournament.recent": "Recent",
     "tournament.summary": "Summary",
+    // A tournament played by teams' summary: its table's groups and columns.
+    "teamSummary.tests": "Tests",
+    "teamSummary.games": "Games",
+    "teamSummary.hoops": "Hoops",
+    "teamSummary.wins": "Wins",
+    "teamSummary.losses": "Losses",
+    "teamSummary.draws": "Draws",
+    "teamSummary.for": "For",
+    "teamSummary.against": "Against",
+    "teamSummary.net": "Net",
     "tournament.players": "Players",
     // A test in a tournament's sections: its two teams' short names.
     "tournament.test": "{first} vs {second}",

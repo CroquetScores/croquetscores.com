@@ -67,6 +67,8 @@
   --void: #16181c;
   /* A score that won its game, as the old site had it: red. */
   --score-won: #b3261e;
+  /* The thick line round a table and between its groups of columns. */
+  --table-rule: #066b00;
 
   /* What a bar's contents are inset by, so that the site name lines up with the
      text in the panel below it rather than with the panel's edge. The panel's
@@ -129,6 +131,9 @@
     --void: light-dark(#16181c, #050605);
     /* Red in both, and never below 4.5:1 on the panel. */
     --score-won: light-dark(#b3261e, #ff8a80);
+    /* The section bar's green in light; in dark, where the bar is black and a
+       black line is lost on the dark panel, the muted ink, which is not. */
+    --table-rule: light-dark(#066b00, #a6b0a3);
   }
 }
 
@@ -2163,6 +2168,57 @@ main {
    medium screen, as a block's summary is. */
 .swiss-table:not(:has(.swiss-results)) {
   max-width: 38rem;
+}
+
+/* A tournament played by teams' summary, set as a block's summary is: headed
+   in the section bar's colours, its groups above their columns, and its rows
+   banded. Scrolling across within the page where it is wider than the window,
+   as a block's grid does, rather than pushing the page out past it. */
+.team-summary-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* A thick line round the whole table and between its groups, Tests, Games
+   and Hoops, so that each group reads as one, as on the old site. */
+.team-summary {
+  border-collapse: collapse;
+  border: 3px solid var(--table-rule);
+}
+
+.team-summary .team-summary-starts {
+  border-left: 3px solid var(--table-rule);
+}
+
+.team-summary th,
+.team-summary td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.team-summary thead th,
+.team-summary thead td {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  border-color: var(--accent-strong);
+}
+
+.team-summary tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+.team-summary-team,
+.team-summary-corner {
+  text-align: start;
+}
+
+.team-summary-group,
+.team-summary-heading,
+.team-summary-number {
+  text-align: center;
+  white-space: nowrap;
 }
 
 /* --- Utilities ----------------------------------------------------------- */

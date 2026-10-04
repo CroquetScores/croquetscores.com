@@ -118,6 +118,7 @@ import { PublicPlayerOfTournamentHandler } from "../application/operations/tourn
 import { PublicBlockOfTournamentHandler } from "../application/operations/tournaments/PublicBlockOfTournamentHandler.js";
 import { PublicKnockoutOfTournamentHandler } from "../application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
 import { PublicSwissOfTournamentHandler } from "../application/operations/tournaments/PublicSwissOfTournamentHandler.js";
+import { PublicTeamSummaryOfTournamentHandler } from "../application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
@@ -241,6 +242,7 @@ import {
 import { swissView } from "./public/swiss.js";
 import { swissSummaryView } from "./public/swissSummary.js";
 import { registerCompetitionPages } from "./public/competitionPages.js";
+import { registerTeamSummaryPage } from "./public/teamSummary.js";
 import { knockoutView } from "./public/knockout.js";
 import { knockoutSummaryView } from "./public/knockoutSummary.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
@@ -863,6 +865,13 @@ export const buildApplication = async (
       tournamentsByAddress,
     ),
   );
+  mediator.handleQuery(
+    new PublicTeamSummaryOfTournamentHandler(
+      tournaments,
+      competitions,
+      tournamentsByAddress,
+    ),
+  );
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -986,6 +995,7 @@ export const buildApplication = async (
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
   registerPlayerPage(server, assets);
+  registerTeamSummaryPage(server, assets);
   registerCompetitionPages(server, assets, {
     block: {
       grid: gridView(assets),
