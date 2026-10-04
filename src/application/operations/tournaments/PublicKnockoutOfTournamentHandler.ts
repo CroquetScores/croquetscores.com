@@ -106,9 +106,10 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
           .map((match, at): MatchOfKnockout => {
             // Where the draw's play has nobody, a place of the first round is
             // a bye where a bye was entered in it and empty where nothing was.
-            // A later place is a bye only where both places of the match that
-            // fed it were, since two byes meeting send nobody through; where
-            // either was empty, the draw is not yet full, and it is empty too.
+            // A later place is empty where the match that fed it had an empty
+            // place, since the draw is not yet full; otherwise it is a bye, fed
+            // by two byes or by a bye and a player who withdrew before taking
+            // it, neither of which sends anybody through.
             const nobodyAt = (place: number): SideOfKnockout => {
               if (before === undefined) {
                 return players[place]?.isBye === true
@@ -116,9 +117,9 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
                   : { is: "empty" };
               }
               const fed = before.matches[place];
-              return fed?.sides.every((side) => side.is === "bye") === true
-                ? { is: "bye" }
-                : { is: "empty" };
+              return fed?.sides.some((side) => side.is === "empty") === true
+                ? { is: "empty" }
+                : { is: "bye" };
             };
             const sideOf = (side: Side, place: number): SideOfKnockout =>
               side.is === "nobody" ? nobodyAt(place) : sideShown(side, shown);

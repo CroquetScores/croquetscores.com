@@ -18,8 +18,9 @@ Feature: A knockout of a tournament, for anybody to read
   a later round is not known until the matches before it are decided. A
   place is empty where the draw is not yet full: a place of the first round
   nobody has been entered in, and a later place fed by a match with such a
-  place in it; a later place is a bye only where both places feeding it were
-  byes. A player is answered
+  place in it. Any other later place with nobody in it is a bye: one fed by
+  two byes, or by a bye and a player who withdrew before taking it, since
+  neither sends anybody through, and the draw is full. A player is answered
   as the tournament's other pages show one: their name, what they represent,
   the flag they fly, where their own page is found, and whether they have
   withdrawn.
@@ -199,6 +200,16 @@ Feature: A knockout of a tournament, for anybody to read
       And "organiser@example.com" has entered a bye in "Plate" of "Spring Open"
       When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
       Then the second side of the first match of the second round answered is empty
+
+    Scenario: A later place fed by a bye and a player who withdrew is a bye
+      Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Plate" of "Spring Open"
+      When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first side of the first match of the second round answered is a bye
 
   Rule: A match is answered with its games, oldest first, and its winner once decided
 
