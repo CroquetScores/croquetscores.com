@@ -13,9 +13,10 @@ Feature: A block's order of play lists its games, oldest first
   A game is shown as the tournament's page shows one (`tournament.feature`):
   the winner on one line, with what they represent, their flag, their score
   and "beat", or "drew with" where the game was drawn; the loser on the
-  next, with their score; and beside them how long ago the game was added,
-  said as the tournament's page says it. The competition each game was
-  played in is not beside it, since every game here was played in the block.
+  next, with their score; and how long ago the game was added, said as the
+  tournament's page says it. The competition each game was played in is not
+  shown, since every game here was played in the block, so how long ago
+  takes its place, beside the winner, where a reader's eye starts on a game.
 
   Like the grid, it is headed by the block's name, offers the block's three
   views with Order of Play marked as the one being read, and its sections are
@@ -106,14 +107,14 @@ Feature: A block's order of play lists its games, oldest first
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
       Then the second line of the first game scores "17"
 
-    Scenario: How long ago the game was added is beside the loser
+    Scenario: How long ago the game was added is beside the winner
       Given the server's clock reads "2026-10-03T10:12:00Z"
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
-      Then the second line of the first game is beside "12 min"
+      Then the first line of the first game is beside "12 min"
 
-    Scenario: The competition is not beside the winner
+    Scenario: The competition is not shown
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
-      Then the first line of the first game is beside nothing
+      Then the first game names no competition
 
   Rule: A drawn game says "drew with"
 
