@@ -1451,7 +1451,9 @@ main {
    list is read a row at a time. The list is drawn up against the heading
    rather than apart from it, so that the two read as one table; where there
    are no players, what says so keeps its place beneath. */
-.players-heading {
+.players-heading,
+.player-games > h2,
+.player-competitions > h2 {
   padding: var(--space-1) var(--space-2);
   background: var(--accent-strong);
   color: var(--accent-ink);
@@ -1519,15 +1521,40 @@ main {
   min-width: 0;
 }
 
+/* Each list set as a tournament's players are: on its heading, a row to
+   each game or competition with a line between, and every other row on the
+   page's tint. Where a player has none, what says so keeps its place beneath
+   the heading. */
 .player-games-list,
 .player-competitions-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
   overflow-wrap: anywhere;
+  border: 1px solid var(--border);
+  border-top: 0;
+}
+
+.player-games-list > li,
+.player-competitions-list > li {
+  padding: var(--space-1) var(--space-2);
+}
+
+.player-games-list > li + li,
+.player-competitions-list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.player-games-list > li:nth-child(even),
+.player-competitions-list > li:nth-child(even) {
+  background: var(--surface);
+}
+
+.player-games-none,
+.player-competitions-none {
+  margin-top: var(--space-2);
 }
 
 /* As tall as anything else pressed with a thumb. */
