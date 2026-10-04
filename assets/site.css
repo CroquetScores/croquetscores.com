@@ -1503,6 +1503,21 @@ main {
   background: var(--surface);
 }
 
+/* A tournament played by teams lists its players team by team, each team's
+   name headed in the section bar's colours as a tournament's own players are,
+   with its players drawn up against it so that the two read as one table. */
+.players-team-name {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+}
+
+.players-team > .players {
+  margin: 0;
+}
+
 /* As tall as anything else pressed with a thumb. */
 .player-name {
   display: inline-flex;

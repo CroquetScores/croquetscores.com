@@ -275,6 +275,7 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       TEAM,
       TEAM_PLAYER,
       "Sam Someone",
+      "sam-someone",
       10000,
       causedBy,
       happenedAt,

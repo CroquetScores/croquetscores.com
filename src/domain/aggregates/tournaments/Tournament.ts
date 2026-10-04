@@ -1180,7 +1180,22 @@ export class Tournament extends AggregateRoot {
     this.#refuseOnceArchived();
     const team = this.#teamFound(teamId);
     team.ensureInUse();
-    const player = TeamPlayer.from(id, details, nextOrderIn(team.players));
+    // Asked what a player is first, so that a name that is no name is refused
+    // as one rather than as a slug that cannot be made of it.
+    TeamPlayer.ensureValid(details);
+    // Found by a slug of their name no other player in any team has, archived
+    // or not, since every team's players are found at the one address.
+    const slug = firstFree(
+      Slug.fromName(details.name),
+      id,
+      [...this.#teams.values()].flatMap((each) =>
+        each.players.map((other) => other.slug.toString()),
+      ),
+    );
+    const player = TeamPlayer.from(id, details, {
+      slug,
+      order: nextOrderIn(team.players),
+    });
     // Unique in every team, since a game in a test is between two teams and
     // names its players by their ids alone.
     if (
@@ -1199,6 +1214,7 @@ export class Tournament extends AggregateRoot {
         teamId.value,
         id.value,
         player.name.toString(),
+        player.slug.toString(),
         player.order,
         by,
         at,
@@ -1552,11 +1568,10 @@ export class Tournament extends AggregateRoot {
     } else if (event instanceof TeamPlayerAdded) {
       this.#teamBecomes(event.teamId, (team) =>
         team.withPlayer(
-          TeamPlayer.from(
-            TeamPlayerId.from(event.playerId),
-            event,
-            event.order,
-          ),
+          TeamPlayer.from(TeamPlayerId.from(event.playerId), event, {
+            slug: Slug.from(event.slug),
+            order: event.order,
+          }),
         ),
       );
     } else if (event instanceof TeamPlayerUpdated) {

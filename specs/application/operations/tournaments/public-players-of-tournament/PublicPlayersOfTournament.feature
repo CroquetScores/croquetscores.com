@@ -16,12 +16,19 @@ Feature: The players of a tournament, for anybody to read
   is what the page's section bar leads to.
 
   A tournament played by teams has no players of its own, only its teams'
-  (`addPlayer.feature`), so it has no players' page, and asking for one is
-  refused as `PublicPlayersOfTournament.PlayedByTeams`. An address no
-  tournament of the website has been found at, or whose tournament is
-  archived, is refused as `PublicPlayersOfTournament.NoSuchTournament`. An
-  address the tournament has moved on from still finds it, and it is answered
-  with where it is found now.
+  (`addPlayer.feature`), so its players are answered team by team instead:
+  each of its teams not archived, in the tournament's order of its teams, by
+  its name, with each of its players not archived, in alphabetical order of
+  their names, by their name and where their own page is found, which is the
+  tournament's address followed by "players" and the player's slug
+  (`addTeamPlayer.feature`), as a tournament's own player's is. Such a
+  tournament is answered as played by teams, and with no players of its own.
+
+  An address no tournament of the website has been found at, or whose
+  tournament is archived, is refused as
+  `PublicPlayersOfTournament.NoSuchTournament`. An address the tournament has
+  moved on from still finds it, and it is answered with where it is found
+  now.
 
   A tournament's players are for anybody, so nobody need be signed in to ask,
   and every scenario here asks with nobody signed in. They are asked for by
@@ -125,13 +132,61 @@ Feature: The players of a tournament, for anybody to read
       When the public players of the tournament at "2026/ac/spring-open" are asked for
       Then the player "Sam Someone" is answered as found at "2026/gc/spring-open/players/sam-someone"
 
-  Rule: A tournament with no players' page is refused
+  Rule: A tournament played by teams is answered team by team
 
-    Scenario: A tournament played by teams is refused
+    Background:
       Given the tournament is to be played in the format "Teams"
       And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Pam Partner" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+
+    Scenario: A tournament played by teams is answered as one
       When the public players of the tournament at "2026/ac/spring-tests" are asked for
-      Then it is refused with "PublicPlayersOfTournament.PlayedByTeams"
+      Then the tournament answered is played by teams
+
+    Scenario: A tournament played by teams is answered with no players of its own
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then 0 players are answered
+
+    Scenario: The teams are answered in the tournament's order, by their names
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then the first team of the players answered is "Australia"
+      And the second team of the players answered is "England"
+
+    Scenario: A team's players are answered in alphabetical order of their names
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then the first player of the team "Australia" among the players answered is "Pam Partner"
+      And the second player of the team "Australia" among the players answered is "Pat Player"
+
+    Scenario: A team's player is answered with where their page is found
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then the player "Pam Partner" of the team "Australia" is answered as found at "2026/ac/spring-tests/players/pam-partner"
+
+    Scenario: A team's player of a tournament found at its old address is found at its address now
+      Given "organiser@example.com" has moved the tournament "Spring Tests" to the sport "gc"
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then the player "Pam Partner" of the team "Australia" is answered as found at "2026/gc/spring-tests/players/pam-partner"
+
+    Scenario: An archived team is not answered
+      Given "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
+      And "organiser@example.com" has archived the team "New Zealand" in "Spring Tests"
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then 2 teams of the players are answered
+
+    Scenario: An archived player of a team is not answered
+      Given "organiser@example.com" has archived the player "Pat Player" of the team "Australia" of "Spring Tests"
+      When the public players of the tournament at "2026/ac/spring-tests" are asked for
+      Then 1 player of the team "Australia" is among the players answered
+
+    Scenario: A Standard tournament is answered as not played by teams
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the public players of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered is not played by teams
+
+  Rule: An address with no tournament a reader is sent to is refused
 
     Scenario: An address no tournament has been found at is refused
       When the public players of the tournament at "2026/ac/autumn-open" are asked for

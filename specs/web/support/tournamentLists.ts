@@ -225,14 +225,14 @@ When(
 // What the page says -------------------------------------------------------------
 
 Then(
-  "the content has the heading {string}",
-  async function (this: SpecWorld, heading: string) {
+  /^the content has (the|no) heading "(.*)"$/,
+  async function (this: SpecWorld, which: string, heading: string) {
     assert.equal(
       await this.browserPage
         .locator("main")
         .getByRole("heading", { name: heading, exact: true })
         .count(),
-      1,
+      which === "the" ? 1 : 0,
     );
   },
 );

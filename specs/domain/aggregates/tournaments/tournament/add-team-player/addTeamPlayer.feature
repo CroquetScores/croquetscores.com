@@ -20,6 +20,16 @@ Feature: Adding a player to a tournament's team
   capitalised, and an archived player keeps theirs. Two teams can each have a
   player of the same name, since a player is always chosen from their team.
 
+  A player in a team is found within their tournament by a slug made from
+  their name, as a tournament's player is (`addPlayer.feature`), so that
+  their own page is at "2026/ac/spring-tests/players/sam-someone"
+  (`player.feature`). Since two teams can each have a player of the same name,
+  and every team's players are found at the one address, a slug another
+  player in any of the tournament's teams has, archived or not, is followed
+  by "-01", then "-02", up to "-99", and should all of them be taken, by the
+  player id's own characters. A player keeps their slug when their name is
+  corrected (`updateTeamPlayer.feature`), and an archived player keeps theirs.
+
   A player is given an order within their team, and the team lists its
   players lowest first, given as a tournament's players are
   (`addPlayer.feature`): the first player added to a team is given 10,000,
@@ -77,6 +87,44 @@ Feature: Adding a player to a tournament's team
       Given the player "Sam Someone" was added to the team "Australia"
       When the tournament is rebuilt from the stream
       Then the team "Australia" has the player "Sam Someone"
+
+  Rule: A player in a team is found by a slug of their name that no other player in the tournament's teams has
+
+    Scenario: A player's slug is made from their name
+      Given the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added to the team "Australia"
+      Then the player "Sam Someone" of the team "Australia" has the slug "sam-someone"
+
+    Scenario: A slug a player in another team has is followed by "-01"
+      Given the player "Sam Someone" was added to the team "England"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added to the team "Australia"
+      Then the player "Sam Someone" of the team "Australia" has the slug "sam-someone-01"
+
+    Scenario: A slug another player in the same team has is followed by "-01"
+      Given the player "Sam Someone" was added to the team "Australia"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someoné" is added to the team "Australia"
+      Then the player "Sam Someoné" of the team "Australia" has the slug "sam-someone-01"
+
+    Scenario: A slug an archived player has is followed by "-01"
+      Given the player "Sam Someone" was added to the team "England"
+      And the player "Sam Someone" of the team "England" was archived
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added to the team "Australia"
+      Then the player "Sam Someone" of the team "Australia" has the slug "sam-someone-01"
+
+    Scenario: A slug "-01" follows is followed by "-02" when "-01" is taken too
+      Given the player "Sam Someone" was added to the team "England"
+      And the player "Sam Someoné" was added to the team "England"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added to the team "Australia"
+      Then the player "Sam Someone" of the team "Australia" has the slug "sam-someone-02"
+
+    Scenario: A tournament rebuilt after a player was added to a team keeps the player's slug
+      Given the player "Sam Someoné" was added to the team "Australia"
+      When the tournament is rebuilt from the stream
+      Then the player "Sam Someoné" of the team "Australia" has the slug "sam-someone"
 
   Rule: Each player added to a team is given 10,000 more than the highest order in the team
 

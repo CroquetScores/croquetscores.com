@@ -3,8 +3,8 @@
 // tournament's page shows a player and leading to their own page. Its sections
 // are the tournament's, with Players marked.
 //
-// A tournament played by teams has no players of its own, and so no players'
-// page, any more than a tournament a reader is not sent to has. An address the
+// A tournament played by teams has no players of its own, only its teams', so
+// it lists them team by team under each team's name. An address the
 // tournament has moved on from leads to its players' page where it is now.
 import type { FastifyInstance } from "fastify";
 
@@ -24,7 +24,6 @@ import { yearInPath } from "./year.js";
 // What answers the page as one that is not there.
 const notThere: readonly string[] = [
   "PublicPlayersOfTournament.NoSuchTournament",
-  "PublicPlayersOfTournament.PlayedByTeams",
 ];
 
 export const registerPlayersPage = (
@@ -70,6 +69,24 @@ ${asked.players
   )
   .join("\n")}
           </ul>`;
+      // A tournament played by teams has no players of its own, only its
+      // teams', listed team by team under each team's name, with no heading
+      // of "Players" over them: the section bar says it already. A team's
+      // player is their name alone, leading to their own page, since their
+      // team is the heading above them.
+      const teams = asked.teams
+        .map(
+          (
+            team,
+            at,
+          ) => `          <section class="players-team" aria-labelledby="players-team-${String(at)}">
+            <h3 class="players-team-name" id="players-team-${String(at)}">${escape(team.name)}</h3>
+            <ul class="players">
+${team.players.map((player) => `              <li class="player"><a class="player-name" href="/${escape(player.address)}">${escape(player.name)}</a></li>`).join("\n")}
+            </ul>
+          </section>`,
+        )
+        .join("\n");
 
       return sendPage(
         reply,
@@ -77,7 +94,7 @@ ${asked.players
         render(assets, {
           tournament: { name: asked.name, address: asked.address },
           title: asked.name,
-          sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
+          sections: sectionsOf(asked, speaking),
           currentSection: say("tournament.players"),
           theme: themeOf(request),
           signedIn: signedIn(request),
@@ -87,8 +104,7 @@ ${asked.players
           tryWebsite: website.isTry,
           path: request.url,
           body: `          <h1>${escape(asked.name)}</h1>
-          <h2 class="players-heading">${escape(say("tournament.players"))}</h2>
-${players}`,
+${asked.playedByTeams ? teams : `          <h2 class="players-heading">${escape(say("tournament.players"))}</h2>\n${players}`}`,
         }),
       );
     },

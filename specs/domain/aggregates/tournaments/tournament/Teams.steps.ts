@@ -243,6 +243,19 @@ Then(
 );
 
 Then(
+  "the player {string} of the team {string} has the slug {string}",
+  function (this: SpecWorld, name: string, team: string, slug: string) {
+    assert.equal(
+      teamPlayerNamed(
+        teamNamed(tournamentOf(this), team),
+        name,
+      ).slug.toString(),
+      slug,
+    );
+  },
+);
+
+Then(
   "the team {string}'s player {string} is archived",
   function (this: SpecWorld, team: string, name: string) {
     assert.equal(

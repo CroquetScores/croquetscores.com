@@ -38,14 +38,23 @@ export const sectionsOf = (
     { href: `${here}/commentary`, label: say("tournament.commentary") },
     ...tournament.competitions.map((competition) => ({
       href: `/${competition.address}`,
-      label:
-        competition.teams === undefined
-          ? competition.name
-          : say("tournament.test", competition.teams),
+      label: competitionNamed(competition, speaking),
       competition: true,
     })),
   ];
 };
+
+/**
+ * A competition as a tournament's pages say it: by its name, or a test by its
+ * two teams' short names, as "AUS vs ENG", since a test is called by them.
+ */
+export const competitionNamed = (
+  competition: CompetitionOfTournament,
+  { say }: Speaking,
+): string =>
+  competition.teams === undefined
+    ? competition.name
+    : say("tournament.test", competition.teams);
 
 /**
  * A player as a tournament's pages show them: their name, what they represent

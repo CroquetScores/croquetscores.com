@@ -47,63 +47,96 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicPlayerOfTournament",
     );
-    // Its players are its teams', who have their teams' pages.
-    if (tournament.format.isTeamFormat) {
-      throw new TournamentOperationRefused(
-        "PublicPlayerOfTournament.PlayedByTeams",
-        "The tournament is played by teams.",
-      );
-    }
-    const player = tournament.players.find(
+    const address = tournament.address.toString();
+    const pageOf = (slug: { toString(): string }): string =>
+      `${address}/players/${slug.toString()}`;
+    // The player, whether the tournament's own or one of a team's, and the
+    // team they play for where they are a team's: a player of an archived
+    // team is no more one a reader is sent to than an archived player is.
+    const own = tournament.players.find(
       (each) => !each.archived && each.slug.toString() === query.slug,
     );
+    const team = tournament.teams.find(
+      (each) =>
+        !each.archived &&
+        each.players.some(
+          (player) => !player.archived && player.slug.toString() === query.slug,
+        ),
+    );
+    const player =
+      own ??
+      team?.players.find(
+        (each) => !each.archived && each.slug.toString() === query.slug,
+      );
     if (player === undefined) {
       throw new TournamentOperationRefused(
         "PublicPlayerOfTournament.NoSuchPlayer",
         "The tournament has no such player.",
       );
     }
-    const address = tournament.address.toString();
-    // Every player by their id, as an opponent is named and found.
-    const opponents = new Map<string, Opponent>(
-      tournament.players.map((each) => [
-        each.id.value,
-        {
-          name: each.name.toString(),
-          address: `${address}/players/${each.slug.toString()}`,
-        },
-      ]),
-    );
+    // Every player by their id, as an opponent is named and found: the
+    // tournament's own, and every team's, since a game in a test names its
+    // players by their own ids.
+    const opponents = new Map<string, Opponent>([
+      ...tournament.players.map(
+        (each) =>
+          [
+            each.id.value,
+            { name: each.name.toString(), address: pageOf(each.slug) },
+          ] as const,
+      ),
+      ...tournament.teams.flatMap((each) =>
+        each.players.map(
+          (other) =>
+            [
+              other.id.value,
+              { name: other.name.toString(), address: pageOf(other.slug) },
+            ] as const,
+        ),
+      ),
+    ]);
+    const nobody: Opponent = { name: "", address };
     const competitions = competitionsInUse(tournament);
     const inUse = tournament.competitions.filter(
       ({ reference }) => !reference.archived,
     );
     const games: GameOfPlayer[] = [];
     const entered: CompetitionOfTournament[] = [];
-    for (const [at, { reference }] of inUse.entries()) {
+    for (const [at, { reference, shape }] of inUse.entries()) {
+      // A team's players are not entered in a test one by one but play in it
+      // for their team, and its games name them by their own ids; anybody
+      // else is entered in a competition, and its games name its entries.
+      const playing =
+        shape.kind === "test"
+          ? team !== undefined &&
+            (shape.firstTeam.equals(team.id) ||
+              shape.secondTeam.equals(team.id))
+          : own !== undefined;
+      if (!playing) continue;
       const competition = await competitionOf(this.competitions, reference.id);
-      const theirs = competition.players.find((each) =>
-        each.tournamentPlayerId.equals(player.id),
-      );
-      if (theirs === undefined) continue;
+      let theirs = player.id.value;
+      let opponentOf = (written: string): Opponent =>
+        opponents.get(written) ?? nobody;
+      if (shape.kind !== "test") {
+        const entry = competition.players.find((each) =>
+          each.tournamentPlayerId.equals(player.id),
+        );
+        if (entry === undefined) continue;
+        theirs = entry.id.value;
+        // Each player in the competition by the id a game names them by.
+        opponentOf = (written: string): Opponent => {
+          const found = competition.players.find(
+            (each) => each.id.value === written,
+          );
+          return opponents.get(found?.tournamentPlayerId.value ?? "") ?? nobody;
+        };
+      }
       const where = competitions[at]!;
       entered.push(where);
-      // Each player in the competition by the id a game names them by.
-      const opponentOf = (written: string): Opponent => {
-        const found = competition.players.find(
-          (each) => each.id.value === written,
-        );
-        return (
-          opponents.get(found?.tournamentPlayerId.value ?? "") ?? {
-            name: "",
-            address,
-          }
-        );
-      };
       for (const game of competition.games) {
         if (game.archived || game.addedAt === undefined) continue;
-        const won = game.winner.equals(theirs.id);
-        if (!won && !game.loser.equals(theirs.id)) continue;
+        const won = game.winner.value === theirs;
+        if (!won && game.loser.value !== theirs) continue;
         games.push({
           result: game.drawn ? "drawn" : won ? "won" : "lost",
           opponent: opponentOf(won ? game.loser.value : game.winner.value),
@@ -118,6 +151,7 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
       name: tournament.name.toString(),
       address,
       competitions,
+      playedByTeams: tournament.format.isTeamFormat,
       player: { name: player.name.toString() },
       // The most recently added first, and of games added at the same moment,
       // the one listed later first, so that the list reads back from now.

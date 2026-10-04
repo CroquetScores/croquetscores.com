@@ -25,9 +25,18 @@ Feature: A player's page shows their games and their competitions
   Its sections are the tournament's, with Players marked, since a player is
   one of the tournament's players.
 
-  A player who is archived, a slug no player has, and a tournament played by
-  teams, which has no players' pages, are not pages; nor is any player of an
-  archived tournament, or one the website never had. An address the
+  A player in a team of a tournament played by teams has a page too, at the
+  same address followed by their slug, as
+  "/2026/ac/spring-tests/players/pat-player", reached from the team they are
+  listed under on the players' page. It is the same page: their games in the
+  tests, each against a player of the other team whose name leads to that
+  player's page, and the tests their team plays in, each said as the section
+  bar says it, by the two teams' short names with "vs" between, as
+  "AUS vs ENG", and leading to the test's page.
+
+  A player who is archived, a player of an archived team, and a slug no
+  player has are not pages; nor is any player of an archived tournament, or
+  one the website never had. An address the
   tournament has moved on from leads to the player where the tournament is
   now.
 
@@ -170,6 +179,66 @@ Feature: A player's page shows their games and their competitions
       When the page at "/2026/ac/spring-open/players/sam-someone" is opened
       Then the section "Players" leads to "/2026/ac/spring-open/players"
 
+  Rule: A player in a team has a page as a tournament's own player has
+
+    Background:
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 2 expected matches
+
+    Scenario: A team's player's page is headed by their name
+      When the page at "/2026/ac/spring-tests/players/pat-player" is opened
+      Then the page is headed "Pat Player"
+
+    Scenario: A team's player's game in a test is said as they played it
+      Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/players/pat-player" is opened
+      Then the first of the player's games says "lost to Kim Keeper 17 to 26"
+
+    Scenario: A team's player's opponent leads to their own page
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And the page at "/2026/ac/spring-tests/players/pat-player" is open
+      When the opponent in the first of the player's games is pressed
+      Then the address is "/2026/ac/spring-tests/players/kim-keeper"
+
+    Scenario: The test a team's player's team plays in is said by its teams' short names
+      When the page at "/2026/ac/spring-tests/players/pat-player" is opened
+      Then the first of the player's competitions is "AUS vs ENG"
+
+    Scenario: The test leads to its page
+      Given the page at "/2026/ac/spring-tests/players/pat-player" is open
+      When the competition "AUS vs ENG" of the player is pressed
+      Then the address is "/2026/ac/spring-tests/tests/aus-v-eng"
+
+    Scenario: A team's player is reached from the players' page
+      Given the page at "/2026/ac/spring-tests/players" is open
+      When the player "Pat Player" is pressed
+      Then the address is "/2026/ac/spring-tests/players/pat-player"
+
+    Scenario: Players is marked as the section being read on a team's player's page
+      When the page at "/2026/ac/spring-tests/players/pat-player" is opened
+      Then the section "Players" is marked as current
+
+    Scenario: A player of an archived team is not found
+      Given "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
+      And "organiser@example.com" has added the player "Nat Newman" to the team "New Zealand" of "Spring Tests"
+      And "organiser@example.com" has archived the team "New Zealand" in "Spring Tests"
+      When the page at "/2026/ac/spring-tests/players/nat-newman" is opened
+      Then the page says the words for "errors.notFound"
+
+    Scenario: A team's player's page is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/players/pat-player" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
   Rule: An address with no player a reader is sent to is not a page
 
     Scenario: A slug no player has is not found
@@ -180,12 +249,6 @@ Feature: A player's page shows their games and their competitions
       Given "organiser@example.com" has added the player "Pat Player" to "Spring Open"
       And "organiser@example.com" has archived the player "Pat Player" in "Spring Open"
       When the page at "/2026/ac/spring-open/players/pat-player" is opened
-      Then the page says the words for "errors.notFound"
-
-    Scenario: A tournament played by teams has no players' pages
-      Given the tournament is to be played in the format "Teams"
-      And "organiser@example.com" has created the tournament "Spring Tests"
-      When the page at "/2026/ac/spring-tests/players/pat-player" is opened
       Then the page says the words for "errors.notFound"
 
     Scenario: An archived tournament's players are not found

@@ -288,6 +288,7 @@ Then(
       ".test-team",
       ".test-side",
       ".test-score",
+      ".players-team-name",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

@@ -25,8 +25,36 @@ export interface TournamentPlayersToRead {
   readonly address: string;
   /** Its competitions in use, in the tournament's order. */
   readonly competitions: readonly CompetitionOfTournament[];
-  /** Every player not archived, in alphabetical order of their names. */
+  /**
+   * Whether it is played by teams, whose players are their teams' rather
+   * than its own, and are answered in `teams`.
+   */
+  readonly playedByTeams: boolean;
+  /**
+   * Every player not archived, in alphabetical order of their names; none
+   * for a tournament played by teams.
+   */
   readonly players: readonly PublicPlayer[];
+  /**
+   * For a tournament played by teams, each team not archived, in the
+   * tournament's order, with its players not archived, in alphabetical order
+   * of their names; none for a Standard tournament.
+   */
+  readonly teams: readonly TeamOfPlayers[];
+}
+
+/** A team, by its name, and its players, as its players' page lists them. */
+export interface TeamOfPlayers {
+  readonly name: string;
+  readonly players: readonly TeamPlayerOfPlayers[];
+}
+
+/** A player in a team, as the players' page lists them and leads to them. */
+export interface TeamPlayerOfPlayers {
+  /** What the tournament calls them now. */
+  readonly name: string;
+  /** Where their page is found, as "2026/ac/spring-tests/players/pat-player". */
+  readonly address: string;
 }
 
 /**
@@ -34,8 +62,8 @@ export interface TournamentPlayersToRead {
  * now or before, as its players' page shows them. For anybody, so it names
  * nobody.
  *
- * A tournament played by teams has no players of its own, and is refused as
- * `PublicPlayersOfTournament.PlayedByTeams`. An address no tournament of the
+ * A tournament played by teams has no players of its own, and is answered
+ * with its teams' instead, team by team. An address no tournament of the
  * website has been found at is refused as
  * `PublicPlayersOfTournament.NoSuchTournament`, and so is an archived
  * tournament's.

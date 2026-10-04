@@ -3,8 +3,11 @@
 // tournament's first. Its sections are the tournament's, with Players marked,
 // since a player is one of the tournament's players.
 //
-// A player who is archived, a slug no player has, and a tournament played by
-// teams are not pages, any more than a tournament a reader is not sent to is.
+// A player of a tournament played by teams is one of a team's, and their
+// competitions are the tests their team plays in, each said as the section bar
+// says it. A player who is archived, a player of an archived team, and a slug
+// no player has are not pages, any more than a tournament a reader is not sent
+// to is.
 // An address the tournament has moved on from leads to the player where the
 // tournament is now.
 import type { FastifyInstance } from "fastify";
@@ -22,13 +25,12 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
-import { sectionsOf } from "./tournamentPages.js";
+import { competitionNamed, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
 // What answers the page as one that is not there.
 const notThere: readonly string[] = [
   "PublicPlayerOfTournament.NoSuchTournament",
-  "PublicPlayerOfTournament.PlayedByTeams",
   "PublicPlayerOfTournament.NoSuchPlayer",
 ];
 
@@ -90,7 +92,7 @@ ${asked.games.map((each) => game(each, speaking)).join("\n")}
 ${asked.entered
   .map(
     (competition) =>
-      `                <li><a class="player-competition" href="/${escape(competition.address)}">${escape(competition.name)}</a></li>`,
+      `                <li><a class="player-competition" href="/${escape(competition.address)}">${escape(competitionNamed(competition, speaking))}</a></li>`,
   )
   .join("\n")}
               </ul>`;
@@ -101,7 +103,7 @@ ${asked.entered
       render(assets, {
         tournament: { name: asked.name, address: asked.address },
         title: asked.player.name,
-        sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
+        sections: sectionsOf(asked, speaking),
         currentSection: say("tournament.players"),
         theme: themeOf(request),
         signedIn: signedIn(request),

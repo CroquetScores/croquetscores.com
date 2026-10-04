@@ -141,7 +141,11 @@ Given(
   function (this: SpecWorld, name: string) {
     const scenario = scenarioOf(this);
     scenario.team = teamOfWorld(this).withPlayer(
-      TeamPlayer.from(TeamPlayerId.create(), { name }, AN_ORDER),
+      TeamPlayer.from(
+        TeamPlayerId.create(),
+        { name },
+        { slug: Slug.from("a-player"), order: AN_ORDER },
+      ),
     );
   },
 );
