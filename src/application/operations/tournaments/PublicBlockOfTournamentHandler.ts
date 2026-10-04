@@ -98,7 +98,12 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
           flag: player.flag === undefined ? undefined : String(player.flag),
           address: `${address}/players/${player.slug.toString()}`,
           withdrawn: entered.withdrawn,
-          matchesWon: matchesWonIn(won, bestOf) + carried("matchWins"),
+          matchesWon:
+            matchesDecidedIn(won, (game) => game.loser.value, bestOf) +
+            carried("matchWins"),
+          matchesLost:
+            matchesDecidedIn(lost, (game) => game.winner.value, bestOf) +
+            carried("matchLosses"),
           gamesWon: won.length + carried("gameWins"),
           netGames:
             won.length -
@@ -121,19 +126,40 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         loser: game.loser.value,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
+        addedAt: game.addedAt,
       })),
+      ranked: rankingOf(players).map(({ id }) => id),
     };
   }
 }
 
-// The matches won among the games `won` by one player, a match being won by
-// whoever wins more than half the games it is the best of: so a match not yet
-// decided, or shared in a best of an even number, is won by neither.
-const matchesWonIn = (won: readonly Game[], bestOf: number): number => {
+// The matches decided among `games`, every one of them won by the same
+// player, against whoever `opponentOf` says each was against. A match is won
+// by whoever wins more than half the games it is the best of: so a match not
+// yet decided, or shared in a best of an even number, is decided for neither.
+const matchesDecidedIn = (
+  games: readonly Game[],
+  opponentOf: (game: Game) => string,
+  bestOf: number,
+): number => {
   const byOpponent = new Map<string, number>();
-  for (const game of won) {
-    const opponent = game.loser.value;
+  for (const game of games) {
+    const opponent = opponentOf(game);
     byOpponent.set(opponent, (byOpponent.get(opponent) ?? 0) + 1);
   }
   return [...byOpponent.values()].filter((wins) => wins * 2 > bestOf).length;
 };
+
+// The share of the matches a player has decided that they have won, and
+// nothing where they have decided none.
+const shareOf = ({ matchesWon, matchesLost }: PlayerOfBlock): number =>
+  matchesWon + matchesLost === 0 ? 0 : matchesWon / (matchesWon + matchesLost);
+
+// `players` ranked as the old site's summary ranked them: the greater share of
+// matches won first, then the more net hoops, and otherwise as they were,
+// since a sort that keeps the order of equals leaves them in the block's.
+const rankingOf = (players: readonly PlayerOfBlock[]): PlayerOfBlock[] =>
+  [...players].sort(
+    (one, other) =>
+      shareOf(other) - shareOf(one) || other.netHoops - one.netHoops,
+  );

@@ -1,3 +1,4 @@
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
 import type { PublicPlayer } from "./PublicPlayersOfTournament.js";
@@ -14,6 +15,11 @@ export interface PlayerOfBlock extends PublicPlayer {
   readonly withdrawn: boolean;
   /** The matches they have won, and the match wins they carry forward. */
   readonly matchesWon: number;
+  /**
+   * The matches their opponents have won against them, and the match losses
+   * they carry forward.
+   */
+  readonly matchesLost: number;
   /** The games they have won, and the game wins they carry forward. */
   readonly gamesWon: number;
   /**
@@ -36,6 +42,8 @@ export interface GameOfBlock {
   readonly loser: string;
   readonly loserScore: string;
   readonly drawn: boolean;
+  /** When it was added, or nothing where that was never kept. */
+  readonly addedAt: ReadOnlyDate | undefined;
 }
 
 /** A block as its page shows it, and the tournament it is a section of. */
@@ -55,6 +63,11 @@ export interface BlockToRead {
   readonly players: readonly PlayerOfBlock[];
   /** Every game of it in use, in the order they were added. */
   readonly games: readonly GameOfBlock[];
+  /**
+   * The ids of its players ranked: the greater share of their decided
+   * matches won first, then the more net hoops, then in the block's order.
+   */
+  readonly ranked: readonly string[];
 }
 
 /**

@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -34,19 +35,6 @@ const totalHeadings = (world: SpecWorld): Locator =>
 // What is said, as a reader reads it, one space between each word.
 const said = async (found: Locator): Promise<string> =>
   ((await found.textContent()) ?? "").replace(/\s+/g, " ").trim();
-
-// A total's heading as it is laid out, a line to each part, since the words
-// of one heading of more than one are parted by line breaks rather than
-// spaces, which leave nothing between them in its text.
-const linesOf = async (heading: Locator): Promise<string[]> =>
-  (await heading.innerText())
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line !== "");
-
-// A total's heading, its lines read as one, a space between each.
-const headingOf = async (heading: Locator): Promise<string> =>
-  (await linesOf(heading)).join(" ");
 
 const rowOf = (world: SpecWorld, name: string): Locator =>
   rows(world).filter({
@@ -336,3 +324,55 @@ Then("the grid can be scrolled across", async function (this: SpecWorld) {
     `It overflows as ${overflow}.`,
   );
 });
+
+// The views offered ----------------------------------------------------------------
+//
+// Said here for all three of a block's views, which offer the same three.
+
+const viewsOffered = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main .block-views .block-view");
+
+const viewCalled = (world: SpecWorld, name: string): Locator =>
+  viewsOffered(world).filter({ hasText: new RegExp(`^${name}$`) });
+
+Then(
+  /^the (first|second|third) view offered is "(.*)"$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    assert.equal(await said(viewsOffered(this).nth(placeOf(which))), name);
+  },
+);
+
+Then(
+  /^the view "(.*)" is (not )?marked as the one being read$/,
+  async function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(
+      await viewCalled(this, name).getAttribute("aria-current"),
+      not === null ? "page" : null,
+    );
+  },
+);
+
+When(
+  "the view {string} is pressed",
+  async function (this: SpecWorld, name: string) {
+    await viewCalled(this, name).click();
+    await this.browserPage.waitForLoadState();
+  },
+);
+
+// The view chosen ------------------------------------------------------------------
+
+const viewCookie = async (world: SpecWorld) => {
+  const cookies = await world.browserContext!.cookies();
+  const cookie = cookies.find((candidate) => candidate.name === "blockView");
+  assert.ok(cookie !== undefined, "No view was kept.");
+  return cookie;
+};
+
+Then(
+  /^the view chosen is kept in a cookie marked (Secure|HttpOnly)$/,
+  async function (this: SpecWorld, mark: string) {
+    const cookie = await viewCookie(this);
+    assert.equal(mark === "Secure" ? cookie.secure : cookie.httpOnly, true);
+  },
+);

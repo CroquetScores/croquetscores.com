@@ -1533,6 +1533,85 @@ main {
   font-style: italic;
 }
 
+/* A block's name with its three views on the same line, against the right
+   edge, wrapping beneath the name only where there is not room beside it. */
+.block-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* A block's three views, offered beside its heading as a row of links, the
+   one being read filled as the section bar's current tile is, so that it is
+   told from the others by more than its colour: it is the one that is not a
+   link's colour, and it is the one filled. */
+.block-views ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* As tall as anything else pressed with a thumb. */
+.block-view {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+}
+
+.block-view[aria-current="page"] {
+  background: var(--current);
+  color: var(--current-ink);
+  border-color: var(--current);
+  text-decoration: none;
+}
+
+/* A block's summary: narrow enough for a phone, since it is the view for
+   one, the names wrapping rather than pushing the numbers off the edge. */
+.block-summary {
+  border-collapse: collapse;
+}
+
+.block-summary th,
+.block-summary td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.block-summary-player {
+  font-weight: normal;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+/* As tight as the heading row, as in the grid. */
+.block-summary .player-name {
+  min-height: 0;
+}
+
+.block-summary-withdrawn {
+  color: var(--ink-muted);
+}
+
+.block-summary-heading,
+.block-summary-total {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.block-summary-ranking {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
 /* --- Utilities ----------------------------------------------------------- */
 
 .lead {

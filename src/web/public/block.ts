@@ -1,39 +1,18 @@
-// A block's page: its results as a grid, as the old site showed them. A row
-// for each player in the block's order, and a column for each in the same
-// order, so that where a player's row meets their opponent's column are the
-// games between them; then each player's totals. Its sections are the
-// tournament's, with the block marked.
-//
-// An archived block, a slug no competition has, and a knockout or a Swiss,
-// which are shown otherwise, are not pages, any more than a tournament a
-// reader is not sent to is. An address the tournament has moved on from
-// leads to the block where the tournament is now.
-import type { FastifyInstance } from "fastify";
-
-import {
-  type BlockToRead,
-  type GameOfBlock,
-  type PlayerOfBlock,
-  PublicBlockOfTournament,
+// A block's grid, at the block's own address: its results as the old site
+// showed them. A row for each player in the block's order, and a column for
+// each in the same order, so that where a player's row meets their
+// opponent's column are the games between them; then each player's totals.
+// What every view of a block shares is blockPages.ts's.
+import type {
+  BlockToRead,
+  GameOfBlock,
+  PlayerOfBlock,
 } from "../../application/operations/tournaments/PublicBlockOfTournament.js";
-import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
-import { type Speaking, speakingOf } from "../common/language.js";
-import { render } from "../common/layout.js";
-import { hasPassword, signedIn } from "../common/reader.js";
-import { siteNameOf, websiteOf } from "../common/site.js";
-import { themeOf } from "../common/theme.js";
-import { sendPage } from "./tournamentLists.js";
-import { playerShown, sectionsOf } from "./tournamentPages.js";
-import { yearInPath } from "./year.js";
-
-// What answers the page as one that is not there.
-const notThere: readonly string[] = [
-  "PublicBlockOfTournament.NoSuchTournament",
-  "PublicBlockOfTournament.NoSuchCompetition",
-  "PublicBlockOfTournament.NotABlock",
-];
+import type { Speaking } from "../common/language.js";
+import { aWordToALine, type DrawView } from "./blockPages.js";
+import { playerShown } from "./tournamentPages.js";
 
 /**
  * The first letter or digit of each word of `name`, a word being what spaces
@@ -121,7 +100,7 @@ ${totals.map(({ of }) => `                <td class="block-grid-total">${escape(
               <tr>
                 <td class="block-grid-corner"></td>
 ${heading}
-${totals.map(({ word }) => `                <th scope="col" class="block-grid-total-heading">${escape(say(word)).split(" ").join("<br/>")}</th>`).join("\n")}
+${totals.map(({ word }) => `                <th scope="col" class="block-grid-total-heading">${aWordToALine(escape(say(word)))}</th>`).join("\n")}
               </tr>
               </thead>
               <tbody>
@@ -131,57 +110,8 @@ ${rows}
           </div>`;
 };
 
-export const registerBlockPage = (
-  server: FastifyInstance,
-  assets: Assets,
-): void => {
-  server.get<{
-    Params: { year: string; sport: string; slug: string; block: string };
-  }>(
-    `/${yearInPath}/:sport/:slug/competitions/:block`,
-    async (request, reply) => {
-      const { year, sport, slug, block } = request.params;
-      const address = `${year}/${sport}/${slug}`;
-      const website = websiteOf(request);
-      let asked;
-      try {
-        asked = await request.server.mediator.query(
-          new PublicBlockOfTournament(website.host, address, block),
-        );
-      } catch (failure) {
-        if (
-          failure instanceof TournamentOperationRefused &&
-          notThere.includes(failure.code)
-        ) {
-          return reply.callNotFound();
-        }
-        throw failure;
-      }
-      // An address the tournament has moved on from leads to the block where
-      // it is now, for good, so that a link kept from before still works.
-      if (asked.address !== address) {
-        return reply.redirect(`/${asked.address}/competitions/${block}`, 301);
-      }
-
-      const speaking = speakingOf(request);
-      return sendPage(
-        reply,
-        request,
-        render(assets, {
-          title: asked.block.name,
-          sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
-          currentSection: asked.block.name,
-          theme: themeOf(request),
-          signedIn: signedIn(request),
-          hasPassword: hasPassword(request),
-          speaking,
-          siteName: siteNameOf(request),
-          tryWebsite: website.isTry,
-          path: request.url,
-          body: `          <h1 id="block-heading">${escape(asked.block.name)}</h1>
-${grid(asked, speaking, assets)}`,
-        }),
-      );
-    },
-  );
-};
+/** What draws a block's grid. */
+export const gridView =
+  (assets: Assets): DrawView =>
+  (asked, speaking) =>
+    grid(asked, speaking, assets);

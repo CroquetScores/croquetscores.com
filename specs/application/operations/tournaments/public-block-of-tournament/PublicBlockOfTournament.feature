@@ -1,12 +1,14 @@
 @postgres
 Feature: A block of a tournament, for anybody to read
 
-  A block's page shows its results as a grid (`block.feature`). The
-  application answers it: the block, found by its slug, with its name; every
-  player entered in it, in the block's order, which is the order its managers
-  gave them; how many games each match between two of them is the best of;
-  every game of the block in use; and, for each player, the matches they
-  have won, the games they have won, their net games and their net hoops.
+  A block's pages show its results three ways: as a grid (`block.feature`),
+  as a summary (`blockSummary.feature`) and in order of play
+  (`blockOrderOfPlay.feature`). The application answers all three: the
+  block, found by its slug, with its name; every player entered in it, in the
+  block's order, which is the order its managers gave them; the same players
+  ranked; how many games each match between two of them is the best of; every
+  game of the block in use; and, for each player, the matches they have won
+  and lost, the games they have won, their net games and their net hoops.
 
   Each player is answered with their name, what they represent and the flag
   they fly, as the tournament's other pages show a player, where their own
@@ -15,13 +17,14 @@ Feature: A block of a tournament, for anybody to read
   the block is not.
 
   Each game is answered with its winner, the winner's score, its loser, the
-  loser's score and whether it was drawn, the scores as they were typed, in
-  the order the games were added. An archived game is not answered, and
+  loser's score, whether it was drawn and when it was added, the scores as
+  they were typed, in the order the games were added. An archived game is not answered, and
   counts for nothing, as everywhere games are counted.
 
   A player has won a match when they have won more than half the games it is
   the best of, so two of a best of 3, and two of a best of 2. A match not yet
-  decided, or shared one each in a best of 2, is won by neither. A player's
+  decided, or shared one each in a best of 2, is won by neither. A player
+  has lost a match when their opponent has won it. A player's
   games are the games they have won, and a drawn game is won by neither.
   Their net games are the games they have won less the games they have lost.
   Their net hoops are the points they have scored less the points scored
@@ -30,10 +33,18 @@ Feature: A block of a tournament, for anybody to read
 
   Whatever a player brings into the block from play not scored in it
   (`ChangeCarryForward.feature`) is counted with what was: their match wins
-  with their matches, their game wins with their games and their net games,
-  their game losses against their net games, and their hoops for less their
-  hoops against with their net hoops. Match losses count towards nothing
-  shown.
+  with the matches they have won, their match losses with the matches they
+  have lost, their game wins with their games and their net games, their
+  game losses against their net games, and their hoops for less their hoops
+  against with their net hoops.
+
+  The players are ranked as the old site's summary ranked them: by the share
+  of their decided matches they have won, highest first, then by their net
+  hoops, most first, and where both are the same, in the block's order. A
+  share rather than a count, so that a player who has played fewer matches
+  is not ranked below one who has simply played more. A player who has
+  decided no match has a share of nothing. Whether this is how a tournament
+  places its players is for its regulations to say, and the summary says so.
 
   The page is a section of the tournament's, so the tournament is answered
   with it as its players are (`PublicPlayersOfTournament.feature`): its name,
@@ -151,6 +162,12 @@ Feature: A block of a tournament, for anybody to read
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the first game of the block answered was played to "26tp" against "17"
 
+    Scenario: A game is answered with when it was added
+      Given the moment "2026-10-03T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the block answered was added at "2026-10-03T10:00:00Z"
+
     Scenario: A drawn game is answered as drawn
       Given "Sam Someone" has beaten "Alex Another" 17 to 17 in "Block A" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
@@ -228,6 +245,25 @@ Feature: A block of a tournament, for anybody to read
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the block "Sam Someone" is answered with 0 matches won
+
+  Rule: A player's matches lost are the matches their opponents have won
+
+    Scenario: A match lost is a match lost
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with 1 match lost
+
+    Scenario: A match won is not a match lost
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 0 matches lost
+
+    Scenario: A match not yet decided is lost by neither player
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with 0 matches lost
 
   Rule: A player's games are the games they have won
 
@@ -340,6 +376,11 @@ Feature: A block of a tournament, for anybody to read
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the block "Sam Someone" is answered with net games of -2
 
+    Scenario: Match losses carried forward are matches lost
+      Given "organiser@example.com" has given the player "Sam Someone" in "Block A" of "Spring Open" a carry forward of match losses of 2
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 2 matches lost
+
     Scenario: Hoops for carried forward add to net hoops
       Given "organiser@example.com" has given the player "Sam Someone" in "Block A" of "Spring Open" a carry forward of hoops for of 40
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
@@ -351,6 +392,56 @@ Feature: A block of a tournament, for anybody to read
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the block "Sam Someone" is answered with net hoops of -21
+
+  Rule: The players are ranked by the share of their matches they have won, then by their net hoops
+
+    Scenario: A player with a greater share of their matches won is ranked higher
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Alex Another"
+
+    Scenario: A share is ranked rather than a count
+      Given the block is to be the best of 1
+      And "organiser@example.com" has added the player "Pat Player" to "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Player" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 17 in "Block B" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Chris Third" has beaten "Pat Player" 26 to 17 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Sam Someone"
+      And the second player of the block ranked is "Chris Third"
+
+    Scenario: Players with the same share are ranked by their net hoops
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Chris Third"
+      And the second player of the block ranked is "Sam Someone"
+
+    Scenario: Players alike in both are ranked in the block's order
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Sam Someone"
+      And the second player of the block ranked is "Alex Another"
+      And the third player of the block ranked is "Chris Third"
+
+    Scenario: A player who has decided no match is ranked below one who has won a match
+      Given "Alex Another" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Alex Another"
+      And the second player of the block ranked is "Sam Someone"
+
+    Scenario: Matches carried forward count towards the share
+      Given "organiser@example.com" has given the player "Chris Third" in "Block A" of "Spring Open" a carry forward of match wins of 1
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Chris Third"
 
   Rule: Only a block of a tournament a reader is sent to is answered
 
