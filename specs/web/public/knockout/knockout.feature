@@ -48,11 +48,11 @@ Feature: A knockout's grid draws its draw round by round
 
   Its sections are the tournament's, with the knockout marked.
 
-  A knockout that is archived, a slug no competition has, and a Swiss, which
-  is shown otherwise and is not a page until the feature that shows it
-  lands, are not pages; nor is any knockout of an archived tournament, or one
-  the website never had. An address the tournament has moved on from leads to
-  the knockout where the tournament is now.
+  A knockout that is archived and a slug no competition has are not pages;
+  nor is any knockout of an archived tournament, or one the website never
+  had. A block or a Swiss at the same address is shown as one
+  (`block.feature`, `swiss.feature`). An address the tournament has moved on
+  from leads to the knockout where the tournament is now.
 
   Where a scenario says nothing else, the tournament is for the sport "ac"
   and starts on 3 October 2026, and its knockout has a draw of 4 places, its
@@ -410,11 +410,6 @@ Feature: A knockout's grid draws its draw round by round
     Scenario: An archived knockout is not found
       Given "organiser@example.com" has archived the competition "Finals" in "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
-      Then the page says the words for "errors.notFound"
-
-    Scenario: A Swiss is not found
-      Given "organiser@example.com" has added the Swiss "Swiss" to "Spring Open"
-      When the page at "/2026/ac/spring-open/competitions/swiss" is opened
       Then the page says the words for "errors.notFound"
 
     Scenario: An archived tournament's knockouts are not found
