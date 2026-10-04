@@ -265,7 +265,7 @@ export const registerCompetitionPages = (
           render(assets, {
             tournament: { name: asked.name, address: asked.address },
             title: found.name,
-            sections: sectionsOf(asked, speaking),
+            sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
             currentSection: found.name,
             theme: themeOf(request),
             signedIn: signedIn(request),

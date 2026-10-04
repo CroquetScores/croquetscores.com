@@ -13,13 +13,15 @@ import type { Section } from "../common/layout.js";
 /**
  * The tournament's sections, by the address it is found at now: Recent, which
  * is its page, then Players, Notes and Commentary, then each of its
- * competitions in use. A tournament played by teams has the same, its
+ * competitions in use. A tournament played by teams has the same, with
+ * Summary after Recent, the place its teams' standing will be shown, and its
  * competitions its tests, each said as its teams' short names with "vs"
  * between, as "AUS vs ENG", in the reader's language.
  */
 export const sectionsOf = (
   tournament: {
     readonly address: string;
+    readonly playedByTeams: boolean;
     readonly competitions: readonly CompetitionOfTournament[];
   },
   speaking: Speaking,
@@ -28,6 +30,9 @@ export const sectionsOf = (
   const here = `/${tournament.address}`;
   return [
     { href: here, label: say("tournament.recent") },
+    ...(tournament.playedByTeams
+      ? [{ href: `${here}/summary`, label: say("tournament.summary") }]
+      : []),
     { href: `${here}/players`, label: say("tournament.players") },
     { href: `${here}/notes`, label: say("tournament.notes") },
     { href: `${here}/commentary`, label: say("tournament.commentary") },

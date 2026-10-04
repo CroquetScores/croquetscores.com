@@ -77,7 +77,7 @@ ${asked.players
         render(assets, {
           tournament: { name: asked.name, address: asked.address },
           title: asked.name,
-          sections: sectionsOf(asked, speaking),
+          sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
           currentSection: say("tournament.players"),
           theme: themeOf(request),
           signedIn: signedIn(request),

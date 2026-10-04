@@ -286,6 +286,7 @@ export const spanish: Language = {
     "yearSport.heading": "Torneos de {sport} en {year}",
     "yearSport.none": "Ningún torneo de {sport} empieza en {year}.",
     "tournament.recent": "Recientes",
+    "tournament.summary": "Resumen",
     "tournament.players": "Jugadores",
     "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notas",

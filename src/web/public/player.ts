@@ -101,7 +101,7 @@ ${asked.entered
       render(assets, {
         tournament: { name: asked.name, address: asked.address },
         title: asked.player.name,
-        sections: sectionsOf(asked, speaking),
+        sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
         currentSection: say("tournament.players"),
         theme: themeOf(request),
         signedIn: signedIn(request),

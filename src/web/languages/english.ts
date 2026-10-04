@@ -295,6 +295,7 @@ export const english: Language = {
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "Recent",
+    "tournament.summary": "Summary",
     "tournament.players": "Players",
     // A test in a tournament's sections: its two teams' short names.
     "tournament.test": "{first} vs {second}",
