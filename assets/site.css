@@ -1650,7 +1650,7 @@ main {
 
 /* A block's name with its three views on the same line, against the right
    edge, wrapping beneath the name only where there is not room beside it. */
-.block-heading {
+.competition-heading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1662,7 +1662,7 @@ main {
    one being read filled as the section bar's current tile is, so that it is
    told from the others by more than its colour: it is the one that is not a
    link's colour, and it is the one filled. */
-.block-views ul {
+.competition-views ul {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -1672,7 +1672,7 @@ main {
 }
 
 /* As tall as anything else pressed with a thumb. */
-.block-view {
+.competition-view {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -1681,7 +1681,7 @@ main {
   border-radius: var(--radius-1);
 }
 
-.block-view[aria-current="page"] {
+.competition-view[aria-current="page"] {
   background: var(--current);
   color: var(--current-ink);
   border-color: var(--current);
@@ -1689,8 +1689,12 @@ main {
 }
 
 /* A block's summary: narrow enough for a phone, since it is the view for
-   one, the names wrapping rather than pushing the numbers off the edge. */
+   one, the names wrapping rather than pushing the numbers off the edge, and
+   no wider than a medium screen, 38rem as a tournament's games are, so that
+   on a wide one its numbers stay within a glance of their names. */
 .block-summary {
+  width: 100%;
+  max-width: 38rem;
   border-collapse: collapse;
 }
 
@@ -1740,6 +1744,335 @@ main {
 .block-summary-ranking {
   font-size: var(--text-sm);
   color: var(--ink-muted);
+}
+
+/* A knockout's grid: a column for each round, side by side, scrolling across
+   within the page where it is wider than the window, as a block's grid does.
+   Positioned, for the reason a block's grid is: what is hidden but said aloud
+   within it scrolls with it rather than pushing the page out. */
+.knockout-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* An arrow halfway down the grid's right edge while there is more of it to
+   the right, leading to the final, and one halfway down its left edge once it
+   is scrolled from its start, leading back to the first round. Whether there
+   is more either way is told by how far the grid is scrolled, so that neither
+   shows where the whole grid fits, since a grid that does not scroll has no
+   scroll to tell by. A browser that cannot tell never shows them, and a
+   reader there scrolls as they would have. */
+.knockout-frame {
+  position: relative;
+  timeline-scope: --knockout;
+}
+
+.knockout-scroll {
+  scroll-timeline: --knockout x;
+}
+
+.knockout-arrow {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .knockout-arrow {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    translate: 0 -50%;
+    border-radius: 50%;
+    background: var(--action);
+    color: var(--action-ink);
+    text-decoration: none;
+    visibility: hidden;
+    animation-timeline: --knockout;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+
+  .knockout-onward {
+    right: var(--space-2);
+    animation-name: knockout-onward;
+  }
+
+  .knockout-back {
+    left: var(--space-2);
+    animation-name: knockout-back;
+  }
+}
+
+/* The same two above the grid and below it, each pair in a row held to the
+   width of what shows of the grid and kept there as it scrolls, asked of the
+   grid itself whether there is more either way. Where the grid does not
+   scroll, the rows are not there at all, rather than empty bands above and
+   below it; and a browser that cannot ask never shows them. */
+.knockout-scroll {
+  container-type: scroll-state;
+}
+
+.knockout-edge {
+  display: none;
+}
+
+@container scroll-state(scrollable: inline) {
+  .knockout-edge {
+    position: sticky;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .knockout-above {
+    padding-bottom: var(--space-2);
+  }
+
+  .knockout-below {
+    padding-top: var(--space-2);
+  }
+}
+
+.knockout-edge-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--action);
+  color: var(--action-ink);
+  text-decoration: none;
+  visibility: hidden;
+}
+
+.knockout-edge-onward {
+  margin-left: auto;
+}
+
+@container scroll-state(scrollable: right) {
+  .knockout-edge-onward {
+    visibility: visible;
+  }
+}
+
+@container scroll-state(scrollable: left) {
+  .knockout-edge-back {
+    visibility: visible;
+  }
+}
+
+@keyframes knockout-onward {
+  0%,
+  98% {
+    visibility: visible;
+  }
+
+  100% {
+    visibility: hidden;
+  }
+}
+
+@keyframes knockout-back {
+  0%,
+  2% {
+    visibility: hidden;
+  }
+
+  3%,
+  100% {
+    visibility: visible;
+  }
+}
+
+/* In the site's small type, near the old site's, so that a draw of 16 places
+   fits a wide screen as it did there. */
+.knockout {
+  display: flex;
+  width: max-content;
+  font-size: var(--text-sm);
+}
+
+.knockout-round {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Every round's column as tall as the first's, each pair given an equal share
+   of it and its two matches at a quarter and three quarters of the way down
+   that share, so that each later match stands level with the gap between
+   the two before it. */
+.knockout-matches {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.knockout-pair {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-around;
+  padding-right: var(--space-3);
+}
+
+/* The bracket, as the old site drew it: a line from the middle of each match
+   of a pair out to the right, joined down the side, that leads on to the
+   match their winners meet in. */
+.knockout-pair::after {
+  content: "";
+  position: absolute;
+  top: 25%;
+  right: 0;
+  bottom: 25%;
+  width: var(--space-3);
+  border: 1px solid var(--ink-muted);
+  border-left: 0;
+}
+
+/* The line on from the bracket before, into the middle of each match of a
+   later round: a pair's two at a quarter and three quarters of the way down,
+   the final's alone at half. */
+.knockout-round + .knockout-round .knockout-pair {
+  padding-left: var(--space-3);
+}
+
+.knockout-round + .knockout-round .knockout-pair::before {
+  content: "";
+  position: absolute;
+  top: 25%;
+  left: 0;
+  width: var(--space-3);
+  height: 50%;
+  border-top: 1px solid var(--ink-muted);
+  border-bottom: 1px solid var(--ink-muted);
+}
+
+.knockout-pair-alone {
+  padding-right: 0;
+}
+
+.knockout-pair-alone::after {
+  content: none;
+}
+
+.knockout-round + .knockout-round .knockout-pair-alone::before {
+  top: 50%;
+  height: 0;
+  border-bottom: 0;
+}
+
+/* A match is a box with its two sides in it, as on the old site, its cells
+   with no lines between them. */
+.knockout-match {
+  border: 1px solid var(--ink-muted);
+  border-collapse: collapse;
+}
+
+.knockout-match th,
+.knockout-match td {
+  padding: var(--space-1) var(--space-2);
+  vertical-align: middle;
+}
+
+/* A name on one line, so that every match is as tall as every other and the
+   brackets meet them in their middles. */
+.knockout-name {
+  font-weight: normal;
+  text-align: start;
+  white-space: nowrap;
+}
+
+/* After the first round a long name wraps, as on the old site, so that a
+   draw of 16 places fits a wide screen. Only the first round's matches need
+   be of one height: they set the column's height, and a later match is set
+   by the middle of its share, whatever its height. */
+.knockout-round + .knockout-round .knockout-name {
+  min-width: 9rem;
+  max-width: 11rem;
+  white-space: normal;
+}
+
+.knockout-round-name,
+.knockout-summary-round > h2 {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-base);
+}
+
+/* Plain, as the old site's were, but for leading to the player's page, which
+   a line beneath says when it is pointed at. */
+.knockout .player-name,
+.knockout-summary .player-name {
+  min-height: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.knockout .player-name:hover,
+.knockout-summary .player-name:hover {
+  text-decoration: underline;
+}
+
+.knockout-score {
+  width: 1.75rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.knockout-withdrawn,
+.knockout-bye {
+  color: var(--ink-muted);
+}
+
+/* Unmarked by colour, as the old site's were, but a game won is bold, so that
+   a reader can still tell a match's winner at a glance, and the result is
+   said aloud for whoever cannot see it. */
+.knockout-won {
+  font-weight: bold;
+}
+
+/* A knockout's summary: its rounds one beneath another, each match a table of
+   its own, for a phone. */
+/* No wider than a medium screen, 38rem as a tournament's games are, since it
+   is the view for a phone and its numbers would drift away from their names
+   across a wide one. */
+.knockout-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 38rem;
+}
+
+/* In the summary, for a phone, a match is as wide as the page allows and a
+   long name wraps rather than running off its edge, its scores still in a
+   column of their own. */
+.knockout-summary .knockout-match {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.knockout-summary .knockout-name {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.knockout-summary .knockout-score {
+  width: 2.5rem;
+}
+
+.knockout-summary-round {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 /* --- Utilities ----------------------------------------------------------- */

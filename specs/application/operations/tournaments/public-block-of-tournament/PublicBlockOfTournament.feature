@@ -3,7 +3,7 @@ Feature: A block of a tournament, for anybody to read
 
   A block's pages show its results three ways: as a grid (`block.feature`),
   as a summary (`blockSummary.feature`) and in order of play
-  (`blockOrderOfPlay.feature`). The application answers all three: the
+  (`orderOfPlay.feature`). The application answers all three: the
   block, found by its slug, with its name; every player entered in it, in the
   block's order, which is the order its managers gave them; the same players
   ranked; how many games each match between two of them is the best of; every

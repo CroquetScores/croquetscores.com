@@ -330,13 +330,24 @@ export const english: Language = {
     "block.withdrawn": "withdrawn",
     "block.losses": "Losses",
     // The three views of a block, offered beneath its heading.
-    "block.views": "Views",
-    "block.view.grid": "Grid",
-    "block.view.summary": "Summary",
-    "block.view.orderOfPlay": "Order of Play",
+    "competition.views": "Views",
+    "competition.view.grid": "Grid",
+    "competition.view.summary": "Summary",
+    "competition.view.orderOfPlay": "Order of Play",
     "blockSummary.ranking":
       "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
-    "blockOrderOfPlay.none": "No games have been played yet.",
+    "orderOfPlay.none": "No games have been played yet.",
+    // A knockout's rounds, named as the old site named them, counted back from
+    // the last, and a bye drawn in place of a player.
+    "knockout.round.final": "Final",
+    "knockout.round.semis": "Semi Finals",
+    "knockout.round.quarters": "Quarter Finals",
+    "knockout.round.number": "Round {number}",
+    "knockout.bye": "Bye",
+    // The arrows that scroll a knockout's grid across to its final, and back
+    // to its first round.
+    "knockout.onward": "Later rounds",
+    "knockout.back": "Earlier rounds",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

@@ -14,6 +14,8 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
+- Withdraw games. For example needed for Pres 8s second round withdrawal
+
 - Tournament finish date can not be greater than current year + 1.
 
 - Feature files for api

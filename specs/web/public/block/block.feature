@@ -45,7 +45,7 @@ Feature: A block's page shows its results as a grid
 
   The grid is one of three views of a block, as it was on the old site: the
   grid, a summary (`blockSummary.feature`) and the order of play
-  (`blockOrderOfPlay.feature`). Each is at the block's address followed by
+  (`orderOfPlay.feature`). Each is at the block's address followed by
   its own name, "grid", "summary" and "order-of-play", and each, on the same
   line as its heading and against the right edge, offers all three, Grid,
   Summary and Order of Play, the one being read marked as the view being
@@ -57,18 +57,20 @@ Feature: A block's page shows its results as a grid
   have chosen none, since it is the whole of the block at once. Opening a
   view at its own address is choosing it, whether by pressing it among the
   views offered or by following a link to it. The choice is one for every
-  block, on every tournament, so that a reader who follows blocks on a phone
-  chooses the summary once rather than once a block.
+  block and every knockout (`knockout.feature`), on every tournament, so that
+  a reader who follows a tournament on a phone chooses the summary once
+  rather than once a competition.
 
   The choice is kept in a cookie for a year, held to the standard the theme's
   is (`theme.feature`): never sent in the clear, and not to be read by a
   script on the page.
 
-  A block that is archived, a slug no competition has, and a knockout or a
-  Swiss, which are shown otherwise and are not pages until the features that
-  show them land, are not pages; nor is any block of an archived tournament,
-  or one the website never had. An address the tournament has moved on from
-  leads to the block where the tournament is now.
+  A block that is archived, a slug no competition has, and a Swiss, which is
+  shown otherwise and is not a page until the feature that shows it lands,
+  are not pages; nor is any block of an archived tournament, or one the
+  website never had. A knockout at the same address is shown as a knockout
+  (`knockout.feature`). An address the tournament has moved on from leads to
+  the block where the tournament is now.
 
   Where a scenario says nothing else, the tournament is for the sport "ac"
   and starts on 3 October 2026, and its block is the best of 3, so that two
@@ -395,11 +397,6 @@ Feature: A block's page shows its results as a grid
     Scenario: An archived block is not found
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page says the words for "errors.notFound"
-
-    Scenario: A knockout is not found
-      Given "organiser@example.com" has added the knockout "Knockout" to "Spring Open"
-      When the page at "/2026/ac/spring-open/competitions/knockout" is opened
       Then the page says the words for "errors.notFound"
 
     Scenario: An archived tournament's blocks are not found

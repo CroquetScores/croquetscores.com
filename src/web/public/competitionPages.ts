@@ -1,0 +1,267 @@
+// What every competition's three views share, a block's (block.ts,
+// blockSummary.ts) and a knockout's (knockout.ts, knockoutSummary.ts) alike,
+// and the order of play, which is the same for both (orderOfPlay.ts): finding
+// the competition, what is not a page and where an old address leads, the
+// heading, the views offered, the section bar with the competition marked,
+// and which view the competition's own address shows. Each view draws only
+// what is its own.
+//
+// A reader keeps the view they chose until they choose another, as on the old
+// site. Opening a view at its own address is choosing it, and a competition's
+// own address, where the section bar and every other page lead, shows the
+// view chosen last, or the grid where none has been. The pages have no
+// scripting, so the choice is kept in a cookie the server reads, as the theme
+// is (theme.ts), and it is one for every competition rather than one a
+// competition, so that a reader who wants the summary on a phone chooses it
+// once.
+//
+// An archived competition, a slug no competition has, and a Swiss, which is
+// not shown yet, are not pages, any more than a tournament a reader is not
+// sent to is. An address the tournament has moved on from leads to the same
+// view of the competition where the tournament is now.
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+
+import {
+  type BlockToRead,
+  PublicBlockOfTournament,
+} from "../../application/operations/tournaments/PublicBlockOfTournament.js";
+import {
+  type KnockoutToRead,
+  PublicKnockoutOfTournament,
+} from "../../application/operations/tournaments/PublicKnockoutOfTournament.js";
+import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
+import type { Mediator } from "../../application/common/Mediator.js";
+import type { Assets } from "../common/assets.js";
+import { escape } from "../common/escape.js";
+import { type Speaking, speakingOf } from "../common/language.js";
+import { render } from "../common/layout.js";
+import { hasPassword, signedIn } from "../common/reader.js";
+import { siteNameOf, websiteOf } from "../common/site.js";
+import { themeOf } from "../common/theme.js";
+import { sendPage } from "./tournamentLists.js";
+import { sectionsOf } from "./tournamentPages.js";
+import { yearInPath } from "./year.js";
+
+/** A view of a competition, and where it is found after its own address. */
+export type CompetitionView = "grid" | "summary" | "orderOfPlay";
+
+const views: readonly {
+  view: CompetitionView;
+  path: string;
+  word: string;
+}[] = [
+  { view: "grid", path: "/grid", word: "competition.view.grid" },
+  { view: "summary", path: "/summary", word: "competition.view.summary" },
+  {
+    view: "orderOfPlay",
+    path: "/order-of-play",
+    word: "competition.view.orderOfPlay",
+  },
+];
+
+// The three views, each leading to its own address, the one being read
+// marked as such.
+const viewsOffered = (
+  competition: string,
+  current: CompetitionView,
+  speaking: Speaking,
+): string => `          <nav class="competition-views" aria-label="${escape(speaking.say("competition.views"))}">
+            <ul>
+${views
+  .map(
+    ({ view, path, word }) =>
+      `              <li><a class="competition-view" href="${escape(`${competition}${path}`)}"${view === current ? ' aria-current="page"' : ""}>${escape(speaking.say(word))}</a></li>`,
+  )
+  .join("\n")}
+            </ul>
+          </nav>`;
+
+// Named for the block, whose pages had views first, and kept so, since a
+// reader's choice made then is still theirs.
+const viewCookie = "blockView";
+
+const aYear = 60 * 60 * 24 * 365;
+
+// The view a reader chose last, or the grid where they have chosen none, which
+// is also what a cookie that names no view means.
+const chosenBy = (request: FastifyRequest): CompetitionView =>
+  views.find(({ view }) => view === request.cookies[viewCookie])?.view ??
+  "grid";
+
+// Held to the standard the theme's cookie is, for the reasons given there:
+// never sent in the clear, and not to be read by a script on the page.
+const remember = (reply: FastifyReply, view: CompetitionView): void => {
+  reply.setCookie(viewCookie, view, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: true,
+    maxAge: aYear,
+  });
+};
+
+/** What draws a view of a competition beneath its heading and the views beside it. */
+export type DrawView<Asked> = (
+  asked: Asked,
+  speaking: Speaking,
+  request: FastifyRequest,
+) => string;
+
+/** What draws each view of each kind of competition that has them. */
+export interface CompetitionDraws {
+  readonly block: Readonly<Record<CompetitionView, DrawView<BlockToRead>>>;
+  readonly knockout: Readonly<
+    Record<CompetitionView, DrawView<KnockoutToRead>>
+  >;
+}
+
+// A competition of either kind, as its pages are given it.
+type Found =
+  | {
+      readonly kind: "block";
+      readonly asked: BlockToRead;
+      readonly name: string;
+    }
+  | {
+      readonly kind: "knockout";
+      readonly asked: KnockoutToRead;
+      readonly name: string;
+    };
+
+// Whether `failure` says there is nothing at the address of the kind asked
+// for, or nothing at all.
+const refusedAs = (failure: unknown, codes: readonly string[]): boolean =>
+  failure instanceof TournamentOperationRefused && codes.includes(failure.code);
+
+// The competition found by `slug`, asked of as a block and then, where it is
+// not one, as a knockout; nothing where neither is there.
+const competitionAt = async (
+  mediator: Mediator,
+  website: string,
+  address: string,
+  slug: string,
+): Promise<Found | undefined> => {
+  try {
+    const asked = await mediator.query(
+      new PublicBlockOfTournament(website, address, slug),
+    );
+    return { kind: "block", asked, name: asked.block.name };
+  } catch (failure) {
+    if (
+      refusedAs(failure, [
+        "PublicBlockOfTournament.NoSuchTournament",
+        "PublicBlockOfTournament.NoSuchCompetition",
+      ])
+    ) {
+      return undefined;
+    }
+    if (!refusedAs(failure, ["PublicBlockOfTournament.NotABlock"])) {
+      throw failure;
+    }
+  }
+  try {
+    const asked = await mediator.query(
+      new PublicKnockoutOfTournament(website, address, slug),
+    );
+    return { kind: "knockout", asked, name: asked.knockout.name };
+  } catch (failure) {
+    if (
+      refusedAs(failure, [
+        "PublicKnockoutOfTournament.NoSuchTournament",
+        "PublicKnockoutOfTournament.NoSuchCompetition",
+        "PublicKnockoutOfTournament.NotAKnockout",
+      ])
+    ) {
+      return undefined;
+    }
+    throw failure;
+  }
+};
+
+/**
+ * Serves every competition's three views, each at its own address, where
+ * opening it chooses it, and at the competition's own address the view
+ * chosen last. Each is drawn by its kind's own of `draws`.
+ */
+export const registerCompetitionPages = (
+  server: FastifyInstance,
+  assets: Assets,
+  draws: CompetitionDraws,
+): void => {
+  const serve = (
+    path: string,
+    viewOf: (request: FastifyRequest) => CompetitionView,
+    chooses: boolean,
+  ): void => {
+    server.get<{
+      Params: {
+        year: string;
+        sport: string;
+        slug: string;
+        competition: string;
+      };
+    }>(
+      `/${yearInPath}/:sport/:slug/competitions/:competition${path}`,
+      async (request, reply) => {
+        const { year, sport, slug, competition } = request.params;
+        const address = `${year}/${sport}/${slug}`;
+        const website = websiteOf(request);
+        const found = await competitionAt(
+          request.server.mediator,
+          website.host,
+          address,
+          competition,
+        );
+        if (found === undefined) return reply.callNotFound();
+        const { asked } = found;
+        const here = `/${asked.address}/competitions/${competition}`;
+        // An address the tournament has moved on from leads to the same
+        // address where it is now, for good, so that a link kept from before
+        // still works. It chooses nothing until it is followed.
+        if (asked.address !== address) {
+          return reply.redirect(`${here}${path}`, 301);
+        }
+
+        const view = viewOf(request);
+        if (chooses) remember(reply, view);
+        const speaking = speakingOf(request);
+        const drawn =
+          found.kind === "block"
+            ? draws.block[view](found.asked, speaking, request)
+            : draws.knockout[view](found.asked, speaking, request);
+        return sendPage(
+          reply,
+          request,
+          render(assets, {
+            tournament: { name: asked.name, address: asked.address },
+            title: found.name,
+            sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
+            currentSection: found.name,
+            theme: themeOf(request),
+            signedIn: signedIn(request),
+            hasPassword: hasPassword(request),
+            speaking,
+            siteName: siteNameOf(request),
+            tryWebsite: website.isTry,
+            path: request.url,
+            body: `          <div class="competition-heading">
+            <h1 id="competition-heading">${escape(found.name)}</h1>
+${viewsOffered(here, view, speaking)}
+          </div>
+${drawn}`,
+          }),
+        );
+      },
+    );
+  };
+  serve("", chosenBy, false);
+  for (const { view, path } of views) serve(path, () => view, true);
+};
+
+/**
+ * `words`, already escaped, with each space a line break, so that a heading
+ * of more than one word has a word to a line and its column is no wider than
+ * its numbers need.
+ */
+export const aWordToALine = (words: string): string =>
+  words.split(" ").join("<br/>");

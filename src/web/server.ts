@@ -116,6 +116,7 @@ import { GamesOfTournamentHandler } from "../application/operations/tournaments/
 import { PublicPlayersOfTournamentHandler } from "../application/operations/tournaments/PublicPlayersOfTournamentHandler.js";
 import { PublicPlayerOfTournamentHandler } from "../application/operations/tournaments/PublicPlayerOfTournamentHandler.js";
 import { PublicBlockOfTournamentHandler } from "../application/operations/tournaments/PublicBlockOfTournamentHandler.js";
+import { PublicKnockoutOfTournamentHandler } from "../application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
@@ -231,8 +232,10 @@ import { registerPlayersPage } from "./public/players.js";
 import { registerPlayerPage } from "./public/player.js";
 import { gridView } from "./public/block.js";
 import { summaryView } from "./public/blockSummary.js";
-import { orderOfPlayView } from "./public/blockOrderOfPlay.js";
-import { registerBlockPages } from "./public/blockPages.js";
+import { blockOrderOfPlay, knockoutOrderOfPlay } from "./public/orderOfPlay.js";
+import { registerCompetitionPages } from "./public/competitionPages.js";
+import { knockoutView } from "./public/knockout.js";
+import { knockoutSummaryView } from "./public/knockoutSummary.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
@@ -839,6 +842,13 @@ export const buildApplication = async (
       tournamentsByAddress,
     ),
   );
+  mediator.handleQuery(
+    new PublicKnockoutOfTournamentHandler(
+      tournaments,
+      competitions,
+      tournamentsByAddress,
+    ),
+  );
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -962,10 +972,17 @@ export const buildApplication = async (
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
   registerPlayerPage(server, assets);
-  registerBlockPages(server, assets, {
-    grid: gridView(assets),
-    summary: summaryView(assets),
-    orderOfPlay: orderOfPlayView(assets),
+  registerCompetitionPages(server, assets, {
+    block: {
+      grid: gridView(assets),
+      summary: summaryView(assets),
+      orderOfPlay: blockOrderOfPlay(assets),
+    },
+    knockout: {
+      grid: knockoutView(assets),
+      summary: knockoutSummaryView(assets),
+      orderOfPlay: knockoutOrderOfPlay(assets),
+    },
   });
 
   // What is queued is sent while the server is listening, and the pool is

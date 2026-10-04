@@ -179,11 +179,6 @@ Feature: A block's summary ranks its players
       When the page at "/2026/ac/spring-open/competitions/block-z/summary" is opened
       Then the page says the words for "errors.notFound"
 
-    Scenario: A knockout has no summary
-      Given "organiser@example.com" has added the knockout "Knockout" to "Spring Open"
-      When the page at "/2026/ac/spring-open/competitions/knockout/summary" is opened
-      Then the page says the words for "errors.notFound"
-
     Scenario: An archived tournament's blocks are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened

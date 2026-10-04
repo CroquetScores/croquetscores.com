@@ -2,7 +2,7 @@
 // and three numbers beside them, where the grid has a column for every
 // player. Beneath it the page says how the players are ranked, and that a
 // tournament's own regulations may place them otherwise. What every view of
-// a block shares is blockPages.ts's.
+// a competition shares is competitionPages.ts's.
 import type {
   BlockToRead,
   PlayerOfBlock,
@@ -10,7 +10,8 @@ import type {
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
-import { aWordToALine, type DrawView, playersById } from "./blockPages.js";
+import { playersById } from "./block.js";
+import { aWordToALine, type DrawView } from "./competitionPages.js";
 import { playerShown } from "./tournamentPages.js";
 
 // Ahead and behind each carry their sign, so that they read as such down the
@@ -68,6 +69,6 @@ ${rows}
 
 /** What draws a block's summary. */
 export const summaryView =
-  (assets: Assets): DrawView =>
+  (assets: Assets): DrawView<BlockToRead> =>
   (asked, speaking) =>
     summary(asked, speaking, assets);

@@ -196,6 +196,17 @@ export class Competition extends AggregateRoot {
   }
 
   /**
+   * A knockout's every match, first round first and each round in the order
+   * of the draw, as the games that count have played it out (KnockoutPlay.ts).
+   * None in a block, a Swiss or a test, which have no draw.
+   */
+  knockoutMatches(told: Told): readonly Match[] {
+    const { shape } = told;
+    if (shape.kind !== "knockout") return [];
+    return this.#knockoutPlay(shape.draw);
+  }
+
+  /**
    * That the tournament player `tournamentPlayer` is entered, and answered
    * with the id they are given. They are given `tournamentOrder`, their order
    * in the tournament, so that the players start in the tournament's order.
