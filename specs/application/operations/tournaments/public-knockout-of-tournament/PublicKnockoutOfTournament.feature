@@ -14,8 +14,12 @@ Feature: A knockout of a tournament, for anybody to read
   to, place 1 meeting place 2, place 3 meeting place 4, and so on, and the
   winners of neighbouring matches meeting in the next round
   (`KnockoutPlay.feature`). A match is answered with its two sides, each a
-  player, a bye, or a place not yet known, since who plays in a later round
-  is not known until the matches before it are decided. A player is answered
+  player, a bye, an empty place or a place not yet known, since who plays in
+  a later round is not known until the matches before it are decided. A
+  place is empty where the draw is not yet full: a place of the first round
+  nobody has been entered in, and a later place fed by a match with such a
+  place in it; a later place is a bye only where both places feeding it were
+  byes. A player is answered
   as the tournament's other pages show one: their name, what they represent,
   the flag they fly, where their own page is found, and whether they have
   withdrawn.
@@ -173,6 +177,28 @@ Feature: A knockout of a tournament, for anybody to read
       And "organiser@example.com" has entered a bye in "Plate" of "Spring Open"
       When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
       Then the second side of the first match of the second round answered is a bye
+
+    Scenario: A place of a draw not yet full is empty
+      Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first side of the second match of the first round answered is empty
+
+    Scenario: A later place fed by places not yet filled is empty, not a bye
+      Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
+      Then the second side of the first match of the second round answered is empty
+
+    Scenario: A later place fed by a bye and a place not yet filled is empty
+      Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Plate" of "Spring Open"
+      When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
+      Then the second side of the first match of the second round answered is empty
 
   Rule: A match is answered with its games, oldest first, and its winner once decided
 

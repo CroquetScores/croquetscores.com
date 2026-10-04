@@ -119,7 +119,7 @@ Then(
 );
 
 Then(
-  new RegExp(`^${SIDE} is (a bye|not yet known)$`),
+  new RegExp(`^${SIDE} is (a bye|empty|not yet known)$`),
   function (
     this: SpecWorld,
     side: string,
@@ -129,7 +129,7 @@ Then(
   ) {
     assert.equal(
       sideAnswered(this, side, match, round).is,
-      what === "a bye" ? "bye" : "not yet known",
+      what === "a bye" ? "bye" : what,
     );
   },
 );

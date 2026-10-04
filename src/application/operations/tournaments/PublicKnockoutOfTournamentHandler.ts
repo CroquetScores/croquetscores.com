@@ -15,6 +15,7 @@ import {
   type MatchOfKnockout,
   type PlayerOfKnockout,
   PublicKnockoutOfTournament,
+  type RoundOfKnockout,
   type SideOfKnockout,
   type WhichSide,
 } from "./PublicKnockoutOfTournament.js";
@@ -93,52 +94,67 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       toldOf(tournament, reference.id),
     );
     const players = competition.players;
-    const rounds = shape.draw.rounds.map((bestOf, round) => ({
-      bestOf: bestOf.games,
-      matches: matches
-        .filter((match) => match.round === round)
-        .map((match, at): MatchOfKnockout => {
-          // Where the draw's play has nobody, a place of the first round is
-          // a bye where a bye was entered in it and empty where nothing was;
-          // in a later round only byes leave nobody to go through.
-          const nobodyAt = (place: number): SideOfKnockout =>
-            round > 0 || players[place]?.isBye === true
-              ? { is: "bye" }
-              : { is: "empty" };
-          const sideOf = (side: Side, place: number): SideOfKnockout =>
-            side.is === "nobody" ? nobodyAt(place) : sideShown(side, shown);
-          const sides = [
-            sideOf(match.sides[0], at * 2),
-            sideOf(match.sides[1], at * 2 + 1),
-          ] as const;
-          // Which side `side` is, where it is a player of this match.
-          const whichIs = (side: Side): WhichSide | undefined => {
-            if (side.is !== "player") return undefined;
-            const [first] = match.sides;
-            return first.is === "player" &&
-              first.player.id.equals(side.player.id)
-              ? 0
-              : 1;
-          };
-          return {
-            sides,
-            games: match.games.map((game) => {
-              const winner: WhichSide =
-                match.sides[0].is === "player" &&
-                game.winner.equals(match.sides[0].player.id)
-                  ? 0
-                  : 1;
-              const won = game.winnerScore.toString();
-              const lost = game.loserScore.toString();
-              return {
-                winner,
-                scores: winner === 0 ? [won, lost] : [lost, won],
-              };
-            }),
-            winner: whichIs(match.winner),
-          };
-        }),
-    }));
+    // Worked out a round at a time, since where the draw's play has nobody in
+    // a later round, the round before says why.
+    const rounds: RoundOfKnockout[] = [];
+    shape.draw.rounds.forEach((bestOf, round) => {
+      const before = rounds[round - 1];
+      rounds.push({
+        bestOf: bestOf.games,
+        matches: matches
+          .filter((match) => match.round === round)
+          .map((match, at): MatchOfKnockout => {
+            // Where the draw's play has nobody, a place of the first round is
+            // a bye where a bye was entered in it and empty where nothing was.
+            // A later place is a bye only where both places of the match that
+            // fed it were, since two byes meeting send nobody through; where
+            // either was empty, the draw is not yet full, and it is empty too.
+            const nobodyAt = (place: number): SideOfKnockout => {
+              if (before === undefined) {
+                return players[place]?.isBye === true
+                  ? { is: "bye" }
+                  : { is: "empty" };
+              }
+              const fed = before.matches[place];
+              return fed?.sides.every((side) => side.is === "bye") === true
+                ? { is: "bye" }
+                : { is: "empty" };
+            };
+            const sideOf = (side: Side, place: number): SideOfKnockout =>
+              side.is === "nobody" ? nobodyAt(place) : sideShown(side, shown);
+            const sides = [
+              sideOf(match.sides[0], at * 2),
+              sideOf(match.sides[1], at * 2 + 1),
+            ] as const;
+            // Which side `side` is, where it is a player of this match.
+            const whichIs = (side: Side): WhichSide | undefined => {
+              if (side.is !== "player") return undefined;
+              const [first] = match.sides;
+              return first.is === "player" &&
+                first.player.id.equals(side.player.id)
+                ? 0
+                : 1;
+            };
+            return {
+              sides,
+              games: match.games.map((game) => {
+                const winner: WhichSide =
+                  match.sides[0].is === "player" &&
+                  game.winner.equals(match.sides[0].player.id)
+                    ? 0
+                    : 1;
+                const won = game.winnerScore.toString();
+                const lost = game.loserScore.toString();
+                return {
+                  winner,
+                  scores: winner === 0 ? [won, lost] : [lost, won],
+                };
+              }),
+              winner: whichIs(match.winner),
+            };
+          }),
+      });
+    });
 
     return {
       name: tournament.name.toString(),
