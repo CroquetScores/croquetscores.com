@@ -456,3 +456,27 @@ Then(
     );
   },
 );
+
+// Where an arrow's link leads: the round it names, or something within it,
+// since following a link to part of the page brings that part into view.
+Then(
+  /^the arrow (back )?(across|above|below) the grid leads to the (first round|final)$/,
+  async function (
+    this: SpecWorld,
+    back: string | null,
+    where: string,
+    round: string,
+  ) {
+    const href = await arrow(this, back, where).getAttribute("href");
+    assert.ok(href?.startsWith("#") === true, `It leads to ${String(href)}.`);
+    const rounds = this.browserPage.locator("main .knockout .knockout-round");
+    const named = round === "final" ? rounds.last() : rounds.first();
+    const target = this.browserPage.locator(href);
+    assert.equal(await target.count(), 1, `Nothing is ${href}.`);
+    assert.equal(
+      (await named.and(target).count()) + (await named.locator(href).count()),
+      1,
+      `${href} is not the ${round}.`,
+    );
+  },
+);

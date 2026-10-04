@@ -347,6 +347,30 @@ Feature: A knockout's grid draws its draw round by round
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then no room is kept below the grid
 
+    Scenario: The arrow back leads to the first round
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the arrow back across the grid leads to the first round
+
+    Scenario: The arrow on leads to the final
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the arrow across the grid leads to the final
+
+    Scenario: In a knockout of one round the arrow back leads to its round
+      Given the knockout is to have a draw of 2 places
+      And "organiser@example.com" has added the knockout "Play-off" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Play-off" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Play-off" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/play-off" is opened
+      Then the arrow back across the grid leads to the first round
+
+    Scenario: In a knockout of one round the arrow on leads to its round
+      Given the knockout is to have a draw of 2 places
+      And "organiser@example.com" has added the knockout "Play-off" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Play-off" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Play-off" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/play-off" is opened
+      Then the arrow across the grid leads to the final
+
   Rule: The knockout's three views are offered, and its own address shows the view chosen last
 
     Scenario: The views are offered in order

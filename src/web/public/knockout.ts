@@ -127,15 +127,19 @@ const pairsOf = (
     matches.slice(at * 2, at * 2 + 2),
   );
 
+// The first round is the arrows' way back and the final their way on. Each
+// is named on a part of its own, the first on its round and the final on its
+// matches, since a knockout of one round has its first round for its final,
+// and one part can have but one name.
 const roundShown = (
   round: RoundOfKnockout,
   at: number,
   rounds: number,
   speaking: Speaking,
   assets: Assets,
-): string => `            <section class="knockout-round"${at === rounds - 1 ? ' id="knockout-final"' : at === 0 ? ' id="knockout-first"' : ""} aria-labelledby="knockout-round-${String(at)}">
+): string => `            <section class="knockout-round"${at === 0 ? ' id="knockout-first"' : ""} aria-labelledby="knockout-round-${String(at)}">
               <h2 class="knockout-round-name visually-hidden" id="knockout-round-${String(at)}">${escape(roundName(at, rounds, speaking))}</h2>
-              <div class="knockout-matches">
+              <div class="knockout-matches"${at === rounds - 1 ? ' id="knockout-final"' : ""}>
 ${pairsOf(round.matches)
   .map(
     (pair) =>
