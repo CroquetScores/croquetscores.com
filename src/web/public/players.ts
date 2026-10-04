@@ -87,7 +87,7 @@ ${asked.players
           tryWebsite: website.isTry,
           path: request.url,
           body: `          <h1>${escape(asked.name)}</h1>
-          <h2>${escape(say("tournament.players"))}</h2>
+          <h2 class="players-heading">${escape(say("tournament.players"))}</h2>
 ${players}`,
         }),
       );

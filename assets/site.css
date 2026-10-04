@@ -1446,19 +1446,40 @@ main {
 }
 
 /* A tournament's players, one to a line, each name leading to the player's
-   own page. */
+   own page, set as a block's summary is: headed in the section bar's colours,
+   and the rows banded, every other one on the page's tint, so that a long
+   list is read a row at a time. The list is drawn up against the heading
+   rather than apart from it, so that the two read as one table; where there
+   are no players, what says so keeps its place beneath. */
+.players-heading {
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+}
+
 .players {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin: 0;
+  margin: calc(-1 * var(--space-4)) 0 0;
   padding: 0;
   list-style: none;
+  border: 1px solid var(--border);
+  border-top: 0;
 }
 
 /* Wraps rather than pushing out past the panel. */
 .player {
+  padding-inline: var(--space-2);
   overflow-wrap: anywhere;
+}
+
+.player + .player {
+  border-top: 1px solid var(--border);
+}
+
+.player:nth-child(even) {
+  background: var(--surface);
 }
 
 /* As tall as anything else pressed with a thumb. */
@@ -1648,6 +1669,21 @@ main {
 /* As tight as the heading row, as in the grid. */
 .block-summary .player-name {
   min-height: 0;
+}
+
+/* Headed in the section bar's colours, so that the headings read as the
+   page's own bar over its columns, and the rows banded, every other one on
+   the page's tint, so that a reader's eye stays on one player's row across to
+   their numbers. */
+.block-summary thead th,
+.block-summary thead td {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  border-color: var(--accent-strong);
+}
+
+.block-summary tbody tr:nth-child(even) {
+  background: var(--surface);
 }
 
 .block-summary-withdrawn {
