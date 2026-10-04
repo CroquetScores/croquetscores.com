@@ -705,6 +705,9 @@ a:hover {
 .site-sections ul:has(.section-competition) a {
   align-items: flex-start;
   align-self: start;
+  /* No shorter than a pointer can be sure of pressing, as every tab is asked
+     to be (TournamentSections.feature), though its words are set tight. */
+  min-height: 24px;
   padding-inline: var(--space-2);
   line-height: var(--leading-tight);
 }
