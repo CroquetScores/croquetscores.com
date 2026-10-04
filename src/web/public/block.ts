@@ -2,7 +2,7 @@
 // showed them. A row for each player in the block's order, and a column for
 // each in the same order, so that where a player's row meets their
 // opponent's column are the games between them; then each player's totals.
-// What every view of a block shares is blockPages.ts's.
+// What every view of a competition shares is competitionPages.ts's.
 import type {
   BlockToRead,
   GameOfBlock,
@@ -11,7 +11,7 @@ import type {
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
-import { aWordToALine, type DrawView } from "./blockPages.js";
+import { aWordToALine, type DrawView } from "./competitionPages.js";
 import { playerShown } from "./tournamentPages.js";
 
 /**
@@ -94,7 +94,7 @@ ${totals.map(({ of }) => `                <td class="block-grid-total">${escape(
               </tr>`;
     })
     .join("\n");
-  return `          <div class="block-grid-scroll" role="region" aria-labelledby="block-heading" tabindex="0">
+  return `          <div class="block-grid-scroll" role="region" aria-labelledby="competition-heading" tabindex="0">
             <table class="block-grid">
               <thead>
               <tr>
@@ -112,6 +112,12 @@ ${rows}
 
 /** What draws a block's grid. */
 export const gridView =
-  (assets: Assets): DrawView =>
+  (assets: Assets): DrawView<BlockToRead> =>
   (asked, speaking) =>
     grid(asked, speaking, assets);
+
+/** The players of `asked` by the id its games name each by. */
+export const playersById = (
+  asked: BlockToRead,
+): ReadonlyMap<string, PlayerOfBlock> =>
+  new Map(asked.players.map((player) => [player.id, player]));

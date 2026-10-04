@@ -1650,7 +1650,7 @@ main {
 
 /* A block's name with its three views on the same line, against the right
    edge, wrapping beneath the name only where there is not room beside it. */
-.block-heading {
+.competition-heading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1662,7 +1662,7 @@ main {
    one being read filled as the section bar's current tile is, so that it is
    told from the others by more than its colour: it is the one that is not a
    link's colour, and it is the one filled. */
-.block-views ul {
+.competition-views ul {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -1672,7 +1672,7 @@ main {
 }
 
 /* As tall as anything else pressed with a thumb. */
-.block-view {
+.competition-view {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -1681,7 +1681,7 @@ main {
   border-radius: var(--radius-1);
 }
 
-.block-view[aria-current="page"] {
+.competition-view[aria-current="page"] {
   background: var(--current);
   color: var(--current-ink);
   border-color: var(--current);
@@ -1740,6 +1740,112 @@ main {
 .block-summary-ranking {
   font-size: var(--text-sm);
   color: var(--ink-muted);
+}
+
+/* A knockout's grid: a column for each round, side by side, scrolling across
+   within the page where it is wider than the window, as a block's grid does.
+   Positioned, for the reason a block's grid is: what is hidden but said aloud
+   within it scrolls with it rather than pushing the page out. */
+.knockout-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.knockout {
+  display: flex;
+  gap: var(--space-5);
+  width: max-content;
+}
+
+/* Every round's column as tall as the first's, its matches spread evenly down
+   it, so that each later match stands level with the gap between the two
+   before it. */
+/* Of one width, as the old site's were, a long name wrapping within it. */
+.knockout-round {
+  display: flex;
+  flex-direction: column;
+  width: 24rem;
+}
+
+.knockout-matches {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: var(--space-4);
+}
+
+.knockout-round-name,
+.knockout-summary-round > h2 {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-base);
+}
+
+/* As wide as its round, its scores in cells of one width and the names
+   taking what is left, so that the scores of every match in a round stand in
+   one column rather than wherever each match's names end. */
+.knockout-match {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.knockout-match th,
+.knockout-match td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.knockout-name {
+  font-weight: normal;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+/* As tight as the rest of the row, as in a block's grid. */
+.knockout .player-name,
+.knockout-summary .player-name {
+  min-height: 0;
+}
+
+.knockout-score {
+  width: 2.75rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.knockout-withdrawn,
+.knockout-bye {
+  color: var(--ink-muted);
+}
+
+/* Told apart by more than colour, as a block's grid tells them. */
+.knockout-won {
+  color: var(--score-won);
+  font-weight: bold;
+}
+
+.knockout-lost {
+  color: var(--ink-muted);
+}
+
+/* A knockout's summary: its rounds one beneath another, each match a table of
+   its own, for a phone. */
+.knockout-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.knockout-summary-round {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 /* --- Utilities ----------------------------------------------------------- */

@@ -1,5 +1,5 @@
 // What the pages of a tournament a reader follows share, whichever of its
-// sections they show (tournament.ts, players.ts, blockOrderOfPlay.ts): the
+// sections they show (tournament.ts, players.ts, orderOfPlay.ts): the
 // section bar, how a player is shown, and how a game is.
 import type { PlayerInGame } from "../../application/operations/tournaments/GamesOfTournament.js";
 import type { CompetitionOfTournament } from "../../application/operations/tournaments/tournamentForReaders.js";
