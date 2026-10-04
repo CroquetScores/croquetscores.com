@@ -344,10 +344,13 @@ a:hover {
   color: var(--accent-ink);
 }
 
+/* Along the top rather than centred, so that where the bar is taller for a
+   tournament's name beneath the site's, the navigation stays at the top of the
+   window rather than sinking to the middle of the bar. */
 .site-bar-inner {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
   padding-inline: var(--panel-inset);
@@ -378,12 +381,35 @@ a:hover {
   font-weight: 700;
 }
 
-.site-name {
+/* The site's name, and beneath it, on a tournament's pages, the tournament's,
+   set alike so that the two read as one title. */
+.site-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-name,
+.site-tournament {
   color: var(--accent-ink);
   font-size: var(--text-lg);
   font-weight: 700;
   text-decoration: none;
   padding-block: var(--space-1);
+}
+
+/* Close beneath the site's name, so that the two read as one title rather
+   than as two things in the bar: nothing between them but the lines
+   themselves, set tight. */
+.site-names:has(.site-tournament) .site-name {
+  padding-bottom: 0;
+}
+
+.site-names:has(.site-tournament) {
+  line-height: var(--leading-tight);
+}
+
+.site-tournament {
+  padding-top: 0;
 }
 
 /* Long tournament names wrap onto as many lines as they need: the name is the

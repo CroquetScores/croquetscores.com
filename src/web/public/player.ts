@@ -99,6 +99,7 @@ ${asked.entered
       reply,
       request,
       render(assets, {
+        tournament: { name: asked.name, address: asked.address },
         title: asked.player.name,
         sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
         currentSection: say("tournament.players"),

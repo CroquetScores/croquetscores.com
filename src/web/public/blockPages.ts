@@ -159,6 +159,7 @@ export const registerBlockPages = (
           reply,
           request,
           render(assets, {
+            tournament: { name: asked.name, address: asked.address },
             title: asked.block.name,
             sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
             currentSection: asked.block.name,

@@ -201,7 +201,10 @@ Given(
 Then(
   "every word in the header is in the test locale",
   async function (this: SpecWorld) {
-    const stray = await unmarkedWithin(this, "header.site-bar", [".site-name"]);
+    const stray = await unmarkedWithin(this, "header.site-bar", [
+      ".site-name",
+      ".site-tournament",
+    ]);
     assert.deepEqual(stray, [], "Words in the header came from elsewhere.");
   },
 );

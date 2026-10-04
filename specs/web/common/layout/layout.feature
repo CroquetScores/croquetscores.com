@@ -68,3 +68,65 @@ Feature: What every page is set in
       And a browser that asks for "en-XA"
       When the home page is opened
       Then every word in the try website's banner is in the test locale
+
+  Rule: On a tournament's pages the header names the tournament beneath the site's name
+
+    A reader following a tournament moves between its pages, its games, its
+    players, a player, a block's views, and the page's own heading is often
+    not the tournament's name but a player's or a block's. So on every page of
+    a tournament the header names the tournament beneath the site's name, set
+    as the site's name is, so that the two read as one title, and leads to the
+    tournament's page as the site's name leads to the home page. It is in the
+    pinned bar, so it stays in sight while the page scrolls.
+
+    Nowhere else names a tournament there: a page of no one tournament, such
+    as the home page or a year's, has the site's name alone.
+
+    Background:
+      Given a viewport 1200 pixels wide
+      And a site served as "croquetscores.com"
+      And the server's clock reads "2026-10-03T10:00:00Z"
+      And "organiser@example.com" has an account, confirmed
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+
+    @postgres
+    Scenario Outline: Every page of a tournament names it in the header
+      When the page at "<address>" is opened
+      Then the header names the tournament "Spring Open"
+
+      Examples:
+        | address                                                 |
+        | /2026/ac/spring-open                                    |
+        | /2026/ac/spring-open/players                            |
+        | /2026/ac/spring-open/players/sam-someone                |
+        | /2026/ac/spring-open/competitions/block-a               |
+        | /2026/ac/spring-open/competitions/block-a/summary       |
+        | /2026/ac/spring-open/competitions/block-a/order-of-play |
+
+    @postgres
+    Scenario: The tournament is beneath the site's name
+      When the page at "/2026/ac/spring-open" is opened
+      Then the tournament named in the header is beneath the site's name
+
+    @postgres
+    Scenario: The tournament is set as the site's name is
+      When the page at "/2026/ac/spring-open" is opened
+      Then the tournament named in the header is set as the site's name is
+
+    @postgres
+    Scenario: The tournament named in the header leads to its page
+      Given the page at "/2026/ac/spring-open/players" is open
+      When the tournament named in the header is pressed
+      Then the address is "/2026/ac/spring-open"
+
+    @postgres
+    Scenario: The home page names no tournament in the header
+      When the home page is opened
+      Then the header names no tournament
+
+    @postgres
+    Scenario: A year's page names no tournament in the header
+      When the page at "/2026" is opened
+      Then the header names no tournament

@@ -27,6 +27,17 @@ export interface Shell {
   readonly title: string;
   /** A second line in the green header. Long names wrap; they are not cut. */
   readonly headerTitle?: string | undefined;
+  /** The tournament a page is of, if it is of one, named in the pinned bar
+      beneath the site's name and leading to its page, since a tournament's
+      pages are often headed by a player's name or a block's rather than its
+      own. */
+  readonly tournament?:
+    | {
+        readonly name: string;
+        /** Where it is found, as "2026/ac/spring-open". */
+        readonly address: string;
+      }
+    | undefined;
   /** The dark green bar. Absent, rather than present and empty, when a page
       has nowhere to move between. */
   readonly sections?: readonly Section[] | undefined;
@@ -258,7 +269,12 @@ ${options}
 /** What the header needs of the page it is drawn on. */
 export type SiteBar = Pick<
   Shell,
-  "speaking" | "siteName" | "currentPath" | "signedIn" | "hasPassword"
+  | "speaking"
+  | "siteName"
+  | "currentPath"
+  | "signedIn"
+  | "hasPassword"
+  | "tournament"
 >;
 
 // Said by the admin's page too (adminPage.ts), so that there is one header
@@ -268,7 +284,9 @@ export const siteBar = (bar: SiteBar): string => `
     <header class="site-bar">
       <div class="page">
         <div class="site-bar-inner">
-          <a class="site-name" href="/">${escape(bar.siteName)}</a>
+          <div class="site-names">
+            <a class="site-name" href="/">${escape(bar.siteName)}</a>
+${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}          </div>
 ${menu(bar.speaking, bar.currentPath, bar.signedIn)}
 ${accountMenu(bar)}
         </div>
