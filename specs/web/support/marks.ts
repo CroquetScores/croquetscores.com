@@ -31,12 +31,25 @@ export const unmarkedWithin = async (
     const named = [...root.querySelectorAll(${JSON.stringify(names.join(", ") || "nothing-at-all")})];
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     const texts = [];
+    // The text read last, and where it was kept among the texts, if it was.
+    let last = null;
+    let lastAt = -1;
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       if (named.some((one) => one.contains(node))) continue;
       const text = node.textContent.trim();
+      // A phrase laid out over more than one line, its words parted by line
+      // breaks rather than spaces, is still one phrase, read as it is said.
+      const before = node.previousSibling;
+      if (before?.nodeName === "BR" && before.previousSibling === last && lastAt >= 0) {
+        texts[lastAt] += " " + text;
+        last = node;
+        continue;
+      }
+      last = node;
+      lastAt = -1;
       // Text with no letter in it, such as the arrows Up and Down are drawn
       // as, is no word of any language.
-      if (/\\p{L}/u.test(text)) texts.push(text);
+      if (/\\p{L}/u.test(text)) lastAt = texts.push(text) - 1;
     }
     return texts;
   })()`);

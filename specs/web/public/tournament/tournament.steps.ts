@@ -254,10 +254,11 @@ Then(
 
 // Its words ----------------------------------------------------------------------------
 
-// The tournament's own words are left out, on its page, its players' page and
-// a player's alike: its name, its players' names and what they represent, its competitions' names and the scores, which are what
-// whoever entered them typed, and the day a game was added, which is numbers
-// and a month the browser names.
+// The tournament's own words are left out, on its page, its players' page, a
+// player's and a block's alike: its name, its players' names, their initials
+// and what they represent, its competitions' names and the scores, which are
+// what whoever entered them typed, and the day a game was added, which is
+// numbers and a month the browser names.
 Then(
   "every word in the page's content but the tournament's own is in the test locale",
   async function (this: SpecWorld) {
@@ -272,6 +273,8 @@ Then(
       ".player-representing",
       ".player-game-opponent",
       ".player-competition",
+      ".block-grid-initials",
+      ".block-grid-points",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

@@ -26,6 +26,7 @@ import { RemovePlayer } from "../../../../src/application/operations/competition
 import { ReverseWithdrawal } from "../../../../src/application/operations/competitions/ReverseWithdrawal.js";
 import { WithdrawPlayer } from "../../../../src/application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../../src/application/operations/tournaments/MovePlayer.js";
+import { AddPlayer } from "../../../../src/application/operations/tournaments/AddPlayer.js";
 import { PlayersOfTest } from "../../../../src/application/operations/competitions/PlayersOfTest.js";
 import type { Competition } from "../../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionPlayer } from "../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
@@ -267,6 +268,40 @@ const entering = async (
 };
 
 // What was done before ---------------------------------------------------------
+
+// As many players as a scenario needs to fill a competition, when who they
+// are is beside the point: each added to the tournament and entered, as the
+// tournament's first manager, who created it, called "Grid Player A",
+// "Grid Player B" and so on.
+Given(
+  "{int} players have been entered in {string} of {string}",
+  async function (
+    this: SpecWorld,
+    count: number,
+    competition: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const manager = (await load(this, tournament)).managers[0];
+    assert.ok(manager !== undefined, `${name} has no manager.`);
+    for (let at = 0; at < count; at++) {
+      const player = `Grid Player ${String.fromCharCode(65 + at)}`;
+      await send(
+        this,
+        new AddPlayer(
+          manager.value,
+          tournament.value,
+          { name: player },
+          momentOf(this),
+        ),
+        tournament,
+      );
+      doneAs(this);
+      await entering(this, manager.value, tournament, competition, player);
+      doneAs(this);
+    }
+  },
+);
 
 // Not refused: a scenario that says something was done is not about whether
 // it could be.
