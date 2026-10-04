@@ -13,13 +13,13 @@ import type { Section } from "../common/layout.js";
 /**
  * The tournament's sections, by the address it is found at now: Recent, which
  * is its page, then Players, Notes and Commentary, then each of its
- * competitions in use. A tournament played by teams has no players of its
- * own, only its teams', so it has no Players.
+ * competitions in use. A tournament played by teams has the same, its
+ * competitions its tests, each said as its teams' short names with "vs"
+ * between, as "AUS vs ENG", in the reader's language.
  */
 export const sectionsOf = (
   tournament: {
     readonly address: string;
-    readonly playedByTeams: boolean;
     readonly competitions: readonly CompetitionOfTournament[];
   },
   speaking: Speaking,
@@ -28,14 +28,15 @@ export const sectionsOf = (
   const here = `/${tournament.address}`;
   return [
     { href: here, label: say("tournament.recent") },
-    ...(tournament.playedByTeams
-      ? []
-      : [{ href: `${here}/players`, label: say("tournament.players") }]),
+    { href: `${here}/players`, label: say("tournament.players") },
     { href: `${here}/notes`, label: say("tournament.notes") },
     { href: `${here}/commentary`, label: say("tournament.commentary") },
     ...tournament.competitions.map((competition) => ({
       href: `/${competition.address}`,
-      label: competition.name,
+      label:
+        competition.teams === undefined
+          ? competition.name
+          : say("tournament.test", competition.teams),
       competition: true,
     })),
   ];

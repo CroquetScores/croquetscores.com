@@ -296,6 +296,8 @@ export const english: Language = {
     // one was added, and what it says when it has none.
     "tournament.recent": "Recent",
     "tournament.players": "Players",
+    // A test in a tournament's sections: its two teams' short names.
+    "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notes",
     "tournament.commentary": "Commentary",
     "tournament.beat": "beat",

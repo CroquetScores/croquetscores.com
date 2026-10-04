@@ -1,6 +1,7 @@
 // What the pages of a tournament a reader follows share, whichever section of
 // it they show: the tournament found by the address a reader's browser names,
 // and what its section bar leads to.
+import type { TeamId } from "../../../domain/aggregates/tournaments/primitives/TeamId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { Website } from "../../../domain/common/Website.js";
@@ -15,6 +16,12 @@ export interface CompetitionOfTournament {
   readonly name: string;
   /** Where it is found, as "2026/ac/spring-open/competitions/block-a". */
   readonly address: string;
+  /**
+   * A test's two teams, by their short names as they are now, the first
+   * team's first; nothing for any other competition.
+   */
+  readonly teams?:
+    { readonly first: string; readonly second: string } | undefined;
 }
 
 /**
@@ -48,7 +55,9 @@ export const tournamentForReaders = async (
 
 /**
  * The competitions of `tournament` in use, in its order, each found under its
- * address: a test under "tests", and any other kind under "competitions".
+ * address: a test under "tests", and any other kind under "competitions". A
+ * test comes with its teams' short names as they are now, which its section
+ * is said as.
  */
 export const competitionsInUse = (
   tournament: Tournament,
@@ -56,8 +65,22 @@ export const competitionsInUse = (
   const address = tournament.address.toString();
   return tournament.competitions
     .filter(({ reference }) => !reference.archived)
-    .map(({ reference, shape }) => ({
-      name: reference.name.toString(),
-      address: `${address}/${shape.kind === "test" ? "tests" : "competitions"}/${reference.slug.toString()}`,
-    }));
+    .map(({ reference, shape }) => {
+      const competition = {
+        name: reference.name.toString(),
+        address: `${address}/${shape.kind === "test" ? "tests" : "competitions"}/${reference.slug.toString()}`,
+      };
+      if (shape.kind !== "test") return competition;
+      const shortNameOf = (team: TeamId): string =>
+        tournament.teams
+          .find((each) => each.id.equals(team))
+          ?.shortName.toString() ?? "";
+      return {
+        ...competition,
+        teams: {
+          first: shortNameOf(shape.firstTeam),
+          second: shortNameOf(shape.secondTeam),
+        },
+      };
+    });
 };
