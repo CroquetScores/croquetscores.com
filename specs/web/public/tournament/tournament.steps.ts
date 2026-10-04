@@ -282,6 +282,7 @@ Then(
       ".player-competition",
       ".block-grid-initials",
       ".block-grid-points",
+      ".swiss-result-opponent",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

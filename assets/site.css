@@ -2075,6 +2075,96 @@ main {
   gap: var(--space-3);
 }
 
+/* Where even with its results wrapped the table is wider than a phone, it
+   scrolls across within the page, as a block's grid does, rather than
+   pushing the page out past the window. */
+.swiss-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* A Swiss's table, set as a block's summary is: headed in the section bar's
+   colours and its rows banded, so that a reader's eye stays on one player's
+   row across to their results. The results wrap within their column rather
+   than pushing the table out past the window. Positioned, for the reason a
+   block's grid is: what is hidden but said aloud within it, the opponents'
+   whole names, stays within it rather than pushing the page out. */
+.swiss-table {
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.swiss-table th,
+.swiss-table td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.swiss-table thead th,
+.swiss-table thead td {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  border-color: var(--accent-strong);
+}
+
+.swiss-table tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+/* A name wraps between its words, and within one only where a word is wider
+   than its column, rather than wherever its column could be made narrower. */
+.swiss-player {
+  font-weight: normal;
+  text-align: start;
+  overflow-wrap: break-word;
+}
+
+/* As tight as the heading row, as in a block's table. */
+.swiss-table .player-name {
+  min-height: 0;
+}
+
+.swiss-withdrawn {
+  color: var(--ink-muted);
+}
+
+.swiss-heading,
+.swiss-total {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.swiss-results {
+  min-width: 7rem;
+}
+
+/* A result on one line of its own words, wrapping between results rather
+   than within one. */
+.swiss-result {
+  white-space: nowrap;
+}
+
+/* Told apart by more than colour: the sign of the margin says which, and a
+   result won is in the colour a block's grid gives a score won, and bold. */
+.swiss-won {
+  color: var(--score-won);
+  font-weight: bold;
+}
+
+.swiss-lost,
+.swiss-drawn {
+  color: var(--ink-muted);
+}
+
+/* The summary, without the results, is for a phone, and no wider than a
+   medium screen, as a block's summary is. */
+.swiss-table:not(:has(.swiss-results)) {
+  max-width: 38rem;
+}
+
 /* --- Utilities ----------------------------------------------------------- */
 
 .lead {

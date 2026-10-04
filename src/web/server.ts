@@ -117,6 +117,7 @@ import { PublicPlayersOfTournamentHandler } from "../application/operations/tour
 import { PublicPlayerOfTournamentHandler } from "../application/operations/tournaments/PublicPlayerOfTournamentHandler.js";
 import { PublicBlockOfTournamentHandler } from "../application/operations/tournaments/PublicBlockOfTournamentHandler.js";
 import { PublicKnockoutOfTournamentHandler } from "../application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
+import { PublicSwissOfTournamentHandler } from "../application/operations/tournaments/PublicSwissOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
@@ -232,7 +233,13 @@ import { registerPlayersPage } from "./public/players.js";
 import { registerPlayerPage } from "./public/player.js";
 import { gridView } from "./public/block.js";
 import { summaryView } from "./public/blockSummary.js";
-import { blockOrderOfPlay, knockoutOrderOfPlay } from "./public/orderOfPlay.js";
+import {
+  blockOrderOfPlay,
+  knockoutOrderOfPlay,
+  swissOrderOfPlay,
+} from "./public/orderOfPlay.js";
+import { swissView } from "./public/swiss.js";
+import { swissSummaryView } from "./public/swissSummary.js";
 import { registerCompetitionPages } from "./public/competitionPages.js";
 import { knockoutView } from "./public/knockout.js";
 import { knockoutSummaryView } from "./public/knockoutSummary.js";
@@ -849,6 +856,13 @@ export const buildApplication = async (
       tournamentsByAddress,
     ),
   );
+  mediator.handleQuery(
+    new PublicSwissOfTournamentHandler(
+      tournaments,
+      competitions,
+      tournamentsByAddress,
+    ),
+  );
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -982,6 +996,11 @@ export const buildApplication = async (
       grid: knockoutView(assets),
       summary: knockoutSummaryView(assets),
       orderOfPlay: knockoutOrderOfPlay(assets),
+    },
+    swiss: {
+      grid: swissView(assets),
+      summary: swissSummaryView(assets),
+      orderOfPlay: swissOrderOfPlay(assets),
     },
   });
 

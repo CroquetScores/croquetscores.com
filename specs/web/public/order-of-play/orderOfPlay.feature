@@ -1,9 +1,9 @@
 @browser @postgres
 Feature: A competition's order of play lists its games, oldest first
 
-  A block is shown three ways (`block.feature`), and so is a knockout
-  (`knockout.feature`), and a Swiss will be when the feature that shows one
-  lands. Of the three, the order of play is the same whatever the
+  A block is shown three ways (`block.feature`), and so are a knockout
+  (`knockout.feature`) and a Swiss (`swiss.feature`). Of the three, the
+  order of play is the same whatever the
   competition: at the competition's address followed by "order-of-play", as
   "/2026/ac/spring-open/competitions/block-a/order-of-play", it lists every
   game of the competition in use, in the order it was played, the oldest
@@ -25,8 +25,8 @@ Feature: A competition's order of play lists its games, oldest first
   the grid is not, and an address the tournament has moved on from leads to
   the order of play where the tournament is now.
 
-  The scenarios are a block's, but for the last rule's, which shows a
-  knockout's order of play is the same.
+  The scenarios are a block's, but for the last two rules', which show a
+  knockout's order of play and a Swiss's are the same.
 
   Where a scenario says nothing else, the tournament is for the sport "ac"
   and starts on 3 October 2026, and its block is the best of 3, so that two
@@ -231,4 +231,39 @@ Feature: A competition's order of play lists its games, oldest first
       Given a browser that asks for "en-XA"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A Swiss's order of play is the same as a block's
+
+    Background:
+      Given "organiser@example.com" has added the Swiss "Zed" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Zed" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Zed" of "Spring Open"
+
+    Scenario: A Swiss's order of play is headed by its name
+      When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
+      Then the page is headed "Zed"
+
+    Scenario: A Swiss's game added first is first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Zed" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Zed" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
+      Then the first game is of "Sam Someone" beating "Alex Another"
+      And the second game is of "Alex Another" beating "Sam Someone"
+
+    Scenario: How long ago a Swiss's game was added is beside the winner
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Zed" of "Spring Open"
+      And the server's clock reads "2026-10-03T10:12:00Z"
+      When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
+      Then the first line of the first game is beside "12 min"
+
+    Scenario: A Swiss is marked as the section being read
+      When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
+      Then the section "Zed" is marked as current
+
+    Scenario: A Swiss's order of play is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Zed" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
       Then every word in the page's content but the tournament's own is in the test locale

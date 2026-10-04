@@ -1,6 +1,7 @@
 // What every competition's three views share, a block's (block.ts,
-// blockSummary.ts) and a knockout's (knockout.ts, knockoutSummary.ts) alike,
-// and the order of play, which is the same for both (orderOfPlay.ts): finding
+// blockSummary.ts), a knockout's (knockout.ts, knockoutSummary.ts) and a
+// Swiss's (swiss.ts, swissSummary.ts) alike, and the order of play, which is
+// the same for all three (orderOfPlay.ts): finding
 // the competition, what is not a page and where an old address leads, the
 // heading, the views offered, the section bar with the competition marked,
 // and which view the competition's own address shows. Each view draws only
@@ -15,9 +16,8 @@
 // competition, so that a reader who wants the summary on a phone chooses it
 // once.
 //
-// An archived competition, a slug no competition has, and a Swiss, which is
-// not shown yet, are not pages, any more than a tournament a reader is not
-// sent to is. An address the tournament has moved on from leads to the same
+// An archived competition and a slug no competition has are not pages, any
+// more than a tournament a reader is not sent to is. An address the tournament has moved on from leads to the same
 // view of the competition where the tournament is now.
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -29,6 +29,10 @@ import {
   type KnockoutToRead,
   PublicKnockoutOfTournament,
 } from "../../application/operations/tournaments/PublicKnockoutOfTournament.js";
+import {
+  PublicSwissOfTournament,
+  type SwissToRead,
+} from "../../application/operations/tournaments/PublicSwissOfTournament.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import type { Mediator } from "../../application/common/Mediator.js";
 import type { Assets } from "../common/assets.js";
@@ -113,9 +117,10 @@ export interface CompetitionDraws {
   readonly knockout: Readonly<
     Record<CompetitionView, DrawView<KnockoutToRead>>
   >;
+  readonly swiss: Readonly<Record<CompetitionView, DrawView<SwissToRead>>>;
 }
 
-// A competition of either kind, as its pages are given it.
+// A competition of any kind that has pages, as its pages are given it.
 type Found =
   | {
       readonly kind: "block";
@@ -126,6 +131,11 @@ type Found =
       readonly kind: "knockout";
       readonly asked: KnockoutToRead;
       readonly name: string;
+    }
+  | {
+      readonly kind: "swiss";
+      readonly asked: SwissToRead;
+      readonly name: string;
     };
 
 // Whether `failure` says there is nothing at the address of the kind asked
@@ -133,8 +143,8 @@ type Found =
 const refusedAs = (failure: unknown, codes: readonly string[]): boolean =>
   failure instanceof TournamentOperationRefused && codes.includes(failure.code);
 
-// The competition found by `slug`, asked of as a block and then, where it is
-// not one, as a knockout; nothing where neither is there.
+// The competition found by `slug`, asked of as a block, then, where it is not
+// one, as a knockout, and then as a Swiss; nothing where none is there.
 const competitionAt = async (
   mediator: Mediator,
   website: string,
@@ -169,7 +179,25 @@ const competitionAt = async (
       refusedAs(failure, [
         "PublicKnockoutOfTournament.NoSuchTournament",
         "PublicKnockoutOfTournament.NoSuchCompetition",
-        "PublicKnockoutOfTournament.NotAKnockout",
+      ])
+    ) {
+      return undefined;
+    }
+    if (!refusedAs(failure, ["PublicKnockoutOfTournament.NotAKnockout"])) {
+      throw failure;
+    }
+  }
+  try {
+    const asked = await mediator.query(
+      new PublicSwissOfTournament(website, address, slug),
+    );
+    return { kind: "swiss", asked, name: asked.swiss.name };
+  } catch (failure) {
+    if (
+      refusedAs(failure, [
+        "PublicSwissOfTournament.NoSuchTournament",
+        "PublicSwissOfTournament.NoSuchCompetition",
+        "PublicSwissOfTournament.NotASwiss",
       ])
     ) {
       return undefined;
@@ -228,7 +256,9 @@ export const registerCompetitionPages = (
         const drawn =
           found.kind === "block"
             ? draws.block[view](found.asked, speaking, request)
-            : draws.knockout[view](found.asked, speaking, request);
+            : found.kind === "knockout"
+              ? draws.knockout[view](found.asked, speaking, request)
+              : draws.swiss[view](found.asked, speaking, request);
         return sendPage(
           reply,
           request,
