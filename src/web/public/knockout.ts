@@ -1,11 +1,14 @@
 // A knockout's grid, at the knockout's address followed by "grid": its draw
 // drawn out as the old site drew it, a column for each round, first round
-// first, each headed by the round's name. A round's matches are in the order
-// of the draw, each its two sides one above the other with a cell for each
-// game the match is the best of. Every round's column is as tall as the
-// first's and spreads its matches evenly down it, so that a later round's
-// match stands level with the gap between the two matches before it, with
-// nothing to measure. What every view of a competition shares is
+// first, each headed by the round's name for whatever reads the page aloud,
+// though not shown, as the old site showed none. A round's matches are in the
+// order of the draw, each its two sides one above the other with a cell for
+// each game the match is the best of, and each two whose winners meet next
+// bracketed together by a line that leads on to that match. Every round's
+// column is as tall as the first's and gives each pair an equal share of it,
+// its two matches at a quarter and three quarters of the way down, so that a
+// later round's match stands level with the gap between the two before it,
+// with nothing to measure. What every view of a competition shares is
 // competitionPages.ts's, and the summary draws a match as this does
 // (knockoutSummary.ts).
 import type {
@@ -101,6 +104,16 @@ ${sideRow(match, 0, bestOf, speaking, assets)}
 ${sideRow(match, 1, bestOf, speaking, assets)}
 </tbody></table>`;
 
+// A round's matches two by two, as the old site joined them: the two whose
+// winners meet in the next round, which a line brackets together. The final
+// is a pair of one, since nothing follows it.
+const pairsOf = (
+  matches: readonly MatchOfKnockout[],
+): readonly (readonly MatchOfKnockout[])[] =>
+  Array.from({ length: Math.ceil(matches.length / 2) }, (_, at) =>
+    matches.slice(at * 2, at * 2 + 2),
+  );
+
 const roundShown = (
   round: RoundOfKnockout,
   at: number,
@@ -108,9 +121,14 @@ const roundShown = (
   speaking: Speaking,
   assets: Assets,
 ): string => `            <section class="knockout-round" aria-labelledby="knockout-round-${String(at)}">
-              <h2 class="knockout-round-name" id="knockout-round-${String(at)}">${escape(roundName(at, rounds, speaking))}</h2>
+              <h2 class="knockout-round-name visually-hidden" id="knockout-round-${String(at)}">${escape(roundName(at, rounds, speaking))}</h2>
               <div class="knockout-matches">
-${round.matches.map((match) => matchShown(match, round.bestOf, speaking, assets)).join("\n")}
+${pairsOf(round.matches)
+  .map(
+    (pair) =>
+      `<div class="knockout-pair${pair.length === 1 ? " knockout-pair-alone" : ""}">${pair.map((match) => matchShown(match, round.bestOf, speaking, assets)).join("")}</div>`,
+  )
+  .join("\n")}
               </div>
             </section>`;
 
