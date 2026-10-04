@@ -314,6 +314,14 @@ export const spanish: Language = {
     "block.lost": "perdida",
     "block.drawn": "empatada",
     "block.withdrawn": "retirado",
+    "block.losses": "Derrotas",
+    "block.views": "Vistas",
+    "block.view.grid": "Cuadro",
+    "block.view.summary": "Resumen",
+    "block.view.orderOfPlay": "Orden de juego",
+    "blockSummary.ranking":
+      "Clasificados por la proporción de encuentros ganados y después por aros netos. El reglamento de un torneo puede ordenar a sus jugadores de otro modo.",
+    "blockOrderOfPlay.none": "Aún no se ha jugado ninguna partida.",
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 

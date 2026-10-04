@@ -195,14 +195,21 @@ Then(
 Then(
   /^the (first|second) line of the (first|second|third) game is beside "(.*)"$/,
   async function (this: SpecWorld, line: string, which: string, words: string) {
-    assert.equal(
-      await textOf(
-        gameAt(this, which).locator(
-          line === "first" ? ".game-competition" : ".game-ago",
-        ),
-      ),
-      words,
+    // Found by where it is laid out rather than by what it is, since what is
+    // beside a line differs from one list of games to another: the
+    // competition beside the winner on a tournament's page, how long ago on
+    // a block's order of play.
+    const top = (await lineOf(this, line, which).boundingBox())?.y;
+    assert.ok(top !== undefined, `The ${line} line is not shown.`);
+    const besides = await gameAt(this, which).locator(".game-beside").all();
+    const tops = await Promise.all(
+      besides.map(async (each) => (await each.boundingBox())?.y),
     );
+    const at = tops.findIndex(
+      (each) => each !== undefined && Math.abs(each - top) < 4,
+    );
+    assert.ok(at >= 0, `Nothing is beside the ${line} line.`);
+    assert.equal(await textOf(besides[at]!), words);
   },
 );
 

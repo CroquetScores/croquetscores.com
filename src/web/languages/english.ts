@@ -328,6 +328,15 @@ export const english: Language = {
     "block.lost": "lost",
     "block.drawn": "drawn",
     "block.withdrawn": "withdrawn",
+    "block.losses": "Losses",
+    // The three views of a block, offered beneath its heading.
+    "block.views": "Views",
+    "block.view.grid": "Grid",
+    "block.view.summary": "Summary",
+    "block.view.orderOfPlay": "Order of Play",
+    "blockSummary.ranking":
+      "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
+    "blockOrderOfPlay.none": "No games have been played yet.",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

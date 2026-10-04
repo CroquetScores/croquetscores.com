@@ -43,6 +43,27 @@ Feature: A block's page shows its results as a grid
 
   Its sections are the tournament's, with the block marked.
 
+  The grid is one of three views of a block, as it was on the old site: the
+  grid, a summary (`blockSummary.feature`) and the order of play
+  (`blockOrderOfPlay.feature`). Each is at the block's address followed by
+  its own name, "grid", "summary" and "order-of-play", and each, on the same
+  line as its heading and against the right edge, offers all three, Grid,
+  Summary and Order of Play, the one being read marked as the view being
+  read. Where there is not room beside the heading, they wrap beneath it.
+
+  A reader who chooses a view keeps it until they choose another, as on the
+  old site: the block's own address, which is where the section bar and every
+  other page lead, shows the view they chose last, and the grid where they
+  have chosen none, since it is the whole of the block at once. Opening a
+  view at its own address is choosing it, whether by pressing it among the
+  views offered or by following a link to it. The choice is one for every
+  block, on every tournament, so that a reader who follows blocks on a phone
+  chooses the summary once rather than once a block.
+
+  The choice is kept in a cookie for a year, held to the standard the theme's
+  is (`theme.feature`): never sent in the clear, and not to be read by a
+  script on the page.
+
   A block that is archived, a slug no competition has, and a knockout or a
   Swiss, which are shown otherwise and are not pages until the features that
   show them land, are not pages; nor is any block of an archived tournament,
@@ -273,6 +294,87 @@ Feature: A block's page shows its results as a grid
       Given a viewport 375 pixels wide
       When the page at "/2026/ac/spring-open/competitions/block-c" is opened
       Then the grid can be scrolled across
+
+  Rule: The block's three views are offered, the grid marked
+
+    Scenario: The views are offered in order
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first view offered is "Grid"
+      And the second view offered is "Summary"
+      And the third view offered is "Order of Play"
+
+    Scenario: The grid is marked as the view being read
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Grid" is marked as the one being read
+
+    Scenario: The summary is not marked
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Summary" is not marked as the one being read
+
+    Scenario: Grid leads to the grid
+      Given the page at "/2026/ac/spring-open/competitions/block-a" is open
+      When the view "Grid" is pressed
+      Then the address is "/2026/ac/spring-open/competitions/block-a/grid"
+
+    Scenario: Summary leads to the summary
+      Given the page at "/2026/ac/spring-open/competitions/block-a" is open
+      When the view "Summary" is pressed
+      Then the address is "/2026/ac/spring-open/competitions/block-a/summary"
+
+    Scenario: Order of Play leads to the order of play
+      Given the page at "/2026/ac/spring-open/competitions/block-a" is open
+      When the view "Order of Play" is pressed
+      Then the address is "/2026/ac/spring-open/competitions/block-a/order-of-play"
+
+  Rule: The block's own address shows the view a reader chose last
+
+    Scenario: A reader who has chosen no view is shown the grid
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Grid" is marked as the one being read
+
+    Scenario: A reader who chose the summary is shown the summary
+      Given the page at "/2026/ac/spring-open/competitions/block-a" is open
+      And the view "Summary" is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Summary" is marked as the one being read
+
+    Scenario: A reader who chose the order of play is shown the order of play
+      Given the page at "/2026/ac/spring-open/competitions/block-a" is open
+      And the view "Order of Play" is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Order of Play" is marked as the one being read
+
+    Scenario: A reader who chose the grid again is shown the grid
+      Given the page at "/2026/ac/spring-open/competitions/block-a" is open
+      And the view "Summary" is pressed
+      And the view "Grid" is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Grid" is marked as the one being read
+
+    Scenario: Following a link to a view chooses it
+      Given the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the view "Order of Play" is marked as the one being read
+
+    Scenario: The section bar leads to the view chosen
+      Given the page at "/2026/ac/spring-open/competitions/block-a/summary" is open
+      And the page at "/2026/ac/spring-open" is open
+      When the section "Block A" is pressed
+      Then the view "Summary" is marked as the one being read
+
+    Scenario: The view chosen is the one every block is shown in
+      Given "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/summary" is open
+      When the page at "/2026/ac/spring-open/competitions/block-b" is opened
+      Then the view "Summary" is marked as the one being read
+
+    Scenario: The view chosen is kept in a cookie never sent in the clear
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the view chosen is kept in a cookie marked Secure
+
+    Scenario: The view chosen is kept in a cookie no script on the page can read
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the view chosen is kept in a cookie marked HttpOnly
 
   Rule: Its sections are the tournament's, with the block marked
 

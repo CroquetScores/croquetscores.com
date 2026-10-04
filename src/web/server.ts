@@ -229,7 +229,10 @@ import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
 import { registerPlayersPage } from "./public/players.js";
 import { registerPlayerPage } from "./public/player.js";
-import { registerBlockPage } from "./public/block.js";
+import { gridView } from "./public/block.js";
+import { summaryView } from "./public/blockSummary.js";
+import { orderOfPlayView } from "./public/blockOrderOfPlay.js";
+import { registerBlockPages } from "./public/blockPages.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
@@ -959,7 +962,11 @@ export const buildApplication = async (
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
   registerPlayerPage(server, assets);
-  registerBlockPage(server, assets);
+  registerBlockPages(server, assets, {
+    grid: gridView(assets),
+    summary: summaryView(assets),
+    orderOfPlay: orderOfPlayView(assets),
+  });
 
   // What is queued is sent while the server is listening, and the pool is
   // still open while the last round finishes: the server is closed before the

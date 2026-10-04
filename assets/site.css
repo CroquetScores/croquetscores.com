@@ -344,10 +344,13 @@ a:hover {
   color: var(--accent-ink);
 }
 
+/* Along the top rather than centred, so that where the bar is taller for a
+   tournament's name beneath the site's, the navigation stays at the top of the
+   window rather than sinking to the middle of the bar. */
 .site-bar-inner {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
   padding-inline: var(--panel-inset);
@@ -378,12 +381,35 @@ a:hover {
   font-weight: 700;
 }
 
-.site-name {
+/* The site's name, and beneath it, on a tournament's pages, the tournament's,
+   set alike so that the two read as one title. */
+.site-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-name,
+.site-tournament {
   color: var(--accent-ink);
   font-size: var(--text-lg);
   font-weight: 700;
   text-decoration: none;
   padding-block: var(--space-1);
+}
+
+/* Close beneath the site's name, so that the two read as one title rather
+   than as two things in the bar: nothing between them but the lines
+   themselves, set tight. */
+.site-names:has(.site-tournament) .site-name {
+  padding-bottom: 0;
+}
+
+.site-names:has(.site-tournament) {
+  line-height: var(--leading-tight);
+}
+
+.site-tournament {
+  padding-top: 0;
 }
 
 /* Long tournament names wrap onto as many lines as they need: the name is the
@@ -662,6 +688,36 @@ a:hover {
   padding: calc(var(--space-1) / 2) var(--space-3);
   color: var(--accent-ink);
   text-decoration: none;
+}
+
+/* A tournament's competitions are tiles of one width, as the old site had
+   them, since their names run long: "Championship Singles Block A" wraps
+   within its tile onto tight lines of its own, and the tiles stand in even
+   columns rather than running on in a ragged line. The tournament's own
+   sections beside them, Recent, Players, Notes and Commentary, are only as
+   wide as their words. Every tab of such a bar is as tall as its own words
+   rather than its row, so that the current one beside a name of three lines
+   is not a tall block of black. */
+.site-sections ul:has(.section-competition) {
+  align-items: flex-start;
+}
+
+.site-sections ul:has(.section-competition) a {
+  align-items: flex-start;
+  align-self: start;
+  /* No shorter than a pointer can be sure of pressing, as every tab is asked
+     to be (TournamentSections.feature), though its words are set tight. */
+  min-height: 24px;
+  padding-inline: var(--space-2);
+  line-height: var(--leading-tight);
+}
+
+.section-competition {
+  flex: 0 0 8.5rem;
+}
+
+.section-competition a {
+  overflow-wrap: break-word;
 }
 
 .site-sections a:hover {
@@ -1351,6 +1407,17 @@ main {
   }
 }
 
+/* Where a game has no competition, as in a block's order of play, whose games
+   are all the block's, how long ago is beside the winner, where a reader's eye
+   starts on a game, at every width: with nothing else to go beside the names,
+   there is room for it even on a phone. */
+.game:not(:has(.game-competition)) {
+  grid-template-areas:
+    "winner ago"
+    "loser .";
+  grid-template-columns: 1fr auto;
+}
+
 .game p {
   margin: 0;
 }
@@ -1393,19 +1460,42 @@ main {
 }
 
 /* A tournament's players, one to a line, each name leading to the player's
-   own page. */
+   own page, set as a block's summary is: headed in the section bar's colours,
+   and the rows banded, every other one on the page's tint, so that a long
+   list is read a row at a time. The list is drawn up against the heading
+   rather than apart from it, so that the two read as one table; where there
+   are no players, what says so keeps its place beneath. */
+.players-heading,
+.player-games > h2,
+.player-competitions > h2 {
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+}
+
 .players {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin: 0;
+  margin: calc(-1 * var(--space-4)) 0 0;
   padding: 0;
   list-style: none;
+  border: 1px solid var(--border);
+  border-top: 0;
 }
 
 /* Wraps rather than pushing out past the panel. */
 .player {
+  padding-inline: var(--space-2);
   overflow-wrap: anywhere;
+}
+
+.player + .player {
+  border-top: 1px solid var(--border);
+}
+
+.player:nth-child(even) {
+  background: var(--surface);
 }
 
 /* As tall as anything else pressed with a thumb. */
@@ -1445,15 +1535,40 @@ main {
   min-width: 0;
 }
 
+/* Each list set as a tournament's players are: on its heading, a row to
+   each game or competition with a line between, and every other row on the
+   page's tint. Where a player has none, what says so keeps its place beneath
+   the heading. */
 .player-games-list,
 .player-competitions-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
   overflow-wrap: anywhere;
+  border: 1px solid var(--border);
+  border-top: 0;
+}
+
+.player-games-list > li,
+.player-competitions-list > li {
+  padding: var(--space-1) var(--space-2);
+}
+
+.player-games-list > li + li,
+.player-competitions-list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.player-games-list > li:nth-child(even),
+.player-competitions-list > li:nth-child(even) {
+  background: var(--surface);
+}
+
+.player-games-none,
+.player-competitions-none {
+  margin-top: var(--space-2);
 }
 
 /* As tall as anything else pressed with a thumb. */
@@ -1531,6 +1646,100 @@ main {
 
 .block-grid-drawn {
   font-style: italic;
+}
+
+/* A block's name with its three views on the same line, against the right
+   edge, wrapping beneath the name only where there is not room beside it. */
+.block-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* A block's three views, offered beside its heading as a row of links, the
+   one being read filled as the section bar's current tile is, so that it is
+   told from the others by more than its colour: it is the one that is not a
+   link's colour, and it is the one filled. */
+.block-views ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* As tall as anything else pressed with a thumb. */
+.block-view {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+}
+
+.block-view[aria-current="page"] {
+  background: var(--current);
+  color: var(--current-ink);
+  border-color: var(--current);
+  text-decoration: none;
+}
+
+/* A block's summary: narrow enough for a phone, since it is the view for
+   one, the names wrapping rather than pushing the numbers off the edge. */
+.block-summary {
+  border-collapse: collapse;
+}
+
+.block-summary th,
+.block-summary td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.block-summary-player {
+  font-weight: normal;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+/* As tight as the heading row, as in the grid. */
+.block-summary .player-name {
+  min-height: 0;
+}
+
+/* Headed in the section bar's colours, so that the headings read as the
+   page's own bar over its columns, and the rows banded, every other one on
+   the page's tint, so that a reader's eye stays on one player's row across to
+   their numbers. */
+.block-summary thead th,
+.block-summary thead td {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  border-color: var(--accent-strong);
+}
+
+.block-summary tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+.block-summary-withdrawn {
+  color: var(--ink-muted);
+}
+
+.block-summary-heading,
+.block-summary-total {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.block-summary-ranking {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
 }
 
 /* --- Utilities ----------------------------------------------------------- */

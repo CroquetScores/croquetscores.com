@@ -136,6 +136,28 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) game of the block answered was added at "(.*)"$/,
+  function (this: SpecWorld, which: string, at: string) {
+    // As a moment, since a scenario writes it without the milliseconds.
+    assert.equal(
+      gameAnswered(this, which).addedAt?.toDate().getTime(),
+      new Date(at).getTime(),
+    );
+  },
+);
+
+// Its players ranked -----------------------------------------------------------------
+
+Then(
+  /^the (first|second|third) player of the block ranked is "(.*)"$/,
+  function (this: SpecWorld, which: string, name: string) {
+    const id = answered(this).ranked[places.indexOf(which)];
+    assert.ok(id !== undefined, `No ${which} player is ranked.`);
+    assert.equal(nameOf(this, id), name);
+  },
+);
+
+Then(
   /^(\d+) games? of the block (?:is|are) answered$/,
   function (this: SpecWorld, count: string) {
     assert.equal(answered(this).games.length, Number(count));
@@ -148,6 +170,13 @@ Then(
   /^the player of the block "(.*)" is answered with (\d+) (?:match|matches) won$/,
   function (this: SpecWorld, name: string, count: string) {
     assert.equal(playerAnswered(this, name).matchesWon, Number(count));
+  },
+);
+
+Then(
+  /^the player of the block "(.*)" is answered with (\d+) (?:match|matches) lost$/,
+  function (this: SpecWorld, name: string, count: string) {
+    assert.equal(playerAnswered(this, name).matchesLost, Number(count));
   },
 );
 
