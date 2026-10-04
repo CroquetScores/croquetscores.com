@@ -134,7 +134,7 @@ export const TournamentSections = ({
           {listed.competitions
             .filter(({ archived }) => !archived)
             .map((competition) => (
-              <li key={competition.slug}>
+              <li key={competition.slug} className="section-competition">
                 <a
                   href={`${tournamentPage}/${competition.kind === "test" ? "tests" : "competitions"}/${competition.slug}`}
                   aria-current={current(

@@ -20,6 +20,9 @@ export interface NavigationLink {
 export interface Section {
   readonly href: string;
   readonly label: string;
+  /** Whether it is one of a tournament's competitions, whose names run long
+      and so are drawn as tiles of one width with the name wrapped within. */
+  readonly competition?: boolean | undefined;
 }
 
 export interface Shell {
@@ -176,9 +179,10 @@ const sectionBar = (
   if (sections === undefined || sections.length === 0) return "";
 
   const items = sections
-    .map(({ href, label }) => {
+    .map(({ href, label, competition }) => {
       const here = label === current ? ' aria-current="page"' : "";
-      return `          <li><a href="${href}"${here}>${escape(label)}</a></li>`;
+      const tile = competition === true ? ' class="section-competition"' : "";
+      return `          <li${tile}><a href="${href}"${here}>${escape(label)}</a></li>`;
     })
     .join("\n");
 

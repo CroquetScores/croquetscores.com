@@ -36,6 +36,7 @@ export const sectionsOf = (
     ...tournament.competitions.map((competition) => ({
       href: `/${competition.address}`,
       label: competition.name,
+      competition: true,
     })),
   ];
 };
