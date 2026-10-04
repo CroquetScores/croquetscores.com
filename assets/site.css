@@ -665,9 +665,14 @@ a:hover {
   color: var(--accent-ink);
 }
 
+/* Tiles of one width, as the old site had them, rather than each as wide as
+   its words: a long competition's name, such as "Championship Singles Block
+   A", wraps within its tile onto lines of its own, and the tiles stand in
+   even columns, three across a phone, rather than running on in a ragged
+   line, one a line on a phone. */
 .site-sections ul {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 8.5rem);
   /* No row gap and no block padding, so the bar is exactly as tall as its tabs
      and the black of the current one runs edge to edge. Green showing above or
      below it would read as a gap rather than as a selection. */
@@ -681,11 +686,17 @@ a:hover {
 /* Half the scale's smallest step above and below its words, so that the bar
    takes as little of a phone's height as it can and is still pointed at
    easily. */
+/* A tile's words from its top, set tight so that a name of three lines is
+   read as one name, and broken within a word only where a word is wider than
+   the tile. As tall as its own words rather than its row, as on the old site,
+   so that the current tile beside a name of three lines is not a tall block
+   of black. */
 .site-sections a {
   display: flex;
-  align-items: center;
-  align-self: stretch;
-  padding: calc(var(--space-1) / 2) var(--space-3);
+  align-self: start;
+  padding: calc(var(--space-1) / 2) var(--space-2);
+  line-height: var(--leading-tight);
+  overflow-wrap: break-word;
   color: var(--accent-ink);
   text-decoration: none;
 }
