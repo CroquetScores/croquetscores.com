@@ -1807,6 +1807,66 @@ main {
   }
 }
 
+/* The same two above the grid and below it, each pair in a row held to the
+   width of what shows of the grid and kept there as it scrolls, asked of the
+   grid itself whether there is more either way. Where the grid does not
+   scroll, the rows are not there at all, rather than empty bands above and
+   below it; and a browser that cannot ask never shows them. */
+.knockout-scroll {
+  container-type: scroll-state;
+}
+
+.knockout-edge {
+  display: none;
+}
+
+@container scroll-state(scrollable: inline) {
+  .knockout-edge {
+    position: sticky;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .knockout-above {
+    padding-bottom: var(--space-2);
+  }
+
+  .knockout-below {
+    padding-top: var(--space-2);
+  }
+}
+
+.knockout-edge-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--action);
+  color: var(--action-ink);
+  text-decoration: none;
+  visibility: hidden;
+}
+
+.knockout-edge-onward {
+  margin-left: auto;
+}
+
+@container scroll-state(scrollable: right) {
+  .knockout-edge-onward {
+    visibility: visible;
+  }
+}
+
+@container scroll-state(scrollable: left) {
+  .knockout-edge-back {
+    visibility: visible;
+  }
+}
+
 @keyframes knockout-onward {
   0%,
   98% {
@@ -1935,7 +1995,7 @@ main {
    by the middle of its share, whatever its height. */
 .knockout-round + .knockout-round .knockout-name {
   min-width: 9rem;
-  max-width: 12rem;
+  max-width: 11rem;
   white-space: normal;
 }
 

@@ -16,7 +16,12 @@
 // to a round, the final or the first, and following a link to part of a page
 // scrolls whatever holds it to bring it into view, the grid across among
 // them. Whether there is more either way is the stylesheet's to know, by how
-// far the grid is scrolled. What every view of a competition shares is
+// far the grid is scrolled.
+//
+// The same two stand above the grid and below it as well, at either end,
+// since halfway down a grid of many rounds can be out of the window. They are in the grid, held
+// to the width of what shows of it, so that the stylesheet can ask the grid
+// whether it scrolls, and leave no room for them at all where it does not. What every view of a competition shares is
 // competitionPages.ts's, and the summary draws a match as this does
 // (knockoutSummary.ts).
 import type {
@@ -149,15 +154,24 @@ const back = "M19 12H5M11 6l-6 6 6 6";
 const arrowDrawn = (path: string): string =>
   `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="${path}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
+// The two arrows in a row of their own, above the grid or below it.
+const arrowsAt = (edge: "above" | "below", speaking: Speaking): string =>
+  `              <div class="knockout-edge knockout-${edge}">
+                <a class="knockout-edge-arrow knockout-edge-back" href="#knockout-first">${arrowDrawn(back)}<span class="visually-hidden">${escape(speaking.say("knockout.back"))}</span></a>
+                <a class="knockout-edge-arrow knockout-edge-onward" href="#knockout-final">${arrowDrawn(onward)}<span class="visually-hidden">${escape(speaking.say("knockout.onward"))}</span></a>
+              </div>`;
+
 const grid = (
   asked: KnockoutToRead,
   speaking: Speaking,
   assets: Assets,
 ): string => `          <div class="knockout-frame">
             <div class="knockout-scroll" role="region" aria-labelledby="competition-heading" tabindex="0">
+${arrowsAt("above", speaking)}
               <div class="knockout">
 ${asked.rounds.map((round, at) => roundShown(round, at, asked.rounds.length, speaking, assets)).join("\n")}
               </div>
+${arrowsAt("below", speaking)}
             </div>
             <a class="knockout-arrow knockout-back" href="#knockout-first">${arrowDrawn(back)}<span class="visually-hidden">${escape(speaking.say("knockout.back"))}</span></a>
             <a class="knockout-arrow knockout-onward" href="#knockout-final">${arrowDrawn(onward)}<span class="visually-hidden">${escape(speaking.say("knockout.onward"))}</span></a>

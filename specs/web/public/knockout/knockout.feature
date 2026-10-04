@@ -41,6 +41,10 @@ Feature: A knockout's grid draws its draw round by round
   pressing it brings the first round into view. Where the whole grid fits
   there is neither, and there is no arrow on to the right once the grid has
   been scrolled to its end, nor back to the left while it is at its start.
+  Since halfway down a grid of many rounds can be out of the window, the same
+  arrows stand above the grid and below it as well, at either end, and above
+  and below it there is nothing at all where the whole grid fits, rather than
+  room kept for them.
 
   Its sections are the tournament's, with the knockout marked.
 
@@ -280,6 +284,68 @@ Feature: A knockout's grid draws its draw round by round
     Scenario: Where the whole grid fits there is no arrow back
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then no arrow back across the grid is shown
+
+    Scenario: On a phone an arrow above the grid says there is more to the right
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then an arrow above the grid is shown
+
+    Scenario: The arrow above the grid is above it
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the arrow above the grid is above the first round
+
+    Scenario: Pressing the arrow above the grid brings the final into view
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow above the grid is pressed
+      Then the final is in view within the grid
+
+    Scenario: Once the grid is scrolled from its start an arrow back is above it
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow across the grid is pressed
+      Then an arrow back above the grid is shown
+
+    Scenario: Where the whole grid fits there is no arrow above it
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then no arrow above the grid is shown
+
+    Scenario: Where the whole grid fits no room is kept above it
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then no room is kept above the grid
+
+    Scenario: Once the grid is scrolled to its end there is no arrow on above it
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow across the grid is pressed
+      Then no arrow above the grid is shown
+
+    Scenario: On a phone an arrow below the grid says there is more to the right
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then an arrow below the grid is shown
+
+    Scenario: The arrow below the grid is below it
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the arrow below the grid is below the first round
+
+    Scenario: Pressing the arrow below the grid brings the final into view
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow below the grid is pressed
+      Then the final is in view within the grid
+
+    Scenario: Once the grid is scrolled from its start an arrow back is below it
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow across the grid is pressed
+      Then an arrow back below the grid is shown
+
+    Scenario: Where the whole grid fits no room is kept below it
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then no room is kept below the grid
 
   Rule: The knockout's three views are offered, and its own address shows the view chosen last
 
