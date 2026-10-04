@@ -165,6 +165,15 @@ Feature: A knockout of a tournament, for anybody to read
       When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
       Then the first side of the first match of the second round answered is "Sam Someone"
 
+    Scenario: Two byes drawn together send a bye to the next round
+      Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Plate" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Plate" of "Spring Open"
+      When the knockout "plate" of the tournament at "2026/ac/spring-open" is asked for
+      Then the second side of the first match of the second round answered is a bye
+
   Rule: A match is answered with its games, oldest first, and its winner once decided
 
     Scenario: A match's game is answered with the side that won it

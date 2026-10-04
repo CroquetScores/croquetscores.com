@@ -65,11 +65,12 @@ Feature: A block's page shows its results as a grid
   is (`theme.feature`): never sent in the clear, and not to be read by a
   script on the page.
 
-  A block that is archived, a slug no competition has, and a knockout or a
-  Swiss, which are shown otherwise and are not pages until the features that
-  show them land, are not pages; nor is any block of an archived tournament,
-  or one the website never had. An address the tournament has moved on from
-  leads to the block where the tournament is now.
+  A block that is archived, a slug no competition has, and a Swiss, which is
+  shown otherwise and is not a page until the feature that shows it lands,
+  are not pages; nor is any block of an archived tournament, or one the
+  website never had. A knockout at the same address is shown as a knockout
+  (`knockout.feature`). An address the tournament has moved on from leads to
+  the block where the tournament is now.
 
   Where a scenario says nothing else, the tournament is for the sport "ac"
   and starts on 3 October 2026, and its block is the best of 3, so that two
@@ -396,11 +397,6 @@ Feature: A block's page shows its results as a grid
     Scenario: An archived block is not found
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page says the words for "errors.notFound"
-
-    Scenario: A knockout is not found
-      Given "organiser@example.com" has added the knockout "Knockout" to "Spring Open"
-      When the page at "/2026/ac/spring-open/competitions/knockout" is opened
       Then the page says the words for "errors.notFound"
 
     Scenario: An archived tournament's blocks are not found

@@ -127,6 +127,7 @@ Feature: A knockout's grid draws its draw round by round
       Then the address is "/2026/ac/spring-open/players/alex-another"
 
     Scenario: A side says what its player represents
+      # Kim is drawn last, since players are drawn in the tournament's order.
       Given the player is to represent "Canterbury"
       And "organiser@example.com" has added the player "Kim Fifth" to "Spring Open"
       And "organiser@example.com" has added the knockout "Plate" to "Spring Open"
@@ -135,7 +136,7 @@ Feature: A knockout's grid draws its draw round by round
       And "organiser@example.com" has entered the player "Chris Third" in "Plate" of "Spring Open"
       And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/plate" is opened
-      Then the first side of the first match of the first round in the grid says they represent "Canterbury"
+      Then the second side of the second match of the first round in the grid says they represent "Canterbury"
 
     Scenario: A withdrawn player says they have withdrawn
       Given "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"

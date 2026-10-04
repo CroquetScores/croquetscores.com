@@ -97,7 +97,13 @@ const backgroundOf = (found: Locator): Promise<string> =>
 When(
   "the name of {string} in the grid is pressed",
   async function (this: SpecWorld, name: string) {
-    await rowOf(this, name).locator(".player-name").click();
+    // A block's grid or a knockout's, whichever the page draws.
+    await this.browserPage
+      .locator("main :is(.block-grid, .knockout) .player-name", {
+        hasText: name,
+      })
+      .first()
+      .click();
     await this.browserPage.waitForLoadState();
   },
 );
@@ -306,7 +312,10 @@ Then(
 // Across a phone -----------------------------------------------------------------
 
 Then("the grid can be scrolled across", async function (this: SpecWorld) {
-  const scroller = this.browserPage.locator("main .block-grid-scroll");
+  // A block's grid or a knockout's, whichever the page draws.
+  const scroller = this.browserPage.locator(
+    "main :is(.block-grid-scroll, .knockout-scroll)",
+  );
   const { scrollWidth, clientWidth } = await scroller.evaluate(
     // Read out in the page, since the element itself does not come back.
     (element: unknown) => {
@@ -330,7 +339,7 @@ Then("the grid can be scrolled across", async function (this: SpecWorld) {
 // Said here for all three of a block's views, which offer the same three.
 
 const viewsOffered = (world: SpecWorld): Locator =>
-  world.browserPage.locator("main .block-views .block-view");
+  world.browserPage.locator("main .competition-views .competition-view");
 
 const viewCalled = (world: SpecWorld, name: string): Locator =>
   viewsOffered(world).filter({ hasText: new RegExp(`^${name}$`) });

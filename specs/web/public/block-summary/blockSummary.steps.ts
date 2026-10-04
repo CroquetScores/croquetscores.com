@@ -38,7 +38,13 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
 When(
   "the name of {string} in the summary is pressed",
   async function (this: SpecWorld, name: string) {
-    await rowOf(this, name).locator(".player-name").click();
+    // A block's summary or a knockout's, whichever the page draws.
+    await this.browserPage
+      .locator("main :is(.block-summary, .knockout-summary) .player-name", {
+        hasText: name,
+      })
+      .first()
+      .click();
     await this.browserPage.waitForLoadState();
   },
 );
