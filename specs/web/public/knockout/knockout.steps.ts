@@ -1,4 +1,4 @@
-import { Then } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
@@ -331,3 +331,51 @@ Then(
     );
   },
 );
+
+// The arrow across the grid ---------------------------------------------------
+
+const arrow = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main .knockout-onward");
+
+// Asked again until it holds or a second has gone, since the browser scrolls
+// and redraws in its own time after a press, and whether the arrow shows
+// follows how far the grid is scrolled.
+const eventually = async (check: () => Promise<void>): Promise<void> => {
+  const until = Date.now() + 1000;
+  for (;;) {
+    try {
+      await check();
+      return;
+    } catch (failure) {
+      if (Date.now() > until) throw failure;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  }
+};
+
+Then("an arrow across the grid is shown", async function (this: SpecWorld) {
+  await eventually(async () => {
+    assert.equal(await arrow(this).isVisible(), true, "No arrow is shown.");
+  });
+});
+
+Then("no arrow across the grid is shown", async function (this: SpecWorld) {
+  await eventually(async () => {
+    assert.equal(await arrow(this).isVisible(), false, "An arrow is shown.");
+  });
+});
+
+When("the arrow across the grid is pressed", async function (this: SpecWorld) {
+  await arrow(this).click();
+});
+
+Then("the final is in view within the grid", async function (this: SpecWorld) {
+  await eventually(async () => {
+    const grid = await boxOf(this.browserPage.locator("main .knockout-scroll"));
+    const final = await boxOf(this.browserPage.locator("main #knockout-final"));
+    assert.ok(
+      final.x >= grid.x - 1 && final.x + final.width <= grid.x + grid.width + 1,
+      `The final runs from ${String(final.x)} to ${String(final.x + final.width)} pixels across.`,
+    );
+  });
+});

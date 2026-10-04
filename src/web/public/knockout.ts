@@ -8,7 +8,13 @@
 // column is as tall as the first's and gives each pair an equal share of it,
 // its two matches at a quarter and three quarters of the way down, so that a
 // later round's match stands level with the gap between the two before it,
-// with nothing to measure. What every view of a competition shares is
+// with nothing to measure.
+//
+// While there is more of the grid to the right than shows, an arrow halfway
+// down its right edge says so. It needs no scripting: it leads to the final,
+// and following a link to part of a page scrolls whatever holds it to bring
+// it into view, the grid across among them. Whether there is more to the
+// right is the stylesheet's to know, by how far the grid is scrolled. What every view of a competition shares is
 // competitionPages.ts's, and the summary draws a match as this does
 // (knockoutSummary.ts).
 import type {
@@ -120,7 +126,7 @@ const roundShown = (
   rounds: number,
   speaking: Speaking,
   assets: Assets,
-): string => `            <section class="knockout-round" aria-labelledby="knockout-round-${String(at)}">
+): string => `            <section class="knockout-round"${at === rounds - 1 ? ' id="knockout-final"' : ""} aria-labelledby="knockout-round-${String(at)}">
               <h2 class="knockout-round-name visually-hidden" id="knockout-round-${String(at)}">${escape(roundName(at, rounds, speaking))}</h2>
               <div class="knockout-matches">
 ${pairsOf(round.matches)
@@ -136,10 +142,13 @@ const grid = (
   asked: KnockoutToRead,
   speaking: Speaking,
   assets: Assets,
-): string => `          <div class="knockout-scroll" role="region" aria-labelledby="competition-heading" tabindex="0">
-            <div class="knockout">
+): string => `          <div class="knockout-frame">
+            <div class="knockout-scroll" role="region" aria-labelledby="competition-heading" tabindex="0">
+              <div class="knockout">
 ${asked.rounds.map((round, at) => roundShown(round, at, asked.rounds.length, speaking, assets)).join("\n")}
+              </div>
             </div>
+            <a class="knockout-onward" href="#knockout-final"><span aria-hidden="true">→</span><span class="visually-hidden">${escape(speaking.say("knockout.onward"))}</span></a>
           </div>`;
 
 /** What draws a knockout's grid. */

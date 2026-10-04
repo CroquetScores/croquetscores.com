@@ -33,7 +33,11 @@ Feature: A knockout's grid draws its draw round by round
   player along a line from the first round to the final.
 
   The grid is wider than a phone, so on a phone it scrolls across within the
-  page, and the page itself is no wider than the window.
+  page, and the page itself is no wider than the window. While there is more
+  of it to the right, an arrow halfway down its right edge says so, and
+  pressing it brings the final into view, so that a reader who does not think
+  to scroll still finds the rounds beyond the first. Where the whole grid fits,
+  or once it has been scrolled to the end, there is no arrow.
 
   Its sections are the tournament's, with the knockout marked.
 
@@ -230,6 +234,27 @@ Feature: A knockout's grid draws its draw round by round
       Given a viewport 375 pixels wide
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then the grid can be scrolled across
+
+    Scenario: On a phone an arrow says there is more of the grid to the right
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then an arrow across the grid is shown
+
+    Scenario: Pressing the arrow brings the final into view
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow across the grid is pressed
+      Then the final is in view within the grid
+
+    Scenario: Once the grid is scrolled to its end there is no arrow
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow across the grid is pressed
+      Then no arrow across the grid is shown
+
+    Scenario: Where the whole grid fits there is no arrow
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then no arrow across the grid is shown
 
   Rule: The knockout's three views are offered, and its own address shows the view chosen last
 

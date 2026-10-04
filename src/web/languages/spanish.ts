@@ -327,6 +327,7 @@ export const spanish: Language = {
     "knockout.round.quarters": "Cuartos de final",
     "knockout.round.number": "Ronda {number}",
     "knockout.bye": "Bye",
+    "knockout.onward": "Rondas siguientes",
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 

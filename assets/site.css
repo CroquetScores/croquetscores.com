@@ -1756,6 +1756,58 @@ main {
   overflow-x: auto;
 }
 
+/* An arrow halfway down the grid's right edge while there is more of it to
+   the right, leading to the final. Whether there is more is told by how far
+   the grid is scrolled: shown until it is scrolled to its end, and not at all
+   where it fits, since a grid that does not scroll has no scroll to tell by.
+   A browser that cannot tell never shows it, and a reader there scrolls as
+   they would have. */
+.knockout-frame {
+  position: relative;
+  timeline-scope: --knockout;
+}
+
+.knockout-scroll {
+  scroll-timeline: --knockout x;
+}
+
+.knockout-onward {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .knockout-onward {
+    position: absolute;
+    top: 50%;
+    right: var(--space-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    translate: 0 -50%;
+    border-radius: 50%;
+    background: var(--action);
+    color: var(--action-ink);
+    font-size: var(--text-xl);
+    text-decoration: none;
+    visibility: hidden;
+    animation: knockout-onward linear both;
+    animation-timeline: --knockout;
+  }
+}
+
+@keyframes knockout-onward {
+  0%,
+  98% {
+    visibility: visible;
+  }
+
+  100% {
+    visibility: hidden;
+  }
+}
+
 /* In the site's small type, near the old site's, so that a draw of 16 places
    fits a wide screen as it did there. */
 .knockout {
