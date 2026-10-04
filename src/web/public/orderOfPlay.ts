@@ -6,6 +6,7 @@
 import type { BlockToRead } from "../../application/operations/tournaments/PublicBlockOfTournament.js";
 import type { KnockoutToRead } from "../../application/operations/tournaments/PublicKnockoutOfTournament.js";
 import type { SwissToRead } from "../../application/operations/tournaments/PublicSwissOfTournament.js";
+import type { TestToRead } from "../../application/operations/tournaments/PublicTestOfTournament.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
@@ -54,5 +55,11 @@ export const knockoutOrderOfPlay =
 /** What draws a Swiss's order of play. */
 export const swissOrderOfPlay =
   (assets: Assets): DrawView<SwissToRead> =>
+  (asked, speaking, request) =>
+    orderOfPlay(asked.games, request.requestedAt.toDate(), speaking, assets);
+
+/** What draws a test's order of play, its players shown as representing their teams. */
+export const testOrderOfPlay =
+  (assets: Assets): DrawView<TestToRead> =>
   (asked, speaking, request) =>
     orderOfPlay(asked.games, request.requestedAt.toDate(), speaking, assets);

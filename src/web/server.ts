@@ -119,6 +119,7 @@ import { PublicBlockOfTournamentHandler } from "../application/operations/tourna
 import { PublicKnockoutOfTournamentHandler } from "../application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
 import { PublicSwissOfTournamentHandler } from "../application/operations/tournaments/PublicSwissOfTournamentHandler.js";
 import { PublicTeamSummaryOfTournamentHandler } from "../application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
+import { PublicTestOfTournamentHandler } from "../application/operations/tournaments/PublicTestOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
@@ -238,7 +239,9 @@ import {
   blockOrderOfPlay,
   knockoutOrderOfPlay,
   swissOrderOfPlay,
+  testOrderOfPlay,
 } from "./public/orderOfPlay.js";
+import { testView } from "./public/test.js";
 import { swissView } from "./public/swiss.js";
 import { swissSummaryView } from "./public/swissSummary.js";
 import { registerCompetitionPages } from "./public/competitionPages.js";
@@ -872,6 +875,13 @@ export const buildApplication = async (
       tournamentsByAddress,
     ),
   );
+  mediator.handleQuery(
+    new PublicTestOfTournamentHandler(
+      tournaments,
+      competitions,
+      tournamentsByAddress,
+    ),
+  );
 
   // Before any route is added, so that every one of them finds it there.
   server.decorate("mediator", mediator);
@@ -1011,6 +1021,10 @@ export const buildApplication = async (
       grid: swissView(assets),
       summary: swissSummaryView(assets),
       orderOfPlay: swissOrderOfPlay(assets),
+    },
+    test: {
+      grid: testView(),
+      orderOfPlay: testOrderOfPlay(assets),
     },
   });
 

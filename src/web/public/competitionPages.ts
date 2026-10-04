@@ -33,6 +33,10 @@ import {
   PublicSwissOfTournament,
   type SwissToRead,
 } from "../../application/operations/tournaments/PublicSwissOfTournament.js";
+import {
+  PublicTestOfTournament,
+  type TestToRead,
+} from "../../application/operations/tournaments/PublicTestOfTournament.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import type { Mediator } from "../../application/common/Mediator.js";
 import type { Assets } from "../common/assets.js";
@@ -63,15 +67,17 @@ const views: readonly {
   },
 ];
 
-// The three views, each leading to its own address, the one being read
-// marked as such.
+// The views a competition offers, each leading to its own address, the one
+// being read marked as such.
 const viewsOffered = (
   competition: string,
+  offered: readonly CompetitionView[],
   current: CompetitionView,
   speaking: Speaking,
 ): string => `          <nav class="competition-views" aria-label="${escape(speaking.say("competition.views"))}">
             <ul>
 ${views
+  .filter(({ view }) => offered.includes(view))
   .map(
     ({ view, path, word }) =>
       `              <li><a class="competition-view" href="${escape(`${competition}${path}`)}"${view === current ? ' aria-current="page"' : ""}>${escape(speaking.say(word))}</a></li>`,
@@ -86,11 +92,14 @@ const viewCookie = "blockView";
 
 const aYear = 60 * 60 * 24 * 365;
 
-// The view a reader chose last, or the grid where they have chosen none, which
-// is also what a cookie that names no view means.
-const chosenBy = (request: FastifyRequest): CompetitionView =>
-  views.find(({ view }) => view === request.cookies[viewCookie])?.view ??
-  "grid";
+// The view a reader chose last, of those `offered`, or the grid where they
+// have chosen none, or one this competition has not, as a test has no summary:
+// a cookie that names no view it offers means as much.
+const chosenBy = (
+  request: FastifyRequest,
+  offered: readonly CompetitionView[],
+): CompetitionView =>
+  offered.find((view) => view === request.cookies[viewCookie]) ?? "grid";
 
 // Held to the standard the theme's cookie is, for the reasons given there:
 // never sent in the clear, and not to be read by a script on the page.
@@ -118,6 +127,10 @@ export interface CompetitionDraws {
     Record<CompetitionView, DrawView<KnockoutToRead>>
   >;
   readonly swiss: Readonly<Record<CompetitionView, DrawView<SwissToRead>>>;
+  /** A test has no summary, its grid being already as short as one. */
+  readonly test: Readonly<
+    Record<Exclude<CompetitionView, "summary">, DrawView<TestToRead>>
+  >;
 }
 
 // A competition of any kind that has pages, as its pages are given it.
@@ -136,6 +149,13 @@ type Found =
       readonly kind: "swiss";
       readonly asked: SwissToRead;
       readonly name: string;
+    }
+  | {
+      readonly kind: "test";
+      readonly asked: TestToRead;
+      readonly name: string;
+      /** How the section bar says it, where there is less room. */
+      readonly section: string;
     };
 
 // Whether `failure` says there is nothing at the address of the kind asked
@@ -206,86 +226,174 @@ const competitionAt = async (
   }
 };
 
+// The test found by `slug` among the tournament's tests; nothing where none
+// is there, or what is there is not a test. It is said by its teams' names,
+// as "Australia vs England", and in the section bar, which has less room, by
+// their short names, as "AUS vs ENG", each in the reader's language.
+const testAt = async (
+  mediator: Mediator,
+  website: string,
+  address: string,
+  slug: string,
+  speaking: Speaking,
+): Promise<Found | undefined> => {
+  try {
+    const asked = await mediator.query(
+      new PublicTestOfTournament(website, address, slug),
+    );
+    const [first, second] = asked.test.teams;
+    return {
+      kind: "test",
+      asked,
+      name: speaking.say("tournament.test", {
+        first: first.name,
+        second: second.name,
+      }),
+      section: speaking.say("tournament.test", {
+        first: first.shortName,
+        second: second.shortName,
+      }),
+    };
+  } catch (failure) {
+    if (
+      refusedAs(failure, [
+        "PublicTestOfTournament.NoSuchTournament",
+        "PublicTestOfTournament.NoSuchCompetition",
+        "PublicTestOfTournament.NotATest",
+      ])
+    ) {
+      return undefined;
+    }
+    throw failure;
+  }
+};
+
 /**
- * Serves every competition's three views, each at its own address, where
- * opening it chooses it, and at the competition's own address the view
- * chosen last. Each is drawn by its kind's own of `draws`.
+ * Serves every competition's views, each at its own address, where opening it
+ * chooses it, and at the competition's own address the view chosen last: a
+ * block's, a knockout's and a Swiss's three under the tournament's
+ * "competitions", and a test's two under its "tests". Each is drawn by its
+ * kind's own of `draws`.
  */
 export const registerCompetitionPages = (
   server: FastifyInstance,
   assets: Assets,
   draws: CompetitionDraws,
 ): void => {
-  const serve = (
-    path: string,
-    viewOf: (request: FastifyRequest) => CompetitionView,
-    chooses: boolean,
-  ): void => {
-    server.get<{
-      Params: {
-        year: string;
-        sport: string;
-        slug: string;
-        competition: string;
-      };
-    }>(
-      `/${yearInPath}/:sport/:slug/competitions/:competition${path}`,
-      async (request, reply) => {
-        const { year, sport, slug, competition } = request.params;
-        const address = `${year}/${sport}/${slug}`;
-        const website = websiteOf(request);
-        const found = await competitionAt(
-          request.server.mediator,
-          website.host,
-          address,
-          competition,
-        );
-        if (found === undefined) return reply.callNotFound();
-        const { asked } = found;
-        const here = `/${asked.address}/competitions/${competition}`;
-        // An address the tournament has moved on from leads to the same
-        // address where it is now, for good, so that a link kept from before
-        // still works. It chooses nothing until it is followed.
-        if (asked.address !== address) {
-          return reply.redirect(`${here}${path}`, 301);
-        }
+  const kinds: readonly {
+    base: string;
+    offered: readonly CompetitionView[];
+    find: (
+      mediator: Mediator,
+      website: string,
+      address: string,
+      slug: string,
+      speaking: Speaking,
+    ) => Promise<Found | undefined>;
+  }[] = [
+    {
+      base: "competitions",
+      offered: ["grid", "summary", "orderOfPlay"],
+      find: competitionAt,
+    },
+    { base: "tests", offered: ["grid", "orderOfPlay"], find: testAt },
+  ];
 
-        const view = viewOf(request);
-        if (chooses) remember(reply, view);
-        const speaking = speakingOf(request);
-        const drawn =
-          found.kind === "block"
-            ? draws.block[view](found.asked, speaking, request)
-            : found.kind === "knockout"
-              ? draws.knockout[view](found.asked, speaking, request)
-              : draws.swiss[view](found.asked, speaking, request);
-        return sendPage(
-          reply,
+  const draw = (
+    found: Found,
+    view: CompetitionView,
+    speaking: Speaking,
+    request: FastifyRequest,
+  ): string => {
+    switch (found.kind) {
+      case "block":
+        return draws.block[view](found.asked, speaking, request);
+      case "knockout":
+        return draws.knockout[view](found.asked, speaking, request);
+      case "swiss":
+        return draws.swiss[view](found.asked, speaking, request);
+      case "test":
+        return draws.test[view === "summary" ? "grid" : view](
+          found.asked,
+          speaking,
           request,
-          render(assets, {
-            tournament: { name: asked.name, address: asked.address },
-            title: found.name,
-            sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
-            currentSection: found.name,
-            theme: themeOf(request),
-            signedIn: signedIn(request),
-            hasPassword: hasPassword(request),
-            speaking,
-            siteName: siteNameOf(request),
-            tryWebsite: website.isTry,
-            path: request.url,
-            body: `          <div class="competition-heading">
-            <h1 id="competition-heading">${escape(found.name)}</h1>
-${viewsOffered(here, view, speaking)}
-          </div>
-${drawn}`,
-          }),
         );
-      },
-    );
+    }
   };
-  serve("", chosenBy, false);
-  for (const { view, path } of views) serve(path, () => view, true);
+
+  for (const { base, offered, find } of kinds) {
+    const serve = (
+      path: string,
+      viewOf: (request: FastifyRequest) => CompetitionView,
+      chooses: boolean,
+    ): void => {
+      server.get<{
+        Params: {
+          year: string;
+          sport: string;
+          slug: string;
+          competition: string;
+        };
+      }>(
+        `/${yearInPath}/:sport/:slug/${base}/:competition${path}`,
+        async (request, reply) => {
+          const { year, sport, slug, competition } = request.params;
+          const address = `${year}/${sport}/${slug}`;
+          const website = websiteOf(request);
+          const speaking = speakingOf(request);
+          const found = await find(
+            request.server.mediator,
+            website.host,
+            address,
+            competition,
+            speaking,
+          );
+          if (found === undefined) return reply.callNotFound();
+          const { asked } = found;
+          const here = `/${asked.address}/${base}/${competition}`;
+          // An address the tournament has moved on from leads to the same
+          // address where it is now, for good, so that a link kept from
+          // before still works. It chooses nothing until it is followed.
+          if (asked.address !== address) {
+            return reply.redirect(`${here}${path}`, 301);
+          }
+
+          const view = viewOf(request);
+          if (chooses) remember(reply, view);
+          return sendPage(
+            reply,
+            request,
+            render(assets, {
+              tournament: { name: asked.name, address: asked.address },
+              title: found.name,
+              sections: sectionsOf(
+                { ...asked, playedByTeams: found.kind === "test" },
+                speaking,
+              ),
+              currentSection:
+                found.kind === "test" ? found.section : found.name,
+              theme: themeOf(request),
+              signedIn: signedIn(request),
+              hasPassword: hasPassword(request),
+              speaking,
+              siteName: siteNameOf(request),
+              tryWebsite: website.isTry,
+              path: request.url,
+              body: `          <div class="competition-heading">
+            <h1 id="competition-heading">${escape(found.name)}</h1>
+${viewsOffered(here, offered, view, speaking)}
+          </div>
+${draw(found, view, speaking, request)}`,
+            }),
+          );
+        },
+      );
+    };
+    serve("", (request) => chosenBy(request, offered), false);
+    for (const { view, path } of views) {
+      if (offered.includes(view)) serve(path, () => view, true);
+    }
+  }
 };
 
 /**

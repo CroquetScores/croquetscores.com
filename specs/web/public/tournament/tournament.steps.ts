@@ -285,6 +285,9 @@ Then(
       ".swiss-result-opponent",
       ".team-summary-team",
       ".team-summary-corner",
+      ".test-team",
+      ".test-side",
+      ".test-score",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

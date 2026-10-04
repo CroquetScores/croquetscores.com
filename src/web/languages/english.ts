@@ -297,6 +297,12 @@ export const english: Language = {
     "tournament.recent": "Recent",
     "tournament.summary": "Summary",
     // A tournament played by teams' summary: its table's groups and columns.
+    // A test's grid: what each match is the best of, the word between its
+    // teams, and its totals beneath the matches.
+    "test.bestOf": "Each match is the best of {count}.",
+    "test.vs": "vs",
+    "test.games": "Games",
+    "test.hoops": "Hoops",
     "teamSummary.tests": "Tests",
     "teamSummary.games": "Games",
     "teamSummary.hoops": "Hoops",

@@ -5,6 +5,7 @@ import type { TeamId } from "../../../domain/aggregates/tournaments/primitives/T
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { Website } from "../../../domain/common/Website.js";
+import type { PlayerInGame } from "./GamesOfTournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import {
   type TournamentAddresses,
@@ -84,3 +85,36 @@ export const competitionsInUse = (
       };
     });
 };
+
+// Each of the tournament's players by their id, as a game names them: a
+// player entered in a competition by what the tournament calls them now, what
+// they represent and the flag they fly; and a player of a team, in a test,
+// by their name, representing their team and flying its flag, since a team's
+// players are known by their team.
+export const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
+  new Map([
+    ...tournament.players.map(
+      (player) =>
+        [
+          player.id.value,
+          {
+            name: player.name.toString(),
+            representing: player.representing,
+            flag: player.flag === undefined ? undefined : String(player.flag),
+          },
+        ] as const,
+    ),
+    ...tournament.teams.flatMap((team) =>
+      team.players.map(
+        (player) =>
+          [
+            player.id.value,
+            {
+              name: player.name.toString(),
+              representing: team.name.toString(),
+              flag: team.flag === undefined ? undefined : String(team.flag),
+            },
+          ] as const,
+      ),
+    ),
+  ]);
