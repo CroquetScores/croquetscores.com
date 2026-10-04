@@ -11,10 +11,12 @@
 // with nothing to measure.
 //
 // While there is more of the grid to the right than shows, an arrow halfway
-// down its right edge says so. It needs no scripting: it leads to the final,
-// and following a link to part of a page scrolls whatever holds it to bring
-// it into view, the grid across among them. Whether there is more to the
-// right is the stylesheet's to know, by how far the grid is scrolled. What every view of a competition shares is
+// down its right edge says so, and once it is scrolled from its start, one
+// halfway down its left edge leads back. They need no scripting: each leads
+// to a round, the final or the first, and following a link to part of a page
+// scrolls whatever holds it to bring it into view, the grid across among
+// them. Whether there is more either way is the stylesheet's to know, by how
+// far the grid is scrolled. What every view of a competition shares is
 // competitionPages.ts's, and the summary draws a match as this does
 // (knockoutSummary.ts).
 import type {
@@ -126,7 +128,7 @@ const roundShown = (
   rounds: number,
   speaking: Speaking,
   assets: Assets,
-): string => `            <section class="knockout-round"${at === rounds - 1 ? ' id="knockout-final"' : ""} aria-labelledby="knockout-round-${String(at)}">
+): string => `            <section class="knockout-round"${at === rounds - 1 ? ' id="knockout-final"' : at === 0 ? ' id="knockout-first"' : ""} aria-labelledby="knockout-round-${String(at)}">
               <h2 class="knockout-round-name visually-hidden" id="knockout-round-${String(at)}">${escape(roundName(at, rounds, speaking))}</h2>
               <div class="knockout-matches">
 ${pairsOf(round.matches)
@@ -138,6 +140,15 @@ ${pairsOf(round.matches)
               </div>
             </section>`;
 
+// The arrows' shafts and heads, drawn rather than written, so that each
+// stands in the middle of its circle whatever the font, which places an arrow
+// written as a letter where its own spacing puts it.
+const onward = "M5 12h14M13 6l6 6-6 6";
+const back = "M19 12H5M11 6l-6 6 6 6";
+
+const arrowDrawn = (path: string): string =>
+  `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="${path}" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 const grid = (
   asked: KnockoutToRead,
   speaking: Speaking,
@@ -148,7 +159,8 @@ const grid = (
 ${asked.rounds.map((round, at) => roundShown(round, at, asked.rounds.length, speaking, assets)).join("\n")}
               </div>
             </div>
-            <a class="knockout-onward" href="#knockout-final"><span aria-hidden="true">→</span><span class="visually-hidden">${escape(speaking.say("knockout.onward"))}</span></a>
+            <a class="knockout-arrow knockout-back" href="#knockout-first">${arrowDrawn(back)}<span class="visually-hidden">${escape(speaking.say("knockout.back"))}</span></a>
+            <a class="knockout-arrow knockout-onward" href="#knockout-final">${arrowDrawn(onward)}<span class="visually-hidden">${escape(speaking.say("knockout.onward"))}</span></a>
           </div>`;
 
 /** What draws a knockout's grid. */

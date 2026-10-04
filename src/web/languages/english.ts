@@ -344,8 +344,10 @@ export const english: Language = {
     "knockout.round.quarters": "Quarter Finals",
     "knockout.round.number": "Round {number}",
     "knockout.bye": "Bye",
-    // The arrow that scrolls a knockout's grid across to its final.
+    // The arrows that scroll a knockout's grid across to its final, and back
+    // to its first round.
     "knockout.onward": "Later rounds",
+    "knockout.back": "Earlier rounds",
     // What every list of tournaments shares, on the home page and a year's:
     // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "Date",

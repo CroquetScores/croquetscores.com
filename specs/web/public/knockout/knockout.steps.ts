@@ -334,8 +334,11 @@ Then(
 
 // The arrow across the grid ---------------------------------------------------
 
-const arrow = (world: SpecWorld): Locator =>
-  world.browserPage.locator("main .knockout-onward");
+// The arrow on to the right, or the one back to the left.
+const arrow = (world: SpecWorld, back: string | null): Locator =>
+  world.browserPage.locator(
+    back === null ? "main .knockout-onward" : "main .knockout-back",
+  );
 
 // Asked again until it holds or a second has gone, since the browser scrolls
 // and redraws in its own time after a press, and whether the arrow shows
@@ -353,29 +356,65 @@ const eventually = async (check: () => Promise<void>): Promise<void> => {
   }
 };
 
-Then("an arrow across the grid is shown", async function (this: SpecWorld) {
-  await eventually(async () => {
-    assert.equal(await arrow(this).isVisible(), true, "No arrow is shown.");
-  });
-});
+Then(
+  /^an arrow (back )?across the grid is shown$/,
+  async function (this: SpecWorld, back: string | null) {
+    await eventually(async () => {
+      assert.equal(
+        await arrow(this, back).isVisible(),
+        true,
+        "No arrow is shown.",
+      );
+    });
+  },
+);
 
-Then("no arrow across the grid is shown", async function (this: SpecWorld) {
-  await eventually(async () => {
-    assert.equal(await arrow(this).isVisible(), false, "An arrow is shown.");
-  });
-});
+Then(
+  /^no arrow (back )?across the grid is shown$/,
+  async function (this: SpecWorld, back: string | null) {
+    await eventually(async () => {
+      assert.equal(
+        await arrow(this, back).isVisible(),
+        false,
+        "An arrow is shown.",
+      );
+    });
+  },
+);
 
-When("the arrow across the grid is pressed", async function (this: SpecWorld) {
-  await arrow(this).click();
-});
+When(
+  /^the arrow (back )?across the grid is pressed$/,
+  async function (this: SpecWorld, back: string | null) {
+    // Once it shows, since the arrow back shows only once the grid has
+    // scrolled from its start, which the press before it begins.
+    await eventually(async () => {
+      assert.equal(await arrow(this, back).isVisible(), true);
+    });
+    await arrow(this, back).click();
+  },
+);
 
-Then("the final is in view within the grid", async function (this: SpecWorld) {
+// Wholly within the grid's scrolled view, give or take a pixel.
+const inView = async (world: SpecWorld, selector: string): Promise<void> => {
   await eventually(async () => {
-    const grid = await boxOf(this.browserPage.locator("main .knockout-scroll"));
-    const final = await boxOf(this.browserPage.locator("main #knockout-final"));
+    const grid = await boxOf(
+      world.browserPage.locator("main .knockout-scroll"),
+    );
+    const round = await boxOf(world.browserPage.locator(selector));
     assert.ok(
-      final.x >= grid.x - 1 && final.x + final.width <= grid.x + grid.width + 1,
-      `The final runs from ${String(final.x)} to ${String(final.x + final.width)} pixels across.`,
+      round.x >= grid.x - 1 && round.x + round.width <= grid.x + grid.width + 1,
+      `The round runs from ${String(round.x)} to ${String(round.x + round.width)} pixels across.`,
     );
   });
+};
+
+Then("the final is in view within the grid", async function (this: SpecWorld) {
+  await inView(this, "main #knockout-final");
 });
+
+Then(
+  "the first round is in view within the grid",
+  async function (this: SpecWorld) {
+    await inView(this, "main #knockout-first");
+  },
+);

@@ -1757,11 +1757,12 @@ main {
 }
 
 /* An arrow halfway down the grid's right edge while there is more of it to
-   the right, leading to the final. Whether there is more is told by how far
-   the grid is scrolled: shown until it is scrolled to its end, and not at all
-   where it fits, since a grid that does not scroll has no scroll to tell by.
-   A browser that cannot tell never shows it, and a reader there scrolls as
-   they would have. */
+   the right, leading to the final, and one halfway down its left edge once it
+   is scrolled from its start, leading back to the first round. Whether there
+   is more either way is told by how far the grid is scrolled, so that neither
+   shows where the whole grid fits, since a grid that does not scroll has no
+   scroll to tell by. A browser that cannot tell never shows them, and a
+   reader there scrolls as they would have. */
 .knockout-frame {
   position: relative;
   timeline-scope: --knockout;
@@ -1771,15 +1772,14 @@ main {
   scroll-timeline: --knockout x;
 }
 
-.knockout-onward {
+.knockout-arrow {
   display: none;
 }
 
 @supports (animation-timeline: scroll()) {
-  .knockout-onward {
+  .knockout-arrow {
     position: absolute;
     top: 50%;
-    right: var(--space-2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1789,11 +1789,21 @@ main {
     border-radius: 50%;
     background: var(--action);
     color: var(--action-ink);
-    font-size: var(--text-xl);
     text-decoration: none;
     visibility: hidden;
-    animation: knockout-onward linear both;
     animation-timeline: --knockout;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+
+  .knockout-onward {
+    right: var(--space-2);
+    animation-name: knockout-onward;
+  }
+
+  .knockout-back {
+    left: var(--space-2);
+    animation-name: knockout-back;
   }
 }
 
@@ -1805,6 +1815,18 @@ main {
 
   100% {
     visibility: hidden;
+  }
+}
+
+@keyframes knockout-back {
+  0%,
+  2% {
+    visibility: hidden;
+  }
+
+  3%,
+  100% {
+    visibility: visible;
   }
 }
 

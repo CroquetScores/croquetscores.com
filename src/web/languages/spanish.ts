@@ -328,6 +328,7 @@ export const spanish: Language = {
     "knockout.round.number": "Ronda {number}",
     "knockout.bye": "Bye",
     "knockout.onward": "Rondas siguientes",
+    "knockout.back": "Rondas anteriores",
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 

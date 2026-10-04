@@ -36,8 +36,11 @@ Feature: A knockout's grid draws its draw round by round
   page, and the page itself is no wider than the window. While there is more
   of it to the right, an arrow halfway down its right edge says so, and
   pressing it brings the final into view, so that a reader who does not think
-  to scroll still finds the rounds beyond the first. Where the whole grid fits,
-  or once it has been scrolled to the end, there is no arrow.
+  to scroll still finds the rounds beyond the first. Once it has been scrolled
+  away from its start, an arrow halfway down its left edge leads back, and
+  pressing it brings the first round into view. Where the whole grid fits
+  there is neither, and there is no arrow on to the right once the grid has
+  been scrolled to its end, nor back to the left while it is at its start.
 
   Its sections are the tournament's, with the knockout marked.
 
@@ -255,6 +258,28 @@ Feature: A knockout's grid draws its draw round by round
     Scenario: Where the whole grid fits there is no arrow
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then no arrow across the grid is shown
+
+    Scenario: At the grid's start there is no arrow back
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then no arrow back across the grid is shown
+
+    Scenario: Once the grid is scrolled from its start an arrow leads back
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      When the arrow across the grid is pressed
+      Then an arrow back across the grid is shown
+
+    Scenario: Pressing the arrow back brings the first round into view
+      Given a viewport 375 pixels wide
+      And the page at "/2026/ac/spring-open/competitions/finals" is open
+      And the arrow across the grid is pressed
+      When the arrow back across the grid is pressed
+      Then the first round is in view within the grid
+
+    Scenario: Where the whole grid fits there is no arrow back
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then no arrow back across the grid is shown
 
   Rule: The knockout's three views are offered, and its own address shows the view chosen last
 
