@@ -1,28 +1,32 @@
 @browser @postgres
-Feature: A block's order of play lists its games, oldest first
+Feature: A competition's order of play lists its games, oldest first
 
-  A block is shown three ways (`block.feature`). Its order of play, at the
-  block's address followed by "order-of-play", as
-  "/2026/ac/spring-open/competitions/block-a/order-of-play", lists every game
-  of the block in use, in the order it was played, the oldest first, so that
-  the block reads as it unfolded. That is what an order of play is, here and
-  in a knockout's and a Swiss's when they have one; a reader who wants what
-  has happened lately has the tournament's page, which lists the most recent
-  first.
+  A block is shown three ways (`block.feature`), and so is a knockout
+  (`knockout.feature`), and a Swiss will be when the feature that shows one
+  lands. Of the three, the order of play is the same whatever the
+  competition: at the competition's address followed by "order-of-play", as
+  "/2026/ac/spring-open/competitions/block-a/order-of-play", it lists every
+  game of the competition in use, in the order it was played, the oldest
+  first, so that the competition reads as it unfolded. A reader who wants
+  what has happened lately has the tournament's page, which lists the most
+  recent first.
 
   A game is shown as the tournament's page shows one (`tournament.feature`):
   the winner on one line, with what they represent, their flag, their score
   and "beat", or "drew with" where the game was drawn; the loser on the
   next, with their score; and how long ago the game was added, said as the
   tournament's page says it. The competition each game was played in is not
-  shown, since every game here was played in the block, so how long ago
+  shown, since every game here was played in the competition, so how long ago
   takes its place, beside the winner, where a reader's eye starts on a game.
 
-  Like the grid, it is headed by the block's name, offers the block's three
+  Like the grid, it is headed by the competition's name, offers the three
   views with Order of Play marked as the one being read, and its sections are
-  the tournament's, with the block marked. It is not a page wherever the grid
-  is not, and an address the tournament has moved on from leads to the order
-  of play where the tournament is now.
+  the tournament's, with the competition marked. It is not a page wherever
+  the grid is not, and an address the tournament has moved on from leads to
+  the order of play where the tournament is now.
+
+  The scenarios are a block's, but for the last rule's, which shows a
+  knockout's order of play is the same.
 
   Where a scenario says nothing else, the tournament is for the sport "ac"
   and starts on 3 October 2026, and its block is the best of 3, so that two
@@ -189,4 +193,47 @@ Feature: A block's order of play lists its games, oldest first
     Scenario: A block with no games says so in the reader's language
       Given a browser that asks for "en-XA"
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A knockout's order of play is the same as a block's
+
+    Background:
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Finals" of "Spring Open"
+
+    Scenario: A knockout's order of play is headed by its name
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then the page is headed "Finals"
+
+    Scenario: A knockout's game added first is first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Pat Fourth" has beaten "Chris Third" 26 to 20 in "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then the first game is of "Sam Someone" beating "Alex Another"
+      And the second game is of "Pat Fourth" beating "Chris Third"
+
+    Scenario: How long ago a knockout's game was added is beside the winner
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And the server's clock reads "2026-10-03T10:12:00Z"
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then the first line of the first game is beside "12 min"
+
+    Scenario: A knockout's order of play marks it as the view being read
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then the view "Order of Play" is marked as the one being read
+
+    Scenario: A knockout is marked as the section being read
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then the section "Finals" is marked as current
+
+    Scenario: A knockout's order of play is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
       Then every word in the page's content but the tournament's own is in the test locale

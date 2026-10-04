@@ -45,7 +45,7 @@ Feature: A block's page shows its results as a grid
 
   The grid is one of three views of a block, as it was on the old site: the
   grid, a summary (`blockSummary.feature`) and the order of play
-  (`blockOrderOfPlay.feature`). Each is at the block's address followed by
+  (`orderOfPlay.feature`). Each is at the block's address followed by
   its own name, "grid", "summary" and "order-of-play", and each, on the same
   line as its heading and against the right edge, offers all three, Grid,
   Summary and Order of Play, the one being read marked as the view being
@@ -57,8 +57,9 @@ Feature: A block's page shows its results as a grid
   have chosen none, since it is the whole of the block at once. Opening a
   view at its own address is choosing it, whether by pressing it among the
   views offered or by following a link to it. The choice is one for every
-  block, on every tournament, so that a reader who follows blocks on a phone
-  chooses the summary once rather than once a block.
+  block and every knockout (`knockout.feature`), on every tournament, so that
+  a reader who follows a tournament on a phone chooses the summary once
+  rather than once a competition.
 
   The choice is kept in a cookie for a year, held to the standard the theme's
   is (`theme.feature`): never sent in the clear, and not to be read by a
