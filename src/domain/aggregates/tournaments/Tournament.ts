@@ -48,6 +48,9 @@ import { TeamsSpacedOut } from "./events/TeamsSpacedOut.js";
 import { TeamUpdated } from "./events/TeamUpdated.js";
 import { TestAdded } from "./events/TestAdded.js";
 import { TestUpdated } from "./events/TestUpdated.js";
+import { TournamentCommentaryStarted } from "./events/TournamentCommentaryStarted.js";
+import { TournamentCommentaryTitleChanged } from "./events/TournamentCommentaryTitleChanged.js";
+import { CommentaryId } from "./primitives/CommentaryId.js";
 import { CompetitionId } from "./primitives/CompetitionId.js";
 import { TeamId } from "./primitives/TeamId.js";
 import { TeamPlayerId } from "./primitives/TeamPlayerId.js";
@@ -60,6 +63,7 @@ import {
   type TournamentPlayerDetails,
 } from "./TournamentPlayer.js";
 import { BestOf } from "./value-objects/BestOf.js";
+import { CommentaryTitle } from "./value-objects/CommentaryTitle.js";
 import { CompetitionName } from "./value-objects/CompetitionName.js";
 import { ExpectedMatches } from "./value-objects/ExpectedMatches.js";
 import { TestGroup } from "./value-objects/TestGroup.js";
@@ -128,7 +132,27 @@ export type TournamentErrorCode =
   | "Tournament.TestHasGames"
   | "Tournament.TestHasGamesInUse"
   | "Tournament.ExpectedMatchesBelowStarted"
-  | "Tournament.BestOfBelowGamesPlayed";
+  | "Tournament.BestOfBelowGamesPlayed"
+  | "Tournament.CommentaryAlreadyStarted"
+  | "Tournament.CommentaryTitleTaken"
+  | "Tournament.NoSuchCommentary"
+  | "Tournament.NotTheCommentaryWriter";
+
+/**
+ * What a tournament knows of each commentary on it: enough to list it and to
+ * find it. Its comments are the commentary's own (Commentary.ts).
+ */
+export interface CommentaryInTournament {
+  readonly id: CommentaryId;
+  readonly title: CommentaryTitle;
+  readonly slug: Slug;
+  // The account that started it, and so its writer.
+  readonly writer: AccountId;
+}
+
+// Where the page that starts a commentary is found among them, which no
+// commentary may be found at too (startCommentary.feature).
+const COMMENTARY_START_PAGE = "create";
 
 /**
  * A tournament's refusal, named by its code. The code is what whoever asked
@@ -297,13 +321,15 @@ const refuse = (code: TournamentErrorCode, message: string): never => {
 
 /**
  * A tournament: created on a website, and holding its players and a reference
- * to each of its competitions. Everything it is, it says was caused by whoever
- * asked for it, since organising a tournament is many people's work.
+ * to each of its competitions and its commentaries. Everything it is, it says
+ * was caused by whoever asked for it, since organising a tournament is many
+ * people's work.
  *
  * It is run by its managers. Whoever creates it is the first, and only a
- * manager can do anything to it afterwards, so every method is told who asks
- * and asks that before anything else. Its scorers enter scores, which nothing
- * records yet, and can do nothing else.
+ * manager can change it afterwards, so every method that changes it is told
+ * who asks and asks that before anything else. Its scorers enter scores, which
+ * nothing records yet, and can do nothing else. Starting a commentary is not
+ * a change of that kind: any account may start one.
  *
  * What it is given is refused as each value would be on its own before it gets
  * here; what the tournament refuses is what it asks of them together, and of
@@ -318,6 +344,8 @@ export class Tournament extends AggregateRoot {
   readonly #players = new Map<string, TournamentPlayer>();
   readonly #competitions = new Map<string, CompetitionInTournament>();
   readonly #teams = new Map<string, Team>();
+  // By the written id, in the order they were started.
+  readonly #commentaries = new Map<string, CommentaryInTournament>();
   // By the written id, in the order they were made.
   readonly #managers = new Set<string>();
   readonly #scorers = new Set<string>();
@@ -500,6 +528,11 @@ export class Tournament extends AggregateRoot {
    */
   get teams(): readonly Team[] {
     return archivedLast(this.#teamsByOrder, ({ archived }) => archived);
+  }
+
+  /** The commentaries on it, in the order they were started. */
+  get commentaries(): readonly CommentaryInTournament[] {
+    return [...this.#commentaries.values()];
   }
 
   /** Its managers, in the order they were made, the one who created it first. */
@@ -1439,6 +1472,76 @@ export class Tournament extends AggregateRoot {
     );
   }
 
+  /**
+   * That a commentary called `title` is started on it as `id`, written by
+   * `by`, found at the first slug of its title no other commentary has. Any
+   * account may start one: commentary is anybody's to write, and not a change
+   * only a manager may make (onlyManagers.feature). Refused once it is
+   * archived, and when another commentary has the id, or the title however it
+   * is capitalised.
+   */
+  startCommentary(
+    id: CommentaryId,
+    title: CommentaryTitle,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseOnceArchived();
+    if (this.#commentaries.has(id.value)) {
+      refuse(
+        "Tournament.CommentaryAlreadyStarted",
+        "The commentary is already started.",
+      );
+    }
+    this.#refuseACommentaryTitleTaken(id, title);
+    const slug = firstFree(Slug.fromName(title.toString()), id, [
+      COMMENTARY_START_PAGE,
+      ...[...this.#commentaries.values()].map((each) => each.slug.toString()),
+    ]);
+    this.record(
+      new TournamentCommentaryStarted(
+        id.value,
+        title.toString(),
+        slug.toString(),
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That the commentary `id` is now called `title`, keeping its slug. Only its
+   * writer may ask, which the tournament knows, since it recorded who started
+   * it. Refused once the tournament is archived, when it has no such
+   * commentary, and when another commentary has the title however it is
+   * capitalised. A title changed to what it is already records nothing.
+   */
+  changeCommentaryTitle(
+    id: CommentaryId,
+    title: CommentaryTitle,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const found =
+      this.#commentaries.get(id.value) ??
+      refuse(
+        "Tournament.NoSuchCommentary",
+        "The tournament has no such commentary.",
+      );
+    if (!found.writer.equals(by)) {
+      refuse(
+        "Tournament.NotTheCommentaryWriter",
+        "Only the commentary's writer can change its title.",
+      );
+    }
+    this.#refuseOnceArchived();
+    this.#refuseACommentaryTitleTaken(id, title);
+    if (found.title.equals(title)) return;
+    this.record(
+      new TournamentCommentaryTitleChanged(id.value, title.toString(), by, at),
+    );
+  }
+
   protected apply(event: DomainEvent): void {
     if (event instanceof TournamentCreated) {
       this.#becomes(Website.from(event.website), event);
@@ -1530,6 +1633,22 @@ export class Tournament extends AggregateRoot {
       event.competitionIds.forEach((written, index) => {
         this.#competitionAt(written, (index + 1) * ORDER_STEP);
       });
+    } else if (event instanceof TournamentCommentaryStarted) {
+      const id = CommentaryId.from(event.commentaryId);
+      this.#commentaries.set(id.value, {
+        id,
+        title: CommentaryTitle.from(event.title),
+        slug: Slug.from(event.slug),
+        writer: event.createdBy,
+      });
+    } else if (event instanceof TournamentCommentaryTitleChanged) {
+      const found = this.#commentaries.get(event.commentaryId);
+      if (found !== undefined) {
+        this.#commentaries.set(event.commentaryId, {
+          ...found,
+          title: CommentaryTitle.from(event.title),
+        });
+      }
     } else {
       this.#applyToTeamsOrTests(event);
     }
@@ -1812,6 +1931,22 @@ export class Tournament extends AggregateRoot {
         "Tournament.NotAManager",
         "Only a manager can change the tournament.",
       );
+    }
+  }
+
+  // Another commentary's title, however it is capitalised. A commentary's own
+  // is not taken from it, so that its capitals can be corrected.
+  #refuseACommentaryTitleTaken(id: CommentaryId, title: CommentaryTitle): void {
+    for (const other of this.#commentaries.values()) {
+      if (
+        !other.id.equals(id) &&
+        sameName(other.title.toString(), title.toString())
+      ) {
+        refuse(
+          "Tournament.CommentaryTitleTaken",
+          "Another commentary has the title.",
+        );
+      }
     }
   }
 

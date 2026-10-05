@@ -42,6 +42,8 @@ import { TeamsSpacedOut } from "./TeamsSpacedOut.js";
 import { TeamUpdated } from "./TeamUpdated.js";
 import { TestAdded } from "./TestAdded.js";
 import { TestUpdated } from "./TestUpdated.js";
+import { TournamentCommentaryStarted } from "./TournamentCommentaryStarted.js";
+import { TournamentCommentaryTitleChanged } from "./TournamentCommentaryTitleChanged.js";
 
 type Said = Readonly<Record<string, unknown>>;
 
@@ -530,6 +532,29 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           number(said, "expectedMatches"),
           number(said, "bestOf"),
           optionalText(said, "group"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TournamentCommentaryStarted,
+      "tournament-commentary-started",
+      (said, { createdBy, occurredAt }) =>
+        new TournamentCommentaryStarted(
+          text(said, "commentaryId"),
+          text(said, "title"),
+          text(said, "slug"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      TournamentCommentaryTitleChanged,
+      "tournament-commentary-title-changed",
+      (said, { createdBy, occurredAt }) =>
+        new TournamentCommentaryTitleChanged(
+          text(said, "commentaryId"),
+          text(said, "title"),
           createdBy,
           occurredAt,
         ),

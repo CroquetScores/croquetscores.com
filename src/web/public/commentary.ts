@@ -1,0 +1,347 @@
+// A commentary's page: its title as the heading of its content, its writer's
+// name beneath it, and its comments the first written first, each drawn from
+// its Markdown with how long ago it was written, and saying so where it has
+// been edited. Its writer, and only its writer, is offered a box beneath the
+// last comment to write the next one in, and a way to edit each comment. Its
+// sections are the tournament's, with Commentary marked.
+//
+// A comment written in the box is added, and the page shown again with the box
+// empty; one refused is said beneath the box with what was typed put back. It
+// needs no scripting.
+import type { FastifyInstance, FastifyRequest } from "fastify";
+import MarkdownIt from "markdown-it";
+
+import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
+import { AddComment } from "../../application/operations/commentaries/AddComment.js";
+import {
+  PublicCommentaryOfTournament,
+  type TournamentCommentaryToRead,
+} from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
+import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
+import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
+import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
+import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import type { Assets } from "../common/assets.js";
+import { escape } from "../common/escape.js";
+import { typedFrom } from "../common/form.js";
+import { speakingOf, type Speaking } from "../common/language.js";
+import { render } from "../common/layout.js";
+import { hasPassword, readerOf, signedIn } from "../common/reader.js";
+import { siteNameOf, websiteOf } from "../common/site.js";
+import { themeOf } from "../common/theme.js";
+import { toSignIn } from "./profile.js";
+import { sendPage } from "./tournamentLists.js";
+import { ago, sectionsOf } from "./tournamentPages.js";
+import { yearInPath } from "./year.js";
+
+export type CommentaryParams = {
+  year: string;
+  sport: string;
+  slug: string;
+  commentary: string;
+};
+
+// What answers a commentary's pages as ones that are not there.
+const notThere: readonly string[] = [
+  "PublicCommentaryOfTournament.NoSuchTournament",
+  "PublicCommentaryOfTournament.NoSuchCommentary",
+];
+
+// HTML is turned off, so that a comment is drawn from its Markdown alone,
+// whatever was kept: the tags were taken out when it was written
+// (CommentText.ts), and this is the second of the two locks. A line break is
+// a line break, since a comment is typed on a phone by somebody who has never
+// heard that Markdown wants two.
+const markdown = new MarkdownIt({ html: false, breaks: true });
+
+// A link in a comment is one the site does not vouch for, so that a search
+// engine gives it nothing, which is what a link put in a commentary to sell
+// something is after; and the page it leads to is told nothing of this one.
+const drawLink = markdown.renderer.rules.link_open;
+markdown.renderer.rules.link_open = (tokens, index, options, env, self) => {
+  tokens[index]?.attrSet("rel", "nofollow ugc noopener noreferrer");
+  return drawLink === undefined
+    ? self.renderToken(tokens, index, options)
+    : drawLink(tokens, index, options, env, self);
+};
+
+/** What a comment says, drawn from its Markdown, with no HTML of its own. */
+export const commentDrawn = (text: string): string => markdown.render(text);
+
+// Two shapes, drawn here rather than fetched or set in a font, as the account
+// menu's is: they cost no request, and they take the colour of the link they
+// are in. Hidden from anyone reading the page aloud, since each link says in
+// words what it is for.
+export const pencil = `<svg class="icon icon-pencil" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25Zm17.7-10.2a1 1 0 0 0 0-1.42l-2.33-2.33a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83Z" /></svg>`;
+const trashCan = `<svg class="icon icon-trash-can" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z" /></svg>`;
+
+/**
+ * What scripting adds to a commentary's pages, where there is scripting: Ctrl
+ * and Enter, or Command and Enter on a Mac, send what is in a comment box, as
+ * its button does; and the trash can beside a comment asks in the modal
+ * dialog before deleting it, rather than leading to the page that asks, which
+ * is where it leads without scripting. Each is a quicker way to what can be
+ * done with none, so nothing is lost where it does not run.
+ */
+export const commentScript = `
+    <script>
+      (function () {
+        document.querySelectorAll(".comment-box").forEach(function (box) {
+          box.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" || !(event.ctrlKey || event.metaKey)) return;
+            event.preventDefault();
+            box.form.requestSubmit();
+          });
+        });
+        var dialog = document.getElementById("delete-dialog");
+        if (!dialog || typeof dialog.showModal !== "function") return;
+        var shown = dialog.querySelector(".delete-comment");
+        var form = dialog.querySelector("form");
+        var opener;
+        document.querySelectorAll(".comment-delete").forEach(function (trash) {
+          trash.addEventListener("click", function (event) {
+            event.preventDefault();
+            opener = trash;
+            // The comment as the page already draws it, so the dialog shows
+            // what the reader saw, and nothing new is drawn from it.
+            var drawn = trash.closest(".comment").querySelector(".comment-text");
+            shown.replaceChildren.apply(shown, Array.prototype.map.call(drawn.childNodes, function (node) { return node.cloneNode(true); }));
+            // The page that asks is the address a delete is sent to as well.
+            form.action = trash.href;
+            dialog.showModal();
+          });
+        });
+        dialog.querySelector(".dialog-cancel").addEventListener("click", function () {
+          dialog.close();
+        });
+        // Whatever opened it has the focus back once it closes, so that the
+        // reader is where they were.
+        dialog.addEventListener("close", function () {
+          if (opener) opener.focus();
+        });
+      })();
+    </script>`;
+
+// The modal dialog the trash can opens where there is scripting (STYLE.md
+// §5c). Which comment it shows, and where its form sends the delete, are
+// filled in by the script as it opens.
+const deleteDialog = (speaking: Speaking): string => {
+  const { say } = speaking;
+  return `
+          <dialog class="modal-dialog dialog" id="delete-dialog" aria-labelledby="delete-dialog-title">
+            <h2 class="dialog-title" id="delete-dialog-title">${escape(say("deleteComment.title"))}</h2>
+            <form class="dialog-form" method="post">
+              <div class="dialog-content stack">
+                <p>${escape(say("deleteComment.question"))}</p>
+                <div class="comment-text delete-comment"></div>
+              </div>
+              <div class="dialog-buttons">
+                <button class="button button-submit" type="submit">${escape(say("deleteComment.confirm"))}</button>
+                <button class="button dialog-cancel" type="button">${escape(say("admin.modal.cancel"))}</button>
+              </div>
+            </form>
+          </dialog>`;
+};
+
+/** Where a comment's own page is, by its id's own characters. */
+export const commentPath = (
+  commentary: { readonly address: string },
+  comment: { readonly id: string },
+): string =>
+  `/${commentary.address}/comments/${comment.id.slice(comment.id.indexOf("/") + 1)}/edit`;
+
+/** Where the page that asks before deleting a comment is. */
+export const deletePathOf = (
+  commentary: { readonly address: string },
+  comment: { readonly id: string },
+): string => commentPath(commentary, comment).replace(/\/edit$/, "/delete");
+
+/**
+ * The commentary the address names, as a reader may follow it and as `reader`
+ * is told whether they write it, or nothing where there is none, which
+ * answers the page as one that is not there.
+ */
+export const commentaryOf = async (
+  request: FastifyRequest<{ Params: CommentaryParams }>,
+): Promise<TournamentCommentaryToRead | undefined> => {
+  const { year, sport, slug, commentary } = request.params;
+  try {
+    return await request.server.mediator.query(
+      new PublicCommentaryOfTournament(
+        websiteOf(request).host,
+        `${year}/${sport}/${slug}`,
+        commentary,
+        readerOf(request)?.value,
+      ),
+    );
+  } catch (failure) {
+    if (
+      failure instanceof TournamentOperationRefused &&
+      notThere.includes(failure.code)
+    ) {
+      return undefined;
+    }
+    throw failure;
+  }
+};
+
+// The box the writer writes the next comment in, four lines tall: enough to
+// see what is being written on a phone without the box filling the screen.
+// What was typed is put back, and a rule it broke said beneath it.
+export const commentBox = (
+  speaking: Speaking,
+  {
+    action,
+    submit,
+    typed,
+    messages,
+  }: {
+    readonly action: string;
+    readonly submit: string;
+    readonly typed: string;
+    readonly messages: readonly string[];
+  },
+): string => {
+  const described =
+    messages.length === 0 ? "" : ` aria-describedby="comment-text-message"`;
+  const wrong = messages.length === 0 ? "" : ` aria-invalid="true" autofocus`;
+  const beneath =
+    messages.length === 0
+      ? ""
+      : `\n              <p class="field-message" id="comment-text-message">${messages.map((text) => `<span>${escape(text)}</span>`).join(" ")}</p>`;
+  return `            <form class="comment-form" method="post" action="${escape(action)}">
+              <label class="comment-label" for="comment-text">${escape(speaking.say("commentary.comment"))}</label>
+              <textarea class="comment-box" id="comment-text" name="text" rows="4"${described}${wrong}>${escape(typed)}</textarea>${beneath}
+              <button class="button button-submit" type="submit">${escape(submit)}</button>
+            </form>`;
+};
+
+const pageOf = (
+  request: FastifyRequest,
+  assets: Assets,
+  asked: TournamentCommentaryToRead,
+  box: { readonly typed: string; readonly messages: readonly string[] },
+): string => {
+  const speaking = speakingOf(request);
+  const { say } = speaking;
+  const { commentary } = asked;
+  const now = request.requestedAt.toDate();
+  const comments =
+    commentary.comments.length === 0
+      ? `          <p class="comments-none">${escape(say("commentary.none"))}</p>`
+      : `          <ol class="comments">
+${commentary.comments
+  .map(
+    (comment) => `            <li class="comment">
+              <div class="comment-text">${commentDrawn(comment.text)}</div>
+              <p class="comment-about"><span class="comment-ago">${ago(ReadOnlyDate.from(new Date(comment.writtenAt)), now, speaking)}</span>${comment.lastEditedAt === undefined ? "" : ` <span class="comment-edited">${escape(say("commentary.edited"))}</span>`}${commentary.writtenByReader ? ` <a class="comment-edit" href="${escape(commentPath(commentary, comment))}">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a> <a class="comment-delete" href="${escape(deletePathOf(commentary, comment))}">${trashCan}<span class="visually-hidden">${escape(say("commentary.delete"))}</span></a>` : ""}</p>
+            </li>`,
+  )
+  .join("\n")}
+          </ol>`;
+  // Beneath the last comment, since the comments read downwards and the next
+  // one goes where it will be read.
+  const writing = commentary.writtenByReader
+    ? `\n${commentBox(speaking, {
+        action: `/${commentary.address}/comments`,
+        submit: say("commentary.add"),
+        ...box,
+      })}${deleteDialog(speaking)}${commentScript}`
+    : "";
+  return render(assets, {
+    tournament: { name: asked.name, address: asked.address },
+    title: `${commentary.title} - ${asked.name}`,
+    sections: sectionsOf(asked, speaking),
+    currentSection: `/${asked.address}/commentaries`,
+    theme: themeOf(request),
+    signedIn: signedIn(request),
+    hasPassword: hasPassword(request),
+    speaking,
+    siteName: siteNameOf(request),
+    tryWebsite: websiteOf(request).isTry,
+    path: request.url,
+    body: `          <h1>${escape(asked.name)}</h1>
+          <div class="commentary-heading">
+            <h2 class="commentary-title">${escape(commentary.title)}</h2>${commentary.writtenByReader ? `\n            <a class="commentary-title-edit" href="/${escape(commentary.address)}/edit">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a>` : ""}
+          </div>
+          <p class="commentary-writer">${escape(commentary.writer)}</p>
+${comments}${writing}`,
+  });
+};
+
+export const registerCommentaryPage = (
+  server: FastifyInstance,
+  assets: Assets,
+): void => {
+  const path = `/${yearInPath}/:sport/:slug/commentaries/:commentary`;
+
+  server.get<{ Params: CommentaryParams }>(path, async (request, reply) => {
+    const asked = await commentaryOf(request);
+    if (asked === undefined) return reply.callNotFound();
+    // An address the tournament has moved on from leads to the commentary
+    // where it is now, for good, so that a link kept from before still works.
+    const { year, sport, slug, commentary } = request.params;
+    if (asked.address !== `${year}/${sport}/${slug}`) {
+      return reply.redirect(
+        `/${asked.address}/commentaries/${commentary}`,
+        301,
+      );
+    }
+    return sendPage(
+      reply,
+      request,
+      pageOf(request, assets, asked, { typed: "", messages: [] }),
+    );
+  });
+
+  server.post<{ Params: CommentaryParams }>(
+    `${path}/comments`,
+    async (request, reply) => {
+      const reader = readerOf(request);
+      if (reader === undefined) return toSignIn(request, reply);
+      const asked = await commentaryOf(request);
+      if (asked === undefined) return reply.callNotFound();
+      const typed = typedFrom(request.body)["text"] ?? "";
+      try {
+        await request.server.mediator.send(
+          new AddComment(
+            reader.value,
+            asked.commentary.tournament,
+            asked.commentary.id,
+            typed,
+            request.requestedAt,
+          ),
+        );
+      } catch (failure) {
+        if (
+          failure instanceof AccountRefused &&
+          failure.code === "Account.Forgotten"
+        ) {
+          return toSignIn(request, reply);
+        }
+        // Only its writer is offered the box, so anybody else sending it is
+        // asking of a page that is not there for them.
+        if (failure instanceof CommentaryRefused) return reply.callNotFound();
+        if (!(failure instanceof RequestInvalid)) throw failure;
+        const speaking = speakingOf(request);
+        return reply
+          .code(422)
+          .header("cache-control", "no-store")
+          .type("text/html; charset=utf-8")
+          .send(
+            pageOf(request, assets, asked, {
+              typed,
+              messages: failure.broken.map((rule) =>
+                speaking.knows(rule.code)
+                  ? speaking.say(rule.code)
+                  : speaking.say("form.otherwise"),
+              ),
+            }),
+          );
+      }
+      // Shown again by asking for it again, so that a reload does not send
+      // the comment a second time.
+      return reply.redirect(`/${asked.commentary.address}`, 303);
+    },
+  );
+};

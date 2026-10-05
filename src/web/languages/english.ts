@@ -328,6 +328,62 @@ export const english: Language = {
     "tournament.none": "No games have been played yet.",
     // A tournament's players' page, when it has none.
     "players.none": "No players have been added yet.",
+    // A tournament's commentaries page: what it says when it has none, the
+    // way to start one, and what the old site's page said of commentary,
+    // which a writer reads before they write anything.
+    "commentaries.none": "No commentaries have been started yet.",
+    "commentaries.start": "Start new commentary",
+    "commentaries.disclaimer.heading": "Disclaimer",
+    "commentaries.disclaimer":
+      "The views and opinions expressed in these commentaries are those of their writers and do not necessarily reflect those of Tim Murphy or {site}.",
+    "commentaries.guidelines.heading": "Guidelines",
+    "commentaries.guidelines.responsible":
+      "You are responsible for your commentary.",
+    "commentaries.guidelines.purpose":
+      "Commentary is for following the tournament as it is played, not for personal messages.",
+    "commentaries.guidelines.notAllowed": "Do not post anything that:",
+    "commentaries.guidelines.violence": "incites violence or hatred;",
+    "commentaries.guidelines.prejudice":
+      "is about anyone's race, religion, ethnicity, gender, age, disability or sexual orientation;",
+    "commentaries.guidelines.personal":
+      "attacks someone personally: play the ball, not the player;",
+    "commentaries.guidelines.unlawful":
+      "may be unlawful, such as breaking copyright or defaming someone;",
+    "commentaries.guidelines.shouting": "swears, or is written in capitals;",
+    "commentaries.guidelines.selling":
+      "sells or advertises anything, or is spam;",
+    "commentaries.guidelines.links":
+      "is mostly links, or links to unsuitable sites;",
+    "commentaries.guidelines.impersonating":
+      "pretends to be someone else, or gives anyone's contact details.",
+    "commentaries.reporting.heading": "Reporting commentary",
+    "commentaries.reporting":
+      "To report a commentary, send Tim Murphy its address, the words you are reporting and why you think they should be taken down.",
+    "commentaries.reporting.reviewed":
+      "Reporting a commentary does not mean it will be taken down, but every report is read. Commentary can be taken down at any time.",
+    // The page that starts a commentary.
+    "startCommentary.title": "Start new commentary",
+    "startCommentary.titleField": "Title",
+    "startCommentary.submit": "Start commentary",
+    // A commentary's page: what it says when it has no comments, what it says
+    // of a comment, and the box its writer writes the next one in.
+    "commentary.none": "No comments have been written yet.",
+    "commentary.edited": "edited",
+    "commentary.edit": "Edit",
+    "commentary.delete": "Delete",
+    "commentary.comment": "Comment",
+    "commentary.add": "Add comment",
+    // The page that changes a commentary's title.
+    "changeCommentaryTitle.title": "Change title",
+    "changeCommentaryTitle.submit": "Save",
+    // A comment's own page, where its writer edits it or deletes it, and the
+    // page that asks before it is deleted.
+    "editComment.title": "Edit comment",
+    "editComment.save": "Save",
+    "deleteComment.title": "Delete comment",
+    "deleteComment.question": "Delete this comment? It cannot be undone.",
+    "deleteComment.confirm": "Delete comment",
+    "deleteComment.keep": "Keep it",
     // A player's page: its two parts, how a game is said as the player played
     // it, and what each part says when it has nothing in it.
     "player.games": "Games",
@@ -671,6 +727,12 @@ export const english: Language = {
     "admin.teamView.players": "Players",
     "TeamName.Missing": "Say what the team is called.",
     "TeamName.TooLong": "That name is too long.",
+    "CommentaryTitle.Missing": "Give the commentary a title.",
+    "CommentaryTitle.TooLong": "That title is too long.",
+    "Tournament.CommentaryTitleTaken":
+      "Another commentary already has that title.",
+    "CommentText.Missing": "Write something in the comment.",
+    "CommentText.TooLong": "That comment is too long.",
     "TeamShortName.Missing": "Give the team a short name.",
     "TeamShortName.TooLong": "A short name can be at most 10 characters.",
     "TeamShortName.NoLetterOrDigit":

@@ -314,6 +314,54 @@ export const spanish: Language = {
     "tournament.ago.hours": "{count} horas",
     "tournament.none": "Aún no se ha jugado ninguna partida.",
     "players.none": "Aún no se ha añadido ningún jugador.",
+    "commentaries.none": "Aún no se ha empezado ningún comentario.",
+    "commentaries.start": "Empezar un comentario nuevo",
+    "commentaries.disclaimer.heading": "Aviso",
+    "commentaries.disclaimer":
+      "Las opiniones expresadas en estos comentarios son de quienes los escriben y no reflejan necesariamente las de Tim Murphy ni las de {site}.",
+    "commentaries.guidelines.heading": "Normas",
+    "commentaries.guidelines.responsible":
+      "Eres responsable de lo que comentas.",
+    "commentaries.guidelines.purpose":
+      "Los comentarios son para seguir el torneo mientras se juega, no para mensajes personales.",
+    "commentaries.guidelines.notAllowed": "No publiques nada que:",
+    "commentaries.guidelines.violence": "incite a la violencia o al odio;",
+    "commentaries.guidelines.prejudice":
+      "se refiera a la raza, la religión, el origen étnico, el género, la edad, la discapacidad o la orientación sexual de nadie;",
+    "commentaries.guidelines.personal":
+      "ataque a alguien personalmente: juega la bola, no al jugador;",
+    "commentaries.guidelines.unlawful":
+      "pueda ser ilegal, como infringir derechos de autor o difamar a alguien;",
+    "commentaries.guidelines.shouting":
+      "contenga palabrotas o esté escrito en mayúsculas;",
+    "commentaries.guidelines.selling": "venda o anuncie algo, o sea spam;",
+    "commentaries.guidelines.links":
+      "sea casi todo enlaces, o enlace a sitios inapropiados;",
+    "commentaries.guidelines.impersonating":
+      "se haga pasar por otra persona o dé los datos de contacto de nadie.",
+    "commentaries.reporting.heading": "Denunciar un comentario",
+    "commentaries.reporting":
+      "Para denunciar un comentario, envía a Tim Murphy su dirección, las palabras que denuncias y por qué crees que deberían retirarse.",
+    "commentaries.reporting.reviewed":
+      "Denunciar un comentario no significa que se vaya a retirar, pero se leen todas las denuncias. Un comentario puede retirarse en cualquier momento.",
+    "startCommentary.title": "Empezar un comentario nuevo",
+    "startCommentary.titleField": "Título",
+    "startCommentary.submit": "Empezar el comentario",
+    "commentary.none": "Aún no se ha escrito nada.",
+    "commentary.edited": "editado",
+    "commentary.edit": "Editar",
+    "commentary.delete": "Eliminar",
+    "commentary.comment": "Comentario",
+    "commentary.add": "Añadir",
+    "changeCommentaryTitle.title": "Cambiar el título",
+    "changeCommentaryTitle.submit": "Guardar",
+    "editComment.title": "Editar el comentario",
+    "editComment.save": "Guardar",
+    "deleteComment.title": "Eliminar el comentario",
+    "deleteComment.question":
+      "¿Eliminar este comentario? No se puede deshacer.",
+    "deleteComment.confirm": "Eliminar el comentario",
+    "deleteComment.keep": "Conservarlo",
     "player.games": "Partidas",
     "player.competitions": "Competiciones",
     "player.beat": "ganó a",
@@ -604,6 +652,11 @@ export const spanish: Language = {
     "admin.teamView.players": "Jugadores",
     "TeamName.Missing": "Di cómo se llama el equipo.",
     "TeamName.TooLong": "Ese nombre es demasiado largo.",
+    "CommentaryTitle.Missing": "Ponle un título al comentario.",
+    "CommentaryTitle.TooLong": "Ese título es demasiado largo.",
+    "Tournament.CommentaryTitleTaken": "Otro comentario ya tiene ese título.",
+    "CommentText.Missing": "Escribe algo en el comentario.",
+    "CommentText.TooLong": "Ese comentario es demasiado largo.",
     "TeamShortName.Missing": "Dale al equipo un nombre corto.",
     "TeamShortName.TooLong": "Un nombre corto tiene como mucho 10 caracteres.",
     "TeamShortName.NoLetterOrDigit":
