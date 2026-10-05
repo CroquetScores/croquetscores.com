@@ -21,7 +21,10 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   A test is won, lost or drawn only once every match it is expected to have
   is decided, since until then its result is not known; but every game
   played in it counts towards the games and hoops of its teams from the
-  first. A shared match, as a best of 2 can end, is won by neither team.
+  first. A test is won sooner where a team has won more than half the
+  matches it is expected to have, as 2 of 3 or 3 of 4, since the other team
+  can no longer win as many; its matches still to be played change nothing
+  but its games and hoops. A shared match, as a best of 2 can end, is won by neither team.
 
   A team's games are those its players have won and lost in the tournament's
   tests, and its hoops the points they scored and had scored against them,
@@ -119,6 +122,50 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the team "England" is answered in the summary with 0 tests lost
 
+  Rule: A test is won once a team has won more than half the matches it is expected to have
+
+    Background:
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 3 expected matches
+
+    Scenario: A team that has won more than half of an odd number of expected matches wins the test
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pam Partner" has beaten "Ken Kicker" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 1 test won
+
+    Scenario: The other team loses it
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pam Partner" has beaten "Ken Kicker" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "England" is answered in the summary with 1 test lost
+
+    Scenario: The second team wins the test as the first would
+      Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Ken Kicker" has beaten "Pam Partner" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "England" is answered in the summary with 1 test won
+
+    Scenario: A team that has won no more than half of the expected matches has not yet won the test
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Ken Kicker" has beaten "Pam Partner" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 0 tests won
+
+    Scenario: A team that has won more than half of an even number of expected matches wins the test
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 4 expected matches
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pam Partner" has beaten "Ken Kicker" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Ken Kicker" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 1 test won
+
+    Scenario: A team that has won half of an even number of expected matches has not yet won the test
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 4 expected matches
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pam Partner" has beaten "Ken Kicker" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 0 tests won
+
   Rule: A test level on matches is decided by net games, then net hoops, unless the tournament draws it
 
     Scenario: A test level on matches is decided by net games
@@ -203,7 +250,6 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       And "organiser@example.com" has given the test "ENG v NZ" of "Spring Tests" 4 expected matches
       And "Nat Ninth" has beaten "Kim Keeper" 26 to 2 in "ENG v NZ" of "Spring Tests"
       And "Nat Ninth" has beaten "Ken Kicker" 26 to 2 in "ENG v NZ" of "Spring Tests"
-      And "Ned Tenth" has beaten "Kim Keeper" 26 to 2 in "ENG v NZ" of "Spring Tests"
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the first team of the summary ranked is "Australia"
 

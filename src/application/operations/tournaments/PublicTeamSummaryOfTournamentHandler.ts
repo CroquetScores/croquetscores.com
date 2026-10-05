@@ -130,13 +130,20 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
       }
 
       const matches = matchesOf(games, shape.bestOf.games);
-      // Not won, lost or drawn until every match it is expected to have is
-      // decided, since until then its result is not known.
-      if (matches.length < shape.expectedMatches.count) continue;
       const matchesWon = (team: string): number =>
         matches.filter(
           (winner) => winner !== undefined && teamOf.get(winner) === team,
         ).length;
+      // Not won, lost or drawn until every match it is expected to have is
+      // decided, since until then its result is not known; unless a team has
+      // won more than half of them, which the other can no longer match.
+      const expected = shape.expectedMatches.count;
+      if (
+        matches.length < expected &&
+        Math.max(matchesWon(first), matchesWon(second)) * 2 <= expected
+      ) {
+        continue;
+      }
       const firstSide = inTest.get(first)!;
       const secondSide = inTest.get(second)!;
       const margin =
