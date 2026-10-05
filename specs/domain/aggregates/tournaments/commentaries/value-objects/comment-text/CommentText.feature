@@ -6,11 +6,16 @@ Feature: What a comment says
   here: every tag in what was written is taken out before the comment is
   kept, and the words between tags are kept, so that a comment pasted from
   somewhere else keeps what it said and loses only how it was drawn there.
-  A tag is one of HTML's own elements, opening or closing, as "<b>", "</p>"
-  or "<img src=x>", or an HTML comment or declaration, as "<!-- -->". Angle
-  brackets around anything else are not a tag, and are kept: a link written
-  in Markdown as "<https://example.com/draw>", an email address as
-  "<sam@example.com>", or words a writer put in brackets of that shape. A tag
+  A tag is one of HTML's own elements in angle brackets: by its name alone,
+  as "<b>" or "</p>", or with attributes, at least one of them given a value,
+  as "<img src=x>" or '<a href="https://example.com">'; or an HTML comment
+  or declaration, as "<!-- -->". Angle brackets around anything else are not
+  a tag, and are kept: a link written in Markdown as
+  "<https://example.com/draw>", an email address as "<sam@example.com>", or
+  words a writer put in brackets of that shape, even where the first of
+  them is the name of an element, as "a", "b", "i" and "p" are, since words
+  are not attributes given values. What is kept is drawn as the characters
+  it is, since the Markdown is drawn with HTML turned off. A tag
   that breaks a line where it is drawn, as "<br>", "<p>" or "<li>" does, is
   taken out for a line break, so that words either side of it are not run
   together and paragraphs stay paragraphs in Markdown; any other is taken
@@ -67,6 +72,22 @@ Feature: What a comment says
     Scenario: An email address between angle brackets is kept
       When the comment "Write to <sam@example.com>" is made
       Then the comment is written "Write to <sam@example.com>"
+
+    Scenario: Words between angle brackets beginning with an element's name are kept
+      When the comment "Sam played <a great shot> on hoop 4" is made
+      Then the comment is written "Sam played <a great shot> on hoop 4"
+
+    Scenario: Words between angle brackets beginning with another element's name are kept
+      When the comment "Score 7<b and Tim>5" is made
+      Then the comment is written "Score 7<b and Tim>5"
+
+    Scenario: A tag whose attributes are given values is taken out
+      When the comment "See <a href='https://example.com' title=draw>the draw</a>" is made
+      Then the comment is written "See the draw"
+
+    Scenario: A tag closed by a slash is taken out
+      When the comment "Hoop 1<br />Hoop 2" is made
+      Then the comment is written "Hoop 1\nHoop 2"
 
     Scenario: Words between angle brackets that are no HTML element are kept
       When the comment "Sam<Tim on lawn 3, score 7>5" is made

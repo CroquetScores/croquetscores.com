@@ -70,6 +70,10 @@ Feature: The title a commentary is known by
       When the commentary title "Day<br>One" is made
       Then the commentary title is written "Day One"
 
+    Scenario: Words between angle brackets beginning with an element's name are kept in a title
+      When the commentary title "Day of <a great final>" is made
+      Then the commentary title is written "Day of <a great final>"
+
     Scenario: Words between angle brackets that are no HTML element are kept
       When the commentary title "Day one <morning>" is made
       Then the commentary title is written "Day one <morning>"

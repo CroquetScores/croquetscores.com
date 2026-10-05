@@ -209,36 +209,61 @@ const BREAKING: ReadonlySet<string> = new Set([
 const NAME_CHARACTER = /[A-Za-z0-9]/;
 const SPACE = /\s/;
 
-// What a "<" kept so far begins, by what has been kept after it: a tag, by
-// its name, as soon as the name is ended by a space or a slash, or an HTML
-// comment or declaration as soon as it is "<!"; maybe a tag, its name not yet
-// ended; waiting on the "<" kept straight after it, which, taken out with the
-// tag it begins, would leave this one followed by something else; or no tag.
-type Begins =
-  | { readonly is: "tag"; readonly name: string }
-  | { readonly is: "maybe"; readonly name: string }
-  | { readonly is: "waiting" }
-  | { readonly is: "nothing" };
+// An attribute: a name, and a value given it if any, quoted or not.
+const ATTRIBUTE =
+  String.raw`[^\s"'<>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'<>=` +
+  "`" +
+  String.raw`]+))?`;
 
-const begunAt = (kept: readonly string[], at: number): Begins => {
+// A whole tag, from its "<" to its ">", with no "<" inside it: an element's
+// name, closing or not, with attributes after it or none, and a slash before
+// its end or none; or an HTML comment or declaration.
+const WHOLE_TAG = new RegExp(
+  String.raw`^<(?:(/?)([A-Za-z0-9]+)((?:\s+${ATTRIBUTE})*)\s*/?|![^>]*)>$`,
+);
+
+/**
+ * The element `written`, from its "<" to its ">", is a tag of, or nothing
+ * where it is no tag. A tag is an element's name alone, closing or not, or an
+ * opening one with attributes, at least one of them given a value: words in
+ * brackets, the first of them an element's name, as "<a great shot>", read as
+ * attributes given no value, and a writer means them as words. An HTML
+ * comment or declaration is a tag of no element.
+ */
+const tagOf = (written: string): string | undefined => {
+  const found = WHOLE_TAG.exec(written);
+  if (found === null) return undefined;
+  const [, closing, name, attributes] = found;
+  if (name === undefined) return "!";
+  if (!ELEMENT_NAMES.has(name.toLowerCase())) return undefined;
+  const given = attributes ?? "";
+  if (given.trim() !== "" && (closing === "/" || !given.includes("="))) {
+    return undefined;
+  }
+  return name.toLowerCase();
+};
+
+// Whether a "<" kept so far could still begin a tag, by what has been kept
+// straight after it: an element's name, whole or begun, or "<!", or a "<"
+// that, taken out with the tag it begins, would leave this one followed by
+// something else. A name ended by anything but a space, a slash, a "<" or
+// the end of what is kept begins no tag, nor does one no element has.
+const couldBegin = (kept: readonly string[], at: number): boolean => {
   let next = at + 1;
-  if (kept[next] === "!") return { is: "tag", name: "!" };
+  if (kept[next] === "!") return true;
   if (kept[next] === "/") next += 1;
   let name = "";
   while (next < kept.length && NAME_CHARACTER.test(kept[next] ?? "")) {
     name += kept[next];
     next += 1;
-    if (name.length > LONGEST_NAME) return { is: "nothing" };
+    if (name.length > LONGEST_NAME) return false;
   }
   const after = kept[next];
-  if (after === undefined) return { is: "maybe", name };
-  if (after === "<") return { is: "waiting" };
-  if (SPACE.test(after) || after === "/") {
-    return ELEMENT_NAMES.has(name.toLowerCase())
-      ? { is: "tag", name }
-      : { is: "nothing" };
-  }
-  return { is: "nothing" };
+  if (after === undefined || after === "<") return true;
+  return (
+    (SPACE.test(after) || after === "/") &&
+    ELEMENT_NAMES.has(name.toLowerCase())
+  );
 };
 
 /**
@@ -253,10 +278,12 @@ const begunAt = (kept: readonly string[], at: number): Begins => {
  * again until none was left, which took as many readings as tags were typed
  * inside one another, and a comment of a hundred thousand of them took a
  * quarter of a minute, which any account could have kept the site busy with.
- * So only the "<"s that could still begin a tag are kept count of: the last
- * one kept since the last ">" kept, and, below it, those waiting on the one
- * after them, each of which begins a tag only if the one after it is taken
- * out. A commentary's title is plain text and takes its tags out the same way
+ * A tag has no "<" inside it, so only the last "<" kept since the last ">"
+ * kept can begin the tag a ">" ends; those before it are kept count of only
+ * as waiting on the one after them, each of which begins a tag only if the
+ * one after it is taken out. So each character is asked about once when a
+ * ">" is read, and either taken out with its tag or kept for good. A
+ * commentary's title is plain text and takes its tags out the same way
  * (CommentaryTitle.ts).
  */
 export const withoutTags = (typed: string): string => {
@@ -264,68 +291,40 @@ export const withoutTags = (typed: string): string => {
   // Where each "<" that could still begin a tag is in what is kept, the last
   // last. All but the last are waiting on the one after them.
   const opening: number[] = [];
-  // Where the first "<" kept since the last ">" kept that begins a tag is, if
-  // one does: the next ">" ends its tag, whatever comes between.
-  let tagAt: number | undefined;
 
-  // What the last "<" begins now, the one below it waiting on it; one that
-  // begins no tag takes every one waiting on it with it.
+  // The last "<" asked again whether it could still begin a tag; one that
+  // could not takes every one waiting on it with it.
   const askOfTheLast = (): void => {
     const last = opening.at(-1);
-    if (last === undefined || tagAt !== undefined) return;
-    const begins = begunAt(kept, last);
-    if (begins.is === "tag") tagAt = last;
-    else if (begins.is === "nothing") opening.length = 0;
+    if (last !== undefined && !couldBegin(kept, last)) opening.length = 0;
   };
 
   for (const character of typed) {
     if (character === ">") {
-      let at = tagAt;
-      if (at === undefined) {
-        const last = opening.at(-1);
-        const begins = last === undefined ? undefined : begunAt(kept, last);
-        if (
-          last !== undefined &&
-          begins?.is === "maybe" &&
-          ELEMENT_NAMES.has(begins.name.toLowerCase())
-        ) {
-          at = last;
-        }
-      }
-      if (at === undefined) {
+      const last = opening.at(-1);
+      const tag =
+        last === undefined ? undefined : tagOf(`${kept.slice(last).join("")}>`);
+      if (last === undefined || tag === undefined) {
         // A ">" kept, which no tag can run across: no "<" before it can begin
         // one any more.
         kept.push(character);
         opening.length = 0;
         continue;
       }
-      const begins = begunAt([...kept.slice(at), " "], 0);
-      kept.length = at;
-      tagAt = undefined;
-      while ((opening.at(-1) ?? -1) >= at) opening.pop();
-      if (begins.is === "tag" && BREAKING.has(begins.name.toLowerCase())) {
-        kept.push("\n");
-      }
+      kept.length = last;
+      opening.pop();
+      if (BREAKING.has(tag)) kept.push("\n");
       // The "<" waiting on the one just taken out is followed by whatever
       // comes next now.
       askOfTheLast();
       continue;
     }
-    if (tagAt !== undefined) {
-      // Inside a tag already begun, which its ">" will take out whole.
-      kept.push(character);
-      continue;
-    }
     if (character === "<") {
       kept.push(character);
-      const last = opening.at(-1);
-      // The last "<" kept is now waiting on this one, or begins nothing
-      // whatever this one turns out to begin.
-      if (last !== undefined && begunAt(kept, last).is !== "waiting") {
-        opening.length = 0;
-      }
-      opening.push(kept.length - 1);
+      // The last "<" kept is now waiting on this one, if it could still begin
+      // a tag at all.
       askOfTheLast();
+      opening.push(kept.length - 1);
       continue;
     }
     kept.push(character);
