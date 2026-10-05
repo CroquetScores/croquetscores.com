@@ -58,6 +58,19 @@ Then(
 // A column's group is the one whose span takes it in, counted along the row of
 // groups as the columns are along the row beneath it.
 Then(
+  "the teams' summary has no column under {string}",
+  async function (this: SpecWorld, group: string) {
+    assert.equal(
+      await tableOf(this)
+        .locator(".team-summary-group")
+        .filter({ hasText: new RegExp(`^${group}$`) })
+        .count(),
+      0,
+    );
+  },
+);
+
+Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) column of the teams' summary is headed "(.*)" under "(.*)"$/,
   async function (
     this: SpecWorld,

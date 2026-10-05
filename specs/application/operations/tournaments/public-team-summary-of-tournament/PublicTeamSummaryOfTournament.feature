@@ -5,8 +5,11 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   whose page shows how its teams stand (`teamSummary.feature`), as the old
   site's summary did. The application answers it: each team of the tournament
   in use, by its name and its short name, with the tests it has won, lost and
-  drawn, the games its players have won and lost in them, and the hoops they
-  have scored and had scored against them, and the teams ranked.
+  drawn, the matches and the games its players have won and lost in them,
+  and the hoops they have scored and had scored against them, and the teams
+  ranked; and whether any of its tests in use has matches the best of more
+  than 1, since where none has, a match is its one game, and the page need
+  not say its matches as well as its games.
 
   A test between two teams is won by the team that wins more of its matches,
   a match being won by the side that wins more than half the games it is the
@@ -26,16 +29,19 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   can no longer win as many; its matches still to be played change nothing
   but its games and hoops. A shared match, as a best of 2 can end, is won by neither team.
 
-  A team's games are those its players have won and lost in the tournament's
-  tests, and its hoops the points they scored and had scored against them,
+  A team's matches are those its players have won and lost in the
+  tournament's tests, each once it is decided and not before, and a shared
+  match neither. A team's games are those its players have won and lost in
+  the tournament's tests, and its hoops the points they scored and had scored against them,
   the points being the number a score starts with, so that "26tp" is 26. An
   archived game counts for nothing, as everywhere games are counted. A test
   with games in use cannot be archived (`archiveCompetition.feature`), so an
   archived test has none to count.
 
   The teams are ranked by the tests they have won, most first, as the old
-  site's summary ranked them; where that is the same, by their net games
-  across all their tests, then by their net hoops, and where all of those are
+  site's summary ranked them; where that is the same, by the matches they
+  have won across all their tests, most first, then by their net games, then
+  by their net hoops, and where all of those are
   the same, in the tournament's order of its teams.
 
   The page is a section of the tournament's, so the tournament is answered
@@ -204,6 +210,39 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the team "Australia" is answered in the summary with 1 test won
 
+  Rule: A team's matches are its players' in the tournament's tests, each once decided
+
+    Background:
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+
+    Scenario: A match won by a team's player is a match won by the team
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 1 match won
+
+    Scenario: A match lost by a team's player is a match lost by the team
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "England" is answered in the summary with 1 match lost
+
+    Scenario: A match not yet decided is won by neither team
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the team "Australia" is answered in the summary with 0 matches won
+
+  Rule: The summary says whether any test has matches the best of more than 1
+
+    Scenario: A tournament whose tests' matches are each the best of 1 has none
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the summary is answered with no test of matches the best of more than 1
+
+    Scenario: A tournament with a test whose matches are the best of 3 has one
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the summary is answered with a test of matches the best of more than 1
+
   Rule: A team's games and hoops are its players' in the tournament's tests
 
     Scenario: A game won by a team's player is a game won by the team
@@ -234,7 +273,7 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the team "Australia" is answered in the summary with 0 games won
 
-  Rule: The teams are ranked by tests won, then net games, then net hoops
+  Rule: The teams are ranked by tests won, then matches won, then net games, then net hoops
 
     Background:
       Given the team is to be known for short as "NZ"
@@ -253,14 +292,30 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the first team of the summary ranked is "Australia"
 
-    Scenario: Teams with the same tests won are ranked by net games
-      Given "Pat Player" has beaten "Kim Keeper" 26 to 25 in "AUS v ENG" of "Spring Tests"
-      And "Ken Kicker" has beaten "Nat Ninth" 26 to 2 in "ENG v NZ" of "Spring Tests"
+    Scenario: Teams with the same tests won are ranked by matches won, not by net matches
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 5 expected matches
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pam Partner" has beaten "Ken Kicker" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Kim Keeper" has beaten "Pam Partner" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Ken Kicker" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Nat Ninth" has beaten "Ken Kicker" 26 to 2 in "ENG v NZ" of "Spring Tests"
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the first team of the summary ranked is "Australia"
-      And the second team of the summary ranked is "England"
 
-    Scenario: Teams with the same tests won and net games are ranked by net hoops
+    Scenario: Teams with the same tests won and matches won are ranked by net games
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 3 expected matches
+      And "organiser@example.com" has given the test "ENG v NZ" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 25 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 25 in "AUS v ENG" of "Spring Tests"
+      And "Nat Ninth" has beaten "Ken Kicker" 26 to 2 in "ENG v NZ" of "Spring Tests"
+      And "Ken Kicker" has beaten "Nat Ninth" 26 to 25 in "ENG v NZ" of "Spring Tests"
+      And "Nat Ninth" has beaten "Ken Kicker" 26 to 2 in "ENG v NZ" of "Spring Tests"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first team of the summary ranked is "Australia"
+      And the second team of the summary ranked is "New Zealand"
+
+    Scenario: Teams with the same tests won, matches won and net games are ranked by net hoops
       Given "Pat Player" has beaten "Kim Keeper" 26 to 25 in "AUS v ENG" of "Spring Tests"
       And "Nat Ninth" has beaten "Ken Kicker" 26 to 2 in "ENG v NZ" of "Spring Tests"
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for

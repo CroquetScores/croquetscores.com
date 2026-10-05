@@ -28,6 +28,8 @@ interface Tally {
   testsWon: number;
   testsLost: number;
   testsDrawn: number;
+  matchesWon: number;
+  matchesLost: number;
   gamesWon: number;
   gamesLost: number;
   hoopsFor: number;
@@ -80,6 +82,8 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
           testsWon: 0,
           testsLost: 0,
           testsDrawn: 0,
+          matchesWon: 0,
+          matchesLost: 0,
           gamesWon: 0,
           gamesLost: 0,
           hoopsFor: 0,
@@ -130,6 +134,17 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
       }
 
       const matches = matchesOf(games, shape.bestOf.games);
+      // A match counts for its teams once it is decided, whether or not the
+      // test is; a shared one for neither.
+      for (const winner of matches) {
+        if (winner === undefined) continue;
+        const winners = teamOf.get(winner);
+        const losers = winners === first ? second : first;
+        const won = tallies.get(winners ?? "");
+        const lost = tallies.get(losers);
+        if (won !== undefined) won.matchesWon += 1;
+        if (lost !== undefined) lost.matchesLost += 1;
+      }
       const matchesWon = (team: string): number =>
         matches.filter(
           (winner) => winner !== undefined && teamOf.get(winner) === team,
@@ -181,6 +196,12 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
       playedByTeams: true,
       competitions: competitionsInUse(tournament),
       teams,
+      bestOfMoreThanOne: tournament.competitions.some(
+        ({ reference, shape }) =>
+          !reference.archived &&
+          shape.kind === "test" &&
+          shape.bestOf.games > 1,
+      ),
       ranked: rankingOf(teams).map(({ id }) => id),
     };
   }
@@ -217,13 +238,15 @@ const matchesOf = (
 };
 
 // The teams ranked as the old site's summary ranked them: the more tests won
-// first, then the more net games, then the more net hoops, and otherwise as
+// first, then the more matches won, then the more net games, then the more net
+// hoops, and otherwise as
 // they were, since a sort that keeps the order of equals leaves them in the
 // tournament's.
 const rankingOf = (teams: readonly TeamStanding[]): TeamStanding[] =>
   [...teams].sort(
     (one, other) =>
       other.testsWon - one.testsWon ||
+      other.matchesWon - one.matchesWon ||
       other.gamesWon - other.gamesLost - (one.gamesWon - one.gamesLost) ||
       other.hoopsFor - other.hoopsAgainst - (one.hoopsFor - one.hoopsAgainst),
   );

@@ -16,7 +16,11 @@ Feature: A tournament played by teams has a summary of how its teams stand
   beside it, grouped under "Tests", "Games" and "Hoops", the tests it has won,
   lost and drawn, headed "Wins", "Losses" and "Draws"; the games it has won
   and lost, headed "Wins" and "Losses"; and its hoops for, against and net,
-  headed "For", "Against" and "Net". The numbers are written as the reader's
+  headed "For", "Against" and "Net". Where any of the tournament's tests has
+  matches the best of more than 1, the matches it has won and lost, headed
+  "Wins" and "Losses" under "Matches", come after its tests, as the teams are
+  ranked by them after their tests; where every test's matches are the best
+  of 1, a match is its one game, and is not said twice. The numbers are written as the reader's
   language writes them, so that a thousand or more is grouped as the old site
   grouped it, as "1,970".
 
@@ -119,6 +123,45 @@ Feature: A tournament played by teams has a summary of how its teams stand
       Given "Pat Player" has beaten "Kim Keeper" 1970 to 17 in "AUS v ENG" of "Spring Tests"
       When the page at "/2026/ac/spring-tests/summary" is opened
       Then the sixth number of "Australia" in the summary is "1,970"
+
+  Rule: Where a test has matches the best of more than 1, the matches come after the tests
+
+    Background:
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+
+    Scenario Outline: The matches are grouped and headed after the tests
+      When the page at "/2026/ac/spring-tests/summary" is opened
+      Then the <place> column of the teams' summary is headed "<heading>" under "<group>"
+
+      Examples:
+        | place  | group   | heading |
+        | third  | Tests   | Draws   |
+        | fourth | Matches | Wins    |
+        | fifth  | Matches | Losses  |
+        | sixth  | Games   | Wins    |
+
+    Scenario Outline: A team's matches are under their headings
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/summary" is opened
+      Then the <place> number of "<team>" in the summary is "<number>"
+
+      Examples:
+        | team      | place  | number |
+        | Australia | fourth | 1      |
+        | England   | fifth  | 1      |
+        | Australia | sixth  | 2      |
+
+    Scenario: The matches are in the reader's language
+      Given a browser that asks for "en-XA"
+      When the page at "/2026/ac/spring-tests/summary" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: Where every test's matches are the best of 1, there are no matches
+
+    Scenario: There is no column under "Matches"
+      When the page at "/2026/ac/spring-tests/summary" is opened
+      Then the teams' summary has no column under "Matches"
 
   Rule: On a phone the page fits the window
 

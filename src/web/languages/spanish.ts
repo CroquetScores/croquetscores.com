@@ -293,6 +293,7 @@ export const spanish: Language = {
     "test.games": "Partidas",
     "test.hoops": "Aros",
     "teamSummary.tests": "Tests",
+    "teamSummary.matches": "Partidos",
     "teamSummary.games": "Partidas",
     "teamSummary.hoops": "Aros",
     "teamSummary.wins": "Victorias",

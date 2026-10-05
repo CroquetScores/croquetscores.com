@@ -3,7 +3,9 @@
 // table, a row for each team ranked, said by its name, since the summary is
 // where a reader looks for each team as a whole, and beside it,
 // grouped under Tests, Games and Hoops, the tests it has won, lost and drawn,
-// the games it has won and lost, and its hoops for, against and net. Its
+// the games it has won and lost, and its hoops for, against and net; and,
+// where any test has matches the best of more than 1, under Matches after the
+// tests, the matches it has won and lost. Its
 // sections are the tournament's, with Summary marked.
 //
 // A Standard tournament has no summary, any more than a tournament a reader
@@ -33,22 +35,34 @@ const notThere: readonly string[] = [
   "PublicTeamSummaryOfTournament.NotPlayedByTeams",
 ];
 
-// The table's columns, each under its group, with what each says of a team.
-const groups: readonly {
-  word: string;
-  columns: readonly {
-    word: string;
-    of: (team: TeamStanding) => number;
+// A group of the table's columns, each with what it says of a team.
+interface Group {
+  readonly word: string;
+  readonly columns: readonly {
+    readonly word: string;
+    readonly of: (team: TeamStanding) => number;
   }[];
-}[] = [
-  {
-    word: "teamSummary.tests",
-    columns: [
-      { word: "teamSummary.wins", of: (team) => team.testsWon },
-      { word: "teamSummary.losses", of: (team) => team.testsLost },
-      { word: "teamSummary.draws", of: (team) => team.testsDrawn },
-    ],
-  },
+}
+
+const tests: Group = {
+  word: "teamSummary.tests",
+  columns: [
+    { word: "teamSummary.wins", of: (team) => team.testsWon },
+    { word: "teamSummary.losses", of: (team) => team.testsLost },
+    { word: "teamSummary.draws", of: (team) => team.testsDrawn },
+  ],
+};
+
+// After the tests, as the teams are ranked by them after their tests.
+const matches: Group = {
+  word: "teamSummary.matches",
+  columns: [
+    { word: "teamSummary.wins", of: (team) => team.matchesWon },
+    { word: "teamSummary.losses", of: (team) => team.matchesLost },
+  ],
+};
+
+const rest: readonly Group[] = [
   {
     word: "teamSummary.games",
     columns: [
@@ -106,6 +120,13 @@ export const registerTeamSummaryPage = (
       const numbers = new Intl.NumberFormat(speaking.language.tag);
       // Each column, and whether it begins its group, where a thick line
       // parts it from the group before.
+      // A match the best of 1 is its one game, so where every test's are,
+      // its matches would only say its games again.
+      const groups: readonly Group[] = [
+        tests,
+        ...(asked.bestOfMoreThanOne ? [matches] : []),
+        ...rest,
+      ];
       const columns = groups.flatMap((group) =>
         group.columns.map((column, at) => ({ ...column, starts: at === 0 })),
       );

@@ -305,6 +305,7 @@ export const english: Language = {
     "test.games": "Games",
     "test.hoops": "Hoops",
     "teamSummary.tests": "Tests",
+    "teamSummary.matches": "Matches",
     "teamSummary.games": "Games",
     "teamSummary.hoops": "Hoops",
     "teamSummary.wins": "Wins",

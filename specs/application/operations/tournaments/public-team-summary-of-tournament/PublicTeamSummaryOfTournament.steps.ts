@@ -66,6 +66,10 @@ const counts: Readonly<Record<string, keyof TeamStanding>> = {
   "tests lost": "testsLost",
   "test drawn": "testsDrawn",
   "tests drawn": "testsDrawn",
+  "match won": "matchesWon",
+  "matches won": "matchesWon",
+  "match lost": "matchesLost",
+  "matches lost": "matchesLost",
   "game won": "gamesWon",
   "games won": "gamesWon",
   "game lost": "gamesLost",
@@ -75,7 +79,7 @@ const counts: Readonly<Record<string, keyof TeamStanding>> = {
 };
 
 Then(
-  /^the team "(.*)" is answered in the summary with (\d+) (tests? won|tests? lost|tests? drawn|games? won|games? lost|hoops for|hoops against)$/,
+  /^the team "(.*)" is answered in the summary with (\d+) (tests? won|tests? lost|tests? drawn|match(?:es)? won|match(?:es)? lost|games? won|games? lost|hoops for|hoops against)$/,
   function (this: SpecWorld, name: string, count: string, what: string) {
     const field = counts[what];
     assert.ok(field !== undefined, `Nothing is counted as ${what}.`);
@@ -92,5 +96,12 @@ Then(
       answered(this).teams.find((each) => each.id === id)?.name,
       name,
     );
+  },
+);
+
+Then(
+  /^the summary is answered with (a|no) test of matches the best of more than 1$/,
+  function (this: SpecWorld, which: string) {
+    assert.equal(answered(this).bestOfMoreThanOne, which === "a");
   },
 );

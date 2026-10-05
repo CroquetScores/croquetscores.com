@@ -15,6 +15,9 @@ export interface TeamStanding {
   readonly testsWon: number;
   readonly testsLost: number;
   readonly testsDrawn: number;
+  /** The matches its players have won and lost, each once it was decided. */
+  readonly matchesWon: number;
+  readonly matchesLost: number;
   readonly gamesWon: number;
   readonly gamesLost: number;
   /** The points its players scored, and had scored against them. */
@@ -35,8 +38,14 @@ export interface TeamSummaryToRead {
   /** Each team in use, in the tournament's order. */
   readonly teams: readonly TeamStanding[];
   /**
-   * The ids of the teams ranked: the more tests won first, then the more net
-   * games, then the more net hoops, then in the tournament's order.
+   * Whether any of its tests in use has matches the best of more than 1;
+   * where none has, a match is its one game.
+   */
+  readonly bestOfMoreThanOne: boolean;
+  /**
+   * The ids of the teams ranked: the more tests won first, then the more
+   * matches won, then the more net games, then the more net hoops, then in the
+   * tournament's order.
    */
   readonly ranked: readonly string[];
 }
