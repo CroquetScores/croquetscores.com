@@ -12,15 +12,19 @@ import { AggregateRepository } from "../../src/application/common/AggregateRepos
 import { ProjectingEventStore } from "../../src/application/common/ProjectingEventStore.js";
 import { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
+import { Commentary } from "../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import { Competition } from "../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionPlayer } from "../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import type { GamePlayerId } from "../../src/domain/aggregates/tournaments/competitions/Game.js";
 import { CompetitionGameAdded } from "../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
+import type { CommentaryId } from "../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { CompetitionId } from "../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { TournamentId } from "../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
 import type { CompetitionInTournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
 import { ImportBlocks } from "../../src/import-ravendb/ImportBlocks.js";
+import { ImportCommentaries } from "../../src/import-ravendb/ImportCommentaries.js";
+import { ImportedAccounts } from "../../src/import-ravendb/ImportedAccounts.js";
 import { ImportKnockouts } from "../../src/import-ravendb/ImportKnockouts.js";
 import { ImportSwisses } from "../../src/import-ravendb/ImportSwisses.js";
 import { ImportTeamMatches } from "../../src/import-ravendb/ImportTeamMatches.js";
@@ -86,6 +90,20 @@ export interface WrittenCompetition {
 
 export type CompetitionKind = "block" | "knockout" | "swiss" | "team match";
 
+export interface WrittenComment {
+  Content: string;
+  CreatedAt: string;
+  IsArchived: boolean;
+}
+
+export interface WrittenCommentary {
+  Tournament: { Id: string };
+  Commentator: { Id: string };
+  Title: string;
+  Comments: WrittenComment[];
+  IsArchived: boolean;
+}
+
 /** The old document a scenario is writing, and where it is from. */
 export type Writing =
   | {
@@ -108,6 +126,12 @@ export type Writing =
       readonly website: string;
       readonly id: string;
       readonly document: WrittenCompetition;
+    }
+  | {
+      readonly kind: "commentary";
+      readonly website: string;
+      readonly id: string;
+      readonly document: WrittenCommentary;
     };
 
 interface Importers {
@@ -117,12 +141,14 @@ interface Importers {
   readonly knockouts: ImportKnockouts;
   readonly swisses: ImportSwisses;
   readonly teamMatches: ImportTeamMatches;
+  readonly commentaries: ImportCommentaries;
   readonly order: OrderCompetitions;
 }
 
 interface Importing {
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
+  readonly commentaries: AggregateRepository<Commentary, CommentaryId>;
   readonly importers: Importers;
   writing?: Writing;
   refused?: unknown;
@@ -166,16 +192,25 @@ export const importingOf = (world: SpecWorld): Importing => {
     store,
     (id: AccountId, events) => Account.rebuiltFrom(id, events),
   );
+  const commentaries = new AggregateRepository(
+    store,
+    (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
+  );
   const importing = { unitOfWork, tournaments, competitions, database };
+  const importedAccounts = new ImportedAccounts(
+    accountRepository,
+    accounts.hasher,
+    database,
+  );
   const made: Importing = {
     tournaments,
     competitions,
+    commentaries,
     importers: {
       tournaments: new ImportTournaments(
         unitOfWork,
         tournaments,
-        accountRepository,
-        accounts.hasher,
+        importedAccounts,
         database,
       ),
       players: new ImportTournamentPlayers(unitOfWork, tournaments, database),
@@ -183,6 +218,13 @@ export const importingOf = (world: SpecWorld): Importing => {
       knockouts: new ImportKnockouts(importing),
       swisses: new ImportSwisses(importing),
       teamMatches: new ImportTeamMatches(importing),
+      commentaries: new ImportCommentaries(
+        unitOfWork,
+        tournaments,
+        commentaries,
+        importedAccounts,
+        database,
+      ),
       order: new OrderCompetitions(unitOfWork, tournaments, database),
     },
     lists: new Map(),
@@ -293,9 +335,17 @@ export const tournamentWritten = (world: SpecWorld): WrittenTournament => {
 export const competitionWritten = (world: SpecWorld): WrittenCompetition => {
   const writing = writingOf(world);
   assert.ok(
-    writing.kind !== "tournament" && writing.kind !== "players",
+    writing.kind !== "tournament" &&
+      writing.kind !== "players" &&
+      writing.kind !== "commentary",
     "No competition is being written.",
   );
+  return writing.document;
+};
+
+export const commentaryWritten = (world: SpecWorld): WrittenCommentary => {
+  const writing = writingOf(world);
+  assert.ok(writing.kind === "commentary", "No commentary is being written.");
   return writing.document;
 };
 
@@ -319,6 +369,7 @@ const importerFor = (
     knockout: importers.knockouts,
     swiss: importers.swisses,
     "team match": importers.teamMatches,
+    commentary: importers.commentaries,
   })[kind];
 
 /**
@@ -494,6 +545,7 @@ Given("the knockouts are imported", standUp);
 Given("the Swisses are imported", standUp);
 Given("the team matches are imported", standUp);
 Given("the competitions are put in order", standUp);
+Given("the commentaries are imported", standUp);
 
 // Scenes set by bringing documents over -----------------------------------------
 
@@ -705,7 +757,7 @@ When("the competition is imported", importIt);
 When("the team match is imported", importIt);
 
 Then(
-  /^importing the (?:tournament|players|competition|team match) is refused with "(.*)"$/,
+  /^importing the (?:tournament|players|competition|team match|commentary) is refused with "(.*)"$/,
   function (this: SpecWorld, code: string) {
     const { refused } = importingOf(this);
     assert.ok(refused !== undefined, "Importing was not refused.");
@@ -714,7 +766,7 @@ Then(
 );
 
 Then(
-  /^importing the (?:tournament|players|competition|team match) is not refused$/,
+  /^importing the (?:tournament|players|competition|team match|commentary) is not refused$/,
   function (this: SpecWorld) {
     const { refused } = importingOf(this);
     assert.equal(

@@ -1,9 +1,4 @@
 import type { AggregateRepository } from "../application/common/AggregateRepository.js";
-import type { EmailAddressHasher } from "../application/services/EmailAddressHasher.js";
-import { Account } from "../domain/aggregates/accounts/Account.js";
-import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
-import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
 import { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { Countries } from "../domain/aggregates/tournaments/value-objects/Countries.js";
@@ -12,11 +7,11 @@ import { Sport } from "../domain/aggregates/tournaments/value-objects/Sport.js";
 import { TournamentFormat } from "../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import { TournamentName } from "../domain/aggregates/tournaments/value-objects/TournamentName.js";
 import { TournamentNotes } from "../domain/aggregates/tournaments/value-objects/TournamentNotes.js";
-import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Slug } from "../domain/common/Slug.js";
 import { Website } from "../domain/common/Website.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
+import type { ImportedAccounts } from "./ImportedAccounts.js";
 import { ImportRefused } from "./ImportRefused.js";
 import { tournamentNameToImport } from "./names.js";
 import { dayOf } from "./newtonsoft.js";
@@ -45,11 +40,6 @@ const formats: Readonly<Record<string, TournamentFormat>> = {
   interstateshield: TournamentFormat.interstateShield,
   gcwtc: TournamentFormat.gcWorldTeamChampionship,
 };
-
-// What a forgotten account is brought over as before it is forgotten, which
-// nobody reads: a forgotten account is read back as "Account Forgotten" and
-// an address at the site's own domain whatever it was kept as (AccountEventSealing).
-const FORGOTTEN_NAME = "Account Forgotten";
 
 const sportOf = (code: string): Sport => {
   const known = sportCodes[code.trim().toLowerCase()];
@@ -119,8 +109,7 @@ export class ImportTournaments implements Importer<OldTournament> {
   constructor(
     private readonly unitOfWork: UnitOfWork,
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly emailAddresses: EmailAddressHasher,
+    private readonly accounts: ImportedAccounts,
     private readonly database: ImportDatabase,
   ) {}
 
@@ -141,7 +130,11 @@ export class ImportTournaments implements Importer<OldTournament> {
       // The old sites kept no moment a tournament was created at, so it was
       // created when it started, as far as anything here says.
       const at = dayOf(document.Start);
-      const creator = await this.#accountOf(website, document.CreatedBy.Id, at);
+      const creator = await this.accounts.accountOf(
+        website,
+        document.CreatedBy.Id,
+        at,
+      );
 
       const tournament = Tournament.bringOver(
         TournamentId.create(),
@@ -175,7 +168,7 @@ export class ImportTournaments implements Importer<OldTournament> {
       );
 
       for (const manager of document.Managers) {
-        const account = await this.#accountOf(website, manager.Id, at);
+        const account = await this.accounts.accountOf(website, manager.Id, at);
         if (!tournament.manages(account)) {
           tournament.addManager(account, creator, at);
         }
@@ -183,7 +176,7 @@ export class ImportTournaments implements Importer<OldTournament> {
       // A manager does everything a scorer does, so is not made one as well,
       // as the old sites made every manager.
       for (const scorer of document.Scorers) {
-        const account = await this.#accountOf(website, scorer.Id, at);
+        const account = await this.accounts.accountOf(website, scorer.Id, at);
         if (!tournament.manages(account) && !tournament.scores(account)) {
           tournament.addScorer(account, creator, at);
         }
@@ -196,41 +189,5 @@ export class ImportTournaments implements Importer<OldTournament> {
         tournament.id.value,
       );
     });
-  }
-
-  // The account the user `documentId` on `website` became, or where they
-  // became none, the forgotten account made for them the first time one was
-  // needed: one that holds nothing of them and that nobody can sign in to.
-  async #accountOf(
-    website: string,
-    documentId: string,
-    at: ReadOnlyDate,
-  ): Promise<AccountId> {
-    const imported = await this.database.findAccountOf(website, documentId);
-    if (imported !== undefined) return AccountId.from(imported.accountId);
-    const forgotten = await this.database.findForgottenAccountOf(
-      website,
-      documentId,
-    );
-    if (forgotten !== undefined) return AccountId.from(forgotten);
-
-    const id = AccountId.create();
-    const address = EmailAddress.from(
-      `account-forgotten-${id.value.slice(id.value.indexOf("/") + 1)}@croquetscores.com`,
-    );
-    // Brought over and forgotten in one save, so that it is never an account
-    // anybody could be sent anything at, and its key is gone with it.
-    const account = Account.bringOver(
-      id,
-      PersonName.from(FORGOTTEN_NAME),
-      address,
-      this.emailAddresses.hash(address),
-      "",
-      at,
-    );
-    account.forget(at);
-    await this.accounts.save(account);
-    await this.database.recordForgottenUser(website, documentId, id.value);
-    return id;
   }
 }
