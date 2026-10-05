@@ -24,6 +24,8 @@ export interface TournamentCommentaryToRead {
   readonly name: string;
   /** Where the tournament is found now, as "2026/ac/spring-open". */
   readonly address: string;
+  /** The tournament's notes, in Markdown, or nothing where it has none. */
+  readonly notes: string | undefined;
   /** Whether it is played by teams, which its sections say. */
   readonly playedByTeams: boolean;
   /** Its competitions in use, in the tournament's order. */

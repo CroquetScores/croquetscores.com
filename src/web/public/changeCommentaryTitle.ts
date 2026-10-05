@@ -83,7 +83,11 @@ export const registerChangeCommentaryTitlePage = (
       .type("text/html; charset=utf-8")
       .send(
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            notes: asked.notes,
+          },
           title: dialog.title,
           theme: themeOf(request),
           signedIn: true,

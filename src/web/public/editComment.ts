@@ -98,7 +98,11 @@ export const registerEditCommentPages = (
         .type("text/html; charset=utf-8")
         .send(
           render(assets, {
-            tournament: { name: asked.name, address: asked.address },
+            tournament: {
+              name: asked.name,
+              address: asked.address,
+              notes: asked.notes,
+            },
             title,
             sections: sectionsOf(asked, speaking),
             currentSection: `/${asked.address}/commentaries`,

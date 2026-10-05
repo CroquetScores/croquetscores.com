@@ -64,6 +64,19 @@ Then(
   },
 );
 
+// Every query a tournament's page asks answers its notes as this one does, so
+// the steps are shared.
+Then(
+  "the tournament answered has the notes {string}",
+  function (this: SpecWorld, notes: string) {
+    assert.equal(answered(this).notes, notes);
+  },
+);
+
+Then("the tournament answered has no notes", function (this: SpecWorld) {
+  assert.equal(answered(this).notes, undefined);
+});
+
 Then(
   /^the tournament answered is (not )?played by teams$/,
   function (this: SpecWorld, not: string | null) {

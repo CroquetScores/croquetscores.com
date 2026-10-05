@@ -128,6 +128,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
 
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address,
       competitions: competitionsInUse(tournament),
       swiss: { name: reference.name.toString() },

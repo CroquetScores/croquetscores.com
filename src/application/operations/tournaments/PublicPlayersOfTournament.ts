@@ -23,6 +23,8 @@ export interface TournamentPlayersToRead {
   readonly name: string;
   /** Where it is found now, as "2026/ac/spring-open". */
   readonly address: string;
+  /** The tournament's notes, in Markdown, or nothing where it has none. */
+  readonly notes: string | undefined;
   /** Its competitions in use, in the tournament's order. */
   readonly competitions: readonly CompetitionOfTournament[];
   /**

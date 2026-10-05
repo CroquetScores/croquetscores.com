@@ -88,7 +88,11 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
         reply,
         request,
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            notes: asked.notes,
+          },
           title: asked.name,
           sections,
           currentSection: `/${asked.address}`,

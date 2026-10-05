@@ -98,7 +98,11 @@ ${asked.commentaries
         reply,
         request,
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            notes: asked.notes,
+          },
           title: `${say("tournament.commentary")} - ${asked.name}`,
           sections: sectionsOf(asked, speaking),
           currentSection: `/${asked.address}/commentaries`,

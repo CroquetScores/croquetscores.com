@@ -115,6 +115,7 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
 
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address: tournament.address.toString(),
       playedByTeams: true,
       competitions: competitionsInUse(tournament),

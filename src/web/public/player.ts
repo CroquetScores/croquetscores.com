@@ -103,7 +103,11 @@ ${asked.entered
       reply,
       request,
       render(assets, {
-        tournament: { name: asked.name, address: asked.address },
+        tournament: {
+          name: asked.name,
+          address: asked.address,
+          notes: asked.notes,
+        },
         title: asked.player.name,
         sections: sectionsOf(asked, speaking),
         currentSection: `/${asked.address}/players`,

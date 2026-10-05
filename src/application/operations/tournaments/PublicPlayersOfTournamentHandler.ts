@@ -44,6 +44,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
     const address = tournament.address.toString();
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address,
       competitions: competitionsInUse(tournament),
       playedByTeams: tournament.format.isTeamFormat,

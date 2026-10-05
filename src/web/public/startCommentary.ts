@@ -105,7 +105,11 @@ export const registerStartCommentaryPage = (
       .type("text/html; charset=utf-8")
       .send(
         render(assets, {
-          tournament: { name: tournament.name, address: tournament.address },
+          tournament: {
+            name: tournament.name,
+            address: tournament.address,
+            notes: tournament.notes,
+          },
           title: dialog.title,
           theme: themeOf(request),
           signedIn: true,

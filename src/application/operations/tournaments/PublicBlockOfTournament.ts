@@ -52,6 +52,8 @@ export interface BlockToRead {
   readonly name: string;
   /** Where the tournament is found now, as "2026/ac/spring-open". */
   readonly address: string;
+  /** The tournament's notes, in Markdown, or nothing where it has none. */
+  readonly notes: string | undefined;
   /** The tournament's competitions in use, in its order, for its sections. */
   readonly competitions: readonly CompetitionOfTournament[];
   readonly block: {

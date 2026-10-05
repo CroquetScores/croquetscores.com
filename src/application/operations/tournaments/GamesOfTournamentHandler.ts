@@ -81,6 +81,7 @@ export class GamesOfTournamentHandler extends QueryHandler<
     // the one listed later first, so that the list reads back from now.
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address: tournament.address.toString(),
       playedByTeams: tournament.format.isTeamFormat,
       competitions,

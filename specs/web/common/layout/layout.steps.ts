@@ -6,6 +6,7 @@ import { Website } from "../../../../src/domain/common/Website.js";
 import { english } from "../../../../src/web/languages/english.js";
 import { anApplicationServedAs, siteNameFor } from "../../support/browser.js";
 import { unmarked } from "../../support/languages.js";
+import { changeTournament } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 const banner = ".try-banner";
@@ -114,5 +115,109 @@ When(
   async function (this: SpecWorld) {
     await tournamentInHeader(this).click();
     await this.browserPage.waitForLoadState();
+  },
+);
+
+// The tournament's notes ----------------------------------------------------------
+
+Given(
+  "the tournament {string} has the notes:",
+  async function (this: SpecWorld, name: string, notes: string) {
+    await changeTournament(this, name, { notes });
+  },
+);
+
+// A window short enough that any tournament's page scrolls.
+Given(
+  "a viewport {int} pixels wide and {int} pixels high",
+  async function (this: SpecWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
+  },
+);
+
+When("the page is scrolled to its bottom", async function (this: SpecWorld) {
+  await this.browserPage.evaluate(
+    "globalThis.scrollTo(0, globalThis.document.body.scrollHeight)",
+  );
+});
+
+const notesInHeader = (world: SpecWorld): Locator =>
+  world.browserPage.locator(".tournament-notes");
+
+Then(
+  "the header shows the notes {string}",
+  async function (this: SpecWorld, notes: string) {
+    assert.equal((await notesInHeader(this).innerText()).trim(), notes);
+  },
+);
+
+Then("the header shows no notes", async function (this: SpecWorld) {
+  assert.equal(await notesInHeader(this).count(), 0);
+});
+
+Then(
+  "the notes in the header are beneath the tournament named there",
+  async function (this: SpecWorld) {
+    const tournament = await tournamentInHeader(this).boundingBox();
+    const notes = await notesInHeader(this).boundingBox();
+    assert.ok(
+      tournament !== null && notes !== null,
+      "One of them is not shown.",
+    );
+    assert.ok(
+      notes.y >= tournament.y + tournament.height,
+      `They start ${String(notes.y)} pixels down.`,
+    );
+  },
+);
+
+// Out of sight behind the pinned bar, which stays at the top of the window
+// while what is beneath it scrolls under it.
+Then(
+  "the notes in the header are out of sight",
+  async function (this: SpecWorld) {
+    const bar = await this.browserPage.locator("header.site-bar").boundingBox();
+    const notes = await notesInHeader(this).boundingBox();
+    assert.ok(bar !== null && notes !== null, "One of them is not drawn.");
+    assert.ok(
+      notes.y + notes.height <= bar.y + bar.height,
+      `They end ${String(notes.y + notes.height)} pixels down.`,
+    );
+  },
+);
+
+Then(
+  "the notes in the header draw {string} bold",
+  async function (this: SpecWorld, words: string) {
+    const bold = await notesInHeader(this).locator("strong").allInnerTexts();
+    assert.deepEqual(bold, [words]);
+  },
+);
+
+const linkInNotes = (world: SpecWorld, words: string): Locator =>
+  notesInHeader(world).locator("a", { hasText: words });
+
+Then(
+  "the notes' link {string} leads to {string}",
+  async function (this: SpecWorld, words: string, href: string) {
+    assert.equal(await linkInNotes(this, words).getAttribute("href"), href);
+  },
+);
+
+Then(
+  "the notes' link {string} is marked as not vouched for",
+  async function (this: SpecWorld, words: string) {
+    const rel = (
+      (await linkInNotes(this, words).getAttribute("rel")) ?? ""
+    ).split(/\s+/);
+    assert.ok(rel.includes("nofollow"), `It is marked ${rel.join(" ")}.`);
+    assert.ok(rel.includes("ugc"), `It is marked ${rel.join(" ")}.`);
+  },
+);
+
+Then(
+  "the notes in the header are a numbered list of {int} items",
+  async function (this: SpecWorld, items: number) {
+    assert.equal(await notesInHeader(this).locator("ol > li").count(), items);
   },
 );

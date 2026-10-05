@@ -67,6 +67,11 @@ Feature: A block of a tournament, for anybody to read
   that a game on equal points is drawn, and its block is the best of 3, so
   that two players can meet more than once.
 
+  The tournament's notes are answered with it, in Markdown as they are kept
+  (`TournamentNotes.feature`), since every page of a tournament shows them
+  beneath its name in the header (`layout.feature`). A tournament with no
+  notes is answered with none.
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -97,6 +102,15 @@ Feature: A block of a tournament, for anybody to read
     Scenario: The tournament is answered with the block
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the tournament answered is called "Spring Open"
+
+    Scenario: The tournament's notes are answered
+      Given the tournament "Spring Open" has the notes "Lunch is at **noon**"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the tournament answered has the notes "Lunch is at **noon**"
+
+    Scenario: A tournament with no notes is answered with none
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the tournament answered has no notes
 
     Scenario: A tournament found at its old address is answered with where it is found now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

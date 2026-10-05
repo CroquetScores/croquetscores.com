@@ -92,7 +92,11 @@ ${team.players.map((player) => `              <li class="player"><a class="playe
         reply,
         request,
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            notes: asked.notes,
+          },
           title: asked.name,
           sections: sectionsOf(asked, speaking),
           currentSection: `/${asked.address}/players`,

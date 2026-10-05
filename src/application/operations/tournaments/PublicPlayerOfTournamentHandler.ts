@@ -153,6 +153,7 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
     }
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address,
       competitions,
       playedByTeams: tournament.format.isTeamFormat,

@@ -31,6 +31,8 @@ export interface TeamSummaryToRead {
   readonly name: string;
   /** Where the tournament is found now, as "2026/ac/spring-tests". */
   readonly address: string;
+  /** The tournament's notes, in Markdown, or nothing where it has none. */
+  readonly notes: string | undefined;
   /** Always, since only a tournament played by teams has a summary. */
   readonly playedByTeams: true;
   /** The tournament's competitions in use, its tests, for its sections. */

@@ -159,6 +159,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
 
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address,
       competitions: competitionsInUse(tournament),
       knockout: { name: reference.name.toString() },

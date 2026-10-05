@@ -55,6 +55,7 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
     return {
       id: tournament.id.value,
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address,
       playedByTeams: tournament.format.isTeamFormat,
       competitions: competitionsInUse(tournament),

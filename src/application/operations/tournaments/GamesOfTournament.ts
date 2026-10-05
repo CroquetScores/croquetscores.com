@@ -34,6 +34,8 @@ export interface TournamentGames {
   readonly name: string;
   /** Where it is found now, as "2026/ac/spring-open". */
   readonly address: string;
+  /** The tournament's notes, in Markdown, or nothing where it has none. */
+  readonly notes: string | undefined;
   /**
    * Whether it is played by teams, whose players are their teams' and have
    * no players' page of the tournament's own.

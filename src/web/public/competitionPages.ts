@@ -358,7 +358,11 @@ export const registerCompetitionPages = (
             reply,
             request,
             render(assets, {
-              tournament: { name: asked.name, address: asked.address },
+              tournament: {
+                name: asked.name,
+                address: asked.address,
+                notes: asked.notes,
+              },
               title: found.name,
               sections: sectionsOf(
                 { ...asked, playedByTeams: found.kind === "test" },

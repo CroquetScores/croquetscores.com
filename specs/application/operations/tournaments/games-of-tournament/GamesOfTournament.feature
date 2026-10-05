@@ -31,6 +31,11 @@ Feature: The games of a tournament, for anybody to read
   A tournament's games are for anybody, so nobody need be signed in to ask,
   and every scenario here asks with nobody signed in.
 
+  The tournament's notes are answered with it, in Markdown as they are kept
+  (`TournamentNotes.feature`), since every page of a tournament shows them
+  beneath its name in the header (`layout.feature`). A tournament with no
+  notes is answered with none.
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -52,6 +57,15 @@ Feature: The games of a tournament, for anybody to read
     Scenario: The tournament's name is answered
       When the games of the tournament at "2026/ac/spring-open" are asked for
       Then the tournament answered is called "Spring Open"
+
+    Scenario: The tournament's notes are answered
+      Given the tournament "Spring Open" has the notes "Lunch is at **noon**"
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered has the notes "Lunch is at **noon**"
+
+    Scenario: A tournament with no notes is answered with none
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered has no notes
 
     Scenario: Where the tournament is found is answered
       When the games of the tournament at "2026/ac/spring-open" are asked for

@@ -5,6 +5,7 @@ import { accountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
 import type { Speaking } from "./language.js";
+import { markdownWithoutHtml } from "./markdown.js";
 import { themes, type Theme } from "./theme.js";
 
 /**
@@ -39,6 +40,9 @@ export interface Shell {
         readonly name: string;
         /** Where it is found, as "2026/ac/spring-open". */
         readonly address: string;
+        /** Its notes, in Markdown, drawn on a strip beneath the pinned bar,
+            or nothing where it has none. */
+        readonly notes: string | undefined;
       }
     | undefined;
   /** The dark green bar. Absent, rather than present and empty, when a page
@@ -209,6 +213,25 @@ const titleBar = (title: string | undefined): string =>
       </div>
     </div>`;
 
+// Notes are kept with their HTML taken out (TournamentNotes.ts), and are drawn
+// by a Markdown that draws none besides (markdown.ts), in case any was missed.
+const notesMarkdown = markdownWithoutHtml();
+
+// A tournament's notes, on a strip of the header's green beneath the pinned
+// bar, and so beneath the tournament's name in it. Not in the bar itself, so
+// that notes of several lines scroll away with the page rather than keeping a
+// phone's screen from what the page says.
+const notesBar = (tournament: Shell["tournament"]): string =>
+  tournament?.notes === undefined
+    ? ""
+    : `
+    <div class="tournament-notes">
+      <div class="page">
+        <div class="tournament-notes-text">
+${notesMarkdown.render(tournament.notes)}        </div>
+      </div>
+    </div>`;
+
 const themeWords: Record<Theme, string> = {
   light: "theme.light",
   dark: "theme.dark",
@@ -350,7 +373,7 @@ ${shell.styles}
     </style>`
     }
   </head>
-  <body>${siteBar(shell)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+  <body>${siteBar(shell)}${notesBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${

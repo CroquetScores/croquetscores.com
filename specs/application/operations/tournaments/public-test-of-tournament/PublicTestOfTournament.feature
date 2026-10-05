@@ -53,6 +53,11 @@ Feature: A test of a tournament played by teams, for anybody to read
   "England", "ENG", with "Kim Keeper" and "Ken Kicker", and its test between
   them is expected to have 2 matches, each the best of 1.
 
+  The tournament's notes are answered with it, in Markdown as they are kept
+  (`TournamentNotes.feature`), since every page of a tournament shows them
+  beneath its name in the header (`layout.feature`). A tournament with no
+  notes is answered with none.
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -95,6 +100,15 @@ Feature: A test of a tournament played by teams, for anybody to read
     Scenario: The tournament is answered with the test
       When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
       Then the tournament answered is called "Spring Tests"
+
+    Scenario: The tournament's notes are answered
+      Given the tournament "Spring Tests" has the notes "Lunch is at **noon**"
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the tournament answered has the notes "Lunch is at **noon**"
+
+    Scenario: A tournament with no notes is answered with none
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the tournament answered has no notes
 
     Scenario: A tournament found at its old address is answered with where it is found now
       Given "organiser@example.com" has moved the tournament "Spring Tests" to the sport "gc"

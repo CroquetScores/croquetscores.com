@@ -66,6 +66,7 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
     const address = tournament.address.toString();
     return {
       name: tournament.name.toString(),
+      notes: tournament.notes?.markdown,
       address,
       playedByTeams: tournament.format.isTeamFormat,
       competitions: competitionsInUse(tournament),
