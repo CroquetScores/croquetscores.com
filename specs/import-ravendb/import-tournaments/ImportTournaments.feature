@@ -205,12 +205,42 @@ Feature: Importing the old sites' tournaments
     tournament with no time zone, or one not on the list, is refused rather
     than guessed at, so that what it needs is added to the list.
 
+    "GMT Standard Time" and "W. Europe Standard Time" are each kept by several
+    countries, and are taken as England's, where the old sites' tournaments kept
+    in them were played; a manager can move one played elsewhere.
+
+    A tournament kept in "Pacific Standard Time (Mexico)" is read as kept in
+    "Pacific Standard Time", whose tournaments were played in the United
+    States: the old sites offered the time zones of the machine they ran on,
+    and some managers on the Pacific coast chose Mexico's, which keeps the same
+    hours.
+
     Scenario: A tournament is in the country of its time zone
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament's time zone is "New Zealand Standard Time"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "nz"
+
+    Scenario Outline: A tournament is in the country its time zone means
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "<time zone>"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | time zone               | country |
+        | GMT Standard Time       | england |
+        | W. Europe Standard Time | england |
+        | Morocco Standard Time   | ma      |
+
+    Scenario: A tournament kept in Mexico's Pacific time is in the country of Pacific time
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Pacific Standard Time (Mexico)"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "us"
 
     Scenario: A tournament is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"

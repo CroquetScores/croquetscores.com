@@ -5,8 +5,9 @@
 // tournaments were played in.
 //
 // "GMT Standard Time" is Great Britain's, Ireland's and Portugal's alike, and
-// is taken as England's, where nearly every old tournament kept in it was
-// played; a manager can move one played elsewhere.
+// "W. Europe Standard Time" is kept by much of western Europe. Each is taken
+// as England's, where the old tournaments kept in it were played; a manager
+// can move one played elsewhere.
 const countryCodes: Readonly<Record<string, string>> = {
   "AUS Eastern Standard Time": "au",
   "AUS Central Standard Time": "au",
@@ -18,6 +19,8 @@ const countryCodes: Readonly<Record<string, string>> = {
   "New Zealand Standard Time": "nz",
   "Chatham Islands Standard Time": "nz",
   "GMT Standard Time": "england",
+  "W. Europe Standard Time": "england",
+  "Morocco Standard Time": "ma",
   "Eastern Standard Time": "us",
   "Central Standard Time": "us",
   "Mountain Standard Time": "us",
@@ -30,6 +33,14 @@ const countryCodes: Readonly<Record<string, string>> = {
   "Tokyo Standard Time": "jp",
 };
 
+// Time zones read as another, which the old sites' managers chose for
+// tournaments played where the other is kept. The old sites offered every time
+// zone of the machine they ran on, and some managers on the Pacific coast of
+// the United States chose Mexico's, which keeps the same hours.
+const readAs: Readonly<Record<string, string>> = {
+  "Pacific Standard Time (Mexico)": "Pacific Standard Time",
+};
+
 /** The code of the country `timeZone` means, or nothing where the import does not know it. */
 export const countryOfTimeZone = (timeZone: string): string | undefined =>
-  countryCodes[timeZone];
+  countryCodes[readAs[timeZone] ?? timeZone];
