@@ -1,7 +1,7 @@
 // "npm run import:ravendb". Empties the site's database, then brings the
 // old sites over into it from RavenDB: their users, their tournaments and the
-// players of each, their blocks, knockouts, Swisses and team matches, and last
-// the order each tournament listed its competitions in.
+// players of each, their blocks, knockouts, Swisses and team matches, their
+// commentaries, and last the order each tournament listed its competitions in.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -11,9 +11,12 @@ import { ProjectingEventStore } from "../application/common/ProjectingEventStore
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
+import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commentary.js";
+import { nameCommentaryEvents } from "../domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
 import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
 import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
+import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
@@ -34,7 +37,9 @@ import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ImportBlocks } from "./ImportBlocks.js";
+import { ImportCommentaries } from "./ImportCommentaries.js";
 import { ImportDatabase } from "./ImportDatabase.js";
+import { ImportedAccounts } from "./ImportedAccounts.js";
 import { ImportKnockouts } from "./ImportKnockouts.js";
 import { ImportSwisses } from "./ImportSwisses.js";
 import { ImportTeamMatches } from "./ImportTeamMatches.js";
@@ -79,8 +84,10 @@ try {
   const eventStore = new ProjectingEventStore(
     new PostgresEventStore(
       unitOfWork,
-      nameCompetitionEvents(
-        nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+      nameCommentaryEvents(
+        nameCompetitionEvents(
+          nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+        ),
       ),
       new AccountEventSealing(accountKeys),
     ),
@@ -112,25 +119,37 @@ try {
     eventStore,
     (id: CompetitionId, events) => Competition.rebuiltFrom(id, events),
   );
+  const commentaries = new AggregateRepository(
+    eventStore,
+    (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
+  );
   const importing = { unitOfWork, tournaments, competitions, database };
+  // One for every importer that names a user, so that a user is one account
+  // wherever they are named.
+  const importedAccounts = new ImportedAccounts(
+    accounts,
+    emailAddresses,
+    database,
+  );
 
   // In the order each needs what the one before brought over: a tournament
-  // its users, its players and competitions the tournament, and the order of
-  // its competitions every competition.
+  // its users, its players, competitions and commentaries the tournament, and
+  // the order of its competitions every competition.
   const importers: readonly Importer<object>[] = [
     new ImportUsers(unitOfWork, accounts, emailAddresses, passwords, database),
-    new ImportTournaments(
-      unitOfWork,
-      tournaments,
-      accounts,
-      emailAddresses,
-      database,
-    ),
+    new ImportTournaments(unitOfWork, tournaments, importedAccounts, database),
     new ImportTournamentPlayers(unitOfWork, tournaments, database),
     new ImportBlocks(importing),
     new ImportKnockouts(importing),
     new ImportSwisses(importing),
     new ImportTeamMatches(importing),
+    new ImportCommentaries(
+      unitOfWork,
+      tournaments,
+      commentaries,
+      importedAccounts,
+      database,
+    ),
     new OrderCompetitions(unitOfWork, tournaments, database),
   ];
 
