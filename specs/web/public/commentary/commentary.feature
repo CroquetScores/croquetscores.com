@@ -17,7 +17,13 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   from its Markdown, so that a word made bold is bold and a link is a link,
   and when it was written, said as how long ago a game was added is on the
   tournament's page (`tournament.feature`). A comment that has been edited
-  says so. A link in a comment is marked as one the site does not vouch for,
+  says so. A comment is drawn as the old site drew one. A line beginning with
+  a number and a full stop or a bracket, as "5. Sam roquets Alex", is drawn
+  as it was written, not as an item of a numbered list: a commentator numbers
+  turns, and a list would number "5." and "7." as 5 and 6. A web address
+  written out with its "https://", and an email address, are drawn as links,
+  without the Markdown a link is otherwise written in, since that is how a
+  commentator types one on a phone. A link in a comment is marked as one the site does not vouch for,
   so that search engines give it nothing, which is what a link put in a
   commentary to sell something is after. Nothing in a comment is drawn as
   HTML: there is none in what was kept (`CommentText.feature`), and the
@@ -162,6 +168,41 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Given "writer@example.com" has added the comment "See [the draw](https://example.com/draw)" to "Day one" of "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the first comment's link "the draw" leads to "https://example.com/draw"
+
+    Scenario: A line beginning with a turn's number is not numbered again
+      Given "writer@example.com" has added the comment "5. Sam roquets Alex\n7. Alex runs hoop 3" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment shows the line "7. Alex runs hoop 3"
+
+    Scenario: Lines beginning with turns' numbers are drawn as no numbered list
+      Given "writer@example.com" has added the comment "5. Sam roquets Alex\n7. Alex runs hoop 3" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment draws no numbered list
+
+    Scenario: A line beginning with a number and a bracket is drawn as it was written
+      Given "writer@example.com" has added the comment "3) Kim pegs out" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment shows the line "3) Kim pegs out"
+
+    Scenario: A web address written out is drawn as a link
+      Given "writer@example.com" has added the comment "Results at https://example.com/results" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment's link "https://example.com/results" leads to "https://example.com/results"
+
+    Scenario: A web address written out is a link the site does not vouch for
+      Given "writer@example.com" has added the comment "Results at https://example.com/results" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment's link "https://example.com/results" is marked as not vouched for
+
+    Scenario: A name with no "https://" is not drawn as a link
+      Given "writer@example.com" has added the comment "Results at example.com" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment has no link
+
+    Scenario: An email address is drawn as a link to write to it
+      Given "writer@example.com" has added the comment "Write to sam@example.com" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment's link "sam@example.com" leads to "mailto:sam@example.com"
 
     Scenario: A link in a comment is one the site does not vouch for
       Given "writer@example.com" has added the comment "See [the draw](https://example.com/draw)" to "Day one" of "Spring Open"

@@ -52,8 +52,17 @@ const notThere: readonly string[] = [
 // whatever was kept: the tags were taken out when it was written
 // (CommentText.ts), and this is the second of the two locks. A line break is
 // a line break, since a comment is typed on a phone by somebody who has never
-// heard that Markdown wants two.
-const markdown = new MarkdownIt({ html: false, breaks: true });
+// heard that Markdown wants two. A web address written out with its scheme,
+// and an email address, are drawn as links without the Markdown a link is
+// otherwise written in, as the old site drew them; a name with no scheme, as
+// "example.com", is left as it is, as it was there, since a word with a full
+// stop in it is not always an address.
+const markdown = new MarkdownIt({
+  html: false,
+  breaks: true,
+  linkify: true,
+});
+markdown.linkify.set({ fuzzyLink: false });
 
 // A link in a comment is one the site does not vouch for, so that a search
 // engine gives it nothing, which is what a link put in a commentary to sell
@@ -66,8 +75,20 @@ markdown.renderer.rules.link_open = (tokens, index, options, env, self) => {
     : drawLink(tokens, index, options, env, self);
 };
 
-/** What a comment says, drawn from its Markdown, with no HTML of its own. */
-export const commentDrawn = (text: string): string => markdown.render(text);
+// A number and a full stop or a bracket beginning a line, which Markdown takes
+// for an item of a numbered list.
+const TURN_NUMBER = /^(\d+)([.)])(?=\s|$)/gm;
+
+/**
+ * What a comment says, drawn from its Markdown, with no HTML of its own. A
+ * line beginning with a number and a full stop or a bracket, as "5. Sam
+ * roquets Alex", is drawn as it was written, as the old site drew it: a
+ * commentator numbers turns, and a numbered list would number "5." and "7."
+ * as 5 and 6. The stop or the bracket is escaped as it is drawn, and what was
+ * kept is as it was written.
+ */
+export const commentDrawn = (text: string): string =>
+  markdown.render(text.replace(TURN_NUMBER, "$1\\$2"));
 
 // Two shapes, drawn here rather than fetched or set in a font, as the account
 // menu's is: they cost no request, and they take the colour of the link they

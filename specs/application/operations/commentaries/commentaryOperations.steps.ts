@@ -61,12 +61,14 @@ Given(
     const account = (await accountFor(this, address)).value;
     const tournament = tournamentNamed(this, name);
     const commentary = await commentaryIn(this, tournament, title);
+    // A scenario cannot write a line break inside a step's quotes, so it
+    // writes "\n", which is sent as the line break it stands for.
     const id: CommentId = await inHandOf(this).send(
       new AddComment(
         account,
         tournament.value,
         commentary.value,
-        text,
+        text.replaceAll("\\n", "\n"),
         momentOf(this),
       ),
     );

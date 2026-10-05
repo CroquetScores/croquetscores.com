@@ -611,3 +611,36 @@ Then(
     }
   },
 );
+
+// A line of what the comment says as it is laid out, line breaks and all.
+Then(
+  /^the (first|second|third|last) comment shows the line "(.*)"$/,
+  async function (this: SpecWorld, which: string, line: string) {
+    const said = commentAt(this, which).locator(".comment-text");
+    await said.waitFor();
+    const lines = unmarked(await said.innerText())
+      .split("\n")
+      .map((each) => each.trim());
+    assert.ok(lines.includes(line), `It shows ${JSON.stringify(lines)}.`);
+  },
+);
+
+Then(
+  /^the (first|second|third|last) comment draws no numbered list$/,
+  async function (this: SpecWorld, which: string) {
+    assert.equal(
+      await commentAt(this, which).locator(".comment-text ol").count(),
+      0,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third|last) comment has no link$/,
+  async function (this: SpecWorld, which: string) {
+    assert.equal(
+      await commentAt(this, which).locator(".comment-text a").count(),
+      0,
+    );
+  },
+);
