@@ -22,7 +22,9 @@ Feature: The title a commentary is known by
   (`startCommentary.feature`), and a title with no letter or digit in it,
   such as "???" or a trophy drawn as an emoji, makes no slug (`Slug.feature`),
   so it is refused as a title rather than left to fail where the commentary
-  is started.
+  is started. A slug takes the accents off letters, so a title of nothing but
+  an accent makes none either, and is refused the same: what is asked is
+  whether a slug can be made of the title, as the slug would make it.
 
   Two commentaries in the same tournament with the same title could not be
   told apart in its list, but a title does not know which tournament it is
@@ -65,6 +67,7 @@ Feature: The title a commentary is known by
         | ???   |
         | —     |
         | 🏆    |
+        | ͺ     |
 
     Scenario Outline: A title with a letter or a digit is accepted
       When the commentary title "<title>" is made
