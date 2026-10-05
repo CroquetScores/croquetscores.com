@@ -26,7 +26,8 @@ Feature: A test's page shows its matches, the first team down one side
   and hoops, headed "Hoops", on its own side.
 
   On a phone the page is no wider than the window. Its sections are the
-  tournament's, with the test marked.
+  tournament's, with the test marked, and only that test where another
+  between the same two teams is said the same way.
 
   A slug no test has, a competition that is not a test, and any test of an
   archived tournament are not pages. An address the tournament has moved on
@@ -178,6 +179,11 @@ Feature: A test's page shows its matches, the first team down one side
     Scenario: The test is marked as the section being read
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
       Then the section "AUS vs ENG" is marked as current
+
+    Scenario: Of two tests between the same teams, only the one being read is marked
+      Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then 1 section is marked as current
 
   Rule: An address with no test a reader is sent to is not a page
 

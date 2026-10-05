@@ -104,7 +104,7 @@ ${asked.entered
         tournament: { name: asked.name, address: asked.address },
         title: asked.player.name,
         sections: sectionsOf(asked, speaking),
-        currentSection: say("tournament.players"),
+        currentSection: `/${asked.address}/players`,
         theme: themeOf(request),
         signedIn: signedIn(request),
         hasPassword: hasPassword(request),

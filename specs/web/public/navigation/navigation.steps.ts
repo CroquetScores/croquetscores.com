@@ -93,6 +93,18 @@ Then(
   },
 );
 
+Then(
+  /^(\d+) sections? (?:is|are) marked as current$/,
+  async function (this: SpecWorld, count: string) {
+    assert.equal(
+      await this.browserPage
+        .locator('.site-sections a[aria-current="page"]')
+        .count(),
+      Number(count),
+    );
+  },
+);
+
 // What the navigation offers ------------------------------------------------------
 
 // Every link in it, in the order it offers them, whether or not the menu is

@@ -132,7 +132,7 @@ ${columns.map(({ of, starts }) => `                <td class="team-summary-numbe
           tournament: { name: asked.name, address: asked.address },
           title: asked.name,
           sections: sectionsOf(asked, speaking),
-          currentSection: say("tournament.summary"),
+          currentSection: `/${asked.address}/summary`,
           theme: themeOf(request),
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),

@@ -154,8 +154,6 @@ type Found =
       readonly kind: "test";
       readonly asked: TestToRead;
       readonly name: string;
-      /** How the section bar says it, where there is less room. */
-      readonly section: string;
     };
 
 // Whether `failure` says there is nothing at the address of the kind asked
@@ -228,8 +226,8 @@ const competitionAt = async (
 
 // The test found by `slug` among the tournament's tests; nothing where none
 // is there, or what is there is not a test. It is said by its teams' names,
-// as "Australia vs England", and in the section bar, which has less room, by
-// their short names, as "AUS vs ENG", each in the reader's language.
+// as "Australia vs England", in the reader's language, where the section bar,
+// which has less room, says it by their short names (`sectionsOf`).
 const testAt = async (
   mediator: Mediator,
   website: string,
@@ -248,10 +246,6 @@ const testAt = async (
       name: speaking.say("tournament.test", {
         first: first.name,
         second: second.name,
-      }),
-      section: speaking.say("tournament.test", {
-        first: first.shortName,
-        second: second.shortName,
       }),
     };
   } catch (failure) {
@@ -370,8 +364,7 @@ export const registerCompetitionPages = (
                 { ...asked, playedByTeams: found.kind === "test" },
                 speaking,
               ),
-              currentSection:
-                found.kind === "test" ? found.section : found.name,
+              currentSection: here,
               theme: themeOf(request),
               signedIn: signedIn(request),
               hasPassword: hasPassword(request),

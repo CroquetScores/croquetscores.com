@@ -95,7 +95,7 @@ ${team.players.map((player) => `              <li class="player"><a class="playe
           tournament: { name: asked.name, address: asked.address },
           title: asked.name,
           sections: sectionsOf(asked, speaking),
-          currentSection: say("tournament.players"),
+          currentSection: `/${asked.address}/players`,
           theme: themeOf(request),
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
