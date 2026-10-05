@@ -52,7 +52,10 @@ export class CommentaryTitle {
   static from(typed: string): CommentaryTitle {
     // As a comment is: tags first, then the ends, so that a title of nothing
     // but tags is missing and the length counted is the words' alone.
-    const title = withoutTags(typed).trim();
+    // One line, so a tag that broke a line in a comment is a space in a title.
+    const title = withoutTags(typed)
+      .replace(/\s*\n\s*/g, " ")
+      .trim();
     titles.ensureValid(title);
     return new CommentaryTitle(title);
   }

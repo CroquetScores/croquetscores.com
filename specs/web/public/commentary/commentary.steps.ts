@@ -556,3 +556,58 @@ Then(
     assert.equal(await textOf(this.browserPage.locator(`#${id!}`)), words(key));
   },
 );
+
+// What the server keeps of the next comment sent, as it would, with its
+// answer kept back until the scenario lets it through.
+Given(
+  "the answer to the next comment sent is held back",
+  async function (this: SpecWorld) {
+    await this.browserPage.route(
+      (url) => url.pathname.endsWith("/comments"),
+      async (route) => {
+        if (route.request().method() !== "POST") return route.fallback();
+        const answer = await route.fetch();
+        heldBack.set(this, () => route.fulfill({ response: answer }));
+      },
+      { times: 1 },
+    );
+  },
+);
+
+// Pressed and not waited on, for a scenario that holds the answer back.
+Given("the Add comment button is pressed", async function (this: SpecWorld) {
+  await this.browserPage.locator("main .comment-form-add button").click();
+});
+
+Then(
+  "the comment {string} is shown once",
+  async function (this: SpecWorld, text: string) {
+    assert.equal(
+      await comments(this)
+        .locator(".comment-text", { hasText: exactly(text) })
+        .count(),
+      1,
+    );
+  },
+);
+
+// Where the theme and the language a reader chooses on the page send them
+// back to once chosen.
+Then(
+  "the theme and the language chosen return to {string}",
+  async function (this: SpecWorld, path: string) {
+    const fields = await this.browserPage
+      .locator('form input[name="return"]')
+      .all();
+    assert.ok(
+      fields.length > 0,
+      "The page offers no choice of theme or language.",
+    );
+    const returns = await Promise.all(
+      fields.map((field) => field.getAttribute("value")),
+    );
+    for (const each of returns) {
+      assert.equal(decodeURI(String(each)), path);
+    }
+  },
+);

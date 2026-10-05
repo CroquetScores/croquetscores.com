@@ -163,6 +163,49 @@ const ELEMENTS = [
 // the tag's end, so that "<bold>" is not taken for "<b>"; or an HTML comment
 // or declaration, which begins "<!". A "<" followed by a space, as "< 3
 // hoops", begins neither.
+// The elements that break a line where they are drawn, whose tags are taken
+// out for a line break rather than for nothing, so that words either side of
+// one are not run together, and paragraphs stay paragraphs in Markdown.
+const BREAKING = new RegExp(
+  `^</?(?:${[
+    "address",
+    "article",
+    "aside",
+    "blockquote",
+    "br",
+    "dd",
+    "details",
+    "div",
+    "dl",
+    "dt",
+    "figcaption",
+    "figure",
+    "footer",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "header",
+    "hr",
+    "li",
+    "main",
+    "nav",
+    "ol",
+    "p",
+    "pre",
+    "section",
+    "summary",
+    "table",
+    "td",
+    "th",
+    "tr",
+    "ul",
+  ].join("|")})(?=[\\s/>])`,
+  "i",
+);
+
 const TAG = new RegExp(
   `<(?:/?(?:${ELEMENTS.join("|")})(?=[\\s/>])[^>]*|![^>]*)>`,
   "gi",
@@ -178,7 +221,9 @@ const TAG = new RegExp(
 export const withoutTags = (typed: string): string => {
   let text = typed;
   for (;;) {
-    const stripped = text.replace(TAG, "");
+    const stripped = text.replace(TAG, (tag) =>
+      BREAKING.test(tag) ? "\n" : "",
+    );
     if (stripped === text) return text;
     text = stripped;
   }

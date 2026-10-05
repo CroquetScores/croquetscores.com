@@ -81,7 +81,9 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   reader has pressed or tabbed to in them keeps the focus; how long ago each
   was written is kept up to date in its place. An answer asked for before a
   comment was added in place, and coming after it, is an answer about the
-  comments as they were, and is not drawn. A quarter of a minute is
+  comments as they were, and is not drawn; and a comment added in place that
+  the comments asked for again have shown already is not added a second
+  time when the answer to adding it comes. A quarter of a minute is
   soon enough to follow a game a stroke at a time, and seldom enough that a
   commentary read by many costs little. The page asks only while it can be
   seen, and asks again as soon as it can be seen once more. It needs nobody
@@ -266,6 +268,13 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the comment "   " is typed
       When the comment is submitted
       Then the comment box says the message for "CommentText.Missing"
+
+    Scenario: The page shown again for a refused comment returns its choices to the commentary
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open
+      And the comment "   " is typed
+      When the comment is submitted
+      Then the theme and the language chosen return to "/2026/ac/spring-open/commentaries/day-one"
 
     Scenario: What was typed is put back
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -492,6 +501,20 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the comment is submitted
       When the answer held back is let through
       Then the last comment says "Alex has pegged out"
+
+  Rule: A comment already shown is not shown again when the answer to adding it comes
+
+    Scenario: A comment shown by the comments asked for again is not added a second time
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the browser has scripting on
+      And the browser's clock is held by the scenario
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open
+      And the answer to the next comment sent is held back
+      And the comment "Sam is two hoops up" is typed
+      And the Add comment button is pressed
+      And a quarter of a minute passes
+      When the answer held back is let through
+      Then the comment "Sam is two hoops up" is shown once
 
   Rule: Ctrl and Enter in the box send the comment
 

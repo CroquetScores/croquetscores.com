@@ -12,7 +12,8 @@ Feature: The title a commentary is known by
   typed is taken out before the title is kept, and the words between tags
   are kept, as they are in a comment, and angle brackets around anything
   that is not one of HTML's own elements are kept as the characters they
-  are (`CommentText.feature`). A title is drawn as the words it is,
+  are (`CommentText.feature`). A title is one line, so a tag that would
+  break a line, as "<br>", is a space in it. A title is drawn as the words it is,
   so "**Day one**" is shown with its asterisks rather than in bold
   (`commentary.feature`).
 
@@ -64,6 +65,10 @@ Feature: The title a commentary is known by
     Scenario: A tag that is never closed is taken out
       When the commentary title "Day one <img src=x onerror=steal()>" is made
       Then the commentary title is written "Day one"
+
+    Scenario: A line break written as a tag is a space in a title
+      When the commentary title "Day<br>One" is made
+      Then the commentary title is written "Day One"
 
     Scenario: Words between angle brackets that are no HTML element are kept
       When the commentary title "Day one <morning>" is made

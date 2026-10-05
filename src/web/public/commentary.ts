@@ -234,7 +234,11 @@ export const commentScript = `
                     list.className = "comments";
                     document.querySelector("main .comments-none").replaceWith(list);
                   }
-                  list.insertAdjacentHTML("beforeend", answer.comment);
+                  // Shown already where the comments asked for again came
+                  // back first, and with it, and not shown a second time.
+                  if (!list.querySelector('[data-comment="' + answer.id + '"]')) {
+                    list.insertAdjacentHTML("beforeend", answer.comment);
+                  }
                   box.value = "";
                   say([]);
                   settle();
@@ -396,7 +400,7 @@ const commentShown = (
   speaking: Speaking,
 ): string => {
   const { say } = speaking;
-  return `            <li class="comment">
+  return `            <li class="comment" data-comment="${escape(comment.id)}">
               <div class="comment-text">${commentDrawn(comment.text)}</div>
               <p class="comment-about"><span class="comment-ago">${ago(ReadOnlyDate.from(new Date(comment.writtenAt)), now, speaking)}</span>${comment.lastEditedAt === undefined ? "" : ` <span class="comment-edited">${escape(say("commentary.edited"))}</span>`}${commentary.writtenByReader ? ` <a class="comment-edit" href="${escape(commentPath(commentary, comment))}">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a> <a class="comment-delete" href="${escape(deletePathOf(commentary, comment))}">${trashCan}<span class="visually-hidden">${escape(say("commentary.delete"))}</span></a>` : ""}</p>
             </li>`;
@@ -457,7 +461,11 @@ const pageOf = (
     speaking,
     siteName: siteNameOf(request),
     tryWebsite: websiteOf(request).isTry,
-    path: request.url,
+    // The commentary's own address, wherever the page is drawn from, so that
+    // the theme and the language chosen on a page shown again for a refused
+    // comment come back to the commentary, and not to the address comments
+    // are sent to, which answers the page's script and not a reader.
+    path: encodeURI(`/${commentary.address}`),
     body: `          <h1>${escape(asked.name)}</h1>
           <div class="commentary-heading">
             <h2 class="commentary-title">${escape(commentary.title)}</h2>${commentary.writtenByReader ? `\n            <a class="commentary-title-edit" href="/${escape(commentary.address)}/edit">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a>` : ""}
@@ -590,6 +598,7 @@ export const registerCommentaryPage = (
         // cannot be drawn here is drawn when the page asks for the comments
         // again, as it does once one is added.
         return reply.header("cache-control", "no-store").send({
+          id: added.value,
           comment:
             after === undefined || comment === undefined
               ? ""

@@ -10,7 +10,11 @@ Feature: What a comment says
   or "<img src=x>", or an HTML comment or declaration, as "<!-- -->". Angle
   brackets around anything else are not a tag, and are kept: a link written
   in Markdown as "<https://example.com/draw>", an email address as
-  "<sam@example.com>", or words a writer put in brackets of that shape.
+  "<sam@example.com>", or words a writer put in brackets of that shape. A tag
+  that breaks a line where it is drawn, as "<br>", "<p>" or "<li>" does, is
+  taken out for a line break, so that words either side of it are not run
+  together and paragraphs stay paragraphs in Markdown; any other is taken
+  out for nothing, as "<b>" is.
   A comment never carries HTML of its own into a page, whoever reads it, and
   it is taken out once, when the comment is made, rather than every time it
   is read, so what is kept is what is shown.
@@ -63,6 +67,14 @@ Feature: What a comment says
     Scenario: Words between angle brackets that are no HTML element are kept
       When the comment "Sam<Tim on lawn 3, score 7>5" is made
       Then the comment is written "Sam<Tim on lawn 3, score 7>5"
+
+    Scenario: A line break written as a tag is kept as a line break
+      When the comment "Hoop 1<br>Hoop 2" is made
+      Then the comment is written "Hoop 1\nHoop 2"
+
+    Scenario: Paragraphs written as tags are kept as paragraphs
+      When the comment "<p>First</p><p>Second</p>" is made
+      Then the comment is written "First\n\nSecond"
 
     Scenario: An HTML comment is taken out
       When the comment "Well played<!-- hidden -->" is made
