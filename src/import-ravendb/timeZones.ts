@@ -31,6 +31,7 @@ const countryCodes: Readonly<Record<string, string>> = {
   "South Africa Standard Time": "za",
   "Egypt Standard Time": "eg",
   "Tokyo Standard Time": "jp",
+  "China Standard Time": "cn",
 };
 
 // Time zones read as another, which the old sites' managers chose for
