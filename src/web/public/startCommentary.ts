@@ -29,6 +29,7 @@ import { render } from "../common/layout.js";
 import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
+import { goneSinceAsked } from "./commentary.js";
 import { toSignIn } from "./profile.js";
 import { yearInPath } from "./year.js";
 
@@ -183,6 +184,7 @@ export const registerStartCommentaryPage = (
       ) {
         return refused([{ code: failure.code, fields: ["title"] }]);
       }
+      if (goneSinceAsked(failure)) return reply.callNotFound();
       throw failure;
     }
     // Found again by its id, since the slug it was given is the tournament's

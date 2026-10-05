@@ -20,7 +20,9 @@ import {
 } from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
+import { CommentaryOperationRefused } from "../../application/operations/commentaries/commentaryOperations.js";
 import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
+import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
@@ -364,6 +366,22 @@ const deleteDialog = (speaking: Speaking): string => {
           </dialog>`;
 };
 
+/**
+ * Whether `failure` says the commentary, or its tournament, is no longer one
+ * a reader is sent to: archived, or not there, since the page asked for it.
+ * Each page that writes asks for the commentary first and is answered "not
+ * found" where it is not there, so this is only the moment between that
+ * asking and the writing, in the same request; it is answered as the asking
+ * would have been, and not as a fault of the site's.
+ */
+export const goneSinceAsked = (failure: unknown): boolean =>
+  (failure instanceof TournamentRefused &&
+    (failure.code === "Tournament.Archived" ||
+      failure.code === "Tournament.NoSuchCommentary")) ||
+  failure instanceof CommentaryOperationRefused ||
+  (failure instanceof TournamentOperationRefused &&
+    failure.code.endsWith(".NoSuchTournament"));
+
 /** Where a comment's own page is, by its id's own characters. */
 export const commentPath = (
   commentary: { readonly address: string },
@@ -623,7 +641,9 @@ export const registerCommentaryPage = (
         }
         // Only its writer is offered the box, so anybody else sending it is
         // asking of a page that is not there for them.
-        if (failure instanceof CommentaryRefused) return reply.callNotFound();
+        if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
+          return reply.callNotFound();
+        }
         if (!(failure instanceof RequestInvalid)) throw failure;
         const messages = failure.broken.map((rule) =>
           speaking.knows(rule.code)

@@ -26,7 +26,11 @@ import { render } from "../common/layout.js";
 import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
-import { type CommentaryParams, commentaryOf } from "./commentary.js";
+import {
+  type CommentaryParams,
+  commentaryOf,
+  goneSinceAsked,
+} from "./commentary.js";
 import { toSignIn } from "./profile.js";
 import { yearInPath } from "./year.js";
 
@@ -149,6 +153,7 @@ export const registerChangeCommentaryTitlePage = (
       ) {
         return refused([{ code: failure.code, fields: ["title"] }]);
       }
+      if (goneSinceAsked(failure)) return reply.callNotFound();
       throw failure;
     }
     // Encoded, since a slug keeps letters of any script, and an address in the

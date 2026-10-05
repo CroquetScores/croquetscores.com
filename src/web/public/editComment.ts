@@ -42,6 +42,7 @@ import {
   commentDrawn,
   commentPath,
   commentScript,
+  goneSinceAsked,
   deletePathOf,
 } from "./commentary.js";
 import { toSignIn } from "./profile.js";
@@ -173,7 +174,9 @@ ${commentBox(speakingOf(request), {
       ) {
         return toSignIn(request, reply);
       }
-      if (failure instanceof CommentaryRefused) return reply.callNotFound();
+      if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
+        return reply.callNotFound();
+      }
       if (!(failure instanceof RequestInvalid)) throw failure;
       const speaking = speakingOf(request);
       return editPage(
@@ -245,7 +248,9 @@ ${commentBox(speakingOf(request), {
         ) {
           return toSignIn(request, reply);
         }
-        if (failure instanceof CommentaryRefused) return reply.callNotFound();
+        if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
+          return reply.callNotFound();
+        }
         throw failure;
       }
       return reply.redirect(
