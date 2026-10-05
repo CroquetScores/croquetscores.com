@@ -90,9 +90,19 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
       };
     };
 
+    const matches = matchesOf(
+      games,
+      (player) => teamOf.get(player) === first,
+      nameOf,
+      shape.bestOf.games,
+    );
+    // A match counts for the team whose player won it, once it is decided,
+    // its first side always being the first team's.
+    const won = (side: WhichSide): number =>
+      matches.filter((match) => match.winner === side).length;
     const tally = {
-      first: { games: 0, hoops: 0 },
-      second: { games: 0, hoops: 0 },
+      first: { matches: won(0), games: 0, hoops: 0 },
+      second: { matches: won(1), games: 0, hoops: 0 },
     };
     for (const game of games) {
       const winnerFirst = teamOf.get(game.winner.value) === first;
@@ -115,12 +125,7 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
         ],
         bestOf: shape.bestOf.games,
       },
-      matches: matchesOf(
-        games,
-        (player) => teamOf.get(player) === first,
-        nameOf,
-        shape.bestOf.games,
-      ),
+      matches,
       games: games.map((game) => ({
         winner: shown.get(game.winner.value) ?? nameless,
         winnerScore: game.winnerScore.toString(),

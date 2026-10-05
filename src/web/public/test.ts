@@ -8,6 +8,7 @@
 import type {
   GameOfTestMatch,
   MatchOfTest,
+  TeamOfTest,
   TestToRead,
 } from "../../application/operations/tournaments/PublicTestOfTournament.js";
 import type { WhichSide } from "../../application/operations/tournaments/PublicKnockoutOfTournament.js";
@@ -41,8 +42,13 @@ const grid = (asked: TestToRead, speaking: Speaking): string => {
   const [first, second] = asked.test.teams;
   const totals: readonly {
     word: string;
-    of: (team: { games: number; hoops: number }) => number;
+    of: (team: TeamOfTest) => number;
   }[] = [
+    // A match the best of 1 is its one game, so its matches would only say
+    // its games again.
+    ...(asked.test.bestOf > 1
+      ? [{ word: "test.matches", of: (team: TeamOfTest) => team.matches }]
+      : []),
     { word: "test.games", of: (team) => team.games },
     { word: "test.hoops", of: (team) => team.hoops },
   ];

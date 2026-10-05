@@ -301,6 +301,7 @@ export const english: Language = {
     // teams, and its totals beneath the matches.
     "test.bestOf": "Each match is the best of {count}.",
     "test.vs": "vs",
+    "test.matches": "Matches",
     "test.games": "Games",
     "test.hoops": "Hoops",
     "teamSummary.tests": "Tests",

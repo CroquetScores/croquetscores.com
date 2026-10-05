@@ -289,6 +289,7 @@ export const spanish: Language = {
     "tournament.summary": "Resumen",
     "test.bestOf": "Cada encuentro es al mejor de {count}.",
     "test.vs": "vs",
+    "test.matches": "Partidos",
     "test.games": "Partidas",
     "test.hoops": "Aros",
     "teamSummary.tests": "Tests",

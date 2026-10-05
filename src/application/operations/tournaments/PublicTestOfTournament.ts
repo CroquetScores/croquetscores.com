@@ -34,6 +34,8 @@ export interface MatchOfTest {
 export interface TeamOfTest {
   readonly name: string;
   readonly shortName: string;
+  /** The matches its players have won in the test, each once it is decided. */
+  readonly matches: number;
   /** The games its players have won in the test. */
   readonly games: number;
   /** The points its players have scored in the test. */

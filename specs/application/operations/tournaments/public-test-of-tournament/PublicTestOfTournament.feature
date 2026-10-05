@@ -8,8 +8,8 @@ Feature: A test of a tournament played by teams, for anybody to read
   application answers both: the test, found by its slug, with its two teams,
   the first first, by their names and their short names; what each of its
   matches is the best
-  of; each match played, with its two sides and its games; how many games and
-  hoops each team has; and every game of the test in use, in the order they
+  of; each match played, with its two sides and its games; how many matches,
+  games and hoops each team has; and every game of the test in use, in the order they
   were added, each with when it was added.
 
   A match is answered once any game of it is played, in the order the first
@@ -20,7 +20,9 @@ Feature: A test of a tournament played by teams, for anybody to read
   was drawn; and the match with the side that won it once it is decided, as
   the competition decides it (`PublicTeamSummaryOfTournament.feature`).
 
-  Each team's games are the games its players have won in the test, and its
+  Each team's matches are the matches its players have won in the test, a
+  match counting once it is decided and not before, its games the games its
+  players have won in the test, and its
   hoops the points they scored, the points being the number a score starts
   with, so that "26tp" is 26. An archived game is not answered, and counts
   for nothing, as everywhere games are counted.
@@ -166,7 +168,27 @@ Feature: A test of a tournament played by teams, for anybody to read
       When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
       Then 0 matches of the test are answered
 
-  Rule: Each team is answered with its games won and its hoops
+  Rule: Each team is answered with its matches won, its games won and its hoops
+
+    Scenario: A team's matches are the matches its players won
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first team of the test is answered with 1 match
+
+    Scenario: The other team's matches are its own players' wins
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 3 in "AUS v ENG" of "Spring Tests"
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the second team of the test is answered with 0 matches
+
+    Scenario: A match not yet decided counts for neither team
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the test "aus-v-eng" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first team of the test is answered with 0 matches
 
     Scenario: A team's games are the games its players won
       Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"

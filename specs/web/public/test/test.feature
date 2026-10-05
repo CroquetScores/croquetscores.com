@@ -23,7 +23,11 @@ Feature: A test's page shows its matches, the first team down one side
   right, and between them the match's games, each the first side's score
   then the second's, as "26 - 17", the winner's marked as won by more than
   its colour; and, beneath the matches, each team's games, headed "Games",
-  and hoops, headed "Hoops", on its own side.
+  and hoops, headed "Hoops", on its own side. Where each match is the best of
+  more than 1, each team's matches won, headed "Matches", come above its
+  games, since a match is then more than a game and the matches are what
+  decide the test; where each is the best of 1, its matches are its games,
+  and are not said twice.
 
   On a phone the page is no wider than the window. Its sections are the
   tournament's, with the test marked, and only that test where another
@@ -134,6 +138,29 @@ Feature: A test's page shows its matches, the first team down one side
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
       Then the test's "Hoops" are "46" on the left and "43" on the right
 
+    Scenario: Where each match is the best of 1 there are no matches beneath
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then the test has no "Matches" beneath its matches
+
+  Rule: Where each match is the best of more than 1, each team's matches won come above its games
+
+    Background:
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 3 in "AUS v ENG" of "Spring Tests"
+
+    Scenario: Each team's matches are on its own side
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then the test's "Matches" are "1" on the left and "0" on the right
+
+    Scenario: The matches come first beneath the matches played
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then the first total beneath the test's matches is headed "Matches"
+
+    Scenario: The games come after the matches
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then the second total beneath the test's matches is headed "Games"
+
   Rule: The test's two views are offered, and its own address shows the view chosen last
 
     Scenario: The views are offered in order
@@ -215,6 +242,13 @@ Feature: A test's page shows its matches, the first team down one side
 
     Scenario: The page is in the reader's language
       Given a browser that asks for "en-XA"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+    Scenario: Where each match is the best of more than 1 the page is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
       And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
       Then every word in the page's content but the tournament's own is in the test locale

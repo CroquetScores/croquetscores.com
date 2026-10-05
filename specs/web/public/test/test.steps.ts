@@ -116,6 +116,33 @@ Then(
   },
 );
 
+const totalNames = (world: SpecWorld): Locator =>
+  tableOf(world).locator("tfoot .test-total-name");
+
+Then(
+  "the test has no {string} beneath its matches",
+  async function (this: SpecWorld, heading: string) {
+    assert.equal(
+      await totalNames(this)
+        .filter({ hasText: new RegExp(`^${heading}$`) })
+        .count(),
+      0,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) total beneath the test's matches is headed "(.*)"$/,
+  async function (this: SpecWorld, which: string, heading: string) {
+    assert.equal(
+      await said(
+        totalNames(this).nth(["first", "second", "third"].indexOf(which)),
+      ),
+      heading,
+    );
+  },
+);
+
 Then(
   "the view {string} is not offered",
   async function (this: SpecWorld, name: string) {

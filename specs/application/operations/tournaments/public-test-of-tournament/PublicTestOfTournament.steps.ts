@@ -77,6 +77,16 @@ Then(
 );
 
 Then(
+  /^the (first|second) team of the test is answered with (\d+) match(?:es)?$/,
+  function (this: SpecWorld, which: string, count: string) {
+    assert.equal(
+      answered(this).test.teams[placeOf(which)]?.matches,
+      Number(count),
+    );
+  },
+);
+
+Then(
   /^the (first|second) team of the test is answered with (\d+) games?$/,
   function (this: SpecWorld, which: string, count: string) {
     assert.equal(
