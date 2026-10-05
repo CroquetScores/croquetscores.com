@@ -86,3 +86,15 @@ Then("it was made within a second", function (this: SpecWorld) {
   assert.ok(took !== undefined, "Nothing was timed.");
   assert.ok(took < 1000, `It took ${String(Math.round(took))} milliseconds.`);
 });
+
+// A link whose title is a hundred thousand ">"s in quotes, every one of them
+// in the value and none the end of the tag.
+When(
+  "a comment of a tag with {int} {string}s in a value given in quotes is made",
+  function (this: SpecWorld, count: number, character: string) {
+    const typed = `<a title="${character.repeat(count)}" href=x>the draw</a>`;
+    const started = performance.now();
+    tryToMake(this, typed);
+    tookMilliseconds.set(this, performance.now() - started);
+  },
+);

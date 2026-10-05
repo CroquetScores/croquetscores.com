@@ -266,6 +266,61 @@ const couldBegin = (kept: readonly string[], at: number): boolean => {
   );
 };
 
+// A "<" that could still begin a tag, and how far into its attributes what
+// has been kept after it has gone.
+interface Opening {
+  readonly at: number;
+  // How many characters have been read after it, and whether any of them
+  // began its name.
+  read: number;
+  begun: boolean;
+  // Whether it begins an HTML comment or declaration, "<!", which has no
+  // attributes and so no values in quotes.
+  comment: boolean;
+  // Whether its name has been ended, by a space or a slash, so that what
+  // follows is its attributes.
+  named: boolean;
+  // Whether an "=" has just been read, so that a quote next begins a value.
+  afterEquals: boolean;
+  // The quote a value is being read inside, which only the same quote ends.
+  quote: string | undefined;
+  // How far into its attributes the "<" before this one had gone before this
+  // one was read after it, to be so again if this one is taken out with the
+  // tag it begins, as though it had never been read.
+  readonly before: Omit<Opening, "before"> | undefined;
+}
+
+// What `character`, kept after the "<" `opening`, makes of how far into its
+// attributes it has gone. A quote begins a value only straight after an "=",
+// with spaces between or none, as a browser reads it; anywhere else it is a
+// character like any other.
+const readInto = (opening: Opening, character: string): void => {
+  opening.read += 1;
+  if (opening.read === 1 && character === "!") opening.comment = true;
+  if (opening.comment) return;
+  if (opening.quote !== undefined) {
+    if (character === opening.quote) opening.quote = undefined;
+    return;
+  }
+  if (!opening.named) {
+    // A slash straight after the "<" is a closing tag's, and ends no name.
+    if (NAME_CHARACTER.test(character)) opening.begun = true;
+    else if (opening.begun && (SPACE.test(character) || character === "/")) {
+      opening.named = true;
+    }
+    return;
+  }
+  if (opening.afterEquals) {
+    if (SPACE.test(character)) return;
+    opening.afterEquals = false;
+    if (character === '"' || character === "'") {
+      opening.quote = character;
+      return;
+    }
+  }
+  if (character === "=") opening.afterEquals = true;
+};
+
 /**
  * `typed` with every HTML tag taken out and the words between them kept: a
  * tag of an element that breaks a line taken out for a line break, and any
@@ -288,22 +343,41 @@ const couldBegin = (kept: readonly string[], at: number): boolean => {
  */
 export const withoutTags = (typed: string): string => {
   const kept: string[] = [];
-  // Where each "<" that could still begin a tag is in what is kept, the last
-  // last. All but the last are waiting on the one after them.
-  const opening: number[] = [];
+  // Each "<" that could still begin a tag, the last last, with where it is in
+  // what is kept, and how far into its attributes what follows it has gone:
+  // whether its name has ended, whether an "=" has just been read, and the
+  // quote a value is being read inside, if any. All but the last are waiting
+  // on the one after them, and are as they were when it came.
+  const opening: Opening[] = [];
 
   // The last "<" asked again whether it could still begin a tag; one that
   // could not takes every one waiting on it with it.
   const askOfTheLast = (): void => {
     const last = opening.at(-1);
-    if (last !== undefined && !couldBegin(kept, last)) opening.length = 0;
+    if (last !== undefined && !couldBegin(kept, last.at)) opening.length = 0;
+  };
+
+  // `character` kept, and read as part of what follows the last "<".
+  const keep = (character: string): void => {
+    kept.push(character);
+    const last = opening.at(-1);
+    if (last !== undefined) readInto(last, character);
+    askOfTheLast();
   };
 
   for (const character of typed) {
+    const last = opening.at(-1);
+    // Inside a value given in quotes, a "<" and a ">" are the value's, as a
+    // browser reads them, and neither begins nor ends a tag.
+    if (last?.quote !== undefined) {
+      keep(character);
+      continue;
+    }
     if (character === ">") {
-      const last = opening.at(-1);
       const tag =
-        last === undefined ? undefined : tagOf(`${kept.slice(last).join("")}>`);
+        last === undefined
+          ? undefined
+          : tagOf(`${kept.slice(last.at).join("")}>`);
       if (last === undefined || tag === undefined) {
         // A ">" kept, which no tag can run across: no "<" before it can begin
         // one any more.
@@ -311,24 +385,47 @@ export const withoutTags = (typed: string): string => {
         opening.length = 0;
         continue;
       }
-      kept.length = last;
+      kept.length = last.at;
       opening.pop();
-      if (BREAKING.has(tag)) kept.push("\n");
+      const waiting = opening.at(-1);
+      if (waiting !== undefined && last.before !== undefined) {
+        Object.assign(waiting, last.before);
+      }
       // The "<" waiting on the one just taken out is followed by whatever
-      // comes next now.
-      askOfTheLast();
+      // comes next now, a line break first where the tag broke a line.
+      if (BREAKING.has(tag)) keep("\n");
+      else askOfTheLast();
       continue;
     }
     if (character === "<") {
-      kept.push(character);
       // The last "<" kept is now waiting on this one, if it could still begin
       // a tag at all.
-      askOfTheLast();
-      opening.push(kept.length - 1);
+      const before = last === undefined ? undefined : { ...last };
+      keep(character);
+      opening.push({
+        before:
+          before === undefined
+            ? undefined
+            : {
+                at: before.at,
+                read: before.read,
+                begun: before.begun,
+                comment: before.comment,
+                named: before.named,
+                afterEquals: before.afterEquals,
+                quote: before.quote,
+              },
+        at: kept.length - 1,
+        read: 0,
+        begun: false,
+        comment: false,
+        named: false,
+        afterEquals: false,
+        quote: undefined,
+      });
       continue;
     }
-    kept.push(character);
-    askOfTheLast();
+    keep(character);
   }
   return kept.join("");
 };

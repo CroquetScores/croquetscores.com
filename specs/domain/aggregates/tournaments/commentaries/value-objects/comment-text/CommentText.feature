@@ -15,7 +15,9 @@ Feature: What a comment says
   words a writer put in brackets of that shape, even where the first of
   them is the name of an element, as "a", "b", "i" and "p" are, since words
   are not attributes given values. What is kept is drawn as the characters
-  it is, since the Markdown is drawn with HTML turned off. A tag
+  it is, since the Markdown is drawn with HTML turned off. A value given in
+  quotes is the value whatever is in it, a ">" among it, as a browser reads
+  it, so a tag with one is taken out whole. A tag
   that breaks a line where it is drawn, as "<br>", "<p>" or "<li>" does, is
   taken out for a line break, so that words either side of it are not run
   together and paragraphs stay paragraphs in Markdown; any other is taken
@@ -84,6 +86,30 @@ Feature: What a comment says
     Scenario: A tag whose attributes are given values is taken out
       When the comment "See <a href='https://example.com' title=draw>the draw</a>" is made
       Then the comment is written "See the draw"
+
+    Scenario: A tag with a ">" in a value given in double quotes is taken out
+      When the comment "<a title=\">\" href=x>the draw</a>" is made
+      Then the comment is written "the draw"
+
+    Scenario: A tag with a ">" in a value given in single quotes is taken out
+      When the comment "<a title='>' href=x>the draw</a>" is made
+      Then the comment is written "the draw"
+
+    Scenario: A picture with a ">" in a value given in quotes is taken out
+      When the comment "<img src=\">\" onerror=alert(1)>Sam is two hoops up" is made
+      Then the comment is written "Sam is two hoops up"
+
+    Scenario: A quote that gives no value does not hide the end of brackets
+      When the comment "Sam said <b \"yes> and left" is made
+      Then the comment is written "Sam said <b \"yes> and left"
+
+    Scenario: A tag with many ">"s in a value given in quotes is taken out within a second
+      When a comment of a tag with 100000 ">"s in a value given in quotes is made
+      Then it was made within a second
+
+    Scenario: What a tag taken out leaves is read afresh, as an HTML comment where it is one
+      When the comment "Sam<<b>!x title='>' y>s" is made
+      Then the comment is written "Sam' y>s"
 
     Scenario: A tag closed by a slash is taken out
       When the comment "Hoop 1<br />Hoop 2" is made
