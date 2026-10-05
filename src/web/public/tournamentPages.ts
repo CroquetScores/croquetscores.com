@@ -35,7 +35,7 @@ export const sectionsOf = (
       : []),
     { href: `${here}/players`, label: say("tournament.players") },
     { href: `${here}/notes`, label: say("tournament.notes") },
-    { href: `${here}/commentary`, label: say("tournament.commentary") },
+    { href: `${here}/commentaries`, label: say("tournament.commentary") },
     ...tournament.competitions.map((competition) => ({
       href: `/${competition.address}`,
       label: competitionNamed(competition, speaking),
@@ -101,7 +101,11 @@ export const playerShown = (
 // one, and from a day on the day itself, in UTC as a tournament's days are,
 // with its month named in the reader's language. The day is marked as one, so
 // that what reads a page for its words can tell it from them.
-const ago = (then: ReadOnlyDate, now: Date, speaking: Speaking): string => {
+export const ago = (
+  then: ReadOnlyDate,
+  now: Date,
+  speaking: Speaking,
+): string => {
   const { say } = speaking;
   const seconds = Math.floor((now.getTime() - then.toDate().getTime()) / 1000);
   if (seconds < 60) {

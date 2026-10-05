@@ -9,6 +9,7 @@ import type { TournamentPlayer } from "../../../../../src/domain/aggregates/tour
 import { TournamentId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
   type AddressTaken,
+  type CommentaryInTournament,
   type CompetitionInTournament,
   Tournament,
   type TournamentDetails,
@@ -513,4 +514,19 @@ export const nameAndBestOf = (
     ),
     bestOf: BestOf.from(changed.bestOf ?? bestOf),
   };
+};
+
+/** The commentary on `tournament` called `title`. */
+export const commentaryTitled = (
+  tournament: Tournament,
+  title: string,
+): CommentaryInTournament => {
+  const found = tournament.commentaries.find(
+    (commentary) => String(commentary.title) === title,
+  );
+  assert.ok(
+    found !== undefined,
+    `It has no commentary ${title}, only ${inspect(tournament.commentaries.map(({ title: each }) => String(each)))}.`,
+  );
+  return found;
 };

@@ -328,6 +328,74 @@ export const english: Language = {
     "tournament.none": "No games have been played yet.",
     // A tournament's players' page, when it has none.
     "players.none": "No players have been added yet.",
+    // A tournament's commentaries page, in the old site's words: how a
+    // commentary is listed, its Disclaimer, its Guidelines, how to report a
+    // commentary, and the link to start one. {site} is the website being read.
+    "commentaries.by": "by",
+    "commentaries.start": "Start new commentary",
+    "commentaries.disclaimer.heading": "Disclaimer",
+    "commentaries.disclaimer":
+      "The views and opinions expressed in these commentaries are those of the authors and do not necessarily reflect those of Tim Murphy or {site}.",
+    "commentaries.guidelines.heading": "Guidelines",
+    "commentaries.guidelines.responsible":
+      "You are responsible for your commentary.",
+    "commentaries.guidelines.purpose":
+      'The commentary feature is to pass on details of what is happening at the tournament. It is not designed as a "social media" venue to pass on good wishes, etc.',
+    "commentaries.guidelines.hatred":
+      "Do not post material that may incite violence or hatred. We will not tolerate comments that humiliate others based on race, religion, ethnicity, gender, age, mental or physical disability, or sexual orientation.",
+    "commentaries.guidelines.abuse":
+      "Gratuitous abuse will not be tolerated. The general rule here is that comments should play the ball, not the man i.e. not attack someone personally but be about the issue at hand.",
+    "commentaries.guidelines.unlawful":
+      "Any comments that are legally questionable, such as possible breaches of copyright or potentially defamatory material, will be removed.",
+    "commentaries.guidelines.shouting":
+      "Please do not swear or write in all caps in commentary.",
+    "commentaries.guidelines.selling":
+      "Do not use the comments section for commercial purposes or spam. Comments that advertise, promote or solicit any goods or services will be removed.",
+    "commentaries.guidelines.links":
+      "Please limit the use of links in comments. Comments containing links to unsuitable material will be removed.",
+    "commentaries.guidelines.impersonating":
+      "Do not impersonate others in the comments section, or post personal details – phone numbers, postal or email addresses – that could inadvertently put someone in danger.",
+    "commentaries.reporting.heading": "Reporting Commentary",
+    "commentaries.reporting.before":
+      "Please report commentary that does not meet these guidelines to",
+    "commentaries.reporting.after":
+      ". Quote the web address and questionable commentary. e.g.",
+    "commentaries.reporting.exampleComment":
+      '"a comment that should be removed"',
+    "commentaries.reporting.exampleReason":
+      "This comment should be removed because...",
+    "commentaries.reporting.reviewed":
+      "Reporting an issue does not mean automatic removal but all reports will be reviewed.",
+    "commentaries.reporting.reserved":
+      "{site} reserves the right to remove commentary.",
+    "commentaries.reporting.subject": "{site} Commentary Report",
+    "commentaries.reporting.body":
+      "Please quote web address, questionable comment and why it should be removed.",
+    // The page that starts a commentary.
+    "startCommentary.title": "Start new commentary",
+    "startCommentary.titleField": "Title",
+    "startCommentary.submit": "Start commentary",
+    // A commentary's page: what it says when it has no comments, what it says
+    // of a comment, and the box its writer writes the next one in.
+    "commentary.none": "No comments have been written yet.",
+    "commentary.edited": "edited",
+    "commentary.edit": "Edit",
+    "commentary.delete": "Delete",
+    "commentary.comment": "Comment",
+    "commentary.add": "Add comment",
+    "commentary.notSent":
+      "The comment could not be sent. Load the page again to see whether it was kept.",
+    // The page that changes a commentary's title.
+    "changeCommentaryTitle.title": "Change title",
+    "changeCommentaryTitle.submit": "Save",
+    // A comment's own page, where its writer edits it or deletes it, and the
+    // page that asks before it is deleted.
+    "editComment.title": "Edit comment",
+    "editComment.save": "Save",
+    "deleteComment.title": "Delete comment",
+    "deleteComment.question": "Delete this comment? It cannot be undone.",
+    "deleteComment.confirm": "Delete comment",
+    "deleteComment.keep": "Keep it",
     // A player's page: its two parts, how a game is said as the player played
     // it, and what each part says when it has nothing in it.
     "player.games": "Games",
@@ -671,6 +739,14 @@ export const english: Language = {
     "admin.teamView.players": "Players",
     "TeamName.Missing": "Say what the team is called.",
     "TeamName.TooLong": "That name is too long.",
+    "CommentaryTitle.Missing": "Give the commentary a title.",
+    "CommentaryTitle.TooLong": "That title is too long.",
+    "CommentaryTitle.NoLetterOrDigit":
+      "A title needs a letter or a digit in it.",
+    "Tournament.CommentaryTitleTaken":
+      "Another commentary already has that title.",
+    "CommentText.Missing": "Write something in the comment.",
+    "CommentText.TooLong": "That comment is too long.",
     "TeamShortName.Missing": "Give the team a short name.",
     "TeamShortName.TooLong": "A short name can be at most 10 characters.",
     "TeamShortName.NoLetterOrDigit":

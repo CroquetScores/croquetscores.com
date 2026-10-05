@@ -51,11 +51,13 @@
     "@node-rs/argon2": "^2.2.1",
     "fastify": "^5.12.5",
     "jose": "^6.2.12",
+    "markdown-it": "^14.3.2",
     "pg": "^8.23.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^13.2.1",
     "@eslint/js": "^10.0.1",
+    "@types/markdown-it": "^14.2.0",
     "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",
     "@types/react": "^19.3.0",

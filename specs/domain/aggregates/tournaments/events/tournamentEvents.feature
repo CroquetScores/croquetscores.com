@@ -30,45 +30,47 @@ Feature: The names a tournament's events are kept under
       Then it was written down under the name "<name>"
 
       Examples:
-        | happening                                 | name                               |
-        | a tournament being created                | tournament-created                 |
-        | a tournament being updated                | tournament-updated                 |
-        | a tournament being archived               | tournament-archived                |
-        | a tournament being restored               | tournament-restored                |
-        | a player being added                      | tournament-player-added            |
-        | a player being updated                    | tournament-player-updated          |
-        | a player being archived                   | tournament-player-archived         |
-        | a player being restored                   | tournament-player-restored         |
-        | a tournament's player being moved         | tournament-player-moved            |
-        | the tournament's players being spaced out | tournament-players-spaced-out      |
-        | a block being added                       | tournament-block-added             |
-        | a block being updated                     | tournament-block-updated           |
-        | a knockout being added                    | tournament-knockout-added          |
-        | a knockout being updated                  | tournament-knockout-updated        |
-        | a Swiss being added                       | tournament-swiss-added             |
-        | a Swiss being updated                     | tournament-swiss-updated           |
-        | a competition being archived              | tournament-competition-archived    |
-        | a competition being restored              | tournament-competition-restored    |
-        | a competition being moved                 | tournament-competition-moved       |
-        | the competitions being spaced out         | tournament-competitions-spaced-out |
-        | an account being made a manager           | tournament-manager-added           |
-        | an account being taken off the managers   | tournament-manager-removed         |
-        | an account being made a scorer            | tournament-scorer-added            |
-        | an account being taken off the scorers    | tournament-scorer-removed          |
-        | a team being added                        | tournament-team-added              |
-        | a team being updated                      | tournament-team-updated            |
-        | a team being archived                     | tournament-team-archived           |
-        | a team being restored                     | tournament-team-restored           |
-        | a team being moved                        | tournament-team-moved              |
-        | the teams being spaced out                | tournament-teams-spaced-out        |
-        | a player being added to a team            | tournament-team-player-added       |
-        | a player in a team being updated          | tournament-team-player-updated     |
-        | a player in a team being archived         | tournament-team-player-archived    |
-        | a player in a team being restored         | tournament-team-player-restored    |
-        | a player in a team being moved            | tournament-team-player-moved       |
-        | a team's players being spaced out         | tournament-team-players-spaced-out |
-        | a test being added                        | tournament-test-added              |
-        | a test being updated                      | tournament-test-updated            |
+        | happening                                 | name                                |
+        | a tournament being created                | tournament-created                  |
+        | a tournament being updated                | tournament-updated                  |
+        | a tournament being archived               | tournament-archived                 |
+        | a tournament being restored               | tournament-restored                 |
+        | a player being added                      | tournament-player-added             |
+        | a player being updated                    | tournament-player-updated           |
+        | a player being archived                   | tournament-player-archived          |
+        | a player being restored                   | tournament-player-restored          |
+        | a tournament's player being moved         | tournament-player-moved             |
+        | the tournament's players being spaced out | tournament-players-spaced-out       |
+        | a block being added                       | tournament-block-added              |
+        | a block being updated                     | tournament-block-updated            |
+        | a knockout being added                    | tournament-knockout-added           |
+        | a knockout being updated                  | tournament-knockout-updated         |
+        | a Swiss being added                       | tournament-swiss-added              |
+        | a Swiss being updated                     | tournament-swiss-updated            |
+        | a competition being archived              | tournament-competition-archived     |
+        | a competition being restored              | tournament-competition-restored     |
+        | a competition being moved                 | tournament-competition-moved        |
+        | the competitions being spaced out         | tournament-competitions-spaced-out  |
+        | an account being made a manager           | tournament-manager-added            |
+        | an account being taken off the managers   | tournament-manager-removed          |
+        | an account being made a scorer            | tournament-scorer-added             |
+        | an account being taken off the scorers    | tournament-scorer-removed           |
+        | a team being added                        | tournament-team-added               |
+        | a team being updated                      | tournament-team-updated             |
+        | a team being archived                     | tournament-team-archived            |
+        | a team being restored                     | tournament-team-restored            |
+        | a team being moved                        | tournament-team-moved               |
+        | the teams being spaced out                | tournament-teams-spaced-out         |
+        | a player being added to a team            | tournament-team-player-added        |
+        | a player in a team being updated          | tournament-team-player-updated      |
+        | a player in a team being archived         | tournament-team-player-archived     |
+        | a player in a team being restored         | tournament-team-player-restored     |
+        | a player in a team being moved            | tournament-team-player-moved        |
+        | a team's players being spaced out         | tournament-team-players-spaced-out  |
+        | a test being added                        | tournament-test-added               |
+        | a test being updated                      | tournament-test-updated             |
+        | a commentary being started                | tournament-commentary-started       |
+        | a commentary's title being changed        | tournament-commentary-title-changed |
 
   Rule: An event written down and read back is the event it was
 
@@ -118,6 +120,8 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         |
         | a test being added                        |
         | a test being updated                      |
+        | a commentary being started                |
+        | a commentary's title being changed        |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -165,6 +169,8 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         |
         | a test being added                        |
         | a test being updated                      |
+        | a commentary being started                |
+        | a commentary's title being changed        |
 
   Rule: What an event can do without is read back as nothing
 
@@ -247,6 +253,11 @@ Feature: The names a tournament's events are kept under
         | a test being added                        | slug            |
         | a test being added                        | expectedMatches |
         | a test being added                        | bestOf          |
+        | a commentary being started                | commentaryId    |
+        | a commentary being started                | title           |
+        | a commentary being started                | slug            |
+        | a commentary's title being changed        | commentaryId    |
+        | a commentary's title being changed        | title           |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>

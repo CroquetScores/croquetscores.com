@@ -119,6 +119,18 @@ import { PublicKnockoutOfTournamentHandler } from "../../../src/application/oper
 import { PublicSwissOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicSwissOfTournamentHandler.js";
 import { PublicTeamSummaryOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
 import { PublicTestOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicTestOfTournamentHandler.js";
+import { StartCommentaryHandler } from "../../../src/application/operations/tournaments/StartCommentaryHandler.js";
+import { StartCommentaryValidator } from "../../../src/application/operations/tournaments/StartCommentaryValidator.js";
+import { ChangeCommentaryTitleHandler } from "../../../src/application/operations/tournaments/ChangeCommentaryTitleHandler.js";
+import { ChangeCommentaryTitleValidator } from "../../../src/application/operations/tournaments/ChangeCommentaryTitleValidator.js";
+import { AddCommentHandler } from "../../../src/application/operations/commentaries/AddCommentHandler.js";
+import { AddCommentValidator } from "../../../src/application/operations/commentaries/AddCommentValidator.js";
+import { EditCommentHandler } from "../../../src/application/operations/commentaries/EditCommentHandler.js";
+import { EditCommentValidator } from "../../../src/application/operations/commentaries/EditCommentValidator.js";
+import { DeleteCommentHandler } from "../../../src/application/operations/commentaries/DeleteCommentHandler.js";
+import { PublicCommentariesOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicCommentariesOfTournamentHandler.js";
+import { PublicCommentaryOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicCommentaryOfTournamentHandler.js";
+import { Commentary } from "../../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
@@ -142,6 +154,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   );
   const competitions = new AggregateRepository(store, (id, events) =>
     Competition.rebuiltFrom(id, events),
+  );
+  const commentaries = new AggregateRepository(store, (id, events) =>
+    Commentary.rebuiltFrom(id, events),
   );
   const accountRepository = new AggregateRepository(
     accounts.store,
@@ -186,6 +201,10 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new MoveTeamPlayerValidator());
   validation.register(new AddTestValidator());
   validation.register(new UpdateTestValidator());
+  validation.register(new StartCommentaryValidator());
+  validation.register(new ChangeCommentaryTitleValidator());
+  validation.register(new AddCommentValidator());
+  validation.register(new EditCommentValidator());
   const both = [tournaments, accountRepository] as const;
   mediator.handleCommand(new CreateTournamentHandler(...both, byAddress));
   mediator.handleCommand(new UpdateTournamentHandler(...both, byAddress));
@@ -236,6 +255,11 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
+  mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
+  mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
+  mediator.handleCommand(new AddCommentHandler(...both, commentaries));
+  mediator.handleCommand(new EditCommentHandler(...both, commentaries));
+  mediator.handleCommand(new DeleteCommentHandler(...both, commentaries));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both, games));
@@ -279,12 +303,28 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleQuery(
     new PublicTestOfTournamentHandler(tournaments, competitions, byAddress),
   );
+  mediator.handleQuery(
+    new PublicCommentariesOfTournamentHandler(
+      tournaments,
+      accountRepository,
+      byAddress,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicCommentaryOfTournamentHandler(
+      tournaments,
+      accountRepository,
+      commentaries,
+      byAddress,
+    ),
+  );
 
   const inHand: TournamentsInHand = {
     send: (command) => mediator.send(command),
     ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
     loadCompetition: (id) => this.asARequest(() => competitions.load(id)),
+    loadCommentary: (id) => this.asARequest(() => commentaries.load(id)),
     eventsOf: (id) => this.asARequest(() => accounts.store.getEvents(id)),
     kept: async () => {
       const { rows } = await this.asARequest(() =>

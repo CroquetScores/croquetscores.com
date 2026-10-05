@@ -113,7 +113,7 @@ Each part of the dialog carries its own background and the radius of its own cor
 
 A modal dialog asks for something without leaving the page it was asked from: a player added to a tournament from the tournament's page, where the list of players is what the reader goes back to. It sits over the page rather than being one, nothing outside it can be pressed while it is open, and since the page's own ways out cannot be reached, it carries a Cancel button of its own.
 
-It is a `<dialog>` element opened with `showModal()`, which makes the page beneath it unreachable and closes it on Escape for the browser rather than by scripting of the site's own (§1). Only the admin has one, since only the admin has scripting to open it with, and every public page has to work with none.
+It is a `<dialog>` element opened with `showModal()`, which makes the page beneath it unreachable and closes it on Escape for the browser rather than by scripting of the site's own (§1). The admin has them, since it has scripting to open them with. A public page has to work with none, so a public page has one only where it is a quicker way to something that a page of its own does without scripting: a commentary's trash can asks in one before deleting a comment, and with scripting off leads to a page that asks the same (`commentary.feature`).
 
 What it does — where focus goes, what Cancel and Escape keep, what happens to the address, what it says after doing something — is behaviour, and is specified in the feature file of the admin screen that opens it, as any behaviour is (`AI.md` §1). What follows is only how it is drawn.
 

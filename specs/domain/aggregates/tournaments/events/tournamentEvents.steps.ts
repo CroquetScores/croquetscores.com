@@ -44,6 +44,8 @@ import { TeamsSpacedOut } from "../../../../../src/domain/aggregates/tournaments
 import { TeamUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TeamUpdated.js";
 import { TestAdded } from "../../../../../src/domain/aggregates/tournaments/events/TestAdded.js";
 import { TestUpdated } from "../../../../../src/domain/aggregates/tournaments/events/TestUpdated.js";
+import { TournamentCommentaryStarted } from "../../../../../src/domain/aggregates/tournaments/events/TournamentCommentaryStarted.js";
+import { TournamentCommentaryTitleChanged } from "../../../../../src/domain/aggregates/tournaments/events/TournamentCommentaryTitleChanged.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { EventRegistry } from "../../../../../src/domain/common/EventRegistry.js";
 import { causedBy, happenedAt } from "../../../../support/exampleEvents.js";
@@ -80,6 +82,7 @@ const TEAM = "team/123e4567-e89b-42d3-a456-426614174000";
 const ANOTHER_TEAM = "team/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const TEAM_PLAYER = "team-player/123e4567-e89b-42d3-a456-426614174000";
 const ANOTHER_TEAM_PLAYER = "team-player/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
+const COMMENTARY = "commentary/123e4567-e89b-42d3-a456-426614174000";
 
 // One event of each kind a tournament records, as a feature names what
 // happened, and those an event can do without left out.
@@ -236,6 +239,21 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
   "the competitions being spaced out": () =>
     new CompetitionsSpacedOut(
       [ANOTHER_COMPETITION, COMPETITION],
+      causedBy,
+      happenedAt,
+    ),
+  "a commentary being started": () =>
+    new TournamentCommentaryStarted(
+      COMMENTARY,
+      "Day one",
+      "day-one",
+      causedBy,
+      happenedAt,
+    ),
+  "a commentary's title being changed": () =>
+    new TournamentCommentaryTitleChanged(
+      COMMENTARY,
+      "Day one, morning",
       causedBy,
       happenedAt,
     ),

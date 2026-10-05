@@ -34,6 +34,14 @@ Four kinds of thing, kept apart.
 
 ## Known problems
 
+### An old address with letters in another script fails where it is sent on
+
+**What goes wrong.** A slug keeps letters of any script (`Slug.feature`), so a tournament or a player can be found at an address such as "/2026/ac/кубок" or "/2026/ac/spring-open/players/李小龍". Where a tournament has moved on from an address, its pages send a reader on with a 301 whose Location is that address as it is, not encoded (`tournament.ts`, `players.ts`, `player.ts`, `teamSummary.ts`), and Fastify refuses a Location with a character outside Latin-1, answering with a server error instead. The commentary pages encode theirs (`encodeURI`), since a commentary's title is the likeliest to be written in another script, and a review found them failing on it.
+
+**Why it has not happened.** It needs a tournament or a player named in another script, and the tournament then moved to another year or sport. The names brought over from the old sites are in Latin letters.
+
+**What to do when it does.** Nothing is lost: the reader is shown an error where they would have been sent on, and the address the tournament is at now still works. To stop it, put each of those redirects' addresses through `encodeURI` as the commentary pages do, with a scenario for each in a script other than Latin.
+
 ### A test's games and its tournament are saved apart
 
 **What goes wrong.** A test's games are kept in the competition's own stream, and whether it has any decides what can be done to the tournament: a test with games in use is not archived, keeps its teams, and keeps its expected matches and best-of from going below what has been played; a team player who has played is not archived. Archiving a test (`ArchiveCompetitionHandler`), updating one (`UpdateTestHandler`) and archiving a team player (`ArchiveTeamPlayerHandler`) read the competition's games and then save the tournament. Adding a game (`AddGameHandler`) reads the tournament and then saves the competition. Neither waits for the other, so a manager archiving a test as a scorer adds its first game can leave an archived test with a game in use, and the same goes for changing its teams or archiving the player who has just played.
@@ -41,6 +49,14 @@ Four kinds of thing, kept apart.
 **Why it has not happened.** It needs the two to land within the same moment, and a test is set up before its games are entered.
 
 **What to do when it does.** Restore the test, or put the player or the teams back, and archive the game first. To stop it, either take a lock on the tournament's stream in `AddGame` (and in correcting and restoring a game) so that it waits for any change to the tournament, or have those three handlers append to the competition's stream as well, so that its version check refuses one of the two.
+
+### A tournament or competition name with no letter or digit fails where its slug is made
+
+**What goes wrong.** A tournament is found at a slug made from its name, and a block, a knockout or a Swiss at a slug made from its own (`Tournament.#addressFor`, `Tournament.#competitionSlugFor`). A name with no letter or digit in it, such as "?????" or "???", makes no slug, and `Slug.fromName` throws `Slug.Empty`. Neither `TournamentName` nor `CompetitionName` refuses such a name first, so it passes validation, and the throw comes from inside the handler: creating or updating the tournament, or adding or updating the competition, answers the admin with a server error rather than a message beside the name. A tournament player, a team player, a team's short name and a commentary's title each refuse one already, as `…NoLetterOrDigit`, for this reason; a team's name does not need to, since a team is found by its short name.
+
+**Why it has not happened.** Nobody has named a tournament or a block with punctuation alone. The names brought over from the old sites all have letters in them.
+
+**What to do when it does.** Nothing is kept, since the throw comes before anything is recorded; the reader is told something went wrong and can type a name with a letter in it. To stop it, give `TournamentName` and `CompetitionName` a `NoLetterOrDigit` rule, as `CommentaryTitle` has, with words in both catalogues, and specify it in their features and in a scenario each of creating a tournament and adding a block.
 
 ---
 

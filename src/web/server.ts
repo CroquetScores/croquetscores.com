@@ -143,6 +143,20 @@ import { MovePlayerHandler } from "../application/operations/tournaments/MovePla
 import { MovePlayerValidator } from "../application/operations/tournaments/MovePlayerValidator.js";
 import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
 import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
+import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commentary.js";
+import { nameCommentaryEvents } from "../domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
+import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
+import { StartCommentaryHandler } from "../application/operations/tournaments/StartCommentaryHandler.js";
+import { StartCommentaryValidator } from "../application/operations/tournaments/StartCommentaryValidator.js";
+import { ChangeCommentaryTitleHandler } from "../application/operations/tournaments/ChangeCommentaryTitleHandler.js";
+import { ChangeCommentaryTitleValidator } from "../application/operations/tournaments/ChangeCommentaryTitleValidator.js";
+import { AddCommentHandler } from "../application/operations/commentaries/AddCommentHandler.js";
+import { AddCommentValidator } from "../application/operations/commentaries/AddCommentValidator.js";
+import { EditCommentHandler } from "../application/operations/commentaries/EditCommentHandler.js";
+import { EditCommentValidator } from "../application/operations/commentaries/EditCommentValidator.js";
+import { DeleteCommentHandler } from "../application/operations/commentaries/DeleteCommentHandler.js";
+import { PublicCommentariesOfTournamentHandler } from "../application/operations/tournaments/PublicCommentariesOfTournamentHandler.js";
+import { PublicCommentaryOfTournamentHandler } from "../application/operations/tournaments/PublicCommentaryOfTournamentHandler.js";
 import { gamesKeptByCompetitions } from "../application/operations/competitions/competitionGames.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
@@ -232,6 +246,11 @@ import { registerYearPage } from "./public/year.js";
 import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
 import { registerPlayersPage } from "./public/players.js";
+import { registerCommentariesPage } from "./public/commentaries.js";
+import { registerStartCommentaryPage } from "./public/startCommentary.js";
+import { registerCommentaryPage } from "./public/commentary.js";
+import { registerEditCommentPages } from "./public/editComment.js";
+import { registerChangeCommentaryTitlePage } from "./public/changeCommentaryTitle.js";
 import { registerPlayerPage } from "./public/player.js";
 import { gridView } from "./public/block.js";
 import { summaryView } from "./public/blockSummary.js";
@@ -326,6 +345,8 @@ export interface Application {
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   /** Every competition's players, each competition under its own id. */
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
+  /** Every commentary's comments, each commentary under its own id. */
+  readonly commentaries: AggregateRepository<Commentary, CommentaryId>;
   /** The tournaments each account has a part in, as the read model keeps them. */
   readonly tournamentsByAccount: TournamentsByAccount;
 }
@@ -480,8 +501,10 @@ export interface ApplicationOptions {
 // Every kind of event the application records, each named once by the name it
 // is kept under, and how it is read back.
 const events = (): EventRegistry =>
-  nameCompetitionEvents(
-    nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+  nameCommentaryEvents(
+    nameCompetitionEvents(
+      nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+    ),
   );
 
 export const buildApplication = async (
@@ -715,6 +738,10 @@ export const buildApplication = async (
     eventStore,
     (id: CompetitionId, events) => Competition.rebuiltFrom(id, events),
   );
+  const commentaries = new AggregateRepository(
+    eventStore,
+    (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
+  );
   // Whether games have been played is asked of the games the competitions
   // keep.
   const games = gamesKeptByCompetitions(tournaments, competitions);
@@ -738,6 +765,10 @@ export const buildApplication = async (
   validation.register(new CorrectGameValidator());
   validation.register(new AddManagerValidator());
   validation.register(new AddScorerValidator());
+  validation.register(new StartCommentaryValidator());
+  validation.register(new ChangeCommentaryTitleValidator());
+  validation.register(new AddCommentValidator());
+  validation.register(new EditCommentValidator());
   validation.register(new AddTeamValidator());
   validation.register(new UpdateTeamValidator());
   validation.register(new MoveTeamValidator());
@@ -801,6 +832,11 @@ export const buildApplication = async (
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
+  mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
+  mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
+  mediator.handleCommand(new AddCommentHandler(...both, commentaries));
+  mediator.handleCommand(new EditCommentHandler(...both, commentaries));
+  mediator.handleCommand(new DeleteCommentHandler(...both, commentaries));
   mediator.handleQuery(new GamesOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new PlayersOfCompetitionHandler(...both, competitions));
   mediator.handleQuery(new CompetitionsOfTournamentHandler(...both, games));
@@ -879,6 +915,21 @@ export const buildApplication = async (
     new PublicTestOfTournamentHandler(
       tournaments,
       competitions,
+      tournamentsByAddress,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicCommentariesOfTournamentHandler(
+      tournaments,
+      accounts,
+      tournamentsByAddress,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicCommentaryOfTournamentHandler(
+      tournaments,
+      accounts,
+      commentaries,
       tournamentsByAddress,
     ),
   );
@@ -1004,6 +1055,11 @@ export const buildApplication = async (
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
+  registerCommentariesPage(server, assets);
+  registerStartCommentaryPage(server, assets);
+  registerCommentaryPage(server, assets);
+  registerEditCommentPages(server, assets);
+  registerChangeCommentaryTitlePage(server, assets);
   registerPlayerPage(server, assets);
   registerTeamSummaryPage(server, assets);
   registerCompetitionPages(server, assets, {
@@ -1050,6 +1106,7 @@ export const buildApplication = async (
     sessions,
     tournaments,
     competitions,
+    commentaries,
     tournamentsByAccount,
   };
 };

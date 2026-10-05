@@ -314,6 +314,66 @@ export const spanish: Language = {
     "tournament.ago.hours": "{count} horas",
     "tournament.none": "Aún no se ha jugado ninguna partida.",
     "players.none": "Aún no se ha añadido ningún jugador.",
+    "commentaries.by": "por",
+    "commentaries.start": "Empezar un comentario nuevo",
+    "commentaries.disclaimer.heading": "Aviso",
+    "commentaries.disclaimer":
+      "Las opiniones expresadas en estos comentarios son de sus autores y no reflejan necesariamente las de Tim Murphy ni las de {site}.",
+    "commentaries.guidelines.heading": "Normas",
+    "commentaries.guidelines.responsible":
+      "Eres responsable de tus comentarios.",
+    "commentaries.guidelines.purpose":
+      'Los comentarios sirven para contar lo que está pasando en el torneo. No están pensados como una "red social" para mandar buenos deseos, etc.',
+    "commentaries.guidelines.hatred":
+      "No publiques nada que pueda incitar a la violencia o al odio. No toleraremos comentarios que humillen a otros por su raza, religión, origen étnico, género, edad, discapacidad mental o física, u orientación sexual.",
+    "commentaries.guidelines.abuse":
+      "No se tolerarán los insultos gratuitos. La norma general es que los comentarios jueguen la bola y no al jugador, es decir, que no ataquen a nadie personalmente sino que traten del asunto en cuestión.",
+    "commentaries.guidelines.unlawful":
+      "Se retirará cualquier comentario de legalidad dudosa, como posibles infracciones de derechos de autor o material que pueda ser difamatorio.",
+    "commentaries.guidelines.shouting":
+      "Por favor, no digas palabrotas ni escribas todo en mayúsculas en los comentarios.",
+    "commentaries.guidelines.selling":
+      "No uses los comentarios con fines comerciales ni para spam. Se retirarán los comentarios que anuncien, promocionen u ofrezcan bienes o servicios.",
+    "commentaries.guidelines.links":
+      "Por favor, limita los enlaces en los comentarios. Se retirarán los comentarios con enlaces a material inapropiado.",
+    "commentaries.guidelines.impersonating":
+      "No te hagas pasar por otros en los comentarios, ni publiques datos personales – números de teléfono, direcciones postales o de correo electrónico – que puedan poner a alguien en peligro sin querer.",
+    "commentaries.reporting.heading": "Denunciar comentarios",
+    "commentaries.reporting.before":
+      "Por favor, denuncia los comentarios que no cumplan estas normas a",
+    "commentaries.reporting.after":
+      ". Cita la dirección web y el comentario dudoso. Por ejemplo:",
+    "commentaries.reporting.exampleComment":
+      '"un comentario que debería retirarse"',
+    "commentaries.reporting.exampleReason":
+      "Este comentario debería retirarse porque...",
+    "commentaries.reporting.reviewed":
+      "Denunciar algo no significa que se retire automáticamente, pero se revisarán todas las denuncias.",
+    "commentaries.reporting.reserved":
+      "{site} se reserva el derecho a retirar comentarios.",
+    "commentaries.reporting.subject": "{site} Denuncia de comentario",
+    "commentaries.reporting.body":
+      "Por favor, cita la dirección web, el comentario dudoso y por qué debería retirarse.",
+    "startCommentary.title": "Empezar un comentario nuevo",
+    "startCommentary.titleField": "Título",
+    "startCommentary.submit": "Empezar el comentario",
+    "commentary.none": "Aún no se ha escrito nada.",
+    "commentary.edited": "editado",
+    "commentary.edit": "Editar",
+    "commentary.delete": "Eliminar",
+    "commentary.comment": "Comentario",
+    "commentary.add": "Añadir",
+    "commentary.notSent":
+      "No se pudo enviar el comentario. Vuelve a cargar la página para ver si se guardó.",
+    "changeCommentaryTitle.title": "Cambiar el título",
+    "changeCommentaryTitle.submit": "Guardar",
+    "editComment.title": "Editar el comentario",
+    "editComment.save": "Guardar",
+    "deleteComment.title": "Eliminar el comentario",
+    "deleteComment.question":
+      "¿Eliminar este comentario? No se puede deshacer.",
+    "deleteComment.confirm": "Eliminar el comentario",
+    "deleteComment.keep": "Conservarlo",
     "player.games": "Partidas",
     "player.competitions": "Competiciones",
     "player.beat": "ganó a",
@@ -604,6 +664,13 @@ export const spanish: Language = {
     "admin.teamView.players": "Jugadores",
     "TeamName.Missing": "Di cómo se llama el equipo.",
     "TeamName.TooLong": "Ese nombre es demasiado largo.",
+    "CommentaryTitle.Missing": "Ponle un título al comentario.",
+    "CommentaryTitle.TooLong": "Ese título es demasiado largo.",
+    "CommentaryTitle.NoLetterOrDigit":
+      "Un título necesita una letra o un número.",
+    "Tournament.CommentaryTitleTaken": "Otro comentario ya tiene ese título.",
+    "CommentText.Missing": "Escribe algo en el comentario.",
+    "CommentText.TooLong": "Ese comentario es demasiado largo.",
     "TeamShortName.Missing": "Dale al equipo un nombre corto.",
     "TeamShortName.TooLong": "Un nombre corto tiene como mucho 10 caracteres.",
     "TeamShortName.NoLetterOrDigit":
