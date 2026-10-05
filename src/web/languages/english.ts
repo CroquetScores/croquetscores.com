@@ -383,6 +383,8 @@ export const english: Language = {
     "commentary.delete": "Delete",
     "commentary.comment": "Comment",
     "commentary.add": "Add comment",
+    "commentary.notSent":
+      "The comment could not be sent. Load the page again to see whether it was kept.",
     // The page that changes a commentary's title.
     "changeCommentaryTitle.title": "Change title",
     "changeCommentaryTitle.submit": "Save",

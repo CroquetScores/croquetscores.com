@@ -30,7 +30,7 @@ import { render } from "../common/layout.js";
 import { hasPassword, readerOf, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
-import { toSignIn } from "./profile.js";
+import { signInPath } from "./signIn.js";
 import { sendPage } from "./tournamentLists.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
@@ -89,15 +89,21 @@ const trashCan = `<svg class="icon icon-trash-can" viewBox="0 0 24 24" aria-hidd
  *
  * Each is a quicker way to what can be done with none, so nothing is lost
  * where it does not run; and where the server answers a comment sent in the
- * background with anything but a comment or what is wrong with it — a page to
- * sign in at, say, for a writer signed out since the page was opened — the
- * comment is sent again as a form would send it, and the page answers it as
- * it would then. Once a comment is sent, the page is scrolled so that the
+ * background by sending the page elsewhere — to sign in, say, for a writer
+ * signed out since the page was opened — the page goes there. A comment is
+ * never sent twice by the page: one not answered may have been kept, so where
+ * there is no answer, or one that says nothing of the comment, the page says
+ * beneath the box that it could not be sent, and that loading the page again
+ * will show whether it was kept. Once a comment is sent, the page is scrolled so that the
  * button that sends it is at the bottom of the window, with the comment just
  * added, or what is wrong with it, just above it.
  *
  * The comments are asked for again every quarter of a minute, while the page
- * can be seen, and drawn again where they have changed, so that a reader sees
+ * can be seen, and drawn again when one has been written, edited or deleted —
+ * otherwise only how long ago each was written is put in its place, so that
+ * what has the focus in them keeps it. An answer asked for before a comment
+ * was added in place, and coming after it, is not drawn, since it is about the
+ * comments as they were. so that a reader sees
  * what has been written, edited or deleted since without loading the page
  * again. Asked for, rather than sent by the server as they are written: that
  * would hold a connection open for every reader of every commentary, and need
@@ -122,14 +128,17 @@ export const commentScript = `
 
         var live = document.querySelector("[data-refresh]");
         if (live && window.fetch) {
-          // The comments as last drawn by the server, so that they are drawn
-          // again only when they have changed, and what has the focus in them
-          // keeps it otherwise.
-          var drawn = null;
+          // Which comments the page shows and when each was last edited, so
+          // that they are drawn again only when one has been written, edited
+          // or deleted, and what has the focus in them keeps it otherwise; and
+          // how many have been added in place, so that an answer asked for
+          // before one was is not drawn over it.
+          var shownKey = live.getAttribute("data-key");
           var asking = false;
           var ask = function () {
             if (document.hidden || asking) return;
             asking = true;
+            var since = window.commentsAddedInPlace || 0;
             fetch(live.getAttribute("data-refresh"), {
               headers: { accept: "application/json" },
               credentials: "same-origin",
@@ -138,9 +147,17 @@ export const commentScript = `
                 return response.ok ? response.json() : null;
               })
               .then(function (answer) {
-                if (!answer || answer.comments === drawn) return;
-                drawn = answer.comments;
-                live.innerHTML = answer.comments;
+                if (!answer || (window.commentsAddedInPlace || 0) !== since) return;
+                if (answer.key !== shownKey) {
+                  shownKey = answer.key;
+                  live.innerHTML = answer.comments;
+                  return;
+                }
+                // Nothing written, edited or deleted: only how long ago each
+                // was written, put in its place.
+                live.querySelectorAll(".comment-ago").forEach(function (ago, at) {
+                  if (answer.ago[at] !== undefined) ago.innerHTML = answer.ago[at];
+                });
               })
               .catch(function () {})
               .then(function () {
@@ -148,6 +165,7 @@ export const commentScript = `
               });
           };
           setInterval(ask, 15000);
+          window.askForComments = ask;
           document.addEventListener("visibilitychange", function () {
             if (!document.hidden) ask();
           });
@@ -196,13 +214,20 @@ export const commentScript = `
               credentials: "same-origin",
             })
               .then(function (response) {
+                // Sent elsewhere, as a writer signed out since is sent to sign
+                // in: the page goes there, and the comment is not sent again.
+                if (response.redirected) {
+                  window.location.assign(response.url);
+                  return;
+                }
                 var json = (response.headers.get("content-type") || "").indexOf("application/json") === 0;
-                if (!json || (response.status !== 200 && response.status !== 422)) throw new Error("not in place");
+                if (!json || (response.status !== 200 && response.status !== 422)) throw new Error("not answered");
                 return response.json().then(function (answer) {
                   if (response.status === 422) {
                     say(answer.messages);
                     return settle();
                   }
+                  window.commentsAddedInPlace = (window.commentsAddedInPlace || 0) + 1;
                   var list = document.querySelector("main .comments");
                   if (!list) {
                     list = document.createElement("ol");
@@ -213,10 +238,16 @@ export const commentScript = `
                   box.value = "";
                   say([]);
                   settle();
+                  // Asked for again, so that the page knows the comments it
+                  // now shows, and a comment it could not draw is drawn.
+                  if (window.askForComments) window.askForComments();
                 });
               })
+              // Not sent, or sent and not answered, and so perhaps kept: never
+              // sent again by the page, which could keep it twice.
               .catch(function () {
-                adding.submit();
+                say([adding.getAttribute("data-not-sent")]);
+                settle();
               })
               .then(function () {
                 button.disabled = false;
@@ -343,7 +374,10 @@ export const commentBox = (
     messages.length === 0
       ? ""
       : `\n              <p class="field-message" id="comment-text-message">${messages.map((text) => `<span>${escape(text)}</span>`).join(" ")}</p>`;
-  return `            <form class="comment-form${inPlace ? " comment-form-add" : ""}" method="post" action="${escape(action)}">
+  const notSent = inPlace
+    ? ` data-not-sent="${escape(speaking.say("commentary.notSent"))}"`
+    : "";
+  return `            <form class="comment-form${inPlace ? " comment-form-add" : ""}" method="post" action="${escape(action)}"${notSent}>
               <label class="comment-label" for="comment-text">${escape(speaking.say("commentary.comment"))}</label>
               <textarea class="comment-box" id="comment-text" name="text" rows="4"${described}${wrong}>${escape(typed)}</textarea>${beneath}
               <button class="button button-submit" type="submit">${escape(submit)}</button>
@@ -384,6 +418,14 @@ ${commentary.comments
   .join("\n")}
           </ol>`;
 
+// Which comments there are, and when each was last edited: what the page
+// compares to tell whether the comments have changed since it drew them, which
+// how long ago each was written, changing by the second, would not tell it.
+const keyOf = (commentary: TournamentCommentaryToRead["commentary"]): string =>
+  commentary.comments
+    .map((comment) => `${comment.id}@${comment.lastEditedAt ?? ""}`)
+    .join(" ");
+
 const pageOf = (
   request: FastifyRequest,
   assets: Assets,
@@ -421,7 +463,7 @@ const pageOf = (
             <h2 class="commentary-title">${escape(commentary.title)}</h2>${commentary.writtenByReader ? `\n            <a class="commentary-title-edit" href="/${escape(commentary.address)}/edit">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a>` : ""}
           </div>
           <p class="commentary-writer">${escape(commentary.writer)}</p>
-          <div class="commentary-comments" data-refresh="/${escape(commentary.address)}/comments">
+          <div class="commentary-comments" data-refresh="/${escape(commentary.address)}/comments" data-key="${escape(keyOf(commentary))}">
 ${commentsShown(commentary, now, speaking)}
           </div>${writing}${commentScript}`,
   });
@@ -462,12 +504,14 @@ export const registerCommentaryPage = (
     async (request, reply) => {
       const asked = await commentaryOf(request);
       if (asked === undefined) return reply.callNotFound();
+      const now = request.requestedAt.toDate();
+      const speaking = speakingOf(request);
       return reply.header("cache-control", "no-store").send({
-        comments: commentsShown(
-          asked.commentary,
-          request.requestedAt.toDate(),
-          speakingOf(request),
+        key: keyOf(asked.commentary),
+        ago: asked.commentary.comments.map((comment) =>
+          ago(ReadOnlyDate.from(new Date(comment.writtenAt)), now, speaking),
         ),
+        comments: commentsShown(asked.commentary, now, speaking),
       });
     },
   );
@@ -475,8 +519,16 @@ export const registerCommentaryPage = (
   server.post<{ Params: CommentaryParams }>(
     `${path}/comments`,
     async (request, reply) => {
+      // Back to the commentary once signed in, rather than to the address
+      // comments are sent to, which is no page to come back to.
+      const { year, sport, slug, commentary: commentarySlug } = request.params;
+      const toSignInHere = () =>
+        reply.redirect(
+          `${signInPath}?return=${encodeURIComponent(`/${year}/${sport}/${slug}/commentaries/${commentarySlug}`)}`,
+          303,
+        );
       const reader = readerOf(request);
-      if (reader === undefined) return toSignIn(request, reply);
+      if (reader === undefined) return toSignInHere();
       const asked = await commentaryOf(request);
       if (asked === undefined) return reply.callNotFound();
       const typed = typedFrom(request.body)["text"] ?? "";
@@ -502,7 +554,7 @@ export const registerCommentaryPage = (
           failure instanceof AccountRefused &&
           failure.code === "Account.Forgotten"
         ) {
-          return toSignIn(request, reply);
+          return toSignInHere();
         }
         // Only its writer is offered the box, so anybody else sending it is
         // asking of a page that is not there for them.
@@ -532,16 +584,20 @@ export const registerCommentaryPage = (
         const comment = after?.commentary.comments.find(
           (each) => each.id === added.value,
         );
-        if (after !== undefined && comment !== undefined) {
-          return reply.header("cache-control", "no-store").send({
-            comment: commentShown(
-              after.commentary,
-              comment,
-              request.requestedAt.toDate(),
-              speaking,
-            ),
-          });
-        }
+        // Answered as kept whatever is found, since it was: a comment that
+        // cannot be drawn here is drawn when the page asks for the comments
+        // again, as it does once one is added.
+        return reply.header("cache-control", "no-store").send({
+          comment:
+            after === undefined || comment === undefined
+              ? ""
+              : commentShown(
+                  after.commentary,
+                  comment,
+                  request.requestedAt.toDate(),
+                  speaking,
+                ),
+        });
       }
       // Shown again by asking for it again, so that a reload does not send
       // the comment a second time.

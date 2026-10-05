@@ -149,6 +149,19 @@ Then(
   },
 );
 
+// Kept once, and not twice, as a comment sent twice would be.
+Then(
+  "the commentary {string} of {string} has the comment {string} once",
+  async function (this: SpecWorld, title: string, name: string, text: string) {
+    const texts = await textsIn(this, title, name);
+    assert.equal(
+      texts.filter((each) => each === text).length,
+      1,
+      `It has ${inspect(texts)}.`,
+    );
+  },
+);
+
 Then(
   "the commentary {string} of {string} does not have the comment {string}",
   async function (this: SpecWorld, title: string, name: string, text: string) {

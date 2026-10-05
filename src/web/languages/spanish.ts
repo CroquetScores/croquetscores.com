@@ -363,6 +363,8 @@ export const spanish: Language = {
     "commentary.delete": "Eliminar",
     "commentary.comment": "Comentario",
     "commentary.add": "Añadir",
+    "commentary.notSent":
+      "No se pudo enviar el comentario. Vuelve a cargar la página para ver si se guardó.",
     "changeCommentaryTitle.title": "Cambiar el título",
     "changeCommentaryTitle.submit": "Guardar",
     "editComment.title": "Editar el comentario",

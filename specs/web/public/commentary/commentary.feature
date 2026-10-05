@@ -59,9 +59,12 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   interrupted by the page jumping back to its top each time. One that is
   refused is said beneath the box in place, with what was typed left in it.
   A comment added in place has its pencil and its trash can as any other
-  does. Where the page cannot add it in place, as when the writer has been
-  signed out since the page was opened, the comment is sent as it would be
-  with no scripting, and the page answers it as it would then.
+  does. A comment is sent once and never again by the page, since a comment
+  sent twice would be kept twice: where the server sends the page elsewhere,
+  as it does a writer signed out since the page was opened, to sign in, the
+  page goes there, and where the comment could not be sent, or was sent and
+  not answered, the page says so beneath the box and that loading the page
+  again will show whether it was kept.
 
   Once a comment has been sent, by the button or by Ctrl and Enter, the page
   is scrolled so that the Add comment button is at the bottom of the window:
@@ -73,7 +76,12 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   is scripting, the page asks every quarter of a minute for the comments as
   they are now, and draws them again where they have changed, so that a
   comment written since the page was opened appears in its place, and one
-  edited or deleted since reads as it does now. A quarter of a minute is
+  edited or deleted since reads as it does now. The comments are drawn again
+  only when one has been written, edited or deleted, so that whatever a
+  reader has pressed or tabbed to in them keeps the focus; how long ago each
+  was written is kept up to date in its place. An answer asked for before a
+  comment was added in place, and coming after it, is an answer about the
+  comments as they were, and is not drawn. A quarter of a minute is
   soon enough to follow a game a stroke at a time, and seldom enough that a
   commentary read by many costs little. The page asks only while it can be
   seen, and asks again as soon as it can be seen once more. It needs nobody
@@ -340,6 +348,20 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Then the comment box says the message for "CommentText.TooLong"
       And the comment box holds what was typed
 
+    Scenario: A comment kept but not answered is not sent again
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the next comment sent is kept and answered with a server error
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up" once
+
+    Scenario: A comment kept but not answered is said beneath the box
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the next comment sent is kept and answered with a server error
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the comment box says the words for "commentary.notSent"
+
     Scenario: A writer signed out since the page was opened is sent to sign in
       Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
       And the reader has signed out
@@ -421,11 +443,47 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When a quarter of a minute passes
       Then the last comment says "Kim has a lift"
 
+    Scenario: How long ago a comment was written is kept up to date
+      Given the server's clock reads "2026-10-03T10:12:00Z"
+      When a quarter of a minute passes
+      Then the first comment was written "12 min" ago
+
     Scenario: A comment shown since offers a reader not signed in no way to edit it
       Given "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
       When a quarter of a minute passes
       Then the last comment says "Alex has pegged out"
       And the last comment does not offer a way to edit it
+
+  Rule: What has the focus in the comments keeps it while nothing has changed
+
+    Background:
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the browser has scripting on
+      And the browser's clock is held by the scenario
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open
+
+    Scenario: The pencil keeps the focus when the comments are asked for again
+      Given the way to edit the first comment is given the focus
+      And the server's clock reads "2026-10-03T10:12:00Z"
+      When a quarter of a minute passes
+      Then the way to edit the first comment has the focus
+
+  Rule: An answer about the comments as they were does not take away one added in place
+
+    Scenario: A comment added in place is kept when an older answer comes after it
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the browser has scripting on
+      And the browser's clock is held by the scenario
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open
+      And the next answer about the comments is held back
+      And "writer@example.com" has added the comment "Kim has a lift" to "Day one" of "Spring Open"
+      And 15 seconds pass on the browser's clock
+      And the comment "Alex has pegged out" is typed
+      And the comment is submitted
+      When the answer held back is let through
+      Then the last comment says "Alex has pegged out"
 
   Rule: Ctrl and Enter in the box send the comment
 

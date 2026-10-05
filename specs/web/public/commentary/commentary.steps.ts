@@ -69,22 +69,38 @@ const sent = async (
   world: SpecWorld,
   sending: () => Promise<void>,
 ): Promise<void> => {
-  await Promise.all([
-    // The post the page is loaded again for, or the one answered with the
-    // comment, or what is wrong with it, to add in place. One answered
-    // otherwise, as one for a writer since signed out is, is sent again as a
-    // form, and it is that one which is waited for.
-    world.browserPage.waitForResponse(
+  const page = world.browserPage;
+  // The post answered with something other than a way elsewhere — the page
+  // loaded again for it, the comment or what is wrong with it to add in place,
+  // or an error — or else the page going elsewhere, as a writer signed out
+  // since is sent to sign in.
+  const answered = Promise.race([
+    page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
         (response.request().isNavigationRequest() ||
-          (response.headers()["content-type"] ?? "").startsWith(
-            "application/json",
-          )),
+          response.status() < 300 ||
+          response.status() >= 400),
     ),
-    sending(),
+    page.waitForEvent("framenavigated"),
   ]);
-  await world.browserPage.waitForLoadState("networkidle");
+  const [answer] = await Promise.all([answered, sending()]);
+  // Answered in place, the page has what it needs once the answer is in: a
+  // step that reads what it drew waits for it. A page loaded again is waited
+  // on until it has settled.
+  const inPlace =
+    "request" in answer && !answer.request().isNavigationRequest();
+  if (!inPlace) {
+    await page.waitForLoadState("networkidle");
+    return;
+  }
+  // An answer that is an error leaves the page to decide what to do next, and
+  // it is given a moment to have done it, so that a page that sends the
+  // comment again is caught sending it rather than missed.
+  if (answer.status() >= 400 && answer.status() !== 422) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await page.waitForLoadState("networkidle");
+  }
 };
 
 // The commentary ---------------------------------------------------------------
@@ -450,5 +466,93 @@ When(
   "{int} seconds pass on the browser's clock",
   async function (this: SpecWorld, seconds: number) {
     await this.browserPage.clock.runFor(seconds * 1000);
+  },
+);
+
+// What the server answers, held back or spoilt --------------------------------------
+
+// The next comment sent is kept by the server, as any is, and its answer then
+// lost to an error, as one would be by a failure after it was kept.
+Given(
+  "the next comment sent is kept and answered with a server error",
+  async function (this: SpecWorld) {
+    await this.browserPage.route(
+      (url) => url.pathname.endsWith("/comments"),
+      async (route) => {
+        if (route.request().method() !== "POST") return route.fallback();
+        await route.fetch();
+        await route.fulfill({
+          status: 500,
+          contentType: "text/html",
+          body: "Something went wrong.",
+        });
+      },
+      { times: 1 },
+    );
+  },
+);
+
+// What the server answers about the comments as they are when the page asks,
+// kept back until the scenario lets it through.
+const heldBack = new WeakMap<SpecWorld, () => Promise<void>>();
+
+Given(
+  "the next answer about the comments is held back",
+  async function (this: SpecWorld) {
+    await this.browserPage.route(
+      (url) => url.pathname.endsWith("/comments"),
+      async (route) => {
+        if (route.request().method() !== "GET") return route.fallback();
+        const answer = await route.fetch();
+        heldBack.set(this, () => route.fulfill({ response: answer }));
+      },
+      { times: 1 },
+    );
+  },
+);
+
+When("the answer held back is let through", async function (this: SpecWorld) {
+  const letThrough = heldBack.get(this);
+  assert.ok(letThrough !== undefined, "No answer was held back.");
+  await letThrough();
+  // Long enough for the page to have read the answer and drawn it, were it
+  // going to: nothing on the page says it has decided not to.
+  await new Promise((resolve) => setTimeout(resolve, 500));
+});
+
+// The focus ----------------------------------------------------------------------------
+
+Given(
+  /^the way to (edit|delete) the (first|second|third|last) comment is given the focus$/,
+  async function (this: SpecWorld, way: string, which: string) {
+    await wayTo(this, way, which).focus();
+  },
+);
+
+Then(
+  /^the way to (edit|delete) the (first|second|third|last) comment has the focus$/,
+  async function (this: SpecWorld, way: string, which: string) {
+    // Told apart by where it leads and what it is, which no other link on the
+    // page has both of.
+    const focused = await this.browserPage.evaluate(
+      "(() => { const active = document.activeElement; return active ? active.className + ' ' + active.getAttribute('href') : ''; })()",
+    );
+    const found = wayTo(this, way, which);
+    assert.equal(
+      focused,
+      `${(await found.getAttribute("class")) ?? ""} ${(await found.getAttribute("href")) ?? ""}`,
+      "It does not have the focus.",
+    );
+  },
+);
+
+Then(
+  "the comment box says the words for {string}",
+  async function (this: SpecWorld, key: string) {
+    await this.browserPage
+      .locator("main .comment-box[aria-describedby]")
+      .waitFor();
+    const id = await box(this).getAttribute("aria-describedby");
+    assert.equal(await textOf(this.browserPage.locator(`#${id!}`)), words(key));
   },
 );
