@@ -44,6 +44,9 @@ export interface Shell {
   /** The dark green bar. Absent, rather than present and empty, when a page
       has nowhere to move between. */
   readonly sections?: readonly Section[] | undefined;
+  /** Where the section being read leads, as "/2026/ac/spring-open/players":
+      by where it leads rather than what it says, since two sections can say
+      the same, as two tests between the same teams do. */
   readonly currentSection?: string | undefined;
   /** A secondary navigation of the page's own making, already escaped, drawn
       where the section bar is, for a page whose bar is more than a row of
@@ -180,7 +183,7 @@ const sectionBar = (
 
   const items = sections
     .map(({ href, label, competition }) => {
-      const here = label === current ? ' aria-current="page"' : "";
+      const here = href === current ? ' aria-current="page"' : "";
       const tile = competition === true ? ' class="section-competition"' : "";
       return `          <li${tile}><a href="${href}"${here}>${escape(label)}</a></li>`;
     })

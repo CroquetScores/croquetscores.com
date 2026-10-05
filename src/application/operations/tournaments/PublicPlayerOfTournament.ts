@@ -13,6 +13,11 @@ export interface Opponent {
   readonly name: string;
   /** Where their page is found, as "2026/ac/spring-open/players/alex-another". */
   readonly address: string;
+  /**
+   * The short name of the team they play for, as "ENG", or nothing for a
+   * tournament's own player, who plays for no team.
+   */
+  readonly team?: string | undefined;
 }
 
 /** One of a player's games, as they played it. */
@@ -35,6 +40,8 @@ export interface PlayerToRead {
   readonly address: string;
   /** The tournament's competitions in use, in its order, for its sections. */
   readonly competitions: readonly CompetitionOfTournament[];
+  /** Whether it is played by teams, whose players are its teams'. */
+  readonly playedByTeams: boolean;
   readonly player: {
     /** What the tournament calls them now. */
     readonly name: string;
@@ -42,8 +49,9 @@ export interface PlayerToRead {
   /** Every game of theirs in use, the most recently added first. */
   readonly games: readonly GameOfPlayer[];
   /**
-   * Every competition in use they are entered in, in reverse of the
-   * tournament's order.
+   * Every competition in use they are entered in, or for a team's player,
+   * every test in use their team plays in, in reverse of the tournament's
+   * order.
    */
   readonly entered: readonly CompetitionOfTournament[];
 }
@@ -53,9 +61,10 @@ export interface PlayerToRead {
  * at `address`, now or before, as their page shows them. For anybody, so it
  * names nobody.
  *
- * A tournament played by teams has no players' pages, and is refused as
- * `PublicPlayerOfTournament.PlayedByTeams`. A slug no player of the tournament
- * has, or an archived player's, is refused as
+ * A player of a tournament played by teams is one of its teams', and is found
+ * as its own players are, playing in the tests their team plays in. A slug no
+ * player of the tournament has, an archived player's, or that of a player of
+ * an archived team, is refused as
  * `PublicPlayerOfTournament.NoSuchPlayer`, and an address no tournament of the
  * website has been found at, or an archived tournament's, as
  * `PublicPlayerOfTournament.NoSuchTournament`.

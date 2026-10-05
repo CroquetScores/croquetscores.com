@@ -96,6 +96,13 @@ Then(
   },
 );
 
+Then(
+  /^the (first|second|third) game answered was against a player of (?:the team "(.*)"|no team)$/,
+  function (this: SpecWorld, which: string, team: string | undefined) {
+    assert.equal(gameAnswered(this, which).opponent.team, team);
+  },
+);
+
 // Their competitions ----------------------------------------------------------------
 
 Then(

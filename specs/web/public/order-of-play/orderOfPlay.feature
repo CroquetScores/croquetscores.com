@@ -2,8 +2,8 @@
 Feature: A competition's order of play lists its games, oldest first
 
   A block is shown three ways (`block.feature`), and so are a knockout
-  (`knockout.feature`) and a Swiss (`swiss.feature`). Of the three, the
-  order of play is the same whatever the
+  (`knockout.feature`) and a Swiss (`swiss.feature`); a test is shown two
+  (`test.feature`). Of them, the order of play is the same whatever the
   competition: at the competition's address followed by "order-of-play", as
   "/2026/ac/spring-open/competitions/block-a/order-of-play", it lists every
   game of the competition in use, in the order it was played, the oldest
@@ -25,8 +25,10 @@ Feature: A competition's order of play lists its games, oldest first
   the grid is not, and an address the tournament has moved on from leads to
   the order of play where the tournament is now.
 
-  The scenarios are a block's, but for the last two rules', which show a
-  knockout's order of play and a Swiss's are the same.
+  The scenarios are a block's, but for the last three rules', which show a
+  knockout's order of play, a Swiss's and a test's are the same. A test is
+  found under the tournament's "tests" rather than its "competitions", and
+  its players are its teams', each shown as representing their team.
 
   Where a scenario says nothing else, the tournament is for the sport "ac"
   and starts on 3 October 2026, and its block is the best of 3, so that two
@@ -266,4 +268,41 @@ Feature: A competition's order of play lists its games, oldest first
       Given a browser that asks for "en-XA"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Zed" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A test's order of play is the same as a block's
+
+    Background:
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+
+    Scenario: A test's order of play is headed by the test
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng/order-of-play" is opened
+      Then the page is headed "Australia vs England"
+
+    Scenario: A test's game is listed
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng/order-of-play" is opened
+      Then the first game is of "Pat Player" beating "Kim Keeper"
+
+    Scenario: A test's player is shown as representing their team
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng/order-of-play" is opened
+      Then the first line of the first game represents "(Australia)"
+
+    Scenario: A test is marked as the section being read
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng/order-of-play" is opened
+      Then the section "AUS vs ENG" is marked as current
+
+    Scenario: A test's order of play is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng/order-of-play" is opened
       Then every word in the page's content but the tournament's own is in the test locale

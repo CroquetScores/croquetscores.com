@@ -4,6 +4,7 @@ import { inspect } from "node:util";
 
 import { TeamPlayerId } from "../../../../../src/domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import { TeamPlayer } from "../../../../../src/domain/aggregates/tournaments/TeamPlayer.js";
+import { Slug } from "../../../../../src/domain/common/Slug.js";
 import type { SpecWorld } from "../../../../support/world.js";
 
 // What a scenario leaves unsaid of a player in a team: a name that is well
@@ -11,6 +12,8 @@ import type { SpecWorld } from "../../../../support/world.js";
 // named.
 const A_NAME = "Sam Someone";
 const AN_ORDER = 10_000;
+// Where a player is found is the tournament's to say, and nothing here asks.
+const A_SLUG = Slug.from("a-player");
 
 interface Scenario {
   player: TeamPlayer | undefined;
@@ -44,7 +47,7 @@ const tryToMake = (world: SpecWorld, name: string, order = AN_ORDER): void => {
     scenarioOf(world).player = TeamPlayer.from(
       TeamPlayerId.create(),
       { name },
-      order,
+      { slug: A_SLUG, order },
     );
   } catch (failure) {
     world.failure = failure;
@@ -80,7 +83,7 @@ Given("a team player named {string}", function (this: SpecWorld, name: string) {
   scenarioOf(this).player = TeamPlayer.from(
     TeamPlayerId.create(),
     { name },
-    AN_ORDER,
+    { slug: A_SLUG, order: AN_ORDER },
   );
 });
 
@@ -90,7 +93,7 @@ Given(
     scenarioOf(this).player = TeamPlayer.from(
       TeamPlayerId.create(),
       { name },
-      order,
+      { slug: A_SLUG, order },
     );
   },
 );
@@ -101,7 +104,7 @@ Given(
     scenarioOf(this).player = TeamPlayer.from(
       TeamPlayerId.create(),
       { name },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     ).archive({ hasGames: false });
   },
 );
@@ -112,7 +115,7 @@ Given(
     scenarioOf(this).other = TeamPlayer.from(
       playerOfWorld(this).id,
       { name },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     );
   },
 );
@@ -123,7 +126,7 @@ Given(
     scenarioOf(this).other = TeamPlayer.from(
       TeamPlayerId.create(),
       { name },
-      AN_ORDER,
+      { slug: A_SLUG, order: AN_ORDER },
     );
   },
 );

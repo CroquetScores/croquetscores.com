@@ -12,10 +12,7 @@ import {
   competitionsInUse,
   tournamentForReaders,
 } from "./tournamentForReaders.js";
-import {
-  type TournamentAddresses,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
+import type { TournamentAddresses } from "./tournamentOperations.js";
 
 // In the order a reader looks for a name in a list, capitals or none.
 const byName = new Intl.Collator("en");
@@ -44,18 +41,26 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicPlayersOfTournament",
     );
-    // Its players are its teams', who have their teams' pages.
-    if (tournament.format.isTeamFormat) {
-      throw new TournamentOperationRefused(
-        "PublicPlayersOfTournament.PlayedByTeams",
-        "The tournament is played by teams.",
-      );
-    }
     const address = tournament.address.toString();
     return {
       name: tournament.name.toString(),
       address,
       competitions: competitionsInUse(tournament),
+      playedByTeams: tournament.format.isTeamFormat,
+      // A tournament played by teams has no players of its own, only its
+      // teams', who are answered team by team.
+      teams: tournament.teams
+        .filter((team) => !team.archived)
+        .map((team) => ({
+          name: team.name.toString(),
+          players: team.players
+            .filter((player) => !player.archived)
+            .map((player) => ({
+              name: player.name.toString(),
+              address: `${address}/players/${player.slug.toString()}`,
+            }))
+            .sort((one, other) => byName.compare(one.name, other.name)),
+        })),
       players: tournament.players
         .filter((player) => !player.archived)
         .map((player) => ({

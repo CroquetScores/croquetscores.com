@@ -295,7 +295,28 @@ export const english: Language = {
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "Recent",
+    "tournament.summary": "Summary",
+    // A tournament played by teams' summary: its table's groups and columns.
+    // A test's grid: what each match is the best of, the word between its
+    // teams, and its totals beneath the matches.
+    "test.bestOf": "Each match is the best of {count}.",
+    "test.vs": "vs",
+    "test.matches": "Matches",
+    "test.games": "Games",
+    "test.hoops": "Hoops",
+    "teamSummary.tests": "Tests",
+    "teamSummary.matches": "Matches",
+    "teamSummary.games": "Games",
+    "teamSummary.hoops": "Hoops",
+    "teamSummary.wins": "Wins",
+    "teamSummary.losses": "Losses",
+    "teamSummary.draws": "Draws",
+    "teamSummary.for": "For",
+    "teamSummary.against": "Against",
+    "teamSummary.net": "Net",
     "tournament.players": "Players",
+    // A test in a tournament's sections: its two teams' short names.
+    "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notes",
     "tournament.commentary": "Commentary",
     "tournament.beat": "beat",

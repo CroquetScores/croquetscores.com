@@ -2,7 +2,8 @@ Feature: Changing what a player in a tournament's team is
 
   A player in a team has their name corrected as a tournament's player does
   (`updatePlayer.feature`). Updating says it again, and the player keeps their
-  id, their team and their place in the team's list. What is asked of it is
+  id, their team, their place in the team's list and their slug, so that a
+  link to them still finds them. What is asked of it is
   asked of a new player in a team (`addTeamPlayer.feature`), and a name
   another player in the same team has, archived or not, is refused as it is
   when a player is added. A player's own name, written with other capitals, is
@@ -58,6 +59,14 @@ Feature: Changing what a player in a tournament's team is
       Given the player "Sam Someone" of the team "Australia" was updated to be called "Samantha Someone"
       When the tournament is rebuilt from the stream
       Then the team "Australia" has the player "Samantha Someone"
+
+  Rule: A player in a team keeps their slug when their name is corrected
+
+    Scenario: A player renamed keeps their slug
+      Given the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      When the player "Sam Someone" of the team "Australia" is updated
+      Then the player "Samantha Someone" of the team "Australia" has the slug "sam-someone"
 
   Rule: What is asked of a player added to a team is asked of a player updated
 

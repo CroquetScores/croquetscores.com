@@ -144,3 +144,45 @@ Then(
     assert.equal(await flagOf(this, name).getAttribute("alt"), country);
   },
 );
+
+// A tournament played by teams, team by team ---------------------------------------
+
+const teamsOnPage = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main .players-team");
+
+const teamOnPage = (world: SpecWorld, name: string): Locator =>
+  teamsOnPage(world).filter({
+    has: world.browserPage.locator(".players-team-name", {
+      hasText: new RegExp(`^${name}$`),
+    }),
+  });
+
+Then(
+  /^the (first|second|third) team on the players' page is headed "(.*)"$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    assert.equal(
+      (
+        await teamsOnPage(this)
+          .nth(["first", "second", "third"].indexOf(which))
+          .locator(".players-team-name")
+          .innerText()
+      ).trim(),
+      name,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) player of the team "(.*)" on the players' page is "(.*)"$/,
+  async function (this: SpecWorld, which: string, team: string, name: string) {
+    assert.equal(
+      (
+        await teamOnPage(this, team)
+          .locator(".player")
+          .nth(["first", "second", "third"].indexOf(which))
+          .innerText()
+      ).trim(),
+      name,
+    );
+  },
+);

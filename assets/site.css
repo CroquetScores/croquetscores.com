@@ -67,6 +67,8 @@
   --void: #16181c;
   /* A score that won its game, as the old site had it: red. */
   --score-won: #b3261e;
+  /* The thick line round a table and between its groups of columns. */
+  --table-rule: #066b00;
 
   /* What a bar's contents are inset by, so that the site name lines up with the
      text in the panel below it rather than with the panel's edge. The panel's
@@ -129,6 +131,9 @@
     --void: light-dark(#16181c, #050605);
     /* Red in both, and never below 4.5:1 on the panel. */
     --score-won: light-dark(#b3261e, #ff8a80);
+    /* The section bar's green in light; in dark, where the bar is black and a
+       black line is lost on the dark panel, the muted ink, which is not. */
+    --table-rule: light-dark(#066b00, #a6b0a3);
   }
 }
 
@@ -1498,6 +1503,21 @@ main {
   background: var(--surface);
 }
 
+/* A tournament played by teams lists its players team by team, each team's
+   name headed in the section bar's colours as a tournament's own players are,
+   with its players drawn up against it so that the two read as one table. */
+.players-team-name {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+}
+
+.players-team > .players {
+  margin: 0;
+}
+
 /* As tall as anything else pressed with a thumb. */
 .player-name {
   display: inline-flex;
@@ -2163,6 +2183,129 @@ main {
    medium screen, as a block's summary is. */
 .swiss-table:not(:has(.swiss-results)) {
   max-width: 38rem;
+}
+
+/* A tournament played by teams' summary, set as a block's summary is: headed
+   in the section bar's colours, its groups above their columns, and its rows
+   banded. Scrolling across within the page where it is wider than the window,
+   as a block's grid does, rather than pushing the page out past it. */
+.team-summary-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* A thick line round the whole table and between its groups, Tests, Games
+   and Hoops, so that each group reads as one, as on the old site. */
+.team-summary {
+  border-collapse: collapse;
+  border: 3px solid var(--table-rule);
+}
+
+.team-summary .team-summary-starts {
+  border-left: 3px solid var(--table-rule);
+}
+
+.team-summary th,
+.team-summary td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.team-summary thead th,
+.team-summary thead td {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  border-color: var(--accent-strong);
+}
+
+.team-summary tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+.team-summary-team,
+.team-summary-corner {
+  text-align: start;
+}
+
+.team-summary-group,
+.team-summary-heading,
+.team-summary-number {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* A test's grid, as the old site drew it: the two teams' players either side
+   of their games, the first team on the left, and each team's totals beneath
+   on its own side; headed in the section bar's colours and its rows banded,
+   no wider than a medium screen, and scrolling across within the page where
+   it is still wider than the window. */
+.test-scroll {
+  position: relative;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.test-matches {
+  width: 100%;
+  max-width: 38rem;
+  border-collapse: collapse;
+}
+
+.test-matches th,
+.test-matches td {
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.test-matches thead th {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  border-color: var(--accent-strong);
+}
+
+.test-matches tbody tr:nth-child(even) {
+  background: var(--surface);
+}
+
+.test-side,
+.test-total-number {
+  overflow-wrap: break-word;
+}
+
+/* The first team's side against the games and the second's from them, each
+   heading over its own side. */
+.test-matches tr > :first-child {
+  text-align: end;
+}
+
+.test-matches tr > :last-child {
+  text-align: start;
+}
+
+.test-vs,
+.test-games,
+.test-total-name {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* A match's games one beneath another. */
+.test-game {
+  display: block;
+}
+
+/* Told apart by more than colour, as a block's grid tells them. */
+.test-won {
+  color: var(--score-won);
+  font-weight: bold;
+}
+
+.test-matches tfoot td,
+.test-matches tfoot th {
+  font-weight: bold;
 }
 
 /* --- Utilities ----------------------------------------------------------- */

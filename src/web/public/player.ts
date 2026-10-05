@@ -3,8 +3,11 @@
 // tournament's first. Its sections are the tournament's, with Players marked,
 // since a player is one of the tournament's players.
 //
-// A player who is archived, a slug no player has, and a tournament played by
-// teams are not pages, any more than a tournament a reader is not sent to is.
+// A player of a tournament played by teams is one of a team's, and their
+// competitions are the tests their team plays in, each said as the section bar
+// says it. A player who is archived, a player of an archived team, and a slug
+// no player has are not pages, any more than a tournament a reader is not sent
+// to is.
 // An address the tournament has moved on from leads to the player where the
 // tournament is now.
 import type { FastifyInstance } from "fastify";
@@ -22,13 +25,12 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
-import { sectionsOf } from "./tournamentPages.js";
+import { competitionNamed, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
 // What answers the page as one that is not there.
 const notThere: readonly string[] = [
   "PublicPlayerOfTournament.NoSuchTournament",
-  "PublicPlayerOfTournament.PlayedByTeams",
   "PublicPlayerOfTournament.NoSuchPlayer",
 ];
 
@@ -39,10 +41,12 @@ const results: Readonly<Record<GameOfPlayer["result"], string>> = {
 };
 
 // A game as the player played it: what they did, to whom, and the score, theirs
-// first, as "beat Alex Another 26 to 17". The opponent leads to their own page.
+// first, as "beat Alex Another 26 to 17". The opponent leads to their own page,
+// and a team's player is followed by their team's short name in brackets, as
+// "Kim Keeper (ENG)", since a reader of a test knows a team by it.
 const game = (played: GameOfPlayer, speaking: Speaking): string => {
   const { say } = speaking;
-  return `                <li class="player-game"><span class="player-game-result">${escape(say(results[played.result]))}</span> <a class="player-game-opponent" href="/${escape(played.opponent.address)}">${escape(played.opponent.name)}</a> <span class="player-game-score">${escape(say("player.score", { score: played.score, opponent: played.opponentScore }))}</span></li>`;
+  return `                <li class="player-game"><span class="player-game-result">${escape(say(results[played.result]))}</span> <a class="player-game-opponent" href="/${escape(played.opponent.address)}">${escape(played.opponent.name)}</a>${played.opponent.team === undefined ? "" : ` <span class="player-game-team">(${escape(played.opponent.team)})</span>`} <span class="player-game-score">${escape(say("player.score", { score: played.score, opponent: played.opponentScore }))}</span></li>`;
 };
 
 export const registerPlayerPage = (
@@ -90,7 +94,7 @@ ${asked.games.map((each) => game(each, speaking)).join("\n")}
 ${asked.entered
   .map(
     (competition) =>
-      `                <li><a class="player-competition" href="/${escape(competition.address)}">${escape(competition.name)}</a></li>`,
+      `                <li><a class="player-competition" href="/${escape(competition.address)}">${escape(competitionNamed(competition, speaking))}</a></li>`,
   )
   .join("\n")}
               </ul>`;
@@ -101,8 +105,8 @@ ${asked.entered
       render(assets, {
         tournament: { name: asked.name, address: asked.address },
         title: asked.player.name,
-        sections: sectionsOf({ ...asked, playedByTeams: false }, speaking),
-        currentSection: say("tournament.players"),
+        sections: sectionsOf(asked, speaking),
+        currentSection: `/${asked.address}/players`,
         theme: themeOf(request),
         signedIn: signedIn(request),
         hasPassword: hasPassword(request),

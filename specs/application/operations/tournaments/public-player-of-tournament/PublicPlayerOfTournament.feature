@@ -21,10 +21,17 @@ Feature: A player of a tournament, for anybody to read
   is found now, and its competitions in use with where each is found, for the
   page's section bar.
 
-  A tournament played by teams has no players' pages, since its players are
-  its teams', and asking for one is refused as
-  `PublicPlayerOfTournament.PlayedByTeams`. A slug no player of the
-  tournament has, or an archived player's, is refused as
+  A tournament played by teams has no players of its own, only its teams',
+  and a player in one of its teams is answered as a tournament's own player
+  is: found by their slug (`addTeamPlayer.feature`), with their name, their
+  games in the tests, each against a player of the other team, answered with
+  that team's short name, since a reader of a test knows a team by it; and
+  the tests their team plays in that are in use, since a team's players are
+  not entered in a test one by one but play in it for their team. A player of an archived
+  team is not one a reader is sent to, any more than an archived player is.
+
+  A slug no player of the tournament has, or an archived player's, is
+  refused as
   `PublicPlayerOfTournament.NoSuchPlayer`, since an archived player is not one
   a reader is sent to. An address no tournament of the website has been found
   at, or an archived tournament's, is refused as
@@ -129,6 +136,11 @@ Feature: A player of a tournament, for anybody to read
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
       Then the first game answered was against a player found at "2026/ac/spring-open/players/alex-another"
 
+    Scenario: A tournament's own player's opponent is answered with no team
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game answered was against a player of no team
+
     Scenario: The competition a game was played in is answered
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
@@ -163,6 +175,77 @@ Feature: A player of a tournament, for anybody to read
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
       Then the competition of the player "Block A" is answered as found at "2026/ac/spring-open/competitions/block-a"
 
+  Rule: A player in a team is answered as a tournament's own player is
+
+    Background:
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" 2 expected matches
+
+    Scenario: A team's player is answered by their slug
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the player answered is called "Pat Player"
+
+    Scenario: A game a team's player won in a test is answered as beating their opponent
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was won against "Kim Keeper"
+
+    Scenario: A game a team's player lost in a test is answered as losing to their opponent
+      Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was lost to "Kim Keeper"
+
+    Scenario: A team's player's game is answered with their score first
+      Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was played to "17" against "26"
+
+    Scenario: A team's player's opponent is answered with where their page is found
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was against a player found at "2026/ac/spring-tests/players/kim-keeper"
+
+    Scenario: A team's player's opponent is answered with their team's short name
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was against a player of the team "ENG"
+
+    Scenario: The test a team's player's game was played in is answered
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was played in "AUS v ENG"
+
+    Scenario: A test the team plays in is answered as the player's competition
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first competition of the player answered is "AUS v ENG"
+
+    Scenario: A test the team does not play in is not answered
+      Given the team is to be known for short as "NZ"
+      And "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
+      And "organiser@example.com" has added the test between "England" and "New Zealand" to "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then 1 competition of the player is answered
+
+    Scenario: An archived player of a team is refused
+      Given "organiser@example.com" has archived the player "Pat Player" of the team "Australia" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then it is refused with "PublicPlayerOfTournament.NoSuchPlayer"
+
+    Scenario: A player of an archived team is refused
+      Given "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
+      And "organiser@example.com" has added the player "Nat Newman" to the team "New Zealand" of "Spring Tests"
+      And "organiser@example.com" has archived the team "New Zealand" in "Spring Tests"
+      When the player "nat-newman" of the tournament at "2026/ac/spring-tests" is asked for
+      Then it is refused with "PublicPlayerOfTournament.NoSuchPlayer"
+
   Rule: A player a reader is not sent to is refused
 
     Scenario: A slug no player has is refused
@@ -174,12 +257,6 @@ Feature: A player of a tournament, for anybody to read
       And "organiser@example.com" has archived the player "Pat Player" in "Spring Open"
       When the player "pat-player" of the tournament at "2026/ac/spring-open" is asked for
       Then it is refused with "PublicPlayerOfTournament.NoSuchPlayer"
-
-    Scenario: A tournament played by teams is refused
-      Given the tournament is to be played in the format "Teams"
-      And "organiser@example.com" has created the tournament "Spring Tests"
-      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
-      Then it is refused with "PublicPlayerOfTournament.PlayedByTeams"
 
     Scenario: An address no tournament has been found at is refused
       When the player "sam-someone" of the tournament at "2026/ac/autumn-open" is asked for

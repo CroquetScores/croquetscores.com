@@ -16,42 +16,10 @@ import {
 } from "./GamesOfTournament.js";
 import {
   competitionsInUse,
+  playersOf,
   tournamentForReaders,
 } from "./tournamentForReaders.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
-
-// Each of the tournament's players by their id, as a game names them: a
-// player entered in a competition by what the tournament calls them now, what
-// they represent and the flag they fly; and a player of a team, in a test,
-// by their name, representing their team and flying its flag, since a team's
-// players are known by their team.
-const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
-  new Map([
-    ...tournament.players.map(
-      (player) =>
-        [
-          player.id.value,
-          {
-            name: player.name.toString(),
-            representing: player.representing,
-            flag: player.flag === undefined ? undefined : String(player.flag),
-          },
-        ] as const,
-    ),
-    ...tournament.teams.flatMap((team) =>
-      team.players.map(
-        (player) =>
-          [
-            player.id.value,
-            {
-              name: player.name.toString(),
-              representing: team.name.toString(),
-              flag: team.flag === undefined ? undefined : String(team.flag),
-            },
-          ] as const,
-      ),
-    ),
-  ]);
 
 export class GamesOfTournamentHandler extends QueryHandler<
   GamesOfTournament,

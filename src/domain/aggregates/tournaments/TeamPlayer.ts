@@ -1,3 +1,4 @@
+import type { Slug } from "../../common/Slug.js";
 import { Validator } from "../../common/validation/Validator.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import { PersonName } from "../accounts/value-objects/PersonName.js";
@@ -38,7 +39,10 @@ export interface TeamPlayerDetails {
  * for is what they represent, and the team flies the flag.
  *
  * A player has an order, which is where they come when the team lists its
- * players, lowest first, and which the tournament gives. A player is never
+ * players, lowest first, and a slug, which finds them within the tournament;
+ * both are the tournament's to give, since it is the one that knows every
+ * team's players. A player keeps their slug whatever else changes, so that a
+ * link to them still finds them. A player is never
  * altered: updating, giving a new order, archiving and restoring each give the
  * player as they are afterwards, and asking for what they already are gives
  * them back as they are.
@@ -49,34 +53,37 @@ export interface TeamPlayerDetails {
 export class TeamPlayer {
   readonly #id: TeamPlayerId;
   readonly #name: PersonName;
+  readonly #slug: Slug;
   readonly #order: number;
   readonly #archived: boolean;
 
   private constructor(
     id: TeamPlayerId,
     name: PersonName,
+    slug: Slug,
     order: number,
     archived: boolean,
   ) {
     this.#id = id;
     this.#name = name;
+    this.#slug = slug;
     this.#order = order;
     this.#archived = archived;
   }
 
   /**
-   * The new player known by `id` that `details` describe, in `order`, not
-   * archived. Throws {@link ValidationError} naming the first rule broken: the
+   * The new player known by `id` that `details` describe, found at `slug` and
+   * in `order`, not archived. Throws {@link ValidationError} naming the first rule broken: the
    * name first, then the order.
    */
   static from(
     id: TeamPlayerId,
     details: TeamPlayerDetails,
-    order: number,
+    { slug, order }: { readonly slug: Slug; readonly order: number },
   ): TeamPlayer {
     const name = TeamPlayer.#nameOf(details);
     orders.ensureValid(order);
-    return new TeamPlayer(id, name, order, false);
+    return new TeamPlayer(id, name, slug, order, false);
   }
 
   /**
@@ -108,6 +115,11 @@ export class TeamPlayer {
     return this.#name;
   }
 
+  /** What finds the player within the tournament. */
+  get slug(): Slug {
+    return this.#slug;
+  }
+
   /** Where the player comes when the team lists its players, lowest first. */
   get order(): number {
     return this.#order;
@@ -129,6 +141,7 @@ export class TeamPlayer {
     return new TeamPlayer(
       this.#id,
       TeamPlayer.#nameOf(details),
+      this.#slug,
       this.#order,
       false,
     );
@@ -140,7 +153,13 @@ export class TeamPlayer {
    */
   withOrder(order: number): TeamPlayer {
     orders.ensureValid(order);
-    return new TeamPlayer(this.#id, this.#name, order, this.#archived);
+    return new TeamPlayer(
+      this.#id,
+      this.#name,
+      this.#slug,
+      order,
+      this.#archived,
+    );
   }
 
   /**
@@ -165,13 +184,13 @@ export class TeamPlayer {
     if (hasGames) {
       throw new ValidationError<TeamPlayerErrorCode>("TeamPlayer.HasGames");
     }
-    return new TeamPlayer(this.#id, this.#name, this.#order, true);
+    return new TeamPlayer(this.#id, this.#name, this.#slug, this.#order, true);
   }
 
   /** The player, no longer archived. */
   restore(): TeamPlayer {
     if (!this.#archived) return this;
-    return new TeamPlayer(this.#id, this.#name, this.#order, false);
+    return new TeamPlayer(this.#id, this.#name, this.#slug, this.#order, false);
   }
 
   equals(other: TeamPlayer | undefined): boolean {

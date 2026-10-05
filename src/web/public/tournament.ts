@@ -75,7 +75,6 @@ export const registerTournamentPage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const recent = say("tournament.recent");
       const sections = sectionsOf(asked, speaking);
       const now = request.requestedAt.toDate();
       const games =
@@ -92,7 +91,7 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
           tournament: { name: asked.name, address: asked.address },
           title: asked.name,
           sections,
-          currentSection: recent,
+          currentSection: `/${asked.address}`,
           theme: themeOf(request),
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),

@@ -35,9 +35,12 @@ Feature: A tournament's page lists its games, the most recent first
   The secondary navigation is the tournament's sections: Recent, which is
   this page and is marked as the section being read, then Players, Notes and
   Commentary, then each of its competitions in use, in the tournament's
-  order. A test is among the competitions, by its name. A tournament played
-  by teams has no players of its own, only its teams', so it offers no
-  Players section. The players' page lists the players
+  order. A tournament played by teams has the same sections, Players among
+  them, with Summary after Recent, the place its teams' standing will be
+  shown; and its competitions are its tests, each said as its two teams'
+  short names as they are now, the first team's first, with "vs" between,
+  as "AUS vs ENG". A Standard tournament has no Summary, since its standing
+  is in its competitions. The players' page lists the players
   (`players.feature`); the pages of the other sections besides this one do
   not exist yet, so each leads to an address that answers `404` until the
   feature that provides it lands.
@@ -309,28 +312,60 @@ Feature: A tournament's page lists its games, the most recent first
         | Commentary | /2026/ac/spring-open/commentary            |
         | Block A    | /2026/ac/spring-open/competitions/block-a  |
 
+    Scenario: A Standard tournament offers no Summary
+      When the page at "/2026/ac/spring-open" is opened
+      Then the section "Summary" is not offered
+
     Scenario: An archived competition is not offered
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block B" in "Spring Open"
       When the page at "/2026/ac/spring-open" is opened
       Then the section "Block B" is not offered
 
-    Scenario: A tournament played by teams offers no Players section
-      Given the tournament is to be played in the format "Teams"
-      And "organiser@example.com" has created the tournament "Spring Tests"
-      When the page at "/2026/ac/spring-tests" is opened
-      Then the section "Players" is not offered
+  Rule: A tournament played by teams has Summary after Recent, and its tests said as its teams' short names
 
-    Scenario: A test leads to its page under the tests
+    Background:
       Given the tournament is to be played in the format "Teams"
       And "organiser@example.com" has created the tournament "Spring Tests"
       And the team is to be known for short as "AUS"
       And "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And the team is to be known for short as "ENG"
       And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the team is to be known for short as "NZ"
+      And "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "England" and "New Zealand" to "Spring Tests"
+
+    Scenario Outline: The sections are Recent, Summary, Players, Notes, Commentary and the tests in order
       When the page at "/2026/ac/spring-tests" is opened
-      Then the section "AUS v ENG" leads to "/2026/ac/spring-tests/tests/aus-v-eng"
+      Then the <place> section is "<section>"
+
+      Examples:
+        | place   | section    |
+        | first   | Recent     |
+        | second  | Summary    |
+        | third   | Players    |
+        | fourth  | Notes      |
+        | fifth   | Commentary |
+        | sixth   | AUS vs ENG |
+        | seventh | ENG vs NZ  |
+
+    Scenario: Summary leads to the tournament's summary
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "Summary" leads to "/2026/ac/spring-tests/summary"
+
+    Scenario: Players leads to the tournament's players
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "Players" leads to "/2026/ac/spring-tests/players"
+
+    Scenario: A test leads to its page under the tests
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "AUS vs ENG" leads to "/2026/ac/spring-tests/tests/aus-v-eng"
+
+    Scenario: A test is said as its teams' short names as they are now
+      Given "organiser@example.com" has given the team "England" of "Spring Tests" the short name "GBR"
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the sixth section is "AUS vs GBR"
 
   Rule: Every word the page says is in the reader's language
 

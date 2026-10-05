@@ -18,10 +18,16 @@ Feature: A tournament's players' page lists its players by name
   the section being read.
 
   A tournament played by teams has no players of its own, only its teams', so
-  it has no players' page. Nor has an archived tournament, or one the website
-  has never had. An address the tournament has moved on from leads to its
-  players' page where it is found now, so that a link kept from before still
-  works.
+  its players' page lists them team by team: each team under a heading of its
+  name, as "Australia", coloured as the section bar is, in the tournament's
+  order of its teams, and its players beneath it in alphabetical order of
+  their names, each by their name alone, since their team is the heading
+  above them, and leading to their own page (`player.feature`). There is no
+  heading of "Players" above the teams, since the section bar says it already
+  and the teams' names head the lists. An archived tournament has no players'
+  page, nor one the website has never had. An address the tournament has
+  moved on from leads to its players' page where it is found now, so that a
+  link kept from before still works.
 
   Where a scenario says nothing else, a tournament is for the sport "ac",
   starts on 3 October 2026, and its players represent nothing and fly no flag.
@@ -120,13 +126,43 @@ Feature: A tournament's players' page lists its players by name
       When the page at "/2026/ac/spring-open/players" is opened
       Then the section "Recent" leads to "/2026/ac/spring-open"
 
-  Rule: An address with no players' page a reader is sent to is not a page
+  Rule: A tournament played by teams lists its players under each team's name
 
-    Scenario: A tournament played by teams has no players' page
+    Background:
       Given the tournament is to be played in the format "Teams"
       And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Pam Partner" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+
+    Scenario: Each team is headed by its name, in the tournament's order
       When the page at "/2026/ac/spring-tests/players" is opened
-      Then the page says the words for "errors.notFound"
+      Then the first team on the players' page is headed "Australia"
+      And the second team on the players' page is headed "England"
+
+    Scenario: The teams are under no heading of "Players"
+      When the page at "/2026/ac/spring-tests/players" is opened
+      Then the content has no heading "Players"
+
+    Scenario: A team's players are beneath it in alphabetical order
+      When the page at "/2026/ac/spring-tests/players" is opened
+      Then the first player of the team "Australia" on the players' page is "Pam Partner"
+      And the second player of the team "Australia" on the players' page is "Pat Player"
+
+    Scenario: A team's player leads to their own page
+      Given the page at "/2026/ac/spring-tests/players" is open
+      When the player "Kim Keeper" is pressed
+      Then the address is "/2026/ac/spring-tests/players/kim-keeper"
+
+    Scenario: Players is marked as the section being read
+      When the page at "/2026/ac/spring-tests/players" is opened
+      Then the section "Players" is marked as current
+
+  Rule: An address with no players' page a reader is sent to is not a page
 
     Scenario: An address no tournament has been found at is not found
       When the page at "/2026/ac/autumn-open/players" is opened
@@ -154,7 +190,8 @@ Feature: A tournament's players' page lists its players by name
 
     The test locale shows it (`language.feature`). What is nobody's language
     is left out: the tournament's name, and its players' names and what they
-    represent, which are what its manager called them.
+    represent, which are what its manager called them. A tournament played by
+    teams says nothing else, its teams' names being its managers' too.
 
     Scenario: The players are in the reader's language
       Given a browser that asks for "en-XA"

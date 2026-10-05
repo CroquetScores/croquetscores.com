@@ -35,8 +35,6 @@ export type TournamentOperationErrorCode =
   | "UpcomingTournaments.NoSuchCountry"
   | "TournamentsInYear.NoSuchCountry"
   | "TournamentYears.SportNotOffered"
-  | "PublicPlayersOfTournament.PlayedByTeams"
-  | "PublicPlayerOfTournament.PlayedByTeams"
   | "PublicPlayerOfTournament.NoSuchPlayer"
   | "PublicBlockOfTournament.NoSuchCompetition"
   | "PublicBlockOfTournament.NotABlock"
@@ -44,6 +42,9 @@ export type TournamentOperationErrorCode =
   | "PublicKnockoutOfTournament.NotAKnockout"
   | "PublicSwissOfTournament.NoSuchCompetition"
   | "PublicSwissOfTournament.NotASwiss"
+  | "PublicTeamSummaryOfTournament.NotPlayedByTeams"
+  | "PublicTestOfTournament.NoSuchCompetition"
+  | "PublicTestOfTournament.NotATest"
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

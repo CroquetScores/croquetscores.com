@@ -13,8 +13,10 @@ import type { Section } from "../common/layout.js";
 /**
  * The tournament's sections, by the address it is found at now: Recent, which
  * is its page, then Players, Notes and Commentary, then each of its
- * competitions in use. A tournament played by teams has no players of its
- * own, only its teams', so it has no Players.
+ * competitions in use. A tournament played by teams has the same, with
+ * Summary after Recent, the place its teams' standing will be shown, and its
+ * competitions its tests, each said as its teams' short names with "vs"
+ * between, as "AUS vs ENG", in the reader's language.
  */
 export const sectionsOf = (
   tournament: {
@@ -29,17 +31,30 @@ export const sectionsOf = (
   return [
     { href: here, label: say("tournament.recent") },
     ...(tournament.playedByTeams
-      ? []
-      : [{ href: `${here}/players`, label: say("tournament.players") }]),
+      ? [{ href: `${here}/summary`, label: say("tournament.summary") }]
+      : []),
+    { href: `${here}/players`, label: say("tournament.players") },
     { href: `${here}/notes`, label: say("tournament.notes") },
     { href: `${here}/commentary`, label: say("tournament.commentary") },
     ...tournament.competitions.map((competition) => ({
       href: `/${competition.address}`,
-      label: competition.name,
+      label: competitionNamed(competition, speaking),
       competition: true,
     })),
   ];
 };
+
+/**
+ * A competition as a tournament's pages say it: by its name, or a test by its
+ * two teams' short names, as "AUS vs ENG", since a test is called by them.
+ */
+export const competitionNamed = (
+  competition: CompetitionOfTournament,
+  { say }: Speaking,
+): string =>
+  competition.teams === undefined
+    ? competition.name
+    : say("tournament.test", competition.teams);
 
 /**
  * A player as a tournament's pages show them: their name, what they represent
