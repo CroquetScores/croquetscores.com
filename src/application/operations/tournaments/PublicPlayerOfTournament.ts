@@ -13,6 +13,11 @@ export interface Opponent {
   readonly name: string;
   /** Where their page is found, as "2026/ac/spring-open/players/alex-another". */
   readonly address: string;
+  /**
+   * The short name of the team they play for, as "ENG", or nothing for a
+   * tournament's own player, who plays for no team.
+   */
+  readonly team?: string | undefined;
 }
 
 /** One of a player's games, as they played it. */

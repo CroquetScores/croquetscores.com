@@ -41,10 +41,12 @@ const results: Readonly<Record<GameOfPlayer["result"], string>> = {
 };
 
 // A game as the player played it: what they did, to whom, and the score, theirs
-// first, as "beat Alex Another 26 to 17". The opponent leads to their own page.
+// first, as "beat Alex Another 26 to 17". The opponent leads to their own page,
+// and a team's player is followed by their team's short name in brackets, as
+// "Kim Keeper (ENG)", since a reader of a test knows a team by it.
 const game = (played: GameOfPlayer, speaking: Speaking): string => {
   const { say } = speaking;
-  return `                <li class="player-game"><span class="player-game-result">${escape(say(results[played.result]))}</span> <a class="player-game-opponent" href="/${escape(played.opponent.address)}">${escape(played.opponent.name)}</a> <span class="player-game-score">${escape(say("player.score", { score: played.score, opponent: played.opponentScore }))}</span></li>`;
+  return `                <li class="player-game"><span class="player-game-result">${escape(say(results[played.result]))}</span> <a class="player-game-opponent" href="/${escape(played.opponent.address)}">${escape(played.opponent.name)}</a>${played.opponent.team === undefined ? "" : ` <span class="player-game-team">(${escape(played.opponent.team)})</span>`} <span class="player-game-score">${escape(say("player.score", { score: played.score, opponent: played.opponentScore }))}</span></li>`;
 };
 
 export const registerPlayerPage = (

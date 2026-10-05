@@ -24,9 +24,10 @@ Feature: A player of a tournament, for anybody to read
   A tournament played by teams has no players of its own, only its teams',
   and a player in one of its teams is answered as a tournament's own player
   is: found by their slug (`addTeamPlayer.feature`), with their name, their
-  games in the tests, each against a player of the other team, and the tests
-  their team plays in that are in use, since a team's players are not entered
-  in a test one by one but play in it for their team. A player of an archived
+  games in the tests, each against a player of the other team, answered with
+  that team's short name, since a reader of a test knows a team by it; and
+  the tests their team plays in that are in use, since a team's players are
+  not entered in a test one by one but play in it for their team. A player of an archived
   team is not one a reader is sent to, any more than an archived player is.
 
   A slug no player of the tournament has, or an archived player's, is
@@ -135,6 +136,11 @@ Feature: A player of a tournament, for anybody to read
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
       Then the first game answered was against a player found at "2026/ac/spring-open/players/alex-another"
 
+    Scenario: A tournament's own player's opponent is answered with no team
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game answered was against a player of no team
+
     Scenario: The competition a game was played in is answered
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
@@ -206,6 +212,11 @@ Feature: A player of a tournament, for anybody to read
       Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
       When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
       Then the first game answered was against a player found at "2026/ac/spring-tests/players/kim-keeper"
+
+    Scenario: A team's player's opponent is answered with their team's short name
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the player "pat-player" of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first game answered was against a player of the team "ENG"
 
     Scenario: The test a team's player's game was played in is answered
       Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"

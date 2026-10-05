@@ -30,7 +30,8 @@ Feature: A player's page shows their games and their competitions
   "/2026/ac/spring-tests/players/pat-player", reached from the team they are
   listed under on the players' page. It is the same page: their games in the
   tests, each against a player of the other team whose name leads to that
-  player's page, and the tests their team plays in, each said as the section
+  player's page, followed by that team's short name in brackets, as
+  "lost to Kim Keeper (ENG) 17 to 26", and the tests their team plays in, each said as the section
   bar says it, by the two teams' short names with "vs" between, as
   "AUS vs ENG", and leading to the test's page.
 
@@ -200,7 +201,7 @@ Feature: A player's page shows their games and their competitions
     Scenario: A team's player's game in a test is said as they played it
       Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
       When the page at "/2026/ac/spring-tests/players/pat-player" is opened
-      Then the first of the player's games says "lost to Kim Keeper 17 to 26"
+      Then the first of the player's games says "lost to Kim Keeper (ENG) 17 to 26"
 
     Scenario: A team's player's opponent leads to their own page
       Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"

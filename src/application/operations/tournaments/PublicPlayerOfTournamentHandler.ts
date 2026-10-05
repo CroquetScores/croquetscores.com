@@ -90,7 +90,11 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
           (other) =>
             [
               other.id.value,
-              { name: other.name.toString(), address: pageOf(other.slug) },
+              {
+                name: other.name.toString(),
+                address: pageOf(other.slug),
+                team: each.shortName.toString(),
+              },
             ] as const,
         ),
       ),
