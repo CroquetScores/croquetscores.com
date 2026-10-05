@@ -75,46 +75,53 @@ markdown.renderer.rules.link_open = (tokens, index, options, env, self) => {
     : drawLink(tokens, index, options, env, self);
 };
 
-// A number and a full stop or a bracket beginning a line, which Markdown takes
-// for an item of a numbered list.
-const TURN_NUMBER = /^(\d+)([.)])(?=\s|$)/;
-
-// A line that opens or closes a block of code: three backticks or tildes or
-// more, indented by three spaces at most.
-const FENCE = /^ {0,3}(`{3,}|~{3,})/;
-
-// `text` with the stop or the bracket after a number beginning a line escaped,
-// but for a line in a block of code, which is drawn exactly as it was written
-// and would show the escape. A block is closed by a fence of its own
-// character at least as long as the one that opened it.
-const turnNumbersEscaped = (text: string): string => {
-  let fence: string | undefined;
-  return text
-    .split("\n")
-    .map((line) => {
-      const fenced = FENCE.exec(line)?.[1];
-      if (fenced !== undefined) {
-        if (fence === undefined) fence = fenced;
-        else if (fenced[0] === fence[0] && fenced.length >= fence.length) {
-          fence = undefined;
-        }
-        return line;
-      }
-      return fence === undefined ? line.replace(TURN_NUMBER, "$1\\$2") : line;
-    })
-    .join("\n");
+// A line that begins, after any indent, with a number and a full stop or a
+// bracket followed by a space or nothing, which Markdown takes for the start
+// of a numbered list.
+const beginsWithATurnNumber = (
+  state: { src: string; bMarks: number[]; tShift: number[]; eMarks: number[] },
+  line: number,
+): boolean => {
+  let at = (state.bMarks[line] ?? 0) + (state.tShift[line] ?? 0);
+  const end = state.eMarks[line] ?? at;
+  const first = at;
+  while (at < end && /\d/.test(state.src.charAt(at))) at += 1;
+  if (at === first || at >= end) return false;
+  const marker = state.src.charAt(at);
+  const after = state.src.charAt(at + 1);
+  return (
+    (marker === "." || marker === ")") && (at + 1 >= end || /\s/.test(after))
+  );
 };
 
-/**
- * What a comment says, drawn from its Markdown, with no HTML of its own. A
- * line beginning with a number and a full stop or a bracket, as "5. Sam
- * roquets Alex", is drawn as it was written, as the old site drew it: a
- * commentator numbers turns, and a numbered list would number "5." and "7."
- * as 5 and 6. The stop or the bracket is escaped as it is drawn, outside a
- * block of code, and what was kept is as it was written.
- */
-export const commentDrawn = (text: string): string =>
-  markdown.render(turnNumbersEscaped(text));
+// A line beginning with a number and a full stop or a bracket, as "5. Sam
+// roquets Alex", begins no numbered list, as the old site had it: a
+// commentator numbers turns, and a list would number "5." and "7." as 5 and 6.
+// Markdown's own rule for lists is asked everything else, and is asked only
+// where Markdown would ask it, so that a line in a block of code — in a
+// list's item or a quotation as anywhere — is never asked at all. Where it
+// begins none, the line is read as words, as any other line is. A line was
+// escaped before it was drawn at first, which had to tell where a block of
+// code was without Markdown, and told it wrongly where its fence was in a
+// list's item or carried words after it.
+const listRule = markdown.block.ruler
+  .getRules("")
+  .find((rule) => rule.name === "list");
+if (listRule === undefined) {
+  throw new Error(
+    "Markdown has no rule for lists to keep numbered turns from.",
+  );
+}
+markdown.block.ruler.at(
+  "list",
+  (state, startLine, endLine, silent) =>
+    !beginsWithATurnNumber(state, startLine) &&
+    listRule(state, startLine, endLine, silent),
+  { alt: ["paragraph", "reference", "blockquote"] },
+);
+
+/** What a comment says, drawn from its Markdown, with no HTML of its own. */
+export const commentDrawn = (text: string): string => markdown.render(text);
 
 // Two shapes, drawn here rather than fetched or set in a font, as the account
 // menu's is: they cost no request, and they take the colour of the link they

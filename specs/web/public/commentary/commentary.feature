@@ -20,9 +20,10 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   says so. A comment is drawn as the old site drew one. A line beginning with
   a number and a full stop or a bracket, as "5. Sam roquets Alex", is drawn
   as it was written, not as an item of a numbered list: a commentator numbers
-  turns, and a list would number "5." and "7." as 5 and 6. Inside a block of
-  code, fenced by three backticks, a line is drawn exactly as it was written
-  already, and is left to be. A web address
+  turns, and a list would number "5." and "7." as 5 and 6. Where a numbered
+  list would begin is told as Markdown tells it, so a block of code, in a
+  list's item or in a quotation as anywhere, is drawn exactly as it was
+  written, a line beginning with a number among it. A web address
   written out with its "https://", and an email address, are drawn as links,
   without the Markdown a link is otherwise written in, since that is how a
   commentator types one on a phone. A link in a comment is marked as one the site does not vouch for,
@@ -190,6 +191,16 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Given "writer@example.com" has added the comment "```\n1. a\n```" to "Day one" of "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the first comment's code says "1. a"
+
+    Scenario: A line beginning with a number in a block of code after a fence with words is drawn exactly as written
+      Given "writer@example.com" has added the comment "```\n```js\n5. Sam roquets\n```" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment's code shows the line "5. Sam roquets"
+
+    Scenario: A line beginning with a number after a block of code in a list's item is not numbered
+      Given "writer@example.com" has added the comment "- ```\n  x\n  ```\n6. y" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment draws no numbered list
 
     Scenario: A web address written out is drawn as a link
       Given "writer@example.com" has added the comment "Results at https://example.com/results" to "Day one" of "Spring Open"

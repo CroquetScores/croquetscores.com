@@ -654,3 +654,15 @@ Then(
     );
   },
 );
+
+Then(
+  /^the (first|second|third|last) comment's code shows the line "(.*)"$/,
+  async function (this: SpecWorld, which: string, line: string) {
+    const code = commentAt(this, which).locator(".comment-text code");
+    await code.first().waitFor();
+    const lines = ((await code.first().textContent()) ?? "")
+      .split("\n")
+      .map((each) => each.trim());
+    assert.ok(lines.includes(line), `It shows ${JSON.stringify(lines)}.`);
+  },
+);
