@@ -10,7 +10,7 @@ Feature: A commentary on a tournament, for anybody to read
   (`addComment.feature`).
 
   Each comment is answered with what a reader is shown of it: what it says,
-  as it was kept, in Markdown with no HTML in it (`CommentText.feature`);
+  as it was kept, in Markdown, as it was typed (`CommentText.feature`);
   when it was written; and, where it has been edited, when it last was
   (`editComment.feature`). The commentary says too whether the reader asking
   is its writer, since only its writer may add, edit or delete a comment, and

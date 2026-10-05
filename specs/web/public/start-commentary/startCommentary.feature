@@ -9,8 +9,8 @@ Feature: A reader signed in can start a commentary on a tournament
   (`CommentaryTitle.feature`), no more than 100 characters, and only where
   it is kept. The field itself puts no limit on what is typed: a browser
   counts what is typed, where a title is counted as a reader counts it, with
-  its tags and the spaces at either end taken out, so a limit on the field
-  would cut short a title that is not too long. That is how every other form
+  the spaces at either end taken out, so a limit on the field would cut
+  short a title that is not too long. That is how every other form
   here holds a length.
 
   A title that breaks a rule, or one another commentary on the tournament

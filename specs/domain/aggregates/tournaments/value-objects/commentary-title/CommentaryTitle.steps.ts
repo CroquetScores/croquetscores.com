@@ -44,13 +44,6 @@ When(
 );
 
 When(
-  "a commentary title of {int} characters wrapped in {string} is made",
-  function (this: SpecWorld, length: number, tag: string) {
-    tryToMake(this, `${tag}${"a".repeat(length)}${tag.replace("<", "</")}`);
-  },
-);
-
-When(
   "a commentary title of {int} accented letters is made with each accent typed after its letter",
   function (this: SpecWorld, length: number) {
     tryToMake(this, ACCENTED.repeat(length));

@@ -106,10 +106,10 @@ Feature: Editing a comment in a commentary
       When the comment "Sam is two hoops up" is edited to "   "
       Then it is refused for breaking "CommentText.Missing"
 
-    Scenario: An edit has its HTML taken out
+    Scenario: An edit is kept as it was typed, HTML and all
       Given the commentary is rebuilt from its stream
       When the comment "Sam is two hoops up" is edited to "Sam is <i>three</i> hoops up"
-      Then the commentary has the comment "Sam is three hoops up"
+      Then the commentary has the comment "Sam is <i>three</i> hoops up"
 
   Rule: Only a comment the commentary has can be edited
 
@@ -131,7 +131,7 @@ Feature: Editing a comment in a commentary
       When the comment "Sam is two hoops up" is edited to "Sam is two hoops up"
       Then it has recorded 0 events
 
-    Scenario: An edit that is the same once its HTML is taken out records nothing
+    Scenario: An edit that is the same once its ends are trimmed records nothing
       Given the commentary is rebuilt from its stream
-      When the comment "Sam is two hoops up" is edited to "<p>Sam is two hoops up</p>"
+      When the comment "Sam is two hoops up" is edited to "  Sam is two hoops up  "
       Then it has recorded 0 events

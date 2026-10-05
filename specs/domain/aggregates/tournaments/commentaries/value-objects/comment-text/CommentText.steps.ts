@@ -39,13 +39,6 @@ When(
 );
 
 When(
-  "a comment of {int} characters wrapped in {string} is made",
-  function (this: SpecWorld, length: number, tag: string) {
-    tryToMake(this, `${tag}${"a".repeat(length)}${tag.replace("<", "</")}`);
-  },
-);
-
-When(
   "a comment of {int} accented letters is made with each accent typed after its letter",
   function (this: SpecWorld, length: number) {
     tryToMake(this, ACCENTED.repeat(length));
@@ -61,40 +54,5 @@ Then(
       `No comment has been made: ${inspect(this.failure)}`,
     );
     assert.equal(String(kept), withLineBreaks(text));
-  },
-);
-
-// How long making the comment took, by the clock of the machine running the
-// scenario, kept for the step that says how long it may take.
-const tookMilliseconds = new WeakMap<SpecWorld, number>();
-
-// "<" a hundred thousand times and then "b>" as many, which is a "<b>" inside
-// a "<b>" inside a "<b>" all the way down, each left only once the one inside
-// it is taken out.
-When(
-  "a comment of {int} tags typed inside one another is made",
-  function (this: SpecWorld, count: number) {
-    const typed = `${"<".repeat(count)}${"b>".repeat(count)}`;
-    const started = performance.now();
-    tryToMake(this, typed);
-    tookMilliseconds.set(this, performance.now() - started);
-  },
-);
-
-Then("it was made within a second", function (this: SpecWorld) {
-  const took = tookMilliseconds.get(this);
-  assert.ok(took !== undefined, "Nothing was timed.");
-  assert.ok(took < 1000, `It took ${String(Math.round(took))} milliseconds.`);
-});
-
-// A link whose title is a hundred thousand ">"s in quotes, every one of them
-// in the value and none the end of the tag.
-When(
-  "a comment of a tag with {int} {string}s in a value given in quotes is made",
-  function (this: SpecWorld, count: number, character: string) {
-    const typed = `<a title="${character.repeat(count)}" href=x>the draw</a>`;
-    const started = performance.now();
-    tryToMake(this, typed);
-    tookMilliseconds.set(this, performance.now() - started);
   },
 );

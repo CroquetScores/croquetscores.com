@@ -9,9 +9,9 @@ Feature: Editing a comment in a commentary
   `EditComment.NoSuchCommentary`; a comment the commentary does not have, or
   has deleted, is the commentary's to refuse, as `Commentary.NoSuchComment`.
 
-  What the comment is to say now is asked its own rules on the way in, its
-  HTML taken out first (`CommentText.feature`), and a request that breaks one
-  is refused with `Request.Invalid` and the first rule it breaks.
+  What the comment is to say now is asked its own rules on the way in, and
+  kept as it was typed, HTML and all (`CommentText.feature`); a request that
+  breaks one is refused with `Request.Invalid` and the first rule it breaks.
 
   An archived tournament can only be restored (`restore.feature`), so a
   comment on one cannot be edited either, and is refused with
@@ -41,9 +41,9 @@ Feature: Editing a comment in a commentary
       When the reader signed in to the account for "writer@example.com" edits the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "Sam is three hoops up"
       Then the commentary "Day one" of "Spring Open" does not have the comment "Sam is two hoops up"
 
-    Scenario: The edit is kept with its HTML taken out
+    Scenario: The edit is kept as it was typed, HTML and all
       When the reader signed in to the account for "writer@example.com" edits the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "Sam is <i>three</i> hoops up"
-      Then the commentary "Day one" of "Spring Open" has the comment "Sam is three hoops up"
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is <i>three</i> hoops up"
 
     Scenario: Editing the comment is recorded as done by whoever asked
       When the reader signed in to the account for "writer@example.com" edits the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "Sam is three hoops up"
@@ -62,8 +62,8 @@ Feature: Editing a comment in a commentary
 
   Rule: What the comment is to say must break none of its own rules
 
-    Scenario: An edit that is nothing but tags is refused for being missing
-      When the reader signed in to the account for "writer@example.com" edits the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "<p></p>"
+    Scenario: An edit that is nothing but spaces is refused for being missing
+      When the reader signed in to the account for "writer@example.com" edits the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "   "
       Then it is refused with "Request.Invalid"
       And the first rule broken is "CommentText.Missing"
 

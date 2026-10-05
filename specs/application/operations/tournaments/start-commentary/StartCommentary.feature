@@ -12,9 +12,8 @@ Feature: Starting a commentary on a tournament
   account as its writer, the only account that may write in it
   (`start.feature`). Both are kept, or neither is.
 
-  The commentary's title is asked its own rules on the way in, its HTML
-  taken out first (`CommentaryTitle.feature`), and a request
-  that breaks one is refused with `Request.Invalid` and the first rule it
+  The commentary's title is asked its own rules on the way in, and kept as
+  it was typed (`CommentaryTitle.feature`); a request that breaks one is refused with `Request.Invalid` and the first rule it
   breaks. What the tournament asks of a commentary — a title no other has,
   however capitalised, a slug unlike every other's, and a tournament that is
   not archived — is the tournament's to refuse.
@@ -54,9 +53,9 @@ Feature: Starting a commentary on a tournament
       When the reader signed in to the account for "writer@example.com" starts the commentary "Day one" on "Spring Open"
       Then the tournament's commentary "Day one" has the slug "day-one"
 
-    Scenario: The commentary is kept with the HTML taken out of its title
+    Scenario: The commentary's title is kept as it was typed, HTML and all
       When the reader signed in to the account for "writer@example.com" starts the commentary "Day <b>one</b>" on "Spring Open"
-      Then the tournament has the commentary "Day one"
+      Then the tournament has the commentary "Day <b>one</b>"
 
     Scenario: The commentary was started by whoever asked
       When the reader signed in to the account for "writer@example.com" starts the commentary "Day one" on "Spring Open"

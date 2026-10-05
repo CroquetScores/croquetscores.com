@@ -117,13 +117,6 @@ Feature: Starting a commentary on a tournament
       When the commentary "Day one" is started
       Then it is refused with "Tournament.CommentaryTitleTaken"
 
-    Scenario: A title is the same title once its HTML is taken out
-      Given a stream where a tournament was created as "Spring Open"
-      And the commentary "Day one" was started on it
-      And the tournament is rebuilt from the stream
-      When the commentary "Day <i>one</i>" is started
-      Then it is refused with "Tournament.CommentaryTitleTaken"
-
     Scenario: A title is the same title however it is capitalised
       Given a stream where a tournament was created as "Spring Open"
       And the commentary "Day one" was started on it
@@ -137,12 +130,6 @@ Feature: Starting a commentary on a tournament
       Given a stream where a tournament was created as "Spring Open"
       And the tournament is rebuilt from the stream
       When the commentary "Day one" is started
-      Then the tournament's commentary "Day one" has the slug "day-one"
-
-    Scenario: A commentary's slug is made from its title with the HTML taken out
-      Given a stream where a tournament was created as "Spring Open"
-      And the tournament is rebuilt from the stream
-      When the commentary "Day <b>one</b>" is started
       Then the tournament's commentary "Day one" has the slug "day-one"
 
     Scenario: A slug another commentary has is followed by "-01"

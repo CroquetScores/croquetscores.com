@@ -9,7 +9,7 @@ Feature: A commentary's writer can edit or delete any of its comments
   the comment says now in a box four lines tall, as the box a comment is
   written in is, so that a correction is a small edit.
 
-  An edit is held to the rules of a comment, its HTML taken out
+  An edit is held to the rules of a comment, and kept as it was typed
   (`CommentText.feature`). One that breaks a rule is said beneath the box,
   and what was typed is put back. A sound one is kept, and the writer is
   taken back to the commentary, which shows the comment as edited. Ctrl and

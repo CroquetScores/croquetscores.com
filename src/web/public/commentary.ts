@@ -48,9 +48,10 @@ const notThere: readonly string[] = [
   "PublicCommentaryOfTournament.NoSuchCommentary",
 ];
 
-// HTML is turned off, so that a comment is drawn from its Markdown alone,
-// whatever was kept: the tags were taken out when it was written
-// (CommentText.ts), and this is the second of the two locks. A line break is
+// HTML is turned off, so that a comment is drawn from its Markdown alone:
+// a comment is kept as it was typed, HTML and all (CommentText.ts), and this
+// is what shows that HTML as the characters it is and keeps it from running,
+// the one guard a page needs, whatever was kept. A line break is
 // a line break, since a comment is typed on a phone by somebody who has never
 // heard that Markdown wants two. A web address written out with its scheme,
 // and an email address, are drawn as links without the Markdown a link is

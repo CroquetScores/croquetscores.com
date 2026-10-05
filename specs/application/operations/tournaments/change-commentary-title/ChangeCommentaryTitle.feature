@@ -10,8 +10,8 @@ Feature: Changing a commentary's title
   does not have is the tournament's to refuse, as
   `Tournament.NoSuchCommentary`.
 
-  The title is asked its own rules on the way in, its HTML taken out first
-  (`CommentaryTitle.feature`), and a request that breaks one is refused with
+  The title is asked its own rules on the way in, and kept as it was typed
+  (`CommentaryTitle.feature`); a request that breaks one is refused with
   `Request.Invalid` and the first rule it breaks. What the tournament asks of
   a title — that no other commentary has it, however capitalised — and of a
   tournament — that it is not archived — is the tournament's to refuse. The
@@ -41,9 +41,9 @@ Feature: Changing a commentary's title
       When the reader signed in to the account for "writer@example.com" changes the title of "Day one" of "Spring Open" to "Day one, morning"
       Then the tournament's commentary "Day one, morning" has the slug "day-one"
 
-    Scenario: The title is kept with its HTML taken out
+    Scenario: The title is kept as it was typed, HTML and all
       When the reader signed in to the account for "writer@example.com" changes the title of "Day one" of "Spring Open" to "Day <b>two</b>"
-      Then the tournament has the commentary "Day two"
+      Then the tournament has the commentary "Day <b>two</b>"
 
     Scenario: Changing the title is recorded as done by whoever asked
       When the reader signed in to the account for "writer@example.com" changes the title of "Day one" of "Spring Open" to "Day one, morning"

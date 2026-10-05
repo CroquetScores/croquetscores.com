@@ -80,10 +80,10 @@ Feature: Changing a commentary's title
       When the title of the commentary "Day one" is changed to ""
       Then it is refused for breaking "CommentaryTitle.Missing"
 
-    Scenario: A title changed has its HTML taken out
+    Scenario: A title changed is kept as it was typed, HTML and all
       Given the tournament is rebuilt from the stream
       When the title of the commentary "Day one" is changed to "Day <b>two</b>"
-      Then the tournament has the commentary "Day two"
+      Then the tournament has the commentary "Day <b>two</b>"
 
   Rule: No two commentaries on a tournament have the same title
 

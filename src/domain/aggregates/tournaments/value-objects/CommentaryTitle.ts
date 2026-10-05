@@ -1,6 +1,5 @@
 import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
-import { withoutTags } from "../commentaries/value-objects/CommentText.js";
 
 /** Every rule a commentary title can break. */
 export type CommentaryTitleErrorCode =
@@ -35,8 +34,9 @@ const titles = new Validator<string, CommentaryTitleErrorCode>({
 });
 
 /**
- * What a commentary is called: plain text, with no HTML in it and its
- * Markdown, if any, kept as the characters it is.
+ * What a commentary is called: plain text, kept as it was typed, its HTML and
+ * its Markdown, if any, among it; it is shown as the characters it is
+ * wherever it is shown.
  */
 export class CommentaryTitle {
   readonly #given: string;
@@ -46,16 +46,13 @@ export class CommentaryTitle {
   }
 
   /**
-   * `typed` with its tags taken out and its ends trimmed. Throws
-   * {@link ValidationError} naming the first rule it breaks.
+   * `typed` with its ends trimmed. Throws {@link ValidationError} naming the
+   * first rule it breaks.
    */
   static from(typed: string): CommentaryTitle {
-    // As a comment is: tags first, then the ends, so that a title of nothing
-    // but tags is missing and the length counted is the words' alone.
-    // One line, so a tag that broke a line in a comment is a space in a title.
-    const title = withoutTags(typed)
-      .replace(/\s*\n\s*/g, " ")
-      .trim();
+    // Trimmed before its length is counted, so that the length is the title's
+    // and not the spaces typed around it.
+    const title = typed.trim();
     titles.ensureValid(title);
     return new CommentaryTitle(title);
   }

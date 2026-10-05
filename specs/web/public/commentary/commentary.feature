@@ -29,9 +29,11 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   commentator types one on a phone. A link in a comment is marked as one the site does not vouch for,
   so that search engines give it nothing, which is what a link put in a
   commentary to sell something is after. Nothing in a comment is drawn as
-  HTML: there is none in what was kept (`CommentText.feature`), and the
-  Markdown is drawn with HTML turned off, so that nothing kept by any other
-  way is drawn as HTML either.
+  HTML: a comment is kept as it was typed, HTML and all
+  (`CommentText.feature`), and the Markdown is drawn with HTML turned off, so
+  that whatever HTML was typed is shown as the characters it is and runs
+  nothing. A commentary's title is shown as the characters it is too, its
+  HTML among them.
 
   The commentary's writer, and only its writer, is offered a box beneath the
   last comment to write the next one in, four lines tall, which is enough to
@@ -128,6 +130,11 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the content has the heading "Day one"
 
+    Scenario: HTML in the title is shown as the characters it is
+      Given "writer@example.com" has started the commentary "<b>Day</b> two" on "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/b-day-b-two" is opened
+      Then the content has the heading "<b>Day</b> two"
+
     Scenario: Markdown in the title is not drawn
       Given "writer@example.com" has started the commentary "**Day two**" on "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries/day-two" is opened
@@ -161,6 +168,22 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Then the commentary page says there are no comments
 
   Rule: Each comment shows what it says, drawn from its Markdown, and when it was written
+
+    Scenario: HTML in a comment is shown as the characters it is
+      Given "writer@example.com" has added the comment "Sam is <b>two hoops</b> up" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment says "Sam is <b>two hoops</b> up"
+
+    Scenario: HTML in a comment is not drawn as HTML
+      Given "writer@example.com" has added the comment "Sam is <b>two hoops</b> up" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment draws nothing bold
+
+    Scenario: A script in a comment runs nothing
+      Given "writer@example.com" has added the comment "<script>document.title = 'ran'</script>" to "Day one" of "Spring Open"
+      And nobody is signed in
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      Then nothing the comment says has run
 
     Scenario: A word made bold in Markdown is drawn bold
       Given "writer@example.com" has added the comment "Sam is **two hoops** up" to "Day one" of "Spring Open"

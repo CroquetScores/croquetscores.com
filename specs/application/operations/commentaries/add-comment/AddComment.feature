@@ -9,9 +9,9 @@ Feature: Adding a comment to a commentary
   have, is refused as `AddComment.NoSuchCommentary`. The comment is given a
   new id, and the answer is that id.
 
-  What the comment says is asked its own rules on the way in, its HTML taken
-  out first (`CommentText.feature`), and a request that breaks one is refused
-  with `Request.Invalid` and the first rule it breaks.
+  What the comment says is asked its own rules on the way in, and kept as it
+  was typed, HTML and all (`CommentText.feature`); a request that breaks one
+  is refused with `Request.Invalid` and the first rule it breaks.
 
   A commentary does not know whether its tournament is archived, so that is
   asked of the tournament here: an archived tournament can only be restored
@@ -41,9 +41,9 @@ Feature: Adding a comment to a commentary
       When the reader signed in to the account for "writer@example.com" adds the comment "Sam is two hoops up" to "Day one" of "Spring Open"
       Then it is answered with the id of the comment "Sam is two hoops up" in "Day one" of "Spring Open"
 
-    Scenario: The comment is kept with its HTML taken out
+    Scenario: The comment is kept as it was typed, HTML and all
       When the reader signed in to the account for "writer@example.com" adds the comment "Sam is <b>two hoops</b> up" to "Day one" of "Spring Open"
-      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is <b>two hoops</b> up"
 
     Scenario: Adding the comment is recorded as done by whoever asked
       When the reader signed in to the account for "writer@example.com" adds the comment "Sam is two hoops up" to "Day one" of "Spring Open"
@@ -66,8 +66,8 @@ Feature: Adding a comment to a commentary
 
   Rule: What the comment says must break none of its own rules
 
-    Scenario: A comment that is nothing but tags is refused for being missing
-      When the reader signed in to the account for "writer@example.com" adds the comment "<p></p>" to "Day one" of "Spring Open"
+    Scenario: A comment that is nothing but spaces is refused for being missing
+      When the reader signed in to the account for "writer@example.com" adds the comment "   " to "Day one" of "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "CommentText.Missing"
 

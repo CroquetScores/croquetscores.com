@@ -7,20 +7,16 @@ Feature: The title a commentary is known by
   team's name is (`TeamName.feature`). It is held to 100, as the old site
   held it, so that it fits a line of the list on a phone.
 
-  A title is plain text. It is not written in Markdown, as a comment is
-  (`CommentText.feature`), and it carries no HTML: every tag in what was
-  typed is taken out before the title is kept, and the words between tags
-  are kept, as they are in a comment, and angle brackets around anything
-  that is not one of HTML's own elements are kept as the characters they
-  are (`CommentText.feature`). A title is one line, so a tag that would
-  break a line, as "<br>", is a space in it. A title is drawn as the words it is,
-  so "**Day one**" is shown with its asterisks rather than in bold
+  A title is plain text, kept as it was typed. It is not written in
+  Markdown, as a comment is (`CommentText.feature`), and HTML typed in it is
+  kept too, as a comment's is: a title is drawn as the characters it is
+  wherever it is shown, so "**Day one**" is shown with its asterisks rather
+  than in bold, and "<b>Day one</b>" with its angle brackets
   (`commentary.feature`).
 
-  Whitespace at either end of a title is taken off, after the tags are taken
-  out, and before anything else is asked of it, and the title is kept
-  without it. A title that is nothing but whitespace, or nothing but tags,
-  is missing. The tags taken out do not count towards its 100 characters.
+  Whitespace at either end of a title is taken off before anything else is
+  asked of it, and the title is kept without it. A title that is nothing but
+  whitespace is missing.
 
   A commentary is found at a slug made from its title
   (`startCommentary.feature`), and a title with no letter or digit in it,
@@ -52,51 +48,11 @@ Feature: The title a commentary is known by
       When the commentary title "" is made
       Then it is refused for breaking "CommentaryTitle.Missing"
 
-  Rule: Every HTML tag is taken out, and the words between them kept
+  Rule: A title is kept as it was typed, HTML and all
 
-    Scenario: A tag is taken out and the words inside it kept
+    Scenario: HTML in a title is kept as it was typed
       When the commentary title "Day <b>one</b>" is made
-      Then the commentary title is written "Day one"
-
-    Scenario: A tag with attributes is taken out
-      When the commentary title "<span onclick=\"steal()\">Day one</span>" is made
-      Then the commentary title is written "Day one"
-
-    Scenario: A tag that is never closed is taken out
-      When the commentary title "Day one <img src=x onerror=steal()>" is made
-      Then the commentary title is written "Day one"
-
-    Scenario: A line break written as a tag is a space in a title
-      When the commentary title "Day<br>One" is made
-      Then the commentary title is written "Day One"
-
-    Scenario: Words between angle brackets beginning with an element's name are kept in a title
-      When the commentary title "Day of <a great final>" is made
-      Then the commentary title is written "Day of <a great final>"
-
-    Scenario: Tags after an HTML comment never ended are taken out of a title
-      When the commentary title "Day one <!-- <b>final</b>" is made
-      Then the commentary title is written "Day one <!-- final"
-
-    Scenario: A "<!" that begins no HTML comment is kept in a title
-      When the commentary title "Day one <!!! what a final>" is made
-      Then the commentary title is written "Day one <!!! what a final>"
-
-    Scenario: Words between angle brackets that are no HTML element are kept
-      When the commentary title "Day one <morning>" is made
-      Then the commentary title is written "Day one <morning>"
-
-    Scenario: A less-than sign that begins no tag is kept
-      When the commentary title "Lawn 3 < Lawn 4" is made
-      Then the commentary title is written "Lawn 3 < Lawn 4"
-
-    Scenario: A commentary title that was nothing but tags is missing
-      When the commentary title "<b></b>" is made
-      Then it is refused for breaking "CommentaryTitle.Missing"
-
-    Scenario: Tags taken out do not count towards the length
-      When a commentary title of 100 characters wrapped in "<b>" is made
-      Then it is not refused
+      Then the commentary title is written "Day <b>one</b>"
 
   Rule: A commentary title has a letter or a digit in it
 
@@ -119,10 +75,6 @@ Feature: The title a commentary is known by
         | 🏆 Day 1 |
         | 1        |
         | 李       |
-
-    Scenario: A title of nothing but tags is missing, not without a letter
-      When the commentary title "<b></b>" is made
-      Then it is refused for breaking "CommentaryTitle.Missing"
 
   Rule: Markdown in a title is kept as the characters it is
 

@@ -88,13 +88,13 @@ Feature: Adding a comment to a commentary
 
     Scenario: A comment that could not be one is refused as a comment is
       Given the commentary is rebuilt from its stream
-      When the comment "<p></p>" is added
+      When the comment "   " is added
       Then it is refused for breaking "CommentText.Missing"
 
-    Scenario: A comment added has its HTML taken out
+    Scenario: A comment added is kept as it was typed, HTML and all
       Given the commentary is rebuilt from its stream
       When the comment "Sam is <b>two hoops</b> up" is added
-      Then the commentary has the comment "Sam is two hoops up"
+      Then the commentary has the comment "Sam is <b>two hoops</b> up"
 
   Rule: No two comments in a commentary have the same id
 

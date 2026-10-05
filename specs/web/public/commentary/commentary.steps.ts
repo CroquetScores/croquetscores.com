@@ -666,3 +666,18 @@ Then(
     assert.ok(lines.includes(line), `It shows ${JSON.stringify(lines)}.`);
   },
 );
+
+Then(
+  /^the (first|second|third|last) comment draws nothing bold$/,
+  async function (this: SpecWorld, which: string) {
+    const said = commentAt(this, which).locator(".comment-text");
+    await said.waitFor();
+    assert.equal(await said.locator("strong, b").count(), 0);
+  },
+);
+
+// What the comment's script would have done, had it run: the page's title
+// set to "ran".
+Then("nothing the comment says has run", async function (this: SpecWorld) {
+  assert.notEqual(await this.browserPage.title(), "ran");
+});
