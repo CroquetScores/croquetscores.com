@@ -8,8 +8,10 @@ Feature: What a comment says
   somewhere else keeps what it said and loses only how it was drawn there.
   A tag is one of HTML's own elements in angle brackets: by its name alone,
   as "<b>" or "</p>", or with attributes, at least one of them given a value,
-  as "<img src=x>" or '<a href="https://example.com">'; or an HTML comment
-  or declaration, as "<!-- -->". Angle brackets around anything else are not
+  as "<img src=x>" or '<a href="https://example.com">'; or an HTML comment,
+  from "<!--" to the first "-->", whatever is between, as a browser reads it;
+  or a doctype, as "<!DOCTYPE html>". Any other "<!" begins no tag, and what
+  follows it is kept, as "<!!! what a shot>". Angle brackets around anything else are not
   a tag, and are kept: a link written in Markdown as
   "<https://example.com/draw>", an email address as "<sam@example.com>", or
   words a writer put in brackets of that shape, even where the first of
@@ -107,9 +109,29 @@ Feature: What a comment says
       When a comment of a tag with 100000 ">"s in a value given in quotes is made
       Then it was made within a second
 
-    Scenario: What a tag taken out leaves is read afresh, as an HTML comment where it is one
-      When the comment "Sam<<b>!x title='>' y>s" is made
-      Then the comment is written "Sam' y>s"
+    Scenario: What a tag taken out leaves is read afresh, as an HTML comment where it begins one
+      When the comment "Sam<<b>!-- a='>' -->s" is made
+      Then the comment is written "Sams"
+
+    Scenario: An HTML comment left by taking out a tag after its "<!" is taken out too
+      When the comment "<!<b>-- hidden -->Sam" is made
+      Then the comment is written "Sam"
+
+    Scenario: A "<!" that begins no HTML comment and no doctype is kept
+      When the comment "Wow <!!! Bob pegs out and wins 26>17" is made
+      Then the comment is written "Wow <!!! Bob pegs out and wins 26>17"
+
+    Scenario: An HTML comment with a ">" in it is taken out whole
+      When the comment "Well played<!-- 26 > 17 -->, Sam" is made
+      Then the comment is written "Well played, Sam"
+
+    Scenario: An HTML comment with a tag in it is taken out whole
+      When the comment "Sam<!-- <b>hidden</b> -->wins" is made
+      Then the comment is written "Samwins"
+
+    Scenario: A doctype is taken out
+      When the comment "<!DOCTYPE html>Sam is two hoops up" is made
+      Then the comment is written "Sam is two hoops up"
 
     Scenario: A tag closed by a slash is taken out
       When the comment "Hoop 1<br />Hoop 2" is made

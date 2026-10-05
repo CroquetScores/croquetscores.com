@@ -217,9 +217,10 @@ const ATTRIBUTE =
 
 // A whole tag, from its "<" to its ">", with no "<" inside it: an element's
 // name, closing or not, with attributes after it or none, and a slash before
-// its end or none; or an HTML comment or declaration.
+// its end or none; or a doctype. An HTML comment is read on its own, since
+// it ends at "-->" and not at the first ">".
 const WHOLE_TAG = new RegExp(
-  String.raw`^<(?:(/?)([A-Za-z0-9]+)((?:\s+${ATTRIBUTE})*)\s*/?|![^>]*)>$`,
+  String.raw`^<(?:(/?)([A-Za-z0-9]+)((?:\s+${ATTRIBUTE})*)\s*/?|![Dd][Oo][Cc][Tt][Yy][Pp][Ee](?:\s[^>]*)?)>$`,
 );
 
 /**
@@ -227,8 +228,8 @@ const WHOLE_TAG = new RegExp(
  * where it is no tag. A tag is an element's name alone, closing or not, or an
  * opening one with attributes, at least one of them given a value: words in
  * brackets, the first of them an element's name, as "<a great shot>", read as
- * attributes given no value, and a writer means them as words. An HTML
- * comment or declaration is a tag of no element.
+ * attributes given no value, and a writer means them as words. A doctype is
+ * a tag of no element.
  */
 const tagOf = (written: string): string | undefined => {
   const found = WHOLE_TAG.exec(written);
@@ -250,7 +251,22 @@ const tagOf = (written: string): string | undefined => {
 // the end of what is kept begins no tag, nor does one no element has.
 const couldBegin = (kept: readonly string[], at: number): boolean => {
   let next = at + 1;
-  if (kept[next] === "!") return true;
+  // "<!" begins an HTML comment, "<!--", or a doctype, and nothing else does:
+  // "<!!! what a shot>" is words. Asked of what has been kept so far, which
+  // may be the start of either.
+  if (kept[next] === "!") {
+    // Up to a "<" kept after it, if one has been, which taken out with the
+    // tag it begins would leave this one followed by something else.
+    const read = kept.slice(next + 1, next + 9).join("");
+    const rest = read.split("<", 1)[0] ?? "";
+    if (rest.startsWith("--") || "--".startsWith(rest)) return true;
+    const lower = rest.toLowerCase();
+    if ("doctype".startsWith(lower)) return true;
+    return (
+      lower.startsWith("doctype") &&
+      (rest.length === 7 ? read.length > 7 : SPACE.test(rest.charAt(7)))
+    );
+  }
   if (kept[next] === "/") next += 1;
   let name = "";
   while (next < kept.length && NAME_CHARACTER.test(kept[next] ?? "")) {
@@ -274,8 +290,12 @@ interface Opening {
   // began its name.
   read: number;
   begun: boolean;
-  // Whether it begins an HTML comment or declaration, "<!", which has no
-  // attributes and so no values in quotes.
+  // Whether it is followed by "!", as an HTML comment or a doctype is, which
+  // have no attributes and so no values in quotes; how many of the two dashes
+  // after it that begin a comment have been read; and whether it begins a
+  // comment, "<!--", inside which everything is the comment's until "-->".
+  bang: boolean;
+  dashes: number;
   comment: boolean;
   // Whether its name has been ended, by a space or a slash, so that what
   // follows is its attributes.
@@ -296,8 +316,14 @@ interface Opening {
 // character like any other.
 const readInto = (opening: Opening, character: string): void => {
   opening.read += 1;
-  if (opening.read === 1 && character === "!") opening.comment = true;
-  if (opening.comment) return;
+  if (opening.read === 1 && character === "!") opening.bang = true;
+  if (opening.bang) {
+    if (opening.read === opening.dashes + 2 && character === "-") {
+      opening.dashes += 1;
+      if (opening.dashes === 2) opening.comment = true;
+    }
+    return;
+  }
   if (opening.quote !== undefined) {
     if (character === opening.quote) opening.quote = undefined;
     return;
@@ -361,12 +387,40 @@ export const withoutTags = (typed: string): string => {
   const keep = (character: string): void => {
     kept.push(character);
     const last = opening.at(-1);
-    if (last !== undefined) readInto(last, character);
-    askOfTheLast();
+    if (last === undefined) return;
+    readInto(last, character);
+    // A comment begun is one until "-->", whatever is in it, so there is
+    // nothing to ask of it.
+    if (!last.comment) askOfTheLast();
+  };
+
+  // The tag the last "<" begins taken out, of the element `tag`, and the
+  // "<" waiting on it as it was before it came.
+  const takeOut = (last: Opening, tag: string): void => {
+    kept.length = last.at;
+    opening.pop();
+    const waiting = opening.at(-1);
+    if (waiting !== undefined && last.before !== undefined) {
+      Object.assign(waiting, last.before);
+    }
+    // The "<" waiting on the one just taken out is followed by whatever
+    // comes next now, a line break first where the tag broke a line.
+    if (BREAKING.has(tag)) keep("\n");
+    else askOfTheLast();
   };
 
   for (const character of typed) {
     const last = opening.at(-1);
+    // Inside an HTML comment, everything is the comment's until "-->", as a
+    // browser reads it, a "<" and a ">" among it.
+    if (last?.comment === true) {
+      if (character === ">" && kept.at(-1) === "-" && kept.at(-2) === "-") {
+        takeOut(last, "!");
+      } else {
+        keep(character);
+      }
+      continue;
+    }
     // Inside a value given in quotes, a "<" and a ">" are the value's, as a
     // browser reads them, and neither begins nor ends a tag.
     if (last?.quote !== undefined) {
@@ -385,16 +439,7 @@ export const withoutTags = (typed: string): string => {
         opening.length = 0;
         continue;
       }
-      kept.length = last.at;
-      opening.pop();
-      const waiting = opening.at(-1);
-      if (waiting !== undefined && last.before !== undefined) {
-        Object.assign(waiting, last.before);
-      }
-      // The "<" waiting on the one just taken out is followed by whatever
-      // comes next now, a line break first where the tag broke a line.
-      if (BREAKING.has(tag)) keep("\n");
-      else askOfTheLast();
+      takeOut(last, tag);
       continue;
     }
     if (character === "<") {
@@ -410,6 +455,8 @@ export const withoutTags = (typed: string): string => {
                 at: before.at,
                 read: before.read,
                 begun: before.begun,
+                bang: before.bang,
+                dashes: before.dashes,
                 comment: before.comment,
                 named: before.named,
                 afterEquals: before.afterEquals,
@@ -418,6 +465,8 @@ export const withoutTags = (typed: string): string => {
         at: kept.length - 1,
         read: 0,
         begun: false,
+        bang: false,
+        dashes: 0,
         comment: false,
         named: false,
         afterEquals: false,
