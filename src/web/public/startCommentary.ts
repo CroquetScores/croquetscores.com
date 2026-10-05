@@ -4,8 +4,9 @@
 // reader is taken to once it is started. A title that breaks a rule, or that
 // another commentary on the tournament has, is said beneath the field with
 // what was typed put back. The field puts no limit on what is typed, since a
-// browser counts what is typed and a title is counted with its tags and its
-// spaces taken out; a title too long is said beneath it as any rule is.
+// browser counts what is typed and a title is counted as a reader counts it,
+// with the spaces at either end taken out; a title too long is said beneath
+// it as any rule is.
 //
 // Any account will do, and a reader who is not signed in is sent to sign in
 // and brought back. It needs no scripting.
