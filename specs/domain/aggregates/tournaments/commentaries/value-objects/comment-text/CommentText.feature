@@ -6,6 +6,11 @@ Feature: What a comment says
   here: every tag in what was written is taken out before the comment is
   kept, and the words between tags are kept, so that a comment pasted from
   somewhere else keeps what it said and loses only how it was drawn there.
+  A tag is one of HTML's own elements, opening or closing, as "<b>", "</p>"
+  or "<img src=x>", or an HTML comment or declaration, as "<!-- -->". Angle
+  brackets around anything else are not a tag, and are kept: a link written
+  in Markdown as "<https://example.com/draw>", an email address as
+  "<sam@example.com>", or words a writer put in brackets of that shape.
   A comment never carries HTML of its own into a page, whoever reads it, and
   it is taken out once, when the comment is made, rather than every time it
   is read, so what is kept is what is shown.
@@ -46,6 +51,26 @@ Feature: What a comment says
     Scenario: A link written in Markdown is kept
       When the comment "See [the draw](https://example.com/draw)" is made
       Then the comment is written "See [the draw](https://example.com/draw)"
+
+    Scenario: A link written in Markdown between angle brackets is kept
+      When the comment "See <https://example.com/draw>" is made
+      Then the comment is written "See <https://example.com/draw>"
+
+    Scenario: An email address between angle brackets is kept
+      When the comment "Write to <sam@example.com>" is made
+      Then the comment is written "Write to <sam@example.com>"
+
+    Scenario: Words between angle brackets that are no HTML element are kept
+      When the comment "Sam<Tim on lawn 3, score 7>5" is made
+      Then the comment is written "Sam<Tim on lawn 3, score 7>5"
+
+    Scenario: An HTML comment is taken out
+      When the comment "Well played<!-- hidden -->" is made
+      Then the comment is written "Well played"
+
+    Scenario: A tag in capitals is taken out
+      When the comment "Sam is <B>two hoops</B> up" is made
+      Then the comment is written "Sam is two hoops up"
 
     Scenario: A less-than sign that begins no tag is kept
       When the comment "Sam needs < 3 hoops" is made

@@ -10,7 +10,9 @@ Feature: The title a commentary is known by
   A title is plain text. It is not written in Markdown, as a comment is
   (`CommentText.feature`), and it carries no HTML: every tag in what was
   typed is taken out before the title is kept, and the words between tags
-  are kept, as they are in a comment. A title is drawn as the words it is,
+  are kept, as they are in a comment, and angle brackets around anything
+  that is not one of HTML's own elements are kept as the characters they
+  are (`CommentText.feature`). A title is drawn as the words it is,
   so "**Day one**" is shown with its asterisks rather than in bold
   (`commentary.feature`).
 
@@ -62,6 +64,10 @@ Feature: The title a commentary is known by
     Scenario: A tag that is never closed is taken out
       When the commentary title "Day one <img src=x onerror=steal()>" is made
       Then the commentary title is written "Day one"
+
+    Scenario: Words between angle brackets that are no HTML element are kept
+      When the commentary title "Day one <morning>" is made
+      Then the commentary title is written "Day one <morning>"
 
     Scenario: A less-than sign that begins no tag is kept
       When the commentary title "Lawn 3 < Lawn 4" is made
