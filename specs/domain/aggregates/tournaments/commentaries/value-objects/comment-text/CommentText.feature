@@ -1,0 +1,103 @@
+Feature: What a comment says
+
+  A comment in a commentary is written in Markdown, so that a writer can make
+  a word bold, start a list or link to a result without knowing anything of
+  HTML, and that is all a comment can be written in. HTML is not Markdown
+  here: every tag in what was written is taken out before the comment is
+  kept, and the words between tags are kept, so that a comment pasted from
+  somewhere else keeps what it said and loses only how it was drawn there.
+  A comment never carries HTML of its own into a page, whoever reads it, and
+  it is taken out once, when the comment is made, rather than every time it
+  is read, so what is kept is what is shown.
+
+  What is left is between 1 and 10,000 characters, counted as a reader
+  counts them. A comment is a few lines written on a phone at the side of a
+  lawn, and 10,000 characters is several screens of them: enough for a long
+  report of a day's play, and short of a page that has to be scrolled past
+  to reach the next comment.
+
+  Whitespace at either end is taken off, and the comment kept without it,
+  after the tags are taken out, so that a comment that was nothing but tags
+  and spaces is missing. Whitespace within it is kept as it was written,
+  since a line break or an indent can be Markdown.
+
+  Rule: Every HTML tag is taken out, and the words between them kept
+
+    Scenario: A comment with no HTML in it is kept as it was written
+      When the comment "Sam is **two hoops** up" is made
+      Then the comment is written "Sam is **two hoops** up"
+
+    Scenario: A tag is taken out and the words inside it kept
+      When the comment "Sam is <b>two hoops</b> up" is made
+      Then the comment is written "Sam is two hoops up"
+
+    Scenario: A script is taken out as any tag is
+      When the comment "Well played<script>alert(1)</script>" is made
+      Then the comment is written "Well playedalert(1)"
+
+    Scenario: A tag with attributes is taken out
+      When the comment "<a href=\"https://example.com\" onclick=\"steal()\">Results</a>" is made
+      Then the comment is written "Results"
+
+    Scenario: A tag that is never closed is taken out
+      When the comment "Lawn 3 <img src=x onerror=steal()> is slow" is made
+      Then the comment is written "Lawn 3  is slow"
+
+    Scenario: A link written in Markdown is kept
+      When the comment "See [the draw](https://example.com/draw)" is made
+      Then the comment is written "See [the draw](https://example.com/draw)"
+
+    Scenario: A less-than sign that begins no tag is kept
+      When the comment "Sam needs < 3 hoops" is made
+      Then the comment is written "Sam needs < 3 hoops"
+
+  Rule: What is left is between 1 and 10,000 characters
+
+    Scenario Outline: A comment of an allowed length is accepted
+      When a comment of <length> characters is made
+      Then it is not refused
+
+      Examples:
+        | length |
+        | 1      |
+        | 10000  |
+
+    Scenario: A comment longer than 10,000 characters is refused
+      When a comment of 10001 characters is made
+      Then it is refused for breaking "CommentText.TooLong"
+
+    Scenario: No comment at all is refused
+      When the comment "" is made
+      Then it is refused for breaking "CommentText.Missing"
+
+    Scenario: A comment that was nothing but tags is missing
+      When the comment "<p></p>" is made
+      Then it is refused for breaking "CommentText.Missing"
+
+    Scenario: Tags taken out do not count towards the length
+      When a comment of 10000 characters wrapped in "<p>" is made
+      Then it is not refused
+
+  Rule: Characters are counted as a reader counts them
+
+    Scenario: A comment of 10,000 letters, each with its accent typed after it, is accepted
+      When a comment of 10000 accented letters is made with each accent typed after its letter
+      Then it is not refused
+
+  Rule: Whitespace at either end is not part of the comment
+
+    Scenario: A comment with spaces around it is kept without them
+      When the comment "  Well played  " is made
+      Then the comment is written "Well played"
+
+    Scenario: A comment that is nothing but whitespace is missing
+      When the comment "   " is made
+      Then it is refused for breaking "CommentText.Missing"
+
+    Scenario: A comment that is nothing but tags and whitespace is missing
+      When the comment " <br> <br> " is made
+      Then it is refused for breaking "CommentText.Missing"
+
+    Scenario: A line break within a comment is kept
+      When the comment "Day one:\n\n- Sam beat Alex" is made
+      Then the comment is written "Day one:\n\n- Sam beat Alex"

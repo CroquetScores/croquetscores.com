@@ -69,6 +69,7 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         | tournament-team-players-spaced-out |
         | a test being added                        | tournament-test-added              |
         | a test being updated                      | tournament-test-updated            |
+        | a commentary being started                | tournament-commentary-started      |
 
   Rule: An event written down and read back is the event it was
 
@@ -118,6 +119,7 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         |
         | a test being added                        |
         | a test being updated                      |
+        | a commentary being started                |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -165,6 +167,7 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         |
         | a test being added                        |
         | a test being updated                      |
+        | a commentary being started                |
 
   Rule: What an event can do without is read back as nothing
 
@@ -247,6 +250,9 @@ Feature: The names a tournament's events are kept under
         | a test being added                        | slug            |
         | a test being added                        | expectedMatches |
         | a test being added                        | bestOf          |
+        | a commentary being started                | commentaryId    |
+        | a commentary being started                | title           |
+        | a commentary being started                | slug            |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>

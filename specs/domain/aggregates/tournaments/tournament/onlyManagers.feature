@@ -7,7 +7,9 @@ Feature: Only a tournament's managers change it
   players, put any of them in order, add and change its tests, and say who
   else manages it or scores it. Everything else that
   asks is refused, a scorer as much as somebody the tournament has never
-  heard of: a scorer enters scores, and nothing else.
+  heard of: a scorer enters scores, and nothing else. Starting a commentary
+  is not a change of that kind, and any account can start one
+  (`startCommentary.feature`).
 
   Who is asking is what every event already records as its cause, so the
   tournament is told on every request, and asks it before anything else. A

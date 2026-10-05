@@ -41,9 +41,12 @@ Feature: A tournament's page lists its games, the most recent first
   short names as they are now, the first team's first, with "vs" between,
   as "AUS vs ENG". A Standard tournament has no Summary, since its standing
   is in its competitions. The players' page lists the players
-  (`players.feature`); the pages of the other sections besides this one do
-  not exist yet, so each leads to an address that answers `404` until the
-  feature that provides it lands.
+  (`players.feature`), and Commentary leads to the commentaries page, at
+  the tournament's address followed by "commentaries", as the old site had
+  it, so that a link kept from there still works (`commentaries.feature`);
+  the pages of the other sections besides this one do not exist yet, so each
+  leads to an address that answers `404` until the feature that provides it
+  lands.
 
   An address a tournament has moved on from leads to where it is found now,
   so that a link kept from before still works. An address no tournament of
@@ -309,7 +312,7 @@ Feature: A tournament's page lists its games, the most recent first
         | Recent     | /2026/ac/spring-open                       |
         | Players    | /2026/ac/spring-open/players               |
         | Notes      | /2026/ac/spring-open/notes                 |
-        | Commentary | /2026/ac/spring-open/commentary            |
+        | Commentary | /2026/ac/spring-open/commentaries          |
         | Block A    | /2026/ac/spring-open/competitions/block-a  |
 
     Scenario: A Standard tournament offers no Summary
