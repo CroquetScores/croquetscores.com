@@ -19,7 +19,10 @@ Feature: What a comment says
   are not attributes given values. What is kept is drawn as the characters
   it is, since the Markdown is drawn with HTML turned off. A value given in
   quotes is the value whatever is in it, a ">" among it, as a browser reads
-  it, so a tag with one is taken out whole. A tag
+  it, so a tag with one is taken out whole. A quote is a value's only where
+  the same quote ends it before any "<", and "<!--" begins a comment only
+  where a "-->" comes after it: a quote or a comment never ended would
+  otherwise hide every tag after it, and those are taken out as any are. A tag
   that breaks a line where it is drawn, as "<br>", "<p>" or "<li>" does, is
   taken out for a line break, so that words either side of it are not run
   together and paragraphs stay paragraphs in Markdown; any other is taken
@@ -132,6 +135,22 @@ Feature: What a comment says
     Scenario: A doctype is taken out
       When the comment "<!DOCTYPE html>Sam is two hoops up" is made
       Then the comment is written "Sam is two hoops up"
+
+    Scenario: Tags after an HTML comment that is never ended are taken out
+      When the comment "<!-- <script>alert(1)</script>" is made
+      Then the comment is written "<!-- alert(1)"
+
+    Scenario: An HTML comment ended only once a tag before its ">" is taken out is taken out
+      When the comment "<!-- x --<b>>Sam" is made
+      Then the comment is written "Sam"
+
+    Scenario: Tags after a quote that is never ended are taken out
+      When the comment "Sam <a title=\"x <b>bold</b>" is made
+      Then the comment is written "Sam <a title=\"x bold"
+
+    Scenario: Tags after a quote with a "<" before its end are taken out, and the tag they leave
+      When the comment "<a title=\"<b>x</b>\">Sam" is made
+      Then the comment is written "Sam"
 
     Scenario: A tag closed by a slash is taken out
       When the comment "Hoop 1<br />Hoop 2" is made

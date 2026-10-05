@@ -209,9 +209,10 @@ const BREAKING: ReadonlySet<string> = new Set([
 const NAME_CHARACTER = /[A-Za-z0-9]/;
 const SPACE = /\s/;
 
-// An attribute: a name, and a value given it if any, quoted or not.
+// An attribute: a name, and a value given it if any, quoted or not. A value
+// in quotes may hold a ">", as a browser reads it, but no "<": a tag has none.
 const ATTRIBUTE =
-  String.raw`[^\s"'<>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'<>=` +
+  String.raw`[^\s"'<>/=]+(?:\s*=\s*(?:"[^"<]*"|'[^'<]*'|[^\s"'<>=` +
   "`" +
   String.raw`]+))?`;
 
@@ -291,61 +292,28 @@ interface Opening {
   read: number;
   begun: boolean;
   // Whether it is followed by "!", as an HTML comment or a doctype is, which
-  // have no attributes and so no values in quotes; how many of the two dashes
-  // after it that begin a comment have been read; and whether it begins a
-  // comment, "<!--", inside which everything is the comment's until "-->".
+  // have no attributes; and how many of the two dashes after it that begin a
+  // comment, "<!--", have been read.
   bang: boolean;
   dashes: number;
-  comment: boolean;
   // Whether its name has been ended, by a space or a slash, so that what
   // follows is its attributes.
   named: boolean;
   // Whether an "=" has just been read, so that a quote next begins a value.
   afterEquals: boolean;
-  // The quote a value is being read inside, which only the same quote ends.
-  quote: string | undefined;
-  // How far into its attributes the "<" before this one had gone before this
-  // one was read after it, to be so again if this one is taken out with the
-  // tag it begins, as though it had never been read.
+  // Where, in what was typed, the quote ending the value being read is, if a
+  // value is being read.
+  quoteEnd: number | undefined;
+  // How far the "<" before this one had gone before this one was read after
+  // it, to be so again if this one is taken out with the tag it begins, as
+  // though it had never been read.
   readonly before: Omit<Opening, "before"> | undefined;
 }
 
-// What `character`, kept after the "<" `opening`, makes of how far into its
-// attributes it has gone. A quote begins a value only straight after an "=",
-// with spaces between or none, as a browser reads it; anywhere else it is a
-// character like any other.
-const readInto = (opening: Opening, character: string): void => {
-  opening.read += 1;
-  if (opening.read === 1 && character === "!") opening.bang = true;
-  if (opening.bang) {
-    if (opening.read === opening.dashes + 2 && character === "-") {
-      opening.dashes += 1;
-      if (opening.dashes === 2) opening.comment = true;
-    }
-    return;
-  }
-  if (opening.quote !== undefined) {
-    if (character === opening.quote) opening.quote = undefined;
-    return;
-  }
-  if (!opening.named) {
-    // A slash straight after the "<" is a closing tag's, and ends no name.
-    if (NAME_CHARACTER.test(character)) opening.begun = true;
-    else if (opening.begun && (SPACE.test(character) || character === "/")) {
-      opening.named = true;
-    }
-    return;
-  }
-  if (opening.afterEquals) {
-    if (SPACE.test(character)) return;
-    opening.afterEquals = false;
-    if (character === '"' || character === "'") {
-      opening.quote = character;
-      return;
-    }
-  }
-  if (character === "=") opening.afterEquals = true;
-};
+// Whether `opening` begins an HTML comment, "<!--", which ends at the first
+// "-->" after it, whatever is between.
+const isComment = (opening: Opening): boolean =>
+  opening.bang && opening.dashes === 2;
 
 /**
  * `typed` with every HTML tag taken out and the words between them kept: a
@@ -355,122 +323,203 @@ const readInto = (opening: Opening, character: string): void => {
  * "<<b>script>" leaves "<script>", is taken out as it is left, and what is
  * kept never holds a tag.
  *
+ * Inside an HTML comment, and inside a value given in quotes, tags are taken
+ * out as anywhere, and a ">" that ends none is the comment's or the value's
+ * rather than an end to the "<" they began after: a comment ends at the first
+ * "-->" in what is kept, which taking a tag out may make, and a value at the
+ * quote that ends it. Nothing is hidden from being read for tags, so a
+ * comment or a quote never ended leaves no tag after it unread.
+ *
  * It is read once, whatever is typed. The tags were taken out again and
  * again until none was left, which took as many readings as tags were typed
  * inside one another, and a comment of a hundred thousand of them took a
  * quarter of a minute, which any account could have kept the site busy with.
- * A tag has no "<" inside it, so only the last "<" kept since the last ">"
- * kept can begin the tag a ">" ends; those before it are kept count of only
- * as waiting on the one after them, each of which begins a tag only if the
- * one after it is taken out. So each character is asked about once when a
- * ">" is read, and either taken out with its tag or kept for good. A
- * commentary's title is plain text and takes its tags out the same way
- * (CommentaryTitle.ts).
+ * A tag has no "<" inside it, so only the last "<" kept can begin the tag a
+ * ">" ends; those before it are kept count of only while they could still
+ * begin one, as waiting on the one after them or as a comment or a value
+ * begun. A commentary's title is plain text and takes its tags out the same
+ * way (CommentaryTitle.ts).
  */
 export const withoutTags = (typed: string): string => {
-  const kept: string[] = [];
-  // Each "<" that could still begin a tag, the last last, with where it is in
-  // what is kept, and how far into its attributes what follows it has gone:
-  // whether its name has ended, whether an "=" has just been read, and the
-  // quote a value is being read inside, if any. All but the last are waiting
-  // on the one after them, and are as they were when it came.
-  const opening: Opening[] = [];
+  const characters = Array.from(typed);
+  const count = characters.length;
+  // For each place in what was typed, where the next double or single quote
+  // at or after it is, or nowhere; found in one reading from the end, so that
+  // asking where a value ends costs nothing however often it is asked.
+  const nextOf = (quote: string): Int32Array => {
+    const next = new Int32Array(count + 1).fill(count);
+    for (let at = count - 1; at >= 0; at -= 1) {
+      next[at] = characters[at] === quote ? at : (next[at + 1] ?? count);
+    }
+    return next;
+  };
+  const nextDouble = nextOf('"');
+  const nextSingle = nextOf("'");
 
-  // The last "<" asked again whether it could still begin a tag; one that
-  // could not takes every one waiting on it with it.
-  const askOfTheLast = (): void => {
+  const kept: string[] = [];
+  // Each "<" that could still begin a tag, the last last.
+  const opening: Opening[] = [];
+  // Where in `opening` each "<" beginning a comment is, the first first: the
+  // first is where a "-->" ends one, since everything after it is its.
+  const comments: number[] = [];
+  // Where in what was typed the character being read is.
+  let reading = 0;
+
+  // Whether `each` is held on to though what follows it has turned out to
+  // begin no tag: a comment, which nothing but "-->" ends, or a value in
+  // quotes not yet ended, which a ">" does not end either.
+  const holds = (each: Opening): boolean =>
+    isComment(each) || each.quoteEnd !== undefined;
+
+  // A value whose quote has been read by now is ended, whichever "<" read it.
+  const settle = (): void => {
     const last = opening.at(-1);
-    if (last !== undefined && !couldBegin(kept, last.at)) opening.length = 0;
+    if (last?.quoteEnd !== undefined && last.quoteEnd <= reading) {
+      last.quoteEnd = undefined;
+    }
   };
 
-  // `character` kept, and read as part of what follows the last "<".
-  const keep = (character: string): void => {
-    kept.push(character);
+  // Every "<" since the last one held on to let go of, as beginning no tag.
+  const letGo = (): void => {
+    while (opening.length > 0 && !holds(opening.at(-1) as Opening)) {
+      opening.pop();
+    }
+    while ((comments.at(-1) ?? -1) >= opening.length) comments.pop();
+    settle();
+  };
+
+  // What `character`, kept after the last "<", makes of how far into its
+  // attributes it has gone. A quote begins a value only straight after an
+  // "=", with spaces between or none, and where the same quote comes later in
+  // what was typed to end it, as a browser reads it.
+  const readIntoTheLast = (character: string): void => {
     const last = opening.at(-1);
     if (last === undefined) return;
-    readInto(last, character);
-    // A comment begun is one until "-->", whatever is in it, so there is
-    // nothing to ask of it.
-    if (!last.comment) askOfTheLast();
+    last.read += 1;
+    if (last.read === 1 && character === "!") last.bang = true;
+    if (last.bang) {
+      if (last.read === last.dashes + 2 && character === "-") {
+        last.dashes += 1;
+        if (isComment(last)) comments.push(opening.length - 1);
+      }
+      return;
+    }
+    if (last.quoteEnd !== undefined) {
+      if (reading >= last.quoteEnd) last.quoteEnd = undefined;
+      return;
+    }
+    if (!last.named) {
+      // A slash straight after the "<" is a closing tag's, and ends no name.
+      if (NAME_CHARACTER.test(character)) last.begun = true;
+      else if (last.begun && (SPACE.test(character) || character === "/")) {
+        last.named = true;
+      }
+      return;
+    }
+    if (last.afterEquals) {
+      if (SPACE.test(character)) return;
+      last.afterEquals = false;
+      if (character === '"' || character === "'") {
+        const ends = (character === '"' ? nextDouble : nextSingle)[reading + 1];
+        if (ends !== undefined && ends < count) last.quoteEnd = ends;
+        return;
+      }
+    }
+    if (character === "=") last.afterEquals = true;
   };
 
-  // The tag the last "<" begins taken out, of the element `tag`, and the
-  // "<" waiting on it as it was before it came.
-  const takeOut = (last: Opening, tag: string): void => {
-    kept.length = last.at;
-    opening.pop();
-    const waiting = opening.at(-1);
-    if (waiting !== undefined && last.before !== undefined) {
-      Object.assign(waiting, last.before);
+  // `character` kept, and read as part of what follows the last "<", which
+  // is let go of if it can no longer begin a tag.
+  const keep = (character: string): void => {
+    kept.push(character);
+    readIntoTheLast(character);
+    const last = opening.at(-1);
+    if (last !== undefined && !holds(last) && !couldBegin(kept, last.at)) {
+      letGo();
     }
+  };
+
+  // What the "<" at `index` of `opening` begins taken out, a tag of the
+  // element `tag`, and the "<" waiting on it as it was before it came.
+  const takeOut = (index: number, tag: string): void => {
+    const taken = opening[index] as Opening;
+    kept.length = taken.at;
+    opening.length = index;
+    while ((comments.at(-1) ?? -1) >= opening.length) comments.pop();
+    const waiting = opening.at(-1);
+    if (waiting !== undefined && taken.before !== undefined) {
+      Object.assign(waiting, taken.before);
+    }
+    settle();
     // The "<" waiting on the one just taken out is followed by whatever
     // comes next now, a line break first where the tag broke a line.
-    if (BREAKING.has(tag)) keep("\n");
-    else askOfTheLast();
+    if (BREAKING.has(tag)) {
+      keep("\n");
+    } else {
+      const last = opening.at(-1);
+      if (last !== undefined && !holds(last) && !couldBegin(kept, last.at)) {
+        letGo();
+      }
+    }
   };
 
-  for (const character of typed) {
-    const last = opening.at(-1);
-    // Inside an HTML comment, everything is the comment's until "-->", as a
-    // browser reads it, a "<" and a ">" among it.
-    if (last?.comment === true) {
-      if (character === ">" && kept.at(-1) === "-" && kept.at(-2) === "-") {
-        takeOut(last, "!");
-      } else {
-        keep(character);
-      }
-      continue;
-    }
-    // Inside a value given in quotes, a "<" and a ">" are the value's, as a
-    // browser reads them, and neither begins nor ends a tag.
-    if (last?.quote !== undefined) {
-      keep(character);
-      continue;
-    }
+  for (; reading < count; reading += 1) {
+    const character = characters[reading] ?? "";
     if (character === ">") {
-      const tag =
-        last === undefined
-          ? undefined
-          : tagOf(`${kept.slice(last.at).join("")}>`);
-      if (last === undefined || tag === undefined) {
-        // A ">" kept, which no tag can run across: no "<" before it can begin
-        // one any more.
-        kept.push(character);
-        opening.length = 0;
+      // The end of the first comment begun, where what is kept ends "--".
+      const first = comments[0];
+      if (
+        first !== undefined &&
+        kept.at(-1) === "-" &&
+        kept.at(-2) === "-" &&
+        kept.length - (opening[first] as Opening).at >= 4
+      ) {
+        takeOut(first, "!");
         continue;
       }
-      takeOut(last, tag);
+      const last = opening.at(-1);
+      const tag =
+        last === undefined || holds(last)
+          ? undefined
+          : tagOf(`${kept.slice(last.at).join("")}>`);
+      if (last !== undefined && tag !== undefined) {
+        takeOut(opening.length - 1, tag);
+        continue;
+      }
+      // A ">" that ends no tag: the comment's or the value's, where one has
+      // been begun, and otherwise an end to every "<" before it.
+      kept.push(character);
+      letGo();
       continue;
     }
     if (character === "<") {
       // The last "<" kept is now waiting on this one, if it could still begin
       // a tag at all.
-      const before = last === undefined ? undefined : { ...last };
+      const last = opening.at(-1);
+      const before =
+        last === undefined
+          ? undefined
+          : {
+              at: last.at,
+              read: last.read,
+              begun: last.begun,
+              bang: last.bang,
+              dashes: last.dashes,
+              named: last.named,
+              afterEquals: last.afterEquals,
+              quoteEnd: last.quoteEnd,
+            };
       keep(character);
       opening.push({
-        before:
-          before === undefined
-            ? undefined
-            : {
-                at: before.at,
-                read: before.read,
-                begun: before.begun,
-                bang: before.bang,
-                dashes: before.dashes,
-                comment: before.comment,
-                named: before.named,
-                afterEquals: before.afterEquals,
-                quote: before.quote,
-              },
+        before,
         at: kept.length - 1,
         read: 0,
         begun: false,
         bang: false,
         dashes: 0,
-        comment: false,
         named: false,
         afterEquals: false,
-        quote: undefined,
+        quoteEnd: undefined,
       });
       continue;
     }

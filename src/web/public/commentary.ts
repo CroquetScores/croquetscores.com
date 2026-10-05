@@ -77,18 +77,44 @@ markdown.renderer.rules.link_open = (tokens, index, options, env, self) => {
 
 // A number and a full stop or a bracket beginning a line, which Markdown takes
 // for an item of a numbered list.
-const TURN_NUMBER = /^(\d+)([.)])(?=\s|$)/gm;
+const TURN_NUMBER = /^(\d+)([.)])(?=\s|$)/;
+
+// A line that opens or closes a block of code: three backticks or tildes or
+// more, indented by three spaces at most.
+const FENCE = /^ {0,3}(`{3,}|~{3,})/;
+
+// `text` with the stop or the bracket after a number beginning a line escaped,
+// but for a line in a block of code, which is drawn exactly as it was written
+// and would show the escape. A block is closed by a fence of its own
+// character at least as long as the one that opened it.
+const turnNumbersEscaped = (text: string): string => {
+  let fence: string | undefined;
+  return text
+    .split("\n")
+    .map((line) => {
+      const fenced = FENCE.exec(line)?.[1];
+      if (fenced !== undefined) {
+        if (fence === undefined) fence = fenced;
+        else if (fenced[0] === fence[0] && fenced.length >= fence.length) {
+          fence = undefined;
+        }
+        return line;
+      }
+      return fence === undefined ? line.replace(TURN_NUMBER, "$1\\$2") : line;
+    })
+    .join("\n");
+};
 
 /**
  * What a comment says, drawn from its Markdown, with no HTML of its own. A
  * line beginning with a number and a full stop or a bracket, as "5. Sam
  * roquets Alex", is drawn as it was written, as the old site drew it: a
  * commentator numbers turns, and a numbered list would number "5." and "7."
- * as 5 and 6. The stop or the bracket is escaped as it is drawn, and what was
- * kept is as it was written.
+ * as 5 and 6. The stop or the bracket is escaped as it is drawn, outside a
+ * block of code, and what was kept is as it was written.
  */
 export const commentDrawn = (text: string): string =>
-  markdown.render(text.replace(TURN_NUMBER, "$1\\$2"));
+  markdown.render(turnNumbersEscaped(text));
 
 // Two shapes, drawn here rather than fetched or set in a font, as the account
 // menu's is: they cost no request, and they take the colour of the link they

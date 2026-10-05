@@ -74,6 +74,10 @@ Feature: The title a commentary is known by
       When the commentary title "Day of <a great final>" is made
       Then the commentary title is written "Day of <a great final>"
 
+    Scenario: Tags after an HTML comment never ended are taken out of a title
+      When the commentary title "Day one <!-- <b>final</b>" is made
+      Then the commentary title is written "Day one <!-- final"
+
     Scenario: A "<!" that begins no HTML comment is kept in a title
       When the commentary title "Day one <!!! what a final>" is made
       Then the commentary title is written "Day one <!!! what a final>"

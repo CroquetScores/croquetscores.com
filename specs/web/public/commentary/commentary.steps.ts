@@ -644,3 +644,13 @@ Then(
     );
   },
 );
+
+Then(
+  /^the (first|second|third|last) comment's code says "(.*)"$/,
+  async function (this: SpecWorld, which: string, text: string) {
+    assert.equal(
+      await textOf(commentAt(this, which).locator(".comment-text code")),
+      text,
+    );
+  },
+);

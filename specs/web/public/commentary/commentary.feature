@@ -20,7 +20,9 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   says so. A comment is drawn as the old site drew one. A line beginning with
   a number and a full stop or a bracket, as "5. Sam roquets Alex", is drawn
   as it was written, not as an item of a numbered list: a commentator numbers
-  turns, and a list would number "5." and "7." as 5 and 6. A web address
+  turns, and a list would number "5." and "7." as 5 and 6. Inside a block of
+  code, fenced by three backticks, a line is drawn exactly as it was written
+  already, and is left to be. A web address
   written out with its "https://", and an email address, are drawn as links,
   without the Markdown a link is otherwise written in, since that is how a
   commentator types one on a phone. A link in a comment is marked as one the site does not vouch for,
@@ -183,6 +185,11 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Given "writer@example.com" has added the comment "3) Kim pegs out" to "Day one" of "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the first comment shows the line "3) Kim pegs out"
+
+    Scenario: A line beginning with a number in a block of code is drawn exactly as written
+      Given "writer@example.com" has added the comment "```\n1. a\n```" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment's code says "1. a"
 
     Scenario: A web address written out is drawn as a link
       Given "writer@example.com" has added the comment "Results at https://example.com/results" to "Day one" of "Spring Open"
