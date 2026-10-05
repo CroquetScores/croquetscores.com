@@ -136,12 +136,12 @@ Feature: Importing the old sites' commentaries
       When the commentary is imported
       Then the first comment of the commentary "Live from Court 1" of the tournament kept for "tournaments/12" on "croquetscores.com" says "Play has started."
 
-    Scenario: A comment's HTML is taken out as the site takes it out
+    Scenario: A comment is kept as it was written, HTML and all, as the site keeps one
       Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
       And the commentary was called "Live from Court 1"
       And comment 1 says "<b>Sam</b> leads by 5."
       When the commentary is imported
-      Then the first comment of the commentary "Live from Court 1" of the tournament kept for "tournaments/12" on "croquetscores.com" says "Sam leads by 5."
+      Then the first comment of the commentary "Live from Court 1" of the tournament kept for "tournaments/12" on "croquetscores.com" says "<b>Sam</b> leads by 5."
 
   Rule: A comment the site refuses is kept as an error, and the other comments are added
 
