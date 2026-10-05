@@ -11,6 +11,8 @@ import type { Tournament } from "../../src/domain/aggregates/tournaments/Tournam
 import type { Games } from "../../src/application/services/Games.js";
 import type { Competition } from "../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionId } from "../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
+import type { Commentary } from "../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
+import type { CommentaryId } from "../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 
 export interface TournamentsInHand {
   /** Sends `command` to the application. Throws what the mediator throws. */
@@ -25,11 +27,16 @@ export interface TournamentsInHand {
   /** The competition `id` as its stream reads now, or nothing if it has none. */
   loadCompetition(id: CompetitionId): Promise<Competition | undefined>;
 
+  /** The commentary `id` as its stream reads now, or nothing if it has none. */
+  loadCommentary(id: CommentaryId): Promise<Commentary | undefined>;
+
   /**
-   * Every event of the tournament or the competition `id`, in the order they
-   * were kept.
+   * Every event of the tournament, the competition or the commentary `id`, in
+   * the order they were kept.
    */
-  eventsOf(id: TournamentId | CompetitionId): Promise<readonly DomainEvent[]>;
+  eventsOf(
+    id: TournamentId | CompetitionId | CommentaryId,
+  ): Promise<readonly DomainEvent[]>;
 
   /** How many tournaments have been kept. */
   kept(): Promise<number>;

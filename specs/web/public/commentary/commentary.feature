@@ -30,15 +30,31 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   It is beneath because the comments read downwards, and the next one goes
   where it will be read. A comment written there is added, and the page
   shown again with it as the last comment and the box empty. One that is
-  refused is said beneath the box, and what was typed is put back.
+  refused is said beneath the box, and what was typed is put back. Ctrl and
+  Enter pressed together in the box send it, as the button does, so that a
+  writer with a keyboard need not reach for the mouse between comments; on a
+  Mac, Command and Enter do the same, since that is the Mac's way of saying
+  it. Enter alone starts a new line, as it does in any box of several lines.
 
-  The writer is offered too, beside each comment, a way to edit it, which
+  The writer is offered too, beside each comment, a pencil, named Edit, which
   leads to the comment's own page (`editComment.feature`), so that the writer
-  can scroll back through the commentary and correct any comment in it.
-  Anybody else, signed in or not, is offered neither the box nor a way to
-  edit: they read.
+  can scroll back through the commentary and correct any comment in it; and
+  beside the pencil a trash can, named Delete, which deletes the comment. A
+  deleted comment cannot be brought back (`deleteComment.feature`), so the
+  trash can asks first, in a modal dialog over the commentary (`STYLE.md`
+  §5c) that shows the comment and offers Delete comment and Cancel. Only
+  Delete comment takes it away, and the commentary is shown again without
+  it; Cancel and Escape close the dialog and take nothing away. A browser
+  with scripting off has no modal dialog to open, so there the trash can
+  leads to a page of its own that asks the same (`editComment.feature`).
+  The writer is offered as well a pencil to the right of the commentary's
+  title, which leads to the page that changes it
+  (`changeCommentaryTitle.feature`). Anybody else, signed in or not, is
+  offered neither the box nor a pencil nor a trash can: they read.
 
-  The page needs no scripting. An archived tournament has no commentary
+  The page needs no scripting: what scripting adds, the modal dialog and
+  Ctrl and Enter, is a quicker way to what can be done without it. An
+  archived tournament has no commentary
   pages, nor one the website has never had, and a slug no commentary on the
   tournament has is not a page. An address the tournament has moved on from
   leads to the commentary where it is found now, so that a link kept from
@@ -219,7 +235,30 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When the comment is submitted
       Then the commentary "Day one" of "Spring Open" has no comments
 
-  Rule: Only the commentary's writer is offered a way to edit each comment
+  Rule: Ctrl and Enter in the box send the comment
+
+    Scenario: Ctrl and Enter send the comment
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When Control and Enter are pressed in the comment box
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
+
+    Scenario: Command and Enter send the comment
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When Meta and Enter are pressed in the comment box
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
+
+    Scenario: Enter alone starts a new line
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When Enter is pressed in the comment box
+      Then the commentary "Day one" of "Spring Open" has no comments
+
+  Rule: Only the commentary's writer is offered a pencil to edit each comment
 
     Scenario: The writer is offered a way to edit each comment
       Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
@@ -228,6 +267,12 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the first comment offers a way to edit it
       And the second comment offers a way to edit it
+
+    Scenario: The way to edit a comment is a pencil named Edit
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the way to edit the first comment is a pencil named "Edit"
 
     Scenario: The way to edit a comment leads to its own page
       Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
@@ -248,6 +293,101 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the first comment does not offer a way to edit it
 
+  Rule: Only the commentary's writer is offered a trash can beside the pencil to delete each comment
+
+    Scenario: The writer is offered a way to delete each comment
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment offers a way to delete it
+      And the second comment offers a way to delete it
+
+    Scenario: The way to delete a comment is a trash can named Delete
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the way to delete the first comment is a trash can named "Delete"
+
+    Scenario: The trash can comes after the pencil
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the way to delete the first comment comes after the way to edit it
+
+    Scenario: A reader signed in who is not the writer is offered no way to delete
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment does not offer a way to delete it
+
+    Scenario: A reader not signed in is offered no way to delete
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And nobody is signed in
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the first comment does not offer a way to delete it
+
+  Rule: The trash can asks first, in a modal dialog, and only Delete comment takes the comment away
+
+    Background:
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+
+    Scenario: Pressing the trash can asks in a modal dialog
+      When the way to delete the first comment is pressed
+      Then the modal dialog titled "Delete comment" is open
+
+    Scenario: The modal dialog shows the comment
+      When the way to delete the first comment is pressed
+      Then the modal dialog names "Sam is two hoops up"
+
+    Scenario: The modal dialog offers Delete comment first
+      When the way to delete the first comment is pressed
+      Then the modal dialog's first button is "Delete comment"
+
+    Scenario: The modal dialog offers Cancel
+      When the way to delete the first comment is pressed
+      Then the modal dialog's second button is "Cancel"
+
+    Scenario: Pressing the trash can alone takes nothing away
+      When the way to delete the first comment is pressed
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
+
+    Scenario: Delete comment takes the comment away
+      Given the way to delete the first comment is pressed
+      When "Delete comment" is pressed in the modal dialog
+      Then the commentary "Day one" of "Spring Open" does not have the comment "Sam is two hoops up"
+
+    Scenario: The commentary is shown again without the deleted comment
+      Given the way to delete the first comment is pressed
+      When "Delete comment" is pressed in the modal dialog
+      Then the commentary page says there are no comments
+
+    Scenario: Cancel takes nothing away
+      Given the way to delete the first comment is pressed
+      When "Cancel" is pressed in the modal dialog
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
+
+    Scenario: Cancel closes the modal dialog
+      Given the way to delete the first comment is pressed
+      When "Cancel" is pressed in the modal dialog
+      Then no modal dialog is open
+
+    Scenario: Escape closes the modal dialog
+      Given the way to delete the first comment is pressed
+      When Escape is pressed
+      Then no modal dialog is open
+
+  Rule: With scripting off, the trash can leads to a page that asks first
+
+    Scenario: The trash can leads to the page that asks whether to delete the comment
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting off
+      When the way to delete the first comment is pressed
+      Then the page asks whether to delete the comment "Sam is two hoops up"
+
   Rule: Only a commentary a reader is sent to has a page
 
     Scenario: A slug no commentary has is not a page
@@ -260,8 +400,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Then the page says the words for "errors.notFound"
 
     Scenario: A commentary whose writer has been forgotten is not found
-      Given the account for "writer@example.com" is taken hold of
-      And the account for "writer@example.com" has been forgotten
+      Given the account for "writer@example.com" has been forgotten
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the page says the words for "errors.notFound"
 

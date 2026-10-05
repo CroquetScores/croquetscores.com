@@ -29,11 +29,11 @@ Feature: The names a commentary's events are kept under
       Then it was written down under the name "<name>"
 
       Examples:
-        | happening                  | name                       |
-        | a commentary being started | commentary-started         |
-        | a comment being added      | commentary-comment-added   |
-        | a comment being edited     | commentary-comment-edited  |
-        | a comment being deleted    | commentary-comment-deleted |
+        | happening                               | name                       |
+        | a commentary's own record being started | commentary-started         |
+        | a comment being added                   | commentary-comment-added   |
+        | a comment being edited                  | commentary-comment-edited  |
+        | a comment being deleted                 | commentary-comment-deleted |
 
   Rule: An event written down and read back is the event it was
 
@@ -44,11 +44,11 @@ Feature: The names a commentary's events are kept under
       Then what was read back is the kind of event that was written down
 
       Examples:
-        | happening                  |
-        | a commentary being started |
-        | a comment being added      |
-        | a comment being edited     |
-        | a comment being deleted    |
+        | happening                               |
+        | a commentary's own record being started |
+        | a comment being added                   |
+        | a comment being edited                  |
+        | a comment being deleted                 |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -57,11 +57,11 @@ Feature: The names a commentary's events are kept under
       Then what was read back says everything the event said
 
       Examples:
-        | happening                  |
-        | a commentary being started |
-        | a comment being added      |
-        | a comment being edited     |
-        | a comment being deleted    |
+        | happening                               |
+        | a commentary's own record being started |
+        | a comment being added                   |
+        | a comment being edited                  |
+        | a comment being deleted                 |
 
   Rule: What was kept without what an event cannot do without is refused
 
@@ -72,13 +72,13 @@ Feature: The names a commentary's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                  | field     |
-        | a commentary being started | writer    |
-        | a comment being added      | commentId |
-        | a comment being added      | text      |
-        | a comment being edited     | commentId |
-        | a comment being edited     | text      |
-        | a comment being deleted    | commentId |
+        | happening                               | field     |
+        | a commentary's own record being started | writer    |
+        | a comment being added                   | commentId |
+        | a comment being added                   | text      |
+        | a comment being edited                  | commentId |
+        | a comment being edited                  | text      |
+        | a comment being deleted                 | commentId |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>
@@ -87,10 +87,10 @@ Feature: The names a commentary's events are kept under
       Then reading it back is refused with "EventRegistry.Unreadable"
 
       Examples:
-        | happening                  | field     | written      |
-        | a commentary being started | writer    | the number 1 |
-        | a comment being added      | commentId | the number 1 |
-        | a comment being added      | text      | the number 3 |
-        | a comment being edited     | commentId | the number 1 |
-        | a comment being edited     | text      | the number 3 |
-        | a comment being deleted    | commentId | the number 1 |
+        | happening                               | field     | written      |
+        | a commentary's own record being started | writer    | the number 1 |
+        | a comment being added                   | commentId | the number 1 |
+        | a comment being added                   | text      | the number 3 |
+        | a comment being edited                  | commentId | the number 1 |
+        | a comment being edited                  | text      | the number 3 |
+        | a comment being deleted                 | commentId | the number 1 |

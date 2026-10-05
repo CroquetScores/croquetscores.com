@@ -34,6 +34,7 @@ export const tournamentsThrough = (
     load: (id) => asARequest(() => application.tournaments.load(id)),
     loadCompetition: (id) =>
       asARequest(() => application.competitions.load(id)),
+    loadCommentary: (id) => asARequest(() => application.commentaries.load(id)),
     eventsOf: (id) => asARequest(() => application.eventStore.getEvents(id)),
     kept: async () => {
       const { rows } = await asARequest(() =>

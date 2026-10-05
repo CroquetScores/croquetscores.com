@@ -12,14 +12,21 @@ Feature: A commentary's writer can edit or delete any of its comments
   An edit is held to the rules of a comment, its HTML taken out
   (`CommentText.feature`). One that breaks a rule is said beneath the box,
   and what was typed is put back. A sound one is kept, and the writer is
-  taken back to the commentary, which shows the comment as edited.
+  taken back to the commentary, which shows the comment as edited. Ctrl and
+  Enter pressed together in the box save it, as they send a comment from the
+  commentary's own box (`commentary.feature`), and Command and Enter on a
+  Mac.
 
-  The page offers to delete the comment too, since a comment posted twice or
-  in the wrong commentary is corrected by taking it away. Deleting cannot be
-  undone (`deleteComment.feature`), so it asks first, on a page of its own
-  rather than in a box that needs scripting, and only a delete confirmed
-  there takes the comment away. The writer is then taken back to the
-  commentary, which no longer shows it.
+  The page edits and does nothing else: it offers no way to delete the
+  comment. That is the trash can beside the comment's pencil on the
+  commentary (`commentary.feature`), which asks first in a modal dialog. A
+  browser with scripting off has no modal dialog, so there the trash can
+  leads instead to a page of the comment's own that asks the same, at the
+  commentary's address followed by "comments", the comment id's own
+  characters and "delete". Deleting cannot be undone
+  (`deleteComment.feature`), so only a delete confirmed there takes the
+  comment away, and the writer is then taken back to the commentary, which no
+  longer shows it; calling it off goes back to the commentary as it was.
 
   Only the commentary's writer can edit or delete its comments
   (`EditComment.feature`, `DeleteComment.feature`). A reader who is not
@@ -112,59 +119,73 @@ Feature: A commentary's writer can edit or delete any of its comments
       When the comment is submitted
       Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
 
-  Rule: Deleting a comment asks first, and only a delete confirmed takes it away
+  Rule: Ctrl and Enter in the box save the edit
 
-    Scenario: The page offers to delete the comment
+    Scenario: Ctrl and Enter save the edit
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page to edit the comment "Sam is two hoops up" is open with scripting on
+      And the comment "Sam is three hoops up" is typed in place of what it held
+      When Control and Enter are pressed in the comment box
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is three hoops up"
+
+  Rule: The page edits the comment, and offers no way to delete it
+
+    Scenario: The page does not offer to delete the comment
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       When the page to edit the comment "Sam is two hoops up" is opened
-      Then the page offers the button "Delete"
+      Then the page does not offer the button "Delete"
 
-    Scenario: Pressing Delete asks first
+  Rule: Without scripting, deleting asks first on a page of its own, and only a delete confirmed takes the comment away
+
+    Scenario: The page asks whether to delete the comment
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open
-      When the button "Delete" is pressed
+      When the page to delete the comment "Sam is two hoops up" is opened
       Then the page asks whether to delete the comment "Sam is two hoops up"
 
-    Scenario: Pressing Delete alone takes nothing away
+    Scenario: Opening the page alone takes nothing away
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open
-      When the button "Delete" is pressed
+      When the page to delete the comment "Sam is two hoops up" is opened
       Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
 
     Scenario: A delete confirmed takes the comment away
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open
-      And the button "Delete" is pressed
+      And the page to delete the comment "Sam is two hoops up" is open
       When the delete is confirmed
       Then the commentary "Day one" of "Spring Open" does not have the comment "Sam is two hoops up"
 
     Scenario: The writer is taken back to the commentary once the comment is deleted
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open
-      And the button "Delete" is pressed
+      And the page to delete the comment "Sam is two hoops up" is open
       When the delete is confirmed
       Then the address is "/2026/ac/spring-open/commentaries/day-one"
 
     Scenario: The commentary no longer shows a deleted comment
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open
-      And the button "Delete" is pressed
+      And the page to delete the comment "Sam is two hoops up" is open
       When the delete is confirmed
       Then the commentary page says there are no comments
 
-    Scenario: A delete not confirmed goes back to the comment
+    Scenario: A delete called off goes back to the commentary
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open
-      And the button "Delete" is pressed
+      And the page to delete the comment "Sam is two hoops up" is open
       When the delete is called off
-      Then the comment box holds "Sam is two hoops up"
+      Then the address is "/2026/ac/spring-open/commentaries/day-one"
 
-    Scenario: A comment can be deleted with scripting off
+    Scenario: A delete called off takes nothing away
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
-      And the page to edit the comment "Sam is two hoops up" is open with scripting off
-      And the button "Delete" is pressed
-      When the delete is confirmed
-      Then the commentary page says there are no comments
+      And the page to delete the comment "Sam is two hoops up" is open
+      When the delete is called off
+      Then the first comment says "Sam is two hoops up"
+
+    Scenario: A reader not signed in is sent to sign in first
+      Given nobody is signed in
+      When the page to delete the comment "Sam is two hoops up" is opened
+      Then the sign in page is shown
+
+    Scenario: A reader signed in to another account is told the page is not found
+      Given the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
+      When the page to delete the comment "Sam is two hoops up" is opened
+      Then the page says the words for "errors.notFound"
 
   Rule: A deleted comment has no page
 

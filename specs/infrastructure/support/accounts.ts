@@ -15,6 +15,7 @@ import { ProjectingEventStore } from "../../../src/application/common/Projecting
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { nameAccountEvents } from "../../../src/domain/aggregates/accounts/events/accountEvents.js";
 import { nameCompetitionEvents } from "../../../src/domain/aggregates/tournaments/competitions/events/competitionEvents.js";
+import { nameCommentaryEvents } from "../../../src/domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
 import { nameTournamentEvents } from "../../../src/domain/aggregates/tournaments/events/tournamentEvents.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -67,8 +68,10 @@ export const storesFor = (
     // Every kind the application records, as the application's own registry
     // knows them, so that a scenario about a tournament keeps its events in
     // the store its accounts are kept in.
-    nameCompetitionEvents(
-      nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+    nameCommentaryEvents(
+      nameCompetitionEvents(
+        nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+      ),
     ),
     new AccountEventSealing(keys),
   );
