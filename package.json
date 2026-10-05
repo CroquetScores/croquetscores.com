@@ -64,7 +64,7 @@
     "eslint": "^10.11.0",
     "playwright": "^1.63.0",
     "prettier": "^3.9.6",
-    "ravendb": "4.2.3",
+    "ravendb": "7.2.7",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tsx": "^4.23.13",
