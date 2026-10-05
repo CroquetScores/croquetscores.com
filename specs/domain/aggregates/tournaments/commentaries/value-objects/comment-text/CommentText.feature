@@ -14,7 +14,11 @@ Feature: What a comment says
   that breaks a line where it is drawn, as "<br>", "<p>" or "<li>" does, is
   taken out for a line break, so that words either side of it are not run
   together and paragraphs stay paragraphs in Markdown; any other is taken
-  out for nothing, as "<b>" is.
+  out for nothing, as "<b>" is. A tag left by taking out another typed inside
+  it, as "<<b>script>" leaves "<script>", is taken out as well. The tags are
+  taken out in one reading of what was typed, however they are nested, so
+  that a comment of tags inside one another, typed to keep the site busy,
+  costs no more to read than any comment of its length.
   A comment never carries HTML of its own into a page, whoever reads it, and
   it is taken out once, when the comment is made, rather than every time it
   is read, so what is kept is what is shown.
@@ -75,6 +79,18 @@ Feature: What a comment says
     Scenario: Paragraphs written as tags are kept as paragraphs
       When the comment "<p>First</p><p>Second</p>" is made
       Then the comment is written "First\n\nSecond"
+
+    Scenario: A tag left by taking out another inside it is taken out too
+      When the comment "<<b>script>alert(1)" is made
+      Then the comment is written "alert(1)"
+
+    Scenario: A tag left by taking out a tag inside its name is taken out too
+      When the comment "<scr<b>ipt>alert(1)" is made
+      Then the comment is written "alert(1)"
+
+    Scenario: Many tags typed inside one another are taken out within a second
+      When a comment of 100000 tags typed inside one another is made
+      Then it was made within a second
 
     Scenario: An HTML comment is taken out
       When the comment "Well played<!-- hidden -->" is made

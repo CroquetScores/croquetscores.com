@@ -63,3 +63,26 @@ Then(
     assert.equal(String(kept), withLineBreaks(text));
   },
 );
+
+// How long making the comment took, by the clock of the machine running the
+// scenario, kept for the step that says how long it may take.
+const tookMilliseconds = new WeakMap<SpecWorld, number>();
+
+// "<" a hundred thousand times and then "b>" as many, which is a "<b>" inside
+// a "<b>" inside a "<b>" all the way down, each left only once the one inside
+// it is taken out.
+When(
+  "a comment of {int} tags typed inside one another is made",
+  function (this: SpecWorld, count: number) {
+    const typed = `${"<".repeat(count)}${"b>".repeat(count)}`;
+    const started = performance.now();
+    tryToMake(this, typed);
+    tookMilliseconds.set(this, performance.now() - started);
+  },
+);
+
+Then("it was made within a second", function (this: SpecWorld) {
+  const took = tookMilliseconds.get(this);
+  assert.ok(took !== undefined, "Nothing was timed.");
+  assert.ok(took < 1000, `It took ${String(Math.round(took))} milliseconds.`);
+});

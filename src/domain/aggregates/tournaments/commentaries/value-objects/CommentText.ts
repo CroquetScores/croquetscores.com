@@ -159,74 +159,179 @@ const ELEMENTS = [
   "xmp",
 ];
 
-// An element's tag, opening or closing, its name ended by a space, a slash or
-// the tag's end, so that "<bold>" is not taken for "<b>"; or an HTML comment
-// or declaration, which begins "<!". A "<" followed by a space, as "< 3
-// hoops", begins neither.
+// HTML's own elements, by their names in lower case, for asking of a name in
+// whatever case it was typed.
+const ELEMENT_NAMES: ReadonlySet<string> = new Set(ELEMENTS);
+
+// The longest of their names, past which a run of letters is no element's.
+const LONGEST_NAME = Math.max(...ELEMENTS.map((name) => name.length));
+
 // The elements that break a line where they are drawn, whose tags are taken
 // out for a line break rather than for nothing, so that words either side of
 // one are not run together, and paragraphs stay paragraphs in Markdown.
-const BREAKING = new RegExp(
-  `^</?(?:${[
-    "address",
-    "article",
-    "aside",
-    "blockquote",
-    "br",
-    "dd",
-    "details",
-    "div",
-    "dl",
-    "dt",
-    "figcaption",
-    "figure",
-    "footer",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "header",
-    "hr",
-    "li",
-    "main",
-    "nav",
-    "ol",
-    "p",
-    "pre",
-    "section",
-    "summary",
-    "table",
-    "td",
-    "th",
-    "tr",
-    "ul",
-  ].join("|")})(?=[\\s/>])`,
-  "i",
-);
+const BREAKING: ReadonlySet<string> = new Set([
+  "address",
+  "article",
+  "aside",
+  "blockquote",
+  "br",
+  "dd",
+  "details",
+  "div",
+  "dl",
+  "dt",
+  "figcaption",
+  "figure",
+  "footer",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "header",
+  "hr",
+  "li",
+  "main",
+  "nav",
+  "ol",
+  "p",
+  "pre",
+  "section",
+  "summary",
+  "table",
+  "td",
+  "th",
+  "tr",
+  "ul",
+]);
 
-const TAG = new RegExp(
-  `<(?:/?(?:${ELEMENTS.join("|")})(?=[\\s/>])[^>]*|![^>]*)>`,
-  "gi",
-);
+const NAME_CHARACTER = /[A-Za-z0-9]/;
+const SPACE = /\s/;
+
+// What a "<" kept so far begins, by what has been kept after it: a tag, by
+// its name, as soon as the name is ended by a space or a slash, or an HTML
+// comment or declaration as soon as it is "<!"; maybe a tag, its name not yet
+// ended; waiting on the "<" kept straight after it, which, taken out with the
+// tag it begins, would leave this one followed by something else; or no tag.
+type Begins =
+  | { readonly is: "tag"; readonly name: string }
+  | { readonly is: "maybe"; readonly name: string }
+  | { readonly is: "waiting" }
+  | { readonly is: "nothing" };
+
+const begunAt = (kept: readonly string[], at: number): Begins => {
+  let next = at + 1;
+  if (kept[next] === "!") return { is: "tag", name: "!" };
+  if (kept[next] === "/") next += 1;
+  let name = "";
+  while (next < kept.length && NAME_CHARACTER.test(kept[next] ?? "")) {
+    name += kept[next];
+    next += 1;
+    if (name.length > LONGEST_NAME) return { is: "nothing" };
+  }
+  const after = kept[next];
+  if (after === undefined) return { is: "maybe", name };
+  if (after === "<") return { is: "waiting" };
+  if (SPACE.test(after) || after === "/") {
+    return ELEMENT_NAMES.has(name.toLowerCase())
+      ? { is: "tag", name }
+      : { is: "nothing" };
+  }
+  return { is: "nothing" };
+};
 
 /**
- * `typed` with every HTML tag taken out and the words between them kept,
- * taken out again until none is left, so that tags typed inside one another,
- * as "<<b>script>", do not leave a tag behind once the inner one is gone.
- * A commentary's title is plain text and takes its tags out the same way
+ * `typed` with every HTML tag taken out and the words between them kept: a
+ * tag of an element that breaks a line taken out for a line break, and any
+ * other for nothing. A tag is taken out the moment its ">" is read, from what
+ * has been kept so far, so that one left by taking out another inside it, as
+ * "<<b>script>" leaves "<script>", is taken out as it is left, and what is
+ * kept never holds a tag.
+ *
+ * It is read once, whatever is typed. The tags were taken out again and
+ * again until none was left, which took as many readings as tags were typed
+ * inside one another, and a comment of a hundred thousand of them took a
+ * quarter of a minute, which any account could have kept the site busy with.
+ * So only the "<"s that could still begin a tag are kept count of: the last
+ * one kept since the last ">" kept, and, below it, those waiting on the one
+ * after them, each of which begins a tag only if the one after it is taken
+ * out. A commentary's title is plain text and takes its tags out the same way
  * (CommentaryTitle.ts).
  */
 export const withoutTags = (typed: string): string => {
-  let text = typed;
-  for (;;) {
-    const stripped = text.replace(TAG, (tag) =>
-      BREAKING.test(tag) ? "\n" : "",
-    );
-    if (stripped === text) return text;
-    text = stripped;
+  const kept: string[] = [];
+  // Where each "<" that could still begin a tag is in what is kept, the last
+  // last. All but the last are waiting on the one after them.
+  const opening: number[] = [];
+  // Where the first "<" kept since the last ">" kept that begins a tag is, if
+  // one does: the next ">" ends its tag, whatever comes between.
+  let tagAt: number | undefined;
+
+  // What the last "<" begins now, the one below it waiting on it; one that
+  // begins no tag takes every one waiting on it with it.
+  const askOfTheLast = (): void => {
+    const last = opening.at(-1);
+    if (last === undefined || tagAt !== undefined) return;
+    const begins = begunAt(kept, last);
+    if (begins.is === "tag") tagAt = last;
+    else if (begins.is === "nothing") opening.length = 0;
+  };
+
+  for (const character of typed) {
+    if (character === ">") {
+      let at = tagAt;
+      if (at === undefined) {
+        const last = opening.at(-1);
+        const begins = last === undefined ? undefined : begunAt(kept, last);
+        if (
+          last !== undefined &&
+          begins?.is === "maybe" &&
+          ELEMENT_NAMES.has(begins.name.toLowerCase())
+        ) {
+          at = last;
+        }
+      }
+      if (at === undefined) {
+        // A ">" kept, which no tag can run across: no "<" before it can begin
+        // one any more.
+        kept.push(character);
+        opening.length = 0;
+        continue;
+      }
+      const begins = begunAt([...kept.slice(at), " "], 0);
+      kept.length = at;
+      tagAt = undefined;
+      while ((opening.at(-1) ?? -1) >= at) opening.pop();
+      if (begins.is === "tag" && BREAKING.has(begins.name.toLowerCase())) {
+        kept.push("\n");
+      }
+      // The "<" waiting on the one just taken out is followed by whatever
+      // comes next now.
+      askOfTheLast();
+      continue;
+    }
+    if (tagAt !== undefined) {
+      // Inside a tag already begun, which its ">" will take out whole.
+      kept.push(character);
+      continue;
+    }
+    if (character === "<") {
+      kept.push(character);
+      const last = opening.at(-1);
+      // The last "<" kept is now waiting on this one, or begins nothing
+      // whatever this one turns out to begin.
+      if (last !== undefined && begunAt(kept, last).is !== "waiting") {
+        opening.length = 0;
+      }
+      opening.push(kept.length - 1);
+      askOfTheLast();
+      continue;
+    }
+    kept.push(character);
+    askOfTheLast();
   }
+  return kept.join("");
 };
 
 const texts = new Validator<string, CommentTextErrorCode>({
