@@ -191,7 +191,10 @@ ${commentBox(speakingOf(request), {
         422,
       );
     }
-    return reply.redirect(`/${found.asked.commentary.address}`, 303);
+    // Encoded, here and once deleted, since a slug keeps letters of any
+    // script, and an address in the Location header that is not encoded is
+    // refused for them.
+    return reply.redirect(encodeURI(`/${found.asked.commentary.address}`), 303);
   });
 
   server.get<{ Params: Params }>(
@@ -245,7 +248,10 @@ ${commentBox(speakingOf(request), {
         if (failure instanceof CommentaryRefused) return reply.callNotFound();
         throw failure;
       }
-      return reply.redirect(`/${found.asked.commentary.address}`, 303);
+      return reply.redirect(
+        encodeURI(`/${found.asked.commentary.address}`),
+        303,
+      );
     },
   );
 };

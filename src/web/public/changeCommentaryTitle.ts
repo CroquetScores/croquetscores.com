@@ -151,6 +151,8 @@ export const registerChangeCommentaryTitlePage = (
       }
       throw failure;
     }
-    return reply.redirect(`/${asked.commentary.address}`, 303);
+    // Encoded, since a slug keeps letters of any script, and an address in the
+    // Location header that is not encoded is refused for them.
+    return reply.redirect(encodeURI(`/${asked.commentary.address}`), 303);
   });
 };

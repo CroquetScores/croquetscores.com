@@ -69,6 +69,13 @@ Feature: A reader signed in can start a commentary on a tournament
       When the dialog is submitted
       Then the writer of the commentary "Day one" of "Spring Open" is the account for "writer@example.com"
 
+    Scenario: A commentary with a title in another script is started and shown
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/create" is open
+      And the title "День два" is typed
+      When the dialog is submitted
+      Then the content has the heading "День два"
+
     Scenario: The reader is taken to the commentary's page
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open

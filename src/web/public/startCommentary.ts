@@ -191,10 +191,14 @@ export const registerStartCommentaryPage = (
     const commentary = after?.commentaries.find(
       (each) => each.id === started.value,
     );
+    // Encoded, since a slug keeps letters of any script, and an address in
+    // the Location header that is not encoded is refused for them.
     return reply.redirect(
-      commentary === undefined
-        ? `/${tournament.address}/commentaries`
-        : `/${commentary.address}`,
+      encodeURI(
+        commentary === undefined
+          ? `/${tournament.address}/commentaries`
+          : `/${commentary.address}`,
+      ),
       303,
     );
   });

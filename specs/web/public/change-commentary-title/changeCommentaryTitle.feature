@@ -109,6 +109,16 @@ Feature: A commentary's writer can change its title
       When the dialog is submitted
       Then the content has the heading "Day one, morning"
 
+  Rule: A commentary titled in another script has its title changed as any has
+
+    Scenario: The changed title heads a commentary found at a slug in another script
+      Given "writer@example.com" has started the commentary "День два" on "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/день-два/edit" is open
+      And the title "День три" is typed
+      When the dialog is submitted
+      Then the content has the heading "День три"
+
   Rule: A title that is refused is said beneath the field, and changes nothing
 
     Scenario: A missing title is said beneath the field

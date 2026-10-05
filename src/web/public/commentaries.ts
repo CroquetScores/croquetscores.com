@@ -74,7 +74,9 @@ export const registerCommentariesPage = (
       // commentaries where it is now, for good, so that a link kept from
       // before still works.
       if (asked.address !== address) {
-        return reply.redirect(`/${asked.address}/commentaries`, 301);
+        // Encoded, since a slug keeps letters of any script, and an address
+        // in the Location header that is not encoded is refused for them.
+        return reply.redirect(encodeURI(`/${asked.address}/commentaries`), 301);
       }
 
       const speaking = speakingOf(request);

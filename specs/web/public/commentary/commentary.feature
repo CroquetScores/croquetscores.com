@@ -243,6 +243,14 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When the comment is submitted
       Then the address is "/2026/ac/spring-open/commentaries/day-one"
 
+    Scenario: A comment written in a commentary titled in another script is shown with it
+      Given "writer@example.com" has started the commentary "День два" on "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/день-два" is open
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the first comment says "Sam is two hoops up"
+
     Scenario: A comment can be written with scripting off
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting off
@@ -653,6 +661,12 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       Given the account for "writer@example.com" has been forgotten
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
       Then the page says the words for "errors.notFound"
+
+    Scenario: An old address leads to a commentary titled in another script where the tournament is now
+      Given "writer@example.com" has started the commentary "День два" on "Spring Open"
+      And "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
+      When the page at "/2026/ac/spring-open/commentaries/день-два" is opened
+      Then the content has the heading "День два"
 
     Scenario: An old address leads to the commentary where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

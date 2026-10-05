@@ -96,6 +96,24 @@ Feature: A commentary's writer can edit or delete any of its comments
       When the comment is submitted
       Then the first comment says "Sam is three hoops up"
 
+  Rule: A commentary titled in another script is edited in as any is
+
+    Background:
+      Given "writer@example.com" has started the commentary "День два" on "Spring Open"
+      And "writer@example.com" has added the comment "Kim has a lift" to "День два" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+
+    Scenario: An edit is shown in a commentary titled in another script
+      Given the page to edit the comment "Kim has a lift" is open
+      And the comment "Kim has a second lift" is typed in place of what it held
+      When the comment is submitted
+      Then the first comment says "Kim has a second lift"
+
+    Scenario: A comment deleted from a commentary titled in another script is gone from it
+      Given the page to delete the comment "Kim has a lift" is open
+      When the delete is confirmed
+      Then the commentary page says there are no comments
+
   Rule: An edit that is refused is said beneath the box, and changes nothing
 
     Scenario: A missing comment is said beneath the box

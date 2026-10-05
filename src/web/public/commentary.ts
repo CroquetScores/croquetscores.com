@@ -482,8 +482,10 @@ export const registerCommentaryPage = (
     // where it is now, for good, so that a link kept from before still works.
     const { year, sport, slug, commentary } = request.params;
     if (asked.address !== `${year}/${sport}/${slug}`) {
+      // Encoded, since a slug keeps letters of any script, and an address in
+      // the Location header that is not encoded is refused for them.
       return reply.redirect(
-        `/${asked.address}/commentaries/${commentary}`,
+        encodeURI(`/${asked.address}/commentaries/${commentary}`),
         301,
       );
     }
@@ -601,7 +603,7 @@ export const registerCommentaryPage = (
       }
       // Shown again by asking for it again, so that a reload does not send
       // the comment a second time.
-      return reply.redirect(`/${asked.commentary.address}`, 303);
+      return reply.redirect(encodeURI(`/${asked.commentary.address}`), 303);
     },
   );
 };
