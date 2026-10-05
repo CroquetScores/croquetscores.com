@@ -42,6 +42,14 @@ Four kinds of thing, kept apart.
 
 **What to do when it does.** Restore the test, or put the player or the teams back, and archive the game first. To stop it, either take a lock on the tournament's stream in `AddGame` (and in correcting and restoring a game) so that it waits for any change to the tournament, or have those three handlers append to the competition's stream as well, so that its version check refuses one of the two.
 
+### A tournament or competition name with no letter or digit fails where its slug is made
+
+**What goes wrong.** A tournament is found at a slug made from its name, and a block, a knockout or a Swiss at a slug made from its own (`Tournament.#addressFor`, `Tournament.#competitionSlugFor`). A name with no letter or digit in it, such as "?????" or "???", makes no slug, and `Slug.fromName` throws `Slug.Empty`. Neither `TournamentName` nor `CompetitionName` refuses such a name first, so it passes validation, and the throw comes from inside the handler: creating or updating the tournament, or adding or updating the competition, answers the admin with a server error rather than a message beside the name. A tournament player, a team player, a team's short name and a commentary's title each refuse one already, as `…NoLetterOrDigit`, for this reason; a team's name does not need to, since a team is found by its short name.
+
+**Why it has not happened.** Nobody has named a tournament or a block with punctuation alone. The names brought over from the old sites all have letters in them.
+
+**What to do when it does.** Nothing is kept, since the throw comes before anything is recorded; the reader is told something went wrong and can type a name with a letter in it. To stop it, give `TournamentName` and `CompetitionName` a `NoLetterOrDigit` rule, as `CommentaryTitle` has, with words in both catalogues, and specify it in their features and in a scenario each of creating a tournament and adding a block.
+
 ---
 
 ## Outstanding .feature files

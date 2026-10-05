@@ -4,7 +4,9 @@ import { withoutTags } from "../commentaries/value-objects/CommentText.js";
 
 /** Every rule a commentary title can break. */
 export type CommentaryTitleErrorCode =
-  "CommentaryTitle.Missing" | "CommentaryTitle.TooLong";
+  | "CommentaryTitle.Missing"
+  | "CommentaryTitle.TooLong"
+  | "CommentaryTitle.NoLetterOrDigit";
 
 // As the old site held it, so that a title fits a line of the list on a phone.
 const MOST_CHARACTERS = 100;
@@ -20,6 +22,14 @@ const titles = new Validator<string, CommentaryTitleErrorCode>({
       field: "title",
       code: "CommentaryTitle.TooLong",
       isBrokenBy: (given) => charactersIn(given) > MOST_CHARACTERS,
+    },
+    // A commentary is found at a slug made from its title, and a title with no
+    // letter or digit makes none (Slug.ts), which would leave the commentary
+    // nowhere to be found.
+    {
+      field: "title",
+      code: "CommentaryTitle.NoLetterOrDigit",
+      isBrokenBy: (given) => given !== "" && !/[\p{L}\p{N}]/u.test(given),
     },
   ],
 });

@@ -729,6 +729,8 @@ export const english: Language = {
     "TeamName.TooLong": "That name is too long.",
     "CommentaryTitle.Missing": "Give the commentary a title.",
     "CommentaryTitle.TooLong": "That title is too long.",
+    "CommentaryTitle.NoLetterOrDigit":
+      "A title needs a letter or a digit in it.",
     "Tournament.CommentaryTitleTaken":
       "Another commentary already has that title.",
     "CommentText.Missing": "Write something in the comment.",

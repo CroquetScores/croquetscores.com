@@ -92,6 +92,11 @@ Feature: Starting a commentary on a tournament
       Then it is refused with "Request.Invalid"
       And the first rule broken is "CommentaryTitle.TooLong"
 
+    Scenario: A title with no letter or digit is refused for it
+      When the reader signed in to the account for "writer@example.com" starts the commentary "???" on "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "CommentaryTitle.NoLetterOrDigit"
+
     Scenario: A commentary that breaks a rule is not started
       When the reader signed in to the account for "writer@example.com" starts the commentary "" on "Spring Open"
       Then the tournament has no commentaries

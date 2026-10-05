@@ -654,6 +654,8 @@ export const spanish: Language = {
     "TeamName.TooLong": "Ese nombre es demasiado largo.",
     "CommentaryTitle.Missing": "Ponle un título al comentario.",
     "CommentaryTitle.TooLong": "Ese título es demasiado largo.",
+    "CommentaryTitle.NoLetterOrDigit":
+      "Un título necesita una letra o un número.",
     "Tournament.CommentaryTitleTaken": "Otro comentario ya tiene ese título.",
     "CommentText.Missing": "Escribe algo en el comentario.",
     "CommentText.TooLong": "Ese comentario es demasiado largo.",

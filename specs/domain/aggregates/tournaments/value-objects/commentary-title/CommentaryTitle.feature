@@ -19,6 +19,12 @@ Feature: The title a commentary is known by
   without it. A title that is nothing but whitespace, or nothing but tags,
   is missing. The tags taken out do not count towards its 100 characters.
 
+  A commentary is found at a slug made from its title
+  (`startCommentary.feature`), and a title with no letter or digit in it,
+  such as "???" or a trophy drawn as an emoji, makes no slug (`Slug.feature`),
+  so it is refused as a title rather than left to fail where the commentary
+  is started.
+
   Two commentaries in the same tournament with the same title could not be
   told apart in its list, but a title does not know which tournament it is
   in, so that is the tournament's to refuse and not the title's
@@ -68,6 +74,32 @@ Feature: The title a commentary is known by
     Scenario: Tags taken out do not count towards the length
       When a commentary title of 100 characters wrapped in "<b>" is made
       Then it is not refused
+
+  Rule: A commentary title has a letter or a digit in it
+
+    Scenario Outline: A title with neither a letter nor a digit is refused
+      When the commentary title "<title>" is made
+      Then it is refused for breaking "CommentaryTitle.NoLetterOrDigit"
+
+      Examples:
+        | title |
+        | ???   |
+        | —     |
+        | 🏆    |
+
+    Scenario Outline: A title with a letter or a digit is accepted
+      When the commentary title "<title>" is made
+      Then it is not refused
+
+      Examples:
+        | title    |
+        | 🏆 Day 1 |
+        | 1        |
+        | 李       |
+
+    Scenario: A title of nothing but tags is missing, not without a letter
+      When the commentary title "<b></b>" is made
+      Then it is refused for breaking "CommentaryTitle.Missing"
 
   Rule: Markdown in a title is kept as the characters it is
 

@@ -99,6 +99,13 @@ Feature: A reader signed in can start a commentary on a tournament
       When the dialog is submitted
       Then the tournament "Spring Open" has a commentary with a title of 100 characters
 
+    Scenario: A title with no letter or digit is said beneath the field
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/create" is open
+      And the title "???" is typed
+      When the dialog is submitted
+      Then the title field says the message for "CommentaryTitle.NoLetterOrDigit"
+
     Scenario: A title another commentary has is said beneath the field
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
       And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
