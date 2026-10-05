@@ -1,37 +1,48 @@
 @browser @postgres
-Feature: A tournament's commentaries page lists its commentaries
+Feature: A tournament's commentaries page is the old site's
 
   A tournament's page has a section of its commentaries, at its address
   followed by "commentaries", as "/2026/ac/spring-open/commentaries", where
-  the old site had it (`tournament.feature`). A commentary is one writer's
-  account of the tournament as it is played, and the page lists every one
-  there is, the most recently started first, each by its title and the name
-  of its writer, and each leading to its own page at the commentaries page's
-  address followed by its slug, as
+  the old site had it (`tournament.feature`). The page is the old site's, as
+  it was, so that a reader who knew that page knows this one: headed
+  "Commentary", the commentaries listed beneath, then the old site's
+  Disclaimer, Guidelines and Reporting Commentary in its own words. The one
+  change is the way to start a new commentary, which the old site left as a
+  link at the foot of the page: here it is a button, between the list and
+  the Disclaimer, where a reader who has looked down the list for a
+  commentary and not found it is looking next.
+
+  A commentary is one writer's account of the tournament as it is played.
+  Each is listed as the old site listed it, by its title and its writer's
+  name with "by" between, as "Day one by Wren Writer", leading to its own
+  page at the commentaries page's address followed by its slug, as
   "/2026/ac/spring-open/commentaries/day-one"
-  (`PublicCommentariesOfTournament.feature`). A title is plain text, and is
-  listed as the words it is, with any Markdown in it not drawn
-  (`CommentaryTitle.feature`).
+  (`PublicCommentariesOfTournament.feature`). The most recently started is
+  listed first, so that the one being written today is at the top. A title
+  is plain text, and is listed as the words it is, with any Markdown in it
+  not drawn (`CommentaryTitle.feature`). A tournament with no commentaries
+  lists none, and says nothing of it, as the old site did not.
 
-  The page carries what the old site's did: a disclaimer, that the views in
-  a commentary are its writer's and not the site's; the guidelines a writer
-  is held to; and how to report a commentary that breaks them. They are said
-  on the page that leads to every commentary, rather than on each, so that
-  they are read before anything is written. It offers to start a new
-  commentary, leading to the page that does (`startCommentary.feature`), to
-  anybody: a reader not signed in who follows it is asked to sign in there,
-  which tells them what writing needs rather than hiding that it can be
-  done.
+  Where the old site's words name croquetscores.com, they name the website
+  being read, so that another website served from here names itself. A
+  commentary is reported to Tim Murphy by email, at the address the old site
+  gave, croquetscores@gmail.com, with the subject and the body the old site
+  filled in. The example of a report gives an address as this site makes
+  them, with https and a commentary's slug, where the old site's gave
+  "http://www." and a commentary's number.
 
-  It is headed by the tournament's name, with the commentaries under a
-  heading of their own, and its sections are the tournament's, with
-  Commentary marked as the section being read. An archived tournament has no
-  commentaries page, nor one the website has never had. An address the
-  tournament has moved on from leads to its commentaries page where it is
-  found now, so that a link kept from before still works.
+  The button to start a new commentary is a link drawn as a button, so that
+  it needs no scripting, and leads to the page that does
+  (`startCommentary.feature`). It is offered to anybody: a reader not signed
+  in who follows it is asked to sign in there, which tells them what writing
+  needs rather than hiding that it can be done.
 
-  The page is laid out for a phone first, since commentary is read and
-  written at the side of a lawn.
+  The tournament is named in the bar beneath the site's name, as on any of
+  its pages, and its sections are the tournament's, with Commentary marked as
+  the section being read. An archived tournament has no commentaries page,
+  nor one the website has never had. An address the tournament has moved on
+  from leads to its commentaries page where it is found now, so that a link
+  kept from before still works.
 
   Where a scenario says nothing else, a tournament is for the sport "ac" and
   starts on 3 October 2026.
@@ -44,15 +55,11 @@ Feature: A tournament's commentaries page lists its commentaries
     And "organiser@example.com" has created the tournament "Spring Open"
     And "writer@example.com" has an account, confirmed, called "Wren Writer", with the password "correct horse battery staple"
 
-  Rule: The page is the tournament's commentaries, for anybody
+  Rule: The page is headed Commentary, for anybody
 
-    Scenario: The page is headed by the tournament's name
+    Scenario: The page is headed Commentary
       When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the page is headed "Spring Open"
-
-    Scenario: The commentaries are under a heading of their own
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the content has the heading "Commentary"
+      Then the page is headed "Commentary"
 
     Scenario: A reader not signed in is shown the commentaries
       Given nobody is signed in
@@ -60,16 +67,11 @@ Feature: A tournament's commentaries page lists its commentaries
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then "Day one" is among the commentaries
 
-    Scenario: A tournament with no commentaries says so
+    Scenario: A tournament with no commentaries lists none
       When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the commentaries page says there are no commentaries
+      Then no commentaries are listed
 
-    Scenario: A tournament with commentaries does not say there are none
-      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the commentaries page does not say there are no commentaries
-
-  Rule: Every commentary is listed, the most recently started first
+  Rule: Every commentary is listed by its title and its writer, the most recently started first
 
     Scenario: The commentaries are listed the most recently started first
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
@@ -78,6 +80,11 @@ Feature: A tournament's commentaries page lists its commentaries
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then the first commentary is "Day two"
       And the second commentary is "Day one"
+
+    Scenario: A commentary is listed as its title by its writer
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then "Day one by Wren Writer" leads to "/2026/ac/spring-open/commentaries/day-one"
 
     Scenario: A commentary is listed with its writer's name
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
@@ -89,12 +96,7 @@ Feature: A tournament's commentaries page lists its commentaries
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then "**Day one**" is among the commentaries
 
-    Scenario: A commentary leads to its own page
-      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the commentary "Day one" leads to "/2026/ac/spring-open/commentaries/day-one"
-
-  Rule: The page says what the old site's did
+  Rule: The page says what the old site's did, in its words
 
     Scenario Outline: The page has each of the old site's headings
       When the page at "/2026/ac/spring-open/commentaries" is opened
@@ -104,9 +106,29 @@ Feature: A tournament's commentaries page lists its commentaries
         | heading              |
         | Disclaimer           |
         | Guidelines           |
-        | Reporting commentary |
+        | Reporting Commentary |
 
-  Rule: Anybody is offered a way to start a commentary
+    Scenario: The old site's headings come in its order
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the content's headings are "Disclaimer", "Guidelines" and "Reporting Commentary", in that order
+
+    Scenario: The disclaimer names the website being read
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the page says "The views and opinions expressed in these commentaries are those of the authors and do not necessarily reflect those of Tim Murphy or croquetscores.com."
+
+    Scenario: The guidelines begin by saying who is responsible
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the page says "You are responsible for your commentary." in bold
+
+    Scenario: A commentary is reported to Tim Murphy by email
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then "Tim Murphy" leads to "mailto:croquetscores@gmail.com?subject=croquetscores.com%20Commentary%20Report&body=Please%20quote%20web%20address%2C%20questionable%20comment%20and%20why%20it%20should%20be%20removed."
+
+    Scenario: The example of a report gives an address as this site makes them
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the page says "https://croquetscores.com/2015/gc/tournament-name/commentaries/day-one"
+
+  Rule: Anybody is offered a button to start a new commentary, between the list and the Disclaimer
 
     Scenario: A reader signed in is offered a way to start a commentary
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -117,6 +139,19 @@ Feature: A tournament's commentaries page lists its commentaries
       Given nobody is signed in
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then "Start new commentary" leads to "/2026/ac/spring-open/commentaries/create"
+
+    Scenario: Start new commentary is drawn as a button
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then "Start new commentary" is drawn as a button
+
+    Scenario: Start new commentary comes after the list of commentaries
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then "Start new commentary" comes after the list of commentaries
+
+    Scenario: Start new commentary comes before the Disclaimer
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then "Start new commentary" comes before the heading "Disclaimer"
 
   Rule: Commentary is marked as the section being read
 

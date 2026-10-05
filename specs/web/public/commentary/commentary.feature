@@ -52,8 +52,38 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   (`changeCommentaryTitle.feature`). Anybody else, signed in or not, is
   offered neither the box nor a pencil nor a trash can: they read.
 
-  The page needs no scripting: what scripting adds, the modal dialog and
-  Ctrl and Enter, is a quicker way to what can be done without it. An
+  Where there is scripting, a comment written in the box is added in place:
+  it is sent without the page being drawn again, and shown as the last
+  comment, with the box emptied and the writer still where they were in the
+  commentary, so that writing comment after comment through a game is not
+  interrupted by the page jumping back to its top each time. One that is
+  refused is said beneath the box in place, with what was typed left in it.
+  A comment added in place has its pencil and its trash can as any other
+  does. Where the page cannot add it in place, as when the writer has been
+  signed out since the page was opened, the comment is sent as it would be
+  with no scripting, and the page answers it as it would then.
+
+  Once a comment has been sent, by the button or by Ctrl and Enter, the page
+  is scrolled so that the Add comment button is at the bottom of the window:
+  the comment just added, or what is wrong with it, is then just above it,
+  and the box is where the next comment is written, without the writer
+  having to find it again.
+
+  A reader is shown new comments without loading the page again. Where there
+  is scripting, the page asks every quarter of a minute for the comments as
+  they are now, and draws them again where they have changed, so that a
+  comment written since the page was opened appears in its place, and one
+  edited or deleted since reads as it does now. A quarter of a minute is
+  soon enough to follow a game a stroke at a time, and seldom enough that a
+  commentary read by many costs little. The page asks only while it can be
+  seen, and asks again as soon as it can be seen once more. It needs nobody
+  signed in, and the writer's own page asks too, so that a comment they
+  wrote from another device appears. Without scripting, a reader loads the
+  page again to see what is new, as on any other page.
+
+  The page needs no scripting: what scripting adds, adding a comment in
+  place, the modal dialog and Ctrl and Enter, is a quicker way to what can be
+  done without it. An
   archived tournament has no commentary
   pages, nor one the website has never had, and a slug no commentary on the
   tournament has is not a page. An address the tournament has moved on from
@@ -234,6 +264,168 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the comment "   " is typed
       When the comment is submitted
       Then the commentary "Day one" of "Spring Open" has no comments
+
+  Rule: With scripting, a comment is added in place, without the page being drawn again
+
+    Background:
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+
+    Scenario: The comment is shown as the last comment
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Alex has pegged out" is typed
+      When the comment is submitted
+      Then the last comment says "Alex has pegged out"
+
+    Scenario: The page is not drawn again
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the page as it is now is remembered
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the last comment says "Sam is two hoops up"
+      And the page is the one remembered
+
+    Scenario: The comment is added to the commentary
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
+
+    Scenario: The box is empty once the comment is added
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the last comment says "Sam is two hoops up"
+      And the comment box is empty
+
+    Scenario: The first comment takes the place of saying there are none
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the last comment says "Sam is two hoops up"
+      And the commentary page does not say there are no comments
+
+    Scenario: A comment added in place is drawn from its Markdown
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is **two hoops** up" is typed
+      When the comment is submitted
+      Then the last comment draws "two hoops" bold
+
+    Scenario: A comment added in place has a pencil and a trash can
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the last comment offers a way to edit it
+      And the last comment offers a way to delete it
+
+    Scenario: A comment added in place is deleted from its trash can, asking first
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the comment "Sam is two hoops up" is typed
+      And the comment is submitted
+      When the way to delete the last comment is pressed
+      Then the modal dialog names "Sam is two hoops up"
+
+    Scenario: A comment refused is said beneath the box in place
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the page as it is now is remembered
+      And the comment "   " is typed
+      When the comment is submitted
+      Then the comment box says the message for "CommentText.Missing"
+      And the page is the one remembered
+
+    Scenario: What was typed is left in the box when it is refused in place
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And a comment of 10001 characters is typed
+      When the comment is submitted
+      Then the comment box says the message for "CommentText.TooLong"
+      And the comment box holds what was typed
+
+    Scenario: A writer signed out since the page was opened is sent to sign in
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the reader has signed out
+      And the comment "Sam is two hoops up" is typed
+      When the comment is submitted
+      Then the sign in page is shown
+
+  Rule: Once a comment is sent, the Add comment button is at the bottom of the window
+
+    Background:
+      Given a viewport 375 pixels wide
+      And "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Chris is on the peg" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Pat has run hoop six" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Kim has a lift" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Lee has a contact" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Sam has pegged out" to "Day one" of "Spring Open"
+      And "writer@example.com" has added the comment "Alex wins 26 to 17" to "Day one" of "Spring Open"
+      And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
+      And the page is scrolled to its top
+
+    Scenario: Pressing Add comment brings the button to the bottom of the window
+      Given the comment "Lee wins the next game" is typed
+      When the comment is submitted
+      Then the Add comment button is at the bottom of the window
+
+    Scenario: Ctrl and Enter bring the button to the bottom of the window
+      Given the comment "Lee wins the next game" is typed
+      When Control and Enter are pressed in the comment box
+      Then the Add comment button is at the bottom of the window
+
+    Scenario: A comment refused brings the button to the bottom of the window too
+      Given the comment "   " is typed
+      When the comment is submitted
+      Then the Add comment button is at the bottom of the window
+
+  Rule: A reader is shown new comments without loading the page again
+
+    Background:
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And nobody is signed in
+      And the browser has scripting on
+      And the browser's clock is held by the scenario
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open
+      And the page as it is now is remembered
+
+    Scenario: A comment written since the page was opened is shown within a quarter of a minute
+      Given "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
+      When a quarter of a minute passes
+      Then the last comment says "Alex has pegged out"
+
+    Scenario: The page is not loaded again to show it
+      Given "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
+      When a quarter of a minute passes
+      Then the last comment says "Alex has pegged out"
+      And the page is the one remembered
+
+    Scenario: A comment written since is not shown before a quarter of a minute has passed
+      Given "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
+      When 10 seconds pass on the browser's clock
+      Then the last comment says "Sam is two hoops up"
+
+    Scenario: A comment edited since reads as it does now
+      Given "writer@example.com" has edited the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "Sam is three hoops up"
+      When a quarter of a minute passes
+      Then the first comment says "Sam is three hoops up"
+
+    Scenario: A comment deleted since is taken away
+      Given "writer@example.com" has deleted the comment "Sam is two hoops up" in "Day one" of "Spring Open"
+      When a quarter of a minute passes
+      Then the commentary page says there are no comments
+
+    Scenario: The first comment written takes the place of saying there are none
+      Given "writer@example.com" has started the commentary "Day two" on "Spring Open"
+      And the page at "/2026/ac/spring-open/commentaries/day-two" is open
+      And "writer@example.com" has added the comment "Kim has a lift" to "Day two" of "Spring Open"
+      When a quarter of a minute passes
+      Then the last comment says "Kim has a lift"
+
+    Scenario: A comment shown since offers a reader not signed in no way to edit it
+      Given "writer@example.com" has added the comment "Alex has pegged out" to "Day one" of "Spring Open"
+      When a quarter of a minute passes
+      Then the last comment says "Alex has pegged out"
+      And the last comment does not offer a way to edit it
 
   Rule: Ctrl and Enter in the box send the comment
 

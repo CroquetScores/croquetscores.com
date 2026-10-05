@@ -14,6 +14,7 @@ import MarkdownIt from "markdown-it";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { AddComment } from "../../application/operations/commentaries/AddComment.js";
 import {
+  type PublicComment,
   PublicCommentaryOfTournament,
   type TournamentCommentaryToRead,
 } from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
@@ -76,40 +77,170 @@ export const pencil = `<svg class="icon icon-pencil" viewBox="0 0 24 24" aria-hi
 const trashCan = `<svg class="icon icon-trash-can" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z" /></svg>`;
 
 /**
- * What scripting adds to a commentary's pages, where there is scripting: Ctrl
- * and Enter, or Command and Enter on a Mac, send what is in a comment box, as
- * its button does; and the trash can beside a comment asks in the modal
- * dialog before deleting it, rather than leading to the page that asks, which
- * is where it leads without scripting. Each is a quicker way to what can be
- * done with none, so nothing is lost where it does not run.
+ * What scripting adds to a commentary's pages, where there is scripting. A
+ * comment written in the commentary's box is added in place: sent in the
+ * background, and the comment the server draws of it put after the last, with
+ * the box emptied, or what is wrong with it said beneath the box, so that the
+ * page is not drawn again and the writer stays where they were. Ctrl and
+ * Enter, or Command and Enter on a Mac, send what is in a comment box, as its
+ * button does. And the trash can beside a comment asks in the modal dialog
+ * before deleting it, rather than leading to the page that asks, which is
+ * where it leads without scripting.
+ *
+ * Each is a quicker way to what can be done with none, so nothing is lost
+ * where it does not run; and where the server answers a comment sent in the
+ * background with anything but a comment or what is wrong with it — a page to
+ * sign in at, say, for a writer signed out since the page was opened — the
+ * comment is sent again as a form would send it, and the page answers it as
+ * it would then. Once a comment is sent, the page is scrolled so that the
+ * button that sends it is at the bottom of the window, with the comment just
+ * added, or what is wrong with it, just above it.
+ *
+ * The comments are asked for again every quarter of a minute, while the page
+ * can be seen, and drawn again where they have changed, so that a reader sees
+ * what has been written, edited or deleted since without loading the page
+ * again. Asked for, rather than sent by the server as they are written: that
+ * would hold a connection open for every reader of every commentary, and need
+ * every one of the site's processes told of a comment another kept, for a
+ * commentary that is written a few times a game. A quarter of a minute is soon
+ * enough to follow a game by.
+ *
+ * The keys and the trash can are listened for on the whole page rather than
+ * on each box and each comment, so that a comment added in place, or drawn
+ * again, has them too.
  */
 export const commentScript = `
     <script>
       (function () {
-        document.querySelectorAll(".comment-box").forEach(function (box) {
-          box.addEventListener("keydown", function (event) {
-            if (event.key !== "Enter" || !(event.ctrlKey || event.metaKey)) return;
-            event.preventDefault();
-            box.form.requestSubmit();
-          });
+        document.addEventListener("keydown", function (event) {
+          var box = event.target;
+          if (!box.classList || !box.classList.contains("comment-box")) return;
+          if (event.key !== "Enter" || !(event.ctrlKey || event.metaKey)) return;
+          event.preventDefault();
+          box.form.requestSubmit();
         });
+
+        var live = document.querySelector("[data-refresh]");
+        if (live && window.fetch) {
+          // The comments as last drawn by the server, so that they are drawn
+          // again only when they have changed, and what has the focus in them
+          // keeps it otherwise.
+          var drawn = null;
+          var asking = false;
+          var ask = function () {
+            if (document.hidden || asking) return;
+            asking = true;
+            fetch(live.getAttribute("data-refresh"), {
+              headers: { accept: "application/json" },
+              credentials: "same-origin",
+            })
+              .then(function (response) {
+                return response.ok ? response.json() : null;
+              })
+              .then(function (answer) {
+                if (!answer || answer.comments === drawn) return;
+                drawn = answer.comments;
+                live.innerHTML = answer.comments;
+              })
+              .catch(function () {})
+              .then(function () {
+                asking = false;
+              });
+          };
+          setInterval(ask, 15000);
+          document.addEventListener("visibilitychange", function () {
+            if (!document.hidden) ask();
+          });
+        }
+
+        var adding = document.querySelector(".comment-form-add");
+        if (adding && window.fetch) {
+          var box = adding.querySelector(".comment-box");
+          var button = adding.querySelector("button[type=submit]");
+          var say = function (messages) {
+            var beneath = document.getElementById("comment-text-message");
+            if (messages.length === 0) {
+              if (beneath) beneath.remove();
+              box.removeAttribute("aria-describedby");
+              box.removeAttribute("aria-invalid");
+              return;
+            }
+            if (!beneath) {
+              beneath = document.createElement("p");
+              beneath.className = "field-message";
+              beneath.id = "comment-text-message";
+              box.insertAdjacentElement("afterend", beneath);
+            }
+            beneath.replaceChildren.apply(beneath, messages.map(function (text) {
+              var line = document.createElement("span");
+              line.textContent = text;
+              return line;
+            }));
+            box.setAttribute("aria-describedby", beneath.id);
+            box.setAttribute("aria-invalid", "true");
+          };
+          // The button at the bottom of the window, with what was just added,
+          // or what is wrong with it, above it, and the box ready for the next.
+          var settle = function () {
+            box.focus({ preventScroll: true });
+            button.scrollIntoView({ block: "end", behavior: "instant" });
+          };
+          adding.addEventListener("submit", function (event) {
+            event.preventDefault();
+            if (button.disabled) return;
+            button.disabled = true;
+            fetch(adding.action, {
+              method: "POST",
+              headers: { accept: "application/json" },
+              body: new URLSearchParams(new FormData(adding)),
+              credentials: "same-origin",
+            })
+              .then(function (response) {
+                var json = (response.headers.get("content-type") || "").indexOf("application/json") === 0;
+                if (!json || (response.status !== 200 && response.status !== 422)) throw new Error("not in place");
+                return response.json().then(function (answer) {
+                  if (response.status === 422) {
+                    say(answer.messages);
+                    return settle();
+                  }
+                  var list = document.querySelector("main .comments");
+                  if (!list) {
+                    list = document.createElement("ol");
+                    list.className = "comments";
+                    document.querySelector("main .comments-none").replaceWith(list);
+                  }
+                  list.insertAdjacentHTML("beforeend", answer.comment);
+                  box.value = "";
+                  say([]);
+                  settle();
+                });
+              })
+              .catch(function () {
+                adding.submit();
+              })
+              .then(function () {
+                button.disabled = false;
+              });
+          });
+        }
+
         var dialog = document.getElementById("delete-dialog");
         if (!dialog || typeof dialog.showModal !== "function") return;
         var shown = dialog.querySelector(".delete-comment");
         var form = dialog.querySelector("form");
         var opener;
-        document.querySelectorAll(".comment-delete").forEach(function (trash) {
-          trash.addEventListener("click", function (event) {
-            event.preventDefault();
-            opener = trash;
-            // The comment as the page already draws it, so the dialog shows
-            // what the reader saw, and nothing new is drawn from it.
-            var drawn = trash.closest(".comment").querySelector(".comment-text");
-            shown.replaceChildren.apply(shown, Array.prototype.map.call(drawn.childNodes, function (node) { return node.cloneNode(true); }));
-            // The page that asks is the address a delete is sent to as well.
-            form.action = trash.href;
-            dialog.showModal();
-          });
+        document.addEventListener("click", function (event) {
+          var trash = event.target.closest && event.target.closest(".comment-delete");
+          if (!trash) return;
+          event.preventDefault();
+          opener = trash;
+          // The comment as the page already draws it, so the dialog shows
+          // what the reader saw, and nothing new is drawn from it.
+          var drawn = trash.closest(".comment").querySelector(".comment-text");
+          shown.replaceChildren.apply(shown, Array.prototype.map.call(drawn.childNodes, function (node) { return node.cloneNode(true); }));
+          // The page that asks is the address a delete is sent to as well.
+          form.action = trash.href;
+          dialog.showModal();
         });
         dialog.querySelector(".dialog-cancel").addEventListener("click", function () {
           dialog.close();
@@ -195,11 +326,14 @@ export const commentBox = (
     submit,
     typed,
     messages,
+    inPlace = false,
   }: {
     readonly action: string;
     readonly submit: string;
     readonly typed: string;
     readonly messages: readonly string[];
+    /** Whether, with scripting, what it sends is added in place. */
+    readonly inPlace?: boolean;
   },
 ): string => {
   const described =
@@ -209,12 +343,46 @@ export const commentBox = (
     messages.length === 0
       ? ""
       : `\n              <p class="field-message" id="comment-text-message">${messages.map((text) => `<span>${escape(text)}</span>`).join(" ")}</p>`;
-  return `            <form class="comment-form" method="post" action="${escape(action)}">
+  return `            <form class="comment-form${inPlace ? " comment-form-add" : ""}" method="post" action="${escape(action)}">
               <label class="comment-label" for="comment-text">${escape(speaking.say("commentary.comment"))}</label>
               <textarea class="comment-box" id="comment-text" name="text" rows="4"${described}${wrong}>${escape(typed)}</textarea>${beneath}
               <button class="button button-submit" type="submit">${escape(submit)}</button>
             </form>`;
 };
+
+// One comment as the page lists it: what it says, drawn from its Markdown,
+// how long before `now` it was written, whether it has been edited, and, for
+// the commentary's writer, the pencil and the trash can. The page lists its
+// comments this way, and a comment added in place is drawn this way too, so
+// that the two are the same.
+const commentShown = (
+  commentary: TournamentCommentaryToRead["commentary"],
+  comment: PublicComment,
+  now: Date,
+  speaking: Speaking,
+): string => {
+  const { say } = speaking;
+  return `            <li class="comment">
+              <div class="comment-text">${commentDrawn(comment.text)}</div>
+              <p class="comment-about"><span class="comment-ago">${ago(ReadOnlyDate.from(new Date(comment.writtenAt)), now, speaking)}</span>${comment.lastEditedAt === undefined ? "" : ` <span class="comment-edited">${escape(say("commentary.edited"))}</span>`}${commentary.writtenByReader ? ` <a class="comment-edit" href="${escape(commentPath(commentary, comment))}">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a> <a class="comment-delete" href="${escape(deletePathOf(commentary, comment))}">${trashCan}<span class="visually-hidden">${escape(say("commentary.delete"))}</span></a>` : ""}</p>
+            </li>`;
+};
+
+// The comments as the page lists them, the first written first, or what the
+// page says when there are none: what the page is drawn with, and what it is
+// given again when it asks for the comments as they are now.
+const commentsShown = (
+  commentary: TournamentCommentaryToRead["commentary"],
+  now: Date,
+  speaking: Speaking,
+): string =>
+  commentary.comments.length === 0
+    ? `          <p class="comments-none">${escape(speaking.say("commentary.none"))}</p>`
+    : `          <ol class="comments">
+${commentary.comments
+  .map((comment) => commentShown(commentary, comment, now, speaking))
+  .join("\n")}
+          </ol>`;
 
 const pageOf = (
   request: FastifyRequest,
@@ -226,27 +394,15 @@ const pageOf = (
   const { say } = speaking;
   const { commentary } = asked;
   const now = request.requestedAt.toDate();
-  const comments =
-    commentary.comments.length === 0
-      ? `          <p class="comments-none">${escape(say("commentary.none"))}</p>`
-      : `          <ol class="comments">
-${commentary.comments
-  .map(
-    (comment) => `            <li class="comment">
-              <div class="comment-text">${commentDrawn(comment.text)}</div>
-              <p class="comment-about"><span class="comment-ago">${ago(ReadOnlyDate.from(new Date(comment.writtenAt)), now, speaking)}</span>${comment.lastEditedAt === undefined ? "" : ` <span class="comment-edited">${escape(say("commentary.edited"))}</span>`}${commentary.writtenByReader ? ` <a class="comment-edit" href="${escape(commentPath(commentary, comment))}">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a> <a class="comment-delete" href="${escape(deletePathOf(commentary, comment))}">${trashCan}<span class="visually-hidden">${escape(say("commentary.delete"))}</span></a>` : ""}</p>
-            </li>`,
-  )
-  .join("\n")}
-          </ol>`;
   // Beneath the last comment, since the comments read downwards and the next
   // one goes where it will be read.
   const writing = commentary.writtenByReader
     ? `\n${commentBox(speaking, {
         action: `/${commentary.address}/comments`,
         submit: say("commentary.add"),
+        inPlace: true,
         ...box,
-      })}${deleteDialog(speaking)}${commentScript}`
+      })}${deleteDialog(speaking)}`
     : "";
   return render(assets, {
     tournament: { name: asked.name, address: asked.address },
@@ -265,7 +421,9 @@ ${commentary.comments
             <h2 class="commentary-title">${escape(commentary.title)}</h2>${commentary.writtenByReader ? `\n            <a class="commentary-title-edit" href="/${escape(commentary.address)}/edit">${pencil}<span class="visually-hidden">${escape(say("commentary.edit"))}</span></a>` : ""}
           </div>
           <p class="commentary-writer">${escape(commentary.writer)}</p>
-${comments}${writing}`,
+          <div class="commentary-comments" data-refresh="/${escape(commentary.address)}/comments">
+${commentsShown(commentary, now, speaking)}
+          </div>${writing}${commentScript}`,
   });
 };
 
@@ -294,6 +452,26 @@ export const registerCommentaryPage = (
     );
   });
 
+  // The comments as they are now, drawn as the page draws them, for the page
+  // to draw again where they have changed. Drawn for whoever asks, so that a
+  // writer's own comments come with their pencil and their trash can. Asked
+  // for by the page's script and never by a reader, so it answers nothing but
+  // the comments, and is never kept by anything in between.
+  server.get<{ Params: CommentaryParams }>(
+    `${path}/comments`,
+    async (request, reply) => {
+      const asked = await commentaryOf(request);
+      if (asked === undefined) return reply.callNotFound();
+      return reply.header("cache-control", "no-store").send({
+        comments: commentsShown(
+          asked.commentary,
+          request.requestedAt.toDate(),
+          speakingOf(request),
+        ),
+      });
+    },
+  );
+
   server.post<{ Params: CommentaryParams }>(
     `${path}/comments`,
     async (request, reply) => {
@@ -302,8 +480,15 @@ export const registerCommentaryPage = (
       const asked = await commentaryOf(request);
       if (asked === undefined) return reply.callNotFound();
       const typed = typedFrom(request.body)["text"] ?? "";
+      // Asked for by the page's own script, which adds the comment in place
+      // and so wants the comment, or what is wrong with it, rather than a page.
+      const inPlace = (request.headers.accept ?? "").includes(
+        "application/json",
+      );
+      const speaking = speakingOf(request);
+      let added;
       try {
-        await request.server.mediator.send(
+        added = await request.server.mediator.send(
           new AddComment(
             reader.value,
             asked.commentary.tournament,
@@ -323,21 +508,40 @@ export const registerCommentaryPage = (
         // asking of a page that is not there for them.
         if (failure instanceof CommentaryRefused) return reply.callNotFound();
         if (!(failure instanceof RequestInvalid)) throw failure;
-        const speaking = speakingOf(request);
+        const messages = failure.broken.map((rule) =>
+          speaking.knows(rule.code)
+            ? speaking.say(rule.code)
+            : speaking.say("form.otherwise"),
+        );
+        if (inPlace) {
+          return reply
+            .code(422)
+            .header("cache-control", "no-store")
+            .send({ messages });
+        }
         return reply
           .code(422)
           .header("cache-control", "no-store")
           .type("text/html; charset=utf-8")
-          .send(
-            pageOf(request, assets, asked, {
-              typed,
-              messages: failure.broken.map((rule) =>
-                speaking.knows(rule.code)
-                  ? speaking.say(rule.code)
-                  : speaking.say("form.otherwise"),
-              ),
-            }),
-          );
+          .send(pageOf(request, assets, asked, { typed, messages }));
+      }
+      if (inPlace) {
+        // Drawn as the page draws every comment, from the commentary as it is
+        // now, so that it is the comment as it was kept.
+        const after = await commentaryOf(request);
+        const comment = after?.commentary.comments.find(
+          (each) => each.id === added.value,
+        );
+        if (after !== undefined && comment !== undefined) {
+          return reply.header("cache-control", "no-store").send({
+            comment: commentShown(
+              after.commentary,
+              comment,
+              request.requestedAt.toDate(),
+              speaking,
+            ),
+          });
+        }
       }
       // Shown again by asking for it again, so that a reload does not send
       // the comment a second time.

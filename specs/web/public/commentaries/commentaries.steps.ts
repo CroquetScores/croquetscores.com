@@ -26,26 +26,6 @@ const textOf = async (found: Locator): Promise<string> =>
   unmarked((await found.textContent()) ?? "").trim();
 
 Then(
-  "the commentaries page says there are no commentaries",
-  async function (this: SpecWorld) {
-    assert.equal(
-      await this.browserPage.locator("main .commentaries-none").count(),
-      1,
-    );
-  },
-);
-
-Then(
-  "the commentaries page does not say there are no commentaries",
-  async function (this: SpecWorld) {
-    assert.equal(
-      await this.browserPage.locator("main .commentaries-none").count(),
-      0,
-    );
-  },
-);
-
-Then(
   "{string} is among the commentaries",
   async function (this: SpecWorld, title: string) {
     assert.equal(await commentaryTitled(this, title).count(), 1);
@@ -78,18 +58,6 @@ Then(
   },
 );
 
-Then(
-  "the commentary {string} leads to {string}",
-  async function (this: SpecWorld, title: string, path: string) {
-    assert.equal(
-      await commentaryTitled(this, title)
-        .locator(".commentary-listed-title")
-        .getAttribute("href"),
-      path,
-    );
-  },
-);
-
 // A link in the page's content by its words, wherever it is.
 Then(
   "{string} leads to {string}",
@@ -99,5 +67,104 @@ Then(
       .getByRole("link", { name: words, exact: true });
     assert.equal(await link.count(), 1, `There is no link ${words}.`);
     assert.equal(await link.getAttribute("href"), path);
+  },
+);
+
+Then("no commentaries are listed", async function (this: SpecWorld) {
+  assert.equal(await commentaries(this).count(), 0);
+});
+
+// The headings beneath the page's own, in the order they come.
+Then(
+  "the content's headings are {string}, {string} and {string}, in that order",
+  async function (
+    this: SpecWorld,
+    first: string,
+    second: string,
+    third: string,
+  ) {
+    const headings = (
+      await this.browserPage.locator("main h2").allTextContents()
+    ).map((each) => unmarked(each).trim());
+    assert.deepEqual(headings, [first, second, third]);
+  },
+);
+
+// A paragraph of the content that says exactly this.
+const paragraphSaying = (world: SpecWorld, words: string): Locator =>
+  world.browserPage.locator("main p", { hasText: exactly(words) });
+
+Then("the page says {string}", async function (this: SpecWorld, words: string) {
+  assert.equal(
+    await paragraphSaying(this, words).count(),
+    1,
+    `Nothing in the content says ${words}.`,
+  );
+});
+
+Then(
+  "the page says {string} in bold",
+  async function (this: SpecWorld, words: string) {
+    assert.equal(
+      await this.browserPage
+        .locator("main strong", { hasText: exactly(words) })
+        .count(),
+      1,
+      `Nothing in the content says ${words} in bold.`,
+    );
+  },
+);
+
+const linkCalled = (world: SpecWorld, words: string): Locator =>
+  world.browserPage
+    .locator("main")
+    .getByRole("link", { name: words, exact: true });
+
+Then(
+  "{string} is drawn as a button",
+  async function (this: SpecWorld, words: string) {
+    const classes = (
+      (await linkCalled(this, words).getAttribute("class")) ?? ""
+    ).split(/\s+/);
+    assert.ok(
+      classes.includes("button"),
+      `It is drawn as ${classes.join(" ")}.`,
+    );
+  },
+);
+
+// Lower on the page, which is later in it: the page is one column.
+const below = async (upper: Locator, lower: Locator): Promise<boolean> => {
+  const top = await upper.boundingBox();
+  const bottom = await lower.boundingBox();
+  assert.ok(top !== null && bottom !== null, "One of them is not drawn.");
+  return bottom.y >= top.y + top.height;
+};
+
+Then(
+  "{string} comes after the list of commentaries",
+  async function (this: SpecWorld, words: string) {
+    assert.ok(
+      await below(
+        this.browserPage.locator("main .commentaries"),
+        linkCalled(this, words),
+      ),
+      `${words} is not beneath the list.`,
+    );
+  },
+);
+
+Then(
+  "{string} comes before the heading {string}",
+  async function (this: SpecWorld, words: string, heading: string) {
+    assert.ok(
+      await below(
+        linkCalled(this, words),
+        this.browserPage
+          .locator("main")
+          .getByRole("heading", { name: heading, exact: true }),
+      ),
+      `${words} is not above ${heading}.`,
+    );
   },
 );

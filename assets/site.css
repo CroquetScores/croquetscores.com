@@ -1521,15 +1521,8 @@ main {
 /* A tournament's commentaries, set as its players are: headed in the section
    bar's colours and banded, each title leading to the commentary and its
    writer's name lighter beside it, since the titles are what a reader is
-   choosing between. What the old site said of commentary comes beneath, kept
-   to a reading width. */
-.commentaries-heading {
-  padding: var(--space-1) var(--space-2);
-  background: var(--accent-strong);
-  color: var(--accent-ink);
-  font-size: var(--text-lg);
-}
-
+   choosing between. What the old site said of commentary comes beneath, the
+   full width of the panel, as the commentaries are. */
 .commentaries {
   display: flex;
   flex-direction: column;
@@ -1553,8 +1546,10 @@ main {
 }
 
 /* As tall as anything else pressed with a thumb. */
-.commentary-listed-title {
+.commentary-listed > a {
   display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
   align-items: center;
   min-height: 44px;
 }
@@ -1565,8 +1560,22 @@ main {
   color: var(--ink-muted);
 }
 
-.commentaries-about {
-  max-width: var(--measure);
+.commentaries-start {
+  margin-block: var(--space-4);
+}
+
+/* The example of a report, set apart as the old site set it, on the page's
+   tint, so that it reads as what to send rather than what the page says. */
+.commentaries-example {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+
+.commentaries-example > p {
+  margin: 0;
 }
 
 /* A commentary's title with, for its writer, the pencil that changes it to
@@ -1596,8 +1605,10 @@ main {
 
 /* A commentary: its comments one beneath another, the first written first,
    each parted from the next by a light line so that a comment of several
-   paragraphs is read as one, and what is said of it beneath it, smaller. A
-   long word or link wraps rather than pushing out past the panel on a phone. */
+   paragraphs is read as one, and what is said of it beneath it, smaller. The
+   comments run the full width of the panel, as the rest of a tournament's
+   pages do. A long word or link wraps rather than pushing out past the panel
+   on a phone. */
 .commentary-title {
   overflow-wrap: anywhere;
 }
@@ -1606,7 +1617,6 @@ main {
   margin: 0;
   padding: 0;
   list-style: none;
-  max-width: var(--measure);
 }
 
 .comment {
@@ -1678,7 +1688,6 @@ html:has(dialog:modal) {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  max-width: var(--measure);
   margin-top: var(--space-5);
 }
 

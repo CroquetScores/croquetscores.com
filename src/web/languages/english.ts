@@ -328,39 +328,49 @@ export const english: Language = {
     "tournament.none": "No games have been played yet.",
     // A tournament's players' page, when it has none.
     "players.none": "No players have been added yet.",
-    // A tournament's commentaries page: what it says when it has none, the
-    // way to start one, and what the old site's page said of commentary,
-    // which a writer reads before they write anything.
-    "commentaries.none": "No commentaries have been started yet.",
+    // A tournament's commentaries page, in the old site's words: how a
+    // commentary is listed, its Disclaimer, its Guidelines, how to report a
+    // commentary, and the link to start one. {site} is the website being read.
+    "commentaries.by": "by",
     "commentaries.start": "Start new commentary",
     "commentaries.disclaimer.heading": "Disclaimer",
     "commentaries.disclaimer":
-      "The views and opinions expressed in these commentaries are those of their writers and do not necessarily reflect those of Tim Murphy or {site}.",
+      "The views and opinions expressed in these commentaries are those of the authors and do not necessarily reflect those of Tim Murphy or {site}.",
     "commentaries.guidelines.heading": "Guidelines",
     "commentaries.guidelines.responsible":
       "You are responsible for your commentary.",
     "commentaries.guidelines.purpose":
-      "Commentary is for following the tournament as it is played, not for personal messages.",
-    "commentaries.guidelines.notAllowed": "Do not post anything that:",
-    "commentaries.guidelines.violence": "incites violence or hatred;",
-    "commentaries.guidelines.prejudice":
-      "is about anyone's race, religion, ethnicity, gender, age, disability or sexual orientation;",
-    "commentaries.guidelines.personal":
-      "attacks someone personally: play the ball, not the player;",
+      'The commentary feature is to pass on details of what is happening at the tournament. It is not designed as a "social media" venue to pass on good wishes, etc.',
+    "commentaries.guidelines.hatred":
+      "Do not post material that may incite violence or hatred. We will not tolerate comments that humiliate others based on race, religion, ethnicity, gender, age, mental or physical disability, or sexual orientation.",
+    "commentaries.guidelines.abuse":
+      "Gratuitous abuse will not be tolerated. The general rule here is that comments should play the ball, not the man i.e. not attack someone personally but be about the issue at hand.",
     "commentaries.guidelines.unlawful":
-      "may be unlawful, such as breaking copyright or defaming someone;",
-    "commentaries.guidelines.shouting": "swears, or is written in capitals;",
+      "Any comments that are legally questionable, such as possible breaches of copyright or potentially defamatory material, will be removed.",
+    "commentaries.guidelines.shouting":
+      "Please do not swear or write in all caps in commentary.",
     "commentaries.guidelines.selling":
-      "sells or advertises anything, or is spam;",
+      "Do not use the comments section for commercial purposes or spam. Comments that advertise, promote or solicit any goods or services will be removed.",
     "commentaries.guidelines.links":
-      "is mostly links, or links to unsuitable sites;",
+      "Please limit the use of links in comments. Comments containing links to unsuitable material will be removed.",
     "commentaries.guidelines.impersonating":
-      "pretends to be someone else, or gives anyone's contact details.",
-    "commentaries.reporting.heading": "Reporting commentary",
-    "commentaries.reporting":
-      "To report a commentary, send Tim Murphy its address, the words you are reporting and why you think they should be taken down.",
+      "Do not impersonate others in the comments section, or post personal details – phone numbers, postal or email addresses – that could inadvertently put someone in danger.",
+    "commentaries.reporting.heading": "Reporting Commentary",
+    "commentaries.reporting.before":
+      "Please report commentary that does not meet these guidelines to",
+    "commentaries.reporting.after":
+      ". Quote the web address and questionable commentary. e.g.",
+    "commentaries.reporting.exampleComment":
+      '"a comment that should be removed"',
+    "commentaries.reporting.exampleReason":
+      "This comment should be removed because...",
     "commentaries.reporting.reviewed":
-      "Reporting a commentary does not mean it will be taken down, but every report is read. Commentary can be taken down at any time.",
+      "Reporting an issue does not mean automatic removal but all reports will be reviewed.",
+    "commentaries.reporting.reserved":
+      "{site} reserves the right to remove commentary.",
+    "commentaries.reporting.subject": "{site} Commentary Report",
+    "commentaries.reporting.body":
+      "Please quote web address, questionable comment and why it should be removed.",
     // The page that starts a commentary.
     "startCommentary.title": "Start new commentary",
     "startCommentary.titleField": "Title",

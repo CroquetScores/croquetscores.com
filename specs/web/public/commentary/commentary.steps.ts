@@ -10,7 +10,9 @@ import { withScripting } from "../../support/browser.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
-// once the page has loaded: nothing here waits for it to be drawn again.
+// once the page has loaded. With scripting, a comment can be added to the page
+// in place, after it has loaded, so what reads a comment waits for it to be
+// there before reading it.
 
 const words = (key: string): string => {
   const said = englishForScenarios.words[key];
@@ -22,13 +24,33 @@ const comments = (world: SpecWorld): Locator =>
   world.browserPage.locator("main .comments > .comment");
 
 const commentAt = (world: SpecWorld, which: string): Locator =>
-  comments(world).nth(["first", "second", "third"].indexOf(which));
+  which === "last"
+    ? comments(world).last()
+    : comments(world).nth(["first", "second", "third"].indexOf(which));
 
 const box = (world: SpecWorld): Locator =>
   world.browserPage.locator("main .comment-box");
 
-const textOf = async (found: Locator): Promise<string> =>
-  unmarked((await found.textContent()) ?? "").trim();
+// The words exactly, rather than anything whose words hold them.
+const exactly = (words: string): RegExp =>
+  new RegExp(`^\\s*${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`);
+
+// Waited for a moment to be there, and not refused for being late: the step
+// that follows says whether it is there, and says it better.
+const settled = async (found: Locator): Promise<void> => {
+  try {
+    await found.first().waitFor({ timeout: 5000 });
+  } catch {
+    // Said by the step that waited.
+  }
+};
+
+// Read once it is there, which a comment added in place is only shortly after
+// it was sent.
+const textOf = async (found: Locator): Promise<string> => {
+  await found.first().waitFor();
+  return unmarked((await found.textContent()) ?? "").trim();
+};
 
 // What was typed into the box last, kept here rather than on the world, which
 // has no business knowing what a comment is.
@@ -37,6 +59,32 @@ const typedIn = new WeakMap<SpecWorld, string>();
 const typeComment = async (world: SpecWorld, text: string): Promise<void> => {
   await box(world).fill(text);
   typedIn.set(world, text);
+};
+
+// Whatever sends the box, then waited on until what it sent is answered and
+// the page has settled: a comment added in place is answered without the page
+// being loaded again, and one sent as a form is answered by the page that
+// follows, so it is the answer to the post that is waited for, either way.
+const sent = async (
+  world: SpecWorld,
+  sending: () => Promise<void>,
+): Promise<void> => {
+  await Promise.all([
+    // The post the page is loaded again for, or the one answered with the
+    // comment, or what is wrong with it, to add in place. One answered
+    // otherwise, as one for a writer since signed out is, is sent again as a
+    // form, and it is that one which is waited for.
+    world.browserPage.waitForResponse(
+      (response) =>
+        response.request().method() === "POST" &&
+        (response.request().isNavigationRequest() ||
+          (response.headers()["content-type"] ?? "").startsWith(
+            "application/json",
+          )),
+    ),
+    sending(),
+  ]);
+  await world.browserPage.waitForLoadState("networkidle");
 };
 
 // The commentary ---------------------------------------------------------------
@@ -52,27 +100,47 @@ Then(
 );
 
 Then(
-  "the commentary page says there are no comments",
-  async function (this: SpecWorld) {
+  /^the commentary page (says|does not say) there are no comments$/,
+  async function (this: SpecWorld, says: string) {
+    if (says === "says") {
+      await settled(this.browserPage.locator("main .comments-none"));
+    }
     assert.equal(
       await this.browserPage.locator("main .comments-none").count(),
-      1,
+      says === "says" ? 1 : 0,
     );
   },
 );
 
+// Something the page holds only while it is not loaded again, so that a page
+// drawn again, which would be a new one, is told from the one remembered.
+Given("the page as it is now is remembered", async function (this: SpecWorld) {
+  await this.browserPage.evaluate("globalThis.rememberedByTheScenario = true");
+});
+
+Then("the page is the one remembered", async function (this: SpecWorld) {
+  assert.equal(
+    await this.browserPage.evaluate(
+      "globalThis.rememberedByTheScenario === true",
+    ),
+    true,
+    "The page has been drawn again.",
+  );
+});
+
 Then(
-  /^the (first|second|third) comment says "(.*)"$/,
+  /^the (first|second|third|last) comment says "(.*)"$/,
   async function (this: SpecWorld, which: string, text: string) {
-    assert.equal(
-      await textOf(commentAt(this, which).locator(".comment-text")),
-      text,
-    );
+    const said = commentAt(this, which).locator(".comment-text");
+    // A comment drawn again since the page loaded, as one asked for again is,
+    // says what it says only once it has been drawn, so it is given a moment.
+    await settled(said.filter({ hasText: exactly(text) }));
+    assert.equal(await textOf(said), text);
   },
 );
 
 Then(
-  /^the (first|second|third) comment draws "(.*)" bold$/,
+  /^the (first|second|third|last) comment draws "(.*)" bold$/,
   async function (this: SpecWorld, which: string, text: string) {
     const bold = commentAt(this, which).locator(".comment-text strong");
     assert.equal(await textOf(bold), text);
@@ -85,7 +153,7 @@ const linkIn = (world: SpecWorld, which: string, name: string): Locator =>
     .getByRole("link", { name, exact: true });
 
 Then(
-  /^the (first|second|third) comment's link "(.*)" leads to "(.*)"$/,
+  /^the (first|second|third|last) comment's link "(.*)" leads to "(.*)"$/,
   async function (this: SpecWorld, which: string, name: string, href: string) {
     assert.equal(await linkIn(this, which, name).getAttribute("href"), href);
   },
@@ -93,7 +161,7 @@ Then(
 
 // Marked as somebody else's, which a search engine gives nothing to.
 Then(
-  /^the (first|second|third) comment's link "(.*)" is marked as not vouched for$/,
+  /^the (first|second|third|last) comment's link "(.*)" is marked as not vouched for$/,
   async function (this: SpecWorld, which: string, name: string) {
     const rel = (
       (await linkIn(this, which, name).getAttribute("rel")) ?? ""
@@ -104,7 +172,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) comment was written "(.*)" ago$/,
+  /^the (first|second|third|last) comment was written "(.*)" ago$/,
   async function (this: SpecWorld, which: string, ago: string) {
     assert.equal(
       await textOf(commentAt(this, which).locator(".comment-ago")),
@@ -114,7 +182,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) comment (says|does not say) it has been edited$/,
+  /^the (first|second|third|last) comment (says|does not say) it has been edited$/,
   async function (this: SpecWorld, which: string, says: string) {
     const edited = commentAt(this, which).locator(".comment-edited");
     assert.equal(await edited.count(), says === "says" ? 1 : 0);
@@ -125,7 +193,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) comment (offers|does not offer) a way to edit it$/,
+  /^the (first|second|third|last) comment (offers|does not offer) a way to edit it$/,
   async function (this: SpecWorld, which: string, offers: string) {
     assert.equal(
       await commentAt(this, which).locator(".comment-edit").count(),
@@ -152,7 +220,7 @@ const wayTo = (world: SpecWorld, way: string, which: string): Locator => {
 };
 
 When(
-  /^the way to (edit|delete) the (first|second|third) comment is pressed$/,
+  /^the way to (edit|delete) the (first|second|third|last) comment is pressed$/,
   async function (this: SpecWorld, way: string, which: string) {
     await wayTo(this, way, which).click();
     await this.browserPage.waitForLoadState();
@@ -160,7 +228,7 @@ When(
 );
 
 Then(
-  /^the (first|second|third) comment (offers|does not offer) a way to delete it$/,
+  /^the (first|second|third|last) comment (offers|does not offer) a way to delete it$/,
   async function (this: SpecWorld, which: string, offers: string) {
     assert.equal(
       await wayTo(this, "delete", which).count(),
@@ -171,7 +239,7 @@ Then(
 
 // Drawn as the shape, and named for a reader who cannot see it.
 Then(
-  /^the way to (edit|delete) the (first|second|third) comment is a (pencil|trash can) named "(.*)"$/,
+  /^the way to (edit|delete) the (first|second|third|last) comment is a (pencil|trash can) named "(.*)"$/,
   async function (
     this: SpecWorld,
     way: string,
@@ -192,7 +260,7 @@ Then(
 
 // To its right, on the same line, where a reader comes to it after the pencil.
 Then(
-  /^the way to delete the (first|second|third) comment comes after the way to edit it$/,
+  /^the way to delete the (first|second|third|last) comment comes after the way to edit it$/,
   async function (this: SpecWorld, which: string) {
     const pencil = await wayTo(this, "edit", which).boundingBox();
     const trash = await wayTo(this, "delete", which).boundingBox();
@@ -217,11 +285,7 @@ Given(
 When(
   /^(Control|Meta) and Enter are pressed in the comment box$/,
   async function (this: SpecWorld, key: string) {
-    await Promise.all([
-      this.browserPage.waitForEvent("framenavigated"),
-      box(this).press(`${key}+Enter`),
-    ]);
-    await this.browserPage.waitForLoadState();
+    await sent(this, () => box(this).press(`${key}+Enter`));
   },
 );
 
@@ -290,8 +354,9 @@ Given(
 );
 
 When("the comment is submitted", async function (this: SpecWorld) {
-  await this.browserPage.locator("main .comment-form button").click();
-  await this.browserPage.waitForLoadState();
+  await sent(this, () =>
+    this.browserPage.locator("main .comment-form button").click(),
+  );
 });
 
 Then("the comment box is empty", async function (this: SpecWorld) {
@@ -315,9 +380,75 @@ Then("the comment box holds what was typed", async function (this: SpecWorld) {
 Then(
   "the comment box says the message for {string}",
   async function (this: SpecWorld, code: string) {
+    await this.browserPage
+      .locator("main .comment-box[aria-describedby]")
+      .waitFor();
     const id = await box(this).getAttribute("aria-describedby");
     assert.ok(id !== null, "The comment box says nothing.");
     const said = await textOf(this.browserPage.locator(`#${id}`));
     assert.equal(said, words(code));
+  },
+);
+
+// The window ----------------------------------------------------------------------
+
+Given("the page is scrolled to its top", async function (this: SpecWorld) {
+  await this.browserPage.evaluate("globalThis.scrollTo(0, 0)");
+});
+
+const windowHeight = (world: SpecWorld): number => {
+  const size = world.browserPage.viewportSize();
+  assert.ok(size !== null, "The browser has no window size.");
+  return size.height;
+};
+
+// Its foot on the window's, to the pixel a browser rounds to.
+Then(
+  "the Add comment button is at the bottom of the window",
+  async function (this: SpecWorld) {
+    const button = await this.browserPage
+      .locator("main .comment-form-add button")
+      .boundingBox();
+    assert.ok(button !== null, "The Add comment button is not drawn.");
+    const foot = button.y + button.height;
+    assert.ok(
+      Math.abs(foot - windowHeight(this)) <= 1,
+      `The button's foot is at ${String(foot)}, and the window's at ${String(windowHeight(this))}.`,
+    );
+  },
+);
+
+// Time --------------------------------------------------------------------------------
+
+Given("the browser has scripting on", async function (this: SpecWorld) {
+  await withScripting(this);
+});
+
+// The browser's clock moves only when the scenario says time passes, so that a
+// quarter of a minute is a quarter of a minute without waiting one.
+Given(
+  "the browser's clock is held by the scenario",
+  async function (this: SpecWorld) {
+    await this.browserPage.clock.install();
+  },
+);
+
+// Long enough for the page to ask for the comments again, and waited on until
+// it has been answered.
+When("a quarter of a minute passes", async function (this: SpecWorld) {
+  await Promise.all([
+    this.browserPage.waitForResponse(
+      (response) =>
+        response.request().method() === "GET" &&
+        new URL(response.url()).pathname.endsWith("/comments"),
+    ),
+    this.browserPage.clock.runFor(15_000),
+  ]);
+});
+
+When(
+  "{int} seconds pass on the browser's clock",
+  async function (this: SpecWorld, seconds: number) {
+    await this.browserPage.clock.runFor(seconds * 1000);
   },
 );
