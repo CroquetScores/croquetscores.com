@@ -32,6 +32,12 @@ export const tournamentsThrough = (
     send: (command) => application.mediator.send(command),
     ask: (query) => application.mediator.query(query),
     load: (id) => asARequest(() => application.tournaments.load(id)),
+    loadManagerNote: (id) =>
+      asARequest(() => application.managerNotes.load(id)),
+    saveManagerNote: (note) =>
+      asARequest(() => application.managerNotes.save(note)),
+    managerNotesOf: (id) =>
+      asARequest(() => application.managerNotesByTournament.of(id)),
     loadCompetition: (id) =>
       asARequest(() => application.competitions.load(id)),
     loadCommentary: (id) => asARequest(() => application.commentaries.load(id)),

@@ -68,6 +68,11 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   beneath its name in the header (`layout.feature`). A tournament with no
   notes is answered with none.
 
+  So are its manager's notes, each by its id with when it last changed
+  (`PublicManagerNotesOfTournament.feature`), since every page of a
+  tournament marks its Notes section while a reader has a note there they
+  have not read as it is now (`notes.feature`).
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -112,6 +117,13 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
     Scenario: A tournament with no notes is answered with none
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the tournament answered has no notes
+
+    Scenario: The tournament's manager notes are answered with when each last changed
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Tests"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has edited the manager note "Lunch is at noon" of "Spring Tests" to "Lunch is at one"
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the first manager note of the tournament answered last changed at "2026-09-26T11:00:00Z"
 
     Scenario: A tournament found at its old address is answered with where it is found now
       Given "organiser@example.com" has moved the tournament "Spring Tests" to the sport "gc"

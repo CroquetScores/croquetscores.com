@@ -275,7 +275,7 @@ When(
 );
 
 When(
-  /^the way to add a (?:player|team|test) is pressed$/,
+  /^the way to add a (?:player|team|test|note) is pressed$/,
   async function (this: SpecWorld) {
     await tabPanel(this).locator("section > p button").first().click();
   },

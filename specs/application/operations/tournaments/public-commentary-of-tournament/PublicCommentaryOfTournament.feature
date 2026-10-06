@@ -44,6 +44,11 @@ Feature: A commentary on a tournament, for anybody to read
   beneath its name in the header (`layout.feature`). A tournament with no
   notes is answered with none.
 
+  So are its manager's notes, each by its id with when it last changed
+  (`PublicManagerNotesOfTournament.feature`), since every page of a
+  tournament marks its Notes section while a reader has a note there they
+  have not read as it is now (`notes.feature`).
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -164,6 +169,13 @@ Feature: A commentary on a tournament, for anybody to read
     Scenario: A tournament with no notes is answered with none
       When the public commentary "day-one" of the tournament at "2026/ac/spring-open" is asked for
       Then the tournament answered has no notes
+
+    Scenario: The tournament's manager notes are answered with when each last changed
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has edited the manager note "Lunch is at noon" of "Spring Open" to "Lunch is at one"
+      When the public commentary "day-one" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first manager note of the tournament answered last changed at "2026-09-26T11:00:00Z"
 
     Scenario: A competition is answered with where it is found
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
