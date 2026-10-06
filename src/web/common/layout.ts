@@ -24,7 +24,23 @@ export interface Section {
   /** Whether it is one of a tournament's competitions, whose names run long
       and so are drawn as tiles of one width with the name wrapped within. */
   readonly competition?: boolean | undefined;
+  /** Whether it holds something new to the reader, as a note they have not
+      read, which marks it with a red asterisk. */
+  readonly isNew?: boolean | undefined;
 }
+
+// An asterisk of six spokes, drawn about the middle of its box rather than
+// set as the character, which a font draws near the top of its line, where it
+// marks a footnote: drawn, it is in the middle of whatever it is set in.
+const asterisk =
+  '<svg class="new-mark-asterisk" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0.5v9M1.1 2.75l7.8 4.5M1.1 7.25l7.8-4.5"/></svg>';
+
+/**
+ * The red asterisk that marks something new to the reader. A colour and a
+ * shape are not read out, so it is said to a screen reader in words.
+ */
+export const newMark = (speaking: Speaking): string =>
+  `<span class="new-mark">${asterisk}<span class="visually-hidden">${escape(speaking.say("notes.new"))}</span></span>`;
 
 export interface Shell {
   /** The <title>, which is not always what the header shows. */
@@ -186,10 +202,13 @@ const sectionBar = (
   if (sections === undefined || sections.length === 0) return "";
 
   const items = sections
-    .map(({ href, label, competition }) => {
+    .map(({ href, label, competition, isNew }) => {
       const here = href === current ? ' aria-current="page"' : "";
       const tile = competition === true ? ' class="section-competition"' : "";
-      return `          <li${tile}><a href="${href}"${here}>${escape(label)}</a></li>`;
+      // Beside the link rather than in it, so that the link is named by its
+      // words alone, as every section is.
+      const mark = isNew === true ? newMark(speaking) : "";
+      return `          <li${tile}><a href="${href}"${here}>${escape(label)}</a>${mark}</li>`;
     })
     .join("\n");
 

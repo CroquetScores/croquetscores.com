@@ -7,22 +7,23 @@ import { TournamentSections } from "../TournamentSections.js";
 import { knows, say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
+import { NotesTab } from "./tabs/notes/notes.js";
 import { PlayersTab } from "./tabs/players/players.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
 import { TeamsTab } from "./tabs/teams/teams.js";
 import { TestsTab } from "./tabs/tests/tests.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
-// to run in four tabs beneath it, and the section bar leading to its
+// to run in five tabs beneath it, and the section bar leading to its
 // competitions' pages above (TournamentSections.feature). The tabs are parts
 // of the one page
 // rather than pages of their own, so they have no addresses: the page opens on
 // the first the reader is offered, and choosing another leaves the address as
-// it was. A manager is offered all four, and a scorer the Competitions tab
+// it was. A manager is offered all five, and a scorer the Competitions tab
 // alone. A tournament played by teams has teams and tests where a Standard
-// one has players and competitions, so its tabs are Teams, Tests, Managers and
-// Scorers, and a scorer is offered Tests alone. Each tab says what it holds in
-// a feature of its own.
+// one has players and competitions, so its tabs are Teams, Tests, Notes,
+// Managers and Scorers, and a scorer is offered Tests alone. Each tab says
+// what it holds in a feature of its own.
 
 interface Props {
   /** Where the tournament was asked for, as "2026/ac/spring-open". */
@@ -48,10 +49,11 @@ type Asked =
 const standardTabs = [
   "players",
   "competitions",
+  "notes",
   "managers",
   "scorers",
 ] as const;
-const teamTabs = ["teams", "tests", "managers", "scorers"] as const;
+const teamTabs = ["teams", "tests", "notes", "managers", "scorers"] as const;
 type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
 
 // What a reader is offered: every tab to a manager, and the competitions
@@ -164,6 +166,9 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                     setChosen("teams");
                   }}
                 />
+              ) : null}
+              {chosen === "notes" ? (
+                <NotesTab tournament={asked.tournament.id} />
               ) : null}
               {chosen === "managers" ? (
                 <ManagersTab tournament={asked.tournament.id} />

@@ -1691,6 +1691,103 @@ main {
   fill: currentcolor;
 }
 
+/* What is new to the reader, as a note they have not read: a red asterisk.
+   On the section bar's dark green red is too dark to see, so there it stands
+   in a pale circle of the panel's colour, against which --danger is
+   measured. */
+.new-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: 0.15em;
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* Drawn in the mark's colour, its spokes as thick as bold type's strokes. */
+.new-mark-asterisk {
+  width: 0.7em;
+  height: 0.7em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.site-sections li:has(> .new-mark) {
+  display: flex;
+  align-items: center;
+}
+
+/* A circle, with the asterisk in its middle. */
+.site-sections .new-mark {
+  width: 1.4em;
+  height: 1.4em;
+  border-radius: 50%;
+  background: var(--panel);
+}
+
+/* A tournament's notes, set as its commentaries are: banded, each title
+   leading to the note, with how long ago it was written lighter beside it. */
+.notes {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+}
+
+.note-listed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+  padding-inline: var(--space-2);
+  overflow-wrap: anywhere;
+}
+
+.note-listed + .note-listed {
+  border-top: 1px solid var(--border);
+}
+
+.note-listed:nth-child(even) {
+  background: var(--surface);
+}
+
+/* As tall as anything else pressed with a thumb. */
+.note-listed-title {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.note-listed-ago,
+.note-about {
+  color: var(--ink-muted);
+}
+
+.note-listed-ago {
+  margin-inline-start: auto;
+  font-size: var(--text-sm);
+}
+
+/* A note's page, set as a comment is: a long word or link wraps rather than
+   pushing out past the panel on a phone. */
+.note-title,
+.note-text {
+  overflow-wrap: anywhere;
+}
+
+.note-text > :first-child {
+  margin-top: 0;
+}
+
+.note-about {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+}
+
 /* A modal dialog (STYLE.md §5c), drawn as a dialog is and laid over the page:
    centred, 32rem at most and the full width inside the gutter on a phone. A
    dialog taller than the window scrolls within itself, and the page beneath

@@ -145,11 +145,23 @@ import { Competition } from "../domain/aggregates/tournaments/competitions/Compe
 import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
 import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commentary.js";
 import { nameCommentaryEvents } from "../domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
+import { nameManagerNoteEvents } from "../domain/aggregates/tournaments/manager-notes/events/managerNoteEvents.js";
+import { ManagerNote } from "../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
+import type { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { StartCommentaryHandler } from "../application/operations/tournaments/StartCommentaryHandler.js";
 import { StartCommentaryValidator } from "../application/operations/tournaments/StartCommentaryValidator.js";
 import { ChangeCommentaryTitleHandler } from "../application/operations/tournaments/ChangeCommentaryTitleHandler.js";
 import { ChangeCommentaryTitleValidator } from "../application/operations/tournaments/ChangeCommentaryTitleValidator.js";
+import { AddManagerNoteHandler } from "../application/operations/tournaments/AddManagerNoteHandler.js";
+import { AddManagerNoteValidator } from "../application/operations/tournaments/AddManagerNoteValidator.js";
+import { DeleteManagerNoteHandler } from "../application/operations/tournaments/DeleteManagerNoteHandler.js";
+import { EditManagerNoteHandler } from "../application/operations/tournaments/EditManagerNoteHandler.js";
+import { EditManagerNoteValidator } from "../application/operations/tournaments/EditManagerNoteValidator.js";
+import { ManagerNotesOfTournamentHandler } from "../application/operations/tournaments/ManagerNotesOfTournamentHandler.js";
+import { ManagerNoteToEditHandler } from "../application/operations/tournaments/ManagerNoteToEditHandler.js";
+import { PublicManagerNoteOfTournamentHandler } from "../application/operations/tournaments/PublicManagerNoteOfTournamentHandler.js";
+import { PublicManagerNotesOfTournamentHandler } from "../application/operations/tournaments/PublicManagerNotesOfTournamentHandler.js";
 import { AddCommentHandler } from "../application/operations/commentaries/AddCommentHandler.js";
 import { AddCommentValidator } from "../application/operations/commentaries/AddCommentValidator.js";
 import { EditCommentHandler } from "../application/operations/commentaries/EditCommentHandler.js";
@@ -198,6 +210,7 @@ import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsB
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
+import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import {
   GoogleOpenIdConnect,
   GoogleOpenIdConnectFailed,
@@ -247,6 +260,8 @@ import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
 import { registerPlayersPage } from "./public/players.js";
 import { registerCommentariesPage } from "./public/commentaries.js";
+import { registerNotePage } from "./public/note.js";
+import { registerNotesPage } from "./public/notes.js";
 import { registerStartCommentaryPage } from "./public/startCommentary.js";
 import { registerCommentaryPage } from "./public/commentary.js";
 import { registerEditCommentPages } from "./public/editComment.js";
@@ -347,6 +362,10 @@ export interface Application {
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
   /** Every commentary's comments, each commentary under its own id. */
   readonly commentaries: AggregateRepository<Commentary, CommentaryId>;
+  /** Every note a tournament's managers wrote, each under its own id. */
+  readonly managerNotes: AggregateRepository<ManagerNote, ManagerNoteId>;
+  /** The notes of each tournament, without what they say, as the read model keeps them. */
+  readonly managerNotesByTournament: ManagerNotesByTournament;
   /** The tournaments each account has a part in, as the read model keeps them. */
   readonly tournamentsByAccount: TournamentsByAccount;
 }
@@ -501,9 +520,11 @@ export interface ApplicationOptions {
 // Every kind of event the application records, each named once by the name it
 // is kept under, and how it is read back.
 const events = (): EventRegistry =>
-  nameCommentaryEvents(
-    nameCompetitionEvents(
-      nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+  nameManagerNoteEvents(
+    nameCommentaryEvents(
+      nameCompetitionEvents(
+        nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+      ),
     ),
   );
 
@@ -545,6 +566,7 @@ export const buildApplication = async (
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
+  const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
 
   // Every read model's projection, each given every event as it is appended.
   const projections: readonly Projection[] = [
@@ -553,6 +575,7 @@ export const buildApplication = async (
     tournamentsByAddress,
     tournamentsByAccount,
     tournamentsByWebsite,
+    managerNotesByTournament,
   ];
 
   // On the unit of work the mediator's transactions use, so that what a
@@ -742,6 +765,12 @@ export const buildApplication = async (
     eventStore,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
+  // Each note a tournament's managers wrote, kept apart from the tournament so
+  // that what it says is read only where the note is.
+  const managerNotes = new AggregateRepository(
+    eventStore,
+    (id: ManagerNoteId, events) => ManagerNote.rebuiltFrom(id, events),
+  );
   // Whether games have been played is asked of the games the competitions
   // keep.
   const games = gamesKeptByCompetitions(tournaments, competitions);
@@ -767,6 +796,8 @@ export const buildApplication = async (
   validation.register(new AddScorerValidator());
   validation.register(new StartCommentaryValidator());
   validation.register(new ChangeCommentaryTitleValidator());
+  validation.register(new AddManagerNoteValidator());
+  validation.register(new EditManagerNoteValidator());
   validation.register(new AddCommentValidator());
   validation.register(new EditCommentValidator());
   validation.register(new AddTeamValidator());
@@ -834,6 +865,9 @@ export const buildApplication = async (
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
   mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
+  mediator.handleCommand(new AddManagerNoteHandler(...both, managerNotes));
+  mediator.handleCommand(new EditManagerNoteHandler(...both, managerNotes));
+  mediator.handleCommand(new DeleteManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new AddCommentHandler(...both, commentaries));
   mediator.handleCommand(new EditCommentHandler(...both, commentaries));
   mediator.handleCommand(new DeleteCommentHandler(...both, commentaries));
@@ -848,6 +882,10 @@ export const buildApplication = async (
     new PlayersOfTournamentHandler(...both, competitions, games),
   );
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
+  mediator.handleQuery(new ManagerNoteToEditHandler(...both, managerNotes));
+  mediator.handleQuery(
+    new ManagerNotesOfTournamentHandler(...both, managerNotesByTournament),
+  );
   mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
   mediator.handleQuery(
     new TournamentToChangeHandler(tournaments, tournamentsByAddress),
@@ -871,16 +909,22 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
-    new PublicPlayersOfTournamentHandler(tournaments, tournamentsByAddress),
+    new PublicPlayersOfTournamentHandler(
+      tournaments,
+      tournamentsByAddress,
+      managerNotesByTournament,
+    ),
   );
   mediator.handleQuery(
     new PublicPlayerOfTournamentHandler(
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -888,6 +932,7 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -895,6 +940,7 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -902,6 +948,7 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -909,6 +956,7 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -916,6 +964,22 @@ export const buildApplication = async (
       tournaments,
       competitions,
       tournamentsByAddress,
+      managerNotesByTournament,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicManagerNotesOfTournamentHandler(
+      tournaments,
+      tournamentsByAddress,
+      managerNotesByTournament,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicManagerNoteOfTournamentHandler(
+      tournaments,
+      tournamentsByAddress,
+      managerNotes,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -923,6 +987,7 @@ export const buildApplication = async (
       tournaments,
       accounts,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -931,6 +996,7 @@ export const buildApplication = async (
       accounts,
       commentaries,
       tournamentsByAddress,
+      managerNotesByTournament,
     ),
   );
 
@@ -1056,6 +1122,8 @@ export const buildApplication = async (
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
   registerCommentariesPage(server, assets);
+  registerNotesPage(server, assets);
+  registerNotePage(server, assets);
   registerStartCommentaryPage(server, assets);
   registerCommentaryPage(server, assets);
   registerEditCommentPages(server, assets);
@@ -1107,6 +1175,8 @@ export const buildApplication = async (
     tournaments,
     competitions,
     commentaries,
+    managerNotes,
+    managerNotesByTournament,
     tournamentsByAccount,
   };
 };

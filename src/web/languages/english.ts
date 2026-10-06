@@ -375,6 +375,11 @@ export const english: Language = {
     "startCommentary.title": "Start new commentary",
     "startCommentary.titleField": "Title",
     "startCommentary.submit": "Start commentary",
+    // A tournament's Notes page, and a note's own page. "New" is said to a
+    // screen reader in place of the red asterisk that marks a note not read.
+    "notes.none": "The managers have written no notes yet.",
+    "notes.new": "new",
+    "note.edited": "edited",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.
     "commentary.none": "No comments have been written yet.",
@@ -503,6 +508,7 @@ export const english: Language = {
     "admin.view.players": "Players",
     "admin.view.competitions": "Competitions",
     "admin.view.managers": "Managers",
+    "admin.view.notes": "Notes",
     "admin.view.scorers": "Scorers",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
@@ -739,6 +745,39 @@ export const english: Language = {
     "admin.teamView.players": "Players",
     "TeamName.Missing": "Say what the team is called.",
     "TeamName.TooLong": "That name is too long.",
+    "admin.notes.add": "Add Note",
+    "admin.notes.none": "No notes",
+    "admin.notes.edit": "Edit",
+    "admin.notes.delete": "Delete",
+    // Asked before deleting a note, since a note deleted is gone for good.
+    "admin.notes.deleteTitle": "Delete Note",
+    "admin.notes.deleteQuestion": "Delete the note “{title}”?",
+    "admin.notes.delete.explanation":
+      "A note deleted is gone for good, and cannot be brought back.",
+    // The note dialog, its description's tabs and the toolbar above its box.
+    "admin.note.addTitle": "Add Note",
+    "admin.note.editTitle": "Edit Note",
+    "admin.note.title": "Title",
+    "admin.note.description": "Description",
+    "admin.note.write": "Write",
+    "admin.note.preview": "Preview",
+    "admin.note.toolbar": "Formatting",
+    "admin.note.tool.heading": "Heading",
+    "admin.note.tool.bold": "Bold",
+    "admin.note.tool.italic": "Italic",
+    "admin.note.tool.quote": "Quote",
+    "admin.note.tool.code": "Code",
+    "admin.note.tool.link": "Link",
+    "admin.note.tool.numberedList": "Numbered list",
+    "admin.note.tool.bulletedList": "Bulleted list",
+    "admin.note.tool.taskList": "Task list",
+    "admin.note.add": "Add",
+    "admin.note.save": "Save",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.note.otherwise": "This note cannot be kept as it is.",
+    "ManagerNoteTitle.Missing": "Give the note a title.",
+    "ManagerNoteTitle.TooLong": "That title is too long.",
+    "ManagerNoteDescription.TooLong": "That description is too long.",
     "CommentaryTitle.Missing": "Give the commentary a title.",
     "CommentaryTitle.TooLong": "That title is too long.",
     "CommentaryTitle.NoLetterOrDigit":

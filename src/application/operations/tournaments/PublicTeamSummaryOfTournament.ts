@@ -1,6 +1,9 @@
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
-import type { CompetitionOfTournament } from "./tournamentForReaders.js";
+import type {
+  CompetitionOfTournament,
+  ManagerNoteChanged,
+} from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's team summary can be refused where it is asked. */
 export type PublicTeamSummaryOfTournamentRefusedCode =
@@ -33,6 +36,11 @@ export interface TeamSummaryToRead {
   readonly address: string;
   /** The tournament's notes, in Markdown, or nothing where it has none. */
   readonly notes: string | undefined;
+  /**
+   * Each of the tournament's notes with when it last changed, the most
+   * recently written first, for its section bar to mark Notes by.
+   */
+  readonly managerNotes: readonly ManagerNoteChanged[];
   /** Always, since only a tournament played by teams has a summary. */
   readonly playedByTeams: true;
   /** The tournament's competitions in use, its tests, for its sections. */

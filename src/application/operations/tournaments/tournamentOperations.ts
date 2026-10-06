@@ -46,6 +46,7 @@ export type TournamentOperationErrorCode =
   | "PublicTestOfTournament.NoSuchCompetition"
   | "PublicTestOfTournament.NotATest"
   | "PublicCommentaryOfTournament.NoSuchCommentary"
+  | `${string}.NoSuchManagerNote`
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;

@@ -4,9 +4,11 @@
 import type { TeamId } from "../../../domain/aggregates/tournaments/primitives/TeamId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { Website } from "../../../domain/common/Website.js";
 import type { PlayerInGame } from "./GamesOfTournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type TournamentAddresses,
   TournamentOperationRefused,
@@ -118,3 +120,38 @@ export const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
       ),
     ),
   ]);
+
+/**
+ * One of a tournament's notes as every page of the tournament knows it: enough
+ * to tell whether a reader has read it as it is now, so that the page can mark
+ * the Notes section while one is still to be read (notes.feature).
+ */
+export interface ManagerNoteChanged {
+  /** The note's id, as "manager-note/0d1e2f3a-…". */
+  readonly id: string;
+  /** When it was last edited, or when it was written if it never has been. */
+  readonly changedAt: ReadOnlyDate;
+}
+
+/**
+ * Each of the notes of `tournament` with when it last changed, the most
+ * recently written first, from the read model of its notes, which holds none
+ * of what they say, since every page of the tournament asks for them.
+ */
+export const managerNotesChangedOf = async (
+  notes: TournamentManagerNotes,
+  tournament: Tournament,
+): Promise<readonly ManagerNoteChanged[]> =>
+  (await notes.of(tournament.id)).map(({ id, changedAt }) => ({
+    id,
+    changedAt,
+  }));
+
+/**
+ * Where the page of the note `id` of `tournament` is found: the tournament's
+ * address followed by "notes" and the part of the id after "manager-note/", as
+ * "2026/ac/spring-open/notes/0d1e2f3a-…". By its id rather than a slug, since
+ * its title can be changed and its address must not change with it.
+ */
+export const noteAddressIn = (tournament: Tournament, id: string): string =>
+  `${tournament.address.toString()}/notes/${id.slice(id.indexOf("/") + 1)}`;

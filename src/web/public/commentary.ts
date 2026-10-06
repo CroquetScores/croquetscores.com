@@ -34,6 +34,7 @@ import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { signInPath } from "./signIn.js";
 import { sendPage } from "./tournamentLists.js";
+import { notesReadOf } from "./notesRead.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -506,7 +507,7 @@ const pageOf = (
       notes: asked.notes,
     },
     title: `${commentary.title} - ${asked.name}`,
-    sections: sectionsOf(asked, speaking),
+    sections: sectionsOf(asked, speaking, notesReadOf(request)),
     currentSection: `/${asked.address}/commentaries`,
     theme: themeOf(request),
     signedIn: signedIn(request),

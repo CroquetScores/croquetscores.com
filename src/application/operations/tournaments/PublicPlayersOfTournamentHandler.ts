@@ -4,6 +4,7 @@ import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   PublicPlayersOfTournament,
   type TournamentPlayersToRead,
@@ -11,6 +12,7 @@ import {
 import {
   competitionsInUse,
   tournamentForReaders,
+  managerNotesChangedOf,
 } from "./tournamentForReaders.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
 
@@ -27,6 +29,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly addresses: TournamentAddresses,
+    private readonly notes: TournamentManagerNotes,
   ) {
     super();
   }
@@ -45,6 +48,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
     return {
       name: tournament.name.toString(),
       notes: tournament.notes?.markdown,
+      managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       competitions: competitionsInUse(tournament),
       playedByTeams: tournament.format.isTeamFormat,

@@ -47,6 +47,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
+import { notesReadOf } from "./notesRead.js";
 import { sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -367,6 +368,7 @@ export const registerCompetitionPages = (
               sections: sectionsOf(
                 { ...asked, playedByTeams: found.kind === "test" },
                 speaking,
+                notesReadOf(request),
               ),
               currentSection: here,
               theme: themeOf(request),

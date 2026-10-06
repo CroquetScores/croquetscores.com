@@ -1,7 +1,10 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
-import type { CompetitionOfTournament } from "./tournamentForReaders.js";
+import type {
+  CompetitionOfTournament,
+  ManagerNoteChanged,
+} from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's player can be refused where it is asked. */
 export type PublicPlayerOfTournamentRefusedCode =
@@ -40,6 +43,11 @@ export interface PlayerToRead {
   readonly address: string;
   /** The tournament's notes, in Markdown, or nothing where it has none. */
   readonly notes: string | undefined;
+  /**
+   * Each of the tournament's notes with when it last changed, the most
+   * recently written first, for its section bar to mark Notes by.
+   */
+  readonly managerNotes: readonly ManagerNoteChanged[];
   /** The tournament's competitions in use, in its order, for its sections. */
   readonly competitions: readonly CompetitionOfTournament[];
   /** Whether it is played by teams, whose players are its teams'. */

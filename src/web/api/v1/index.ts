@@ -36,6 +36,11 @@ import { ArchivePlayer } from "../../../application/operations/tournaments/Archi
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
 import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
 import { UpdatePlayer } from "../../../application/operations/tournaments/UpdatePlayer.js";
+import { AddManagerNote } from "../../../application/operations/tournaments/AddManagerNote.js";
+import { DeleteManagerNote } from "../../../application/operations/tournaments/DeleteManagerNote.js";
+import { EditManagerNote } from "../../../application/operations/tournaments/EditManagerNote.js";
+import { ManagerNotesOfTournament } from "../../../application/operations/tournaments/ManagerNotesOfTournament.js";
+import { ManagerNoteToEdit } from "../../../application/operations/tournaments/ManagerNoteToEdit.js";
 import { AddTeam } from "../../../application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../../../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../../../application/operations/tournaments/AddTest.js";
@@ -1029,6 +1034,122 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       },
     );
   }
+
+  // A tournament's notes, as its manager lists them, the newest first, each
+  // without what it says, which a list has no use for.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/notes",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const notes = await request.server.mediator.query(
+        new ManagerNotesOfTournament(
+          reader.value,
+          `tournament/${request.params.id}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ notes });
+    },
+  );
+
+  // One of a tournament's notes, as its manager edits it, by the part of its
+  // id after "manager-note/": asked for by itself once it is chosen, since
+  // the list it is chosen from holds no description.
+  server.get<{ Params: { id: string; note: string } }>(
+    "/tournaments/:id/notes/:note",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const note = await request.server.mediator.query(
+        new ManagerNoteToEdit(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `manager-note/${request.params.note}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send(note);
+    },
+  );
+
+  // A note's description may be 750,000 characters (ManagerNoteDescription.ts),
+  // counted as a reader counts them, and a character can take several bytes to
+  // send: an accented letter typed as a letter and its accent takes three, and
+  // JSON escapes some characters into six. So adding and editing a note take a
+  // body larger than the 1 MiB every other request is held to: eight, room for
+  // a description at its limit of any of those. The description's own rule is
+  // still what refuses one too long.
+  const noteBodyLimit = 8 * 1024 * 1024;
+
+  // What a note is, as the note dialog sends it. A description left empty is
+  // no description.
+  const noteFrom = (body: unknown) => ({
+    title: textOf(body, "title"),
+    description: textOf(body, "description"),
+  });
+
+  // A note added, and answered with its id.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/notes",
+    { bodyLimit: noteBodyLimit },
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const { title, description } = noteFrom(request.body);
+      const added = await request.server.mediator.send(
+        new AddManagerNote(
+          reader.value,
+          `tournament/${request.params.id}`,
+          title,
+          description,
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: added.value });
+    },
+  );
+
+  // A note edited, by the part of its id after "manager-note/".
+  server.put<{ Params: { id: string; note: string } }>(
+    "/tournaments/:id/notes/:note",
+    { bodyLimit: noteBodyLimit },
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const { title, description } = noteFrom(request.body);
+      await request.server.mediator.send(
+        new EditManagerNote(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `manager-note/${request.params.note}`,
+          title,
+          description,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A note deleted, for good.
+  server.delete<{ Params: { id: string; note: string } }>(
+    "/tournaments/:id/notes/:note",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new DeleteManagerNote(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `manager-note/${request.params.note}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
 
   // A team's page, found beneath the tournament at an address, as its manager
   // sees it, its flag as it is seen.

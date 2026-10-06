@@ -10,6 +10,7 @@ import { randomUUID } from "node:crypto";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
+import { ManagerNoteRefused } from "../../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { CompetitionRefused } from "../../domain/aggregates/tournaments/competitions/Competition.js";
 import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
@@ -132,7 +133,8 @@ export const registerErrorMapping = (
     // not the caller's: the mediator's, the event store's and the database's
     // are the server failing, and must reach the log as that below.
     //
-    // So is a competition's refusal, and a rule the thing asked for broke once
+    // So is a competition's refusal, and a note's, which refuses what is asked
+    // of it once it is deleted, and a rule the thing asked for broke once
     // what it needed of the tournament was known — a game with a tie and no
     // mark saying who won, a player who has withdrawn — which the score
     // dialog says beside the field it is about.
@@ -140,6 +142,7 @@ export const registerErrorMapping = (
       (error instanceof TournamentRefused ||
         error instanceof TournamentOperationRefused ||
         error instanceof CompetitionRefused ||
+        error instanceof ManagerNoteRefused ||
         error instanceof ValidationError) &&
       wantsJson(request)
     ) {

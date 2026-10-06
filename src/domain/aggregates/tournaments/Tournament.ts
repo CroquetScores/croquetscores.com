@@ -1473,6 +1473,18 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
+   * Refused unless `by` may write its notes: add one, edit one or delete one
+   * (writeManagerNotes.feature). Only its managers may, and not once it is
+   * archived. It records nothing, since a note is kept in a stream of its own
+   * (ManagerNote.ts), so that a long one is not read on every page of the
+   * tournament; whatever writes a note asks this first.
+   */
+  allowWritingManagerNotes(by: AccountId): void {
+    this.#refuseUnlessManager(by);
+    this.#refuseOnceArchived();
+  }
+
+  /**
    * That a commentary called `title` is started on it as `id`, written by
    * `by`, found at the first slug of its title no other commentary has. Any
    * account may start one: commentary is anybody's to write, and not a change
