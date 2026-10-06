@@ -107,14 +107,42 @@ export default tseslint.config(
       "**/import-ravendb/**",
     ),
   },
+  // A page asks the mediator for what it reads and sends the mediator what it
+  // writes. The event store, and the stores that load and save aggregates
+  // from it, are handed by the composition root to the handlers alone: a page
+  // that reached them would read past the read models and write past the
+  // rules a command is held to. They are in the application layer, which the
+  // web may otherwise name, so they are shut out by name.
   {
     files: ["src/web/**/*.ts", "src/web/**/*.tsx"],
     ignores: ["src/web/server.ts"],
-    rules: forbid(
-      "only the composition root, src/web/server.ts, may name infrastructure.",
-      "**/infrastructure/**",
-      "**/import-ravendb/**",
-    ),
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            ...["**/infrastructure/**", "**/import-ravendb/**"].map(
+              (group) => ({
+                group: [group],
+                message:
+                  "only the composition root, src/web/server.ts, may name infrastructure.",
+              }),
+            ),
+            // Each with and without its extension, either of which a
+            // bundler would find.
+            ...[
+              "**/application/services/EventStore",
+              "**/application/common/ProjectingEventStore",
+              "**/application/common/AggregateRepository",
+            ].map((group) => ({
+              group: [group, `${group}.js`],
+              message:
+                "the web reads and writes through the mediator; only src/web/server.ts hands out the event store and the aggregate repositories.",
+            })),
+          ],
+        },
+      ],
+    },
   },
   // The import from the old sites is put together from the layers, as the
   // site is, and nothing in them knows it is there: it goes when the old
