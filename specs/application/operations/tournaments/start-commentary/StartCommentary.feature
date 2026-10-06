@@ -110,6 +110,36 @@ Feature: Starting a commentary on a tournament
       When the reader signed in to the account for "writer@example.com" starts the commentary "Day one" on "Spring Open"
       Then it is refused with "Tournament.Archived"
 
+  Rule: Of two commentaries given one title at once, the second is refused as any other would be
+
+    Which titles a tournament's commentaries have taken is read from the read
+    model of them, and nothing is written to the tournament as a commentary is
+    started. So two asked for at the same moment would each read a title as
+    free, and the second's would then be refused by the table rather than by
+    the commentary, as a fault rather than an answer. Asking which titles are
+    taken holds every other asking for the tournament's until the first is
+    kept, so that the second reads the title the first took, and is refused
+    as `Commentary.TitleTaken`, as it would have been a moment later.
+
+    Scenario: Of two commentaries started at once with one title, one is started
+      Given the reader signed in to the account for "writer@example.com" is to start the commentary "Day one" on "Spring Open"
+      And the reader signed in to the account for "organiser@example.com" is to start the commentary "Day one" on "Spring Open"
+      When both are asked for at once
+      Then one of them is answered
+
+    Scenario: Of two commentaries started at once with one title, the other is refused
+      Given the reader signed in to the account for "writer@example.com" is to start the commentary "Day one" on "Spring Open"
+      And the reader signed in to the account for "organiser@example.com" is to start the commentary "Day one" on "Spring Open"
+      When both are asked for at once
+      Then one of them is refused with "Commentary.TitleTaken"
+
+    Scenario: A commentary started with a title another is changed to at once is refused, or the change is
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      And the reader signed in to the account for "writer@example.com" is to change the title of "Day one" of "Spring Open" to "Day 1"
+      And the reader signed in to the account for "organiser@example.com" is to start the commentary "Day 1" on "Spring Open"
+      When both are asked for at once
+      Then one of them is refused with "Commentary.TitleTaken"
+
   Rule: A forgotten writer's commentary keeps its title and its slug
 
     Scenario: A title a forgotten writer's commentary has is refused

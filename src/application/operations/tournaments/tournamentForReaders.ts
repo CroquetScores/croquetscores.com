@@ -205,7 +205,11 @@ export interface TournamentCommentaries {
 
   /**
    * The titles and slugs every commentary of `tournament` has taken, its
-   * writer forgotten or not, apart from `except`'s own.
+   * writer forgotten or not, apart from `except`'s own. Asked by a command
+   * about to take one, so it holds every other asking of the tournament's
+   * until the command's work is kept or not: two asked at once are then
+   * answered one after the other, the second with what the first took, and
+   * not both with the same title free (StartCommentary.feature).
    */
   taken(
     tournament: TournamentId,

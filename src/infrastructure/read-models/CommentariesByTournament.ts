@@ -175,6 +175,11 @@ export class CommentariesByTournament
     return rows[0]?.commentary_id;
   }
 
+  // Held by a lock of the tournament's own for the rest of the transaction
+  // asking, taken before anything is read, so that a second asking waits for
+  // the first's work to be kept and then reads what it took. A lock of the
+  // transaction rather than of rows, since what is guarded is a title nobody
+  // has yet, which no row holds.
   async taken(
     tournament: TournamentId,
     except?: string,
@@ -182,13 +187,15 @@ export class CommentariesByTournament
     readonly titles: readonly string[];
     readonly slugs: readonly string[];
   }> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{ title: string; slug: string }>(
-        `select title, slug from commentaries_by_tournament
+    const connection = this.unitOfWork.connection();
+    await connection.query("select pg_advisory_xact_lock(hashtext($1))", [
+      `commentaries-taken:${tournament.value}`,
+    ]);
+    const { rows } = await connection.query<{ title: string; slug: string }>(
+      `select title, slug from commentaries_by_tournament
           where tournament_id = $1 and commentary_id is distinct from $2`,
-        [tournament.value, except ?? null],
-      );
+      [tournament.value, except ?? null],
+    );
     return {
       titles: rows.map(({ title }) => title),
       slugs: rows.map(({ slug }) => slug),

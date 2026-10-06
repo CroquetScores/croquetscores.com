@@ -56,7 +56,11 @@ export interface TournamentManagerNotes {
 
   /**
    * Every slug the notes of `tournament` have, deleted or not, since a
-   * deleted note's slug is never given to another (add.feature).
+   * deleted note's slug is never given to another (add.feature). Asked by a
+   * command about to take one, so it holds every other asking of the
+   * tournament's until the command's work is kept or not: two asked at once
+   * are then answered one after the other, the second with the slug the first
+   * took (AddManagerNote.feature).
    */
   slugsTakenIn(tournament: TournamentId): Promise<readonly string[]>;
 }

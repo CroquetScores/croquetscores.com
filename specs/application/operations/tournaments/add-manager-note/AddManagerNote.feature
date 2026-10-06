@@ -78,6 +78,34 @@ Feature: Adding a manager's note to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the manager note "Lunch" to "Spring Open"
       Then the manager note "Lunch" of "Spring Open" is found at "lunch"
 
+  Rule: Of two notes added at once whose titles make one slug, the second is found after the first
+
+    Which slugs a tournament's notes have taken is read from the read model of
+    them, and nothing is written to the tournament as a note is added. So two
+    added at the same moment would each read a slug as free, and the second
+    would then be refused by the table, as a fault rather than an answer.
+    Asking which slugs are taken holds every other asking for the tournament's
+    until the first is kept, so that the second reads the slug the first
+    took, and is given the next, as it would have been a moment later.
+
+    Scenario: Two notes added at once whose titles make one slug are both added
+      Given the reader signed in to the account for "organiser@example.com" is to add the manager note "Lunch" to "Spring Open"
+      And the reader signed in to the account for "organiser@example.com" is to add the manager note "Lunch!" to "Spring Open"
+      When both are asked for at once
+      Then neither is refused
+
+    Scenario: Of two notes added at once whose titles make one slug, one is found at it
+      Given the reader signed in to the account for "organiser@example.com" is to add the manager note "Lunch" to "Spring Open"
+      And the reader signed in to the account for "organiser@example.com" is to add the manager note "Lunch!" to "Spring Open"
+      When both are asked for at once
+      Then a manager note of "Spring Open" is found at "lunch"
+
+    Scenario: Of two notes added at once whose titles make one slug, the other is found after it
+      Given the reader signed in to the account for "organiser@example.com" is to add the manager note "Lunch" to "Spring Open"
+      And the reader signed in to the account for "organiser@example.com" is to add the manager note "Lunch!" to "Spring Open"
+      When both are asked for at once
+      Then a manager note of "Spring Open" is found at "lunch-01"
+
   Rule: Each value must break none of its own rules
 
     Scenario: A missing title is refused

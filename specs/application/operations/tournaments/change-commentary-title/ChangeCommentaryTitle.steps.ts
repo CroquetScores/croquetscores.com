@@ -1,11 +1,18 @@
-import { When } from "@cucumber/cucumber";
+import { Given, When } from "@cucumber/cucumber";
 
 import { ChangeCommentaryTitle } from "../../../../../src/application/operations/tournaments/ChangeCommentaryTitle.js";
 import { CommentaryId } from "../../../../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { TournamentId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { SpecWorld } from "../../../../support/world.js";
 import { commentaryIn } from "../../commentaries/commentaryRequests.js";
-import { momentOf, noTournament, send, tournamentNamed } from "../aRequest.js";
+import {
+  inHandOf,
+  momentOf,
+  noTournament,
+  send,
+  tournamentNamed,
+} from "../aRequest.js";
+import { toBeAsked } from "../askedAtOnce.js";
 import { readerOf } from "../teamRequests.js";
 
 // The account for an address, or the one the scenario took hold of where it
@@ -32,6 +39,35 @@ const change = async (
     tournament,
   );
 };
+
+// Asked for with another at once (askedAtOnce.ts), its answer kept there.
+Given(
+  new RegExp(
+    `${READER} is to change the title of "([^"]*)" of "([^"]*)" to "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string | undefined,
+    title: string,
+    name: string,
+    changed: string,
+  ) {
+    const account = await readerOf(this, address ?? undefined);
+    const tournament = tournamentNamed(this, name);
+    const commentary = await commentaryIn(this, tournament, title);
+    toBeAsked(this, () =>
+      inHandOf(this).send(
+        new ChangeCommentaryTitle(
+          account,
+          tournament.value,
+          commentary.value,
+          changed,
+          momentOf(this),
+        ),
+      ),
+    );
+  },
+);
 
 When(
   new RegExp(

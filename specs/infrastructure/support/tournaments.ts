@@ -148,6 +148,30 @@ import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
 import { standUpFor } from "./registering.js";
 import { unitOfWorkOf } from "./transactions.js";
+import { heldUntilTheOthersHaveRead } from "../../support/heldAtOnce.js";
+
+// `readModel`, but held just after it is asked `method`, until whatever else
+// is asked at once has asked it too (heldAtOnce.ts): so that two commands asked
+// for at once read what is taken before either writes, where nothing makes the
+// second wait. Every other method is the read model's own.
+const heldAfter = <TReadModel extends object>(
+  world: SpecWorld,
+  readModel: TReadModel,
+  method: keyof TReadModel,
+): TReadModel =>
+  new Proxy(readModel, {
+    get(target, property) {
+      const value: unknown = Reflect.get(target, property, target);
+      if (typeof value !== "function") return value;
+      const bound = (value as (...args: unknown[]) => unknown).bind(target);
+      if (property !== method) return bound;
+      return async (...args: unknown[]) => {
+        const answer = await bound(...args);
+        await heldUntilTheOthersHaveRead(world);
+        return answer;
+      };
+    },
+  });
 
 Given("the application's tournaments", function (this: SpecWorld) {
   standUpFor(this);
@@ -276,14 +300,21 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
+  // What is taken is read held, for the scenarios that ask two of these at
+  // once.
+  const takenHeld = heldAfter(this, byCommentaries, "taken");
   mediator.handleCommand(
-    new StartCommentaryHandler(...both, commentaries, byCommentaries),
+    new StartCommentaryHandler(...both, commentaries, takenHeld),
   );
   mediator.handleCommand(
-    new ChangeCommentaryTitleHandler(...both, commentaries, byCommentaries),
+    new ChangeCommentaryTitleHandler(...both, commentaries, takenHeld),
   );
   mediator.handleCommand(
-    new AddManagerNoteHandler(...both, managerNotes, byNotes),
+    new AddManagerNoteHandler(
+      ...both,
+      managerNotes,
+      heldAfter(this, byNotes, "slugsTakenIn"),
+    ),
   );
   mediator.handleCommand(new EditManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new DeleteManagerNoteHandler(...both, managerNotes));

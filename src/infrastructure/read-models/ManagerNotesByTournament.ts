@@ -82,13 +82,20 @@ export class ManagerNotesByTournament
     return rows[0]?.note_id;
   }
 
+  // Held by a lock of the tournament's own for the rest of the transaction
+  // asking, taken before anything is read, so that a second asking waits for
+  // the first's work to be kept and then reads the slug it took. A lock of the
+  // transaction rather than of rows, since what is guarded is a slug nobody
+  // has yet, which no row holds.
   async slugsTakenIn(tournament: TournamentId): Promise<readonly string[]> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{ slug: string }>(
-        `select slug from manager_notes_by_tournament where tournament_id = $1`,
-        [tournament.value],
-      );
+    const connection = this.unitOfWork.connection();
+    await connection.query("select pg_advisory_xact_lock(hashtext($1))", [
+      `manager-notes-taken:${tournament.value}`,
+    ]);
+    const { rows } = await connection.query<{ slug: string }>(
+      `select slug from manager_notes_by_tournament where tournament_id = $1`,
+      [tournament.value],
+    );
     return rows.map(({ slug }) => slug);
   }
 

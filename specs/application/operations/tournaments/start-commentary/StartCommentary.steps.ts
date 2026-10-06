@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -10,7 +10,14 @@ import {
   commentaryIn,
   loadCommentary,
 } from "../../commentaries/commentaryRequests.js";
-import { momentOf, noTournament, send, tournamentNamed } from "../aRequest.js";
+import {
+  inHandOf,
+  momentOf,
+  noTournament,
+  send,
+  tournamentNamed,
+} from "../aRequest.js";
+import { toBeAsked } from "../askedAtOnce.js";
 import { readerOf } from "../teamRequests.js";
 
 // The account for an address, or the one the scenario took hold of where it
@@ -30,6 +37,25 @@ const start = async (
     tournament,
   );
 };
+
+// Asked for with another at once (askedAtOnce.ts), its answer kept there.
+Given(
+  new RegExp(`${READER} is to start the commentary "([^"]*)" on "([^"]*)"$`),
+  async function (
+    this: SpecWorld,
+    address: string | undefined,
+    title: string,
+    name: string,
+  ) {
+    const account = await readerOf(this, address ?? undefined);
+    const tournament = tournamentNamed(this, name);
+    toBeAsked(this, () =>
+      inHandOf(this).send(
+        new StartCommentary(account, tournament.value, title, momentOf(this)),
+      ),
+    );
+  },
+);
 
 When(
   new RegExp(`${READER} starts the commentary "([^"]*)" on "([^"]*)"$`),
