@@ -80,7 +80,7 @@ import {
   gateballScoresFormats,
 } from "./value-objects/tournamentFormats.js";
 import { TournamentName } from "./value-objects/TournamentName.js";
-import { TournamentNotes } from "./value-objects/TournamentNotes.js";
+import { TournamentSubtitle } from "./value-objects/TournamentSubtitle.js";
 
 /** Why a tournament will not do what it was asked. */
 export type TournamentErrorCode =
@@ -153,7 +153,7 @@ export interface TournamentDetails {
   readonly sport: Sport;
   readonly country: Country;
   readonly region?: string | undefined;
-  readonly notes?: TournamentNotes | undefined;
+  readonly subtitle?: TournamentSubtitle | undefined;
   readonly handicap?: boolean | undefined;
   readonly drawsAllowed?: boolean | undefined;
   readonly levelTestsDrawn?: boolean | undefined;
@@ -228,7 +228,7 @@ interface Settled {
   readonly sport: Sport;
   readonly country: Country;
   readonly region: Region | undefined;
-  readonly notes: TournamentNotes | undefined;
+  readonly subtitle: TournamentSubtitle | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
@@ -397,8 +397,8 @@ export class Tournament extends AggregateRoot {
     return this.#now.region;
   }
 
-  get notes(): TournamentNotes | undefined {
-    return this.#now.notes;
+  get subtitle(): TournamentSubtitle | undefined {
+    return this.#now.subtitle;
   }
 
   get handicap(): boolean {
@@ -1697,7 +1697,7 @@ export class Tournament extends AggregateRoot {
       sport,
       country,
       region,
-      notes: details.notes,
+      subtitle: details.subtitle,
       handicap,
       drawsAllowed,
       levelTestsDrawn,
@@ -1787,10 +1787,10 @@ export class Tournament extends AggregateRoot {
       sport: Sport.from(written.sport),
       country,
       region,
-      notes:
-        written.notes === undefined
+      subtitle:
+        written.subtitle === undefined
           ? undefined
-          : TournamentNotes.from(written.notes),
+          : TournamentSubtitle.from(written.subtitle),
       handicap: written.handicap,
       drawsAllowed: written.drawsAllowed,
       levelTestsDrawn: written.levelTestsDrawn,
@@ -2342,7 +2342,7 @@ const writtenFrom = (settled: Settled): WrittenTournament => ({
   sport: settled.sport.code,
   country: settled.country.code,
   region: settled.region?.code,
-  notes: settled.notes?.markdown,
+  subtitle: settled.subtitle?.markdown,
   handicap: settled.handicap,
   drawsAllowed: settled.drawsAllowed,
   levelTestsDrawn: settled.levelTestsDrawn,

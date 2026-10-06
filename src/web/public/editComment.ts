@@ -102,7 +102,7 @@ export const registerEditCommentPages = (
             tournament: {
               name: asked.name,
               address: asked.address,
-              notes: asked.notes,
+              subtitle: asked.subtitle,
             },
             title,
             sections: sectionsOf(asked, speaking, readsOf(request)),

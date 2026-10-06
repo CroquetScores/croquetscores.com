@@ -88,7 +88,7 @@ export const registerNotePage = (
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: `${managerNote.title} - ${asked.name}`,
           sections: sectionsOf(asked, speaking, read),

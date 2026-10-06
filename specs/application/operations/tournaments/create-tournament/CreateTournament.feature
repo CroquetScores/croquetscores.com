@@ -124,11 +124,11 @@ Feature: Creating a tournament
         | sport    | xx          | Sport.Unknown                  |
         | country  | zz          | CreateTournament.NoSuchCountry |
 
-    Scenario: Notes longer than notes may be are refused for it
-      Given the request says the notes are 2001 characters long
+    Scenario: A subtitle longer than a subtitle may be is refused for it
+      Given the request says the subtitle is 2001 characters long
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then it is refused with "Request.Invalid"
-      And the first rule broken is "TournamentNotes.TooLong"
+      And the first rule broken is "TournamentSubtitle.TooLong"
 
     Scenario: A request that breaks a rule creates nothing
       Given the request says the name is "spring open"

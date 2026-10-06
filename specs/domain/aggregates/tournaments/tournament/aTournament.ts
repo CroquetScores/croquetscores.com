@@ -20,7 +20,7 @@ import { Sport } from "../../../../../src/domain/aggregates/tournaments/value-ob
 import { TournamentAddress } from "../../../../../src/domain/aggregates/tournaments/value-objects/TournamentAddress.js";
 import { TournamentFormat } from "../../../../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import { TournamentName } from "../../../../../src/domain/aggregates/tournaments/value-objects/TournamentName.js";
-import { TournamentNotes } from "../../../../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
+import { TournamentSubtitle } from "../../../../../src/domain/aggregates/tournaments/value-objects/TournamentSubtitle.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import { Slug } from "../../../../../src/domain/common/Slug.js";
@@ -35,8 +35,9 @@ import type { SpecWorld } from "../../../../support/world.js";
 /**
  * What a scenario says of a tournament, each part written as the feature
  * writes it. What it leaves unsaid is a tournament that is well made, so that
- * what is refused is only ever what the scenario named. Notes and the region
- * are nothing when a scenario says there are none, and left unsaid otherwise.
+ * what is refused is only ever what the scenario named. The subtitle and the
+ * region are nothing when a scenario says there is none, and left unsaid
+ * otherwise.
  */
 export interface Said {
   website?: string;
@@ -47,7 +48,7 @@ export interface Said {
   sport?: string;
   country?: string;
   region?: string | null;
-  notes?: string | null;
+  subtitle?: string | null;
   handicap?: boolean;
   drawsAllowed?: boolean;
   levelTestsDrawn?: boolean;
@@ -215,10 +216,10 @@ export const detailsOf = (said: Said): TournamentDetails => {
     ),
     country,
     region: regionOf(country, said.region),
-    notes:
-      said.notes === undefined || said.notes === null
+    subtitle:
+      said.subtitle === undefined || said.subtitle === null
         ? undefined
-        : TournamentNotes.from(said.notes),
+        : TournamentSubtitle.from(said.subtitle),
     handicap: said.handicap,
     drawsAllowed: said.drawsAllowed,
     levelTestsDrawn: said.levelTestsDrawn,
@@ -370,7 +371,7 @@ export const updateOf = (
     sport: tournament.sport,
     country: tournament.country,
     region: tournament.region?.code,
-    notes: tournament.notes,
+    subtitle: tournament.subtitle,
     handicap: tournament.handicap,
     drawsAllowed: tournament.drawsAllowed,
     levelTestsDrawn:
@@ -398,9 +399,9 @@ export const updateOf = (
     ...(changed.region === undefined
       ? {}
       : { region: changed.region ?? undefined }),
-    ...(changed.notes === undefined || changed.notes === null
+    ...(changed.subtitle === undefined || changed.subtitle === null
       ? {}
-      : { notes: TournamentNotes.from(changed.notes) }),
+      : { subtitle: TournamentSubtitle.from(changed.subtitle) }),
     ...(changed.handicap === undefined ? {} : { handicap: changed.handicap }),
     ...(changed.drawsAllowed === undefined
       ? {}

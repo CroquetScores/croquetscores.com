@@ -504,7 +504,7 @@ const pageOf = (
     tournament: {
       name: asked.name,
       address: asked.address,
-      notes: asked.notes,
+      subtitle: asked.subtitle,
     },
     title: `${commentary.title} - ${asked.name}`,
     sections: sectionsOf(asked, speaking, reads),

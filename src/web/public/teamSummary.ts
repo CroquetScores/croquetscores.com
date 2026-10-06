@@ -154,7 +154,7 @@ ${columns.map(({ of, starts }) => `                <td class="team-summary-numbe
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: asked.name,
           sections: sectionsOf(asked, speaking, readsOf(request)),

@@ -374,28 +374,28 @@ a:hover {
    as the title strip does, so that notes of several lines do not keep a phone's
    screen from what the page says. Set in from the edge as the tournament's name
    is, so that the two line up. */
-.tournament-notes {
+.tournament-subtitle {
   background: var(--accent);
   color: var(--accent-ink);
 }
 
-.tournament-notes-text {
+.tournament-subtitle-text {
   padding-inline: var(--panel-inset);
   padding-bottom: var(--space-2);
 }
 
-.tournament-notes-text > * {
+.tournament-subtitle-text > * {
   margin: 0;
   max-width: none;
 }
 
-.tournament-notes-text > * + * {
+.tournament-subtitle-text > * + * {
   margin-top: var(--space-2);
 }
 
 /* In the strip's own colour, and underlined to say they are links, since the
    site's link colour is measured against the panel rather than the green. */
-.tournament-notes-text a {
+.tournament-subtitle-text a {
   color: inherit;
   text-decoration: underline;
 }

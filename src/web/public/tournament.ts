@@ -92,7 +92,7 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: asked.name,
           sections,

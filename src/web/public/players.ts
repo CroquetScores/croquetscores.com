@@ -96,7 +96,7 @@ ${team.players.map((player) => `              <li class="player"><a class="playe
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: asked.name,
           sections: sectionsOf(asked, speaking, readsOf(request)),

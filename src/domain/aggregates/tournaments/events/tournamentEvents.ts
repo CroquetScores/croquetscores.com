@@ -98,7 +98,7 @@ const tournament = (said: Said): WrittenTournament => ({
   sport: text(said, "sport"),
   country: text(said, "country"),
   region: optionalText(said, "region"),
-  notes: optionalText(said, "notes"),
+  subtitle: optionalText(said, "subtitle"),
   handicap: yesOrNo(said, "handicap"),
   // Asked only since drawn games could be allowed, so a tournament kept before
   // says nothing of it, and allowed none.

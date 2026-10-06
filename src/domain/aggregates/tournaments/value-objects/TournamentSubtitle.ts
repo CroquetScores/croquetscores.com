@@ -1,16 +1,16 @@
 import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
-/** Every rule notes can break. */
-export type TournamentNotesErrorCode = "TournamentNotes.TooLong";
+/** Every rule a subtitle can break. */
+export type TournamentSubtitleErrorCode = "TournamentSubtitle.TooLong";
 
 const MOST_CHARACTERS = 2000;
 
-const notes = new Validator<string, TournamentNotesErrorCode>({
+const subtitle = new Validator<string, TournamentSubtitleErrorCode>({
   fields: [
     {
-      field: "notes",
-      code: "TournamentNotes.TooLong",
+      field: "subtitle",
+      code: "TournamentSubtitle.TooLong",
       isBrokenBy: (given) => charactersIn(given) > MOST_CHARACTERS,
     },
   ],
@@ -43,7 +43,7 @@ const emailAddress =
 // "<" followed by anything else begins no tag, and is text. A tag left open
 // takes everything after it: Markdown passes "<div onmouseover=..." at the
 // start of a line through as it stands, and a browser would then read the
-// page after the notes as the rest of the tag, so its attributes would count.
+// page after the subtitle as the rest of the tag, so its attributes would count.
 const tags = new RegExp(
   `<(?!(?:${link}|${emailAddress})>)\\/?[a-z][^>]*(?:>|$)`,
   "gi",
@@ -62,7 +62,7 @@ const spellingsOf = (character: string): string => {
 };
 
 // A browser skips tabs and line breaks between the letters of a scheme, and the
-// notes promise to take out one with any whitespace between its letters, so
+// subtitle promises to take out one with any whitespace between its letters, so
 // whitespace is allowed there however it is written.
 const between = "(?:\\s|&Tab;|&NewLine;|&#0*(?:9|10|13);?|&#x0*(?:9|a|d);?)*";
 // Markdown lets any punctuation be escaped with a backslash, and drops the
@@ -98,14 +98,14 @@ const withoutHtmlOrScripts = (text: string): string => {
 };
 
 /**
- * The notes a tournament has: Markdown, kept as it was written, with every
+ * The subtitle a tournament has: Markdown, kept as it was written, with every
  * piece of HTML and every "javascript:" and "vbscript:" taken out.
  *
- * The HTML is taken out when the notes are made rather than when they are
+ * The HTML is taken out when the subtitle is made rather than when it is
  * shown, so that no page can forget to, and nothing kept is ever something a
  * page must not show.
  */
-export class TournamentNotes {
+export class TournamentSubtitle {
   readonly #markdown: string;
 
   private constructor(markdown: string) {
@@ -113,21 +113,21 @@ export class TournamentNotes {
   }
 
   /**
-   * The notes `text` makes once its HTML, its scripts and the whitespace at
-   * either end are taken out, or nothing when that leaves nothing: notes are
-   * optional, so there being none is not a mistake. Throws
+   * The subtitle `text` makes once its HTML, its scripts and the whitespace
+   * at either end are taken out, or nothing when that leaves nothing: a
+   * subtitle is optional, so there being none is not a mistake. Throws
    * {@link ValidationError} naming the first rule `text` breaks.
    */
-  static from(text: string): TournamentNotes | undefined {
-    // Measured before anything is taken out, so that notes too long are
+  static from(text: string): TournamentSubtitle | undefined {
+    // Measured before anything is taken out, so that a subtitle too long is
     // refused without first paying for cleaning them up.
     const trimmed = text.trim();
-    notes.ensureValid(trimmed);
+    subtitle.ensureValid(trimmed);
     const markdown = withoutHtmlOrScripts(trimmed).trim();
-    return markdown === "" ? undefined : new TournamentNotes(markdown);
+    return markdown === "" ? undefined : new TournamentSubtitle(markdown);
   }
 
-  /** The notes, in Markdown. */
+  /** The subtitle, in Markdown. */
   get markdown(): string {
     return this.#markdown;
   }

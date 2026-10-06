@@ -19,7 +19,7 @@ export class TournamentUpdated
   readonly sport: string;
   readonly country: string;
   readonly region: string | undefined;
-  readonly notes: string | undefined;
+  readonly subtitle: string | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
@@ -41,7 +41,7 @@ export class TournamentUpdated
     this.sport = written.sport;
     this.country = written.country;
     this.region = written.region;
-    this.notes = written.notes;
+    this.subtitle = written.subtitle;
     this.handicap = written.handicap;
     this.drawsAllowed = written.drawsAllowed;
     this.levelTestsDrawn = written.levelTestsDrawn;

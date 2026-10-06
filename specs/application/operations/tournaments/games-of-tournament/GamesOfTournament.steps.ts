@@ -64,17 +64,17 @@ Then(
   },
 );
 
-// Every query a tournament's page asks answers its notes as this one does, so
+// Every query a tournament's page asks answers its subtitle as this one does, so
 // the steps are shared.
 Then(
-  "the tournament answered has the notes {string}",
-  function (this: SpecWorld, notes: string) {
-    assert.equal(answered(this).notes, notes);
+  "the tournament answered has the subtitle {string}",
+  function (this: SpecWorld, subtitle: string) {
+    assert.equal(answered(this).subtitle, subtitle);
   },
 );
 
-Then("the tournament answered has no notes", function (this: SpecWorld) {
-  assert.equal(answered(this).notes, undefined);
+Then("the tournament answered has no subtitle", function (this: SpecWorld) {
+  assert.equal(answered(this).subtitle, undefined);
 });
 
 Then(

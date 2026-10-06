@@ -27,8 +27,8 @@ export interface TournamentPlayersToRead {
   readonly name: string;
   /** Where it is found now, as "2026/ac/spring-open". */
   readonly address: string;
-  /** The tournament's notes, in Markdown, or nothing where it has none. */
-  readonly notes: string | undefined;
+  /** The tournament's subtitle, in Markdown, or nothing where it has none. */
+  readonly subtitle: string | undefined;
   /**
    * Each of the tournament's notes with when it last changed, the most
    * recently written first, for its section bar to mark Notes by.

@@ -118,12 +118,12 @@ When(
   },
 );
 
-// The tournament's notes ----------------------------------------------------------
+// The tournament's subtitle -------------------------------------------------------
 
 Given(
-  "the tournament {string} has the notes:",
-  async function (this: SpecWorld, name: string, notes: string) {
-    await changeTournament(this, name, { notes });
+  "the tournament {string} has the subtitle:",
+  async function (this: SpecWorld, name: string, subtitle: string) {
+    await changeTournament(this, name, { subtitle });
   },
 );
 
@@ -141,32 +141,32 @@ When("the page is scrolled to its bottom", async function (this: SpecWorld) {
   );
 });
 
-const notesInHeader = (world: SpecWorld): Locator =>
-  world.browserPage.locator(".tournament-notes");
+const subtitleInHeader = (world: SpecWorld): Locator =>
+  world.browserPage.locator(".tournament-subtitle");
 
 Then(
-  "the header shows the notes {string}",
-  async function (this: SpecWorld, notes: string) {
-    assert.equal((await notesInHeader(this).innerText()).trim(), notes);
+  "the header shows the subtitle {string}",
+  async function (this: SpecWorld, subtitle: string) {
+    assert.equal((await subtitleInHeader(this).innerText()).trim(), subtitle);
   },
 );
 
-Then("the header shows no notes", async function (this: SpecWorld) {
-  assert.equal(await notesInHeader(this).count(), 0);
+Then("the header shows no subtitle", async function (this: SpecWorld) {
+  assert.equal(await subtitleInHeader(this).count(), 0);
 });
 
 Then(
-  "the notes in the header are beneath the tournament named there",
+  "the subtitle in the header is beneath the tournament named there",
   async function (this: SpecWorld) {
     const tournament = await tournamentInHeader(this).boundingBox();
-    const notes = await notesInHeader(this).boundingBox();
+    const subtitle = await subtitleInHeader(this).boundingBox();
     assert.ok(
-      tournament !== null && notes !== null,
+      tournament !== null && subtitle !== null,
       "One of them is not shown.",
     );
     assert.ok(
-      notes.y >= tournament.y + tournament.height,
-      `They start ${String(notes.y)} pixels down.`,
+      subtitle.y >= tournament.y + tournament.height,
+      `It starts ${String(subtitle.y)} pixels down.`,
     );
   },
 );
@@ -174,41 +174,41 @@ Then(
 // Out of sight behind the pinned bar, which stays at the top of the window
 // while what is beneath it scrolls under it.
 Then(
-  "the notes in the header are out of sight",
+  "the subtitle in the header is out of sight",
   async function (this: SpecWorld) {
     const bar = await this.browserPage.locator("header.site-bar").boundingBox();
-    const notes = await notesInHeader(this).boundingBox();
-    assert.ok(bar !== null && notes !== null, "One of them is not drawn.");
+    const subtitle = await subtitleInHeader(this).boundingBox();
+    assert.ok(bar !== null && subtitle !== null, "One of them is not drawn.");
     assert.ok(
-      notes.y + notes.height <= bar.y + bar.height,
-      `They end ${String(notes.y + notes.height)} pixels down.`,
+      subtitle.y + subtitle.height <= bar.y + bar.height,
+      `It ends ${String(subtitle.y + subtitle.height)} pixels down.`,
     );
   },
 );
 
 Then(
-  "the notes in the header draw {string} bold",
+  "the subtitle in the header draws {string} bold",
   async function (this: SpecWorld, words: string) {
-    const bold = await notesInHeader(this).locator("strong").allInnerTexts();
+    const bold = await subtitleInHeader(this).locator("strong").allInnerTexts();
     assert.deepEqual(bold, [words]);
   },
 );
 
-const linkInNotes = (world: SpecWorld, words: string): Locator =>
-  notesInHeader(world).locator("a", { hasText: words });
+const linkInSubtitle = (world: SpecWorld, words: string): Locator =>
+  subtitleInHeader(world).locator("a", { hasText: words });
 
 Then(
-  "the notes' link {string} leads to {string}",
+  "the subtitle's link {string} leads to {string}",
   async function (this: SpecWorld, words: string, href: string) {
-    assert.equal(await linkInNotes(this, words).getAttribute("href"), href);
+    assert.equal(await linkInSubtitle(this, words).getAttribute("href"), href);
   },
 );
 
 Then(
-  "the notes' link {string} is marked as not vouched for",
+  "the subtitle's link {string} is marked as not vouched for",
   async function (this: SpecWorld, words: string) {
     const rel = (
-      (await linkInNotes(this, words).getAttribute("rel")) ?? ""
+      (await linkInSubtitle(this, words).getAttribute("rel")) ?? ""
     ).split(/\s+/);
     assert.ok(rel.includes("nofollow"), `It is marked ${rel.join(" ")}.`);
     assert.ok(rel.includes("ugc"), `It is marked ${rel.join(" ")}.`);
@@ -216,8 +216,11 @@ Then(
 );
 
 Then(
-  "the notes in the header are a numbered list of {int} items",
+  "the subtitle in the header is a numbered list of {int} items",
   async function (this: SpecWorld, items: number) {
-    assert.equal(await notesInHeader(this).locator("ol > li").count(), items);
+    assert.equal(
+      await subtitleInHeader(this).locator("ol > li").count(),
+      items,
+    );
   },
 );

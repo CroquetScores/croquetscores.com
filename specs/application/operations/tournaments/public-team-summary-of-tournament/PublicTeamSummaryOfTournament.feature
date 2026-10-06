@@ -63,10 +63,10 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   "England", "ENG", with "Kim Keeper" and "Ken Kicker", and its test between
   them is expected to have 2 matches, each the best of 1.
 
-  The tournament's notes are answered with it, in Markdown as they are kept
-  (`TournamentNotes.feature`), since every page of a tournament shows them
+  The tournament's subtitle is answered with it, in Markdown as it is kept
+  (`TournamentSubtitle.feature`), since every page of a tournament shows it
   beneath its name in the header (`layout.feature`). A tournament with no
-  notes is answered with none.
+  subtitle is answered with none.
 
   So are its manager's notes, each by its id with when it last changed
   (`PublicManagerNotesOfTournament.feature`), since every page of a
@@ -113,14 +113,14 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
       Then the tournament answered is called "Spring Tests"
 
-    Scenario: The tournament's notes are answered
-      Given the tournament "Spring Tests" has the notes "Lunch is at **noon**"
+    Scenario: The tournament's subtitle is answered
+      Given the tournament "Spring Tests" has the subtitle "Lunch is at **noon**"
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
-      Then the tournament answered has the notes "Lunch is at **noon**"
+      Then the tournament answered has the subtitle "Lunch is at **noon**"
 
-    Scenario: A tournament with no notes is answered with none
+    Scenario: A tournament with no subtitle is answered with none
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
-      Then the tournament answered has no notes
+      Then the tournament answered has no subtitle
 
     Scenario: The tournament's manager notes are answered with when each last changed
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Tests"

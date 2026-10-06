@@ -191,8 +191,8 @@ factOf(
   (t) => t.country.code,
 );
 factOf(
-  "the tournament kept for {string} on {string} has the notes {string}",
-  (t) => t.notes?.markdown,
+  "the tournament kept for {string} on {string} has the subtitle {string}",
+  (t) => t.subtitle?.markdown,
 );
 
 // Moments compared as moments, since a moment can be written more than one way.
@@ -260,8 +260,8 @@ yesOrNo(
   undefined,
 );
 yesOrNo(
-  "the tournament kept for {string} on {string} has no notes",
-  (t) => t.notes,
+  "the tournament kept for {string} on {string} has no subtitle",
+  (t) => t.subtitle,
   undefined,
 );
 yesOrNo(

@@ -108,7 +108,7 @@ export const registerStartCommentaryPage = (
           tournament: {
             name: tournament.name,
             address: tournament.address,
-            notes: tournament.notes,
+            subtitle: tournament.subtitle,
           },
           title: dialog.title,
           theme: themeOf(request),

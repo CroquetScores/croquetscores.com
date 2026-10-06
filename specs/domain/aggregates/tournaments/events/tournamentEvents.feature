@@ -11,7 +11,7 @@ Feature: The names a tournament's events are kept under
   it today. Every one begins with "tournament-", so that no name of a
   tournament's could ever be one another kind of thing wants for its own.
 
-  What an event can do without, such as a tournament's notes or the flag a
+  What an event can do without, such as a tournament's subtitle or the flag a
   player flies, is left out when it is nothing, and is read back as nothing.
   What an event cannot do without, it is refused without. What was kept comes
   back from a table something else could have written to, and an event read
@@ -168,8 +168,8 @@ Feature: The names a tournament's events are kept under
 
   Rule: What an event can do without is read back as nothing
 
-    Scenario: A tournament created with no notes is read back with none
-      Given an event of a tournament being created with no notes
+    Scenario: A tournament created with no subtitle is read back with none
+      Given an event of a tournament being created with no subtitle
       When the event is written down through the registry
       And what was kept is read back through the registry
       Then what was read back says everything the event said

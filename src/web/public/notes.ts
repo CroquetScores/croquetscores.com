@@ -82,7 +82,7 @@ ${asked.managerNotes
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: `${say("tournament.notes")} - ${asked.name}`,
           sections: sectionsOf(asked, speaking, read),

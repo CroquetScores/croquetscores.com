@@ -3,7 +3,7 @@ Feature: Changing what a tournament is
   Everything a tournament was created with can be changed afterwards except
   its id and the website it is run on (`create.feature`). Updating says all of
   it again: the name, when it starts and finishes, the format, the sport, the
-  country, the region, the notes, and whether it is played under handicap,
+  country, the region, the subtitle, and whether it is played under handicap,
   counts towards the world rankings, is a national or an international event,
   allows drawn games, and draws a test level on matches. What is asked of those together when a tournament is created is
   asked again when it is updated, of the website it was created on.
@@ -91,12 +91,12 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then the tournament is played in the region "nsw"
 
-    Scenario: An updated tournament has the notes it was updated with
-      Given a stream where a tournament was created with no notes
+    Scenario: An updated tournament has the subtitle it was updated with
+      Given a stream where a tournament was created with no subtitle
       And the tournament is rebuilt from the stream
-      And the update gives it the notes "Lunch is at noon."
+      And the update gives it the subtitle "Lunch is at noon."
       When the tournament is updated
-      Then the tournament's notes are "Lunch is at noon."
+      Then the tournament's subtitle is "Lunch is at noon."
 
     Scenario: An updated tournament is played under handicap when it was updated to be
       Given a stream where a tournament was created not played under handicap

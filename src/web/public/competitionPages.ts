@@ -362,7 +362,7 @@ export const registerCompetitionPages = (
               tournament: {
                 name: asked.name,
                 address: asked.address,
-                notes: asked.notes,
+                subtitle: asked.subtitle,
               },
               title: found.name,
               sections: sectionsOf(

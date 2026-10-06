@@ -98,9 +98,9 @@ Given(
 );
 
 Given(
-  "the tournament {string} has the notes {string}",
-  async function (this: SpecWorld, name: string, notes: string) {
-    await changeTournament(this, name, { notes });
+  "the tournament {string} has the subtitle {string}",
+  async function (this: SpecWorld, name: string, subtitle: string) {
+    await changeTournament(this, name, { subtitle });
   },
 );
 
@@ -117,18 +117,18 @@ Then(
 );
 
 Then(
-  "the tournament {string} is kept with the notes {string}",
-  async function (this: SpecWorld, name: string, notes: string) {
-    assert.equal((await keptCalled(this, name)).notes?.markdown, notes);
+  "the tournament {string} is kept with the subtitle {string}",
+  async function (this: SpecWorld, name: string, subtitle: string) {
+    assert.equal((await keptCalled(this, name)).subtitle?.markdown, subtitle);
   },
 );
 
-// The notes are the manager's words, in a box of their own, and the regions are
-// left as they were recorded (new.feature), so neither is read for marks.
+// The subtitle is the manager's words, in a box of their own, and the regions
+// are left as they were recorded (new.feature), so neither is read for marks.
 // Once the form is drawn and its lists filled, which is once the country the
 // tournament is in is chosen in its list.
 Then(
-  "every word in the form but the notes and the regions is in the test locale",
+  "every word in the form but the subtitle and the regions is in the test locale",
   async function (this: SpecWorld) {
     await this.browserPage
       .locator("#field-region option:checked:not([value=''])")

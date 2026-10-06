@@ -3,7 +3,7 @@ Feature: Creating a tournament
   A tournament begins when it is created, on the website it is to be run on.
   Creating it says everything it begins with: its name, when it starts and
   finishes, the format and the sport it is played in, the country and the
-  region of that country it is played in, and any notes. It also says whether
+  region of that country it is played in, and any subtitle. It also says whether
   it is played under handicap rules, whether its results count towards the
   world rankings, whether it is a national or an international event, and
   whether drawn games are allowed.
@@ -122,15 +122,15 @@ Feature: Creating a tournament
       When a tournament is created
       Then the tournament is played in the region "vic"
 
-    Scenario: A new tournament has the notes it was created with
-      Given the notes "Lunch is at noon."
+    Scenario: A new tournament has the subtitle it was created with
+      Given the subtitle "Lunch is at noon."
       When a tournament is created
-      Then the tournament's notes are "Lunch is at noon."
+      Then the tournament's subtitle is "Lunch is at noon."
 
-    Scenario: A new tournament need have no notes
-      Given no notes
+    Scenario: A new tournament need have no subtitle
+      Given no subtitle
       When a tournament is created
-      Then the tournament has no notes
+      Then the tournament has no subtitle
 
   Rule: A new tournament is not archived and has nobody and nothing in it
 

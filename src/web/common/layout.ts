@@ -56,9 +56,9 @@ export interface Shell {
         readonly name: string;
         /** Where it is found, as "2026/ac/spring-open". */
         readonly address: string;
-        /** Its notes, in Markdown, drawn on a strip beneath the pinned bar,
-            or nothing where it has none. */
-        readonly notes: string | undefined;
+        /** Its subtitle, in Markdown, drawn on a strip beneath the pinned
+            bar, or nothing where it has none. */
+        readonly subtitle: string | undefined;
       }
     | undefined;
   /** The dark green bar. Absent, rather than present and empty, when a page
@@ -232,22 +232,23 @@ const titleBar = (title: string | undefined): string =>
       </div>
     </div>`;
 
-// Notes are kept with their HTML taken out (TournamentNotes.ts), and are drawn
-// by a Markdown that draws none besides (markdown.ts), in case any was missed.
-const notesMarkdown = markdownWithoutHtml();
+// A subtitle is kept with its HTML taken out (TournamentSubtitle.ts), and is
+// drawn by a Markdown that draws none besides (markdown.ts), in case any was
+// missed.
+const subtitleMarkdown = markdownWithoutHtml();
 
-// A tournament's notes, on a strip of the header's green beneath the pinned
+// A tournament's subtitle, on a strip of the header's green beneath the pinned
 // bar, and so beneath the tournament's name in it. Not in the bar itself, so
-// that notes of several lines scroll away with the page rather than keeping a
-// phone's screen from what the page says.
-const notesBar = (tournament: Shell["tournament"]): string =>
-  tournament?.notes === undefined
+// that a subtitle of several lines scrolls away with the page rather than
+// keeping a phone's screen from what the page says.
+const subtitleBar = (tournament: Shell["tournament"]): string =>
+  tournament?.subtitle === undefined
     ? ""
     : `
-    <div class="tournament-notes">
+    <div class="tournament-subtitle">
       <div class="page">
-        <div class="tournament-notes-text">
-${notesMarkdown.render(tournament.notes)}        </div>
+        <div class="tournament-subtitle-text">
+${subtitleMarkdown.render(tournament.subtitle)}        </div>
       </div>
     </div>`;
 
@@ -392,7 +393,7 @@ ${shell.styles}
     </style>`
     }
   </head>
-  <body>${siteBar(shell)}${notesBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+  <body>${siteBar(shell)}${subtitleBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${

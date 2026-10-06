@@ -20,7 +20,7 @@ Feature: The manager's notes of a tournament, for anybody to read
 
   The page is a section of the tournament's, so the tournament is answered
   with it as its players are (`PublicPlayersOfTournament.feature`): its name,
-  where it is found now, its notes for the header, its commentaries each by
+  where it is found now, its subtitle for the header, its commentaries each by
   its id with when it last changed, for the section bar to mark Commentary
   by (`CommentariesByTournament.feature`), and its competitions in use with
   where each is found, which is what the page's section bar leads
@@ -123,10 +123,10 @@ Feature: The manager's notes of a tournament, for anybody to read
       When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
       Then the first commentary of the tournament answered last changed at "2026-09-26T11:00:00Z"
 
-    Scenario: The tournament's notes are answered
-      Given the tournament "Spring Open" has the notes "Lunch is at **noon**"
+    Scenario: The tournament's subtitle is answered
+      Given the tournament "Spring Open" has the subtitle "Lunch is at **noon**"
       When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
-      Then the tournament answered has the notes "Lunch is at **noon**"
+      Then the tournament answered has the subtitle "Lunch is at **noon**"
 
     Scenario: A competition is answered with where it is found
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"

@@ -226,10 +226,10 @@ export const creationOf = (world: SpecWorld): TournamentRequest => {
       (site === "gateballScores" ? "gb" : "ac"),
     country: says.country ?? said.country ?? "au",
     region: said.region ?? "vic",
-    ...(says.notes !== undefined
-      ? { notes: says.notes }
-      : typeof said.notes === "string"
-        ? { notes: said.notes }
+    ...(says.subtitle !== undefined
+      ? { subtitle: says.subtitle }
+      : typeof said.subtitle === "string"
+        ? { subtitle: said.subtitle }
         : {}),
     handicap: said.handicap,
     drawsAllowed: said.drawsAllowed,
@@ -250,7 +250,7 @@ export const updateOf = (
 ): TournamentRequest => {
   const changed = domainScenarioOf(world).updating;
   const { says } = scenarioOf(world);
-  const notes = changed.notes ?? tournament.notes?.markdown;
+  const subtitle = changed.subtitle ?? tournament.subtitle?.markdown;
   return {
     name: says.name ?? changed.name ?? tournament.name.toString(),
     starts: changed.starts ?? tournament.starts.toISOString(),
@@ -259,7 +259,7 @@ export const updateOf = (
     sport: says.sport ?? changed.sport ?? tournament.sport.code,
     country: says.country ?? tournament.country.code,
     region: changed.region ?? tournament.region?.code,
-    ...(typeof notes === "string" ? { notes } : {}),
+    ...(typeof subtitle === "string" ? { subtitle } : {}),
     handicap: changed.handicap ?? tournament.handicap,
     drawsAllowed: changed.drawsAllowed ?? tournament.drawsAllowed,
     levelTestsDrawn: tournament.levelTestsDrawn,

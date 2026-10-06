@@ -105,7 +105,7 @@ ${asked.commentaries
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: `${say("tournament.commentary")} - ${asked.name}`,
           sections: sectionsOf(asked, speaking, reads),

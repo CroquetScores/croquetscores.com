@@ -435,7 +435,7 @@ export const spanish: Language = {
     "admin.tournament.sport": "Deporte",
     "admin.tournament.country": "País",
     "admin.tournament.region": "Región",
-    "admin.tournament.notes": "Notas",
+    "admin.tournament.subtitle": "Subtítulo",
     "admin.tournament.handicap": "Jugado con hándicap",
     "admin.tournament.drawsAllowed": "Permite empates",
     "admin.tournament.levelTestsDrawn": "Los tests igualados son empate",
@@ -823,8 +823,8 @@ export const spanish: Language = {
     "Tournament.StartsAfterNextYear":
       "Un torneo no puede empezar después del año que viene.",
     "CreateTournament.NoSuchCountry": "Elige el país.",
-    "TournamentNotes.TooLong":
-      "Las notas pueden tener como mucho 2000 caracteres.",
+    "TournamentSubtitle.TooLong":
+      "El subtítulo puede tener como mucho 2000 caracteres.",
     "Tournament.NotAManager":
       "Solo quien gestiona este torneo puede cambiarlo.",
     "Tournament.NotAManagerOrScorer":

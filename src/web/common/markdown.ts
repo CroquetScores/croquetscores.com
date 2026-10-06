@@ -1,5 +1,5 @@
 // How the site draws what its writers write in Markdown: a commentary's
-// comments (commentary.ts) and a tournament's notes (layout.ts). Each is
+// comments (commentary.ts) and a tournament's subtitle (layout.ts). Each is
 // drawn by a Markdown of its own made here, so that what one adds to it, as a
 // comment's turns that begin no list, is not the other's.
 import MarkdownIt from "markdown-it";

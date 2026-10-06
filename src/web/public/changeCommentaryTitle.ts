@@ -86,7 +86,7 @@ export const registerChangeCommentaryTitlePage = (
           tournament: {
             name: asked.name,
             address: asked.address,
-            notes: asked.notes,
+            subtitle: asked.subtitle,
           },
           title: dialog.title,
           theme: themeOf(request),

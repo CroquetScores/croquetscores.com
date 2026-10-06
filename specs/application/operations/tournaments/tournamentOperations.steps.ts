@@ -200,7 +200,7 @@ Given(
 );
 
 // What `as` is, said again with `changed`, since an update says everything the
-// tournament is, and one without its notes would take them away.
+// tournament is, and one without its subtitle would take it away.
 const requestFor = (
   as: Tournament,
   changed: Partial<TournamentRequest>,
@@ -212,7 +212,7 @@ const requestFor = (
   sport: as.sport.code,
   country: as.country.code,
   region: as.region?.code,
-  ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
+  ...(as.subtitle === undefined ? {} : { subtitle: as.subtitle.markdown }),
   handicap: as.handicap,
   drawsAllowed: as.drawsAllowed,
   levelTestsDrawn: as.levelTestsDrawn,
@@ -577,9 +577,9 @@ Given(
 );
 
 Given(
-  "the request says the notes are {int} characters long",
+  "the request says the subtitle is {int} characters long",
   function (this: SpecWorld, length: number) {
-    scenarioOf(this).says.notes = "n".repeat(length);
+    scenarioOf(this).says.subtitle = "n".repeat(length);
   },
 );
 

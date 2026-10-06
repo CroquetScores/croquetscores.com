@@ -63,7 +63,7 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
     return {
       id: tournament.id.value,
       name: tournament.name.toString(),
-      notes: tournament.notes?.markdown,
+      subtitle: tournament.subtitle?.markdown,
       commentariesChanged: changed,
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,

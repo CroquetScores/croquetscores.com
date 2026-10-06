@@ -158,7 +158,7 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
     }
     return {
       name: tournament.name.toString(),
-      notes: tournament.notes?.markdown,
+      subtitle: tournament.subtitle?.markdown,
       commentariesChanged: await this.changes.of(tournament.id),
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,

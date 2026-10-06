@@ -107,7 +107,7 @@ ${asked.entered
         tournament: {
           name: asked.name,
           address: asked.address,
-          notes: asked.notes,
+          subtitle: asked.subtitle,
         },
         title: asked.player.name,
         sections: sectionsOf(asked, speaking, readsOf(request)),

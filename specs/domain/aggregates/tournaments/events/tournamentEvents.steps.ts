@@ -59,7 +59,7 @@ const A_TOURNAMENT: WrittenTournament = {
   sport: "ac",
   country: "au",
   region: "vic",
-  notes: "Lunch is at noon.",
+  subtitle: "Lunch is at noon.",
   handicap: false,
   // Allowed, so that one read back as not allowing them is found.
   drawsAllowed: true,
@@ -102,10 +102,10 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     Reflect.deleteProperty(created, "drawsAllowed");
     return created;
   },
-  "a tournament being created with no notes": () =>
+  "a tournament being created with no subtitle": () =>
     new TournamentCreated(
       "croquetscores.com",
-      { ...A_TOURNAMENT, notes: undefined },
+      { ...A_TOURNAMENT, subtitle: undefined },
       causedBy,
       happenedAt,
     ),

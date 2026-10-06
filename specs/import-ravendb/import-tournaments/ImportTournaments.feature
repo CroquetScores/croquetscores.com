@@ -263,43 +263,45 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then importing the tournament is refused with "ImportTournaments.UnknownTimeZone"
 
-  Rule: A tournament's notes are read as the old site showed them
+  Rule: A tournament's subtitle is read as the old site showed it
 
-    The old sites wrote "<" and ">" in notes as "&lt;" and "&gt;", and showed
-    them as the characters. They are brought over as the characters, so that
-    a manager editing the notes sees what they wrote. The notes are then
-    whatever the site makes of them, which takes out anything that is HTML.
+    What the old sites called a tournament's notes is its subtitle here. They
+    wrote "<" and ">" in notes as "&lt;" and "&gt;", and showed them as the
+    characters. They are brought over as the characters, so that a manager
+    editing the subtitle sees what they wrote. The subtitle is then whatever
+    the site makes of it, which takes out anything that is HTML.
 
     A tournament with no notes was kept in either of two ways: with notes of
-    nothing, or with no notes in its document at all. Either has none here.
+    nothing, or with no notes in its document at all. Either has no subtitle
+    here.
 
-    Scenario: Notes are kept
+    Scenario: The notes are kept as the subtitle
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament's notes were "Play starts at 9am."
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the notes "Play starts at 9am."
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the subtitle "Play starts at 9am."
 
     Scenario: Angle brackets written as the old site wrote them are read as angle brackets
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament's notes were "Handicaps &lt; 2 play first."
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the notes "Handicaps < 2 play first."
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the subtitle "Handicaps < 2 play first."
 
-    Scenario: A tournament with no notes has none
+    Scenario: A tournament with no notes has no subtitle
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament had no notes
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" has no notes
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has no subtitle
 
-    Scenario: A tournament whose document holds no notes has none
+    Scenario: A tournament whose document holds no notes has no subtitle
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament's document held no notes
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" has no notes
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has no subtitle
 
   Rule: A tournament allows no drawn games and counts towards nothing
 

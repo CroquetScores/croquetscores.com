@@ -6,7 +6,7 @@ Feature: A new tournament is created in the admin
   for everything a tournament begins with, as creating one says it
   (`create.feature`): its name, when it starts and finishes, the sport and
   the format it is played in, the country and the region it is played in, any
-  notes, whether it is played under handicap, whether it allows drawn games,
+  subtitle, whether it is played under handicap, whether it allows drawn games,
   whether it counts towards the world rankings, whether it is national and
   whether it is international.
 
@@ -85,7 +85,7 @@ Feature: A new tournament is created in the admin
         | Sport                        |
         | Format                       |
         | Country                      |
-        | Notes                        |
+        | Subtitle                     |
         | Played with handicaps        |
         | Allows drawn results         |
         | Counts toward world rankings |
@@ -435,15 +435,15 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then "Country" is refused with "CreateTournament.NoSuchCountry"
 
-    Scenario: Notes longer than notes may be are refused beside them
+    Scenario: A subtitle longer than a subtitle may be is refused beside it
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"
       And "2026-10-03" is typed as the "Starts"
       And "2026-10-05" is typed as the "Finishes"
       And the country "Fiji" is chosen
-      And 2001 characters are typed as the "Notes"
+      And 2001 characters are typed as the "Subtitle"
       When "Create Tournament" is pressed
-      Then "Notes" is refused with "TournamentNotes.TooLong"
+      Then "Subtitle" is refused with "TournamentSubtitle.TooLong"
 
     Scenario: A refused form keeps what was typed
       Given the new tournament page is open

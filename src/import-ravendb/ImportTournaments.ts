@@ -6,7 +6,7 @@ import type { Country } from "../domain/aggregates/tournaments/value-objects/Cou
 import { Sport } from "../domain/aggregates/tournaments/value-objects/Sport.js";
 import { TournamentFormat } from "../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import { TournamentName } from "../domain/aggregates/tournaments/value-objects/TournamentName.js";
-import { TournamentNotes } from "../domain/aggregates/tournaments/value-objects/TournamentNotes.js";
+import { TournamentSubtitle } from "../domain/aggregates/tournaments/value-objects/TournamentSubtitle.js";
 import { Slug } from "../domain/common/Slug.js";
 import { Website } from "../domain/common/Website.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
@@ -82,15 +82,16 @@ const countryOf = (timeZone: string | null): Country => {
   return country;
 };
 
-// The notes as the old sites showed them, which wrote "<" and ">" as "&lt;"
-// and "&gt;" and showed them as the characters. None where the document says
-// none, or leaves them out, as RavenDB left out a field never set.
-const notesOf = (
+// The subtitle the old sites' notes make, read as the old sites showed them,
+// which wrote "<" and ">" as "&lt;" and "&gt;" and showed them as the
+// characters. None where the document says none, or leaves them out, as
+// RavenDB left out a field never set.
+const subtitleOf = (
   notes: string | null | undefined,
-): TournamentNotes | undefined =>
+): TournamentSubtitle | undefined =>
   notes === null || notes === undefined
     ? undefined
-    : TournamentNotes.from(
+    : TournamentSubtitle.from(
         notes.replaceAll("&lt;", "<").replaceAll("&gt;", ">"),
       );
 
@@ -146,7 +147,7 @@ export class ImportTournaments implements Importer<OldTournament> {
           format,
           sport,
           country,
-          notes: notesOf(document.Notes),
+          subtitle: subtitleOf(document.Notes),
           // Nothing the old sites never said is claimed: none of them allowed
           // a drawn game, and none said the rest.
           handicap: false,

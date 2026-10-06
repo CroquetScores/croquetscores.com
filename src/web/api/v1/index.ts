@@ -169,9 +169,9 @@ const gamePlayerOf = (said: string): string | undefined =>
       : `competition-player/${said}`;
 
 // What a tournament is to be, as a form sends it to create one or to change
-// one. Notes left empty are no notes, and a region left empty is none.
+// one. A subtitle left empty is none, and so is a region left empty.
 const tournamentFrom = (body: unknown): TournamentRequest => {
-  const notes = textOf(body, "notes");
+  const subtitle = textOf(body, "subtitle");
   const region = textOf(body, "region");
   return {
     name: textOf(body, "name"),
@@ -181,7 +181,7 @@ const tournamentFrom = (body: unknown): TournamentRequest => {
     sport: textOf(body, "sport"),
     country: textOf(body, "country"),
     ...(region === "" ? {} : { region }),
-    ...(notes === "" ? {} : { notes }),
+    ...(subtitle === "" ? {} : { subtitle }),
     handicap: yesOrNoOf(body, "handicap"),
     drawsAllowed: yesOrNoOf(body, "drawsAllowed"),
     levelTestsDrawn: yesOrNoOf(body, "levelTestsDrawn"),

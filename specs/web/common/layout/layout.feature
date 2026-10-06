@@ -131,25 +131,26 @@ Feature: What every page is set in
       When the page at "/2026" is opened
       Then the header names no tournament
 
-  Rule: On a tournament's pages the tournament's notes are beneath its name in the header
+  Rule: On a tournament's pages the tournament's subtitle is beneath its name in the header
 
-    A tournament's notes are what its managers want every reader to know,
+    A tournament's subtitle is what its managers want every reader to know,
     whichever of its pages they are reading: where lunch is, when play
-    starts, a change to the draw. So on every page of a tournament with
-    notes, they are shown beneath its name in the header, on a strip of the
+    starts, a change to the draw. So on every page of a tournament with a
+    subtitle, it is shown beneath its name in the header, on a strip of the
     header's green. The strip is beneath the pinned bar rather than in it,
-    and scrolls away with the page, so that notes of several lines do not
-    take a phone's screen from what the page itself says once reading has
+    and scrolls away with the page, so that a subtitle of several lines does
+    not take a phone's screen from what the page itself says once reading has
     started.
 
-    Notes are written in Markdown (`TournamentNotes.feature`) and drawn from
-    it, so that a word made bold is bold and a link is a link. A web address
-    written out is a link too, as it is in a comment (`commentary.feature`).
-    A link in the notes is marked as one the site does not vouch for, as a
-    comment's is, since the notes are written by whoever manages the
-    tournament, not by the site. A line beginning with a number is the start
-    of a numbered list, as Markdown has it: a comment's numbered turns are a
-    commentary's own. A tournament with no notes has no strip.
+    A subtitle is written in Markdown (`TournamentSubtitle.feature`) and drawn
+    from it, so that a word made bold is bold and a link is a link. A web
+    address written out is a link too, as it is in a comment
+    (`commentary.feature`). A link in the subtitle is marked as one the site
+    does not vouch for, as a comment's is, since the subtitle is written by
+    whoever manages the tournament, not by the site. A line beginning with a
+    number is the start of a numbered list, as Markdown has it: a comment's
+    numbered turns are a commentary's own. A tournament with no subtitle has
+    no strip.
 
     Background:
       Given a viewport 1200 pixels wide
@@ -161,10 +162,10 @@ Feature: What every page is set in
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
 
     @postgres
-    Scenario Outline: Every page of a tournament with notes shows them in the header
-      Given the tournament "Spring Open" has the notes "Lunch is at noon"
+    Scenario Outline: Every page of a tournament with a subtitle shows it in the header
+      Given the tournament "Spring Open" has the subtitle "Lunch is at noon"
       When the page at "<address>" is opened
-      Then the header shows the notes "Lunch is at noon"
+      Then the header shows the subtitle "Lunch is at noon"
 
       Examples:
         | address                                                 |
@@ -177,54 +178,54 @@ Feature: What every page is set in
         | /2026/ac/spring-open/commentaries                       |
 
     @postgres
-    Scenario: The notes are beneath the tournament named in the header
-      Given the tournament "Spring Open" has the notes "Lunch is at noon"
+    Scenario: The subtitle is beneath the tournament named in the header
+      Given the tournament "Spring Open" has the subtitle "Lunch is at noon"
       When the page at "/2026/ac/spring-open" is opened
-      Then the notes in the header are beneath the tournament named there
+      Then the subtitle in the header is beneath the tournament named there
 
     @postgres
-    Scenario: The notes scroll away with the page
+    Scenario: The subtitle scrolls away with the page
       Given a viewport 1200 pixels wide and 400 pixels high
-      And the tournament "Spring Open" has the notes "Lunch is at noon"
+      And the tournament "Spring Open" has the subtitle "Lunch is at noon"
       And the page at "/2026/ac/spring-open" is open
       When the page is scrolled to its bottom
-      Then the notes in the header are out of sight
+      Then the subtitle in the header is out of sight
 
     @postgres
-    Scenario: A word made bold in the notes is drawn bold
-      Given the tournament "Spring Open" has the notes "Lunch is at **noon**"
+    Scenario: A word made bold in the subtitle is drawn bold
+      Given the tournament "Spring Open" has the subtitle "Lunch is at **noon**"
       When the page at "/2026/ac/spring-open" is opened
-      Then the notes in the header draw "noon" bold
+      Then the subtitle in the header draws "noon" bold
 
     @postgres
-    Scenario: A link in the notes leads where it says
-      Given the tournament "Spring Open" has the notes "See [the draw](https://example.com/draw)"
+    Scenario: A link in the subtitle leads where it says
+      Given the tournament "Spring Open" has the subtitle "See [the draw](https://example.com/draw)"
       When the page at "/2026/ac/spring-open" is opened
-      Then the notes' link "the draw" leads to "https://example.com/draw"
+      Then the subtitle's link "the draw" leads to "https://example.com/draw"
 
     @postgres
-    Scenario: A web address written out in the notes is a link
-      Given the tournament "Spring Open" has the notes "Results at https://example.com/results"
+    Scenario: A web address written out in the subtitle is a link
+      Given the tournament "Spring Open" has the subtitle "Results at https://example.com/results"
       When the page at "/2026/ac/spring-open" is opened
-      Then the notes' link "https://example.com/results" leads to "https://example.com/results"
+      Then the subtitle's link "https://example.com/results" leads to "https://example.com/results"
 
     @postgres
-    Scenario: A link in the notes is one the site does not vouch for
-      Given the tournament "Spring Open" has the notes "See [the draw](https://example.com/draw)"
+    Scenario: A link in the subtitle is one the site does not vouch for
+      Given the tournament "Spring Open" has the subtitle "See [the draw](https://example.com/draw)"
       When the page at "/2026/ac/spring-open" is opened
-      Then the notes' link "the draw" is marked as not vouched for
+      Then the subtitle's link "the draw" is marked as not vouched for
 
     @postgres
-    Scenario: A line beginning with a number in the notes begins a numbered list
-      Given the tournament "Spring Open" has the notes:
+    Scenario: A line beginning with a number in the subtitle begins a numbered list
+      Given the tournament "Spring Open" has the subtitle:
         """
         1. Register
         2. Play
         """
       When the page at "/2026/ac/spring-open" is opened
-      Then the notes in the header are a numbered list of 2 items
+      Then the subtitle in the header is a numbered list of 2 items
 
     @postgres
-    Scenario: A tournament with no notes shows none in the header
+    Scenario: A tournament with no subtitle shows none in the header
       When the page at "/2026/ac/spring-open" is opened
-      Then the header shows no notes
+      Then the header shows no subtitle

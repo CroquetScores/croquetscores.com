@@ -45,7 +45,7 @@ export class PublicManagerNotesOfTournamentHandler extends QueryHandler<
     );
     return {
       name: tournament.name.toString(),
-      notes: tournament.notes?.markdown,
+      subtitle: tournament.subtitle?.markdown,
       address: tournament.address.toString(),
       playedByTeams: tournament.format.isTeamFormat,
       competitions: competitionsInUse(tournament),

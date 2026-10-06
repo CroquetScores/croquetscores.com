@@ -489,7 +489,7 @@ export const english: Language = {
     "admin.tournament.sport": "Sport",
     "admin.tournament.country": "Country",
     "admin.tournament.region": "Region",
-    "admin.tournament.notes": "Notes",
+    "admin.tournament.subtitle": "Subtitle",
     "admin.tournament.handicap": "Played with handicaps",
     "admin.tournament.drawsAllowed": "Allows drawn results",
     "admin.tournament.levelTestsDrawn": "Level tests are drawn",
@@ -907,7 +907,8 @@ export const english: Language = {
     "Tournament.StartsAfterNextYear":
       "A tournament cannot start after next year.",
     "CreateTournament.NoSuchCountry": "Choose the country.",
-    "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
+    "TournamentSubtitle.TooLong":
+      "A subtitle can be no longer than 2000 characters.",
     "Tournament.NotAManager":
       "Only a manager of this tournament can change it.",
     "Tournament.NotAManagerOrScorer":
