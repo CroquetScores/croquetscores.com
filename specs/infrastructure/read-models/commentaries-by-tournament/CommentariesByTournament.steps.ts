@@ -49,8 +49,12 @@ interface Scenario {
   readonly comments: Map<string, CommentId>;
   // How many events each stream holds, for the next append to expect.
   readonly versions: Map<string, number>;
-  // Which kind of stream a rebuild takes first, where the scenario says.
+  // Which kind of stream a rebuild takes first, where the scenario says, and
+  // whether it takes the commentaries' streams the latest started first.
   first: "account/" | undefined;
+  latestFirst: boolean;
+  // The commentaries' streams, in the order they were started.
+  readonly started: string[];
   found: readonly CommentaryListed[];
   changed: readonly CommentaryChanged[];
   foundAt: string | undefined;
@@ -119,6 +123,8 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
     comments: new Map(),
     versions: new Map(),
     first: undefined,
+    latestFirst: false,
+    started: [],
     found: [],
     changed: [],
     foundAt: undefined,
@@ -127,7 +133,16 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
   scenarios.set(this, scenario);
   rebuildsWith(this, () =>
     this.asARequest(async () => {
-      const events = await store.readAll();
+      const read = await store.readAll();
+      // The store reads them by their ids, which says nothing of when each
+      // was started, so the order a scenario names is put on them here.
+      const startedAt = (stream: string): number =>
+        scenario.started.indexOf(stream);
+      const events = scenario.latestFirst
+        ? [...read].sort(
+            (one, other) => startedAt(other.stream) - startedAt(one.stream),
+          )
+        : read;
       const isFirst = ({ stream }: StoredEvent): boolean =>
         scenario.first !== undefined && stream.startsWith(scenario.first);
       await readModel.rebuildFrom(
@@ -142,6 +157,37 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
   );
 });
 
+// The slug a commentary's start gives it, where nothing else has it.
+const slugOf = (title: string): string =>
+  title.toLowerCase().replaceAll(" ", "-");
+
+// That the commentary `title` is started, and known by that title to the
+// scenario from then on.
+const started = async (
+  world: SpecWorld,
+  title: string,
+  name: string,
+  writer: string,
+  slug: string,
+): Promise<void> => {
+  const id = CommentaryId.create();
+  const scenario = scenarioOf(world);
+  scenario.commentaries.set(title, id);
+  scenario.started.push(id.value);
+  await appended(
+    world,
+    id,
+    new CommentaryStarted(
+      tournamentCalled(world, name).value,
+      title,
+      slug,
+      writer,
+      AccountId.from(writer),
+      now(world),
+    ),
+  );
+};
+
 Given(
   "the commentary {string} is started on the tournament {string} by {string}",
   async function (
@@ -150,20 +196,16 @@ Given(
     name: string,
     writer: string,
   ) {
-    const id = CommentaryId.create();
-    scenarioOf(this).commentaries.set(title, id);
-    await appended(
-      this,
-      id,
-      new CommentaryStarted(
-        tournamentCalled(this, name).value,
-        title,
-        title.toLowerCase().replaceAll(" ", "-"),
-        writer,
-        AccountId.from(writer),
-        now(this),
-      ),
-    );
+    await started(this, title, name, writer, slugOf(title));
+  },
+);
+
+// A second commentary with a title another had, found at a slug of its own,
+// since the first keeps the slug it was found at when its title changes.
+Given(
+  "the commentary {string} is started again on the tournament {string}, found at {string}",
+  async function (this: SpecWorld, title: string, name: string, slug: string) {
+    await started(this, title, name, WRITER.value, slug);
   },
 );
 
@@ -233,6 +275,13 @@ Given(
       commentaryCalled(this, title),
       new CommentaryTitleChanged(to, WRITER, now(this)),
     );
+  },
+);
+
+Given(
+  "the commentaries' streams are to be rebuilt the latest started first",
+  function (this: SpecWorld) {
+    scenarioOf(this).latestFirst = true;
   },
 );
 

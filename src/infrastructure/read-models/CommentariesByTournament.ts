@@ -16,6 +16,17 @@ import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
+// A commentary's row as a rebuild works it out from its stream, before it is
+// written.
+interface Row {
+  readonly tournamentId: string;
+  title: string;
+  readonly slug: string;
+  readonly writerId: string;
+  readonly startedAt: Date;
+  changedAt: Date;
+}
+
 /**
  * A tournament's commentaries, kept in step with every append, with their
  * titles, slugs, writers and when each last changed, and never what their
@@ -37,17 +48,74 @@ export class CommentariesByTournament
   }
 
   /**
-   * The tables made again from `events`, every one there is. A commentary's
-   * row depends on its own stream, and whether its writer is forgotten on a
-   * table of its own, so the streams can come in any order, as long as each
-   * stream's own events come in the order they were kept.
+   * The tables made again from `events`, every one there is. The streams can
+   * come in any order, as long as each stream's own events come in the order
+   * they were kept, since the store keeps no order between them.
+   *
+   * Each commentary's row is worked out from its whole stream before any is
+   * written, rather than written event by event as `project` does. A title can
+   * pass from one commentary to another, and no two ever hold it at once; but
+   * written event by event, a stream taken before another could give a title
+   * to the second while the first still held it, and the table refuses that.
+   * Each as its stream leaves it, no two hold one title.
    */
   async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
-    await this.unitOfWork.connection().query(
+    const connection = this.unitOfWork.connection();
+    await connection.query(
       `truncate commentaries_by_tournament,
                   commentaries_by_tournament_forgotten`,
     );
-    for (const { stream, event } of events) await this.#project(stream, event);
+    const rows = new Map<string, Row>();
+    const forgotten = new Set<string>();
+    for (const { stream, event } of events) {
+      const row = rows.get(stream);
+      if (event instanceof CommentaryStarted) {
+        if (row !== undefined) continue;
+        const at = event.occurredAt.toDate();
+        rows.set(stream, {
+          tournamentId: event.tournamentId,
+          title: event.title,
+          slug: event.slug,
+          writerId: event.writer,
+          startedAt: at,
+          changedAt: at,
+        });
+      } else if (event instanceof CommentaryTitleChanged) {
+        if (row !== undefined) row.title = event.title;
+      } else if (
+        event instanceof CommentaryCommentAdded ||
+        event instanceof CommentaryCommentEdited
+      ) {
+        const at = event.occurredAt.toDate();
+        if (row !== undefined && at > row.changedAt) row.changedAt = at;
+      } else if (event instanceof AccountForgotten) {
+        forgotten.add(stream);
+      }
+    }
+    for (const [commentaryId, row] of rows) {
+      await connection.query(
+        `insert into commentaries_by_tournament
+                (commentary_id, tournament_id, title, slug, writer_id,
+                 started_at, changed_at)
+         values ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          commentaryId,
+          row.tournamentId,
+          row.title,
+          row.slug,
+          row.writerId,
+          row.startedAt,
+          row.changedAt,
+        ],
+      );
+    }
+    for (const accountId of forgotten) {
+      await connection.query(
+        `insert into commentaries_by_tournament_forgotten (account_id)
+         values ($1)`,
+        [accountId],
+      );
+    }
   }
 
   async of(tournament: TournamentId): Promise<readonly CommentaryChanged[]> {

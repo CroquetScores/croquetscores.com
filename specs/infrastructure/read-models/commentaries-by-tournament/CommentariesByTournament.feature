@@ -34,6 +34,13 @@ Feature: Finding a tournament's commentaries without reading them
   tournament's are not among them. The projection is safe to run twice, as
   rebuilding the read model does.
 
+  A rebuild takes the streams in no order but each stream's own, since the
+  store keeps no order between them. A title can pass from one commentary to
+  another, given up by the first and taken by the second, and no two hold it
+  at once; so a rebuild sets each commentary as its whole stream leaves it,
+  rather than as each event comes, which could give the title to the second
+  while the first still held it.
+
   Background:
     Given the commentaries by tournament read model
     And the moment "2026-09-26T10:00:00Z"
@@ -190,6 +197,25 @@ Feature: Finding a tournament's commentaries without reading them
       When the read model is rebuilt from the events
       And the commentaries of "Spring Open" are looked for
       Then no commentaries are found
+
+  Rule: A rebuild takes the streams in any order
+
+    Scenario: A title given up by one commentary and taken by another is rebuilt whichever comes first
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the title of "Day one" is changed to "Day 1"
+      And the commentary "Day one" is started again on the tournament "Spring Open", found at "day-one-01"
+      And the commentaries' streams are to be rebuilt the latest started first
+      When the read model is rebuilt from the events
+      Then it is rebuilt without failing
+
+    Scenario: A title given up by one commentary and taken by another is found where it went
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the title of "Day one" is changed to "Day 1"
+      And the commentary "Day one" is started again on the tournament "Spring Open", found at "day-one-01"
+      And the commentaries' streams are to be rebuilt the latest started first
+      When the read model is rebuilt from the events
+      And the commentaries of "Spring Open" are looked for
+      Then the commentary "Day one" found is at "day-one-01"
 
   Rule: Projecting the same events again changes nothing
 
