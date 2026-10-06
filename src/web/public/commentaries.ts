@@ -7,7 +7,9 @@
 // not found what they want looks next. It is a link drawn as a button, so it
 // needs no scripting, and it is offered to anybody, since a reader not signed
 // in is asked to sign in where it leads. Where those words name croquetscores.com they name
-// the website being read. The tournament is named in the bar beneath the
+// the website being read. A commentary the reader has not read as it is now is
+// marked with a red asterisk, as the Commentary section is on every page of the
+// tournament while there is one (tournamentPages.ts). The tournament is named in the bar beneath the
 // site's name, and its sections are the tournament's, with Commentary marked.
 import type { FastifyInstance } from "fastify";
 
@@ -16,12 +18,12 @@ import { TournamentOperationRefused } from "../../application/operations/tournam
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import { speakingOf } from "../common/language.js";
-import { render } from "../common/layout.js";
+import { newMark, render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
-import { notesReadOf } from "./notesRead.js";
+import { hasRead, readsOf } from "./read.js";
 import { sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -82,6 +84,7 @@ export const registerCommentariesPage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
+      const reads = readsOf(request);
       const site = website.host;
       const report = `mailto:${REPORT_TO}?subject=${encodeURIComponent(say("commentaries.reporting.subject", { site }))}&body=${encodeURIComponent(say("commentaries.reporting.body"))}`;
       // As the old site listed them, a list that is empty where there are
@@ -90,7 +93,7 @@ export const registerCommentariesPage = (
 ${asked.commentaries
   .map(
     (commentary) =>
-      `            <li class="commentary-listed"><a href="/${escape(commentary.address)}"><span class="commentary-listed-title">${escape(commentary.title)}</span> ${escape(say("commentaries.by"))} <span class="commentary-listed-writer">${escape(commentary.writer)}</span></a></li>`,
+      `            <li class="commentary-listed"><a href="/${escape(commentary.address)}"><span class="commentary-listed-title">${escape(commentary.title)}</span> ${escape(say("commentaries.by"))} <span class="commentary-listed-writer">${escape(commentary.writer)}</span></a>${hasRead(reads.commentaries, commentary) ? "" : newMark(speaking)}</li>`,
   )
   .join("\n")}
           </ul>`;
@@ -105,7 +108,7 @@ ${asked.commentaries
             notes: asked.notes,
           },
           title: `${say("tournament.commentary")} - ${asked.name}`,
-          sections: sectionsOf(asked, speaking, notesReadOf(request)),
+          sections: sectionsOf(asked, speaking, reads),
           currentSection: `/${asked.address}/commentaries`,
           theme: themeOf(request),
           signedIn: signedIn(request),

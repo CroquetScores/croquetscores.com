@@ -40,7 +40,7 @@ const asterisk =
  * shape are not read out, so it is said to a screen reader in words.
  */
 export const newMark = (speaking: Speaking): string =>
-  `<span class="new-mark">${asterisk}<span class="visually-hidden">${escape(speaking.say("notes.new"))}</span></span>`;
+  `<span class="new-mark">${asterisk}<span class="visually-hidden">${escape(speaking.say("marks.new"))}</span></span>`;
 
 export interface Shell {
   /** The <title>, which is not always what the header shows. */

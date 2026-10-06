@@ -33,6 +33,9 @@ interface Scenario {
   // Each note by the title it was added with, edited or not.
   readonly byTitle: Map<string, ManagerNoteId>;
   found: readonly ManagerNoteHeading[];
+  // The note found at a slug, by its id, or nothing where none was.
+  foundAt: string | undefined;
+  slugs: readonly string[];
 }
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
@@ -82,6 +85,8 @@ Given("the manager notes by tournament read model", function (this: SpecWorld) {
     tournaments: new Map(),
     byTitle: new Map(),
     found: [],
+    foundAt: undefined,
+    slugs: [],
   });
   rebuildsWith(this, () =>
     this.asARequest(async () => readModel.rebuildFrom(await store.readAll())),
@@ -96,13 +101,14 @@ const add = async (
 ): Promise<void> => {
   const scenario = scenarioOf(world);
   const tournament = tournamentCalled(world, name);
-  await world.asARequest(() =>
+  await world.asARequest(async () =>
     scenario.notes.save(
       ManagerNote.add(
         id,
         tournament,
         ManagerNoteTitle.from(title),
         ManagerNoteDescription.from(""),
+        await scenario.readModel.slugsTakenIn(tournament),
         WRITER,
         now(world),
       ),
@@ -227,6 +233,58 @@ Then(
     );
   },
 );
+
+Then(
+  /^the (first|second) manager note found is found at "(.*)"$/,
+  function (this: SpecWorld, which: string, slug: string) {
+    assert.equal(foundAt(this, which).slug, slug);
+  },
+);
+
+When(
+  "the manager note of {string} at {string} is looked for",
+  async function (this: SpecWorld, name: string, slug: string) {
+    const scenario = scenarioOf(this);
+    scenario.foundAt = await this.asARequest(() =>
+      scenario.readModel.noteAt(tournamentCalled(this, name), slug),
+    );
+  },
+);
+
+Then(
+  "the manager note {string} is found there",
+  function (this: SpecWorld, title: string) {
+    assert.equal(scenarioOf(this).foundAt, noteTitled(this, title).value);
+  },
+);
+
+Then("no manager note is found there", function (this: SpecWorld) {
+  assert.equal(scenarioOf(this).foundAt, undefined);
+});
+
+When(
+  "the slugs taken by the notes of {string} are looked for",
+  async function (this: SpecWorld, name: string) {
+    const scenario = scenarioOf(this);
+    scenario.slugs = await this.asARequest(() =>
+      scenario.readModel.slugsTakenIn(tournamentCalled(this, name)),
+    );
+  },
+);
+
+Then(
+  "{string} is among the slugs taken",
+  function (this: SpecWorld, slug: string) {
+    assert.ok(
+      scenarioOf(this).slugs.includes(slug),
+      `The slugs taken are ${inspect(scenarioOf(this).slugs)}.`,
+    );
+  },
+);
+
+Then("no slugs are taken", function (this: SpecWorld) {
+  assert.deepEqual(scenarioOf(this).slugs, []);
+});
 
 Then("no manager notes are found", function (this: SpecWorld) {
   assert.deepEqual(scenarioOf(this).found, []);

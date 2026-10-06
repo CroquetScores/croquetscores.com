@@ -8,9 +8,11 @@ Feature: What a manager's note is called
 
   A title is between 1 and 100 characters, counted as a reader counts them,
   as a commentary's title is (`CommentaryTitle.feature`), so that it fits a
-  line of the list on a phone. Unlike a commentary's, a note's title makes
-  no slug: a note is found by its id, so a title with no letter or digit in
-  it, as "???", is a title like any other.
+  line of the list on a phone. A note is found at a slug made from its title
+  (`add.feature`), and a title with no letter or digit in it, as "???",
+  makes none (`Slug.feature`), so such a title is refused, as a commentary's
+  is. It is asked of the slug itself rather than of the title, since a slug
+  takes accents off.
 
   Whitespace at either end is taken off, and the title kept without it, so
   that a title of nothing but spaces is missing.
@@ -25,9 +27,6 @@ Feature: What a manager's note is called
       When the manager note title "Lunch <b>moved</b>" is made
       Then the manager note title is written "Lunch <b>moved</b>"
 
-    Scenario: A title with no letter or digit is kept
-      When the manager note title "???" is made
-      Then the manager note title is written "???"
 
   Rule: A title is between 1 and 100 characters
 
@@ -47,6 +46,16 @@ Feature: What a manager's note is called
     Scenario: No title at all is refused
       When the manager note title "" is made
       Then it is refused for breaking "ManagerNoteTitle.Missing"
+
+  Rule: A title has a letter or a digit in it
+
+    Scenario: A title with no letter or digit is refused
+      When the manager note title "???" is made
+      Then it is refused for breaking "ManagerNoteTitle.NoLetterOrDigit"
+
+    Scenario: A title of a letter with an accent is accepted
+      When the manager note title "É" is made
+      Then it is not refused
 
   Rule: Characters are counted as a reader counts them
 

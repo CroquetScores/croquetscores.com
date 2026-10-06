@@ -15,7 +15,8 @@ import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 /**
  * The notes of each tournament, kept in step with every append, with their
- * titles and when each was written and last changed, and never what they say
+ * titles, their slugs and when each was written and last changed, and never
+ * what they say
  * (ManagerNotesByTournament.feature): a description may be 750,000
  * characters, and every page of a tournament asks this.
  */
@@ -48,21 +49,47 @@ export class ManagerNotesByTournament
     const { rows } = await this.unitOfWork.connection().query<{
       note_id: string;
       title: string;
+      slug: string;
       written_at: Date;
       changed_at: Date;
     }>(
-      `select note_id, title, written_at, changed_at
+      `select note_id, title, slug, written_at, changed_at
          from manager_notes_by_tournament
-        where tournament_id = $1
+        where tournament_id = $1 and not deleted
         order by written_at desc, made desc`,
       [tournament.value],
     );
     return rows.map((row) => ({
       id: row.note_id,
       title: row.title,
+      slug: row.slug,
       writtenAt: ReadOnlyDate.from(row.written_at),
       changedAt: ReadOnlyDate.from(row.changed_at),
     }));
+  }
+
+  async noteAt(
+    tournament: TournamentId,
+    slug: string,
+  ): Promise<string | undefined> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ note_id: string }>(
+        `select note_id from manager_notes_by_tournament
+          where tournament_id = $1 and slug = $2 and not deleted`,
+        [tournament.value, slug],
+      );
+    return rows[0]?.note_id;
+  }
+
+  async slugsTakenIn(tournament: TournamentId): Promise<readonly string[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ slug: string }>(
+        `select slug from manager_notes_by_tournament where tournament_id = $1`,
+        [tournament.value],
+      );
+    return rows.map(({ slug }) => slug);
   }
 
   // Each event's part, safe to run twice: a note added again is the row it
@@ -73,10 +100,10 @@ export class ManagerNotesByTournament
       const at = event.occurredAt.toDate();
       await connection.query(
         `insert into manager_notes_by_tournament
-                (note_id, tournament_id, title, written_at, changed_at)
-         values ($1, $2, $3, $4, $4)
+                (note_id, tournament_id, title, slug, written_at, changed_at)
+         values ($1, $2, $3, $4, $5, $5)
          on conflict (note_id) do nothing`,
-        [stream, event.tournamentId, event.title, at],
+        [stream, event.tournamentId, event.title, event.slug, at],
       );
     } else if (event instanceof ManagerNoteEdited) {
       await connection.query(
@@ -86,8 +113,10 @@ export class ManagerNotesByTournament
         [stream, event.title, event.occurredAt.toDate()],
       );
     } else if (event instanceof ManagerNoteDeleted) {
+      // Kept, marked, so that its slug stays taken.
       await connection.query(
-        `delete from manager_notes_by_tournament where note_id = $1`,
+        `update manager_notes_by_tournament set deleted = true
+          where note_id = $1`,
         [stream],
       );
     }

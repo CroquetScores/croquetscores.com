@@ -375,10 +375,11 @@ export const english: Language = {
     "startCommentary.title": "Start new commentary",
     "startCommentary.titleField": "Title",
     "startCommentary.submit": "Start commentary",
-    // A tournament's Notes page, and a note's own page. "New" is said to a
-    // screen reader in place of the red asterisk that marks a note not read.
+    // "New" is said to a screen reader in place of the red asterisk that marks
+    // a note or a commentary not read as it is now.
+    "marks.new": "new",
+    // A tournament's Notes page, and a note's own page.
     "notes.none": "The managers have written no notes yet.",
-    "notes.new": "new",
     "note.edited": "edited",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

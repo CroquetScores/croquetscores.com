@@ -21,7 +21,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
-import { notesReadOf } from "./notesRead.js";
+import { readsOf } from "./read.js";
 import { gameShown, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -76,7 +76,7 @@ export const registerTournamentPage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const sections = sectionsOf(asked, speaking, notesReadOf(request));
+      const sections = sectionsOf(asked, speaking, readsOf(request));
       const now = request.requestedAt.toDate();
       const games =
         asked.games.length === 0

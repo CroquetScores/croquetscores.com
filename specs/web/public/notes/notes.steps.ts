@@ -2,8 +2,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { english } from "../../../../src/web/languages/english.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { colourOf, dangerOn, wordsFor } from "../../support/newMarks.js";
 import {
   inHandOf,
   load,
@@ -31,35 +31,6 @@ const noteListed = (world: SpecWorld, title: string): Locator =>
 const titleOf = async (note: Locator): Promise<string> =>
   (await note.locator(".note-listed-title").innerText()).trim();
 
-// What reads a mark for what it is reads the page's own idea of red: an
-// element coloured with the palette's --danger, put on the page and asked its
-// colour, so that the step does not have to know the palette.
-const dangerOn = (world: SpecWorld): Promise<string> =>
-  world.browserPage.evaluate(`(() => {
-    const probe = document.createElement("span");
-    probe.style.color = "var(--danger)";
-    document.body.append(probe);
-    const colour = getComputedStyle(probe).color;
-    probe.remove();
-    return colour;
-  })()`);
-
-const colourOf = (mark: Locator): Promise<string> =>
-  mark.evaluate(
-    (element: unknown) =>
-      (
-        globalThis as unknown as {
-          getComputedStyle(element: unknown): { color: string };
-        }
-      ).getComputedStyle(element).color,
-  );
-
-const wordsFor = (key: string): string => {
-  const said = english.words[key];
-  assert.ok(said !== undefined, `English has no words for ${key}.`);
-  return said;
-};
-
 When(
   "the page at {string} is opened with scripting off",
   async function (this: SpecWorld, path: string) {
@@ -68,8 +39,8 @@ When(
 );
 
 // Read by opening its page, which is what reading it is, in this browser.
-// Found by its title among the scenario's tournaments, since a note's page is
-// found by its id, which the scenario never knew.
+// Found by its title among the scenario's tournaments, which the scenario
+// names it by.
 Given(
   "the reader has read the note {string}",
   async function (this: SpecWorld, title: string) {
@@ -80,7 +51,7 @@ Given(
       if (note === undefined) continue;
       const tournament = await load(this, id);
       await this.browserPage.goto(
-        `${this.baseUrl!}/${tournament.address.toString()}/notes/${note.id.slice(note.id.indexOf("/") + 1)}`,
+        `${this.baseUrl!}/${tournament.address.toString()}/notes/${note.slug}`,
       );
       return;
     }

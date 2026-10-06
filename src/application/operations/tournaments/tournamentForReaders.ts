@@ -148,10 +148,35 @@ export const managerNotesChangedOf = async (
   }));
 
 /**
- * Where the page of the note `id` of `tournament` is found: the tournament's
- * address followed by "notes" and the part of the id after "manager-note/", as
- * "2026/ac/spring-open/notes/0d1e2f3a-…". By its id rather than a slug, since
- * its title can be changed and its address must not change with it.
+ * Where the page of the note found at `slug` among the notes of `tournament`
+ * is found: the tournament's address followed by "notes" and the slug, as
+ * "2026/ac/spring-open/notes/lunch-is-at-noon".
  */
-export const noteAddressIn = (tournament: Tournament, id: string): string =>
-  `${tournament.address.toString()}/notes/${id.slice(id.indexOf("/") + 1)}`;
+export const noteAddressIn = (tournament: Tournament, slug: string): string =>
+  `${tournament.address.toString()}/notes/${slug}`;
+
+/**
+ * One of a tournament's commentaries as every page of the tournament knows
+ * it: enough to tell whether a reader has read it as it is now, so that the
+ * page can mark the Commentary section while one is still to be read
+ * (commentaries.feature).
+ */
+export interface CommentaryChanged {
+  /** The commentary's id, as "commentary/0d1e2f3a-…". */
+  readonly id: string;
+  /**
+   * When it was started, or when a comment was last added to it or edited in
+   * it.
+   */
+  readonly changedAt: ReadOnlyDate;
+}
+
+/**
+ * The commentaries of each tournament with when each last changed, without
+ * reading any comment (CommentariesByTournament.feature). A commentary whose
+ * writer has been forgotten is left out, since a reader is shown nothing of
+ * it.
+ */
+export interface TournamentCommentaries {
+  of(tournament: TournamentId): Promise<readonly CommentaryChanged[]>;
+}

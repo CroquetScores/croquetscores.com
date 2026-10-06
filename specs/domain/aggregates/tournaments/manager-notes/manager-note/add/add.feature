@@ -20,6 +20,17 @@ Feature: Adding a manager's note
   whatever adds a note has asked it first. The note knows only which
   tournament it is of, what it says, and when it was written.
 
+  A note is found within its tournament by a slug made from its title, as
+  "2026/ac/spring-open/notes/lunch-is-at-noon". Two titles that are not the
+  same can make the same slug, and two notes may even have the same title,
+  so a slug another note of the tournament has, deleted or not, is followed
+  by "-01", then "-02", up to "-99", as a commentary's is
+  (`startCommentary.feature`), and should all of them be taken, by the note
+  id's own characters. A deleted note's slug stays taken, so that a link
+  kept to it never leads to another note. The note is told which slugs its
+  tournament's other notes have by whatever adds it, which has them from the
+  read model of the tournament's notes (`ManagerNotesByTournament.feature`).
+
   The note's id is given it by whatever adds it, and names its stream.
   Adding it is its first event.
 
@@ -72,6 +83,27 @@ Feature: Adding a manager's note
       Given a stream where the manager note "Lunch" was added saying "In the **clubhouse**"
       When the manager note is rebuilt from its stream
       Then the manager note says "In the **clubhouse**"
+
+  Rule: A note is found at a slug of its title that no other note of the tournament has
+
+    Scenario: A note's slug is made from its title
+      When the manager note "Lunch is at noon" is added
+      Then the manager note is found at "lunch-is-at-noon"
+
+    Scenario: A slug another note has is followed by "-01"
+      Given the tournament's other notes are found at "lunch"
+      When the manager note "Lunch" is added
+      Then the manager note is found at "lunch-01"
+
+    Scenario: The next slug nobody has is the new note's
+      Given the tournament's other notes are found at "lunch" and "lunch-01"
+      When the manager note "Lunch" is added
+      Then the manager note is found at "lunch-02"
+
+    Scenario: A note rebuilt from its stream is found where it was added
+      Given a stream where the manager note "Lunch is at noon" was added
+      When the manager note is rebuilt from its stream
+      Then the manager note is found at "lunch-is-at-noon"
 
   Rule: A note's title and description are asked what any are asked
 

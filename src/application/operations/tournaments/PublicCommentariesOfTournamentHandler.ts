@@ -15,6 +15,7 @@ import {
   competitionsInUse,
   tournamentForReaders,
   managerNotesChangedOf,
+  type TournamentCommentaries,
 } from "./tournamentForReaders.js";
 import { namesOf, type TournamentAddresses } from "./tournamentOperations.js";
 
@@ -30,6 +31,7 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly addresses: TournamentAddresses,
     private readonly notes: TournamentManagerNotes,
+    private readonly changes: TournamentCommentaries,
   ) {
     super();
   }
@@ -55,10 +57,16 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
         )
       ).map(({ id, name }) => [id.value, name]),
     );
+    // From the read model of its commentaries, which reads no comment.
+    const changed = await this.changes.of(tournament.id);
+    const changedAt = new Map(
+      changed.map(({ id, changedAt }) => [id, changedAt]),
+    );
     return {
       id: tournament.id.value,
       name: tournament.name.toString(),
       notes: tournament.notes?.markdown,
+      commentariesChanged: changed,
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       playedByTeams: tournament.format.isTeamFormat,
@@ -66,7 +74,8 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
       commentaries: tournament.commentaries
         .flatMap((commentary) => {
           const writer = writers.get(commentary.writer.value);
-          return writer === undefined
+          const at = changedAt.get(commentary.id.value);
+          return writer === undefined || at === undefined
             ? []
             : [
                 {
@@ -74,6 +83,7 @@ export class PublicCommentariesOfTournamentHandler extends QueryHandler<
                   title: commentary.title.toString(),
                   writer,
                   address: `${address}/commentaries/${commentary.slug.toString()}`,
+                  changedAt: at,
                 },
               ];
         })

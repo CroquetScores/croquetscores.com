@@ -4,6 +4,7 @@ import { Query } from "../../common/Query.js";
 import type {
   CompetitionOfTournament,
   ManagerNoteChanged,
+  CommentaryChanged,
 } from "./tournamentForReaders.js";
 
 /** Every reason asking for one of a tournament's notes can be refused where it is asked. */
@@ -23,11 +24,16 @@ export interface TournamentManagerNoteToRead {
   readonly competitions: readonly CompetitionOfTournament[];
   /** Every one of its notes, for its section bar, the most recently written first. */
   readonly managerNotes: readonly ManagerNoteChanged[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
   readonly managerNote: ManagerNoteChanged & {
     readonly title: string;
     /** What it says beneath its title, in Markdown, or nothing. */
     readonly description: string | undefined;
-    /** Where its page is found, as "2026/ac/spring-open/notes/0d1e2f3a-…". */
+    /** Where its page is found, as "2026/ac/spring-open/notes/lunch-is-at-noon". */
     readonly address: string;
     readonly writtenAt: ReadOnlyDate;
     /** When it was last edited, or nothing when it never has been. */
@@ -37,11 +43,11 @@ export interface TournamentManagerNoteToRead {
 
 /**
  * The note `note` of the tournament of the website being read found at
- * `address`, now or before, as its page shows it, by the part of its id after
- * "manager-note/". For anybody, so it names nobody.
+ * `address`, now or before, as its page shows it, by its slug. For anybody, so
+ * it names nobody.
  *
- * A note the tournament does not have, or has deleted, or anything that is no
- * note's id at all, is refused as
+ * A slug no note of the tournament is found at, a deleted note's among them,
+ * is refused as
  * `PublicManagerNoteOfTournament.NoSuchManagerNote`. An address no tournament
  * of the website has been found at is refused as
  * `PublicManagerNoteOfTournament.NoSuchTournament`, and so is an archived
@@ -52,7 +58,7 @@ export class PublicManagerNoteOfTournament extends Query<TournamentManagerNoteTo
     readonly website: string,
     /** Where the tournament is found, as "2026/ac/spring-open". */
     readonly address: string,
-    /** The part of the note's id after "manager-note/". */
+    /** The note's slug, as "lunch-is-at-noon". */
     readonly note: string,
   ) {
     super();

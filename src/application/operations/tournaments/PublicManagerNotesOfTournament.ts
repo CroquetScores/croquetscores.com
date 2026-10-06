@@ -4,6 +4,7 @@ import { Query } from "../../common/Query.js";
 import type {
   CompetitionOfTournament,
   ManagerNoteChanged,
+  CommentaryChanged,
 } from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's notes can be refused where it is asked. */
@@ -13,7 +14,7 @@ export type PublicManagerNotesOfTournamentRefusedCode =
 /** A note as a tournament's Notes page lists it and leads to it. */
 export interface PublicManagerNoteListed extends ManagerNoteChanged {
   readonly title: string;
-  /** Where its page is found, as "2026/ac/spring-open/notes/0d1e2f3a-…". */
+  /** Where its page is found, as "2026/ac/spring-open/notes/lunch-is-at-noon". */
   readonly address: string;
   readonly writtenAt: ReadOnlyDate;
 }
@@ -31,6 +32,11 @@ export interface TournamentManagerNotesToRead {
   readonly competitions: readonly CompetitionOfTournament[];
   /** Every note its managers wrote, the most recently written first. */
   readonly managerNotes: readonly PublicManagerNoteListed[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
 }
 
 /**

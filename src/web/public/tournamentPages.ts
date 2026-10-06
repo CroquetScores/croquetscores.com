@@ -3,6 +3,7 @@
 // section bar, how a player is shown, and how a game is.
 import type { PlayerInGame } from "../../application/operations/tournaments/GamesOfTournament.js";
 import type {
+  CommentaryChanged,
   CompetitionOfTournament,
   ManagerNoteChanged,
 } from "../../application/operations/tournaments/tournamentForReaders.js";
@@ -12,7 +13,7 @@ import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import type { Section } from "../common/layout.js";
-import { anyUnread, type NotesRead } from "./notesRead.js";
+import { anyUnread, type Reads } from "./read.js";
 
 /**
  * The tournament's sections, by the address it is found at now: Recent, which
@@ -21,8 +22,9 @@ import { anyUnread, type NotesRead } from "./notesRead.js";
  * Summary after Recent, the place its teams' standing will be shown, and its
  * competitions its tests, each said as its teams' short names with "vs"
  * between, as "AUS vs ENG", in the reader's language. Notes is marked as new
- * while the tournament has a note the reader has not read as it is now, so
- * that a reader on any of its pages sees there is news (notes.feature).
+ * while the tournament has a note the reader has not read as it is now, and
+ * Commentary while it has such a commentary, so that a reader on any of its
+ * pages sees there is news (notes.feature, commentaries.feature).
  */
 export const sectionsOf = (
   tournament: {
@@ -30,9 +32,10 @@ export const sectionsOf = (
     readonly playedByTeams: boolean;
     readonly competitions: readonly CompetitionOfTournament[];
     readonly managerNotes: readonly ManagerNoteChanged[];
+    readonly commentariesChanged: readonly CommentaryChanged[];
   },
   speaking: Speaking,
-  read: NotesRead,
+  read: Reads,
 ): readonly Section[] => {
   const { say } = speaking;
   const here = `/${tournament.address}`;
@@ -45,9 +48,13 @@ export const sectionsOf = (
     {
       href: `${here}/notes`,
       label: say("tournament.notes"),
-      isNew: anyUnread(read, tournament.managerNotes),
+      isNew: anyUnread(read.notes, tournament.managerNotes),
     },
-    { href: `${here}/commentaries`, label: say("tournament.commentary") },
+    {
+      href: `${here}/commentaries`,
+      label: say("tournament.commentary"),
+      isNew: anyUnread(read.commentaries, tournament.commentariesChanged),
+    },
     ...tournament.competitions.map((competition) => ({
       href: `/${competition.address}`,
       label: competitionNamed(competition, speaking),

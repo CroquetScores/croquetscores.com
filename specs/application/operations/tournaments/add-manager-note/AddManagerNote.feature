@@ -14,7 +14,10 @@ Feature: Adding a manager's note to a tournament
   The note's title and description are asked their own rules on the way in
   (`ManagerNoteTitle.feature`, `ManagerNoteDescription.feature`), and a
   request that breaks one is refused with `Request.Invalid` and the first
-  rule it breaks. A description left empty is no description. That the
+  rule it breaks. A description left empty is no description. The note is
+  found at a slug of its title that no other note of the tournament has,
+  deleted or not (`add.feature`), which the read model of the tournament's
+  notes says (`ManagerNotesByTournament.feature`). That the
   tournament is not archived is the tournament's to refuse.
 
   A forgotten account adds nothing, and is refused with `Account.Forgotten`.
@@ -52,12 +55,40 @@ Feature: Adding a manager's note to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the manager note "Lunch is at noon" to "Spring Open"
       Then the manager note "Lunch is at noon" of "Spring Open" was added by the account for "organiser@example.com"
 
+  Rule: A note is found at a slug of its title that no other note of the tournament has
+
+    Scenario: The note is found at a slug of its title
+      When the reader signed in to the account for "organiser@example.com" adds the manager note "Lunch is at noon" to "Spring Open"
+      Then the manager note "Lunch is at noon" of "Spring Open" is found at "lunch-is-at-noon"
+
+    Scenario: A slug another note has is followed by "-01"
+      Given "organiser@example.com" has added the manager note "Lunch" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the manager note "Lunch!" to "Spring Open"
+      Then the manager note "Lunch!" of "Spring Open" is found at "lunch-01"
+
+    Scenario: A deleted note's slug is not given again
+      Given "organiser@example.com" has added the manager note "Lunch" to "Spring Open"
+      And "organiser@example.com" has deleted the manager note "Lunch" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the manager note "Lunch!" to "Spring Open"
+      Then the manager note "Lunch!" of "Spring Open" is found at "lunch-01"
+
+    Scenario: A slug another tournament's note has is not taken
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the manager note "Lunch" to "Autumn Open"
+      When the reader signed in to the account for "organiser@example.com" adds the manager note "Lunch" to "Spring Open"
+      Then the manager note "Lunch" of "Spring Open" is found at "lunch"
+
   Rule: Each value must break none of its own rules
 
     Scenario: A missing title is refused
       When the reader signed in to the account for "organiser@example.com" adds the manager note "" to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "ManagerNoteTitle.Missing"
+
+    Scenario: A title with no letter or digit is refused
+      When the reader signed in to the account for "organiser@example.com" adds the manager note "???" to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "ManagerNoteTitle.NoLetterOrDigit"
 
     Scenario: A description too long is refused
       Given the manager note is to say 750001 characters

@@ -33,6 +33,7 @@ export const nameManagerNoteEvents = (registry: EventRegistry): EventRegistry =>
           text(said, "tournamentId"),
           text(said, "title"),
           text(said, "description"),
+          text(said, "slug"),
           createdBy,
           occurredAt,
         ),

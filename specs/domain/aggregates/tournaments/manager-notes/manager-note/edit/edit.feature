@@ -46,6 +46,18 @@ Feature: Editing a manager's note
       When the manager note is rebuilt from its stream
       Then the manager note says "At one"
 
+  Rule: An edited note keeps its slug
+
+    A note's slug is made when it is added, and is not made again when its
+    title is edited, so that every link to it still finds it, as a
+    commentary keeps its slug when its title is changed
+    (`changeCommentaryTitle.feature`).
+
+    Scenario: An edited note is found where it was before
+      Given the manager note is rebuilt from its stream
+      When the manager note is edited to "Lunch moved" saying "At noon"
+      Then the manager note is found at "lunch"
+
   Rule: An edited note keeps when it was written, and was last edited when it was edited
 
     Scenario: An edited note keeps when it was written

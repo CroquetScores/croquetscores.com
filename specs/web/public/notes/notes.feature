@@ -71,9 +71,9 @@ Feature: A tournament's Notes page lists its managers' notes
       And the second note is "Lunch is at noon"
 
     Scenario: A note leads to its own page
-      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open" as "manager-note/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a"
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the page at "/2026/ac/spring-open/notes" is opened
-      Then "Lunch is at noon" leads to "/2026/ac/spring-open/notes/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a"
+      Then "Lunch is at noon" leads to "/2026/ac/spring-open/notes/lunch-is-at-noon"
 
     Scenario: A note is listed with how long ago it was written
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
@@ -101,7 +101,7 @@ Feature: A tournament's Notes page lists its managers' notes
     Scenario: The mark is said to a screen reader as the word new
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the page at "/2026/ac/spring-open/notes" is opened
-      Then the mark on the note "Lunch is at noon" is said as the words for "notes.new"
+      Then the mark on the note "Lunch is at noon" is said as the words for "marks.new"
 
     Scenario: A note the reader has read is not marked
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
@@ -157,7 +157,7 @@ Feature: A tournament's Notes page lists its managers' notes
     Scenario: The section's mark is said to a screen reader as the word new
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the page at "/2026/ac/spring-open" is opened
-      Then the mark on the section "Notes" is said as the words for "notes.new"
+      Then the mark on the section "Notes" is said as the words for "marks.new"
 
     Scenario: A tournament with no notes does not mark the section
       When the page at "/2026/ac/spring-open" is opened

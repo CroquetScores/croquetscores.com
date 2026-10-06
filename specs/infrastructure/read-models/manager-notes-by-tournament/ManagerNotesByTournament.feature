@@ -10,19 +10,25 @@ Feature: Finding a tournament's notes without reading what they say
   notes' streams without reading every description. A read model keeps what
   they need instead: a table of notes by tournament, kept by a projection as
   notes are added, edited and deleted, holding each note's id, its
-  tournament, its title, when it was written and when it last changed. It
+  tournament, its title, its slug, when it was written and when it last
+  changed. It
   holds no description: a description is read from the note's own stream,
   and only when a reader reads that note (`note.feature`).
 
   When a note last changed is when it was last edited, or when it was
   written if it never has been. An edit changes its title and when it last
-  changed, and not when it was written. A note deleted is gone from the
-  read model, as it is from everywhere a reader looks.
+  changed, and not when it was written or its slug. A note deleted is not
+  found among the tournament's notes, nor at its slug, as it is gone from
+  everywhere a reader looks; but its slug stays taken, so that a note added
+  after it is never found where it was (`add.feature`), and so it is kept
+  for that.
 
   The read model is asked for a tournament's notes, and answers them the
   most recently written first, as every page lists them. A tournament with
   no notes is answered with none, and another tournament's notes are not
-  among them.
+  among them. It is asked which note of a tournament is found at a slug, as
+  a note's page is found by its address, and which slugs a tournament's
+  notes have taken.
 
   The projection is safe to run twice, as rebuilding the read model does.
 
@@ -71,6 +77,50 @@ Feature: Finding a tournament's notes without reading what they say
       When the manager notes of "Spring Open" are looked for
       Then the first manager note found last changed at "2026-09-26T10:00:00Z"
 
+  Rule: A note is found at its slug, and a deleted note's slug stays taken
+
+    Scenario: A note is found with its slug
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager notes of "Spring Open" are looked for
+      Then the first manager note found is found at "lunch-is-at-noon"
+
+    Scenario: The note at a slug is found
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is looked for
+      Then the manager note "Lunch is at noon" is found there
+
+    Scenario: No note is found at a slug no note has
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the manager note of "Spring Open" at "tea" is looked for
+      Then no manager note is found there
+
+    Scenario: Another tournament's note is not found at its slug
+      Given the manager note "Lunch is at noon" is added to the tournament "Autumn Open"
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is looked for
+      Then no manager note is found there
+
+    Scenario: No note is found at a deleted note's slug
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the manager note "Lunch is at noon" is deleted
+      When the manager note of "Spring Open" at "lunch-is-at-noon" is looked for
+      Then no manager note is found there
+
+    Scenario: A note's slug is taken
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      When the slugs taken by the notes of "Spring Open" are looked for
+      Then "lunch-is-at-noon" is among the slugs taken
+
+    Scenario: A deleted note's slug is still taken
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"
+      And the manager note "Lunch is at noon" is deleted
+      When the slugs taken by the notes of "Spring Open" are looked for
+      Then "lunch-is-at-noon" is among the slugs taken
+
+    Scenario: Another tournament's notes' slugs are not taken
+      Given the manager note "Lunch is at noon" is added to the tournament "Autumn Open"
+      When the slugs taken by the notes of "Spring Open" are looked for
+      Then no slugs are taken
+
   Rule: An edit changes a note's title and when it last changed
 
     Background:
@@ -89,6 +139,10 @@ Feature: Finding a tournament's notes without reading what they say
     Scenario: An edited note keeps when it was written
       When the manager notes of "Spring Open" are looked for
       Then the first manager note found was written at "2026-09-26T10:00:00Z"
+
+    Scenario: An edited note keeps its slug
+      When the manager notes of "Spring Open" are looked for
+      Then the first manager note found is found at "lunch-is-at-noon"
 
   Rule: A note deleted is not found
 

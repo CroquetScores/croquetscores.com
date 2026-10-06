@@ -18,7 +18,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
-import { notesReadOf } from "./notesRead.js";
+import { readsOf } from "./read.js";
 import { playerShown, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -99,7 +99,7 @@ ${team.players.map((player) => `              <li class="player"><a class="playe
             notes: asked.notes,
           },
           title: asked.name,
-          sections: sectionsOf(asked, speaking, notesReadOf(request)),
+          sections: sectionsOf(asked, speaking, readsOf(request)),
           currentSection: `/${asked.address}/players`,
           theme: themeOf(request),
           signedIn: signedIn(request),

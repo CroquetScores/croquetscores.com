@@ -19,6 +19,8 @@ interface Scenario {
   noteId: string | undefined;
   tournamentId: string | undefined;
   readonly stream: DomainEvent[];
+  // The slugs the scenario says the tournament's other notes have.
+  readonly taken: string[];
 }
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
@@ -26,7 +28,12 @@ const scenarios = new WeakMap<SpecWorld, Scenario>();
 export const noteScenarioOf = (world: SpecWorld): Scenario => {
   let scenario = scenarios.get(world);
   if (scenario === undefined) {
-    scenario = { noteId: undefined, tournamentId: undefined, stream: [] };
+    scenario = {
+      noteId: undefined,
+      tournamentId: undefined,
+      stream: [],
+      taken: [],
+    };
     scenarios.set(world, scenario);
   }
   return scenario;

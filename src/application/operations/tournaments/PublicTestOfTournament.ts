@@ -7,6 +7,7 @@ import type {
 import type {
   CompetitionOfTournament,
   ManagerNoteChanged,
+  CommentaryChanged,
 } from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's test can be refused where it is asked. */
@@ -61,6 +62,11 @@ export interface TestToRead {
    * recently written first, for its section bar to mark Notes by.
    */
   readonly managerNotes: readonly ManagerNoteChanged[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
   /** Always, since only a tournament played by teams has tests. */
   readonly playedByTeams: true;
   /** The tournament's competitions in use, its tests, for its sections. */

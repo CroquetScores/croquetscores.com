@@ -141,6 +141,7 @@ import { PublicCommentaryOfTournamentHandler } from "../../../src/application/op
 import { Commentary } from "../../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import { ManagerNote } from "../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { ManagerNotesByTournament } from "../../../src/infrastructure/read-models/ManagerNotesByTournament.js";
+import { CommentariesByTournament } from "../../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { ManagerNoteToEditHandler } from "../../../src/application/operations/tournaments/ManagerNoteToEditHandler.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -155,10 +156,12 @@ Given("the application's tournaments", function (this: SpecWorld) {
   const byAddress = new TournamentsByAddress(unitOfWork);
   const byWebsite = new TournamentsByWebsite(unitOfWork);
   const byNotes = new ManagerNotesByTournament(unitOfWork);
+  const byCommentaries = new CommentariesByTournament(unitOfWork);
   const store = new ProjectingEventStore(accounts.store, [
     byAddress,
     byWebsite,
     byNotes,
+    byCommentaries,
   ]);
   // Wrapped rather than handed over as they are: a static passed on its own is
   // a method separated from what it was declared on.
@@ -275,7 +278,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
   mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
-  mediator.handleCommand(new AddManagerNoteHandler(...both, managerNotes));
+  mediator.handleCommand(
+    new AddManagerNoteHandler(...both, managerNotes, byNotes),
+  );
   mediator.handleCommand(new EditManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new DeleteManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new AddCommentHandler(...both, commentaries));
@@ -295,7 +300,12 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleQuery(new ManagerNoteToEditHandler(...both, managerNotes));
   mediator.handleQuery(new ManagerNotesOfTournamentHandler(...both, byNotes));
   mediator.handleQuery(
-    new PublicManagerNotesOfTournamentHandler(tournaments, byAddress, byNotes),
+    new PublicManagerNotesOfTournamentHandler(
+      tournaments,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
     new PublicManagerNoteOfTournamentHandler(
@@ -303,6 +313,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       byAddress,
       managerNotes,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(new RecentResultsHandler(byWebsite));
@@ -310,10 +321,21 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(byWebsite));
   mediator.handleQuery(
-    new GamesOfTournamentHandler(tournaments, competitions, byAddress, byNotes),
+    new GamesOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
-    new PublicPlayersOfTournamentHandler(tournaments, byAddress, byNotes),
+    new PublicPlayersOfTournamentHandler(
+      tournaments,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
     new PublicPlayerOfTournamentHandler(
@@ -321,6 +343,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       competitions,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -329,6 +352,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       competitions,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -337,6 +361,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       competitions,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -345,6 +370,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       competitions,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -353,6 +379,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       competitions,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -361,6 +388,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       competitions,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -369,6 +397,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       accountRepository,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -378,6 +407,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
       commentaries,
       byAddress,
       byNotes,
+      byCommentaries,
     ),
   );
 

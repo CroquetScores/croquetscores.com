@@ -8,9 +8,8 @@ Feature: The manager's notes of a tournament, for anybody to read
   it. An edited note keeps its place, since it is still the note it was.
 
   Each is answered with its title, where its page is found, which is the
-  tournament's address followed by "notes" and the part of the note's id
-  after "manager-note/", since a note has no slug and its title can be
-  changed; when it was written; and when it last changed, which is when it
+  tournament's address followed by "notes" and the note's slug, which it
+  keeps when its title is edited (`add.feature`); when it was written; and when it last changed, which is when it
   was last edited, or when it was written if it never has been. A reader is
   shown which notes they have not read since they last changed
   (`notes.feature`), and the time is what that is told by.
@@ -21,8 +20,10 @@ Feature: The manager's notes of a tournament, for anybody to read
 
   The page is a section of the tournament's, so the tournament is answered
   with it as its players are (`PublicPlayersOfTournament.feature`): its name,
-  where it is found now, its notes for the header, and its competitions in
-  use with where each is found, which is what the page's section bar leads
+  where it is found now, its notes for the header, its commentaries each by
+  its id with when it last changed, for the section bar to mark Commentary
+  by (`CommentariesByTournament.feature`), and its competitions in use with
+  where each is found, which is what the page's section bar leads
   to.
 
   An address no tournament of the website has been found at, or whose
@@ -84,16 +85,16 @@ Feature: The manager's notes of a tournament, for anybody to read
   Rule: Each note is answered with where its page is found, and when it was written and last changed
 
     Background:
-      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open" as "manager-note/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a"
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
 
     Scenario: A note is answered with where its page is found
       When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
-      Then the first manager note answered is found at "2026/ac/spring-open/notes/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a"
+      Then the first manager note answered is found at "2026/ac/spring-open/notes/lunch-is-at-noon"
 
     Scenario: A note of a tournament found at its old address is found at its address now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
       When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
-      Then the first manager note answered is found at "2026/gc/spring-open/notes/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a"
+      Then the first manager note answered is found at "2026/gc/spring-open/notes/lunch-is-at-noon"
 
     Scenario: A note is answered with when it was written
       When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
@@ -114,6 +115,13 @@ Feature: The manager's notes of a tournament, for anybody to read
     Scenario: The tournament's name is answered
       When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
       Then the tournament answered is called "Spring Open"
+
+    Scenario: The tournament's commentaries are answered with when each last changed
+      Given "organiser@example.com" has started the commentary "Day one" on "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      When the public manager notes of the tournament at "2026/ac/spring-open" are asked for
+      Then the first commentary of the tournament answered last changed at "2026-09-26T11:00:00Z"
 
     Scenario: The tournament's notes are answered
       Given the tournament "Spring Open" has the notes "Lunch is at **noon**"

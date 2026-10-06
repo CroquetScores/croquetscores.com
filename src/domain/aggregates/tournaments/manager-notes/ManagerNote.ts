@@ -3,6 +3,8 @@ import { AggregateRoot } from "../../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
 import { Refused } from "../../../common/Refused.js";
+import { Slug } from "../../../common/Slug.js";
+import { firstFree } from "../freeSlugs.js";
 import type { ManagerNoteId } from "../primitives/ManagerNoteId.js";
 import { TournamentId } from "../primitives/TournamentId.js";
 import { ManagerNoteDescription } from "../value-objects/ManagerNoteDescription.js";
@@ -34,6 +36,7 @@ export class ManagerNoteRefused extends Refused<ManagerNoteErrorCode> {}
 export class ManagerNote extends AggregateRoot {
   #tournament: TournamentId | undefined;
   #title: ManagerNoteTitle | undefined;
+  #slug: Slug | undefined;
   #description: ManagerNoteDescription | undefined;
   #writtenAt: ReadOnlyDate | undefined;
   #lastEditedAt: ReadOnlyDate | undefined;
@@ -43,12 +46,17 @@ export class ManagerNote extends AggregateRoot {
     super(id);
   }
 
-  /** A new note `id` of `tournament`, written by `by` now. */
+  /**
+   * A new note `id` of `tournament`, written by `by` now, found at the first
+   * slug of its title that none of `taken`, the slugs the tournament's other
+   * notes have, deleted or not, is (add.feature).
+   */
   static add(
     id: ManagerNoteId,
     tournament: TournamentId,
     title: ManagerNoteTitle,
     description: ManagerNoteDescription | undefined,
+    taken: readonly string[],
     by: AccountId,
     at: ReadOnlyDate,
   ): ManagerNote {
@@ -58,6 +66,7 @@ export class ManagerNote extends AggregateRoot {
         tournament.value,
         title.toString(),
         description?.toString() ?? "",
+        firstFree(Slug.fromName(title.toString()), id, taken).toString(),
         by,
         at,
       ),
@@ -96,6 +105,15 @@ export class ManagerNote extends AggregateRoot {
 
   get title(): ManagerNoteTitle {
     return this.#added(this.#title);
+  }
+
+  /**
+   * Where it is found among its tournament's notes, made from its title when
+   * it was added and kept when the title is edited, so that a link to it
+   * still finds it.
+   */
+  get slug(): Slug {
+    return this.#added(this.#slug);
   }
 
   /** What it says beneath its title, or nothing where it says nothing more. */
@@ -155,6 +173,7 @@ export class ManagerNote extends AggregateRoot {
     if (event instanceof ManagerNoteAdded) {
       this.#tournament = TournamentId.from(event.tournamentId);
       this.#title = ManagerNoteTitle.from(event.title);
+      this.#slug = Slug.from(event.slug);
       this.#description = ManagerNoteDescription.from(event.description);
       this.#writtenAt = event.occurredAt;
     } else if (event instanceof ManagerNoteEdited) {

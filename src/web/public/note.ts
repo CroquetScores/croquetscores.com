@@ -6,7 +6,7 @@
 // drawing (markdown.ts), so that what a manager sees is what a reader will.
 //
 // Opening the page is reading the note: the reader's browser is told they
-// have read it as it is now (notesRead.ts), and the section bar is drawn as
+// have read it as it is now (read.ts), and the section bar is drawn as
 // what they have read is after it. It needs no scripting.
 import type { FastifyInstance } from "fastify";
 
@@ -20,7 +20,7 @@ import { markdownWithoutHtml } from "../common/markdown.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
-import { notesReadOf, rememberRead } from "./notesRead.js";
+import { readsOf, rememberRead } from "./read.js";
 import { sendPage } from "./tournamentLists.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
@@ -69,7 +69,11 @@ export const registerNotePage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const read = rememberRead(reply, notesReadOf(request), asked.managerNote);
+      const reads = readsOf(request);
+      const read = {
+        ...reads,
+        notes: rememberRead(reply, reads.notes, asked.managerNote),
+      };
       const now = request.requestedAt.toDate();
       const { managerNote } = asked;
       const edited =

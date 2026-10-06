@@ -211,6 +211,7 @@ import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
+import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
 import {
   GoogleOpenIdConnect,
   GoogleOpenIdConnectFailed,
@@ -567,6 +568,7 @@ export const buildApplication = async (
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
+  const commentariesByTournament = new CommentariesByTournament(unitOfWork);
 
   // Every read model's projection, each given every event as it is appended.
   const projections: readonly Projection[] = [
@@ -576,6 +578,7 @@ export const buildApplication = async (
     tournamentsByAccount,
     tournamentsByWebsite,
     managerNotesByTournament,
+    commentariesByTournament,
   ];
 
   // On the unit of work the mediator's transactions use, so that what a
@@ -865,7 +868,9 @@ export const buildApplication = async (
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
   mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
-  mediator.handleCommand(new AddManagerNoteHandler(...both, managerNotes));
+  mediator.handleCommand(
+    new AddManagerNoteHandler(...both, managerNotes, managerNotesByTournament),
+  );
   mediator.handleCommand(new EditManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new DeleteManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new AddCommentHandler(...both, commentaries));
@@ -910,6 +915,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -917,6 +923,7 @@ export const buildApplication = async (
       tournaments,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -925,6 +932,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -933,6 +941,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -941,6 +950,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -949,6 +959,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -957,6 +968,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -965,6 +977,7 @@ export const buildApplication = async (
       competitions,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -972,6 +985,7 @@ export const buildApplication = async (
       tournaments,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -980,6 +994,7 @@ export const buildApplication = async (
       tournamentsByAddress,
       managerNotes,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -988,6 +1003,7 @@ export const buildApplication = async (
       accounts,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
   mediator.handleQuery(
@@ -997,6 +1013,7 @@ export const buildApplication = async (
       commentaries,
       tournamentsByAddress,
       managerNotesByTournament,
+      commentariesByTournament,
     ),
   );
 

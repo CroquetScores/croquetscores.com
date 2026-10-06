@@ -25,7 +25,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
-import { notesReadOf } from "./notesRead.js";
+import { readsOf } from "./read.js";
 import { competitionNamed, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -110,7 +110,7 @@ ${asked.entered
           notes: asked.notes,
         },
         title: asked.player.name,
-        sections: sectionsOf(asked, speaking, notesReadOf(request)),
+        sections: sectionsOf(asked, speaking, readsOf(request)),
         currentSection: `/${asked.address}/players`,
         theme: themeOf(request),
         signedIn: signedIn(request),

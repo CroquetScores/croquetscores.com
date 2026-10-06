@@ -32,6 +32,8 @@ export interface ManagerNoteHeading {
   /** Its id, as "manager-note/0d1e2f3a-…". */
   readonly id: string;
   readonly title: string;
+  /** Where it is found among its tournament's notes, as "lunch-is-at-noon". */
+  readonly slug: string;
   readonly writtenAt: ReadOnlyDate;
   /** When it was last edited, or when it was written if it never has been. */
   readonly changedAt: ReadOnlyDate;
@@ -45,6 +47,18 @@ export interface ManagerNoteHeading {
 export interface TournamentManagerNotes {
   /** The notes of `tournament` not deleted, the most recently written first. */
   of(tournament: TournamentId): Promise<readonly ManagerNoteHeading[]>;
+
+  /**
+   * The id of the note of `tournament` found at `slug`, or nothing where no
+   * note not deleted is found there.
+   */
+  noteAt(tournament: TournamentId, slug: string): Promise<string | undefined>;
+
+  /**
+   * Every slug the notes of `tournament` have, deleted or not, since a
+   * deleted note's slug is never given to another (add.feature).
+   */
+  slugsTakenIn(tournament: TournamentId): Promise<readonly string[]>;
 }
 
 /**

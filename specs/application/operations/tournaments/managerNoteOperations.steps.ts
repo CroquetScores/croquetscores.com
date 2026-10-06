@@ -5,18 +5,18 @@ import { inspect } from "node:util";
 import { AddManagerNote } from "../../../../src/application/operations/tournaments/AddManagerNote.js";
 import { DeleteManagerNote } from "../../../../src/application/operations/tournaments/DeleteManagerNote.js";
 import { EditManagerNote } from "../../../../src/application/operations/tournaments/EditManagerNote.js";
-import type { ManagerNoteChanged } from "../../../../src/application/operations/tournaments/tournamentForReaders.js";
+import type {
+  CommentaryChanged,
+  ManagerNoteChanged,
+} from "../../../../src/application/operations/tournaments/tournamentForReaders.js";
 import { ManagerNote } from "../../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { ManagerNoteId } from "../../../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
-import { ManagerNoteDescription } from "../../../../src/domain/aggregates/tournaments/value-objects/ManagerNoteDescription.js";
-import { ManagerNoteTitle } from "../../../../src/domain/aggregates/tournaments/value-objects/ManagerNoteTitle.js";
 import type { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { SpecWorld } from "../../../support/world.js";
 import {
   accountFor,
   inHandOf,
-  load,
   lookAt,
   momentOf,
   tournamentNamed,
@@ -70,35 +70,6 @@ Given(
       ),
     );
     await lookAt(this, tournament);
-  },
-);
-
-// Under an id the scenario names, so that it can say where the note's page is
-// found. Adding a note mints its own id, so the note is made as adding it
-// makes it, once the tournament has said the account may, and kept.
-Given(
-  "{string} has added the manager note {string} to {string} as {string}",
-  async function (
-    this: SpecWorld,
-    address: string,
-    title: string,
-    name: string,
-    id: string,
-  ) {
-    const account = await accountFor(this, address);
-    const tournamentId = tournamentNamed(this, name);
-    (await load(this, tournamentId)).allowWritingManagerNotes(account);
-    await inHandOf(this).saveManagerNote(
-      ManagerNote.add(
-        ManagerNoteId.from(id),
-        tournamentId,
-        ManagerNoteTitle.from(title),
-        ManagerNoteDescription.from(descriptionOf(this)),
-        account,
-        momentOf(this),
-      ),
-    );
-    await lookAt(this, tournamentId);
   },
 );
 
@@ -259,6 +230,19 @@ Then(
   },
 );
 
+// Every page of a tournament answers each of its commentaries with when it
+// last changed, for its section bar (commentaries.feature), as it does its
+// notes.
+Then(
+  /^the (first|second) commentary of the tournament answered last changed at "(.*)"$/,
+  function (this: SpecWorld, which: string, moment: string) {
+    const changed = (
+      answer(this) as { commentariesChanged: readonly CommentaryChanged[] }
+    ).commentariesChanged;
+    isAt(changed[places.indexOf(which)]?.changedAt, moment);
+  },
+);
+
 // Every page of a tournament answers each of its notes with when it last
 // changed, for its section bar (notes.feature).
 Then(
@@ -339,6 +323,18 @@ Then(
     await eventually(async () => {
       assert.equal(await keptDescription(this, title, name), said);
     });
+  },
+);
+
+Then(
+  "the manager note {string} of {string} is found at {string}",
+  async function (this: SpecWorld, title: string, name: string, slug: string) {
+    const note = await managerNoteCalled(
+      this,
+      tournamentNamed(this, name),
+      title,
+    );
+    assert.equal(note.slug.toString(), slug);
   },
 );
 

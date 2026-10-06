@@ -46,7 +46,7 @@ import {
   deletePathOf,
 } from "./commentary.js";
 import { toSignIn } from "./profile.js";
-import { notesReadOf } from "./notesRead.js";
+import { readsOf } from "./read.js";
 import { sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -105,7 +105,7 @@ export const registerEditCommentPages = (
               notes: asked.notes,
             },
             title,
-            sections: sectionsOf(asked, speaking, notesReadOf(request)),
+            sections: sectionsOf(asked, speaking, readsOf(request)),
             currentSection: `/${asked.address}/commentaries`,
             theme: themeOf(request),
             signedIn: true,

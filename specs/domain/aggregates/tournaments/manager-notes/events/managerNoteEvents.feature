@@ -71,5 +71,6 @@ Feature: The names a manager's note's events are kept under
         | a manager's note being added  | tournamentId |
         | a manager's note being added  | title        |
         | a manager's note being added  | description  |
+        | a manager's note being added  | slug         |
         | a manager's note being edited | title        |
         | a manager's note being edited | description  |

@@ -17,7 +17,7 @@ import { newMark, render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
-import { hasRead, notesReadOf } from "./notesRead.js";
+import { hasRead, readsOf } from "./read.js";
 import { sendPage } from "./tournamentLists.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
@@ -61,7 +61,7 @@ export const registerNotesPage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const read = notesReadOf(request);
+      const read = readsOf(request);
       const now = request.requestedAt.toDate();
       const notes =
         asked.managerNotes.length === 0
@@ -70,7 +70,7 @@ export const registerNotesPage = (
 ${asked.managerNotes
   .map(
     (note) =>
-      `            <li class="note-listed"><a class="note-listed-title" href="/${escape(note.address)}">${escape(note.title)}</a>${hasRead(read, note) ? "" : newMark(speaking)} <span class="note-listed-ago">${ago(note.writtenAt, now, speaking)}</span></li>`,
+      `            <li class="note-listed"><a class="note-listed-title" href="/${escape(note.address)}">${escape(note.title)}</a>${hasRead(read.notes, note) ? "" : newMark(speaking)} <span class="note-listed-ago">${ago(note.writtenAt, now, speaking)}</span></li>`,
   )
   .join("\n")}
           </ul>`;

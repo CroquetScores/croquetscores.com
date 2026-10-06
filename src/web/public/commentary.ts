@@ -34,7 +34,7 @@ import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { signInPath } from "./signIn.js";
 import { sendPage } from "./tournamentLists.js";
-import { notesReadOf } from "./notesRead.js";
+import { type Reads, readsOf, rememberRead } from "./read.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -485,6 +485,7 @@ const pageOf = (
   assets: Assets,
   asked: TournamentCommentaryToRead,
   box: { readonly typed: string; readonly messages: readonly string[] },
+  reads: Reads = readsOf(request),
 ): string => {
   const speaking = speakingOf(request);
   const { say } = speaking;
@@ -507,7 +508,7 @@ const pageOf = (
       notes: asked.notes,
     },
     title: `${commentary.title} - ${asked.name}`,
-    sections: sectionsOf(asked, speaking, notesReadOf(request)),
+    sections: sectionsOf(asked, speaking, reads),
     currentSection: `/${asked.address}/commentaries`,
     theme: themeOf(request),
     signedIn: signedIn(request),
@@ -551,10 +552,28 @@ export const registerCommentaryPage = (
         301,
       );
     }
+    // Opening the page is reading the commentary: the reader's browser is
+    // told they have read it as it is now, and the section bar is drawn as
+    // what they have read is after it.
+    const reads = readsOf(request);
+    const changed = asked.commentariesChanged.find(
+      ({ id }) => id === asked.commentary.id,
+    );
     return sendPage(
       reply,
       request,
-      pageOf(request, assets, asked, { typed: "", messages: [] }),
+      pageOf(
+        request,
+        assets,
+        asked,
+        { typed: "", messages: [] },
+        changed === undefined
+          ? reads
+          : {
+              ...reads,
+              commentaries: rememberRead(reply, reads.commentaries, changed),
+            },
+      ),
     );
   });
 

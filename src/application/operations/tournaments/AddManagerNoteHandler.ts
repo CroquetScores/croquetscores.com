@@ -10,6 +10,7 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AddManagerNote } from "./AddManagerNote.js";
+import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 
 /**
@@ -27,6 +28,7 @@ export class AddManagerNoteHandler extends CommandHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly notes: AggregateRepository<ManagerNote, ManagerNoteId>,
+    private readonly headings: TournamentManagerNotes,
   ) {
     super();
   }
@@ -46,6 +48,9 @@ export class AddManagerNoteHandler extends CommandHandler<
         tournament.id,
         ManagerNoteTitle.from(command.title),
         ManagerNoteDescription.from(command.description),
+        // Found at a slug none of the tournament's other notes has, deleted or
+        // not, which the read model of its notes knows.
+        await this.headings.slugsTakenIn(tournament.id),
         by,
         command.requestedAt,
       ),

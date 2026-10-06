@@ -20,6 +20,7 @@ import {
   competitionsInUse,
   tournamentForReaders,
   managerNotesChangedOf,
+  type TournamentCommentaries,
 } from "./tournamentForReaders.js";
 import {
   type TournamentAddresses,
@@ -38,6 +39,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
     private readonly notes: TournamentManagerNotes,
+    private readonly changes: TournamentCommentaries,
   ) {
     super();
   }
@@ -120,6 +122,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     return {
       name: tournament.name.toString(),
       notes: tournament.notes?.markdown,
+      commentariesChanged: await this.changes.of(tournament.id),
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       competitions: competitionsInUse(tournament),

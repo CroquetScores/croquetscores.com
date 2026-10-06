@@ -38,6 +38,7 @@ import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
+import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
 import { ImportDatabase } from "./ImportDatabase.js";
@@ -105,6 +106,7 @@ try {
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
       new ManagerNotesByTournament(unitOfWork),
+      new CommentariesByTournament(unitOfWork),
     ],
   );
   const accounts = new AggregateRepository(

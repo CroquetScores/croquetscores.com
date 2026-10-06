@@ -46,6 +46,12 @@ Feature: Editing a manager's note
       When the reader signed in to the account for "manager@example.com" edits the manager note "Lunch" of "Spring Open" to "Lunch moved"
       Then the manager note "Lunch moved" of "Spring Open" was last edited by the account for "manager@example.com"
 
+  Rule: An edited note keeps its slug
+
+    Scenario: A note edited is found where it was before
+      When the reader signed in to the account for "organiser@example.com" edits the manager note "Lunch" of "Spring Open" to "Lunch moved"
+      Then the manager note "Lunch moved" of "Spring Open" is found at "lunch"
+
   Rule: Each value must break none of its own rules
 
     Scenario: A missing title is refused

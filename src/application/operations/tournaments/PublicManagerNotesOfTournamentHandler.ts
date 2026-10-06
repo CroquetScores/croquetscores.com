@@ -13,6 +13,7 @@ import {
   competitionsInUse,
   noteAddressIn,
   tournamentForReaders,
+  type TournamentCommentaries,
 } from "./tournamentForReaders.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
 
@@ -27,6 +28,7 @@ export class PublicManagerNotesOfTournamentHandler extends QueryHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly addresses: TournamentAddresses,
     private readonly notes: TournamentManagerNotes,
+    private readonly changes: TournamentCommentaries,
   ) {
     super();
   }
@@ -49,9 +51,10 @@ export class PublicManagerNotesOfTournamentHandler extends QueryHandler<
       competitions: competitionsInUse(tournament),
       // From the read model of its notes, which holds none of what they say,
       // since a list is not where a note is read.
+      commentariesChanged: await this.changes.of(tournament.id),
       managerNotes: (await this.notes.of(tournament.id)).map((note) => ({
         ...note,
-        address: noteAddressIn(tournament, note.id),
+        address: noteAddressIn(tournament, note.slug),
       })),
     };
   }

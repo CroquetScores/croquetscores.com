@@ -23,6 +23,7 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       TOURNAMENT,
       "Lunch",
       "In the **clubhouse**",
+      "lunch",
       causedBy,
       happenedAt,
     ),

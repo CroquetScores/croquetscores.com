@@ -4,6 +4,7 @@ import { Query } from "../../common/Query.js";
 import type {
   CompetitionOfTournament,
   ManagerNoteChanged,
+  CommentaryChanged,
 } from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's player can be refused where it is asked. */
@@ -48,6 +49,11 @@ export interface PlayerToRead {
    * recently written first, for its section bar to mark Notes by.
    */
   readonly managerNotes: readonly ManagerNoteChanged[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
   /** The tournament's competitions in use, in its order, for its sections. */
   readonly competitions: readonly CompetitionOfTournament[];
   /** Whether it is played by teams, whose players are its teams'. */

@@ -359,7 +359,7 @@ export const spanish: Language = {
     "startCommentary.submit": "Empezar el comentario",
     // A tournament's Notes page, and a note's own page, as the English says.
     "notes.none": "Los organizadores aún no han escrito notas.",
-    "notes.new": "nuevo",
+    "marks.new": "nuevo",
     "note.edited": "editada",
     "commentary.none": "Aún no se ha escrito nada.",
     "commentary.edited": "editado",

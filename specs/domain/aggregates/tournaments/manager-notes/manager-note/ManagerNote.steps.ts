@@ -37,6 +37,20 @@ Given(
   },
 );
 
+Given(
+  "the tournament's other notes are found at {string}",
+  function (this: SpecWorld, slug: string) {
+    noteScenarioOf(this).taken.push(slug);
+  },
+);
+
+Given(
+  "the tournament's other notes are found at {string} and {string}",
+  function (this: SpecWorld, one: string, other: string) {
+    noteScenarioOf(this).taken.push(one, other);
+  },
+);
+
 // Made inside what is asked, so that a title or a description that could
 // not be a note's is refused as adding it would be.
 const added = (world: SpecWorld, title: string, description: string) =>
@@ -45,6 +59,7 @@ const added = (world: SpecWorld, title: string, description: string) =>
     noteTournamentOf(world),
     ManagerNoteTitle.from(title),
     ManagerNoteDescription.from(description),
+    noteScenarioOf(world).taken,
     byOf(world),
     now(world),
   );
@@ -178,6 +193,13 @@ Then(
   "the manager note is of the tournament {string}",
   function (this: SpecWorld, id: string) {
     assert.equal(noteOf(this).tournament.value, id);
+  },
+);
+
+Then(
+  "the manager note is found at {string}",
+  function (this: SpecWorld, slug: string) {
+    assert.equal(noteOf(this).slug.toString(), slug);
   },
 );
 

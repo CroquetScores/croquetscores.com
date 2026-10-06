@@ -1,8 +1,10 @@
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
 import type {
   CompetitionOfTournament,
   ManagerNoteChanged,
+  CommentaryChanged,
 } from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's commentaries can be refused where it is asked. */
@@ -18,6 +20,11 @@ export interface PublicCommentaryListed {
   readonly writer: string;
   /** Where its page is found, as "2026/ac/spring-open/commentaries/day-one". */
   readonly address: string;
+  /**
+   * When it was started, or when a comment was last added to it or edited in
+   * it, which tells a reader whether they have read it as it is now.
+   */
+  readonly changedAt: ReadOnlyDate;
 }
 
 /** A tournament as its commentaries page shows it: what it is, its sections, its commentaries. */
@@ -34,6 +41,11 @@ export interface TournamentCommentariesToRead {
    * recently written first, for its section bar to mark Notes by.
    */
   readonly managerNotes: readonly ManagerNoteChanged[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
   /** Whether it is played by teams, which its sections say. */
   readonly playedByTeams: boolean;
   /** Its competitions in use, in the tournament's order. */

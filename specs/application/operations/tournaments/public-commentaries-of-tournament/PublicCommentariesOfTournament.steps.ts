@@ -96,3 +96,13 @@ Then(
     assert.equal(commentaryAnswered(this, title).address, address);
   },
 );
+
+Then(
+  "the commentary {string} is answered as last changed at {string}",
+  function (this: SpecWorld, title: string, moment: string) {
+    assert.equal(
+      commentaryAnswered(this, title).changedAt.toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
