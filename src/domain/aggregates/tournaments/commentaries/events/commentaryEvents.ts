@@ -5,6 +5,7 @@ import { CommentaryCommentAdded } from "./CommentaryCommentAdded.js";
 import { CommentaryCommentDeleted } from "./CommentaryCommentDeleted.js";
 import { CommentaryCommentEdited } from "./CommentaryCommentEdited.js";
 import { CommentaryStarted } from "./CommentaryStarted.js";
+import { CommentaryTitleChanged } from "./CommentaryTitleChanged.js";
 
 type Said = Readonly<Record<string, unknown>>;
 
@@ -29,7 +30,20 @@ export const nameCommentaryEvents = (registry: EventRegistry): EventRegistry =>
       CommentaryStarted,
       "commentary-started",
       (said, { createdBy, occurredAt }) =>
-        new CommentaryStarted(text(said, "writer"), createdBy, occurredAt),
+        new CommentaryStarted(
+          text(said, "tournamentId"),
+          text(said, "title"),
+          text(said, "slug"),
+          text(said, "writer"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CommentaryTitleChanged,
+      "commentary-title-changed",
+      (said, { createdBy, occurredAt }) =>
+        new CommentaryTitleChanged(text(said, "title"), createdBy, occurredAt),
     )
     .name(
       CommentaryCommentAdded,

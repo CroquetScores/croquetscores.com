@@ -60,7 +60,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   leads to a page of its own that asks the same (`editComment.feature`).
   The writer is offered as well a pencil to the right of the commentary's
   title, which leads to the page that changes it
-  (`changeCommentaryTitle.feature`). Anybody else, signed in or not, is
+  (`changeTitle.feature`). Anybody else, signed in or not, is
   offered neither the box nor a pencil nor a trash can: they read.
 
   Where there is scripting, a comment written in the box is added in place:
@@ -101,6 +101,14 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   signed in, and the writer's own page asks too, so that a comment they
   wrote from another device appears. Without scripting, a reader loads the
   page again to see what is new, as on any other page.
+
+  Opening the page is reading the commentary: the reader's browser
+  remembers that they have read it as it is now, and it is no longer marked
+  as new (`commentaries.feature`). The Commentary section is not marked on
+  the page itself unless another commentary is still to be read. Comments
+  shown without loading the page again are not remembered as read; the
+  commentary is news again on the reader's next visit, which tells them
+  there was more than they saw when they opened it.
 
   The page needs no scripting: what scripting adds, adding a comment in
   place, the modal dialog and Ctrl and Enter, is a quicker way to what can be
@@ -750,6 +758,27 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting off
       When the way to delete the first comment is pressed
       Then the page asks whether to delete the comment "Sam is two hoops up"
+
+  Rule: Opening the page is reading the commentary
+
+    Scenario: A commentary whose page was opened is no longer marked as new
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is not marked as new
+
+    Scenario: The page of the only commentary to read does not mark the Commentary section
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the section "Commentary" is not marked as new
+
+    Scenario: The page of one commentary marks the Commentary section while another is still to be read
+      Given "writer@example.com" has started the commentary "Day two" on "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
+      Then the section "Commentary" is marked as new
+
+    Scenario: A commentary is read with scripting off
+      Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting off
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is not marked as new
 
   Rule: Only a commentary a reader is sent to has a page
 

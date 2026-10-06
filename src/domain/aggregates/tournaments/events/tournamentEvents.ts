@@ -42,8 +42,6 @@ import { TeamsSpacedOut } from "./TeamsSpacedOut.js";
 import { TeamUpdated } from "./TeamUpdated.js";
 import { TestAdded } from "./TestAdded.js";
 import { TestUpdated } from "./TestUpdated.js";
-import { TournamentCommentaryStarted } from "./TournamentCommentaryStarted.js";
-import { TournamentCommentaryTitleChanged } from "./TournamentCommentaryTitleChanged.js";
 
 type Said = Readonly<Record<string, unknown>>;
 
@@ -100,7 +98,7 @@ const tournament = (said: Said): WrittenTournament => ({
   sport: text(said, "sport"),
   country: text(said, "country"),
   region: optionalText(said, "region"),
-  notes: optionalText(said, "notes"),
+  subtitle: optionalText(said, "subtitle"),
   handicap: yesOrNo(said, "handicap"),
   // Asked only since drawn games could be allowed, so a tournament kept before
   // says nothing of it, and allowed none.
@@ -532,29 +530,6 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           number(said, "expectedMatches"),
           number(said, "bestOf"),
           optionalText(said, "group"),
-          createdBy,
-          occurredAt,
-        ),
-    )
-    .name(
-      TournamentCommentaryStarted,
-      "tournament-commentary-started",
-      (said, { createdBy, occurredAt }) =>
-        new TournamentCommentaryStarted(
-          text(said, "commentaryId"),
-          text(said, "title"),
-          text(said, "slug"),
-          createdBy,
-          occurredAt,
-        ),
-    )
-    .name(
-      TournamentCommentaryTitleChanged,
-      "tournament-commentary-title-changed",
-      (said, { createdBy, occurredAt }) =>
-        new TournamentCommentaryTitleChanged(
-          text(said, "commentaryId"),
-          text(said, "title"),
           createdBy,
           occurredAt,
         ),

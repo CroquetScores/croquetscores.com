@@ -493,28 +493,44 @@ Given(
 );
 
 // What the server answers about the comments as they are when the page asks,
-// kept back until the scenario lets it through.
-const heldBack = new WeakMap<SpecWorld, () => Promise<void>>();
+// kept back until the scenario lets it through. What is kept is the promise of
+// the answer, made when the scenario holds it back, since the server may not
+// have answered by the time the scenario lets it through when it is busy.
+const heldBack = new WeakMap<SpecWorld, Promise<() => Promise<void>>>();
+
+// Holds back the answer to the next request to the comments made by `method`.
+const holdBack = async (world: SpecWorld, method: string): Promise<void> => {
+  let hold: (letThrough: () => Promise<void>) => void = () => undefined;
+  heldBack.set(
+    world,
+    new Promise((resolve) => {
+      hold = resolve;
+    }),
+  );
+  await world.browserPage.route(
+    (url) => url.pathname.endsWith("/comments"),
+    async (route) => {
+      if (route.request().method() !== method) return route.fallback();
+      const answer = await route.fetch();
+      hold(() => route.fulfill({ response: answer }));
+    },
+    { times: 1 },
+  );
+};
 
 Given(
   "the next answer about the comments is held back",
   async function (this: SpecWorld) {
-    await this.browserPage.route(
-      (url) => url.pathname.endsWith("/comments"),
-      async (route) => {
-        if (route.request().method() !== "GET") return route.fallback();
-        const answer = await route.fetch();
-        heldBack.set(this, () => route.fulfill({ response: answer }));
-      },
-      { times: 1 },
-    );
+    await holdBack(this, "GET");
   },
 );
 
 When("the answer held back is let through", async function (this: SpecWorld) {
-  const letThrough = heldBack.get(this);
-  assert.ok(letThrough !== undefined, "No answer was held back.");
-  await letThrough();
+  const held = heldBack.get(this);
+  assert.ok(held !== undefined, "No answer was held back.");
+  await (
+    await held
+  )();
   // Long enough for the page to have read the answer and drawn it, were it
   // going to: nothing on the page says it has decided not to.
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -562,15 +578,7 @@ Then(
 Given(
   "the answer to the next comment sent is held back",
   async function (this: SpecWorld) {
-    await this.browserPage.route(
-      (url) => url.pathname.endsWith("/comments"),
-      async (route) => {
-        if (route.request().method() !== "POST") return route.fallback();
-        const answer = await route.fetch();
-        heldBack.set(this, () => route.fulfill({ response: answer }));
-      },
-      { times: 1 },
-    );
+    await holdBack(this, "POST");
   },
 );
 

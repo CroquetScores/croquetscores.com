@@ -74,9 +74,9 @@ Given("the update draws a level test", function (this: SpecWorld) {
 });
 
 Given(
-  "a stream where a tournament was created with no notes",
+  "a stream where a tournament was created with no subtitle",
   function (this: SpecWorld) {
-    createdAs(this, { notes: null });
+    createdAs(this, { subtitle: null });
   },
 );
 
@@ -190,9 +190,9 @@ Given(
 );
 
 Given(
-  "the update gives it the notes {string}",
-  function (this: SpecWorld, notes: string) {
-    scenarioOf(this).updating.notes = notes;
+  "the update gives it the subtitle {string}",
+  function (this: SpecWorld, subtitle: string) {
+    scenarioOf(this).updating.subtitle = subtitle;
   },
 );
 

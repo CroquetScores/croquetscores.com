@@ -19,7 +19,7 @@ Feature: The title a commentary is known by
   whitespace is missing.
 
   A commentary is found at a slug made from its title
-  (`startCommentary.feature`), and a title with no letter or digit in it,
+  (`start.feature`), and a title with no letter or digit in it,
   such as "???" or a trophy drawn as an emoji, makes no slug (`Slug.feature`),
   so it is refused as a title rather than left to fail where the commentary
   is started. A slug takes the accents off letters, so a title of nothing but
@@ -29,7 +29,7 @@ Feature: The title a commentary is known by
   Two commentaries in the same tournament with the same title could not be
   told apart in its list, but a title does not know which tournament it is
   in, so that is the tournament's to refuse and not the title's
-  (`startCommentary.feature`).
+  (`start.feature`).
 
   Rule: A commentary title is between 1 and 100 characters
 

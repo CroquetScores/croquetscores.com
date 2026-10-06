@@ -232,7 +232,7 @@ Then(
 );
 
 Then(
-  /^the tab says there are no (?:competitions|tests)$/,
+  /^the tab says there are no (?:competitions|tests|notes)$/,
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);

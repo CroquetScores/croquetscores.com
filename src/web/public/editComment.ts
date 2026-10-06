@@ -46,6 +46,7 @@ import {
   deletePathOf,
 } from "./commentary.js";
 import { toSignIn } from "./profile.js";
+import { readsOf } from "./read.js";
 import { sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -98,9 +99,13 @@ export const registerEditCommentPages = (
         .type("text/html; charset=utf-8")
         .send(
           render(assets, {
-            tournament: { name: asked.name, address: asked.address },
+            tournament: {
+              name: asked.name,
+              address: asked.address,
+              subtitle: asked.subtitle,
+            },
             title,
-            sections: sectionsOf(asked, speaking),
+            sections: sectionsOf(asked, speaking, readsOf(request)),
             currentSection: `/${asked.address}/commentaries`,
             theme: themeOf(request),
             signedIn: true,

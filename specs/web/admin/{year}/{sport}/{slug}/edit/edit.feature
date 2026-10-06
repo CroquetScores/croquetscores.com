@@ -70,7 +70,7 @@ Feature: A tournament is changed in the admin
         | Sport                        |
         | Format                       |
         | Country                      |
-        | Notes                        |
+        | Subtitle                     |
         | Played with handicaps        |
         | Allows drawn results         |
         | Counts toward world rankings |
@@ -161,10 +161,10 @@ Feature: A tournament is changed in the admin
       When the page to edit "Spring Open" is opened
       Then "Level tests are drawn" is ticked
 
-    Scenario: The notes are the tournament's
-      Given the tournament "Spring Open" has the notes "Lawns open at nine."
+    Scenario: The subtitle is the tournament's
+      Given the tournament "Spring Open" has the subtitle "Lawns open at nine."
       When the page to edit "Spring Open" is opened
-      Then "Notes" still says "Lawns open at nine."
+      Then "Subtitle" still says "Lawns open at nine."
 
   Rule: Saving keeps the change and takes the reader to the tournament
 
@@ -201,11 +201,11 @@ Feature: A tournament is changed in the admin
       Then the tournament "Spring Open" is kept in no region
 
     Scenario: What is left alone is kept as it was
-      Given the tournament "Spring Open" has the notes "Lawns open at nine."
+      Given the tournament "Spring Open" has the subtitle "Lawns open at nine."
       And the page to edit "Spring Open" is open
       And "Spring Open Championship" is typed as the "Name"
       When "Update Tournament" is pressed
-      Then the tournament "Spring Open Championship" is kept with the notes "Lawns open at nine."
+      Then the tournament "Spring Open Championship" is kept with the subtitle "Lawns open at nine."
 
   Rule: What is refused is said beside the field it is about
 
@@ -299,16 +299,16 @@ Feature: A tournament is changed in the admin
 
     The test locale shows it (`language.feature`). What the tournament is, it
     is by what its manager typed, which is nobody's language and is in the
-    fields rather than among the page's words; the notes are the exception,
-    being words in a box, and are left out with the regions, which are left as
+    fields rather than among the page's words; the subtitle is the exception,
+    being words in a box, and is left out with the regions, which are left as
     they were recorded (`new.feature`). Each refusal is looked at, since each
     says something of its own in place of the form.
 
     Scenario: The form begun as the tournament is is in the reader's language
       Given a browser that asks for "en-XA"
-      And the tournament "Spring Open" has the notes "Lawns open at nine."
+      And the tournament "Spring Open" has the subtitle "Lawns open at nine."
       When the page to edit "Spring Open" is opened
-      Then every word in the form but the notes and the regions is in the test locale
+      Then every word in the form but the subtitle and the regions is in the test locale
 
     Scenario: An archived tournament is refused in the reader's language
       Given a browser that asks for "en-XA"

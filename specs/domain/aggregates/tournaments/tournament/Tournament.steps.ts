@@ -275,9 +275,9 @@ Then(
 );
 
 Then(
-  "the tournament's notes are {string}",
-  function (this: SpecWorld, notes: string) {
-    assert.equal(tournamentOf(this).notes?.markdown, notes);
+  "the tournament's subtitle is {string}",
+  function (this: SpecWorld, subtitle: string) {
+    assert.equal(tournamentOf(this).subtitle?.markdown, subtitle);
   },
 );
 

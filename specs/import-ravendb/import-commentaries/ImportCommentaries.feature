@@ -6,7 +6,7 @@ Feature: Importing the old sites' commentaries
   Each is brought over as a commentary of the tournament it was on
   (`ImportTournaments.feature`), started by the account its writer became
   (`ImportUsers.feature`), with its comments in the order they were written.
-  It is started as the site starts one (`startCommentary.feature`), so that it
+  It is started as the site starts one (`start.feature`), so that it
   is found and read as any other.
 
   A writer who became no account is the forgotten account made for them, as a

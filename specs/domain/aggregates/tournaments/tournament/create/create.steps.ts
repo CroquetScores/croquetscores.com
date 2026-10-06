@@ -53,12 +53,12 @@ Given("no region", function (this: SpecWorld) {
   scenarioOf(this).creating.region = null;
 });
 
-Given("the notes {string}", function (this: SpecWorld, notes: string) {
-  scenarioOf(this).creating.notes = notes;
+Given("the subtitle {string}", function (this: SpecWorld, subtitle: string) {
+  scenarioOf(this).creating.subtitle = subtitle;
 });
 
-Given("no notes", function (this: SpecWorld) {
-  scenarioOf(this).creating.notes = null;
+Given("no subtitle", function (this: SpecWorld) {
+  scenarioOf(this).creating.subtitle = null;
 });
 
 // The address the numbered addresses from `from` to `to` are followed by, and
@@ -234,8 +234,8 @@ Then(
   },
 );
 
-Then("the tournament has no notes", function (this: SpecWorld) {
-  assert.equal(tournamentOf(this).notes, undefined);
+Then("the tournament has no subtitle", function (this: SpecWorld) {
+  assert.equal(tournamentOf(this).subtitle, undefined);
 });
 
 Then("the tournament has no players", function (this: SpecWorld) {

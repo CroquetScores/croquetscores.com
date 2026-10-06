@@ -34,6 +34,7 @@ Feature: The names a commentary's events are kept under
         | a comment being added                   | commentary-comment-added   |
         | a comment being edited                  | commentary-comment-edited  |
         | a comment being deleted                 | commentary-comment-deleted |
+        | a commentary's title being changed      | commentary-title-changed   |
 
   Rule: An event written down and read back is the event it was
 
@@ -49,6 +50,7 @@ Feature: The names a commentary's events are kept under
         | a comment being added                   |
         | a comment being edited                  |
         | a comment being deleted                 |
+        | a commentary's title being changed      |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -62,6 +64,7 @@ Feature: The names a commentary's events are kept under
         | a comment being added                   |
         | a comment being edited                  |
         | a comment being deleted                 |
+        | a commentary's title being changed      |
 
   Rule: What was kept without what an event cannot do without is refused
 
@@ -73,12 +76,16 @@ Feature: The names a commentary's events are kept under
 
       Examples:
         | happening                               | field     |
+        | a commentary's own record being started | tournamentId |
+        | a commentary's own record being started | title     |
+        | a commentary's own record being started | slug      |
         | a commentary's own record being started | writer    |
         | a comment being added                   | commentId |
         | a comment being added                   | text      |
         | a comment being edited                  | commentId |
         | a comment being edited                  | text      |
         | a comment being deleted                 | commentId |
+        | a commentary's title being changed      | title     |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>

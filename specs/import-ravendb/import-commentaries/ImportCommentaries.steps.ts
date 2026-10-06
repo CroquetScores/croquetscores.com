@@ -5,7 +5,7 @@ import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Commentary } from "../../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
-import type { CommentaryInTournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
+import { CommentaryId } from "../../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { accountsOf } from "../../infrastructure/support/accounts.js";
 import type { SpecWorld } from "../../support/world.js";
 import {
@@ -100,6 +100,8 @@ When("the commentary is imported", async function (this: SpecWorld) {
 
 // What it became -----------------------------------------------------------------
 
+// Found among the tournament's commentaries as the read model of them has
+// them, and read from its own stream.
 const commentaryCalled = async (
   world: SpecWorld,
   title: string,
@@ -107,22 +109,23 @@ const commentaryCalled = async (
   website: string,
 ): Promise<{
   readonly creator: AccountId | undefined;
-  readonly inTournament: CommentaryInTournament;
   readonly commentary: Commentary;
 }> => {
   const tournament = await tournamentKeptFor(world, id, website);
-  const inTournament = tournament.commentaries.find(
-    (each) => each.title.toString() === title,
+  const importing = importingOf(world);
+  const listed = await world.asARequest(() =>
+    importing.commentariesByTournament.listed(tournament.id),
   );
+  const found = listed.find((each) => each.title === title);
   assert.ok(
-    inTournament !== undefined,
-    `It has no commentary ${title}: ${tournament.commentaries.map((each) => each.title.toString()).join(", ")}.`,
+    found !== undefined,
+    `It has no commentary ${title}: ${listed.map((each) => each.title).join(", ")}.`,
   );
   const commentary = await world.asARequest(() =>
-    importingOf(world).commentaries.load(inTournament.id),
+    importing.commentaries.load(CommentaryId.from(found.id)),
   );
   assert.ok(commentary !== undefined, `${title} has no events.`);
-  return { creator: tournament.managers[0], inTournament, commentary };
+  return { creator: tournament.managers[0], commentary };
 };
 
 Then(
@@ -136,7 +139,10 @@ Then(
   "the tournament kept for {string} on {string} has no commentaries",
   async function (this: SpecWorld, id: string, website: string) {
     const tournament = await tournamentKeptFor(this, id, website);
-    assert.deepEqual(tournament.commentaries, []);
+    const listed = await this.asARequest(() =>
+      importingOf(this).commentariesByTournament.listed(tournament.id),
+    );
+    assert.deepEqual(listed, []);
   },
 );
 

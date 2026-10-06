@@ -130,3 +130,102 @@ Feature: What every page is set in
     Scenario: A year's page names no tournament in the header
       When the page at "/2026" is opened
       Then the header names no tournament
+
+  Rule: On a tournament's pages the tournament's subtitle is beneath its name in the header
+
+    A tournament's subtitle is what its managers want every reader to know,
+    whichever of its pages they are reading: where lunch is, when play
+    starts, a change to the draw. So on every page of a tournament with a
+    subtitle, it is shown beneath its name in the header, on a strip of the
+    header's green. The strip is beneath the pinned bar rather than in it,
+    and scrolls away with the page, so that a subtitle of several lines does
+    not take a phone's screen from what the page itself says once reading has
+    started.
+
+    A subtitle is written in Markdown (`TournamentSubtitle.feature`) and drawn
+    from it, so that a word made bold is bold and a link is a link. A web
+    address written out is a link too, as it is in a comment
+    (`commentary.feature`). A link in the subtitle is marked as one the site
+    does not vouch for, as a comment's is, since the subtitle is written by
+    whoever manages the tournament, not by the site. A line beginning with a
+    number is the start of a numbered list, as Markdown has it: a comment's
+    numbered turns are a commentary's own. A tournament with no subtitle has
+    no strip.
+
+    Background:
+      Given a viewport 1200 pixels wide
+      And a site served as "croquetscores.com"
+      And the server's clock reads "2026-10-03T10:00:00Z"
+      And "organiser@example.com" has an account, confirmed
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+
+    @postgres
+    Scenario Outline: Every page of a tournament with a subtitle shows it in the header
+      Given the tournament "Spring Open" has the subtitle "Lunch is at noon"
+      When the page at "<address>" is opened
+      Then the header shows the subtitle "Lunch is at noon"
+
+      Examples:
+        | address                                                 |
+        | /2026/ac/spring-open                                    |
+        | /2026/ac/spring-open/players                            |
+        | /2026/ac/spring-open/players/sam-someone                |
+        | /2026/ac/spring-open/competitions/block-a               |
+        | /2026/ac/spring-open/competitions/block-a/summary       |
+        | /2026/ac/spring-open/competitions/block-a/order-of-play |
+        | /2026/ac/spring-open/commentaries                       |
+
+    @postgres
+    Scenario: The subtitle is beneath the tournament named in the header
+      Given the tournament "Spring Open" has the subtitle "Lunch is at noon"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the subtitle in the header is beneath the tournament named there
+
+    @postgres
+    Scenario: The subtitle scrolls away with the page
+      Given a viewport 1200 pixels wide and 400 pixels high
+      And the tournament "Spring Open" has the subtitle "Lunch is at noon"
+      And the page at "/2026/ac/spring-open" is open
+      When the page is scrolled to its bottom
+      Then the subtitle in the header is out of sight
+
+    @postgres
+    Scenario: A word made bold in the subtitle is drawn bold
+      Given the tournament "Spring Open" has the subtitle "Lunch is at **noon**"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the subtitle in the header draws "noon" bold
+
+    @postgres
+    Scenario: A link in the subtitle leads where it says
+      Given the tournament "Spring Open" has the subtitle "See [the draw](https://example.com/draw)"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the subtitle's link "the draw" leads to "https://example.com/draw"
+
+    @postgres
+    Scenario: A web address written out in the subtitle is a link
+      Given the tournament "Spring Open" has the subtitle "Results at https://example.com/results"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the subtitle's link "https://example.com/results" leads to "https://example.com/results"
+
+    @postgres
+    Scenario: A link in the subtitle is one the site does not vouch for
+      Given the tournament "Spring Open" has the subtitle "See [the draw](https://example.com/draw)"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the subtitle's link "the draw" is marked as not vouched for
+
+    @postgres
+    Scenario: A line beginning with a number in the subtitle begins a numbered list
+      Given the tournament "Spring Open" has the subtitle:
+        """
+        1. Register
+        2. Play
+        """
+      When the page at "/2026/ac/spring-open" is opened
+      Then the subtitle in the header is a numbered list of 2 items
+
+    @postgres
+    Scenario: A tournament with no subtitle shows none in the header
+      When the page at "/2026/ac/spring-open" is opened
+      Then the header shows no subtitle

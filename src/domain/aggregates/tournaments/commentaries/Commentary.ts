@@ -3,17 +3,23 @@ import { AggregateRoot } from "../../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../../common/DomainEvent.js";
 import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
 import { Refused } from "../../../common/Refused.js";
+import { Slug } from "../../../common/Slug.js";
+import { firstFree } from "../freeSlugs.js";
 import type { CommentaryId } from "../primitives/CommentaryId.js";
+import { TournamentId } from "../primitives/TournamentId.js";
+import { CommentaryTitle } from "../value-objects/CommentaryTitle.js";
 import { CommentaryCommentAdded } from "./events/CommentaryCommentAdded.js";
 import { CommentaryCommentDeleted } from "./events/CommentaryCommentDeleted.js";
 import { CommentaryCommentEdited } from "./events/CommentaryCommentEdited.js";
 import { CommentaryStarted } from "./events/CommentaryStarted.js";
+import { CommentaryTitleChanged } from "./events/CommentaryTitleChanged.js";
 import { CommentId } from "./primitives/CommentId.js";
 import { CommentText } from "./value-objects/CommentText.js";
 
 /** Every reason a commentary refuses what it is asked. */
 export type CommentaryErrorCode =
   | "Commentary.NotTheWriter"
+  | "Commentary.TitleTaken"
   | "Commentary.NoSuchComment"
   | "Commentary.CommentAlreadyAdded";
 
@@ -22,6 +28,16 @@ export class CommentaryRefused extends Refused<CommentaryErrorCode> {}
 
 const refuse = (code: CommentaryErrorCode, message: string): never => {
   throw new CommentaryRefused(code, message);
+};
+
+// Another commentary's title, however it is capitalised.
+const refuseATitleTaken = (
+  title: CommentaryTitle,
+  taken: { readonly titles: readonly string[] },
+): void => {
+  if (taken.titles.some((other) => sameTitle(other, title.toString()))) {
+    refuse("Commentary.TitleTaken", "Another commentary has the title.");
+  }
 };
 
 /** One comment in a commentary, as it reads now. */
@@ -34,18 +50,42 @@ export interface Comment {
 }
 
 /**
- * One writer's account of a tournament as it is played: the comments under a
- * commentary's title, which the tournament lists (startCommentary.feature).
- * It is kept under the id the tournament gave it, as an aggregate of its own
- * rather than a part of the tournament, so that a busy commentary does not
- * make the tournament longer to read every time either changes.
+ * What the other commentaries on a commentary's tournament have taken, which
+ * none of them may have twice: their titles, however capitalised, and their
+ * slugs. Told it by whatever starts a commentary or changes its title, from
+ * the read model of a tournament's commentaries.
+ */
+export interface CommentariesTaken {
+  readonly titles: readonly string[];
+  readonly slugs: readonly string[];
+}
+
+// Where the page that starts a commentary is found among the tournament's
+// commentaries, which no commentary may be found at too (start.feature).
+const START_PAGE = "create";
+
+// A title is the same title however it is capitalised, as a reader takes it.
+const sameTitle = (one: string, other: string): boolean =>
+  one.toLowerCase() === other.toLowerCase();
+
+/**
+ * One writer's account of a tournament as it is played: a title, and the
+ * comments under it (start.feature). It is kept under its own id, as an
+ * aggregate of its own rather than a part of the tournament, since a
+ * tournament is read on every one of its pages and none of them needs its
+ * commentaries but through the read model of them
+ * (CommentariesByTournament.ts).
  *
  * Its writer is the account that started it, and the only account that may
- * add, edit or delete a comment in it. Whether its tournament is archived it
- * does not know, and whatever asks has asked the tournament first.
+ * change its title or add, edit or delete a comment in it. Whether its
+ * tournament is archived it does not know, and whatever asks has asked the
+ * tournament first (Tournament.allowWritingCommentary).
  */
 export class Commentary extends AggregateRoot {
   #writer: AccountId | undefined;
+  #tournament: TournamentId | undefined;
+  #title: CommentaryTitle | undefined;
+  #slug: Slug | undefined;
   // By the written id, in the order they were written. A deleted comment is
   // taken out, and its id kept in `#deleted`, so that no comment is ever
   // added under it again.
@@ -56,10 +96,36 @@ export class Commentary extends AggregateRoot {
     super(id);
   }
 
-  /** A new commentary, written by `by`, which has no comments. */
-  static start(id: CommentaryId, by: AccountId, at: ReadOnlyDate): Commentary {
+  /**
+   * A new commentary `id` on `tournament` called `title`, written by `by`,
+   * which has no comments, found at the first slug of its title that none of
+   * the tournament's other commentaries has. Refused when another has the
+   * title, however it is capitalised.
+   */
+  static start(
+    id: CommentaryId,
+    tournament: TournamentId,
+    title: CommentaryTitle,
+    taken: CommentariesTaken,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): Commentary {
+    refuseATitleTaken(title, taken);
+    const slug = firstFree(Slug.fromName(title.toString()), id, [
+      START_PAGE,
+      ...taken.slugs,
+    ]);
     const commentary = new Commentary(id);
-    commentary.record(new CommentaryStarted(by.value, by, at));
+    commentary.record(
+      new CommentaryStarted(
+        tournament.value,
+        title.toString(),
+        slug.toString(),
+        by.value,
+        by,
+        at,
+      ),
+    );
     return commentary;
   }
 
@@ -86,6 +152,51 @@ export class Commentary extends AggregateRoot {
       throw new Error("The commentary's stream did not begin by starting it.");
     }
     return this.#writer;
+  }
+
+  /** The tournament it is a commentary on. */
+  get tournament(): TournamentId {
+    return this.#started(this.#tournament);
+  }
+
+  get title(): CommentaryTitle {
+    return this.#started(this.#title);
+  }
+
+  /**
+   * Where it is found among its tournament's commentaries, made from its
+   * title when it was started and kept when the title is changed.
+   */
+  get slug(): Slug {
+    return this.#started(this.#slug);
+  }
+
+  // Every commentary's stream begins by starting it, so one without is a
+  // stream that was never a commentary's.
+  #started<T>(value: T | undefined): T {
+    if (value === undefined) {
+      throw new Error("The commentary's stream did not begin by starting it.");
+    }
+    return value;
+  }
+
+  /**
+   * That the commentary is now called `title`, keeping its slug, so that
+   * every link to it still finds it. Refused unless `by` is its writer, and
+   * when another of the tournament's commentaries, of whose titles `others`
+   * are, has the title however it is capitalised. A title changed to what it
+   * is already records nothing.
+   */
+  changeTitle(
+    title: CommentaryTitle,
+    others: readonly string[],
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessWriter(by);
+    refuseATitleTaken(title, { titles: others });
+    if (this.title.equals(title)) return;
+    this.record(new CommentaryTitleChanged(title.toString(), by, at));
   }
 
   /** Its comments not deleted, the first written first. */
@@ -140,6 +251,11 @@ export class Commentary extends AggregateRoot {
   protected apply(event: DomainEvent): void {
     if (event instanceof CommentaryStarted) {
       this.#writer = AccountId.from(event.writer);
+      this.#tournament = TournamentId.from(event.tournamentId);
+      this.#title = CommentaryTitle.from(event.title);
+      this.#slug = Slug.from(event.slug);
+    } else if (event instanceof CommentaryTitleChanged) {
+      this.#title = CommentaryTitle.from(event.title);
     } else if (event instanceof CommentaryCommentAdded) {
       const id = CommentId.from(event.commentId);
       this.#comments.set(id.value, {

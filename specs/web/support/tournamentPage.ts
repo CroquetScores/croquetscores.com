@@ -11,7 +11,13 @@ import {
 import type { SpecWorld } from "../../support/world.js";
 
 export type Tab =
-  "players" | "competitions" | "teams" | "tests" | "managers" | "scorers";
+  | "players"
+  | "competitions"
+  | "teams"
+  | "tests"
+  | "notes"
+  | "managers"
+  | "scorers";
 
 /**
  * Where a tab lists what it holds, once it has been asked for, or where a page

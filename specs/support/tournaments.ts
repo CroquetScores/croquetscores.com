@@ -13,6 +13,10 @@ import type { Competition } from "../../src/domain/aggregates/tournaments/compet
 import type { CompetitionId } from "../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Commentary } from "../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { CommentaryId } from "../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
+import type { ManagerNoteHeading } from "../../src/application/operations/tournaments/managerNoteOperations.js";
+import type { CommentaryListed } from "../../src/application/operations/tournaments/tournamentForReaders.js";
+import type { ManagerNote } from "../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
+import type { ManagerNoteId } from "../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 
 export interface TournamentsInHand {
   /** Sends `command` to the application. Throws what the mediator throws. */
@@ -23,6 +27,28 @@ export interface TournamentsInHand {
 
   /** The tournament `id` as its stream reads now, or nothing if it has none. */
   load(id: TournamentId): Promise<Tournament | undefined>;
+
+  /** The note `id` as its stream reads now, or nothing if it has none. */
+  loadManagerNote(id: ManagerNoteId): Promise<ManagerNote | undefined>;
+
+  /**
+   * Keeps `note` as an operation would, for what no request does just so,
+   * such as a note added under an id the scenario names.
+   */
+  saveManagerNote(note: ManagerNote): Promise<void>;
+
+  /**
+   * The commentaries of `tournament`, as the read model of them finds them,
+   * the most recently started first.
+   */
+  commentariesOf(
+    tournament: TournamentId,
+  ): Promise<readonly CommentaryListed[]>;
+
+  /** The notes of `tournament`, as the read model of them finds them. */
+  managerNotesOf(
+    tournament: TournamentId,
+  ): Promise<readonly ManagerNoteHeading[]>;
 
   /** The competition `id` as its stream reads now, or nothing if it has none. */
   loadCompetition(id: CompetitionId): Promise<Competition | undefined>;
@@ -35,7 +61,7 @@ export interface TournamentsInHand {
    * the order they were kept.
    */
   eventsOf(
-    id: TournamentId | CompetitionId | CommentaryId,
+    id: TournamentId | CompetitionId | CommentaryId | ManagerNoteId,
   ): Promise<readonly DomainEvent[]>;
 
   /** How many tournaments have been kept. */

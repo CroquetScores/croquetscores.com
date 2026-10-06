@@ -5,6 +5,7 @@ import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
@@ -17,6 +18,8 @@ import {
 import {
   competitionsInUse,
   tournamentForReaders,
+  managerNotesChangedOf,
+  type TournamentCommentaries,
 } from "./tournamentForReaders.js";
 import {
   type TournamentAddresses,
@@ -47,6 +50,8 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly competitions: Competitions,
     private readonly addresses: TournamentAddresses,
+    private readonly notes: TournamentManagerNotes,
+    private readonly changes: TournamentCommentaries,
   ) {
     super();
   }
@@ -192,6 +197,9 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
       }));
     return {
       name: tournament.name.toString(),
+      subtitle: tournament.subtitle?.markdown,
+      commentariesChanged: await this.changes.of(tournament.id),
+      managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address: tournament.address.toString(),
       playedByTeams: true,
       competitions: competitionsInUse(tournament),

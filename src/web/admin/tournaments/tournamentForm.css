@@ -1,5 +1,5 @@
 /* What the new tournament form asks that the public dialogs never have: days,
-   choices from a list, notes, and ticks. Drawn in the dialog's own vocabulary
+   choices from a list, a subtitle, and ticks. Drawn in the dialog's own vocabulary
    (STYLE.md §5b), so that a field here is a field like any other. */
 
 /* A day or a choice is never empty to look at, since the browser draws its

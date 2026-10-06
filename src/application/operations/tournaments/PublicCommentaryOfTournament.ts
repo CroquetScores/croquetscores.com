@@ -1,6 +1,10 @@
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
-import type { CompetitionOfTournament } from "./tournamentForReaders.js";
+import type {
+  CompetitionOfTournament,
+  ManagerNoteChanged,
+  CommentaryChanged,
+} from "./tournamentForReaders.js";
 
 /** Every reason asking for a commentary can be refused where it is asked. */
 export type PublicCommentaryOfTournamentRefusedCode =
@@ -24,6 +28,18 @@ export interface TournamentCommentaryToRead {
   readonly name: string;
   /** Where the tournament is found now, as "2026/ac/spring-open". */
   readonly address: string;
+  /** The tournament's subtitle, in Markdown, or nothing where it has none. */
+  readonly subtitle: string | undefined;
+  /**
+   * Each of the tournament's notes with when it last changed, the most
+   * recently written first, for its section bar to mark Notes by.
+   */
+  readonly managerNotes: readonly ManagerNoteChanged[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
   /** Whether it is played by teams, which its sections say. */
   readonly playedByTeams: boolean;
   /** Its competitions in use, in the tournament's order. */

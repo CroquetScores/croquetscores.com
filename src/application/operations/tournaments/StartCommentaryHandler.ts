@@ -9,6 +9,7 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { Commentaries } from "../commentaries/commentaryOperations.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 import { StartCommentary } from "./StartCommentary.js";
 
@@ -28,6 +29,7 @@ export class StartCommentaryHandler extends CommandHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly commentaries: Commentaries,
+    private readonly listed: TournamentCommentaries,
   ) {
     super();
   }
@@ -39,15 +41,21 @@ export class StartCommentaryHandler extends CommandHandler<
       command.tournament,
       "StartCommentary",
     );
+    tournament.allowWritingCommentary();
     const id = CommentaryId.create();
-    tournament.startCommentary(
-      id,
-      CommentaryTitle.from(command.title),
-      by,
-      command.requestedAt,
+    // Kept in a stream of its own, told the titles and slugs the tournament's
+    // other commentaries have, forgotten writers' among them, by the read
+    // model of them.
+    await this.commentaries.save(
+      Commentary.start(
+        id,
+        tournament.id,
+        CommentaryTitle.from(command.title),
+        await this.listed.taken(tournament.id),
+        by,
+        command.requestedAt,
+      ),
     );
-    await this.tournaments.save(tournament);
-    await this.commentaries.save(Commentary.start(id, by, command.requestedAt));
     return id;
   }
 }

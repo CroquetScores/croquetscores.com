@@ -4,12 +4,12 @@ Feature: Only a tournament's managers change it
   (`create.feature`). After that, only the tournament's managers can do
   anything to it: change what it is, archive or restore it, add, change,
   archive or restore its players, its competitions, its teams and their
-  players, put any of them in order, add and change its tests, and say who
-  else manages it or scores it. Everything else that
+  players, put any of them in order, add and change its tests, write its notes
+  (`writeManagerNotes.feature`), and say who else manages it or scores it. Everything else that
   asks is refused, a scorer as much as somebody the tournament has never
   heard of: a scorer enters scores, and nothing else. Starting a commentary
   is not a change of that kind, and any account can start one
-  (`startCommentary.feature`).
+  (`writeCommentary.feature`).
 
   Who is asking is what every event already records as its cause, so the
   tournament is told on every request, and asks it before anything else. A
@@ -65,6 +65,7 @@ Feature: Only a tournament's managers change it
         | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a manager         |
         | the account "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b" is taken off the managers |
         | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a scorer          |
+        | the tournament's manager notes are written                                           |
         | the account "account/5f0c7a2e-3b1d-4c8e-9f6a-2d4b8e1c7a3f" is taken off the scorers  |
 
     Scenario: A refused request changes nothing
@@ -105,6 +106,7 @@ Feature: Only a tournament's managers change it
         | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a manager         |
         | the account "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b" is taken off the managers |
         | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a scorer          |
+        | the tournament's manager notes are written                                           |
         | the account "account/5f0c7a2e-3b1d-4c8e-9f6a-2d4b8e1c7a3f" is taken off the scorers  |
 
   Rule: Nobody but a manager can do anything to a tournament's teams or its tests

@@ -1,12 +1,14 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { Commentaries } from "../commentaries/commentaryOperations.js";
+import { CommentaryId } from "../../../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   PublicCommentaryOfTournament,
   type TournamentCommentaryToRead,
@@ -14,6 +16,8 @@ import {
 import {
   competitionsInUse,
   tournamentForReaders,
+  managerNotesChangedOf,
+  type TournamentCommentaries,
 } from "./tournamentForReaders.js";
 import {
   namesOf,
@@ -33,6 +37,8 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly commentaries: Commentaries,
     private readonly addresses: TournamentAddresses,
+    private readonly notes: TournamentManagerNotes,
+    private readonly changes: TournamentCommentaries,
   ) {
     super();
   }
@@ -53,19 +59,25 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
         "There is no such commentary.",
       );
     };
+    // Found at its slug by the read model of the tournament's commentaries,
+    // and read from its own stream.
+    const id = await this.changes.at(tournament.id, query.slug);
     const found =
-      tournament.commentaries.find(
-        ({ slug }) => slug.toString() === query.slug,
-      ) ?? noSuchCommentary();
+      (id === undefined
+        ? undefined
+        : await this.commentaries.load(CommentaryId.from(id))) ??
+      noSuchCommentary();
     // A forgotten writer has no name to be read, and every word of the
     // commentary is theirs, so it is not one a reader is shown.
     const [writer] = await namesOf(this.accounts, [found.writer]);
     if (writer === undefined) return noSuchCommentary();
-    const commentary =
-      (await this.commentaries.load(found.id)) ?? noSuchCommentary();
+    const commentary = found;
     const address = tournament.address.toString();
     return {
       name: tournament.name.toString(),
+      subtitle: tournament.subtitle?.markdown,
+      commentariesChanged: await this.changes.of(tournament.id),
+      managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       playedByTeams: tournament.format.isTeamFormat,
       competitions: competitionsInUse(tournament),

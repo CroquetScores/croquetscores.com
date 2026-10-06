@@ -1,8 +1,14 @@
-import { Then } from "@cucumber/cucumber";
+import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import {
+  inHandOf,
+  load,
+  scenarioOf,
+} from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { colourOf, dangerOn, wordsFor } from "../../support/newMarks.js";
 import { unmarked } from "../../support/languages.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -166,5 +172,56 @@ Then(
       ),
       `${words} is not above ${heading}.`,
     );
+  },
+);
+
+// What is new to the reader ------------------------------------------------------
+
+// Read by opening its page, which is what reading it is, in this browser.
+// Found by its title among the scenario's tournaments, which the scenario
+// names it by.
+Given(
+  "the reader has read the commentary {string}",
+  async function (this: SpecWorld, title: string) {
+    for (const id of scenarioOf(this).byName.values()) {
+      const commentary = (await inHandOf(this).commentariesOf(id)).find(
+        (each) => each.title === title,
+      );
+      if (commentary === undefined) continue;
+      const tournament = await load(this, id);
+      await this.browserPage.goto(
+        `${this.baseUrl!}/${tournament.address.toString()}/commentaries/${commentary.slug}`,
+      );
+      return;
+    }
+    assert.fail(`No tournament has the commentary ${title}.`);
+  },
+);
+
+Then(
+  /^the commentary "(.*)" is (not )?marked as new$/,
+  async function (this: SpecWorld, title: string, not: string | null) {
+    const marks = await commentaryTitled(this, title)
+      .locator(".new-mark")
+      .count();
+    assert.equal(marks, not === null ? 1 : 0);
+  },
+);
+
+Then(
+  "the commentary {string} is marked in red",
+  async function (this: SpecWorld, title: string) {
+    const mark = commentaryTitled(this, title).locator(".new-mark");
+    assert.equal(await colourOf(mark), await dangerOn(this));
+  },
+);
+
+Then(
+  "the mark on the commentary {string} is said as the words for {string}",
+  async function (this: SpecWorld, title: string, key: string) {
+    const said = await commentaryTitled(this, title)
+      .locator(".new-mark .visually-hidden")
+      .textContent();
+    assert.equal(said, wordsFor(key));
   },
 );

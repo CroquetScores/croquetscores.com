@@ -53,6 +53,20 @@ Feature: A Swiss of a tournament, for anybody to read
   its Swiss "Zed" has "Sam Someone", "Alex Another" and "Chris Third" entered
   in it, in that order.
 
+  The tournament's subtitle is answered with it, in Markdown as it is kept
+  (`TournamentSubtitle.feature`), since every page of a tournament shows it
+  beneath its name in the header (`layout.feature`). A tournament with no
+  subtitle is answered with none.
+
+  So are its manager's notes, each by its id with when it last changed
+  (`PublicManagerNotesOfTournament.feature`), since every page of a
+  tournament marks its Notes section while a reader has a note there they
+  have not read as it is now (`notes.feature`).
+
+  So are its commentaries, each by its id with when it last changed
+  (`CommentariesByTournament.feature`), since every page of a tournament
+  marks its Commentary section the same way (`commentaries.feature`).
+
   These scenarios run against Postgres, with the application's event store and
   read models.
 
@@ -78,6 +92,29 @@ Feature: A Swiss of a tournament, for anybody to read
     Scenario: The tournament is answered with the Swiss
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then the tournament answered is called "Spring Open"
+
+    Scenario: The tournament's subtitle is answered
+      Given the tournament "Spring Open" has the subtitle "Lunch is at **noon**"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the tournament answered has the subtitle "Lunch is at **noon**"
+
+    Scenario: A tournament with no subtitle is answered with none
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the tournament answered has no subtitle
+
+    Scenario: The tournament's manager notes are answered with when each last changed
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has edited the manager note "Lunch is at noon" of "Spring Open" to "Lunch is at one"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first manager note of the tournament answered last changed at "2026-09-26T11:00:00Z"
+
+    Scenario: The tournament's commentaries are answered with when each last changed
+      Given "organiser@example.com" has started the commentary "Day one" on "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first commentary of the tournament answered last changed at "2026-09-26T11:00:00Z"
 
     Scenario: A tournament found at its old address is answered with where it is found now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

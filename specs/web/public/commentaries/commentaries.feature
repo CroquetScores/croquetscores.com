@@ -37,6 +37,21 @@ Feature: A tournament's commentaries page is the old site's
   in who follows it is asked to sign in there, which tells them what writing
   needs rather than hiding that it can be done.
 
+  A reader following a commentary needs to know when there is something new
+  in it to read, as they do of a tournament's notes (`notes.feature`), and
+  the same way: a commentary they have not read as it is now is marked with
+  a red asterisk in the list, until they open it (`commentary.feature`), and
+  while there is any such commentary the Commentary section is marked with a
+  red asterisk on every page of the tournament. A commentary is news again
+  once a comment is added to it since the reader read it, or a comment in it
+  is edited, since what they read is no longer what it says; a comment taken
+  away is not news, and nor is a title changed. When each commentary last
+  changed is kept by a read model, so that no page reads comments to know it
+  (`CommentariesByTournament.feature`). A commentary whose writer has been
+  forgotten is not listed, and so is never news. What a reader has read is
+  remembered by their browser, in a cookie, as their notes are; the asterisk
+  is said to a screen reader as the word "new".
+
   The tournament is named in the bar beneath the site's name, as on any of
   its pages, and its sections are the tournament's, with Commentary marked as
   the section being read. An archived tournament has no commentaries page,
@@ -152,6 +167,102 @@ Feature: A tournament's commentaries page is the old site's
     Scenario: Start new commentary comes before the Disclaimer
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then "Start new commentary" comes before the heading "Disclaimer"
+
+  Rule: A commentary the reader has not read as it is now is marked with a red asterisk
+
+    Background:
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+
+    Scenario: A commentary the reader has not read is marked
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is marked as new
+
+    Scenario: The mark is red
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is marked in red
+
+    Scenario: The mark is said to a screen reader as the word new
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the mark on the commentary "Day one" is said as the words for "marks.new"
+
+    Scenario: A commentary the reader has read is not marked
+      Given the reader has read the commentary "Day one"
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is not marked as new
+
+    Scenario: A comment added since the reader read it marks it again
+      Given the reader has read the commentary "Day one"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is marked as new
+
+    Scenario: A comment edited since the reader read it marks it again
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has read the commentary "Day one"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "writer@example.com" has edited the comment "Sam is two hoops up" in "Day one" of "Spring Open" to "Sam is three hoops up"
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is marked as new
+
+    Scenario: A comment taken away since the reader read it does not mark it again
+      Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      And the reader has read the commentary "Day one"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "writer@example.com" has deleted the comment "Sam is two hoops up" in "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is not marked as new
+
+    Scenario: A commentary read in another browser is still marked
+      Given the reader has read the commentary "Day one"
+      And the reader opens another browser
+      When the page at "/2026/ac/spring-open/commentaries" is opened
+      Then the commentary "Day one" is marked as new
+
+  Rule: While any commentary is not read as it is now, the Commentary section is marked with a red asterisk on every page of the tournament
+
+    Scenario Outline: Every page of the tournament marks the Commentary section
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      When the page at "<address>" is opened
+      Then the section "Commentary" is marked as new
+
+      Examples:
+        | address                                  |
+        | /2026/ac/spring-open                     |
+        | /2026/ac/spring-open/players             |
+        | /2026/ac/spring-open/players/sam-someone |
+        | /2026/ac/spring-open/notes               |
+        | /2026/ac/spring-open/commentaries        |
+
+    Scenario: The section's mark is red
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the section "Commentary" is marked in red
+
+    Scenario: A tournament with no commentaries does not mark the section
+      When the page at "/2026/ac/spring-open" is opened
+      Then the section "Commentary" is not marked as new
+
+    Scenario: Once every commentary is read the section is not marked
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      And the reader has read the commentary "Day one"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the section "Commentary" is not marked as new
+
+    Scenario: A comment added since every commentary was read marks the section again
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      And the reader has read the commentary "Day one"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the section "Commentary" is marked as new
+
+    Scenario: A commentary whose writer has been forgotten does not mark the section
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+      And the account for "writer@example.com" has been forgotten
+      When the page at "/2026/ac/spring-open" is opened
+      Then the section "Commentary" is not marked as new
 
   Rule: Commentary is marked as the section being read
 

@@ -42,17 +42,22 @@ export const rememberComment = (
 };
 
 /**
- * The commentary on the tournament `tournament` called `title`, and one that
- * names nothing where it has none, or where there is no tournament.
+ * The commentary on the tournament `tournament` called `title`, as the read
+ * model of its commentaries finds it, and one that names nothing where it has
+ * none, or where there is no tournament.
  */
 export const commentaryIn = async (
   world: SpecWorld,
   tournament: TournamentId,
   title: string,
-): Promise<CommentaryId> =>
-  (await inHandOf(world).load(tournament))?.commentaries.find(
-    (commentary) => commentary.title.toString() === title,
-  )?.id ?? CommentaryId.create();
+): Promise<CommentaryId> => {
+  const found = (await inHandOf(world).commentariesOf(tournament)).find(
+    (commentary) => commentary.title === title,
+  );
+  return found === undefined
+    ? CommentaryId.create()
+    : CommentaryId.from(found.id);
+};
 
 /** The commentary `id` as its stream reads now. */
 export const loadCommentary = async (

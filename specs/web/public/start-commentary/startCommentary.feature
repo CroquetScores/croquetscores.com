@@ -14,7 +14,7 @@ Feature: A reader signed in can start a commentary on a tournament
   here holds a length.
 
   A title that breaks a rule, or one another commentary on the tournament
-  has (`startCommentary.feature`), is said beneath the field, and what was
+  has (`start.feature`), is said beneath the field, and what was
   typed is put back. A sound one starts the commentary, with the reader as
   its writer, and the reader is taken to its page, ready to write the first
   comment.
@@ -119,7 +119,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day One" is typed
       When the dialog is submitted
-      Then the title field says the message for "Tournament.CommentaryTitleTaken"
+      Then the title field says the message for "Commentary.TitleTaken"
 
     Scenario: What was typed is put back
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"

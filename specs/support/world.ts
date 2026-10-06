@@ -37,7 +37,7 @@ import type { Countries } from "../../src/domain/aggregates/tournaments/value-ob
 import type { Region } from "../../src/domain/aggregates/tournaments/value-objects/Region.js";
 import type { Sport } from "../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
-import type { TournamentNotes } from "../../src/domain/aggregates/tournaments/value-objects/TournamentNotes.js";
+import type { TournamentSubtitle } from "../../src/domain/aggregates/tournaments/value-objects/TournamentSubtitle.js";
 import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/TournamentPlayer.js";
 import type { TournamentPlayerId } from "../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { CompetitionPlayer } from "../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
@@ -312,9 +312,9 @@ export class SpecWorld extends World {
   public sameTournamentFormat: boolean | undefined;
   public offeredFormats: readonly TournamentFormat[] | undefined;
   public offeredFormatsChecked = 0;
-  // The notes a scenario made, which may be none, kept apart from whether any
-  // were made at all.
-  public madeNotes: { notes: TournamentNotes | undefined } | undefined;
+  // The subtitle a scenario made, which may be none, kept apart from whether
+  // any was made at all.
+  public madeSubtitle: { subtitle: TournamentSubtitle | undefined } | undefined;
   // The player in a tournament a scenario makes, the other it is compared
   // with, and whether the two were found the same. A failure to make one is
   // kept in `failure`.

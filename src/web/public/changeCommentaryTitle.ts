@@ -16,7 +16,7 @@ import { RequestInvalid } from "../../application/common/ValidationBehaviour.js"
 import { ChangeCommentaryTitle } from "../../application/operations/tournaments/ChangeCommentaryTitle.js";
 import type { TournamentCommentaryToRead } from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
 import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
-import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
+import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { BrokenRule } from "../../domain/common/validation/Validator.js";
 import type { Assets } from "../common/assets.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
@@ -34,9 +34,9 @@ import {
 import { toSignIn } from "./profile.js";
 import { yearInPath } from "./year.js";
 
-// What the tournament refuses of a title that is the title's to put right,
+// What the commentary refuses of a title that is the title's to put right,
 // said beneath the field as a rule the title breaks is.
-const saidOfTheTitle: readonly string[] = ["Tournament.CommentaryTitleTaken"];
+const saidOfTheTitle: readonly string[] = ["Commentary.TitleTaken"];
 
 const formFor = (speaking: Speaking, action: string, typed: Typed): Dialog => ({
   title: speaking.say("changeCommentaryTitle.title"),
@@ -83,7 +83,11 @@ export const registerChangeCommentaryTitlePage = (
       .type("text/html; charset=utf-8")
       .send(
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            subtitle: asked.subtitle,
+          },
           title: dialog.title,
           theme: themeOf(request),
           signedIn: true,
@@ -148,7 +152,7 @@ export const registerChangeCommentaryTitlePage = (
       }
       if (failure instanceof RequestInvalid) return refused(failure.broken);
       if (
-        failure instanceof TournamentRefused &&
+        failure instanceof CommentaryRefused &&
         saidOfTheTitle.includes(failure.code)
       ) {
         return refused([{ code: failure.code, fields: ["title"] }]);

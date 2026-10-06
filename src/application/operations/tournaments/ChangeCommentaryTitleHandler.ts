@@ -7,12 +7,18 @@ import { CommentaryTitle } from "../../../domain/aggregates/tournaments/value-ob
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { askedBy, tournamentFor } from "./tournamentOperations.js";
+import {
+  type Commentaries,
+  CommentaryOperationRefused,
+} from "../commentaries/commentaryOperations.js";
 import { ChangeCommentaryTitle } from "./ChangeCommentaryTitle.js";
+import type { TournamentCommentaries } from "./tournamentForReaders.js";
+import { askedBy, tournamentFor } from "./tournamentOperations.js";
 
 /**
- * Changing a commentary's title. Who may is the tournament's to say, since it
- * knows who started each commentary.
+ * Changing a commentary's title, in its own stream. Who may is the
+ * commentary's to say, since it knows its writer, and whether commentary may
+ * be written on the tournament is the tournament's.
  */
 export class ChangeCommentaryTitleHandler extends CommandHandler<
   ChangeCommentaryTitle,
@@ -23,6 +29,8 @@ export class ChangeCommentaryTitleHandler extends CommandHandler<
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly commentaries: Commentaries,
+    private readonly listed: TournamentCommentaries,
   ) {
     super();
   }
@@ -34,12 +42,28 @@ export class ChangeCommentaryTitleHandler extends CommandHandler<
       command.tournament,
       "ChangeCommentaryTitle",
     );
-    tournament.changeCommentaryTitle(
+    // Found under the tournament it is on, so that a commentary of another
+    // tournament is not one this tournament has.
+    const commentary = await this.commentaries.load(
       CommentaryId.from(command.commentary),
+    );
+    if (
+      commentary === undefined ||
+      !commentary.tournament.equals(tournament.id)
+    ) {
+      throw new CommentaryOperationRefused(
+        "ChangeCommentaryTitle.NoSuchCommentary",
+        "There is no such commentary.",
+      );
+    }
+    commentary.changeTitle(
       CommentaryTitle.from(command.title),
+      // The other commentaries' titles, from the read model of them.
+      (await this.listed.taken(tournament.id, commentary.id.value)).titles,
       by,
       command.requestedAt,
     );
-    await this.tournaments.save(tournament);
+    tournament.allowWritingCommentary();
+    await this.commentaries.save(commentary);
   }
 }

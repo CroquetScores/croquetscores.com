@@ -4,8 +4,9 @@
 // reader is taken to once it is started. A title that breaks a rule, or that
 // another commentary on the tournament has, is said beneath the field with
 // what was typed put back. The field puts no limit on what is typed, since a
-// browser counts what is typed and a title is counted with its tags and its
-// spaces taken out; a title too long is said beneath it as any rule is.
+// browser counts what is typed and a title is counted as a reader counts it,
+// with the spaces at either end taken out; a title too long is said beneath
+// it as any rule is.
 //
 // Any account will do, and a reader who is not signed in is sent to sign in
 // and brought back. It needs no scripting.
@@ -19,7 +20,7 @@ import {
 import { StartCommentary } from "../../application/operations/tournaments/StartCommentary.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
-import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
+import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { BrokenRule } from "../../domain/common/validation/Validator.js";
 import type { Assets } from "../common/assets.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
@@ -40,9 +41,9 @@ const notThere: readonly string[] = [
   "PublicCommentariesOfTournament.NoSuchTournament",
 ];
 
-// What the tournament refuses of a title that is the title's to put right,
+// What the commentary refuses of a title that is the title's to put right,
 // said beneath the field as a rule the title breaks is.
-const saidOfTheTitle: readonly string[] = ["Tournament.CommentaryTitleTaken"];
+const saidOfTheTitle: readonly string[] = ["Commentary.TitleTaken"];
 
 const formFor = (speaking: Speaking, action: string, typed: Typed): Dialog => ({
   title: speaking.say("startCommentary.title"),
@@ -104,7 +105,11 @@ export const registerStartCommentaryPage = (
       .type("text/html; charset=utf-8")
       .send(
         render(assets, {
-          tournament: { name: tournament.name, address: tournament.address },
+          tournament: {
+            name: tournament.name,
+            address: tournament.address,
+            subtitle: tournament.subtitle,
+          },
           title: dialog.title,
           theme: themeOf(request),
           signedIn: true,
@@ -179,7 +184,7 @@ export const registerStartCommentaryPage = (
       }
       if (failure instanceof RequestInvalid) return refused(failure.broken);
       if (
-        failure instanceof TournamentRefused &&
+        failure instanceof CommentaryRefused &&
         saidOfTheTitle.includes(failure.code)
       ) {
         return refused([{ code: failure.code, fields: ["title"] }]);

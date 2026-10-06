@@ -4,7 +4,11 @@ import type {
   GameOfKnockout,
   WhichSide,
 } from "./PublicKnockoutOfTournament.js";
-import type { CompetitionOfTournament } from "./tournamentForReaders.js";
+import type {
+  CompetitionOfTournament,
+  ManagerNoteChanged,
+  CommentaryChanged,
+} from "./tournamentForReaders.js";
 
 /** Every reason asking for a tournament's test can be refused where it is asked. */
 export type PublicTestOfTournamentRefusedCode =
@@ -51,6 +55,18 @@ export interface TestToRead {
   readonly name: string;
   /** Where the tournament is found now, as "2026/ac/spring-tests". */
   readonly address: string;
+  /** The tournament's subtitle, in Markdown, or nothing where it has none. */
+  readonly subtitle: string | undefined;
+  /**
+   * Each of the tournament's notes with when it last changed, the most
+   * recently written first, for its section bar to mark Notes by.
+   */
+  readonly managerNotes: readonly ManagerNoteChanged[];
+  /**
+   * Each of the tournament's commentaries with when it last changed, for its
+   * section bar to mark Commentary by.
+   */
+  readonly commentariesChanged: readonly CommentaryChanged[];
   /** Always, since only a tournament played by teams has tests. */
   readonly playedByTeams: true;
   /** The tournament's competitions in use, its tests, for its sections. */

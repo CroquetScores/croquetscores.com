@@ -32,6 +32,14 @@ export const tournamentsThrough = (
     send: (command) => application.mediator.send(command),
     ask: (query) => application.mediator.query(query),
     load: (id) => asARequest(() => application.tournaments.load(id)),
+    loadManagerNote: (id) =>
+      asARequest(() => application.managerNotes.load(id)),
+    saveManagerNote: (note) =>
+      asARequest(() => application.managerNotes.save(note)),
+    managerNotesOf: (id) =>
+      asARequest(() => application.managerNotesByTournament.of(id)),
+    commentariesOf: (id) =>
+      asARequest(() => application.commentariesByTournament.listed(id)),
     loadCompetition: (id) =>
       asARequest(() => application.competitions.load(id)),
     loadCommentary: (id) => asARequest(() => application.commentaries.load(id)),
@@ -80,7 +88,9 @@ export const changeTournament = async (
         sport: as.sport.code,
         country: as.country.code,
         region: as.region?.code,
-        ...(as.notes === undefined ? {} : { notes: as.notes.markdown }),
+        ...(as.subtitle === undefined
+          ? {}
+          : { subtitle: as.subtitle.markdown }),
         handicap: as.handicap,
         drawsAllowed: as.drawsAllowed,
         levelTestsDrawn: as.levelTestsDrawn,

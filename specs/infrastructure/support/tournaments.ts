@@ -123,6 +123,14 @@ import { StartCommentaryHandler } from "../../../src/application/operations/tour
 import { StartCommentaryValidator } from "../../../src/application/operations/tournaments/StartCommentaryValidator.js";
 import { ChangeCommentaryTitleHandler } from "../../../src/application/operations/tournaments/ChangeCommentaryTitleHandler.js";
 import { ChangeCommentaryTitleValidator } from "../../../src/application/operations/tournaments/ChangeCommentaryTitleValidator.js";
+import { AddManagerNoteHandler } from "../../../src/application/operations/tournaments/AddManagerNoteHandler.js";
+import { AddManagerNoteValidator } from "../../../src/application/operations/tournaments/AddManagerNoteValidator.js";
+import { DeleteManagerNoteHandler } from "../../../src/application/operations/tournaments/DeleteManagerNoteHandler.js";
+import { EditManagerNoteHandler } from "../../../src/application/operations/tournaments/EditManagerNoteHandler.js";
+import { EditManagerNoteValidator } from "../../../src/application/operations/tournaments/EditManagerNoteValidator.js";
+import { ManagerNotesOfTournamentHandler } from "../../../src/application/operations/tournaments/ManagerNotesOfTournamentHandler.js";
+import { PublicManagerNoteOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicManagerNoteOfTournamentHandler.js";
+import { PublicManagerNotesOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicManagerNotesOfTournamentHandler.js";
 import { AddCommentHandler } from "../../../src/application/operations/commentaries/AddCommentHandler.js";
 import { AddCommentValidator } from "../../../src/application/operations/commentaries/AddCommentValidator.js";
 import { EditCommentHandler } from "../../../src/application/operations/commentaries/EditCommentHandler.js";
@@ -131,11 +139,39 @@ import { DeleteCommentHandler } from "../../../src/application/operations/commen
 import { PublicCommentariesOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicCommentariesOfTournamentHandler.js";
 import { PublicCommentaryOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicCommentaryOfTournamentHandler.js";
 import { Commentary } from "../../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
+import { ManagerNote } from "../../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
+import { ManagerNotesByTournament } from "../../../src/infrastructure/read-models/ManagerNotesByTournament.js";
+import { CommentariesByTournament } from "../../../src/infrastructure/read-models/CommentariesByTournament.js";
+import { ManagerNoteToEditHandler } from "../../../src/application/operations/tournaments/ManagerNoteToEditHandler.js";
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
 import { standUpFor } from "./registering.js";
 import { unitOfWorkOf } from "./transactions.js";
+import { heldUntilTheOthersHaveRead } from "../../support/heldAtOnce.js";
+
+// `readModel`, but held just after it is asked `method`, until whatever else
+// is asked at once has asked it too (heldAtOnce.ts): so that two commands asked
+// for at once read what is taken before either writes, where nothing makes the
+// second wait. Every other method is the read model's own.
+const heldAfter = <TReadModel extends object>(
+  world: SpecWorld,
+  readModel: TReadModel,
+  method: keyof TReadModel,
+): TReadModel =>
+  new Proxy(readModel, {
+    get(target, property) {
+      const value: unknown = Reflect.get(target, property, target);
+      if (typeof value !== "function") return value;
+      const bound = (value as (...args: unknown[]) => unknown).bind(target);
+      if (property !== method) return bound;
+      return async (...args: unknown[]) => {
+        const answer = await bound(...args);
+        await heldUntilTheOthersHaveRead(world);
+        return answer;
+      };
+    },
+  });
 
 Given("the application's tournaments", function (this: SpecWorld) {
   standUpFor(this);
@@ -143,9 +179,13 @@ Given("the application's tournaments", function (this: SpecWorld) {
   const accounts = accountsOf(this);
   const byAddress = new TournamentsByAddress(unitOfWork);
   const byWebsite = new TournamentsByWebsite(unitOfWork);
+  const byNotes = new ManagerNotesByTournament(unitOfWork);
+  const byCommentaries = new CommentariesByTournament(unitOfWork);
   const store = new ProjectingEventStore(accounts.store, [
     byAddress,
     byWebsite,
+    byNotes,
+    byCommentaries,
   ]);
   // Wrapped rather than handed over as they are: a static passed on its own is
   // a method separated from what it was declared on.
@@ -157,6 +197,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
   );
   const commentaries = new AggregateRepository(store, (id, events) =>
     Commentary.rebuiltFrom(id, events),
+  );
+  const managerNotes = new AggregateRepository(store, (id, events) =>
+    ManagerNote.rebuiltFrom(id, events),
   );
   const accountRepository = new AggregateRepository(
     accounts.store,
@@ -203,6 +246,8 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new UpdateTestValidator());
   validation.register(new StartCommentaryValidator());
   validation.register(new ChangeCommentaryTitleValidator());
+  validation.register(new AddManagerNoteValidator());
+  validation.register(new EditManagerNoteValidator());
   validation.register(new AddCommentValidator());
   validation.register(new EditCommentValidator());
   const both = [tournaments, accountRepository] as const;
@@ -255,8 +300,24 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
-  mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
-  mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
+  // What is taken is read held, for the scenarios that ask two of these at
+  // once.
+  const takenHeld = heldAfter(this, byCommentaries, "taken");
+  mediator.handleCommand(
+    new StartCommentaryHandler(...both, commentaries, takenHeld),
+  );
+  mediator.handleCommand(
+    new ChangeCommentaryTitleHandler(...both, commentaries, takenHeld),
+  );
+  mediator.handleCommand(
+    new AddManagerNoteHandler(
+      ...both,
+      managerNotes,
+      heldAfter(this, byNotes, "slugsTakenIn"),
+    ),
+  );
+  mediator.handleCommand(new EditManagerNoteHandler(...both, managerNotes));
+  mediator.handleCommand(new DeleteManagerNoteHandler(...both, managerNotes));
   mediator.handleCommand(new AddCommentHandler(...both, commentaries));
   mediator.handleCommand(new EditCommentHandler(...both, commentaries));
   mediator.handleCommand(new DeleteCommentHandler(...both, commentaries));
@@ -271,43 +332,107 @@ Given("the application's tournaments", function (this: SpecWorld) {
     new PlayersOfTournamentHandler(...both, competitions, games),
   );
   mediator.handleQuery(new ScorersOfTournamentHandler(...both));
+  mediator.handleQuery(new ManagerNoteToEditHandler(...both, managerNotes));
+  mediator.handleQuery(new ManagerNotesOfTournamentHandler(...both, byNotes));
+  mediator.handleQuery(
+    new PublicManagerNotesOfTournamentHandler(
+      tournaments,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicManagerNoteOfTournamentHandler(
+      tournaments,
+      byAddress,
+      managerNotes,
+      byNotes,
+      byCommentaries,
+    ),
+  );
   mediator.handleQuery(new RecentResultsHandler(byWebsite));
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(byWebsite));
   mediator.handleQuery(
-    new GamesOfTournamentHandler(tournaments, competitions, byAddress),
+    new GamesOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
-    new PublicPlayersOfTournamentHandler(tournaments, byAddress),
+    new PublicPlayersOfTournamentHandler(
+      tournaments,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
-    new PublicPlayerOfTournamentHandler(tournaments, competitions, byAddress),
+    new PublicPlayerOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
-    new PublicBlockOfTournamentHandler(tournaments, competitions, byAddress),
+    new PublicBlockOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
-    new PublicKnockoutOfTournamentHandler(tournaments, competitions, byAddress),
+    new PublicKnockoutOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
-    new PublicSwissOfTournamentHandler(tournaments, competitions, byAddress),
+    new PublicSwissOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
     new PublicTeamSummaryOfTournamentHandler(
       tournaments,
       competitions,
       byAddress,
+      byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
-    new PublicTestOfTournamentHandler(tournaments, competitions, byAddress),
+    new PublicTestOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
   );
   mediator.handleQuery(
     new PublicCommentariesOfTournamentHandler(
       tournaments,
       accountRepository,
       byAddress,
+      byNotes,
+      byCommentaries,
     ),
   );
   mediator.handleQuery(
@@ -316,6 +441,8 @@ Given("the application's tournaments", function (this: SpecWorld) {
       accountRepository,
       commentaries,
       byAddress,
+      byNotes,
+      byCommentaries,
     ),
   );
 
@@ -323,6 +450,10 @@ Given("the application's tournaments", function (this: SpecWorld) {
     send: (command) => mediator.send(command),
     ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
+    loadManagerNote: (id) => this.asARequest(() => managerNotes.load(id)),
+    saveManagerNote: (note) => this.asARequest(() => managerNotes.save(note)),
+    managerNotesOf: (id) => this.asARequest(() => byNotes.of(id)),
+    commentariesOf: (id) => this.asARequest(() => byCommentaries.listed(id)),
     loadCompetition: (id) => this.asARequest(() => competitions.load(id)),
     loadCommentary: (id) => this.asARequest(() => commentaries.load(id)),
     eventsOf: (id) => this.asARequest(() => accounts.store.getEvents(id)),

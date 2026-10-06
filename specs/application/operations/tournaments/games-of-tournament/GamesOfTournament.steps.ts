@@ -64,6 +64,19 @@ Then(
   },
 );
 
+// Every query a tournament's page asks answers its subtitle as this one does, so
+// the steps are shared.
+Then(
+  "the tournament answered has the subtitle {string}",
+  function (this: SpecWorld, subtitle: string) {
+    assert.equal(answered(this).subtitle, subtitle);
+  },
+);
+
+Then("the tournament answered has no subtitle", function (this: SpecWorld) {
+  assert.equal(answered(this).subtitle, undefined);
+});
+
 Then(
   /^the tournament answered is (not )?played by teams$/,
   function (this: SpecWorld, not: string | null) {

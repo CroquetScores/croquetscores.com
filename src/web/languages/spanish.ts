@@ -357,6 +357,10 @@ export const spanish: Language = {
     "startCommentary.title": "Empezar un comentario nuevo",
     "startCommentary.titleField": "Título",
     "startCommentary.submit": "Empezar el comentario",
+    // A tournament's Notes page, and a note's own page, as the English says.
+    "notes.none": "Los organizadores aún no han escrito notas.",
+    "marks.new": "nuevo",
+    "note.edited": "editada",
     "commentary.none": "Aún no se ha escrito nada.",
     "commentary.edited": "editado",
     "commentary.edit": "Editar",
@@ -431,7 +435,7 @@ export const spanish: Language = {
     "admin.tournament.sport": "Deporte",
     "admin.tournament.country": "País",
     "admin.tournament.region": "Región",
-    "admin.tournament.notes": "Notas",
+    "admin.tournament.subtitle": "Subtítulo",
     "admin.tournament.handicap": "Jugado con hándicap",
     "admin.tournament.drawsAllowed": "Permite empates",
     "admin.tournament.levelTestsDrawn": "Los tests igualados son empate",
@@ -448,6 +452,7 @@ export const spanish: Language = {
     "admin.view.players": "Jugadores",
     "admin.view.competitions": "Competiciones",
     "admin.view.managers": "Gestores",
+    "admin.view.notes": "Notas",
     "admin.view.scorers": "Anotadores",
     "admin.view.otherwise": "Este torneo no se puede gestionar desde aquí.",
     "admin.competitionView.tabs": "Competición",
@@ -664,11 +669,52 @@ export const spanish: Language = {
     "admin.teamView.players": "Jugadores",
     "TeamName.Missing": "Di cómo se llama el equipo.",
     "TeamName.TooLong": "Ese nombre es demasiado largo.",
+    "admin.notes.add": "Añadir nota",
+    "admin.notes.none": "No hay notas",
+    "admin.notes.edit": "Editar",
+    "admin.notes.delete": "Eliminar",
+    "admin.notes.deleteTitle": "Eliminar nota",
+    "admin.notes.deleteQuestion": "¿Eliminar la nota «{title}»?",
+    "admin.notes.delete.explanation":
+      "Una nota eliminada desaparece para siempre y no se puede recuperar.",
+    "admin.notes.otherwise": "No se ha podido hacer.",
+    "admin.note.addTitle": "Añadir nota",
+    "admin.note.editTitle": "Editar nota",
+    "admin.note.title": "Título",
+    "admin.note.description": "Descripción",
+    "admin.note.write": "Escribir",
+    "admin.note.preview": "Vista previa",
+    "admin.note.toolbar": "Formato",
+    "admin.note.tool.heading": "Encabezado",
+    "admin.note.tool.bold": "Negrita",
+    "admin.note.tool.italic": "Cursiva",
+    "admin.note.tool.quote": "Cita",
+    "admin.note.tool.code": "Código",
+    "admin.note.tool.link": "Enlace",
+    "admin.note.tool.numberedList": "Lista numerada",
+    "admin.note.tool.bulletedList": "Lista con viñetas",
+    "admin.note.tool.taskList": "Lista de tareas",
+    "admin.note.add": "Añadir",
+    "admin.note.save": "Guardar",
+    "admin.note.otherwise": "Esta nota no se puede guardar así.",
+    "ManagerNoteTitle.Missing": "Ponle un título a la nota.",
+    "ManagerNoteTitle.TooLong": "Ese título es demasiado largo.",
+    "ManagerNoteTitle.NoLetterOrDigit":
+      "Un título necesita una letra o un número.",
+    "ManagerNoteDescription.TooLong": "Esa descripción es demasiado larga.",
+    "ManagerNoteToEdit.NoSuchManagerNote":
+      "Esa nota ya no está. Puede que otro organizador la haya eliminado.",
+    "EditManagerNote.NoSuchManagerNote":
+      "Esa nota ya no está. Puede que otro organizador la haya eliminado.",
+    "DeleteManagerNote.NoSuchManagerNote":
+      "Esa nota ya no está. Puede que otro organizador la haya eliminado.",
+    "ManagerNote.Deleted":
+      "Esa nota ha sido eliminada. Puede que otro organizador la haya eliminado.",
     "CommentaryTitle.Missing": "Ponle un título al comentario.",
     "CommentaryTitle.TooLong": "Ese título es demasiado largo.",
     "CommentaryTitle.NoLetterOrDigit":
       "Un título necesita una letra o un número.",
-    "Tournament.CommentaryTitleTaken": "Otro comentario ya tiene ese título.",
+    "Commentary.TitleTaken": "Otro comentario ya tiene ese título.",
     "CommentText.Missing": "Escribe algo en el comentario.",
     "CommentText.TooLong": "Ese comentario es demasiado largo.",
     "TeamShortName.Missing": "Dale al equipo un nombre corto.",
@@ -777,8 +823,8 @@ export const spanish: Language = {
     "Tournament.StartsAfterNextYear":
       "Un torneo no puede empezar después del año que viene.",
     "CreateTournament.NoSuchCountry": "Elige el país.",
-    "TournamentNotes.TooLong":
-      "Las notas pueden tener como mucho 2000 caracteres.",
+    "TournamentSubtitle.TooLong":
+      "El subtítulo puede tener como mucho 2000 caracteres.",
     "Tournament.NotAManager":
       "Solo quien gestiona este torneo puede cambiarlo.",
     "Tournament.NotAManagerOrScorer":

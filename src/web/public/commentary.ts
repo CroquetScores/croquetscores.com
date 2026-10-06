@@ -9,7 +9,6 @@
 // empty; one refused is said beneath the box with what was typed put back. It
 // needs no scripting.
 import type { FastifyInstance, FastifyRequest } from "fastify";
-import MarkdownIt from "markdown-it";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { AddComment } from "../../application/operations/commentaries/AddComment.js";
@@ -29,11 +28,13 @@ import { escape } from "../common/escape.js";
 import { typedFrom } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
+import { markdownWithoutHtml } from "../common/markdown.js";
 import { hasPassword, readerOf, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { signInPath } from "./signIn.js";
 import { sendPage } from "./tournamentLists.js";
+import { type Reads, readsOf, rememberRead } from "./read.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -50,33 +51,9 @@ const notThere: readonly string[] = [
   "PublicCommentaryOfTournament.NoSuchCommentary",
 ];
 
-// HTML is turned off, so that a comment is drawn from its Markdown alone:
-// a comment is kept as it was typed, HTML and all (CommentText.ts), and this
-// is what shows that HTML as the characters it is and keeps it from running,
-// the one guard a page needs, whatever was kept. A line break is
-// a line break, since a comment is typed on a phone by somebody who has never
-// heard that Markdown wants two. A web address written out with its scheme,
-// and an email address, are drawn as links without the Markdown a link is
-// otherwise written in, as the old site drew them; a name with no scheme, as
-// "example.com", is left as it is, as it was there, since a word with a full
-// stop in it is not always an address.
-const markdown = new MarkdownIt({
-  html: false,
-  breaks: true,
-  linkify: true,
-});
-markdown.linkify.set({ fuzzyLink: false });
-
-// A link in a comment is one the site does not vouch for, so that a search
-// engine gives it nothing, which is what a link put in a commentary to sell
-// something is after; and the page it leads to is told nothing of this one.
-const drawLink = markdown.renderer.rules.link_open;
-markdown.renderer.rules.link_open = (tokens, index, options, env, self) => {
-  tokens[index]?.attrSet("rel", "nofollow ugc noopener noreferrer");
-  return drawLink === undefined
-    ? self.renderToken(tokens, index, options)
-    : drawLink(tokens, index, options, env, self);
-};
+// A comment is kept as it was typed, HTML and all (CommentText.ts), and is
+// drawn by a Markdown that draws no HTML (markdown.ts).
+const markdown = markdownWithoutHtml();
 
 // A line that begins, after any indent, with a number and a full stop or a
 // bracket followed by a space or nothing, which Markdown takes for the start
@@ -376,8 +353,7 @@ const deleteDialog = (speaking: Speaking): string => {
  */
 export const goneSinceAsked = (failure: unknown): boolean =>
   (failure instanceof TournamentRefused &&
-    (failure.code === "Tournament.Archived" ||
-      failure.code === "Tournament.NoSuchCommentary")) ||
+    failure.code === "Tournament.Archived") ||
   failure instanceof CommentaryOperationRefused ||
   (failure instanceof TournamentOperationRefused &&
     failure.code.endsWith(".NoSuchTournament"));
@@ -508,6 +484,7 @@ const pageOf = (
   assets: Assets,
   asked: TournamentCommentaryToRead,
   box: { readonly typed: string; readonly messages: readonly string[] },
+  reads: Reads = readsOf(request),
 ): string => {
   const speaking = speakingOf(request);
   const { say } = speaking;
@@ -524,9 +501,13 @@ const pageOf = (
       })}${deleteDialog(speaking)}`
     : "";
   return render(assets, {
-    tournament: { name: asked.name, address: asked.address },
+    tournament: {
+      name: asked.name,
+      address: asked.address,
+      subtitle: asked.subtitle,
+    },
     title: `${commentary.title} - ${asked.name}`,
-    sections: sectionsOf(asked, speaking),
+    sections: sectionsOf(asked, speaking, reads),
     currentSection: `/${asked.address}/commentaries`,
     theme: themeOf(request),
     signedIn: signedIn(request),
@@ -570,10 +551,28 @@ export const registerCommentaryPage = (
         301,
       );
     }
+    // Opening the page is reading the commentary: the reader's browser is
+    // told they have read it as it is now, and the section bar is drawn as
+    // what they have read is after it.
+    const reads = readsOf(request);
+    const changed = asked.commentariesChanged.find(
+      ({ id }) => id === asked.commentary.id,
+    );
     return sendPage(
       reply,
       request,
-      pageOf(request, assets, asked, { typed: "", messages: [] }),
+      pageOf(
+        request,
+        assets,
+        asked,
+        { typed: "", messages: [] },
+        changed === undefined
+          ? reads
+          : {
+              ...reads,
+              commentaries: rememberRead(reply, reads.commentaries, changed),
+            },
+      ),
     );
   });
 

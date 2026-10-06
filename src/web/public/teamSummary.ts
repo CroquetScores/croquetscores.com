@@ -26,6 +26,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
+import { readsOf } from "./read.js";
 import { sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -150,9 +151,13 @@ ${columns.map(({ of, starts }) => `                <td class="team-summary-numbe
         reply,
         request,
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            subtitle: asked.subtitle,
+          },
           title: asked.name,
-          sections: sectionsOf(asked, speaking),
+          sections: sectionsOf(asked, speaking, readsOf(request)),
           currentSection: `/${asked.address}/summary`,
           theme: themeOf(request),
           signedIn: signedIn(request),

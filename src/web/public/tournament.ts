@@ -21,6 +21,7 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
+import { readsOf } from "./read.js";
 import { gameShown, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
@@ -75,7 +76,7 @@ export const registerTournamentPage = (
 
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const sections = sectionsOf(asked, speaking);
+      const sections = sectionsOf(asked, speaking, readsOf(request));
       const now = request.requestedAt.toDate();
       const games =
         asked.games.length === 0
@@ -88,7 +89,11 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
         reply,
         request,
         render(assets, {
-          tournament: { name: asked.name, address: asked.address },
+          tournament: {
+            name: asked.name,
+            address: asked.address,
+            subtitle: asked.subtitle,
+          },
           title: asked.name,
           sections,
           currentSection: `/${asked.address}`,

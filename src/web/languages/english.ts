@@ -375,6 +375,12 @@ export const english: Language = {
     "startCommentary.title": "Start new commentary",
     "startCommentary.titleField": "Title",
     "startCommentary.submit": "Start commentary",
+    // "New" is said to a screen reader in place of the red asterisk that marks
+    // a note or a commentary not read as it is now.
+    "marks.new": "new",
+    // A tournament's Notes page, and a note's own page.
+    "notes.none": "The managers have written no notes yet.",
+    "note.edited": "edited",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.
     "commentary.none": "No comments have been written yet.",
@@ -483,7 +489,7 @@ export const english: Language = {
     "admin.tournament.sport": "Sport",
     "admin.tournament.country": "Country",
     "admin.tournament.region": "Region",
-    "admin.tournament.notes": "Notes",
+    "admin.tournament.subtitle": "Subtitle",
     "admin.tournament.handicap": "Played with handicaps",
     "admin.tournament.drawsAllowed": "Allows drawn results",
     "admin.tournament.levelTestsDrawn": "Level tests are drawn",
@@ -503,6 +509,7 @@ export const english: Language = {
     "admin.view.players": "Players",
     "admin.view.competitions": "Competitions",
     "admin.view.managers": "Managers",
+    "admin.view.notes": "Notes",
     "admin.view.scorers": "Scorers",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
@@ -739,12 +746,56 @@ export const english: Language = {
     "admin.teamView.players": "Players",
     "TeamName.Missing": "Say what the team is called.",
     "TeamName.TooLong": "That name is too long.",
+    "admin.notes.add": "Add Note",
+    "admin.notes.none": "No notes",
+    "admin.notes.edit": "Edit",
+    "admin.notes.delete": "Delete",
+    // Asked before deleting a note, since a note deleted is gone for good.
+    "admin.notes.deleteTitle": "Delete Note",
+    "admin.notes.deleteQuestion": "Delete the note “{title}”?",
+    "admin.notes.delete.explanation":
+      "A note deleted is gone for good, and cannot be brought back.",
+    // Above the list, for a refusal with no words of its own.
+    "admin.notes.otherwise": "That could not be done.",
+    // The note dialog, its description's tabs and the toolbar above its box.
+    "admin.note.addTitle": "Add Note",
+    "admin.note.editTitle": "Edit Note",
+    "admin.note.title": "Title",
+    "admin.note.description": "Description",
+    "admin.note.write": "Write",
+    "admin.note.preview": "Preview",
+    "admin.note.toolbar": "Formatting",
+    "admin.note.tool.heading": "Heading",
+    "admin.note.tool.bold": "Bold",
+    "admin.note.tool.italic": "Italic",
+    "admin.note.tool.quote": "Quote",
+    "admin.note.tool.code": "Code",
+    "admin.note.tool.link": "Link",
+    "admin.note.tool.numberedList": "Numbered list",
+    "admin.note.tool.bulletedList": "Bulleted list",
+    "admin.note.tool.taskList": "Task list",
+    "admin.note.add": "Add",
+    "admin.note.save": "Save",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.note.otherwise": "This note cannot be kept as it is.",
+    "ManagerNoteTitle.Missing": "Give the note a title.",
+    "ManagerNoteTitle.TooLong": "That title is too long.",
+    "ManagerNoteTitle.NoLetterOrDigit":
+      "A title needs a letter or a digit in it.",
+    "ManagerNoteDescription.TooLong": "That description is too long.",
+    "ManagerNoteToEdit.NoSuchManagerNote":
+      "That note is no longer there. Another manager may have deleted it.",
+    "EditManagerNote.NoSuchManagerNote":
+      "That note is no longer there. Another manager may have deleted it.",
+    "DeleteManagerNote.NoSuchManagerNote":
+      "That note is no longer there. Another manager may have deleted it.",
+    "ManagerNote.Deleted":
+      "That note has been deleted. Another manager may have deleted it.",
     "CommentaryTitle.Missing": "Give the commentary a title.",
     "CommentaryTitle.TooLong": "That title is too long.",
     "CommentaryTitle.NoLetterOrDigit":
       "A title needs a letter or a digit in it.",
-    "Tournament.CommentaryTitleTaken":
-      "Another commentary already has that title.",
+    "Commentary.TitleTaken": "Another commentary already has that title.",
     "CommentText.Missing": "Write something in the comment.",
     "CommentText.TooLong": "That comment is too long.",
     "TeamShortName.Missing": "Give the team a short name.",
@@ -856,7 +907,8 @@ export const english: Language = {
     "Tournament.StartsAfterNextYear":
       "A tournament cannot start after next year.",
     "CreateTournament.NoSuchCountry": "Choose the country.",
-    "TournamentNotes.TooLong": "Notes can be no longer than 2000 characters.",
+    "TournamentSubtitle.TooLong":
+      "A subtitle can be no longer than 2000 characters.",
     "Tournament.NotAManager":
       "Only a manager of this tournament can change it.",
     "Tournament.NotAManagerOrScorer":

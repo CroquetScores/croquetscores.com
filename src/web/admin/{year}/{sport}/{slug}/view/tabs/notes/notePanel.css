@@ -1,0 +1,71 @@
+/* The note panel, in the Notes tab in place of its list: its heading, the
+   title, the description with GitHub's toolbar above a box tall enough to
+   write a few paragraphs in, and Preview drawn as the note's page is. */
+
+.note-panel-heading {
+  margin: 0;
+}
+
+/* As a dialog's are (STYLE.md §5b): the one that keeps the note first, and
+   Cancel after it, stacked on a phone and side by side where there is room. */
+.note-panel-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* The tools wrap onto a second row on a phone rather than pushing the dialog
+   wider than the window, and each is as big as anything else pressed with a
+   thumb though its icon is small. */
+.note-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.note-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-1);
+  background: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+
+.note-tool:hover {
+  border-color: var(--border);
+  color: var(--ink);
+}
+
+.note-tool-icon {
+  width: 1rem;
+  height: 1rem;
+  fill: currentcolor;
+}
+
+.note-description {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2);
+  border: 1px solid var(--ink-muted);
+  border-radius: var(--radius-1);
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+
+.note-preview {
+  overflow-wrap: anywhere;
+}
+
+.note-preview .note-title {
+  margin-top: 0;
+}

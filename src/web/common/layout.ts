@@ -5,6 +5,7 @@ import { accountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
 import type { Speaking } from "./language.js";
+import { markdownWithoutHtml } from "./markdown.js";
 import { themes, type Theme } from "./theme.js";
 
 /**
@@ -23,7 +24,23 @@ export interface Section {
   /** Whether it is one of a tournament's competitions, whose names run long
       and so are drawn as tiles of one width with the name wrapped within. */
   readonly competition?: boolean | undefined;
+  /** Whether it holds something new to the reader, as a note they have not
+      read, which marks it with a red asterisk. */
+  readonly isNew?: boolean | undefined;
 }
+
+// An asterisk of six spokes, drawn about the middle of its box rather than
+// set as the character, which a font draws near the top of its line, where it
+// marks a footnote: drawn, it is in the middle of whatever it is set in.
+const asterisk =
+  '<svg class="new-mark-asterisk" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0.5v9M1.1 2.75l7.8 4.5M1.1 7.25l7.8-4.5"/></svg>';
+
+/**
+ * The red asterisk that marks something new to the reader. A colour and a
+ * shape are not read out, so it is said to a screen reader in words.
+ */
+export const newMark = (speaking: Speaking): string =>
+  `<span class="new-mark">${asterisk}<span class="visually-hidden">${escape(speaking.say("marks.new"))}</span></span>`;
 
 export interface Shell {
   /** The <title>, which is not always what the header shows. */
@@ -39,6 +56,9 @@ export interface Shell {
         readonly name: string;
         /** Where it is found, as "2026/ac/spring-open". */
         readonly address: string;
+        /** Its subtitle, in Markdown, drawn on a strip beneath the pinned
+            bar, or nothing where it has none. */
+        readonly subtitle: string | undefined;
       }
     | undefined;
   /** The dark green bar. Absent, rather than present and empty, when a page
@@ -182,10 +202,13 @@ const sectionBar = (
   if (sections === undefined || sections.length === 0) return "";
 
   const items = sections
-    .map(({ href, label, competition }) => {
+    .map(({ href, label, competition, isNew }) => {
       const here = href === current ? ' aria-current="page"' : "";
       const tile = competition === true ? ' class="section-competition"' : "";
-      return `          <li${tile}><a href="${href}"${here}>${escape(label)}</a></li>`;
+      // Beside the link rather than in it, so that the link is named by its
+      // words alone, as every section is.
+      const mark = isNew === true ? newMark(speaking) : "";
+      return `          <li${tile}><a href="${href}"${here}>${escape(label)}</a>${mark}</li>`;
     })
     .join("\n");
 
@@ -206,6 +229,26 @@ const titleBar = (title: string | undefined): string =>
     <div class="site-title-bar">
       <div class="page">
         <h1 class="page-title">${escape(title)}</h1>
+      </div>
+    </div>`;
+
+// A subtitle is kept with its HTML taken out (TournamentSubtitle.ts), and is
+// drawn by a Markdown that draws none besides (markdown.ts), in case any was
+// missed.
+const subtitleMarkdown = markdownWithoutHtml();
+
+// A tournament's subtitle, on a strip of the header's green beneath the pinned
+// bar, and so beneath the tournament's name in it. Not in the bar itself, so
+// that a subtitle of several lines scrolls away with the page rather than
+// keeping a phone's screen from what the page says.
+const subtitleBar = (tournament: Shell["tournament"]): string =>
+  tournament?.subtitle === undefined
+    ? ""
+    : `
+    <div class="tournament-subtitle">
+      <div class="page">
+        <div class="tournament-subtitle-text">
+${subtitleMarkdown.render(tournament.subtitle)}        </div>
       </div>
     </div>`;
 
@@ -350,7 +393,7 @@ ${shell.styles}
     </style>`
     }
   </head>
-  <body>${siteBar(shell)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+  <body>${siteBar(shell)}${subtitleBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${

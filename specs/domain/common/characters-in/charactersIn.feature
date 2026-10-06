@@ -1,6 +1,6 @@
 Feature: Counting characters as a reader counts them
 
-  A name, a password or a tournament's notes is held to a length, and the
+  A name, a password or a tournament's subtitle is held to a length, and the
   length is counted in characters as whoever typed it sees them, not in the
   code points a computer keeps them as. A letter with its accent typed after
   it is two code points and one character; a flag, or a thumb with a skin

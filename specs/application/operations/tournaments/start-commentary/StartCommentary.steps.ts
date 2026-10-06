@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -7,16 +7,17 @@ import { CommentaryId } from "../../../../../src/domain/aggregates/tournaments/p
 import type { TournamentId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { SpecWorld } from "../../../../support/world.js";
 import {
-  commentaryTitled,
-  tournamentOf,
-} from "../../../../domain/aggregates/tournaments/tournament/aTournament.js";
+  commentaryIn,
+  loadCommentary,
+} from "../../commentaries/commentaryRequests.js";
 import {
-  accountFor,
+  inHandOf,
   momentOf,
   noTournament,
   send,
   tournamentNamed,
 } from "../aRequest.js";
+import { toBeAsked } from "../askedAtOnce.js";
 import { readerOf } from "../teamRequests.js";
 
 // The account for an address, or the one the scenario took hold of where it
@@ -36,6 +37,25 @@ const start = async (
     tournament,
   );
 };
+
+// Asked for with another at once (askedAtOnce.ts), its answer kept there.
+Given(
+  new RegExp(`${READER} is to start the commentary "([^"]*)" on "([^"]*)"$`),
+  async function (
+    this: SpecWorld,
+    address: string | undefined,
+    title: string,
+    name: string,
+  ) {
+    const account = await readerOf(this, address ?? undefined);
+    const tournament = tournamentNamed(this, name);
+    toBeAsked(this, () =>
+      inHandOf(this).send(
+        new StartCommentary(account, tournament.value, title, momentOf(this)),
+      ),
+    );
+  },
+);
 
 When(
   new RegExp(`${READER} starts the commentary "([^"]*)" on "([^"]*)"$`),
@@ -77,26 +97,25 @@ When(
   },
 );
 
+// Found among the commentaries of the tournament the scenario is looking at,
+// which is the one it was started on.
 Then(
   "it is answered with the id of the tournament's commentary {string}",
-  function (this: SpecWorld, title: string) {
+  async function (this: SpecWorld, title: string) {
     assert.ok(
       this.answer instanceof CommentaryId,
       `It was answered with ${inspect(this.answer)}: ${inspect(this.failure)}`,
     );
-    assert.ok(
-      this.answer.equals(commentaryTitled(tournamentOf(this), title).id),
-    );
+    const looking = this.aggregate as { id: TournamentId } | undefined;
+    assert.ok(looking !== undefined, "No tournament is being looked at.");
+    assert.ok(this.answer.equals(await commentaryIn(this, looking.id, title)));
   },
 );
 
 Then(
-  "the tournament's commentary {string} was started by the account for {string}",
-  async function (this: SpecWorld, title: string, address: string) {
-    assert.ok(
-      commentaryTitled(tournamentOf(this), title).writer.equals(
-        await accountFor(this, address),
-      ),
-    );
+  "the commentary {string} of {string} is found at {string}",
+  async function (this: SpecWorld, title: string, name: string, slug: string) {
+    const id = await commentaryIn(this, tournamentNamed(this, name), title);
+    assert.equal((await loadCommentary(this, id)).slug.toString(), slug);
   },
 );

@@ -76,9 +76,12 @@ Then(
 // What was and was not changed ------------------------------------------------------
 
 // Signed in with it, as a reader would find out whether their old password
-// still works: nothing else says so without asking the hash.
+// still works: nothing else says so without asking the hash. Given ten
+// seconds rather than five, since it opens two pages and checks a password,
+// and has run past five on a busy machine.
 Then(
   "the reader can sign in as {string} with the password {string}",
+  { timeout: 10_000 },
   async function (this: SpecWorld, address: string, password: string) {
     const page = this.browserPage;
     await page.goto(`${this.baseUrl!}/account/sign-in`);

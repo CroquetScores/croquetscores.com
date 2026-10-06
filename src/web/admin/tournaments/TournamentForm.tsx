@@ -120,7 +120,7 @@ export interface Begins {
   readonly country: string;
   /** Nothing where the tournament is in no region. */
   readonly region: string | undefined;
-  readonly notes: string | undefined;
+  readonly subtitle: string | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
@@ -156,7 +156,7 @@ export const TournamentForm = ({
   const [format, setFormat] = useState(begins?.format ?? "");
   const [country, setCountry] = useState(begins?.country ?? "");
   const [region, setRegion] = useState(begins?.region ?? "");
-  const [notes, setNotes] = useState(begins?.notes ?? "");
+  const [subtitle, setSubtitle] = useState(begins?.subtitle ?? "");
   const [handicap, setHandicap] = useState(begins?.handicap ?? false);
   const [drawsAllowed, setDrawsAllowed] = useState(
     begins?.drawsAllowed ?? false,
@@ -247,7 +247,7 @@ export const TournamentForm = ({
         format,
         country,
         region: asksForRegion ? region : (regions[0]?.code ?? ""),
-        notes,
+        subtitle,
         handicap,
         drawsAllowed,
         ...(asksAboutLevelTests ? { levelTestsDrawn } : {}),
@@ -469,18 +469,18 @@ export const TournamentForm = ({
                 ) : null}
               </div>
               <Field
-                name="notes"
-                label={say("admin.tournament.notes")}
-                refused={said("notes")}
+                name="subtitle"
+                label={say("admin.tournament.subtitle")}
+                refused={said("subtitle")}
                 lifted
               >
                 {(tied) => (
                   <textarea
                     {...tied}
                     rows={4}
-                    value={notes}
+                    value={subtitle}
                     onChange={(event) => {
-                      setNotes(event.target.value);
+                      setSubtitle(event.target.value);
                     }}
                   />
                 )}

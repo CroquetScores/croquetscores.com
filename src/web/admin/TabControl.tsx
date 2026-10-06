@@ -19,11 +19,10 @@ interface Props<Tab extends string> {
   readonly label: string;
   /** What the tab being read holds. */
   readonly children: ReactNode;
+  /** What its tabs' and its panel's ids begin with, so that a tab control in
+      a dialog over the page does not take the ids of the page's own. */
+  readonly ids?: string;
 }
-
-const tabPanelId = "tab-panel";
-
-const tabId = (tab: string): string => `tab-${tab}`;
 
 export const TabControl = <Tab extends string>({
   tabs,
@@ -32,27 +31,32 @@ export const TabControl = <Tab extends string>({
   wordsFor,
   label,
   children,
-}: Props<Tab>): React.JSX.Element => (
-  <div className="tabbed">
-    <div className="tab-control" role="tablist" aria-label={label}>
-      {tabs.map((tab) => (
-        <button
-          key={tab}
-          type="button"
-          role="tab"
-          id={tabId(tab)}
-          aria-controls={tabPanelId}
-          aria-selected={tab === chosen}
-          onClick={() => {
-            choose(tab);
-          }}
-        >
-          {wordsFor(tab)}
-        </button>
-      ))}
+  ids = "tab",
+}: Props<Tab>): React.JSX.Element => {
+  const tabPanelId = `${ids}-panel`;
+  const tabId = (tab: string): string => `${ids}-${tab}`;
+  return (
+    <div className="tabbed">
+      <div className="tab-control" role="tablist" aria-label={label}>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            role="tab"
+            id={tabId(tab)}
+            aria-controls={tabPanelId}
+            aria-selected={tab === chosen}
+            onClick={() => {
+              choose(tab);
+            }}
+          >
+            {wordsFor(tab)}
+          </button>
+        ))}
+      </div>
+      <div id={tabPanelId} role="tabpanel" aria-labelledby={tabId(chosen)}>
+        {children}
+      </div>
     </div>
-    <div id={tabPanelId} role="tabpanel" aria-labelledby={tabId(chosen)}>
-      {children}
-    </div>
-  </div>
-);
+  );
+};

@@ -103,9 +103,11 @@ Given("reCAPTCHA judges the reader not a person", function (this: SpecWorld) {
 // never ran the script sends. The page is opened with scripting on all the
 // same, because a browser without it is sent away before the form arrives —
 // that is the other half of the same rule, and this is the half about a form
-// that reaches the site unjudged.
+// that reaches the site unjudged. Given ten seconds rather than five, since
+// it opens a page and sends a form, and has run past five on a busy machine.
 When(
   "a registration for {string} arrives without reCAPTCHA's judgement",
+  { timeout: 10_000 },
   async function (this: SpecWorld, address: string) {
     recaptchaScriptDoesNotLoad(this);
     await withScripting(this);

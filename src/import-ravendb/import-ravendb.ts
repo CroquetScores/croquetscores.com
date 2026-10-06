@@ -13,6 +13,7 @@ import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commentary.js";
 import { nameCommentaryEvents } from "../domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
+import { nameManagerNoteEvents } from "../domain/aggregates/tournaments/manager-notes/events/managerNoteEvents.js";
 import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
 import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
@@ -36,6 +37,8 @@ import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsB
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
+import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
+import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
 import { ImportDatabase } from "./ImportDatabase.js";
@@ -79,14 +82,18 @@ try {
   const emailAddresses = new KeyedEmailAddressHasher(
     config.accountEmailAddressHashKey,
   );
+  // Asked by bringing commentaries over which titles and slugs are taken.
+  const commentariesByTournament = new CommentariesByTournament(unitOfWork);
   // Every one of the site's read models, kept in step with everything
   // brought over, as the site keeps them with everything it records.
   const eventStore = new ProjectingEventStore(
     new PostgresEventStore(
       unitOfWork,
-      nameCommentaryEvents(
-        nameCompetitionEvents(
-          nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+      nameManagerNoteEvents(
+        nameCommentaryEvents(
+          nameCompetitionEvents(
+            nameTournamentEvents(nameAccountEvents(new EventRegistry())),
+          ),
         ),
       ),
       new AccountEventSealing(accountKeys),
@@ -100,6 +107,8 @@ try {
       new TournamentsByAddress(unitOfWork),
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
+      new ManagerNotesByTournament(unitOfWork),
+      commentariesByTournament,
     ],
   );
   const accounts = new AggregateRepository(
@@ -149,6 +158,7 @@ try {
       commentaries,
       importedAccounts,
       database,
+      commentariesByTournament,
     ),
     new OrderCompetitions(unitOfWork, tournaments, database),
   ];

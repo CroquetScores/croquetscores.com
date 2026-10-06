@@ -20,7 +20,7 @@ import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Spor
 import { TournamentAddress } from "../../../domain/aggregates/tournaments/value-objects/TournamentAddress.js";
 import { TournamentFormat } from "../../../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import { TournamentName } from "../../../domain/aggregates/tournaments/value-objects/TournamentName.js";
-import { TournamentNotes } from "../../../domain/aggregates/tournaments/value-objects/TournamentNotes.js";
+import { TournamentSubtitle } from "../../../domain/aggregates/tournaments/value-objects/TournamentSubtitle.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
@@ -46,6 +46,7 @@ export type TournamentOperationErrorCode =
   | "PublicTestOfTournament.NoSuchCompetition"
   | "PublicTestOfTournament.NotATest"
   | "PublicCommentaryOfTournament.NoSuchCommentary"
+  | `${string}.NoSuchManagerNote`
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
   | `${string}.NoSuchTournament`;
@@ -93,7 +94,7 @@ export interface TournamentRequest {
   /** The country's code, and the code of one of its regions, if any. */
   readonly country: string;
   readonly region?: string | undefined;
-  readonly notes?: string | undefined;
+  readonly subtitle?: string | undefined;
   readonly handicap?: boolean | undefined;
   readonly drawsAllowed?: boolean | undefined;
   readonly levelTestsDrawn?: boolean | undefined;
@@ -226,10 +227,10 @@ export const detailsFrom = (request: TournamentRequest): TournamentDetails => {
     sport: Sport.from(request.sport),
     country,
     region: request.region,
-    notes:
-      request.notes === undefined
+    subtitle:
+      request.subtitle === undefined
         ? undefined
-        : TournamentNotes.from(request.notes),
+        : TournamentSubtitle.from(request.subtitle),
     handicap: request.handicap,
     drawsAllowed: request.drawsAllowed,
     levelTestsDrawn: request.levelTestsDrawn,
@@ -297,9 +298,11 @@ export const brokenByTournament = (
   ...(countryCalled(request.country) === undefined
     ? [{ code: `${operation}.NoSuchCountry`, fields: ["country"] }]
     : []),
-  ...(request.notes === undefined
+  ...(request.subtitle === undefined
     ? []
-    : brokenBy("notes", () => TournamentNotes.from(request.notes ?? ""))),
+    : brokenBy("subtitle", () =>
+        TournamentSubtitle.from(request.subtitle ?? ""),
+      )),
 ];
 
 /** What making somebody a manager or a scorer asks of where accounts are found. */

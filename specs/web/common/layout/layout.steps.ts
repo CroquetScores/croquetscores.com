@@ -6,6 +6,7 @@ import { Website } from "../../../../src/domain/common/Website.js";
 import { english } from "../../../../src/web/languages/english.js";
 import { anApplicationServedAs, siteNameFor } from "../../support/browser.js";
 import { unmarked } from "../../support/languages.js";
+import { changeTournament } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 const banner = ".try-banner";
@@ -114,5 +115,112 @@ When(
   async function (this: SpecWorld) {
     await tournamentInHeader(this).click();
     await this.browserPage.waitForLoadState();
+  },
+);
+
+// The tournament's subtitle -------------------------------------------------------
+
+Given(
+  "the tournament {string} has the subtitle:",
+  async function (this: SpecWorld, name: string, subtitle: string) {
+    await changeTournament(this, name, { subtitle });
+  },
+);
+
+// A window short enough that any tournament's page scrolls.
+Given(
+  "a viewport {int} pixels wide and {int} pixels high",
+  async function (this: SpecWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
+  },
+);
+
+When("the page is scrolled to its bottom", async function (this: SpecWorld) {
+  await this.browserPage.evaluate(
+    "globalThis.scrollTo(0, globalThis.document.body.scrollHeight)",
+  );
+});
+
+const subtitleInHeader = (world: SpecWorld): Locator =>
+  world.browserPage.locator(".tournament-subtitle");
+
+Then(
+  "the header shows the subtitle {string}",
+  async function (this: SpecWorld, subtitle: string) {
+    assert.equal((await subtitleInHeader(this).innerText()).trim(), subtitle);
+  },
+);
+
+Then("the header shows no subtitle", async function (this: SpecWorld) {
+  assert.equal(await subtitleInHeader(this).count(), 0);
+});
+
+Then(
+  "the subtitle in the header is beneath the tournament named there",
+  async function (this: SpecWorld) {
+    const tournament = await tournamentInHeader(this).boundingBox();
+    const subtitle = await subtitleInHeader(this).boundingBox();
+    assert.ok(
+      tournament !== null && subtitle !== null,
+      "One of them is not shown.",
+    );
+    assert.ok(
+      subtitle.y >= tournament.y + tournament.height,
+      `It starts ${String(subtitle.y)} pixels down.`,
+    );
+  },
+);
+
+// Out of sight behind the pinned bar, which stays at the top of the window
+// while what is beneath it scrolls under it.
+Then(
+  "the subtitle in the header is out of sight",
+  async function (this: SpecWorld) {
+    const bar = await this.browserPage.locator("header.site-bar").boundingBox();
+    const subtitle = await subtitleInHeader(this).boundingBox();
+    assert.ok(bar !== null && subtitle !== null, "One of them is not drawn.");
+    assert.ok(
+      subtitle.y + subtitle.height <= bar.y + bar.height,
+      `It ends ${String(subtitle.y + subtitle.height)} pixels down.`,
+    );
+  },
+);
+
+Then(
+  "the subtitle in the header draws {string} bold",
+  async function (this: SpecWorld, words: string) {
+    const bold = await subtitleInHeader(this).locator("strong").allInnerTexts();
+    assert.deepEqual(bold, [words]);
+  },
+);
+
+const linkInSubtitle = (world: SpecWorld, words: string): Locator =>
+  subtitleInHeader(world).locator("a", { hasText: words });
+
+Then(
+  "the subtitle's link {string} leads to {string}",
+  async function (this: SpecWorld, words: string, href: string) {
+    assert.equal(await linkInSubtitle(this, words).getAttribute("href"), href);
+  },
+);
+
+Then(
+  "the subtitle's link {string} is marked as not vouched for",
+  async function (this: SpecWorld, words: string) {
+    const rel = (
+      (await linkInSubtitle(this, words).getAttribute("rel")) ?? ""
+    ).split(/\s+/);
+    assert.ok(rel.includes("nofollow"), `It is marked ${rel.join(" ")}.`);
+    assert.ok(rel.includes("ugc"), `It is marked ${rel.join(" ")}.`);
+  },
+);
+
+Then(
+  "the subtitle in the header is a numbered list of {int} items",
+  async function (this: SpecWorld, items: number) {
+    assert.equal(
+      await subtitleInHeader(this).locator("ol > li").count(),
+      items,
+    );
   },
 );

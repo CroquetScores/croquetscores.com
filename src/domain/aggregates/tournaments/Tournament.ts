@@ -48,9 +48,7 @@ import { TeamsSpacedOut } from "./events/TeamsSpacedOut.js";
 import { TeamUpdated } from "./events/TeamUpdated.js";
 import { TestAdded } from "./events/TestAdded.js";
 import { TestUpdated } from "./events/TestUpdated.js";
-import { TournamentCommentaryStarted } from "./events/TournamentCommentaryStarted.js";
-import { TournamentCommentaryTitleChanged } from "./events/TournamentCommentaryTitleChanged.js";
-import { CommentaryId } from "./primitives/CommentaryId.js";
+import { firstFree, lastOf, slugsFor } from "./freeSlugs.js";
 import { CompetitionId } from "./primitives/CompetitionId.js";
 import { TeamId } from "./primitives/TeamId.js";
 import { TeamPlayerId } from "./primitives/TeamPlayerId.js";
@@ -63,7 +61,6 @@ import {
   type TournamentPlayerDetails,
 } from "./TournamentPlayer.js";
 import { BestOf } from "./value-objects/BestOf.js";
-import { CommentaryTitle } from "./value-objects/CommentaryTitle.js";
 import { CompetitionName } from "./value-objects/CompetitionName.js";
 import { ExpectedMatches } from "./value-objects/ExpectedMatches.js";
 import { TestGroup } from "./value-objects/TestGroup.js";
@@ -83,7 +80,7 @@ import {
   gateballScoresFormats,
 } from "./value-objects/tournamentFormats.js";
 import { TournamentName } from "./value-objects/TournamentName.js";
-import { TournamentNotes } from "./value-objects/TournamentNotes.js";
+import { TournamentSubtitle } from "./value-objects/TournamentSubtitle.js";
 
 /** Why a tournament will not do what it was asked. */
 export type TournamentErrorCode =
@@ -132,27 +129,7 @@ export type TournamentErrorCode =
   | "Tournament.TestHasGames"
   | "Tournament.TestHasGamesInUse"
   | "Tournament.ExpectedMatchesBelowStarted"
-  | "Tournament.BestOfBelowGamesPlayed"
-  | "Tournament.CommentaryAlreadyStarted"
-  | "Tournament.CommentaryTitleTaken"
-  | "Tournament.NoSuchCommentary"
-  | "Tournament.NotTheCommentaryWriter";
-
-/**
- * What a tournament knows of each commentary on it: enough to list it and to
- * find it. Its comments are the commentary's own (Commentary.ts).
- */
-export interface CommentaryInTournament {
-  readonly id: CommentaryId;
-  readonly title: CommentaryTitle;
-  readonly slug: Slug;
-  // The account that started it, and so its writer.
-  readonly writer: AccountId;
-}
-
-// Where the page that starts a commentary is found among them, which no
-// commentary may be found at too (startCommentary.feature).
-const COMMENTARY_START_PAGE = "create";
+  | "Tournament.BestOfBelowGamesPlayed";
 
 /**
  * A tournament's refusal, named by its code. The code is what whoever asked
@@ -176,7 +153,7 @@ export interface TournamentDetails {
   readonly sport: Sport;
   readonly country: Country;
   readonly region?: string | undefined;
-  readonly notes?: TournamentNotes | undefined;
+  readonly subtitle?: TournamentSubtitle | undefined;
   readonly handicap?: boolean | undefined;
   readonly drawsAllowed?: boolean | undefined;
   readonly levelTestsDrawn?: boolean | undefined;
@@ -251,7 +228,7 @@ interface Settled {
   readonly sport: Sport;
   readonly country: Country;
   readonly region: Region | undefined;
-  readonly notes: TournamentNotes | undefined;
+  readonly subtitle: TournamentSubtitle | undefined;
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
@@ -283,37 +260,9 @@ const SPORTS_WITH_WORLD_RANKINGS: readonly Sport[] = [
 // one can later be put between two others without either of them moving.
 const ORDER_STEP = 10_000;
 
-// A slug somebody else has is followed by a number from 1 to this, each
-// written in two digits.
-const MOST_NUMBERED = 99;
-
 // A name is the same name however it is capitalised, as a reader takes it.
 const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
-
-// The characters of an id after its kind, which no other id has, for the slug
-// that nothing else can be found at.
-const ownCharactersOf = (id: Id): string =>
-  id.value.slice(id.value.indexOf("/") + 1);
-
-// Every slug a thing named `slug` may be found at, in the order they are
-// tried: the slug itself, then followed by "-01" to "-99", then by the id's own
-// characters, which is never taken, since nothing else has them.
-function* slugsFor(slug: Slug, id: Id): Generator<Slug> {
-  yield slug;
-  for (let number = 1; number <= MOST_NUMBERED; number += 1) {
-    yield Slug.from(`${slug.toString()}-${String(number).padStart(2, "0")}`);
-  }
-  yield Slug.from(`${slug.toString()}-${ownCharactersOf(id)}`);
-}
-
-// The last slug a thing may be found at, which slugsFor always ends with.
-const lastOf = (slugs: Generator<Slug>): Slug => {
-  let last: Slug | undefined;
-  for (const slug of slugs) last = slug;
-  if (last === undefined) throw new Error("There was no slug to be found at.");
-  return last;
-};
 
 const refuse = (code: TournamentErrorCode, message: string): never => {
   throw new TournamentRefused(code, message);
@@ -321,15 +270,15 @@ const refuse = (code: TournamentErrorCode, message: string): never => {
 
 /**
  * A tournament: created on a website, and holding its players and a reference
- * to each of its competitions and its commentaries. Everything it is, it says
+ * to each of its competitions. Everything it is, it says
  * was caused by whoever asked for it, since organising a tournament is many
  * people's work.
  *
  * It is run by its managers. Whoever creates it is the first, and only a
  * manager can change it afterwards, so every method that changes it is told
  * who asks and asks that before anything else. Its scorers enter scores, which
- * nothing records yet, and can do nothing else. Starting a commentary is not
- * a change of that kind: any account may start one.
+ * nothing records yet, and can do nothing else. Writing commentary is not a
+ * change of that kind: any account may (allowWritingCommentary).
  *
  * What it is given is refused as each value would be on its own before it gets
  * here; what the tournament refuses is what it asks of them together, and of
@@ -344,8 +293,6 @@ export class Tournament extends AggregateRoot {
   readonly #players = new Map<string, TournamentPlayer>();
   readonly #competitions = new Map<string, CompetitionInTournament>();
   readonly #teams = new Map<string, Team>();
-  // By the written id, in the order they were started.
-  readonly #commentaries = new Map<string, CommentaryInTournament>();
   // By the written id, in the order they were made.
   readonly #managers = new Set<string>();
   readonly #scorers = new Set<string>();
@@ -450,8 +397,8 @@ export class Tournament extends AggregateRoot {
     return this.#now.region;
   }
 
-  get notes(): TournamentNotes | undefined {
-    return this.#now.notes;
+  get subtitle(): TournamentSubtitle | undefined {
+    return this.#now.subtitle;
   }
 
   get handicap(): boolean {
@@ -528,11 +475,6 @@ export class Tournament extends AggregateRoot {
    */
   get teams(): readonly Team[] {
     return archivedLast(this.#teamsByOrder, ({ archived }) => archived);
-  }
-
-  /** The commentaries on it, in the order they were started. */
-  get commentaries(): readonly CommentaryInTournament[] {
-    return [...this.#commentaries.values()];
   }
 
   /** Its managers, in the order they were made, the one who created it first. */
@@ -1473,73 +1415,28 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That a commentary called `title` is started on it as `id`, written by
-   * `by`, found at the first slug of its title no other commentary has. Any
-   * account may start one: commentary is anybody's to write, and not a change
-   * only a manager may make (onlyManagers.feature). Refused once it is
-   * archived, and when another commentary has the id, or the title however it
-   * is capitalised.
+   * Refused unless `by` may write its notes: add one, edit one or delete one
+   * (writeManagerNotes.feature). Only its managers may, and not once it is
+   * archived. It records nothing, since a note is kept in a stream of its own
+   * (ManagerNote.ts), so that a long one is not read on every page of the
+   * tournament; whatever writes a note asks this first.
    */
-  startCommentary(
-    id: CommentaryId,
-    title: CommentaryTitle,
-    by: AccountId,
-    at: ReadOnlyDate,
-  ): void {
+  allowWritingManagerNotes(by: AccountId): void {
+    this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
-    if (this.#commentaries.has(id.value)) {
-      refuse(
-        "Tournament.CommentaryAlreadyStarted",
-        "The commentary is already started.",
-      );
-    }
-    this.#refuseACommentaryTitleTaken(id, title);
-    const slug = firstFree(Slug.fromName(title.toString()), id, [
-      COMMENTARY_START_PAGE,
-      ...[...this.#commentaries.values()].map((each) => each.slug.toString()),
-    ]);
-    this.record(
-      new TournamentCommentaryStarted(
-        id.value,
-        title.toString(),
-        slug.toString(),
-        by,
-        at,
-      ),
-    );
   }
 
   /**
-   * That the commentary `id` is now called `title`, keeping its slug. Only its
-   * writer may ask, which the tournament knows, since it recorded who started
-   * it. Refused once the tournament is archived, when it has no such
-   * commentary, and when another commentary has the title however it is
-   * capitalised. A title changed to what it is already records nothing.
+   * Refused unless commentary may be written on it: a commentary started, its
+   * title changed, or a comment added, edited or deleted
+   * (writeCommentary.feature). Any account may, since commentary is anybody's
+   * to write and not a change only a manager may make (onlyManagers.feature),
+   * but not once it is archived. It records nothing, since a commentary is
+   * kept in a stream of its own (Commentary.ts); whatever writes commentary
+   * asks this first.
    */
-  changeCommentaryTitle(
-    id: CommentaryId,
-    title: CommentaryTitle,
-    by: AccountId,
-    at: ReadOnlyDate,
-  ): void {
-    const found =
-      this.#commentaries.get(id.value) ??
-      refuse(
-        "Tournament.NoSuchCommentary",
-        "The tournament has no such commentary.",
-      );
-    if (!found.writer.equals(by)) {
-      refuse(
-        "Tournament.NotTheCommentaryWriter",
-        "Only the commentary's writer can change its title.",
-      );
-    }
+  allowWritingCommentary(): void {
     this.#refuseOnceArchived();
-    this.#refuseACommentaryTitleTaken(id, title);
-    if (found.title.equals(title)) return;
-    this.record(
-      new TournamentCommentaryTitleChanged(id.value, title.toString(), by, at),
-    );
   }
 
   protected apply(event: DomainEvent): void {
@@ -1633,22 +1530,6 @@ export class Tournament extends AggregateRoot {
       event.competitionIds.forEach((written, index) => {
         this.#competitionAt(written, (index + 1) * ORDER_STEP);
       });
-    } else if (event instanceof TournamentCommentaryStarted) {
-      const id = CommentaryId.from(event.commentaryId);
-      this.#commentaries.set(id.value, {
-        id,
-        title: CommentaryTitle.from(event.title),
-        slug: Slug.from(event.slug),
-        writer: event.createdBy,
-      });
-    } else if (event instanceof TournamentCommentaryTitleChanged) {
-      const found = this.#commentaries.get(event.commentaryId);
-      if (found !== undefined) {
-        this.#commentaries.set(event.commentaryId, {
-          ...found,
-          title: CommentaryTitle.from(event.title),
-        });
-      }
     } else {
       this.#applyToTeamsOrTests(event);
     }
@@ -1816,7 +1697,7 @@ export class Tournament extends AggregateRoot {
       sport,
       country,
       region,
-      notes: details.notes,
+      subtitle: details.subtitle,
       handicap,
       drawsAllowed,
       levelTestsDrawn,
@@ -1906,10 +1787,10 @@ export class Tournament extends AggregateRoot {
       sport: Sport.from(written.sport),
       country,
       region,
-      notes:
-        written.notes === undefined
+      subtitle:
+        written.subtitle === undefined
           ? undefined
-          : TournamentNotes.from(written.notes),
+          : TournamentSubtitle.from(written.subtitle),
       handicap: written.handicap,
       drawsAllowed: written.drawsAllowed,
       levelTestsDrawn: written.levelTestsDrawn,
@@ -1931,22 +1812,6 @@ export class Tournament extends AggregateRoot {
         "Tournament.NotAManager",
         "Only a manager can change the tournament.",
       );
-    }
-  }
-
-  // Another commentary's title, however it is capitalised. A commentary's own
-  // is not taken from it, so that its capitals can be corrected.
-  #refuseACommentaryTitleTaken(id: CommentaryId, title: CommentaryTitle): void {
-    for (const other of this.#commentaries.values()) {
-      if (
-        !other.id.equals(id) &&
-        sameName(other.title.toString(), title.toString())
-      ) {
-        refuse(
-          "Tournament.CommentaryTitleTaken",
-          "Another commentary has the title.",
-        );
-      }
     }
   }
 
@@ -2385,15 +2250,6 @@ interface Ordered {
 const nextOrderIn = (ordered: readonly { readonly order: number }[]): number =>
   Math.max(0, ...ordered.map(({ order }) => order)) + ORDER_STEP;
 
-// The first slug a thing named `slug` may be found at that none of `taken` is
-// (`slugsFor`).
-const firstFree = (slug: Slug, id: Id, taken: readonly string[]): Slug => {
-  for (const candidate of slugsFor(slug, id)) {
-    if (!taken.includes(candidate.toString())) return candidate;
-  }
-  return lastOf(slugsFor(slug, id));
-};
-
 // Another player in `team` with the player's name, archived or not, however
 // it is capitalised. A player in another team may have it, since a player is
 // always chosen from their team.
@@ -2486,7 +2342,7 @@ const writtenFrom = (settled: Settled): WrittenTournament => ({
   sport: settled.sport.code,
   country: settled.country.code,
   region: settled.region?.code,
-  notes: settled.notes?.markdown,
+  subtitle: settled.subtitle?.markdown,
   handicap: settled.handicap,
   drawsAllowed: settled.drawsAllowed,
   levelTestsDrawn: settled.levelTestsDrawn,

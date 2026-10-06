@@ -9,7 +9,7 @@ Feature: The commentaries on a tournament, for anybody to read
   called now, since a commentary is one writer's account and a reader chooses
   whose to read, and where its page is found, which is the tournament's
   address followed by "commentaries" and the commentary's slug
-  (`startCommentary.feature`).
+  (`start.feature`).
 
   A commentary whose writer's account has since been forgotten is not
   answered. Every word of it is that account's, under that account's name,
@@ -33,6 +33,20 @@ Feature: The commentaries on a tournament, for anybody to read
   ask, and every scenario here asks with nobody signed in. They are asked for
   by the tournament's address on the website being read, as a reader's
   browser names it.
+
+  The tournament's subtitle is answered with it, in Markdown as it is kept
+  (`TournamentSubtitle.feature`), since every page of a tournament shows it
+  beneath its name in the header (`layout.feature`). A tournament with no
+  subtitle is answered with none.
+
+  So are its manager's notes, each by its id with when it last changed
+  (`PublicManagerNotesOfTournament.feature`), since every page of a
+  tournament marks its Notes section while a reader has a note there they
+  have not read as it is now (`notes.feature`).
+
+  So are its commentaries, each by its id with when it last changed
+  (`CommentariesByTournament.feature`), since every page of a tournament
+  marks its Commentary section the same way (`commentaries.feature`).
 
   These scenarios run against Postgres, with the application's event store and
   read models.
@@ -107,11 +121,55 @@ Feature: The commentaries on a tournament, for anybody to read
       When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
       Then the commentary "Day one" is answered as found at "2026/gc/spring-open/commentaries/day-one"
 
+  Rule: Each commentary is answered with when it last changed
+
+    A reader is shown which commentaries they have not read since they last
+    changed (`commentaries.feature`), and the time is what that is told by:
+    when it was started, or when a comment was last added to it or edited in
+    it. It is answered from the read model of a tournament's commentaries
+    (`CommentariesByTournament.feature`), which reads no comment.
+
+    Background:
+      Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
+
+    Scenario: A commentary never written in last changed when it was started
+      When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
+      Then the commentary "Day one" is answered as last changed at "2026-09-26T10:00:00Z"
+
+    Scenario: A comment added changes when the commentary last changed
+      Given the moment "2026-09-26T11:00:00Z"
+      And "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
+      Then the commentary "Day one" is answered as last changed at "2026-09-26T11:00:00Z"
+
   Rule: The tournament is answered as its page's section bar shows it
 
     Scenario: The tournament's name is answered
       When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
       Then the tournament answered is called "Spring Open"
+
+    Scenario: The tournament's subtitle is answered
+      Given the tournament "Spring Open" has the subtitle "Lunch is at **noon**"
+      When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered has the subtitle "Lunch is at **noon**"
+
+    Scenario: A tournament with no subtitle is answered with none
+      When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered has no subtitle
+
+    Scenario: The tournament's manager notes are answered with when each last changed
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has edited the manager note "Lunch is at noon" of "Spring Open" to "Lunch is at one"
+      When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
+      Then the first manager note of the tournament answered last changed at "2026-09-26T11:00:00Z"
+
+    Scenario: The tournament's commentaries are answered with when each last changed
+      Given "organiser@example.com" has started the commentary "Day one" on "Spring Open"
+      And the moment "2026-09-26T11:00:00Z"
+      And "organiser@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
+      When the public commentaries of the tournament at "2026/ac/spring-open" are asked for
+      Then the first commentary of the tournament answered last changed at "2026-09-26T11:00:00Z"
 
     Scenario: A competition is answered with where it is found
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"

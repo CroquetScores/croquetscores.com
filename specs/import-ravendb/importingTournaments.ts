@@ -10,6 +10,7 @@ import { inspect } from "node:util";
 
 import { AggregateRepository } from "../../src/application/common/AggregateRepository.js";
 import { ProjectingEventStore } from "../../src/application/common/ProjectingEventStore.js";
+import { CommentariesByTournament } from "../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import { Commentary } from "../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
@@ -149,6 +150,8 @@ interface Importing {
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
   readonly commentaries: AggregateRepository<Commentary, CommentaryId>;
+  /** The commentaries of each tournament, as the read model of them has them. */
+  readonly commentariesByTournament: CommentariesByTournament;
   readonly importers: Importers;
   writing?: Writing;
   refused?: unknown;
@@ -172,11 +175,13 @@ export const importingOf = (world: SpecWorld): Importing => {
   const unitOfWork = unitOfWorkOf(world);
   const accounts = accountsOf(world);
   const database = importDatabaseOf(world);
+  const commentariesByTournament = new CommentariesByTournament(unitOfWork);
   const store = new ProjectingEventStore(accounts.store, [
     accounts.readModel,
     accounts.byGoogleAccount,
     new TournamentsByAddress(unitOfWork),
     new TournamentsByAccount(unitOfWork),
+    commentariesByTournament,
   ]);
   // Wrapped rather than handed over as they are: a static passed on its own is
   // a method separated from what it was declared on.
@@ -206,6 +211,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     tournaments,
     competitions,
     commentaries,
+    commentariesByTournament,
     importers: {
       tournaments: new ImportTournaments(
         unitOfWork,
@@ -224,6 +230,7 @@ export const importingOf = (world: SpecWorld): Importing => {
         commentaries,
         importedAccounts,
         database,
+        commentariesByTournament,
       ),
       order: new OrderCompetitions(unitOfWork, tournaments, database),
     },

@@ -93,6 +93,12 @@ Feature: Adding a comment to a commentary
       When the reader signed in to the account for "writer@example.com" adds the comment "Sam is two hoops up" to a commentary of "Spring Open" there is not
       Then it is refused with "AddComment.NoSuchCommentary"
 
+    Scenario: Adding a comment to another tournament's commentary is refused
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "writer@example.com" has started the commentary "Day two" on "Autumn Open"
+      When the reader signed in to the account for "writer@example.com" adds the comment "Sam is two hoops up" to "Day two" of "Autumn Open" as a commentary of "Spring Open"
+      Then it is refused with "AddComment.NoSuchCommentary"
+
     Scenario: Adding a comment to a commentary of a tournament there is not is refused
       When the reader signed in to the account for "writer@example.com" adds the comment "Sam is two hoops up" to a commentary of a tournament there is not
       Then it is refused with "AddComment.NoSuchCommentary"

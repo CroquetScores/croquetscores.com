@@ -11,7 +11,7 @@ Feature: The names a tournament's events are kept under
   it today. Every one begins with "tournament-", so that no name of a
   tournament's could ever be one another kind of thing wants for its own.
 
-  What an event can do without, such as a tournament's notes or the flag a
+  What an event can do without, such as a tournament's subtitle or the flag a
   player flies, is left out when it is nothing, and is read back as nothing.
   What an event cannot do without, it is refused without. What was kept comes
   back from a table something else could have written to, and an event read
@@ -69,8 +69,6 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         | tournament-team-players-spaced-out  |
         | a test being added                        | tournament-test-added               |
         | a test being updated                      | tournament-test-updated             |
-        | a commentary being started                | tournament-commentary-started       |
-        | a commentary's title being changed        | tournament-commentary-title-changed |
 
   Rule: An event written down and read back is the event it was
 
@@ -120,8 +118,6 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         |
         | a test being added                        |
         | a test being updated                      |
-        | a commentary being started                |
-        | a commentary's title being changed        |
 
     Scenario Outline: An event read back says everything it said
       Given an event of <happening>
@@ -169,13 +165,11 @@ Feature: The names a tournament's events are kept under
         | a team's players being spaced out         |
         | a test being added                        |
         | a test being updated                      |
-        | a commentary being started                |
-        | a commentary's title being changed        |
 
   Rule: What an event can do without is read back as nothing
 
-    Scenario: A tournament created with no notes is read back with none
-      Given an event of a tournament being created with no notes
+    Scenario: A tournament created with no subtitle is read back with none
+      Given an event of a tournament being created with no subtitle
       When the event is written down through the registry
       And what was kept is read back through the registry
       Then what was read back says everything the event said
@@ -253,11 +247,6 @@ Feature: The names a tournament's events are kept under
         | a test being added                        | slug            |
         | a test being added                        | expectedMatches |
         | a test being added                        | bestOf          |
-        | a commentary being started                | commentaryId    |
-        | a commentary being started                | title           |
-        | a commentary being started                | slug            |
-        | a commentary's title being changed        | commentaryId    |
-        | a commentary's title being changed        | title           |
 
     Scenario Outline: What was kept with a field that is not what its event says there is refused
       Given an event of <happening>

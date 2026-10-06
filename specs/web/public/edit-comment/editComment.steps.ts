@@ -7,7 +7,10 @@ import { strict as assert } from "node:assert";
 import type { SpecWorld } from "../../../support/world.js";
 import { withScripting } from "../../support/browser.js";
 import { load } from "../../../application/operations/tournaments/aRequest.js";
-import { commentWritten } from "../../../application/operations/commentaries/commentaryRequests.js";
+import {
+  commentWritten,
+  loadCommentary,
+} from "../../../application/operations/commentaries/commentaryRequests.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 const words = (key: string): string => {
@@ -21,10 +24,7 @@ const words = (key: string): string => {
 const editPathOf = async (world: SpecWorld, text: string): Promise<string> => {
   const written = commentWritten(world, text);
   const tournament = await load(world, written.tournament);
-  const commentary = tournament.commentaries.find((each) =>
-    each.id.equals(written.commentary),
-  );
-  assert.ok(commentary !== undefined, "The tournament has no such commentary.");
+  const commentary = await loadCommentary(world, written.commentary);
   const own = written.id.value.slice(written.id.value.indexOf("/") + 1);
   return `/${tournament.address.toString()}/commentaries/${commentary.slug.toString()}/comments/${own}/edit`;
 };

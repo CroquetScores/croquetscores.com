@@ -6,6 +6,7 @@ import { CommentaryCommentAdded } from "../../../../../../src/domain/aggregates/
 import { CommentaryCommentDeleted } from "../../../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryCommentDeleted.js";
 import { CommentaryCommentEdited } from "../../../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryCommentEdited.js";
 import { CommentaryStarted } from "../../../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryStarted.js";
+import { CommentaryTitleChanged } from "../../../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryTitleChanged.js";
 import type { DomainEvent } from "../../../../../../src/domain/common/DomainEvent.js";
 import { EventRegistry } from "../../../../../../src/domain/common/EventRegistry.js";
 import { causedBy, happenedAt } from "../../../../../support/exampleEvents.js";
@@ -18,12 +19,20 @@ import type { SpecWorld } from "../../../../../support/world.js";
 
 const WRITER = "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b";
 const COMMENT = "comment/123e4567-e89b-42d3-a456-426614174000";
+const TOURNAMENT = "tournament/123e4567-e89b-42d3-a456-426614174000";
 
 const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
   // Its own record, not the tournament's starting of it, which is said in
   // words of its own so that neither registry's steps match the other's.
   "a commentary's own record being started": () =>
-    new CommentaryStarted(WRITER, causedBy, happenedAt),
+    new CommentaryStarted(
+      TOURNAMENT,
+      "Day one",
+      "day-one",
+      WRITER,
+      causedBy,
+      happenedAt,
+    ),
   "a comment being added": () =>
     new CommentaryCommentAdded(
       COMMENT,
@@ -40,6 +49,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     ),
   "a comment being deleted": () =>
     new CommentaryCommentDeleted(COMMENT, causedBy, happenedAt),
+  "a commentary's title being changed": () =>
+    new CommentaryTitleChanged("Day one, morning", causedBy, happenedAt),
 };
 
 // Matched by these happenings alone, so that the steps for the tournament's
