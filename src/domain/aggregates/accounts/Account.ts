@@ -16,6 +16,7 @@ import { RoleAdded } from "./events/RoleAdded.js";
 import { RoleRemoved } from "./events/RoleRemoved.js";
 import { SignedIn } from "./events/SignedIn.js";
 import type { AccountId } from "./AccountId.js";
+import { Administrator } from "./Administrator.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
 import type { Role } from "./value-objects/Role.js";
@@ -183,6 +184,15 @@ export class Account extends AggregateRoot {
 
   get isWorldRankingOfficer(): boolean {
     return this.#roles.has("world-ranking-officer");
+  }
+
+  /**
+   * The account as it asks for something (asker.feature): known to be an
+   * administrator while it holds the Administrator role, and otherwise by its
+   * id alone. A forgotten account holds no role, so asks as its id.
+   */
+  get asker(): AccountId {
+    return this.isAdministrator ? Administrator.of(this.id) : this.id;
   }
 
   /**

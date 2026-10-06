@@ -22,6 +22,13 @@ Feature: Finding the tournaments an account has a part in
   year is not among them unless there is a tournament in it: offering it
   anyway is the admin's to decide, not the read model's.
 
+  An account that administers the site is listed every tournament on the
+  website, as a manager of each, since it may do to every one what a manager
+  may (`administrators.feature`). What the list shows of a tournament is held
+  once for it whoever has a part in it, so every tournament is asked for from
+  that, in the same order and by the same year as an account's own, and its
+  years are those any tournament on the website starts in.
+
   The projection is safe to run twice, as rebuilding the read model does.
   Each tournament is one stream and nothing in one tournament's row depends on
   another's, so a rebuild can take the streams in any order.
@@ -309,6 +316,71 @@ Feature: Finding the tournaments an account has a part in
 
     Scenario: An account with no tournaments has no years
       When the years of the account for "organiser@example.com" are looked for
+      Then no year is found
+
+  Rule: Every tournament on a website is found, as one managed, for an administrator's list
+
+    Scenario: A tournament is found whoever created it
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is found
+
+    Scenario: Tournaments created by different accounts are all found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And a tournament "Autumn Open" to start on "2026-03-06"
+      And "Autumn Open" is created by the account for "other@example.com"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then 2 tournaments are found
+
+    Scenario: A tournament is found once however many accounts have a part in it
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "scorer@example.com" is made a scorer of "Spring Open"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then 1 tournament is found
+
+    Scenario: Every tournament is found as one managed
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is held as one it manages
+
+    Scenario: An archived tournament is found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament is not found in another year
+      Given a tournament "Spring Open" to start on "2025-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is not found
+
+    Scenario: A tournament is not found on another website
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to be on the website "gateballscores.com"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is not found
+
+    Scenario: The years are those any tournament on the website starts in, newest first
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And a tournament "Autumn Open" to start on "2027-03-06"
+      And "Autumn Open" is created by the account for "other@example.com"
+      When the years of every tournament on "croquetscores.com" are looked for
+      Then the first year is 2027
+      And the second year is 2024
+
+    Scenario: The years of another website's tournaments are not among every tournament's
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" to be on the website "gateballscores.com"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the years of every tournament on "croquetscores.com" are looked for
       Then no year is found
 
   Rule: Projecting the same events again changes nothing

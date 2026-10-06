@@ -1,4 +1,5 @@
-import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import type { Account } from "../../../domain/aggregates/accounts/Account.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
   type Tournament,
@@ -10,6 +11,7 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import {
   type TournamentAddresses,
   TournamentOperationRefused,
+  readerAs,
 } from "./tournamentOperations.js";
 import {
   type ChangingTournament,
@@ -30,6 +32,7 @@ export class TournamentToChangeHandler extends QueryHandler<
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly addresses: TournamentAddresses,
+    private readonly accounts: AggregateRepository<Account, AccountId>,
   ) {
     super();
   }
@@ -44,7 +47,7 @@ export class TournamentToChangeHandler extends QueryHandler<
         "No tournament has been found at that address.",
       );
     }
-    if (!tournament.manages(AccountId.from(query.account))) {
+    if (!tournament.mayManage(await readerAs(this.accounts, query.account))) {
       throw new TournamentRefused(
         "Tournament.NotAManager",
         "Only a manager of the tournament can change it.",

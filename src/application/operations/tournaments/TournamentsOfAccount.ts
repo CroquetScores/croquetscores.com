@@ -38,11 +38,25 @@ export interface TournamentsByAccount {
 
   /** The years it has one starting in on `website`, the newest first, each once. */
   yearsOf(account: AccountId, website: Website): Promise<readonly number[]>;
+
+  /**
+   * Every tournament on `website` starting in `year`, each once and each as
+   * one managed, in the order tournamentsOf keeps: for an administrator, who
+   * may do to every tournament what its managers may.
+   */
+  everyTournament(
+    website: Website,
+    year: number,
+  ): Promise<readonly TournamentOfAccount[]>;
+
+  /** The years any tournament on `website` starts in, the newest first, each once. */
+  everyYear(website: Website): Promise<readonly number[]>;
 }
 
 /**
  * The tournaments the account the reader is signed in to manages or scores on
- * the website being read, starting in `year`.
+ * the website being read, starting in `year`: every one there, as one it
+ * manages, where the account administers the site.
  *
  * It names the account the reader is signed in to, never one they chose, so
  * nobody can list another account's tournaments.

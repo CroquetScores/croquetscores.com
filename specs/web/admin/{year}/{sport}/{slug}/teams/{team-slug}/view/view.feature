@@ -168,3 +168,12 @@ Feature: A team's page in the admin
       And "organiser@example.com" has added the team "The Very Long Named Croquet And Lawn Bowls Club Of The Northern Districts" to "Spring Tests"
       When the page of the team "The Very Long Named Croquet And Lawn Bowls Club Of The Northern Districts" in "Spring Tests" is opened
       Then the page is no wider than the window
+
+  Rule: An administrator sees a team as a manager does
+
+    Scenario: An administrator is offered a team's players to add
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of the team "Australia" in "Spring Tests" is opened
+      Then the page offers "Add Player"

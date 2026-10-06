@@ -117,6 +117,21 @@ export const accountsThrough = (
     );
   },
 
+  // Kept straight to the store, as an account brought over is, since no
+  // command gives a role yet. Given by an account of nobody's, as the role's
+  // event records whoever gave it and the scenario does not say.
+  async giveRole(address, role) {
+    await changed(application, address, (account) => {
+      account.addRole(role, AccountId.create(), now());
+    });
+  },
+
+  async takeRole(address, role) {
+    await changed(application, address, (account) => {
+      account.removeRole(role, AccountId.create(), now());
+    });
+  },
+
   // Linked the way the site links one: by a sign-in with Google carrying the
   // account's own address, verified. A scenario that says an account was
   // linked is not about how, and this is the one way there is.
@@ -126,6 +141,24 @@ export const accountsThrough = (
     );
   },
 });
+
+/** The account for `address`, changed by `change` and kept again. */
+const changed = async (
+  application: Application,
+  address: string,
+  change: (account: Account) => void,
+): Promise<void> => {
+  await application.unitOfWork.inTransaction(async () => {
+    const id = await application.accountsByEmailAddress.find(
+      EmailAddress.from(address),
+    );
+    if (id === undefined) throw new Error(`No account for ${address}.`);
+    const account = await application.accounts.load(id);
+    if (account === undefined) throw new Error(`No events for ${address}.`);
+    change(account);
+    await application.accounts.save(account);
+  });
+};
 
 /** The link in the newest email queued for `address`, of `kind` if given. */
 export const linkEmailedTo = async (

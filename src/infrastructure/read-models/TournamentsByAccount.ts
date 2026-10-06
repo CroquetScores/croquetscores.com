@@ -104,6 +104,51 @@ export class TournamentsByAccount implements Projection, Asked {
     return rows.map(({ year }) => year);
   }
 
+  // From the details alone, which hold each tournament once whoever has a
+  // part in it, so that a tournament with several is listed once.
+  async everyTournament(
+    website: Website,
+    year: number,
+  ): Promise<readonly TournamentOfAccount[]> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      tournament_id: string;
+      name: string;
+      starts: string;
+      finishes: string;
+      address: string;
+      archived: boolean;
+    }>(
+      `select tournament_id, name,
+              to_char(starts, 'YYYY-MM-DD') as starts,
+              to_char(finishes, 'YYYY-MM-DD') as finishes,
+              address, archived
+         from tournaments_by_account_details
+        where website = $1 and extract(year from starts) = $2
+        order by archived, starts desc, name`,
+      [website.host, year],
+    );
+    return rows.map((row) => ({
+      id: row.tournament_id,
+      name: row.name,
+      starts: row.starts,
+      finishes: row.finishes,
+      address: row.address,
+      archived: row.archived,
+      part: "manager",
+    }));
+  }
+
+  async everyYear(website: Website): Promise<readonly number[]> {
+    const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
+      `select distinct extract(year from starts)::int as year
+         from tournaments_by_account_details
+        where website = $1
+        order by year desc`,
+      [website.host],
+    );
+    return rows.map(({ year }) => year);
+  }
+
   // Each written so that writing it twice leaves what writing it once did,
   // which is what makes projecting the same events again change nothing.
   async #project(tournament: string, event: DomainEvent): Promise<void> {

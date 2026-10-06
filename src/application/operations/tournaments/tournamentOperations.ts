@@ -104,7 +104,9 @@ export interface TournamentRequest {
 }
 
 /**
- * The account `written`, which asks. A forgotten one is refused with
+ * The account `written`, which asks, as it asks (Account.asker): known to be
+ * an administrator while it holds the role, so that a tournament lets it
+ * through as one of its managers. A forgotten one is refused with
  * `Account.Forgotten`: a session is ended when its account is forgotten, so
  * this is a request that raced the forgetting.
  */
@@ -120,7 +122,21 @@ export const askedBy = async (
   if (account.forgotten) {
     throw new AccountRefused("Account.Forgotten", "The account is forgotten.");
   }
-  return id;
+  return account.asker;
+};
+
+/**
+ * The account `written` as it asks, for a page that is shown rather than a
+ * change that is made: not refused for being forgotten or for not being found,
+ * as askedBy refuses, since a page refuses by what the tournament says of
+ * whoever reads it, and one of those asks as nothing more than its id.
+ */
+export const readerAs = async (
+  accounts: AggregateRepository<Account, AccountId>,
+  written: string,
+): Promise<AccountId> => {
+  const id = AccountId.from(written);
+  return (await accounts.load(id))?.asker ?? id;
 };
 
 /**
@@ -158,7 +174,7 @@ export const managedBy = async (
 ): Promise<{ readonly by: AccountId; readonly tournament: Tournament }> => {
   const by = await askedBy(accounts, account);
   const tournament = await tournamentFor(tournaments, written, operation);
-  if (!tournament.manages(by)) {
+  if (!tournament.mayManage(by)) {
     throw new TournamentRefused(
       "Tournament.NotAManager",
       "Only a manager of the tournament can ask for this.",
@@ -184,7 +200,7 @@ export const managedOrScoredBy = async (
 }> => {
   const by = await askedBy(accounts, account);
   const tournament = await tournamentFor(tournaments, written, operation);
-  if (tournament.manages(by)) return { tournament, part: "manager" };
+  if (tournament.mayManage(by)) return { tournament, part: "manager" };
   if (tournament.scores(by)) return { tournament, part: "scorer" };
   throw new TournamentRefused(
     "Tournament.NotAManager",

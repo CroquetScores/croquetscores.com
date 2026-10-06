@@ -630,6 +630,23 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await world.keepAccount?.(account);
     },
 
+    // Kept straight to the store, as forgetting is above, since no command
+    // gives a role yet. Given by an account of nobody's, as the role's event
+    // records whoever gave it and the scenario does not say.
+    async giveRole(address, role) {
+      await settle();
+      const account = await readBack(world, await idFor(address));
+      account.addRole(role, AccountId.create(), now());
+      await world.keepAccount?.(account);
+    },
+
+    async takeRole(address, role) {
+      await settle();
+      const account = await readBack(world, await idFor(address));
+      account.removeRole(role, AccountId.create(), now());
+      await world.keepAccount?.(account);
+    },
+
     async send(command: RegisterAccount): Promise<void> {
       await settle();
       await mediator.send(command);
@@ -810,6 +827,8 @@ export const standUpFor = (world: SpecWorld): void => {
     forget: (address) => registering.forget(address),
     linkToGoogle: (address, subject) =>
       registering.linkToGoogle(address, subject),
+    giveRole: (address, role) => registering.giveRole(address, role),
+    takeRole: (address, role) => registering.takeRole(address, role),
   };
 };
 

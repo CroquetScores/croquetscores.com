@@ -30,6 +30,11 @@ Feature: The admin lists the reader's tournaments
   in, which is also the year in its address, so one that runs over the new
   year is found where its address says it is.
 
+  A reader whose account administers the site may do to every tournament
+  what its managers may (`administrators.feature`), so the list is of every
+  tournament on the website, each offering what a manager is offered, and the
+  years are those any tournament on the website is in.
+
   The years to choose from are in the secondary navigation, and are the years
   the reader has a tournament in on this website, newest first. Finding them
   from each tournament's events would mean reading every tournament there is,
@@ -132,6 +137,53 @@ Feature: The admin lists the reader's tournaments
       And "organiser@example.com" has archived the tournament "Spring Open"
       When the admin is opened
       Then the tournament "Spring Open" is listed
+
+  Rule: An administrator's list is of every tournament on the website
+
+    Scenario: A tournament an administrator has no part in is listed
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" is listed
+
+    Scenario: A tournament an administrator has no part in offers what a manager does
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" offers "Manage"
+
+    Scenario: A tournament on another website is not listed for an administrator
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open" on the website "gateballscores.com"
+      When the admin is opened
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: A year an administrator has no tournament of their own in is offered
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2024-10-03"
+      When the admin is opened
+      Then the year 2024 is offered
+
+    Scenario: A year's address lists every tournament in it for an administrator
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2024-10-03"
+      When the admin for 2024 is opened
+      Then the tournament "Autumn Open" is listed
+
+    Scenario: An account the role was taken from is listed only its own tournaments
+      Given "organiser@example.com" has been given the role "Administrator"
+      And "organiser@example.com" has had the role "Administrator" taken away
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" is not listed
 
   Rule: The list is of the website it is read on
 

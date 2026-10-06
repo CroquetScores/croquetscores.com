@@ -4,6 +4,7 @@ import { inspect } from "node:util";
 
 import { Account } from "../../../../../src/domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
+import { Administrator } from "../../../../../src/domain/aggregates/accounts/Administrator.js";
 import type { Role } from "../../../../../src/domain/aggregates/accounts/value-objects/Role.js";
 import type { DomainEvent } from "../../../../../src/domain/common/DomainEvent.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
@@ -39,6 +40,13 @@ export const idOf = (world: SpecWorld): AccountId => {
 // a tournament's steps are asked who asks in the same words.
 export const askedBy = (world: SpecWorld, account: string): void => {
   world.askedBy = AccountId.from(account);
+};
+
+export const askedByAnAdministrator = (
+  world: SpecWorld,
+  account: string,
+): void => {
+  world.askedBy = Administrator.of(AccountId.from(account));
 };
 
 // Somebody other than the account, for a scenario that does not say who asked

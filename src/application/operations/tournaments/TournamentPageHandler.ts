@@ -1,4 +1,5 @@
-import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import type { Account } from "../../../domain/aggregates/accounts/Account.js";
+import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
   type Tournament,
@@ -10,6 +11,7 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import {
   type TournamentAddresses,
   TournamentOperationRefused,
+  readerAs,
 } from "./tournamentOperations.js";
 import { type TournamentAsPaged, TournamentPage } from "./TournamentPage.js";
 
@@ -22,6 +24,7 @@ export class TournamentPageHandler extends QueryHandler<
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly addresses: TournamentAddresses,
+    private readonly accounts: AggregateRepository<Account, AccountId>,
   ) {
     super();
   }
@@ -36,8 +39,8 @@ export class TournamentPageHandler extends QueryHandler<
         "No tournament has been found at that address.",
       );
     }
-    const reader = AccountId.from(query.account);
-    const part = tournament.manages(reader)
+    const reader = await readerAs(this.accounts, query.account);
+    const part = tournament.mayManage(reader)
       ? "manager"
       : tournament.scores(reader)
         ? "scorer"

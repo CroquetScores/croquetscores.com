@@ -12,6 +12,10 @@
 import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import {
+  isRole,
+  type Role,
+} from "../../src/domain/aggregates/accounts/value-objects/Role.js";
 import type { SpecWorld } from "./world.js";
 
 /** How an account a scenario says exists was come by. */
@@ -36,6 +40,12 @@ export interface AccountsInHand {
 
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
+
+  /** Gives the account for `address` the role `role`. */
+  giveRole(address: string, role: Role): Promise<void>;
+
+  /** Takes the role `role` from the account for `address`. */
+  takeRole(address: string, role: Role): Promise<void>;
 }
 
 const inHand = (world: SpecWorld): AccountsInHand => {
@@ -106,6 +116,31 @@ Given(
   "the account for {string} has been forgotten",
   async function (this: SpecWorld, address: string) {
     await inHand(this).forget(address);
+  },
+);
+
+// A role as a feature names it, "Administrator" or "World Ranking Officer",
+// and as the account keeps it.
+const roleCalled = (name: string): Role => {
+  const role = name.toLowerCase().replaceAll(" ", "-");
+  assert.ok(isRole(role), `There is no role called ${name}.`);
+  return role;
+};
+
+// Given and taken away by somebody the scenario does not name, since nothing
+// gives a role yet but the steps: who may give one is for the command that
+// will, when there is one.
+Given(
+  "{string} has been given the role {string}",
+  async function (this: SpecWorld, address: string, role: string) {
+    await inHand(this).giveRole(address, roleCalled(role));
+  },
+);
+
+Given(
+  "{string} has had the role {string} taken away",
+  async function (this: SpecWorld, address: string, role: string) {
+    await inHand(this).takeRole(address, roleCalled(role));
   },
 );
 

@@ -9,7 +9,8 @@ Feature: Only a tournament's managers change it
   asks is refused, a scorer as much as somebody the tournament has never
   heard of: a scorer enters scores, and nothing else. Starting a commentary
   is not a change of that kind, and any account can start one
-  (`writeCommentary.feature`).
+  (`writeCommentary.feature`). An account that administers the site is the
+  exception: it can do anything a manager can, to every tournament.
 
   Who is asking is what every event already records as its cause, so the
   tournament is told on every request, and asks it before anything else. A
@@ -173,5 +174,63 @@ Feature: Only a tournament's managers change it
       Given the account "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b" was taken off its managers
       And the tournament is rebuilt from the stream
       And it is asked for by "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b"
+      When somebody archives the tournament
+      Then it is refused with "Tournament.NotAManager"
+
+  Rule: An account that administers the site can do anything a manager can
+
+    An account holding the Administrator role asks as an administrator
+    (`asker.feature`), and is let through as a manager would be, to every
+    tournament, without being made one of its managers. So it is never
+    counted among them: not in who manages the tournament, and not as the
+    manager a tournament must always keep (`removeManager.feature`). What it
+    does is recorded as caused by it, as a manager's is.
+
+    Scenario Outline: A request from an administrator is let through
+      Given the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who administers the site
+      When <asking>
+      Then it is not refused
+
+      Examples:
+        | asking                                                                               |
+        | the tournament is updated                                                            |
+        | somebody archives the tournament                                                     |
+        | the player "Alex Another" is added                                                   |
+        | the player "Sam Someone" is updated                                                  |
+        | the player "Sam Someone" is archived                                                 |
+        | the block "Block B" is added                                                         |
+        | the block "Block A" is updated                                                       |
+        | the knockout "Plate" is added                                                        |
+        | the Swiss "Swiss B" is added                                                         |
+        | the competition "Block A" is archived                                                |
+        | the competition "Main Event" is moved up                                             |
+        | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a manager         |
+        | the account "account/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b" is taken off the managers |
+        | the account "account/0d1e2f3a-4b5c-4d6e-8f7a-9b0c1d2e3f4a" is made a scorer          |
+        | the tournament's manager notes are written                                           |
+        | the account "account/5f0c7a2e-3b1d-4c8e-9f6a-2d4b8e1c7a3f" is taken off the scorers  |
+
+    Scenario: What an administrator does is recorded as theirs
+      Given the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who administers the site
+      When somebody archives the tournament
+      Then what it recorded was caused by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+    Scenario: An administrator does not manage the tournament for having changed it
+      Given the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who administers the site
+      When somebody archives the tournament
+      Then the account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" does not manage the tournament
+
+    Scenario: An administrator can be made a scorer, not being a manager
+      Given the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who administers the site
+      When the account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is made a scorer
+      Then it is not refused
+
+    Scenario: The same account asking as itself is refused
+      Given the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7"
       When somebody archives the tournament
       Then it is refused with "Tournament.NotAManager"
