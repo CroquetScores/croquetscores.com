@@ -20,7 +20,7 @@ import {
 import { StartCommentary } from "../../application/operations/tournaments/StartCommentary.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
-import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
+import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { BrokenRule } from "../../domain/common/validation/Validator.js";
 import type { Assets } from "../common/assets.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
@@ -41,9 +41,9 @@ const notThere: readonly string[] = [
   "PublicCommentariesOfTournament.NoSuchTournament",
 ];
 
-// What the tournament refuses of a title that is the title's to put right,
+// What the commentary refuses of a title that is the title's to put right,
 // said beneath the field as a rule the title breaks is.
-const saidOfTheTitle: readonly string[] = ["Tournament.CommentaryTitleTaken"];
+const saidOfTheTitle: readonly string[] = ["Commentary.TitleTaken"];
 
 const formFor = (speaking: Speaking, action: string, typed: Typed): Dialog => ({
   title: speaking.say("startCommentary.title"),
@@ -184,7 +184,7 @@ export const registerStartCommentaryPage = (
       }
       if (failure instanceof RequestInvalid) return refused(failure.broken);
       if (
-        failure instanceof TournamentRefused &&
+        failure instanceof CommentaryRefused &&
         saidOfTheTitle.includes(failure.code)
       ) {
         return refused([{ code: failure.code, fields: ["title"] }]);

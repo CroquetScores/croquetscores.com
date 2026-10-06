@@ -11,7 +11,7 @@ Feature: A commentary's writer can change its title
   small correction is a small edit. A title is held to the rules of a
   commentary title (`CommentaryTitle.feature`), and one that breaks a rule,
   or that another commentary on the tournament has
-  (`changeCommentaryTitle.feature`), is said beneath the field, with what was
+  (`changeTitle.feature`), is said beneath the field, with what was
   typed put back. As on the page that starts a commentary
   (`startCommentary.feature`), the field puts no limit on what is typed. A
   sound title is kept, and the writer is taken back to the commentary, which
@@ -134,7 +134,7 @@ Feature: A commentary's writer can change its title
       And the page at "/2026/ac/spring-open/commentaries/day-one/edit" is open
       And the title "Day Two" is typed
       When the dialog is submitted
-      Then the title field says the message for "Tournament.CommentaryTitleTaken"
+      Then the title field says the message for "Commentary.TitleTaken"
 
     Scenario: What was typed is put back
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"

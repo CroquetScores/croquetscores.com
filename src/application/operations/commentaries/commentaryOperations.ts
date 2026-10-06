@@ -6,10 +6,7 @@ import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js
 import type { Commentary } from "../../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import { CommentaryId } from "../../../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import {
-  type Tournament,
-  TournamentRefused,
-} from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { askedBy } from "../tournaments/tournamentOperations.js";
@@ -51,16 +48,12 @@ export const commentaryAskedBy = async (
   const tournament =
     (await tournaments.load(TournamentId.from(request.tournament))) ??
     noSuchCommentary();
-  const id = CommentaryId.from(request.commentary);
-  if (!tournament.commentaries.some((each) => each.id.equals(id))) {
+  // Found under the tournament it is on, so that a commentary of another
+  // tournament is not one this tournament has.
+  const commentary =
+    (await commentaries.load(CommentaryId.from(request.commentary))) ??
     noSuchCommentary();
-  }
-  if (tournament.archived) {
-    throw new TournamentRefused(
-      "Tournament.Archived",
-      "An archived tournament can only be restored.",
-    );
-  }
-  const commentary = (await commentaries.load(id)) ?? noSuchCommentary();
+  if (!commentary.tournament.equals(tournament.id)) noSuchCommentary();
+  tournament.allowWritingCommentary();
   return { by, commentary };
 };

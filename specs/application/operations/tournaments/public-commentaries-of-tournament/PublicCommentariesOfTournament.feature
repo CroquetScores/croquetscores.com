@@ -9,7 +9,7 @@ Feature: The commentaries on a tournament, for anybody to read
   called now, since a commentary is one writer's account and a reader chooses
   whose to read, and where its page is found, which is the tournament's
   address followed by "commentaries" and the commentary's slug
-  (`startCommentary.feature`).
+  (`start.feature`).
 
   A commentary whose writer's account has since been forgotten is not
   answered. Every word of it is that account's, under that account's name,

@@ -25,7 +25,7 @@ Feature: Adding a manager's note
   same can make the same slug, and two notes may even have the same title,
   so a slug another note of the tournament has, deleted or not, is followed
   by "-01", then "-02", up to "-99", as a commentary's is
-  (`startCommentary.feature`), and should all of them be taken, by the note
+  (`start.feature`), and should all of them be taken, by the note
   id's own characters. A deleted note's slug stays taken, so that a link
   kept to it never leads to another note. The note is told which slugs its
   tournament's other notes have by whatever adds it, which has them from the

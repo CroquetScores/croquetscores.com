@@ -9,7 +9,7 @@ Feature: Only a tournament's managers change it
   asks is refused, a scorer as much as somebody the tournament has never
   heard of: a scorer enters scores, and nothing else. Starting a commentary
   is not a change of that kind, and any account can start one
-  (`startCommentary.feature`).
+  (`writeCommentary.feature`).
 
   Who is asking is what every event already records as its cause, so the
   tournament is told on every request, and asks it before anything else. A

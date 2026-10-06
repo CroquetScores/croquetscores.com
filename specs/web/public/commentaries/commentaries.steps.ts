@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import {
+  inHandOf,
   load,
   scenarioOf,
 } from "../../../application/operations/tournaments/aRequest.js";
@@ -183,13 +184,13 @@ Given(
   "the reader has read the commentary {string}",
   async function (this: SpecWorld, title: string) {
     for (const id of scenarioOf(this).byName.values()) {
-      const tournament = await load(this, id);
-      const commentary = tournament.commentaries.find(
-        (each) => each.title.toString() === title,
+      const commentary = (await inHandOf(this).commentariesOf(id)).find(
+        (each) => each.title === title,
       );
       if (commentary === undefined) continue;
+      const tournament = await load(this, id);
       await this.browserPage.goto(
-        `${this.baseUrl!}/${tournament.address.toString()}/commentaries/${commentary.slug.toString()}`,
+        `${this.baseUrl!}/${tournament.address.toString()}/commentaries/${commentary.slug}`,
       );
       return;
     }

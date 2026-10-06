@@ -5,7 +5,7 @@ import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
 import {
-  load,
+  inHandOf,
   tournamentNamed,
 } from "../../../application/operations/tournaments/aRequest.js";
 import { englishForScenarios } from "../../support/languages.js";
@@ -64,8 +64,8 @@ Then(
   "the tournament {string} has a commentary with a title of {int} characters",
   async function (this: SpecWorld, name: string, length: number) {
     const titles = (
-      await load(this, tournamentNamed(this, name))
-    ).commentaries.map(({ title }) => title.toString());
+      await inHandOf(this).commentariesOf(tournamentNamed(this, name))
+    ).map(({ title }) => title);
     assert.ok(
       titles.includes("a".repeat(length)),
       `It has ${JSON.stringify(titles)}.`,

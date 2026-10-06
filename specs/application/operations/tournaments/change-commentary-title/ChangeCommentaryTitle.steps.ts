@@ -55,6 +55,30 @@ When(
   },
 );
 
+// Another tournament's commentary, by its id, asked to be changed as one of
+// the tournament named.
+When(
+  new RegExp(
+    `${READER} changes the title of "([^"]*)" of "([^"]*)" as a commentary of "([^"]*)" to "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string | undefined,
+    title: string,
+    of: string,
+    as: string,
+    changed: string,
+  ) {
+    await change(
+      this,
+      address,
+      tournamentNamed(this, as),
+      await commentaryIn(this, tournamentNamed(this, of), title),
+      changed,
+    );
+  },
+);
+
 When(
   new RegExp(
     `${READER} changes the title of a commentary of "([^"]*)" there is not to "([^"]*)"$`,

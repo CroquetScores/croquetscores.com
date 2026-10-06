@@ -11,7 +11,6 @@ import type { SpecWorld } from "../../../support/world.js";
 import {
   accountFor,
   inHandOf,
-  load,
   lookAt,
   momentOf,
   tournamentNamed,
@@ -212,14 +211,14 @@ Then(
   },
 );
 
-// What the tournament is afterwards ------------------------------------------------
+// What the tournament's commentaries are afterwards ---------------------------------
 
 Then(
   "the tournament {string} has the commentary {string}",
   async function (this: SpecWorld, name: string, title: string) {
     const titles = (
-      await load(this, tournamentNamed(this, name))
-    ).commentaries.map((commentary) => commentary.title.toString());
+      await inHandOf(this).commentariesOf(tournamentNamed(this, name))
+    ).map((commentary) => commentary.title);
     assert.ok(titles.includes(title), `It has ${inspect(titles)}.`);
   },
 );
@@ -228,7 +227,7 @@ Then(
   "the tournament {string} has no commentaries",
   async function (this: SpecWorld, name: string) {
     assert.deepEqual(
-      (await load(this, tournamentNamed(this, name))).commentaries,
+      await inHandOf(this).commentariesOf(tournamentNamed(this, name)),
       [],
     );
   },

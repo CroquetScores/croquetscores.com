@@ -1,4 +1,5 @@
 import type { AggregateRepository } from "../application/common/AggregateRepository.js";
+import type { TournamentCommentaries } from "../application/operations/tournaments/tournamentForReaders.js";
 import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commentary.js";
 import { CommentId } from "../domain/aggregates/tournaments/commentaries/primitives/CommentId.js";
 import { CommentText } from "../domain/aggregates/tournaments/commentaries/value-objects/CommentText.js";
@@ -24,7 +25,9 @@ import type { Importer, ReadDocument } from "./runImporter.js";
  * A comment the site refuses is kept as an error naming it, and the rest are
  * added all the same. What the old sites archived is left behind, as is a
  * commentary of a tournament left behind. The tournament, the commentary, and
- * any forgotten account made for its writer are kept in one transaction.
+ * any forgotten account made for its writer are kept in one transaction. The
+ * titles and slugs the tournament's other commentaries have are asked of the
+ * read model of them, as starting one on the site asks.
  */
 export class ImportCommentaries implements Importer<OldCommentary> {
   readonly collection = "Commentaries";
@@ -38,6 +41,7 @@ export class ImportCommentaries implements Importer<OldCommentary> {
     >,
     private readonly accounts: ImportedAccounts,
     private readonly database: ImportDatabase,
+    private readonly listed: TournamentCommentaries,
   ) {}
 
   async importDocument({
@@ -74,15 +78,22 @@ export class ImportCommentaries implements Importer<OldCommentary> {
 
       // The site tells a tournament's commentaries apart by their titles, in
       // any case, and the old sites did not.
+      const taken = await this.listed.taken(tournament.id);
       const title = CommentaryTitle.from(
         numberedApart(
           CommentaryTitle.from(document.Title).toString(),
-          tournament.commentaries.map((each) => each.title.toString()),
+          taken.titles,
         ),
       );
-      const commentaryId = CommentaryId.create();
-      tournament.startCommentary(commentaryId, title, writer, at);
-      const commentary = Commentary.start(commentaryId, writer, at);
+      tournament.allowWritingCommentary();
+      const commentary = Commentary.start(
+        CommentaryId.create(),
+        tournament.id,
+        title,
+        taken,
+        writer,
+        at,
+      );
 
       // Numbered from 1 among those not archived, as the error names them.
       for (const [index, comment] of comments.entries()) {
@@ -101,7 +112,6 @@ export class ImportCommentaries implements Importer<OldCommentary> {
         }
       }
 
-      await this.tournaments.save(tournament);
       await this.commentaries.save(commentary);
     });
   }

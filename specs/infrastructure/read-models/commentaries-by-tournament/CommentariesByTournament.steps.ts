@@ -2,7 +2,10 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
-import type { CommentaryChanged } from "../../../../src/application/operations/tournaments/tournamentForReaders.js";
+import type {
+  CommentaryChanged,
+  CommentaryListed,
+} from "../../../../src/application/operations/tournaments/tournamentForReaders.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { AccountForgotten } from "../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
 import { nameAccountEvents } from "../../../../src/domain/aggregates/accounts/events/accountEvents.js";
@@ -11,8 +14,8 @@ import { CommentaryCommentDeleted } from "../../../../src/domain/aggregates/tour
 import { CommentaryCommentEdited } from "../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryCommentEdited.js";
 import { nameCommentaryEvents } from "../../../../src/domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
 import { CommentId } from "../../../../src/domain/aggregates/tournaments/commentaries/primitives/CommentId.js";
-import { TournamentCommentaryStarted } from "../../../../src/domain/aggregates/tournaments/events/TournamentCommentaryStarted.js";
-import { nameTournamentEvents } from "../../../../src/domain/aggregates/tournaments/events/tournamentEvents.js";
+import { CommentaryStarted } from "../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryStarted.js";
+import { CommentaryTitleChanged } from "../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryTitleChanged.js";
 import { CommentaryId } from "../../../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { TournamentId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
@@ -31,8 +34,8 @@ import { unitOfWorkOf } from "../../support/transactions.js";
 
 // The read model in front of the Postgres store, and the events the scenario
 // says happened appended through it to the streams they belong to: a
-// commentary's start to its tournament's, its comments to its own, and a
-// forgetting to the account's. The events are made as their aggregates would
+// commentary's start and its comments to its own, and a forgetting to the
+// account's. The events are made as their aggregates would
 // make them, rather than through the aggregates, since the read model is told
 // only of the events, and a tournament made to start a commentary would say
 // nothing the read model reads besides.
@@ -47,8 +50,14 @@ interface Scenario {
   // How many events each stream holds, for the next append to expect.
   readonly versions: Map<string, number>;
   // Which kind of stream a rebuild takes first, where the scenario says.
-  first: "commentary/" | "account/" | undefined;
-  found: readonly CommentaryChanged[];
+  first: "account/" | undefined;
+  found: readonly CommentaryListed[];
+  changed: readonly CommentaryChanged[];
+  foundAt: string | undefined;
+  taken: {
+    readonly titles: readonly string[];
+    readonly slugs: readonly string[];
+  };
 }
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
@@ -99,9 +108,7 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
   const readModel = new CommentariesByTournament(unitOfWork);
   const store = new PostgresEventStore(
     unitOfWork,
-    nameCommentaryEvents(
-      nameTournamentEvents(nameAccountEvents(new EventRegistry())),
-    ),
+    nameCommentaryEvents(nameAccountEvents(new EventRegistry())),
   );
   const scenario: Scenario = {
     readModel,
@@ -113,6 +120,9 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
     versions: new Map(),
     first: undefined,
     found: [],
+    changed: [],
+    foundAt: undefined,
+    taken: { titles: [], slugs: [] },
   };
   scenarios.set(this, scenario);
   rebuildsWith(this, () =>
@@ -144,11 +154,12 @@ Given(
     scenarioOf(this).commentaries.set(title, id);
     await appended(
       this,
-      tournamentCalled(this, name),
-      new TournamentCommentaryStarted(
-        id.value,
+      id,
+      new CommentaryStarted(
+        tournamentCalled(this, name).value,
         title,
         title.toLowerCase().replaceAll(" ", "-"),
+        writer,
         AccountId.from(writer),
         now(this),
       ),
@@ -215,14 +226,18 @@ Given(
 );
 
 Given(
-  "the commentaries' streams are to be rebuilt before the tournaments'",
-  function (this: SpecWorld) {
-    scenarioOf(this).first = "commentary/";
+  "the title of {string} is changed to {string}",
+  async function (this: SpecWorld, title: string, to: string) {
+    await appended(
+      this,
+      commentaryCalled(this, title),
+      new CommentaryTitleChanged(to, WRITER, now(this)),
+    );
   },
 );
 
 Given(
-  "the accounts' streams are to be rebuilt before the tournaments'",
+  "the accounts' streams are to be rebuilt before the commentaries'",
   function (this: SpecWorld) {
     scenarioOf(this).first = "account/";
   },
@@ -236,11 +251,9 @@ When(
     const { readModel, store, versions } = scenarioOf(this);
     await this.asARequest(async () => {
       for (const written of versions.keys()) {
-        const stream = written.startsWith("tournament/")
-          ? TournamentId.from(written)
-          : written.startsWith("commentary/")
-            ? CommentaryId.from(written)
-            : AccountId.from(written);
+        const stream = written.startsWith("commentary/")
+          ? CommentaryId.from(written)
+          : AccountId.from(written);
         await readModel.project(stream, 1, await store.getEvents(stream));
       }
     });
@@ -251,29 +264,95 @@ When(
   "the commentaries of {string} are looked for",
   async function (this: SpecWorld, name: string) {
     const scenario = scenarioOf(this);
+    const tournament = tournamentCalled(this, name);
     scenario.found = await this.asARequest(() =>
-      scenario.readModel.of(tournamentCalled(this, name)),
+      scenario.readModel.listed(tournament),
+    );
+    scenario.changed = await this.asARequest(() =>
+      scenario.readModel.of(tournament),
+    );
+  },
+);
+
+When(
+  "the commentary of {string} at {string} is looked for",
+  async function (this: SpecWorld, name: string, slug: string) {
+    const scenario = scenarioOf(this);
+    scenario.foundAt = await this.asARequest(() =>
+      scenario.readModel.at(tournamentCalled(this, name), slug),
+    );
+  },
+);
+
+When(
+  "the titles and slugs taken by the commentaries of {string} are looked for",
+  async function (this: SpecWorld, name: string) {
+    const scenario = scenarioOf(this);
+    scenario.taken = await this.asARequest(() =>
+      scenario.readModel.taken(tournamentCalled(this, name)),
     );
   },
 );
 
 // What was found -------------------------------------------------------------------
 
-const foundCalled = (
+// Among a tournament's commentaries as a reader is shown them, its writer not
+// forgotten.
+const shownCalled = (
   world: SpecWorld,
   title: string,
 ): CommentaryChanged | undefined => {
   const id = commentaryCalled(world, title).value;
-  return scenarioOf(world).found.find((each) => each.id === id);
+  return scenarioOf(world).changed.find((each) => each.id === id);
 };
+
+const listedCalled = (world: SpecWorld, title: string): CommentaryListed => {
+  const id = commentaryCalled(world, title).value;
+  const found = scenarioOf(world).found.find((each) => each.id === id);
+  assert.ok(found !== undefined, `${title} is not listed.`);
+  return found;
+};
+
+const places = ["first", "second"];
 
 Then(
   "the commentary {string} is found",
   function (this: SpecWorld, title: string) {
     assert.ok(
-      foundCalled(this, title) !== undefined,
-      `The commentaries found are ${inspect(scenarioOf(this).found)}.`,
+      shownCalled(this, title) !== undefined,
+      `The commentaries found are ${inspect(scenarioOf(this).changed)}.`,
     );
+  },
+);
+
+Then(
+  /^the (first|second) commentary found is "(.*)"$/,
+  function (this: SpecWorld, which: string, title: string) {
+    assert.equal(scenarioOf(this).found[places.indexOf(which)]?.title, title);
+  },
+);
+
+Then(
+  /^the (first|second) commentary found last changed at "(.*)"$/,
+  function (this: SpecWorld, which: string, moment: string) {
+    assert.equal(
+      scenarioOf(this).found[places.indexOf(which)]?.changedAt.toISOString(),
+      new Date(moment).toISOString(),
+    );
+  },
+);
+
+Then(
+  "the commentary {string} found is at {string}",
+  function (this: SpecWorld, title: string, slug: string) {
+    assert.equal(listedCalled(this, title).slug, slug);
+  },
+);
+
+Then(
+  "the commentary {string} found is written by {string}",
+  function (this: SpecWorld, title: string, writer: string) {
+    assert.equal(listedCalled(this, title).writer, writer);
   },
 );
 
@@ -281,19 +360,48 @@ Then(
   "the commentary {string} found last changed at {string}",
   function (this: SpecWorld, title: string, moment: string) {
     assert.equal(
-      foundCalled(this, title)?.changedAt.toISOString(),
+      shownCalled(this, title)?.changedAt.toISOString(),
       new Date(moment).toISOString(),
     );
   },
 );
 
+Then(
+  "the commentary {string} is found there",
+  function (this: SpecWorld, title: string) {
+    assert.equal(scenarioOf(this).foundAt, commentaryCalled(this, title).value);
+  },
+);
+
+Then("no commentary is found there", function (this: SpecWorld) {
+  assert.equal(scenarioOf(this).foundAt, undefined);
+});
+
+Then(
+  "the title {string} is among those taken",
+  function (this: SpecWorld, title: string) {
+    assert.ok(scenarioOf(this).taken.titles.includes(title));
+  },
+);
+
+Then(
+  "the slug {string} is among those taken",
+  function (this: SpecWorld, slug: string) {
+    assert.ok(scenarioOf(this).taken.slugs.includes(slug));
+  },
+);
+
+Then("nothing is taken", function (this: SpecWorld) {
+  assert.deepEqual(scenarioOf(this).taken, { titles: [], slugs: [] });
+});
+
 Then("no commentaries are found", function (this: SpecWorld) {
-  assert.deepEqual(scenarioOf(this).found, []);
+  assert.deepEqual(scenarioOf(this).changed, []);
 });
 
 Then(
   /^(\d+) commentar(?:y is|ies are) found$/,
   function (this: SpecWorld, count: string) {
-    assert.equal(scenarioOf(this).found.length, Number(count));
+    assert.equal(scenarioOf(this).changed.length, Number(count));
   },
 );

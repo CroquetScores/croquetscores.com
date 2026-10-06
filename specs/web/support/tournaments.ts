@@ -38,6 +38,8 @@ export const tournamentsThrough = (
       asARequest(() => application.managerNotes.save(note)),
     managerNotesOf: (id) =>
       asARequest(() => application.managerNotesByTournament.of(id)),
+    commentariesOf: (id) =>
+      asARequest(() => application.commentariesByTournament.listed(id)),
     loadCompetition: (id) =>
       asARequest(() => application.competitions.load(id)),
     loadCommentary: (id) => asARequest(() => application.commentaries.load(id)),

@@ -51,7 +51,7 @@ Feature: Editing a manager's note
     A note's slug is made when it is added, and is not made again when its
     title is edited, so that every link to it still finds it, as a
     commentary keeps its slug when its title is changed
-    (`changeCommentaryTitle.feature`).
+    (`changeTitle.feature`).
 
     Scenario: An edited note is found where it was before
       Given the manager note is rebuilt from its stream

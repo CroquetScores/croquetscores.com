@@ -82,6 +82,8 @@ try {
   const emailAddresses = new KeyedEmailAddressHasher(
     config.accountEmailAddressHashKey,
   );
+  // Asked by bringing commentaries over which titles and slugs are taken.
+  const commentariesByTournament = new CommentariesByTournament(unitOfWork);
   // Every one of the site's read models, kept in step with everything
   // brought over, as the site keeps them with everything it records.
   const eventStore = new ProjectingEventStore(
@@ -106,7 +108,7 @@ try {
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
       new ManagerNotesByTournament(unitOfWork),
-      new CommentariesByTournament(unitOfWork),
+      commentariesByTournament,
     ],
   );
   const accounts = new AggregateRepository(
@@ -156,6 +158,7 @@ try {
       commentaries,
       importedAccounts,
       database,
+      commentariesByTournament,
     ),
     new OrderCompetitions(unitOfWork, tournaments, database),
   ];

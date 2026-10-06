@@ -90,6 +90,30 @@ When(
   },
 );
 
+// Another tournament's commentary, by its id, asked to be written in as one of
+// the tournament named.
+When(
+  new RegExp(
+    `${READER} adds the comment "([^"]*)" to "([^"]*)" of "([^"]*)" as a commentary of "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string | undefined,
+    text: string,
+    title: string,
+    of: string,
+    as: string,
+  ) {
+    await add(
+      this,
+      address,
+      tournamentNamed(this, as),
+      await commentaryIn(this, tournamentNamed(this, of), title),
+      text,
+    );
+  },
+);
+
 When(
   new RegExp(
     `${READER} adds the comment "([^"]*)" to a commentary of "([^"]*)" there is not$`,

@@ -10,13 +10,14 @@ import { CommentaryCommentEdited } from "../../../../../../src/domain/aggregates
 import { CommentaryStarted } from "../../../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryStarted.js";
 import { CommentId } from "../../../../../../src/domain/aggregates/tournaments/commentaries/primitives/CommentId.js";
 import { CommentText } from "../../../../../../src/domain/aggregates/tournaments/commentaries/value-objects/CommentText.js";
-import { TournamentCommentaryStarted } from "../../../../../../src/domain/aggregates/tournaments/events/TournamentCommentaryStarted.js";
-import { Tournament } from "../../../../../../src/domain/aggregates/tournaments/Tournament.js";
+import { TournamentId } from "../../../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
+import { CommentaryTitle } from "../../../../../../src/domain/aggregates/tournaments/value-objects/CommentaryTitle.js";
+import { CommentaryTitleChanged } from "../../../../../../src/domain/aggregates/tournaments/commentaries/events/CommentaryTitleChanged.js";
 import { AccountId } from "../../../../../../src/domain/aggregates/accounts/AccountId.js";
 import type { DomainEvent } from "../../../../../../src/domain/common/DomainEvent.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import { positionOf } from "../../ordinals.js";
-import { byOf, now } from "../../tournament/aTournament.js";
+import { A_TOURNAMENT_ID, byOf, now } from "../../tournament/aTournament.js";
 import {
   ask,
   commentaryIdOf,
@@ -42,14 +43,96 @@ Given("the comment id {string}", function (this: SpecWorld, id: string) {
 });
 
 Given(
+  "the commentary is to be started on the tournament {string}",
+  function (this: SpecWorld, id: string) {
+    commentaryScenarioOf(this).tournamentId = id;
+  },
+);
+
+Given(
+  "the tournament's other commentaries are called {string}",
+  function (this: SpecWorld, title: string) {
+    commentaryScenarioOf(this).titles.push(title);
+  },
+);
+
+Given(
+  "the tournament's other commentaries are found at {string}",
+  function (this: SpecWorld, slug: string) {
+    commentaryScenarioOf(this).slugs.push(slug);
+  },
+);
+
+Given(
+  "the tournament's other commentaries are found at {string} and {string}",
+  function (this: SpecWorld, one: string, other: string) {
+    commentaryScenarioOf(this).slugs.push(one, other);
+  },
+);
+
+// Every slug from `from` to `to`, numbered as they would be, so that the next
+// commentary has none of them to be found at.
+Given(
+  "the tournament's other commentaries are found at every slug from {string} to {string}",
+  function (this: SpecWorld, from: string, to: string) {
+    const last = /^(.*)-(\d{2})$/.exec(to);
+    assert.ok(
+      last !== null && last[1] === from,
+      `${to} is not ${from} numbered.`,
+    );
+    commentaryScenarioOf(this).slugs.push(
+      from,
+      ...Array.from(
+        { length: Number(last[2]) },
+        (_, at) => `${from}-${String(at + 1).padStart(2, "0")}`,
+      ),
+    );
+  },
+);
+
+// Made as starting it makes it, so that a title that could not be a
+// commentary's is refused as starting it would be.
+const started = (world: SpecWorld, title: string, by: AccountId) => {
+  const scenario = commentaryScenarioOf(world);
+  return Commentary.start(
+    commentaryIdOf(world),
+    TournamentId.from(scenario.tournamentId ?? A_TOURNAMENT_ID),
+    CommentaryTitle.from(title),
+    { titles: scenario.titles, slugs: scenario.slugs },
+    by,
+    now(world),
+  );
+};
+
+Given(
   "a stream where a commentary was started by {string}",
   function (this: SpecWorld, writer: string) {
-    const commentary = Commentary.start(
-      commentaryIdOf(this),
-      AccountId.from(writer),
-      now(this),
+    commentaryScenarioOf(this).stream.push(
+      ...started(this, "Day one", AccountId.from(writer)).handOver(),
     );
-    commentaryScenarioOf(this).stream.push(...commentary.handOver());
+  },
+);
+
+Given(
+  "a stream where the commentary {string} was started",
+  function (this: SpecWorld, title: string) {
+    commentaryScenarioOf(this).stream.push(
+      ...started(this, title, byOf(this)).handOver(),
+    );
+  },
+);
+
+Given(
+  "the commentary's title was changed to {string}",
+  function (this: SpecWorld, title: string) {
+    happened(this, (commentary) => {
+      commentary.changeTitle(
+        CommentaryTitle.from(title),
+        commentaryScenarioOf(this).titles,
+        commentary.writer,
+        now(this),
+      );
+    });
   },
 );
 
@@ -115,17 +198,31 @@ Given("the commentary is rebuilt from its stream", function (this: SpecWorld) {
 
 // What it is asked -----------------------------------------------------------
 
-When("a commentary is started", function (this: SpecWorld) {
-  try {
-    this.aggregate = Commentary.start(
-      commentaryIdOf(this),
-      byOf(this),
-      now(this),
-    );
-  } catch (failure) {
-    this.failure = failure;
-  }
-});
+When(
+  "the commentary {string} is started",
+  function (this: SpecWorld, title: string) {
+    try {
+      this.aggregate = started(this, title, byOf(this));
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
+// Asked by whoever the scenario says asks, the writer where it says nobody.
+When(
+  "the commentary's title is changed to {string}",
+  function (this: SpecWorld, title: string) {
+    ask(this, (commentary) => {
+      commentary.changeTitle(
+        CommentaryTitle.from(title),
+        commentaryScenarioOf(this).titles,
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
 
 // Making what the comment says may be refused as well as adding it, and both
 // are the scenario's to expect.
@@ -187,20 +284,38 @@ const assertFirstRecorded = (
   assert.ok(event instanceof kind, `It recorded ${inspect(event)}.`);
 };
 
-// Said of the tournament starting one and of the commentary's own record
-// alike, in the same words, so asked of whichever the scenario looks at.
 Then(
   "the first thing it recorded is a commentary being started",
   function (this: SpecWorld) {
-    if (this.aggregate instanceof Tournament) {
-      const event = this.aggregate.recorded[0];
-      assert.ok(
-        event instanceof TournamentCommentaryStarted,
-        `It recorded ${inspect(event)}.`,
-      );
-      return;
-    }
     assertFirstRecorded(this, CommentaryStarted);
+  },
+);
+
+Then(
+  "the first thing it recorded is a commentary's title being changed",
+  function (this: SpecWorld) {
+    assertFirstRecorded(this, CommentaryTitleChanged);
+  },
+);
+
+Then(
+  "the commentary is on the tournament {string}",
+  function (this: SpecWorld, id: string) {
+    assert.equal(commentaryOf(this).tournament.value, id);
+  },
+);
+
+Then(
+  "the commentary is called {string}",
+  function (this: SpecWorld, title: string) {
+    assert.equal(commentaryOf(this).title.toString(), title);
+  },
+);
+
+Then(
+  "the commentary is found at {string}",
+  function (this: SpecWorld, slug: string) {
+    assert.equal(commentaryOf(this).slug.toString(), slug);
   },
 );
 

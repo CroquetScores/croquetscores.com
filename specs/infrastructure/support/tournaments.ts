@@ -276,8 +276,12 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
-  mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
-  mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
+  mediator.handleCommand(
+    new StartCommentaryHandler(...both, commentaries, byCommentaries),
+  );
+  mediator.handleCommand(
+    new ChangeCommentaryTitleHandler(...both, commentaries, byCommentaries),
+  );
   mediator.handleCommand(
     new AddManagerNoteHandler(...both, managerNotes, byNotes),
   );
@@ -418,6 +422,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
     loadManagerNote: (id) => this.asARequest(() => managerNotes.load(id)),
     saveManagerNote: (note) => this.asARequest(() => managerNotes.save(note)),
     managerNotesOf: (id) => this.asARequest(() => byNotes.of(id)),
+    commentariesOf: (id) => this.asARequest(() => byCommentaries.listed(id)),
     loadCompetition: (id) => this.asARequest(() => competitions.load(id)),
     loadCommentary: (id) => this.asARequest(() => commentaries.load(id)),
     eventsOf: (id) => this.asARequest(() => accounts.store.getEvents(id)),

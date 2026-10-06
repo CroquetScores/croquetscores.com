@@ -367,6 +367,8 @@ export interface Application {
   readonly managerNotes: AggregateRepository<ManagerNote, ManagerNoteId>;
   /** The notes of each tournament, without what they say, as the read model keeps them. */
   readonly managerNotesByTournament: ManagerNotesByTournament;
+  /** The commentaries of each tournament, without their comments, as the read model keeps them. */
+  readonly commentariesByTournament: CommentariesByTournament;
   /** The tournaments each account has a part in, as the read model keeps them. */
   readonly tournamentsByAccount: TournamentsByAccount;
 }
@@ -866,8 +868,16 @@ export const buildApplication = async (
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
-  mediator.handleCommand(new StartCommentaryHandler(...both, commentaries));
-  mediator.handleCommand(new ChangeCommentaryTitleHandler(...both));
+  mediator.handleCommand(
+    new StartCommentaryHandler(...both, commentaries, commentariesByTournament),
+  );
+  mediator.handleCommand(
+    new ChangeCommentaryTitleHandler(
+      ...both,
+      commentaries,
+      commentariesByTournament,
+    ),
+  );
   mediator.handleCommand(
     new AddManagerNoteHandler(...both, managerNotes, managerNotesByTournament),
   );
@@ -1194,6 +1204,7 @@ export const buildApplication = async (
     commentaries,
     managerNotes,
     managerNotesByTournament,
+    commentariesByTournament,
     tournamentsByAccount,
   };
 };

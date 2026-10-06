@@ -1,53 +1,57 @@
 @postgres
-Feature: Knowing when each of a tournament's commentaries last changed
+Feature: Finding a tournament's commentaries without reading them
 
-  Every page of a tournament marks its Commentary section while the reader
-  has a commentary there they have not read as it is now, and the
-  commentaries page marks each such commentary (`commentaries.feature`).
-  Whether there is one is told by when each commentary last changed, and a
-  commentary's comments are kept in a stream of its own (`start.feature`),
-  so no page can know it without replaying every commentary's comments. A
-  read model keeps it instead: a table of commentaries by tournament, kept by
-  a projection, holding each commentary's id, its tournament, its writer and
-  when it last changed. It holds no comment.
+  A commentary is kept in a stream of its own (`start.feature`), its start
+  and its comments alike, so nothing that lists a tournament's commentaries
+  can do it without replaying every commentary's stream. A read model keeps
+  what is needed instead: a table of commentaries by tournament, kept by a
+  projection, holding each commentary's id, its tournament, its title, its
+  slug, its writer, when it was started and when it last changed. It holds
+  no comment. It is asked for:
+
+  - a tournament's commentaries, for its commentaries page, the most
+    recently started first, each with its title, slug and writer;
+  - when each last changed, for every page of the tournament to mark its
+    Commentary section by (`commentaries.feature`);
+  - which commentary is found at a slug, for a commentary's page;
+  - which titles and slugs the tournament's commentaries have taken, for
+    starting one or changing its title (`start.feature`).
 
   A commentary last changed when it was started, or when a comment was last
   added to it or edited in it, since what was there before is no longer all
   there is to read. A comment taken away changes nothing a reader has not
-  already read, and is not counted.
-
-  A commentary is started by its tournament (`startCommentary.feature`), and
-  its comments are kept in its own stream, so the read model hears of it
-  from both, in whichever order a rebuild takes the streams: a comment
-  projected before the commentary's start still counts once the start is.
+  already read, and is not counted, and nor is a title changed.
 
   A commentary whose writer's account has been forgotten is not listed
-  anywhere a reader looks (`PublicCommentariesOfTournament.feature`), so it
-  is not found here either, and is never news. The read model hears of the
-  forgetting from the account's own stream, which may also come before the
-  commentary's start in a rebuild.
+  anywhere a reader looks, so it is not found among a tournament's
+  commentaries and is never news. Its title and slug stay taken, so that a
+  link kept to it never leads to somebody else's words
+  (`StartCommentary.feature`). The read model hears of the forgetting from
+  the account's own stream, which a rebuild may take before the
+  commentary's.
 
-  The read model is asked for a tournament's commentaries, and answers each
-  by its id with when it last changed. A tournament with no commentaries is
-  answered with none, and another tournament's are not among them.
-
-  The projection is safe to run twice, as rebuilding the read model does.
+  A tournament with no commentaries is answered with none, and another
+  tournament's are not among them. The projection is safe to run twice, as
+  rebuilding the read model does.
 
   Background:
     Given the commentaries by tournament read model
     And the moment "2026-09-26T10:00:00Z"
 
-  Rule: A tournament's commentaries are found, each with when it last changed
+  Rule: A tournament's commentaries are found, the most recently started first
 
     Scenario: A commentary started is found
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
       When the commentaries of "Spring Open" are looked for
       Then the commentary "Day one" is found
 
-    Scenario: A commentary never written in last changed when it was started
+    Scenario: The commentaries are found the most recently started first
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the moment "2026-09-27T10:00:00Z"
+      And the commentary "Day two" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
       When the commentaries of "Spring Open" are looked for
-      Then the commentary "Day one" found last changed at "2026-09-26T10:00:00Z"
+      Then the first commentary found is "Day two"
+      And the second commentary found is "Day one"
 
     Scenario: A tournament with no commentaries has none found
       When the commentaries of "Spring Open" are looked for
@@ -58,30 +62,113 @@ Feature: Knowing when each of a tournament's commentaries last changed
       When the commentaries of "Spring Open" are looked for
       Then no commentaries are found
 
-  Rule: A comment added or edited changes when a commentary last changed, and one taken away does not
+  Rule: A commentary is found with its slug, its writer and its title as it is now
 
     Background:
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
-      And the moment "2026-09-26T11:00:00Z"
-      And the comment "Sam is two hoops up" is added to "Day one"
+
+    Scenario: A commentary is found with its slug
+      When the commentaries of "Spring Open" are looked for
+      Then the commentary "Day one" found is at "day-one"
+
+    Scenario: A commentary is found with its writer
+      When the commentaries of "Spring Open" are looked for
+      Then the commentary "Day one" found is written by "account/123e4567-e89b-42d3-a456-426614174000"
+
+    Scenario: A commentary whose title was changed is found with the title it was changed to
+      Given the title of "Day one" is changed to "Day one, morning"
+      When the commentaries of "Spring Open" are looked for
+      Then the first commentary found is "Day one, morning"
+
+    Scenario: A commentary whose title was changed keeps its slug
+      Given the title of "Day one" is changed to "Day one, morning"
+      When the commentaries of "Spring Open" are looked for
+      Then the commentary "Day one" found is at "day-one"
+
+  Rule: Each is found with when it last changed: started, or a comment added or edited
+
+    Background:
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+
+    Scenario: A commentary never written in last changed when it was started
+      When the commentaries of "Spring Open" are looked for
+      Then the commentary "Day one" found last changed at "2026-09-26T10:00:00Z"
 
     Scenario: A comment added changes when the commentary last changed
+      Given the moment "2026-09-26T11:00:00Z"
+      And the comment "Sam is two hoops up" is added to "Day one"
       When the commentaries of "Spring Open" are looked for
       Then the commentary "Day one" found last changed at "2026-09-26T11:00:00Z"
 
     Scenario: A comment edited changes when the commentary last changed
-      Given the moment "2026-09-26T12:00:00Z"
+      Given the moment "2026-09-26T11:00:00Z"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      And the moment "2026-09-26T12:00:00Z"
       And the comment "Sam is two hoops up" in "Day one" is edited to "Sam is three hoops up"
       When the commentaries of "Spring Open" are looked for
       Then the commentary "Day one" found last changed at "2026-09-26T12:00:00Z"
 
     Scenario: A comment taken away does not change when the commentary last changed
-      Given the moment "2026-09-26T12:00:00Z"
+      Given the moment "2026-09-26T11:00:00Z"
+      And the comment "Sam is two hoops up" is added to "Day one"
+      And the moment "2026-09-26T12:00:00Z"
       And the comment "Sam is two hoops up" in "Day one" is deleted
       When the commentaries of "Spring Open" are looked for
       Then the commentary "Day one" found last changed at "2026-09-26T11:00:00Z"
 
-  Rule: A commentary whose writer has been forgotten is not found
+    Scenario: A title changed does not change when the commentary last changed
+      Given the moment "2026-09-26T12:00:00Z"
+      And the title of "Day one" is changed to "Day one, morning"
+      When the commentaries of "Spring Open" are looked for
+      Then the first commentary found last changed at "2026-09-26T10:00:00Z"
+
+  Rule: The commentary at a slug is found
+
+    Scenario: The commentary at a slug is found
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      When the commentary of "Spring Open" at "day-one" is looked for
+      Then the commentary "Day one" is found there
+
+    Scenario: No commentary is found at a slug no commentary has
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      When the commentary of "Spring Open" at "day-two" is looked for
+      Then no commentary is found there
+
+    Scenario: Another tournament's commentary is not found at its slug
+      Given the commentary "Day one" is started on the tournament "Autumn Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      When the commentary of "Spring Open" at "day-one" is looked for
+      Then no commentary is found there
+
+  Rule: The titles and slugs a tournament's commentaries have taken are found
+
+    Scenario: A commentary's title is taken
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      When the titles and slugs taken by the commentaries of "Spring Open" are looked for
+      Then the title "Day one" is among those taken
+
+    Scenario: A commentary's slug is taken
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      When the titles and slugs taken by the commentaries of "Spring Open" are looked for
+      Then the slug "day-one" is among those taken
+
+    Scenario: A title changed is taken as it is now
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the title of "Day one" is changed to "Day one, morning"
+      When the titles and slugs taken by the commentaries of "Spring Open" are looked for
+      Then the title "Day one, morning" is among those taken
+
+    Scenario: A forgotten writer's commentary's title and slug stay taken
+      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      And the account "account/123e4567-e89b-42d3-a456-426614174000" is forgotten
+      When the titles and slugs taken by the commentaries of "Spring Open" are looked for
+      Then the slug "day-one" is among those taken
+
+    Scenario: Another tournament's commentaries' titles are not taken
+      Given the commentary "Day one" is started on the tournament "Autumn Open" by "account/123e4567-e89b-42d3-a456-426614174000"
+      When the titles and slugs taken by the commentaries of "Spring Open" are looked for
+      Then nothing is taken
+
+  Rule: A commentary whose writer has been forgotten is not found among the tournament's
 
     Scenario: A forgotten writer's commentary is not found
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
@@ -96,21 +183,10 @@ Feature: Knowing when each of a tournament's commentaries last changed
       When the commentaries of "Spring Open" are looked for
       Then the commentary "Day two" is found
 
-  Rule: A rebuild finds every commentary as it is now, whichever stream comes first
-
-    Scenario: A comment rebuilt before its commentary's start still counts
-      Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
-      And the moment "2026-09-26T11:00:00Z"
-      And the comment "Sam is two hoops up" is added to "Day one"
-      And the commentaries' streams are to be rebuilt before the tournaments'
-      When the read model is rebuilt from the events
-      And the commentaries of "Spring Open" are looked for
-      Then the commentary "Day one" found last changed at "2026-09-26T11:00:00Z"
-
     Scenario: A forgetting rebuilt before the commentary's start still counts
       Given the commentary "Day one" is started on the tournament "Spring Open" by "account/123e4567-e89b-42d3-a456-426614174000"
       And the account "account/123e4567-e89b-42d3-a456-426614174000" is forgotten
-      And the accounts' streams are to be rebuilt before the tournaments'
+      And the accounts' streams are to be rebuilt before the commentaries'
       When the read model is rebuilt from the events
       And the commentaries of "Spring Open" are looked for
       Then no commentaries are found

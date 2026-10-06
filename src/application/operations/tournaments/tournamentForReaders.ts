@@ -171,12 +171,47 @@ export interface CommentaryChanged {
   readonly changedAt: ReadOnlyDate;
 }
 
+/** One of a tournament's commentaries as a list of them shows it. */
+export interface CommentaryListed extends CommentaryChanged {
+  readonly title: string;
+  /** Where it is found among its tournament's commentaries, as "day-one". */
+  readonly slug: string;
+  /** Its writer's account's id. */
+  readonly writer: string;
+}
+
 /**
- * The commentaries of each tournament with when each last changed, without
- * reading any comment (CommentariesByTournament.feature). A commentary whose
- * writer has been forgotten is left out, since a reader is shown nothing of
- * it.
+ * The commentaries of each tournament, without reading any comment
+ * (CommentariesByTournament.feature). Where a list leaves out a commentary
+ * whose writer has been forgotten, since a reader is shown nothing of it, its
+ * title and slug are still taken.
  */
 export interface TournamentCommentaries {
+  /**
+   * Each commentary of `tournament` with when it last changed, its writer
+   * not forgotten.
+   */
   of(tournament: TournamentId): Promise<readonly CommentaryChanged[]>;
+
+  /**
+   * The commentaries of `tournament`, the most recently started first, each
+   * with its title, slug and writer, forgotten or not; a list asks its
+   * writers' names, and leaves out those it cannot have.
+   */
+  listed(tournament: TournamentId): Promise<readonly CommentaryListed[]>;
+
+  /** The id of the commentary of `tournament` found at `slug`, if any. */
+  at(tournament: TournamentId, slug: string): Promise<string | undefined>;
+
+  /**
+   * The titles and slugs every commentary of `tournament` has taken, its
+   * writer forgotten or not, apart from `except`'s own.
+   */
+  taken(
+    tournament: TournamentId,
+    except?: string,
+  ): Promise<{
+    readonly titles: readonly string[];
+    readonly slugs: readonly string[];
+  }>;
 }

@@ -18,6 +18,11 @@ interface Scenario {
   // The id the scenario says, which a commentary started, by the tournament
   // or on its own, is started as. One is made where it says none.
   commentaryId: string | undefined;
+  // The tournament it is started on, where the scenario says one.
+  tournamentId: string | undefined;
+  // What the tournament's other commentaries have taken, as the scenario says.
+  readonly titles: string[];
+  readonly slugs: string[];
   readonly stream: DomainEvent[];
   // The id the next comment is added as, where the scenario says one.
   commentId: string | undefined;
@@ -33,6 +38,9 @@ export const commentaryScenarioOf = (world: SpecWorld): Scenario => {
   if (scenario === undefined) {
     scenario = {
       commentaryId: undefined,
+      tournamentId: undefined,
+      titles: [],
+      slugs: [],
       stream: [],
       commentId: undefined,
       comments: new Map(),

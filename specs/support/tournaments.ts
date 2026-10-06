@@ -14,6 +14,7 @@ import type { CompetitionId } from "../../src/domain/aggregates/tournaments/prim
 import type { Commentary } from "../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { CommentaryId } from "../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { ManagerNoteHeading } from "../../src/application/operations/tournaments/managerNoteOperations.js";
+import type { CommentaryListed } from "../../src/application/operations/tournaments/tournamentForReaders.js";
 import type { ManagerNote } from "../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import type { ManagerNoteId } from "../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 
@@ -35,6 +36,14 @@ export interface TournamentsInHand {
    * such as a note added under an id the scenario names.
    */
   saveManagerNote(note: ManagerNote): Promise<void>;
+
+  /**
+   * The commentaries of `tournament`, as the read model of them finds them,
+   * the most recently started first.
+   */
+  commentariesOf(
+    tournament: TournamentId,
+  ): Promise<readonly CommentaryListed[]>;
 
   /** The notes of `tournament`, as the read model of them finds them. */
   managerNotesOf(

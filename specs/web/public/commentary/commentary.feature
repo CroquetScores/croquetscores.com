@@ -60,7 +60,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
   leads to a page of its own that asks the same (`editComment.feature`).
   The writer is offered as well a pencil to the right of the commentary's
   title, which leads to the page that changes it
-  (`changeCommentaryTitle.feature`). Anybody else, signed in or not, is
+  (`changeTitle.feature`). Anybody else, signed in or not, is
   offered neither the box nor a pencil nor a trash can: they read.
 
   Where there is scripting, a comment written in the box is added in place:

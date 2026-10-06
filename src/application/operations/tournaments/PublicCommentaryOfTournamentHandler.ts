@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { Commentaries } from "../commentaries/commentaryOperations.js";
+import { CommentaryId } from "../../../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -58,16 +59,19 @@ export class PublicCommentaryOfTournamentHandler extends QueryHandler<
         "There is no such commentary.",
       );
     };
+    // Found at its slug by the read model of the tournament's commentaries,
+    // and read from its own stream.
+    const id = await this.changes.at(tournament.id, query.slug);
     const found =
-      tournament.commentaries.find(
-        ({ slug }) => slug.toString() === query.slug,
-      ) ?? noSuchCommentary();
+      (id === undefined
+        ? undefined
+        : await this.commentaries.load(CommentaryId.from(id))) ??
+      noSuchCommentary();
     // A forgotten writer has no name to be read, and every word of the
     // commentary is theirs, so it is not one a reader is shown.
     const [writer] = await namesOf(this.accounts, [found.writer]);
     if (writer === undefined) return noSuchCommentary();
-    const commentary =
-      (await this.commentaries.load(found.id)) ?? noSuchCommentary();
+    const commentary = found;
     const address = tournament.address.toString();
     return {
       name: tournament.name.toString(),

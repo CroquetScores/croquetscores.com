@@ -353,8 +353,7 @@ const deleteDialog = (speaking: Speaking): string => {
  */
 export const goneSinceAsked = (failure: unknown): boolean =>
   (failure instanceof TournamentRefused &&
-    (failure.code === "Tournament.Archived" ||
-      failure.code === "Tournament.NoSuchCommentary")) ||
+    failure.code === "Tournament.Archived") ||
   failure instanceof CommentaryOperationRefused ||
   (failure instanceof TournamentOperationRefused &&
     failure.code.endsWith(".NoSuchTournament"));
