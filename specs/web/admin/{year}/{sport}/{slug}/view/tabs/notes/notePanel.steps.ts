@@ -10,6 +10,7 @@ import {
   unmarkedWithin,
 } from "../../../../../../../support/marks.js";
 import { eventually } from "../../../../../../../support/tournamentPage.js";
+import { english } from "../../../../../../../../../src/web/languages/english.js";
 
 // The note panel, in the Notes tab in place of its list.
 const panelOf = (world: SpecWorld): Locator =>
@@ -125,6 +126,20 @@ Then("the description has the focus", async function (this: SpecWorld) {
   );
   assert.equal(focused, "note-description");
 });
+
+// In English, the language a scenario reads the site in unless it says
+// otherwise: the words a reader is told, which a code with none of its own
+// would leave as the panel's words for anything at all.
+Then(
+  "the title is refused in the words for {string}",
+  async function (this: SpecWorld, key: string) {
+    const words = english.words[key];
+    assert.ok(words !== undefined, `English has no words for ${key}.`);
+    const message = panelOf(this).locator("#field-title-message");
+    await message.waitFor();
+    assert.equal((await message.innerText()).trim(), words);
+  },
+);
 
 Then(
   "the description is refused with {string}",

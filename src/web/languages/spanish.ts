@@ -677,6 +677,7 @@ export const spanish: Language = {
     "admin.notes.deleteQuestion": "¿Eliminar la nota «{title}»?",
     "admin.notes.delete.explanation":
       "Una nota eliminada desaparece para siempre y no se puede recuperar.",
+    "admin.notes.otherwise": "No se ha podido hacer.",
     "admin.note.addTitle": "Añadir nota",
     "admin.note.editTitle": "Editar nota",
     "admin.note.title": "Título",
@@ -698,6 +699,8 @@ export const spanish: Language = {
     "admin.note.otherwise": "Esta nota no se puede guardar así.",
     "ManagerNoteTitle.Missing": "Ponle un título a la nota.",
     "ManagerNoteTitle.TooLong": "Ese título es demasiado largo.",
+    "ManagerNoteTitle.NoLetterOrDigit":
+      "Un título necesita una letra o un número.",
     "ManagerNoteDescription.TooLong": "Esa descripción es demasiado larga.",
     "ManagerNoteToEdit.NoSuchManagerNote":
       "Esa nota ya no está. Puede que otro organizador la haya eliminado.",

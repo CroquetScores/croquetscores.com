@@ -143,6 +143,30 @@ Feature: The notes tab of a tournament's page
       When "Cancel" is pressed in the modal dialog
       Then "Spring Open" has the manager note "Lunch is at noon"
 
+  Rule: A delete refused says why above the list
+
+    A delete can be refused after it is asked: the tournament archived, or the
+    reader no longer one of its managers, since the list was opened. What was
+    refused is said above the list, by its code, as a test's Archive refused
+    is said (`tests-tab.feature`), and the list is asked for again, so that it
+    says what the notes are now.
+
+    Scenario: A delete refused is said above the list
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the notes of "Spring Open" are open
+      And Delete is pressed for the note "Lunch is at noon"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When "Delete" is pressed in the modal dialog
+      Then the tab is refused with "Tournament.Archived"
+
+    Scenario: A note whose delete was refused is still kept
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the notes of "Spring Open" are open
+      And Delete is pressed for the note "Lunch is at noon"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When "Delete" is pressed in the modal dialog
+      Then "Spring Open" has the manager note "Lunch is at noon"
+
   Rule: Every word the tab says is in the reader's language
 
     Scenario: The tab is in the reader's language

@@ -755,6 +755,8 @@ export const english: Language = {
     "admin.notes.deleteQuestion": "Delete the note “{title}”?",
     "admin.notes.delete.explanation":
       "A note deleted is gone for good, and cannot be brought back.",
+    // Above the list, for a refusal with no words of its own.
+    "admin.notes.otherwise": "That could not be done.",
     // The note dialog, its description's tabs and the toolbar above its box.
     "admin.note.addTitle": "Add Note",
     "admin.note.editTitle": "Edit Note",
@@ -778,6 +780,8 @@ export const english: Language = {
     "admin.note.otherwise": "This note cannot be kept as it is.",
     "ManagerNoteTitle.Missing": "Give the note a title.",
     "ManagerNoteTitle.TooLong": "That title is too long.",
+    "ManagerNoteTitle.NoLetterOrDigit":
+      "A title needs a letter or a digit in it.",
     "ManagerNoteDescription.TooLong": "That description is too long.",
     "ManagerNoteToEdit.NoSuchManagerNote":
       "That note is no longer there. Another manager may have deleted it.",

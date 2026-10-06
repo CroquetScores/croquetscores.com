@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { ModalDialog } from "../../../../../../ModalDialog.js";
-import { say } from "../../../../../../words.js";
+import { knows, say } from "../../../../../../words.js";
 import { type NoteListed, NotePanel } from "./notePanel.js";
 import "../listed.css";
 
@@ -9,8 +9,8 @@ import "../listed.css";
 // for its readers, the most recently written first, each by its title and
 // offering Edit and Delete. Add Note, a note's title and Edit show the note
 // panel in place of the list. Delete asks first, since a note deleted is gone
-// for good. Whenever the panel keeps a note, or one is deleted, the list is
-// asked for again.
+// for good, and a delete refused says why above the list. Whenever the panel
+// keeps a note, or a delete is asked for, the list is asked for again.
 
 interface Props {
   /** The tournament's id. */
@@ -32,6 +32,8 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
   const [writing, setWriting] = useState<"adding" | NoteListed | undefined>();
   // The note a manager is asked about before it is deleted.
   const [deleting, setDeleting] = useState<NoteListed | undefined>();
+  // What the tournament refused of the last delete, by its code.
+  const [refused, setRefused] = useState<string | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/notes`;
 
   useEffect(() => {
@@ -57,12 +59,21 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
     setAsking((count) => count + 1);
   };
 
+  // Asked again whether or not it was done, since the list is to say what the
+  // notes are now; and where it was refused, why.
   const remove = async (note: NoteListed): Promise<void> => {
     setActing(true);
+    setRefused(undefined);
     try {
-      await fetch(`${at}/${idInAddress(note.id)}`, { method: "DELETE" });
+      const response = await fetch(`${at}/${idInAddress(note.id)}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const answer = (await response.json()) as { error?: string };
+        setRefused(answer.error ?? "Unknown");
+      }
     } catch {
-      // A request that never arrived is said by the list asked for again.
+      setRefused("Unknown");
     } finally {
       askAgain();
       setActing(false);
@@ -131,6 +142,11 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
               {say("admin.notes.add")}
             </button>
           </p>
+          {refused === undefined ? null : (
+            <p className="listed-refused" data-refused={refused}>
+              {say(knows(refused) ? refused : "admin.notes.otherwise")}
+            </p>
+          )}
           {listed === undefined ? null : listed.length === 0 ? (
             <p className="listed-none">{say("admin.notes.none")}</p>
           ) : (

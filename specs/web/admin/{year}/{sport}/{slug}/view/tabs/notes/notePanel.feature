@@ -452,6 +452,20 @@ Feature: A manager's note is added to a tournament, or edited, in a panel on its
       When "Add" is pressed
       Then "Title" is refused with "ManagerNoteTitle.Missing"
 
+    Scenario: A title with no letter or digit is refused beneath the title
+      Given the notes of "Spring Open" are open
+      And "Add Note" is pressed
+      And "???" is typed as the "Title"
+      When "Add" is pressed
+      Then "Title" is refused with "ManagerNoteTitle.NoLetterOrDigit"
+
+    Scenario: A title with no letter or digit is refused in words that say why
+      Given the notes of "Spring Open" are open
+      And "Add Note" is pressed
+      And "???" is typed as the "Title"
+      When "Add" is pressed
+      Then the title is refused in the words for "ManagerNoteTitle.NoLetterOrDigit"
+
     Scenario: A description too long is refused beneath the description
       Given the notes of "Spring Open" are open
       And "Add Note" is pressed
