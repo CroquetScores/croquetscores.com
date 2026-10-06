@@ -272,9 +272,12 @@ const entering = async (
 // As many players as a scenario needs to fill a competition, when who they
 // are is beside the point: each added to the tournament and entered, as the
 // tournament's first manager, who created it, called "Grid Player A",
-// "Grid Player B" and so on.
+// "Grid Player B" and so on. Given ten seconds rather than five, since a
+// sixteen-player draw is two commands to a player and has run past five on a
+// busy machine.
 Given(
   "{int} players have been entered in {string} of {string}",
+  { timeout: 10_000 },
   async function (
     this: SpecWorld,
     count: number,
