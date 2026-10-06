@@ -785,6 +785,12 @@ export const english: Language = {
     "ManagerNoteDescription.TooLong": "That description is too long.",
     "ManagerNoteToEdit.NoSuchManagerNote":
       "That note is no longer there. Another manager may have deleted it.",
+    "EditManagerNote.NoSuchManagerNote":
+      "That note is no longer there. Another manager may have deleted it.",
+    "DeleteManagerNote.NoSuchManagerNote":
+      "That note is no longer there. Another manager may have deleted it.",
+    "ManagerNote.Deleted":
+      "That note has been deleted. Another manager may have deleted it.",
     "CommentaryTitle.Missing": "Give the commentary a title.",
     "CommentaryTitle.TooLong": "That title is too long.",
     "CommentaryTitle.NoLetterOrDigit":

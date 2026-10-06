@@ -224,6 +224,20 @@ Feature: A manager's note is added to a tournament, or edited, in a panel on its
       When "Save" is pressed
       Then the manager note "Lunch" of "Spring Open" says "At one"
 
+    Scenario: A note deleted while it was edited is refused when it is saved
+      Given the notes of "Spring Open" are open
+      And the title of the note "Lunch" is pressed
+      And "organiser@example.com" has deleted the manager note "Lunch" of "Spring Open"
+      When "Save" is pressed
+      Then the note panel is refused with "ManagerNote.Deleted"
+
+    Scenario: A note deleted while it was edited is refused in words that say so
+      Given the notes of "Spring Open" are open
+      And the title of the note "Lunch" is pressed
+      And "organiser@example.com" has deleted the manager note "Lunch" of "Spring Open"
+      When "Save" is pressed
+      Then the note panel is refused in the words for "ManagerNote.Deleted"
+
     Scenario: The list is back once the edit is kept
       Given the notes of "Spring Open" are open
       And the title of the note "Lunch" is pressed

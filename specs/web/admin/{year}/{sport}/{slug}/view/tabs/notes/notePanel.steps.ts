@@ -407,6 +407,20 @@ Then(
   },
 );
 
+// In English, as the panel says it above the fields: the words a reader is
+// told, which a code with none of its own would leave as the panel's words for
+// anything at all.
+Then(
+  "the note panel is refused in the words for {string}",
+  async function (this: SpecWorld, key: string) {
+    const words = english.words[key];
+    assert.ok(words !== undefined, `English has no words for ${key}.`);
+    const said = panelOf(this).locator(".dialog-problems [data-refused]");
+    await said.waitFor();
+    assert.equal((await said.innerText()).trim(), words);
+  },
+);
+
 // Once it has said what it refused, so that a button it never offers is not
 // taken to be missing only because the panel has not yet been told.
 Then(
