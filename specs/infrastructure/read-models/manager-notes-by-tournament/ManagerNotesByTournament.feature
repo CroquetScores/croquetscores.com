@@ -24,7 +24,10 @@ Feature: Finding a tournament's notes without reading what they say
   for that.
 
   The read model is asked for a tournament's notes, and answers them the
-  most recently written first, as every page lists them. A tournament with
+  most recently written first, as every page lists them. Two written at the
+  same moment are answered in the order of their ids, the greater first,
+  which a rebuild cannot change: the order rows were made in can, since a
+  rebuild takes the streams in no order but each stream's own. A tournament with
   no notes is answered with none, and another tournament's notes are not
   among them. It is asked which note of a tournament is found at a slug, as
   a note's page is found by its address, and which slugs a tournament's
@@ -168,6 +171,14 @@ Feature: Finding a tournament's notes without reading what they say
       Then no manager notes are found
 
   Rule: A rebuild finds every note as it is now
+
+    Scenario: Two notes written at the same moment are found in the same order once the read model is rebuilt
+      Given the manager note "Lunch is at noon" is added to the tournament "Spring Open" as "manager-note/123e4567-e89b-42d3-a456-426614174000"
+      And the manager note "Play starts at 9:30" is added to the tournament "Spring Open" as "manager-note/9b2f6a4e-1d3c-4e5f-8a7b-6c5d4e3f2a1b"
+      And the notes' streams are to be rebuilt the latest added first
+      When the read model is rebuilt from the events
+      And the manager notes of "Spring Open" are looked for
+      Then the first manager note found is "Play starts at 9:30"
 
     Scenario: A note edited is found as it was edited once the read model is rebuilt
       Given the manager note "Lunch is at noon" is added to the tournament "Spring Open"

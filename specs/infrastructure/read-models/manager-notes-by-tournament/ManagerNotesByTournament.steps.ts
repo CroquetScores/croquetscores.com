@@ -36,6 +36,8 @@ interface Scenario {
   // The note found at a slug, by its id, or nothing where none was.
   foundAt: string | undefined;
   slugs: readonly string[];
+  // Whether a rebuild takes the notes' streams the latest added first.
+  latestFirst: boolean;
 }
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
@@ -87,9 +89,24 @@ Given("the manager notes by tournament read model", function (this: SpecWorld) {
     found: [],
     foundAt: undefined,
     slugs: [],
+    latestFirst: false,
   });
   rebuildsWith(this, () =>
-    this.asARequest(async () => readModel.rebuildFrom(await store.readAll())),
+    this.asARequest(async () => {
+      const scenario = scenarioOf(this);
+      const read = await store.readAll();
+      // The store reads them by their ids, which says nothing of when each
+      // was added, so the order a scenario names is put on them here.
+      const added = [...scenario.byTitle.values()].map((id) => id.value);
+      await readModel.rebuildFrom(
+        scenario.latestFirst
+          ? [...read].sort(
+              (one, other) =>
+                added.indexOf(other.stream) - added.indexOf(one.stream),
+            )
+          : read,
+      );
+    }),
   );
 });
 
@@ -128,6 +145,13 @@ Given(
   "the manager note {string} is added to the tournament {string} as {string}",
   async function (this: SpecWorld, title: string, name: string, id: string) {
     await add(this, title, name, ManagerNoteId.from(id));
+  },
+);
+
+Given(
+  "the notes' streams are to be rebuilt the latest added first",
+  function (this: SpecWorld) {
+    scenarioOf(this).latestFirst = true;
   },
 );
 

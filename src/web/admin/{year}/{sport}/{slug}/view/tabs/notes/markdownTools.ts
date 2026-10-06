@@ -54,12 +54,19 @@ const wrapped = (typed: Typed, before: string, after: string): Typed => {
   };
 };
 
+// Where the line holding `at` begins. Asked as 0 at the start of the text
+// rather than of lastIndexOf, which looks at the first character even when
+// asked to look before it, and would take a line break there for one before
+// the first line.
+const lineStartOf = (value: string, at: number): number =>
+  at === 0 ? 0 : value.lastIndexOf("\n", at - 1) + 1;
+
 const forLines = (typed: Typed, prefix: (line: number) => string): Typed => {
   const { value, start, end } = typed;
   // Nothing selected part way along a line: what the tool begins goes on a
   // line of its own, rather than in the middle of what is there.
   if (start === end) {
-    const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+    const lineStart = lineStartOf(value, start);
     const begun = value.slice(lineStart, start).trim() === "" ? "" : "\n";
     const written = begun + prefix(0);
     return {
@@ -71,7 +78,7 @@ const forLines = (typed: Typed, prefix: (line: number) => string): Typed => {
   // Every line the selection touches, whole. A selection ending just after a
   // line break, as a triple-click selects a line in some browsers, ends with
   // the line before it: the line after is not one the reader chose.
-  const from = value.lastIndexOf("\n", start - 1) + 1;
+  const from = lineStartOf(value, start);
   const last = value[end - 1] === "\n" ? end - 1 : end;
   const lineEnd = value.indexOf("\n", last);
   const to = lineEnd === -1 ? value.length : lineEnd;

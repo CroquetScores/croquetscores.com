@@ -35,8 +35,9 @@ export class ManagerNotesByTournament
 
   /**
    * The table made again from `events`, every one there is. A note's row
-   * depends on its own stream alone, so the streams can come in any order, as
-   * long as each stream's own events come in the order they were kept.
+   * depends on its own stream alone, and two notes written at the same moment
+   * are listed by their ids, so the streams can come in any order, as long as
+   * each stream's own events come in the order they were kept.
    */
   async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
     await this.unitOfWork
@@ -56,7 +57,7 @@ export class ManagerNotesByTournament
       `select note_id, title, slug, written_at, changed_at
          from manager_notes_by_tournament
         where tournament_id = $1 and not deleted
-        order by written_at desc, made desc`,
+        order by written_at desc, note_id desc`,
       [tournament.value],
     );
     return rows.map((row) => ({

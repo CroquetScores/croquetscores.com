@@ -370,6 +370,14 @@ Feature: A manager's note is added to a tournament, or edited, in a panel on its
         | Quote         | > lunch\ntea   |
         | Bulleted list | - lunch\ntea   |
 
+    Scenario: A selection from the first of lines that begin empty marks every one of them
+      Given the notes of "Spring Open" are open
+      And "Add Note" is pressed
+      And "\n\nlunch" is typed in the description
+      And the description's words are all selected
+      When the tool "Numbered list" is pressed
+      Then the description says "1. \n2. \n3. lunch"
+
     Scenario: Code around more than one line is a block of code
       Given the notes of "Spring Open" are open
       And "Add Note" is pressed
