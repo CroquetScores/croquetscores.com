@@ -323,6 +323,10 @@ Then(
 Then(
   "the note panel's first button is {string}",
   async function (this: SpecWorld, words: string) {
+    // Once the note it edits is in hand: until then it offers Cancel alone.
+    await this.browserPage
+      .locator('form.note-panel[aria-busy="false"]')
+      .waitFor();
     const first = panelOf(this).locator(".note-panel-buttons button").first();
     assert.equal((await first.innerText()).trim(), words);
   },
@@ -355,6 +359,41 @@ Then(
     assert.ok(
       panel.x + panel.width <= window.width,
       `It ends ${String(panel.x + panel.width)} pixels across.`,
+    );
+  },
+);
+
+Then(
+  "the note panel is refused with {string}",
+  async function (this: SpecWorld, code: string) {
+    const said = panelOf(this).locator(".dialog-problems [data-refused]");
+    await said.waitFor();
+    assert.equal(await said.getAttribute("data-refused"), code);
+  },
+);
+
+// Once it has said what it refused, so that a button it never offers is not
+// taken to be missing only because the panel has not yet been told.
+Then(
+  "the note panel does not offer {string}",
+  async function (this: SpecWorld, words: string) {
+    await panelOf(this).locator(".dialog-problems").waitFor();
+    assert.equal(
+      await panelOf(this)
+        .getByRole("button", { name: words, exact: true })
+        .count(),
+      0,
+    );
+  },
+);
+
+Then(
+  "the note panel does not offer the field {string}",
+  async function (this: SpecWorld, label: string) {
+    await panelOf(this).locator(".dialog-problems").waitFor();
+    assert.equal(
+      await panelOf(this).getByLabel(label, { exact: true }).count(),
+      0,
     );
   },
 );

@@ -86,8 +86,9 @@ export const NotePanel = ({
   const [title, setTitle] = useState(note?.title ?? "");
   const [description, setDescription] = useState("");
   // Whether the note is in hand: at once to add one, and to edit one once it
-  // has been asked for, since the list it was chosen from holds no
-  // description.
+  // has been had, since the list it was chosen from holds no description.
+  // Never where it could not be had: a Save then would keep an empty
+  // description over the note's own, which cannot be undone.
   const [ready, setReady] = useState(note === undefined);
   const [tab, setTab] = useState<DescriptionTab>("write");
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
@@ -118,15 +119,13 @@ export const NotePanel = ({
         if (response.ok) {
           setTitle(answer.title ?? "");
           setDescription(answer.description ?? "");
+          setReady(true);
         } else {
           setRefused([refusal(answer.error ?? "Unknown")]);
         }
       })
       .catch(() => {
         if (current) setRefused([refusal("Unknown")]);
-      })
-      .finally(() => {
-        if (current) setReady(true);
       });
     return () => {
       current = false;
@@ -175,7 +174,7 @@ export const NotePanel = ({
   };
 
   const send = async (): Promise<void> => {
-    if (sending) return;
+    if (sending || !ready) return;
     setSending(true);
     try {
       const response = await fetch(
@@ -212,6 +211,8 @@ export const NotePanel = ({
     setSending(false);
   };
 
+  // Still asking for the note it edits: neither had nor refused yet.
+  const asking = !ready && refused.length === 0;
   const above = refusedFor(undefined);
   const descriptionRefused = refusedFor("description");
 
@@ -223,7 +224,7 @@ export const NotePanel = ({
     <form
       className="tab-form note-panel stack"
       aria-label={heading}
-      aria-busy={sending || !ready}
+      aria-busy={sending || asking}
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -234,7 +235,9 @@ export const NotePanel = ({
       {above.length > 0 ? (
         <div className="dialog-problems">
           {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
+            <p key={code} data-refused={code}>
+              {words}
+            </p>
           ))}
         </div>
       ) : null}
@@ -358,16 +361,20 @@ export const NotePanel = ({
               </div>
             )}
           </TabControl>
-          <div className="note-panel-buttons">
-            <button className="button button-submit" type="submit">
-              {say(note === undefined ? "admin.note.add" : "admin.note.save")}
-            </button>
-            <button className="button" type="button" onClick={close}>
-              {say("admin.modal.cancel")}
-            </button>
-          </div>
         </>
       ) : null}
+      {/* Cancel whatever else is offered, so that a note that could not be
+          had can still be left. */}
+      <div className="note-panel-buttons">
+        {ready ? (
+          <button className="button button-submit" type="submit">
+            {say(note === undefined ? "admin.note.add" : "admin.note.save")}
+          </button>
+        ) : null}
+        <button className="button" type="button" onClick={close}>
+          {say("admin.modal.cancel")}
+        </button>
+      </div>
     </form>
   );
 };

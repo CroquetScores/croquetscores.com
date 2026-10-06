@@ -20,7 +20,14 @@ Feature: A manager's note is added to a tournament, or edited, in a panel on its
   Adding and editing are the one panel, so that the two cannot come to ask
   different things. Shown by "Add Note", it is headed "Add Note", begins
   empty and its button is Add. Shown for a note, it is headed "Edit Note",
-  begins as the note is and its button is Save. A note is written one at a
+  begins as the note is and its button is Save. The list the note is chosen
+  from holds no description (`ManagerNotesOfTournament.feature`), so the
+  panel asks for the note when it is shown (`ManagerNoteToEdit.feature`),
+  and offers nothing to type in or save until it has it: a Save pressed
+  before then would keep an empty description over the note's own, and
+  that cannot be undone. Where the note cannot be had, as when another
+  manager has deleted it since the list was shown, the panel says so, and
+  offers Cancel alone. A note is written one at a
   time, and is read as soon as it is kept, so Add puts the list back once
   the note is added, as Save does once the edit is kept, and the list says
   what the notes are now.
@@ -133,6 +140,30 @@ Feature: A manager's note is added to a tournament, or edited, in a panel on its
       Given the notes of "Spring Open" are open
       When the title of the note "Lunch" is pressed
       Then the note panel's first button is "Save"
+
+  Rule: A note that cannot be had to edit offers nothing to save
+
+    Background:
+      Given "organiser@example.com" has added the manager note "Lunch" to "Spring Open"
+      And the notes of "Spring Open" are open
+      And "organiser@example.com" has deleted the manager note "Lunch" of "Spring Open"
+
+    Scenario: A note deleted since the list was shown is said to be gone
+      When the title of the note "Lunch" is pressed
+      Then the note panel is refused with "ManagerNoteToEdit.NoSuchManagerNote"
+
+    Scenario: A note deleted since the list was shown offers nothing to save
+      When the title of the note "Lunch" is pressed
+      Then the note panel does not offer "Save"
+
+    Scenario: A note deleted since the list was shown offers nothing to type in
+      When the title of the note "Lunch" is pressed
+      Then the note panel does not offer the field "Title"
+
+    Scenario: A note deleted since the list was shown can still be cancelled
+      Given the title of the note "Lunch" is pressed
+      When "Cancel" is pressed
+      Then the note panel is not shown
 
   Rule: Add adds the note and puts the list back
 

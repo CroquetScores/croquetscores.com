@@ -778,6 +778,8 @@ export const english: Language = {
     "ManagerNoteTitle.Missing": "Give the note a title.",
     "ManagerNoteTitle.TooLong": "That title is too long.",
     "ManagerNoteDescription.TooLong": "That description is too long.",
+    "ManagerNoteToEdit.NoSuchManagerNote":
+      "That note is no longer there. Another manager may have deleted it.",
     "CommentaryTitle.Missing": "Give the commentary a title.",
     "CommentaryTitle.TooLong": "That title is too long.",
     "CommentaryTitle.NoLetterOrDigit":

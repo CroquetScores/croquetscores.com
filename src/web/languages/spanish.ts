@@ -699,6 +699,8 @@ export const spanish: Language = {
     "ManagerNoteTitle.Missing": "Ponle un título a la nota.",
     "ManagerNoteTitle.TooLong": "Ese título es demasiado largo.",
     "ManagerNoteDescription.TooLong": "Esa descripción es demasiado larga.",
+    "ManagerNoteToEdit.NoSuchManagerNote":
+      "Esa nota ya no está. Puede que otro organizador la haya eliminado.",
     "CommentaryTitle.Missing": "Ponle un título al comentario.",
     "CommentaryTitle.TooLong": "Ese título es demasiado largo.",
     "CommentaryTitle.NoLetterOrDigit":
