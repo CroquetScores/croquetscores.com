@@ -55,6 +55,13 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
     };
   }, [at, asking]);
 
+  // The panel shown to add or to edit a note, and a delete refused before it
+  // no longer said, since what the reader does now is something else.
+  const write = (what: "adding" | NoteListed): void => {
+    setRefused(undefined);
+    setWriting(what);
+  };
+
   const askAgain = (): void => {
     setAsking((count) => count + 1);
   };
@@ -89,7 +96,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
           type="button"
           className="listed-name"
           onClick={() => {
-            setWriting(note);
+            write(note);
           }}
         >
           {note.title}
@@ -103,7 +110,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
           className="button"
           data-action="edit"
           onClick={() => {
-            setWriting(note);
+            write(note);
           }}
         >
           {say("admin.notes.edit")}
@@ -136,7 +143,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
               type="button"
               className="button"
               onClick={() => {
-                setWriting("adding");
+                write("adding");
               }}
             >
               {say("admin.notes.add")}

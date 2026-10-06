@@ -68,9 +68,12 @@ const forLines = (typed: Typed, prefix: (line: number) => string): Typed => {
       end: start + written.length,
     };
   }
-  // Every line the selection touches, whole.
+  // Every line the selection touches, whole. A selection ending just after a
+  // line break, as a triple-click selects a line in some browsers, ends with
+  // the line before it: the line after is not one the reader chose.
   const from = value.lastIndexOf("\n", start - 1) + 1;
-  const lineEnd = value.indexOf("\n", end);
+  const last = value[end - 1] === "\n" ? end - 1 : end;
+  const lineEnd = value.indexOf("\n", last);
   const to = lineEnd === -1 ? value.length : lineEnd;
   const lines = value
     .slice(from, to)

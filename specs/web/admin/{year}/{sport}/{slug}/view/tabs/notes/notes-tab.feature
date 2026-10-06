@@ -159,6 +159,17 @@ Feature: The notes tab of a tournament's page
       When "Delete" is pressed in the modal dialog
       Then the tab is refused with "Tournament.Archived"
 
+    Scenario: What a delete was refused is not said once something else is done
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the notes of "Spring Open" are open
+      And Delete is pressed for the note "Lunch is at noon"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And "Delete" is pressed in the modal dialog
+      And the tab is refused with "Tournament.Archived"
+      And "Add Note" is pressed
+      When "Cancel" is pressed
+      Then nothing is said above the list of notes
+
     Scenario: A note whose delete was refused is still kept
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       And the notes of "Spring Open" are open

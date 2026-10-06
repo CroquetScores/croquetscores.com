@@ -356,6 +356,20 @@ Feature: A manager's note is added to a tournament, or edited, in a panel on its
         | Bulleted list | - lunch\n- tea       |
         | Task list     | - [ ] lunch\n- [ ] tea |
 
+    Scenario Outline: A selection ending at a line break leaves the line after it alone
+      Given the notes of "Spring Open" are open
+      And "Add Note" is pressed
+      And "lunch\ntea" is typed in the description
+      And the description's first line is selected with its line break
+      When the tool "<tool>" is pressed
+      Then the description says "<written>"
+
+      Examples:
+        | tool          | written        |
+        | Heading       | ### lunch\ntea |
+        | Quote         | > lunch\ntea   |
+        | Bulleted list | - lunch\ntea   |
+
     Scenario: Code around more than one line is a block of code
       Given the notes of "Spring Open" are open
       And "Add Note" is pressed

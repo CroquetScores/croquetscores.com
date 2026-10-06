@@ -101,3 +101,19 @@ Then(
     assert.deepEqual(stray, [], "Words in the tab came from elsewhere.");
   },
 );
+
+// Once the list is back: nothing above it saying a refusal, where something
+// was said before.
+Then(
+  "nothing is said above the list of notes",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.equal(
+        await tabPanel(this).locator(".notes-tab .listed").count(),
+        1,
+        "The list is not back.",
+      );
+      assert.equal(await tabPanel(this).locator(".listed-refused").count(), 0);
+    });
+  },
+);

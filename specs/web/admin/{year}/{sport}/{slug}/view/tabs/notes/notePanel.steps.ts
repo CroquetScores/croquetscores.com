@@ -113,6 +113,26 @@ Given(
   },
 );
 
+// The first line and the line break after it, as a triple-click selects a
+// line in some browsers.
+Given(
+  "the description's first line is selected with its line break",
+  async function (this: SpecWorld) {
+    // Said as what of a text box it uses, since the specs are not built with
+    // the browser's types.
+    await box(this).evaluate(
+      (textarea: {
+        readonly value: string;
+        focus(): void;
+        setSelectionRange(start: number, end: number): void;
+      }) => {
+        textarea.focus();
+        textarea.setSelectionRange(0, textarea.value.indexOf("\n") + 1);
+      },
+    );
+  },
+);
+
 Then(
   "the description says {string}",
   async function (this: SpecWorld, words: string) {
