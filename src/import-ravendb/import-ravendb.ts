@@ -2,6 +2,7 @@
 // old sites over into it from RavenDB: their users, their tournaments and the
 // players of each, their blocks, knockouts, Swisses and team matches, their
 // commentaries, and last the order each tournament listed its competitions in.
+// Once every site is over, the site's roles are given to whoever holds them.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -22,6 +23,7 @@ import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/
 import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
+import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { loadEnvFile } from "../infrastructure/config/Config.js";
 import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { createPool } from "../infrastructure/database/pool.js";
@@ -39,6 +41,7 @@ import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
+import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
 import { ImportDatabase } from "./ImportDatabase.js";
@@ -58,6 +61,16 @@ import {
   numbers,
   runImporter,
 } from "./runImporter.js";
+
+// Who holds each of the site's roles, by the addresses their users had on the
+// old sites (GiveRoles.feature).
+const ROLE_HOLDERS: RoleHolders = {
+  administrator: ["tim@26tp.com", "croquetscores@gmail.com"],
+  "world-ranking-officer": [
+    "chris@butedock.com",
+    "richard.bilton30@talktalk.net",
+  ],
+};
 
 // Where the import writes, without the credentials that got it there.
 const where = (url: string): string => {
@@ -174,6 +187,19 @@ try {
       documents.dispose();
     }
   }
+
+  // After every website, since a user of either old site may hold one, and
+  // one of both is one account.
+  console.log("Giving the site's roles");
+  const withNoAccount = await new GiveRoles(
+    unitOfWork,
+    accounts,
+    database,
+  ).give(ROLE_HOLDERS, ReadOnlyDate.from(new Date()));
+  for (const address of withNoAccount) {
+    console.error(`No user was brought over as ${address}, who holds a role.`);
+  }
+  errors += withNoAccount.length;
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
