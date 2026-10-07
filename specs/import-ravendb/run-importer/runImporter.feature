@@ -12,7 +12,9 @@ Feature: Running an importer over a collection of the old sites' documents
   is kept, against the website and the document it went wrong with, and the
   next document is handed over. An import is run again and again while it is
   being written, and one that stopped at the first bad document would be run
-  once for every bad document there is.
+  once for every bad document there is. What is kept names the code the
+  document was refused with, where it has one, since the code is what
+  whoever is working out why looks for.
 
   What is shown on screen as it goes — how many documents have been read, how
   many refused, and how long it took — is for whoever is watching, and is not
@@ -72,6 +74,12 @@ Feature: Running an importer over a collection of the old sites' documents
       And the importer refuses "users/2"
       When the importer is run over "croquetscores.com"
       Then the error kept for "croquetscores.com/users/2" says "Refused users/2"
+
+    Scenario: The error kept names the code the document was refused with
+      Given "croquetscores.com" has 3 documents in "Users"
+      And the importer refuses "users/2" with "ImportUsers.Unreadable"
+      When the importer is run over "croquetscores.com"
+      Then the error kept for "croquetscores.com/users/2" says "ImportUsers.Unreadable"
 
     Scenario: The documents after a refused one are handed over
       Given "croquetscores.com" has 3 documents in "Users"
