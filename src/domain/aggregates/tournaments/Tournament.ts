@@ -561,7 +561,7 @@ export class Tournament extends AggregateRoot {
       name: found.name.toString(),
       worldRankingName,
     });
-    if (String(player.worldRankingName) === String(found.worldRankingName))
+    if (sameWorldRankingName(player.worldRankingName, found.worldRankingName))
       return;
     this.record(
       new TeamPlayerUpdated(

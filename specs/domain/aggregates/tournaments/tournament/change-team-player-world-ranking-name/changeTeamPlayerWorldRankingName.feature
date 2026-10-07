@@ -57,6 +57,11 @@ Feature: Changing a player in a team's world ranking name alone
       Then it has recorded 1 event
       And the first thing it recorded is a player in a team being updated
 
+    Scenario: Changing it to a name that reads as no world ranking name records it
+      Given the tournament is rebuilt from the stream
+      When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "undefined"
+      Then it has recorded 1 event
+
     Scenario: Changing it to what it is records nothing
       Given the player "Sam Someone" of the team "Australia" was updated to be known in the world rankings as "Samuel Someone"
       And the tournament is rebuilt from the stream
