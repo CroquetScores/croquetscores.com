@@ -20,6 +20,12 @@ interface Props {
   readonly tournament: string;
   /** Where the tournament is found, as "2026/ac/spring-tests". */
   readonly address: string;
+  /**
+   * Whether the reader manages the tournament. A world ranking officer who
+   * does not is shown the teams to reach their players, and offered nothing
+   * but each team's page.
+   */
+  readonly manages: boolean;
 }
 
 /** A team as the API lists it, its flag as it is seen. */
@@ -38,7 +44,11 @@ type Action = "up" | "down" | "archive" | "restore";
 // or a team, so that each is one segment of an address.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
-export const TeamsTab = ({ tournament, address }: Props): React.JSX.Element => {
+export const TeamsTab = ({
+  tournament,
+  address,
+  manages,
+}: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // Counted up to ask again, once something has been pressed or kept.
   const [asking, setAsking] = useState(0);
@@ -115,8 +125,8 @@ export const TeamsTab = ({ tournament, address }: Props): React.JSX.Element => {
       ? button(team, action)
       : noOption(action, say(`admin.teams.${action}`));
   // Room is kept only for what some row offers.
-  const anyArchive = inUse.some(({ inATest }) => !inATest);
-  const anyMove = inUse.length > 1;
+  const anyArchive = manages && inUse.some(({ inATest }) => !inATest);
+  const anyMove = manages && inUse.length > 1;
 
   const row = (team: Listed, place: number): React.JSX.Element => (
     <li
@@ -154,11 +164,13 @@ export const TeamsTab = ({ tournament, address }: Props): React.JSX.Element => {
       ) : null}
       <span className="listed-options">
         {team.archived
-          ? button(team, "restore")
+          ? manages
+            ? button(team, "restore")
+            : null
           : [
               // Edit before View, as a competition's is, so that what is done
               // to a team is offered ahead of going to it.
-              button(team, "edit"),
+              ...(manages ? [button(team, "edit")] : []),
               <a key="view" className="button" href={pageOf(team)}>
                 {say("admin.teams.view")}
               </a>,
@@ -184,17 +196,19 @@ export const TeamsTab = ({ tournament, address }: Props): React.JSX.Element => {
     >
       {/* Above the list rather than beneath it, where a long one would push
           it off a phone's screen. */}
-      <p>
-        <button
-          type="button"
-          className="button"
-          onClick={() => {
-            setDialog("adding");
-          }}
-        >
-          {say("admin.teams.add")}
-        </button>
-      </p>
+      {manages ? (
+        <p>
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              setDialog("adding");
+            }}
+          >
+            {say("admin.teams.add")}
+          </button>
+        </p>
+      ) : null}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.teams.none")}</p>
       ) : (

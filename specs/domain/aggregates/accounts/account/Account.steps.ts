@@ -23,6 +23,7 @@ import {
   addressHashOf,
   askedBy,
   askedByAnAdministrator,
+  askedByAWorldRankingOfficer,
   askerOf,
   at,
   idOf,
@@ -41,6 +42,14 @@ Given(
   "it is asked for by {string}",
   function (this: SpecWorld, account: string) {
     askedBy(this, account);
+  },
+);
+
+// As the account would ask while holding the World Ranking Officer role.
+Given(
+  "it is asked for by {string}, who is a world ranking officer",
+  function (this: SpecWorld, account: string) {
+    askedByAWorldRankingOfficer(this, account);
   },
 );
 

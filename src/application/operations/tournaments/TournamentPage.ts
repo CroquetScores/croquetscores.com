@@ -12,9 +12,16 @@ export interface TournamentAsPaged {
   readonly name: string;
   /**
    * The reader's part in it, which is what the page offers them: all its tabs
-   * to a manager, and its competitions alone to a scorer.
+   * to a manager, and its competitions alone to a scorer; and to a world
+   * ranking officer with no part in it, its players alone, whose world
+   * ranking names it may change.
    */
-  readonly part: "manager" | "scorer";
+  readonly part: "manager" | "scorer" | "rankingOfficer";
+  /**
+   * Whether the reader may change its players' world ranking names, as a
+   * manager and a world ranking officer may, for the players offered.
+   */
+  readonly mayChangeWorldRankingNames: boolean;
   /**
    * Whether it is played by teams, which have tests where a Standard
    * tournament's players have competitions, and so other tabs.
@@ -32,8 +39,8 @@ export interface TournamentAsPaged {
  * shows it to the account the reader is signed in to. It names that account
  * and never one the reader chose.
  *
- * Only its managers and scorers have anything to do there, so anybody else is
- * refused with `Tournament.NotAManager`; an archived tournament can only be
+ * Only its managers and scorers, and world ranking officers, have anything to
+ * do there, so anybody else is refused with `Tournament.NotAManager`; an archived tournament can only be
  * restored, and is refused with `Tournament.Archived`, to a scorer as to a
  * manager; and an address no tournament has been found at is refused as
  * changing one that is not there is, with `UpdateTournament.NoSuchTournament`.

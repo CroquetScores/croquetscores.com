@@ -842,3 +842,56 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Given the page of "Spring Open" is open
       When "Add Player" is pressed
       Then "Add" is above "Cancel"
+
+  Rule: A world ranking officer who does not manage the tournament changes the world ranking name alone
+
+    A world ranking officer may change a player's world ranking name and
+    nothing else (`changeWorldRankingName.feature`), so where it does not
+    manage the tournament the dialog shows everything the player is, but only
+    the world ranking name can be changed. Save keeps it.
+
+    Scenario Outline: Everything but the world ranking name is shown and cannot be changed
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of "Spring Open" is open
+      When the name of the player "Sam Someone" is pressed
+      Then "<field>" cannot be changed
+
+      Examples:
+        | field        |
+        | Name         |
+        | Representing |
+        | Flag         |
+
+    Scenario: The world ranking name can be changed
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of "Spring Open" is open
+      When the name of the player "Sam Someone" is pressed
+      Then "World Ranking Player Name" can be changed
+
+    Scenario: The world ranking name changed is kept
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Save" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Samuel Someone"
+
+    Scenario: Saving closes the dialog
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Save" is pressed
+      Then no modal dialog is open

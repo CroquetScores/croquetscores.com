@@ -483,6 +483,7 @@ export const english: Language = {
     "admin.tournaments.archive": "Archive",
     "admin.tournaments.restore": "Restore",
     "admin.tournaments.scores": "Scores",
+    "admin.tournaments.players": "Players",
     "admin.years.label": "Years",
     // What the drop-down list of years says while the year chosen is a tab.
     "admin.years.earlier": "Earlier years",

@@ -22,6 +22,12 @@ Feature: Finding the tournaments an account has a part in
   year is not among them unless there is a tournament in it: offering it
   anyway is the admin's to decide, not the read model's.
 
+  A world ranking officer is listed the tournaments it manages or scores, and
+  every tournament of the sports with world rankings besides, as one whose
+  rankings it looks after, so they can be asked for together, in the same
+  order and by the same year, a tournament's sport being the one its address
+  says.
+
   An account that administers the site is listed every tournament on the
   website, as a manager of each, since it may do to every one what a manager
   may (`administrators.feature`). What the list shows of a tournament is held
@@ -381,6 +387,53 @@ Feature: Finding the tournaments an account has a part in
       And "Spring Open" to be on the website "gateballscores.com"
       And "Spring Open" is created by the account for "organiser@example.com"
       When the years of every tournament on "croquetscores.com" are looked for
+      Then no year is found
+
+  Rule: A world ranking officer's list is its own tournaments and every one of the sports asked about
+
+    Scenario: A tournament of a sport asked about that it has no part in is found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament it has no part in is held as one whose rankings it looks after
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is held as one whose rankings it looks after
+
+    Scenario: A tournament it manages is held as one it manages
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "ranker@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is held as one it manages
+
+    Scenario: A tournament of another sport it manages is found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to be for the sport "rc"
+      And "Spring Open" is created by the account for "ranker@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament of another sport it has no part in is not found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to be for the sport "rc"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is not found
+
+    Scenario: The years of a sport asked about are among a world ranking officer's
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the years of the account for "ranker@example.com" as a world ranking officer of association and golf croquet are looked for
+      Then the first year is 2024
+
+    Scenario: The years of another sport's tournaments it has no part in are not among them
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" to be for the sport "rc"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the years of the account for "ranker@example.com" as a world ranking officer of association and golf croquet are looked for
       Then no year is found
 
   Rule: Projecting the same events again changes nothing

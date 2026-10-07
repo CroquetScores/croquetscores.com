@@ -1,3 +1,4 @@
+import { ChangeTeamPlayerWorldRankingName } from "../../../../src/application/operations/tournaments/ChangeTeamPlayerWorldRankingName.js";
 import { AddTeam } from "../../../../src/application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../../../../src/application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../../../../src/application/operations/tournaments/AddTest.js";
@@ -208,6 +209,29 @@ export const addTeamPlayer = async (
     ),
     tournament,
   );
+
+/** Changes the world ranking name of the player `name` of the team `team` alone. */
+export const changeTeamPlayerWorldRankingName = async (
+  world: SpecWorld,
+  account: string,
+  tournament: About,
+  team: string,
+  name: string,
+  worldRankingName: string,
+): Promise<void> => {
+  await send(
+    world,
+    new ChangeTeamPlayerWorldRankingName(
+      account,
+      tournament.value,
+      (await teamIn(world, tournament, team)).value,
+      (await teamPlayerIn(world, tournament, team, name)).value,
+      worldRankingName,
+      momentOf(world),
+    ),
+    tournament,
+  );
+};
 
 // Said again as the player is, with what the scenario's update changes, as an
 // update says everything about the player.

@@ -17,7 +17,7 @@ interface Listed {
   readonly finishes: string;
   readonly address: string;
   readonly archived: boolean;
-  readonly part: "manager" | "scorer";
+  readonly part: "manager" | "scorer" | "rankingOfficer";
 }
 
 interface Props {
@@ -114,6 +114,17 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
 
   const options = (tournament: Listed): React.JSX.Element[] => {
     const at = `/admin/${tournament.address}`;
+    // A world ranking officer's, whose players' world ranking names it looks
+    // after, offers those players, on the tournament's page.
+    if (tournament.part === "rankingOfficer") {
+      return tournament.archived
+        ? []
+        : [
+            <a key="players" className="button" href={at}>
+              {say("admin.tournaments.players")}
+            </a>,
+          ];
+    }
     if (tournament.part === "scorer") {
       return tournament.archived
         ? []

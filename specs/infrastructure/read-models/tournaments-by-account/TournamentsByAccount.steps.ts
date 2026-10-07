@@ -166,6 +166,38 @@ When(
   },
 );
 
+// A world ranking officer's, of the two sports with world rankings.
+const RANKED = ["ac", "gc"];
+
+When(
+  "the tournaments of the account for {string} as a world ranking officer of association and golf croquet in {int} are looked for",
+  async function (this: SpecWorld, address: string, year: number) {
+    const answer = await this.asARequest(() =>
+      readModelOf(this).tournamentsOfRankingOfficer(
+        accountFor(this, address),
+        Website.from("croquetscores.com"),
+        year,
+        RANKED,
+      ),
+    );
+    foundByAccount.set(this, answer);
+    scenarioOf(this).found = answer;
+  },
+);
+
+When(
+  "the years of the account for {string} as a world ranking officer of association and golf croquet are looked for",
+  async function (this: SpecWorld, address: string) {
+    scenarioOf(this).years = await this.asARequest(() =>
+      readModelOf(this).yearsOfRankingOfficer(
+        accountFor(this, address),
+        Website.from("croquetscores.com"),
+        RANKED,
+      ),
+    );
+  },
+);
+
 // What was found -------------------------------------------------------------------------
 
 Then(
@@ -179,6 +211,13 @@ Then(
   "{string} is held as one it scores",
   function (this: SpecWorld, name: string) {
     assert.equal(found(this, name).part, "scorer");
+  },
+);
+
+Then(
+  "{string} is held as one whose rankings it looks after",
+  function (this: SpecWorld, name: string) {
+    assert.equal(found(this, name).part, "rankingOfficer");
   },
 );
 

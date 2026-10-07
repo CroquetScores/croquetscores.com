@@ -21,6 +21,12 @@ export interface TeamAsPaged {
    * which only a sport with world rankings has (Sport.feature).
    */
   readonly asksWorldRankingNames: boolean;
+  /**
+   * Whether the reader manages the tournament, and so may change its players;
+   * a world ranking officer who does not may change their world ranking names
+   * alone.
+   */
+  readonly manages: boolean;
 }
 
 /**

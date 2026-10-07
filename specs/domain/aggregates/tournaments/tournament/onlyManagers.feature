@@ -10,7 +10,10 @@ Feature: Only a tournament's managers change it
   heard of: a scorer enters scores, and nothing else. Starting a commentary
   is not a change of that kind, and any account can start one
   (`writeCommentary.feature`). An account that administers the site is the
-  exception: it can do anything a manager can, to every tournament.
+  exception: it can do anything a manager can, to every tournament. So, for
+  one thing alone, is an account that holds the World Ranking Officer role,
+  which may change any player's world ranking name
+  (`changeWorldRankingName.feature`) and nothing else.
 
   Who is asking is what every event already records as its cause, so the
   tournament is told on every request, and asks it before anything else. A

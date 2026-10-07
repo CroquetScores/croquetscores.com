@@ -11,6 +11,12 @@ Feature: Who an account asks as
   so does a forgotten account, whatever it held. Holding the World Ranking
   Officer role says nothing about it.
 
+  An account that holds the World Ranking Officer role asks as a world
+  ranking officer, the same id known to be one, so that it may change the
+  world ranking name of any player (`changeWorldRankingName.feature`) without
+  the tournament having to know anything of anybody's roles. An account
+  holding both roles asks as an administrator, who may do that and more.
+
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-19T10:00:00Z"
@@ -44,6 +50,29 @@ Feature: Who an account asks as
       Given the role "World Ranking Officer" was added to it
       When the account is rebuilt from the stream
       Then the account does not ask as an administrator
+
+  Rule: An account asks as a world ranking officer while it holds that role
+
+    Scenario: An account given the World Ranking Officer role asks as a world ranking officer
+      Given the role "World Ranking Officer" was added to it
+      When the account is rebuilt from the stream
+      Then the account asks as a world ranking officer
+
+    Scenario: An account never given the role does not ask as a world ranking officer
+      When the account is rebuilt from the stream
+      Then the account does not ask as a world ranking officer
+
+    Scenario: An account the role was taken from does not ask as a world ranking officer
+      Given the role "World Ranking Officer" was added to it
+      And the role "World Ranking Officer" was removed from it
+      When the account is rebuilt from the stream
+      Then the account does not ask as a world ranking officer
+
+    Scenario: An account holding both roles asks as an administrator
+      Given the role "World Ranking Officer" was added to it
+      And the role "Administrator" was added to it
+      When the account is rebuilt from the stream
+      Then the account asks as an administrator
 
   Rule: An account asks as itself, whatever it holds
 

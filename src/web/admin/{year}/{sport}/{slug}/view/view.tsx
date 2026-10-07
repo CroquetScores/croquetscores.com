@@ -36,7 +36,9 @@ interface Found {
   readonly name: string;
   readonly address: string;
   /** The reader's part in it, which is what the page offers them. */
-  readonly part: "manager" | "scorer";
+  readonly part: "manager" | "scorer" | "rankingOfficer";
+  /** Whether the reader may change its players' world ranking names. */
+  readonly mayChangeWorldRankingNames: boolean;
   /** Whether it is played by teams, which gives it other tabs. */
   readonly playedByTeams: boolean;
   /** Whether its sport has world rankings, for its players' dialog. */
@@ -60,18 +62,30 @@ type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
 
 // What a reader is offered: every tab to a manager, and the competitions
 // alone to a scorer, since scores are entered in a tournament's competitions
-// and the rest is the managers' to change. The page opens on the first.
+// and the rest is the managers' to change. A world ranking officer is offered
+// the players besides, whose world ranking names it may change: after the
+// competitions where it scores, and alone where it has no part. The page
+// opens on the first.
 const offeredTo = ({
   part,
   playedByTeams,
-}: Pick<Found, "part" | "playedByTeams">): readonly Tab[] =>
-  playedByTeams
-    ? part === "manager"
-      ? teamTabs
-      : ["tests"]
-    : part === "manager"
-      ? standardTabs
-      : ["competitions"];
+  mayChangeWorldRankingNames,
+}: Pick<
+  Found,
+  "part" | "playedByTeams" | "mayChangeWorldRankingNames"
+>): readonly Tab[] => {
+  if (part === "manager") return playedByTeams ? teamTabs : standardTabs;
+  const players: readonly Tab[] = mayChangeWorldRankingNames
+    ? [playedByTeams ? "teams" : "players"]
+    : [];
+  if (part === "rankingOfficer") return players;
+  return [playedByTeams ? "tests" : "competitions", ...players];
+};
+
+// The part a reader has in the competitions and tests, which a world ranking
+// officer with no part in the tournament is never offered.
+const partInCompetitions = (part: Found["part"]): "manager" | "scorer" =>
+  part === "manager" ? "manager" : "scorer";
 
 // What a refusal says in place of the tabs: its words, by its code, or the
 // words for any where it has none.
@@ -147,26 +161,28 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 <PlayersTab
                   tournament={asked.tournament.id}
                   asksWorldRankingNames={asked.tournament.asksWorldRankingNames}
+                  manages={asked.tournament.part === "manager"}
                 />
               ) : null}
               {chosen === "competitions" ? (
                 <CompetitionsTab
                   tournament={asked.tournament.id}
                   address={asked.tournament.address}
-                  part={asked.tournament.part}
+                  part={partInCompetitions(asked.tournament.part)}
                 />
               ) : null}
               {chosen === "teams" ? (
                 <TeamsTab
                   tournament={asked.tournament.id}
                   address={asked.tournament.address}
+                  manages={asked.tournament.part === "manager"}
                 />
               ) : null}
               {chosen === "tests" ? (
                 <TestsTab
                   tournament={asked.tournament.id}
                   address={asked.tournament.address}
-                  part={asked.tournament.part}
+                  part={partInCompetitions(asked.tournament.part)}
                   toTeams={() => {
                     setChosen("teams");
                   }}

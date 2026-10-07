@@ -23,6 +23,12 @@ interface Props {
   readonly tournament: string;
   /** Whether the tournament's sport has world rankings, for the dialog. */
   readonly asksWorldRankingNames: boolean;
+  /**
+   * Whether the reader manages the tournament. A world ranking officer who
+   * does not is shown the players to change their world ranking names alone,
+   * and offered nothing else.
+   */
+  readonly manages: boolean;
 }
 
 /** A player as the API lists them, their flag as it is seen. */
@@ -43,6 +49,7 @@ const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 export const PlayersTab = ({
   tournament,
   asksWorldRankingNames,
+  manages,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // Counted up to ask again, once something has been pressed or kept.
@@ -137,8 +144,8 @@ export const PlayersTab = ({
   // Room is kept only for what some row offers: a gap no row fills would be
   // space and nothing else. A lone player moves nowhere, and a list where
   // everybody has played archives nobody.
-  const anyArchive = inUse.some(({ hasPlayed }) => !hasPlayed);
-  const anyMove = inUse.length > 1;
+  const anyArchive = manages && inUse.some(({ hasPlayed }) => !hasPlayed);
+  const anyMove = manages && inUse.length > 1;
 
   const row = (player: Listed, place: number): React.JSX.Element => (
     <li
@@ -181,7 +188,9 @@ export const PlayersTab = ({
       ) : null}
       <span className="listed-options">
         {player.archived
-          ? button(player, "restore")
+          ? manages
+            ? button(player, "restore")
+            : null
           : [
               // Before Archive, as a competition's Edit is, so that changing
               // a player is offered ahead of setting them aside.
@@ -209,17 +218,19 @@ export const PlayersTab = ({
     >
       {/* Above the list rather than beneath it, where a long one would push
           it off a phone's screen. */}
-      <p>
-        <button
-          type="button"
-          className="button"
-          onClick={() => {
-            setDialog("adding");
-          }}
-        >
-          {say("admin.players.add")}
-        </button>
-      </p>
+      {manages ? (
+        <p>
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              setDialog("adding");
+            }}
+          >
+            {say("admin.players.add")}
+          </button>
+        </p>
+      ) : null}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.players.none")}</p>
       ) : (
@@ -270,6 +281,7 @@ export const PlayersTab = ({
         <PlayerDialog
           tournament={tournament}
           asksWorldRankingName={asksWorldRankingNames}
+          onlyWorldRankingName={!manages}
           player={dialog === "adding" ? undefined : dialog}
           kept={askAgain}
           close={() => {

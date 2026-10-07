@@ -40,11 +40,15 @@ export class TournamentPageHandler extends QueryHandler<
       );
     }
     const reader = await readerAs(this.accounts, query.account);
+    const mayChangeWorldRankingNames =
+      tournament.mayChangeWorldRankingNames(reader);
     const part = tournament.mayManage(reader)
       ? "manager"
       : tournament.scores(reader)
         ? "scorer"
-        : undefined;
+        : mayChangeWorldRankingNames
+          ? "rankingOfficer"
+          : undefined;
     if (part === undefined) {
       throw new TournamentRefused(
         "Tournament.NotAManager",
@@ -64,6 +68,7 @@ export class TournamentPageHandler extends QueryHandler<
       part,
       playedByTeams: tournament.format.isTeamFormat,
       asksWorldRankingNames: tournament.sport.hasWorldRankings,
+      mayChangeWorldRankingNames,
     };
   }
 }
