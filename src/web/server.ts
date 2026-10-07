@@ -28,6 +28,10 @@ import { SetNewPasswordValidator } from "../application/operations/accounts/SetN
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
 import { AskToSetPasswordHandler } from "../application/operations/accounts/AskToSetPasswordHandler.js";
 import { AccountProfile } from "../application/operations/accounts/AccountProfile.js";
+import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
+import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
+import { AddRoleValidator } from "../application/operations/accounts/AddRoleValidator.js";
+import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
 import { ChangePasswordHandler } from "../application/operations/accounts/ChangePasswordHandler.js";
@@ -208,6 +212,7 @@ import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReader
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
+import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
@@ -585,6 +590,8 @@ export const buildApplication = async (
     config.accountEmailAddressHashKey,
   );
 
+  const accountsByRole = new AccountsByRole(unitOfWork);
+
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
@@ -595,6 +602,7 @@ export const buildApplication = async (
   const projections: readonly Projection[] = [
     accountsByEmailAddress,
     accountsByGoogleAccount,
+    accountsByRole,
     tournamentsByAddress,
     tournamentsByAccount,
     tournamentsByWebsite,
@@ -735,6 +743,10 @@ export const buildApplication = async (
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
   mediator.handleQuery(new AccountProfileHandler(accounts));
+  validation.register(new AddRoleValidator());
+  mediator.handleCommand(new AddRoleHandler(accounts, accountsByEmailAddress));
+  mediator.handleCommand(new RemoveRoleHandler(accounts));
+  mediator.handleQuery(new AccountsWithRoleHandler(accounts, accountsByRole));
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(

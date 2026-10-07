@@ -60,6 +60,9 @@ import { UpdateTeamPlayer } from "../../../application/operations/tournaments/Up
 import { UpdateTest } from "../../../application/operations/tournaments/UpdateTest.js";
 import { Flags } from "../../../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Assets } from "../../common/assets.js";
+import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
+import { AddRole } from "../../../application/operations/accounts/AddRole.js";
+import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
@@ -905,6 +908,57 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         new RemoveManager(
           reader.value,
           `tournament/${request.params.id}`,
+          `account/${request.params.account}`,
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // The accounts holding a role, as an administrator lists them. The role is
+  // named as one is kept, "administrator" or "world-ranking-officer".
+  server.get<{ Params: { role: string } }>(
+    "/roles/:role/accounts",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const accounts = await request.server.mediator.query(
+        new AccountsWithRole(reader.value, request.params.role),
+      );
+      return reply.header("cache-control", "no-store").send({ accounts });
+    },
+  );
+
+  // Somebody given a role, by their email address.
+  server.post<{ Params: { role: string } }>(
+    "/roles/:role/accounts",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new AddRole(
+          reader.value,
+          request.params.role,
+          textOf(request.body, "emailAddress"),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A role taken from somebody, by the part of their account's id after
+  // "account/".
+  server.post<{ Params: { role: string; account: string } }>(
+    "/roles/:role/accounts/:account/remove",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new RemoveRole(
+          reader.value,
+          request.params.role,
           `account/${request.params.account}`,
           request.requestedAt,
         ),

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { Accounts } from "./administrator/accounts/accounts.js";
+import { AdministratorSections } from "./administrator/AdministratorSections.js";
 import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competition-slug}/view/view.js";
@@ -63,6 +65,34 @@ export const App = (): React.JSX.Element => {
   // another of the same kind, as from one competition to the next, draws the
   // page afresh as loading it did, rather than showing the one left while the
   // one asked for is fetched.
+  // The administrator's pages, under their own section bar. Only an
+  // administrator is sent this page for them (administrator.feature), so
+  // nothing here asks again. A page beneath the accounts that is not there yet
+  // still marks Accounts, since it is one of theirs.
+  const administrator = /^\/admin\/administrator(\/accounts)?(\/.*)?$/.exec(
+    path,
+  );
+  if (administrator !== null) {
+    const onAccounts = administrator[1] !== undefined;
+    const theAccountsPage = onAccounts && (administrator[2] ?? "/") === "/";
+    return (
+      <>
+        <AdministratorSections reading={onAccounts ? "accounts" : undefined} />
+        <main id="content">
+          <div className="page">
+            <div className="panel stack">
+              {theAccountsPage ? (
+                <Accounts />
+              ) : (
+                <h1>{say("admin.administrator.title")}</h1>
+              )}
+            </div>
+          </div>
+        </main>
+      </>
+    );
+  }
+
   if (/^\/admin\/tournaments\/new\/?$/.test(path)) {
     return <NewTournament key={path} />;
   }

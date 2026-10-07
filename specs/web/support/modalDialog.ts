@@ -97,7 +97,7 @@ When(
 // dialog's words, and read inside their marks with them. A competition's name
 // is its manager's, and is listed in the dialog on its own.
 Then(
-  /^every word in the modal dialog but the (?:scorer|manager)'s name is in the test locale$/,
+  /^every word in the modal dialog but the (?:scorer|manager|account)'s name is in the test locale$/,
   async function (this: SpecWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open);

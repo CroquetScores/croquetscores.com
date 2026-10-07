@@ -36,6 +36,7 @@ import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPassw
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
+import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
@@ -117,6 +118,7 @@ try {
         unitOfWork,
         config.accountEmailAddressHashKey,
       ),
+      new AccountsByRole(unitOfWork),
       new TournamentsByAddress(unitOfWork),
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),

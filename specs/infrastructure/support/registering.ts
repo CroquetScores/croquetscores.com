@@ -41,6 +41,16 @@ import type {
   Profile,
 } from "../../../src/application/operations/accounts/AccountProfile.js";
 import { AccountProfileHandler } from "../../../src/application/operations/accounts/AccountProfileHandler.js";
+import type { AddRole } from "../../../src/application/operations/accounts/AddRole.js";
+import { AddRoleHandler } from "../../../src/application/operations/accounts/AddRoleHandler.js";
+import { AddRoleValidator } from "../../../src/application/operations/accounts/AddRoleValidator.js";
+import type { RemoveRole } from "../../../src/application/operations/accounts/RemoveRole.js";
+import { RemoveRoleHandler } from "../../../src/application/operations/accounts/RemoveRoleHandler.js";
+import type {
+  AccountsWithRole,
+  AccountWithRole,
+} from "../../../src/application/operations/accounts/AccountsWithRole.js";
+import { AccountsWithRoleHandler } from "../../../src/application/operations/accounts/AccountsWithRoleHandler.js";
 import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
 import type { ChangePassword } from "../../../src/application/operations/accounts/ChangePassword.js";
 import { ChangePasswordHandler } from "../../../src/application/operations/accounts/ChangePasswordHandler.js";
@@ -182,6 +192,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   const store = new ProjectingEventStore(accounts.store, [
     accounts.readModel,
     accounts.byGoogleAccount,
+    accounts.byRole,
     refusing,
   ]);
   // Wrapped rather than handed over as it is: a static passed on its own is a
@@ -311,6 +322,12 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(repository));
   mediator.handleQuery(new AccountProfileHandler(repository));
+  validation.register(new AddRoleValidator());
+  mediator.handleCommand(new AddRoleHandler(repository, accounts.readModel));
+  mediator.handleCommand(new RemoveRoleHandler(repository));
+  mediator.handleQuery(
+    new AccountsWithRoleHandler(repository, accounts.byRole),
+  );
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(
@@ -497,6 +514,30 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     async profile(query: AccountProfile): Promise<Profile | undefined> {
       await settle();
       return mediator.query(query);
+    },
+
+    async addRole(command: AddRole): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    async removeRole(command: RemoveRole): Promise<void> {
+      await settle();
+      await mediator.send(command);
+    },
+
+    async accountsWithRole(
+      query: AccountsWithRole,
+    ): Promise<readonly AccountWithRole[]> {
+      await settle();
+      return mediator.query(query);
+    },
+
+    async lastCausedBy(address: string): Promise<AccountId | undefined> {
+      await settle();
+      const id = await idFor(address);
+      const events = await world.asARequest(() => accounts.store.getEvents(id));
+      return events.at(-1)?.createdBy;
     },
 
     async askToMove(command: AskToChangeEmailAddress): Promise<void> {
@@ -783,6 +824,12 @@ Given(
     await aFakeOfHaveIBeenPwned(this);
   },
 );
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about giving, taking or listing roles is not about registering.
+Given("the application's accounts", function (this: SpecWorld) {
+  standUpFor(this);
+});
 
 // The same mediator over the same accounts, said in its own words because a
 // scenario about what an account shows is not about registering.

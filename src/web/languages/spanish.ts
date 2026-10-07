@@ -464,6 +464,26 @@ export const spanish: Language = {
     "admin.competitionView.scores": "Resultados",
     "admin.sections.label": "El torneo y sus competiciones",
     "admin.sections.tournament": "Torneo",
+    "admin.administrator.sections.label": "Las páginas del administrador",
+    "admin.administrator.sections.tournaments": "Torneos",
+    "admin.administrator.sections.accounts": "Cuentas",
+    "admin.administrator.title": "Administrador",
+    "admin.accounts.title": "Cuentas",
+    "admin.roles.add": "Añadir",
+    "admin.roles.administrator.heading": "Administradores",
+    "admin.roles.administrator.none": "No hay otros administradores",
+    "admin.roles.administrator.removeTitle": "Quitar administrador",
+    "admin.roles.administrator.removeExplanation":
+      "{name} dejará de ser administrador de este sitio.",
+    "admin.roles.world-ranking-officer.heading":
+      "Responsables del ranking mundial",
+    "admin.roles.world-ranking-officer.none":
+      "No hay responsables del ranking mundial",
+    "admin.roles.world-ranking-officer.removeTitle":
+      "Quitar responsable del ranking mundial",
+    "admin.roles.world-ranking-officer.removeExplanation":
+      "{name} dejará de ser responsable del ranking mundial.",
+    "admin.roles.otherwise": "A esa dirección no se le puede dar el rol.",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",
@@ -805,6 +825,15 @@ export const spanish: Language = {
       "Dos jugadores del mismo equipo no juegan entre sí.",
     "AddManager.NoSuchAccount":
       "Esa dirección no tiene ninguna cuenta que se pueda hacer gestora.",
+    "Account.NotAnAdministrator": "Solo un administrador puede hacer eso.",
+    "AddRole.NoSuchAccount":
+      "Esa dirección no tiene ninguna cuenta a la que se pueda dar el rol.",
+    "AddRole.NoSuchRole": "No existe ese rol.",
+    "RemoveRole.NoSuchAccount": "No existe esa cuenta.",
+    "RemoveRole.NoSuchRole": "No existe ese rol.",
+    "RemoveRole.Yourself":
+      "No puedes quitarte a ti mismo el rol de administrador.",
+    "AccountsWithRole.NoSuchRole": "No existe ese rol.",
     "admin.scorers.add": "Añadir anotador",
     "admin.scorers.none": "No hay anotadores",
     "admin.scorers.removeTitle": "Quitar anotador",

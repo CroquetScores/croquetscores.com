@@ -524,6 +524,27 @@ export const english: Language = {
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "The tournament and its competitions",
     "admin.sections.tournament": "Tournament",
+    // The section bar of the administrator's pages.
+    "admin.administrator.sections.label": "The administrator's pages",
+    "admin.administrator.sections.tournaments": "Tournaments",
+    "admin.administrator.sections.accounts": "Accounts",
+    "admin.administrator.title": "Administrator",
+    // The accounts page, a section for each role.
+    "admin.accounts.title": "Accounts",
+    "admin.roles.add": "Add",
+    "admin.roles.administrator.heading": "Administrators",
+    "admin.roles.administrator.none": "No other administrators",
+    "admin.roles.administrator.removeTitle": "Remove Administrator",
+    "admin.roles.administrator.removeExplanation":
+      "{name} will no longer be an administrator of this site.",
+    "admin.roles.world-ranking-officer.heading": "World Ranking Officers",
+    "admin.roles.world-ranking-officer.none": "No world ranking officers",
+    "admin.roles.world-ranking-officer.removeTitle":
+      "Remove World Ranking Officer",
+    "admin.roles.world-ranking-officer.removeExplanation":
+      "{name} will no longer be a world ranking officer.",
+    // Beneath the field, for a refusal with no words of its own.
+    "admin.roles.otherwise": "That address cannot be given the role.",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,
@@ -895,6 +916,16 @@ export const english: Language = {
     "admin.scorers.otherwise": "That address cannot be made a scorer.",
     "AddScorer.NoSuchAccount":
       "That address has no account that can be made a scorer.",
+    // Giving, taking and listing roles, which only an administrator can do.
+    "Account.NotAnAdministrator": "Only an administrator can do that.",
+    "AddRole.NoSuchAccount":
+      "That address has no account that can be given the role.",
+    "AddRole.NoSuchRole": "There is no such role.",
+    "RemoveRole.NoSuchAccount": "There is no such account.",
+    "RemoveRole.NoSuchRole": "There is no such role.",
+    "RemoveRole.Yourself":
+      "You cannot take the Administrator role from yourself.",
+    "AccountsWithRole.NoSuchRole": "There is no such role.",
     "Tournament.AlreadyAManager":
       "That account manages the tournament already, and can do everything a scorer can.",
 

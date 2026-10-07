@@ -30,6 +30,12 @@ import type { SendConfirmationLinkAgain } from "../../src/application/operations
 import type { WhatAConfirmationLinkIsWorth } from "../../src/application/operations/accounts/WhatAConfirmationLinkIsWorth.js";
 import type { ConfirmationLinkWorth } from "../../src/application/operations/accounts/confirmationLinks.js";
 import type { RegisterAccount } from "../../src/application/operations/accounts/RegisterAccount.js";
+import type { AddRole } from "../../src/application/operations/accounts/AddRole.js";
+import type { RemoveRole } from "../../src/application/operations/accounts/RemoveRole.js";
+import type {
+  AccountsWithRole,
+  AccountWithRole,
+} from "../../src/application/operations/accounts/AccountsWithRole.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountAsGiven } from "./accounts.js";
 
@@ -105,6 +111,20 @@ export interface Registering {
 
   /** What an account is called and where it is reached, or nothing. */
   profile(query: AccountProfile): Promise<Profile | undefined>;
+
+  /** Gives somebody a role. Throws what the mediator throws. */
+  addRole(command: AddRole): Promise<void>;
+
+  /** Takes a role from somebody. Throws what the mediator throws. */
+  removeRole(command: RemoveRole): Promise<void>;
+
+  /** The accounts holding a role, or throws what the mediator throws. */
+  accountsWithRole(
+    query: AccountsWithRole,
+  ): Promise<readonly AccountWithRole[]>;
+
+  /** Who caused the last thing the account for `address` recorded. */
+  lastCausedBy(address: string): Promise<AccountId | undefined>;
 
   /** Has reporting tell `address`, or nobody where there is none. */
   tellsAdministrator(address: string | undefined): void;
