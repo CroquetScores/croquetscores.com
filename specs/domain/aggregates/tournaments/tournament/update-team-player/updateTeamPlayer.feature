@@ -60,6 +60,12 @@ Feature: Changing what a player in a tournament's team is
       When the player "Sam Someone" of the team "Australia" is updated
       Then it has recorded 1 event
 
+    Scenario: An update to a world ranking name that reads as no world ranking name records it
+      Given the tournament is rebuilt from the stream
+      And the update gives the player the world ranking name "undefined"
+      When the player "Sam Someone" of the team "Australia" is updated
+      Then it has recorded 1 event
+
     Scenario: A tournament rebuilt after a player in a team was updated has their world ranking name as updated
       Given the player "Sam Someone" of the team "Australia" was updated to be known in the world rankings as "Samuel Someone"
       When the tournament is rebuilt from the stream

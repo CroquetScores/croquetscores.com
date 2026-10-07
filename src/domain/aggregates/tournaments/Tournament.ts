@@ -82,6 +82,7 @@ import {
 } from "./value-objects/tournamentFormats.js";
 import { TournamentName } from "./value-objects/TournamentName.js";
 import { TournamentSubtitle } from "./value-objects/TournamentSubtitle.js";
+import type { WorldRankingName } from "./value-objects/WorldRankingName.js";
 
 /** Why a tournament will not do what it was asked. */
 export type TournamentErrorCode =
@@ -1228,7 +1229,7 @@ export class Tournament extends AggregateRoot {
     refuseATeamPlayerNameTaken(team, player);
     if (
       player.name.equals(found.name) &&
-      String(player.worldRankingName) === String(found.worldRankingName)
+      sameWorldRankingName(player.worldRankingName, found.worldRankingName)
     )
       return;
     this.record(
@@ -2406,7 +2407,14 @@ const samePlayer = (one: TournamentPlayer, other: TournamentPlayer): boolean =>
   one.name.equals(other.name) &&
   one.representing === other.representing &&
   String(one.flag) === String(other.flag) &&
-  String(one.worldRankingName) === String(other.worldRankingName);
+  sameWorldRankingName(one.worldRankingName, other.worldRankingName);
+
+// Compared as names rather than as text, since "undefined" is a name a player
+// can be known by and also what String makes of none.
+const sameWorldRankingName = (
+  one: WorldRankingName | undefined,
+  other: WorldRankingName | undefined,
+): boolean => (one === undefined ? other === undefined : one.equals(other));
 
 const playerEvent = <T extends DomainEvent>(
   Kind: new (
