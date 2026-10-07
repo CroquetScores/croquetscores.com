@@ -14,6 +14,12 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
+- The role API returns 422 rather than 404. That refusal is what the features specify. The route addresses are in the admin script every signed-in reader gets, so a 404 would hide nothing.
+
+- RoleSection duplicates PeopleTab. Sharing one component would change the Managers and Scorers tabs, which this branch doesn't touch. It's worth doing separately; PeopleTab also has the same silent-Add problem as item 5.
+
+- A ninth copy of idInAddress. Combining them means editing eight files outside this branch.
+
 - Withdraw games. For example needed for Pres 8s second round withdrawal
 
 - Tournament finish date can not be greater than current year + 1.

@@ -61,14 +61,15 @@ export const App = (): React.JSX.Element => {
     }
   }, [path]);
 
-  // Each page below is keyed by its address, so that moving from one page to
-  // another of the same kind, as from one competition to the next, draws the
-  // page afresh as loading it did, rather than showing the one left while the
-  // one asked for is fetched.
   // The administrator's pages, under their own section bar. Only an
-  // administrator is sent this page for them (administrator.feature), so
-  // nothing here asks again. A page beneath the accounts that is not there yet
-  // still marks Accounts, since it is one of theirs.
+  // administrator is sent the admin's page at one of their addresses
+  // (administrator.feature), but a reader already in the admin can reach one
+  // in place, without the server being asked. Nothing here asks again: what
+  // these pages show is asked of the API, which refuses anybody who is not an
+  // administrator, and the page says so (accounts.feature); what is drawn
+  // before that is headings, which are no secret, being in the admin's
+  // script for every reader. A page beneath the accounts that is not there
+  // yet still marks Accounts, since it is one of theirs.
   const administrator = /^\/admin\/administrator(\/accounts)?(\/.*)?$/.exec(
     path,
   );
@@ -93,6 +94,10 @@ export const App = (): React.JSX.Element => {
     );
   }
 
+  // Each page below is keyed by its address, so that moving from one page to
+  // another of the same kind, as from one competition to the next, draws the
+  // page afresh as loading it did, rather than showing the one left while the
+  // one asked for is fetched.
   if (/^\/admin\/tournaments\/new\/?$/.test(path)) {
     return <NewTournament key={path} />;
   }

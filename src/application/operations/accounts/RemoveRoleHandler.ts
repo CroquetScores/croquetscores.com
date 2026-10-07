@@ -5,6 +5,7 @@ import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { RemoveRole } from "./RemoveRole.js";
 import {
+  type AccountsByRole,
   RoleOperationRefused,
   administratorAsking,
   roleNamed,
@@ -19,6 +20,7 @@ export class RemoveRoleHandler extends CommandHandler<RemoveRole, void> {
 
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly byRole: AccountsByRole,
   ) {
     super();
   }
@@ -35,6 +37,20 @@ export class RemoveRoleHandler extends CommandHandler<RemoveRole, void> {
         "RemoveRole.Yourself",
         "An administrator cannot take the Administrator role from themselves.",
       );
+    }
+    // The last two administrators taking the role from each other at once
+    // would each be found an administrator before the other had taken it, and
+    // leave the site with none. So the administrators are held first, and
+    // whoever asks is asked again whether they are one: the second to ask
+    // waits, and then finds the role already taken from them.
+    if (role === "administrator") {
+      const administrators = await this.byRole.holdEvery("administrator");
+      if (!administrators.some((id) => id.equals(by))) {
+        throw new RoleOperationRefused(
+          "Account.NotAnAdministrator",
+          "Only an administrator can ask for this.",
+        );
+      }
     }
     // A forgotten account holds no role, and refuses whatever is asked of it,
     // so it is refused as one there is not.

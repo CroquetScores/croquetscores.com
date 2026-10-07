@@ -30,6 +30,13 @@ export class RoleOperationRefused extends Refused<RoleOperationErrorCode> {}
 export interface AccountsByRole {
   /** Every account holding `role`, in no order. */
   holding(role: Role): Promise<readonly AccountId[]>;
+
+  /**
+   * Every account holding `role`, in no order, each held until the
+   * transaction is done: whoever else takes hold of them waits until then,
+   * and finds them as this transaction left them.
+   */
+  holdEvery(role: Role): Promise<readonly AccountId[]>;
 }
 
 /**

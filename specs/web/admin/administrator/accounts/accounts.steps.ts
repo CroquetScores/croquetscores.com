@@ -321,6 +321,22 @@ Then(
   },
 );
 
+// Said in the section rather than beneath its field, since it is about the
+// section as a whole: read by its code, which is the contract.
+Then(
+  "the section {string} says it was refused with {string}",
+  async function (this: SpecWorld, heading: string, code: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await sectionCalled(this, heading)
+          .locator(".role-refused")
+          .getAttribute("data-refused", { timeout: 500 }),
+        code,
+      );
+    });
+  },
+);
+
 Then(
   "nothing is said beneath {string} in {string}",
   async function (this: SpecWorld, label: string, heading: string) {

@@ -282,6 +282,23 @@ Feature: The accounts page, where an administrator gives and takes roles
       When "Cancel" is pressed in the modal dialog
       Then no modal dialog is open
 
+  Rule: A refused Remove is said in its section
+
+    Remove can be refused after the dialog has been answered: the reader's
+    own role taken by another administrator while the page was open, or the
+    account forgotten. The refusal is said in the section, by its code, in
+    place of a list that can no longer be asked for, rather than the list
+    going quietly blank. That a refused Remove takes nothing away is the
+    command's to say (`RemoveRole.feature`).
+
+    Scenario: Removing once the reader's role has been taken says so
+      Given "someone@example.com" has been given the role "World Ranking Officer"
+      And the accounts page is open
+      And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
+      And "admin@example.com" has had the role "Administrator" taken away
+      When "Remove" is pressed in the modal dialog
+      Then the section "World Ranking Officers" says it was refused with "Account.NotAnAdministrator"
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). An account's name is

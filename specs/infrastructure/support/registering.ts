@@ -102,6 +102,7 @@ import { aSiteKey, keepAccounts, readBack } from "./accounts.js";
 import { alterLink } from "./links.js";
 import { queueingOf } from "./emailQueue.js";
 import { unitOfWorkOf } from "./transactions.js";
+import { heldAfter } from "../../support/heldAtOnce.js";
 import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
 import { scenarioLanguages } from "../../web/support/languages.js";
@@ -324,7 +325,15 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleQuery(new AccountProfileHandler(repository));
   validation.register(new AddRoleValidator());
   mediator.handleCommand(new AddRoleHandler(repository, accounts.readModel));
-  mediator.handleCommand(new RemoveRoleHandler(repository));
+  // Held just after it takes hold of the administrators, so that two
+  // administrators taking the role from each other at once both read who holds
+  // it before either writes, where nothing makes the second wait.
+  mediator.handleCommand(
+    new RemoveRoleHandler(
+      repository,
+      heldAfter(world, accounts.byRole, "holdEvery"),
+    ),
+  );
   mediator.handleQuery(
     new AccountsWithRoleHandler(repository, accounts.byRole),
   );

@@ -69,6 +69,31 @@ Feature: Taking a role away from an account
       When the reader signed in to the account for "someone@example.com" takes the role "Administrator" from "admin@example.com"
       Then the account for "admin@example.com" does not hold the role "Administrator"
 
+  Rule: Two administrators taking the role from each other at once leave one
+
+    Refusing an administrator who takes the role from themselves is not
+    enough to keep the site from being left with none: two administrators,
+    the last two, could each take it from the other at the same moment. Each
+    would be asked whether it was an administrator before the other had taken
+    it, and each would go on. So taking the Administrator role waits for any
+    other taking of it to be done, and only then asks whether whoever asks
+    still holds it. The second is refused with `Account.NotAnAdministrator`,
+    as it would be had it asked a moment later.
+
+    Scenario: One of the two is refused
+      Given "someone@example.com" has been given the role "Administrator"
+      And the reader signed in to the account for "admin@example.com" is to take the role "Administrator" from "someone@example.com"
+      And the reader signed in to the account for "someone@example.com" is to take the role "Administrator" from "admin@example.com"
+      When both are asked for at once
+      Then one of them is refused with "Account.NotAnAdministrator"
+
+    Scenario: One administrator is left
+      Given "someone@example.com" has been given the role "Administrator"
+      And the reader signed in to the account for "admin@example.com" is to take the role "Administrator" from "someone@example.com"
+      And the reader signed in to the account for "someone@example.com" is to take the role "Administrator" from "admin@example.com"
+      When both are asked for at once
+      Then 1 of "admin@example.com" and "someone@example.com" holds the role "Administrator"
+
   Rule: Only an account there is can have a role taken from it
 
     Scenario: An account there is not is refused

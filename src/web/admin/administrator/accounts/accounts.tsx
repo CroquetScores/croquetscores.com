@@ -24,6 +24,15 @@ interface Holder {
 // that it is one segment of an address.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
+// The code a refusal was answered with, where it was answered with one.
+const refusalOf = async (response: Response): Promise<string | undefined> => {
+  try {
+    return ((await response.json()) as { error?: string }).error;
+  } catch {
+    return undefined;
+  }
+};
+
 const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Holder[] | undefined>();
   // Counted up to ask again, once the role is given or taken.
@@ -33,6 +42,12 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
   const [emailAddress, setEmailAddress] = useState("");
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   const [removing, setRemoving] = useState<Holder | undefined>();
+  // What the section as a whole was refused, by its code: a Remove, or the
+  // list asked for again after one, once the reader is no longer allowed.
+  const [refusedHere, setRefusedHere] = useState<string | undefined>();
+  // Its own flag rather than `sending`, which a Remove sets too: an Add sent
+  // while a Remove is under way is sent, not dropped without a word.
+  const adding = useRef(false);
   const field = useRef<HTMLInputElement>(null);
   const at = `/api/v1/roles/${role}/accounts`;
   const heading = `role-${role}`;
@@ -40,11 +55,14 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
   useEffect(() => {
     let current = true;
     void fetch(at, { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { accounts: Holder[] }).accounts
-          : undefined,
-      )
+      .then(async (response) => {
+        if (response.ok) {
+          return ((await response.json()) as { accounts: Holder[] }).accounts;
+        }
+        const code = await refusalOf(response);
+        if (current && code !== undefined) setRefusedHere(code);
+        return undefined;
+      })
       .catch(() => undefined)
       .then((accounts) => {
         if (!current) return;
@@ -63,7 +81,9 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
   });
 
   const add = async (): Promise<void> => {
-    if (sending) return;
+    if (adding.current) return;
+    adding.current = true;
+    setRefusedHere(undefined);
     setSending(true);
     try {
       const response = await fetch(at, {
@@ -94,16 +114,20 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
     } catch {
       setRefused([refusal("Unknown")]);
     }
+    adding.current = false;
     setSending(false);
   };
 
   const remove = async (holder: Holder): Promise<void> => {
     setRemoving(undefined);
+    setRefusedHere(undefined);
     setSending(true);
     try {
-      await fetch(`${at}/${idInAddress(holder.id)}/remove`, {
+      const response = await fetch(`${at}/${idInAddress(holder.id)}/remove`, {
         method: "POST",
+        headers: { accept: "application/json" },
       });
+      if (!response.ok) setRefusedHere(await refusalOf(response));
     } catch {
       // A request that never arrived is said by the list asked for again.
     }
@@ -122,6 +146,11 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
         {say(`admin.roles.${role}.heading`)}
       </h2>
       <div className="role-body stack">
+        {refusedHere === undefined ? null : (
+          <p className="role-refused" data-refused={refusedHere}>
+            {refusal(refusedHere).words}
+          </p>
+        )}
         {listed === undefined ? null : listed.length === 0 ? (
           <p className="listed-none">{say(`admin.roles.${role}.none`)}</p>
         ) : (

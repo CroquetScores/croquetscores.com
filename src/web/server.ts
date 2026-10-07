@@ -745,7 +745,7 @@ export const buildApplication = async (
   mediator.handleQuery(new AccountProfileHandler(accounts));
   validation.register(new AddRoleValidator());
   mediator.handleCommand(new AddRoleHandler(accounts, accountsByEmailAddress));
-  mediator.handleCommand(new RemoveRoleHandler(accounts));
+  mediator.handleCommand(new RemoveRoleHandler(accounts, accountsByRole));
   mediator.handleQuery(new AccountsWithRoleHandler(accounts, accountsByRole));
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(

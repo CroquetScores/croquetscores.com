@@ -17,3 +17,9 @@
 .role-body {
   padding: var(--space-3);
 }
+
+/* What the section as a whole was refused, said where its list would be. */
+.role-refused {
+  margin: 0;
+  color: var(--danger);
+}

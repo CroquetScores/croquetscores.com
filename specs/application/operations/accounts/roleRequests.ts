@@ -60,3 +60,21 @@ export const keepingWhatCameOf = async (
       : undefined;
   }
 };
+
+// Asked of the account as its stream reads now, since what matters is what it
+// holds once everything recorded of it is read back.
+export const holds = async (
+  world: SpecWorld,
+  address: string,
+  role: string,
+): Promise<boolean> => {
+  const account = await accountAt(world, address);
+  switch (roleWritten(role)) {
+    case "administrator":
+      return account.isAdministrator;
+    case "world-ranking-officer":
+      return account.isWorldRankingOfficer;
+    default:
+      throw new Error(`There is no role called ${role}.`);
+  }
+};

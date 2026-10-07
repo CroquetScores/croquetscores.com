@@ -5,6 +5,7 @@ import { AddRole } from "../../../../../src/application/operations/accounts/AddR
 import type { SpecWorld } from "../../../../support/world.js";
 import {
   accountAt,
+  holds,
   keepingWhatCameOf,
   momentOf,
   registeringOf,
@@ -34,24 +35,6 @@ When(
     );
   },
 );
-
-// Asked of the account as its stream reads now, since what matters is what it
-// holds once everything recorded of it is read back.
-const holds = async (
-  world: SpecWorld,
-  address: string,
-  role: string,
-): Promise<boolean> => {
-  const account = await accountAt(world, address);
-  switch (roleWritten(role)) {
-    case "administrator":
-      return account.isAdministrator;
-    case "world-ranking-officer":
-      return account.isWorldRankingOfficer;
-    default:
-      throw new Error(`There is no role called ${role}.`);
-  }
-};
 
 Then(
   "the account for {string} holds the role {string}",
