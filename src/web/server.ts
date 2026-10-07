@@ -901,19 +901,23 @@ export const buildApplication = async (
   mediator.handleQuery(
     new ManagerNotesOfTournamentHandler(...both, managerNotesByTournament),
   );
-  mediator.handleQuery(new TournamentsOfAccountHandler(tournamentsByAccount));
   mediator.handleQuery(
-    new TournamentToChangeHandler(tournaments, tournamentsByAddress),
+    new TournamentsOfAccountHandler(tournamentsByAccount, accounts),
   );
   mediator.handleQuery(
-    new TournamentPageHandler(tournaments, tournamentsByAddress),
+    new TournamentToChangeHandler(tournaments, tournamentsByAddress, accounts),
   );
   mediator.handleQuery(
-    new CompetitionPageHandler(tournaments, tournamentsByAddress),
+    new TournamentPageHandler(tournaments, tournamentsByAddress, accounts),
   );
-  mediator.handleQuery(new TeamPageHandler(tournaments, tournamentsByAddress));
   mediator.handleQuery(
-    new TournamentYearsOfAccountHandler(tournamentsByAccount),
+    new CompetitionPageHandler(tournaments, tournamentsByAddress, accounts),
+  );
+  mediator.handleQuery(
+    new TeamPageHandler(tournaments, tournamentsByAddress, accounts),
+  );
+  mediator.handleQuery(
+    new TournamentYearsOfAccountHandler(tournamentsByAccount, accounts),
   );
   mediator.handleQuery(new RecentResultsHandler(tournamentsByWebsite));
   mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));

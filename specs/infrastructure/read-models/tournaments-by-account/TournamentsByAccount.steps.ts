@@ -145,6 +145,27 @@ When(
   },
 );
 
+// Every tournament, as an administrator's list asks for it.
+When(
+  "every tournament on {string} in {int} is looked for",
+  async function (this: SpecWorld, website: string, year: number) {
+    const answer = await this.asARequest(() =>
+      readModelOf(this).everyTournament(Website.from(website), year),
+    );
+    foundByAccount.set(this, answer);
+    scenarioOf(this).found = answer;
+  },
+);
+
+When(
+  "the years of every tournament on {string} are looked for",
+  async function (this: SpecWorld, website: string) {
+    scenarioOf(this).years = await this.asARequest(() =>
+      readModelOf(this).everyYear(Website.from(website)),
+    );
+  },
+);
+
 // What was found -------------------------------------------------------------------------
 
 Then(

@@ -32,7 +32,7 @@ const managedOrScoredBy = async (
 ): Promise<{ readonly by: AccountId; readonly tournament: Tournament }> => {
   const by = await askedBy(accounts, account);
   const tournament = await tournamentFor(tournaments, written, operation);
-  if (!tournament.manages(by) && !tournament.scores(by)) {
+  if (!tournament.mayManage(by) && !tournament.scores(by)) {
     throw new TournamentRefused(
       "Tournament.NotAManagerOrScorer",
       "Only a manager or a scorer of the tournament can ask for this.",

@@ -215,3 +215,12 @@ Feature: A competition's page in the admin
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the page of the competition "Block A" in "Spring Open" is opened
       Then every word in the admin's content is in the test locale
+
+  Rule: An administrator sees a competition as a manager does
+
+    Scenario: An administrator's page opens on the Players tab
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then the tab "Players" is the one being read

@@ -335,3 +335,12 @@ Feature: A tournament is changed in the admin
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
       When the page at "/admin/2026/ac/spring-open/edit" is opened
       Then the address is "/admin/2026/gc/spring-open/edit"
+
+  Rule: An administrator changes any tournament as a manager does
+
+    Scenario: An administrator is given the form
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page to edit "Spring Open" is opened
+      Then "Name" still says "Spring Open"

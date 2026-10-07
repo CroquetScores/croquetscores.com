@@ -22,6 +22,7 @@ import {
   accountOf,
   addressHashOf,
   askedBy,
+  askedByAnAdministrator,
   askerOf,
   at,
   idOf,
@@ -40,6 +41,15 @@ Given(
   "it is asked for by {string}",
   function (this: SpecWorld, account: string) {
     askedBy(this, account);
+  },
+);
+
+// As the account would ask while holding the Administrator role, which the
+// account says of itself (asker.feature): what is asked of is not told how.
+Given(
+  "it is asked for by {string}, who administers the site",
+  function (this: SpecWorld, account: string) {
+    askedByAnAdministrator(this, account);
   },
 );
 

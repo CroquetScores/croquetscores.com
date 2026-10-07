@@ -3,6 +3,7 @@
 // the shape whatever stands those up puts on the world, and the steps ask only
 // this. Application and domain types only, for the reason at the top of
 // world.ts.
+import type { Role } from "../../src/domain/aggregates/accounts/value-objects/Role.js";
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
 import type { SignInWithGoogle } from "../../src/application/operations/accounts/SignInWithGoogle.js";
@@ -140,6 +141,12 @@ export interface Registering {
 
   /** Forgets the account for `address`, as forgetting one will. */
   forget(address: string): Promise<void>;
+
+  /** Gives the account for `address` the role `role`. */
+  giveRole(address: string, role: Role): Promise<void>;
+
+  /** Takes the role `role` from the account for `address`. */
+  takeRole(address: string, role: Role): Promise<void>;
 
   /** An account for `address`, made before the scenario's own request. */
   giveAnAccount(address: string, as: AccountAsGiven): Promise<void>;

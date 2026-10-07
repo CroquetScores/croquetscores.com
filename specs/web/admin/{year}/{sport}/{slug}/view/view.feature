@@ -335,3 +335,31 @@ Feature: A tournament's page in the admin
       And "organiser@example.com" has archived the tournament "Spring Open"
       When the page of "Spring Open" is opened
       Then every word in the admin's content is in the test locale
+
+  Rule: An administrator sees every tournament's page as a manager does
+
+    An account that administers the site can do anything a manager can, to
+    every tournament (`onlyManagers.feature`), so it is offered what a manager
+    is offered, though it is none of the tournament's managers.
+
+    Scenario: An administrator's page opens on the Players tab
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: An administrator is offered the managers' tabs
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Managers" is offered
+
+    Scenario: An account the role was taken from is told it cannot run the tournament
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      And "other@example.com" has had the role "Administrator" taken away
+      When the page of "Spring Open" is opened
+      Then the page is refused with "Tournament.NotAManager"

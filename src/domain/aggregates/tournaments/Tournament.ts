@@ -6,6 +6,7 @@ import { Refused } from "../../common/Refused.js";
 import { Slug } from "../../common/Slug.js";
 import { Website } from "../../common/Website.js";
 import { AccountId } from "../accounts/AccountId.js";
+import { Administrator } from "../accounts/Administrator.js";
 import { CompetitionReference } from "./CompetitionReference.js";
 import { BlockAdded } from "./events/BlockAdded.js";
 import { BlockUpdated } from "./events/BlockUpdated.js";
@@ -489,6 +490,17 @@ export class Tournament extends AggregateRoot {
 
   manages(account: AccountId): boolean {
     return this.#managers.has(account.value);
+  }
+
+  /**
+   * Whether `by` may do what a manager may: one of its managers, or an account
+   * asking as an administrator (Administrator.ts), which may do it to every
+   * tournament (onlyManagers.feature). Kept apart from {@link manages}, which
+   * says who the managers are: an administrator let through is not one, so
+   * is never counted among them, nor as the manager a tournament must keep.
+   */
+  mayManage(by: AccountId): boolean {
+    return this.manages(by) || by instanceof Administrator;
   }
 
   scores(account: AccountId): boolean {
@@ -1807,7 +1819,7 @@ export class Tournament extends AggregateRoot {
   // Asked before anything else, so that somebody who may not ask is told no
   // more than that, whatever they asked for.
   #refuseUnlessManager(by: AccountId): void {
-    if (!this.manages(by)) {
+    if (!this.mayManage(by)) {
       refuse(
         "Tournament.NotAManager",
         "Only a manager can change the tournament.",
