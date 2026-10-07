@@ -6,7 +6,6 @@ import {
   aCompetition,
   competitionKeptFor,
   competitionWritten,
-  imported,
   startWriting,
 } from "../importingTournaments.js";
 
@@ -18,24 +17,6 @@ Given(
       website,
       id,
       document: aCompetition("block", tournament),
-    });
-  },
-);
-
-Given(
-  "the block {string} of {string} on {string} is imported as {string}",
-  async function (
-    this: SpecWorld,
-    id: string,
-    tournament: string,
-    website: string,
-    name: string,
-  ) {
-    await imported(this, {
-      kind: "block",
-      website,
-      id,
-      document: { ...aCompetition("block", tournament), Name: name },
     });
   },
 );

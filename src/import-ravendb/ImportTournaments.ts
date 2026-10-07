@@ -96,9 +96,10 @@ const subtitleOf = (
       );
 
 /**
- * Brings every tournament the old sites did not archive over, found where
- * they found it, and keeps which tournament each became and which were left
- * behind (ImportTournaments.feature).
+ * Brings one of the old sites' tournaments over, found where they found it,
+ * and keeps which tournament it became (ImportTournaments.feature). Which
+ * tournaments are brought over, and what is brought over with each, is
+ * ImportWholeTournaments'.
  *
  * The tournament, its managers and scorers, any forgotten account made for
  * one of them, and the record of it are kept in one transaction, so that none
@@ -120,11 +121,6 @@ export class ImportTournaments implements Importer<OldTournament> {
     document,
   }: ReadDocument<OldTournament>): Promise<void> {
     await this.unitOfWork.inTransaction(async () => {
-      if (document.IsArchived) {
-        await this.database.recordLeftBehind(website, id);
-        return;
-      }
-
       const format = formatOf(document.TournamentType);
       const sport = sportOf(document.SportType);
       const country = countryOf(document.TimeZoneId);

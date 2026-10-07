@@ -5,6 +5,8 @@ Feature: Importing the players of the old sites' tournaments
   which names the tournament it belongs to. Each player in it is added to the
   tournament that document became (`ImportTournaments.feature`), in the order
   the document lists them, so the tournament lists them as the old site did.
+  They are brought over with the tournament, before its competitions
+  (`ImportWholeTournaments.feature`).
 
   The document is brought over a player at a time. A player the site refuses
   is kept as an error against the document, naming the player, and the
@@ -206,34 +208,6 @@ Feature: Importing the players of the old sites' tournaments
       And player 1 is called ""
       When the players are imported
       Then player 1 of "tournaments/12" on "croquetscores.com" is not kept as any player
-
-  Rule: The players of an archived tournament are left behind with it
-
-    An archived tournament is not brought over (`ImportTournaments.feature`),
-    and its players have nowhere to go. They are left behind without an error,
-    since nothing went wrong.
-
-    Scenario: Players of an archived tournament are not refused
-      Given a tournament "tournaments/14" on "croquetscores.com" is left behind as archived
-      And the players "tournamentplayers/43" of "tournaments/14" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      When the players are imported
-      Then no error is kept for "croquetscores.com/tournamentplayers/43"
-
-    Scenario: Players of an archived tournament are not kept as any player
-      Given a tournament "tournaments/14" on "croquetscores.com" is left behind as archived
-      And the players "tournamentplayers/43" of "tournaments/14" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      When the players are imported
-      Then player 1 of "tournaments/14" on "croquetscores.com" is not kept as any player
-
-  Rule: The players of a tournament that was not imported are refused
-
-    Scenario: Players of a tournament not imported are refused
-      Given the players "tournamentplayers/41" of "tournaments/99" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      When the players are imported
-      Then importing the players is refused with "ImportTournamentPlayers.NoTournament"
 
   Rule: The players of a tournament played by teams are left for its team matches
 

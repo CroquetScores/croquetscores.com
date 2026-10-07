@@ -10,7 +10,6 @@ import {
   competitionPlayerWritten,
   competitionWritten,
   gamesInUse,
-  imported,
   startWriting,
   tournamentKeptFor,
 } from "../importingTournaments.js";
@@ -25,28 +24,6 @@ Given(
       website,
       id,
       document: aCompetition("team match", tournament),
-    });
-  },
-);
-
-Given(
-  "the team match {string} of {string} on {string} is imported between {string} and {string}",
-  async function (
-    this: SpecWorld,
-    id: string,
-    tournament: string,
-    website: string,
-    first: string,
-    second: string,
-  ) {
-    await imported(this, {
-      kind: "team match",
-      website,
-      id,
-      document: {
-        ...aCompetition("team match", tournament),
-        Name: `${first} vs ${second}`,
-      },
     });
   },
 );

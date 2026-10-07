@@ -141,13 +141,6 @@ Then(
   },
 );
 
-Then(
-  "{string} on {string} is kept as left behind",
-  async function (this: SpecWorld, id: string, website: string) {
-    assert.equal(await importDatabaseOf(this).isLeftBehind(website, id), true);
-  },
-);
-
 // Each a fact about the tournament, read from it by `reading` and written as
 // the feature writes it.
 const factOf = (

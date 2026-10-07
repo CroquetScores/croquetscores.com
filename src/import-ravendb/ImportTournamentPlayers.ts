@@ -5,7 +5,7 @@ import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js"
 import { Flags } from "../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { ImportRefused, describedFailure } from "./ImportRefused.js";
+import { describedFailure } from "./ImportRefused.js";
 import { nameToImport, numberedApart } from "./names.js";
 import { oldFlagOf } from "./oldSites.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
@@ -27,27 +27,23 @@ export const flagOf = (representing: string | null): string | undefined => {
 
 /**
  * Loads the tournament the tournament document `documentId` on `website`
- * became, or answers nothing where it was left behind as archived, or is
- * refused as `refusedAs` where it was never brought over.
+ * became. Whatever names a tournament is brought over only once the
+ * tournament is (ImportWholeTournaments.feature), so one that was not is a
+ * fault in the import rather than in the document.
  */
 export const tournamentBecome = async (
   database: ImportDatabase,
   tournaments: AggregateRepository<Tournament, TournamentId>,
   website: string,
   documentId: string,
-  refusedAs: string,
-): Promise<Tournament | undefined> => {
-  if (await database.isLeftBehind(website, documentId)) return undefined;
+): Promise<Tournament> => {
   const written = await database.findTournamentOf(website, documentId);
   const tournament =
     written === undefined
       ? undefined
       : await tournaments.load(TournamentId.from(written));
   if (tournament === undefined) {
-    throw new ImportRefused(
-      refusedAs,
-      `The tournament ${documentId} was not brought over.`,
-    );
+    throw new Error(`The tournament ${documentId} was not brought over.`);
   }
   return tournament;
 };
@@ -83,9 +79,8 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
         this.tournaments,
         website,
         tournamentDocument,
-        "ImportTournamentPlayers.NoTournament",
       );
-      if (tournament === undefined || tournament.format.isTeamFormat) return;
+      if (tournament.format.isTeamFormat) return;
 
       // Done as the tournament's first manager, who created it, when it was
       // created.

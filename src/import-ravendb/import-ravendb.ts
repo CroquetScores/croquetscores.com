@@ -1,8 +1,9 @@
 // "npm run import:ravendb". Empties the site's database, then brings the
-// old sites over into it from RavenDB: their users, their tournaments and the
-// players of each, their blocks, knockouts, Swisses and team matches, their
-// commentaries, and last the order each tournament listed its competitions in.
-// Once every site is over, the site's roles are given to whoever holds them.
+// old sites over into it from RavenDB: their users, then each tournament with
+// its players, its blocks, knockouts, Swisses and team matches, and its
+// commentaries, and last whatever names a tournament that was not there, as
+// an error. Once every site is over, the site's roles are given to whoever
+// holds them.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -53,9 +54,10 @@ import { ImportTeamMatches } from "./ImportTeamMatches.js";
 import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
+import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
-import { OrderCompetitions } from "./OrderCompetitions.js";
+import { RefuseLeftOvers } from "./RefuseLeftOvers.js";
 import {
   type Importer,
   minutesAndSeconds,
@@ -156,18 +158,31 @@ try {
     database,
   );
 
-  // In the order each needs what the one before brought over: a tournament
-  // its users, its players, competitions and commentaries the tournament, and
-  // the order of its competitions every competition.
-  const importers: readonly Importer<object>[] = [
-    new ImportUsers(unitOfWork, accounts, emailAddresses, passwords, database),
-    new ImportTournaments(unitOfWork, tournaments, importedAccounts, database),
-    new ImportTournamentPlayers(unitOfWork, tournaments, database),
-    new ImportBlocks(importing),
-    new ImportKnockouts(importing),
-    new ImportSwisses(importing),
-    new ImportTeamMatches(importing),
-    new ImportCommentaries(
+  const users = new ImportUsers(
+    unitOfWork,
+    accounts,
+    emailAddresses,
+    passwords,
+    database,
+  );
+  // What brings over a tournament and each kind of document that names one.
+  // The competitions are in the order one its tournament does not list is
+  // added in, as they were when each kind was brought over by itself.
+  const parts = {
+    tournament: new ImportTournaments(
+      unitOfWork,
+      tournaments,
+      importedAccounts,
+      database,
+    ),
+    players: new ImportTournamentPlayers(unitOfWork, tournaments, database),
+    competitions: [
+      new ImportBlocks(importing),
+      new ImportKnockouts(importing),
+      new ImportSwisses(importing),
+      new ImportTeamMatches(importing),
+    ],
+    commentaries: new ImportCommentaries(
       unitOfWork,
       tournaments,
       commentaries,
@@ -175,11 +190,22 @@ try {
       database,
       commentariesByTournament,
     ),
-    new OrderCompetitions(unitOfWork, tournaments, database),
-  ];
+  };
+  const leftOvers = [
+    parts.players,
+    ...parts.competitions,
+    parts.commentaries,
+  ].map(({ collection }) => new RefuseLeftOvers(collection, database));
 
   for (const website of config.ravenDbDatabases) {
     const documents = new RavenDbDocuments(config.ravenDbUrl, website);
+    // Users before the tournaments that name them, and what no tournament
+    // took once every tournament has taken what it would.
+    const importers: readonly Importer<object>[] = [
+      users,
+      new ImportWholeTournaments(documents, parts, database),
+      ...leftOvers,
+    ];
     try {
       for (const importer of importers) {
         console.log(`${website} ${importer.collection}`);

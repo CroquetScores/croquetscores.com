@@ -94,10 +94,12 @@ export class ImportDatabase implements ImportErrors {
           primary key (website, document_id)
       )
     `);
-    // A tournament archived on the old sites, left behind, so that its players
-    // and its competitions are left behind with it rather than each refused.
+    // Every tournament document read, whatever became of it, so that what is
+    // looked for last of all can tell a document whose tournament took it,
+    // or left it behind, or was refused, from one whose tournament was never
+    // there to take it.
     await this.#pool.query(`
-      create table left_behind_tournaments (
+      create table tournaments_read (
           website     text not null,
           document_id text not null,
           primary key (website, document_id)
@@ -234,19 +236,25 @@ export class ImportDatabase implements ImportErrors {
     return rows[0]?.tournament_id;
   }
 
-  /** Keeps that the tournament `documentId` on `website` was left behind. */
-  async recordLeftBehind(website: string, documentId: string): Promise<void> {
+  /** Keeps that the tournament `documentId` on `website` was read. */
+  async recordTournamentRead(
+    website: string,
+    documentId: string,
+  ): Promise<void> {
     await this.#queryable().query(
-      `insert into left_behind_tournaments (website, document_id)
+      `insert into tournaments_read (website, document_id)
        values ($1, $2)`,
       [website, documentId.toLowerCase()],
     );
   }
 
-  /** Whether the tournament `documentId` on `website` was left behind. */
-  async isLeftBehind(website: string, documentId: string): Promise<boolean> {
+  /** Whether the tournament `documentId` on `website` was read. */
+  async wasTournamentRead(
+    website: string,
+    documentId: string,
+  ): Promise<boolean> {
     const { rows } = await this.#queryable().query(
-      `select 1 from left_behind_tournaments
+      `select 1 from tournaments_read
        where website = $1 and document_id = $2`,
       [website, documentId.toLowerCase()],
     );

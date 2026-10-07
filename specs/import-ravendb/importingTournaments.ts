@@ -1,7 +1,8 @@
 // What the features importing the old sites' tournaments, players and
 // competitions share: the importers over the scenario's own database, the old
-// document a scenario is writing, built a field at a time, and the steps more
-// than one of the features is written in. Imported by their step definitions
+// document a scenario is writing, built a field at a time, the old site every
+// document written is kept in, and the steps more than one of the features is
+// written in. Imported by their step definitions
 // rather than found by Cucumber, so that each step is defined once, whichever
 // feature is run.
 import { Given, Then, When } from "@cucumber/cucumber";
@@ -31,10 +32,16 @@ import { ImportSwisses } from "../../src/import-ravendb/ImportSwisses.js";
 import { ImportTeamMatches } from "../../src/import-ravendb/ImportTeamMatches.js";
 import { ImportTournamentPlayers } from "../../src/import-ravendb/ImportTournamentPlayers.js";
 import { ImportTournaments } from "../../src/import-ravendb/ImportTournaments.js";
-import { OrderCompetitions } from "../../src/import-ravendb/OrderCompetitions.js";
+import {
+  ImportWholeTournaments,
+  type TournamentDocuments,
+} from "../../src/import-ravendb/ImportWholeTournaments.js";
 import type { CompetitionPlayer as OldCompetitionPlayer } from "../../src/import-ravendb/ravendb-models/Competition.js";
 import type { Tournament as OldTournament } from "../../src/import-ravendb/ravendb-models/Tournament.js";
-import type { Importer } from "../../src/import-ravendb/runImporter.js";
+import type {
+  DocumentSource,
+  Importer,
+} from "../../src/import-ravendb/runImporter.js";
 import { TournamentsByAccount } from "../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByAddress } from "../../src/infrastructure/read-models/TournamentsByAddress.js";
 import { accountsOf } from "../infrastructure/support/accounts.js";
@@ -135,7 +142,62 @@ export type Writing =
       readonly document: WrittenCommentary;
     };
 
+/**
+ * One old site's documents as a scenario wrote them, a list to each
+ * collection, read as RavenDB is read.
+ */
+export class WrittenSite implements DocumentSource, TournamentDocuments {
+  readonly #collections = new Map<string, { id: string; document: object }[]>();
+
+  constructor(readonly website: string) {}
+
+  add(collection: string, id: string, document: object): void {
+    const documents = this.#collections.get(collection) ?? [];
+    documents.push({ id, document });
+    this.#collections.set(collection, documents);
+  }
+
+  /** The document `id`, of whichever collection it is in. */
+  find(id: string): object | undefined {
+    for (const documents of this.#collections.values()) {
+      const found = documents.find((each) => each.id === id);
+      if (found !== undefined) return found.document;
+    }
+    return undefined;
+  }
+
+  page<TDocument extends object>(
+    collection: string,
+    skip: number,
+    take: number,
+  ): Promise<readonly { readonly id: string; readonly document: TDocument }[]> {
+    return Promise.resolve(
+      (this.#collections.get(collection) ?? []).slice(skip, skip + take) as {
+        id: string;
+        document: TDocument;
+      }[],
+    );
+  }
+
+  // In any case, as RavenDB compares them.
+  naming<TDocument extends object>(
+    collection: string,
+    tournamentDocumentId: string,
+  ): Promise<readonly { readonly id: string; readonly document: TDocument }[]> {
+    return Promise.resolve(
+      (this.#collections.get(collection) ?? []).filter(
+        ({ document }) =>
+          (
+            document as { Tournament?: { Id: string } }
+          ).Tournament?.Id.toLowerCase() === tournamentDocumentId.toLowerCase(),
+      ) as { id: string; document: TDocument }[],
+    );
+  }
+}
+
 interface Importers {
+  /** Brings over a tournament on `website` with what names it there. */
+  readonly whole: (website: string) => ImportWholeTournaments;
   readonly tournaments: ImportTournaments;
   readonly players: ImportTournamentPlayers;
   readonly blocks: ImportBlocks;
@@ -143,7 +205,6 @@ interface Importers {
   readonly swisses: ImportSwisses;
   readonly teamMatches: ImportTeamMatches;
   readonly commentaries: ImportCommentaries;
-  readonly order: OrderCompetitions;
 }
 
 interface Importing {
@@ -154,11 +215,11 @@ interface Importing {
   readonly commentariesByTournament: CommentariesByTournament;
   readonly importers: Importers;
   writing?: Writing;
+  /** The tournament written last, which "the tournament" means. */
+  tournament?: Writing & { readonly kind: "tournament" };
   refused?: unknown;
-  // The tournament a scenario's competitions are to be put in order in, and
-  // the competitions each tournament lists, by its website and document.
-  ordering?: { readonly website: string; readonly id: string };
-  readonly lists: Map<string, string[]>;
+  /** Every document written, by its website. */
+  readonly sites: Map<string, WrittenSite>;
 }
 
 const importings = new WeakMap<SpecWorld, Importing>();
@@ -207,41 +268,78 @@ export const importingOf = (world: SpecWorld): Importing => {
     accounts.hasher,
     database,
   );
+  const players = new ImportTournamentPlayers(
+    unitOfWork,
+    tournaments,
+    database,
+  );
+  const blocks = new ImportBlocks(importing);
+  const knockouts = new ImportKnockouts(importing);
+  const swisses = new ImportSwisses(importing);
+  const teamMatches = new ImportTeamMatches(importing);
+  const commentaryImporter = new ImportCommentaries(
+    unitOfWork,
+    tournaments,
+    commentaries,
+    importedAccounts,
+    database,
+    commentariesByTournament,
+  );
+  const tournamentImporter = new ImportTournaments(
+    unitOfWork,
+    tournaments,
+    importedAccounts,
+    database,
+  );
+  const sites = new Map<string, WrittenSite>();
   const made: Importing = {
     tournaments,
     competitions,
     commentaries,
     commentariesByTournament,
     importers: {
-      tournaments: new ImportTournaments(
-        unitOfWork,
-        tournaments,
-        importedAccounts,
-        database,
-      ),
-      players: new ImportTournamentPlayers(unitOfWork, tournaments, database),
-      blocks: new ImportBlocks(importing),
-      knockouts: new ImportKnockouts(importing),
-      swisses: new ImportSwisses(importing),
-      teamMatches: new ImportTeamMatches(importing),
-      commentaries: new ImportCommentaries(
-        unitOfWork,
-        tournaments,
-        commentaries,
-        importedAccounts,
-        database,
-        commentariesByTournament,
-      ),
-      order: new OrderCompetitions(unitOfWork, tournaments, database),
+      whole: (website) =>
+        new ImportWholeTournaments(
+          siteOf(sites, website),
+          {
+            tournament: tournamentImporter,
+            players,
+            competitions: [blocks, knockouts, swisses, teamMatches],
+            commentaries: commentaryImporter,
+          },
+          database,
+        ),
+      tournaments: tournamentImporter,
+      players,
+      blocks,
+      knockouts,
+      swisses,
+      teamMatches,
+      commentaries: commentaryImporter,
     },
-    lists: new Map(),
+    sites,
   };
   importings.set(world, made);
   return made;
 };
 
-const keyOf = (website: string, id: string): string =>
-  `${website}/${id.toLowerCase()}`;
+const siteOf = (
+  sites: Map<string, WrittenSite>,
+  website: string,
+): WrittenSite => {
+  const site = sites.get(website) ?? new WrittenSite(website);
+  sites.set(website, site);
+  return site;
+};
+
+/** The old site `website`, as the scenario has written it. */
+export const writtenSiteOf = (world: SpecWorld, website: string): WrittenSite =>
+  siteOf(importingOf(world).sites, website);
+
+/** Every old site the scenario has written a document on. */
+export const writtenSites = (world: SpecWorld): readonly WrittenSite[] => [
+  ...importingOf(world).sites.values(),
+];
 
 // The documents, as each is written to begin with -------------------------------
 
@@ -361,16 +459,23 @@ export const startWriting = (world: SpecWorld, writing: Writing): void => {
   const state = importingOf(world);
   state.writing = writing;
   state.refused = undefined;
+  if (writing.kind === "tournament") state.tournament = writing;
+  siteOf(state.sites, writing.website).add(
+    writing.kind === "tournament"
+      ? "Tournaments"
+      : importerFor(state.importers, writing.kind).collection,
+    writing.id,
+    writing.document,
+  );
 };
 
 // Bringing a document over -------------------------------------------------------
 
 const importerFor = (
   importers: Importers,
-  kind: Writing["kind"],
+  kind: Exclude<Writing["kind"], "tournament">,
 ): Importer<object> =>
   ({
-    tournament: importers.tournaments,
     players: importers.players,
     block: importers.blocks,
     knockout: importers.knockouts,
@@ -379,25 +484,62 @@ const importerFor = (
     commentary: importers.commentaries,
   })[kind];
 
-/**
- * Brings the document being written over, keeping whatever it is refused with
- * as the scenario's to judge rather than throwing it.
- */
-export const importWritten = async (world: SpecWorld): Promise<void> => {
+// Brings `writing` over, keeping whatever it is refused with as the
+// scenario's to judge rather than throwing it. A tournament is brought over
+// whole, with whatever names it that has been written by then.
+const importWriting = async (
+  world: SpecWorld,
+  writing: Writing,
+): Promise<void> => {
   const state = importingOf(world);
-  const writing = writingOf(world);
   state.refused = undefined;
-  const document =
-    writing.kind === "tournament" ? asKept(writing.document) : writing.document;
   try {
-    await importerFor(state.importers, writing.kind).importDocument({
-      website: writing.website,
-      id: writing.id,
-      document,
-    });
+    if (writing.kind === "tournament") {
+      await state.importers.whole(writing.website).importDocument({
+        website: writing.website,
+        id: writing.id,
+        document: asKept(writing.document),
+      });
+    } else {
+      await importerFor(state.importers, writing.kind).importDocument({
+        website: writing.website,
+        id: writing.id,
+        document: writing.document,
+      });
+    }
   } catch (failure) {
     state.refused = failure;
   }
+};
+
+/** Brings the document being written over. */
+export const importWritten = async (world: SpecWorld): Promise<void> => {
+  await importWriting(world, writingOf(world));
+};
+
+/** Brings the tournament written last over, whole. */
+export const importTournamentWritten = async (
+  world: SpecWorld,
+): Promise<void> => {
+  const { tournament } = importingOf(world);
+  assert.ok(tournament !== undefined, "No tournament has been written.");
+  await importWriting(world, tournament);
+};
+
+/** Brings the tournament `id` on `website` over, whole, as it was written. */
+export const importTournamentCalled = async (
+  world: SpecWorld,
+  id: string,
+  website: string,
+): Promise<void> => {
+  const document = writtenSiteOf(world, website).find(id);
+  assert.ok(document !== undefined, `No tournament ${id} has been written.`);
+  await importWriting(world, {
+    kind: "tournament",
+    website,
+    id,
+    document: document as WrittenTournament,
+  });
 };
 
 /** Brings `writing` over as a scenario's setting, which is refused with nothing. */
@@ -551,7 +693,6 @@ Given("the blocks are imported", standUp);
 Given("the knockouts are imported", standUp);
 Given("the Swisses are imported", standUp);
 Given("the team matches are imported", standUp);
-Given("the competitions are put in order", standUp);
 Given("the commentaries are imported", standUp);
 
 // Scenes set by bringing documents over -----------------------------------------
@@ -568,7 +709,6 @@ const tournamentImported = async (
     id,
     document: { ...aTournament(website, id), ...fields },
   });
-  importingOf(world).ordering = { website, id };
 };
 
 Given(
@@ -582,20 +722,6 @@ Given(
   "a tournament {string} on {string} of the type {string} is imported",
   async function (this: SpecWorld, id: string, website: string, type: string) {
     await tournamentImported(this, id, website, { TournamentType: type });
-  },
-);
-
-Given(
-  "a tournament {string} on {string} is left behind as archived",
-  async function (this: SpecWorld, id: string, website: string) {
-    await tournamentImported(this, id, website, { IsArchived: true });
-  },
-);
-
-Given(
-  "a tournament {string} on {string} that was not imported",
-  function (this: SpecWorld, id: string, website: string) {
-    importingOf(this).ordering = { website, id };
   },
 );
 
@@ -758,7 +884,9 @@ Given(
 const importIt = async function (this: SpecWorld): Promise<void> {
   await importWritten(this);
 };
-When("the tournament is imported", importIt);
+When("the tournament is imported", async function (this: SpecWorld) {
+  await importTournamentWritten(this);
+});
 When("the players are imported", importIt);
 When("the competition is imported", importIt);
 When("the team match is imported", importIt);
@@ -871,37 +999,3 @@ Then(
     );
   },
 );
-
-/** The lists of the tournament `id` on `website`, for putting its competitions in order. */
-export const listOf = (
-  world: SpecWorld,
-  website: string,
-  id: string,
-): string[] => {
-  const { lists } = importingOf(world);
-  const key = keyOf(website, id);
-  const found = lists.get(key) ?? [];
-  lists.set(key, found);
-  return found;
-};
-
-/** The old document of the tournament being put in order, as the old sites kept it. */
-export const orderedDocument = (
-  world: SpecWorld,
-): {
-  readonly website: string;
-  readonly id: string;
-  readonly document: OldTournament;
-} => {
-  const { ordering } = importingOf(world);
-  assert.ok(ordering !== undefined, "No tournament is being put in order.");
-  return {
-    ...ordering,
-    document: asKept({
-      ...aTournament(ordering.website, ordering.id),
-      Competitions: listOf(world, ordering.website, ordering.id).map((Id) => ({
-        Id,
-      })),
-    }),
-  };
-};

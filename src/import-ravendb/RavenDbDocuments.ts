@@ -1,5 +1,6 @@
 import { DocumentStore } from "ravendb";
 
+import type { TournamentDocuments } from "./ImportWholeTournaments.js";
 import type { DocumentSource } from "./runImporter.js";
 
 /**
@@ -15,9 +16,10 @@ import type { DocumentSource } from "./runImporter.js";
  * went round in circles.
  *
  * Specified by nothing, because nothing here can stand up a RavenDB to hold it
- * to a scenario. What it does with a page is `runImporter.feature`'s.
+ * to a scenario. What it does with a page is `runImporter.feature`'s, and
+ * with what names a tournament `ImportWholeTournaments.feature`'s.
  */
-export class RavenDbDocuments implements DocumentSource {
+export class RavenDbDocuments implements DocumentSource, TournamentDocuments {
   readonly #store: DocumentStore;
 
   constructor(
@@ -40,6 +42,29 @@ export class RavenDbDocuments implements DocumentSource {
       .rawQuery<TDocument>(
         `from ${collection} limit ${String(skip)}, ${String(take)}`,
       )
+      .all();
+    return documents.map((document) => ({
+      id: session.advanced.getMetadataFor(document)["@id"] as string,
+      document,
+    }));
+  }
+
+  async naming<TDocument extends object>(
+    collection: string,
+    tournamentDocumentId: string,
+  ): Promise<readonly { readonly id: string; readonly document: TDocument }[]> {
+    const session = this.#store.openSession();
+    // The key is written into the query, as a page is, and quoted, since it
+    // is the old sites' rather than the import's own. RavenDB compares it in
+    // any case, as the old sites wrote a key in more than one.
+    //
+    // Waiting for the index, because the first time a collection is asked
+    // for what names a tournament RavenDB makes an index to answer it, and
+    // answers from it before it has read the whole collection.
+    const quoted = `'${tournamentDocumentId.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`;
+    const documents = await session.advanced
+      .rawQuery<TDocument>(`from ${collection} where Tournament.Id = ${quoted}`)
+      .waitForNonStaleResults()
       .all();
     return documents.map((document) => ({
       id: session.advanced.getMetadataFor(document)["@id"] as string,
