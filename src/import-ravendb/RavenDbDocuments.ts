@@ -4,6 +4,15 @@ import type { TournamentDocuments } from "./ImportWholeTournaments.js";
 import type { DocumentSource } from "./runImporter.js";
 
 /**
+ * How long asking what names a tournament waits for RavenDB's index. The
+ * client's own is 15 seconds, which is not long enough for the first asking of
+ * a large collection, such as every block with every game in it, while RavenDB
+ * makes the index from the whole of it. Every tournament asked about in that
+ * time would be refused, and what names each of them refused after it.
+ */
+const WAIT_FOR_INDEX_MILLISECONDS = 10 * 60 * 1000;
+
+/**
  * One of the old sites' RavenDB 4.2 databases, read a page at a time.
  *
  * A session a page, because a RavenDB session refuses more than 30 requests
@@ -64,7 +73,7 @@ export class RavenDbDocuments implements DocumentSource, TournamentDocuments {
     const quoted = `'${tournamentDocumentId.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`;
     const documents = await session.advanced
       .rawQuery<TDocument>(`from ${collection} where Tournament.Id = ${quoted}`)
-      .waitForNonStaleResults()
+      .waitForNonStaleResults(WAIT_FOR_INDEX_MILLISECONDS)
       .all();
     return documents.map((document) => ({
       id: session.advanced.getMetadataFor(document)["@id"] as string,
