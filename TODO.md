@@ -18,7 +18,7 @@ Four kinds of thing, kept apart.
 
 - RoleSection duplicates PeopleTab. Sharing one component would change the Managers and Scorers tabs, which this branch doesn't touch. It's worth doing separately; PeopleTab also has the same silent-Add problem as item 5.
 
-- A ninth copy of idInAddress. Combining them means editing eight files outside this branch.
+- A ninth copy of idInAddress, and another of reading a refusal's code out of an answer, as `refusalOf` does on the accounts page. One module under `src/web/admin` could export both. Combining them means editing eight files outside this branch.
 
 - Withdraw games. For example needed for Pres 8s second round withdrawal
 

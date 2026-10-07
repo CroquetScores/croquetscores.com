@@ -39,8 +39,11 @@ const noLongerWorks = {
  *
  * The last administrator is not forgotten, since forgetting takes every role
  * an account holds and only an administrator can make another
- * (ForgetAccount.feature). Who they are is read from `administrators` rather
- * than from the account, so that forgetting can ask it of the rows it holds.
+ * (ForgetAccount.feature). Whether the account is one is asked of the account
+ * itself, and whether there is another of `administrators`, which forgetting
+ * holds: a read model out of step with the account then refuses an
+ * administrator it should not, which can be put right, rather than forgetting
+ * the last, which cannot.
  */
 export const worthOfForgettingLink = async (
   links: Links,
@@ -59,7 +62,10 @@ export const worthOfForgettingLink = async (
   const account = await accounts.load(carried.account);
   if (account === undefined) return noLongerWorks;
   if (account.forgotten) return noLongerWorks;
-  if (administrators.length === 1 && administrators[0]?.equals(account.id)) {
+  if (
+    account.isAdministrator &&
+    administrators.every((administrator) => administrator.equals(account.id))
+  ) {
     return { worth: "ForgetAccount.LastAdministrator" };
   }
   return { worth: "Link.Works", account };

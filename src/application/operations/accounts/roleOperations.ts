@@ -50,14 +50,20 @@ export const administratorAsking = async (
   written: string,
 ): Promise<AccountId> => {
   const account = await accounts.load(AccountId.from(written));
-  if (account?.isAdministrator !== true) {
-    throw new RoleOperationRefused(
-      "Account.NotAnAdministrator",
-      "Only an administrator can ask for this.",
-    );
-  }
+  if (account?.isAdministrator !== true) throw notAnAdministrator();
   return account.id;
 };
+
+/**
+ * The refusal of whoever asks without holding the Administrator role, kept in
+ * one place since it is said both before the administrators are held and,
+ * where taking the role is asked, again once they are.
+ */
+export const notAnAdministrator = (): RoleOperationRefused =>
+  new RoleOperationRefused(
+    "Account.NotAnAdministrator",
+    "Only an administrator can ask for this.",
+  );
 
 /**
  * The role `written` names, as a role is kept, or refused as `operation`'s

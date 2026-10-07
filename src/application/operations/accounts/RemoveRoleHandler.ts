@@ -8,6 +8,7 @@ import {
   type AccountsByRole,
   RoleOperationRefused,
   administratorAsking,
+  notAnAdministrator,
   roleNamed,
 } from "./roleOperations.js";
 
@@ -46,10 +47,7 @@ export class RemoveRoleHandler extends CommandHandler<RemoveRole, void> {
     if (role === "administrator") {
       const administrators = await this.byRole.holdEvery("administrator");
       if (!administrators.some((id) => id.equals(by))) {
-        throw new RoleOperationRefused(
-          "Account.NotAnAdministrator",
-          "Only an administrator can ask for this.",
-        );
+        throw notAnAdministrator();
       }
     }
     // A forgotten account holds no role, and refuses whatever is asked of it,
