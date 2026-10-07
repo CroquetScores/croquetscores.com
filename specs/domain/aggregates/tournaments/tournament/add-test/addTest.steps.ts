@@ -57,6 +57,12 @@ Given(
   },
 );
 
+// For a test added after one a scenario put in a group, which keeps its group
+// for the next until it is told otherwise.
+Given("the test is to be in no group", function (this: SpecWorld) {
+  teamScenarioOf(this).test.group = null;
+});
+
 Given(
   "the test is to be in a group of {int} characters",
   function (this: SpecWorld, length: number) {

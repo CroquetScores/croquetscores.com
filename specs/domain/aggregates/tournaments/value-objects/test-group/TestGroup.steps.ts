@@ -55,3 +55,16 @@ Then(
 Then("there is no test group", function (this: SpecWorld) {
   assert.equal(madeOf(this), undefined);
 });
+
+Then(
+  "the test group's slug is {string}",
+  function (this: SpecWorld, slug: string) {
+    assert.equal(String(madeOf(this)?.slug), slug);
+  },
+);
+
+Then("the test group has no slug", function (this: SpecWorld) {
+  const group = madeOf(this);
+  assert.ok(group !== undefined, "No group was made.");
+  assert.equal(group.slug, undefined);
+});

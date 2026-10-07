@@ -28,6 +28,11 @@ Feature: A tournament played by teams has a summary of how its teams stand
   the window, so that the page itself is no wider than the window. Its
   sections are the tournament's, with Summary marked.
 
+  A tournament with a test in a group has no summary either, as the old
+  site's had none: each group's page shows how the teams of that group stand
+  (`group.feature`), and the tournament offers no Summary
+  (`tournament.feature`).
+
   A Standard tournament has no summary, and its address followed by
   "summary" is not a page; nor is an archived tournament's, or any the website
   never had. An address the tournament has moved on from leads to the
@@ -186,6 +191,12 @@ Feature: A tournament played by teams has a summary of how its teams stand
       Given the tournament is to be played in the format "Standard"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/summary" is opened
+      Then the page says the words for "errors.notFound"
+
+    Scenario: A tournament with a test in a group has no summary
+      Given the test is to be in the group "Block A"
+      And "organiser@example.com" has added the test between "England" and "Australia" to "Spring Tests"
+      When the page at "/2026/ac/spring-tests/summary" is opened
       Then the page says the words for "errors.notFound"
 
     Scenario: An archived tournament's summary is not found

@@ -14,6 +14,13 @@ Feature: The group a test is played in
   group, as what a player represents is (`TournamentPlayer.feature`), since
   a field left blank says the test is in none.
 
+  The tests in a group have a page of their own (`group.feature`), found by
+  the group's slug, made from its name as a competition's is (`Slug.feature`),
+  so that "Block A" is found at "block-a". A group whose name has no letter or
+  digit in it, as "?", makes no slug, and so has no page to be found at; it
+  is a group all the same, since the name is what the manager typed, and is
+  no group only to whatever needs it to be found.
+
   Rule: A group is between 1 and 254 characters
 
     Scenario Outline: A group of an allowed length is accepted
@@ -42,3 +49,13 @@ Feature: The group a test is played in
     Scenario: An empty group is no group
       When the test group "" is made
       Then there is no test group
+
+  Rule: A group's slug is made from its name
+
+    Scenario: A group's slug is made from its name
+      When the test group "Tier 2 Championship" is made
+      Then the test group's slug is "tier-2-championship"
+
+    Scenario: A group whose name has no letter or digit has no slug
+      When the test group "?" is made
+      Then the test group has no slug

@@ -25,6 +25,12 @@ export interface CompetitionOfTournament {
    */
   readonly teams?:
     { readonly first: string; readonly second: string } | undefined;
+  /**
+   * The group a test is in, by its name as it was typed and the slug its page
+   * is found at; nothing for a test in none, for one whose group makes no
+   * slug, which has no page to be found at, and for any other competition.
+   */
+  readonly group?: { readonly name: string; readonly slug: string } | undefined;
 }
 
 /**
@@ -78,12 +84,16 @@ export const competitionsInUse = (
         tournament.teams
           .find((each) => each.id.equals(team))
           ?.shortName.toString() ?? "";
+      const slug = shape.group?.slug;
       return {
         ...competition,
         teams: {
           first: shortNameOf(shape.firstTeam),
           second: shortNameOf(shape.secondTeam),
         },
+        ...(shape.group === undefined || slug === undefined
+          ? {}
+          : { group: { name: shape.group.toString(), slug: slug.toString() } }),
       };
     });
 };

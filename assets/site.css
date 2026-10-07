@@ -2004,8 +2004,10 @@ html:has(dialog:modal) {
 /* A block's three views, offered beside its heading as a row of links, the
    one being read filled as the section bar's current tile is, so that it is
    told from the others by more than its colour: it is the one that is not a
-   link's colour, and it is the one filled. */
-.competition-views ul {
+   link's colour, and it is the one filled. A group's Summary and tests are
+   offered the same way, in a row of their own above the page's heading. */
+.competition-views ul,
+.group-links ul {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -2015,7 +2017,8 @@ html:has(dialog:modal) {
 }
 
 /* As tall as anything else pressed with a thumb. */
-.competition-view {
+.competition-view,
+.group-link {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -2024,11 +2027,17 @@ html:has(dialog:modal) {
   border-radius: var(--radius-1);
 }
 
-.competition-view[aria-current="page"] {
+.competition-view[aria-current="page"],
+.group-link[aria-current="page"] {
   background: var(--current);
   color: var(--current-ink);
   border-color: var(--current);
   text-decoration: none;
+}
+
+/* Parted from what is beneath it as the heading is from the page. */
+.group-links {
+  margin-block-end: var(--space-3);
 }
 
 /* A block's summary: narrow enough for a phone, since it is the view for

@@ -1,4 +1,6 @@
 import { charactersIn } from "../../../common/charactersIn.js";
+import { Slug } from "../../../common/Slug.js";
+import { ValidationError } from "../../../common/validation/ValidationError.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a test's group can break. */
@@ -36,6 +38,21 @@ export class TestGroup {
     if (trimmed === "") return undefined;
     groups.ensureValid(trimmed);
     return new TestGroup(trimmed);
+  }
+
+  /**
+   * The slug the group's page is found at, made from its name, or nothing
+   * where its name has no letter or digit in it to make one from.
+   */
+  get slug(): Slug | undefined {
+    // Asked of the slug itself, so that what has no slug is what a slug says
+    // it cannot be made from, and nothing here can come to disagree with it.
+    try {
+      return Slug.fromName(this.#given);
+    } catch (refused) {
+      if (refused instanceof ValidationError) return undefined;
+      throw refused;
+    }
   }
 
   equals(other: TestGroup | undefined): boolean {

@@ -43,6 +43,8 @@ export type TournamentOperationErrorCode =
   | "PublicSwissOfTournament.NoSuchCompetition"
   | "PublicSwissOfTournament.NotASwiss"
   | "PublicTeamSummaryOfTournament.NotPlayedByTeams"
+  | "PublicGroupOfTournament.NotPlayedByTeams"
+  | "PublicGroupOfTournament.NoSuchGroup"
   | "PublicTestOfTournament.NoSuchCompetition"
   | "PublicTestOfTournament.NotATest"
   | "PublicCommentaryOfTournament.NoSuchCommentary"
