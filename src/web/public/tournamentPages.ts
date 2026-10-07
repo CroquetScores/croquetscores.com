@@ -21,7 +21,10 @@ import { anyUnread, type Reads } from "./read.js";
  * competitions in use. A tournament played by teams has the same, with
  * Summary after Recent, the place its teams' standing will be shown, and its
  * competitions its tests, each said as its teams' short names with "vs"
- * between, as "AUS vs ENG", in the reader's language. Notes is marked as new
+ * between, as "AUS vs ENG", in the reader's language. A test in a group is
+ * not a section of its own: the group is, once, where the first of its tests
+ * would be, leading to the group's page, and a tournament with a group has no
+ * Summary, each group's page being where its teams' standing is shown. Notes is marked as new
  * while the tournament has a note the reader has not read as it is now, and
  * Commentary while it has such a commentary, so that a reader on any of its
  * pages sees there is news (notes.feature, commentaries.feature).
@@ -39,9 +42,12 @@ export const sectionsOf = (
 ): readonly Section[] => {
   const { say } = speaking;
   const here = `/${tournament.address}`;
+  const grouped = tournament.competitions.some(
+    ({ group }) => group !== undefined,
+  );
   return [
     { href: here, label: say("tournament.recent") },
-    ...(tournament.playedByTeams
+    ...(tournament.playedByTeams && !grouped
       ? [{ href: `${here}/summary`, label: say("tournament.summary") }]
       : []),
     { href: `${here}/players`, label: say("tournament.players") },
@@ -55,13 +61,77 @@ export const sectionsOf = (
       label: say("tournament.commentary"),
       isNew: anyUnread(read.commentaries, tournament.commentariesChanged),
     },
-    ...tournament.competitions.map((competition) => ({
-      href: `/${competition.address}`,
-      label: competitionNamed(competition, speaking),
-      competition: true,
-    })),
+    ...competitionSections(tournament, speaking),
   ];
 };
+
+// Each competition in use, a test in a group said as its group, once, where
+// the first of the group's tests is.
+const competitionSections = (
+  tournament: {
+    readonly address: string;
+    readonly competitions: readonly CompetitionOfTournament[];
+  },
+  speaking: Speaking,
+): readonly Section[] => {
+  const groupsOffered = new Set<string>();
+  return tournament.competitions.flatMap((competition): Section[] => {
+    const { group } = competition;
+    if (group === undefined) {
+      return [
+        {
+          href: `/${competition.address}`,
+          label: competitionNamed(competition, speaking),
+          competition: true,
+        },
+      ];
+    }
+    if (groupsOffered.has(group.slug)) return [];
+    groupsOffered.add(group.slug);
+    return [
+      {
+        href: groupAddress(tournament.address, group.slug),
+        label: group.name,
+        competition: true,
+      },
+    ];
+  });
+};
+
+/**
+ * A group's Summary and tests, in a row of their own above the page's heading
+ * on the group's page and on each of its tests' pages, as the old site
+ * offered them: Summary leading to the group's page, then each test in use,
+ * said as the section bar says a test, with the one at `current` marked as
+ * the one being read. Named for the group, for a reader who cannot see it.
+ */
+export const groupLinks = (
+  tournament: string,
+  group: { readonly name: string; readonly slug: string },
+  tests: readonly CompetitionOfTournament[],
+  current: string,
+  speaking: Speaking,
+): string => {
+  const link = (href: string, label: string): string =>
+    `              <li><a class="group-link" href="${escape(href)}"${href === current ? ' aria-current="page"' : ""}>${escape(label)}</a></li>`;
+  return `          <nav class="group-links" aria-label="${escape(group.name)}">
+            <ul>
+${[
+  link(
+    groupAddress(tournament, group.slug),
+    speaking.say("tournament.summary"),
+  ),
+  ...tests.map((test) =>
+    link(`/${test.address}`, competitionNamed(test, speaking)),
+  ),
+].join("\n")}
+            </ul>
+          </nav>`;
+};
+
+/** Where a group of the tournament at `tournament` is found, by its slug. */
+export const groupAddress = (tournament: string, slug: string): string =>
+  `/${tournament}/groups/${slug}`;
 
 /**
  * A competition as a tournament's pages say it: by its name, or a test by its

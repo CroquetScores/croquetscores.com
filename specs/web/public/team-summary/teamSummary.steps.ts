@@ -55,6 +55,16 @@ Then(
   },
 );
 
+// Waited for by the table, which is drawn with the page, so that a row looked
+// for too soon is not taken for one that is not there.
+Then(
+  "the team {string} is not in the summary",
+  async function (this: SpecWorld, team: string) {
+    await tableOf(this).waitFor();
+    assert.equal(await rowOf(this, team).count(), 0);
+  },
+);
+
 // A column's group is the one whose span takes it in, counted along the row of
 // groups as the columns are along the row beneath it.
 Then(

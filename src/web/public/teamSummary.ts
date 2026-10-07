@@ -20,7 +20,7 @@ import {
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
-import { speakingOf } from "../common/language.js";
+import { type Speaking, speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
@@ -84,6 +84,71 @@ const rest: readonly Group[] = [
   },
 ];
 
+/**
+ * How the teams of `standing` stand, as a table whose first heading, above the
+ * teams, is `heading`, as the old site's was: the tournament's name on its
+ * summary, a group's on the group's page (group.ts). The page is headed by it
+ * too, for whatever reads the page aloud, without showing it twice.
+ */
+export const teamSummaryTable = (
+  heading: string,
+  asked: {
+    readonly teams: readonly TeamStanding[];
+    readonly ranked: readonly string[];
+    readonly bestOfMoreThanOne: boolean;
+  },
+  speaking: Speaking,
+): string => {
+  const { say } = speaking;
+  // Written as the reader's language writes a number, grouped as the old
+  // site grouped a thousand or more, as "1,970".
+  const numbers = new Intl.NumberFormat(speaking.language.tag);
+  // Each column, and whether it begins its group, where a thick line
+  // parts it from the group before.
+  // A match the best of 1 is its one game, so where every test's are,
+  // its matches would only say its games again.
+  const groups: readonly Group[] = [
+    tests,
+    ...(asked.bestOfMoreThanOne ? [matches] : []),
+    ...rest,
+  ];
+  const columns = groups.flatMap((group) =>
+    group.columns.map((column, at) => ({ ...column, starts: at === 0 })),
+  );
+  const startClass = (starts: boolean): string =>
+    starts ? " team-summary-starts" : "";
+  const byId = new Map(asked.teams.map((team) => [team.id, team]));
+  const rows = asked.ranked
+    .flatMap((id) => {
+      const team = byId.get(id);
+      return team === undefined ? [] : [team];
+    })
+    .map(
+      (team) => `              <tr>
+                <th scope="row" class="team-summary-team">${escape(team.name)}</th>
+${columns.map(({ of, starts }) => `                <td class="team-summary-number${startClass(starts)}">${escape(numbers.format(of(team)))}</td>`).join("\n")}
+              </tr>`,
+    )
+    .join("\n");
+  return `          <h1 id="team-summary-heading" class="visually-hidden">${escape(heading)}</h1>
+          <div class="team-summary-scroll" role="region" aria-labelledby="team-summary-heading" tabindex="0">
+          <table class="team-summary">
+            <thead>
+              <tr>
+                <th scope="col" class="team-summary-corner" rowspan="2">${escape(heading)}</th>
+${groups.map((group) => `                <th scope="colgroup" colspan="${String(group.columns.length)}" class="team-summary-group team-summary-starts">${escape(say(group.word))}</th>`).join("\n")}
+              </tr>
+              <tr>
+${columns.map(({ word, starts }) => `                <th scope="col" class="team-summary-heading${startClass(starts)}">${escape(say(word))}</th>`).join("\n")}
+              </tr>
+            </thead>
+            <tbody>
+${rows}
+            </tbody>
+          </table>
+          </div>`;
+};
+
 export const registerTeamSummaryPage = (
   server: FastifyInstance,
   assets: Assets,
@@ -108,6 +173,11 @@ export const registerTeamSummaryPage = (
         }
         throw failure;
       }
+      // A tournament with a test in a group has no summary, as the old site's
+      // had none: each group's page shows how the teams of that group stand.
+      if (asked.competitions.some(({ group }) => group !== undefined)) {
+        return reply.callNotFound();
+      }
       // An address the tournament has moved on from leads to its summary
       // where it is now, for good, so that a link kept from before still works.
       if (asked.address !== address) {
@@ -115,38 +185,6 @@ export const registerTeamSummaryPage = (
       }
 
       const speaking = speakingOf(request);
-      const { say } = speaking;
-      // Written as the reader's language writes a number, grouped as the old
-      // site grouped a thousand or more, as "1,970".
-      const numbers = new Intl.NumberFormat(speaking.language.tag);
-      // Each column, and whether it begins its group, where a thick line
-      // parts it from the group before.
-      // A match the best of 1 is its one game, so where every test's are,
-      // its matches would only say its games again.
-      const groups: readonly Group[] = [
-        tests,
-        ...(asked.bestOfMoreThanOne ? [matches] : []),
-        ...rest,
-      ];
-      const columns = groups.flatMap((group) =>
-        group.columns.map((column, at) => ({ ...column, starts: at === 0 })),
-      );
-      const startClass = (starts: boolean): string =>
-        starts ? " team-summary-starts" : "";
-      const byId = new Map(asked.teams.map((team) => [team.id, team]));
-      const rows = asked.ranked
-        .flatMap((id) => {
-          const team = byId.get(id);
-          return team === undefined ? [] : [team];
-        })
-        .map(
-          (team) => `              <tr>
-                <th scope="row" class="team-summary-team">${escape(team.name)}</th>
-${columns.map(({ of, starts }) => `                <td class="team-summary-number${startClass(starts)}">${escape(numbers.format(of(team)))}</td>`).join("\n")}
-              </tr>`,
-        )
-        .join("\n");
-
       return sendPage(
         reply,
         request,
@@ -166,26 +204,7 @@ ${columns.map(({ of, starts }) => `                <td class="team-summary-numbe
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          // The table says the tournament's name in its first heading, as the
-          // old site's did, so the page's own heading is left for whatever
-          // reads the page aloud rather than shown again above it.
-          body: `          <h1 id="team-summary-heading" class="visually-hidden">${escape(asked.name)}</h1>
-          <div class="team-summary-scroll" role="region" aria-labelledby="team-summary-heading" tabindex="0">
-          <table class="team-summary">
-            <thead>
-              <tr>
-                <th scope="col" class="team-summary-corner" rowspan="2">${escape(asked.name)}</th>
-${groups.map((group) => `                <th scope="colgroup" colspan="${String(group.columns.length)}" class="team-summary-group team-summary-starts">${escape(say(group.word))}</th>`).join("\n")}
-              </tr>
-              <tr>
-${columns.map(({ word, starts }) => `                <th scope="col" class="team-summary-heading${startClass(starts)}">${escape(say(word))}</th>`).join("\n")}
-              </tr>
-            </thead>
-            <tbody>
-${rows}
-            </tbody>
-          </table>
-          </div>`,
+          body: teamSummaryTable(asked.name, asked, speaking),
         }),
       );
     },

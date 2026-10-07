@@ -370,6 +370,70 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-tests" is opened
       Then the sixth section is "AUS vs GBR"
 
+  Rule: A group of tests is one section, in place of its tests, and a tournament with one has no Summary
+
+    A test can be in a group, as "Block A" (`TestGroup.feature`), whose tests
+    are played among themselves, as on the old site, whose "WCF GC World Team
+    Championship Tiers 2 & 3" offered Block A, Block B, Tier 2 Championship
+    and the rest as its sections. So a group is one section, named as the
+    group is, leading to the group's own page (`group.feature`), in place of
+    its tests, which the group's page offers. It stands where the first of
+    its tests would, and a test in no group stands where it is, as before. A
+    tournament with a test in a group has no Summary, as the old site's had
+    none: each group's page shows how the teams of that group stand, and one
+    table of every team across groups that were never played against each
+    other would rank nothing.
+
+    Background:
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And the team is to be known for short as "NZ"
+      And "organiser@example.com" has added the team "New Zealand" to "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "New Zealand" to "Spring Tests"
+      And the test is to be in the group "Block A"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "organiser@example.com" has added the test between "England" and "New Zealand" to "Spring Tests"
+
+    Scenario Outline: The group stands where its first test would, and a test in no group where it is
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the <place> section is "<section>"
+
+      Examples:
+        | place  | section    |
+        | first  | Recent     |
+        | second | Players    |
+        | third  | Notes      |
+        | fourth | Commentary |
+        | fifth  | AUS vs NZ  |
+        | sixth  | Block A    |
+
+    Scenario: The group leads to its page under the groups
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "Block A" leads to "/2026/ac/spring-tests/groups/block-a"
+
+    Scenario: A test in a group is not offered as a section of its own
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "AUS vs ENG" is not offered
+
+    Scenario: The group is offered once however many tests are in it
+      When the page at "/2026/ac/spring-tests" is opened
+      Then 6 sections are offered
+
+    Scenario: A tournament with a test in a group offers no Summary
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "Summary" is not offered
+
+    Scenario: A group whose tests are all archived is not offered
+      Given the test is to be in the group "Block B"
+      And "organiser@example.com" has added the test between "New Zealand" and "England" to "Spring Tests"
+      And "organiser@example.com" has archived the competition "NZ v ENG" in "Spring Tests"
+      When the page at "/2026/ac/spring-tests" is opened
+      Then the section "Block B" is not offered
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language

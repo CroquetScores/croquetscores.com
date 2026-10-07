@@ -48,7 +48,7 @@ import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
 import { readsOf } from "./read.js";
-import { sectionsOf } from "./tournamentPages.js";
+import { groupAddress, groupLinks, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 
 /** A view of a competition, and where it is found after its own address. */
@@ -355,6 +355,22 @@ export const registerCompetitionPages = (
 
           const view = viewOf(request);
           if (chooses) remember(reply, view);
+          // A test in a group is one of its group's, so its page marks the
+          // group rather than itself, and offers the group's Summary and
+          // tests above its heading, as the group's page does (group.ts).
+          const group = asked.competitions.find(
+            (each) => `/${each.address}` === here,
+          )?.group;
+          const groupHere =
+            group === undefined
+              ? undefined
+              : groupAddress(asked.address, group.slug);
+          const groupTests =
+            group === undefined
+              ? []
+              : asked.competitions.filter(
+                  (each) => each.group?.slug === group.slug,
+                );
           return sendPage(
             reply,
             request,
@@ -370,7 +386,7 @@ export const registerCompetitionPages = (
                 speaking,
                 readsOf(request),
               ),
-              currentSection: here,
+              currentSection: groupHere ?? here,
               theme: themeOf(request),
               signedIn: signedIn(request),
               hasPassword: hasPassword(request),
@@ -378,7 +394,7 @@ export const registerCompetitionPages = (
               siteName: siteNameOf(request),
               tryWebsite: website.isTry,
               path: request.url,
-              body: `          <div class="competition-heading">
+              body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <div class="competition-heading">
             <h1 id="competition-heading">${escape(found.name)}</h1>
 ${viewsOffered(here, offered, view, speaking)}
           </div>

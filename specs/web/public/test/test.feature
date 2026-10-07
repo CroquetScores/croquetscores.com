@@ -31,7 +31,11 @@ Feature: A test's page shows its matches, the first team down one side
 
   On a phone the page is no wider than the window. Its sections are the
   tournament's, with the test marked, and only that test where another
-  between the same two teams is said the same way.
+  between the same two teams is said the same way. A test in a group is not
+  a section of its own but one of its group's (`tournament.feature`), so its
+  page marks the group, and offers what the group's page offers, in a row of
+  their own above the test: Summary, leading to the group's page, and each of
+  the group's tests, with this one marked (`group.feature`).
 
   A slug no test has, a competition that is not a test, and any test of an
   archived tournament are not pages. An address the tournament has moved on
@@ -211,6 +215,40 @@ Feature: A test's page shows its matches, the first team down one side
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
       Then 1 section is marked as current
+
+  Rule: A test in a group offers its group's Summary and tests, and marks its group
+
+    Background:
+      Given the test is to be in the group "Block A"
+      And "organiser@example.com" has added the test between "England" and "Australia" to "Spring Tests"
+
+    Scenario: Summary comes first
+      When the page at "/2026/ac/spring-tests/tests/eng-v-aus" is opened
+      Then the first of the group's links is "Summary"
+
+    Scenario: The group's tests come after Summary
+      When the page at "/2026/ac/spring-tests/tests/eng-v-aus" is opened
+      Then the second of the group's links is "ENG vs AUS"
+
+    Scenario: Summary leads to the group's page
+      When the page at "/2026/ac/spring-tests/tests/eng-v-aus" is opened
+      Then the group's link "Summary" leads to "/2026/ac/spring-tests/groups/block-a"
+
+    Scenario: The test is marked as the one being read
+      When the page at "/2026/ac/spring-tests/tests/eng-v-aus" is opened
+      Then the group's link "ENG vs AUS" is marked as the one being read
+
+    Scenario: Summary is not marked
+      When the page at "/2026/ac/spring-tests/tests/eng-v-aus" is opened
+      Then the group's link "Summary" is not marked as the one being read
+
+    Scenario: The group is marked as the section being read
+      When the page at "/2026/ac/spring-tests/tests/eng-v-aus" is opened
+      Then the section "Block A" is marked as current
+
+    Scenario: A test in no group offers no group's links
+      When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
+      Then the group offers no links
 
   Rule: An address with no test a reader is sent to is not a page
 

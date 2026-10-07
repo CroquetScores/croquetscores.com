@@ -117,6 +117,7 @@ import { PublicPlayerOfTournamentHandler } from "../../../src/application/operat
 import { PublicBlockOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicBlockOfTournamentHandler.js";
 import { PublicKnockoutOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
 import { PublicSwissOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicSwissOfTournamentHandler.js";
+import { PublicGroupOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicGroupOfTournamentHandler.js";
 import { PublicTeamSummaryOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
 import { PublicTestOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicTestOfTournamentHandler.js";
 import { StartCommentaryHandler } from "../../../src/application/operations/tournaments/StartCommentaryHandler.js";
@@ -410,6 +411,15 @@ Given("the application's tournaments", function (this: SpecWorld) {
   );
   mediator.handleQuery(
     new PublicTeamSummaryOfTournamentHandler(
+      tournaments,
+      competitions,
+      byAddress,
+      byNotes,
+      byCommentaries,
+    ),
+  );
+  mediator.handleQuery(
+    new PublicGroupOfTournamentHandler(
       tournaments,
       competitions,
       byAddress,

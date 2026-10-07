@@ -118,6 +118,7 @@ import { PublicPlayerOfTournamentHandler } from "../application/operations/tourn
 import { PublicBlockOfTournamentHandler } from "../application/operations/tournaments/PublicBlockOfTournamentHandler.js";
 import { PublicKnockoutOfTournamentHandler } from "../application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
 import { PublicSwissOfTournamentHandler } from "../application/operations/tournaments/PublicSwissOfTournamentHandler.js";
+import { PublicGroupOfTournamentHandler } from "../application/operations/tournaments/PublicGroupOfTournamentHandler.js";
 import { PublicTeamSummaryOfTournamentHandler } from "../application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
 import { PublicTestOfTournamentHandler } from "../application/operations/tournaments/PublicTestOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
@@ -280,6 +281,7 @@ import { testView } from "./public/test.js";
 import { swissView } from "./public/swiss.js";
 import { swissSummaryView } from "./public/swissSummary.js";
 import { registerCompetitionPages } from "./public/competitionPages.js";
+import { registerGroupPage } from "./public/group.js";
 import { registerTeamSummaryPage } from "./public/teamSummary.js";
 import { knockoutView } from "./public/knockout.js";
 import { knockoutSummaryView } from "./public/knockoutSummary.js";
@@ -986,6 +988,15 @@ export const buildApplication = async (
     ),
   );
   mediator.handleQuery(
+    new PublicGroupOfTournamentHandler(
+      tournaments,
+      competitions,
+      tournamentsByAddress,
+      managerNotesByTournament,
+      commentariesByTournament,
+    ),
+  );
+  mediator.handleQuery(
     new PublicTestOfTournamentHandler(
       tournaments,
       competitions,
@@ -1161,6 +1172,7 @@ export const buildApplication = async (
   registerChangeCommentaryTitlePage(server, assets);
   registerPlayerPage(server, assets);
   registerTeamSummaryPage(server, assets);
+  registerGroupPage(server, assets);
   registerCompetitionPages(server, assets, {
     block: {
       grid: gridView(assets),
