@@ -67,6 +67,7 @@ import { AccountsWithRole } from "../../../application/operations/accounts/Accou
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
@@ -1009,6 +1010,24 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       .type("application/x-ndjson; charset=utf-8")
       .send(lines);
   });
+
+  // The world ranking players of a sport a name typed may be, and whether the
+  // world rankings know it, as the player dialogs ask as it is typed. The
+  // sport by its code, and what was typed as it was typed.
+  server.get<{ Params: { sport: string }; Querystring: { typed?: string } }>(
+    "/world-rankings/:sport/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const matching = await request.server.mediator.query(
+        new WorldRankingPlayersMatching(
+          request.params.sport,
+          request.query.typed ?? "",
+        ),
+      );
+      return reply.header("cache-control", "no-store").send(matching);
+    },
+  );
 
   // A flag, as a reader sees it: its picture, and the name of the place it is
   // the flag of, in the reader's language.

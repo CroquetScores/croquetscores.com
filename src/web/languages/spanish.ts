@@ -683,6 +683,9 @@ export const spanish: Language = {
     "admin.player.name": "Nombre",
     "admin.player.representing": "Representa a",
     "admin.player.worldRankingName": "Nombre en el ranking mundial",
+    "admin.player.worldRankingKnown": "El ranking mundial conoce este nombre.",
+    "admin.player.worldRankingQuestioned":
+      "El ranking mundial no tiene ningún jugador con este nombre. Puede que esté mal escrito, o que el jugador sea nuevo en el ranking.",
     "admin.player.flag": "Bandera",
     "admin.player.add": "Añadir",
     "admin.player.save": "Guardar",

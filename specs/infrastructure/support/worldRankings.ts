@@ -1,18 +1,23 @@
 // What stands behind "a fake of the world rankings": the reading of the
 // players' lists, asking a fake of the rankings' site on a port of its own;
-// the steps that say what the fake's lists hold and how it answers; and the
-// steps that read back the players kept, which three features share.
+// the steps that say what the fake's lists hold and how it answers; the steps
+// that read back the players kept, which three features share; and the steps
+// that put players there for finding them by name.
 //
 // Here rather than in specs/support/ because it names infrastructure, and
 // specs/support/ is loaded by every spec in the repository and so may not.
 import { After, Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { Mediator } from "../../../src/application/common/Mediator.js";
+import { WorldRankingPlayersMatchingHandler } from "../../../src/application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import type { WorldRankingSport } from "../../../src/application/services/WorldRankingLists.js";
+import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
+import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { WorldRankingWebsite } from "../../../src/infrastructure/services/WorldRankingWebsite.js";
 import { FakeWorldRankings } from "../services/world-ranking-website/FakeWorldRankings.js";
 import type { SpecWorld } from "../../support/world.js";
-import { fromOutside } from "./transactions.js";
+import { fromOutside, unitOfWorkOf } from "./transactions.js";
 
 /**
  * How long the scenarios' reading waits for the fake. Long enough that a fake
@@ -203,5 +208,56 @@ Then(
   async function (this: SpecWorld, count: string, sport: string) {
     const kept = await namesKept(this, sportCalled(sport));
     assert.equal(kept.length, Number(count), `Kept ${JSON.stringify(kept)}.`);
+  },
+);
+
+// The players a scenario says are kept, put straight into the tables, as an
+// import would have left them: what is found among them is the scenario's
+// subject, not how they came to be there.
+Given(
+  new RegExp(`^the ${SPORT} players include "([^"]*)"$`),
+  async function (this: SpecWorld, sport: string, name: string) {
+    await this.database.query(
+      `insert into ${TABLES[sportCalled(sport)]} (name) values ($1)
+       on conflict do nothing`,
+      [name],
+    );
+  },
+);
+
+// Each with a first name of its own, so that every one is a different name.
+Given(
+  new RegExp(
+    `^the ${SPORT} players include (\\d+) players with the surname "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    sport: string,
+    count: number,
+    surname: string,
+  ) {
+    for (let each = 1; each <= Number(count); each += 1) {
+      await this.database.query(
+        `insert into ${TABLES[sportCalled(sport)]} (name) values ($1)`,
+        [`Player${String(each)} ${surname}`],
+      );
+    }
+  },
+);
+
+// The query behind the player dialogs' offers, as the application stands it
+// up: in a read-only transaction, over the tables the import keeps.
+Given(
+  "the application's finding of world ranking players",
+  function (this: SpecWorld) {
+    const unitOfWork = unitOfWorkOf(this);
+    const mediator = new Mediator();
+    mediator.addQueryBehaviour(new ReadOnlyTransactionBehaviour(unitOfWork));
+    mediator.handleQuery(
+      new WorldRankingPlayersMatchingHandler(
+        new PostgresWorldRankingPlayers(unitOfWork),
+      ),
+    );
+    this.mediator = mediator;
   },
 );

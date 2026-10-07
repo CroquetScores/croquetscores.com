@@ -759,6 +759,10 @@ export const english: Language = {
     "admin.player.name": "Name",
     "admin.player.representing": "Representing",
     "admin.player.worldRankingName": "World Ranking Player Name",
+    // Beside the world ranking name: whether the world rankings know it.
+    "admin.player.worldRankingKnown": "The world rankings know this name.",
+    "admin.player.worldRankingQuestioned":
+      "The world rankings have no player of this name. It may be misspelled, or the player may be new to the rankings.",
     "admin.player.flag": "Flag",
     "admin.player.add": "Add",
     "admin.player.save": "Save",

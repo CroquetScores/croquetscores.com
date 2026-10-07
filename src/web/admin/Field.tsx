@@ -17,6 +17,8 @@ interface FieldProps {
   /** What the field is for, said beneath it where its label alone would leave
       a reader wondering, and read out with it. */
   readonly explanation?: string | undefined;
+  /** Something said of what was typed, at the end of the line it is on. */
+  readonly mark?: React.ReactNode;
   readonly children: (said: {
     id: string;
     "aria-labelledby": string;
@@ -34,6 +36,7 @@ export const Field = ({
   refused,
   lifted,
   explanation,
+  mark,
   children,
 }: FieldProps): React.JSX.Element => {
   const id = `field-${name}`;
@@ -63,6 +66,7 @@ export const Field = ({
         <span className="field-label" id={labelId}>
           {label}
         </span>
+        {mark}
       </label>
       {wrong ? (
         <p

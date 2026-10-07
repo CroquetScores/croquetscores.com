@@ -1,7 +1,11 @@
 // The players the world rankings know, by their full names, in a table for
-// each sport (PostgresWorldRankingPlayers.feature).
+// each sport (PostgresWorldRankingPlayers.feature), and found by them
+// (WorldRankingPlayersMatching.feature).
 import type { WorldRankingSport } from "../../application/services/WorldRankingLists.js";
-import type { WorldRankingPlayers } from "../../application/services/WorldRankingPlayers.js";
+import type {
+  WorldRankingPlayerNames,
+  WorldRankingPlayers,
+} from "../../application/services/WorldRankingPlayers.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
 
 // Written out rather than made from the sport, so that nothing a caller says
@@ -11,7 +15,15 @@ const TABLES: Readonly<Record<WorldRankingSport, string>> = {
   gc: "gc_world_ranking_players",
 };
 
-export class PostgresWorldRankingPlayers implements WorldRankingPlayers {
+// What was typed, as a pattern matches it: lower case, as the names are
+// compared, with every character a pattern would read as anything other than
+// itself written so that it is read as itself.
+const literally = (typed: string): string =>
+  typed.toLowerCase().replace(/[\\%_]/g, (character) => `\\${character}`);
+
+export class PostgresWorldRankingPlayers
+  implements WorldRankingPlayers, WorldRankingPlayerNames
+{
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
   async replace(
@@ -33,5 +45,38 @@ export class PostgresWorldRankingPlayers implements WorldRankingPlayers {
        select distinct name from unnest($1::text[]) as given (name)`,
       [names],
     );
+  }
+
+  // A few thousand names to a sport, so each is read rather than indexed: a
+  // word can begin anywhere in a name, which no index of the name as a whole
+  // can find.
+  async beginning(
+    sport: WorldRankingSport,
+    typed: string,
+    most: number,
+  ): Promise<readonly string[]> {
+    const pattern = literally(typed);
+    const { rows } = await this.unitOfWork.connection().query<{
+      name: string;
+    }>(
+      `select name from ${TABLES[sport]}
+        where lower(name) like $1 escape '\\'
+           or lower(name) like $2 escape '\\'
+           or lower(name) like $3 escape '\\'
+        order by name
+        limit $4`,
+      [`${pattern}%`, `% ${pattern}%`, `%-${pattern}%`, most],
+    );
+    return rows.map((row) => row.name);
+  }
+
+  async has(sport: WorldRankingSport, name: string): Promise<boolean> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ found: boolean }>(
+        `select exists (select 1 from ${TABLES[sport]} where name = $1) as found`,
+        [name],
+      );
+    return rows[0]?.found === true;
   }
 }

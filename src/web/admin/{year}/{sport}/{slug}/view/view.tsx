@@ -45,6 +45,9 @@ interface Found {
   readonly asksWorldRankingNames: boolean;
 }
 
+// The sport of a tournament, from its address, whose second part it is.
+const sportIn = (address: string): string | undefined => address.split("/")[1];
+
 type Asked =
   | { readonly is: "asking" }
   | { readonly is: "refused"; readonly code: string }
@@ -160,7 +163,11 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               {chosen === "players" ? (
                 <PlayersTab
                   tournament={asked.tournament.id}
-                  asksWorldRankingNames={asked.tournament.asksWorldRankingNames}
+                  worldRankingSport={
+                    asked.tournament.asksWorldRankingNames
+                      ? sportIn(asked.tournament.address)
+                      : undefined
+                  }
                   manages={asked.tournament.part === "manager"}
                 />
               ) : null}

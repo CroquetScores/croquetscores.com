@@ -44,35 +44,35 @@ Feature: Finding the world ranking players a name typed may be
 
     Scenario: The start of a first name finds the player
       When the association croquet players matching "kei" are found
-      Then "Keith Aiton" is found
+      Then "Keith Aiton" is among the players found
 
     Scenario: The start of a surname finds the player
       When the association croquet players matching "ait" are found
-      Then "Keith Aiton" is found
+      Then "Keith Aiton" is among the players found
 
     Scenario: The start of a word after a hyphen finds the player
       When the association croquet players matching "thomas" are found
-      Then "Pat Asa-Thomas" is found
+      Then "Pat Asa-Thomas" is among the players found
 
     Scenario: Capitals find the player
       When the association croquet players matching "KEI" are found
-      Then "Keith Aiton" is found
+      Then "Keith Aiton" is among the players found
 
     Scenario: The whole name finds the player
       When the association croquet players matching "Keith Aiton" are found
-      Then "Keith Aiton" is found
+      Then "Keith Aiton" is among the players found
 
     Scenario: The middle of a word finds nobody
       When the association croquet players matching "eith" are found
-      Then "Keith Aiton" is not found
+      Then "Keith Aiton" is not among the players found
 
     Scenario: A name the typing does not begin is not found
       When the association croquet players matching "kei" are found
-      Then "Bill Aldridge" is not found
+      Then "Bill Aldridge" is not among the players found
 
     Scenario: The spaces around what was typed do not count
       When the association croquet players matching "  kei  " are found
-      Then "Keith Aiton" is found
+      Then "Keith Aiton" is among the players found
 
     Scenario: A character that stands for any other elsewhere stands for itself
       When the association croquet players matching "k_ith" are found
@@ -86,11 +86,11 @@ Feature: Finding the world ranking players a name typed may be
 
     Scenario: Golf croquet's players are found among golf croquet's
       When the golf croquet players matching "bil" are found
-      Then "Bill Arliss" is found
+      Then "Bill Arliss" is among the players found
 
     Scenario: Association croquet's players are not found among golf croquet's
       When the golf croquet players matching "bil" are found
-      Then "Bill Aldridge" is not found
+      Then "Bill Aldridge" is not among the players found
 
     Scenario: A sport without world rankings is refused
       When the players matching "kei" are found for the sport "rc"
@@ -104,7 +104,7 @@ Feature: Finding the world ranking players a name typed may be
 
     Scenario: Two characters find a player
       When the association croquet players matching "ke" are found
-      Then "Keith Aiton" is found
+      Then "Keith Aiton" is among the players found
 
     Scenario: One character with spaces around it finds nobody
       When the association croquet players matching " k " are found
@@ -113,8 +113,9 @@ Feature: Finding the world ranking players a name typed may be
   Rule: At most ten are found, in alphabetical order
 
     Scenario: The players found are in alphabetical order
+      Given the association croquet players include "Bianca Zane"
       When the association croquet players matching "bi" are found
-      Then the first found is "Bill Aldridge"
+      Then the first found is "Bianca Zane"
 
     Scenario: No more than ten are found
       Given the association croquet players include 12 players with the surname "Smith"

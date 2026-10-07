@@ -15,3 +15,23 @@ export interface WorldRankingPlayers {
    */
   replace(sport: WorldRankingSport, names: readonly string[]): Promise<void>;
 }
+
+/**
+ * Where the players the world rankings know are found by their names, as the
+ * player dialogs ask for them (WorldRankingPlayersMatching.feature).
+ */
+export interface WorldRankingPlayerNames {
+  /**
+   * The names of `sport`'s players in which `typed` begins a word, whatever
+   * its case, in alphabetical order, no more than `most` of them. A space or
+   * a hyphen begins a word, and no character in `typed` stands for another.
+   */
+  beginning(
+    sport: WorldRankingSport,
+    typed: string,
+    most: number,
+  ): Promise<readonly string[]>;
+
+  /** Whether `name` is one of `sport`'s players, spelled exactly so. */
+  has(sport: WorldRankingSport, name: string): Promise<boolean>;
+}

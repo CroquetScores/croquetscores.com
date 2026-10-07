@@ -35,6 +35,7 @@ import { AccountProfile } from "../application/operations/accounts/AccountProfil
 import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
 import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
+import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { AddRoleValidator } from "../application/operations/accounts/AddRoleValidator.js";
 import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
@@ -765,13 +766,17 @@ export const buildApplication = async (
   mediator.handleQuery(new AccountsWithRoleHandler(accounts, accountsByRole));
   // Given the unit of work to run its own transactions in, since it reads the
   // rankings' lists between them, where the reading holds no connection.
+  const worldRankingPlayers = new PostgresWorldRankingPlayers(unitOfWork);
   mediator.handleCommand(
     new ImportWorldRankingPlayersHandler(
       accounts,
       options.worldRankingLists ?? new WorldRankingWebsite(),
-      new PostgresWorldRankingPlayers(unitOfWork),
+      worldRankingPlayers,
       unitOfWork,
     ),
+  );
+  mediator.handleQuery(
+    new WorldRankingPlayersMatchingHandler(worldRankingPlayers),
   );
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(

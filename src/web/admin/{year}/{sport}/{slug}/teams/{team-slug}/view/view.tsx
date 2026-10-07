@@ -37,6 +37,10 @@ interface Found {
   readonly manages: boolean;
 }
 
+// The sport of the team's tournament, from its address, whose second part it
+// is.
+const sportIn = (address: string): string | undefined => address.split("/")[1];
+
 type Asked =
   | { readonly is: "asking" }
   | { readonly is: "refused"; readonly code: string }
@@ -121,7 +125,11 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
               <TeamPlayers
                 tournament={team.tournament}
                 team={team.id}
-                asksWorldRankingNames={team.asksWorldRankingNames}
+                worldRankingSport={
+                  team.asksWorldRankingNames
+                    ? sportIn(team.tournamentAddress)
+                    : undefined
+                }
                 manages={team.manages}
               />
             </div>

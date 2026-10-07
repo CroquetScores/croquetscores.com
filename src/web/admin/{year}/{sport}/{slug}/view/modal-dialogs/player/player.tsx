@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
+import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
 
 // The player dialog (player.feature), over a tournament's page: opened by Add
 // Player to add players one after another, and by a player's name to change
@@ -15,7 +16,9 @@ import { knows, say } from "../../../../../../words.js";
 // it is typed, as long as it is empty or still says what the name said, so
 // that a reader who types in it has a name of their own there; while one is
 // changed it follows nothing, since the rankings still know a player by it
-// when their name is corrected. Left empty, it is sent as the name.
+// when their name is corrected. Left empty, it is sent as the name. Both
+// offer the world ranking players as they are typed, and the world ranking
+// name is marked as known to the rankings or not (WorldRankingPlayers.tsx).
 //
 // Opened by a world ranking officer who does not manage the tournament, it
 // shows everything the player is, but only the world ranking name can be
@@ -41,8 +44,11 @@ interface Props {
   readonly tournament: string;
   /** Nothing when adding, and the player when changing one. */
   readonly player?: PlayerAsTheyAre | undefined;
-  /** Whether the tournament's sport has world rankings, for which it asks. */
-  readonly asksWorldRankingName: boolean;
+  /**
+   * The tournament's sport, by its code, where it has world rankings, for
+   * which it asks. Nothing where it has none.
+   */
+  readonly worldRankingSport: string | undefined;
   /** Whether only the world ranking name may be changed, as a world ranking officer's. */
   readonly onlyWorldRankingName?: boolean | undefined;
   /** Once a player is kept, so that the list says so. */
@@ -74,11 +80,12 @@ const fieldOf = (code: string): FieldName | undefined =>
 export const PlayerDialog = ({
   tournament,
   player,
-  asksWorldRankingName,
+  worldRankingSport,
   onlyWorldRankingName = false,
   kept,
   close,
 }: Props): React.JSX.Element => {
+  const asksWorldRankingName = worldRankingSport !== undefined;
   const [flags, setFlags] = useState<readonly Flag[]>([]);
   const [name, setName] = useState(player?.name ?? "");
   const [representing, setRepresenting] = useState(player?.representing ?? "");
@@ -95,6 +102,16 @@ export const PlayerDialog = ({
   const nameField = useRef<HTMLInputElement>(null);
   const worldRankingNameField = useRef<HTMLInputElement>(null);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
+  const offeredForName = useMatching(worldRankingSport, name);
+  const offeredForWorldRankingName = useMatching(
+    worldRankingSport,
+    worldRankingName,
+  );
+  // What will be kept as the world ranking name, which is what is marked.
+  const markedFor = useMatching(
+    worldRankingSport,
+    worldRankingName.trim() === "" ? name : worldRankingName,
+  );
 
   useEffect(() => {
     void fetch("/api/v1/flags", { headers: { accept: "application/json" } })
@@ -239,28 +256,34 @@ export const PlayerDialog = ({
           refused={refusedFor("name")}
         >
           {(tied) => (
-            <input
-              {...tied}
-              ref={nameField}
-              disabled={onlyWorldRankingName}
-              type="text"
-              placeholder=" "
-              autoComplete="off"
-              value={name}
-              onChange={(event) => {
-                // Followed while a player is added, until it says something
-                // of its own.
-                if (
-                  player === undefined &&
-                  (worldRankingName === "" || worldRankingName === name)
-                ) {
-                  setWorldRankingName(event.target.value);
-                }
-                setName(event.target.value);
-                // Who was added is no longer the news once the next is typed.
-                setAdded(undefined);
-              }}
-            />
+            <>
+              <input
+                {...tied}
+                ref={nameField}
+                disabled={onlyWorldRankingName}
+                type="text"
+                placeholder=" "
+                autoComplete="off"
+                list={asksWorldRankingName ? "name-offers" : undefined}
+                value={name}
+                onChange={(event) => {
+                  // Followed while a player is added, until it says something
+                  // of its own.
+                  if (
+                    player === undefined &&
+                    (worldRankingName === "" || worldRankingName === name)
+                  ) {
+                    setWorldRankingName(event.target.value);
+                  }
+                  setName(event.target.value);
+                  // Who was added is no longer the news once the next is typed.
+                  setAdded(undefined);
+                }}
+              />
+              {asksWorldRankingName ? (
+                <Offers id="name-offers" matching={offeredForName} />
+              ) : null}
+            </>
           )}
         </Field>
         <Field
@@ -312,19 +335,27 @@ export const PlayerDialog = ({
             name="worldRankingName"
             label={say("admin.player.worldRankingName")}
             refused={refusedFor("worldRankingName")}
+            mark={<Mark matching={markedFor} />}
           >
             {(tied) => (
-              <input
-                {...tied}
-                ref={worldRankingNameField}
-                type="text"
-                placeholder=" "
-                autoComplete="off"
-                value={worldRankingName}
-                onChange={(event) => {
-                  setWorldRankingName(event.target.value);
-                }}
-              />
+              <>
+                <input
+                  {...tied}
+                  ref={worldRankingNameField}
+                  type="text"
+                  placeholder=" "
+                  autoComplete="off"
+                  list="worldRankingName-offers"
+                  value={worldRankingName}
+                  onChange={(event) => {
+                    setWorldRankingName(event.target.value);
+                  }}
+                />
+                <Offers
+                  id="worldRankingName-offers"
+                  matching={offeredForWorldRankingName}
+                />
+              </>
             )}
           </Field>
         ) : null}

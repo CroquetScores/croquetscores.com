@@ -22,8 +22,11 @@ interface Props {
   readonly tournament: string;
   /** The team's id. */
   readonly team: string;
-  /** Whether the tournament's sport has world rankings, for the dialog. */
-  readonly asksWorldRankingNames: boolean;
+  /**
+   * The tournament's sport, by its code, where it has world rankings, for
+   * the dialog. Nothing where it has none.
+   */
+  readonly worldRankingSport: string | undefined;
   /**
    * Whether the reader manages the tournament. A world ranking officer who
    * does not is shown the players to change their world ranking names alone,
@@ -46,7 +49,7 @@ const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 export const TeamPlayers = ({
   tournament,
   team,
-  asksWorldRankingNames,
+  worldRankingSport,
   manages,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
@@ -225,7 +228,7 @@ export const TeamPlayers = ({
       {dialog === undefined ? null : (
         <TeamPlayerDialog
           tournament={tournament}
-          asksWorldRankingName={asksWorldRankingNames}
+          worldRankingSport={worldRankingSport}
           onlyWorldRankingName={!manages}
           team={team}
           player={dialog === "adding" ? undefined : dialog}
