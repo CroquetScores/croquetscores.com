@@ -53,8 +53,10 @@ const options = {
  * cookie's life from when it was given it, and would otherwise drop it 90 days
  * after signing in however often its reader came back.
  *
- * Whether the account has a password is asked of `hasPassword` only once a
- * session has been found, and so only for a reader who is signed in.
+ * Whether the account has a password, and whether it is an administrator, are
+ * asked of `about` only once a session has been found, and so only for a
+ * reader who is signed in. Both are asked on every request rather than kept
+ * with the session, so that a role taken away is gone from the next page.
  *
  * A request for one of the site's own files is not asked at all. Nothing under
  * /assets/ is drawn for a reader, so there is nothing there to know — and the
@@ -66,7 +68,9 @@ export const readerFromSessions =
   (
     sessions: Sessions,
     inTransaction: InTransaction,
-    hasPassword: (account: AccountId) => Promise<boolean>,
+    about: (
+      account: AccountId,
+    ) => Promise<Pick<SignedInReader, "hasPassword" | "isAdministrator">>,
   ) =>
   async (
     request: FastifyRequest,
@@ -82,7 +86,7 @@ export const readerFromSessions =
     );
     if (account === undefined) return undefined;
     reply.setCookie(sessionCookie, id, options);
-    return { account, hasPassword: await hasPassword(account) };
+    return { account, ...(await about(account)) };
   };
 
 /**

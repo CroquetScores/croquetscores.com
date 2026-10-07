@@ -14,13 +14,15 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 
 /**
- * The account a reader is signed in to, and whether it has a password. The
- * account menu asks the second on every page, since what it offers a reader
- * whose account has none leaves out every page that asks for one.
+ * The account a reader is signed in to, whether it has a password, and
+ * whether it holds the Administrator role. The account menu asks the second on
+ * every page, since what it offers a reader whose account has none leaves out
+ * every page that asks for one; the administrator's pages ask the third.
  */
 export interface SignedInReader {
   readonly account: AccountId;
   readonly hasPassword: boolean;
+  readonly isAdministrator: boolean;
 }
 
 /**
@@ -39,6 +41,8 @@ declare module "fastify" {
     readonly readerAccount: AccountId | undefined;
     /** Whether that account has a password. Read it through hasPassword. */
     readonly readerHasPassword: boolean;
+    /** Whether that account is an administrator. Read it through isAdministrator. */
+    readonly readerIsAdministrator: boolean;
   }
 }
 
@@ -49,14 +53,17 @@ export const knowTheReader = (
 ): void => {
   server.decorateRequest("readerAccount", undefined);
   server.decorateRequest("readerHasPassword", false);
+  server.decorateRequest("readerIsAdministrator", false);
   server.addHook("onRequest", async (request, reply) => {
     const found = await reader(request, reply);
     const told = request as {
       readerAccount: AccountId | undefined;
       readerHasPassword: boolean;
+      readerIsAdministrator: boolean;
     };
     told.readerAccount = found?.account;
     told.readerHasPassword = found?.hasPassword ?? false;
+    told.readerIsAdministrator = found?.isAdministrator ?? false;
   });
 };
 
@@ -70,6 +77,13 @@ export const readerOf = (request: FastifyRequest): AccountId | undefined =>
  */
 export const hasPassword = (request: FastifyRequest): boolean =>
   request.readerHasPassword;
+
+/**
+ * Whether the account the reader of `request` is signed in to holds the
+ * Administrator role. Nobody signed in holds none.
+ */
+export const isAdministrator = (request: FastifyRequest): boolean =>
+  request.readerIsAdministrator;
 
 /** Whether the reader of `request` is signed in to anything. */
 export const signedIn = (request: FastifyRequest): boolean =>

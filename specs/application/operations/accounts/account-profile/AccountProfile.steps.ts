@@ -72,6 +72,20 @@ Then(
   },
 );
 
+Then(
+  "the profile says the account is an administrator",
+  function (this: SpecWorld) {
+    assert.equal(profileOf(this).isAdministrator, true);
+  },
+);
+
+Then(
+  "the profile says the account is not an administrator",
+  function (this: SpecWorld) {
+    assert.equal(profileOf(this).isAdministrator, false);
+  },
+);
+
 Then("there is no profile", function (this: SpecWorld) {
   assert.ok(answered.has(this), "No profile was asked for.");
   assert.equal(answered.get(this), undefined);

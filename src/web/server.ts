@@ -224,7 +224,12 @@ import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
-import { knowTheReader, signedIn, type Reader } from "./common/reader.js";
+import {
+  isAdministrator,
+  knowTheReader,
+  signedIn,
+  type Reader,
+} from "./common/reader.js";
 import type { InTransaction } from "./common/database.js";
 import { readerFromSessions, registerSignOut } from "./common/session.js";
 import { speakToRequests, type Language } from "./common/language.js";
@@ -424,6 +429,10 @@ const registerAssets = (server: FastifyInstance, assets: Assets): void => {
   );
 };
 
+// /admin/administrator and everything beneath it, but not an address that
+// only begins the same way, such as /admin/administrators.
+const administratorsOnly = /^\/admin\/administrator(?:[/?#]|$)/;
+
 const registerAdmin = async (
   server: FastifyInstance,
   adminRoot: string,
@@ -459,15 +468,23 @@ const registerAdmin = async (
   // Nothing in the admin is anybody's but the reader's own, so a reader who is
   // not signed in is sent to sign in first, and brought back to the address
   // they asked for, as every page of an account's own does.
-  server.get("/admin/*", (request, reply) =>
-    signedIn(request)
-      ? reply
-          .header("cache-control", "private, no-cache")
-          .header("vary", "Cookie, Accept-Language")
-          .type("text/html; charset=utf-8")
-          .send(adminPage(built, request))
-      : toSignIn(request, reply),
-  );
+  //
+  // The administrator's pages are nobody's own, so being signed in is not
+  // enough for them (administrator.feature). Not found rather than refused, so
+  // that they do not announce themselves to whoever may not open them. A
+  // reader not signed in is still sent to sign in, since they may be an
+  // administrator who has not said so yet.
+  server.get("/admin/*", (request, reply) => {
+    if (!signedIn(request)) return toSignIn(request, reply);
+    if (administratorsOnly.test(request.url) && !isAdministrator(request)) {
+      return reply.callNotFound();
+    }
+    return reply
+      .header("cache-control", "private, no-cache")
+      .header("vary", "Cookie, Accept-Language")
+      .type("text/html; charset=utf-8")
+      .send(adminPage(built, request));
+  });
 };
 
 export interface ApplicationOptions {
@@ -1062,13 +1079,13 @@ export const buildApplication = async (
   knowTheReader(
     server,
     options.reader ??
-      readerFromSessions(
-        sessions,
-        inTransaction,
-        async (account) =>
-          (await mediator.query(new AccountProfile(account.value)))
-            ?.hasPassword ?? false,
-      ),
+      readerFromSessions(sessions, inTransaction, async (account) => {
+        const profile = await mediator.query(new AccountProfile(account.value));
+        return {
+          hasPassword: profile?.hasPassword ?? false,
+          isAdministrator: profile?.isAdministrator ?? false,
+        };
+      }),
   );
 
   // Before any route, so nothing that changes something can be reached from
