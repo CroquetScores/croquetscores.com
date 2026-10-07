@@ -63,6 +63,16 @@ Given(
   },
 );
 
+const counted = new WeakMap<SpecWorld, number>();
+
+When("the errors kept are counted", async function (this: SpecWorld) {
+  counted.set(this, await importDatabaseOf(this).errorCount());
+});
+
+Then("{int} errors are counted", function (this: SpecWorld, count: number) {
+  assert.equal(counted.get(this), count);
+});
+
 Given(
   "{string} on {string} is kept as an account at {string}",
   async function (
@@ -97,9 +107,9 @@ Given(
 );
 
 Given(
-  "{string} on {string} was kept as left behind",
+  "{string} on {string} was kept as read",
   async function (this: SpecWorld, documentId: string, website: string) {
-    await importDatabaseOf(this).recordLeftBehind(website, documentId);
+    await importDatabaseOf(this).recordTournamentRead(website, documentId);
   },
 );
 
@@ -144,10 +154,10 @@ Given(
 );
 
 Then(
-  "{string} on {string} is not kept as left behind",
+  "{string} on {string} is not kept as read",
   async function (this: SpecWorld, documentId: string, website: string) {
     assert.equal(
-      await importDatabaseOf(this).isLeftBehind(website, documentId),
+      await importDatabaseOf(this).wasTournamentRead(website, documentId),
       false,
     );
   },

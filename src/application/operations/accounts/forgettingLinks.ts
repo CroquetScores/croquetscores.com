@@ -11,26 +11,39 @@ import type { Links } from "../../services/Links.js";
 /**
  * What a link to confirm forgetting is worth. One refusal for every way it can
  * be worth nothing, because there is nothing to be had for any of them: a new
- * link is asked for from the account, not traded for an old one.
+ * link is asked for from the account, not traded for an old one. And one for
+ * a link that works for the site's last administrator, who is told what would
+ * let them be forgotten.
  */
-export type ForgettingLinkWorth = "Link.Works" | "Link.NoLongerWorks";
+export type ForgettingLinkWorth =
+  "Link.Works" | "Link.NoLongerWorks" | "ForgetAccount.LastAdministrator";
 
 export type ForgettingLinkJudged =
   | { readonly worth: "Link.Works"; readonly account: Account }
-  | { readonly worth: "Link.NoLongerWorks" };
+  | { readonly worth: "Link.NoLongerWorks" }
+  | { readonly worth: "ForgetAccount.LastAdministrator" };
 
 const noLongerWorks = {
   worth: "Link.NoLongerWorks",
 } as const satisfies ForgettingLinkJudged;
 
 /**
- * What `link` is worth at `at` to the reader signed in to `reader`.
+ * What `link` is worth at `at` to the reader signed in to `reader`, where
+ * `administrators` are the accounts holding the Administrator role.
  *
  * A link works only for the account it was sent for, and only for a reader
  * signed in to that account: followed signed in as somebody else, it forgets
  * nothing, since whoever asks has to be able to read the account's email as
  * well as be signed in to it. A link for an account already forgotten is spent,
  * which is what makes it work once.
+ *
+ * The last administrator is not forgotten, since forgetting takes every role
+ * an account holds and only an administrator can make another
+ * (ForgetAccount.feature). Whether the account is one is asked of the account
+ * itself, and whether there is another of `administrators`, which forgetting
+ * holds: a read model out of step with the account then refuses an
+ * administrator it should not, which can be put right, rather than forgetting
+ * the last, which cannot.
  */
 export const worthOfForgettingLink = async (
   links: Links,
@@ -38,6 +51,7 @@ export const worthOfForgettingLink = async (
   link: string,
   reader: AccountId,
   at: ReadOnlyDate,
+  administrators: readonly AccountId[],
 ): Promise<ForgettingLinkJudged> => {
   const carried = links.read(link);
   if (carried === undefined) return noLongerWorks;
@@ -48,5 +62,11 @@ export const worthOfForgettingLink = async (
   const account = await accounts.load(carried.account);
   if (account === undefined) return noLongerWorks;
   if (account.forgotten) return noLongerWorks;
+  if (
+    account.isAdministrator &&
+    administrators.every((administrator) => administrator.equals(account.id))
+  ) {
+    return { worth: "ForgetAccount.LastAdministrator" };
+  }
   return { worth: "Link.Works", account };
 };

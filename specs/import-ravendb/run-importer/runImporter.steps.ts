@@ -7,6 +7,7 @@ import {
   type ImporterRun,
   type ReadDocument,
 } from "../../../src/import-ravendb/runImporter.js";
+import { ImportRefused } from "../../../src/import-ravendb/ImportRefused.js";
 import type { SpecWorld } from "../../support/world.js";
 import { keepErrorsIn, type ErrorsKept } from "../importing.js";
 
@@ -60,7 +61,9 @@ class Errors implements ErrorsKept {
 
 interface Running {
   readonly collection: string;
-  readonly refuses: Set<string>;
+  // Each document refused, by its key, with the code it is refused with where
+  // it is refused with one.
+  readonly refuses: Map<string, string | undefined>;
   readonly handed: ReadDocument<Document>[];
   readonly sites: Map<string, Documents>;
   readonly errors: Errors;
@@ -94,7 +97,7 @@ Given(
     const errors = new Errors();
     running.set(this, {
       collection,
-      refuses: new Set(),
+      refuses: new Map(),
       handed: [],
       sites: new Map(),
       errors,
@@ -119,7 +122,14 @@ Given(
 Given(
   "the importer refuses {string}",
   function (this: SpecWorld, documentId: string) {
-    runningOf(this).refuses.add(documentId);
+    runningOf(this).refuses.set(documentId, undefined);
+  },
+);
+
+Given(
+  "the importer refuses {string} with {string}",
+  function (this: SpecWorld, documentId: string, code: string) {
+    runningOf(this).refuses.set(documentId, code);
   },
 );
 
@@ -135,7 +145,13 @@ When(
         importDocument(read: ReadDocument<Document>): Promise<void> {
           state.handed.push(read);
           if (state.refuses.has(read.id)) {
-            return Promise.reject(new Error(`Refused ${read.id}`));
+            const code = state.refuses.get(read.id);
+            const message = `Refused ${read.id}`;
+            return Promise.reject(
+              code === undefined
+                ? new Error(message)
+                : new ImportRefused(code, message),
+            );
           }
           return Promise.resolve();
         },

@@ -24,8 +24,9 @@ Feature: Importing the old sites' team matches
   A test is brought over a player and a game at a time, as a competition is
   (`importCompetition.feature`), and is created by whoever the tournament
   was created by and when it was. An archived team match is left behind, as
-  an archived competition is, and putting the tests in the old order is left
-  until every competition is brought over (`OrderCompetitions.feature`).
+  an archived competition is. Which tournament it is brought over with, and
+  where among its competitions, is said with the tournament
+  (`ImportWholeTournaments.feature`).
 
   The old sites kept no world ranking name, so a player is brought over with
   none (`WorldRankingName.feature`).
@@ -62,12 +63,6 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then importing the team match is refused with "ImportTeamMatches.NotTwoTeams"
 
-    Scenario: A team match of a tournament not imported is refused
-      Given the team match "teammatches/51" of "tournaments/99" on "croquetscores.com"
-      And the team match is called "New Zealand vs England"
-      When the team match is imported
-      Then importing the team match is refused with "ImportTeamMatches.NoTournament"
-
     Scenario: A team match of a tournament not played by teams is refused
       Given a tournament "tournaments/12" on "croquetscores.com" is imported
       And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
@@ -75,7 +70,7 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then importing the team match is refused with "Tournament.NotPlayedByTeams"
 
-  Rule: An archived team match, and one of an archived tournament, is left behind
+  Rule: An archived team match is left behind
 
     Scenario: An archived team match is not kept as any test
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -95,13 +90,6 @@ Feature: Importing the old sites' team matches
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       And the team match was archived
-      When the team match is imported
-      Then importing the team match is not refused
-
-    Scenario: Leaving a team match of an archived tournament behind is not refused
-      Given a tournament "tournaments/14" on "croquetscores.com" is left behind as archived
-      And the team match "teammatches/55" of "tournaments/14" on "croquetscores.com"
-      And the team match is called "New Zealand vs England"
       When the team match is imported
       Then importing the team match is not refused
 

@@ -153,30 +153,7 @@ import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
 import { standUpFor } from "./registering.js";
 import { unitOfWorkOf } from "./transactions.js";
-import { heldUntilTheOthersHaveRead } from "../../support/heldAtOnce.js";
-
-// `readModel`, but held just after it is asked `method`, until whatever else
-// is asked at once has asked it too (heldAtOnce.ts): so that two commands asked
-// for at once read what is taken before either writes, where nothing makes the
-// second wait. Every other method is the read model's own.
-const heldAfter = <TReadModel extends object>(
-  world: SpecWorld,
-  readModel: TReadModel,
-  method: keyof TReadModel,
-): TReadModel =>
-  new Proxy(readModel, {
-    get(target, property) {
-      const value: unknown = Reflect.get(target, property, target);
-      if (typeof value !== "function") return value;
-      const bound = (value as (...args: unknown[]) => unknown).bind(target);
-      if (property !== method) return bound;
-      return async (...args: unknown[]) => {
-        const answer = await bound(...args);
-        await heldUntilTheOthersHaveRead(world);
-        return answer;
-      };
-    },
-  });
+import { heldAfter } from "../../support/heldAtOnce.js";
 
 Given("the application's tournaments", function (this: SpecWorld) {
   standUpFor(this);

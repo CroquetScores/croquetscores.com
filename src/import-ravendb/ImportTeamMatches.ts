@@ -57,7 +57,7 @@ const sameName = (one: string, other: string): boolean =>
  *
  * A player representing neither team, and a game the site refuses, is kept
  * as an error naming it, and the rest are brought over. An archived team match
- * is left behind, as is one of a tournament left behind.
+ * is left behind.
  */
 export class ImportTeamMatches implements Importer<TeamMatch> {
   readonly collection = "TeamMatches";
@@ -80,9 +80,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         tournaments,
         website,
         tournamentDocument,
-        "ImportTeamMatches.NoTournament",
       );
-      if (tournament === undefined) return;
 
       const split = document.Name.indexOf(VERSUS);
       if (split === -1) {

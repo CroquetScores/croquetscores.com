@@ -5,14 +5,9 @@ Feature: Importing the old sites' tournaments
   players in a document of their own and each competition in another. This
   brings the tournament itself over: what it is called, when it was played,
   in what sport, format and country, and who ran it. Its players and its
-  competitions are brought over after it (`ImportTournamentPlayers.feature`,
-  `importCompetition.feature`, `ImportTeamMatches.feature`), and its
-  competitions are put in the old order once they all are
-  (`OrderCompetitions.feature`).
-
-  An archived tournament is not brought over. The old sites archived a
-  tournament to be rid of it, and its players and competitions are left
-  behind with it.
+  competitions are brought over after it, with it
+  (`ImportWholeTournaments.feature`), which also says which tournaments are
+  brought over at all: an archived one is not.
 
   A tournament is brought over as it is on the old site, and as the site
   would hold it, and where the two differ the scenarios below say which wins.
@@ -21,9 +16,8 @@ Feature: Importing the old sites' tournaments
   old sites kept no moment it was created at.
 
   Which tournament each document became is kept, by the website and the
-  document, so that its players and its competitions can find it, and so is
-  each tournament left behind, so that its players and competitions are left
-  behind without an error each. The record goes when importing is finished.
+  document, so that its players and its competitions can find it. The record
+  goes when importing is finished.
 
   Background:
     Given the users are imported
@@ -72,29 +66,6 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" was created at "2014-03-01T00:00:00Z"
-
-  Rule: An archived tournament is left behind
-
-    Scenario: An archived tournament is not kept as any tournament
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament was archived
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
-
-    Scenario: Leaving an archived tournament behind is not refused
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament was archived
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then importing the tournament is not refused
-
-    Scenario: An archived tournament is kept as left behind
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament was archived
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then "tournaments/12" on "croquetscores.com" is kept as left behind
 
   Rule: A tournament is played in the sport and the format the old site named
 

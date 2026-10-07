@@ -22,8 +22,9 @@ Feature: Importing the old sites' commentaries
   written. The site has nothing like it, and it is left behind.
 
   An archived commentary is left behind, as an archived tournament is, and so
-  is an archived comment: the old sites archived either to be rid of it. A
-  commentary of a tournament left behind is left behind with it.
+  is an archived comment: the old sites archived either to be rid of it.
+  Which tournament a commentary is brought over with is said with the
+  tournament (`ImportWholeTournaments.feature`).
 
   Background:
     Given the users are imported
@@ -60,12 +61,6 @@ Feature: Importing the old sites' commentaries
       And the commentary was called "Live from Court 1"
       When the commentary is imported
       Then the commentary "Live from Court 1" of the tournament kept for "tournaments/12" on "croquetscores.com" was started at "2014-03-01T00:00:00Z"
-
-    Scenario: A commentary of a tournament not imported is refused
-      Given the commentary "commentaries/6" of "tournaments/99" on "croquetscores.com"
-      And the commentary was called "Live from Court 1"
-      When the commentary is imported
-      Then importing the commentary is refused with "ImportCommentaries.NoTournament"
 
     Scenario: A commentary with a title the site would refuse is refused, naming why
       Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
@@ -207,10 +202,3 @@ Feature: Importing the old sites' commentaries
       And comment 2 was archived
       When the commentary is imported
       Then the commentary "Live from Court 1" of the tournament kept for "tournaments/12" on "croquetscores.com" has 1 comment
-
-    Scenario: Leaving a commentary of an archived tournament behind is not refused
-      Given a tournament "tournaments/14" on "croquetscores.com" is left behind as archived
-      And the commentary "commentaries/7" of "tournaments/14" on "croquetscores.com"
-      And the commentary was called "Live from Court 1"
-      When the commentary is imported
-      Then importing the commentary is not refused

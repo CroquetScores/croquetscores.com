@@ -197,6 +197,49 @@ Feature: A reader who is signed in can have their account forgotten
       When the link to confirm the email address is followed as a link to confirm forgetting
       Then "someone@example.com" has an account
 
+  Rule: The site's last administrator is told they cannot be forgotten
+
+    The site must keep an administrator (`ForgetAccount.feature`). The last
+    one following the link is told so in place of the button, and told what
+    would let them be forgotten. One who was not the last when the link was
+    followed, but is by the time they say so, is told the same, and their
+    account is not forgotten.
+
+    Scenario: The last administrator following the link is told they cannot be forgotten
+      Given a viewport 1200 pixels wide
+      And "admin@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "admin@example.com"
+      When the link is followed
+      Then the reader is told the last administrator cannot be forgotten
+
+    Scenario: An administrator left the last after following the link is told they cannot be forgotten
+      Given a viewport 1200 pixels wide
+      And "admin@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And "someone@example.com" has an account, confirmed
+      And "someone@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "admin@example.com"
+      And the link is followed
+      And "someone@example.com" has had the role "Administrator" taken away
+      When forgetting is confirmed
+      Then the reader is told the last administrator cannot be forgotten
+
+    Scenario: An administrator left the last after following the link is not forgotten
+      Given a viewport 1200 pixels wide
+      And "admin@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And "someone@example.com" has an account, confirmed
+      And "someone@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "correct horse battery staple"
+      And a link to confirm forgetting has been sent to "admin@example.com"
+      And the link is followed
+      And "someone@example.com" has had the role "Administrator" taken away
+      When forgetting is confirmed
+      Then "admin@example.com" has an account
+
   Rule: A forgotten account is signed out of, and its email address is free again
 
     Scenario: The reader is told it is done

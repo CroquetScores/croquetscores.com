@@ -5,14 +5,17 @@ import { ValidationError } from "../../../domain/common/validation/ValidationErr
 export type AccountProfileRefusedCode = "AccountProfile.NotText";
 
 /**
- * What an account is called, the email address it is reached at, and whether
- * it has a password: one made by signing in with Google has none, and nothing
- * that asks for the password it has now is offered to it.
+ * What an account is called, the email address it is reached at, whether it
+ * has a password — one made by signing in with Google has none, and nothing
+ * that asks for the password it has now is offered to it — and whether it
+ * holds the Administrator role, without which the administrator's pages are
+ * not found.
  */
 export interface Profile {
   readonly name: string;
   readonly emailAddress: string;
   readonly hasPassword: boolean;
+  readonly isAdministrator: boolean;
 }
 
 /**

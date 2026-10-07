@@ -1,15 +1,11 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { TournamentPlayerId } from "../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { SpecWorld } from "../../support/world.js";
-import { importDatabaseOf } from "../importing.js";
 import {
   aCompetition,
-  aCompetitionPlayer,
   competitionKeptFor,
   competitionWritten,
-  imported,
   nameOf,
   startWriting,
 } from "../importingTournaments.js";
@@ -22,47 +18,6 @@ Given(
       website,
       id,
       document: aCompetition("knockout", tournament),
-    });
-  },
-);
-
-// A knockout of two byes, which is a knockout whose draw is filled without a
-// player having to be brought over first. The byes are a player of the
-// tournament the old sites called "Bye", numbered past any a scenario names.
-const BYES = 999;
-
-Given(
-  "the knockout {string} of {string} on {string} is imported as {string}",
-  async function (
-    this: SpecWorld,
-    id: string,
-    tournament: string,
-    website: string,
-    name: string,
-  ) {
-    const database = importDatabaseOf(this);
-    if (
-      (await database.findPlayerOf(website, tournament, BYES)) === undefined
-    ) {
-      await database.recordImportedPlayer(
-        website,
-        tournament,
-        BYES,
-        TournamentPlayerId.bye().value,
-      );
-    }
-    await imported(this, {
-      kind: "knockout",
-      website,
-      id,
-      document: {
-        ...aCompetition("knockout", tournament),
-        Name: name,
-        Size: 2,
-        Players: {
-          _Players: [aCompetitionPlayer(BYES), aCompetitionPlayer(BYES)],
-        },
-      },
     });
   },
 );

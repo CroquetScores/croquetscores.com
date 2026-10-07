@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { Accounts } from "./administrator/accounts/accounts.js";
+import { AdministratorSections } from "./administrator/AdministratorSections.js";
 import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competition-slug}/view/view.js";
@@ -58,6 +60,39 @@ export const App = (): React.JSX.Element => {
       going.value = here();
     }
   }, [path]);
+
+  // The administrator's pages, under their own section bar. Only an
+  // administrator is sent the admin's page at one of their addresses
+  // (administrator.feature), but a reader already in the admin can reach one
+  // in place, without the server being asked. Nothing here asks again: what
+  // these pages show is asked of the API, which refuses anybody who is not an
+  // administrator, and the page says so (accounts.feature); what is drawn
+  // before that is headings, which are no secret, being in the admin's
+  // script for every reader. A page beneath the accounts that is not there
+  // yet still marks Accounts, since it is one of theirs.
+  const administrator = /^\/admin\/administrator(\/accounts)?(\/.*)?$/.exec(
+    path,
+  );
+  if (administrator !== null) {
+    const onAccounts = administrator[1] !== undefined;
+    const theAccountsPage = onAccounts && (administrator[2] ?? "/") === "/";
+    return (
+      <>
+        <AdministratorSections reading={onAccounts ? "accounts" : undefined} />
+        <main id="content">
+          <div className="page">
+            <div className="panel stack">
+              {theAccountsPage ? (
+                <Accounts />
+              ) : (
+                <h1>{say("admin.administrator.title")}</h1>
+              )}
+            </div>
+          </div>
+        </main>
+      </>
+    );
+  }
 
   // Each page below is keyed by its address, so that moving from one page to
   // another of the same kind, as from one competition to the next, draws the

@@ -6,6 +6,7 @@ import {
   tournamentNamed,
 } from "../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../support/world.js";
+import { openAndKeepTheAnswer } from "../../../../../support/answered.js";
 import { unmarkedWithin } from "../../../../../support/marks.js";
 import {
   changeTournament,
@@ -32,10 +33,12 @@ const openToEdit = async function (
 Given("the page to edit {string} is open", openToEdit);
 When("the page to edit {string} is opened", openToEdit);
 
+// Keeping what it was answered with, for a scenario that says whether it was
+// found.
 When(
   "the page at {string} is opened",
   async function (this: SpecWorld, path: string) {
-    await this.browserPage.goto(`${this.baseUrl!}${path}`);
+    await openAndKeepTheAnswer(this, path);
   },
 );
 

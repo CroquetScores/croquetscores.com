@@ -144,6 +144,9 @@ export const spanish: Language = {
     "forgetAccount.noLongerWorks.title": "Ese enlace ya no funciona",
     "forgetAccount.noLongerWorks.explanation":
       "Puede que haya caducado, que ya se haya usado o que sea de una cuenta en la que no tienes iniciada la sesión. Vuelve a pedirlo desde tu cuenta si todavía quieres que se olvide.",
+    "forgetAccount.lastAdministrator.title": "Tu cuenta no se puede olvidar",
+    "forgetAccount.lastAdministrator.explanation":
+      "Eres el único administrador de este sitio. Da el rol de administrador a otra persona y después se podrá olvidar tu cuenta.",
     "forgetAccount.askAgain": "Volver a pedirlo",
     "forgetAccount.home": "Volver a {siteName}",
 
@@ -465,6 +468,26 @@ export const spanish: Language = {
     "admin.competitionView.scores": "Resultados",
     "admin.sections.label": "El torneo y sus competiciones",
     "admin.sections.tournament": "Torneo",
+    "admin.administrator.sections.label": "Las páginas del administrador",
+    "admin.administrator.sections.tournaments": "Torneos",
+    "admin.administrator.sections.accounts": "Cuentas",
+    "admin.administrator.title": "Administrador",
+    "admin.accounts.title": "Cuentas",
+    "admin.roles.add": "Añadir",
+    "admin.roles.administrator.heading": "Administradores",
+    "admin.roles.administrator.none": "No hay otros administradores",
+    "admin.roles.administrator.removeTitle": "Quitar administrador",
+    "admin.roles.administrator.removeExplanation":
+      "{name} dejará de ser administrador de este sitio.",
+    "admin.roles.world-ranking-officer.heading":
+      "Responsables del ranking mundial",
+    "admin.roles.world-ranking-officer.none":
+      "No hay responsables del ranking mundial",
+    "admin.roles.world-ranking-officer.removeTitle":
+      "Quitar responsable del ranking mundial",
+    "admin.roles.world-ranking-officer.removeExplanation":
+      "{name} dejará de ser responsable del ranking mundial.",
+    "admin.roles.otherwise": "No se ha podido hacer.",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",
@@ -806,6 +829,15 @@ export const spanish: Language = {
       "Dos jugadores del mismo equipo no juegan entre sí.",
     "AddManager.NoSuchAccount":
       "Esa dirección no tiene ninguna cuenta que se pueda hacer gestora.",
+    "Account.NotAnAdministrator": "Solo un administrador puede hacer eso.",
+    "AddRole.NoSuchAccount":
+      "Esa dirección no tiene ninguna cuenta a la que se pueda dar el rol.",
+    "AddRole.NoSuchRole": "No existe ese rol.",
+    "RemoveRole.NoSuchAccount": "No existe esa cuenta.",
+    "RemoveRole.NoSuchRole": "No existe ese rol.",
+    "RemoveRole.Yourself":
+      "No puedes quitarte a ti mismo el rol de administrador.",
+    "AccountsWithRole.NoSuchRole": "No existe ese rol.",
     "admin.scorers.add": "Añadir anotador",
     "admin.scorers.none": "No hay anotadores",
     "admin.scorers.removeTitle": "Quitar anotador",

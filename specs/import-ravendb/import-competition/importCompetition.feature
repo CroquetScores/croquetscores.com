@@ -24,13 +24,12 @@ Feature: Importing one of the old sites' competitions
   competition behind.
 
   An archived competition is not brought over: the old sites archived one to
-  be rid of it, and took it out of its tournament's list. Nor is a
-  competition of a tournament left behind as archived
-  (`ImportTournaments.feature`). Neither is an error, since nothing went
-  wrong. Which competition each document became is kept, by the website and
-  the document, so that the competitions can be put in the old order once
-  they are all brought over (`OrderCompetitions.feature`), and goes when
-  importing is finished.
+  be rid of it, and took it out of its tournament's list. That is not an
+  error, since nothing went wrong. Which tournament a competition is brought
+  over with, and where among its competitions, is said with the tournament
+  (`ImportWholeTournaments.feature`). Which competition each document became
+  is kept, by the website and the document, for whoever is working out what
+  became of one, and goes when importing is finished.
 
   Background:
     Given the users are imported
@@ -56,12 +55,6 @@ Feature: Importing one of the old sites' competitions
       Then "blocks/30" on "croquetscores.com" is kept as the competition "A Block"
 
 
-    Scenario: A competition of a tournament not imported is refused
-      Given the block "blocks/31" of "tournaments/99" on "croquetscores.com"
-      And the competition is called "A Block"
-      When the competition is imported
-      Then importing the competition is refused with "importCompetition.NoTournament"
-
     Scenario: A competition the site refuses is refused, naming why
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the competition is called ""
@@ -74,7 +67,7 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then "blocks/30" on "croquetscores.com" is not kept as any competition
 
-  Rule: An archived competition, and one of an archived tournament, is left behind
+  Rule: An archived competition is left behind
 
     Scenario: An archived competition is not kept as any competition
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -85,18 +78,6 @@ Feature: Importing one of the old sites' competitions
     Scenario: Leaving an archived competition behind is not refused
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the competition was archived
-      When the competition is imported
-      Then importing the competition is not refused
-
-    Scenario: A competition of an archived tournament is not kept as any competition
-      Given a tournament "tournaments/14" on "croquetscores.com" is left behind as archived
-      And the block "blocks/33" of "tournaments/14" on "croquetscores.com"
-      When the competition is imported
-      Then "blocks/33" on "croquetscores.com" is not kept as any competition
-
-    Scenario: Leaving a competition of an archived tournament behind is not refused
-      Given a tournament "tournaments/14" on "croquetscores.com" is left behind as archived
-      And the block "blocks/33" of "tournaments/14" on "croquetscores.com"
       When the competition is imported
       Then importing the competition is not refused
 

@@ -11,7 +11,9 @@ Feature: What an account is called, and where it is reached
   every change made to them, and with whether the account has a password. An
   account made by signing in with Google has none (`SignInWithGoogle.feature`),
   and the pages that ask for the password the account has now are neither
-  offered to it nor there for it (`profile.feature`, `accountMenu.feature`). An account with nothing to show answers with
+  offered to it nor there for it (`profile.feature`, `accountMenu.feature`). It
+  answers too with whether the account holds the Administrator role, which the
+  administrator's pages ask on every request (`administrator.feature`). An account with nothing to show answers with
   nothing: one that has been forgotten, whose name and address are gone, and
   one that has never been confirmed, which has no name yet and cannot be signed
   in to. The pages treat an answer of nothing as nobody signed in.
@@ -52,6 +54,26 @@ Feature: What an account is called, and where it is reached
       Given "someone@example.com" has an account, confirmed, with no password
       When the profile of the account for "someone@example.com" is asked for
       Then the profile says the account has no password
+
+  Rule: The profile says whether the account is an administrator
+
+    Scenario: The profile says an account given the role is an administrator
+      Given "someone@example.com" has an account, confirmed, called "Sam Someone"
+      And "someone@example.com" has been given the role "Administrator"
+      When the profile of the account for "someone@example.com" is asked for
+      Then the profile says the account is an administrator
+
+    Scenario: The profile says an account never given the role is not an administrator
+      Given "someone@example.com" has an account, confirmed, called "Sam Someone"
+      When the profile of the account for "someone@example.com" is asked for
+      Then the profile says the account is not an administrator
+
+    Scenario: The profile says an account the role was taken from is not an administrator
+      Given "someone@example.com" has an account, confirmed, called "Sam Someone"
+      And "someone@example.com" has been given the role "Administrator"
+      And "someone@example.com" has had the role "Administrator" taken away
+      When the profile of the account for "someone@example.com" is asked for
+      Then the profile says the account is not an administrator
 
   Rule: An account with nothing to show is answered with nothing
 

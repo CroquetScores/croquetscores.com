@@ -23,8 +23,8 @@ import type { Importer, ReadDocument } from "./runImporter.js";
  * comments in the order they were written (ImportCommentaries.feature).
  *
  * A comment the site refuses is kept as an error naming it, and the rest are
- * added all the same. What the old sites archived is left behind, as is a
- * commentary of a tournament left behind. The tournament, the commentary, and
+ * added all the same. What the old sites archived is left behind. The
+ * tournament, the commentary, and
  * any forgotten account made for its writer are kept in one transaction. The
  * titles and slugs the tournament's other commentaries have are asked of the
  * read model of them, as starting one on the site asks.
@@ -57,9 +57,7 @@ export class ImportCommentaries implements Importer<OldCommentary> {
         this.tournaments,
         website,
         document.Tournament.Id,
-        "ImportCommentaries.NoTournament",
       );
-      if (tournament === undefined) return;
 
       const comments = document.Comments.filter(
         (comment) => !comment.IsArchived,

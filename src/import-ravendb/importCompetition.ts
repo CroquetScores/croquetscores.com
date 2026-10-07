@@ -134,9 +134,8 @@ export const addGames = async (
  * withdrew withdrawn once their games are. A player or a game the site
  * refuses is kept as an error naming it, and the rest are brought over.
  *
- * An archived competition is left behind, as is one of a tournament left
- * behind. The tournament, the competition and the record of it are kept in
- * one transaction.
+ * An archived competition is left behind. The tournament, the competition
+ * and the record of it are kept in one transaction.
  */
 export const importCompetition = async <TDocument extends OldCompetition>(
   importing: ImportingCompetitions,
@@ -154,9 +153,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournaments,
       website,
       tournamentDocument,
-      "importCompetition.NoTournament",
     );
-    if (tournament === undefined) return;
     const name = CompetitionName.from(document.Name);
 
     const bye = TournamentPlayerId.bye().value;

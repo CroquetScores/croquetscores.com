@@ -49,6 +49,9 @@ export const readerTheScenariosSet: Reader = (request: FastifyRequest) =>
     : {
         account: somebody,
         hasPassword: (request.cookies[noPassword] ?? "") === "",
+        // A role is given to an account, and a scenario with no database has
+        // none to give it to: one about an administrator signs in for real.
+        isAdministrator: false,
       };
 
 /** Has this scenario's browser ask as a reader signed in as `address`. */

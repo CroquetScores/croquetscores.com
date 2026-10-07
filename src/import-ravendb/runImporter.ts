@@ -1,4 +1,5 @@
 import type { ImportErrors } from "./ImportDatabase.js";
+import { describedFailure } from "./ImportRefused.js";
 
 /** How many documents are read at a time. */
 export const PAGE_SIZE = 100;
@@ -53,14 +54,6 @@ export const minutesAndSeconds = (milliseconds: number): string => {
   return `${String(Math.floor(seconds / 60))}.${String(seconds % 60).padStart(2, "0")}`;
 };
 
-// The stack, where there is one, because the error is read later by whoever
-// is working out why a document was refused, and where it was refused is half
-// of that.
-const messageOf = (failure: unknown): string =>
-  failure instanceof Error
-    ? (failure.stack ?? failure.message)
-    : String(failure);
-
 /**
  * Reads every document in the importer's collection, a page at a time, and
  * hands each to the importer in turn (runImporter.feature). `show` is given
@@ -91,7 +84,10 @@ export const runImporter = async <TDocument extends object>(
           document,
         });
       } catch (failure) {
-        await errors.recordError(`${source.website}/${id}`, messageOf(failure));
+        await errors.recordError(
+          `${source.website}/${id}`,
+          describedFailure(failure),
+        );
         refused += 1;
       }
 

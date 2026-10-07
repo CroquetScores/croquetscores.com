@@ -9,6 +9,7 @@ import type {
 import { randomUUID } from "node:crypto";
 
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
+import { RoleOperationRefused } from "../../application/operations/accounts/roleOperations.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import { ManagerNoteRefused } from "../../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { CompetitionRefused } from "../../domain/aggregates/tournaments/competitions/Competition.js";
@@ -138,9 +139,13 @@ export const registerErrorMapping = (
     // what it needed of the tournament was known — a game with a tie and no
     // mark saying who won, a player who has withdrawn — which the score
     // dialog says beside the field it is about.
+    //
+    // So is a refusal to give, take or list a role, which the accounts page
+    // says beneath the field it is about.
     if (
       (error instanceof TournamentRefused ||
         error instanceof TournamentOperationRefused ||
+        error instanceof RoleOperationRefused ||
         error instanceof CompetitionRefused ||
         error instanceof ManagerNoteRefused ||
         error instanceof ValidationError) &&

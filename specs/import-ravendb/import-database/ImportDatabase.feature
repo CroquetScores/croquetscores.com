@@ -13,9 +13,10 @@ Feature: The database an import empties and fills
   not be imported, and one each keeping what the old sites' users,
   tournaments, tournament players and competitions became, so that whatever
   is imported after them can find them. A user may have become a forgotten
-  account, and a tournament may have been left behind as archived, and each
-  of those is kept too. None is a migration's, because the
-  site has no use for them, and all go when importing is finished.
+  account, which is kept too, and every tournament read is kept, whatever
+  became of it, so that a document naming one never read can be found. None
+  is a migration's, because the site has no use for them, and all go when
+  importing is finished.
 
   Background:
     Given an import's database
@@ -45,11 +46,11 @@ Feature: The database an import empties and fills
       When the import's database is emptied
       Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
 
-    Scenario: A tournament left behind before emptying is gone after it
+    Scenario: A tournament read before emptying is gone after it
       Given the import's database is emptied
-      And "tournaments/14" on "croquetscores.com" was kept as left behind
+      And "tournaments/14" on "croquetscores.com" was kept as read
       When the import's database is emptied
-      Then "tournaments/14" on "croquetscores.com" is not kept as left behind
+      Then "tournaments/14" on "croquetscores.com" is not kept as read
 
     Scenario: A forgotten account kept before emptying is gone after it
       Given the import's database is emptied
@@ -121,3 +122,23 @@ Feature: The database an import empties and fills
       And "users/1" on "croquetscores.com" is kept as an account at "someone@example.com"
       When the account imported for "nobody@example.com" is looked for
       Then no account imported is found
+
+  Rule: The errors kept are counted, wherever they were kept from
+
+    The import ends by saying how many errors it kept. A document refused
+    while its tournament brings it over is kept by the tournament
+    (`ImportWholeTournaments.feature`), not by whoever read the tournament, so
+    adding up what each collection's reading was refused would leave it out.
+    The count is asked of what was kept instead.
+
+    Scenario: Every error kept is counted
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/users/2" saying "Refused"
+      And an error is kept for "croquetscores.com/blocks/1" saying "Refused"
+      When the errors kept are counted
+      Then 2 errors are counted
+
+    Scenario: No error kept counts none
+      Given the import's database is emptied
+      When the errors kept are counted
+      Then 0 errors are counted

@@ -7,6 +7,7 @@ import type { AccountId } from "../../../../../src/domain/aggregates/accounts/Ac
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
 import type { Registering } from "../../../../support/registering.js";
 import type { SpecWorld } from "../../../../support/world.js";
+import { toBeAsked } from "../../tournaments/askedAtOnce.js";
 
 const registeringOf = (world: SpecWorld): Registering => {
   assert.ok(world.registering !== undefined, "Registering is not stood up.");
@@ -98,3 +99,31 @@ Then("it is answered with that account", function (this: SpecWorld) {
   );
   assert.equal((this.answer as AccountId).value, heldBy(this));
 });
+
+// Asked for with another at once (askedAtOnce.ts), its answer kept there. The
+// link is made for the scenario rather than taken out of an email, since two
+// emails to two addresses are not what the scenario is about.
+Given(
+  "the reader signed in to the account for {string} is to confirm forgetting it",
+  async function (this: SpecWorld, address: string) {
+    const reader = await signedInTo(this, address);
+    const link = await registeringOf(this).aLinkToForget(address);
+    const at = momentOf(this);
+    toBeAsked(this, () =>
+      registeringOf(this).forgetWithLink(new ForgetAccount(link, reader, at)),
+    );
+  },
+);
+
+Then(
+  "{int} of {string} and {string} has an account",
+  async function (this: SpecWorld, count: number, one: string, other: string) {
+    const found = await Promise.all(
+      [one, other].map((address) => registeringOf(this).accountFor(address)),
+    );
+    assert.equal(
+      found.filter((account) => account !== undefined).length,
+      count,
+    );
+  },
+);

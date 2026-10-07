@@ -58,3 +58,9 @@ Then("the page is not found", function (this: SpecWorld) {
   assert.ok(status !== undefined, "Nothing was opened or posted to.");
   assert.equal(status, 404);
 });
+
+Then("the page opens", function (this: SpecWorld) {
+  const status = statuses.get(this);
+  assert.ok(status !== undefined, "Nothing was opened or posted to.");
+  assert.equal(status, 200);
+});

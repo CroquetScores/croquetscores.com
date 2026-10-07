@@ -32,6 +32,10 @@ import { SetNewPasswordValidator } from "../application/operations/accounts/SetN
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
 import { AskToSetPasswordHandler } from "../application/operations/accounts/AskToSetPasswordHandler.js";
 import { AccountProfile } from "../application/operations/accounts/AccountProfile.js";
+import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
+import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
+import { AddRoleValidator } from "../application/operations/accounts/AddRoleValidator.js";
+import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
 import { ChangeNameHandler } from "../application/operations/accounts/ChangeNameHandler.js";
 import { ChangePasswordHandler } from "../application/operations/accounts/ChangePasswordHandler.js";
@@ -212,6 +216,7 @@ import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReader
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
+import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
@@ -228,7 +233,12 @@ import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
-import { knowTheReader, signedIn, type Reader } from "./common/reader.js";
+import {
+  isAdministrator,
+  knowTheReader,
+  signedIn,
+  type Reader,
+} from "./common/reader.js";
 import type { InTransaction } from "./common/database.js";
 import { readerFromSessions, registerSignOut } from "./common/session.js";
 import { speakToRequests, type Language } from "./common/language.js";
@@ -428,6 +438,10 @@ const registerAssets = (server: FastifyInstance, assets: Assets): void => {
   );
 };
 
+// /admin/administrator and everything beneath it, but not an address that
+// only begins the same way, such as /admin/administrators.
+const administratorsOnly = /^\/admin\/administrator(?:[/?#]|$)/;
+
 const registerAdmin = async (
   server: FastifyInstance,
   adminRoot: string,
@@ -463,15 +477,23 @@ const registerAdmin = async (
   // Nothing in the admin is anybody's but the reader's own, so a reader who is
   // not signed in is sent to sign in first, and brought back to the address
   // they asked for, as every page of an account's own does.
-  server.get("/admin/*", (request, reply) =>
-    signedIn(request)
-      ? reply
-          .header("cache-control", "private, no-cache")
-          .header("vary", "Cookie, Accept-Language")
-          .type("text/html; charset=utf-8")
-          .send(adminPage(built, request))
-      : toSignIn(request, reply),
-  );
+  //
+  // The administrator's pages are nobody's own, so being signed in is not
+  // enough for them (administrator.feature). Not found rather than refused, so
+  // that they do not announce themselves to whoever may not open them. A
+  // reader not signed in is still sent to sign in, since they may be an
+  // administrator who has not said so yet.
+  server.get("/admin/*", (request, reply) => {
+    if (!signedIn(request)) return toSignIn(request, reply);
+    if (administratorsOnly.test(request.url) && !isAdministrator(request)) {
+      return reply.callNotFound();
+    }
+    return reply
+      .header("cache-control", "private, no-cache")
+      .header("vary", "Cookie, Accept-Language")
+      .type("text/html; charset=utf-8")
+      .send(adminPage(built, request));
+  });
 };
 
 export interface ApplicationOptions {
@@ -572,6 +594,8 @@ export const buildApplication = async (
     config.accountEmailAddressHashKey,
   );
 
+  const accountsByRole = new AccountsByRole(unitOfWork);
+
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
@@ -582,6 +606,7 @@ export const buildApplication = async (
   const projections: readonly Projection[] = [
     accountsByEmailAddress,
     accountsByGoogleAccount,
+    accountsByRole,
     tournamentsByAddress,
     tournamentsByAccount,
     tournamentsByWebsite,
@@ -718,10 +743,16 @@ export const buildApplication = async (
       links,
     ),
   );
-  mediator.handleCommand(new ForgetAccountHandler(accounts, links));
+  mediator.handleCommand(
+    new ForgetAccountHandler(accounts, links, accountsByRole),
+  );
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
   mediator.handleQuery(new AccountProfileHandler(accounts));
+  validation.register(new AddRoleValidator());
+  mediator.handleCommand(new AddRoleHandler(accounts, accountsByEmailAddress));
+  mediator.handleCommand(new RemoveRoleHandler(accounts, accountsByRole));
+  mediator.handleQuery(new AccountsWithRoleHandler(accounts, accountsByRole));
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(
@@ -748,7 +779,9 @@ export const buildApplication = async (
       breached,
     ),
   );
-  mediator.handleQuery(new WhatAForgettingLinkIsWorthHandler(accounts, links));
+  mediator.handleQuery(
+    new WhatAForgettingLinkIsWorthHandler(accounts, links, accountsByRole),
+  );
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(
       accounts,
@@ -1070,13 +1103,13 @@ export const buildApplication = async (
   knowTheReader(
     server,
     options.reader ??
-      readerFromSessions(
-        sessions,
-        inTransaction,
-        async (account) =>
-          (await mediator.query(new AccountProfile(account.value)))
-            ?.hasPassword ?? false,
-      ),
+      readerFromSessions(sessions, inTransaction, async (account) => {
+        const profile = await mediator.query(new AccountProfile(account.value));
+        return {
+          hasPassword: profile?.hasPassword ?? false,
+          isAdministrator: profile?.isAdministrator ?? false,
+        };
+      }),
   );
 
   // Before any route, so nothing that changes something can be reached from

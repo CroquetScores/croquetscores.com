@@ -1,0 +1,25 @@
+/* Each role's section on the accounts page (accounts.feature): headed on the
+   section bar's colours, so that the two read as two parts of the page, with
+   the list and the field beneath on the panel. */
+
+.role-section {
+  border: 1px solid var(--border);
+}
+
+.role-heading {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-xl);
+}
+
+.role-body {
+  padding: var(--space-3);
+}
+
+/* What the section as a whole was refused, said where its list would be. */
+.role-refused {
+  margin: 0;
+  color: var(--danger);
+}
