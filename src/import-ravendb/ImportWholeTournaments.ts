@@ -35,7 +35,11 @@ interface Named {
   readonly importer: Importer<object>;
 }
 
-const isArchived = (document: object): boolean =>
+/**
+ * Whether the old sites archived `document`, to be rid of it. Left out of a
+ * document that is never archived, such as a tournament's players.
+ */
+export const isArchived = (document: object): boolean =>
   (document as { IsArchived?: unknown }).IsArchived === true;
 
 /**
@@ -52,7 +56,10 @@ const isArchived = (document: object): boolean =>
  * own, so that the errors count every document not brought over.
  *
  * Every tournament read is kept as read, so that RefuseLeftOvers can find
- * what no tournament took.
+ * what no tournament took: an archived one at once, and any other once the
+ * old site has said what names it. One the old site could not be asked about
+ * is not kept as read, so that what names it is refused there, and counted,
+ * rather than passed over as though it had been taken.
  */
 export class ImportWholeTournaments implements Importer<OldTournament> {
   readonly collection = "Tournaments";
@@ -65,8 +72,10 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
     const { website, id, document } = read;
-    await this.database.recordTournamentRead(website, id);
-    if (document.IsArchived) return;
+    if (document.IsArchived) {
+      await this.database.recordTournamentRead(website, id);
+      return;
+    }
 
     // Asked for all at once, since none waits on another's answer and each
     // is a round trip to the old site.
@@ -80,6 +89,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       ...this.#inListedOrder(document, competitions.flat()),
       ...commentaries,
     ];
+    await this.database.recordTournamentRead(website, id);
 
     try {
       await this.parts.tournament.importDocument(read);

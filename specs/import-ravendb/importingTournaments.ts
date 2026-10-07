@@ -148,8 +148,16 @@ export type Writing =
  */
 export class WrittenSite implements DocumentSource, TournamentDocuments {
   readonly #collections = new Map<string, { id: string; document: object }[]>();
+  // The collections asking what names a tournament fails for, as RavenDB's
+  // does when it gives up waiting for an index.
+  readonly #failing = new Set<string>();
 
   constructor(readonly website: string) {}
+
+  /** Has asking `collection` what names a tournament fail from now on. */
+  failNaming(collection: string): void {
+    this.#failing.add(collection);
+  }
 
   add(collection: string, id: string, document: object): void {
     const documents = this.#collections.get(collection) ?? [];
@@ -184,6 +192,11 @@ export class WrittenSite implements DocumentSource, TournamentDocuments {
     collection: string,
     tournamentDocumentId: string,
   ): Promise<readonly { readonly id: string; readonly document: TDocument }[]> {
+    if (this.#failing.has(collection)) {
+      return Promise.reject(
+        new Error(`Waiting for the index of ${collection} timed out.`),
+      );
+    }
     return Promise.resolve(
       (this.#collections.get(collection) ?? []).filter(
         ({ document }) =>
@@ -884,6 +897,13 @@ Given(
 const importIt = async function (this: SpecWorld): Promise<void> {
   await importWritten(this);
 };
+Given(
+  "{string} fails when asked which {string} name a tournament",
+  function (this: SpecWorld, website: string, collection: string) {
+    writtenSiteOf(this, website).failNaming(collection);
+  },
+);
+
 When("the tournament is imported", async function (this: SpecWorld) {
   await importTournamentWritten(this);
 });

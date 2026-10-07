@@ -9,6 +9,10 @@ Feature: Refusing whatever names a tournament that was never there
   an error (`runImporter.feature`). Without it, an import that kept no
   errors could still have left documents behind that nobody read.
 
+  A tournament the old site could not be asked about is not kept as read
+  (`ImportWholeTournaments.feature`), so what names it is refused here too,
+  as a tournament's that was not there to bring it over.
+
   A document whose tournament was read is passed over, whatever became of
   the tournament: one brought over took it, one archived left it behind, and
   one refused kept it as an error already. An archived document is passed
@@ -35,6 +39,13 @@ Feature: Refusing whatever names a tournament that was never there
         | Swiss      | swisses/30           |
         | team match | teammatches/50       |
         | commentary | commentaries/5       |
+
+    Scenario: A document of a tournament the old site could not be asked about is kept as an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And "croquetscores.com" fails when asked which "Blocks" name a tournament
+      And the tournament "tournaments/12" on "croquetscores.com" is imported
+      When the documents no tournament took are looked for
+      Then the error kept for "croquetscores.com/blocks/30" says "RefuseLeftOvers.NoTournament"
 
     Scenario: An archived document naming a tournament not there is not an error
       Given the block "blocks/30" of "tournaments/99" on "croquetscores.com"

@@ -1,4 +1,5 @@
 import type { ImportDatabase } from "./ImportDatabase.js";
+import { isArchived } from "./ImportWholeTournaments.js";
 import { ImportRefused } from "./ImportRefused.js";
 import type { Reference } from "./ravendb-models/Tournament.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
@@ -31,7 +32,7 @@ export class RefuseLeftOvers implements Importer<NamingATournament> {
     website,
     document,
   }: ReadDocument<NamingATournament>): Promise<void> {
-    if (document.IsArchived === true) return;
+    if (isArchived(document)) return;
     const tournament = document.Tournament.Id;
     if (await this.database.wasTournamentRead(website, tournament)) return;
     throw new ImportRefused(

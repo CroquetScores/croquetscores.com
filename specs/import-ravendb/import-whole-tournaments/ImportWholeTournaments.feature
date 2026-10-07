@@ -218,6 +218,21 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament is imported
       Then no error is kept for "croquetscores.com/tournamentplayers/40"
 
+  Rule: A tournament whose documents cannot be asked for is not brought over
+
+    The old site is asked for what names a tournament before anything is
+    brought over, and it can fail to answer, as RavenDB does when it gives up
+    waiting for an index it is still making. The tournament is then refused
+    with whatever the old site failed with, and nothing of it is brought over.
+    It is not kept as read, so that whatever names it is refused once every
+    tournament is done (`RefuseLeftOvers.feature`), and counted, rather than
+    passed over as though the tournament had taken it.
+
+    Scenario: A tournament whose documents cannot be asked for is not kept as any tournament
+      Given "croquetscores.com" fails when asked which "Blocks" name a tournament
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
   Rule: A refused tournament takes what names it with it, each as an error
 
     A tournament the site refuses brings nothing that names it over, since
