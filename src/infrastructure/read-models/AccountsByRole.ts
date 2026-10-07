@@ -51,13 +51,18 @@ export class AccountsByRole implements Projection, Finding {
   /**
    * Locks the rows as they are read. Under read committed, a second request
    * waiting on them reads them again once the first is done, and finds any
-   * the first deleted gone.
+   * the first deleted gone. Locked in the order of their ids, so that two
+   * requests take them in the same order and one waits for the other, rather
+   * than each holding a row the other wants and both being stopped as a
+   * deadlock.
    */
   async holdEvery(role: Role): Promise<readonly AccountId[]> {
     const { rows } = await this.unitOfWork
       .connection()
       .query<{ account_id: string }>(
-        `select account_id from accounts_by_role where role = $1 for update`,
+        `select account_id from accounts_by_role where role = $1
+         order by account_id
+         for update`,
         [role],
       );
     return rows.map(({ account_id }) => AccountId.from(account_id));

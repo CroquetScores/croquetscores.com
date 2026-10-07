@@ -75,6 +75,13 @@ const noLongerWorks = (speaking: Speaking): Said => ({
   },
 });
 
+// No way onwards but home: asking again would be refused the same way, until
+// somebody else is given the role.
+const lastAdministrator = (speaking: Speaking): Said => ({
+  title: speaking.say("forgetAccount.lastAdministrator.title"),
+  explanation: speaking.say("forgetAccount.lastAdministrator.explanation"),
+});
+
 const carriedIn = (request: FastifyRequest): string | undefined =>
   /[?&]link=([^&]*)/.exec(request.url)?.[1];
 
@@ -171,9 +178,14 @@ export const registerForgetAccountPage = (
         request.requestedAt,
       ),
     );
-    return worth === "Link.Works"
-      ? showing(request, reply, confirmingFor(speaking, carried))
-      : telling(request, reply, noLongerWorks(speaking));
+    switch (worth) {
+      case "Link.Works":
+        return showing(request, reply, confirmingFor(speaking, carried));
+      case "ForgetAccount.LastAdministrator":
+        return telling(request, reply, lastAdministrator(speaking));
+      case "Link.NoLongerWorks":
+        return telling(request, reply, noLongerWorks(speaking));
+    }
   });
 
   server.post(forgetAccountPath, async (request, reply) => {
@@ -202,7 +214,13 @@ export const registerForgetAccountPage = (
       );
     } catch (failure) {
       if (failure instanceof ForgettingRefused) {
-        return telling(request, reply, noLongerWorks(speaking));
+        return telling(
+          request,
+          reply,
+          failure.code === "ForgetAccount.LastAdministrator"
+            ? lastAdministrator(speaking)
+            : noLongerWorks(speaking),
+        );
       }
       throw failure;
     }

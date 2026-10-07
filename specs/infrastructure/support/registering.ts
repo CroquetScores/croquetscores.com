@@ -319,7 +319,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       links,
     ),
   );
-  mediator.handleCommand(new ForgetAccountHandler(repository, links));
+  // Held just after it takes hold of the administrators, as taking the role
+  // is below, so that the last two administrators forgetting at once both read
+  // who holds it before either writes, where nothing makes the second wait.
+  mediator.handleCommand(
+    new ForgetAccountHandler(
+      repository,
+      links,
+      heldAfter(world, accounts.byRole, "holdEvery"),
+    ),
+  );
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(repository));
   mediator.handleQuery(new AccountProfileHandler(repository));
@@ -680,9 +689,10 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await world.keepAccount?.(account);
     },
 
-    // Kept straight to the store, as forgetting is above, since no command
-    // gives a role yet. Given by an account of nobody's, as the role's event
-    // records whoever gave it and the scenario does not say.
+    // Kept straight to the store, as forgetting is above, rather than asked of
+    // AddRole, which would need an administrator to ask it. Given by an
+    // account of nobody's, as the role's event records whoever gave it and
+    // the scenario does not say.
     async giveRole(address, role) {
       await settle();
       const account = await readBack(world, await idFor(address));

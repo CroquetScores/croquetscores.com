@@ -62,6 +62,27 @@ const openTheAccounts = async function (this: SpecWorld): Promise<void> {
 Given("the accounts page is open", openTheAccounts);
 When("the accounts page is opened", openTheAccounts);
 
+// The next time the page asks who holds the role, answered as a failure of the
+// site's is: a server error, and a page rather than a code.
+Given(
+  "the accounts holding the role {string} are answered with a server error",
+  async function (this: SpecWorld, role: string) {
+    const at = `/api/v1/roles/${role.toLowerCase().replaceAll(" ", "-")}/accounts`;
+    await this.browserPage.route(
+      (url) => url.pathname === at,
+      async (route) => {
+        if (route.request().method() !== "GET") return route.fallback();
+        await route.fulfill({
+          status: 500,
+          contentType: "text/html",
+          body: "Something went wrong.",
+        });
+      },
+      { times: 1 },
+    );
+  },
+);
+
 const headings = async (world: SpecWorld): Promise<string[]> =>
   (await sections(world).locator(".role-heading").allInnerTexts()).map(
     (heading) => heading.trim(),

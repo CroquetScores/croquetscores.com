@@ -24,12 +24,13 @@ interface Holder {
 // that it is one segment of an address.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
-// The code a refusal was answered with, where it was answered with one.
-const refusalOf = async (response: Response): Promise<string | undefined> => {
+// The code a refusal was answered with, or "Unknown" where it was answered
+// with none, as a failure of the site's is, so that something is always said.
+const refusalOf = async (response: Response): Promise<string> => {
   try {
-    return ((await response.json()) as { error?: string }).error;
+    return ((await response.json()) as { error?: string }).error ?? "Unknown";
   } catch {
-    return undefined;
+    return "Unknown";
   }
 };
 
@@ -43,7 +44,7 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   const [removing, setRemoving] = useState<Holder | undefined>();
   // What the section as a whole was refused, by its code: a Remove, or the
-  // list asked for again after one, once the reader is no longer allowed.
+  // list, whether the reader is no longer allowed it or the site failed.
   const [refusedHere, setRefusedHere] = useState<string | undefined>();
   // Its own flag rather than `sending`, which a Remove sets too: an Add sent
   // while a Remove is under way is sent, not dropped without a word.
@@ -60,10 +61,13 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
           return ((await response.json()) as { accounts: Holder[] }).accounts;
         }
         const code = await refusalOf(response);
-        if (current && code !== undefined) setRefusedHere(code);
+        if (current) setRefusedHere(code);
         return undefined;
       })
-      .catch(() => undefined)
+      .catch(() => {
+        if (current) setRefusedHere("Unknown");
+        return undefined;
+      })
       .then((accounts) => {
         if (!current) return;
         setListed(accounts);

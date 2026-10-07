@@ -117,3 +117,63 @@ Feature: Forgetting an account, asked for and then confirmed
       And forgetting has been confirmed with that link, signed in to that account
       When forgetting is confirmed with that link, signed in to that account
       Then it is refused with "Link.NoLongerWorks"
+
+  Rule: The site's last administrator cannot be forgotten
+
+    Forgetting an account takes every role it held, and only an administrator
+    can make another (`AddRole.feature`), so forgetting the last one would
+    leave the site with none, which only the database could then undo. The
+    last administrator is refused with `ForgetAccount.LastAdministrator`, and
+    can be forgotten once they have given the role to somebody else. An
+    administrator who is not the last is forgotten as anybody is.
+
+    As taking the Administrator role does (`RemoveRole.feature`), forgetting
+    waits for any other taking of it, or forgetting of an administrator, to be
+    done, and only then asks who still holds it. So the last two administrators
+    forgetting their accounts at once leave one.
+
+    Scenario: The last administrator is refused
+      Given "admin@example.com" has an account, confirmed
+      And "admin@example.com" has been given the role "Administrator"
+      And forgetting has been asked for by the reader signed in to the account for "admin@example.com"
+      And the link emailed to "admin@example.com" is taken out of it
+      When forgetting is confirmed with that link, signed in to the account for "admin@example.com"
+      Then it is refused with "ForgetAccount.LastAdministrator"
+
+    Scenario: The last administrator is not forgotten
+      Given "admin@example.com" has an account, confirmed
+      And "admin@example.com" has been given the role "Administrator"
+      And forgetting has been asked for by the reader signed in to the account for "admin@example.com"
+      And the link emailed to "admin@example.com" is taken out of it
+      When forgetting is confirmed with that link, signed in to the account for "admin@example.com"
+      Then there is an account for "admin@example.com"
+
+    Scenario: An administrator who is not the last is forgotten
+      Given "admin@example.com" has an account, confirmed
+      And "admin@example.com" has been given the role "Administrator"
+      And "someone@example.com" has an account, confirmed
+      And "someone@example.com" has been given the role "Administrator"
+      And forgetting has been asked for by the reader signed in to the account for "admin@example.com"
+      And the link emailed to "admin@example.com" is taken out of it
+      When forgetting is confirmed with that link, signed in to the account for "admin@example.com"
+      Then there is no account for "admin@example.com"
+
+    Scenario: Of the last two forgetting at once, one is refused
+      Given "admin@example.com" has an account, confirmed
+      And "admin@example.com" has been given the role "Administrator"
+      And "someone@example.com" has an account, confirmed
+      And "someone@example.com" has been given the role "Administrator"
+      And the reader signed in to the account for "admin@example.com" is to confirm forgetting it
+      And the reader signed in to the account for "someone@example.com" is to confirm forgetting it
+      When both are asked for at once
+      Then one of them is refused with "ForgetAccount.LastAdministrator"
+
+    Scenario: Of the last two forgetting at once, one is left
+      Given "admin@example.com" has an account, confirmed
+      And "admin@example.com" has been given the role "Administrator"
+      And "someone@example.com" has an account, confirmed
+      And "someone@example.com" has been given the role "Administrator"
+      And the reader signed in to the account for "admin@example.com" is to confirm forgetting it
+      And the reader signed in to the account for "someone@example.com" is to confirm forgetting it
+      When both are asked for at once
+      Then 1 of "admin@example.com" and "someone@example.com" has an account

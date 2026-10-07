@@ -127,9 +127,9 @@ const roleCalled = (name: string): Role => {
   return role;
 };
 
-// Given and taken away by somebody the scenario does not name, since nothing
-// gives a role yet but the steps: who may give one is for the command that
-// will, when there is one.
+// Given and taken away by somebody the scenario does not name, since who may
+// give one is for AddRole.feature and RemoveRole.feature to say, and a
+// scenario elsewhere only needs the role held.
 Given(
   "{string} has been given the role {string}",
   async function (this: SpecWorld, address: string, role: string) {

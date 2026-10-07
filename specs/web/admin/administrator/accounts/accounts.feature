@@ -299,6 +299,17 @@ Feature: The accounts page, where an administrator gives and takes roles
       When "Remove" is pressed in the modal dialog
       Then the section "World Ranking Officers" says it was refused with "Account.NotAnAdministrator"
 
+  Rule: A list the site fails to answer is said in its section
+
+    A failure answered with no code of its own, as an error of the site's is,
+    is said as `Unknown`, rather than the section showing neither a list nor
+    that there is nobody in it, which would look like a page still loading.
+
+    Scenario: A list the site fails to answer says so
+      Given the accounts holding the role "World Ranking Officer" are answered with a server error
+      When the accounts page is opened
+      Then the section "World Ranking Officers" says it was refused with "Unknown"
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). An account's name is

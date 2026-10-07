@@ -12,9 +12,9 @@ export type RoleHolders = Readonly<Partial<Record<Role, readonly string[]>>>;
 
 /**
  * Gives the site's roles to the accounts named for them, once the old sites'
- * users are brought over (GiveRoles.feature). Nothing on the site gives a role
- * yet, and the import empties the database first, so without this every role
- * would be held by nobody.
+ * users are brought over (GiveRoles.feature). The import empties the database
+ * first, so without this every role would be held by nobody, and with no
+ * administrator there would be nobody to give one on the site.
  */
 export class GiveRoles {
   constructor(

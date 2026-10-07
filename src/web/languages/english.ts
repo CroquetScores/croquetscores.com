@@ -153,6 +153,9 @@ export const english: Language = {
     "forgetAccount.noLongerWorks.title": "That link no longer works",
     "forgetAccount.noLongerWorks.explanation":
       "It may have expired, been used already, or be for an account you are not signed in to. Ask again from your account if you still want it forgotten.",
+    "forgetAccount.lastAdministrator.title": "Your account cannot be forgotten",
+    "forgetAccount.lastAdministrator.explanation":
+      "You are this site's only administrator. Give the Administrator role to somebody else, and then your account can be forgotten.",
     "forgetAccount.askAgain": "Ask again",
     "forgetAccount.home": "Back to {siteName}",
 
@@ -543,8 +546,10 @@ export const english: Language = {
       "Remove World Ranking Officer",
     "admin.roles.world-ranking-officer.removeExplanation":
       "{name} will no longer be a world ranking officer.",
-    // Beneath the field, for a refusal with no words of its own.
-    "admin.roles.otherwise": "That address cannot be given the role.",
+    // For a refusal with no words of its own, beneath the field or in place
+    // of the list. Not about the address, since it may be the session that
+    // ended or the site that failed.
+    "admin.roles.otherwise": "That could not be done.",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,

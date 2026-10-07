@@ -144,6 +144,9 @@ export const spanish: Language = {
     "forgetAccount.noLongerWorks.title": "Ese enlace ya no funciona",
     "forgetAccount.noLongerWorks.explanation":
       "Puede que haya caducado, que ya se haya usado o que sea de una cuenta en la que no tienes iniciada la sesión. Vuelve a pedirlo desde tu cuenta si todavía quieres que se olvide.",
+    "forgetAccount.lastAdministrator.title": "Tu cuenta no se puede olvidar",
+    "forgetAccount.lastAdministrator.explanation":
+      "Eres el único administrador de este sitio. Da el rol de administrador a otra persona y después se podrá olvidar tu cuenta.",
     "forgetAccount.askAgain": "Volver a pedirlo",
     "forgetAccount.home": "Volver a {siteName}",
 
@@ -483,7 +486,7 @@ export const spanish: Language = {
       "Quitar responsable del ranking mundial",
     "admin.roles.world-ranking-officer.removeExplanation":
       "{name} dejará de ser responsable del ranking mundial.",
-    "admin.roles.otherwise": "A esa dirección no se le puede dar el rol.",
+    "admin.roles.otherwise": "No se ha podido hacer.",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",

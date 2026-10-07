@@ -141,6 +141,18 @@ Then(
 );
 
 Then(
+  "the reader is told the last administrator cannot be forgotten",
+  async function (this: SpecWorld) {
+    assert.ok(
+      (await contentOf(this)).includes(
+        words("forgetAccount.lastAdministrator.explanation"),
+      ),
+      "The page does not say the last administrator cannot be forgotten.",
+    );
+  },
+);
+
+Then(
   "the reader is told their account has been forgotten",
   async function (this: SpecWorld) {
     assert.ok(

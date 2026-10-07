@@ -739,7 +739,9 @@ export const buildApplication = async (
       links,
     ),
   );
-  mediator.handleCommand(new ForgetAccountHandler(accounts, links));
+  mediator.handleCommand(
+    new ForgetAccountHandler(accounts, links, accountsByRole),
+  );
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
   mediator.handleQuery(new AccountProfileHandler(accounts));
@@ -773,7 +775,9 @@ export const buildApplication = async (
       breached,
     ),
   );
-  mediator.handleQuery(new WhatAForgettingLinkIsWorthHandler(accounts, links));
+  mediator.handleQuery(
+    new WhatAForgettingLinkIsWorthHandler(accounts, links, accountsByRole),
+  );
   mediator.handleCommand(
     new SendConfirmationLinkAgainHandler(
       accounts,
