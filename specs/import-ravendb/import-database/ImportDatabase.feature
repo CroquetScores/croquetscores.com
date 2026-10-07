@@ -122,3 +122,23 @@ Feature: The database an import empties and fills
       And "users/1" on "croquetscores.com" is kept as an account at "someone@example.com"
       When the account imported for "nobody@example.com" is looked for
       Then no account imported is found
+
+  Rule: The errors kept are counted, wherever they were kept from
+
+    The import ends by saying how many errors it kept. A document refused
+    while its tournament brings it over is kept by the tournament
+    (`ImportWholeTournaments.feature`), not by whoever read the tournament, so
+    adding up what each collection's reading was refused would leave it out.
+    The count is asked of what was kept instead.
+
+    Scenario: Every error kept is counted
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/users/2" saying "Refused"
+      And an error is kept for "croquetscores.com/blocks/1" saying "Refused"
+      When the errors kept are counted
+      Then 2 errors are counted
+
+    Scenario: No error kept counts none
+      Given the import's database is emptied
+      When the errors kept are counted
+      Then 0 errors are counted

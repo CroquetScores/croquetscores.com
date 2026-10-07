@@ -39,7 +39,9 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
   // Counted up to ask again, once the role is given or taken.
   const [asking, setAsking] = useState(0);
   const [answered, setAnswered] = useState<number | undefined>();
-  const [sending, setSending] = useState(false);
+  // How many Adds and Removes are under way, counted rather than flagged so
+  // that one answered does not say the section is done while another is not.
+  const [sending, setSending] = useState(0);
   const [emailAddress, setEmailAddress] = useState("");
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   const [removing, setRemoving] = useState<Holder | undefined>();
@@ -88,7 +90,7 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
     if (adding.current) return;
     adding.current = true;
     setRefusedHere(undefined);
-    setSending(true);
+    setSending((count) => count + 1);
     try {
       const response = await fetch(at, {
         method: "POST",
@@ -119,13 +121,13 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
       setRefused([refusal("Unknown")]);
     }
     adding.current = false;
-    setSending(false);
+    setSending((count) => count - 1);
   };
 
   const remove = async (holder: Holder): Promise<void> => {
     setRemoving(undefined);
     setRefusedHere(undefined);
-    setSending(true);
+    setSending((count) => count + 1);
     try {
       const response = await fetch(`${at}/${idInAddress(holder.id)}/remove`, {
         method: "POST",
@@ -136,7 +138,7 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
       // A request that never arrived is said by the list asked for again.
     }
     setAsking((count) => count + 1);
-    setSending(false);
+    setSending((count) => count - 1);
   };
 
   return (
@@ -144,7 +146,7 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => {
       className="role-section"
       data-role={role}
       aria-labelledby={heading}
-      aria-busy={sending || answered !== asking}
+      aria-busy={sending > 0 || answered !== asking}
     >
       <h2 id={heading} className="role-heading">
         {say(`admin.roles.${role}.heading`)}

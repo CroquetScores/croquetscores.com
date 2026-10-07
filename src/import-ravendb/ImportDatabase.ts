@@ -338,6 +338,14 @@ export class ImportDatabase implements ImportErrors {
     );
   }
 
+  /** How many errors were kept, by whatever kept them. */
+  async errorCount(): Promise<number> {
+    const { rows } = await this.#pool.query<{ count: string }>(
+      "select count(*) as count from import_errors",
+    );
+    return Number(rows[0]?.count ?? 0);
+  }
+
   /** What was kept against `documentId`, in the order it was kept. */
   async errorsFor(documentId: string): Promise<string[]> {
     const { rows } = await this.#pool.query<{ error_message: string }>(

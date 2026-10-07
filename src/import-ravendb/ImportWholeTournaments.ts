@@ -68,19 +68,17 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     await this.database.recordTournamentRead(website, id);
     if (document.IsArchived) return;
 
+    // Asked for all at once, since none waits on another's answer and each
+    // is a round trip to the old site.
+    const [players, commentaries, ...competitions] = await Promise.all([
+      this.#naming(this.parts.players, id),
+      this.#naming(this.parts.commentaries, id),
+      ...this.parts.competitions.map((importer) => this.#naming(importer, id)),
+    ]);
     const named = [
-      ...(await this.#naming(this.parts.players, id)),
-      ...this.#inListedOrder(
-        document,
-        (
-          await Promise.all(
-            this.parts.competitions.map((importer) =>
-              this.#naming(importer, id),
-            ),
-          )
-        ).flat(),
-      ),
-      ...(await this.#naming(this.parts.commentaries, id)),
+      ...players,
+      ...this.#inListedOrder(document, competitions.flat()),
+      ...commentaries,
     ];
 
     try {

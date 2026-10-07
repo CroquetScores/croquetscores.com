@@ -63,6 +63,16 @@ Given(
   },
 );
 
+const counted = new WeakMap<SpecWorld, number>();
+
+When("the errors kept are counted", async function (this: SpecWorld) {
+  counted.set(this, await importDatabaseOf(this).errorCount());
+});
+
+Then("{int} errors are counted", function (this: SpecWorld, count: number) {
+  assert.equal(counted.get(this), count);
+});
+
 Given(
   "{string} on {string} is kept as an account at {string}",
   async function (

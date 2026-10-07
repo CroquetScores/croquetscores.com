@@ -84,7 +84,6 @@ const where = (url: string): string => {
 loadEnvFile();
 const config = loadImportConfig();
 const started = Date.now();
-let errors = 0;
 
 const pool = createPool(config.databaseUrl);
 try {
@@ -209,7 +208,7 @@ try {
     try {
       for (const importer of importers) {
         console.log(`${website} ${importer.collection}`);
-        errors += (await runImporter(documents, database, importer)).errors;
+        await runImporter(documents, database, importer);
       }
     } finally {
       documents.dispose();
@@ -227,7 +226,11 @@ try {
   for (const address of withNoAccount) {
     console.error(`No user was brought over as ${address}, who holds a role.`);
   }
-  errors += withNoAccount.length;
+  // Counted from what was kept rather than added up from each collection's
+  // reading, since a tournament keeps the errors of what names it itself
+  // (ImportDatabase.feature). A role holder with no account is said above and
+  // kept nowhere, so is added.
+  const errors = (await database.errorCount()) + withNoAccount.length;
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
