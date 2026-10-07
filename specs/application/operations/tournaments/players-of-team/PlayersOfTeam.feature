@@ -5,7 +5,7 @@ Feature: The players of a tournament's team, as a manager lists them
   order, archive them and restore them, on the team's page
   (`team-players.feature`), so the application answers with every player the
   team has, archived ones among them. Each is answered with their id, their
-  name, whether they are archived, and whether they have played any games in
+  name, their world ranking name, whether they are archived, and whether they have played any games in
   use.
 
   They are answered in the team's order, lowest first
@@ -84,6 +84,12 @@ Feature: The players of a tournament's team, as a manager lists them
       Then the first player answered is "Alex Another"
 
   Rule: Each player is answered with what they are
+
+    Scenario: A player is listed with their world ranking name
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the players of the team "Australia" of "Spring Tests"
+      Then the player "Sam Someone" is answered known in the world rankings as "Samuel Someone"
 
     Scenario: An archived player is listed as archived
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"

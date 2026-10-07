@@ -4,6 +4,8 @@ import { Query } from "../../common/Query.js";
 export interface ListedTeamPlayer {
   readonly id: string;
   readonly name: string;
+  /** The name the world rankings know them by, if any. */
+  readonly worldRankingName: string | undefined;
   readonly archived: boolean;
   /**
    * Whether they have played any games in use in the tournament's tests, as

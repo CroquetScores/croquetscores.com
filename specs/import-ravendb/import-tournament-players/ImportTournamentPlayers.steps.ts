@@ -71,6 +71,14 @@ Then(
 );
 
 Then(
+  "{string} in the tournament kept for {string} on {string} has no world ranking name",
+  async function (this: SpecWorld, name: string, id: string, website: string) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    assert.equal(playerCalled(tournament, name).worldRankingName, undefined);
+  },
+);
+
+Then(
   "{string} in the tournament kept for {string} on {string} flies the flag {string}",
   async function (
     this: SpecWorld,

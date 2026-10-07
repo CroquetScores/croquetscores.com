@@ -47,3 +47,10 @@ Then("they are different sports", function (this: SpecWorld) {
 Then("the sport's name is {string}", function (this: SpecWorld, name: string) {
   assert.equal(sportOfWorld(this).name, name);
 });
+
+Then(
+  /^the sport (has|does not have) world rankings$/,
+  function (this: SpecWorld, has: string) {
+    assert.equal(sportOfWorld(this).hasWorldRankings, has === "has");
+  },
+);

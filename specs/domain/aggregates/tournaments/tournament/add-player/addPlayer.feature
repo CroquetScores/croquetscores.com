@@ -76,6 +76,19 @@ Feature: Adding a player to a tournament
       When the player "Sam Someone" is added
       Then the tournament's player "Sam Someone" flies the flag "nz"
 
+    Scenario: A player added has the world ranking name they were added with
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      And the player is to have the world ranking name "Samuel Someone"
+      When the player "Sam Someone" is added
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
+    Scenario: A player added with no world ranking name has none
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added
+      Then the tournament's player "Sam Someone" has no world ranking name
+
     Scenario: A player added is not archived
       Given a stream where a tournament was created as "Spring Open"
       And the tournament is rebuilt from the stream
@@ -87,6 +100,13 @@ Feature: Adding a player to a tournament
       And the player "Sam Someone" was added to it
       When the tournament is rebuilt from the stream
       Then the tournament has the player "Sam Someone"
+
+    Scenario: A tournament rebuilt after a player was added has their world ranking name
+      Given a stream where a tournament was created as "Spring Open"
+      And the player is to have the world ranking name "Samuel Someone"
+      And the player "Sam Someone" was added to it
+      When the tournament is rebuilt from the stream
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
 
   Rule: A player is found by a slug of their name that no other player in the tournament has
 

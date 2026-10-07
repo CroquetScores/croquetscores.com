@@ -20,6 +20,11 @@ export interface TournamentAsPaged {
    * tournament's players have competitions, and so other tabs.
    */
   readonly playedByTeams: boolean;
+  /**
+   * Whether its players are asked the name the world rankings know them by,
+   * which only a sport with world rankings has (Sport.feature).
+   */
+  readonly asksWorldRankingNames: boolean;
 }
 
 /**

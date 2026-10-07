@@ -9,6 +9,13 @@ import { knows, say } from "../../../../../../words.js";
 // them. Adding and changing are the one dialog, so that the two cannot come to
 // ask different things. Adding keeps it open, says who was added and empties
 // it for the next; saving closes it.
+//
+// In a tournament of a sport with world rankings it asks for the player's
+// world ranking name as well. While a player is added it follows the name as
+// it is typed, as long as it is empty or still says what the name said, so
+// that a reader who types in it has a name of their own there; while one is
+// changed it follows nothing, since the rankings still know a player by it
+// when their name is corrected. Left empty, it is sent as the name.
 
 /** A flag as the API offers it: its code, its name as the reader reads it. */
 interface Flag {
@@ -22,6 +29,7 @@ export interface PlayerAsTheyAre {
   readonly name: string;
   readonly representing: string | undefined;
   readonly flag: { readonly code: string } | undefined;
+  readonly worldRankingName: string | undefined;
 }
 
 interface Props {
@@ -29,6 +37,8 @@ interface Props {
   readonly tournament: string;
   /** Nothing when adding, and the player when changing one. */
   readonly player?: PlayerAsTheyAre | undefined;
+  /** Whether the tournament's sport has world rankings, for which it asks. */
+  readonly asksWorldRankingName: boolean;
   /** Once a player is kept, so that the list says so. */
   readonly kept: () => void;
   readonly close: () => void;
@@ -42,18 +52,23 @@ const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 const BYE = "TournamentPlayer.NamedBye";
 
 // The field each refusal is about. One about no one field is said above them.
-const fieldOf = (code: string): "name" | "flag" | undefined =>
+type FieldName = "name" | "flag" | "worldRankingName";
+
+const fieldOf = (code: string): FieldName | undefined =>
   code.startsWith("PersonName.") ||
   code === "TournamentPlayer.NoLetterOrDigit" ||
   code === "Tournament.PlayerNameTaken"
     ? "name"
     : code === "TournamentPlayer.NoSuchFlag"
       ? "flag"
-      : undefined;
+      : code.startsWith("WorldRankingName.")
+        ? "worldRankingName"
+        : undefined;
 
 export const PlayerDialog = ({
   tournament,
   player,
+  asksWorldRankingName,
   kept,
   close,
 }: Props): React.JSX.Element => {
@@ -61,6 +76,9 @@ export const PlayerDialog = ({
   const [name, setName] = useState(player?.name ?? "");
   const [representing, setRepresenting] = useState(player?.representing ?? "");
   const [flag, setFlag] = useState(player?.flag?.code ?? "");
+  const [worldRankingName, setWorldRankingName] = useState(
+    player?.worldRankingName ?? "",
+  );
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   // Who was last added, said until the next name is typed.
   const [added, setAdded] = useState<string | undefined>();
@@ -68,6 +86,7 @@ export const PlayerDialog = ({
   // Whether the reader is being told why a player is never a bye.
   const [explaining, setExplaining] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
+  const worldRankingNameField = useRef<HTMLInputElement>(null);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
 
   useEffect(() => {
@@ -90,7 +109,7 @@ export const PlayerDialog = ({
     setTimeout(() => nameField.current?.focus());
   };
 
-  const refusedFor = (field: "name" | "flag" | undefined): Refusal[] =>
+  const refusedFor = (field: FieldName | undefined): Refusal[] =>
     refused.filter(({ code }) => fieldOf(code) === field);
 
   const send = async (): Promise<void> => {
@@ -105,7 +124,18 @@ export const PlayerDialog = ({
             accept: "application/json",
             "content-type": "application/json",
           },
-          body: JSON.stringify({ name, representing, flag }),
+          body: JSON.stringify({
+            name,
+            representing,
+            flag,
+            // Asked for only where the sport has world rankings; elsewhere a
+            // player keeps whatever they had, as none was asked of them.
+            worldRankingName: asksWorldRankingName
+              ? worldRankingName.trim() === ""
+                ? name
+                : worldRankingName
+              : (player?.worldRankingName ?? ""),
+          }),
         },
       );
       if (response.ok) {
@@ -120,6 +150,7 @@ export const PlayerDialog = ({
         setName("");
         setRepresenting("");
         setFlag("");
+        setWorldRankingName("");
         nameField.current?.focus();
       } else {
         const answer = (await response.json()) as {
@@ -151,6 +182,10 @@ export const PlayerDialog = ({
   useEffect(() => {
     if (refused.some(({ code }) => fieldOf(code) === "name")) {
       nameField.current?.focus();
+    } else if (
+      refused.some(({ code }) => fieldOf(code) === "worldRankingName")
+    ) {
+      worldRankingNameField.current?.focus();
     }
   }, [refused]);
 
@@ -199,6 +234,14 @@ export const PlayerDialog = ({
               autoComplete="off"
               value={name}
               onChange={(event) => {
+                // Followed while a player is added, until it says something
+                // of its own.
+                if (
+                  player === undefined &&
+                  (worldRankingName === "" || worldRankingName === name)
+                ) {
+                  setWorldRankingName(event.target.value);
+                }
                 setName(event.target.value);
                 // Who was added is no longer the news once the next is typed.
                 setAdded(undefined);
@@ -248,6 +291,27 @@ export const PlayerDialog = ({
             </select>
           )}
         </Field>
+        {asksWorldRankingName ? (
+          <Field
+            name="worldRankingName"
+            label={say("admin.player.worldRankingName")}
+            refused={refusedFor("worldRankingName")}
+          >
+            {(tied) => (
+              <input
+                {...tied}
+                ref={worldRankingNameField}
+                type="text"
+                placeholder=" "
+                autoComplete="off"
+                value={worldRankingName}
+                onChange={(event) => {
+                  setWorldRankingName(event.target.value);
+                }}
+              />
+            )}
+          </Field>
+        ) : null}
       </ModalDialog>
       {explaining ? (
         <ModalDialog

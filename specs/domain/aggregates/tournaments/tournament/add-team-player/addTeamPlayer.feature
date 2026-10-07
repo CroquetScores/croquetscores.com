@@ -78,6 +78,17 @@ Feature: Adding a player to a tournament's team
       When the player "Sam Someone" is added to the team "Australia"
       Then the player "Sam Someone" of the team "Australia" is known by "team-player/123e4567-e89b-42d3-a456-426614174000"
 
+    Scenario: A player added to a team has the world ranking name they were added with
+      Given the tournament is rebuilt from the stream
+      And the player is to have the world ranking name "Samuel Someone"
+      When the player "Sam Someone" is added to the team "Australia"
+      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
+
+    Scenario: A player added to a team with no world ranking name has none
+      Given the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added to the team "Australia"
+      Then the team "Australia"'s player "Sam Someone" has no world ranking name
+
     Scenario: A player added to a team is not archived
       Given the tournament is rebuilt from the stream
       When the player "Sam Someone" is added to the team "Australia"
@@ -87,6 +98,12 @@ Feature: Adding a player to a tournament's team
       Given the player "Sam Someone" was added to the team "Australia"
       When the tournament is rebuilt from the stream
       Then the team "Australia" has the player "Sam Someone"
+
+    Scenario: A tournament rebuilt after a player was added to a team has their world ranking name
+      Given the player is to have the world ranking name "Samuel Someone"
+      And the player "Sam Someone" was added to the team "Australia"
+      When the tournament is rebuilt from the stream
+      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
 
   Rule: A player in a team is found by a slug of their name that no other player in the tournament's teams has
 

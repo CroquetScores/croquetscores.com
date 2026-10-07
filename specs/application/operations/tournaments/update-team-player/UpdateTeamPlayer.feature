@@ -38,18 +38,29 @@ Feature: Changing what a player in a tournament's team is
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" of the team "Australia" of "Spring Tests"
       Then the team "Australia" has the player "Samantha Someone"
 
+    Scenario: The player has the world ranking name they were updated to
+      Given the update gives the player the world ranking name "Samuel Someone"
+      When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" of the team "Australia" of "Spring Tests"
+      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
+
     Scenario: Changing the player is recorded as done by whoever asked
       Given the update calls the player "Samantha Someone"
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" of the team "Australia" of "Spring Tests"
       Then the last thing the tournament recorded was caused by the account for "organiser@example.com"
 
-  Rule: The name must break none of its own rules
+  Rule: The name and the world ranking name must break none of their own rules
 
     Scenario: A name that breaks a rule is refused for it
       Given the update calls the player "Sa"
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" of the team "Australia" of "Spring Tests"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "PersonName.TooShort"
+
+    Scenario: A world ranking name that breaks a rule is refused for it
+      Given the update gives the player the world ranking name "Sa"
+      When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" of the team "Australia" of "Spring Tests"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "WorldRankingName.TooShort"
 
   Rule: What the tournament and the team ask is theirs to refuse
 

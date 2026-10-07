@@ -50,6 +50,7 @@ export class PlayersOfTeamHandler extends QueryHandler<
     return team.players.map((player) => ({
       id: player.id.value,
       name: player.name.toString(),
+      worldRankingName: player.worldRankingName?.toString(),
       archived: player.archived,
       hasPlayed: played.has(player.id.value),
     }));

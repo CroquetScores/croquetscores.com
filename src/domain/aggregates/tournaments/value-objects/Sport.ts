@@ -25,17 +25,31 @@ const codes = new Validator<string, SportErrorCode>({
 export class Sport {
   readonly #code: string;
   readonly #name: string;
+  readonly #hasWorldRankings: boolean;
 
-  private constructor(code: string, name: string) {
+  private constructor(code: string, name: string, hasWorldRankings = false) {
     this.#code = code;
     this.#name = name;
+    this.#hasWorldRankings = hasWorldRankings;
   }
 
-  static readonly associationCroquet = new Sport("ac", "Association Croquet");
-  static readonly golfCroquet = new Sport("gc", "Golf Croquet");
+  static readonly associationCroquet = new Sport(
+    "ac",
+    "Association Croquet",
+    true,
+  );
+  static readonly golfCroquet = new Sport("gc", "Golf Croquet", true);
   static readonly american6Wicket = new Sport("a6w", "American 6 Wicket");
   static readonly ricochet = new Sport("rc", "Ricochet");
   static readonly gateball = new Sport("gb", "Gateball");
+
+  /**
+   * Whether it is ranked across the world, so that its players have a name the
+   * world rankings know them by to ask for (Sport.feature).
+   */
+  get hasWorldRankings(): boolean {
+    return this.#hasWorldRankings;
+  }
 
   /** Every sport there is. */
   static readonly all: readonly Sport[] = [

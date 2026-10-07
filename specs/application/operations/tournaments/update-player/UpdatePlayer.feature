@@ -39,6 +39,11 @@ Feature: Changing what a tournament's player is
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" in "Spring Open"
       Then the tournament's player "Sam Someone" flies the flag "au"
 
+    Scenario: The player updated has the world ranking name they were updated to
+      Given the update gives the player the world ranking name "Samuel Someone"
+      When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" in "Spring Open"
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
     Scenario: Updating the player is recorded as done by whoever asked
       Given the update calls the player "Samantha Someone"
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" in "Spring Open"
@@ -68,6 +73,12 @@ Feature: Changing what a tournament's player is
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" in "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "TournamentPlayer.NoLetterOrDigit"
+
+    Scenario: A world ranking name that breaks a rule is refused for it
+      Given the update gives the player the world ranking name "Sa"
+      When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" in "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "WorldRankingName.TooShort"
 
     Scenario: A player whose update breaks a rule is left as they were
       Given the update calls the player "Sa"

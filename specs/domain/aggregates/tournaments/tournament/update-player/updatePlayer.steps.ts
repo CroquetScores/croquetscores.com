@@ -20,9 +20,16 @@ import {
 const updateOf = (
   world: SpecWorld,
   player: TournamentPlayer | undefined,
-): { name: string; representing?: string; flag?: string } => {
+): {
+  name: string;
+  representing?: string;
+  flag?: string;
+  worldRankingName?: string;
+} => {
   const changed = scenarioOf(world).playerUpdate;
   const representing = changed.representing ?? player?.representing;
+  const worldRankingName =
+    changed.worldRankingName ?? player?.worldRankingName?.toString();
   const flag =
     changed.flag ??
     (player?.flag === undefined ? undefined : String(player.flag));
@@ -30,6 +37,7 @@ const updateOf = (
     name: changed.name ?? player?.name.toString() ?? "Sam Someone",
     ...(representing === undefined ? {} : { representing }),
     ...(flag === undefined ? {} : { flag }),
+    ...(worldRankingName === undefined ? {} : { worldRankingName }),
   };
 };
 
@@ -45,6 +53,29 @@ Given(
         now(this),
       );
     });
+  },
+);
+
+Given(
+  "the player {string} was updated to be known in the world rankings as {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    happened(this, (tournament) => {
+      const player = playerNamed(tournament, name);
+      tournament.updatePlayer(
+        player.id,
+        { name, worldRankingName },
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
+
+// Said of a player in a tournament or in a team alike, as their name is.
+Given(
+  "the update gives the player the world ranking name {string}",
+  function (this: SpecWorld, worldRankingName: string) {
+    scenarioOf(this).playerUpdate.worldRankingName = worldRankingName;
   },
 );
 

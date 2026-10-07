@@ -255,6 +255,10 @@ export const english: Language = {
     "PersonName.Missing": "Enter a name.",
     "PersonName.TooShort": "A name has to be at least 3 characters.",
     "PersonName.TooLong": "A name can be at most 254 characters.",
+    "WorldRankingName.TooShort":
+      "A world ranking name has to be at least 3 characters.",
+    "WorldRankingName.TooLong":
+      "A world ranking name can be at most 254 characters.",
     "Password.Missing": "Enter a password.",
     "Password.TooShort": "A password has to be at least 12 characters.",
     "Password.ConfirmationDiffers":
@@ -700,6 +704,7 @@ export const english: Language = {
     "admin.player.editTitle": "Edit Player",
     "admin.player.name": "Name",
     "admin.player.representing": "Representing",
+    "admin.player.worldRankingName": "World Ranking Player Name",
     "admin.player.flag": "Flag",
     "admin.player.add": "Add",
     "admin.player.save": "Save",

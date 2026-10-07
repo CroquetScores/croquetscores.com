@@ -75,3 +75,21 @@ Feature: The sport a tournament is played in
       Given the sport "ac"
       When it is compared with the sport "gc"
       Then they are different sports
+
+  Rule: Association and golf croquet have world rankings
+
+    Of the sports there are, only association croquet and golf croquet are
+    ranked across the world, so only a player of one of them has a name the
+    world rankings know them by to ask for (`WorldRankingName.feature`).
+
+    Scenario Outline: A sport has world rankings, or not
+      When the sport "<code>" is made
+      Then the sport <has> world rankings
+
+      Examples:
+        | code | has           |
+        | ac   | has           |
+        | gc   | has           |
+        | a6w  | does not have |
+        | rc   | does not have |
+        | gb   | does not have |

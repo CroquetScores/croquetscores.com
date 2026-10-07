@@ -440,6 +440,35 @@ Then(
 );
 
 Then(
+  "the player {string} of {string} has the world ranking name {string}",
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    worldRankingName: string,
+  ) {
+    await eventually(this, async () => {
+      assert.equal(
+        String((await playerCalled(this, tournament, name)).worldRankingName),
+        worldRankingName,
+      );
+    });
+  },
+);
+
+Then(
+  "the player {string} of {string} has no world ranking name",
+  async function (this: SpecWorld, name: string, tournament: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await playerCalled(this, tournament, name)).worldRankingName,
+        undefined,
+      );
+    });
+  },
+);
+
+Then(
   "the player {string} of {string} represents nothing",
   async function (this: SpecWorld, name: string, tournament: string) {
     assert.equal(

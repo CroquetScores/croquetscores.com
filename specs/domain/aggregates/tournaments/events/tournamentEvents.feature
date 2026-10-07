@@ -192,6 +192,18 @@ Feature: The names a tournament's events are kept under
       And what was kept is read back through the registry
       Then what was read back says everything the event said
 
+    Scenario: A player added with no world ranking name is read back with none
+      Given an event of a player being added with no world ranking name
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
+    Scenario: A player added to a team with no world ranking name is read back with none
+      Given an event of a player being added to a team with no world ranking name
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
     Scenario: A team added flying no flag is read back flying none
       Given an event of a team being added that flies no flag
       When the event is written down through the registry

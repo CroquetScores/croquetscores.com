@@ -3,6 +3,7 @@ import { Validator } from "../../common/validation/Validator.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import { PersonName } from "../accounts/value-objects/PersonName.js";
 import type { TeamPlayerId } from "./primitives/TeamPlayerId.js";
+import { WorldRankingName } from "./value-objects/WorldRankingName.js";
 
 /** Every rule a player in a team can break, besides those of a person's name. */
 export type TeamPlayerErrorCode =
@@ -28,14 +29,26 @@ const orders = new Validator<number, TeamPlayerErrorCode>({
   ],
 });
 
+// What a player is called, in the tournament and in the world rankings.
+interface Named {
+  readonly name: PersonName;
+  readonly worldRankingName: WorldRankingName | undefined;
+}
+
 /** What a player in a team is, as it is given, before anything is asked of it. */
 export interface TeamPlayerDetails {
   readonly name: string;
+  /**
+   * The name the world rankings know them by, if any: nothing, or blank, for
+   * none (WorldRankingName.feature).
+   */
+  readonly worldRankingName?: string | undefined;
 }
 
 /**
  * A player in one team of a tournament played by teams, and in that team
- * alone. They have a name and nothing else of their own: the team they play
+ * alone. They have a name, and may have a name the world rankings know them
+ * by, and nothing else of their own: the team they play
  * for is what they represent, and the team flies the flag.
  *
  * A player has an order, which is where they come when the team lists its
@@ -53,19 +66,21 @@ export interface TeamPlayerDetails {
 export class TeamPlayer {
   readonly #id: TeamPlayerId;
   readonly #name: PersonName;
+  readonly #worldRankingName: WorldRankingName | undefined;
   readonly #slug: Slug;
   readonly #order: number;
   readonly #archived: boolean;
 
   private constructor(
     id: TeamPlayerId,
-    name: PersonName,
+    { name, worldRankingName }: Named,
     slug: Slug,
     order: number,
     archived: boolean,
   ) {
     this.#id = id;
     this.#name = name;
+    this.#worldRankingName = worldRankingName;
     this.#slug = slug;
     this.#order = order;
     this.#archived = archived;
@@ -73,17 +88,17 @@ export class TeamPlayer {
 
   /**
    * The new player known by `id` that `details` describe, found at `slug` and
-   * in `order`, not archived. Throws {@link ValidationError} naming the first rule broken: the
-   * name first, then the order.
+   * in `order`, not archived. Throws {@link ValidationError} naming the first
+   * rule broken: the name first, then the world ranking name, then the order.
    */
   static from(
     id: TeamPlayerId,
     details: TeamPlayerDetails,
     { slug, order }: { readonly slug: Slug; readonly order: number },
   ): TeamPlayer {
-    const name = TeamPlayer.#nameOf(details);
+    const named = TeamPlayer.#namedOf(details);
     orders.ensureValid(order);
-    return new TeamPlayer(id, name, slug, order, false);
+    return new TeamPlayer(id, named, slug, order, false);
   }
 
   /**
@@ -92,19 +107,22 @@ export class TeamPlayer {
    * has said where the player comes.
    */
   static ensureValid(details: TeamPlayerDetails): void {
-    TeamPlayer.#nameOf(details);
+    TeamPlayer.#namedOf(details);
   }
 
   // A test has no byes, but a score against "Bye" reads as a match nobody
   // played, and a player is never a bye in one kind of tournament and a name
   // in another. The word ends where anything but a letter comes, as it does
   // for a tournament's player, so "Bye 2" is a bye and "Byers" is a name.
-  static #nameOf(details: TeamPlayerDetails): PersonName {
+  static #namedOf(details: TeamPlayerDetails): Named {
     const name = PersonName.from(details.name);
     if (/^bye(?!\p{L})/iu.test(details.name.trim())) {
       throw new ValidationError<TeamPlayerErrorCode>("TeamPlayer.NamedBye");
     }
-    return name;
+    return {
+      name,
+      worldRankingName: WorldRankingName.from(details.worldRankingName ?? ""),
+    };
   }
 
   get id(): TeamPlayerId {
@@ -113,6 +131,11 @@ export class TeamPlayer {
 
   get name(): PersonName {
     return this.#name;
+  }
+
+  /** The name the world rankings know them by, or nothing where none was given. */
+  get worldRankingName(): WorldRankingName | undefined {
+    return this.#worldRankingName;
   }
 
   /** What finds the player within the tournament. */
@@ -140,7 +163,7 @@ export class TeamPlayer {
     }
     return new TeamPlayer(
       this.#id,
-      TeamPlayer.#nameOf(details),
+      TeamPlayer.#namedOf(details),
       this.#slug,
       this.#order,
       false,
@@ -155,7 +178,7 @@ export class TeamPlayer {
     orders.ensureValid(order);
     return new TeamPlayer(
       this.#id,
-      this.#name,
+      this.#named,
       this.#slug,
       order,
       this.#archived,
@@ -184,13 +207,23 @@ export class TeamPlayer {
     if (hasGames) {
       throw new ValidationError<TeamPlayerErrorCode>("TeamPlayer.HasGames");
     }
-    return new TeamPlayer(this.#id, this.#name, this.#slug, this.#order, true);
+    return new TeamPlayer(this.#id, this.#named, this.#slug, this.#order, true);
   }
 
   /** The player, no longer archived. */
   restore(): TeamPlayer {
     if (!this.#archived) return this;
-    return new TeamPlayer(this.#id, this.#name, this.#slug, this.#order, false);
+    return new TeamPlayer(
+      this.#id,
+      this.#named,
+      this.#slug,
+      this.#order,
+      false,
+    );
+  }
+
+  get #named(): Named {
+    return { name: this.#name, worldRankingName: this.#worldRankingName };
   }
 
   equals(other: TeamPlayer | undefined): boolean {

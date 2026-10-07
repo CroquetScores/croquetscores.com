@@ -16,6 +16,7 @@ import {
   byOf,
   happened,
   now,
+  scenarioOf,
   tournamentOf,
 } from "../aTournament.js";
 
@@ -53,7 +54,7 @@ When(
       tournament.addTeamPlayer(
         teamNamed(tournament, team).id,
         teamPlayerIdOf(this),
-        { name },
+        { name, worldRankingName: scenarioOf(this).player.worldRankingName },
         byOf(this),
         now(this),
       ),

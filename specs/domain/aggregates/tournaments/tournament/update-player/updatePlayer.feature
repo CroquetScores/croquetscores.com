@@ -66,6 +66,37 @@ Feature: Changing what a tournament's player is
       When the player "Sam Someone" is updated
       Then the tournament's player "Sam Someone" flies the flag "au"
 
+    Scenario: An updated player has the world ranking name they were updated to
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update gives the player the world ranking name "Samuel Someone"
+      When the player "Sam Someone" is updated
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
+    Scenario: An update of the world ranking name alone records it
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update gives the player the world ranking name "Samuel Someone"
+      When the player "Sam Someone" is updated
+      Then it has recorded 1 event
+
+    Scenario: An update to a world ranking name that reads as no world ranking name records it
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update gives the player the world ranking name "undefined"
+      When the player "Sam Someone" is updated
+      Then it has recorded 1 event
+
+    Scenario: A tournament rebuilt after a player was updated has their world ranking name as updated
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the player "Sam Someone" was updated to be known in the world rankings as "Samuel Someone"
+      When the tournament is rebuilt from the stream
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
     Scenario: An updated player keeps their place in the list
       Given a stream where a tournament was created as "Spring Open"
       And the player "Sam Someone" was added to it

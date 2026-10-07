@@ -303,7 +303,8 @@ Given(
     player: string,
     name: string,
   ) {
-    const { representing, flag } = domainScenarioOf(this).player;
+    const { representing, flag, worldRankingName } =
+      domainScenarioOf(this).player;
     await doneTo(this, address, name, (account, tournament) =>
       Promise.resolve(
         new AddPlayer(
@@ -313,6 +314,7 @@ Given(
             name: player,
             ...(representing === undefined ? {} : { representing }),
             ...(flag === undefined ? {} : { flag }),
+            ...(worldRankingName === undefined ? {} : { worldRankingName }),
           },
           momentOf(this),
         ),
