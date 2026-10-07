@@ -22,6 +22,8 @@ interface Props {
   readonly tournament: string;
   /** The team's id. */
   readonly team: string;
+  /** Whether the tournament's sport has world rankings, for the dialog. */
+  readonly asksWorldRankingNames: boolean;
 }
 
 /** A player as the API lists a team's. */
@@ -35,7 +37,11 @@ type Action = "up" | "down" | "archive" | "restore";
 // The part of an id after its kind, which is how the API names a thing.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
-export const TeamPlayers = ({ tournament, team }: Props): React.JSX.Element => {
+export const TeamPlayers = ({
+  tournament,
+  team,
+  asksWorldRankingNames,
+}: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // Counted up to ask again, once something has been pressed or kept.
   const [asking, setAsking] = useState(0);
@@ -208,6 +214,7 @@ export const TeamPlayers = ({ tournament, team }: Props): React.JSX.Element => {
       {dialog === undefined ? null : (
         <TeamPlayerDialog
           tournament={tournament}
+          asksWorldRankingName={asksWorldRankingNames}
           team={team}
           player={dialog === "adding" ? undefined : dialog}
           kept={askAgain}

@@ -31,6 +31,8 @@ interface Found {
     | undefined;
   readonly tournamentAddress: string;
   readonly slug: string;
+  /** Whether its tournament's sport has world rankings, for its players' dialog. */
+  readonly asksWorldRankingNames: boolean;
 }
 
 type Asked =
@@ -114,7 +116,11 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
               </p>
             )}
             <div id="page-list">
-              <TeamPlayers tournament={team.tournament} team={team.id} />
+              <TeamPlayers
+                tournament={team.tournament}
+                team={team.id}
+                asksWorldRankingNames={team.asksWorldRankingNames}
+              />
             </div>
           </div>
         </div>

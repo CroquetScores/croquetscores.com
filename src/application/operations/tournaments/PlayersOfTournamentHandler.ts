@@ -57,6 +57,7 @@ export class PlayersOfTournamentHandler extends QueryHandler<
         name: player.name.toString(),
         representing: player.representing,
         flag: player.flag === undefined ? undefined : String(player.flag),
+        worldRankingName: player.worldRankingName?.toString(),
         archived: player.archived,
         // Asked of the games, as archiving a player asks, so that a list
         // offering to archive a player offers it only where it would be done.

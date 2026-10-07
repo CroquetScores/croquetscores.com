@@ -42,11 +42,16 @@ const scenarioOf = (world: SpecWorld): Scenario => {
 };
 
 // Making a player may be refused, and the scenario says which it expects.
-const tryToMake = (world: SpecWorld, name: string, order = AN_ORDER): void => {
+const tryToMake = (
+  world: SpecWorld,
+  name: string,
+  order = AN_ORDER,
+  worldRankingName?: string,
+): void => {
   try {
     scenarioOf(world).player = TeamPlayer.from(
       TeamPlayerId.create(),
-      { name },
+      { name, worldRankingName },
       { slug: A_SLUG, order },
     );
   } catch (failure) {
@@ -86,6 +91,17 @@ Given("a team player named {string}", function (this: SpecWorld, name: string) {
     { slug: A_SLUG, order: AN_ORDER },
   );
 });
+
+Given(
+  "a team player named {string} with the world ranking name {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    scenarioOf(this).player = TeamPlayer.from(
+      TeamPlayerId.create(),
+      { name, worldRankingName },
+      { slug: A_SLUG, order: AN_ORDER },
+    );
+  },
+);
 
 Given(
   "a team player named {string} in the order {int}",
@@ -169,9 +185,48 @@ When(
 When(
   "the team player is updated to be called {string}",
   function (this: SpecWorld, name: string) {
-    tryToChange(this, (player) => player.update({ name }));
+    tryToChange(this, (player) =>
+      player.update({
+        name,
+        worldRankingName: player.worldRankingName?.toString(),
+      }),
+    );
   },
 );
+
+When(
+  "the team player is updated to have the world ranking name {string}",
+  function (this: SpecWorld, worldRankingName: string) {
+    tryToChange(this, (player) =>
+      player.update({ name: player.name.toString(), worldRankingName }),
+    );
+  },
+);
+
+When(
+  "a team player with the world ranking name {string} is made",
+  function (this: SpecWorld, worldRankingName: string) {
+    tryToMake(this, "Sam Someone", AN_ORDER, worldRankingName);
+  },
+);
+
+When(
+  "a team player with a world ranking name of {int} characters is made",
+  function (this: SpecWorld, length: number) {
+    tryToMake(this, "Sam Someone", AN_ORDER, "a".repeat(length));
+  },
+);
+
+Then(
+  "the team player's world ranking name is {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(String(playerOfWorld(this).worldRankingName), name);
+  },
+);
+
+Then("the team player has no world ranking name", function (this: SpecWorld) {
+  assert.equal(playerOfWorld(this).worldRankingName, undefined);
+});
 
 When("the tournament archives the team player", function (this: SpecWorld) {
   const { hasGames } = scenarioOf(this);

@@ -20,6 +20,9 @@ Feature: Importing the players of the old sites' tournaments
   players are its teams' (`ImportTeamMatches.feature`). So the players of
   such a tournament are left here for its team matches to bring over.
 
+  The old sites kept no world ranking name, so a player is brought over with
+  none (`WorldRankingName.feature`).
+
   Background:
     Given the users are imported
     And the tournaments are imported
@@ -47,6 +50,12 @@ Feature: Importing the players of the old sites' tournaments
       And player 1 represents nothing
       When the players are imported
       Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents nothing
+
+    Scenario: A player is brought over with no world ranking name
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      When the players are imported
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" has no world ranking name
 
     Scenario: The players are listed in the order the old site listed them
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"

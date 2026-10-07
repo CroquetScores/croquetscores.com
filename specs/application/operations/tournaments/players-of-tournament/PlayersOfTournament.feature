@@ -4,7 +4,7 @@ Feature: The players of a tournament, as a manager lists them
   A manager lists a tournament's players to find one, correct them, archive
   them and restore them, so the application answers with every player the
   tournament has, archived ones among them. Each is answered with their id,
-  their name, what they represent and the flag they fly, if either, whether
+  their name, their world ranking name, what they represent and the flag they fly, if either, whether
   they are archived, and whether they have played any games in use.
 
   They are answered in the tournament's order, lowest first
@@ -97,6 +97,12 @@ Feature: The players of a tournament, as a manager lists them
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
       Then the player "Sam Someone" is answered flying the flag "nz"
+
+    Scenario: A player is listed with their world ranking name
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
+      Then the player "Sam Someone" is answered known in the world rankings as "Samuel Someone"
 
     Scenario: An archived player is listed as archived
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

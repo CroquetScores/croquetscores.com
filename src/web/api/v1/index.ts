@@ -961,15 +961,28 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     },
   );
 
-  // What a player is, as the player dialog sends it. What they represent and
-  // their flag are left out where nothing was said.
+  // What a player is, as the player dialog sends it. What they represent,
+  // their flag and their world ranking name are left out where nothing was
+  // said.
   const playerFrom = (body: unknown) => {
     const representing = textOf(body, "representing");
     const flag = textOf(body, "flag");
+    const worldRankingName = textOf(body, "worldRankingName");
     return {
       name: textOf(body, "name"),
       ...(representing === "" ? {} : { representing }),
       ...(flag === "" ? {} : { flag }),
+      ...(worldRankingName === "" ? {} : { worldRankingName }),
+    };
+  };
+
+  // What a player in a team is, as the team player dialog sends it. Their
+  // world ranking name is left out where nothing was said.
+  const teamPlayerFrom = (body: unknown) => {
+    const worldRankingName = textOf(body, "worldRankingName");
+    return {
+      name: textOf(body, "name"),
+      ...(worldRankingName === "" ? {} : { worldRankingName }),
     };
   };
 
@@ -1291,7 +1304,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
           reader.value,
           `tournament/${request.params.id}`,
           `team/${request.params.team}`,
-          { name: textOf(request.body, "name") },
+          teamPlayerFrom(request.body),
           request.requestedAt,
         ),
       );
@@ -1314,7 +1327,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
           `tournament/${request.params.id}`,
           `team/${request.params.team}`,
           `team-player/${request.params.player}`,
-          { name: textOf(request.body, "name") },
+          teamPlayerFrom(request.body),
           request.requestedAt,
         ),
       );

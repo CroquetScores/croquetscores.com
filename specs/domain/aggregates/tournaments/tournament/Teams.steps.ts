@@ -15,7 +15,13 @@ import {
   testNamed,
   testToAdd,
 } from "./aTeamTournament.js";
-import { byOf, happened, now, tournamentOf } from "./aTournament.js";
+import {
+  byOf,
+  happened,
+  now,
+  scenarioOf,
+  tournamentOf,
+} from "./aTournament.js";
 
 // The steps more than one of the features of a tournament played by teams
 // uses: the teams, their players and the tests a stream holds, and what each
@@ -68,7 +74,7 @@ Given(
       tournament.addTeamPlayer(
         teamNamed(tournament, team).id,
         TeamPlayerId.create(),
-        { name },
+        { name, worldRankingName: scenarioOf(this).player.worldRankingName },
         byOf(this),
         now(this),
       ),
@@ -261,6 +267,35 @@ Then(
     assert.equal(
       teamPlayerNamed(teamNamed(tournamentOf(this), team), name).archived,
       true,
+    );
+  },
+);
+
+Then(
+  "the team {string}'s player {string} has the world ranking name {string}",
+  function (
+    this: SpecWorld,
+    team: string,
+    name: string,
+    worldRankingName: string,
+  ) {
+    assert.equal(
+      String(
+        teamPlayerNamed(teamNamed(tournamentOf(this), team), name)
+          .worldRankingName,
+      ),
+      worldRankingName,
+    );
+  },
+);
+
+Then(
+  "the team {string}'s player {string} has no world ranking name",
+  function (this: SpecWorld, team: string, name: string) {
+    assert.equal(
+      teamPlayerNamed(teamNamed(tournamentOf(this), team), name)
+        .worldRankingName,
+      undefined,
     );
   },
 );

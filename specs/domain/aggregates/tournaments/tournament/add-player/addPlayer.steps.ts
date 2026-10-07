@@ -43,6 +43,14 @@ Given(
   },
 );
 
+// Said of a player added to a tournament or to a team alike, as their name is.
+Given(
+  "the player is to have the world ranking name {string}",
+  function (this: SpecWorld, worldRankingName: string) {
+    scenarioOf(this).player.worldRankingName = worldRankingName;
+  },
+);
+
 Given(
   "the player is to fly the flag {string}",
   function (this: SpecWorld, flag: string) {
@@ -53,13 +61,13 @@ Given(
 // Making the player may be refused as well as adding them, and both are the
 // scenario's to expect.
 When("the player {string} is added", function (this: SpecWorld, name: string) {
-  const { id, representing, flag } = scenarioOf(this).player;
+  const { id, representing, flag, worldRankingName } = scenarioOf(this).player;
   ask(this, (tournament) =>
     tournament.addPlayer(
       id === undefined
         ? TournamentPlayerId.create()
         : TournamentPlayerId.from(id),
-      { name, representing, flag },
+      { name, representing, flag, worldRankingName },
       byOf(this),
       now(this),
     ),

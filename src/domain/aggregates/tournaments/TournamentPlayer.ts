@@ -5,6 +5,7 @@ import { PersonName } from "../accounts/value-objects/PersonName.js";
 import type { TournamentPlayerId } from "./primitives/TournamentPlayerId.js";
 import type { Flag } from "./value-objects/Flag.js";
 import { Flags } from "./value-objects/Flags.js";
+import { WorldRankingName } from "./value-objects/WorldRankingName.js";
 
 /** Every rule a player can break, besides those of a person's name. */
 export type TournamentPlayerErrorCode =
@@ -40,6 +41,11 @@ export interface TournamentPlayerDetails {
   readonly representing?: string | undefined;
   /** The name of the flag they fly, if any. */
   readonly flag?: string | undefined;
+  /**
+   * The name the world rankings know them by, if any: nothing, or blank, for
+   * none (WorldRankingName.feature).
+   */
+  readonly worldRankingName?: string | undefined;
 }
 
 /**
@@ -66,6 +72,7 @@ export class TournamentPlayer {
   readonly #name: PersonName;
   readonly #representing: string | undefined;
   readonly #flag: Flag | undefined;
+  readonly #worldRankingName: WorldRankingName | undefined;
   readonly #slug: Slug;
   readonly #order: number;
   readonly #archived: boolean;
@@ -75,6 +82,7 @@ export class TournamentPlayer {
     name: PersonName,
     representing: string | undefined,
     flag: Flag | undefined,
+    worldRankingName: WorldRankingName | undefined,
     slug: Slug,
     order: number,
     archived: boolean,
@@ -83,6 +91,7 @@ export class TournamentPlayer {
     this.#name = name;
     this.#representing = representing;
     this.#flag = flag;
+    this.#worldRankingName = worldRankingName;
     this.#slug = slug;
     this.#order = order;
     this.#archived = archived;
@@ -91,7 +100,8 @@ export class TournamentPlayer {
   /**
    * The new player known by `id` that `details` describe, found at `slug` and
    * in `order`, not archived. Throws {@link ValidationError} naming the first
-   * rule broken: the name first, then the flag, then the order.
+   * rule broken: the name first, then the flag, then the world ranking name,
+   * then the order.
    */
   static from(
     id: TournamentPlayerId,
@@ -117,13 +127,15 @@ export class TournamentPlayer {
     order: number,
     archived: boolean,
   ): TournamentPlayer {
-    const { name, representing, flag } = TournamentPlayer.#detailsOf(details);
+    const { name, representing, flag, worldRankingName } =
+      TournamentPlayer.#detailsOf(details);
     orders.ensureValid(order);
     return new TournamentPlayer(
       id,
       name,
       representing,
       flag,
+      worldRankingName,
       slug,
       order,
       archived,
@@ -134,6 +146,7 @@ export class TournamentPlayer {
     readonly name: PersonName;
     readonly representing: string | undefined;
     readonly flag: Flag | undefined;
+    readonly worldRankingName: WorldRankingName | undefined;
   } {
     const name = PersonName.from(details.name);
     // A knockout's byes are entered as byes, so a player standing in for one
@@ -159,6 +172,7 @@ export class TournamentPlayer {
       // it is nothing represented rather than something called nothing.
       representing: details.representing?.trim() || undefined,
       flag: TournamentPlayer.#flagNamed(details.flag),
+      worldRankingName: WorldRankingName.from(details.worldRankingName ?? ""),
     };
   }
 
@@ -190,6 +204,11 @@ export class TournamentPlayer {
   /** The flag shown beside their name, or nothing. */
   get flag(): Flag | undefined {
     return this.#flag;
+  }
+
+  /** The name the world rankings know them by, or nothing where none was given. */
+  get worldRankingName(): WorldRankingName | undefined {
+    return this.#worldRankingName;
   }
 
   /** What finds them within the tournament, made from their name when added. */
@@ -286,6 +305,7 @@ export class TournamentPlayer {
       this.#name,
       this.#representing,
       this.#flag,
+      this.#worldRankingName,
       this.#slug,
       changed.order ?? this.#order,
       changed.archived ?? this.#archived,

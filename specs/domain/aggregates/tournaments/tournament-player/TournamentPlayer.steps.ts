@@ -75,6 +75,17 @@ Given(
 );
 
 Given(
+  "a player named {string} with the world ranking name {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    this.tournamentPlayer = TournamentPlayer.from(
+      TournamentPlayerId.create(),
+      { name, worldRankingName },
+      { slug: A_SLUG, order: AN_ORDER },
+    );
+  },
+);
+
+Given(
   "a player named {string} representing {string}",
   function (this: SpecWorld, name: string, representing: string) {
     this.tournamentPlayer = TournamentPlayer.from(
@@ -143,6 +154,20 @@ When(
   },
 );
 
+When(
+  "a player with the world ranking name {string} is made",
+  function (this: SpecWorld, worldRankingName: string) {
+    tryToMake(this, { worldRankingName });
+  },
+);
+
+When(
+  "a player with a world ranking name of {int} characters is made",
+  function (this: SpecWorld, length: number) {
+    tryToMake(this, { worldRankingName: "a".repeat(length) });
+  },
+);
+
 When("a player representing nothing is made", function (this: SpecWorld) {
   tryToMake(this, { representing: undefined });
 });
@@ -192,6 +217,7 @@ const updatedWith = (
       name: player.name.toString(),
       representing: player.representing,
       flag: player.flag === undefined ? undefined : String(player.flag),
+      worldRankingName: player.worldRankingName?.toString(),
       ...changed,
     }),
   );
@@ -201,6 +227,13 @@ When(
   "the player is updated to be called {string}",
   function (this: SpecWorld, name: string) {
     updatedWith(this, { name });
+  },
+);
+
+When(
+  "the player is updated to have the world ranking name {string}",
+  function (this: SpecWorld, worldRankingName: string) {
+    updatedWith(this, { worldRankingName });
   },
 );
 
@@ -261,6 +294,17 @@ Then(
     assert.equal(playerOfWorld(this).representing, representing);
   },
 );
+
+Then(
+  "the player's world ranking name is {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(String(playerOfWorld(this).worldRankingName), name);
+  },
+);
+
+Then("the player has no world ranking name", function (this: SpecWorld) {
+  assert.equal(playerOfWorld(this).worldRankingName, undefined);
+});
 
 Then("the player represents nothing", function (this: SpecWorld) {
   assert.equal(playerOfWorld(this).representing, undefined);

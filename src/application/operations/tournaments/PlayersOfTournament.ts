@@ -8,6 +8,8 @@ export interface ListedPlayer {
   readonly representing: string | undefined;
   /** The name of the flag they fly, if any. */
   readonly flag: string | undefined;
+  /** The name the world rankings know them by, if any. */
+  readonly worldRankingName: string | undefined;
   readonly archived: boolean;
   /**
    * Whether they have played any games, as the application's games say,

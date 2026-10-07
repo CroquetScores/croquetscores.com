@@ -64,6 +64,7 @@ interface PlayerSaid {
   name?: string;
   representing?: string;
   flag?: string;
+  worldRankingName?: string;
 }
 
 interface CompetitionSaid {

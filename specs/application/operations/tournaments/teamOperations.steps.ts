@@ -23,7 +23,10 @@ import {
   teamToAdd,
   testNamed,
 } from "../../../domain/aggregates/tournaments/tournament/aTeamTournament.js";
-import { tournamentOf } from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
+import {
+  scenarioOf as domainScenarioOf,
+  tournamentOf,
+} from "../../../domain/aggregates/tournaments/tournament/aTournament.js";
 import {
   accountFor,
   inHandOf,
@@ -177,7 +180,10 @@ Given(
           account,
           tournament.value,
           (await teamIn(this, tournament, team)).value,
-          { name: player },
+          {
+            name: player,
+            worldRankingName: domainScenarioOf(this).player.worldRankingName,
+          },
           momentOf(this),
         ),
     );

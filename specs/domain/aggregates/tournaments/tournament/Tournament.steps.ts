@@ -67,7 +67,7 @@ Given(
     happened(this, (tournament) =>
       tournament.addPlayer(
         TournamentPlayerId.create(),
-        { name },
+        { name, worldRankingName: scenarioOf(this).player.worldRankingName },
         byOf(this),
         now(this),
       ),
@@ -348,6 +348,26 @@ Then(
     assert.equal(
       playerNamed(tournamentOf(this), name).representing,
       representing,
+    );
+  },
+);
+
+Then(
+  "the tournament's player {string} has the world ranking name {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    assert.equal(
+      String(playerNamed(tournamentOf(this), name).worldRankingName),
+      worldRankingName,
+    );
+  },
+);
+
+Then(
+  "the tournament's player {string} has no world ranking name",
+  function (this: SpecWorld, name: string) {
+    assert.equal(
+      playerNamed(tournamentOf(this), name).worldRankingName,
+      undefined,
     );
   },
 );

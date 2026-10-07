@@ -14,6 +14,9 @@ export class TournamentPlayerUpdated extends DomainEvent {
     readonly representing: string | undefined,
     // The name of the flag the player flies, or nothing when they fly none.
     readonly flag: string | undefined,
+    // The name the world rankings know the player by, or nothing when they
+    // have none, which JSON leaves out.
+    readonly worldRankingName: string | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

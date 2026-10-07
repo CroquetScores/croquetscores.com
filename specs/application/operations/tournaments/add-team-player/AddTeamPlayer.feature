@@ -39,11 +39,16 @@ Feature: Adding a player to a tournament's team
       When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to the team "Australia" of "Spring Tests"
       Then it is answered with the id of the player "Sam Someone" of the team "Australia"
 
+    Scenario: The player has the world ranking name they were added with
+      Given the player is to have the world ranking name "Samuel Someone"
+      When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
+
     Scenario: Adding the player is recorded as done by whoever asked
       When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to the team "Australia" of "Spring Tests"
       Then the last thing the tournament recorded was caused by the account for "organiser@example.com"
 
-  Rule: The name must break none of its own rules
+  Rule: The name and the world ranking name must break none of their own rules
 
     Scenario Outline: A name that breaks a rule is refused for it
       When the reader signed in to the account for "organiser@example.com" adds the player "<name>" to the team "Australia" of "Spring Tests"
@@ -55,6 +60,12 @@ Feature: Adding a player to a tournament's team
         |      | PersonName.Missing  |
         | Sa   | PersonName.TooShort |
         | Bye  | TeamPlayer.NamedBye |
+
+    Scenario: A world ranking name that breaks a rule is refused for it
+      Given the player is to have the world ranking name "Sa"
+      When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "WorldRankingName.TooShort"
 
     Scenario: A player who breaks a rule is not added
       When the reader signed in to the account for "organiser@example.com" adds the player "Sa" to the team "Australia" of "Spring Tests"

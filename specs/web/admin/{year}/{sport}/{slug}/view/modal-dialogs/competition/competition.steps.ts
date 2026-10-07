@@ -31,11 +31,30 @@ const fieldOf = (world: SpecWorld, label: string): Locator =>
   dialogOf(world).getByLabel(label, { exact: true });
 
 Then(
-  /^the (?:competition|team player|test) dialog does not ask for "([^"]*)"$/,
+  /^the (?:competition|player|team player|test) dialog does not ask for "([^"]*)"$/,
   async function (this: SpecWorld, label: string) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {
       assert.equal(await fieldOf(this, label).count(), 0);
+    });
+  },
+);
+
+// Which field comes after which, by the words each is labelled with, in the
+// order the reader comes to them.
+Then(
+  /^the field after "([^"]*)" in the (?:player|team player) dialog is "([^"]*)"$/,
+  async function (this: SpecWorld, before: string, label: string) {
+    await dialogOf(this).waitFor();
+    await eventually(this, async () => {
+      const labels = (
+        await dialogOf(this).locator(".field-label").allTextContents()
+      ).map((text) => text.trim());
+      assert.equal(
+        labels[labels.indexOf(before) + 1],
+        label,
+        `The fields are ${JSON.stringify(labels)}.`,
+      );
     });
   },
 );

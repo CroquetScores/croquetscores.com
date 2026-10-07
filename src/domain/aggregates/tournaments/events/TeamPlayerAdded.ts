@@ -4,13 +4,16 @@ import type { AccountId } from "../../accounts/AccountId.js";
 
 /**
  * That a player was added to one of the tournament's teams, with their name,
- * and the slug and the order within the team the tournament gave them.
+ * their world ranking name, and the slug and the order within the team the tournament gave them.
  */
 export class TeamPlayerAdded extends DomainEvent {
   constructor(
     readonly teamId: string,
     readonly playerId: string,
     readonly name: string,
+    // The name the world rankings know the player by, or nothing when they
+    // have none, which JSON leaves out.
+    readonly worldRankingName: string | undefined,
     // What finds the player within the tournament, as the tournament gave it.
     readonly slug: string,
     // Where the player comes when the team lists its players, lowest first.

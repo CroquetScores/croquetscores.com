@@ -28,6 +28,11 @@ Feature: A player in a team
   a manager who has learned that a player is never a bye should not find
   that true in one kind of tournament and not the other.
 
+  A player in a team may have a world ranking name, the name the world
+  rankings know them by (`WorldRankingName.feature`), as a player in a
+  tournament may (`TournamentPlayer.feature`): none where none is given, or
+  one is left blank, and kept as it was made when their name is corrected.
+
   A player in a team has an order, which is where they come when the team
   lists its players, lowest first, a whole number from 1 up. How the orders
   are given is the tournament's to say (`addTeamPlayer.feature`).
@@ -40,8 +45,8 @@ Feature: A player in a team
   when it asks for them to be archived. An archived player can be restored,
   and that is all that can be done to them until they are.
 
-  A player can be updated: their name said again, asked what it is asked of a
-  new player. The player updated is the same player, with the same id and the
+  A player can be updated: their name and their world ranking name said
+  again, each asked what it is asked of a new player. The player updated is the same player, with the same id and the
   same order.
 
   A player is never altered: updating, giving a new order, archiving and
@@ -109,6 +114,24 @@ Feature: A player in a team
       When a team player named "Sam Someone" is made
       Then the team player represents nothing of their own
 
+  Rule: A player in a team may have a world ranking name
+
+    Scenario: A team player's world ranking name is kept as it was given
+      When a team player with the world ranking name "Samuel Someone" is made
+      Then the team player's world ranking name is "Samuel Someone"
+
+    Scenario: A team player given no world ranking name has none
+      When a team player named "Bob Jackson" is made
+      Then the team player has no world ranking name
+
+    Scenario: A team player given a blank world ranking name has none
+      When a team player with the world ranking name "   " is made
+      Then the team player has no world ranking name
+
+    Scenario: A world ranking name that could not be one is refused
+      When a team player with a world ranking name of 255 characters is made
+      Then it is refused for breaking "WorldRankingName.TooLong"
+
   Rule: A player's order is a whole number from 1 up
 
     Scenario Outline: An order that is a whole number from 1 up is accepted
@@ -149,6 +172,21 @@ Feature: A player in a team
       Given a team player named "Sam Someone"
       When the team player is updated to be called "Samantha Someone"
       Then the team player is the same player they were
+
+    Scenario: An updated player has the world ranking name they were updated to
+      Given a team player named "Bob Jackson"
+      When the team player is updated to have the world ranking name "Robert Jackson"
+      Then the team player's world ranking name is "Robert Jackson"
+
+    Scenario: An updated player keeps their world ranking name when their name is corrected
+      Given a team player named "Bob Jackson" with the world ranking name "Robert Jackson"
+      When the team player is updated to be called "Bob Jackston"
+      Then the team player's world ranking name is "Robert Jackson"
+
+    Scenario: A player updated with a blank world ranking name has none
+      Given a team player named "Bob Jackson" with the world ranking name "Robert Jackson"
+      When the team player is updated to have the world ranking name "   "
+      Then the team player has no world ranking name
 
     Scenario: An updated player keeps their order
       Given a team player named "Sam Someone" in the order 20000

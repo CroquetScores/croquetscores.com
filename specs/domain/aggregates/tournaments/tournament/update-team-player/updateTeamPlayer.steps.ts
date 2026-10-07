@@ -20,12 +20,15 @@ import {
 const updateOf = (
   world: SpecWorld,
   player: TeamPlayer | undefined,
-): { name: string } => ({
-  name:
-    scenarioOf(world).playerUpdate.name ??
-    player?.name.toString() ??
-    "Sam Someone",
-});
+): { name: string; worldRankingName?: string } => {
+  const changed = scenarioOf(world).playerUpdate;
+  const worldRankingName =
+    changed.worldRankingName ?? player?.worldRankingName?.toString();
+  return {
+    name: changed.name ?? player?.name.toString() ?? "Sam Someone",
+    ...(worldRankingName === undefined ? {} : { worldRankingName }),
+  };
+};
 
 Given(
   "the player {string} of the team {string} was updated to be called {string}",
@@ -36,6 +39,27 @@ Given(
         found.id,
         teamPlayerNamed(found, name).id,
         { name: called },
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
+
+Given(
+  "the player {string} of the team {string} was updated to be known in the world rankings as {string}",
+  function (
+    this: SpecWorld,
+    name: string,
+    team: string,
+    worldRankingName: string,
+  ) {
+    happened(this, (tournament) => {
+      const found = teamNamed(tournament, team);
+      tournament.updateTeamPlayer(
+        found.id,
+        teamPlayerNamed(found, name).id,
+        { name, worldRankingName },
         byOf(this),
         now(this),
       );

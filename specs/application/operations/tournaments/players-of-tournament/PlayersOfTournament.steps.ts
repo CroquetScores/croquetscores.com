@@ -112,6 +112,15 @@ Then(
   },
 );
 
+// Said of a tournament's players and of a team's alike, each answered with
+// their world ranking name.
+Then(
+  "the player {string} is answered known in the world rankings as {string}",
+  function (this: SpecWorld, name: string, worldRankingName: string) {
+    assert.equal(playerCalled(this, name).worldRankingName, worldRankingName);
+  },
+);
+
 Then(
   "the player {string} is answered flying the flag {string}",
   function (this: SpecWorld, name: string, flag: string) {

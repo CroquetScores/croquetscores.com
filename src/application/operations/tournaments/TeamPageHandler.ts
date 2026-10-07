@@ -71,6 +71,7 @@ export class TeamPageHandler extends QueryHandler<TeamPage, TeamAsPaged> {
       flag: team.flag === undefined ? undefined : String(team.flag),
       tournamentAddress: tournament.address.toString(),
       slug: team.slug.toString(),
+      asksWorldRankingNames: tournament.sport.hasWorldRankings,
     };
   }
 }

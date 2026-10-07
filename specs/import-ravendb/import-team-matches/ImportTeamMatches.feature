@@ -27,6 +27,9 @@ Feature: Importing the old sites' team matches
   an archived competition is, and putting the tests in the old order is left
   until every competition is brought over (`OrderCompetitions.feature`).
 
+  The old sites kept no world ranking name, so a player is brought over with
+  none (`WorldRankingName.feature`).
+
   Background:
     Given the users are imported
     And the tournaments are imported
@@ -250,6 +253,15 @@ Feature: Importing the old sites' team matches
       And player 7 represents "New Zealand"
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone"
+
+    Scenario: A player of a team is brought over with no world ranking name
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      When the team match is imported
+      Then the player "Sam Someone" of the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has no world ranking name
 
     Scenario: A player representing neither team is kept as an error
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"

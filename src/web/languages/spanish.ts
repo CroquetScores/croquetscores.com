@@ -241,6 +241,10 @@ export const spanish: Language = {
     "PersonName.Missing": "Introduce un nombre.",
     "PersonName.TooShort": "Un nombre tiene que tener al menos 3 caracteres.",
     "PersonName.TooLong": "Un nombre puede tener como mucho 254 caracteres.",
+    "WorldRankingName.TooShort":
+      "El nombre en el ranking mundial debe tener al menos 3 caracteres.",
+    "WorldRankingName.TooLong":
+      "El nombre en el ranking mundial puede tener como mucho 254 caracteres.",
     "Password.Missing": "Introduce una contraseña.",
     "Password.TooShort":
       "Una contraseña tiene que tener al menos 12 caracteres.",
@@ -628,6 +632,7 @@ export const spanish: Language = {
     "admin.player.editTitle": "Editar jugador",
     "admin.player.name": "Nombre",
     "admin.player.representing": "Representa a",
+    "admin.player.worldRankingName": "Nombre en el ranking mundial",
     "admin.player.flag": "Bandera",
     "admin.player.add": "Añadir",
     "admin.player.save": "Guardar",

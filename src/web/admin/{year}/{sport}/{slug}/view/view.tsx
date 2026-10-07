@@ -39,6 +39,8 @@ interface Found {
   readonly part: "manager" | "scorer";
   /** Whether it is played by teams, which gives it other tabs. */
   readonly playedByTeams: boolean;
+  /** Whether its sport has world rankings, for its players' dialog. */
+  readonly asksWorldRankingNames: boolean;
 }
 
 type Asked =
@@ -142,7 +144,10 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               label={say("admin.view.tabs")}
             >
               {chosen === "players" ? (
-                <PlayersTab tournament={asked.tournament.id} />
+                <PlayersTab
+                  tournament={asked.tournament.id}
+                  asksWorldRankingNames={asked.tournament.asksWorldRankingNames}
+                />
               ) : null}
               {chosen === "competitions" ? (
                 <CompetitionsTab

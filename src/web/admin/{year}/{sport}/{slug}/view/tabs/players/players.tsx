@@ -21,6 +21,8 @@ import "../listed.css";
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
+  /** Whether the tournament's sport has world rankings, for the dialog. */
+  readonly asksWorldRankingNames: boolean;
 }
 
 /** A player as the API lists them, their flag as it is seen. */
@@ -38,7 +40,10 @@ interface Listed extends PlayerAsTheyAre {
 // or a player, so that each is one segment of an address.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
-export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
+export const PlayersTab = ({
+  tournament,
+  asksWorldRankingNames,
+}: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // Counted up to ask again, once something has been pressed or kept.
   const [asking, setAsking] = useState(0);
@@ -264,6 +269,7 @@ export const PlayersTab = ({ tournament }: Props): React.JSX.Element => {
       {dialog === undefined ? null : (
         <PlayerDialog
           tournament={tournament}
+          asksWorldRankingName={asksWorldRankingNames}
           player={dialog === "adding" ? undefined : dialog}
           kept={askAgain}
           close={() => {

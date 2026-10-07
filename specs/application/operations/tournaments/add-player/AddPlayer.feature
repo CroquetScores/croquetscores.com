@@ -8,8 +8,8 @@ Feature: Adding a player to a tournament
   else, a scorer among them, is refused with `Tournament.NotAManager`
   (`onlyManagers.feature`).
 
-  The player's name, what they represent and the flag they fly are asked their
-  own rules on the way in, and a request that breaks one is refused with
+  The player's name, what they represent, the flag they fly and their world
+  ranking name are asked their own rules on the way in, and a request that breaks one is refused with
   `Request.Invalid` and the first rule it breaks. What the tournament asks of a
   player — that no other has their name, archived or not, however it is
   capitalised — is the tournament's to refuse (`addPlayer.feature`).
@@ -45,6 +45,11 @@ Feature: Adding a player to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to "Spring Open"
       Then the tournament's player "Sam Someone" flies the flag "nz"
 
+    Scenario: The player has the world ranking name they were added with
+      Given the player is to have the world ranking name "Samuel Someone"
+      When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to "Spring Open"
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
     Scenario: Adding the player is recorded as done by whoever asked
       When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to "Spring Open"
       Then the last thing the tournament recorded was caused by the account for "organiser@example.com"
@@ -64,6 +69,12 @@ Feature: Adding a player to a tournament
         | Sam Someone | zz   | TournamentPlayer.NoSuchFlag      |
         | Bye         | nz   | TournamentPlayer.NamedBye        |
         | — ! —       | nz   | TournamentPlayer.NoLetterOrDigit |
+
+    Scenario: A world ranking name that breaks a rule is refused for it
+      Given the player is to have the world ranking name "Sa"
+      When the reader signed in to the account for "organiser@example.com" adds the player "Sam Someone" to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "WorldRankingName.TooShort"
 
     Scenario: A player who breaks a rule is not added
       When the reader signed in to the account for "organiser@example.com" adds the player "Sa" to "Spring Open"

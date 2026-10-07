@@ -5,10 +5,14 @@ Feature: A player is added to a team, or changed, in a modal dialog
   Player", and changes one by pressing their name or their Edit
   (`team-players.feature`). Either opens the team player dialog over the
   page. It asks for what a player in a team is (`TeamPlayer.feature`): their
-  name.
+  name and, beneath it, the name the world rankings know them by, headed
+  "World Ranking Player Name" (`WorldRankingName.feature`).
 
   It is the player dialog of a Standard tournament (`player.feature`) without
-  its Representing and its Flag, since a player in a team represents their
+  its Representing and its Flag, and asks for the world ranking name as that
+  does, in a tournament of association or golf croquet alone: following the name while a player is added until it is typed in,
+  kept as the name when left empty, and left as it is when a player's name is
+  corrected, since a player in a team represents their
   team and the team flies the flag (`TeamPlayer.feature`). It asks for the
   name the same way, so that a manager who has used one has used the other:
   titled "Add Player" with Add, or "Edit Player" with Save; Add keeping the
@@ -60,8 +64,14 @@ Feature: A player is added to a team, or changed, in a modal dialog
       Then the team player dialog asks for "<field>"
 
       Examples:
-        | field |
-        | Name  |
+        | field                     |
+        | Name                      |
+        | World Ranking Player Name |
+
+    Scenario: The world ranking name is asked for beneath the name
+      Given the page of the team "Australia" in "Spring Tests" is open
+      When "Add Player" is pressed
+      Then the field after "Name" in the team player dialog is "World Ranking Player Name"
 
     Scenario Outline: The dialog asks for nothing more of a player
       Given the page of the team "Australia" in "Spring Tests" is open
@@ -125,7 +135,67 @@ Feature: A player is added to a team, or changed, in a modal dialog
       When "Add" is pressed
       Then "Name" is empty
 
+    Scenario: A tournament of another sport asks for no world ranking name
+      Given the tournament "Spring Tests" does not count towards the world rankings
+      And the tournament "Spring Tests" is for the sport "rc"
+      And the page of the team "Australia" in "Spring Tests" is open
+      When "Add Player" is pressed
+      Then the team player dialog does not ask for "World Ranking Player Name"
+
+    Scenario: The world ranking name follows the name as it is typed
+      Given the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      When "Sam Someone" is typed as the "Name"
+      Then "World Ranking Player Name" says "Sam Someone"
+
+    Scenario: A world ranking name typed in no longer follows the name
+      Given the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Sam Someones" is typed as the "Name"
+      Then "World Ranking Player Name" says "Samuel Someone"
+
+    Scenario: The player added has the world ranking name typed
+      Given the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of the team "Australia" of "Spring Tests" has the world ranking name "Samuel Someone"
+
+    Scenario: The player added with the world ranking name left to follow has their name
+      Given the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of the team "Australia" of "Spring Tests" has the world ranking name "Sam Someone"
+
   Rule: Save keeps the change and closes the dialog
+
+    Scenario: The world ranking name is the player's
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And the page of the team "Australia" in "Spring Tests" is open
+      When the name of the player "Sam Someone" is pressed
+      Then "World Ranking Player Name" says "Samuel Someone"
+
+    Scenario: A renamed player keeps their world ranking name
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And the page of the team "Australia" in "Spring Tests" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samantha Someone" is typed as the "Name"
+      When "Save" is pressed
+      Then the player "Samantha Someone" of the team "Australia" of "Spring Tests" has the world ranking name "Samuel Someone"
+
+    Scenario: A world ranking name changed is kept
+      Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And the page of the team "Australia" in "Spring Tests" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Save" is pressed
+      Then the player "Sam Someone" of the team "Australia" of "Spring Tests" has the world ranking name "Samuel Someone"
 
     Scenario: A renamed player is kept by their new name
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
@@ -193,6 +263,14 @@ Feature: A player is added to a team, or changed, in a modal dialog
       And "Sam Someone" is typed as the "Name"
       When "Add" is pressed
       Then the team "Australia" of "Spring Tests" has the player "Sam Someone"
+
+    Scenario: A world ranking name that could not be one is refused beside it
+      Given the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Sa" is typed as the "World Ranking Player Name"
+      When "Add" is pressed
+      Then "World Ranking Player Name" is refused with "WorldRankingName.TooShort"
 
     Scenario: A refused dialog stays open
       Given the page of the team "Australia" in "Spring Tests" is open

@@ -200,20 +200,31 @@ export const addTeamPlayer = async (
       account,
       tournament.value,
       (await teamIn(world, tournament, team)).value,
-      { name },
+      {
+        name,
+        worldRankingName: domainScenarioOf(world).player.worldRankingName,
+      },
       momentOf(world),
     ),
     tournament,
   );
 
+// Said again as the player is, with what the scenario's update changes, as an
+// update says everything about the player.
 export const updateTeamPlayer = async (
   world: SpecWorld,
   account: string,
   tournament: About,
   team: string,
   name: string | undefined,
-): Promise<void> =>
-  send(
+): Promise<void> => {
+  const changed = domainScenarioOf(world).playerUpdate;
+  const player = (await found(world, tournament))?.teams
+    .find((each) => each.name.toString() === team)
+    ?.players.find((each) => each.name.toString() === name);
+  const worldRankingName =
+    changed.worldRankingName ?? player?.worldRankingName?.toString();
+  await send(
     world,
     new UpdateTeamPlayer(
       account,
@@ -221,13 +232,14 @@ export const updateTeamPlayer = async (
       (await teamIn(world, tournament, team)).value,
       (await teamPlayerIn(world, tournament, team, name)).value,
       {
-        name:
-          domainScenarioOf(world).playerUpdate.name ?? name ?? "Sam Someone",
+        name: changed.name ?? name ?? "Sam Someone",
+        ...(worldRankingName === undefined ? {} : { worldRankingName }),
       },
       momentOf(world),
     ),
     tournament,
   );
+};
 
 export const archiveTeamPlayer = async (
   world: SpecWorld,

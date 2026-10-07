@@ -656,6 +656,7 @@ export class Tournament extends AggregateRoot {
         player.name.toString(),
         player.representing,
         player.flag === undefined ? undefined : String(player.flag),
+        player.worldRankingName?.toString(),
         player.slug.toString(),
         player.order,
         by,
@@ -1201,6 +1202,7 @@ export class Tournament extends AggregateRoot {
         teamId.value,
         id.value,
         player.name.toString(),
+        player.worldRankingName?.toString(),
         player.slug.toString(),
         player.order,
         by,
@@ -1224,12 +1226,17 @@ export class Tournament extends AggregateRoot {
     const { team, player: found } = this.#teamPlayerToChange(teamId, id, by);
     const player = found.update(details);
     refuseATeamPlayerNameTaken(team, player);
-    if (player.name.equals(found.name)) return;
+    if (
+      player.name.equals(found.name) &&
+      String(player.worldRankingName) === String(found.worldRankingName)
+    )
+      return;
     this.record(
       new TeamPlayerUpdated(
         teamId.value,
         id.value,
         player.name.toString(),
+        player.worldRankingName?.toString(),
         by,
         at,
       ),
@@ -2398,7 +2405,8 @@ const orderPast = (
 const samePlayer = (one: TournamentPlayer, other: TournamentPlayer): boolean =>
   one.name.equals(other.name) &&
   one.representing === other.representing &&
-  String(one.flag) === String(other.flag);
+  String(one.flag) === String(other.flag) &&
+  String(one.worldRankingName) === String(other.worldRankingName);
 
 const playerEvent = <T extends DomainEvent>(
   Kind: new (
@@ -2406,6 +2414,7 @@ const playerEvent = <T extends DomainEvent>(
     name: string,
     representing: string | undefined,
     flag: string | undefined,
+    worldRankingName: string | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) => T,
@@ -2418,6 +2427,7 @@ const playerEvent = <T extends DomainEvent>(
     player.name.toString(),
     player.representing,
     player.flag === undefined ? undefined : String(player.flag),
+    player.worldRankingName?.toString(),
     by,
     at,
   );

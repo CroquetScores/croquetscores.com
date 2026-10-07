@@ -10,12 +10,16 @@ import { knows, say } from "../../../../../../../../words.js";
 // asks for a name the same way, so that a manager who has used one has used
 // the other: Add keeps it open and empties it for the next, Save closes it. A
 // name as a bye is refused beneath the name as any other broken rule is, since
-// a test has no byes to point the reader to.
+// a test has no byes to point the reader to. It asks for the world ranking
+// name as the player dialog does, in a tournament of a sport with world
+// rankings alone: following the name while a player is added, following
+// nothing while one is changed, and sent as the name when left empty.
 
 /** A player as they are, when one is being changed. */
 export interface TeamPlayerAsTheyAre {
   readonly id: string;
   readonly name: string;
+  readonly worldRankingName: string | undefined;
 }
 
 interface Props {
@@ -25,6 +29,8 @@ interface Props {
   readonly team: string;
   /** Nothing when adding, and the player when changing one. */
   readonly player?: TeamPlayerAsTheyAre | undefined;
+  /** Whether the tournament's sport has world rankings, for which it asks. */
+  readonly asksWorldRankingName: boolean;
   /** Once a player is kept, so that the list says so. */
   readonly kept: () => void;
   readonly close: () => void;
@@ -33,26 +39,34 @@ interface Props {
 // The part of an id after its kind, which is how the API names a thing.
 const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
-// Whether a refusal is about the name, the one field. One that is not is said
-// above it.
+// Whether a refusal is about the name, or the world ranking name. One about
+// neither is said above them.
 const aboutTheName = (code: string): boolean =>
   code.startsWith("PersonName.") ||
   code === "Team.PlayerNameTaken" ||
   code === "TeamPlayer.NamedBye";
 
+const aboutTheWorldRankingName = (code: string): boolean =>
+  code.startsWith("WorldRankingName.");
+
 export const TeamPlayerDialog = ({
   tournament,
   team,
   player,
+  asksWorldRankingName,
   kept,
   close,
 }: Props): React.JSX.Element => {
   const [name, setName] = useState(player?.name ?? "");
+  const [worldRankingName, setWorldRankingName] = useState(
+    player?.worldRankingName ?? "",
+  );
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   // Who was last added, said until the next name is typed.
   const [added, setAdded] = useState<string | undefined>();
   const [sending, setSending] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
+  const worldRankingNameField = useRef<HTMLInputElement>(null);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
 
   const refusal = (code: string): Refusal => ({
@@ -72,7 +86,16 @@ export const TeamPlayerDialog = ({
             accept: "application/json",
             "content-type": "application/json",
           },
-          body: JSON.stringify({ name }),
+          body: JSON.stringify({
+            name,
+            // Asked for only where the sport has world rankings; elsewhere a
+            // player keeps whatever they had, as none was asked of them.
+            worldRankingName: asksWorldRankingName
+              ? worldRankingName.trim() === ""
+                ? name
+                : worldRankingName
+              : (player?.worldRankingName ?? ""),
+          }),
         },
       );
       if (response.ok) {
@@ -85,6 +108,7 @@ export const TeamPlayerDialog = ({
         // Emptied for the next, with the reader back in the name.
         setAdded(name.trim());
         setName("");
+        setWorldRankingName("");
         nameField.current?.focus();
       } else {
         const answer = (await response.json()) as {
@@ -109,10 +133,14 @@ export const TeamPlayerDialog = ({
   useEffect(() => {
     if (refused.some(({ code }) => aboutTheName(code))) {
       nameField.current?.focus();
+    } else if (refused.some(({ code }) => aboutTheWorldRankingName(code))) {
+      worldRankingNameField.current?.focus();
     }
   }, [refused]);
 
-  const above = refused.filter(({ code }) => !aboutTheName(code));
+  const above = refused.filter(
+    ({ code }) => !aboutTheName(code) && !aboutTheWorldRankingName(code),
+  );
 
   return (
     <ModalDialog
@@ -159,6 +187,14 @@ export const TeamPlayerDialog = ({
             autoComplete="off"
             value={name}
             onChange={(event) => {
+              // Followed while a player is added, until it says something of
+              // its own.
+              if (
+                player === undefined &&
+                (worldRankingName === "" || worldRankingName === name)
+              ) {
+                setWorldRankingName(event.target.value);
+              }
               setName(event.target.value);
               // Who was added is no longer the news once the next is typed.
               setAdded(undefined);
@@ -166,6 +202,27 @@ export const TeamPlayerDialog = ({
           />
         )}
       </Field>
+      {asksWorldRankingName ? (
+        <Field
+          name="worldRankingName"
+          label={say("admin.player.worldRankingName")}
+          refused={refused.filter(({ code }) => aboutTheWorldRankingName(code))}
+        >
+          {(tied) => (
+            <input
+              {...tied}
+              ref={worldRankingNameField}
+              type="text"
+              placeholder=" "
+              autoComplete="off"
+              value={worldRankingName}
+              onChange={(event) => {
+                setWorldRankingName(event.target.value);
+              }}
+            />
+          )}
+        </Field>
+      ) : null}
     </ModalDialog>
   );
 };

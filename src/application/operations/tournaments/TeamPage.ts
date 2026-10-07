@@ -16,6 +16,11 @@ export interface TeamAsPaged {
   /** Where its tournament is found now, as "2026/ac/spring-tests". */
   readonly tournamentAddress: string;
   readonly slug: string;
+  /**
+   * Whether its players are asked the name the world rankings know them by,
+   * which only a sport with world rankings has (Sport.feature).
+   */
+  readonly asksWorldRankingNames: boolean;
 }
 
 /**

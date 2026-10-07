@@ -5,7 +5,11 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   pressing "Add Player", and changes one they have added by pressing their
   name (`players-tab.feature`). Either opens the player dialog over the page.
   It asks for what a player is (`TournamentPlayer.feature`): their name, what
-  they represent, if anything, and the flag they fly, if any.
+  they represent, if anything, the flag they fly, if any, and, beneath the
+  flag, the name the world rankings know them by, headed "World Ranking Player
+  Name" (`WorldRankingName.feature`). Only association croquet and golf
+  croquet have world rankings (`Sport.feature`), so the world ranking name is
+  asked for only in a tournament of one of them.
 
   It is a modal dialog, which is not the dialog a form that is a page's
   purpose is drawn in (`STYLE.md`). That stands on a page of its own, at an
@@ -35,7 +39,15 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   where the reader is. Save changes one player, so it closes the dialog once
   the change is kept.
 
-  The name is required; what the player represents and their flag are not.
+  The name is required; what the player represents, their flag and their
+  world ranking name are not. Most players are known in the world rankings by
+  their name, so while a player is being added their world ranking name
+  follows their name as it is typed, and stops following once the reader
+  types in it, since then it is a name of its own; emptied, it follows the
+  name again. A world ranking name left empty is kept as the player's name.
+  A player being changed keeps the world ranking name they have when their
+  name is corrected, since the rankings still know them by it, so it follows
+  nothing while a player is changed.
   The flags are offered by the name of the place each is the flag of, in the
   reader's language, in order of those names, with a choice of none first,
   since most players fly none.
@@ -43,7 +55,8 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   What is refused is said beneath the field it is about, by the refusal's
   code, and what was typed stays typed so that it can be put right: a name
   that could not be a person's, a name with neither a letter nor a digit in
-  it (`TournamentPlayer.feature`), and a name another player in the tournament
+  it (`TournamentPlayer.feature`), a world ranking name that could not be one
+  (`WorldRankingName.feature`), and a name another player in the tournament
   already has, however it is capitalised (`addPlayer.feature`). A refusal about
   no one field is said above the fields. Nothing refused is kept, and the
   dialog stays open.
@@ -99,10 +112,16 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Then the player dialog asks for "<field>"
 
       Examples:
-        | field        |
-        | Name         |
-        | Representing |
-        | Flag         |
+        | field                     |
+        | Name                      |
+        | Representing              |
+        | Flag                      |
+        | World Ranking Player Name |
+
+    Scenario: The world ranking name is asked for beneath the flag
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the field after "Flag" in the player dialog is "World Ranking Player Name"
 
   Rule: A player opened from the page opens the dialog to change them
 
@@ -143,6 +162,13 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And the page of "Spring Open" is open
       When the name of the player "Sam Someone" is pressed
       Then the flag chosen is "New Zealand"
+
+    Scenario: The world ranking name is the player's
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      When the name of the player "Sam Someone" is pressed
+      Then "World Ranking Player Name" says "Samuel Someone"
 
   Rule: The dialog sits over the page, and nothing outside it can be reached
 
@@ -356,6 +382,101 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Alex Another" is typed as the "Name"
       Then the player dialog says nobody was added
 
+  Rule: Only a tournament of a sport with world rankings asks for a world ranking name
+
+    Scenario Outline: A tournament of association or golf croquet asks for a world ranking name
+      Given the tournament "Spring Open" is for the sport "<sport>"
+      And the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the player dialog asks for "World Ranking Player Name"
+
+      Examples:
+        | sport |
+        | ac    |
+        | gc    |
+
+    Scenario Outline: A tournament of another sport asks for none
+      Given the tournament "Spring Open" does not count towards the world rankings
+      And the tournament "Spring Open" is for the sport "<sport>"
+      And the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the player dialog does not ask for "World Ranking Player Name"
+
+      Examples:
+        | sport |
+        | a6w   |
+        | rc    |
+
+    Scenario: A player added in a tournament of another sport has no world ranking name
+      Given the tournament "Spring Open" does not count towards the world rankings
+      And the tournament "Spring Open" is for the sport "rc"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" has no world ranking name
+
+  Rule: While a player is added, their world ranking name follows their name until it is typed in
+
+    Scenario: The world ranking name begins empty
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then "World Ranking Player Name" is empty
+
+    Scenario: The world ranking name follows the name as it is typed
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Sam Someone" is typed as the "Name"
+      Then "World Ranking Player Name" says "Sam Someone"
+
+    Scenario: A world ranking name typed in no longer follows the name
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Sam Someones" is typed as the "Name"
+      Then "World Ranking Player Name" says "Samuel Someone"
+
+    Scenario: A world ranking name emptied follows the name again
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "" is typed as the "World Ranking Player Name"
+      When "Samantha Someone" is typed as the "Name"
+      Then "World Ranking Player Name" says "Samantha Someone"
+
+    Scenario: The player added has the world ranking name typed
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Samuel Someone"
+
+    Scenario: The player added with the world ranking name left to follow has their name
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Sam Someone"
+
+    Scenario: Adding empties the world ranking name
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Add" is pressed
+      Then "World Ranking Player Name" is empty
+
+    Scenario: The next player's world ranking name follows their name
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      And "Add" is pressed
+      When "Alex Another" is typed as the "Name"
+      Then "World Ranking Player Name" says "Alex Another"
+
   Rule: Save keeps the change and closes the dialog
 
     Scenario: A renamed player is kept by their new name
@@ -382,6 +503,47 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Samantha Someone" is typed as the "Name"
       When "Save" is pressed
       Then the player "Samantha Someone" of "Spring Open" represents "Canterbury Croquet Club"
+
+    Scenario: A renamed player keeps their world ranking name
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samantha Someone" is typed as the "Name"
+      When "Save" is pressed
+      Then the player "Samantha Someone" of "Spring Open" has the world ranking name "Samuel Someone"
+
+    Scenario: The world ranking name does not follow the name while a player is changed
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      When "Samantha Someone" is typed as the "Name"
+      Then "World Ranking Player Name" says "Samuel Someone"
+
+    Scenario: A player with no world ranking name saved is given their name
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      When "Save" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Sam Someone"
+
+    Scenario: A world ranking name changed is kept
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Save" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Samuel Someone"
+
+    Scenario: A world ranking name emptied is kept as the player's name
+      Given the player is to have the world ranking name "Samuel Someone"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "" is typed as the "World Ranking Player Name"
+      When "Save" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Sam Someone"
 
     Scenario: A flag taken away is kept taken away
       Given the player is to fly the flag "nz"
@@ -579,6 +741,14 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Sam Someone" is typed as the "Name"
       When "Save" is pressed
       Then "Name" is refused with "Tournament.PlayerNameTaken"
+
+    Scenario: A world ranking name that could not be one is refused beside it
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Sa" is typed as the "World Ranking Player Name"
+      When "Add" is pressed
+      Then "World Ranking Player Name" is refused with "WorldRankingName.TooShort"
 
     Scenario: A refused player is not added
       Given the page of "Spring Open" is open
