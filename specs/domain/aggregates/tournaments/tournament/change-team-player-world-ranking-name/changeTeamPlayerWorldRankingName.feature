@@ -4,7 +4,7 @@ Feature: Changing a player in a team's world ranking name alone
   may (`TeamPlayer.feature`), and it is changed alone as theirs is
   (`changeWorldRankingName.feature`): by the tournament's managers, or by an
   account asking as a world ranking officer, whatever part it has in the
-  tournament; anybody else, a scorer among them, is refused with
+  tournament, where its sport is ranked across the world; anybody else, a scorer among them, is refused with
   `Tournament.NotAManagerOrRankingOfficer`. Changing it changes nothing else
   about the player, is recorded as the player in a team being updated, and
   records nothing where it changes nothing.
@@ -40,6 +40,13 @@ Feature: Changing a player in a team's world ranking name alone
     Scenario: A scorer is refused
       Given the tournament is rebuilt from the stream
       And it is asked for by "account/5f0c7a2e-3b1d-4c8e-9f6a-2d4b8e1c7a3f"
+      When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
+      Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
+
+    Scenario: A world ranking officer is refused in a sport the world does not rank
+      Given it was updated with the sport "rc"
+      And the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
       When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
       Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
 
