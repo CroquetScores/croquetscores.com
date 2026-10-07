@@ -21,6 +21,11 @@ Feature: A player is added to a team, or changed, in a modal dialog
   page, and is laid out and read, is said of this one, and is not said again
   here.
 
+  In a tournament of association or golf croquet it offers the world
+  ranking players as the name and the world ranking name are typed, and marks
+  the world ranking name with a tick or a question mark, as the player dialog
+  does. That it does is said here; how is said there.
+
   This says what is its own. The player is added to the team whose page it
   was opened from, and to no other. A name another player in the same team
   has is refused beneath the name, with `Team.PlayerNameTaken`, however it is
@@ -322,6 +327,35 @@ Feature: A player is added to a team, or changed, in a modal dialog
       And "Byers Kim" is typed as the "Name"
       When "Add" is pressed
       Then the team "Australia" of "Spring Tests" has the player "Byers Kim"
+
+  Rule: The dialog offers the world ranking players and marks the world ranking name as the player dialog does
+
+    Scenario: Typing in the name offers the world ranking players
+      Given the association croquet players include "Keith Aiton"
+      And the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      When "Kei" is typed as the "Name"
+      Then "Name" offers "Keith Aiton"
+
+    Scenario: Typing in the world ranking name offers the world ranking players
+      Given the association croquet players include "Keith Aiton"
+      And the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      When "Kei" is typed as the "World Ranking Player Name"
+      Then "World Ranking Player Name" offers "Keith Aiton"
+
+    Scenario: A world ranking name the world rankings know is ticked
+      Given the association croquet players include "Keith Aiton"
+      And the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      When "Keith Aiton" is typed as the "Name"
+      Then the world ranking name is ticked
+
+    Scenario: A world ranking name the world rankings do not know is questioned
+      Given the page of the team "Australia" in "Spring Tests" is open
+      And "Add Player" is pressed
+      When "Sam Someone" is typed as the "Name"
+      Then the world ranking name is questioned
 
   Rule: Every word the dialog says is in the reader's language
 

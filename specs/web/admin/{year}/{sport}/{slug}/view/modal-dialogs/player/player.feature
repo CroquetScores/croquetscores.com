@@ -48,6 +48,23 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   A player being changed keeps the world ranking name they have when their
   name is corrected, since the rankings still know them by it, so it follows
   nothing while a player is changed.
+  In a tournament of association or golf croquet, the name and the world
+  ranking name each offer, as they are typed, the players the world rankings
+  know for the tournament's sport whose names the typing may be the start of
+  (`WorldRankingPlayersMatching.feature`), so that a manager can take a
+  player's name as the rankings spell it rather than typing it out. Choosing
+  one fills the field as typing it would, and the world ranking name follows
+  a name chosen as it follows one typed.
+
+  Beside the world ranking name is a tick where the world rankings know it,
+  and a question mark where they do not, which says why on hovering over it:
+  the rankings have no player of that name, so the name may be misspelled, or
+  the player may be new to them. Where the world ranking name is empty, the
+  mark is for the name, since that is what will be kept. Before anything is
+  typed there is no mark. It is only advice: a world ranking name the
+  rankings do not know is kept as readily as one they do, since a player new
+  to the rankings is not in them yet.
+
   The flags are offered by the name of the place each is the flag of, in the
   reader's language, in order of those names, with a choice of none first,
   since most players fly none.
@@ -785,6 +802,126 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Sa" is typed as the "Name"
       When "Add" is pressed
       Then "Name" has the focus
+
+  Rule: The name and the world ranking name offer the world ranking players as they are typed
+
+    Scenario: Typing the start of a first name in the name offers the player
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Kei" is typed as the "Name"
+      Then "Name" offers "Keith Aiton"
+
+    Scenario: Typing the start of a surname in the name offers the player
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Ait" is typed as the "Name"
+      Then "Name" offers "Keith Aiton"
+
+    Scenario: Typing in the world ranking name offers the player
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Kei" is typed as the "World Ranking Player Name"
+      Then "World Ranking Player Name" offers "Keith Aiton"
+
+    Scenario: A player being changed is offered the world ranking players
+      Given the association croquet players include "Keith Aiton"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      When "Kei" is typed as the "Name"
+      Then "Name" offers "Keith Aiton"
+
+    Scenario: A tournament of golf croquet offers golf croquet's players
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the golf croquet players include "Bill Arliss"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Bil" is typed as the "Name"
+      Then "Name" offers "Bill Arliss"
+
+    Scenario: A tournament of golf croquet does not offer association croquet's players
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Kei" is typed as the "Name"
+      Then "Name" does not offer "Keith Aiton"
+
+  Rule: Beside the world ranking name, a tick or a question mark says whether the world rankings know it
+
+    Scenario: Nothing is marked before anything is typed
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the world ranking name is not marked
+
+    Scenario: A world ranking name the world rankings know is ticked
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Keith Aiton" is typed as the "Name"
+      Then the world ranking name is ticked
+
+    Scenario: A world ranking name the world rankings do not know is questioned
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Sam Someone" is typed as the "Name"
+      Then the world ranking name is questioned
+
+    Scenario: The world ranking name typed in is the one marked
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Keith Aiton" is typed as the "Name"
+      When "K Aiton" is typed as the "World Ranking Player Name"
+      Then the world ranking name is questioned
+
+    Scenario: A world ranking name capitalised otherwise is questioned
+      Given the association croquet players include "Keith Aiton"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "keith aiton" is typed as the "Name"
+      Then the world ranking name is questioned
+
+    Scenario: An empty world ranking name is marked for the name
+      Given the association croquet players include "Keith Aiton"
+      And the player is to have the world ranking name "K Aiton"
+      And "organiser@example.com" has added the player "Keith Aiton" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Keith Aiton" is pressed
+      When "" is typed as the "World Ranking Player Name"
+      Then the world ranking name is ticked
+
+    Scenario: A player whose world ranking name the world rankings know is ticked when opened
+      Given the association croquet players include "Keith Aiton"
+      And the player is to have the world ranking name "Keith Aiton"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      When the name of the player "Sam Someone" is pressed
+      Then the world ranking name is ticked
+
+    Scenario: The question mark says why
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Sam Someone" is typed as the "Name"
+      Then the question mark says why on hovering over it
+
+    Scenario: The question mark says why in the reader's language
+      Given a browser that asks for "en-XA"
+      And the page of "Spring Open" is open
+      And the way to add a player is pressed
+      When "Sam Someone" is typed into the player's name
+      Then what the question mark says is in the test locale
+
+    Scenario: A world ranking name the world rankings do not know is kept
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Sam Someone"
 
   Rule: Every word the dialog says is in the reader's language
 
