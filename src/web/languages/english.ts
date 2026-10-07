@@ -532,6 +532,7 @@ export const english: Language = {
     "admin.administrator.sections.label": "The administrator's pages",
     "admin.administrator.sections.tournaments": "Tournaments",
     "admin.administrator.sections.accounts": "Accounts",
+    "admin.administrator.sections.worldRankings": "World Rankings",
     "admin.administrator.title": "Administrator",
     // The accounts page, a section for each role.
     "admin.accounts.title": "Accounts",
@@ -551,6 +552,32 @@ export const english: Language = {
     // of the list. Not about the address, since it may be the session that
     // ended or the site that failed.
     "admin.roles.otherwise": "That could not be done.",
+    // The page where the world ranking players are imported, and its log, a
+    // line for each thing the import says. A count is said after a colon,
+    // so that one player and many are said the same way.
+    "admin.worldRankings.title": "Import World Ranking Players",
+    "admin.worldRankings.import": "Import",
+    "admin.worldRankings.log": "How the import went",
+    "admin.worldRankings.ac.reading": "Reading the association croquet list",
+    "admin.worldRankings.ac.read":
+      "Association croquet players read: {players}",
+    "admin.worldRankings.ac.kept":
+      "Association croquet players kept: {players}",
+    "admin.worldRankings.ac.refused":
+      "The association croquet list could not be read, so its players were left as they were.",
+    "admin.worldRankings.gc.reading": "Reading the golf croquet list",
+    "admin.worldRankings.gc.read": "Golf croquet players read: {players}",
+    "admin.worldRankings.gc.kept": "Golf croquet players kept: {players}",
+    "admin.worldRankings.gc.refused":
+      "The golf croquet list could not be read, so its players were left as they were.",
+    "admin.worldRankings.finished": "Finished",
+    "admin.worldRankings.failed": "The import did not finish.",
+    // For a refusal with no words of its own, as a failure of the site's.
+    "admin.worldRankings.otherwise": "Something went wrong on the site.",
+    "WorldRankingLists.Unreachable":
+      "The world rankings' site could not be reached.",
+    "WorldRankingLists.Unreadable":
+      "The list has a line in it that could not be read.",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,

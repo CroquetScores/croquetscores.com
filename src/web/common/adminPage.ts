@@ -39,7 +39,7 @@ export const adminWordsId = "admin-words";
 // is why each screen's scenarios read a refusal's own words and not only its
 // code: the words for any would pass for it otherwise.
 const saidByTheAdmin =
-  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.|ManagerNote|EditManagerNote\.|DeleteManagerNote\.|AddRole\.|RemoveRole\.|AccountsWithRole\.|Account\.NotAnAdministrator)/;
+  /^(admin\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.|ManagerNote|EditManagerNote\.|DeleteManagerNote\.|AddRole\.|RemoveRole\.|AccountsWithRole\.|Account\.NotAnAdministrator|WorldRankingLists\.)/;
 
 // The admin's words in the reader's language, each one the site's first
 // language has, so that a word missing from the reader's is said in that one

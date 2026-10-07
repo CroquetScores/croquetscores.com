@@ -1,7 +1,8 @@
 import { say } from "../words.js";
 
 // The section bar of the administrator's pages (AdministratorSections.feature):
-// back to the tournaments, and on to the accounts. Tournaments is never marked
+// back to the tournaments, and on to the accounts and to the page where the
+// world ranking players are imported. Tournaments is never marked
 // here, since the tournaments are not one of the administrator's pages; and
 // the administrator's pages at /admin/administrator itself are neither
 // section, so nothing is marked there.
@@ -11,7 +12,7 @@ import { say } from "../words.js";
 
 interface Props {
   /** The section being read, if the page is one of them. */
-  readonly reading?: "accounts" | undefined;
+  readonly reading?: "accounts" | "world-rankings" | undefined;
 }
 
 export const AdministratorSections = ({
@@ -35,6 +36,14 @@ export const AdministratorSections = ({
             aria-current={reading === "accounts" ? "page" : undefined}
           >
             {say("admin.administrator.sections.accounts")}
+          </a>
+        </li>
+        <li>
+          <a
+            href="/admin/administrator/import-world-ranking-players"
+            aria-current={reading === "world-rankings" ? "page" : undefined}
+          >
+            {say("admin.administrator.sections.worldRankings")}
           </a>
         </li>
       </ul>

@@ -23,6 +23,7 @@ import type {
   PasswordHasher,
 } from "../../src/application/services/PasswordHasher.js";
 import type { BreachedPasswords } from "../../src/application/services/BreachedPasswords.js";
+import type { WorldRankingLists } from "../../src/application/services/WorldRankingLists.js";
 import type { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AggregateRoot } from "../../src/domain/common/AggregateRoot.js";
@@ -250,6 +251,11 @@ export class SpecWorld extends World {
   public knownBreached: ((password: string) => void) | undefined;
   public breachedPasswordsUnreachable: (() => Promise<void>) | undefined;
   public breached: boolean | undefined;
+
+  // Where the world ranking players are read from, when a scenario stands a
+  // fake of the rankings' site up: put here by whatever stands it up, since
+  // the import's feature cannot name the reading behind it.
+  public worldRankingLists: WorldRankingLists | undefined;
 
   // The parts of an account a scenario makes, whether the last email address
   // was found the same as another, and every way the last password made was

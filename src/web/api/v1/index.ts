@@ -7,6 +7,7 @@ import type {
   FastifyReply,
   FastifyRequest,
 } from "fastify";
+import { PassThrough } from "node:stream";
 
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
 import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
@@ -65,6 +66,7 @@ import type { Assets } from "../../common/assets.js";
 import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
+import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
@@ -968,6 +970,45 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // The players the world rankings know, imported as an administrator asks
+  // from the page for it. Answered as it goes, a line of JSON for each thing
+  // the import says, so that the page can show each as it comes rather than
+  // all of them once both lists have been read. A refusal before the import
+  // says anything is answered as any refusal is. A failure after that can
+  // only be a last line, since what has been answered cannot be taken back.
+  server.post("/world-ranking-players/import", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const lines = new PassThrough();
+    let saidSomething = (): void => {};
+    const said = new Promise<void>((resolve) => {
+      saidSomething = resolve;
+    });
+    const importing = request.server.mediator.send(
+      new ImportWorldRankingPlayers(
+        reader.value,
+        (report) => {
+          lines.write(`${JSON.stringify(report)}\n`);
+          saidSomething();
+        },
+        request.requestedAt,
+      ),
+    );
+    // Throws a refusal that comes first, for the errors to answer.
+    await Promise.race([said, importing]);
+    importing.then(
+      () => lines.end(),
+      (error: unknown) => {
+        request.log.error({ err: error }, "The import failed partway");
+        lines.end(`${JSON.stringify({ kind: "failed", code: "Unknown" })}\n`);
+      },
+    );
+    return reply
+      .header("cache-control", "no-store")
+      .type("application/x-ndjson; charset=utf-8")
+      .send(lines);
+  });
 
   // A flag, as a reader sees it: its picture, and the name of the place it is
   // the flag of, in the reader's language.

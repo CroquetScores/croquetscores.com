@@ -104,13 +104,13 @@ Feature: Reading the players' lists from the world rankings' site
 
     Scenario: A line without its sport's details is refused
       Given the golf croquet list has the line "1,Arliss,William,Bill,m,ENG,ENG,,2050,2050,,,,,1,0,0"
-      And the golf croquet list has the line "2,Brand,Richard"
+      And the golf croquet list has the line "2,Brand,Richard,Richard,m,ENG"
       When the golf croquet list is read
       Then the reading is refused with "WorldRankingLists.Unreadable"
 
     Scenario: A line with another sport's details is refused
-      Given the golf croquet list has the line "     3,Aiton,KMH,          ,England,      130,Keith, , ,Ntt, ,Irish, , , , , , , , , , , , ,"
-      When the golf croquet list is read
+      Given the association croquet list has the line "1,Arliss,William,Bill,m,ENG,ENG,,2050,2050,,,,,1,0,0"
+      When the association croquet list is read
       Then the reading is refused with "WorldRankingLists.Unreadable"
 
     Scenario: A line with no surname is refused

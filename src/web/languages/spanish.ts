@@ -471,6 +471,7 @@ export const spanish: Language = {
     "admin.administrator.sections.label": "Las páginas del administrador",
     "admin.administrator.sections.tournaments": "Torneos",
     "admin.administrator.sections.accounts": "Cuentas",
+    "admin.administrator.sections.worldRankings": "Ranking mundial",
     "admin.administrator.title": "Administrador",
     "admin.accounts.title": "Cuentas",
     "admin.roles.add": "Añadir",
@@ -488,6 +489,31 @@ export const spanish: Language = {
     "admin.roles.world-ranking-officer.removeExplanation":
       "{name} dejará de ser responsable del ranking mundial.",
     "admin.roles.otherwise": "No se ha podido hacer.",
+    "admin.worldRankings.title": "Importar jugadores del ranking mundial",
+    "admin.worldRankings.import": "Importar",
+    "admin.worldRankings.log": "Cómo fue la importación",
+    "admin.worldRankings.ac.reading":
+      "Leyendo la lista de croquet de asociación",
+    "admin.worldRankings.ac.read":
+      "Jugadores de croquet de asociación leídos: {players}",
+    "admin.worldRankings.ac.kept":
+      "Jugadores de croquet de asociación guardados: {players}",
+    "admin.worldRankings.ac.refused":
+      "No se pudo leer la lista de croquet de asociación, así que sus jugadores se han dejado como estaban.",
+    "admin.worldRankings.gc.reading": "Leyendo la lista de golf croquet",
+    "admin.worldRankings.gc.read":
+      "Jugadores de golf croquet leídos: {players}",
+    "admin.worldRankings.gc.kept":
+      "Jugadores de golf croquet guardados: {players}",
+    "admin.worldRankings.gc.refused":
+      "No se pudo leer la lista de golf croquet, así que sus jugadores se han dejado como estaban.",
+    "admin.worldRankings.finished": "Terminado",
+    "admin.worldRankings.failed": "La importación no terminó.",
+    "admin.worldRankings.otherwise": "Algo ha fallado en el sitio.",
+    "WorldRankingLists.Unreachable":
+      "No se ha podido llegar al sitio del ranking mundial.",
+    "WorldRankingLists.Unreadable":
+      "La lista tiene una línea que no se ha podido leer.",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",

@@ -34,6 +34,7 @@ import { AskToSetPasswordHandler } from "../application/operations/accounts/AskT
 import { AccountProfile } from "../application/operations/accounts/AccountProfile.js";
 import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
 import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
+import { ImportWorldRankingPlayersHandler } from "../application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
 import { AddRoleValidator } from "../application/operations/accounts/AddRoleValidator.js";
 import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
@@ -130,6 +131,7 @@ import { PublicGroupOfTournamentHandler } from "../application/operations/tourna
 import { PublicTeamSummaryOfTournamentHandler } from "../application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
 import { PublicTestOfTournamentHandler } from "../application/operations/tournaments/PublicTestOfTournamentHandler.js";
 import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
+import type { WorldRankingLists } from "../application/services/WorldRankingLists.js";
 import { AddGameHandler } from "../application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../application/operations/competitions/AddGameValidator.js";
 import { ArchiveGameHandler } from "../application/operations/competitions/ArchiveGameHandler.js";
@@ -212,6 +214,8 @@ import { Argon2id } from "../infrastructure/identity/Argon2id.js";
 import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
+import { PostgresWorldRankingPlayers } from "../infrastructure/database/PostgresWorldRankingPlayers.js";
+import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebsite.js";
 import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
@@ -533,6 +537,12 @@ export interface ApplicationOptions {
    */
   readonly breachedPasswords?: BreachedPasswords;
   /**
+   * Where the players the world rankings know are read from. The rankings'
+   * own site, unless a scenario says otherwise, for the reason Have I Been
+   * Pwned is not asked.
+   */
+  readonly worldRankingLists?: WorldRankingLists;
+  /**
    * What judges whether whoever is registering is a person. reCAPTCHA, when
    * the site has keys for it, unless a scenario says otherwise: a spec run has
    * no business asking Google, and a scenario that is about being judged needs
@@ -753,6 +763,16 @@ export const buildApplication = async (
   mediator.handleCommand(new AddRoleHandler(accounts, accountsByEmailAddress));
   mediator.handleCommand(new RemoveRoleHandler(accounts, accountsByRole));
   mediator.handleQuery(new AccountsWithRoleHandler(accounts, accountsByRole));
+  // Given the unit of work to run its own transactions in, since it reads the
+  // rankings' lists between them, where the reading holds no connection.
+  mediator.handleCommand(
+    new ImportWorldRankingPlayersHandler(
+      accounts,
+      options.worldRankingLists ?? new WorldRankingWebsite(),
+      new PostgresWorldRankingPlayers(unitOfWork),
+      unitOfWork,
+    ),
+  );
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(

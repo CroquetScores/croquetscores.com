@@ -32,6 +32,7 @@ import type { ConfirmationLinkWorth } from "../../src/application/operations/acc
 import type { RegisterAccount } from "../../src/application/operations/accounts/RegisterAccount.js";
 import type { AddRole } from "../../src/application/operations/accounts/AddRole.js";
 import type { RemoveRole } from "../../src/application/operations/accounts/RemoveRole.js";
+import type { ImportWorldRankingPlayers } from "../../src/application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import type {
   AccountsWithRole,
   AccountWithRole,
@@ -117,6 +118,9 @@ export interface Registering {
 
   /** Takes a role from somebody. Throws what the mediator throws. */
   removeRole(command: RemoveRole): Promise<void>;
+
+  /** Imports the world ranking players. Throws what the mediator throws. */
+  importWorldRankingPlayers(command: ImportWorldRankingPlayers): Promise<void>;
 
   /** The accounts holding a role, or throws what the mediator throws. */
   accountsWithRole(

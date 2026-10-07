@@ -172,7 +172,7 @@ Feature: The page where an administrator imports the world ranking players
       Given a browser that asks for "en-XA"
       And the world rankings answer the golf croquet list with a failure
       And the page at "/admin/administrator/import-world-ranking-players" is open
-      When "Import" is pressed
+      When the way to import is pressed
       And the import's log says it has finished
       Then every word in the import's log but its numbers and codes is in the test locale
 
