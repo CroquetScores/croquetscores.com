@@ -131,7 +131,18 @@ Feature: The teams of a tournament, as a manager lists them
       When the reader signed in to the account for "organiser@example.com" lists the teams of "Spring Tests"
       Then the team "Australia" is answered as in no test
 
-  Rule: Only a manager of a tournament there is can list them
+  Rule: Only a manager or a world ranking officer can list them
+
+    A world ranking officer may change any team player's world ranking name
+    (`ChangeTeamPlayerWorldRankingName.feature`), so it may list the teams
+    too, whatever part it has in the tournament.
+
+    Scenario: A world ranking officer lists them
+      Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      When the reader signed in to the account for "ranker@example.com" lists the teams of "Spring Tests"
+      Then the team "Australia" is answered
 
     Scenario: A tournament there is not is refused
       When the reader signed in to the account for "organiser@example.com" lists the teams of a tournament there is not

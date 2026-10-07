@@ -8,7 +8,9 @@ export type TournamentYearsOfAccountRefusedCode =
 /**
  * The years the account the reader is signed in to has a tournament starting
  * in on the website being read, the newest first: those any tournament there
- * starts in, where the account administers the site. It names that account
+ * starts in, where the account administers the site, and those of every
+ * tournament of a sport with world rankings besides its own where it is a
+ * world ranking officer. It names that account
  * and never one the reader chose, as listing the tournaments does.
  */
 export class TournamentYearsOfAccount extends Query<readonly number[]> {

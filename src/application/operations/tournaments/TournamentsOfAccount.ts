@@ -17,7 +17,12 @@ export interface TournamentOfAccount {
   /** Where it is found, as "2026/ac/spring-open". */
   readonly address: string;
   readonly archived: boolean;
-  readonly part: "manager" | "scorer";
+  /**
+   * The account's part in it: a manager's or a scorer's, or, for a world
+   * ranking officer with no part in it, one whose players' world ranking
+   * names it looks after.
+   */
+  readonly part: "manager" | "scorer" | "rankingOfficer";
 }
 
 /**
@@ -51,12 +56,33 @@ export interface TournamentsByAccount {
 
   /** The years any tournament on `website` starts in, the newest first, each once. */
   everyYear(website: Website): Promise<readonly number[]>;
+
+  /**
+   * For a world ranking officer: those on `website` starting in `year` that
+   * `account` manages or scores, as tournamentsOf answers them, and every one
+   * of a sport whose code is among `sports` besides, as one whose rankings it
+   * looks after, in the order tournamentsOf keeps.
+   */
+  tournamentsOfRankingOfficer(
+    account: AccountId,
+    website: Website,
+    year: number,
+    sports: readonly string[],
+  ): Promise<readonly TournamentOfAccount[]>;
+
+  /** The years of the tournaments tournamentsOfRankingOfficer answers, the newest first, each once. */
+  yearsOfRankingOfficer(
+    account: AccountId,
+    website: Website,
+    sports: readonly string[],
+  ): Promise<readonly number[]>;
 }
 
 /**
  * The tournaments the account the reader is signed in to manages or scores on
  * the website being read, starting in `year`: every one there, as one it
- * manages, where the account administers the site.
+ * manages, where the account administers the site, and every one of a sport
+ * with world rankings besides its own where it is a world ranking officer.
  *
  * It names the account the reader is signed in to, never one they chose, so
  * nobody can list another account's tournaments.

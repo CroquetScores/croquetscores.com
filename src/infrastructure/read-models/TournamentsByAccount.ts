@@ -149,6 +149,66 @@ export class TournamentsByAccount implements Projection, Asked {
     return rows.map(({ year }) => year);
   }
 
+  // From the details, as every tournament is, joined to the account's own part
+  // where it has one: a tournament it has no part in is one whose rankings it
+  // looks after where its sport, the second part of its address, is asked
+  // about, and is left out where it is not.
+  async tournamentsOfRankingOfficer(
+    account: AccountId,
+    website: Website,
+    year: number,
+    sports: readonly string[],
+  ): Promise<readonly TournamentOfAccount[]> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      tournament_id: string;
+      name: string;
+      starts: string;
+      finishes: string;
+      address: string;
+      archived: boolean;
+      part: "manager" | "scorer" | null;
+    }>(
+      `select d.tournament_id, d.name,
+              to_char(d.starts, 'YYYY-MM-DD') as starts,
+              to_char(d.finishes, 'YYYY-MM-DD') as finishes,
+              d.address, d.archived, a.part
+         from tournaments_by_account_details d
+         left join tournaments_by_account a
+           on a.tournament_id = d.tournament_id and a.account_id = $1
+        where d.website = $2 and extract(year from d.starts) = $3
+          and (a.part is not null or split_part(d.address, '/', 2) = any($4))
+        order by d.archived, d.starts desc, d.name`,
+      [account.value, website.host, year, sports],
+    );
+    return rows.map((row) => ({
+      id: row.tournament_id,
+      name: row.name,
+      starts: row.starts,
+      finishes: row.finishes,
+      address: row.address,
+      archived: row.archived,
+      part: row.part ?? "rankingOfficer",
+    }));
+  }
+
+  async yearsOfRankingOfficer(
+    account: AccountId,
+    website: Website,
+    sports: readonly string[],
+  ): Promise<readonly number[]> {
+    const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
+      `select distinct extract(year from d.starts)::int as year
+         from tournaments_by_account_details d
+         left join tournaments_by_account a
+           on a.tournament_id = d.tournament_id and a.account_id = $1
+        where d.website = $2
+          and (a.part is not null or split_part(d.address, '/', 2) = any($3))
+        order by year desc`,
+      [account.value, website.host, sports],
+    );
+    return rows.map(({ year }) => year);
+  }
+
   // Each written so that writing it twice leaves what writing it once did,
   // which is what makes projecting the same events again change nothing.
   async #project(tournament: string, event: DomainEvent): Promise<void> {

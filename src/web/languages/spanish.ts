@@ -430,6 +430,7 @@ export const spanish: Language = {
     "admin.tournaments.archive": "Archivar",
     "admin.tournaments.restore": "Restaurar",
     "admin.tournaments.scores": "Resultados",
+    "admin.tournaments.players": "Jugadores",
     "admin.years.label": "Años",
     "admin.years.earlier": "Años anteriores",
     "admin.tournament.name": "Nombre",

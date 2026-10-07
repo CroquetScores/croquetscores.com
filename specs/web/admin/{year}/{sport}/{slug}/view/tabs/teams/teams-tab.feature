@@ -420,3 +420,50 @@ Feature: The teams tab of a tournament's page
       And "organiser@example.com" has added the team "The Very Long Named Croquet And Lawn Bowls Club Of The Northern Districts" to "Spring Tests"
       When the teams of "Spring Tests" are opened
       Then the page is no wider than the window
+
+  Rule: A world ranking officer who does not manage the tournament is shown its teams, to reach their players
+
+    A world ranking officer may change any team player's world ranking name
+    (`changeTeamPlayerWorldRankingName.feature`), and reaches them through
+    their teams. So where it does not manage the tournament it is shown every
+    team, and offered only the way to each team's page, not to add, change,
+    archive, restore or move one.
+
+    Scenario: A world ranking officer is shown the teams
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the teams of "Spring Tests" are open
+      Then the first team listed is "Australia"
+
+    Scenario: A world ranking officer is not offered Add Team
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the teams of "Spring Tests" are open
+      Then the tab does not offer "Add Team"
+
+    Scenario Outline: A world ranking officer is offered only the team's page
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the teams of "Spring Tests" are open
+      Then the team "Australia" does not offer "<option>"
+
+      Examples:
+        | option  |
+        | Edit    |
+        | Archive |
+        | Down    |
+
+    Scenario: A world ranking officer is offered the team's page
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the teams of "Spring Tests" are open
+      Then the team "Australia" offers "View"

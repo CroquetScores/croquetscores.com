@@ -1,5 +1,9 @@
 // The composition root. This is the only file outside src/infrastructure/ that
 // names a concrete implementation: everything chosen here is chosen once.
+import { ChangePlayerWorldRankingNameHandler } from "../application/operations/tournaments/ChangePlayerWorldRankingNameHandler.js";
+import { ChangePlayerWorldRankingNameValidator } from "../application/operations/tournaments/ChangePlayerWorldRankingNameValidator.js";
+import { ChangeTeamPlayerWorldRankingNameHandler } from "../application/operations/tournaments/ChangeTeamPlayerWorldRankingNameHandler.js";
+import { ChangeTeamPlayerWorldRankingNameValidator } from "../application/operations/tournaments/ChangeTeamPlayerWorldRankingNameValidator.js";
 import Fastify, { type FastifyInstance } from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
@@ -786,6 +790,8 @@ export const buildApplication = async (
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
   validation.register(new UpdatePlayerValidator());
+  validation.register(new ChangePlayerWorldRankingNameValidator());
+  validation.register(new ChangeTeamPlayerWorldRankingNameValidator());
   validation.register(new AddBlockValidator());
   validation.register(new UpdateBlockValidator());
   validation.register(new AddKnockoutValidator());
@@ -825,6 +831,8 @@ export const buildApplication = async (
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
+  mediator.handleCommand(new ChangePlayerWorldRankingNameHandler(...both));
+  mediator.handleCommand(new ChangeTeamPlayerWorldRankingNameHandler(...both));
   mediator.handleCommand(
     new ArchivePlayerHandler(...both, competitions, games),
   );

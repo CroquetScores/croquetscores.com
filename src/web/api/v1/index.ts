@@ -1,5 +1,7 @@
 // /api/v1 — JSON, and the same endpoints whether a mobile app or the admin SPA
 // is asking. Operations arrive here as features are accepted.
+import { ChangePlayerWorldRankingName } from "../../../application/operations/tournaments/ChangePlayerWorldRankingName.js";
+import { ChangeTeamPlayerWorldRankingName } from "../../../application/operations/tournaments/ChangeTeamPlayerWorldRankingName.js";
 import type {
   FastifyPluginCallback,
   FastifyReply,
@@ -1026,6 +1028,26 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     },
   );
 
+  // A player's world ranking name changed alone, as a world ranking officer
+  // changes it.
+  server.put<{ Params: { id: string; player: string } }>(
+    "/tournaments/:id/players/:player/world-ranking-name",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new ChangePlayerWorldRankingName(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `tournament-player/${request.params.player}`,
+          textOf(request.body, "worldRankingName"),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
   // A player moved a place, archived or restored.
   for (const action of ["up", "down", "archive", "restore"] as const) {
     server.post<{ Params: { id: string; player: string } }>(
@@ -1328,6 +1350,27 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
           `team/${request.params.team}`,
           `team-player/${request.params.player}`,
           teamPlayerFrom(request.body),
+          request.requestedAt,
+        ),
+      );
+      return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // A team's player's world ranking name changed alone, as a world ranking
+  // officer changes it.
+  server.put<{ Params: { id: string; team: string; player: string } }>(
+    "/tournaments/:id/teams/:team/players/:player/world-ranking-name",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      await request.server.mediator.send(
+        new ChangeTeamPlayerWorldRankingName(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `team/${request.params.team}`,
+          `team-player/${request.params.player}`,
+          textOf(request.body, "worldRankingName"),
           request.requestedAt,
         ),
       );

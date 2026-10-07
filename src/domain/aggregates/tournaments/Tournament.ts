@@ -7,6 +7,7 @@ import { Slug } from "../../common/Slug.js";
 import { Website } from "../../common/Website.js";
 import { AccountId } from "../accounts/AccountId.js";
 import { Administrator } from "../accounts/Administrator.js";
+import { WorldRankingOfficer } from "../accounts/WorldRankingOfficer.js";
 import { CompetitionReference } from "./CompetitionReference.js";
 import { BlockAdded } from "./events/BlockAdded.js";
 import { BlockUpdated } from "./events/BlockUpdated.js";
@@ -110,6 +111,7 @@ export type TournamentErrorCode =
   | "Tournament.KnockoutPlayerHasGames"
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
+  | "Tournament.NotAManagerOrRankingOfficer"
   | "Tournament.LastManager"
   | "Tournament.AlreadyAManager"
   | "Tournament.PlayedByTeams"
@@ -502,6 +504,79 @@ export class Tournament extends AggregateRoot {
    */
   mayManage(by: AccountId): boolean {
     return this.manages(by) || by instanceof Administrator;
+  }
+
+  /**
+   * Whether `by` may change its players' world ranking names
+   * (changeWorldRankingName.feature): whoever may manage it, or an account
+   * asking as a world ranking officer (WorldRankingOfficer.ts), which may do
+   * that to every tournament of a sport ranked across the world and nothing
+   * else. In any other sport there are no rankings for it to look after.
+   */
+  mayChangeWorldRankingNames(by: AccountId): boolean {
+    return (
+      this.mayManage(by) ||
+      (by instanceof WorldRankingOfficer && this.sport.hasWorldRankings)
+    );
+  }
+
+  /**
+   * That the player `id`'s world ranking name is now `worldRankingName`,
+   * none where it is blank, and nothing else about them changed. Refused
+   * unless `by` may change world ranking names, as an update is for the rest,
+   * and recorded as the player being updated. Changing it to what it is
+   * records nothing.
+   */
+  changeWorldRankingName(
+    id: TournamentPlayerId,
+    worldRankingName: string,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessRankingNamesMayChange(by);
+    this.#refuseOnceArchived();
+    const found = this.#playerFound(id);
+    const player = found.update({
+      name: found.name.toString(),
+      representing: found.representing,
+      flag: found.flag === undefined ? undefined : String(found.flag),
+      worldRankingName,
+    });
+    if (samePlayer(player, found)) return;
+    this.record(playerEvent(TournamentPlayerUpdated, player, by, at));
+  }
+
+  /**
+   * That the player `id` of the team `teamId` now has the world ranking name
+   * `worldRankingName`, and nothing else about them changed, as
+   * changeWorldRankingName does for a tournament's player.
+   */
+  changeTeamPlayerWorldRankingName(
+    teamId: TeamId,
+    id: TeamPlayerId,
+    worldRankingName: string,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    this.#refuseUnlessRankingNamesMayChange(by);
+    this.#refuseOnceArchived();
+    const { player: found } = this.#teamPlayerFound(teamId, id);
+    const player = found.update({
+      name: found.name.toString(),
+      worldRankingName,
+    });
+    if (sameWorldRankingName(player.worldRankingName, found.worldRankingName))
+      return;
+    this.record(
+      new TeamPlayerUpdated(
+        teamId.value,
+        id.value,
+        player.name.toString(),
+        player.worldRankingName?.toString(),
+        by,
+        at,
+      ),
+    );
   }
 
   scores(account: AccountId): boolean {
@@ -1835,6 +1910,16 @@ export class Tournament extends AggregateRoot {
     }
   }
 
+  // Asked before anything else, as a manager's part is.
+  #refuseUnlessRankingNamesMayChange(by: AccountId): void {
+    if (!this.mayChangeWorldRankingNames(by)) {
+      refuse(
+        "Tournament.NotAManagerOrRankingOfficer",
+        "Only a manager or a world ranking officer can change a world ranking name.",
+      );
+    }
+  }
+
   #refuseOnceArchived(): void {
     if (this.#archived) {
       refuse("Tournament.Archived", "The tournament is archived.");
@@ -2094,6 +2179,13 @@ export class Tournament extends AggregateRoot {
   ): { readonly team: Team; readonly player: TeamPlayer } {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
+    return this.#teamPlayerFound(teamId, id);
+  }
+
+  #teamPlayerFound(
+    teamId: TeamId,
+    id: TeamPlayerId,
+  ): { readonly team: Team; readonly player: TeamPlayer } {
     const team = this.#teamFound(teamId);
     team.ensureInUse();
     const player =

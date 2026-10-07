@@ -185,6 +185,70 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the tournament "Autumn Open" is not listed
 
+  Rule: A world ranking officer's list adds every tournament of a sport with world rankings
+
+    An account that holds the World Ranking Officer role may change the world
+    ranking name of any player (`changeWorldRankingName.feature`), and only
+    association croquet and golf croquet have world rankings
+    (`Sport.feature`). So its list is of the tournaments it manages or
+    scores, offering what its part allows, and every tournament of those two
+    sports on the website besides, each offering its players, which is what
+    the officer is there for. The years are those any of them is in.
+
+    Scenario: A tournament of a sport with world rankings is listed for a world ranking officer
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" is listed
+
+    Scenario: A tournament a world ranking officer has no part in offers its players
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" offers "Players"
+
+    Scenario: A tournament a world ranking officer has no part in offers nothing a manager is offered
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" does not offer "Manage"
+
+    Scenario: Players leads to the tournament in the admin
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the tournament "Autumn Open" is for the sport "ac"
+      And the admin is open
+      When "Players" is pressed for the tournament "Autumn Open"
+      Then the address is "/admin/2026/ac/autumn-open"
+
+    Scenario: A tournament a world ranking officer manages offers what a manager does
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then the tournament "Spring Open" offers "Manage"
+
+    Scenario: A tournament of a sport without world rankings is not listed for a world ranking officer
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" does not count towards the world rankings
+      And the tournament "Autumn Open" is for the sport "rc"
+      When the admin is opened
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: A year of a tournament of a sport with world rankings is offered to a world ranking officer
+      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2024-10-03"
+      When the admin is opened
+      Then the year 2024 is offered
+
   Rule: The list is of the website it is read on
 
     Scenario: A tournament on this website is listed

@@ -33,6 +33,8 @@ interface Found {
   readonly slug: string;
   /** Whether its tournament's sport has world rankings, for its players' dialog. */
   readonly asksWorldRankingNames: boolean;
+  /** Whether the reader manages its tournament, rather than ranking it alone. */
+  readonly manages: boolean;
 }
 
 type Asked =
@@ -120,6 +122,7 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
                 tournament={team.tournament}
                 team={team.id}
                 asksWorldRankingNames={team.asksWorldRankingNames}
+                manages={team.manages}
               />
             </div>
           </div>

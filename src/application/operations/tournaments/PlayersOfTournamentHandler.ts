@@ -11,7 +11,7 @@ import {
   PlayersOfTournament,
 } from "./PlayersOfTournament.js";
 import type { Competitions } from "../competitions/competitionOperations.js";
-import { managedBy } from "./tournamentOperations.js";
+import { managedOrRankedBy } from "./tournamentOperations.js";
 
 export class PlayersOfTournamentHandler extends QueryHandler<
   PlayersOfTournament,
@@ -29,7 +29,7 @@ export class PlayersOfTournamentHandler extends QueryHandler<
   }
 
   async handle(query: PlayersOfTournament): Promise<readonly ListedPlayer[]> {
-    const { tournament } = await managedBy(
+    const { tournament } = await managedOrRankedBy(
       this.tournaments,
       this.accounts,
       query.account,

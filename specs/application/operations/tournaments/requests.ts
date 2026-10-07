@@ -19,6 +19,7 @@ import { RestorePlayer } from "../../../../src/application/operations/tournament
 import { RestoreTournament } from "../../../../src/application/operations/tournaments/RestoreTournament.js";
 import { UpdateBlock } from "../../../../src/application/operations/tournaments/UpdateBlock.js";
 import { UpdateKnockout } from "../../../../src/application/operations/tournaments/UpdateKnockout.js";
+import { ChangePlayerWorldRankingName } from "../../../../src/application/operations/tournaments/ChangePlayerWorldRankingName.js";
 import { UpdatePlayer } from "../../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { UpdateSwiss } from "../../../../src/application/operations/tournaments/UpdateSwiss.js";
 import { UpdateTournament } from "../../../../src/application/operations/tournaments/UpdateTournament.js";
@@ -140,6 +141,29 @@ export const addPlayer = (
         ...(flag === undefined ? {} : { flag }),
         ...(worldRankingName === undefined ? {} : { worldRankingName }),
       },
+      momentOf(world),
+    ),
+    tournament,
+  );
+};
+
+/** Changes the world ranking name of the player `name` of `tournament` alone. */
+export const changePlayerWorldRankingName = async (
+  world: SpecWorld,
+  account: string,
+  tournament: About,
+  name: string,
+  worldRankingName: string,
+): Promise<void> => {
+  const id =
+    (await playerIn(world, tournament, name)) ?? TournamentPlayerId.create();
+  await send(
+    world,
+    new ChangePlayerWorldRankingName(
+      account,
+      tournament.value,
+      id.value,
+      worldRankingName,
       momentOf(world),
     ),
     tournament,

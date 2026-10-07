@@ -684,3 +684,69 @@ Feature: The players tab of a tournament's page
       And "organiser@example.com" has added the player "Maximilian Alexander Fitzwilliam-Worthington" to "Spring Open"
       When the players of "Spring Open" are opened
       Then the page is no wider than the window
+
+  Rule: A world ranking officer who does not manage the tournament is shown its players to change their world ranking names alone
+
+    An account that holds the World Ranking Officer role may change any
+    player's world ranking name, and nothing else (`changeWorldRankingName.feature`).
+    So where it does not manage the tournament it is shown every player, in
+    use and archived, as a manager is, but offered no way to add a player, nor
+    to archive, restore or move one: only Edit, and a name to press, which
+    open the player dialog to change the world ranking name
+    (`player.feature`).
+
+    Scenario: A world ranking officer is shown the players
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the players of "Spring Open" are open
+      Then the player "Sam Someone" is listed
+
+    Scenario: A world ranking officer is shown the archived players
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the players of "Spring Open" are open
+      Then the player "Sam Someone" is listed among the archived
+
+    Scenario: A world ranking officer is not offered Add Player
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the players of "Spring Open" are open
+      Then the tab does not offer "Add Player"
+
+    Scenario Outline: A world ranking officer is offered nothing but Edit
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the players of "Spring Open" are open
+      Then the player "Sam Someone" does not offer "<option>"
+
+      Examples:
+        | option  |
+        | Archive |
+        | Up      |
+        | Down    |
+
+    Scenario: A world ranking officer is offered Edit
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the players of "Spring Open" are open
+      Then the player "Sam Someone" offers "Edit"
+
+    Scenario: A world ranking officer is not offered Restore
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the players of "Spring Open" are open
+      Then the player "Sam Someone" does not offer "Restore"

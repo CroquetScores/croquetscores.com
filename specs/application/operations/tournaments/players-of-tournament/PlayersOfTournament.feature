@@ -200,7 +200,18 @@ Feature: The players of a tournament, as a manager lists them
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
       Then the player "Sam Someone" is answered as not having played
 
-  Rule: Only a manager of a tournament there is can list them
+  Rule: Only a manager or a world ranking officer can list them
+
+    A world ranking officer may change any player's world ranking name
+    (`ChangePlayerWorldRankingName.feature`), so it may list them too,
+    whatever part it has in the tournament.
+
+    Scenario: A world ranking officer lists them
+      Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the reader signed in to the account for "ranker@example.com" lists the players of "Spring Open"
+      Then the player "Sam Someone" is answered
 
     Scenario: A tournament there is not is refused
       When the reader signed in to the account for "organiser@example.com" lists the players of a tournament there is not

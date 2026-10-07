@@ -363,3 +363,69 @@ Feature: A tournament's page in the admin
       And "other@example.com" has had the role "Administrator" taken away
       When the page of "Spring Open" is opened
       Then the page is refused with "Tournament.NotAManager"
+
+  Rule: A world ranking officer is offered the players, and what its part offers
+
+    An account that holds the World Ranking Officer role may change any
+    player's world ranking name in a sport ranked across the world
+    (`changeWorldRankingName.feature`). So such a tournament's page offers it
+    the players, a Standard tournament's on the
+    Players tab and one played by teams' on the Teams tab, where a manager's
+    are offered, besides whatever its part in the tournament offers: every
+    tab to a manager, and the competitions to a scorer, with the players
+    after them.
+
+    Scenario: A world ranking officer with no part is offered the Players tab
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: A world ranking officer with no part is refused a tournament in a sport the world does not rank
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the tournament is to be for the sport "rc"
+      And "organiser@example.com" has created the tournament "Spring Ricochet"
+      When the page of "Spring Ricochet" is opened
+      Then the page is refused with "Tournament.NotAManager"
+
+    Scenario Outline: A world ranking officer with no part is not offered the managers' tabs
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "<tab>" is not offered
+
+      Examples:
+        | tab          |
+        | Competitions |
+        | Notes        |
+        | Managers     |
+        | Scorers      |
+
+    Scenario: A world ranking officer who scores the tournament is offered the Competitions tab
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
+      When the page of "Spring Open" is opened
+      Then the tab "Competitions" is offered
+
+    Scenario: A world ranking officer who scores the tournament is offered the Players tab too
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
+      When the page of "Spring Open" is opened
+      Then the tab "Players" is offered
+
+    Scenario: A world ranking officer is offered a tournament played by teams' Teams tab
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      When the page of "Spring Tests" is opened
+      Then the tab "Teams" is the one being read

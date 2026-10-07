@@ -6,7 +6,7 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import { type ListedTeam, TeamsOfTournament } from "./TeamsOfTournament.js";
-import { managedBy } from "./tournamentOperations.js";
+import { managedOrRankedBy } from "./tournamentOperations.js";
 
 export class TeamsOfTournamentHandler extends QueryHandler<
   TeamsOfTournament,
@@ -22,7 +22,7 @@ export class TeamsOfTournamentHandler extends QueryHandler<
   }
 
   async handle(query: TeamsOfTournament): Promise<readonly ListedTeam[]> {
-    const { tournament } = await managedBy(
+    const { tournament } = await managedOrRankedBy(
       this.tournaments,
       this.accounts,
       query.account,

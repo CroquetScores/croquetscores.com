@@ -24,6 +24,12 @@ interface Props {
   readonly team: string;
   /** Whether the tournament's sport has world rankings, for the dialog. */
   readonly asksWorldRankingNames: boolean;
+  /**
+   * Whether the reader manages the tournament. A world ranking officer who
+   * does not is shown the players to change their world ranking names alone,
+   * and offered nothing else.
+   */
+  readonly manages: boolean;
 }
 
 /** A player as the API lists a team's. */
@@ -41,6 +47,7 @@ export const TeamPlayers = ({
   tournament,
   team,
   asksWorldRankingNames,
+  manages,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // Counted up to ask again, once something has been pressed or kept.
@@ -118,8 +125,8 @@ export const TeamPlayers = ({
     offered
       ? button(player, action)
       : noOption(action, say(`admin.players.${action}`));
-  const anyArchive = inUse.some(({ hasPlayed }) => !hasPlayed);
-  const anyMove = inUse.length > 1;
+  const anyArchive = manages && inUse.some(({ hasPlayed }) => !hasPlayed);
+  const anyMove = manages && inUse.length > 1;
 
   const row = (player: Listed, place: number): React.JSX.Element => (
     <li
@@ -155,7 +162,9 @@ export const TeamPlayers = ({
       ) : null}
       <span className="listed-options">
         {player.archived
-          ? button(player, "restore")
+          ? manages
+            ? button(player, "restore")
+            : null
           : [
               button(player, "edit"),
               ...(anyArchive
@@ -179,17 +188,19 @@ export const TeamPlayers = ({
     >
       {/* Above the list rather than beneath it, where a long one would push
           it off a phone's screen. */}
-      <p>
-        <button
-          type="button"
-          className="button"
-          onClick={() => {
-            setDialog("adding");
-          }}
-        >
-          {say("admin.players.add")}
-        </button>
-      </p>
+      {manages ? (
+        <p>
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              setDialog("adding");
+            }}
+          >
+            {say("admin.players.add")}
+          </button>
+        </p>
+      ) : null}
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.players.none")}</p>
       ) : (
@@ -215,6 +226,7 @@ export const TeamPlayers = ({
         <TeamPlayerDialog
           tournament={tournament}
           asksWorldRankingName={asksWorldRankingNames}
+          onlyWorldRankingName={!manages}
           team={team}
           player={dialog === "adding" ? undefined : dialog}
           kept={askAgain}

@@ -13,7 +13,9 @@ import { knows, say } from "../../../../../../../../words.js";
 // a test has no byes to point the reader to. It asks for the world ranking
 // name as the player dialog does, in a tournament of a sport with world
 // rankings alone: following the name while a player is added, following
-// nothing while one is changed, and sent as the name when left empty.
+// nothing while one is changed, and sent as the name when left empty. Opened
+// by a world ranking officer who does not manage the tournament, only the
+// world ranking name can be changed, and Save changes that alone.
 
 /** A player as they are, when one is being changed. */
 export interface TeamPlayerAsTheyAre {
@@ -31,6 +33,8 @@ interface Props {
   readonly player?: TeamPlayerAsTheyAre | undefined;
   /** Whether the tournament's sport has world rankings, for which it asks. */
   readonly asksWorldRankingName: boolean;
+  /** Whether only the world ranking name may be changed, as a world ranking officer's. */
+  readonly onlyWorldRankingName?: boolean | undefined;
   /** Once a player is kept, so that the list says so. */
   readonly kept: () => void;
   readonly close: () => void;
@@ -54,6 +58,7 @@ export const TeamPlayerDialog = ({
   team,
   player,
   asksWorldRankingName,
+  onlyWorldRankingName = false,
   kept,
   close,
 }: Props): React.JSX.Element => {
@@ -78,24 +83,31 @@ export const TeamPlayerDialog = ({
     if (sending) return;
     setSending(true);
     try {
+      const worldRankingNameSent =
+        worldRankingName.trim() === "" ? name : worldRankingName;
       const response = await fetch(
-        player === undefined ? at : `${at}/${idInAddress(player.id)}`,
+        player === undefined
+          ? at
+          : `${at}/${idInAddress(player.id)}${onlyWorldRankingName ? "/world-ranking-name" : ""}`,
         {
           method: player === undefined ? "POST" : "PUT",
           headers: {
             accept: "application/json",
             "content-type": "application/json",
           },
-          body: JSON.stringify({
-            name,
-            // Asked for only where the sport has world rankings; elsewhere a
-            // player keeps whatever they had, as none was asked of them.
-            worldRankingName: asksWorldRankingName
-              ? worldRankingName.trim() === ""
-                ? name
-                : worldRankingName
-              : (player?.worldRankingName ?? ""),
-          }),
+          body: JSON.stringify(
+            onlyWorldRankingName
+              ? { worldRankingName: worldRankingNameSent }
+              : {
+                  name,
+                  // Asked for only where the sport has world rankings;
+                  // elsewhere a player keeps whatever they had, as none was
+                  // asked of them.
+                  worldRankingName: asksWorldRankingName
+                    ? worldRankingNameSent
+                    : (player?.worldRankingName ?? ""),
+                },
+          ),
         },
       );
       if (response.ok) {
@@ -182,6 +194,7 @@ export const TeamPlayerDialog = ({
           <input
             {...tied}
             ref={nameField}
+            disabled={onlyWorldRankingName}
             type="text"
             placeholder=" "
             autoComplete="off"

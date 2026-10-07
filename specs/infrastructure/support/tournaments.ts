@@ -10,6 +10,10 @@
 // application's, and an application spec may name nothing from
 // infrastructure. It puts a plain shape on the world (specs/support/
 // tournaments.ts) and the steps ask only that.
+import { ChangePlayerWorldRankingNameHandler } from "../../../src/application/operations/tournaments/ChangePlayerWorldRankingNameHandler.js";
+import { ChangePlayerWorldRankingNameValidator } from "../../../src/application/operations/tournaments/ChangePlayerWorldRankingNameValidator.js";
+import { ChangeTeamPlayerWorldRankingNameHandler } from "../../../src/application/operations/tournaments/ChangeTeamPlayerWorldRankingNameHandler.js";
+import { ChangeTeamPlayerWorldRankingNameValidator } from "../../../src/application/operations/tournaments/ChangeTeamPlayerWorldRankingNameValidator.js";
 import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
@@ -222,6 +226,8 @@ Given("the application's tournaments", function (this: SpecWorld) {
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
   validation.register(new UpdatePlayerValidator());
+  validation.register(new ChangePlayerWorldRankingNameValidator());
+  validation.register(new ChangeTeamPlayerWorldRankingNameValidator());
   validation.register(new AddBlockValidator());
   validation.register(new UpdateBlockValidator());
   validation.register(new AddKnockoutValidator());
@@ -258,6 +264,8 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
+  mediator.handleCommand(new ChangePlayerWorldRankingNameHandler(...both));
+  mediator.handleCommand(new ChangeTeamPlayerWorldRankingNameHandler(...both));
   mediator.handleCommand(
     new ArchivePlayerHandler(...both, competitions, games),
   );

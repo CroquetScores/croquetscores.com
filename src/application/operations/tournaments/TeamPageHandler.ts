@@ -36,7 +36,8 @@ export class TeamPageHandler extends QueryHandler<TeamPage, TeamAsPaged> {
         "No tournament has been found at that address.",
       );
     }
-    if (!tournament.mayManage(await readerAs(this.accounts, query.account))) {
+    const reader = await readerAs(this.accounts, query.account);
+    if (!tournament.mayChangeWorldRankingNames(reader)) {
       throw new TournamentRefused(
         "Tournament.NotAManager",
         "Only a manager of the tournament sees its teams.",
@@ -72,6 +73,7 @@ export class TeamPageHandler extends QueryHandler<TeamPage, TeamAsPaged> {
       tournamentAddress: tournament.address.toString(),
       slug: team.slug.toString(),
       asksWorldRankingNames: tournament.sport.hasWorldRankings,
+      manages: tournament.mayManage(reader),
     };
   }
 }

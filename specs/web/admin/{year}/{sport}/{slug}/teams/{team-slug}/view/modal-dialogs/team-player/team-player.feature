@@ -337,3 +337,34 @@ Feature: A player is added to a team, or changed, in a modal dialog
       Given the page of the team "Australia" in "Spring Tests" is open
       When "Add Player" is pressed
       Then the team player dialog is no wider than the window
+
+  Rule: A world ranking officer who does not manage the tournament changes the world ranking name alone
+
+    Scenario: The name is shown and cannot be changed
+      Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of the team "Australia" in "Spring Tests" is open
+      When the name of the player "Sam Someone" is pressed
+      Then "Name" cannot be changed
+
+    Scenario: The world ranking name can be changed
+      Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of the team "Australia" in "Spring Tests" is open
+      When the name of the player "Sam Someone" is pressed
+      Then "World Ranking Player Name" can be changed
+
+    Scenario: The world ranking name changed is kept
+      Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And the page of the team "Australia" in "Spring Tests" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samuel Someone" is typed as the "World Ranking Player Name"
+      When "Save" is pressed
+      Then the player "Sam Someone" of the team "Australia" of "Spring Tests" has the world ranking name "Samuel Someone"

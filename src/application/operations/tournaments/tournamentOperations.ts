@@ -186,6 +186,30 @@ export const managedBy = async (
 };
 
 /**
+ * The tournament `written`, once `account` is known to be asking and to manage
+ * it, or to ask as a world ranking officer, who may change any of its players'
+ * world ranking names and so is shown its players and its teams: refused as a
+ * manager's list is otherwise.
+ */
+export const managedOrRankedBy = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  accounts: AggregateRepository<Account, AccountId>,
+  account: string,
+  written: string,
+  operation: string,
+): Promise<{ readonly by: AccountId; readonly tournament: Tournament }> => {
+  const by = await askedBy(accounts, account);
+  const tournament = await tournamentFor(tournaments, written, operation);
+  if (!tournament.mayChangeWorldRankingNames(by)) {
+    throw new TournamentRefused(
+      "Tournament.NotAManager",
+      "Only a manager or a world ranking officer can ask for this.",
+    );
+  }
+  return { by, tournament };
+};
+
+/**
  * The tournament `written`, and the part `account` has in it, once it is known
  * to be asking and to manage or score it: refused as a manager's list is, but
  * letting a scorer in as well, for what a scorer is shown.

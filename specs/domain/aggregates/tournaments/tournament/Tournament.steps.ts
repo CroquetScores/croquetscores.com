@@ -67,7 +67,11 @@ Given(
     happened(this, (tournament) =>
       tournament.addPlayer(
         TournamentPlayerId.create(),
-        { name, worldRankingName: scenarioOf(this).player.worldRankingName },
+        {
+          name,
+          representing: scenarioOf(this).player.representing,
+          worldRankingName: scenarioOf(this).player.worldRankingName,
+        },
         byOf(this),
         now(this),
       ),
