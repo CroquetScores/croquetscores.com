@@ -425,6 +425,8 @@ export const spanish: Language = {
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 
+    "admin.newerBuild.message": "Hay una versión más reciente de este sitio.",
+    "admin.newerBuild.reload": "Recargar",
     "admin.title": "Administración",
     "admin.tournaments.new": "Nuevo torneo",
     "admin.tournaments.none": "No hay torneos",

@@ -8,6 +8,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
+import { createHash } from "node:crypto";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
@@ -465,9 +466,21 @@ const registerAssets = (server: FastifyInstance, assets: Assets): void => {
 // only begins the same way, such as /admin/administrators.
 const administratorsOnly = /^\/admin\/administrator(?:[/?#]|$)/;
 
+// What the admin was built to, which changes whenever the admin does: the
+// built page names the files Vite hashed, so a hash of the page is a hash of
+// them. Not the server's own version, which changes with a deploy that left the
+// admin as it was, and would have every open tab offered a reload for nothing.
+const buildOf = (adminRoot: string): string => {
+  const page = join(adminRoot, "index.html");
+  return existsSync(page)
+    ? createHash("sha256").update(readFileSync(page)).digest("hex").slice(0, 16)
+    : "not built";
+};
+
 const registerAdmin = async (
   server: FastifyInstance,
   adminRoot: string,
+  build: () => string,
 ): Promise<void> => {
   if (!existsSync(adminRoot)) {
     // A fresh clone has not built the SPA yet. Say so, rather than 404ing as
@@ -515,13 +528,19 @@ const registerAdmin = async (
       .header("cache-control", "private, no-cache")
       .header("vary", "Cookie, Accept-Language")
       .type("text/html; charset=utf-8")
-      .send(adminPage(built, request));
+      .send(adminPage(built, request, build()));
   });
 };
 
 export interface ApplicationOptions {
   /** Off for the specs, whose output is the scenario list and not a request log. */
   readonly logger?: boolean;
+  /**
+   * What the admin's build is called, asked afresh for every page and every
+   * answer of the API. What the admin was built to, unless a scenario says
+   * otherwise: a scenario deploys the site again by answering something else.
+   */
+  readonly build?: () => string | undefined;
   /** Where the time comes from. The machine's clock, unless a scenario sets one. */
   readonly clock?: Clock;
   /**
@@ -1199,6 +1218,15 @@ export const buildApplication = async (
   // another site by forgetting to ask.
   refuseCrossSite(server, config.canonicalHost);
 
+  // Every answer of the API names the build the site is serving, so that an
+  // admin left open across a deploy learns of it (newerBuild.feature).
+  const builtAs = buildOf(join(repositoryRoot, "dist", "admin"));
+  const build = (): string => options.build?.() ?? builtAs;
+  server.addHook("onSend", (request, reply, payload, done) => {
+    if (request.url.startsWith("/api/v1/"))
+      reply.header("x-admin-build", build());
+    done(null, payload);
+  });
   await server.register(apiV1, { prefix: "/api/v1", assets });
   await server.register(
     auth({
@@ -1210,7 +1238,7 @@ export const buildApplication = async (
 
   registerAssets(server, assets);
 
-  await registerAdmin(server, join(repositoryRoot, "dist", "admin"));
+  await registerAdmin(server, join(repositoryRoot, "dist", "admin"), build);
 
   registerThemeRoute(server);
   registerLanguageRoute(server);

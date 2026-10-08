@@ -27,6 +27,9 @@ const bodyEnd = "</body>";
 /** Where the admin finds its words, in the page it is served in. */
 export const adminWordsId = "admin-words";
 
+/** Where the admin finds the build it was loaded as, in the same page. */
+export const adminBuildId = "admin-build";
+
 // What the admin says: its own words, and the refusals of the tournaments it
 // creates and changes, of the competitions it adds and the players it enters
 // in them, of the games and scores it keeps, and of the addresses it makes
@@ -76,8 +79,23 @@ export const builtAdminPage = (built: string): string => {
   return built;
 };
 
-/** The admin's page as it is sent to whoever `request` is from. */
-export const adminPage = (built: string, request: FastifyRequest): string => {
+// The build the page was sent as, which the admin compares with the one every
+// answer of the API names (newerBuild.feature). As JSON, as the words are, so
+// that nothing in it can close the script it is in.
+const adminBuild = (build: string): string =>
+  `<script type="application/json" id="${adminBuildId}">${JSON.stringify(
+    build,
+  ).replace(/</g, "\\u003c")}</script>`;
+
+/**
+ * The admin's page as it is sent to whoever `request` is from, naming `build`
+ * as the build it is.
+ */
+export const adminPage = (
+  built: string,
+  request: FastifyRequest,
+  build: string,
+): string => {
   const siteName = siteNameOf(request);
   const theme = themeOf(request);
   const speaking = speakingOf(request);
@@ -120,7 +138,7 @@ export const adminPage = (built: string, request: FastifyRequest): string => {
           currentPath: "/admin/",
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
-        })}${banner}${adminWords(speaking)}`;
+        })}${banner}${adminWords(speaking)}${adminBuild(build)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.

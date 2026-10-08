@@ -45,6 +45,15 @@ let browser: Browser | undefined;
 let application: Application | undefined;
 let baseUrl: string | undefined;
 
+// What each scenario has deployed the site as, where it has deployed it again.
+// Nothing is the build the admin was built to.
+const deployedAs = new WeakMap<SpecWorld, string>();
+
+/** Deploys the site again: from now on it names another build. */
+export const deployAgain = (world: SpecWorld): void => {
+  deployedAs.set(world, "built-again-by-the-scenario");
+};
+
 // The one browser, launched by the first scenario that needs one.
 const theBrowser = async (): Promise<Browser> => {
   browser ??= await chromium.launch();
@@ -255,6 +264,9 @@ const itsOwn = async (
       logger: false,
       ...offered(languages),
       clock: () => new Date(clock.now.getTime()),
+      // What the admin's build is called, which a scenario changes to deploy
+      // the site again (newerBuild.feature).
+      build: () => deployedAs.get(world),
       // Nothing is sent. What these scenarios read is what is waiting in the
       // queue, which is where a reader's link comes from.
       sendsTheEmailQueue: false,

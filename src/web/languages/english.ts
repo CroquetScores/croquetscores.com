@@ -478,6 +478,8 @@ export const english: Language = {
     // The admin's words. The admin draws them in the browser, so the server
     // says them into its page as it sends it (adminPage.ts): these, and the
     // tournament's refusals below.
+    "admin.newerBuild.message": "A newer version of this site is available.",
+    "admin.newerBuild.reload": "Reload",
     "admin.title": "Admin",
     "admin.tournaments.new": "New Tournament",
     "admin.tournaments.none": "No tournaments",
