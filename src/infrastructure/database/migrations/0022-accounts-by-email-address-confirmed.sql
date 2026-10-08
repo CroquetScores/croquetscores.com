@@ -3,16 +3,7 @@
 -- account is confirmed when its address is, or when it came over from the old
 -- site, and is never unconfirmed afterwards.
 --
--- Filled from the events already kept, by the names they are kept under, so
--- that a database made before this has every account as it is rather than
--- every account waiting to be confirmed until the read models are rebuilt.
--- Neither event's name is sealed, so no account's key is needed.
+-- Not filled from the events already kept: no site keeps real events yet, and
+-- a database is imported again from the old sites, which empties it first.
 alter table accounts_by_email_address
     add column confirmed boolean not null default false;
-
-update accounts_by_email_address
-   set confirmed = true
- where account_id in (
-     select stream_id from events
-      where name in ('account-brought-over', 'account-email-address-confirmed')
- );
