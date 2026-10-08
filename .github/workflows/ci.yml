@@ -1,8 +1,9 @@
 name: CI
 
+# Only on a pull request. main is only ever reached by squash-merging one
+# whose run passed on its own branch, so running again there says nothing new
+# and costs a full run.
 on:
-  push:
-    branches: [main]
   pull_request:
 
 jobs:
@@ -38,11 +39,6 @@ jobs:
   # failed rather than only those in the first shard to.
   tests:
     needs: build
-    # Not on main: it is only ever reached by squash-merging a pull request
-    # whose scenarios passed on its own branch, so running them again there
-    # says nothing new and costs a full run. Said of the ref rather than of an
-    # env, which a job's if cannot read.
-    if: github.ref != 'refs/heads/main'
     # Pinned, as the build's is.
     runs-on: ubuntu-24.04
 
