@@ -25,7 +25,10 @@ Feature: A block's page shows its results as a grid
   player, as it was typed, oldest first, one beneath another, so that a best
   of 3 has room for three. Each score is marked as won, lost or drawn, for
   the row player, so the same game reads as won in one player's row and lost
-  in the other's. The marks are told apart by more than colour.
+  in the other's. The marks are told apart by more than colour. A withdrawn
+  game was played, so it is in its cell, but it counts for nothing
+  (`withdrawGame.feature`), so it is marked as withdrawn, struck through,
+  and left out of the totals.
 
   After the players' columns come each player's totals, as the old site had
   them. Where each match is a single game, a game won is a match won, and the
@@ -213,6 +216,37 @@ Feature: A block's page shows its results as a grid
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the cell where "Sam Someone" meets "Alex Another" is empty
+
+  Rule: A withdrawn game is shown, struck through, and counts for nothing
+
+    Scenario: A withdrawn game is shown
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is "26"
+
+    Scenario: A withdrawn game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is marked as withdrawn
+
+    Scenario: A game not withdrawn is not marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is not marked as withdrawn
+
+    Scenario: A withdrawn game is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is struck through
+
+    Scenario: A withdrawn game is not counted in the totals
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the "Games" of "Sam Someone" in the grid are "0"
 
   Rule: Where a match is the best of more than one game, the totals are matches, net games, games and net hoops
 

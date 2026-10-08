@@ -1997,6 +1997,12 @@ html:has(dialog:modal) {
   font-style: italic;
 }
 
+/* A game withdrawn was played, but counts for nothing, so it is struck
+   through, and said to be withdrawn for whatever reads the page aloud. */
+.block-grid-score[data-withdrawn] {
+  text-decoration: line-through;
+}
+
 /* A block's name with its three views on the same line, against the right
    edge, wrapping beneath the name only where there is not room beside it. */
 .competition-heading {
@@ -2515,6 +2521,12 @@ html:has(dialog:modal) {
 .swiss-lost,
 .swiss-drawn {
   color: var(--ink-muted);
+}
+
+/* A game withdrawn was played, but counts for nothing, so it is struck
+   through, as a block's grid strikes it. */
+.swiss-result[data-withdrawn] {
+  text-decoration: line-through;
 }
 
 /* The summary, without the results, is for a phone, and no wider than a

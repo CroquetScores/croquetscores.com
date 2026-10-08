@@ -16,6 +16,12 @@
   text-decoration: line-through;
 }
 
+/* Struck through too where it was played but is not to count, though it stays
+   among those in use, where it was played. Its row says so in words too. */
+.listed-item[data-withdrawn] .listed-score {
+  text-decoration: line-through;
+}
+
 /* A test's scores, set out by team: each team's player under its short name,
    the scores between them, and what each offers last. The players' and the
    scores' columns are as wide as what is in them and no wider, and nothing

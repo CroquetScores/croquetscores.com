@@ -53,6 +53,8 @@ interface Listed {
   readonly loserScore: string;
   readonly archived: boolean;
   readonly archivable: boolean;
+  readonly withdrawn: boolean;
+  readonly withdrawable: boolean;
   /** In a test, the team each player plays for, by its id. */
   readonly winnerTeam?: string;
   readonly loserTeam?: string;
@@ -135,10 +137,10 @@ export const ScoresTab = ({
     setAsking((count) => count + 1);
   };
 
-  // Neither asks first: each is undone by the other, and nothing is lost.
+  // None asks first: each is undone by another, and nothing is lost.
   const act = async (
     game: Listed,
-    action: "archive" | "restore" | "up" | "down",
+    action: "archive" | "restore" | "withdraw" | "unwithdraw" | "up" | "down",
   ): Promise<void> => {
     setActing(true);
     setRefused(undefined);
@@ -168,11 +170,20 @@ export const ScoresTab = ({
       </span>
     ) : null;
 
+  // Said in words as well, since a line through a score is not read out.
+  const withdrawnSaid = (game: Listed): React.JSX.Element | null =>
+    game.withdrawn ? (
+      <span className="visually-hidden" data-said="withdrawn">
+        {say("admin.scores.withdrawnSaid")}
+      </span>
+    ) : null;
+
   const row = (game: Listed): React.JSX.Element => (
     <li
       key={game.id}
       className="listed-item"
       data-archived={game.archived ? "" : undefined}
+      data-withdrawn={game.withdrawn ? "" : undefined}
     >
       <span className="listed-score">
         <span className="score-winner">{game.winner}</span>{" "}
@@ -181,6 +192,7 @@ export const ScoresTab = ({
         <span className="score-loser-score">{game.loserScore}</span>
       </span>
       {archivedSaid(game)}
+      {withdrawnSaid(game)}
       {options(game)}
     </li>
   );
@@ -283,6 +295,27 @@ export const ScoresTab = ({
         // Its room, where other games offer Archive, so that what is beside
         // it lines up with theirs (optionFace.tsx).
         noOption("archive", say("admin.scores.archive"))
+      ) : null}
+      {/* A block's or a Swiss's score, after Archive, as the Players tab
+            offers Withdraw: one played but not to count, which a withdrawn
+            score is offered back from. Only a block or a Swiss answers either,
+            so every score in use there offers one of the two. */}
+      {game.archived ? null : game.withdrawn ? (
+        <button
+          type="button"
+          className="button"
+          onClick={() => void act(game, "unwithdraw")}
+        >
+          {say("admin.scores.unwithdraw")}
+        </button>
+      ) : game.withdrawable ? (
+        <button
+          type="button"
+          className="button"
+          onClick={() => void act(game, "withdraw")}
+        >
+          {say("admin.scores.withdraw")}
+        </button>
       ) : null}
       {/* A test's scores, last and drawn as arrows, as a list's Up and Down
           are, so that the scores can be listed as they were played. Nowhere

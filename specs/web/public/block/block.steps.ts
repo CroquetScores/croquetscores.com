@@ -227,6 +227,48 @@ Then(
 // Marked by more than colour: by a word said aloud, which is the result's, and
 // by a weight or slant, which no other result has.
 Then(
+  /^the (first|second|third) score where "(.*)" meets "(.*)" is (not )?marked as withdrawn$/,
+  async function (
+    this: SpecWorld,
+    which: string,
+    player: string,
+    opponent: string,
+    not: string | null,
+  ) {
+    const score = await scoreWhere(this, which, player, opponent);
+    assert.equal(
+      (await score.getAttribute("data-withdrawn")) !== null,
+      not === null,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) score where "(.*)" meets "(.*)" is struck through$/,
+  async function (
+    this: SpecWorld,
+    which: string,
+    player: string,
+    opponent: string,
+  ) {
+    const score = await scoreWhere(this, which, player, opponent);
+    assert.match(
+      await score.evaluate(
+        (element: unknown) =>
+          (
+            globalThis as unknown as {
+              getComputedStyle(element: unknown): {
+                textDecorationLine: string;
+              };
+            }
+          ).getComputedStyle(element).textDecorationLine,
+      ),
+      /line-through/,
+    );
+  },
+);
+
+Then(
   /^the (first|second|third) score where "(.*)" meets "(.*)" is marked as (won|lost|drawn)$/,
   async function (
     this: SpecWorld,

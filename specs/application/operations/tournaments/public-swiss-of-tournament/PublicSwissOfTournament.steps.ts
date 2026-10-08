@@ -156,6 +156,13 @@ Then(
 );
 
 Then(
+  new RegExp(`^${RESULT} was (not )?withdrawn$`),
+  function (this: SpecWorld, which: string, name: string, not: string | null) {
+    assert.equal(resultAnswered(this, which, name).withdrawn, not === null);
+  },
+);
+
+Then(
   new RegExp(`^${RESULT} was drawn$`),
   function (this: SpecWorld, which: string, name: string) {
     const found = resultAnswered(this, which, name);
@@ -183,6 +190,13 @@ Then(
   /^the (first|second|third) game of the Swiss answered was won by "(.*)"$/,
   function (this: SpecWorld, which: string, name: string) {
     assert.equal(answered(this).games[placeOf(which)]?.winner.name, name);
+  },
+);
+
+Then(
+  /^the (first|second|third) game of the Swiss answered was withdrawn$/,
+  function (this: SpecWorld, which: string) {
+    assert.equal(answered(this).games[placeOf(which)]?.withdrawn, true);
   },
 );
 

@@ -23,6 +23,12 @@ export interface ResultOfSwiss {
   readonly result: "won" | "lost" | "drawn";
   /** The player's points less their opponent's, below 0 for a game lost. */
   readonly margin: number;
+  /**
+   * Whether the game was played but counts for nothing
+   * (`withdrawGame.feature`), so that nothing the player is answered with
+   * counts it.
+   */
+  readonly withdrawn: boolean;
 }
 
 /** A player entered in a Swiss, as its grid shows them. */
@@ -44,7 +50,10 @@ export interface PlayerOfSwiss extends PublicPlayer {
 }
 
 /** One of a Swiss's games, as its order of play shows it. */
-export type GameOfSwiss = GameOfKnockout;
+export type GameOfSwiss = GameOfKnockout & {
+  /** Whether it was played but counts for nothing (`withdrawGame.feature`). */
+  readonly withdrawn: boolean;
+};
 
 /** A Swiss as its pages show it, and the tournament it is a section of. */
 export interface SwissToRead {
@@ -75,7 +84,10 @@ export interface SwissToRead {
    * have played no game after all who have.
    */
   readonly ranked: readonly string[];
-  /** Every game of it in use, in the order they were added. */
+  /**
+   * Every game of it in use, withdrawn ones among them, in the order they
+   * were added.
+   */
   readonly games: readonly GameOfSwiss[];
 }
 

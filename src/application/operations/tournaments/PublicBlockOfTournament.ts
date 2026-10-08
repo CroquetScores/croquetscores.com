@@ -46,6 +46,8 @@ export interface GameOfBlock {
   readonly loser: string;
   readonly loserScore: string;
   readonly drawn: boolean;
+  /** Whether it was played but counts for nothing (`withdrawGame.feature`). */
+  readonly withdrawn: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;
 }
@@ -77,7 +79,10 @@ export interface BlockToRead {
   };
   /** Every player entered in it, withdrawn or not, in the block's order. */
   readonly players: readonly PlayerOfBlock[];
-  /** Every game of it in use, in the order they were added. */
+  /**
+   * Every game of it in use, withdrawn ones among them, in the order they
+   * were added.
+   */
   readonly games: readonly GameOfBlock[];
   /**
    * The ids of its players ranked: the greater share of their decided

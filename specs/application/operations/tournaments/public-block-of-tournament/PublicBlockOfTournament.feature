@@ -19,7 +19,9 @@ Feature: A block of a tournament, for anybody to read
   Each game is answered with its winner, the winner's score, its loser, the
   loser's score, whether it was drawn and when it was added, the scores as
   they were typed, in the order the games were added. An archived game is not answered, and
-  counts for nothing, as everywhere games are counted.
+  counts for nothing, as everywhere games are counted. A withdrawn game was
+  played, so it is answered, and said to be withdrawn, but it counts for
+  nothing too (`withdrawGame.feature`).
 
   A player has won a match when they have won more than half the games it is
   the best of, so two of a best of 3, and two of a best of 2. A match not yet
@@ -230,6 +232,44 @@ Feature: A block of a tournament, for anybody to read
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then 0 games of the block are answered
+
+  Rule: A withdrawn game is answered as withdrawn, and counts for nothing
+
+    Scenario: A withdrawn game is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the block answered was withdrawn
+
+    Scenario: A game not withdrawn is answered as not withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the block answered was not withdrawn
+
+    Scenario: A withdrawn game is not a game won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 0 games won
+
+    Scenario: A match won with a withdrawn game is not won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 0 matches won
+
+    Scenario: A withdrawn game counts for nothing in net hoops
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with net hoops of 0
+
+    Scenario: A withdrawn game ranks nobody higher
+      Given "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Alex Another" beating "Sam Someone" in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Sam Someone"
 
   Rule: A player's matches are the matches they have won
 

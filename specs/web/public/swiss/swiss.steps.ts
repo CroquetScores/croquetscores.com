@@ -138,8 +138,47 @@ Then(
     opponent: string,
   ) {
     assert.equal(
-      await said(resultOf(this, which, name).locator(".visually-hidden")),
+      await said(
+        resultOf(this, which, name).locator(
+          ".swiss-result-opponent .visually-hidden",
+        ),
+      ),
       opponent,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) result of "(.*)" in the Swiss is (not )?marked as withdrawn$/,
+  async function (
+    this: SpecWorld,
+    which: string,
+    name: string,
+    not: string | null,
+  ) {
+    assert.equal(
+      (await resultOf(this, which, name).getAttribute("data-withdrawn")) !==
+        null,
+      not === null,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) result of "(.*)" in the Swiss is struck through$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    assert.match(
+      await resultOf(this, which, name).evaluate(
+        (element: unknown) =>
+          (
+            globalThis as unknown as {
+              getComputedStyle(element: unknown): {
+                textDecorationLine: string;
+              };
+            }
+          ).getComputedStyle(element).textDecorationLine,
+      ),
+      /line-through/,
     );
   },
 );

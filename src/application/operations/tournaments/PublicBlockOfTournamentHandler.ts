@@ -71,6 +71,8 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
+    // A withdrawn game is shown, but counts for nothing.
+    const counting = games.filter((game) => !game.withdrawn);
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();
     const players = competition.players.flatMap((entered): PlayerOfBlock[] => {
@@ -78,7 +80,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         each.id.equals(entered.tournamentPlayerId),
       );
       if (player === undefined) return [];
-      const theirs = games.filter(
+      const theirs = counting.filter(
         (game) =>
           game.winner.equals(entered.id) || game.loser.equals(entered.id),
       );
@@ -134,6 +136,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         loser: game.loser.value,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
+        withdrawn: game.withdrawn,
         addedAt: game.addedAt,
       })),
       ranked: rankingOf(players).map(({ id }) => id),

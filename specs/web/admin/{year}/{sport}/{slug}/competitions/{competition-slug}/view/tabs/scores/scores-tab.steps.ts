@@ -283,6 +283,23 @@ Then(
   },
 );
 
+// By what it is marked with, since the words are in the reader's language.
+Then(
+  "the score of {string} beating {string} is announced as withdrawn",
+  async function (this: SpecWorld, winner: string, loser: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await (
+          await rowOf(this, winner, loser)
+        )
+          .locator('.visually-hidden[data-said="withdrawn"]')
+          .count(),
+        1,
+      );
+    });
+  },
+);
+
 Then(
   "the score of {string} beating {string} is announced as archived",
   async function (this: SpecWorld, winner: string, loser: string) {
