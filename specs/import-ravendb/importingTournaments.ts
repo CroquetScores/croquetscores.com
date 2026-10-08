@@ -378,7 +378,10 @@ export const aTournament = (
   CreatedBy: { Id: "users/1" },
   Managers: [],
   Scorers: [],
-  Competitions: [],
+  // One no document is, since a tournament that lists no competition is left
+  // behind (ImportWholeTournaments.feature). A scenario about what one lists
+  // says it, or that it lists nothing.
+  Competitions: [{ Id: "blocks/0" }],
   SportType: website === "gateballscores.com" ? "GB" : "AC",
   TournamentType: "standard",
   TimeZoneId: "AUS Eastern Standard Time",

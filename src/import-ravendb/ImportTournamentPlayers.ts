@@ -10,10 +10,15 @@ import { nameToImport, numberedApart } from "./names.js";
 import { oldFlagOf } from "./oldSites.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
+import { isNamedBye } from "../domain/aggregates/tournaments/TournamentPlayer.js";
 
-/** Whether the old sites' player called `name` was their bye. */
-export const isOldBye = (name: string): boolean =>
-  name.trim().toLowerCase() === "bye";
+/**
+ * Whether the old sites' player called `name` was a bye: "Bye", or one of
+ * several a manager entered, as "Bye 2". Asked as the site asks whether a
+ * player is named as a bye, so that every player it would refuse for it is
+ * kept as the bye instead.
+ */
+export const isOldBye = (name: string): boolean => isNamedBye(name);
 
 /**
  * The flag the site flies for a player the old sites showed `representing`'s

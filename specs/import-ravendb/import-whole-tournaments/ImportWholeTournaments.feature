@@ -25,6 +25,13 @@ Feature: Importing each of the old sites' tournaments with everything that names
   competitions not archived are missing from the list too. Going by the list
   would leave those behind without a word.
 
+  But a tournament that lists no competition at all is left behind, with
+  everything that names it, as an archived one is: the old sites kept
+  tournaments that were started and never played, and one with nothing
+  listed is taken for one of those, even where something names it. The
+  scenarios here are of a tournament that lists a competition no document
+  is, unless they say otherwise.
+
   Background:
     Given the users are imported
     And the tournaments are imported
@@ -73,8 +80,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has the commentary "Live from Court 1"
 
     Scenario: A competition the tournament does not list is brought over
-      Given the tournament lists nothing
-      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       When the tournament is imported
       Then "blocks/30" on "croquetscores.com" is kept as a competition of the tournament kept for "tournaments/12" on "croquetscores.com"
 
@@ -217,6 +223,34 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And player 1 is called "Sam Someone"
       When the tournament is imported
       Then no error is kept for "croquetscores.com/tournamentplayers/40"
+
+  Rule: A tournament that lists no competition is left behind with everything that names it
+
+    Scenario: A tournament that lists no competition is not kept as any tournament
+      Given the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: Leaving a tournament that lists no competition behind is not refused
+      Given the tournament lists nothing
+      When the tournament is imported
+      Then importing the tournament is not refused
+
+    Scenario: A competition naming a tournament that lists none is not kept as any competition
+      Given the tournament lists nothing
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a competition naming a tournament that lists none behind is not an error
+      Given the tournament lists nothing
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A tournament that lists a competition is kept
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
 
   Rule: A tournament whose documents cannot be asked for is not brought over
 

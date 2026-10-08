@@ -72,7 +72,10 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
     const { website, id, document } = read;
-    if (document.IsArchived) {
+    // Left behind with everything that names it, as an archived one is: one
+    // that lists no competition was started on the old sites and never
+    // played, whatever names it.
+    if (document.IsArchived || document.Competitions.length === 0) {
       await this.database.recordTournamentRead(website, id);
       return;
     }

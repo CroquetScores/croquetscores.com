@@ -107,16 +107,47 @@ Feature: Importing the players of the old sites' tournaments
   Rule: A bye is no player
 
     The old sites entered a bye in a knockout as a player called "Bye", one
-    for the whole tournament, standing in every place a bye was. The site
-    enters a bye as a bye (`enterPlayer.feature`) and refuses a player called
-    one, so the old site's bye is left out of the tournament's players, and a
-    knockout brings its byes over as byes (`ImportKnockouts.feature`).
+    for the whole tournament, standing in every place a bye was, and some
+    managers entered more than one, as "Bye 1" and "Bye 2". The site enters a
+    bye as a bye (`enterPlayer.feature`) and refuses a player named as one,
+    as it says a player is (`TournamentPlayer.feature`): a name that begins
+    with "bye", in any case, where no letter follows it. So every such player
+    is left out of the tournament's players, and kept as the bye, so that a
+    competition that names them puts a bye where they were
+    (`ImportKnockouts.feature`). A name that only begins with the letters of
+    "bye", as "Byers" does, is a player's like any other.
 
-    Scenario: A player called "Bye" is not added
+    Scenario Outline: A player named as a bye is not added
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 1 is called "Bye"
+      And player 1 is called "<name>"
       When the players are imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has no players
+
+      Examples:
+        | name  |
+        | Bye   |
+        | bye   |
+        | BYE   |
+        | Bye 1 |
+        | Bye-2 |
+
+    Scenario: A player named as a bye is kept as the bye
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Bye 1"
+      When the players are imported
+      Then player 1 of "tournaments/12" on "croquetscores.com" is kept as the bye
+
+    Scenario: Leaving a player named as a bye out is not refused
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Bye 1"
+      When the players are imported
+      Then no error is kept for "croquetscores.com/tournamentplayers/40"
+
+    Scenario: A name that only begins with the letters of "bye" is a player's
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Byers"
+      When the players are imported
+      Then player 1 of "tournaments/12" on "croquetscores.com" is kept as "Byers"
 
     Scenario: Leaving a bye out is not refused
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
