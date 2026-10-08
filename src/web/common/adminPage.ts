@@ -30,6 +30,9 @@ export const adminWordsId = "admin-words";
 /** Where the admin finds the build it was loaded as, in the same page. */
 export const adminBuildId = "admin-build";
 
+/** The header every answer of the API names the build being served in. */
+export const adminBuildHeader = "x-admin-build";
+
 // What the admin says: its own words, and the refusals of the tournaments it
 // creates and changes, of the competitions it adds and the players it enters
 // in them, of the games and scores it keeps, and of the addresses it makes

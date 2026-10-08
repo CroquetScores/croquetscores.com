@@ -57,9 +57,11 @@ export const registerGroupPage = (
     }
     const here = groupAddress(asked.address, asked.group.slug);
     // An address the tournament has moved on from leads to the group where it
-    // is now, for good, so that a link kept from before still works.
+    // is now, for good, so that a link kept from before still works. Encoded,
+    // since a slug keeps letters of any script, and a Location outside
+    // Latin-1 is refused.
     if (asked.address !== address) {
-      return reply.redirect(here, 301);
+      return reply.redirect(encodeURI(here), 301);
     }
 
     const speaking = speakingOf(request);

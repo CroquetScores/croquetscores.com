@@ -239,7 +239,11 @@ import {
   type GoogleEndpoints,
 } from "../infrastructure/identity/GoogleOpenIdConnect.js";
 import { apiV1 } from "./api/v1/index.js";
-import { adminPage, builtAdminPage } from "./common/adminPage.js";
+import {
+  adminBuildHeader,
+  adminPage,
+  builtAdminPage,
+} from "./common/adminPage.js";
 import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
@@ -466,23 +470,30 @@ const registerAssets = (server: FastifyInstance, assets: Assets): void => {
 // only begins the same way, such as /admin/administrators.
 const administratorsOnly = /^\/admin\/administrator(?:[/?#]|$)/;
 
+// The admin's page as it was built, read once, so that the page served and the
+// build it is named as are the same reading of it, or nothing where the admin
+// has not been built.
+const builtPageIn = (adminRoot: string): string | undefined => {
+  const page = join(adminRoot, "index.html");
+  return existsSync(page) ? readFileSync(page, "utf8") : undefined;
+};
+
 // What the admin was built to, which changes whenever the admin does: the
 // built page names the files Vite hashed, so a hash of the page is a hash of
 // them. Not the server's own version, which changes with a deploy that left the
 // admin as it was, and would have every open tab offered a reload for nothing.
-const buildOf = (adminRoot: string): string => {
-  const page = join(adminRoot, "index.html");
-  return existsSync(page)
-    ? createHash("sha256").update(readFileSync(page)).digest("hex").slice(0, 16)
-    : "not built";
-};
+const buildOf = (page: string | undefined): string =>
+  page === undefined
+    ? "not built"
+    : createHash("sha256").update(page).digest("hex").slice(0, 16);
 
 const registerAdmin = async (
   server: FastifyInstance,
   adminRoot: string,
+  page: string | undefined,
   build: () => string,
 ): Promise<void> => {
-  if (!existsSync(adminRoot)) {
+  if (page === undefined) {
     // A fresh clone has not built the SPA yet. Say so, rather than 404ing as
     // though /admin were not a thing this application has.
     const notBuilt = (): never => {
@@ -504,9 +515,7 @@ const registerAdmin = async (
     prefix: "/admin/assets/",
     wildcard: false,
   });
-  const built = builtAdminPage(
-    readFileSync(join(adminRoot, "index.html"), "utf8"),
-  );
+  const built = builtAdminPage(page);
   server.get("/admin", (_request, reply) => reply.redirect("/admin/", 308));
   // What every other page is sent with, for the same reason: the page is now
   // drawn from the reader's cookies and the languages their browser asks for.
@@ -596,13 +605,13 @@ export interface ApplicationOptions {
   readonly googleEndpoints?: GoogleEndpoints;
 }
 
-// Every kind of event the application records, each named once by the name it
-// is kept under, and how it is read back.
 /** A read model that can be made again from every event kept. */
 interface RebuildableReadModel {
   rebuildFrom(events: readonly StoredEvent[]): Promise<void>;
 }
 
+// Every kind of event the application records, each named once by the name it
+// is kept under, and how it is read back.
 const events = (): EventRegistry =>
   nameManagerNoteEvents(
     nameCommentaryEvents(
@@ -655,8 +664,10 @@ export const buildApplication = async (
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
 
-  // Every read model's projection, each given every event as it is appended.
-  const projections: readonly Projection[] = [
+  // Every read model, each given every event as it is appended and each made
+  // again from every event by the maintenance script that rebuilds them. One
+  // list, so that a read model is never projected and left out of a rebuild.
+  const readModels: readonly (Projection & RebuildableReadModel)[] = [
     accountsByEmailAddress,
     accountsByGoogleAccount,
     accountsByRole,
@@ -677,34 +688,24 @@ export const buildApplication = async (
   );
   const eventStore = new ProjectingEventStore(
     keptEvents,
-    options.projections ?? projections,
+    options.projections ?? readModels,
   );
-
-  // Every read model that can be made again from the events. Reading every
-  // event is not something the EventStore the application hands out can do,
-  // since no command or query has any business doing it, so the maintenance
-  // script that rebuilds the read models asks for it here, and a route cannot.
-  const rebuildable: readonly RebuildableReadModel[] = [
-    accountsByEmailAddress,
-    accountsByGoogleAccount,
-    accountsByRole,
-    tournamentsByAddress,
-    tournamentsByAccount,
-    tournamentsByWebsite,
-    managerNotesByTournament,
-    commentariesByTournament,
-  ];
   // Everything it changes is changed in one transaction, so that a change
   // that fails leaves every key as it was. The application goes on using the
   // key it was made with; the setting is changed and the site started again.
   const changeSiteKey = (newSiteKey: string): Promise<void> =>
     unitOfWork.inTransaction(() => accountKeys.changeSiteKey(newSiteKey));
+  // Reading every event is not something the EventStore the application
+  // hands out can do, since no command or query has any business doing it, so
+  // the maintenance script that rebuilds the read models asks for it here, and
+  // a route cannot. The application's own read models are rebuilt, and never
+  // a scenario's stand-in projections, which are examples rather than read
+  // models. One transaction, so that a rebuild that fails leaves every read
+  // model as it was, and one that is running is not seen half done.
   const rebuildReadModels = (): Promise<number> =>
-    // One transaction, so that a rebuild that fails leaves every read model
-    // as it was, and one that is running is not seen half done.
     unitOfWork.inTransaction(async () => {
       const everyEvent = await keptEvents.readAll();
-      for (const readModel of rebuildable) {
+      for (const readModel of readModels) {
         await readModel.rebuildFrom(everyEvent);
       }
       return everyEvent.length;
@@ -1220,11 +1221,13 @@ export const buildApplication = async (
 
   // Every answer of the API names the build the site is serving, so that an
   // admin left open across a deploy learns of it (newerBuild.feature).
-  const builtAs = buildOf(join(repositoryRoot, "dist", "admin"));
+  const adminRoot = join(repositoryRoot, "dist", "admin");
+  const adminPageBuilt = builtPageIn(adminRoot);
+  const builtAs = buildOf(adminPageBuilt);
   const build = (): string => options.build?.() ?? builtAs;
   server.addHook("onSend", (request, reply, payload, done) => {
     if (request.url.startsWith("/api/v1/"))
-      reply.header("x-admin-build", build());
+      reply.header(adminBuildHeader, build());
     done(null, payload);
   });
   await server.register(apiV1, { prefix: "/api/v1", assets });
@@ -1238,7 +1241,7 @@ export const buildApplication = async (
 
   registerAssets(server, assets);
 
-  await registerAdmin(server, join(repositoryRoot, "dist", "admin"), build);
+  await registerAdmin(server, adminRoot, adminPageBuilt, build);
 
   registerThemeRoute(server);
   registerLanguageRoute(server);

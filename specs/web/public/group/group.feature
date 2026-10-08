@@ -180,6 +180,19 @@ Feature: A group of a tournament's tests has a page of how its teams stand
       When the page at "/2026/ac/spring-tests/groups/block-a" is opened
       Then the address is "/2026/gc/spring-tests/groups/block-a"
 
+    Scenario: An old address in another script leads to the group where the tournament is now
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Кубок"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Кубок"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Кубок"
+      And the test is to be in the group "Block A"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Кубок"
+      And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
+      When the page at "/2026/ac/кубок/groups/block-a" is opened
+      Then the page is headed "Block A"
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language
