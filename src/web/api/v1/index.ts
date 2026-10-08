@@ -7,6 +7,7 @@ import type {
   FastifyReply,
   FastifyRequest,
 } from "fastify";
+import { PassThrough } from "node:stream";
 
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
 import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
@@ -65,6 +66,8 @@ import type { Assets } from "../../common/assets.js";
 import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
+import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
 import { ManagersOfTournament } from "../../../application/operations/tournaments/ManagersOfTournament.js";
@@ -966,6 +969,71 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         ),
       );
       return reply.code(204).header("cache-control", "no-store").send();
+    },
+  );
+
+  // The players the world rankings know, imported as an administrator asks
+  // from the page for it. Answered as it goes, a line of JSON for each thing
+  // the import says, so that the page can show each as it comes rather than
+  // all of them once both lists have been read. A refusal before the import
+  // says anything is answered as any refusal is. A failure after that can
+  // only be a last line, since what has been answered cannot be taken back.
+  server.post("/world-ranking-players/import", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const lines = new PassThrough();
+    let saidSomething = (): void => {};
+    const said = new Promise<void>((resolve) => {
+      saidSomething = resolve;
+    });
+    const importing = request.server.mediator.send(
+      new ImportWorldRankingPlayers(
+        reader.value,
+        (report) => {
+          lines.write(`${JSON.stringify(report)}\n`);
+          saidSomething();
+        },
+        request.requestedAt,
+      ),
+    );
+    // Throws a refusal that comes first, for the errors to answer.
+    await Promise.race([said, importing]);
+    importing.then(
+      () => lines.end(),
+      (error: unknown) => {
+        request.log.error({ err: error }, "The import failed partway");
+        lines.end(`${JSON.stringify({ kind: "failed", code: "Unknown" })}\n`);
+      },
+    );
+    // Told to whatever stands in front of the site not to hold the answer
+    // back until it is whole, as nginx and much else does unless told,
+    // which would leave the page saying nothing until both lists were read.
+    // An import whose reader has gone carries on to the end, since every
+    // list it keeps is kept whole, and says no more.
+    return reply
+      .header("cache-control", "no-store")
+      .header("x-accel-buffering", "no")
+      .type("application/x-ndjson; charset=utf-8")
+      .send(lines);
+  });
+
+  // The world ranking players of a sport a name typed may be, and whether the
+  // world rankings know it, as the player dialogs ask as it is typed. The
+  // sport by its code, and what was typed as it was typed.
+  server.get<{ Params: { sport: string }; Querystring: { typed?: unknown } }>(
+    "/world-rankings/:sport/players",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const matching = await request.server.mediator.query(
+        new WorldRankingPlayersMatching(
+          request.params.sport,
+          // Asked more than once, it arrives as a list rather than text, and
+          // is taken as nothing typed, as a field sent as anything but text is.
+          typeof request.query.typed === "string" ? request.query.typed : "",
+        ),
+      );
+      return reply.header("cache-control", "no-store").send(matching);
     },
   );
 

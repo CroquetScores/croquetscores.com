@@ -28,10 +28,12 @@ export interface TournamentAsPaged {
    */
   readonly playedByTeams: boolean;
   /**
-   * Whether its players are asked the name the world rankings know them by,
-   * which only a sport with world rankings has (Sport.feature).
+   * Its sport, by its code, where its players are asked the name the world
+   * rankings know them by, which only a sport with world rankings has
+   * (Sport.feature), so that what is typed can be found among that sport's
+   * world ranking players. Nothing where they are not asked.
    */
-  readonly asksWorldRankingNames: boolean;
+  readonly worldRankingSport: string | undefined;
 }
 
 /**

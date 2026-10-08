@@ -1,0 +1,17 @@
+/* The import's log (importWorldRankingPlayers.feature): a line for each thing
+   the import says, in the order it says them. A list in order, drawn without
+   its numbers, which would read beside the lines as counts of players. */
+
+.import-log {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+.import-log-line[data-kind="refused"],
+.import-log-line[data-kind="failed"] {
+  color: var(--danger);
+}

@@ -4,15 +4,18 @@ Feature: The section bar of the administrator's pages
   Every one of the administrator's pages (`administrator.feature`) has a
   section bar, which is for moving between pages (`LAYOUT.md`). It leads back
   to the tournaments, as Tournaments, which is where an administrator runs a
-  tournament as its managers do, and to the accounts, as Accounts, which is
-  the first of the administrator's own pages.
+  tournament as its managers do; to the accounts, as Accounts, which is the
+  first of the administrator's own pages; and to the page where the players
+  the world rankings know are imported, as World Rankings
+  (`importWorldRankingPlayers.feature`).
 
   Tournaments comes first, since it is the admin an administrator came from,
-  and Accounts after it. It leads to /admin/, the admin's own address for the
+  then Accounts, and World Rankings after it. It leads to /admin/, the admin's own address for the
   tournaments, rather than to /admin, which is only sent on to it.
 
   The page being read is marked, as the section bar marks the section being
-  read: Accounts on the accounts page and on any page beneath it. The
+  read: Accounts on the accounts page and on any page beneath it, and World
+  Rankings on the page where the players are imported. The
   administrator's pages at /admin/administrator itself are none of the
   sections, so nothing is marked there. Tournaments is never marked here,
   since the tournaments are not one of the administrator's pages and have a
@@ -32,7 +35,7 @@ Feature: The section bar of the administrator's pages
     And "admin@example.com" has been given the role "Administrator"
     And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
 
-  Rule: The administrator's pages lead to the tournaments and the accounts
+  Rule: The administrator's pages lead to the tournaments, the accounts and the world rankings
 
     Scenario: The administrator's pages have a section bar
       When the page at "/admin/administrator" is opened
@@ -54,6 +57,14 @@ Feature: The section bar of the administrator's pages
       When the page at "/admin/administrator" is opened
       Then the second section is "Accounts"
 
+    Scenario: The section bar offers the world rankings
+      When the page at "/admin/administrator" is opened
+      Then the section "World Rankings" is offered
+
+    Scenario: World Rankings comes third
+      When the page at "/admin/administrator" is opened
+      Then the third section is "World Rankings"
+
     Scenario: Tournaments leads to the admin's tournaments
       When the page at "/admin/administrator" is opened
       Then the section "Tournaments" leads to "/admin/"
@@ -61,6 +72,10 @@ Feature: The section bar of the administrator's pages
     Scenario: Accounts leads to the accounts page
       When the page at "/admin/administrator" is opened
       Then the section "Accounts" leads to "/admin/administrator/accounts"
+
+    Scenario: World Rankings leads to the page where the players are imported
+      When the page at "/admin/administrator" is opened
+      Then the section "World Rankings" leads to "/admin/administrator/import-world-ranking-players"
 
     Scenario: Pressing Accounts opens the accounts page
       Given the page at "/admin/administrator" is open
@@ -72,9 +87,18 @@ Feature: The section bar of the administrator's pages
       When the section "Tournaments" is pressed
       Then the address is "/admin/"
 
+    Scenario: Pressing World Rankings opens the page where the players are imported
+      Given the page at "/admin/administrator" is open
+      When the section "World Rankings" is pressed
+      Then the address is "/admin/administrator/import-world-ranking-players"
+
     Scenario: Nothing is marked on the administrator's pages themselves
       When the page at "/admin/administrator" is opened
       Then the section "Accounts" is not marked as current
+
+    Scenario: World Rankings is not marked on the administrator's pages themselves
+      When the page at "/admin/administrator" is opened
+      Then the section "World Rankings" is not marked as current
 
     Scenario: The section bar is in the reader's language
       Given a browser that asks for "en-XA"
@@ -98,3 +122,19 @@ Feature: The section bar of the administrator's pages
     Scenario: Accounts is marked on a page beneath the accounts page
       When the page at "/admin/administrator/accounts/someone" is opened
       Then the section "Accounts" is marked as current
+
+    Scenario: World Rankings is not marked on the accounts page
+      When the page at "/admin/administrator/accounts" is opened
+      Then the section "World Rankings" is not marked as current
+
+    Scenario: The page where the players are imported has a section bar
+      When the page at "/admin/administrator/import-world-ranking-players" is opened
+      Then the page has a section bar
+
+    Scenario: World Rankings is marked on the page where the players are imported
+      When the page at "/admin/administrator/import-world-ranking-players" is opened
+      Then the section "World Rankings" is marked as current
+
+    Scenario: Accounts is not marked on the page where the players are imported
+      When the page at "/admin/administrator/import-world-ranking-players" is opened
+      Then the section "Accounts" is not marked as current

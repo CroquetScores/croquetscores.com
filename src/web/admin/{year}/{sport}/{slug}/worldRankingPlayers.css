@@ -1,0 +1,14 @@
+/* The mark beside a world ranking name (player.feature): inside the field's
+   box, at the end of the line the typing is on, so that it is read with the
+   name it is about. The question mark in the danger colour, since it asks
+   the reader to look again; the tick in the ink, since it asks nothing. */
+
+.world-ranking-mark {
+  margin-inline-start: var(--space-2);
+  font-weight: 700;
+  cursor: help;
+}
+
+.world-ranking-mark[data-mark="questioned"] {
+  color: var(--danger);
+}

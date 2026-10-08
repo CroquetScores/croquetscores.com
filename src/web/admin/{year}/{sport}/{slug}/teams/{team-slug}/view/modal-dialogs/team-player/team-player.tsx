@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
+import {
+  Mark,
+  Offers,
+  useMatching,
+} from "../../../../../WorldRankingPlayers.js";
 
 // The team player dialog (team-player.feature), over a team's page: the player
 // dialog of a Standard tournament without its Representing and its Flag, since
@@ -13,9 +18,11 @@ import { knows, say } from "../../../../../../../../words.js";
 // a test has no byes to point the reader to. It asks for the world ranking
 // name as the player dialog does, in a tournament of a sport with world
 // rankings alone: following the name while a player is added, following
-// nothing while one is changed, and sent as the name when left empty. Opened
-// by a world ranking officer who does not manage the tournament, only the
-// world ranking name can be changed, and Save changes that alone.
+// nothing while one is changed, and sent as the name when left empty; and it
+// offers the world ranking players and marks the world ranking name as that
+// does (WorldRankingPlayers.tsx). Opened by a world ranking officer who does
+// not manage the tournament, only the world ranking name can be changed, and
+// Save changes that alone.
 
 /** A player as they are, when one is being changed. */
 export interface TeamPlayerAsTheyAre {
@@ -31,8 +38,11 @@ interface Props {
   readonly team: string;
   /** Nothing when adding, and the player when changing one. */
   readonly player?: TeamPlayerAsTheyAre | undefined;
-  /** Whether the tournament's sport has world rankings, for which it asks. */
-  readonly asksWorldRankingName: boolean;
+  /**
+   * The tournament's sport, by its code, where it has world rankings, for
+   * which it asks. Nothing where it has none.
+   */
+  readonly worldRankingSport: string | undefined;
   /** Whether only the world ranking name may be changed, as a world ranking officer's. */
   readonly onlyWorldRankingName?: boolean | undefined;
   /** Once a player is kept, so that the list says so. */
@@ -57,11 +67,12 @@ export const TeamPlayerDialog = ({
   tournament,
   team,
   player,
-  asksWorldRankingName,
+  worldRankingSport,
   onlyWorldRankingName = false,
   kept,
   close,
 }: Props): React.JSX.Element => {
+  const asksWorldRankingName = worldRankingSport !== undefined;
   const [name, setName] = useState(player?.name ?? "");
   const [worldRankingName, setWorldRankingName] = useState(
     player?.worldRankingName ?? "",
@@ -73,6 +84,21 @@ export const TeamPlayerDialog = ({
   const nameField = useRef<HTMLInputElement>(null);
   const worldRankingNameField = useRef<HTMLInputElement>(null);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
+  // Nothing is offered for a name that cannot be changed, as a world ranking
+  // officer's cannot, so nothing is asked for it.
+  const offeredForName = useMatching(
+    onlyWorldRankingName ? undefined : worldRankingSport,
+    name,
+  );
+  const offeredForWorldRankingName = useMatching(
+    worldRankingSport,
+    worldRankingName,
+  );
+  // What will be kept as the world ranking name, which is what is marked.
+  const markedFor = useMatching(
+    worldRankingSport,
+    worldRankingName.trim() === "" ? name : worldRankingName,
+  );
 
   const refusal = (code: string): Refusal => ({
     code,
@@ -191,28 +217,34 @@ export const TeamPlayerDialog = ({
         refused={refused.filter(({ code }) => aboutTheName(code))}
       >
         {(tied) => (
-          <input
-            {...tied}
-            ref={nameField}
-            disabled={onlyWorldRankingName}
-            type="text"
-            placeholder=" "
-            autoComplete="off"
-            value={name}
-            onChange={(event) => {
-              // Followed while a player is added, until it says something of
-              // its own.
-              if (
-                player === undefined &&
-                (worldRankingName === "" || worldRankingName === name)
-              ) {
-                setWorldRankingName(event.target.value);
-              }
-              setName(event.target.value);
-              // Who was added is no longer the news once the next is typed.
-              setAdded(undefined);
-            }}
-          />
+          <>
+            <input
+              {...tied}
+              ref={nameField}
+              disabled={onlyWorldRankingName}
+              type="text"
+              placeholder=" "
+              autoComplete="off"
+              list={asksWorldRankingName ? "name-offers" : undefined}
+              value={name}
+              onChange={(event) => {
+                // Followed while a player is added, until it says something of
+                // its own.
+                if (
+                  player === undefined &&
+                  (worldRankingName === "" || worldRankingName === name)
+                ) {
+                  setWorldRankingName(event.target.value);
+                }
+                setName(event.target.value);
+                // Who was added is no longer the news once the next is typed.
+                setAdded(undefined);
+              }}
+            />
+            {asksWorldRankingName ? (
+              <Offers id="name-offers" matching={offeredForName} />
+            ) : null}
+          </>
         )}
       </Field>
       {asksWorldRankingName ? (
@@ -220,19 +252,29 @@ export const TeamPlayerDialog = ({
           name="worldRankingName"
           label={say("admin.player.worldRankingName")}
           refused={refused.filter(({ code }) => aboutTheWorldRankingName(code))}
+          mark={
+            markedFor === undefined ? undefined : <Mark matching={markedFor} />
+          }
         >
           {(tied) => (
-            <input
-              {...tied}
-              ref={worldRankingNameField}
-              type="text"
-              placeholder=" "
-              autoComplete="off"
-              value={worldRankingName}
-              onChange={(event) => {
-                setWorldRankingName(event.target.value);
-              }}
-            />
+            <>
+              <input
+                {...tied}
+                ref={worldRankingNameField}
+                type="text"
+                placeholder=" "
+                autoComplete="off"
+                list="worldRankingName-offers"
+                value={worldRankingName}
+                onChange={(event) => {
+                  setWorldRankingName(event.target.value);
+                }}
+              />
+              <Offers
+                id="worldRankingName-offers"
+                matching={offeredForWorldRankingName}
+              />
+            </>
           )}
         </Field>
       ) : null}

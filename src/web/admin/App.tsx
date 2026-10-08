@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Accounts } from "./administrator/accounts/accounts.js";
 import { AdministratorSections } from "./administrator/AdministratorSections.js";
+import { ImportWorldRankingPlayers } from "./administrator/import-world-ranking-players/importWorldRankingPlayers.js";
 import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
 import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competition-slug}/view/view.js";
@@ -69,21 +70,36 @@ export const App = (): React.JSX.Element => {
   // administrator, and the page says so (accounts.feature); what is drawn
   // before that is headings, which are no secret, being in the admin's
   // script for every reader. A page beneath the accounts that is not there
-  // yet still marks Accounts, since it is one of theirs.
-  const administrator = /^\/admin\/administrator(\/accounts)?(\/.*)?$/.exec(
-    path,
-  );
+  // yet still marks Accounts, since it is one of theirs. The page where the
+  // world ranking players are imported is the one address it is found at.
+  const administrator =
+    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players)?(\/.*)?$/.exec(
+      path,
+    );
   if (administrator !== null) {
-    const onAccounts = administrator[1] !== undefined;
+    const onAccounts = administrator[1] === "/accounts";
     const theAccountsPage = onAccounts && (administrator[2] ?? "/") === "/";
+    const theImportPage =
+      administrator[1] === "/import-world-ranking-players" &&
+      (administrator[2] ?? "/") === "/";
     return (
       <>
-        <AdministratorSections reading={onAccounts ? "accounts" : undefined} />
+        <AdministratorSections
+          reading={
+            onAccounts
+              ? "accounts"
+              : theImportPage
+                ? "world-rankings"
+                : undefined
+          }
+        />
         <main id="content">
           <div className="page">
             <div className="panel stack">
               {theAccountsPage ? (
                 <Accounts />
+              ) : theImportPage ? (
+                <ImportWorldRankingPlayers />
               ) : (
                 <h1>{say("admin.administrator.title")}</h1>
               )}

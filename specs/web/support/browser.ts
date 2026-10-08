@@ -24,6 +24,7 @@ import {
   type Config,
 } from "../../../src/infrastructure/config/Config.js";
 import { CheckRefused } from "../../../src/application/services/BreachedPasswords.js";
+import { ListRefused } from "../../../src/application/services/WorldRankingLists.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import type { Language } from "../../../src/web/common/language.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
@@ -277,6 +278,20 @@ const itsOwn = async (
                 ),
               )
             : Promise.resolve(false),
+      },
+      // Never the rankings' own site, for the same reason: the fake the
+      // scenario stands up, asked for when the import reads a list, since the
+      // step standing it up comes after the application is built. With none,
+      // the lists cannot be reached, as a site that is not there cannot.
+      worldRankingLists: {
+        playersOf: (sport) =>
+          world.worldRankingLists?.playersOf(sport) ??
+          Promise.reject(
+            new ListRefused(
+              "WorldRankingLists.Unreachable",
+              "The scenario stood up no world rankings.",
+            ),
+          ),
       },
       // Never Google: a spec run has no business asking it, and a scenario
       // about being judged has to say what the judgement was. It judges a

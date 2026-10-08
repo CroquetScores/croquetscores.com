@@ -1044,6 +1044,12 @@ main {
   -webkit-text-fill-color: var(--ink);
 }
 
+/* Something said of what was typed, at the end of the line it is on, and
+   never squeezed by the typing beside it. */
+.field-box .field-mark {
+  flex: none;
+}
+
 /* The box draws the ring, so the input does not draw a second one inside it. */
 .field-box input:focus-visible {
   outline: none;
