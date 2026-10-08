@@ -129,6 +129,13 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) game of the block answered was (not )?withdrawn$/,
+  function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(gameAnswered(this, which).withdrawn, not === null);
+  },
+);
+
+Then(
   /^the (first|second|third) game of the block answered was drawn$/,
   function (this: SpecWorld, which: string) {
     assert.equal(gameAnswered(this, which).drawn, true);

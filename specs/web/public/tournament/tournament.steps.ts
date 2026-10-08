@@ -75,6 +75,38 @@ Then(
   },
 );
 
+Then(
+  /^the (first|second|third) game is (not )?marked as withdrawn$/,
+  async function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(
+      (await gameAt(this, which).getAttribute("data-withdrawn")) !== null,
+      not === null,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) game is struck through$/,
+  async function (this: SpecWorld, which: string) {
+    for (const line of ["first", "second"]) {
+      assert.match(
+        await lineOf(this, line, which).evaluate(
+          (element: unknown) =>
+            (
+              globalThis as unknown as {
+                getComputedStyle(element: unknown): {
+                  textDecorationLine: string;
+                };
+              }
+            ).getComputedStyle(element).textDecorationLine,
+        ),
+        /line-through/,
+        `The ${line} line is not struck through.`,
+      );
+    }
+  },
+);
+
 // A game's lines ------------------------------------------------------------------
 
 Then(

@@ -30,7 +30,9 @@ Feature: A Swiss's grid ranks its players with their results
   "+4" for a game won by 4, "-1" for one lost by 1 and "0" for one drawn,
   with the opponent's whole name for whatever reads the page aloud. Each is
   marked won, lost or drawn by more than its colour, the sign of its margin
-  saying which.
+  saying which. A withdrawn game was played, so it is among the results, but
+  it counts for nothing (`withdrawGame.feature`), so it is marked as
+  withdrawn, struck through, and left out of the games, wins and win share.
 
   On a phone the results wrap within their column, and where the table is
   still wider than the window it scrolls across within the page, as a
@@ -179,6 +181,37 @@ Feature: A Swiss's grid ranks its players with their results
       Given "Sam Someone" has beaten "Chris Third" 7 to 3 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the first result of "Chris Third" in the Swiss is marked as lost
+
+  Rule: A withdrawn game is among the results, struck through, and counts for nothing
+
+    Scenario: A withdrawn game is among the results
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "A.Another +3"
+
+    Scenario: A withdrawn game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is marked as withdrawn
+
+    Scenario: A game not withdrawn is not marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is not marked as withdrawn
+
+    Scenario: A withdrawn game is struck through
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is struck through
+
+    Scenario: A withdrawn game is not among the games played
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the "Games" of "Sam Someone" in the Swiss are "0"
 
   Rule: On a phone the page fits the window
 

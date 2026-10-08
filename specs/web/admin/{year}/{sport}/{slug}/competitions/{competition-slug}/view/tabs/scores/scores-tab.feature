@@ -57,6 +57,17 @@ Feature: The scores tab of a competition's page
   Archive and Restore do not ask first: each is undone by the other, and
   nothing is lost by either. Whatever is pressed, the list is asked for again.
 
+  In a block or a Swiss, a score that was played but is not to count is
+  withdrawn rather than archived (`withdrawGame.feature`), so each score in
+  use there is offered Withdraw too, after Archive. A withdrawn score was
+  played, so it stays among those in use, in its place, but struck through,
+  and says in words that it is withdrawn. It offers Unwithdraw in place of
+  Withdraw, and Edit still. Neither asks first, since each is undone by the
+  other. Unwithdraw is refused where the score could not be added now, as
+  where one of its players has withdrawn since, and the refusal is said above
+  the list. A knockout's or a test's score is offered neither, since there a
+  score decides more than the standings.
+
   The tab has no address of its own, so a scenario opens the competition's
   page and chooses the tab, which is what opening the scores of a competition
   does.
@@ -579,6 +590,100 @@ Feature: The scores tab of a competition's page
       When the scores of "Block A" in "Spring Open" are opened
       Then the score of "Sam Someone" beating "Alex Another" is not listed among the archived
 
+  Rule: In a block or a Swiss, a score is withdrawn, and its withdrawal reversed
+
+    Scenario: A score in a block offers Withdraw
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Withdraw"
+
+    Scenario: A score in a Swiss offers Withdraw
+      Given "organiser@example.com" has added the Swiss "Swiss A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Swiss A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Swiss A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Swiss A" of "Spring Open"
+      When the scores of "Swiss A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Withdraw"
+
+    Scenario: A score in a knockout does not offer Withdraw
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the scores of "Final Stage" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" does not offer "Withdraw"
+
+    Scenario: A score in use does not offer Unwithdraw
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" does not offer "Unwithdraw"
+
+    Scenario: Withdrawing a score strikes it through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Withdraw" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score of "Sam Someone" beating "Alex Another" is struck through
+
+    Scenario: Withdrawing does not ask first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Withdraw" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then no modal dialog is open
+
+    Scenario: A score withdrawn from the tab is kept withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      And "Withdraw" is pressed on the score of "Sam Someone" beating "Alex Another"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" is struck through
+
+    Scenario: A withdrawn score is not listed among the archived
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" is not listed among the archived
+
+    Scenario: A withdrawn score is said to be withdrawn to a screen reader
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" is announced as withdrawn
+
+    Scenario: A withdrawn score offers Unwithdraw
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Unwithdraw"
+
+    Scenario: A withdrawn score does not offer Withdraw
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" does not offer "Withdraw"
+
+    Scenario: A withdrawn score offers Edit
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" offers "Edit"
+
+    Scenario: Unwithdrawing a score no longer strikes it through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Unwithdraw" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score of "Sam Someone" beating "Alex Another" is not struck through
+
+    Scenario: A refused Unwithdraw is said above the list
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Unwithdraw" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the tab is refused with "CompetitionPlayer.Withdrawn"
+
   Rule: Every word the tab says is in the reader's language
 
     The test locale shows it (`language.feature`). A player's name is what
@@ -594,6 +699,13 @@ Feature: The scores tab of a competition's page
       Given a browser that asks for "en-XA"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then every word in the tab but the players' names is in the test locale
+
+    Scenario: A withdrawn score is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
       Then every word in the tab but the players' names is in the test locale
 
@@ -616,9 +728,10 @@ Feature: The scores tab of a competition's page
       Then "<option>" on the score of "<winner>" beating "<loser>" is at least 44 pixels tall
 
       Examples:
-        | winner      | loser        | option  |
-        | Sam Someone | Alex Another | Archive |
-        | Chris Third | Sam Someone  | Restore |
+        | winner      | loser        | option   |
+        | Sam Someone | Alex Another | Archive  |
+        | Sam Someone | Alex Another | Withdraw |
+        | Chris Third | Sam Someone  | Restore  |
 
     Scenario: Long names wrap rather than widening the page
       Given "organiser@example.com" has added the player "Maximilian Alexander Fitzwilliam-Worthington" to "Spring Open"

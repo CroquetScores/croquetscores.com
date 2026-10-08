@@ -15,6 +15,7 @@ import {
   type ListedGame,
 } from "../../../../src/application/operations/competitions/GamesOfCompetition.js";
 import { RestoreGame } from "../../../../src/application/operations/competitions/RestoreGame.js";
+import { ReverseGameWithdrawal } from "../../../../src/application/operations/competitions/ReverseGameWithdrawal.js";
 import { MoveGame } from "../../../../src/application/operations/competitions/MoveGame.js";
 import { EnterPlayer } from "../../../../src/application/operations/competitions/EnterPlayer.js";
 import { MoveCompetitionPlayer } from "../../../../src/application/operations/competitions/MoveCompetitionPlayer.js";
@@ -28,6 +29,7 @@ import { WithdrawPlayer } from "../../../../src/application/operations/competiti
 import { MovePlayer } from "../../../../src/application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../../src/application/operations/tournaments/AddPlayer.js";
 import { PlayersOfTest } from "../../../../src/application/operations/competitions/PlayersOfTest.js";
+import { WithdrawGame } from "../../../../src/application/operations/competitions/WithdrawGame.js";
 import type { Competition } from "../../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionPlayer } from "../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import type {
@@ -1506,6 +1508,36 @@ const archiving: GameMaking = (account, tournament, competition, game, at) =>
 const restoring: GameMaking = (account, tournament, competition, game, at) =>
   new RestoreGame(account, tournament.value, competition.value, game.value, at);
 
+const withdrawingGame: GameMaking = (
+  account,
+  tournament,
+  competition,
+  game,
+  at,
+) =>
+  new WithdrawGame(
+    account,
+    tournament.value,
+    competition.value,
+    game.value,
+    at,
+  );
+
+const reversingWithdrawal: GameMaking = (
+  account,
+  tournament,
+  competition,
+  game,
+  at,
+) =>
+  new ReverseGameWithdrawal(
+    account,
+    tournament.value,
+    competition.value,
+    game.value,
+    at,
+  );
+
 const gameSent = async (
   world: SpecWorld,
   account: string,
@@ -1538,13 +1570,20 @@ const gameSent = async (
   );
 };
 
-for (const [verb, making] of [
-  ["archive", archiving],
-  ["restore", restoring],
+// Each said as the reader does it, and as it has been done.
+for (const [does, done, making] of [
+  ["archives", "archived", archiving],
+  ["restores", "restored", restoring],
+  ["withdraws", "withdrawn", withdrawingGame],
+  [
+    "reverses the withdrawal of",
+    "reversed the withdrawal of",
+    reversingWithdrawal,
+  ],
 ] as const) {
   Given(
     new RegExp(
-      `^"([^"]*)" has ${verb}d the score of ${GAME} in "([^"]*)" of "([^"]*)"$`,
+      `^"([^"]*)" has ${done} the score of ${GAME} in "([^"]*)" of "([^"]*)"$`,
     ),
     async function (
       this: SpecWorld,
@@ -1568,7 +1607,7 @@ for (const [verb, making] of [
 
   When(
     new RegExp(
-      `^the reader signed in to the account for "([^"]*)" ${verb}s the score of ${GAME} in "([^"]*)" of "([^"]*)"$`,
+      `^the reader signed in to the account for "([^"]*)" ${does} the score of ${GAME} in "([^"]*)" of "([^"]*)"$`,
     ),
     async function (
       this: SpecWorld,
@@ -1591,7 +1630,7 @@ for (const [verb, making] of [
 
   When(
     new RegExp(
-      `^the reader signed in to that account ${verb}s the score of ${GAME} in "([^"]*)" of "([^"]*)"$`,
+      `^the reader signed in to that account ${does} the score of ${GAME} in "([^"]*)" of "([^"]*)"$`,
     ),
     async function (
       this: SpecWorld,
@@ -1612,7 +1651,7 @@ for (const [verb, making] of [
   );
 
   When(
-    `the reader signed in to the account for {string} ${verb}s a score {string} of {string} does not have`,
+    `the reader signed in to the account for {string} ${does} a score {string} of {string} does not have`,
     async function (
       this: SpecWorld,
       address: string,
@@ -1632,7 +1671,7 @@ for (const [verb, making] of [
 
   When(
     new RegExp(
-      `^the reader signed in to the account for "([^"]*)" ${verb}s the score of ${GAME} in a competition "([^"]*)" does not have$`,
+      `^the reader signed in to the account for "([^"]*)" ${does} the score of ${GAME} in a competition "([^"]*)" does not have$`,
     ),
     async function (
       this: SpecWorld,
@@ -1654,7 +1693,7 @@ for (const [verb, making] of [
 
   When(
     new RegExp(
-      `^the reader signed in to the account for "([^"]*)" ${verb}s the score of ${GAME} in "([^"]*)" of a tournament there is not$`,
+      `^the reader signed in to the account for "([^"]*)" ${does} the score of ${GAME} in "([^"]*)" of a tournament there is not$`,
     ),
     async function (
       this: SpecWorld,
@@ -2122,7 +2161,7 @@ Then(
 
 Then(
   new RegExp(
-    `^the score of ${GAME} in "([^"]*)" of "([^"]*)" is (not )?archived$`,
+    `^the score of ${GAME} in "([^"]*)" of "([^"]*)" is (not )?(archived|withdrawn)$`,
   ),
   async function (
     this: SpecWorld,
@@ -2131,6 +2170,7 @@ Then(
     competition: string,
     name: string,
     not: string | null,
+    state: "archived" | "withdrawn",
   ) {
     const about = await theCompetition(this, competition, name);
     const game = await gameCalled(
@@ -2141,7 +2181,7 @@ Then(
       loser,
     );
     assert.ok(game !== undefined, "There is no such game.");
-    assert.equal(game.archived, not === null);
+    assert.equal(game[state], not === null);
   },
 );
 
@@ -2245,7 +2285,7 @@ Then("no scores are answered", function (this: SpecWorld) {
 
 Then(
   new RegExp(
-    `^the score of ${GAME} ${SCORES} is answered( as archived| as not archived| as one that can be archived| as one that cannot be archived)?$`,
+    `^the score of ${GAME} ${SCORES} is answered(?: as (not )?(archived|withdrawn)| as one that (can|cannot) be (archived|withdrawn))?$`,
   ),
   function (
     this: SpecWorld,
@@ -2253,15 +2293,19 @@ Then(
     loser: string,
     winnerScore: string,
     loserScore: string,
-    as: string | null,
+    not: string | null,
+    state: "archived" | "withdrawn" | null,
+    can: "can" | "cannot" | null,
+    doing: "archived" | "withdrawn" | null,
   ) {
     const game = gameListed(this, winner, loser, winnerScore, loserScore);
-    if (as === " as archived") assert.equal(game.archived, true);
-    if (as === " as not archived") assert.equal(game.archived, false);
-    if (as === " as one that can be archived")
-      assert.equal(game.archivable, true);
-    if (as === " as one that cannot be archived")
-      assert.equal(game.archivable, false);
+    if (state !== null) assert.equal(game[state], not === null);
+    if (doing !== null) {
+      assert.equal(
+        doing === "archived" ? game.archivable : game.withdrawable,
+        can === "can",
+      );
+    }
   },
 );
 

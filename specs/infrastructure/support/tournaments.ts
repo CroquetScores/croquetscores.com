@@ -91,6 +91,8 @@ import { CorrectGameHandler } from "../../../src/application/operations/competit
 import { CorrectGameValidator } from "../../../src/application/operations/competitions/CorrectGameValidator.js";
 import { GamesOfCompetitionHandler } from "../../../src/application/operations/competitions/GamesOfCompetitionHandler.js";
 import { RestoreGameHandler } from "../../../src/application/operations/competitions/RestoreGameHandler.js";
+import { ReverseGameWithdrawalHandler } from "../../../src/application/operations/competitions/ReverseGameWithdrawalHandler.js";
+import { WithdrawGameHandler } from "../../../src/application/operations/competitions/WithdrawGameHandler.js";
 import { EnterPlayerHandler } from "../../../src/application/operations/competitions/EnterPlayerHandler.js";
 import { MoveCompetitionPlayerHandler } from "../../../src/application/operations/competitions/MoveCompetitionPlayerHandler.js";
 import { ChangeCarryForwardHandler } from "../../../src/application/operations/competitions/ChangeCarryForwardHandler.js";
@@ -285,6 +287,10 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleCommand(new ArchiveGameHandler(...both, competitions));
   mediator.handleCommand(new MoveGameHandler(...both, competitions));
   mediator.handleCommand(new RestoreGameHandler(...both, competitions));
+  mediator.handleCommand(new WithdrawGameHandler(...both, competitions));
+  mediator.handleCommand(
+    new ReverseGameWithdrawalHandler(...both, competitions),
+  );
   mediator.handleCommand(new CorrectGameHandler(...both, competitions));
   // What is taken is read held, for the scenarios that ask two of these at
   // once.

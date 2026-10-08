@@ -7,6 +7,8 @@ import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates
 import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
 import { CompetitionGameMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
+import { CompetitionGameWithdrawalReversed } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawalReversed.js";
+import { CompetitionGameWithdrawn } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawn.js";
 import type {
   Game,
   GamePlayerId,
@@ -339,6 +341,7 @@ When(
 for (const [verb, doing] of [
   ["archived", "archiveGame"],
   ["restored", "restoreGame"],
+  ["withdrawn", "withdrawGame"],
 ] as const) {
   When(
     new RegExp(`^${GAME} is ${verb}$`),
@@ -396,6 +399,63 @@ for (const [verb, doing] of [
     },
   );
 }
+
+// A withdrawn game's withdrawal reversed, said as a player's is.
+When(
+  new RegExp(`^the withdrawal of ${GAME} is reversed$`),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const said = [winner, loser, winnerScore, loserScore];
+    ask(this, (competition) => {
+      competition.reverseGameWithdrawal(
+        gameSaid(this, competition, said).id,
+        toldOf(this),
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
+
+Given(
+  new RegExp(`^the withdrawal of ${GAME} was reversed$`),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const said = [winner, loser, winnerScore, loserScore];
+    happened(this, (competition) => {
+      competition.reverseGameWithdrawal(
+        gameSaid(this, competition, said).id,
+        toldOf(this),
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
+
+When(
+  "the withdrawal of the game {string} is reversed by its id",
+  function (this: SpecWorld, id: string) {
+    ask(this, (competition) => {
+      competition.reverseGameWithdrawal(
+        GameId.from(id),
+        toldOf(this),
+        byOf(this),
+        now(this),
+      );
+    });
+  },
+);
 
 // A test's game moved a place, up or down.
 for (const direction of ["up", "down"] as const) {
@@ -559,10 +619,44 @@ Then(
   },
 );
 
+Then(
+  new RegExp(
+    `^the competition's ${GAME.replace("the game", "game")} is (not )?withdrawn$`,
+  ),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    not: string | null,
+  ) {
+    const said = [winner, loser, winnerScore, loserScore];
+    assert.equal(
+      gameSaid(this, competitionOf(this), said).withdrawn,
+      not === null,
+    );
+  },
+);
+
+Then(
+  "the player {string} has a game in use",
+  function (this: SpecWorld, name: string) {
+    const competition = competitionOf(this);
+    const player = gamePlayerNamed(this, competition, name);
+    assert.ok(
+      player instanceof CompetitionPlayerId &&
+        competition.hasGamesInUse(player),
+    );
+  },
+);
+
 for (const [happening, kind] of [
   ["a game being added", CompetitionGameAdded],
   ["a game being archived", CompetitionGameArchived],
   ["a game being restored", CompetitionGameRestored],
+  ["a game being withdrawn", CompetitionGameWithdrawn],
+  ["a game's withdrawal being reversed", CompetitionGameWithdrawalReversed],
   ["a game being corrected", CompetitionGameCorrected],
 ] as const) {
   Then(

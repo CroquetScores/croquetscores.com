@@ -44,6 +44,8 @@ Feature: The names a competition's events are kept under
         | a game being added                      | competition-game-added                   |
         | a game being archived                   | competition-game-archived                |
         | a game being restored                   | competition-game-restored                |
+        | a game being withdrawn                  | competition-game-withdrawn               |
+        | a game's withdrawal being reversed      | competition-game-withdrawal-reversed     |
         | a game being corrected                  | competition-game-corrected               |
         | a game being corrected to other players | competition-game-corrected               |
 
@@ -69,6 +71,8 @@ Feature: The names a competition's events are kept under
         | a game being added                     |
         | a game being archived                  |
         | a game being restored                  |
+        | a game being withdrawn                 |
+        | a game's withdrawal being reversed     |
         | a game being corrected                 |
 
     Scenario Outline: An event read back says everything it said
@@ -91,6 +95,8 @@ Feature: The names a competition's events are kept under
         | a game being added                      |
         | a game being archived                   |
         | a game being restored                   |
+        | a game being withdrawn                  |
+        | a game's withdrawal being reversed      |
         | a game being corrected                  |
         | a game being corrected to other players |
 
@@ -155,6 +161,8 @@ Feature: The names a competition's events are kept under
         | a game being added                     | winnerMarked       |
         | a game being archived                  | gameId             |
         | a game being restored                  | gameId             |
+        | a game being withdrawn                 | gameId             |
+        | a game's withdrawal being reversed     | gameId             |
         | a game being corrected                 | gameId             |
         | a game being corrected                 | winnerScore        |
         | a game being corrected                 | winnerMarked       |

@@ -46,8 +46,14 @@ export interface GameDetails {
  * with other players where the competition allows it. An archived game is
  * not changed in any way, so it is not corrected.
  *
- * A game is never altered: archiving, restoring and correcting each give the
- * game as it is afterwards, still added when it was. Two games are the same
+ * A game played that is not to count is withdrawn, rather than archived,
+ * which is for one entered by mistake. The two are apart, since a withdrawn
+ * game can be archived and restored, and is still withdrawn; corrected, it
+ * is still withdrawn too.
+ *
+ * A game is never altered: archiving, restoring, withdrawing, reversing a
+ * withdrawal and correcting each give the game as it is afterwards, still
+ * added when it was. Two games are the same
  * game when their ids are, since two games between the same players can have
  * the same scores.
  */
@@ -55,22 +61,26 @@ export class Game {
   readonly #id: GameId;
   readonly #details: GameDetails;
   readonly #archived: boolean;
+  readonly #withdrawn: boolean;
   readonly #addedAt: ReadOnlyDate | undefined;
 
   private constructor(
     id: GameId,
     details: GameDetails,
     archived: boolean,
+    withdrawn: boolean,
     addedAt: ReadOnlyDate | undefined,
   ) {
     this.#id = id;
     this.#details = details;
     this.#archived = archived;
+    this.#withdrawn = withdrawn;
     this.#addedAt = addedAt;
   }
 
   /**
-   * The game known by `id` that `details` describe, not archived, added at
+   * The game known by `id` that `details` describe, neither archived nor
+   * withdrawn, added at
    * `addedAt` where it was added. Whether drawn games are allowed is the
    * tournament's, so whatever makes the game says. Throws
    * {@link ValidationError} naming the first rule broken.
@@ -96,7 +106,7 @@ export class Game {
     ) {
       refuse("Game.WinnerNotAhead");
     }
-    return new Game(id, details, false, addedAt);
+    return new Game(id, details, false, false, addedAt);
   }
 
   get id(): GameId {
@@ -128,6 +138,10 @@ export class Game {
 
   get archived(): boolean {
     return this.#archived;
+  }
+
+  get withdrawn(): boolean {
+    return this.#withdrawn;
   }
 
   /**
@@ -167,21 +181,37 @@ export class Game {
       },
     );
     if (corrected.drawn !== this.drawn) refuse("Game.ResultChanged");
-    return corrected;
+    return this.#withdrawn ? corrected.withdraw() : corrected;
   }
 
   /** The game, archived. */
   archive(): Game {
-    return this.#archived
-      ? this
-      : new Game(this.#id, this.#details, true, this.#addedAt);
+    return this.#archived ? this : this.#with(true, this.#withdrawn);
   }
 
   /** The game, no longer archived. */
   restore(): Game {
-    return this.#archived
-      ? new Game(this.#id, this.#details, false, this.#addedAt)
-      : this;
+    return this.#archived ? this.#with(false, this.#withdrawn) : this;
+  }
+
+  /** The game, withdrawn. */
+  withdraw(): Game {
+    return this.#withdrawn ? this : this.#with(this.#archived, true);
+  }
+
+  /** The game, no longer withdrawn. */
+  reverseWithdrawal(): Game {
+    return this.#withdrawn ? this.#with(this.#archived, false) : this;
+  }
+
+  #with(archived: boolean, withdrawn: boolean): Game {
+    return new Game(
+      this.#id,
+      this.#details,
+      archived,
+      withdrawn,
+      this.#addedAt,
+    );
   }
 
   equals(other: Game | undefined): boolean {

@@ -430,6 +430,8 @@ export const english: Language = {
     "block.lost": "lost",
     "block.drawn": "drawn",
     "block.withdrawn": "withdrawn",
+    // A game withdrawn, which Spanish says otherwise than a player.
+    "block.gameWithdrawn": "withdrawn",
     "block.losses": "Losses",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Views",
@@ -700,6 +702,9 @@ export const english: Language = {
     "admin.scores.restore": "Restore",
     "admin.scores.archived": "Archived scores",
     "admin.scores.archivedSaid": "Archived",
+    "admin.scores.withdraw": "Withdraw",
+    "admin.scores.unwithdraw": "Unwithdraw",
+    "admin.scores.withdrawnSaid": "Withdrawn",
     // Above the list, for a refusal with no words of its own.
     "admin.scores.otherwise": "That could not be done.",
     "admin.score.title": "Add Score",

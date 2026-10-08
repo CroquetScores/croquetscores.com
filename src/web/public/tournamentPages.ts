@@ -232,6 +232,11 @@ export interface GameShown {
   readonly loser: PlayerInGame;
   readonly loserScore: string;
   readonly drawn: boolean;
+  /**
+   * Whether it was played but counts for nothing (`withdrawGame.feature`),
+   * where whatever lists it says so. Nothing is the same as not.
+   */
+  readonly withdrawn?: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;
 }
@@ -252,9 +257,16 @@ export const gameShown = (
 ): string => {
   const { say } = speaking;
   const result = say(played.drawn ? "tournament.drewWith" : "tournament.beat");
-  return `            <li class="game">
+  // Struck through, and said to be withdrawn for whatever reads the page
+  // aloud, as a block's grid says it.
+  const withdrawn = played.withdrawn === true;
+  const said = withdrawn
+    ? `              <p class="visually-hidden">${escape(say("block.gameWithdrawn"))}</p>
+`
+    : "";
+  return `            <li class="game"${withdrawn ? " data-withdrawn" : ""}>
               <p class="game-line game-winner">${playerShown(played.winner, "game", speaking, assets)} <span class="game-score">${escape(played.winnerScore)}</span> <span class="game-result">${escape(result)}</span></p>
 ${beside === undefined ? "" : `              <p class="game-beside game-competition">${beside}</p>\n`}              <p class="game-line game-loser">${playerShown(played.loser, "game", speaking, assets)} <span class="game-score">${escape(played.loserScore)}</span></p>
               <p class="game-beside game-ago">${played.addedAt === undefined ? "" : ago(played.addedAt, now, speaking)}</p>
-            </li>`;
+${said}            </li>`;
 };

@@ -8,6 +8,8 @@ import { CompetitionGameArchived } from "./CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./CompetitionGameCorrected.js";
 import { CompetitionGameMoved } from "./CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "./CompetitionGameRestored.js";
+import { CompetitionGameWithdrawalReversed } from "./CompetitionGameWithdrawalReversed.js";
+import { CompetitionGameWithdrawn } from "./CompetitionGameWithdrawn.js";
 import { CompetitionPlayerCarryForwardChanged } from "./CompetitionPlayerCarryForwardChanged.js";
 import { CompetitionPlayerEntered } from "./CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "./CompetitionPlayerMoved.js";
@@ -205,6 +207,26 @@ export const nameCompetitionEvents = (registry: EventRegistry): EventRegistry =>
       "competition-game-restored",
       (said, { createdBy, occurredAt }) =>
         new CompetitionGameRestored(
+          text(said, "gameId"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CompetitionGameWithdrawn,
+      "competition-game-withdrawn",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionGameWithdrawn(
+          text(said, "gameId"),
+          createdBy,
+          occurredAt,
+        ),
+    )
+    .name(
+      CompetitionGameWithdrawalReversed,
+      "competition-game-withdrawal-reversed",
+      (said, { createdBy, occurredAt }) =>
+        new CompetitionGameWithdrawalReversed(
           text(said, "gameId"),
           createdBy,
           occurredAt,

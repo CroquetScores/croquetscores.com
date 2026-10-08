@@ -109,21 +109,24 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
             opponent: { name: opponent.name, address: opponent.address },
             result: game.drawn ? "drawn" : won ? "won" : "lost",
             margin: theirs.points - against.points,
+            withdrawn: game.withdrawn,
           },
         ];
       });
+      // A withdrawn game is among the results, but counts for nothing.
+      const counting = results.filter(({ withdrawn }) => !withdrawn);
       return [
         {
           ...player,
           id: entered.id.value,
           withdrawn: entered.withdrawn,
           gamesPlayed:
-            results.length + carried("gameWins") + carried("gameLosses"),
+            counting.length + carried("gameWins") + carried("gameLosses"),
           gamesWon:
-            results.filter(({ result }) => result === "won").length +
+            counting.filter(({ result }) => result === "won").length +
             carried("gameWins"),
           netHoops:
-            results.reduce((net, { margin }) => net + margin, 0) +
+            counting.reduce((net, { margin }) => net + margin, 0) +
             carried("hoopsFor") -
             carried("hoopsAgainst"),
           results,
@@ -147,6 +150,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
         loser: named.get(game.loser.value) ?? nameless,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
+        withdrawn: game.withdrawn,
         addedAt: game.addedAt,
       })),
     };

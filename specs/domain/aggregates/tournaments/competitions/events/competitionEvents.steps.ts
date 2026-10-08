@@ -8,6 +8,8 @@ import { CompetitionGameAdded } from "../../../../../../src/domain/aggregates/to
 import { CompetitionGameArchived } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameCorrected.js";
 import { CompetitionGameRestored } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
+import { CompetitionGameWithdrawalReversed } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawalReversed.js";
+import { CompetitionGameWithdrawn } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionGameWithdrawn.js";
 import { CompetitionPlayerCarryForwardChanged } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerCarryForwardChanged.js";
 import { CompetitionPlayerEntered } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerEntered.js";
 import { CompetitionPlayerMoved } from "../../../../../../src/domain/aggregates/tournaments/competitions/events/CompetitionPlayerMoved.js";
@@ -105,6 +107,10 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
     new CompetitionGameArchived(GAME, causedBy, happenedAt),
   "a game being restored": () =>
     new CompetitionGameRestored(GAME, causedBy, happenedAt),
+  "a game being withdrawn": () =>
+    new CompetitionGameWithdrawn(GAME, causedBy, happenedAt),
+  "a game's withdrawal being reversed": () =>
+    new CompetitionGameWithdrawalReversed(GAME, causedBy, happenedAt),
   // Keeping its players, so saying none.
   "a game being corrected": () =>
     new CompetitionGameCorrected(

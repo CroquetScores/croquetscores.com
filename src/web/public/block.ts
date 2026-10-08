@@ -46,7 +46,8 @@ const totalsOf = (
 
 // One score, the row player's, in a game against the column player, marked
 // for the row player by more than its colour: a word for whatever reads the
-// page aloud, and a weight or a slant for whoever sees it.
+// page aloud, and a weight or a slant for whoever sees it. A withdrawn game
+// is struck through, and said to be withdrawn, since it counts for nothing.
 const scoreIn = (
   game: GameOfBlock,
   player: string,
@@ -55,7 +56,12 @@ const scoreIn = (
   const won = game.winner === player;
   const result = game.drawn ? "drawn" : won ? "won" : "lost";
   const score = won ? game.winnerScore : game.loserScore;
-  return `<span class="block-grid-score block-grid-${result}"><span class="block-grid-points">${escape(score)}</span> <span class="visually-hidden">${escape(speaking.say(`block.${result}`))}</span></span>`;
+  const said = [
+    speaking.say(`block.${result}`),
+    ...(game.withdrawn ? [speaking.say("block.gameWithdrawn")] : []),
+  ].join(", ");
+  const withdrawn = game.withdrawn ? " data-withdrawn" : "";
+  return `<span class="block-grid-score block-grid-${result}"${withdrawn}><span class="block-grid-points">${escape(score)}</span> <span class="visually-hidden">${escape(said)}</span></span>`;
 };
 
 const grid = (

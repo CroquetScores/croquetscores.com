@@ -21,6 +21,8 @@ import { CompetitionGameArchived } from "./events/CompetitionGameArchived.js";
 import { CompetitionGameCorrected } from "./events/CompetitionGameCorrected.js";
 import { CompetitionGameMoved } from "./events/CompetitionGameMoved.js";
 import { CompetitionGameRestored } from "./events/CompetitionGameRestored.js";
+import { CompetitionGameWithdrawalReversed } from "./events/CompetitionGameWithdrawalReversed.js";
+import { CompetitionGameWithdrawn } from "./events/CompetitionGameWithdrawn.js";
 import {
   Game,
   type GameDetails,
@@ -58,6 +60,7 @@ export type CompetitionErrorCode =
   | "Competition.MatchDecided"
   | "Competition.NotDrawnToMeet"
   | "Competition.WinnerHasPlayedOn"
+  | "Competition.NotABlockOrSwiss"
   | "Competition.DrawFixed"
   | "Competition.DrawFull"
   | "Competition.DrawNotFilled"
@@ -85,6 +88,10 @@ export interface Told {
   readonly drawsAllowed: boolean;
   readonly teamPlayers?: readonly TeamPlayerInTest[] | undefined;
 }
+
+// Whether the competition is one whose games count only towards standings.
+const isBlockOrSwiss = (told: Told): boolean =>
+  told.shape.kind === "block" || told.shape.kind === "swiss";
 
 // Whether the player `id` won or lost `game`.
 const isIn = (game: Game, id: GamePlayerId): boolean =>
@@ -175,10 +182,10 @@ export class Competition extends AggregateRoot {
   /**
    * Whether the player `id` won or lost any game in use. Only those count: an
    * archived game counts for nothing, so it keeps nobody in the competition
-   * or the tournament.
+   * or the tournament. A withdrawn one was played, so it does.
    */
   hasGamesInUse(id: CompetitionPlayerId): boolean {
-    return this.#counting().some((game) => isIn(game, id));
+    return this.games.some((game) => !game.archived && isIn(game, id));
   }
 
   /**
@@ -591,9 +598,67 @@ export class Competition extends AggregateRoot {
   restoreGame(id: GameId, told: Told, by: AccountId, at: ReadOnlyDate): void {
     const game = this.#gameFound(id);
     if (!game.archived) return;
+    // A withdrawn game comes back withdrawn, counting for nothing, so it
+    // asks nothing of its players or its match.
+    if (!game.withdrawn) {
+      this.#ensureBothPlaying(game.winner, game.loser, told);
+      this.#ensureItCounts(game, told);
+    }
+    this.record(new CompetitionGameRestored(id.value, by, at));
+  }
+
+  /**
+   * That the block's or the Swiss's game `id` was played, but no longer
+   * counts. Any other competition's game is refused, since there it decides
+   * more than the standings. An archived game is refused as the game refuses
+   * changing it. Withdrawing one that is withdrawn records nothing.
+   */
+  withdrawGame(id: GameId, told: Told, by: AccountId, at: ReadOnlyDate): void {
+    const game = this.#withdrawable(id, told);
+    if (game.withdrawn) return;
+    this.record(new CompetitionGameWithdrawn(id.value, by, at));
+  }
+
+  /**
+   * That the withdrawn game `id` counts again, where it could be added now:
+   * refused as adding it would be, as restoring an archived game is.
+   * Reversing the withdrawal of one not withdrawn records nothing.
+   */
+  reverseGameWithdrawal(
+    id: GameId,
+    told: Told,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    const game = this.#withdrawable(id, told);
+    if (!game.withdrawn) return;
     this.#ensureBothPlaying(game.winner, game.loser, told);
     this.#ensureItCounts(game, told);
-    this.record(new CompetitionGameRestored(id.value, by, at));
+    this.record(new CompetitionGameWithdrawalReversed(id.value, by, at));
+  }
+
+  /**
+   * Whether the game `id` could be withdrawn now, as withdrawing it would
+   * say: for a list offering to withdraw a game only where it would be done.
+   */
+  canBeWithdrawn(id: GameId, told: Told): boolean {
+    const game = this.#gameFound(id);
+    return isBlockOrSwiss(told) && !game.archived && !game.withdrawn;
+  }
+
+  // The game `id`, where it is a block's or a Swiss's and not archived.
+  #withdrawable(id: GameId, told: Told): Game {
+    const game = this.#gameFound(id);
+    if (!isBlockOrSwiss(told)) {
+      refuse(
+        "Competition.NotABlockOrSwiss",
+        "Only a block's or a Swiss's games are withdrawn.",
+      );
+    }
+    if (game.archived) {
+      throw new ValidationError<GameErrorCode>("Game.Archived");
+    }
+    return game;
   }
 
   /**
@@ -641,7 +706,8 @@ export class Competition extends AggregateRoot {
         );
       }
       this.#ensureBothPlaying(winner, loser, told);
-      this.#ensureItCounts(corrected, told, game);
+      // A withdrawn game counts for nothing, so it decides no match.
+      if (!corrected.withdrawn) this.#ensureItCounts(corrected, told, game);
     }
     const same = (one: Score, other: Score): boolean =>
       String(one) === String(other) && one.marked === other.marked;
@@ -746,6 +812,10 @@ export class Competition extends AggregateRoot {
       if (other !== undefined) this.#swap(event.gameId, other);
     } else if (event instanceof CompetitionGameRestored) {
       this.#changeGame(event.gameId, (game) => game.restore());
+    } else if (event instanceof CompetitionGameWithdrawn) {
+      this.#changeGame(event.gameId, (game) => game.withdraw());
+    } else if (event instanceof CompetitionGameWithdrawalReversed) {
+      this.#changeGame(event.gameId, (game) => game.reverseWithdrawal());
     } else if (event instanceof CompetitionGameCorrected) {
       // Asked of the game when it was recorded, as a game added is. One
       // that says no players kept its own.
@@ -921,9 +991,10 @@ export class Competition extends AggregateRoot {
     }
   }
 
-  // The games that count: those not archived, in the order they were added.
+  // The games that count: those neither archived nor withdrawn, in the order
+  // they were added.
   #counting(): Game[] {
-    return this.games.filter((game) => !game.archived);
+    return this.games.filter((game) => !game.archived && !game.withdrawn);
   }
 
   #knockoutPlay(draw: Parameters<typeof knockoutPlay>[0]): readonly Match[] {

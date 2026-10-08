@@ -39,9 +39,17 @@ const marginOf = (margin: number): string =>
 
 // A result, said as the old site said it, with the opponent's whole name for
 // whatever reads the page aloud, and marked won, lost or drawn by its class
-// as well as by the sign of its margin.
-const resultShown = ({ opponent, result, margin }: ResultOfSwiss): string =>
-  `<span class="swiss-result swiss-${result}"><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(marginOf(margin))}</span></span>`;
+// as well as by the sign of its margin. A withdrawn game is struck through,
+// and said to be withdrawn, since it counts for nothing.
+const resultShown =
+  (speaking: Speaking) =>
+  ({ opponent, result, margin, withdrawn }: ResultOfSwiss): string => {
+    const marked = withdrawn ? " data-withdrawn" : "";
+    const said = withdrawn
+      ? ` <span class="swiss-result-withdrawn visually-hidden">${escape(speaking.say("block.gameWithdrawn"))}</span>`
+      : "";
+    return `<span class="swiss-result swiss-${result}"${marked}><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(marginOf(margin))}</span>${said}</span>`;
+  };
 
 // The share of the games they have played that a player has won, to one
 // decimal place, as "66.7%", or nothing where they have played none.
@@ -81,7 +89,7 @@ export const swissTable = (
         ? ` <span class="swiss-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
       const results = withResults
-        ? `\n                <td class="swiss-results">${player.results.map(resultShown).join(", ")}</td>`
+        ? `\n                <td class="swiss-results">${player.results.map(resultShown(speaking)).join(", ")}</td>`
         : "";
       return `              <tr>
                 <th scope="row" class="swiss-player">${playerShown(player, "player", speaking, assets, `/${player.address}`)}${withdrawn}</th>

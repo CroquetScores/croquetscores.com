@@ -18,6 +18,9 @@ Feature: A competition's order of play lists its games, oldest first
   tournament's page says it. The competition each game was played in is not
   shown, since every game here was played in the competition, so how long ago
   takes its place, beside the winner, where a reader's eye starts on a game.
+  A withdrawn game was played, so it is listed, but it counts for nothing
+  (`withdrawGame.feature`), so it is struck through and said to be
+  withdrawn, as the grid shows it.
 
   Like the grid, it is headed by the competition's name, offers the three
   views with Order of Play marked as the one being read, and its sections are
@@ -87,6 +90,38 @@ Feature: A competition's order of play lists its games, oldest first
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
       Then the page does not say there are no games
+
+  Rule: A withdrawn game is listed, struck through
+
+    Scenario: A withdrawn game is listed
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is of "Sam Someone" beating "Alex Another"
+
+    Scenario: A withdrawn game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is marked as withdrawn
+
+    Scenario: A game not withdrawn is not marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is not marked as withdrawn
+
+    Scenario: A withdrawn game is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is struck through
+
+    Scenario: A withdrawn game is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
 
   Rule: A game is the winner on one line and the loser on the next, as on the tournament's page
 
@@ -259,6 +294,12 @@ Feature: A competition's order of play lists its games, oldest first
       And the server's clock reads "2026-10-03T10:12:00Z"
       When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
       Then the first line of the first game is beside "12 min"
+
+    Scenario: A Swiss's withdrawn game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
+      Then the first game is marked as withdrawn
 
     Scenario: A Swiss is marked as the section being read
       When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened

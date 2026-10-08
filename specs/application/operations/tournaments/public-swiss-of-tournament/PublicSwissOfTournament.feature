@@ -176,6 +176,47 @@ Feature: A Swiss of a tournament, for anybody to read
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the Swiss "Sam Someone" is answered with 0 games played
 
+  Rule: A withdrawn game is among a player's results, and counts for nothing
+
+    A withdrawn game was played, so it is among the results of each of its
+    players, and among the games, said to be withdrawn, but it counts for
+    nothing (`withdrawGame.feature`).
+
+    Scenario: A withdrawn game is a result withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first result of the player of the Swiss "Sam Someone" was withdrawn
+
+    Scenario: A game not withdrawn is a result not withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first result of the player of the Swiss "Sam Someone" was not withdrawn
+
+    Scenario: A withdrawn game is not a game played
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Alex Another" is answered with 0 games played
+
+    Scenario: A withdrawn game is not a game won
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with 0 games won
+
+    Scenario: A withdrawn game counts for nothing in net hoops
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with net hoops of 0
+
+    Scenario: A withdrawn game is answered among the games as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the Swiss answered was withdrawn
+
   Rule: A player is answered with their results, in the order the games were added
 
     Scenario: A result names the opponent

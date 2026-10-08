@@ -87,6 +87,8 @@ export class GamesOfCompetitionHandler extends QueryHandler<
       loserScore: String(game.loserScore),
       archived: game.archived,
       archivable: competition.canBeArchived(game.id, told),
+      withdrawn: game.withdrawn,
+      withdrawable: competition.canBeWithdrawn(game.id, told),
       winnerTeam: teams.get(game.winner.value),
       loserTeam: teams.get(game.loser.value),
     }));

@@ -31,6 +31,7 @@ import { MoveGame } from "../../../application/operations/competitions/MoveGame.
 import { PlayersOfCompetition } from "../../../application/operations/competitions/PlayersOfCompetition.js";
 import { RemovePlayer } from "../../../application/operations/competitions/RemovePlayer.js";
 import { RestoreGame } from "../../../application/operations/competitions/RestoreGame.js";
+import { ReverseGameWithdrawal } from "../../../application/operations/competitions/ReverseGameWithdrawal.js";
 import { ReverseWithdrawal } from "../../../application/operations/competitions/ReverseWithdrawal.js";
 import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
@@ -53,6 +54,7 @@ import { MoveTeam } from "../../../application/operations/tournaments/MoveTeam.j
 import { MoveTeamPlayer } from "../../../application/operations/tournaments/MoveTeamPlayer.js";
 import { PlayersOfTeam } from "../../../application/operations/tournaments/PlayersOfTeam.js";
 import { PlayersOfTest } from "../../../application/operations/competitions/PlayersOfTest.js";
+import { WithdrawGame } from "../../../application/operations/competitions/WithdrawGame.js";
 import { RestoreTeam } from "../../../application/operations/tournaments/RestoreTeam.js";
 import { RestoreTeamPlayer } from "../../../application/operations/tournaments/RestoreTeamPlayer.js";
 import { TeamPage } from "../../../application/operations/tournaments/TeamPage.js";
@@ -793,8 +795,18 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     );
   }
 
-  // A game's score archived or restored, by the part of its id after "game/".
-  for (const action of ["archive", "restore"] as const) {
+  // A game's score archived or restored, withdrawn or its withdrawal
+  // reversed, by the part of its id after "game/". Unwithdraw, as a player's
+  // withdrawal is reversed.
+  const gameActions = {
+    archive: ArchiveGame,
+    restore: RestoreGame,
+    withdraw: WithdrawGame,
+    unwithdraw: ReverseGameWithdrawal,
+  } as const;
+  for (const action of Object.keys(
+    gameActions,
+  ) as (keyof typeof gameActions)[]) {
     server.post<{ Params: { id: string; competition: string; game: string } }>(
       `/tournaments/:id/competitions/:competition/games/:game/${action}`,
       async (request, reply) => {
@@ -807,11 +819,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
           `game/${request.params.game}`,
           request.requestedAt,
         ] as const;
-        await request.server.mediator.send(
-          action === "archive"
-            ? new ArchiveGame(...asked)
-            : new RestoreGame(...asked),
-        );
+        await request.server.mediator.send(new gameActions[action](...asked));
         return reply.code(204).header("cache-control", "no-store").send();
       },
     );
