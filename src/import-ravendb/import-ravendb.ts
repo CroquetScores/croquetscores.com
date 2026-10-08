@@ -83,6 +83,10 @@ const ROLE_HOLDERS: RoleHolders = {
   ],
 };
 
+// The old site every role holder was a user of, whose users are imported
+// before the roles are given.
+const ROLE_HOLDERS_SITE = "croquetscores.com";
+
 // What the import says of the world ranking players as it imports them. In
 // English, as the rest of what it says is: it is read by whoever runs it, not
 // by a reader of the site.
@@ -224,6 +228,26 @@ try {
     parts.commentaries,
   ].map(({ collection }) => new RefuseLeftOvers(collection, database));
 
+  // The site's roles, given as soon as their holders' accounts are brought
+  // over, rather than once everything is, so that an import that stops partway
+  // through the tournaments still leaves the site an administrator, without
+  // whom nobody can give a role on the site. Every holder was a user of
+  // croquetscores.com, so they are given once its users are imported, before
+  // its tournaments.
+  let withNoAccount: readonly string[] | undefined;
+  const giveRoles = async (): Promise<void> => {
+    console.log("Giving the site's roles");
+    withNoAccount = await new GiveRoles(unitOfWork, accounts, database).give(
+      ROLE_HOLDERS,
+      ReadOnlyDate.from(new Date()),
+    );
+    for (const address of withNoAccount) {
+      console.error(
+        `No user was brought over as ${address}, who holds a role.`,
+      );
+    }
+  };
+
   for (const website of config.ravenDbDatabases) {
     const documents = new RavenDbDocuments(config.ravenDbUrl, website);
     // Users before the tournaments that name them, and what no tournament
@@ -237,22 +261,22 @@ try {
       for (const importer of importers) {
         console.log(`${website} ${importer.collection}`);
         await runImporter(documents, database, importer);
+        if (importer === users && website === ROLE_HOLDERS_SITE) {
+          await giveRoles();
+        }
       }
     } finally {
       documents.dispose();
     }
   }
 
-  // After every website, since a user of either old site may hold one, and
-  // one of both is one account.
-  console.log("Giving the site's roles");
-  const withNoAccount = await new GiveRoles(
-    unitOfWork,
-    accounts,
-    database,
-  ).give(ROLE_HOLDERS, ReadOnlyDate.from(new Date()));
-  for (const address of withNoAccount) {
-    console.error(`No user was brought over as ${address}, who holds a role.`);
+  // An import not of croquetscores.com gives no role, which is said and
+  // counted rather than left for an empty list of administrators to show.
+  const rolesNotGiven = withNoAccount === undefined ? 1 : 0;
+  if (withNoAccount === undefined) {
+    console.error(
+      `The site's roles were not given, since ${ROLE_HOLDERS_SITE} was not imported.`,
+    );
   }
 
   // Last, since nothing brought over names them, and the rankings' site is
@@ -285,11 +309,14 @@ try {
   }
   // Counted from what was kept rather than added up from each collection's
   // reading, since a tournament keeps the errors of what names it itself
-  // (ImportDatabase.feature). A role holder with no account, and a world
-  // ranking list that was not read or a failure importing them, are said
-  // above and kept nowhere, so are added.
+  // (ImportDatabase.feature). A role holder with no account, roles not given
+  // at all, and a world ranking list that was not read or a failure importing
+  // them, are said above and kept nowhere, so are added.
   const errors =
-    (await database.errorCount()) + withNoAccount.length + worldRankingErrors;
+    (await database.errorCount()) +
+    (withNoAccount?.length ?? 0) +
+    rolesNotGiven +
+    worldRankingErrors;
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
