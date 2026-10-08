@@ -819,6 +819,18 @@ Then(
   },
 );
 
+// A competition's Players tab adds the player chosen in its drop-down with a
+// button of its own rather than a form's, and sends nothing when nobody is
+// chosen, as the tab does. Waited on like a form's, since a step that opened
+// the page again before the add was answered would find nobody added: a
+// scenario lost that race under the whole suite, and not on its own.
+const addsWhatIsChosen = async (
+  page: SpecWorld["browserPage"],
+  pressing: Locator,
+): Promise<boolean> =>
+  (await pressing.and(page.locator(".listed-adding button")).count()) === 1 &&
+  (await page.locator(".listed-adding .listed-choice").inputValue()) !== "";
+
 // Pressed, and waited on until what it does is done: a link followed, or a
 // form's answer come back and acted on, so that the next step reads what
 // pressing it did rather than the page as it was before.
@@ -856,7 +868,7 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
           'form.tab-form button[type="submit"], dialog[open] form button[type="submit"]',
         ),
       )
-      .count()) === 1;
+      .count()) === 1 || (await addsWhatIsChosen(page, pressing));
   const sentFromATab = sendsATabsForm
     ? page.waitForResponse(
         (response) =>
