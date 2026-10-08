@@ -575,6 +575,21 @@ export const spanish: Language = {
       "Abrir este test para ver e introducir sus resultados",
     "admin.hover.teams.view":
       "Abrir este equipo para ver y gestionar sus jugadores",
+    "admin.hover.dialog.player.add": "Añadir a este jugador al torneo",
+    "admin.hover.dialog.player.save": "Guardar los cambios de este jugador",
+    "admin.hover.dialog.team.add": "Añadir este equipo al torneo",
+    "admin.hover.dialog.team.save": "Guardar los cambios de este equipo",
+    "admin.hover.dialog.test.add": "Añadir este test al torneo",
+    "admin.hover.dialog.test.save": "Guardar los cambios de este test",
+    "admin.hover.dialog.competition.add": "Añadir esta competición al torneo",
+    "admin.hover.dialog.competition.save":
+      "Guardar los cambios de esta competición",
+    "admin.hover.dialog.score.add": "Añadir este resultado a la competición",
+    "admin.hover.dialog.score.save": "Guardar la corrección de este resultado",
+    "admin.hover.dialog.carryForward.save":
+      "Trasladar los resultados de este jugador",
+    "admin.hover.dialog.tournament.new": "Crear este torneo",
+    "admin.hover.dialog.tournament.edit": "Guardar los cambios de este torneo",
     "admin.hover.modal.cancel": "Cerrar esto sin guardar nada",
     "admin.hover.modal.ok": "Cerrar este mensaje",
     "admin.hover.tab": "Mostrar la pestaña {name}",

@@ -298,6 +298,7 @@ export const People = ({
         <ModalDialog
           title={say(words.removeTitle)}
           action={say("admin.people.remove")}
+          hover={say("admin.hover.people.remove")}
           act={() => void remove(removing)}
           cancel={() => {
             setRemoving(undefined);

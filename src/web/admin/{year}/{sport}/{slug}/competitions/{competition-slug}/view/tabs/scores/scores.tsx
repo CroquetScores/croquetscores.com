@@ -419,6 +419,7 @@ export const ScoresTab = ({
         <ModalDialog
           title={say("admin.scores.drawNotFilledTitle")}
           action={say("admin.modal.ok")}
+          hover={say("admin.hover.modal.ok")}
           act={() => {
             setUnfilled(false);
           }}

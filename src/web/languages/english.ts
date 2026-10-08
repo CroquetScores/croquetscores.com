@@ -637,6 +637,22 @@ export const english: Language = {
       "Open this competition to see and enter its players and scores",
     "admin.hover.tests.view": "Open this test to see and enter its scores",
     "admin.hover.teams.view": "Open this team to see and manage its players",
+    "admin.hover.dialog.player.add": "Add this player to the tournament",
+    "admin.hover.dialog.player.save": "Keep the changes to this player",
+    "admin.hover.dialog.team.add": "Add this team to the tournament",
+    "admin.hover.dialog.team.save": "Keep the changes to this team",
+    "admin.hover.dialog.test.add": "Add this test to the tournament",
+    "admin.hover.dialog.test.save": "Keep the changes to this test",
+    "admin.hover.dialog.competition.add":
+      "Add this competition to the tournament",
+    "admin.hover.dialog.competition.save":
+      "Keep the changes to this competition",
+    "admin.hover.dialog.score.add": "Add this score to the competition",
+    "admin.hover.dialog.score.save": "Keep the correction to this score",
+    "admin.hover.dialog.carryForward.save":
+      "Carry this player's results forward",
+    "admin.hover.dialog.tournament.new": "Create this tournament",
+    "admin.hover.dialog.tournament.edit": "Keep the changes to this tournament",
     "admin.hover.modal.cancel": "Close this without keeping anything",
     "admin.hover.modal.ok": "Close this message",
     "admin.hover.tab": "Show the {name} tab",

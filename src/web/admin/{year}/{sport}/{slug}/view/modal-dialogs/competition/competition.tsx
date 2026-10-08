@@ -225,6 +225,11 @@ export const CompetitionDialog = ({
           ? "admin.competition.add"
           : "admin.competition.save",
       )}
+      hover={
+        competition === undefined
+          ? say("admin.hover.dialog.competition.add")
+          : say("admin.hover.dialog.competition.save")
+      }
       act={() => void send()}
       cancel={close}
       busy={sending}

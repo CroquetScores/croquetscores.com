@@ -5,6 +5,13 @@
 
 const arrows = { up: "↑", down: "↓" } as const;
 
+const faceOf = (action: string, words: string): React.JSX.Element | string =>
+  action === "up" || action === "down" ? (
+    <span aria-hidden="true">{arrows[action]}</span>
+  ) : (
+    words
+  );
+
 /**
  * What the button for `action` shows, given the `words` it is named by and
  * what it says when pointed at, in `hover`.
@@ -38,6 +45,6 @@ export const optionFace = (
  */
 export const noOption = (action: string, words: string): React.JSX.Element => (
   <span key={`no-${action}`} className="button option-space" aria-hidden="true">
-    {optionFace(action, words, "").children}
+    {faceOf(action, words)}
   </span>
 );

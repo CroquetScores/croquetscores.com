@@ -18,6 +18,8 @@ interface Props {
   readonly children: ReactNode;
   /** The words on the button that does what the dialog is for. */
   readonly action: string;
+  /** What the button that does that says, when it is pointed at. */
+  readonly hover: string;
   readonly act: () => void;
   /** Closing it by Cancel or Escape, which keeps nothing. */
   readonly cancel: () => void;
@@ -31,6 +33,7 @@ export const ModalDialog = ({
   title,
   children,
   action,
+  hover,
   act,
   cancel,
   busy,
@@ -108,7 +111,7 @@ export const ModalDialog = ({
             <button
               className="button button-submit"
               type="button"
-              title={say("admin.hover.modal.ok")}
+              title={hover}
               onClick={act}
             >
               {action}
@@ -117,7 +120,7 @@ export const ModalDialog = ({
             <button
               className="button button-submit"
               type="submit"
-              title={title}
+              title={hover}
             >
               {action}
             </button>

@@ -234,6 +234,11 @@ export const PlayerDialog = ({
         action={say(
           player === undefined ? "admin.player.add" : "admin.player.save",
         )}
+        hover={
+          player === undefined
+            ? say("admin.hover.dialog.player.add")
+            : say("admin.hover.dialog.player.save")
+        }
         act={() => void send()}
         cancel={close}
         busy={sending}
@@ -370,6 +375,7 @@ export const PlayerDialog = ({
         <ModalDialog
           title={say("admin.player.byesTitle")}
           action={say("admin.modal.ok")}
+          hover={say("admin.hover.modal.ok")}
           act={explained}
           cancel={explained}
           alone

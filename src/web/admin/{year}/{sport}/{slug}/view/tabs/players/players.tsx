@@ -262,6 +262,7 @@ export const PlayersTab = ({
         <ModalDialog
           title={say("admin.players.archiveTitle")}
           action={say("admin.players.archive")}
+          hover={say("admin.hover.players.archive")}
           act={() => {
             const player = archiving;
             setArchiving(undefined);

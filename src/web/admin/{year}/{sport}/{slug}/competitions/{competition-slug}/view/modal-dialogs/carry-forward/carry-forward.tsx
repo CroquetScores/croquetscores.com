@@ -137,6 +137,7 @@ export const CarryForwardDialog = ({
     <ModalDialog
       title={say("admin.carryForward.title", { name: player.name })}
       action={say("admin.carryForward.save")}
+      hover={say("admin.hover.dialog.carryForward.save")}
       act={() => void send()}
       cancel={close}
       busy={sending}

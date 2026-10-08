@@ -176,6 +176,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
         <ModalDialog
           title={say("admin.notes.deleteTitle")}
           action={say("admin.notes.delete")}
+          hover={say("admin.hover.notes.delete")}
           act={() => {
             const note = deleting;
             setDeleting(undefined);

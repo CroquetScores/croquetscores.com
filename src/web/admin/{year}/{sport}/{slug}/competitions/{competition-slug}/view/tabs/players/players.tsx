@@ -406,6 +406,7 @@ export const CompetitionPlayersTab = ({
         <ModalDialog
           title={say(`admin.competitionPlayers.${confirming.action}Title`)}
           action={say(`admin.competitionPlayers.${confirming.action}`)}
+          hover={say(`admin.hover.competitionPlayers.${confirming.action}`)}
           act={() => {
             const { player, action } = confirming;
             setConfirming(undefined);
