@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Field, type Refusal } from "../../../../../Field.js";
-import { ModalDialog } from "../../../../../ModalDialog.js";
-import { knows, say } from "../../../../../words.js";
+import { Field, type Refusal } from "./Field.js";
+import { ModalDialog } from "./ModalDialog.js";
+import { knows, say } from "./words.js";
 import { noOption } from "./optionFace.js";
-import { idInAddress, refusalOf } from "../../../../../api.js";
+import { idInAddress, refusalOf } from "./api.js";
 import "./listed.css";
 import "./people.css";
 

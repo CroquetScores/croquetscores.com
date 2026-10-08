@@ -1,5 +1,5 @@
 import { say } from "../../../../../../words.js";
-import { People } from "../people.js";
+import { People } from "../../../../../../people.js";
 import { idInAddress } from "../../../../../../api.js";
 
 // The Scorers tab (scorers-tab.feature): the Managers tab for scorers, but

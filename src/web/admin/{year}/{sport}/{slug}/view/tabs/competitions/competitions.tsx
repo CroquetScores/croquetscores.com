@@ -5,9 +5,9 @@ import {
   CompetitionDialog,
   type CompetitionAsItIs,
 } from "../../modal-dialogs/competition/competition.js";
-import { noOption, optionFace } from "../optionFace.js";
+import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
-import "../listed.css";
+import "../../../../../../listed.css";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
 // the tournament's order, each offering Edit, View, Archive, Up and Down, and

@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
-import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
+import { noOption, optionFace } from "../../../../../../../../optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
 import { idInAddress, refusalOf } from "../../../../../../../../api.js";
-import "../../../../../view/tabs/listed.css";
+import "../../../../../../../../listed.css";
 import "./scores.css";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games

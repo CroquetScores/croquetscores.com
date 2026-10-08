@@ -1,6 +1,6 @@
 import { go } from "../../../../../../navigation.js";
 import { say } from "../../../../../../words.js";
-import { People } from "../people.js";
+import { People } from "../../../../../../people.js";
 import { idInAddress } from "../../../../../../api.js";
 
 // The Managers tab (managers-tab.feature). A tournament always has a manager,

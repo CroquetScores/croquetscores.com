@@ -1,8 +1,5 @@
 import { say } from "../../words.js";
-import {
-  People,
-  type Person,
-} from "../../{year}/{sport}/{slug}/view/tabs/people.js";
+import { People, type Person } from "../../people.js";
 
 // The accounts page (accounts.feature): a section for each role, each listing
 // the accounts holding it with Remove beside each, and beneath the list a

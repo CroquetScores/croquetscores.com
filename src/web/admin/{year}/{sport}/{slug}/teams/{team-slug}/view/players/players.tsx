@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { say } from "../../../../../../../words.js";
-import { noOption, optionFace } from "../../../../view/tabs/optionFace.js";
+import { noOption, optionFace } from "../../../../../../../optionFace.js";
 import {
   TeamPlayerDialog,
   type TeamPlayerAsTheyAre,
 } from "../modal-dialogs/team-player/team-player.js";
 import { idInAddress } from "../../../../../../../api.js";
-import "../../../../view/tabs/listed.css";
+import "../../../../../../../listed.css";
 
 // A team's players (team-players.feature), which are its page: those in use in
 // the team's order, each by their name alone, offering Edit, Archive, Up and
