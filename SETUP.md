@@ -8,24 +8,24 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 
 ## 1. Requirements, and the decisions they force
 
-| Requirement                                       | Decision                                                                                        |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| TypeScript                                        | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                          |
-| Postgres in Docker                                | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI                |
-| Auth: email address + password                    | argon2id hashing, opaque session cookie for browsers                                            |
-| Auth: Google and Facebook                         | Google over OIDC, Facebook over OAuth 2.0 + Graph                                               |
-| Auth: an API for mobile apps                      | Bearer JWT access token + rotating refresh token, same endpoints as the web API                 |
-| Web: an API                                       | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                             |
-| Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                             |
-| Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                             |
-| Gherkin                                           | Cucumber.js, the only test runner                                                               |
+| Requirement                                       | Decision                                                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| TypeScript                                        | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                                     |
+| Postgres in Docker                                | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI                           |
+| Auth: email address + password                    | argon2id hashing, opaque session cookie for browsers                                                       |
+| Auth: Google and Facebook                         | Google over OIDC, Facebook over OAuth 2.0 + Graph                                                          |
+| Auth: an API for mobile apps                      | Bearer JWT access token + rotating refresh token, same endpoints as the web API                            |
+| Web: an API                                       | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                                        |
+| Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                                        |
+| Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                                        |
+| Gherkin                                           | Cucumber.js, the only test runner                                                                          |
 | CI via GitHub                                     | Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database |
-| Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape         |
-| Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                      |
-| `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                 |
-| No `/tests` folder                                | Stated as a rule below so nobody adds one back                                                  |
-| No ambient clock                                  | Every command carries `requestedAt`; the domain is told the time, never asks for it             |
-| A real browser for what only a browser can answer | Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one |
+| Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape                    |
+| Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                                 |
+| `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                            |
+| No `/tests` folder                                | Stated as a rule below so nobody adds one back                                                             |
+| No ambient clock                                  | Every command carries `requestedAt`; the domain is told the time, never asks for it                        |
+| A real browser for what only a browser can answer | Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one            |
 
 **Two decisions confirmed, and recorded here so they are not reopened by accident:**
 
