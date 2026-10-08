@@ -10,7 +10,11 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { EmailAddressHasher } from "../../services/EmailAddressHasher.js";
-import type { AccountsByAddress } from "./RegisterAccountHandler.js";
+import type {
+  FindsAccountByAddress,
+  HoldsAccount,
+  ReservesAddress,
+} from "./accountsByAddress.js";
 import { SignInWithGoogle } from "./SignInWithGoogle.js";
 
 /** Every way signing in with Google is refused. */
@@ -28,16 +32,8 @@ const isLinkedToAnother = (failure: unknown): boolean =>
   failure.code === "Account.GoogleAccountAlreadyLinked";
 
 /** What signing in with Google asks of where accounts are found by address. */
-export interface AccountsByAddressForGoogle extends AccountsByAddress {
-  find(address: EmailAddress): Promise<AccountId | undefined>;
-
-  /**
-   * Holds `account` until the request is done, as reserving its address does,
-   * so that two requests for it take turns rather than both changing it from
-   * where it stood before either began.
-   */
-  hold(account: AccountId): Promise<void>;
-}
+export interface AccountsByAddressForGoogle
+  extends ReservesAddress, FindsAccountByAddress, HoldsAccount {}
 
 /** What signing in with Google asks of where accounts are found by Google. */
 export interface AccountsByGoogleAccount {

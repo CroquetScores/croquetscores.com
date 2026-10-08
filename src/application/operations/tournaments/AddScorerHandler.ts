@@ -11,10 +11,8 @@ import {
   tournamentFor,
 } from "./tournamentOperations.js";
 import { AddScorer } from "./AddScorer.js";
-import {
-  type AccountsByAddress,
-  accountThatCanBeGiven,
-} from "../accounts/accountsThatCanBeGiven.js";
+import { accountThatCanBeGiven } from "../accounts/accountsThatCanBeGiven.js";
+import type { FindsAccountByAddress } from "../accounts/accountsByAddress.js";
 
 /**
  * Making somebody a scorer of a tournament, named by their email address,
@@ -26,7 +24,7 @@ export class AddScorerHandler extends CommandHandler<AddScorer, void> {
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly accountsByAddress: AccountsByAddress,
+    private readonly accountsByAddress: FindsAccountByAddress,
   ) {
     super();
   }

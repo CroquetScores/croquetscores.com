@@ -10,13 +10,9 @@ import type { EmailQueue } from "../../services/EmailQueue.js";
 import type { EmailsWritten, WrittenTo } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { LinkPurpose, Links } from "../../services/Links.js";
+import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import { ResetPassword } from "./ResetPassword.js";
 import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
-
-/** What asking needs of where accounts are found by their address. */
-export interface AccountsByAddressForAsking {
-  find(address: EmailAddress): Promise<AccountId | undefined>;
-}
 
 // What each kind of email carries, said here once rather than worked out from
 // its name where it is queued, so that the next kind added has to say.
@@ -62,7 +58,7 @@ export class ResetPasswordHandler extends CommandHandler<ResetPassword, void> {
 
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly byAddress: AccountsByAddressForAsking,
+    private readonly byAddress: FindsAccountByAddress,
     private readonly addresses: EmailAddressHasher,
     private readonly queue: EmailQueue,
     private readonly written: EmailsWritten,

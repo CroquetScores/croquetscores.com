@@ -10,6 +10,7 @@ import type { EmailQueue } from "../../services/EmailQueue.js";
 import type { EmailsWritten, WrittenTo } from "../../services/EmailsWritten.js";
 import type { Links } from "../../services/Links.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
+import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import { AskToChangeEmailAddress } from "./AskToChangeEmailAddress.js";
 import { ChangeEmailAddressRefused } from "./ChangeEmailAddressRefused.js";
 import { MOVING_LINK_WORKS_FOR_MILLISECONDS } from "./movingLinks.js";
@@ -18,11 +19,6 @@ import { MOVING_LINK_WORKS_FOR_MILLISECONDS } from "./movingLinks.js";
 const EMAILS_AN_HOUR = 3;
 
 const AN_HOUR = 60 * 60 * 1000;
-
-/** What moving to another address asks of where accounts are found by address. */
-export interface AccountsByAddressForMoving {
-  find(address: EmailAddress): Promise<AccountId | undefined>;
-}
 
 /**
  * Asking to move the account the reader is signed in to, to another address.
@@ -54,7 +50,7 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
 
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly byAddress: AccountsByAddressForMoving,
+    private readonly byAddress: FindsAccountByAddress,
     private readonly addresses: EmailAddressHasher,
     private readonly passwords: PasswordHasher,
     private readonly queue: EmailQueue,
