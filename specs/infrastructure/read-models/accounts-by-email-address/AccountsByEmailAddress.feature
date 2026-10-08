@@ -45,6 +45,15 @@ Feature: Finding an account by its email address
   is, only the scenarios rebuild; the application neither offers rebuilding nor
   needs it, since a read model is never behind.
 
+  It holds whether each account is confirmed as well, for whatever gives an
+  account something by its address: a role, or a part in a tournament as a
+  manager or a scorer. Each may give only an account that is confirmed and
+  not forgotten, and asking the table that is one query, where loading the
+  account would replay every event it has, a sign-in among them for every
+  time its owner signed in. An account is confirmed when its address is, or
+  when it came over from the old site, where every account was, and is never
+  unconfirmed afterwards.
+
   The projection is safe to run twice, as rebuilding the read model does:
   projecting an account's registering again changes nothing, and projecting
   it again after its forgetting leaves it forgotten.
@@ -214,6 +223,51 @@ Feature: Finding an account by its email address
       When another account for "someone@example.com" is registered
       Then the read model holds 2 rows
 
+  Rule: Only a confirmed account not forgotten is found as one that can be given something
+
+    Scenario: An account waiting to be confirmed is not found as one that can be given something
+      Given an account for "someone@example.com" is registered
+      When the confirmed account for "someone@example.com" is looked for
+      Then nothing is found
+
+    Scenario: A confirmed account is found as one that can be given something
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" confirms its address
+      When the confirmed account for "someone@example.com" is looked for
+      Then it is found
+
+    Scenario: It is found as one that can be given something by its address in another case
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" confirms its address
+      When the confirmed account for "Someone@Example.COM" is looked for
+      Then it is found
+
+    Scenario: An account brought over is found as one that can be given something
+      Given an account for "someone@example.com" is brought over from the old site
+      When the confirmed account for "someone@example.com" is looked for
+      Then it is found
+
+    Scenario: A forgotten account is not found as one that can be given something
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" confirms its address
+      And the account for "someone@example.com" is forgotten
+      When the confirmed account for "someone@example.com" is looked for
+      Then nothing is found
+
+    Scenario: A moved account is found as one that can be given something by its new address
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" confirms its address
+      And the account for "someone@example.com" is moved to "sam@example.org"
+      When the confirmed account for "sam@example.org" is looked for
+      Then it is found
+
+    Scenario: A confirming projected twice is still found as one that can be given something
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" confirms its address
+      When its confirming is projected again
+      And the confirmed account for "someone@example.com" is looked for
+      Then it is found
+
   Rule: The read model is rebuilt from the events alone, forgotten and moved accounts and all
 
     A rebuild is handed every event there is, one stream at a time, and which
@@ -279,6 +333,28 @@ Feature: Finding an account by its email address
       And the account for "someone@example.com" is looked for
       Then it is rebuilt without failing
       And the other account is found
+
+    Scenario: A confirmed account rebuilt is found as one that can be given something
+      Given an account for "someone@example.com" is registered
+      And the account for "someone@example.com" confirms its address
+      When the read model is rebuilt from the events
+      And the confirmed account for "someone@example.com" is looked for
+      Then it is rebuilt without failing
+      And it is found
+
+    Scenario: An account waiting to be confirmed rebuilt is not found as one that can be given something
+      Given an account for "someone@example.com" is registered
+      When the read model is rebuilt from the events
+      And the confirmed account for "someone@example.com" is looked for
+      Then it is rebuilt without failing
+      And nothing is found
+
+    Scenario: An account brought over rebuilt is found as one that can be given something
+      Given an account for "someone@example.com" is brought over from the old site
+      When the read model is rebuilt from the events
+      And the confirmed account for "someone@example.com" is looked for
+      Then it is rebuilt without failing
+      And it is found
 
     Scenario: Rebuilding needs no account's key
       Given an account for "someone@example.com" is registered

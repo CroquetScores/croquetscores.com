@@ -5,7 +5,7 @@ import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AddRole } from "./AddRole.js";
 import { accountThatCanBeGiven } from "./accountsThatCanBeGiven.js";
-import type { FindsAccountByAddress } from "./accountsByAddress.js";
+import type { FindsConfirmedAccountByAddress } from "./accountsByAddress.js";
 import {
   RoleOperationRefused,
   administratorAsking,
@@ -21,7 +21,7 @@ export class AddRoleHandler extends CommandHandler<AddRole, void> {
 
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly accountsByAddress: FindsAccountByAddress,
+    private readonly accountsByAddress: FindsConfirmedAccountByAddress,
   ) {
     super();
   }
@@ -29,11 +29,13 @@ export class AddRoleHandler extends CommandHandler<AddRole, void> {
   async handle(command: AddRole): Promise<void> {
     const by = await administratorAsking(this.accounts, command.account);
     const role = roleNamed(command.role, "AddRole");
-    const account = await accountThatCanBeGiven(
-      this.accounts,
+    const found = await accountThatCanBeGiven(
       this.accountsByAddress,
       command.emailAddress,
     );
+    // Loaded, since giving a role changes the account.
+    const account =
+      found === undefined ? undefined : await this.accounts.load(found);
     if (account === undefined) {
       throw new RoleOperationRefused(
         "AddRole.NoSuchAccount",

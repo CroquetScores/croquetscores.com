@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { AccountForgotten } from "../../../../src/domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../../../src/domain/aggregates/accounts/events/AccountRegistered.js";
 import { EmailAddressChanged } from "../../../../src/domain/aggregates/accounts/events/EmailAddressChanged.js";
+import { EmailAddressConfirmed } from "../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
@@ -89,6 +90,14 @@ When("its registering is projected again", async function (this: SpecWorld) {
   const { readModel } = accountsOf(this);
   const id = keptAt(this, 1);
   await this.asARequest(() => readModel.project(id, 1, [registered]));
+});
+
+// The confirming is the account's second event, after its registering.
+When("its confirming is projected again", async function (this: SpecWorld) {
+  const confirmed = await firstAccounts(this, EmailAddressConfirmed);
+  const { readModel } = accountsOf(this);
+  const id = keptAt(this, 1);
+  await this.asARequest(() => readModel.project(id, 2, [confirmed]));
 });
 
 When("its forgetting is projected again", async function (this: SpecWorld) {
