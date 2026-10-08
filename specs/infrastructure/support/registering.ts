@@ -53,7 +53,6 @@ import type {
 import { AccountsWithRoleHandler } from "../../../src/application/operations/accounts/AccountsWithRoleHandler.js";
 import type { ImportWorldRankingPlayers } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import { ImportWorldRankingPlayersHandler } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
-import type { WorldRankingLists } from "../../../src/application/services/WorldRankingLists.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
 import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
 import type { ChangePassword } from "../../../src/application/operations/accounts/ChangePassword.js";
@@ -108,6 +107,7 @@ import { queueingOf } from "./emailQueue.js";
 import { unitOfWorkOf } from "./transactions.js";
 import { heldAfter } from "../../support/heldAtOnce.js";
 import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
+import { listsStoodUpBy } from "./worldRankings.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
 import { scenarioLanguages } from "../../web/support/languages.js";
 
@@ -350,16 +350,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleQuery(
     new AccountsWithRoleHandler(repository, accounts.byRole),
   );
-  // Asked of whatever the scenario has stood up when it is used, as the
-  // breached password check is, since what stands the fake up is a step of
-  // its own that may come later.
-  const worldRankingLists: WorldRankingLists = {
-    playersOf: (sport) => {
-      const lists = world.worldRankingLists;
-      assert.ok(lists !== undefined, "There is no fake of the world rankings.");
-      return lists.playersOf(sport);
-    },
-  };
+  const worldRankingLists = listsStoodUpBy(world);
   mediator.handleCommand(
     new ImportWorldRankingPlayersHandler(
       repository,

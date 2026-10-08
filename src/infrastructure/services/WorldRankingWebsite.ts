@@ -8,6 +8,15 @@ import {
   type WorldRankingSport,
 } from "../../application/services/WorldRankingLists.js";
 
+/**
+ * Each sport as what is written for whoever runs the site names it: what a
+ * list not read is refused with, and what the import says as it goes. Not a
+ * reader's words, which are the catalogues'.
+ */
+export const worldRankingSportNames: Readonly<
+  Record<WorldRankingSport, string>
+> = { ac: "association croquet", gc: "golf croquet" };
+
 /** Where the world rankings keep each sport's list. */
 export const worldRankingAddresses: Readonly<
   Record<WorldRankingSport, string>
@@ -35,11 +44,6 @@ const LAYOUTS: Readonly<
   gc: { details: 17, firstName: 3, surname: 1 },
 };
 
-const SPORT_NAMES: Readonly<Record<WorldRankingSport, string>> = {
-  ac: "association croquet",
-  gc: "golf croquet",
-};
-
 const unreachable = (
   sport: WorldRankingSport,
   what: string,
@@ -47,14 +51,14 @@ const unreachable = (
 ): ListRefused =>
   new ListRefused(
     "WorldRankingLists.Unreachable",
-    `The world rankings' ${SPORT_NAMES[sport]} list ${what}.`,
+    `The world rankings' ${worldRankingSportNames[sport]} list ${what}.`,
     cause,
   );
 
 const unreadable = (sport: WorldRankingSport, what: string): ListRefused =>
   new ListRefused(
     "WorldRankingLists.Unreadable",
-    `The world rankings' ${SPORT_NAMES[sport]} list ${what}, so none of it was read.`,
+    `The world rankings' ${worldRankingSportNames[sport]} list ${what}, so none of it was read.`,
   );
 
 export class WorldRankingWebsite implements WorldRankingLists {

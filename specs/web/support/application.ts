@@ -16,6 +16,7 @@ import {
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import { aFakeOfHaveIBeenPwned } from "../../infrastructure/support/breachedPasswords.js";
 import { useUnitOfWork } from "../../infrastructure/support/transactions.js";
+import { listsStoodUpBy } from "../../infrastructure/support/worldRankings.js";
 import { exampleRegistry } from "../../support/exampleEvents.js";
 import type { SpecWorld } from "../../support/world.js";
 import { clockFor } from "./clock.js";
@@ -75,18 +76,8 @@ Given("the application is built", async function (this: SpecWorld) {
       logger: false,
       clock: () => new Date(clock.now.getTime()),
       breachedPasswords,
-      // Never the rankings' own site: whatever fake the scenario stands up,
-      // asked for when a list is read, and none where it stands none up.
-      worldRankingLists: {
-        playersOf: (sport) => {
-          const lists = this.worldRankingLists;
-          assert.ok(
-            lists !== undefined,
-            "There is no fake of the world rankings.",
-          );
-          return lists.playersOf(sport);
-        },
-      },
+      // Never the rankings' own site: whatever fake the scenario stands up.
+      worldRankingLists: listsStoodUpBy(this),
       // The example events, and the scenario's own list of projections, so
       // that a projection named after this step is still given what the
       // application's store appends.

@@ -23,6 +23,8 @@ export type ImportReport =
       readonly kind: "refused";
       readonly sport: WorldRankingSport;
       readonly code: WorldRankingListsErrorCode;
+      /** Why, for whoever reads a log rather than for a reader of the site. */
+      readonly message: string;
     }
   | { readonly kind: "finished" };
 

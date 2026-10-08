@@ -128,11 +128,20 @@ Then(
     `^the import's ${PLACE} report is that the ${SPORT} list was refused with "([^"]*)"$`,
   ),
   function (this: SpecWorld, place: string, sport: string, code: string) {
-    assert.deepEqual(reportAt(this, place), {
-      kind: "refused",
-      sport: sportOf(sport),
-      code,
-    });
+    // The message is for a log, and its words are nobody's contract.
+    const {
+      kind,
+      sport: said,
+      code: refused,
+    } = reportAt(this, place) as {
+      kind: string;
+      sport?: string;
+      code?: string;
+    };
+    assert.deepEqual(
+      { kind, sport: said, code: refused },
+      { kind: "refused", sport: sportOf(sport), code },
+    );
   },
 );
 
