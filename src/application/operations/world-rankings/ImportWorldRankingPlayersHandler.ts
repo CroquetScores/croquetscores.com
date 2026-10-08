@@ -7,14 +7,11 @@ import type { Transactions } from "../../services/Transactions.js";
 import {
   ListRefused,
   type WorldRankingLists,
-  type WorldRankingSport,
+  worldRankingSports,
 } from "../../services/WorldRankingLists.js";
 import type { WorldRankingPlayers } from "../../services/WorldRankingPlayers.js";
 import { administratorAsking } from "../accounts/roleOperations.js";
 import { ImportWorldRankingPlayers } from "./ImportWorldRankingPlayers.js";
-
-// Association croquet's first, as the page's log reads them.
-const SPORTS: readonly WorldRankingSport[] = ["ac", "gc"];
 
 /**
  * Importing the players the world rankings know
@@ -46,7 +43,7 @@ export class ImportWorldRankingPlayersHandler extends CommandHandler<
     await this.transactions.inReadOnlyTransaction(() =>
       administratorAsking(this.accounts, command.account),
     );
-    for (const sport of SPORTS) {
+    for (const sport of worldRankingSports) {
       command.report({ kind: "reading", sport });
       let names: readonly string[];
       try {

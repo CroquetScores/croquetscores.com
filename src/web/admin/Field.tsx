@@ -17,7 +17,11 @@ interface FieldProps {
   /** What the field is for, said beneath it where its label alone would leave
       a reader wondering, and read out with it. */
   readonly explanation?: string | undefined;
-  /** Something said of what was typed, at the end of the line it is on. */
+  /**
+   * Something said of what was typed, at the end of the line it is on, and
+   * read out with the field as what is beneath it is. Nothing where there is
+   * nothing to say.
+   */
   readonly mark?: React.ReactNode;
   readonly children: (said: {
     id: string;
@@ -43,11 +47,13 @@ export const Field = ({
   const labelId = `${id}-label`;
   const messageId = `${id}-message`;
   const explanationId = `${id}-explanation`;
+  const markId = `${id}-mark`;
   const wrong = refused !== undefined && refused.length > 0;
   // What is wrong first, since it is what the reader most needs to hear.
   const describedBy = [
     ...(wrong ? [messageId] : []),
     ...(explanation === undefined ? [] : [explanationId]),
+    ...(mark === undefined ? [] : [markId]),
   ].join(" ");
   return (
     <div className="field">
@@ -66,7 +72,11 @@ export const Field = ({
         <span className="field-label" id={labelId}>
           {label}
         </span>
-        {mark}
+        {mark === undefined ? null : (
+          <span className="field-mark" id={markId}>
+            {mark}
+          </span>
+        )}
       </label>
       {wrong ? (
         <p

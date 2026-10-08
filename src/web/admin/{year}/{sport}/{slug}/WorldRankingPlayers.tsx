@@ -46,27 +46,26 @@ const ask = (sport: string, typed: string): Promise<Matching> => {
 const PAUSE_MILLISECONDS = 150;
 
 /**
- * What `typed` may be among the world ranking players of `sport`, once it is
- * known: nothing while it is asked, nothing where nothing is typed, and
- * nothing where the sport has no world rankings.
+ * What `typed` may be among the world ranking players of `sport`: the answer
+ * for what was typed last, kept while what is typed now is asked, so that the
+ * offers and the mark do not blink out with every letter. Nothing until the
+ * first answer, nothing where nothing is typed, and nothing where the sport
+ * has no world rankings.
  */
 export const useMatching = (
   sport: string | undefined,
   typed: string,
 ): Matching | undefined => {
-  const key = sport === undefined ? undefined : `${sport}\n${typed}`;
   const [answer, setAnswer] = useState<
-    { readonly key: string; readonly matching: Matching } | undefined
+    { readonly sport: string; readonly matching: Matching } | undefined
   >();
   useEffect(() => {
-    if (sport === undefined || key === undefined || typed.trim() === "") {
-      return;
-    }
+    if (sport === undefined || typed.trim() === "") return;
     let current = true;
     const paused = setTimeout(() => {
       ask(sport, typed).then(
         (matching) => {
-          if (current) setAnswer({ key, matching });
+          if (current) setAnswer({ sport, matching });
         },
         // Nothing is offered, and nothing marked, where nothing could be
         // asked: both are only advice, and the field takes whatever is typed.
@@ -77,8 +76,13 @@ export const useMatching = (
       current = false;
       clearTimeout(paused);
     };
-  }, [sport, typed, key]);
-  if (answer === undefined || answer.key !== key || typed.trim() === "") {
+  }, [sport, typed]);
+  if (
+    sport === undefined ||
+    typed.trim() === "" ||
+    answer === undefined ||
+    answer.sport !== sport
+  ) {
     return undefined;
   }
   return answer.matching;

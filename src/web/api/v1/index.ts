@@ -1020,7 +1020,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   // The world ranking players of a sport a name typed may be, and whether the
   // world rankings know it, as the player dialogs ask as it is typed. The
   // sport by its code, and what was typed as it was typed.
-  server.get<{ Params: { sport: string }; Querystring: { typed?: string } }>(
+  server.get<{ Params: { sport: string }; Querystring: { typed?: unknown } }>(
     "/world-rankings/:sport/players",
     async (request, reply) => {
       const reader = signedInOrRefused(request, reply);
@@ -1028,7 +1028,9 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       const matching = await request.server.mediator.query(
         new WorldRankingPlayersMatching(
           request.params.sport,
-          request.query.typed ?? "",
+          // Asked more than once, it arrives as a list rather than text, and
+          // is taken as nothing typed, as a field sent as anything but text is.
+          typeof request.query.typed === "string" ? request.query.typed : "",
         ),
       );
       return reply.header("cache-control", "no-store").send(matching);

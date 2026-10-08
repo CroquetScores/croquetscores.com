@@ -1,7 +1,25 @@
 import { Refused } from "../../domain/common/Refused.js";
 
-/** The two sports the world rankings keep a list of players for. */
-export type WorldRankingSport = "ac" | "gc";
+/**
+ * The sports the world rankings keep a list of players for, association
+ * croquet's first, which is the order they are imported in. Said once, here,
+ * and everything that names one is typed by it.
+ *
+ * Not worked out from the domain's Sport.hasWorldRankings, which says which
+ * sports have world rankings. This says which have a list the site can read:
+ * a file on the rankings' site, a layout to read it by, and a table to keep it
+ * in. The two are the same today. A sport given world rankings without a list
+ * is refused here, rather than asked for a list nobody has written a way to
+ * read.
+ */
+export const worldRankingSports = ["ac", "gc"] as const;
+
+/** One of the sports the world rankings keep a list of players for. */
+export type WorldRankingSport = (typeof worldRankingSports)[number];
+
+/** Whether `code` is one of the sports with a list of players. */
+export const isWorldRankingSport = (code: string): code is WorldRankingSport =>
+  (worldRankingSports as readonly string[]).includes(code);
 
 /** Every way reading a list can be refused. */
 export type WorldRankingListsErrorCode =

@@ -102,7 +102,12 @@ export const PlayerDialog = ({
   const nameField = useRef<HTMLInputElement>(null);
   const worldRankingNameField = useRef<HTMLInputElement>(null);
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
-  const offeredForName = useMatching(worldRankingSport, name);
+  // Nothing is offered for a name that cannot be changed, as a world ranking
+  // officer's cannot, so nothing is asked for it.
+  const offeredForName = useMatching(
+    onlyWorldRankingName ? undefined : worldRankingSport,
+    name,
+  );
   const offeredForWorldRankingName = useMatching(
     worldRankingSport,
     worldRankingName,
@@ -335,7 +340,11 @@ export const PlayerDialog = ({
             name="worldRankingName"
             label={say("admin.player.worldRankingName")}
             refused={refusedFor("worldRankingName")}
-            mark={<Mark matching={markedFor} />}
+            mark={
+              markedFor === undefined ? undefined : (
+                <Mark matching={markedFor} />
+              )
+            }
           >
             {(tied) => (
               <>

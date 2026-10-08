@@ -4,7 +4,6 @@
    the reader to look again; the tick in the ink, since it asks nothing. */
 
 .world-ranking-mark {
-  flex: none;
   margin-inline-start: var(--space-2);
   font-weight: 700;
   cursor: help;
