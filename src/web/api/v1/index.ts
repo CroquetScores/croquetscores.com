@@ -923,6 +923,13 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
 
   // The accounts holding a role, as an administrator lists them. The role is
   // named as one is kept, "administrator" or "world-ranking-officer".
+  //
+  // Somebody who is not an administrator asking this or either route below is
+  // refused, as any refusal is, rather than told the route is not found as the
+  // administrator's pages are (server.ts). Not found would hide nothing: these
+  // addresses are written in the admin's script, which every signed-in reader
+  // is sent. The refusal is also what AddRole.feature, RemoveRole.feature and
+  // AccountsWithRole.feature say.
   server.get<{ Params: { role: string } }>(
     "/roles/:role/accounts",
     async (request, reply) => {
