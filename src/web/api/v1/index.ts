@@ -69,6 +69,8 @@ import { AccountsWithRole } from "../../../application/operations/accounts/Accou
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { ImportErrorKept } from "../../../application/operations/import-errors/ImportErrorKept.js";
+import { ImportErrorsKept } from "../../../application/operations/import-errors/ImportErrorsKept.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
@@ -1049,6 +1051,32 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         ),
       );
       return reply.header("cache-control", "no-store").send(matching);
+    },
+  );
+
+  // The documents the import refused, each as its id and the first line of
+  // what the import said. Refused to anybody who is not an administrator, as
+  // the routes for roles are, for the same reason.
+  server.get("/import-errors", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const errors = await request.server.mediator.query(
+      new ImportErrorsKept(reader.value),
+    );
+    return reply.header("cache-control", "no-store").send({ errors });
+  });
+
+  // What the import said of one document, by its id as the import kept it. A
+  // slash in the id arrives written as %2F and is read back as the slash.
+  server.get<{ Params: { document: string } }>(
+    "/import-errors/:document",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const kept = await request.server.mediator.query(
+        new ImportErrorKept(reader.value, request.params.document),
+      );
+      return reply.header("cache-control", "no-store").send(kept);
     },
   );
 

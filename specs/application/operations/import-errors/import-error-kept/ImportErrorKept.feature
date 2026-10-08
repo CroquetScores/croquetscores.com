@@ -1,0 +1,78 @@
+@postgres
+Feature: What the import said of one document it refused, as an administrator reads it
+
+  An administrator opens one document from the list of those the import
+  refused (`ImportErrorsKept.feature`) to read the whole of what the import
+  said of it, so the application answers with the document's id and the full
+  message, every line of it as it was kept.
+
+  The import can keep more than one error against a document, as when it
+  refuses it for a second reason on another run of the import over the same
+  tables. A document is therefore answered with every message kept against it,
+  in the order they were kept, rather than with one and the other lost.
+
+  A document id that nothing was kept against is refused as
+  `ImportErrorKept.NotFound`. Only an administrator can ask: anybody else is
+  refused with `Account.NotAnAdministrator`, whether or not there is such a
+  document, so that the answer does not tell whoever may not ask what is kept.
+
+  Background:
+    Given the application's import errors
+    And the moment "2026-10-09T10:00:00Z"
+    And "admin@example.com" has an account, confirmed, called "Ada Administrator"
+    And "admin@example.com" has been given the role "Administrator"
+    And "someone@example.com" has an account, confirmed, called "Sam Someone"
+
+  Rule: The document is answered with its id and its whole message
+
+    Scenario: The document's id is answered
+      Given the import refused the document "users/1-A" with "No email address"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then the document id answered is "users/1-A"
+
+    Scenario: The first line of the message is answered
+      Given the import refused the document "users/1-A" with "No email address" then "at line 4"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then the first message answered has the first line "No email address"
+
+    Scenario: The later lines of the message are answered
+      Given the import refused the document "users/1-A" with "No email address" then "at line 4"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then the first message answered has the second line "at line 4"
+
+    Scenario: A document id with a slash in it is found
+      Given the import refused the document "users/1-A" with "No email address"
+      And the import refused the document "users/2-A" with "No name"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/2-A"
+      Then the first message answered has the first line "No name"
+
+  Rule: Every message kept against the document is answered, in the order kept
+
+    Scenario: A second message is answered
+      Given the import refused the document "users/1-A" with "No email address"
+      And the import refused the document "users/1-A" with "Bad date"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then the second message answered has the first line "Bad date"
+
+    Scenario: A message kept against another document is not answered
+      Given the import refused the document "users/1-A" with "No email address"
+      And the import refused the document "users/2-A" with "Bad date"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then 1 message is answered
+
+  Rule: A document nothing was kept against is refused
+
+    Scenario: A document that was not refused is not found
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/9-A"
+      Then reading the import error is refused with "ImportErrorKept.NotFound"
+
+  Rule: Only an administrator can ask
+
+    Scenario: A reader who is not an administrator is refused
+      Given the import refused the document "users/1-A" with "No email address"
+      When the reader signed in to the account for "someone@example.com" reads the import error of "users/1-A"
+      Then reading the import error is refused with "Account.NotAnAdministrator"
+
+    Scenario: A reader who is not an administrator is refused for a document that is not there
+      When the reader signed in to the account for "someone@example.com" reads the import error of "users/9-A"
+      Then reading the import error is refused with "Account.NotAnAdministrator"
