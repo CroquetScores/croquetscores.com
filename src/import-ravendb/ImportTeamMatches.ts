@@ -6,7 +6,6 @@ import { TeamId } from "../domain/aggregates/tournaments/primitives/TeamId.js";
 import { TeamPlayerId } from "../domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import type { Team } from "../domain/aggregates/tournaments/Team.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
-import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { ExpectedMatches } from "../domain/aggregates/tournaments/value-objects/ExpectedMatches.js";
 import { TestGroup } from "../domain/aggregates/tournaments/value-objects/TestGroup.js";
 import { charactersIn } from "../domain/common/charactersIn.js";
@@ -20,6 +19,7 @@ import { dayOf } from "./newtonsoft.js";
 import { oldShortNameOf, stateNamed } from "./oldSites.js";
 import type { TeamMatch } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
+import { bestOfImported } from "./bestOfImported.js";
 
 // How the old sites named a team match: "Team A vs Team B".
 const VERSUS = " vs ";
@@ -111,7 +111,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           starts: dayOf(document.Start),
           finishes: dayOf(document.Finish),
           expectedMatches: ExpectedMatches.from(document.ExpectedMatches),
-          bestOf: BestOf.from(document.BestOf),
+          bestOf: bestOfImported(document.BestOf),
           group: TestGroup.from(document.Group ?? ""),
         },
         by,

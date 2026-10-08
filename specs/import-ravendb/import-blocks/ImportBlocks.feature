@@ -3,7 +3,9 @@ Feature: Importing the old sites' blocks
 
   A block is brought over as every competition is (`importCompetition.feature`).
   What is a block's own is said here: what each of its matches is the best
-  of, and what each player carried forward into it.
+  of, and what each player carried forward into it. The old sites kept some
+  blocks as the best of 0, which no match can be, and which played as single
+  games, so such a block's matches are the best of 1.
 
   Background:
     Given the users are imported
@@ -25,6 +27,12 @@ Feature: Importing the old sites' blocks
       And the block's matches are the best of 3
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block whose matches were the best of 0 is the best of 1
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 0
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
   Rule: What a player carried forward is carried forward, unless it was nothing
 

@@ -1,10 +1,10 @@
-import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
 import {
   type ImportingCompetitions,
   importCompetition,
 } from "./importCompetition.js";
 import type { Block } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
+import { bestOfImported } from "./bestOfImported.js";
 
 /**
  * Brings the old sites' blocks over as blocks, each the best of what it was,
@@ -24,7 +24,13 @@ export class ImportBlocks implements Importer<Block> {
       shape: (document, listed) => ({
         entries: listed.filter((entry) => !entry.bye),
         add: (tournament, id, name, by, at) => {
-          tournament.addBlock(id, name, BestOf.from(document.BestOf), by, at);
+          tournament.addBlock(
+            id,
+            name,
+            bestOfImported(document.BestOf),
+            by,
+            at,
+          );
         },
       }),
     });

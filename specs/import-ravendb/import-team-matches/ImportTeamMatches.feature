@@ -119,6 +119,12 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is the best of 3
 
+    Scenario: A team match whose matches were the best of 0 is the best of 1
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match's matches were the best of 0
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is the best of 1
+
     Scenario: A test is in the group its team match was in
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match was in the group "Block A"
