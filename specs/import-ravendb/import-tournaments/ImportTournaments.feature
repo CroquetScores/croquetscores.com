@@ -187,6 +187,11 @@ Feature: Importing the old sites' tournaments
     countries, and are taken as England's, where the old sites' tournaments kept
     in them were played; a manager can move one played elsewhere.
 
+    Three that mean no country are taken as one all the same, since the old
+    sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
+    as England's, and "UTC+13" as New Zealand's. A manager can move one played
+    elsewhere.
+
     A tournament kept in "Pacific Standard Time (Mexico)" is read as kept in
     "Pacific Standard Time", whose tournaments were played in the United
     States: the old sites offered the time zones of the machine they ran on,
@@ -216,6 +221,9 @@ Feature: Importing the old sites' tournaments
         | Arabian Standard Time        | ae      |
         | Argentina Standard Time      | ar      |
         | Canada Central Standard Time | ca      |
+        | UTC                          | england |
+        | Dateline Standard Time       | england |
+        | UTC+13                       | nz      |
 
     Scenario: A tournament kept in Mexico's Pacific time is in the country of Pacific time
       Given a tournament "tournaments/12" on "croquetscores.com"
