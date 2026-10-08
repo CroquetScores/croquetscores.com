@@ -96,8 +96,7 @@ Then(
     const notRead = notReadOf(this);
     assert.ok(
       notRead.some(
-        (each) =>
-          each.sport === sportCalled(sport) && each.refused.code === code,
+        (each) => each.sport === sportCalled(sport) && each.code === code,
       ),
       `Named ${inspect(notRead)}.`,
     );

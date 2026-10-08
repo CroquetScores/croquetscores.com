@@ -6,8 +6,16 @@ import {
   ListRefused,
   type WorldRankingLists,
   type WorldRankingSport,
-  worldRankingSportNames,
 } from "../../application/services/WorldRankingLists.js";
+
+/**
+ * Each sport as what is written for whoever runs the site names it: what a
+ * list not read is refused with, and what the import says as it goes. Not a
+ * reader's words, which are the catalogues'.
+ */
+export const worldRankingSportNames: Readonly<
+  Record<WorldRankingSport, string>
+> = { ac: "association croquet", gc: "golf croquet" };
 
 /** Where the world rankings keep each sport's list. */
 export const worldRankingAddresses: Readonly<

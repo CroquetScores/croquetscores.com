@@ -45,9 +45,11 @@ import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
-import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebsite.js";
+import {
+  WorldRankingWebsite,
+  worldRankingSportNames,
+} from "../infrastructure/services/WorldRankingWebsite.js";
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
-import { worldRankingSportNames as SPORT_NAMES } from "../application/services/WorldRankingLists.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -84,18 +86,20 @@ const ROLE_HOLDERS: RoleHolders = {
 // What the import says of the world ranking players as it imports them. In
 // English, as the rest of what it says is: it is read by whoever runs it, not
 // by a reader of the site.
-const said = (report: ImportReport): string => {
+const said = (report: ImportReport, notRead: number): string => {
   switch (report.kind) {
     case "reading":
-      return `Reading the world rankings' ${SPORT_NAMES[report.sport]} list`;
+      return `Reading the world rankings' ${worldRankingSportNames[report.sport]} list`;
     case "read":
-      return `Read ${numbers.format(report.players)} ${SPORT_NAMES[report.sport]} players`;
+      return `Read ${numbers.format(report.players)} ${worldRankingSportNames[report.sport]} players`;
     case "kept":
-      return `Kept ${numbers.format(report.players)} ${SPORT_NAMES[report.sport]} players`;
+      return `Kept ${numbers.format(report.players)} ${worldRankingSportNames[report.sport]} players`;
     case "refused":
-      return `The ${SPORT_NAMES[report.sport]} list was not read: ${report.code}`;
+      return `The ${worldRankingSportNames[report.sport]} list was not read, and its players were not kept: ${report.code}. ${report.message}`;
     case "finished":
-      return "Imported the world ranking players";
+      return notRead === 0
+        ? "Imported the world ranking players"
+        : `Imported the world ranking players, but ${numbers.format(notRead)} of the lists were not read`;
   }
 };
 
@@ -257,24 +261,27 @@ try {
   // Anything else that fails here is said and counted as one error rather
   // than ending the import, since everything before it is already kept and
   // whoever ran it is owed the count of what went wrong.
+  // Said and counted as each happens, so that what was said before a failure
+  // is still said, and counted, after it.
   let worldRankingErrors = 0;
   try {
-    const notRead = await new ImportWorldRankingPlayerNames({
+    let notRead = 0;
+    await new ImportWorldRankingPlayerNames({
       lists: new WorldRankingWebsite(),
       players: new PostgresWorldRankingPlayers(unitOfWork),
       transactions: unitOfWork,
     }).import((report) => {
-      if (report.kind !== "refused") console.log(said(report));
+      if (report.kind === "refused") {
+        notRead += 1;
+        worldRankingErrors += 1;
+        console.error(said(report, notRead));
+      } else {
+        console.log(said(report, notRead));
+      }
     });
-    for (const { sport, refused } of notRead) {
-      console.error(
-        `The ${SPORT_NAMES[sport]} list was not read: ${refused.code}. ${refused.message}`,
-      );
-    }
-    worldRankingErrors = notRead.length;
   } catch (failure) {
-    console.error("The world ranking players were not imported.", failure);
-    worldRankingErrors = 1;
+    console.error("The world ranking players were not all imported.", failure);
+    worldRankingErrors += 1;
   }
   // Counted from what was kept rather than added up from each collection's
   // reading, since a tournament keeps the errors of what names it itself

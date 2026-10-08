@@ -17,15 +17,6 @@ export const worldRankingSports = ["ac", "gc"] as const;
 /** One of the sports the world rankings keep a list of players for. */
 export type WorldRankingSport = (typeof worldRankingSports)[number];
 
-/**
- * Each sport as what is written for whoever runs the site names it: a log,
- * or what the import says as it goes. Not a reader's words, which are the
- * catalogues'.
- */
-export const worldRankingSportNames: Readonly<
-  Record<WorldRankingSport, string>
-> = { ac: "association croquet", gc: "golf croquet" };
-
 /** Whether `code` is one of the sports with a list of players. */
 export const isWorldRankingSport = (code: string): code is WorldRankingSport =>
   (worldRankingSports as readonly string[]).includes(code);

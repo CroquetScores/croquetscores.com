@@ -1,11 +1,19 @@
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import {
   importWorldRankingPlayers,
-  type ListNotRead,
   type WorldRankingImportParts,
 } from "../application/operations/world-rankings/importingWorldRankingPlayers.js";
+import type {
+  WorldRankingListsErrorCode,
+  WorldRankingSport,
+} from "../application/services/WorldRankingLists.js";
 
-export type { ListNotRead };
+/** A list that was not read, and why. */
+export interface ListNotRead {
+  readonly sport: WorldRankingSport;
+  readonly code: WorldRankingListsErrorCode;
+  readonly message: string;
+}
 
 /**
  * Imports the players the world rankings know, once the old sites are over
@@ -22,13 +30,23 @@ export class ImportWorldRankingPlayerNames {
 
   /**
    * Reads both lists and keeps the players on each that is read in full,
-   * telling `report` each thing done as it is done. Answers the lists that
-   * were not read, so that the import can say why and count them among its
-   * errors.
+   * telling `report` each thing done as it is done, a list not read among
+   * them. Answers the lists that were not read, as they were told.
    */
-  import(
+  async import(
     report: (report: ImportReport) => void = () => undefined,
   ): Promise<readonly ListNotRead[]> {
-    return importWorldRankingPlayers(this.parts, report);
+    const notRead: ListNotRead[] = [];
+    await importWorldRankingPlayers(this.parts, (said) => {
+      if (said.kind === "refused") {
+        notRead.push({
+          sport: said.sport,
+          code: said.code,
+          message: said.message,
+        });
+      }
+      report(said);
+    });
+    return notRead;
   }
 }
