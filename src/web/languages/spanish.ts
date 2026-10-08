@@ -475,6 +475,7 @@ export const spanish: Language = {
     "admin.administrator.sections.tournaments": "Torneos",
     "admin.administrator.sections.accounts": "Cuentas",
     "admin.administrator.sections.worldRankings": "Ranking mundial",
+    "admin.administrator.sections.importErrors": "Errores de importación",
     "admin.administrator.title": "Administrador",
     "admin.accounts.title": "Cuentas",
     "admin.roles.add": "Añadir",
@@ -516,6 +517,13 @@ export const spanish: Language = {
       "No se ha podido llegar al sitio del ranking mundial.",
     "WorldRankingLists.Unreadable":
       "La lista no tiene la forma de las listas del ranking mundial: una línea no se ha podido leer, no tiene a nadie o no está escrita en UTF-8.",
+    "admin.importErrors.title": "Errores de importación",
+    "admin.importErrors.none": "No hay errores de importación",
+    "admin.importErrors.otherwise": "Algo ha fallado en el sitio.",
+    "admin.importError.title": "Error de importación",
+    "admin.importError.documentId": "Id del documento",
+    "ImportErrorKept.NotFound":
+      "La importación no guardó ningún error de ese documento.",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",

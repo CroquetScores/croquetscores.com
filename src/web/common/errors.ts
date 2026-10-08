@@ -11,6 +11,7 @@ import { randomUUID } from "node:crypto";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { RoleOperationRefused } from "../../application/operations/accounts/roleOperations.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
+import { ImportErrorKeptRefused } from "../../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { WorldRankingPlayersRefused } from "../../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ManagerNoteRefused } from "../../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import { CompetitionRefused } from "../../domain/aggregates/tournaments/competitions/Competition.js";
@@ -143,12 +144,14 @@ export const registerErrorMapping = (
     //
     // So is a refusal to give, take or list a role, which the accounts page
     // says beneath the field it is about, and a refusal to find world ranking
-    // players of a sport that has none.
+    // players of a sport that has none, and to read the error of a document the
+    // import kept none against.
     if (
       (error instanceof TournamentRefused ||
         error instanceof TournamentOperationRefused ||
         error instanceof RoleOperationRefused ||
         error instanceof WorldRankingPlayersRefused ||
+        error instanceof ImportErrorKeptRefused ||
         error instanceof CompetitionRefused ||
         error instanceof ManagerNoteRefused ||
         error instanceof ValidationError) &&

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import { Accounts } from "./administrator/accounts/accounts.js";
 import { AdministratorSections } from "./administrator/AdministratorSections.js";
+import { ImportError } from "./administrator/import-errors/importError.js";
+import { ImportErrors } from "./administrator/import-errors/importErrors.js";
 import { ImportWorldRankingPlayers } from "./administrator/import-world-ranking-players/importWorldRankingPlayers.js";
 import { NewTournament } from "./tournaments/new/new.js";
 import { EditTournament } from "./{year}/{sport}/{slug}/edit/edit.js";
@@ -71,9 +73,12 @@ export const App = (): React.JSX.Element => {
   // before that is headings, which are no secret, being in the admin's
   // script for every reader. A page beneath the accounts that is not there
   // yet still marks Accounts, since it is one of theirs. The page where the
-  // world ranking players are imported is the one address it is found at.
+  // world ranking players are imported is the one address it is found at. The
+  // documents the import refused are listed at theirs, and each is a page
+  // beneath it, named by its id as one segment, which is why the address keeps
+  // its %2F rather than reading it as a slash.
   const administrator =
-    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players)?(\/.*)?$/.exec(
+    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors)?(\/.*)?$/.exec(
       path,
     );
   if (administrator !== null) {
@@ -82,6 +87,12 @@ export const App = (): React.JSX.Element => {
     const theImportPage =
       administrator[1] === "/import-world-ranking-players" &&
       (administrator[2] ?? "/") === "/";
+    const onImportErrors = administrator[1] === "/import-errors";
+    const theImportErrorsPage =
+      onImportErrors && (administrator[2] ?? "/") === "/";
+    const importErrorOf = onImportErrors
+      ? /^\/([^/]+)\/?$/.exec(administrator[2] ?? "")?.[1]
+      : undefined;
     return (
       <>
         <AdministratorSections
@@ -90,7 +101,9 @@ export const App = (): React.JSX.Element => {
               ? "accounts"
               : theImportPage
                 ? "world-rankings"
-                : undefined
+                : onImportErrors
+                  ? "import-errors"
+                  : undefined
           }
         />
         <main id="content">
@@ -100,6 +113,13 @@ export const App = (): React.JSX.Element => {
                 <Accounts />
               ) : theImportPage ? (
                 <ImportWorldRankingPlayers />
+              ) : theImportErrorsPage ? (
+                <ImportErrors />
+              ) : importErrorOf !== undefined ? (
+                <ImportError
+                  key={importErrorOf}
+                  document={decodeURIComponent(importErrorOf)}
+                />
               ) : (
                 <h1>{say("admin.administrator.title")}</h1>
               )}

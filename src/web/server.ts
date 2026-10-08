@@ -37,6 +37,8 @@ import { AccountsWithRoleHandler } from "../application/operations/accounts/Acco
 import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
 import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
+import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
+import { ImportErrorsKeptHandler } from "../application/operations/import-errors/ImportErrorsKeptHandler.js";
 import { AddRoleValidator } from "../application/operations/accounts/AddRoleValidator.js";
 import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
@@ -221,6 +223,7 @@ import { Argon2id } from "../infrastructure/identity/Argon2id.js";
 import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
+import { PostgresKeptImportErrors } from "../infrastructure/database/PostgresKeptImportErrors.js";
 import { PostgresWorldRankingPlayers } from "../infrastructure/database/PostgresWorldRankingPlayers.js";
 import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebsite.js";
 import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
@@ -852,6 +855,9 @@ export const buildApplication = async (
   mediator.handleQuery(
     new WorldRankingPlayersMatchingHandler(worldRankingPlayers),
   );
+  const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
+  mediator.handleQuery(new ImportErrorsKeptHandler(accounts, keptImportErrors));
+  mediator.handleQuery(new ImportErrorKeptHandler(accounts, keptImportErrors));
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(

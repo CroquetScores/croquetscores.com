@@ -52,6 +52,9 @@ import type {
 } from "../../../src/application/operations/accounts/AccountsWithRole.js";
 import { AccountsWithRoleHandler } from "../../../src/application/operations/accounts/AccountsWithRoleHandler.js";
 import type { ImportWorldRankingPlayers } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { ImportErrorKeptHandler } from "../../../src/application/operations/import-errors/ImportErrorKeptHandler.js";
+import { ImportErrorsKeptHandler } from "../../../src/application/operations/import-errors/ImportErrorsKeptHandler.js";
+import { PostgresKeptImportErrors } from "../../../src/infrastructure/database/PostgresKeptImportErrors.js";
 import { ImportWorldRankingPlayersHandler } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
 import { ChangeNameHandler } from "../../../src/application/operations/accounts/ChangeNameHandler.js";
@@ -358,6 +361,13 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       new PostgresWorldRankingPlayers(unitOfWork),
       unitOfWork,
     ),
+  );
+  const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
+  mediator.handleQuery(
+    new ImportErrorsKeptHandler(repository, keptImportErrors),
+  );
+  mediator.handleQuery(
+    new ImportErrorKeptHandler(repository, keptImportErrors),
   );
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
@@ -867,6 +877,12 @@ Given(
 // The same mediator over the same accounts, said in its own words because a
 // scenario about giving, taking or listing roles is not about registering.
 Given("the application's accounts", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about the errors the import kept is not about registering.
+Given("the application's import errors", function (this: SpecWorld) {
   standUpFor(this);
 });
 

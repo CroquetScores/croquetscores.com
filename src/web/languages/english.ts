@@ -537,6 +537,7 @@ export const english: Language = {
     "admin.administrator.sections.tournaments": "Tournaments",
     "admin.administrator.sections.accounts": "Accounts",
     "admin.administrator.sections.worldRankings": "World Rankings",
+    "admin.administrator.sections.importErrors": "Import Errors",
     "admin.administrator.title": "Administrator",
     // The accounts page, a section for each role.
     "admin.accounts.title": "Accounts",
@@ -581,6 +582,14 @@ export const english: Language = {
       "The world rankings' site could not be reached.",
     "WorldRankingLists.Unreadable":
       "The list is not laid out as the world rankings lay theirs out: a line in it could not be read, it has nobody on it, or it is not written in UTF-8.",
+    // The documents the import from the old sites refused, and the page of one.
+    "admin.importErrors.title": "Import Errors",
+    "admin.importErrors.none": "No import errors",
+    "admin.importErrors.otherwise": "Something went wrong on the site.",
+    "admin.importError.title": "Import Error",
+    "admin.importError.documentId": "Document id",
+    "ImportErrorKept.NotFound":
+      "The import kept no error against that document.",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,

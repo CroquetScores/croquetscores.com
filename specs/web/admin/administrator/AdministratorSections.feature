@@ -7,7 +7,9 @@ Feature: The section bar of the administrator's pages
   tournament as its managers do; to the accounts, as Accounts, which is the
   first of the administrator's own pages; and to the page where the players
   the world rankings know are imported, as World Rankings
-  (`importWorldRankingPlayers.feature`).
+  (`importWorldRankingPlayers.feature`); and to the documents the import from
+  the old sites refused, as Import Errors (`importErrors.feature`), which
+  comes fourth, after World Rankings.
 
   Tournaments comes first, since it is the admin an administrator came from,
   then Accounts, and World Rankings after it. It leads to /admin/, the admin's own address for the
@@ -64,6 +66,23 @@ Feature: The section bar of the administrator's pages
     Scenario: World Rankings comes third
       When the page at "/admin/administrator" is opened
       Then the third section is "World Rankings"
+
+    Scenario: The section bar offers the import errors
+      When the page at "/admin/administrator" is opened
+      Then the section "Import Errors" is offered
+
+    Scenario: Import Errors comes fourth
+      When the page at "/admin/administrator" is opened
+      Then the fourth section is "Import Errors"
+
+    Scenario: Import Errors leads to the page of the documents the import refused
+      When the page at "/admin/administrator" is opened
+      Then the section "Import Errors" leads to "/admin/administrator/import-errors"
+
+    Scenario: Pressing Import Errors opens the page of the documents the import refused
+      Given the page at "/admin/administrator" is open
+      When the section "Import Errors" is pressed
+      Then the address is "/admin/administrator/import-errors"
 
     Scenario: Tournaments leads to the admin's tournaments
       When the page at "/admin/administrator" is opened
@@ -137,4 +156,20 @@ Feature: The section bar of the administrator's pages
 
     Scenario: Accounts is not marked on the page where the players are imported
       When the page at "/admin/administrator/import-world-ranking-players" is opened
+      Then the section "Accounts" is not marked as current
+
+    Scenario: The page of the documents the import refused has a section bar
+      When the page at "/admin/administrator/import-errors" is opened
+      Then the page has a section bar
+
+    Scenario: Import Errors is marked on the page of the documents the import refused
+      When the page at "/admin/administrator/import-errors" is opened
+      Then the section "Import Errors" is marked as current
+
+    Scenario: Import Errors is marked on the page of one document
+      When the page at "/admin/administrator/import-errors/users%2F1-A" is opened
+      Then the section "Import Errors" is marked as current
+
+    Scenario: Accounts is not marked on the page of the documents the import refused
+      When the page at "/admin/administrator/import-errors" is opened
       Then the section "Accounts" is not marked as current

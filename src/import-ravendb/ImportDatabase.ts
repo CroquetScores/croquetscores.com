@@ -30,19 +30,16 @@ export class ImportDatabase implements ImportErrors {
 
   /**
    * Drops every table in the database, in every schema but Postgres's own,
-   * applies every migration, and makes the import's own tables.
+   * applies every migration, and makes the import's own tables beside them.
    */
   async reset(): Promise<void> {
     await dropTables(this.#pool);
 
     await migrate(this.#pool);
 
-    await this.#pool.query(`
-      create table import_errors (
-          document_id   text not null,
-          error_message text not null
-      )
-    `);
+    // The table of errors is the site's own, made by the migrations
+    // (0023-import-errors.sql), so that the administrator's page for it finds
+    // it on a site the import has never run on.
 
     // Which account each user became, so that a user on both old sites is one
     // account, and whatever is imported later can find the account a user's
