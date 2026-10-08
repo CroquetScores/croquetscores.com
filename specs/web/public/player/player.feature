@@ -262,6 +262,13 @@ Feature: A player's page shows their games and their competitions
       When the page at "/2026/ac/spring-open/players/sam-someone" is opened
       Then the address is "/2026/gc/spring-open/players/sam-someone"
 
+    Scenario: An old address in another script leads to a player named in another script where the tournament is now
+      Given "organiser@example.com" has created the tournament "Кубок"
+      And "organiser@example.com" has added the player "李小龍" to "Кубок"
+      And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
+      When the page at "/2026/ac/кубок/players/李小龍" is opened
+      Then the page is headed "李小龍"
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language

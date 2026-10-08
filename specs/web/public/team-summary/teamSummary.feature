@@ -209,6 +209,12 @@ Feature: A tournament played by teams has a summary of how its teams stand
       When the page at "/2026/ac/spring-tests/summary" is opened
       Then the address is "/2026/gc/spring-tests/summary"
 
+    Scenario: An old address in another script leads to the summary where the tournament is now
+      Given "organiser@example.com" has created the tournament "Кубок"
+      And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
+      When the page at "/2026/ac/кубок/summary" is opened
+      Then the page is headed "Кубок"
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language

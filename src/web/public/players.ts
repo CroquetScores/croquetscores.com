@@ -54,7 +54,9 @@ export const registerPlayersPage = (
       // An address the tournament has moved on from leads to its players
       // where it is now, for good, so that a link kept from before still works.
       if (asked.address !== address) {
-        return reply.redirect(`/${asked.address}/players`, 301);
+        // Encoded, since a slug keeps letters of any script and Fastify refuses a
+        // Location with a character outside Latin-1.
+        return reply.redirect(encodeURI(`/${asked.address}/players`), 301);
       }
 
       const speaking = speakingOf(request);

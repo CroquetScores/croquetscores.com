@@ -178,6 +178,12 @@ Feature: A tournament's players' page lists its players by name
       When the page at "/2026/ac/spring-open/players" is opened
       Then the address is "/2026/gc/spring-open/players"
 
+    Scenario: An old address in another script leads to the players' page where the tournament is now
+      Given "organiser@example.com" has created the tournament "Кубок"
+      And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
+      When the page at "/2026/ac/кубок/players" is opened
+      Then the page is headed "Кубок"
+
   Rule: The page fits a phone
 
     Scenario: On a phone the page is no wider than the window
