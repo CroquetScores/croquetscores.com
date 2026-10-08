@@ -61,6 +61,7 @@ Feature: Adding a block to a tournament
       Examples:
         | name    | games | code                    |
         |         | 1     | CompetitionName.Missing |
+        | ???     | 1     | CompetitionName.NoLetterOrDigit |
         | Block A | 0     | BestOf.TooSmall         |
 
     Scenario: A block that breaks a rule is not added

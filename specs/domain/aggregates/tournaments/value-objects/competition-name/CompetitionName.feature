@@ -10,6 +10,13 @@ Feature: The name a competition is known by
   it, and the name is kept without it. A name that is nothing but whitespace
   is missing.
 
+  A competition is found at a slug made from its name (`addBlock.feature`),
+  and a name with no letter or digit in it, such as "???", makes no slug
+  (`Slug.feature`), so it is refused as a name rather than left to fail where
+  the competition is added. A slug takes the accents off letters, so a name of
+  nothing but an accent makes none either, and is refused the same: what is
+  asked is whether a slug can be made of the name, as the slug would make it.
+
   Two competitions in the same tournament called the same thing could not be
   told apart, but a name does not know which tournament it is in, so that is
   the tournament's to refuse and not the name's.
@@ -32,6 +39,30 @@ Feature: The name a competition is known by
     Scenario: No competition name at all is refused
       When the competition name "" is made
       Then it is refused for breaking "CompetitionName.Missing"
+
+  Rule: A competition name has a letter or a digit in it
+
+    Scenario Outline: A name with neither a letter nor a digit is refused
+      When the competition name "<name>" is made
+      Then it is refused for breaking "CompetitionName.NoLetterOrDigit"
+
+      Examples:
+        | name |
+        | ???  |
+        | —    |
+        | 🏆   |
+        | ͺ    |
+
+    Scenario Outline: A name with a letter or a digit is accepted
+      When the competition name "<name>" is made
+      Then it is not refused
+
+      Examples:
+        | name    |
+        | A       |
+        | 1       |
+        | Block 1 |
+        | 李      |
 
   Rule: A character is counted as a reader counts it
 

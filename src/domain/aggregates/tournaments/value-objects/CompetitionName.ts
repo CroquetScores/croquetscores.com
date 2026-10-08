@@ -1,9 +1,12 @@
+import { canMakeASlug } from "../../../common/canMakeASlug.js";
 import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
 /** Every rule a competition name can break. */
 export type CompetitionNameErrorCode =
-  "CompetitionName.Missing" | "CompetitionName.TooLong";
+  | "CompetitionName.Missing"
+  | "CompetitionName.TooLong"
+  | "CompetitionName.NoLetterOrDigit";
 
 const MOST_CHARACTERS = 254;
 
@@ -20,6 +23,14 @@ const names = new Validator<string, CompetitionNameErrorCode>({
       field: "name",
       code: "CompetitionName.TooLong",
       isBrokenBy: (given) => charactersIn(given) > MOST_CHARACTERS,
+    },
+    // A competition is found at a slug made from its name, and a name with no
+    // letter or digit makes none (Slug.ts), which would otherwise throw from
+    // inside the handler instead of being told to the admin beside the name.
+    {
+      field: "name",
+      code: "CompetitionName.NoLetterOrDigit",
+      isBrokenBy: (given) => given !== "" && !canMakeASlug(given),
     },
   ],
 });

@@ -118,6 +118,7 @@ Feature: Creating a tournament
         | field    | value       | code                           |
         | name     |             | TournamentName.Missing         |
         | name     | spring open | TournamentName.AllLowerCase    |
+        | name     | ?????       | TournamentName.NoLetterOrDigit |
         | starts   | soon        | ReadOnlyDate.Unreadable        |
         | finishes | later       | ReadOnlyDate.Unreadable        |
         | format   | Doubles     | TournamentFormat.Unknown       |
