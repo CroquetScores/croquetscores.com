@@ -6,7 +6,6 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
-import type { WorldRankingLists } from "../../../src/application/services/WorldRankingLists.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
 import {
   ImportWorldRankingPlayerNames,
@@ -14,19 +13,20 @@ import {
 } from "../../../src/import-ravendb/ImportWorldRankingPlayerNames.js";
 import { unitOfWorkOf } from "../../infrastructure/support/transactions.js";
 import {
+  listsStoodUpBy,
   SPORT,
   sportCalled,
 } from "../../infrastructure/support/worldRankings.js";
 import type { SpecWorld } from "../../support/world.js";
 
-interface Importing {
+interface NamesImport {
   readonly importer: ImportWorldRankingPlayerNames;
   notRead?: readonly ListNotRead[];
 }
 
-const importings = new WeakMap<SpecWorld, Importing>();
+const importings = new WeakMap<SpecWorld, NamesImport>();
 
-const importingOf = (world: SpecWorld): Importing => {
+const importingOf = (world: SpecWorld): NamesImport => {
   const found = importings.get(world);
   assert.ok(
     found !== undefined,
@@ -41,21 +41,10 @@ const notReadOf = (world: SpecWorld): readonly ListNotRead[] => {
   return notRead;
 };
 
-// Asking whatever the scenario has stood up when it is read, since a step
-// after this one may have the fake hold a list back, as it does on the site.
 Given(
   "the world ranking player names are to be imported",
   function (this: SpecWorld) {
-    const lists: WorldRankingLists = {
-      playersOf: (sport) => {
-        const standing = this.worldRankingLists;
-        assert.ok(
-          standing !== undefined,
-          "There is no fake of the world rankings.",
-        );
-        return standing.playersOf(sport);
-      },
-    };
+    const lists = listsStoodUpBy(this);
     const unitOfWork = unitOfWorkOf(this);
     importings.set(this, {
       importer: new ImportWorldRankingPlayerNames({
@@ -107,7 +96,8 @@ Then(
     const notRead = notReadOf(this);
     assert.ok(
       notRead.some(
-        (each) => each.sport === sportCalled(sport) && each.code === code,
+        (each) =>
+          each.sport === sportCalled(sport) && each.refused.code === code,
       ),
       `Named ${inspect(notRead)}.`,
     );

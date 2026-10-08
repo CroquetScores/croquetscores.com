@@ -69,3 +69,8 @@ Feature: Importing the world ranking player names once the old sites are over
       Given the golf croquet list has a line that cannot be read
       When the world ranking player names are imported
       Then "Bill Arliss" is not kept among the golf croquet players
+
+    Scenario: A list with a line that cannot be read is named with its code
+      Given the golf croquet list has a line that cannot be read
+      When the world ranking player names are imported
+      Then the golf croquet list is named with "WorldRankingLists.Unreadable"

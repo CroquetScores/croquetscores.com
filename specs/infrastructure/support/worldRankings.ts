@@ -11,7 +11,10 @@ import { strict as assert } from "node:assert";
 
 import { Mediator } from "../../../src/application/common/Mediator.js";
 import { WorldRankingPlayersMatchingHandler } from "../../../src/application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
-import type { WorldRankingSport } from "../../../src/application/services/WorldRankingLists.js";
+import type {
+  WorldRankingLists,
+  WorldRankingSport,
+} from "../../../src/application/services/WorldRankingLists.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
 import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/database/ReadOnlyTransactionBehaviour.js";
 import { WorldRankingWebsite } from "../../../src/infrastructure/services/WorldRankingWebsite.js";
@@ -37,6 +40,20 @@ export const sportCalled = (name: string): WorldRankingSport => {
 export const SPORT = "(association croquet|golf croquet)";
 
 const fakes = new WeakMap<SpecWorld, FakeWorldRankings>();
+
+/**
+ * The lists of whatever the scenario has stood up, asked for when a list is
+ * read rather than when this is made: what stands the fake up is a step that
+ * may come after whatever is given these, and a step may stand a reading of
+ * its own up in place of the first, as holding a list back does.
+ */
+export const listsStoodUpBy = (world: SpecWorld): WorldRankingLists => ({
+  playersOf: (sport) => {
+    const lists = world.worldRankingLists;
+    assert.ok(lists !== undefined, "There is no fake of the world rankings.");
+    return lists.playersOf(sport);
+  },
+});
 
 export const fakeRankingsOf = (world: SpecWorld): FakeWorldRankings => {
   const fake = fakes.get(world);

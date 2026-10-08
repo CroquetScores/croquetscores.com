@@ -47,6 +47,7 @@ import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerN
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
 import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebsite.js";
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { worldRankingSportNames as SPORT_NAMES } from "../application/services/WorldRankingLists.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -83,8 +84,6 @@ const ROLE_HOLDERS: RoleHolders = {
 // What the import says of the world ranking players as it imports them. In
 // English, as the rest of what it says is: it is read by whoever runs it, not
 // by a reader of the site.
-const SPORT_NAMES = { ac: "association croquet", gc: "golf croquet" } as const;
-
 const said = (report: ImportReport): string => {
   switch (report.kind) {
     case "reading":
@@ -253,22 +252,37 @@ try {
   }
 
   // Last, since nothing brought over names them, and the rankings' site is
-  // the slowest thing the import asks.
-  const listsNotRead = await new ImportWorldRankingPlayerNames({
-    lists: new WorldRankingWebsite(),
-    players: new PostgresWorldRankingPlayers(unitOfWork),
-    transactions: unitOfWork,
-  }).import((report) => {
-    if (report.kind === "refused") console.error(said(report));
-    else console.log(said(report));
-  });
+  // the slowest thing the import asks. A list that was not read is said with
+  // its code and why, which is what whoever runs the import has to see to.
+  // Anything else that fails here is said and counted as one error rather
+  // than ending the import, since everything before it is already kept and
+  // whoever ran it is owed the count of what went wrong.
+  let worldRankingErrors = 0;
+  try {
+    const notRead = await new ImportWorldRankingPlayerNames({
+      lists: new WorldRankingWebsite(),
+      players: new PostgresWorldRankingPlayers(unitOfWork),
+      transactions: unitOfWork,
+    }).import((report) => {
+      if (report.kind !== "refused") console.log(said(report));
+    });
+    for (const { sport, refused } of notRead) {
+      console.error(
+        `The ${SPORT_NAMES[sport]} list was not read: ${refused.code}. ${refused.message}`,
+      );
+    }
+    worldRankingErrors = notRead.length;
+  } catch (failure) {
+    console.error("The world ranking players were not imported.", failure);
+    worldRankingErrors = 1;
+  }
   // Counted from what was kept rather than added up from each collection's
   // reading, since a tournament keeps the errors of what names it itself
   // (ImportDatabase.feature). A role holder with no account, and a world
-  // ranking list that was not read, are said above and kept nowhere, so are
-  // added.
+  // ranking list that was not read or a failure importing them, are said
+  // above and kept nowhere, so are added.
   const errors =
-    (await database.errorCount()) + withNoAccount.length + listsNotRead.length;
+    (await database.errorCount()) + withNoAccount.length + worldRankingErrors;
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
