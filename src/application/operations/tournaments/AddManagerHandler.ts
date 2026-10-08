@@ -12,7 +12,7 @@ import {
 } from "./tournamentOperations.js";
 import { AddManager } from "./AddManager.js";
 import { accountThatCanBeGiven } from "../accounts/accountsThatCanBeGiven.js";
-import type { FindsAccountByAddress } from "../accounts/accountsByAddress.js";
+import type { FindsConfirmedAccountByAddress } from "../accounts/accountsByAddress.js";
 
 /**
  * Making somebody a manager of a tournament, named by their email address,
@@ -24,7 +24,7 @@ export class AddManagerHandler extends CommandHandler<AddManager, void> {
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly accountsByAddress: FindsAccountByAddress,
+    private readonly accountsByAddress: FindsConfirmedAccountByAddress,
   ) {
     super();
   }
@@ -36,18 +36,17 @@ export class AddManagerHandler extends CommandHandler<AddManager, void> {
       command.tournament,
       "AddManager",
     );
-    const account = await accountThatCanBeGiven(
-      this.accounts,
+    const found = await accountThatCanBeGiven(
       this.accountsByAddress,
       command.emailAddress,
     );
-    if (account === undefined) {
+    if (found === undefined) {
       throw new TournamentOperationRefused(
         "AddManager.NoSuchAccount",
         "The address has no account that can be made a manager.",
       );
     }
-    tournament.addManager(account.id, by, command.requestedAt);
+    tournament.addManager(found, by, command.requestedAt);
     await this.tournaments.save(tournament);
   }
 }

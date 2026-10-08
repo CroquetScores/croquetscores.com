@@ -231,6 +231,24 @@ When(
   },
 );
 
+// Its address confirmed, with the name every account here is given, and no
+// password, as signing in with Google confirms one.
+When(
+  "the account for {string} confirms its address",
+  async function (this: SpecWorld, address: string) {
+    const id = registeredFor(this, address).at(-1);
+    assert.ok(id !== undefined, `No account was registered for ${address}.`);
+    assert.ok(this.moment !== undefined, "No moment has been named.");
+    const account = await readBack(this, id);
+    account.confirm(
+      PersonName.from("Sam Someone"),
+      undefined,
+      ReadOnlyDate.from(this.moment),
+    );
+    await this.keepAccount?.(account);
+  },
+);
+
 // Looking accounts up ----------------------------------------------------------
 
 When(
@@ -239,6 +257,17 @@ When(
     const { readModel } = accountsOf(this);
     const found = await this.asARequest(() =>
       readModel.find(EmailAddress.from(address)),
+    );
+    this.lookup = { found };
+  },
+);
+
+When(
+  "the confirmed account for {string} is looked for",
+  async function (this: SpecWorld, address: string) {
+    const { readModel } = accountsOf(this);
+    const found = await this.asARequest(() =>
+      readModel.findConfirmed(EmailAddress.from(address)),
     );
     this.lookup = { found };
   },

@@ -13,6 +13,15 @@ export interface FindsAccountByAddress {
   find(address: EmailAddress): Promise<AccountId | undefined>;
 }
 
+/** Finding the account at an address that can be given something. */
+export interface FindsConfirmedAccountByAddress {
+  /**
+   * The account at `address` where it is confirmed and not forgotten, or
+   * nothing where there is no such account there.
+   */
+  findConfirmed(address: EmailAddress): Promise<AccountId | undefined>;
+}
+
 /** Holding an account, so that requests for it at once take turns. */
 export interface HoldsAccount {
   /**

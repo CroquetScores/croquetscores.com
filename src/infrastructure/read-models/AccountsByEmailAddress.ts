@@ -1,7 +1,10 @@
 // Accounts by their email address, for registering to ask whether an address
 // has one, and for asking for a way back in to ask whose it is. Neither can
 // replay every account's events to find out, so this keeps the answer, as
-// accounts are registered and forgotten, and is asked.
+// accounts are registered and forgotten, and is asked. It keeps whether each
+// is confirmed too, so that whatever gives an account something by its address
+// asks one query rather than loading the account, whose every sign-in is an
+// event of its own.
 //
 // It holds a keyed hash of each address, never the address: useless to anyone
 // who takes the table without the key. The hash is taken from the registering
@@ -14,6 +17,7 @@ import { AccountBroughtOver } from "../../domain/aggregates/accounts/events/Acco
 import { AccountForgotten } from "../../domain/aggregates/accounts/events/AccountForgotten.js";
 import { AccountRegistered } from "../../domain/aggregates/accounts/events/AccountRegistered.js";
 import { EmailAddressChanged } from "../../domain/aggregates/accounts/events/EmailAddressChanged.js";
+import { EmailAddressConfirmed } from "../../domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import type { EmailAddress } from "../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
@@ -131,18 +135,38 @@ export class AccountsByEmailAddress implements Projection {
     );
   }
 
+  /**
+   * The account `address` belongs to where it is confirmed, or nothing when it
+   * has none or has one waiting to be confirmed.
+   */
+  async findConfirmed(address: EmailAddress): Promise<AccountId | undefined> {
+    const found = await this.#accountAt(address);
+    return found?.confirmed === true ? found.id : undefined;
+  }
+
   /** The account `address` belongs to, or nothing when it has none. */
   async find(address: EmailAddress): Promise<AccountId | undefined> {
+    return (await this.#accountAt(address))?.id;
+  }
+
+  // The account `address` belongs to, among those not forgotten, and whether
+  // it is confirmed: one statement of which row an address names, for both
+  // finding an account and finding one that can be given something.
+  async #accountAt(
+    address: EmailAddress,
+  ): Promise<{ id: AccountId; confirmed: boolean } | undefined> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<{ account_id: string }>(
-        `select account_id
+      .query<{ account_id: string; confirmed: boolean }>(
+        `select account_id, confirmed
            from accounts_by_email_address
           where email_address_hash = $1 and not forgotten`,
         [this.hasher.hash(address)],
       );
     const row = rows[0];
-    return row === undefined ? undefined : AccountId.from(row.account_id);
+    return row === undefined
+      ? undefined
+      : { id: AccountId.from(row.account_id), confirmed: row.confirmed };
   }
 
   /**
@@ -161,18 +185,25 @@ export class AccountsByEmailAddress implements Projection {
   async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
     const connection = this.unitOfWork.connection();
     await connection.query(`truncate accounts_by_email_address`);
-    const forgotten = new Set(
-      events
-        .filter(({ event }) => event instanceof AccountForgotten)
-        .map(({ stream }) => stream),
-    );
-    // And where each account ended up, before any row is written: a row
-    // written at an address its account later moved from would take that
-    // address from whichever account has it now, if that account's stream
-    // were read first. A stream's events come in the order they were kept, so
-    // the last move read is the last made.
+    // Which accounts were forgotten, which are confirmed, and where each
+    // ended up, all in one reading before any row is written. Where each
+    // ended up, since a row written at an address its account later moved
+    // from would take that address from whichever account has it now, if that
+    // account's stream were read first; a stream's events come in the order
+    // they were kept, so the last move read is the last made. Confirmed by
+    // its address being confirmed, or by arriving from the old site, where
+    // every account was.
+    const forgotten = new Set<string>();
+    const confirmed = new Set<string>();
     const movedTo = new Map<string, string>();
     for (const { stream, event } of events) {
+      if (event instanceof AccountForgotten) forgotten.add(stream);
+      if (
+        event instanceof EmailAddressConfirmed ||
+        event instanceof AccountBroughtOver
+      ) {
+        confirmed.add(stream);
+      }
       if (event instanceof EmailAddressChanged) {
         movedTo.set(stream, event.emailAddressHash);
       }
@@ -186,13 +217,14 @@ export class AccountsByEmailAddress implements Projection {
       }
       await connection.query(
         `insert into accounts_by_email_address
-           (account_id, email_address_hash, forgotten)
-         values ($1, $2, $3)
+           (account_id, email_address_hash, forgotten, confirmed)
+         values ($1, $2, $3, $4)
          on conflict (account_id) do nothing`,
         [
           stream,
           movedTo.get(stream) ?? event.emailAddressHash,
           forgotten.has(stream),
+          confirmed.has(stream),
         ],
       );
     }
@@ -208,11 +240,13 @@ export class AccountsByEmailAddress implements Projection {
       event instanceof AccountBroughtOver
     ) {
       try {
+        // Brought over is confirmed, as every account on the old site was.
         await connection.query(
-          `insert into accounts_by_email_address (account_id, email_address_hash)
-           values ($1, $2)
+          `insert into accounts_by_email_address
+             (account_id, email_address_hash, confirmed)
+           values ($1, $2, $3)
            on conflict (account_id) do nothing`,
-          [stream, event.emailAddressHash],
+          [stream, event.emailAddressHash, event instanceof AccountBroughtOver],
         );
       } catch (failure) {
         if (isTheAddressTaken(failure)) {
@@ -242,6 +276,12 @@ export class AccountsByEmailAddress implements Projection {
         }
         throw failure;
       }
+    } else if (event instanceof EmailAddressConfirmed) {
+      await connection.query(
+        `update accounts_by_email_address set confirmed = true
+          where account_id = $1`,
+        [stream],
+      );
     } else if (event instanceof AccountForgotten) {
       await connection.query(
         `update accounts_by_email_address set forgotten = true
