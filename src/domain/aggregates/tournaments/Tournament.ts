@@ -346,8 +346,12 @@ export class Tournament extends AggregateRoot {
     at: ReadOnlyDate,
   ): Tournament {
     const tournament = new Tournament(id);
-    const settled = tournament.#settle(website, details, at, (year, sport) =>
-      TournamentAddress.from(year, sport, slug),
+    const settled = tournament.#settle(
+      website,
+      details,
+      at,
+      (year, sport) => TournamentAddress.from(year, sport, slug),
+      { broughtOver: true },
     );
     tournament.record(
       new TournamentCreated(website.host, writtenFrom(settled), by, at),
@@ -1721,11 +1725,14 @@ export class Tournament extends AggregateRoot {
   // What `details` make of a tournament on `website`, asked for at `at`,
   // refused on the first thing asked of them together that they do not hold
   // to, and found where `addressIn` says for the year and the sport it is in.
+  // One `broughtOver` from the old sites keeps the finish they gave it
+  // (bringOver.feature).
   #settle(
     website: Website,
     details: TournamentDetails,
     at: ReadOnlyDate,
     addressIn: (year: number, sport: Sport) => TournamentAddress,
+    { broughtOver = false }: { readonly broughtOver?: boolean } = {},
   ): Settled {
     const { sport, format, starts, finishes, country } = details;
     if (
@@ -1753,7 +1760,9 @@ export class Tournament extends AggregateRoot {
     // Counted in UTC, as the year of the tournament's address is, so that the
     // year a tournament may be found at is the year it may start in.
     const yearAfterNext = Date.UTC(at.toDate().getUTCFullYear() + 2, 0, 1);
-    if (starts.toDate().getTime() >= yearAfterNext) {
+    const afterNextYear = (day: ReadOnlyDate): boolean =>
+      day.toDate().getTime() >= yearAfterNext;
+    if (afterNextYear(starts)) {
       refuse(
         "Tournament.StartsAfterNextYear",
         "The tournament starts after next year.",
@@ -1761,7 +1770,7 @@ export class Tournament extends AggregateRoot {
     }
     // Asked after its start, so that one wholly too far ahead is refused for
     // its start, where the year was most likely typed wrongly.
-    if (finishes.toDate().getTime() >= yearAfterNext) {
+    if (!broughtOver && afterNextYear(finishes)) {
       refuse(
         "Tournament.FinishesAfterNextYear",
         "The tournament finishes after next year.",

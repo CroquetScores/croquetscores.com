@@ -231,11 +231,13 @@ Feature: Creating a tournament
 
   Rule: A tournament finishes before the year after next begins
 
-    For the same reason: a tournament that starts next year finishes in it,
-    and one that finishes later is a year typed wrongly in its finish. Since
-    a tournament finishes no earlier than it starts, one that starts too far
-    ahead is refused for its start, which is asked first. The years are
-    counted as they are for its start.
+    For the same reason, held to the same year: a finish after next year is
+    most often a year typed wrongly. So is a tournament over New Year at the
+    end of next year refused until the year turns, since nothing here tells
+    it from a slip of the year, and it is entered once the year it starts in
+    is next year. Since a tournament finishes no earlier than it starts, one
+    that starts too far ahead is refused for its start, which is asked
+    first. The years are counted as they are for its start.
 
     Scenario: A tournament that finishes on the last day of next year is accepted
       Given the tournament is to start at "2027-12-30T00:00:00Z"
