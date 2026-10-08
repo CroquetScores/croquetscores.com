@@ -627,6 +627,71 @@ export const english: Language = {
     "KnockoutDraw.EvenBestOf":
       "A knockout's match has to have a winner, so it is the best of an odd number of games.",
     // Every modal dialog's way out, since the page beneath cannot be reached.
+    "admin.hover.modal.cancel": "Close this without keeping anything",
+    "admin.hover.modal.ok": "Close this message",
+    "admin.hover.tab": "Show the {name} tab",
+    "admin.hover.tournaments.archive":
+      "Archive this tournament; it can be restored",
+    "admin.hover.tournaments.restore": "Bring this archived tournament back",
+    "admin.hover.players.add": "Add a player to this tournament",
+    "admin.hover.players.edit": "Change this player's details",
+    "admin.hover.players.up": "Move this player up the list",
+    "admin.hover.players.down": "Move this player down the list",
+    "admin.hover.players.archive": "Archive this player; they can be restored",
+    "admin.hover.players.restore": "Bring this archived player back",
+    "admin.hover.teams.add": "Add a team to this tournament",
+    "admin.hover.teams.edit": "Change this team's details",
+    "admin.hover.teams.up": "Move this team up the list",
+    "admin.hover.teams.down": "Move this team down the list",
+    "admin.hover.teams.archive": "Archive this team; it can be restored",
+    "admin.hover.teams.restore": "Bring this archived team back",
+    "admin.hover.competitions.add": "Add a competition to this tournament",
+    "admin.hover.competitions.edit": "Change this competition's details",
+    "admin.hover.competitions.up": "Move this competition up the list",
+    "admin.hover.competitions.down": "Move this competition down the list",
+    "admin.hover.competitions.archive":
+      "Archive this competition; it can be restored",
+    "admin.hover.competitions.restore": "Bring this archived competition back",
+    "admin.hover.tests.add": "Add a test between two teams",
+    "admin.hover.tests.edit": "Change this test's details",
+    "admin.hover.tests.up": "Move this test up the list",
+    "admin.hover.tests.down": "Move this test down the list",
+    "admin.hover.tests.archive": "Archive this test; it can be restored",
+    "admin.hover.tests.restore": "Bring this archived test back",
+    "admin.hover.tests.toTeams":
+      "Go to the Teams tab to add the teams a test needs",
+    "admin.hover.scores.add": "Add a game's score to this competition",
+    "admin.hover.scores.edit": "Correct this score",
+    "admin.hover.scores.archive":
+      "Archive this score so that it stops counting; it can be restored",
+    "admin.hover.scores.restore":
+      "Bring this archived score back, so that it counts again",
+    "admin.hover.scores.withdraw":
+      "Keep this score on the list but stop it counting",
+    "admin.hover.scores.unwithdraw": "Make this withdrawn score count again",
+    "admin.hover.scores.up": "Move this score earlier in the list",
+    "admin.hover.scores.down": "Move this score later in the list",
+    "admin.hover.competitionPlayers.add":
+      "Put the chosen player into this competition",
+    "admin.hover.competitionPlayers.up": "Move this player up the list",
+    "admin.hover.competitionPlayers.down": "Move this player down the list",
+    "admin.hover.competitionPlayers.remove":
+      "Take this player out of the competition",
+    "admin.hover.competitionPlayers.withdraw":
+      "Withdraw this player from the competition",
+    "admin.hover.competitionPlayers.unwithdraw":
+      "Put this withdrawn player back in the competition",
+    "admin.hover.competitionPlayers.carryForward":
+      "Carry this player's results forward from another competition",
+    "admin.hover.notes.add": "Write a new note for this tournament",
+    "admin.hover.notes.edit": "Change this note",
+    "admin.hover.notes.delete": "Delete this note",
+    "admin.hover.note.add": "Keep this note and add it to the tournament",
+    "admin.hover.note.save": "Keep the changes to this note",
+    "admin.hover.people.add": "Give this person the role",
+    "admin.hover.people.remove": "Take the role from this person",
+    "admin.hover.worldRankings.import":
+      "Fetch the world rankings and add their players",
     "admin.modal.cancel": "Cancel",
     // The one button of a modal dialog that only tells the reader something.
     "admin.modal.ok": "OK",

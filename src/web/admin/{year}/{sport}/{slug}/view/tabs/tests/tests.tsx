@@ -169,7 +169,11 @@ export const TestsTab = ({
       className="button"
       data-action={action}
       onClick={() => void act(test, action)}
-      {...optionFace(action, say(`admin.tests.${action}`))}
+      {...optionFace(
+        action,
+        say(`admin.tests.${action}`),
+        say(`admin.hover.tests.${action}`),
+      )}
     />
   );
 
@@ -219,6 +223,7 @@ export const TestsTab = ({
             <button
               type="button"
               className="button"
+              title={say("admin.hover.tests.add")}
               onClick={() => {
                 setAdding(true);
               }}
@@ -233,6 +238,7 @@ export const TestsTab = ({
               type="button"
               className="button"
               data-action="teams"
+              title={say("admin.hover.tests.toTeams")}
               onClick={toTeams}
             >
               {say("admin.tests.toTeams")}
@@ -261,6 +267,7 @@ export const TestsTab = ({
                         type="button"
                         className="button"
                         data-action="edit"
+                        title={say("admin.hover.tests.edit")}
                         onClick={() => {
                           setEditing(test);
                         }}

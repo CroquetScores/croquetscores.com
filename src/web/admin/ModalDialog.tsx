@@ -108,17 +108,27 @@ export const ModalDialog = ({
             <button
               className="button button-submit"
               type="button"
+              title={say("admin.hover.modal.ok")}
               onClick={act}
             >
               {action}
             </button>
           ) : (
-            <button className="button button-submit" type="submit">
+            <button
+              className="button button-submit"
+              type="submit"
+              title={title}
+            >
               {action}
             </button>
           )}
           {alone ? null : (
-            <button className="button" type="button" onClick={cancel}>
+            <button
+              className="button"
+              type="button"
+              title={say("admin.hover.modal.cancel")}
+              onClick={cancel}
+            >
               {say("admin.modal.cancel")}
             </button>
           )}

@@ -129,6 +129,7 @@ export const ImportWorldRankingPlayers = (): React.JSX.Element => {
           type="button"
           className="button button-submit"
           disabled={importing}
+          title={say("admin.hover.worldRankings.import")}
           onClick={() => void run()}
         >
           {say("admin.worldRankings.import")}

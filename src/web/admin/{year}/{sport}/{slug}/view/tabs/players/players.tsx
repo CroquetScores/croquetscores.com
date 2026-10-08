@@ -127,7 +127,11 @@ export const PlayersTab = ({
           void act(player, action);
         }
       }}
-      {...optionFace(action, say(`admin.players.${action}`))}
+      {...optionFace(
+        action,
+        say(`admin.players.${action}`),
+        say(`admin.hover.players.${action}`),
+      )}
     />
   );
 
@@ -162,6 +166,7 @@ export const PlayersTab = ({
           <button
             type="button"
             className="listed-name"
+            title={say("admin.hover.players.edit")}
             onClick={() => {
               setDialog(player);
             }}
@@ -223,6 +228,7 @@ export const PlayersTab = ({
           <button
             type="button"
             className="button"
+            title={say("admin.hover.players.add")}
             onClick={() => {
               setDialog("adding");
             }}

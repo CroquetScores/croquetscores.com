@@ -537,7 +537,11 @@ export const TournamentForm = ({
               />
             </div>
             <div className="dialog-buttons">
-              <button className="button button-submit" type="submit">
+              <button
+                className="button button-submit"
+                type="submit"
+                title={title}
+              >
                 {button}
               </button>
             </div>

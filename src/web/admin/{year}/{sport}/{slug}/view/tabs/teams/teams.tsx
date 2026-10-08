@@ -107,7 +107,11 @@ export const TeamsTab = ({
         if (action === "edit") setDialog(team);
         else void act(team, action);
       }}
-      {...optionFace(action, say(`admin.teams.${action}`))}
+      {...optionFace(
+        action,
+        say(`admin.teams.${action}`),
+        say(`admin.hover.teams.${action}`),
+      )}
     />
   );
 
@@ -198,6 +202,7 @@ export const TeamsTab = ({
           <button
             type="button"
             className="button"
+            title={say("admin.hover.teams.add")}
             onClick={() => {
               setDialog("adding");
             }}

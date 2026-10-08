@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { say } from "./words.js";
 
 import "./tabControl.css";
 
@@ -46,6 +47,7 @@ export const TabControl = <Tab extends string>({
             id={tabId(tab)}
             aria-controls={tabPanelId}
             aria-selected={tab === chosen}
+            title={say("admin.hover.tab", { name: wordsFor(tab) })}
             onClick={() => {
               choose(tab);
             }}

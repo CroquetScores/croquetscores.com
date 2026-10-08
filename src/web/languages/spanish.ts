@@ -561,6 +561,74 @@ export const spanish: Language = {
       "Un encuentro tiene que ser al mejor de al menos 1 partida.",
     "KnockoutDraw.EvenBestOf":
       "Un encuentro de eliminatoria tiene que tener ganador, así que es al mejor de un número impar de partidas.",
+    "admin.hover.modal.cancel": "Cerrar esto sin guardar nada",
+    "admin.hover.modal.ok": "Cerrar este mensaje",
+    "admin.hover.tab": "Mostrar la pestaña {name}",
+    "admin.hover.tournaments.archive":
+      "Archivar este torneo; se puede restaurar",
+    "admin.hover.tournaments.restore": "Recuperar este torneo archivado",
+    "admin.hover.players.add": "Añadir un jugador a este torneo",
+    "admin.hover.players.edit": "Cambiar los datos de este jugador",
+    "admin.hover.players.up": "Subir a este jugador en la lista",
+    "admin.hover.players.down": "Bajar a este jugador en la lista",
+    "admin.hover.players.archive":
+      "Archivar a este jugador; se puede restaurar",
+    "admin.hover.players.restore": "Recuperar a este jugador archivado",
+    "admin.hover.teams.add": "Añadir un equipo a este torneo",
+    "admin.hover.teams.edit": "Cambiar los datos de este equipo",
+    "admin.hover.teams.up": "Subir este equipo en la lista",
+    "admin.hover.teams.down": "Bajar este equipo en la lista",
+    "admin.hover.teams.archive": "Archivar este equipo; se puede restaurar",
+    "admin.hover.teams.restore": "Recuperar este equipo archivado",
+    "admin.hover.competitions.add": "Añadir una competición a este torneo",
+    "admin.hover.competitions.edit": "Cambiar los datos de esta competición",
+    "admin.hover.competitions.up": "Subir esta competición en la lista",
+    "admin.hover.competitions.down": "Bajar esta competición en la lista",
+    "admin.hover.competitions.archive":
+      "Archivar esta competición; se puede restaurar",
+    "admin.hover.competitions.restore": "Recuperar esta competición archivada",
+    "admin.hover.tests.add": "Añadir un test entre dos equipos",
+    "admin.hover.tests.edit": "Cambiar los datos de este test",
+    "admin.hover.tests.up": "Subir este test en la lista",
+    "admin.hover.tests.down": "Bajar este test en la lista",
+    "admin.hover.tests.archive": "Archivar este test; se puede restaurar",
+    "admin.hover.tests.restore": "Recuperar este test archivado",
+    "admin.hover.tests.toTeams":
+      "Ir a la pestaña Equipos para añadir los equipos que necesita un test",
+    "admin.hover.scores.add":
+      "Añadir el resultado de un partido a esta competición",
+    "admin.hover.scores.edit": "Corregir este resultado",
+    "admin.hover.scores.archive":
+      "Archivar este resultado para que deje de contar; se puede restaurar",
+    "admin.hover.scores.restore":
+      "Recuperar este resultado archivado, para que vuelva a contar",
+    "admin.hover.scores.withdraw":
+      "Dejar este resultado en la lista pero que no cuente",
+    "admin.hover.scores.unwithdraw":
+      "Hacer que este resultado retirado vuelva a contar",
+    "admin.hover.scores.up": "Mover este resultado antes en la lista",
+    "admin.hover.scores.down": "Mover este resultado después en la lista",
+    "admin.hover.competitionPlayers.add":
+      "Poner al jugador elegido en esta competición",
+    "admin.hover.competitionPlayers.up": "Subir a este jugador en la lista",
+    "admin.hover.competitionPlayers.down": "Bajar a este jugador en la lista",
+    "admin.hover.competitionPlayers.remove":
+      "Sacar a este jugador de la competición",
+    "admin.hover.competitionPlayers.withdraw":
+      "Retirar a este jugador de la competición",
+    "admin.hover.competitionPlayers.unwithdraw":
+      "Volver a poner en la competición a este jugador retirado",
+    "admin.hover.competitionPlayers.carryForward":
+      "Trasladar los resultados de este jugador desde otra competición",
+    "admin.hover.notes.add": "Escribir una nota nueva para este torneo",
+    "admin.hover.notes.edit": "Cambiar esta nota",
+    "admin.hover.notes.delete": "Eliminar esta nota",
+    "admin.hover.note.add": "Guardar esta nota y añadirla al torneo",
+    "admin.hover.note.save": "Guardar los cambios de esta nota",
+    "admin.hover.people.add": "Dar el rol a esta persona",
+    "admin.hover.people.remove": "Quitar el rol a esta persona",
+    "admin.hover.worldRankings.import":
+      "Obtener las clasificaciones mundiales y añadir a sus jugadores",
     "admin.modal.cancel": "Cancelar",
     "admin.modal.ok": "Aceptar",
     "admin.people.emailAddress": "Dirección de correo electrónico",

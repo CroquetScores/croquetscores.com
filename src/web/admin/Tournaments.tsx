@@ -137,6 +137,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
           key="restore"
           type="button"
           className="button"
+          title={say("admin.hover.tournaments.restore")}
           onClick={() => void act(tournament, "restore")}
         >
           {say("admin.tournaments.restore")}
@@ -154,6 +155,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         key="archive"
         type="button"
         className="button"
+        title={say("admin.hover.tournaments.archive")}
         onClick={() => void act(tournament, "archive")}
       >
         {say("admin.tournaments.archive")}
