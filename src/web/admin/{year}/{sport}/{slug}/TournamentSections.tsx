@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { say } from "../../../words.js";
 import "./tournamentSections.css";
+import { idInAddress } from "../../../api.js";
 
 // The section bar of a tournament's page and its competitions' pages
 // (TournamentSections.feature): Tournament first, then each competition in
@@ -43,10 +44,6 @@ interface Team {
   readonly slug: string;
   readonly archived: boolean;
 }
-
-// The part of an id after its kind, which is how the API names a tournament,
-// so that it is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 /**
  * The bar's room, one row of tabs tall and empty, while what goes in it is

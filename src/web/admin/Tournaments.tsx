@@ -4,6 +4,7 @@ import { dated } from "../common/dates.js";
 import { say } from "./words.js";
 import { Years } from "./Years.js";
 import "./tournaments.css";
+import { idInAddress } from "./api.js";
 
 // The admin's front door: the tournaments the reader manages or scores on this
 // website, one year at a time, and what they can do with each. The months are
@@ -46,10 +47,6 @@ const thisYear = (): number => new Date().getFullYear();
 // have one in it, since this year is where the list starts. The newest first.
 const offered = (years: readonly number[]): readonly number[] =>
   [...new Set([...years, thisYear()])].sort((one, other) => other - one);
-
-// The part of the id after "tournament/", which is what the API names a
-// tournament by, so that the id is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   const [years, setYears] = useState<readonly number[]>([]);

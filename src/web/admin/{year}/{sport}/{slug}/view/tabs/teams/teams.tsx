@@ -4,6 +4,7 @@ import { say } from "../../../../../../words.js";
 import { TeamDialog, type TeamAsItIs } from "../../modal-dialogs/team/team.js";
 import { noOption, optionFace } from "../optionFace.js";
 import "../listed.css";
+import { idInAddress } from "../../../../../../api.js";
 
 // The Teams tab (teams-tab.feature) of a tournament played by teams: the teams
 // in use in the tournament's order, each with its short name and the flag it
@@ -39,10 +40,6 @@ interface Listed extends TeamAsItIs {
 }
 
 type Action = "up" | "down" | "archive" | "restore";
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a team, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const TeamsTab = ({
   tournament,

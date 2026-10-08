@@ -5,6 +5,7 @@ import { knows, say } from "../../../../../../words.js";
 import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
 import { noOption, optionFace } from "../optionFace.js";
 import "../listed.css";
+import { idInAddress } from "../../../../../../api.js";
 
 // The Tests tab (tests-tab.feature) of a tournament played by teams, which
 // does for its tests what the Competitions tab does for a Standard
@@ -40,9 +41,6 @@ type Listed = TestAsItIs & {
 };
 
 type Action = "up" | "down" | "archive" | "restore";
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 /**
  * The days a test is played, each in a <time> that says the day it is: the

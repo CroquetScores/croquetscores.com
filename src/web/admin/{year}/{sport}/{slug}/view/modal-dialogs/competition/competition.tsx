@@ -4,6 +4,7 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import "./competition.css";
+import { idInAddress } from "../../../../../../api.js";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit
@@ -43,10 +44,6 @@ interface Props {
   readonly kept: () => void;
   readonly close: () => void;
 }
-
-// The part of an id after its kind, which is how the API names a tournament,
-// so that it is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // A number as it was typed, or one that is no number where nothing was: the
 // API refuses either as a best-of that is not whole or not enough.

@@ -4,6 +4,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { type NoteListed, NotePanel } from "./notePanel.js";
 import "../listed.css";
+import { idInAddress } from "../../../../../../api.js";
 
 // The Notes tab (notes-tab.feature): the notes a tournament's managers wrote
 // for its readers, the most recently written first, each by its title and
@@ -16,10 +17,6 @@ interface Props {
   /** The tournament's id. */
   readonly tournament: string;
 }
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a note, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly NoteListed[] | undefined>();

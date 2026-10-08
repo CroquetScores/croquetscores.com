@@ -7,6 +7,7 @@ import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { TestPlayed } from "../../../view/tabs/tests/tests.js";
 import "../../../teams/{team-slug}/view/view.css";
+import { idInAddress } from "../../../../../../api.js";
 
 // A test's page (view.feature beneath the test): headed by its teams' names,
 // as "Australia v England", and beneath that how it is played, as the Tests
@@ -54,9 +55,6 @@ type Asked =
 // words for any where it has none.
 const wordsFor = (code: string): string =>
   say(knows(code) ? code : "admin.testView.otherwise");
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });

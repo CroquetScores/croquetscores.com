@@ -5,6 +5,7 @@ import { knows, say } from "../../../../../../../../words.js";
 import { CarryForwardDialog } from "../../modal-dialogs/carry-forward/carry-forward.js";
 import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import "../../../../../view/tabs/listed.css";
+import { idInAddress } from "../../../../../../../../api.js";
 
 // A competition's Players tab (competition-players-tab.feature): a drop-down
 // of the tournament's players not in the competition, with Add Player, above
@@ -64,10 +65,6 @@ type Action =
 
 // The tournament player a bye is entered as: every digit 0.
 const BYE = "tournament-player/00000000-0000-0000-0000-000000000000";
-
-// The part of an id after its kind, which is how the API names a thing, so
-// that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 const asked = async <T,>(at: string, field: string): Promise<T[] | undefined> =>
   fetch(at, { headers: { accept: "application/json" } })

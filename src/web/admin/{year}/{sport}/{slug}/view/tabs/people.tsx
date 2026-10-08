@@ -6,6 +6,7 @@ import { knows, say } from "../../../../../words.js";
 import { noOption } from "./optionFace.js";
 import "./listed.css";
 import "./people.css";
+import { idInAddress, refusalOf } from "../../../../../api.js";
 
 // Somebody given a part by their email address, in a field beside the list,
 // and the part taken by Remove, which asks first, since what it does is gone
@@ -61,23 +62,6 @@ interface Props {
   /** Once `person` no longer has the part, what happens next. */
   readonly removed?: (person: Person) => void;
 }
-
-/**
- * The part of an id after its kind, which is how the API names a tournament
- * or an account, so that each is one segment of an address.
- */
-export const idInAddress = (id: string): string =>
-  id.slice(id.indexOf("/") + 1);
-
-// The code a refusal was answered with, or "Unknown" where it was answered
-// with none, as a failure of the site's is, so that something is always said.
-const refusalOf = async (response: Response): Promise<string> => {
-  try {
-    return ((await response.json()) as { error?: string }).error ?? "Unknown";
-  } catch {
-    return "Unknown";
-  }
-};
 
 export const People = ({
   at,

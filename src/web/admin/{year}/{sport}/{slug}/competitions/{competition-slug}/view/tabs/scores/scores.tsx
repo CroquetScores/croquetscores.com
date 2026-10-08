@@ -6,6 +6,7 @@ import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
 import "../../../../../view/tabs/listed.css";
 import "./scores.css";
+import { idInAddress } from "../../../../../../../../api.js";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
 // in use, in the order they were entered, each saying the winner and their
@@ -57,9 +58,6 @@ interface Listed {
   readonly winnerTeam?: string;
   readonly loserTeam?: string;
 }
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // Whether the knockout `competition` has as many players and byes as its draw
 // has places, counted as the knockout counts them: a withdrawn player keeps

@@ -7,6 +7,7 @@ import {
   type TeamPlayerAsTheyAre,
 } from "../modal-dialogs/team-player/team-player.js";
 import "../../../../view/tabs/listed.css";
+import { idInAddress } from "../../../../../../../api.js";
 
 // A team's players (team-players.feature), which are its page: those in use in
 // the team's order, each by their name alone, offering Edit, Archive, Up and
@@ -42,9 +43,6 @@ interface Listed extends TeamPlayerAsTheyAre {
 }
 
 type Action = "up" | "down" | "archive" | "restore";
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const TeamPlayers = ({
   tournament,

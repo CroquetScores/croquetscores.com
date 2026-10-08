@@ -4,6 +4,7 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
+import { idInAddress } from "../../../../../../api.js";
 
 // The player dialog (player.feature), over a tournament's page: opened by Add
 // Player to add players one after another, and by a player's name to change
@@ -55,10 +56,6 @@ interface Props {
   readonly kept: () => void;
   readonly close: () => void;
 }
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a player, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // What a name that makes a player a bye is refused with.
 const BYE = "TournamentPlayer.NamedBye";
