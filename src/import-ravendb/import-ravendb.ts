@@ -3,7 +3,8 @@
 // its players, its blocks, knockouts, Swisses and team matches, and its
 // commentaries, and last whatever names a tournament that was not there, as
 // an error. Once every site is over, the site's roles are given to whoever
-// holds them.
+// holds them, and the players the world rankings know are imported from the
+// rankings' own lists, since emptying the database emptied them too.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -28,6 +29,7 @@ import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { loadEnvFile } from "../infrastructure/config/Config.js";
 import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { createPool } from "../infrastructure/database/pool.js";
+import { PostgresWorldRankingPlayers } from "../infrastructure/database/PostgresWorldRankingPlayers.js";
 import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSealing.js";
 import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
 import { KeyedEmailAddressHasher } from "../infrastructure/encryption/KeyedEmailAddressHasher.js";
@@ -43,6 +45,8 @@ import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
+import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebsite.js";
+import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -55,6 +59,7 @@ import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
+import { ImportWorldRankingPlayerNames } from "./ImportWorldRankingPlayerNames.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
 import { RefuseLeftOvers } from "./RefuseLeftOvers.js";
@@ -73,6 +78,26 @@ const ROLE_HOLDERS: RoleHolders = {
     "chris@butedock.com",
     "richard.bilton30@talktalk.net",
   ],
+};
+
+// What the import says of the world ranking players as it imports them. In
+// English, as the rest of what it says is: it is read by whoever runs it, not
+// by a reader of the site.
+const SPORT_NAMES = { ac: "association croquet", gc: "golf croquet" } as const;
+
+const said = (report: ImportReport): string => {
+  switch (report.kind) {
+    case "reading":
+      return `Reading the world rankings' ${SPORT_NAMES[report.sport]} list`;
+    case "read":
+      return `Read ${numbers.format(report.players)} ${SPORT_NAMES[report.sport]} players`;
+    case "kept":
+      return `Kept ${numbers.format(report.players)} ${SPORT_NAMES[report.sport]} players`;
+    case "refused":
+      return `The ${SPORT_NAMES[report.sport]} list was not read: ${report.code}`;
+    case "finished":
+      return "Imported the world ranking players";
+  }
 };
 
 // Where the import writes, without the credentials that got it there.
@@ -226,11 +251,24 @@ try {
   for (const address of withNoAccount) {
     console.error(`No user was brought over as ${address}, who holds a role.`);
   }
+
+  // Last, since nothing brought over names them, and the rankings' site is
+  // the slowest thing the import asks.
+  const listsNotRead = await new ImportWorldRankingPlayerNames({
+    lists: new WorldRankingWebsite(),
+    players: new PostgresWorldRankingPlayers(unitOfWork),
+    transactions: unitOfWork,
+  }).import((report) => {
+    if (report.kind === "refused") console.error(said(report));
+    else console.log(said(report));
+  });
   // Counted from what was kept rather than added up from each collection's
   // reading, since a tournament keeps the errors of what names it itself
-  // (ImportDatabase.feature). A role holder with no account is said above and
-  // kept nowhere, so is added.
-  const errors = (await database.errorCount()) + withNoAccount.length;
+  // (ImportDatabase.feature). A role holder with no account, and a world
+  // ranking list that was not read, are said above and kept nowhere, so are
+  // added.
+  const errors =
+    (await database.errorCount()) + withNoAccount.length + listsNotRead.length;
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
