@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 
 import { knows, say } from "../../words.js";
-import "./importWorldRankingPlayers.css";
 import { refusalOf } from "../../api.js";
+import "./importWorldRankingPlayers.css";
 
 // The page where an administrator imports the players the world rankings
 // know (importWorldRankingPlayers.feature): Import, and beneath it the

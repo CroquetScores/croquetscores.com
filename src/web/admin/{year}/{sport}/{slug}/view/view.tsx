@@ -12,6 +12,7 @@ import { PlayersTab } from "./tabs/players/players.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
 import { TeamsTab } from "./tabs/teams/teams.js";
 import { TestsTab } from "./tabs/tests/tests.js";
+import { refusalOf } from "../../../../api.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
 // to run in five tabs beneath it, and the section bar leading to its
@@ -103,11 +104,11 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
-        const answer = (await response.json()) as Found & { error?: string };
         if (!response.ok) {
-          setAsked({ is: "refused", code: answer.error ?? "Unknown" });
+          setAsked({ is: "refused", code: await refusalOf(response) });
           return;
         }
+        const answer = (await response.json()) as Found;
         // An address the tournament has moved on from sends the reader to
         // where it is now.
         if (answer.address !== address) {

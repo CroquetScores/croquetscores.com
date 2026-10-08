@@ -5,8 +5,8 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { TabControl } from "../../../../../../TabControl.js";
 import { knows, say } from "../../../../../../words.js";
 import { type Tool, tools, written } from "./markdownTools.js";
-import "./notePanel.css";
 import { idInAddress } from "../../../../../../api.js";
+import "./notePanel.css";
 
 // The note panel (notePanel.feature), in a tournament's Notes tab in place of
 // its list: shown by Add Note to add a note, and by a note's title to edit it.

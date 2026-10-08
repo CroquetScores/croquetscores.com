@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { say } from "../../../words.js";
-import "./tournamentSections.css";
 import { idInAddress } from "../../../api.js";
+import "./tournamentSections.css";
 
 // The section bar of a tournament's page and its competitions' pages
 // (TournamentSections.feature): Tournament first, then each competition in

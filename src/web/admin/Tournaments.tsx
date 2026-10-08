@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { dated } from "../common/dates.js";
 import { say } from "./words.js";
 import { Years } from "./Years.js";
-import "./tournaments.css";
 import { idInAddress } from "./api.js";
+import "./tournaments.css";
 
 // The admin's front door: the tournaments the reader manages or scores on this
 // website, one year at a time, and what they can do with each. The months are

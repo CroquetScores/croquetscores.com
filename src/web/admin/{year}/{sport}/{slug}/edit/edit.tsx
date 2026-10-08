@@ -6,6 +6,7 @@ import {
   TournamentForm,
 } from "../../../../tournaments/TournamentForm.js";
 import { knows, say } from "../../../../words.js";
+import { refusalOf } from "../../../../api.js";
 
 // Where a manager changes a tournament (edit.feature): the form every
 // tournament is created and changed with, beginning as the tournament is.
@@ -33,14 +34,13 @@ export const EditTournament = ({ address }: Props): React.JSX.Element => {
   useEffect(() => {
     void fetch(at, { headers: { accept: "application/json" } })
       .then(async (response) => {
-        const answer = (await response.json()) as Begins & {
-          address?: string;
-          error?: string;
-        };
         if (!response.ok) {
-          setAsked({ is: "refused", code: answer.error ?? "Unknown" });
+          setAsked({ is: "refused", code: await refusalOf(response) });
           return;
         }
+        const answer = (await response.json()) as Begins & {
+          address?: string;
+        };
         // An address the tournament has moved on from sends the reader to
         // where it is now, rather than changing it under an old name.
         if (answer.address !== undefined && answer.address !== address) {

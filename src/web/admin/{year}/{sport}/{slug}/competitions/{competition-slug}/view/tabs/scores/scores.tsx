@@ -4,9 +4,9 @@ import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
+import { idInAddress, refusalOf } from "../../../../../../../../api.js";
 import "../../../../../view/tabs/listed.css";
 import "./scores.css";
-import { idInAddress } from "../../../../../../../../api.js";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
 // in use, in the order they were entered, each saying the winner and their
@@ -145,8 +145,7 @@ export const ScoresTab = ({
         method: "POST",
       });
       if (!response.ok) {
-        const answer = (await response.json()) as { error?: string };
-        setRefused(answer.error ?? "Unknown");
+        setRefused(await refusalOf(response));
       }
     } catch {
       setRefused("Unknown");

@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
-import "./competition.css";
 import { idInAddress } from "../../../../../../api.js";
+import "./competition.css";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit

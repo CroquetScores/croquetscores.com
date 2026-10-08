@@ -7,6 +7,7 @@ import { TournamentSections } from "../../../TournamentSections.js";
 import { knows, say } from "../../../../../../words.js";
 import { CompetitionPlayersTab } from "./tabs/players/players.js";
 import { ScoresTab } from "./tabs/scores/scores.js";
+import { refusalOf } from "../../../../../../api.js";
 
 // A competition's page (view.feature beneath the competition): headed by its
 // name, with what there is to run in two tabs, laid out and chosen as the
@@ -62,11 +63,11 @@ export const ViewCompetition = ({
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
-        const answer = (await response.json()) as Found & { error?: string };
         if (!response.ok) {
-          setAsked({ is: "refused", code: answer.error ?? "Unknown" });
+          setAsked({ is: "refused", code: await refusalOf(response) });
           return;
         }
+        const answer = (await response.json()) as Found;
         // An address the tournament has moved on from sends the reader to the
         // competition where it is now.
         if (answer.tournamentAddress !== address) {

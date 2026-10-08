@@ -4,8 +4,8 @@ import { dayWritten } from "../../../../../../../common/dates.js";
 import { knows, say } from "../../../../../../words.js";
 import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
 import { noOption, optionFace } from "../optionFace.js";
+import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../listed.css";
-import { idInAddress } from "../../../../../../api.js";
 
 // The Tests tab (tests-tab.feature) of a tournament played by teams, which
 // does for its tests what the Competitions tab does for a Standard
@@ -147,8 +147,7 @@ export const TestsTab = ({
         method: "POST",
       });
       if (!response.ok) {
-        const answer = (await response.json()) as { error?: string };
-        setRefused(answer.error ?? "Unknown");
+        setRefused(await refusalOf(response));
       }
     } catch {
       setRefused("Unknown");

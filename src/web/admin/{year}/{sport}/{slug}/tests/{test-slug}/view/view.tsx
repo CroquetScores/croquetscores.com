@@ -6,8 +6,8 @@ import { ScoresTab } from "../../../competitions/{competition-slug}/view/tabs/sc
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { TestPlayed } from "../../../view/tabs/tests/tests.js";
+import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../teams/{team-slug}/view/view.css";
-import { idInAddress } from "../../../../../../api.js";
 
 // A test's page (view.feature beneath the test): headed by its teams' names,
 // as "Australia v England", and beneath that how it is played, as the Tests
@@ -70,11 +70,11 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
         `/api/v1/tournaments/at/${address}/competitions/${slug}/page`,
         { headers: { accept: "application/json" } },
       );
-      const answer = (await response.json()) as Found & { error?: string };
       if (!response.ok) {
-        refused(answer.error ?? "Unknown");
+        refused(await refusalOf(response));
         return;
       }
+      const answer = (await response.json()) as Found;
       // Any other competition is not a test, and there is no test here.
       if (answer.kind !== "test") {
         refused("Tournament.NoSuchCompetition");

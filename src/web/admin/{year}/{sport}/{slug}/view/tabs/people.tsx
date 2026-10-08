@@ -4,9 +4,9 @@ import { Field, type Refusal } from "../../../../../Field.js";
 import { ModalDialog } from "../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../words.js";
 import { noOption } from "./optionFace.js";
+import { idInAddress, refusalOf } from "../../../../../api.js";
 import "./listed.css";
 import "./people.css";
-import { idInAddress, refusalOf } from "../../../../../api.js";
 
 // Somebody given a part by their email address, in a field beside the list,
 // and the part taken by Remove, which asks first, since what it does is gone

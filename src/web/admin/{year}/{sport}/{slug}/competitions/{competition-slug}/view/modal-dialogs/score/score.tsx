@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
-import "./score.css";
 import { idInAddress } from "../../../../../../../../api.js";
+import "./score.css";
 
 // The score dialog (score-modal-dialog.feature), over a competition's Scores
 // tab: the winner and their score, "beat", the loser and theirs, as the result

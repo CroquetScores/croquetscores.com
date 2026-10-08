@@ -5,6 +5,7 @@ import { knows, say } from "../../../../../../words.js";
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { TeamPlayers } from "./players/players.js";
+import { refusalOf } from "../../../../../../api.js";
 import "./view.css";
 
 // A team's page (view.feature beneath the team): headed by the team's name
@@ -55,11 +56,11 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
-        const answer = (await response.json()) as Found & { error?: string };
         if (!response.ok) {
-          setAsked({ is: "refused", code: answer.error ?? "Unknown" });
+          setAsked({ is: "refused", code: await refusalOf(response) });
           return;
         }
+        const answer = (await response.json()) as Found;
         // An address the tournament has moved on from sends the reader to the
         // team where it is now.
         if (answer.tournamentAddress !== address) {

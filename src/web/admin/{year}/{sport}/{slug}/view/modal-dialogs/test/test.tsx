@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
-import "./test.css";
 import { idInAddress } from "../../../../../../api.js";
+import "./test.css";
 
 // The test dialog (test.feature), over a tournament's Tests tab: opened by Add
 // Test to add tests a round at a time, and by Edit to change one. It reads in

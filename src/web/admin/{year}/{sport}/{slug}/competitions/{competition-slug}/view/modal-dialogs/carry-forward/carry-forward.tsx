@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
-import "./carry-forward.css";
 import { idInAddress } from "../../../../../../../../api.js";
+import "./carry-forward.css";
 
 // The carry forward dialog (carry-forward.feature), over a competition's
 // Players tab: the six counts a player brings into the competition from play

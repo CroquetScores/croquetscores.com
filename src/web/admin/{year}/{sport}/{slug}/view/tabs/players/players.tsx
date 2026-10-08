@@ -7,8 +7,8 @@ import {
   type PlayerAsTheyAre,
 } from "../../modal-dialogs/player/player.js";
 import { noOption, optionFace } from "../optionFace.js";
-import "../listed.css";
 import { idInAddress } from "../../../../../../api.js";
+import "../listed.css";
 
 // The Players tab (players-tab.feature): the players in use in the
 // tournament's order, each with what they represent and the flag they fly,

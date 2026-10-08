@@ -6,8 +6,8 @@ import {
   TeamPlayerDialog,
   type TeamPlayerAsTheyAre,
 } from "../modal-dialogs/team-player/team-player.js";
-import "../../../../view/tabs/listed.css";
 import { idInAddress } from "../../../../../../../api.js";
+import "../../../../view/tabs/listed.css";
 
 // A team's players (team-players.feature), which are its page: those in use in
 // the team's order, each by their name alone, offering Edit, Archive, Up and
