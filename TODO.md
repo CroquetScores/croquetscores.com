@@ -14,18 +14,6 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
-- RoleSection duplicates PeopleTab. Sharing one component would change the Managers and Scorers tabs, which this branch doesn't touch. It's worth doing separately; PeopleTab also has the same silent-Add problem as item 5.
-
-- Whether an address has an account that can be given something (found, confirmed, not forgotten) is checked in AddRoleHandler, AddManagerHandler and AddScorerHandler, each written out. One helper would keep the three from disagreeing. Two of them are outside this branch.
-
-- A ninth copy of idInAddress, and another of reading a refusal's code out of an answer, as `refusalOf` does on the accounts page. One module under `src/web/admin` could export both. Combining them means editing eight files outside this branch.
-
-- Withdraw games. For example needed for Pres 8s second round withdrawal
-
-- Tournament finish date can not be greater than current year + 1.
-
-- Feature files for api
-
 - SETUP.md §7.2 says a stored event's shape only ever gains optional fields, with no exception while no site keeps events. Until one does, event shapes can still change, and the rule as written has already led a review to flag such a change as breaking stored data. Add that the rule starts applying once the site holds real data.
 
 - An open admin tab keeps running the build it loaded, since moving between the admin's pages happens in place (App.tsx), so after a deploy it can talk to a newer API with older code and show the wrong screens until reloaded (a team tournament showed a Standard one's tabs). The admin could notice a newer build, say by the API answering the build it serves, and offer to reload.

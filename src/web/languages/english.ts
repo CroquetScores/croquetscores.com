@@ -629,6 +629,7 @@ export const english: Language = {
     // email address and takes one off.
     "admin.people.emailAddress": "Email address",
     "admin.people.remove": "Remove",
+    "admin.people.otherwise": "That could not be done.",
     // Beside the reader's own name among the managers.
     "admin.managers.you": "You",
     "admin.managers.add": "Add Manager",

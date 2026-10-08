@@ -1,5 +1,5 @@
 import { say } from "../../../../../../words.js";
-import { PeopleTab } from "../people.js";
+import { idInAddress, People } from "../people.js";
 
 // The Scorers tab (scorers-tab.feature): the Managers tab for scorers, but
 // that a tournament needs no scorer, so every one is offered Remove, and the
@@ -9,10 +9,17 @@ export const ScorersTab = ({
 }: {
   readonly tournament: string;
 }): React.JSX.Element => (
-  <PeopleTab
-    tournament={tournament}
-    part="scorers"
-    removable={() => true}
+  <People
+    at={`/api/v1/tournaments/${idInAddress(tournament)}/scorers`}
+    listedUnder="scorers"
+    name="scorers"
+    fieldAbove
+    words={{
+      add: "admin.scorers.add",
+      none: "admin.scorers.none",
+      removeTitle: "admin.scorers.removeTitle",
+      otherwise: "admin.scorers.otherwise",
+    }}
     explanation={(scorer) =>
       say("admin.scorers.removeExplanation", { name: scorer.name })
     }

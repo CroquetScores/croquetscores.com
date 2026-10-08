@@ -1,6 +1,6 @@
 import { go } from "../../../../../../navigation.js";
 import { say } from "../../../../../../words.js";
-import { PeopleTab } from "../people.js";
+import { idInAddress, People } from "../people.js";
 
 // The Managers tab (managers-tab.feature). A tournament always has a manager,
 // so the last one is not offered Remove. A reader taking themselves off is told
@@ -12,9 +12,17 @@ export const ManagersTab = ({
 }: {
   readonly tournament: string;
 }): React.JSX.Element => (
-  <PeopleTab
-    tournament={tournament}
-    part="managers"
+  <People
+    at={`/api/v1/tournaments/${idInAddress(tournament)}/managers`}
+    listedUnder="managers"
+    name="managers"
+    fieldAbove
+    words={{
+      add: "admin.managers.add",
+      none: "admin.managers.none",
+      removeTitle: "admin.managers.removeTitle",
+      otherwise: "admin.managers.otherwise",
+    }}
     removable={(_manager, everybody) => everybody.length > 1}
     explanation={(manager) =>
       manager.isReader === true

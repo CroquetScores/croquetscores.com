@@ -561,6 +561,7 @@ export const spanish: Language = {
     "admin.modal.ok": "Aceptar",
     "admin.people.emailAddress": "Dirección de correo electrónico",
     "admin.people.remove": "Quitar",
+    "admin.people.otherwise": "No se ha podido hacer.",
     "admin.managers.you": "Tú",
     "admin.managers.add": "Añadir gestor",
     "admin.managers.none": "No hay gestores",
