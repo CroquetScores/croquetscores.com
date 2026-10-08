@@ -8,6 +8,7 @@ import {
   Offers,
   useMatching,
 } from "../../../../../WorldRankingPlayers.js";
+import { idInAddress } from "../../../../../../../../api.js";
 
 // The team player dialog (team-player.feature), over a team's page: the player
 // dialog of a Standard tournament without its Representing and its Flag, since
@@ -49,9 +50,6 @@ interface Props {
   readonly kept: () => void;
   readonly close: () => void;
 }
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // Whether a refusal is about the name, or the world ranking name. One about
 // neither is said above them.

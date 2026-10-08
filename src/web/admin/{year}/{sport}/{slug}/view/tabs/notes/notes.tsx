@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { type NoteListed, NotePanel } from "./notePanel.js";
+import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../listed.css";
 
 // The Notes tab (notes-tab.feature): the notes a tournament's managers wrote
@@ -16,10 +17,6 @@ interface Props {
   /** The tournament's id. */
   readonly tournament: string;
 }
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a note, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly NoteListed[] | undefined>();
@@ -76,8 +73,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
         method: "DELETE",
       });
       if (!response.ok) {
-        const answer = (await response.json()) as { error?: string };
-        setRefused(answer.error ?? "Unknown");
+        setRefused(await refusalOf(response));
       }
     } catch {
       setRefused("Unknown");

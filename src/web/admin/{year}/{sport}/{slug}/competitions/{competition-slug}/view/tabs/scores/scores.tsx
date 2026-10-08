@@ -4,6 +4,7 @@ import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
+import { idInAddress, refusalOf } from "../../../../../../../../api.js";
 import "../../../../../view/tabs/listed.css";
 import "./scores.css";
 
@@ -57,9 +58,6 @@ interface Listed {
   readonly winnerTeam?: string;
   readonly loserTeam?: string;
 }
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // Whether the knockout `competition` has as many players and byes as its draw
 // has places, counted as the knockout counts them: a withdrawn player keeps
@@ -147,8 +145,7 @@ export const ScoresTab = ({
         method: "POST",
       });
       if (!response.ok) {
-        const answer = (await response.json()) as { error?: string };
-        setRefused(answer.error ?? "Unknown");
+        setRefused(await refusalOf(response));
       }
     } catch {
       setRefused("Unknown");

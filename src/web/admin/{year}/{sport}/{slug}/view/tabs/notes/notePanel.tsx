@@ -5,6 +5,7 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { TabControl } from "../../../../../../TabControl.js";
 import { knows, say } from "../../../../../../words.js";
 import { type Tool, tools, written } from "./markdownTools.js";
+import { idInAddress } from "../../../../../../api.js";
 import "./notePanel.css";
 
 // The note panel (notePanel.feature), in a tournament's Notes tab in place of
@@ -39,10 +40,6 @@ interface Props {
   /** Putting the list back, by Cancel or once the note is kept. */
   readonly close: () => void;
 }
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a note, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // A note is kept as it was typed, HTML and all, and drawn with HTML turned
 // off, so what Preview puts on the page is Markdown's drawing alone.

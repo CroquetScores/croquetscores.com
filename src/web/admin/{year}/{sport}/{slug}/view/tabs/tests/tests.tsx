@@ -4,6 +4,7 @@ import { dayWritten } from "../../../../../../../common/dates.js";
 import { knows, say } from "../../../../../../words.js";
 import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
 import { noOption, optionFace } from "../optionFace.js";
+import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../listed.css";
 
 // The Tests tab (tests-tab.feature) of a tournament played by teams, which
@@ -40,9 +41,6 @@ type Listed = TestAsItIs & {
 };
 
 type Action = "up" | "down" | "archive" | "restore";
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 /**
  * The days a test is played, each in a <time> that says the day it is: the
@@ -149,8 +147,7 @@ export const TestsTab = ({
         method: "POST",
       });
       if (!response.ok) {
-        const answer = (await response.json()) as { error?: string };
-        setRefused(answer.error ?? "Unknown");
+        setRefused(await refusalOf(response));
       }
     } catch {
       setRefused("Unknown");

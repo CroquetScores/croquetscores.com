@@ -7,6 +7,7 @@ import {
   type PlayerAsTheyAre,
 } from "../../modal-dialogs/player/player.js";
 import { noOption, optionFace } from "../optionFace.js";
+import { idInAddress } from "../../../../../../api.js";
 import "../listed.css";
 
 // The Players tab (players-tab.feature): the players in use in the
@@ -44,10 +45,6 @@ interface Listed extends PlayerAsTheyAre {
   /** The names of the competitions they are in, in the tournament's order. */
   readonly competitions: readonly string[];
 }
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a player, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const PlayersTab = ({
   tournament,

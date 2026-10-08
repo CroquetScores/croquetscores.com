@@ -6,6 +6,7 @@ import {
   type CompetitionAsItIs,
 } from "../../modal-dialogs/competition/competition.js";
 import { noOption, optionFace } from "../optionFace.js";
+import { idInAddress } from "../../../../../../api.js";
 import "../listed.css";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
@@ -34,10 +35,6 @@ type Listed = CompetitionAsItIs & {
   readonly slug: string;
   readonly archived: boolean;
 };
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a competition, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 export const CompetitionsTab = ({
   tournament,

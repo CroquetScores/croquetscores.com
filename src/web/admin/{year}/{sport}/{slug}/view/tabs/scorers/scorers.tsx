@@ -1,5 +1,6 @@
 import { say } from "../../../../../../words.js";
-import { idInAddress, People } from "../people.js";
+import { People } from "../people.js";
+import { idInAddress } from "../../../../../../api.js";
 
 // The Scorers tab (scorers-tab.feature): the Managers tab for scorers, but
 // that a tournament needs no scorer, so every one is offered Remove, and the

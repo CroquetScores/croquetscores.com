@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
+import { idInAddress } from "../../../../../../api.js";
 
 // The team dialog (team.feature), over a tournament's Teams tab: opened by Add
 // Team to add teams a few at a time, and by a team's name or Edit to change
@@ -35,10 +36,6 @@ interface Props {
 }
 
 type Part = "name" | "shortName" | "flag";
-
-// The part of an id after its kind, which is how the API names a tournament
-// or a team, so that each is one segment of an address.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // The field each refusal is about. A short name longer than the name is said
 // beneath the short name, since that is the one most likely wrong. One about

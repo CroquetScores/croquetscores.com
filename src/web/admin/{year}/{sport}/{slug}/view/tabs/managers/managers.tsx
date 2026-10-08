@@ -1,6 +1,7 @@
 import { go } from "../../../../../../navigation.js";
 import { say } from "../../../../../../words.js";
-import { idInAddress, People } from "../people.js";
+import { People } from "../people.js";
+import { idInAddress } from "../../../../../../api.js";
 
 // The Managers tab (managers-tab.feature). A tournament always has a manager,
 // so the last one is not offered Remove. A reader taking themselves off is told

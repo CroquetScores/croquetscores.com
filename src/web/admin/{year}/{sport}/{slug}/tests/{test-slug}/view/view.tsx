@@ -6,6 +6,7 @@ import { ScoresTab } from "../../../competitions/{competition-slug}/view/tabs/sc
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { TestPlayed } from "../../../view/tabs/tests/tests.js";
+import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../teams/{team-slug}/view/view.css";
 
 // A test's page (view.feature beneath the test): headed by its teams' names,
@@ -55,9 +56,6 @@ type Asked =
 const wordsFor = (code: string): string =>
   say(knows(code) ? code : "admin.testView.otherwise");
 
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
-
 export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
 
@@ -72,11 +70,11 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
         `/api/v1/tournaments/at/${address}/competitions/${slug}/page`,
         { headers: { accept: "application/json" } },
       );
-      const answer = (await response.json()) as Found & { error?: string };
       if (!response.ok) {
-        refused(answer.error ?? "Unknown");
+        refused(await refusalOf(response));
         return;
       }
+      const answer = (await response.json()) as Found;
       // Any other competition is not a test, and there is no test here.
       if (answer.kind !== "test") {
         refused("Tournament.NoSuchCompetition");

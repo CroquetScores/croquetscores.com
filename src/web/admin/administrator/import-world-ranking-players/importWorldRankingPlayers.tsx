@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import { knows, say } from "../../words.js";
+import { refusalOf } from "../../api.js";
 import "./importWorldRankingPlayers.css";
 
 // The page where an administrator imports the players the world rankings
@@ -20,16 +21,6 @@ type Said =
   | { readonly kind: "failed"; readonly code: string };
 
 const failed = (code: string): Said => ({ kind: "failed", code });
-
-// The code a refusal was answered with, or "Unknown" where it was answered
-// with none, as a failure of the site's is, so that something is always said.
-const refusalOf = async (response: Response): Promise<string> => {
-  try {
-    return ((await response.json()) as { error?: string }).error ?? "Unknown";
-  } catch {
-    return "Unknown";
-  }
-};
 
 // A refusal in its own words, or in the words for any.
 const sayRefusal = (code: string): string =>

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
+import { idInAddress } from "../../../../../../api.js";
 import "./test.css";
 
 // The test dialog (test.feature), over a tournament's Tests tab: opened by Add
@@ -68,9 +69,6 @@ const parts: readonly Part[] = [
   "bestOf",
   "group",
 ];
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // A number as it was typed, or one that is no number where nothing was: the
 // API refuses either as not whole or not enough.

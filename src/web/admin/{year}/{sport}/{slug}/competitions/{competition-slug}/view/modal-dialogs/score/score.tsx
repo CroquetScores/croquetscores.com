@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
+import { idInAddress } from "../../../../../../../../api.js";
 import "./score.css";
 
 // The score dialog (score-modal-dialog.feature), over a competition's Scores
@@ -69,9 +70,6 @@ type Part = "winner" | "winnerScore" | "loser" | "loserScore";
 
 // What a test's player archived while the dialog is open is refused with.
 const ARCHIVED = "TeamPlayer.Archived";
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // The part each refusal is about, where its code says. One about no one part
 // is said above them all.

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
+import { idInAddress } from "../../../../../../../../api.js";
 import "./carry-forward.css";
 
 // The carry forward dialog (carry-forward.feature), over a competition's
@@ -40,9 +41,6 @@ interface Props {
   readonly kept: () => void;
   readonly close: () => void;
 }
-
-// The part of an id after its kind, which is how the API names a thing.
-const idInAddress = (id: string): string => id.slice(id.indexOf("/") + 1);
 
 // A refusal as the API says it: its code, and the counts it is about.
 interface Broken {
