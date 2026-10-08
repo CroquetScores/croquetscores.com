@@ -430,6 +430,8 @@ export const english: Language = {
     "block.lost": "lost",
     "block.drawn": "drawn",
     "block.withdrawn": "withdrawn",
+    // A game withdrawn, which Spanish says otherwise than a player.
+    "block.gameWithdrawn": "withdrawn",
     "block.losses": "Losses",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Views",

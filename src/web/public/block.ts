@@ -58,7 +58,7 @@ const scoreIn = (
   const score = won ? game.winnerScore : game.loserScore;
   const said = [
     speaking.say(`block.${result}`),
-    ...(game.withdrawn ? [speaking.say("block.withdrawn")] : []),
+    ...(game.withdrawn ? [speaking.say("block.gameWithdrawn")] : []),
   ].join(", ");
   const withdrawn = game.withdrawn ? " data-withdrawn" : "";
   return `<span class="block-grid-score block-grid-${result}"${withdrawn}><span class="block-grid-points">${escape(score)}</span> <span class="visually-hidden">${escape(said)}</span></span>`;

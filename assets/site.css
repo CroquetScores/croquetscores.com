@@ -1488,6 +1488,12 @@ main {
   overflow-wrap: anywhere;
 }
 
+/* A game withdrawn was played, but counts for nothing, so its lines are
+   struck through, as a block's grid strikes it. */
+.game[data-withdrawn] .game-line {
+  text-decoration: line-through;
+}
+
 /* Lighter than the name, since the names are what a reader is looking for,
    on a tournament's page and its players' alike. */
 .game-representing,

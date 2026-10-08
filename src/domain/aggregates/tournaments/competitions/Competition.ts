@@ -89,11 +89,11 @@ export interface Told {
   readonly teamPlayers?: readonly TeamPlayerInTest[] | undefined;
 }
 
-// Whether the player `id` won or lost `game`.
 // Whether the competition is one whose games count only towards standings.
 const isBlockOrSwiss = (told: Told): boolean =>
   told.shape.kind === "block" || told.shape.kind === "swiss";
 
+// Whether the player `id` won or lost `game`.
 const isIn = (game: Game, id: GamePlayerId): boolean =>
   game.winner.equals(id) || game.loser.equals(id);
 

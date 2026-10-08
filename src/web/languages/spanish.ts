@@ -402,6 +402,7 @@ export const spanish: Language = {
     "block.lost": "perdida",
     "block.drawn": "empatada",
     "block.withdrawn": "retirado",
+    "block.gameWithdrawn": "retirada",
     "block.losses": "Derrotas",
     "competition.views": "Vistas",
     "competition.view.grid": "Cuadro",

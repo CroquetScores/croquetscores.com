@@ -46,7 +46,7 @@ const resultShown =
   ({ opponent, result, margin, withdrawn }: ResultOfSwiss): string => {
     const marked = withdrawn ? " data-withdrawn" : "";
     const said = withdrawn
-      ? ` <span class="swiss-result-withdrawn visually-hidden">${escape(speaking.say("block.withdrawn"))}</span>`
+      ? ` <span class="swiss-result-withdrawn visually-hidden">${escape(speaking.say("block.gameWithdrawn"))}</span>`
       : "";
     return `<span class="swiss-result swiss-${result}"${marked}><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(marginOf(margin))}</span>${said}</span>`;
   };
