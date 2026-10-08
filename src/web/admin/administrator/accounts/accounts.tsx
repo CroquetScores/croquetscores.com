@@ -23,7 +23,7 @@ const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => (
       add: "admin.roles.add",
       none: `admin.roles.${role}.none`,
       removeTitle: `admin.roles.${role}.removeTitle`,
-      otherwise: "admin.roles.otherwise",
+      otherwise: "admin.people.otherwise",
     }}
     explanation={(holder: Person) =>
       say(`admin.roles.${role}.removeExplanation`, { name: holder.name })

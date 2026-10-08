@@ -100,9 +100,14 @@ export const People = ({
   const [emailAddress, setEmailAddress] = useState("");
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   const [removing, setRemoving] = useState<Person | undefined>();
-  // What was refused other than the address, by its code: a Remove, or the
-  // list, whether the reader is no longer allowed it or the site failed.
-  const [refusedHere, setRefusedHere] = useState<string | undefined>();
+  // What was refused other than the address, by its code, whether the reader
+  // is no longer allowed it or the site failed. Kept apart, since each is
+  // over at a different time: a Remove's once something else is done, the
+  // list's once the list is answered. Were they one, a Remove's refusal would
+  // be lost to the list that failed after it, and a list's left standing
+  // beside the list answered after it.
+  const [removeRefused, setRemoveRefused] = useState<string | undefined>();
+  const [listRefused, setListRefused] = useState<string | undefined>();
   // Its own flag rather than `sending`, which a Remove sets too: an Add sent
   // while a Remove is under way is sent, not dropped without a word.
   const adding = useRef(false);
@@ -114,16 +119,18 @@ export const People = ({
     void fetch(at, { headers: { accept: "application/json" } })
       .then(async (response) => {
         if (response.ok) {
-          return ((await response.json()) as Record<string, Person[]>)[
+          const people = ((await response.json()) as Record<string, Person[]>)[
             listedUnder
           ];
+          if (current) setListRefused(undefined);
+          return people;
         }
         const code = await refusalOf(response);
-        if (current) setRefusedHere(code);
+        if (current) setListRefused(code);
         return undefined;
       })
       .catch(() => {
-        if (current) setRefusedHere("Unknown");
+        if (current) setListRefused("Unknown");
         return undefined;
       })
       .then((people) => {
@@ -145,7 +152,7 @@ export const People = ({
   const add = async (): Promise<void> => {
     if (adding.current) return;
     adding.current = true;
-    setRefusedHere(undefined);
+    setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
       const response = await fetch(at, {
@@ -182,7 +189,7 @@ export const People = ({
 
   const remove = async (person: Person): Promise<void> => {
     setRemoving(undefined);
-    setRefusedHere(undefined);
+    setRemoveRefused(undefined);
     setSending((count) => count + 1);
     try {
       const response = await fetch(`${at}/${idInAddress(person.id)}/remove`, {
@@ -190,13 +197,15 @@ export const People = ({
         headers: { accept: "application/json" },
       });
       if (response.ok) removed?.(person);
-      else setRefusedHere(await refusalOf(response));
+      else setRemoveRefused(await refusalOf(response));
     } catch {
       // A request that never arrived is said by the list asked for again.
     }
     setAsking((count) => count + 1);
     setSending((count) => count - 1);
   };
+
+  const refusedHere = removeRefused ?? listRefused;
 
   const form = (
     <form
@@ -248,7 +257,10 @@ export const People = ({
       )}
       <div className="people-body stack">
         {fieldAbove ? form : null}
-        {/* Not the words for a refused address, which this is not. */}
+        {/* One said at a time, the Remove's first, since it is what the
+            reader last asked for, and where the reader is no longer allowed
+            the list either the two are the same refusal. Not the words for a
+            refused address, which this is not. */}
         {refusedHere === undefined ? null : (
           <p className="people-refused" data-refused={refusedHere}>
             {refusal(refusedHere, "admin.people.otherwise").words}

@@ -488,7 +488,6 @@ export const spanish: Language = {
       "Quitar responsable del ranking mundial",
     "admin.roles.world-ranking-officer.removeExplanation":
       "{name} dejará de ser responsable del ranking mundial.",
-    "admin.roles.otherwise": "No se ha podido hacer.",
     "admin.worldRankings.title": "Importar jugadores del ranking mundial",
     "admin.worldRankings.import": "Importar",
     "admin.worldRankings.log": "Cómo fue la importación",

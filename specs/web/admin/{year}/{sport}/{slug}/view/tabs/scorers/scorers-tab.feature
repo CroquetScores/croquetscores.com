@@ -304,6 +304,15 @@ Feature: The scorers tab of a tournament's page
       When "Remove" is pressed in the modal dialog
       Then the tab says it was refused with "Tournament.Archived"
 
+    Scenario: A refused Remove is still said when the list then fails
+      Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
+      And the scorers of "Spring Open" are open
+      And "Remove" is pressed on the scorer "Sam Someone"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And the scorers of "Spring Open" are answered with a server error
+      When "Remove" is pressed in the modal dialog
+      Then the tab says it was refused with "Tournament.Archived"
+
   Rule: A list the site fails to answer is said in the tab
 
     A failure answered with no code of its own, as an error of the site's is,
@@ -314,6 +323,13 @@ Feature: The scorers tab of a tournament's page
       Given the scorers of "Spring Open" are answered with a server error
       When the scorers of "Spring Open" are opened
       Then the tab says it was refused with "Unknown"
+
+    Scenario: A list that failed is no longer said to have once it is answered
+      Given the scorers of "Spring Open" are answered with a server error
+      And the scorers of "Spring Open" are open
+      And "someone@example.com" is typed as the "Email address"
+      When "Add Scorer" is pressed
+      Then the tab says nothing was refused
 
   Rule: Every word the tab says is in the reader's language
 

@@ -284,6 +284,12 @@ Then(
   },
 );
 
+Then("the tab says nothing was refused", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(await tabPanel(this).locator(".people-refused").count(), 0);
+  });
+});
+
 // Somebody's name is theirs, and nobody's language. What the reader typed is
 // in the field, and not among the tab's words.
 Then(

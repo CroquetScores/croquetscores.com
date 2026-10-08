@@ -14,11 +14,11 @@ Four kinds of thing, kept apart.
 
 ## Jotted
 
+Nothing
+
+### Event shape after live
+
 - SETUP.md §7.2 says a stored event's shape only ever gains optional fields, with no exception while no site keeps events. Until one does, event shapes can still change, and the rule as written has already led a review to flag such a change as breaking stored data. Add that the rule starts applying once the site holds real data.
-
-- An open admin tab keeps running the build it loaded, since moving between the admin's pages happens in place (App.tsx), so after a deploy it can talk to a newer API with older code and show the wrong screens until reloaded (a team tournament showed a Standard one's tabs). The admin could notice a newer build, say by the API answering the build it serves, and offer to reload.
-
-- The admin's first modal dialog (STYLE.md §5c), adding players from a tournament's page, wants its behaviour in its feature file: focus goes to the first field (or first button) on opening and back to whatever opened it on closing; Cancel closes it keeping nothing the other buttons have not already kept, and Escape does the same; opening, closing and using it leave the address as it was; and where it stays open after doing something it says what it did in a live-region status message above the fields.
 
 ### Sending email
 
