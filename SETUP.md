@@ -19,7 +19,7 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 | Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                             |
 | Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                             |
 | Gherkin                                           | Cucumber.js, the only test runner                                                               |
-| CI via GitHub                                     | Actions: lint, typecheck, build, then the whole spec suite against the compose database         |
+| CI via GitHub                                     | Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database |
 | Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape         |
 | Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                      |
 | `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                 |
@@ -470,7 +470,7 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 - A tag given on the command line is added to the profile's rather than replacing it: `npm run test:nodb -- --tags @browser` runs the scenarios that are both.
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
-- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:features -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
+- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:nobrowser -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber, which is why CI asks of a script that runs Cucumber directly. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
 - tsx is applied twice over, once to each kind of thread. The npm script runs Cucumber's bin through tsx, which is what the main thread loads the steps with. A worker thread does not inherit that, so `loader` names `cucumber-loader.mjs`, which Cucumber registers in each worker before loading anything: tsx's own hooks, handed the empty options that Cucumber does not give them and without which tsx takes itself to have been started with Node's deprecated `--loader` flag and refuses to run. Steps execute as TypeScript with no build step either way.
 
 ### 8.1 Scenarios that need a database
@@ -506,7 +506,7 @@ The `@postgres` hooks have to run before the `@browser` ones, because a scenario
 
 That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
 
-CI installs Chromium and only Chromium. A second engine is a second download on every run, and wants a reason.
+CI does not run the `@browser` scenarios, and so installs no browser: `test:nobrowser` is what it runs. They are run by hand, with `npm run test:browser`, wherever a change touches what they check. If CI is to run them again, it installs Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
 
 ### 8.3 Gherkin conventions
 
@@ -756,7 +756,7 @@ code-review.md
 `.github/workflows/ci.yml` runs on every pull request and on nothing else, since `main` is only reached by squash-merging a pull request whose run passed on its own branch. It is two jobs, and the file itself is where what each does is said, with why beside it:
 
 - `build` installs, lints, typechecks and builds.
-- `tests` waits on it, and runs every scenario in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
+- `tests` waits on it, and runs every scenario but the `@browser` ones (`npm run test:nobrowser`) in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
 
 Nothing is kept of a run but what GitHub shows of it: a failing scenario is read off the log of the shard it failed in, and run again locally.
 

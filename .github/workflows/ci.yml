@@ -39,10 +39,6 @@ jobs:
   # failed rather than only those in the first shard to.
   tests:
     needs: build
-    # Off for now, and only for now: take this line out to run the scenarios
-    # again. AI.md and SETUP.md still say CI runs them, which is what they go
-    # back to.
-    if: false
     # Pinned, as the build's is.
     runs-on: ubuntu-24.04
 
@@ -64,34 +60,14 @@ jobs:
 
       - run: npm ci
 
-      # Which browser build Playwright wants is fixed by the version of
-      # playwright-core, so that is what the cache is keyed on. Keyed on the
-      # whole of package-lock.json, any change to any dependency would throw
-      # away a browser that had not changed.
-      - id: playwright
-        run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
-
-      # The browser the @browser scenarios drive. Only Chromium: a second engine
-      # is a second download on every run, and wants a reason. Run whether or
-      # not the cache held the browser, because --with-deps also installs the
-      # system packages Chromium needs, which live outside the cache; with the
-      # browser already there, those are all it has left to do.
-      - run: npx playwright install --with-deps chromium
-
       # Postgres, from the same compose.yaml a developer uses. Each @postgres
       # scenario makes a database of its own on it.
       - run: npm run db:up
 
+      # Everything but the @browser scenarios, so no browser is installed.
       # Two workers rather than the six cucumber.mjs asks for: the runner has
-      # two cores, and workers beyond them only wait their turn for one. Asked
-      # of test:features rather than test, because test runs it through a
-      # second npm run, and npm keeps what follows the -- for itself.
-      - run: npm run test:features -- --parallel 2 --shard ${{ matrix.shard }}/4
+      # two cores, and workers beyond them only wait their turn for one.
+      - run: npm run test:nobrowser -- --parallel 2 --shard ${{ matrix.shard }}/4
 
       - if: always()
         run: npm run db:down
