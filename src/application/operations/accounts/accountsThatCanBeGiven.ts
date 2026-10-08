@@ -7,16 +7,23 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
-import type { AccountsByAddress } from "../tournaments/tournamentOperations.js";
+
+/** What giving somebody something asks of where accounts are found. */
+export interface AccountsByAddress {
+  /** The account at `address`, or nothing where no account is found there. */
+  find(address: EmailAddress): Promise<AccountId | undefined>;
+}
 
 /**
  * The account at `emailAddress`, as it was typed, where it can be given
- * something: one found there, confirmed, and not forgotten. Nothing however
- * else the address came to have no such account, so that whoever asks learns
- * no more about somebody else's address than that it cannot be given what
- * they asked, and each caller refuses that with a code of its own. Throws
- * where the address breaks an email address's rules, as one typed anywhere
- * does.
+ * something: one found there, confirmed, and not forgotten.
+ *
+ * Nothing where there is no such account, whatever the reason: none found,
+ * one not yet confirmed, or one forgotten. The three are answered alike so
+ * that whoever asks learns no more about somebody else's address than that it
+ * cannot be given what they asked, and each caller refuses that with a code
+ * of its own. Throws where the address breaks an email address's rules, as
+ * one typed anywhere does.
  */
 export const accountThatCanBeGiven = async (
   accounts: AggregateRepository<Account, AccountId>,

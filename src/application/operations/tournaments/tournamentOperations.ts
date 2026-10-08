@@ -6,7 +6,6 @@ import {
   AccountRefused,
 } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import type { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
   type AddressTaken,
@@ -346,9 +345,3 @@ export const brokenByTournament = (
         TournamentSubtitle.from(request.subtitle ?? ""),
       )),
 ];
-
-/** What making somebody a manager or a scorer asks of where accounts are found. */
-export interface AccountsByAddress {
-  /** The account at `address`, or nothing where no account is found there. */
-  find(address: EmailAddress): Promise<AccountId | undefined>;
-}

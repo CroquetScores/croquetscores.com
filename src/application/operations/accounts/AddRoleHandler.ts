@@ -3,9 +3,11 @@ import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
-import type { AccountsByAddress } from "../tournaments/tournamentOperations.js";
 import { AddRole } from "./AddRole.js";
-import { accountThatCanBeGiven } from "./givingToAnAccount.js";
+import {
+  type AccountsByAddress,
+  accountThatCanBeGiven,
+} from "./accountsThatCanBeGiven.js";
 import {
   RoleOperationRefused,
   administratorAsking,

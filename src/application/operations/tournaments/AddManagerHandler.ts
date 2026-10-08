@@ -5,14 +5,16 @@ import type { Tournament } from "../../../domain/aggregates/tournaments/Tourname
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import type { AccountsByAddress } from "./tournamentOperations.js";
 import {
   TournamentOperationRefused,
   askedBy,
   tournamentFor,
 } from "./tournamentOperations.js";
 import { AddManager } from "./AddManager.js";
-import { accountThatCanBeGiven } from "../accounts/givingToAnAccount.js";
+import {
+  type AccountsByAddress,
+  accountThatCanBeGiven,
+} from "../accounts/accountsThatCanBeGiven.js";
 
 /**
  * Making somebody a manager of a tournament, named by their email address,
