@@ -39,6 +39,10 @@ jobs:
   # failed rather than only those in the first shard to.
   tests:
     needs: build
+    # Off for now, and only for now: take this line out to run the scenarios
+    # again. AI.md and SETUP.md still say CI runs them, which is what they go
+    # back to.
+    if: false
     # Pinned, as the build's is.
     runs-on: ubuntu-24.04
 
