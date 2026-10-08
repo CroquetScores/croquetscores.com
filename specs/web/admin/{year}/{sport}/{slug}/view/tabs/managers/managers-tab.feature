@@ -310,6 +310,54 @@ Feature: The managers tab of a tournament's page
       When "Remove" is pressed in the modal dialog
       Then the address is "/admin/"
 
+  Rule: A refused Remove is said in the tab
+
+    Remove can be refused after the dialog has been answered: the tournament
+    archived by another manager while the tab was open, or the reader taken
+    off the managers. The refusal is said above the list, by its code, rather
+    than the list going on as though nothing had been asked. Where the reader
+    is no longer a manager the list is refused too, with the same code, so
+    the scenario is of the tournament archived, whose list is still answered.
+    That a refused Remove takes nobody off is the command's to say
+    (`RemoveManager.feature`). The accounts page says its
+    refusals the same way (`accounts.feature`), since the two are drawn by
+    the same code.
+
+    Scenario: Removing once the tournament is archived says so
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the managers of "Spring Open" are open
+      And "Remove" is pressed on the manager "Sam Someone"
+      And "someone@example.com" has archived the tournament "Spring Open"
+      When "Remove" is pressed in the modal dialog
+      Then the tab says it was refused with "Tournament.Archived"
+
+    Scenario: A refused Remove is still said when the list then fails
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the managers of "Spring Open" are open
+      And "Remove" is pressed on the manager "Sam Someone"
+      And "someone@example.com" has archived the tournament "Spring Open"
+      And the managers of "Spring Open" are answered with a server error
+      When "Remove" is pressed in the modal dialog
+      Then the tab says it was refused with "Tournament.Archived"
+
+  Rule: A list the site fails to answer is said in the tab
+
+    A failure answered with no code of its own, as an error of the site's is,
+    is said as `Unknown`, rather than the tab showing neither a list nor that
+    there is nobody in it, which would look like a tab still loading.
+
+    Scenario: A list the site fails to answer says so
+      Given the managers of "Spring Open" are answered with a server error
+      When the managers of "Spring Open" are opened
+      Then the tab says it was refused with "Unknown"
+
+    Scenario: A list that failed is no longer said to have once it is answered
+      Given the managers of "Spring Open" are answered with a server error
+      And the managers of "Spring Open" are open
+      And "someone@example.com" is typed as the "Email address"
+      When "Add Manager" is pressed
+      Then the tab says nothing was refused
+
   Rule: Every word the tab says is in the reader's language
 
     The test locale shows it (`language.feature`). A manager's name is theirs,

@@ -2,10 +2,11 @@
 // scorers-tab.feature), which are one tab for two parts a reader can have in a
 // tournament. Each is said of the part it is about, "the scorer" or "the
 // manager", and read from that tab's list.
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import { tournamentNamed } from "../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../support/world.js";
 import { unmarkedWithin } from "./marks.js";
 import { eventually, openTab, tabPanel } from "./tournamentPage.js";
@@ -246,6 +247,48 @@ Then(
     await tabPanel(this).locator("form.tab-form .field-message").waitFor();
   },
 );
+
+// The tournament's list answered as an error of the site's is, with no code of
+// its own. Once only, as the list is asked for once when the tab is opened.
+Given(
+  /^the (scorers|managers) of "([^"]*)" are answered with a server error$/,
+  async function (this: SpecWorld, part: Part, name: string) {
+    const tournament = tournamentNamed(this, name).value;
+    const at = `/api/v1/tournaments/${tournament.slice(tournament.indexOf("/") + 1)}/${part}`;
+    await this.browserPage.route(
+      (url) => url.pathname === at,
+      async (route) => {
+        if (route.request().method() !== "GET") return route.fallback();
+        await route.fulfill({
+          status: 500,
+          contentType: "text/html",
+          body: "Something went wrong.",
+        });
+      },
+      { times: 1 },
+    );
+  },
+);
+
+Then(
+  "the tab says it was refused with {string}",
+  async function (this: SpecWorld, code: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await tabPanel(this)
+          .locator(".people-refused")
+          .getAttribute("data-refused", { timeout: 500 }),
+        code,
+      );
+    });
+  },
+);
+
+Then("the tab says nothing was refused", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(await tabPanel(this).locator(".people-refused").count(), 0);
+  });
+});
 
 // Somebody's name is theirs, and nobody's language. What the reader typed is
 // in the field, and not among the tab's words.

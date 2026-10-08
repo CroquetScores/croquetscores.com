@@ -22,11 +22,11 @@ interface InThePage {
 }
 
 const sections = (world: SpecWorld): Locator =>
-  world.browserPage.locator("section.role-section");
+  world.browserPage.locator("section.people");
 
 const sectionCalled = (world: SpecWorld, heading: string): Locator =>
   sections(world).filter({
-    has: world.browserPage.locator(".role-heading", {
+    has: world.browserPage.locator(".people-heading", {
       hasText: exactly(heading),
     }),
   });
@@ -40,7 +40,7 @@ const eventually = async (
   check: () => Promise<void>,
 ): Promise<void> => {
   await world.browserPage
-    .locator('section.role-section[aria-busy="false"]')
+    .locator('section.people[aria-busy="false"]')
     .nth(1)
     .waitFor();
   const until = Date.now() + 3000;
@@ -84,7 +84,7 @@ Given(
 );
 
 const headings = async (world: SpecWorld): Promise<string[]> =>
-  (await sections(world).locator(".role-heading").allInnerTexts()).map(
+  (await sections(world).locator(".people-heading").allInnerTexts()).map(
     (heading) => heading.trim(),
   );
 
@@ -124,7 +124,7 @@ Then(
           return [style.backgroundColor, style.color];
         });
       assert.deepEqual(
-        await colours(sectionCalled(this, heading).locator(".role-heading")),
+        await colours(sectionCalled(this, heading).locator(".people-heading")),
         await colours(this.browserPage.locator("nav.site-sections")),
       );
     });
@@ -225,9 +225,7 @@ When(
   "the way to remove the first world ranking officer is pressed",
   async function (this: SpecWorld) {
     const row = this.browserPage
-      .locator(
-        'section[data-role="world-ranking-officer"] ul.listed > .listed-item',
-      )
+      .locator('ul.listed[data-listed="world-ranking-officer"] > .listed-item')
       .first();
     await eventually(this, async () => {
       assert.equal(await row.locator(".listed-options button").count(), 1);
@@ -350,7 +348,7 @@ Then(
     await eventually(this, async () => {
       assert.equal(
         await sectionCalled(this, heading)
-          .locator(".role-refused")
+          .locator(".people-refused")
           .getAttribute("data-refused", { timeout: 500 }),
         code,
       );

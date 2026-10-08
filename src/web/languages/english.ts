@@ -551,7 +551,6 @@ export const english: Language = {
     // For a refusal with no words of its own, beneath the field or in place
     // of the list. Not about the address, since it may be the session that
     // ended or the site that failed.
-    "admin.roles.otherwise": "That could not be done.",
     // The page where the world ranking players are imported, and its log, a
     // line for each thing the import says. A count is said after a colon,
     // so that one player and many are said the same way.
@@ -629,6 +628,7 @@ export const english: Language = {
     // email address and takes one off.
     "admin.people.emailAddress": "Email address",
     "admin.people.remove": "Remove",
+    "admin.people.otherwise": "That could not be done.",
     // Beside the reader's own name among the managers.
     "admin.managers.you": "You",
     "admin.managers.add": "Add Manager",
