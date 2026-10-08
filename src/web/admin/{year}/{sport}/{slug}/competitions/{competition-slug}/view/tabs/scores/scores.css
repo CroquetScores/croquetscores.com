@@ -5,8 +5,9 @@
   overflow-wrap: anywhere;
 }
 
-.score-winner,
-.score-loser {
+/* The scores are what is read first, so they are the bold; a name is not. */
+.score-winner-score,
+.score-loser-score {
   font-weight: 600;
 }
 
@@ -68,10 +69,6 @@
 .test-scores th:nth-child(2),
 .test-scores .listed-score {
   text-align: center;
-}
-
-.test-scores .score-player {
-  font-weight: 600;
 }
 
 .test-scores .listed-options {
