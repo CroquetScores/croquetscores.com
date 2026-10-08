@@ -133,6 +133,25 @@ Then(
   },
 );
 
+Then("its uuid is {string}", function (this: SpecWorld, uuid: string) {
+  assert.equal(lastIdOf(this).uuid, uuid);
+});
+
+// Taken from text, with no id made of it: the places that want it only have
+// the text.
+const taken = new WeakMap<SpecWorld, string>();
+
+When(
+  "the uuid is taken from the writing {string}",
+  function (this: SpecWorld, written: string) {
+    taken.set(this, Id.uuidOf(written));
+  },
+);
+
+Then("the uuid taken is {string}", function (this: SpecWorld, uuid: string) {
+  assert.equal(taken.get(this), uuid);
+});
+
 Then("the two ids differ", function (this: SpecWorld) {
   const [first, second] = twoIdsOf(this);
   assert.ok(

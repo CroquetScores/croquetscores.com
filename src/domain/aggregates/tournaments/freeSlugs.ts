@@ -10,11 +10,6 @@ import { Slug } from "../../common/Slug.js";
 // written in two digits.
 const MOST_NUMBERED = 99;
 
-// The characters of an id after its kind, which no other id has, for the slug
-// that nothing else can be found at.
-const ownCharactersOf = (id: Id): string =>
-  id.value.slice(id.value.indexOf("/") + 1);
-
 // Every slug a thing named `slug` may be found at, in the order they are
 // tried: the slug itself, then followed by "-01" to "-99", then by the id's own
 // characters, which is never taken, since nothing else has them.
@@ -23,7 +18,7 @@ export function* slugsFor(slug: Slug, id: Id): Generator<Slug> {
   for (let number = 1; number <= MOST_NUMBERED; number += 1) {
     yield Slug.from(`${slug.toString()}-${String(number).padStart(2, "0")}`);
   }
-  yield Slug.from(`${slug.toString()}-${ownCharactersOf(id)}`);
+  yield Slug.from(`${slug.toString()}-${id.uuid}`);
 }
 
 // The last slug a thing may be found at, which slugsFor always ends with.

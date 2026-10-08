@@ -47,7 +47,7 @@ export class ImportedAccounts {
 
     const id = AccountId.create();
     const address = EmailAddress.from(
-      `account-forgotten-${id.value.slice(id.value.indexOf("/") + 1)}@croquetscores.com`,
+      `account-forgotten-${id.uuid}@croquetscores.com`,
     );
     // Brought over and forgotten in one save, so that it is never an account
     // anybody could be sent anything at, and its key is gone with it.

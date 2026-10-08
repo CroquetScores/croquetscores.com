@@ -13,6 +13,7 @@
 // so long ago that it was forgotten is marked as new again, which is no harm.
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import { Id } from "../../domain/common/Id.js";
 import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 
 /** Something a reader reads: a note or a commentary, as a page knows it. */
@@ -50,10 +51,7 @@ const anEntry = /^[0-9a-f]{12}\.[0-9a-z]{1,11}$/;
 const aYear = 60 * 60 * 24 * 365;
 
 const keyOf = (id: string): string =>
-  id
-    .slice(id.indexOf("/") + 1)
-    .replaceAll("-", "")
-    .slice(0, 12);
+  Id.uuidOf(id).replaceAll("-", "").slice(0, 12);
 
 const entryOf = (read: Readable): string =>
   `${keyOf(read.id)}.${read.changedAt.toDate().getTime().toString(36)}`;
