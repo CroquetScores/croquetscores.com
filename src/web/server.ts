@@ -403,6 +403,13 @@ export interface Application {
    * rebuilds them (scripts/rebuild-read-models.mjs); no route calls it.
    */
   readonly rebuildReadModels: () => Promise<number>;
+  /**
+   * Re-encrypts every account's key, and every email waiting with no account,
+   * with `newSiteKey`, in one transaction, and rewrites no event. For the
+   * maintenance script that changes ACCOUNT_ENCRYPTION_KEY
+   * (scripts/change-site-key.mjs); no route calls it.
+   */
+  readonly changeSiteKey: (newSiteKey: string) => Promise<void>;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -668,6 +675,11 @@ export const buildApplication = async (
     managerNotesByTournament,
     commentariesByTournament,
   ];
+  // Everything it changes is changed in one transaction, so that a change
+  // that fails leaves every key as it was. The application goes on using the
+  // key it was made with; the setting is changed and the site started again.
+  const changeSiteKey = (newSiteKey: string): Promise<void> =>
+    unitOfWork.inTransaction(() => accountKeys.changeSiteKey(newSiteKey));
   const rebuildReadModels = (): Promise<number> =>
     // One transaction, so that a rebuild that fails leaves every read model
     // as it was, and one that is running is not seen half done.
@@ -1335,6 +1347,7 @@ export const buildApplication = async (
     commentariesByTournament,
     tournamentsByAccount,
     rebuildReadModels,
+    changeSiteKey,
   };
 };
 
