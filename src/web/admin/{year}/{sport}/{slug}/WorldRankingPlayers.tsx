@@ -15,26 +15,35 @@ export interface Matching {
   readonly known: boolean;
 }
 
-// What each name has been answered with, so that the world ranking name
-// following the name asks nothing the name has not already asked. A failure
-// is not kept, so that the next keystroke asks again.
-const answered = new Map<string, Promise<Matching>>();
+// What each name is being asked, while it is asked, so that the world
+// ranking name following the name asks nothing the name is already asking.
+// Let go of once it is answered, so that a name asked again later is asked of
+// the players kept then, after an import, rather than of those kept when the
+// page was opened.
+const asking = new Map<string, Promise<Matching>>();
 
 const ask = (sport: string, typed: string): Promise<Matching> => {
   const key = `${sport}\n${typed}`;
-  const found = answered.get(key);
-  if (found !== undefined) return found;
-  const asking = fetch(
+  const underway = asking.get(key);
+  if (underway !== undefined) return underway;
+  const answer = fetch(
     `/api/v1/world-rankings/${sport}/players?typed=${encodeURIComponent(typed)}`,
     { headers: { accept: "application/json" } },
   ).then(async (response) => {
     if (!response.ok) throw new Error(`Answered ${response.status}.`);
     return (await response.json()) as Matching;
   });
-  answered.set(key, asking);
-  asking.catch(() => answered.delete(key));
-  return asking;
+  asking.set(key, answer);
+  answer.then(
+    () => asking.delete(key),
+    () => asking.delete(key),
+  );
+  return answer;
 };
+
+// How long typing must pause before what was typed is asked, so that a name
+// typed at speed is asked once or twice rather than once a letter.
+const PAUSE_MILLISECONDS = 150;
 
 /**
  * What `typed` may be among the world ranking players of `sport`, once it is
@@ -54,16 +63,19 @@ export const useMatching = (
       return;
     }
     let current = true;
-    ask(sport, typed).then(
-      (matching) => {
-        if (current) setAnswer({ key, matching });
-      },
-      // Nothing is offered, and nothing marked, where nothing could be asked:
-      // both are only advice, and the field still takes whatever is typed.
-      () => undefined,
-    );
+    const paused = setTimeout(() => {
+      ask(sport, typed).then(
+        (matching) => {
+          if (current) setAnswer({ key, matching });
+        },
+        // Nothing is offered, and nothing marked, where nothing could be
+        // asked: both are only advice, and the field takes whatever is typed.
+        () => undefined,
+      );
+    }, PAUSE_MILLISECONDS);
     return () => {
       current = false;
+      clearTimeout(paused);
     };
   }, [sport, typed, key]);
   if (answer === undefined || answer.key !== key || typed.trim() === "") {

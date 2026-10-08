@@ -41,12 +41,9 @@ interface Found {
   readonly mayChangeWorldRankingNames: boolean;
   /** Whether it is played by teams, which gives it other tabs. */
   readonly playedByTeams: boolean;
-  /** Whether its sport has world rankings, for its players' dialog. */
-  readonly asksWorldRankingNames: boolean;
+  /** Its sport, by its code, where it has world rankings, for its players' dialog. */
+  readonly worldRankingSport?: string | undefined;
 }
-
-// The sport of a tournament, from its address, whose second part it is.
-const sportIn = (address: string): string | undefined => address.split("/")[1];
 
 type Asked =
   | { readonly is: "asking" }
@@ -163,11 +160,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               {chosen === "players" ? (
                 <PlayersTab
                   tournament={asked.tournament.id}
-                  worldRankingSport={
-                    asked.tournament.asksWorldRankingNames
-                      ? sportIn(asked.tournament.address)
-                      : undefined
-                  }
+                  worldRankingSport={asked.tournament.worldRankingSport}
                   manages={asked.tournament.part === "manager"}
                 />
               ) : null}

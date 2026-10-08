@@ -1005,8 +1005,14 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
         lines.end(`${JSON.stringify({ kind: "failed", code: "Unknown" })}\n`);
       },
     );
+    // Told to whatever stands in front of the site not to hold the answer
+    // back until it is whole, as nginx and much else does unless told,
+    // which would leave the page saying nothing until both lists were read.
+    // An import whose reader has gone carries on to the end, since every
+    // list it keeps is kept whole, and says no more.
     return reply
       .header("cache-control", "no-store")
+      .header("x-accel-buffering", "no")
       .type("application/x-ndjson; charset=utf-8")
       .send(lines);
   });

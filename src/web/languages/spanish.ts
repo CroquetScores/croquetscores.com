@@ -513,7 +513,7 @@ export const spanish: Language = {
     "WorldRankingLists.Unreachable":
       "No se ha podido llegar al sitio del ranking mundial.",
     "WorldRankingLists.Unreadable":
-      "La lista tiene una línea que no se ha podido leer.",
+      "La lista no tiene la forma de las listas del ranking mundial: una línea no se ha podido leer, no tiene a nadie o no está escrita en UTF-8.",
     "admin.competitionView.otherwise":
       "Esta competición no se puede gestionar desde aquí.",
     "admin.competitions.block": "Bloque",

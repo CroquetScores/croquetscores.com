@@ -17,10 +17,12 @@ export interface TeamAsPaged {
   readonly tournamentAddress: string;
   readonly slug: string;
   /**
-   * Whether its players are asked the name the world rankings know them by,
-   * which only a sport with world rankings has (Sport.feature).
+   * Its sport, by its code, where its players are asked the name the world
+   * rankings know them by, which only a sport with world rankings has
+   * (Sport.feature), so that what is typed can be found among that sport's
+   * world ranking players. Nothing where they are not asked.
    */
-  readonly asksWorldRankingNames: boolean;
+  readonly worldRankingSport: string | undefined;
   /**
    * Whether the reader manages the tournament, and so may change its players;
    * a world ranking officer who does not may change their world ranking names

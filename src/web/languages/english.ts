@@ -577,7 +577,7 @@ export const english: Language = {
     "WorldRankingLists.Unreachable":
       "The world rankings' site could not be reached.",
     "WorldRankingLists.Unreadable":
-      "The list has a line in it that could not be read.",
+      "The list is not laid out as the world rankings lay theirs out: a line in it could not be read, it has nobody on it, or it is not written in UTF-8.",
     "admin.competitionView.otherwise":
       "This competition cannot be run from here.",
     // The Competitions tab: each competition's kind, what can be done with it,

@@ -15,11 +15,14 @@ const TABLES: Readonly<Record<WorldRankingSport, string>> = {
   gc: "gc_world_ranking_players",
 };
 
-// What was typed, as a pattern matches it: lower case, as the names are
-// compared, with every character a pattern would read as anything other than
-// itself written so that it is read as itself.
+// What was typed, as a pattern matches it, with every character a pattern
+// would read as anything other than itself written so that it is read as
+// itself. Not put into lower case here: Postgres does that to the pattern and
+// the names alike, so that the two are lowered the same way whatever the
+// database's collation, which lowers some letters differently from
+// JavaScript.
 const literally = (typed: string): string =>
-  typed.toLowerCase().replace(/[\\%_]/g, (character) => `\\${character}`);
+  typed.replace(/[\\%_]/g, (character) => `\\${character}`);
 
 export class PostgresWorldRankingPlayers
   implements WorldRankingPlayers, WorldRankingPlayerNames
@@ -60,9 +63,9 @@ export class PostgresWorldRankingPlayers
       name: string;
     }>(
       `select name from ${TABLES[sport]}
-        where lower(name) like $1 escape '\\'
-           or lower(name) like $2 escape '\\'
-           or lower(name) like $3 escape '\\'
+        where lower(name) like lower($1) escape '\\'
+           or lower(name) like lower($2) escape '\\'
+           or lower(name) like lower($3) escape '\\'
         order by name
         limit $4`,
       [`${pattern}%`, `% ${pattern}%`, `%-${pattern}%`, most],

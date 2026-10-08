@@ -67,7 +67,9 @@ export class TournamentPageHandler extends QueryHandler<
       name: tournament.name.toString(),
       part,
       playedByTeams: tournament.format.isTeamFormat,
-      asksWorldRankingNames: tournament.sport.hasWorldRankings,
+      worldRankingSport: tournament.sport.hasWorldRankings
+        ? tournament.sport.code
+        : undefined,
       mayChangeWorldRankingNames,
     };
   }
