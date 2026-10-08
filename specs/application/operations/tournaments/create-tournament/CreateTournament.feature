@@ -149,6 +149,12 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then it is refused with "Tournament.StartsAfterNextYear"
 
+    Scenario: A finish in the year after next is refused as the tournament refuses it
+      Given the tournament is to start at "2027-12-31T00:00:00Z"
+      And the tournament is to finish at "2028-01-01T00:00:00Z"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then it is refused with "Tournament.FinishesAfterNextYear"
+
     Scenario: A tournament allowing drawn games said to count towards the world rankings is refused as the tournament refuses it
       Given the tournament is said to allow drawn games
       And the tournament is said to count towards the world rankings

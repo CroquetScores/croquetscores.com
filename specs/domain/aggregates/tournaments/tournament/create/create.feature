@@ -229,6 +229,39 @@ Feature: Creating a tournament
       When a tournament is created
       Then it is not refused
 
+  Rule: A tournament finishes before the year after next begins
+
+    For the same reason: a tournament that starts next year finishes in it,
+    and one that finishes later is a year typed wrongly in its finish. Since
+    a tournament finishes no earlier than it starts, one that starts too far
+    ahead is refused for its start, which is asked first. The years are
+    counted as they are for its start.
+
+    Scenario: A tournament that finishes on the last day of next year is accepted
+      Given the tournament is to start at "2027-12-30T00:00:00Z"
+      And the tournament is to finish at "2027-12-31T00:00:00Z"
+      When a tournament is created
+      Then it is not refused
+
+    Scenario: A tournament that finishes on the first day of the year after next is refused
+      Given the tournament is to start at "2027-12-31T00:00:00Z"
+      And the tournament is to finish at "2028-01-01T00:00:00Z"
+      When a tournament is created
+      Then it is refused with "Tournament.FinishesAfterNextYear"
+
+    Scenario: A tournament that starts and finishes in the year after next is refused for its start
+      Given the tournament is to start at "2028-01-01T00:00:00Z"
+      And the tournament is to finish at "2028-01-02T00:00:00Z"
+      When a tournament is created
+      Then it is refused with "Tournament.StartsAfterNextYear"
+
+    Scenario: The years are counted for its finish from the year it is created in as it is written in UTC
+      Given the moment "2026-12-31T23:30:00-05:00"
+      And the tournament is to start at "2028-06-01T00:00:00Z"
+      And the tournament is to finish at "2028-12-31T00:00:00Z"
+      When a tournament is created
+      Then it is not refused
+
   Rule: A tournament's region is one of its country's
 
     Scenario: A region of another country is refused

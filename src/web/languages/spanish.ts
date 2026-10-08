@@ -893,6 +893,8 @@ export const spanish: Language = {
       "Un torneo no puede terminar antes de empezar.",
     "Tournament.StartsAfterNextYear":
       "Un torneo no puede empezar después del año que viene.",
+    "Tournament.FinishesAfterNextYear":
+      "Un torneo no puede terminar después del año que viene.",
     "CreateTournament.NoSuchCountry": "Elige el país.",
     "TournamentSubtitle.TooLong":
       "El subtítulo puede tener como mucho 2000 caracteres.",

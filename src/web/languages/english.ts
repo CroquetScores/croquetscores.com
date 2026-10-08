@@ -984,6 +984,8 @@ export const english: Language = {
       "A tournament cannot finish before it starts.",
     "Tournament.StartsAfterNextYear":
       "A tournament cannot start after next year.",
+    "Tournament.FinishesAfterNextYear":
+      "A tournament cannot finish after next year.",
     "CreateTournament.NoSuchCountry": "Choose the country.",
     "TournamentSubtitle.TooLong":
       "A subtitle can be no longer than 2000 characters.",

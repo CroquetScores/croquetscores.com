@@ -92,6 +92,7 @@ export type TournamentErrorCode =
   | "Tournament.FormatNotOffered"
   | "Tournament.FinishesBeforeStarts"
   | "Tournament.StartsAfterNextYear"
+  | "Tournament.FinishesAfterNextYear"
   | "Tournament.RegionNotInCountry"
   | "Tournament.NoWorldRankings"
   | "Tournament.HandicapInWorldRankings"
@@ -1756,6 +1757,14 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.StartsAfterNextYear",
         "The tournament starts after next year.",
+      );
+    }
+    // Asked after its start, so that one wholly too far ahead is refused for
+    // its start, where the year was most likely typed wrongly.
+    if (finishes.toDate().getTime() >= yearAfterNext) {
+      refuse(
+        "Tournament.FinishesAfterNextYear",
+        "The tournament finishes after next year.",
       );
     }
     const region =
