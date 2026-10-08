@@ -37,12 +37,15 @@ export type Listed =
 
 /**
  * What a kind of competition brings over besides what every competition
- * does: how it is added to its tournament, and the places it is entered in,
- * in order. Nothing where it is left behind without an error.
+ * does: how it is added to its tournament, the places it is entered in, in
+ * order, and where its games are not added in the order the old sites
+ * numbered them, the order they are. Nothing where it is left behind without
+ * an error.
  */
 export type Shaped =
   | {
       readonly entries: readonly Listed[];
+      readonly gamesInOrder?: (games: readonly OldGame[]) => readonly OldGame[];
       readonly add: (
         tournament: Tournament,
         id: CompetitionId,
@@ -82,8 +85,9 @@ export const gamesInOrder = (games: readonly OldGame[]): OldGame[] =>
   [...games].sort((one, other) => one.Id - other.Id);
 
 /**
- * Adds each of `games` to `competition`, in the order the old sites numbered
- * them, each at the moment the old sites kept it at. A game whose player is
+ * Adds each of `games` to `competition`, in the order `ordered` puts them, or
+ * the old sites numbered them where nothing says otherwise, each at the moment
+ * the old sites kept it at. A game whose player is
  * not in the competition, or that the site refuses, is kept as an error
  * against `documentId` naming it, and the rest are added all the same.
  */
@@ -96,8 +100,9 @@ export const addGames = async (
   told: Told,
   website: Website,
   by: AccountId,
+  ordered: (games: readonly OldGame[]) => readonly OldGame[] = gamesInOrder,
 ): Promise<void> => {
-  for (const game of gamesInOrder(games)) {
+  for (const game of ordered(games)) {
     try {
       const winner = playerOf(game.Winner.PlayerId);
       const loser = playerOf(game.Loser.PlayerId);
@@ -253,6 +258,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       told,
       Website.from(website),
       by,
+      shaped.gamesInOrder,
     );
 
     for (const playerId of withdrew) {

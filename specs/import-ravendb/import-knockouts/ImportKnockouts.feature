@@ -34,6 +34,16 @@ Feature: Importing the old sites' knockouts
   no games yet is the best of what the round before was, or of 1 where it is
   the first.
 
+  A knockout's games are added round by round, the first round first, and
+  each round's in the order the old site numbered them. The old sites took a
+  score whenever it was entered, so a match of an early round was sometimes
+  finished after a later round had been played, its last games entered late.
+  The site takes a game only between two players drawn to meet, and a player
+  is drawn into the next round only once they have won their match, so added
+  in the order they were entered, the later round's games would be refused
+  for coming before the match that sent its players there. Which round a
+  game is of is worked out as the best-of is, from the draw and every game.
+
   A knockout has no standings, so nothing is carried forward in one. The old
   sites kept counts for its players that they never showed, and they are left
   behind.
@@ -291,6 +301,56 @@ Feature: Importing the old sites' knockouts
       And player 4 is in the competition
       When the competition is imported
       Then round 1 of the competition kept for "knockouts/30" on "croquetscores.com" is the best of 1
+
+  Rule: A knockout's games are added round by round, the first round first
+
+    Ann Able and Ben Baker play the best of 3, and the first round is the
+    best of 3 for it. Ann's deciding game against Ben is game 6, entered after
+    game 5, her final against Cat Cole.
+
+    Scenario: A game of a round finished late is added before the next round's
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 2
+      And game 2 was lost by player 1
+      And game 3 was won by player 3
+      And game 3 was lost by player 4
+      And game 4 was won by player 3
+      And game 4 was lost by player 4
+      And game 5 was won by player 1
+      And game 5 was lost by player 3
+      And game 6 was won by player 1
+      And game 6 was lost by player 2
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 6 games
+
+    Scenario: A later round's game entered before an earlier round finished is not an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 2
+      And game 2 was lost by player 1
+      And game 3 was won by player 3
+      And game 3 was lost by player 4
+      And game 4 was won by player 3
+      And game 4 was lost by player 4
+      And game 5 was won by player 1
+      And game 5 was lost by player 3
+      And game 6 was won by player 1
+      And game 6 was lost by player 2
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
 
   Rule: Nothing is carried forward in a knockout
 

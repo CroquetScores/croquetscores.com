@@ -75,7 +75,8 @@ const odd = (games: number): number => (games % 2 === 0 ? games + 1 : games);
  * round first, worked out from its games as the old sites worked it out each
  * time they showed one: the most games any match of the round had, made odd,
  * and never fewer than the round before. A round with no games is the best of
- * what the round before was, or of 1 where it is the first.
+ * what the round before was, or of 1 where it is the first. And which round
+ * each game is of, by its number, for the games to be added round by round.
  *
  * A match's games are the games between its two players not already given to
  * a match, and its winner is whoever won more of them, or whoever met a bye.
@@ -83,9 +84,10 @@ const odd = (games: number): number => (games % 2 === 0 ? games + 1 : games);
 const roundsOf = (
   places: readonly Listed[],
   games: readonly Game[],
-): number[] => {
+): { readonly rounds: number[]; readonly roundOf: Map<number, number> } => {
   const used = new Set<number>();
   const rounds: number[] = [];
+  const roundOf = new Map<number, number>();
   let standing: (number | "bye" | undefined)[] = places.map((place) =>
     place.bye ? "bye" : place.player._Id,
   );
@@ -99,7 +101,10 @@ const roundsOf = (
         const played = games.filter(
           (game) => !used.has(game.Id) && isBetween(game, one, other),
         );
-        for (const game of played) used.add(game.Id);
+        for (const game of played) {
+          used.add(game.Id);
+          roundOf.set(game.Id, rounds.length);
+        }
         most = Math.max(most, played.length);
         const won = (number: number): number =>
           played.filter((game) => game.Winner.PlayerId === number).length;
@@ -122,8 +127,26 @@ const roundsOf = (
     rounds.push(Math.max(before, most === 0 ? before : odd(most)));
     standing = through;
   }
-  return rounds;
+  return { rounds, roundOf };
 };
+
+/**
+ * `games` round by round, the first round first, and each round's in the
+ * order the old sites numbered them (ImportKnockouts.feature): a match the old
+ * site finished late, after the next round was played, is still added before
+ * the next round's games, which its winner is drawn into. A game given to no
+ * match comes last, in the order it was numbered, to be refused as it would be
+ * anywhere.
+ */
+const roundByRound = (
+  games: readonly Game[],
+  roundOf: ReadonlyMap<number, number>,
+): Game[] =>
+  gamesInOrder(games).sort(
+    (one, other) =>
+      (roundOf.get(one.Id) ?? Number.MAX_SAFE_INTEGER) -
+      (roundOf.get(other.Id) ?? Number.MAX_SAFE_INTEGER),
+  );
 
 /**
  * Brings the old sites' knockouts over as knockouts, drawn as the old sites
@@ -153,9 +176,11 @@ export class ImportKnockouts implements Importer<Knockout> {
               ? undefined
               : withByesWorkedOut(listed, games);
         if (places?.length !== size) return undefined;
-        const draw = KnockoutDraw.from(size, roundsOf(places, games));
+        const { rounds, roundOf } = roundsOf(places, games);
+        const draw = KnockoutDraw.from(size, rounds);
         return {
           entries: places,
+          gamesInOrder: (toAdd) => roundByRound(toAdd, roundOf),
           add: (tournament, id, name, by, at) => {
             tournament.addKnockout(id, name, draw, by, at);
           },
