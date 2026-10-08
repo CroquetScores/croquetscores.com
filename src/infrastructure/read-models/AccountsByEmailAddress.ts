@@ -140,30 +140,33 @@ export class AccountsByEmailAddress implements Projection {
    * has none or has one waiting to be confirmed.
    */
   async findConfirmed(address: EmailAddress): Promise<AccountId | undefined> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{ account_id: string }>(
-        `select account_id
-           from accounts_by_email_address
-          where email_address_hash = $1 and not forgotten and confirmed`,
-        [this.hasher.hash(address)],
-      );
-    const row = rows[0];
-    return row === undefined ? undefined : AccountId.from(row.account_id);
+    const found = await this.#accountAt(address);
+    return found?.confirmed === true ? found.id : undefined;
   }
 
   /** The account `address` belongs to, or nothing when it has none. */
   async find(address: EmailAddress): Promise<AccountId | undefined> {
+    return (await this.#accountAt(address))?.id;
+  }
+
+  // The account `address` belongs to, among those not forgotten, and whether
+  // it is confirmed: one statement of which row an address names, for both
+  // finding an account and finding one that can be given something.
+  async #accountAt(
+    address: EmailAddress,
+  ): Promise<{ id: AccountId; confirmed: boolean } | undefined> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<{ account_id: string }>(
-        `select account_id
+      .query<{ account_id: string; confirmed: boolean }>(
+        `select account_id, confirmed
            from accounts_by_email_address
           where email_address_hash = $1 and not forgotten`,
         [this.hasher.hash(address)],
       );
     const row = rows[0];
-    return row === undefined ? undefined : AccountId.from(row.account_id);
+    return row === undefined
+      ? undefined
+      : { id: AccountId.from(row.account_id), confirmed: row.confirmed };
   }
 
   /**
@@ -182,29 +185,25 @@ export class AccountsByEmailAddress implements Projection {
   async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
     const connection = this.unitOfWork.connection();
     await connection.query(`truncate accounts_by_email_address`);
-    const forgotten = new Set(
-      events
-        .filter(({ event }) => event instanceof AccountForgotten)
-        .map(({ stream }) => stream),
-    );
-    // An account brought over is confirmed as it arrives, so only a
-    // registered one is asked for its confirming.
-    const confirmed = new Set(
-      events
-        .filter(
-          ({ event }) =>
-            event instanceof EmailAddressConfirmed ||
-            event instanceof AccountBroughtOver,
-        )
-        .map(({ stream }) => stream),
-    );
-    // And where each account ended up, before any row is written: a row
-    // written at an address its account later moved from would take that
-    // address from whichever account has it now, if that account's stream
-    // were read first. A stream's events come in the order they were kept, so
-    // the last move read is the last made.
+    // Which accounts were forgotten, which are confirmed, and where each
+    // ended up, all in one reading before any row is written. Where each
+    // ended up, since a row written at an address its account later moved
+    // from would take that address from whichever account has it now, if that
+    // account's stream were read first; a stream's events come in the order
+    // they were kept, so the last move read is the last made. Confirmed by
+    // its address being confirmed, or by arriving from the old site, where
+    // every account was.
+    const forgotten = new Set<string>();
+    const confirmed = new Set<string>();
     const movedTo = new Map<string, string>();
     for (const { stream, event } of events) {
+      if (event instanceof AccountForgotten) forgotten.add(stream);
+      if (
+        event instanceof EmailAddressConfirmed ||
+        event instanceof AccountBroughtOver
+      ) {
+        confirmed.add(stream);
+      }
       if (event instanceof EmailAddressChanged) {
         movedTo.set(stream, event.emailAddressHash);
       }

@@ -36,17 +36,17 @@ export class AddScorerHandler extends CommandHandler<AddScorer, void> {
       command.tournament,
       "AddScorer",
     );
-    const account = await accountThatCanBeGiven(
+    const found = await accountThatCanBeGiven(
       this.accountsByAddress,
       command.emailAddress,
     );
-    if (account === undefined) {
+    if (found === undefined) {
       throw new TournamentOperationRefused(
         "AddScorer.NoSuchAccount",
         "The address has no account that can be made a scorer.",
       );
     }
-    tournament.addScorer(account, by, command.requestedAt);
+    tournament.addScorer(found, by, command.requestedAt);
     await this.tournaments.save(tournament);
   }
 }

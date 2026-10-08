@@ -1,8 +1,10 @@
 // Finding the account somebody is to be given something by their email
 // address: a role (AddRole.feature), or a part in a tournament as a manager
-// (AddManager.feature) or a scorer (AddScorer.feature). Written once, so that
-// the three cannot come to disagree about which accounts can be given
-// anything.
+// (AddManager.feature) or a scorer (AddScorer.feature). Asked here once, of
+// one question, so that the three cannot come to disagree about which accounts
+// can be given anything. Which accounts those are is the answer of where
+// accounts are found by their address (FindsConfirmedAccountByAddress), kept
+// by the read model (AccountsByEmailAddress.feature).
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { FindsConfirmedAccountByAddress } from "./accountsByAddress.js";

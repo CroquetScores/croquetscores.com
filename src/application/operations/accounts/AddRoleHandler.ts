@@ -33,10 +33,12 @@ export class AddRoleHandler extends CommandHandler<AddRole, void> {
       this.accountsByAddress,
       command.emailAddress,
     );
-    // Loaded, since giving a role changes the account.
+    // Loaded, since giving a role changes the account, and asked again as it
+    // is now, so that one forgotten since it was found is refused as one that
+    // cannot be given a role rather than by the account.
     const account =
       found === undefined ? undefined : await this.accounts.load(found);
-    if (account === undefined) {
+    if (account === undefined || !account.confirmed || account.forgotten) {
       throw new RoleOperationRefused(
         "AddRole.NoSuchAccount",
         "The address has no account that can be given a role.",

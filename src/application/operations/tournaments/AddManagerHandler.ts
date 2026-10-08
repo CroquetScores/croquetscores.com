@@ -36,17 +36,17 @@ export class AddManagerHandler extends CommandHandler<AddManager, void> {
       command.tournament,
       "AddManager",
     );
-    const account = await accountThatCanBeGiven(
+    const found = await accountThatCanBeGiven(
       this.accountsByAddress,
       command.emailAddress,
     );
-    if (account === undefined) {
+    if (found === undefined) {
       throw new TournamentOperationRefused(
         "AddManager.NoSuchAccount",
         "The address has no account that can be made a manager.",
       );
     }
-    tournament.addManager(account, by, command.requestedAt);
+    tournament.addManager(found, by, command.requestedAt);
     await this.tournaments.save(tournament);
   }
 }
