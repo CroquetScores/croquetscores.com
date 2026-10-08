@@ -21,6 +21,7 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { describedFailure } from "./ImportRefused.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
+import { numberedApart } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
 import type {
   Competition as OldCompetition,
@@ -154,7 +155,18 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       website,
       tournamentDocument,
     );
-    const name = CompetitionName.from(document.Name);
+    // The site tells a tournament's competitions apart by their names, in any
+    // case, and the old sites did not, so a name another of them has is
+    // numbered apart from theirs, archived ones among them, as the tournament
+    // compares it.
+    const name = CompetitionName.from(
+      numberedApart(
+        CompetitionName.from(document.Name).toString(),
+        tournament.competitions.map(({ reference }) =>
+          reference.name.toString(),
+        ),
+      ),
+    );
 
     const bye = TournamentPlayerId.bye().value;
     const listed: Listed[] = [];

@@ -920,10 +920,13 @@ export class Competition extends AggregateRoot {
   // of them, which is a game being corrected to other players and would no
   // longer count as it was: in a block, in a match not yet decided; in a
   // knockout, between the two drawn to meet in one not yet decided. A Swiss
-  // asks nothing more of it. In a test, a game that would start a match
-  // beyond those it is expected to have is refused too.
+  // asks nothing more of it, nor does a block whose matches are the best of
+  // 1, which is played in rounds, each game a match of its own, and two
+  // players can meet in as many rounds as it has. In a test, a game that
+  // would start a match beyond those it is expected to have is refused too.
   #ensureItCounts(game: Game, told: Told, without?: Game): void {
     const { shape } = told;
+    if (shape.kind === "block" && shape.bestOf.games === 1) return;
     const counting = this.#counting().filter((each) => !each.equals(without));
     // A test's two players meet in a match of its best-of, as a block's do.
     if (shape.kind === "block" || shape.kind === "test") {

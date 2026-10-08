@@ -227,29 +227,21 @@ Then(
   },
 );
 
-const firstCommentOf = async (
-  world: SpecWorld,
-  title: string,
-  id: string,
-  website: string,
-) => {
-  const { commentary } = await commentaryCalled(world, title, id, website);
-  const [first] = commentary.comments;
-  assert.ok(first !== undefined, "The commentary has no comments.");
-  return first;
-};
-
 Then(
-  "the first comment of the commentary {string} of the tournament kept for {string} on {string} says {string}",
+  /^the (first|last) comment of the commentary "(.*)" of the tournament kept for "(.*)" on "(.*)" says "(.*)"$/,
   async function (
     this: SpecWorld,
+    which: string,
     title: string,
     id: string,
     website: string,
     says: string,
   ) {
-    const first = await firstCommentOf(this, title, id, website);
-    assert.equal(first.text.toString(), says);
+    const { commentary } = await commentaryCalled(this, title, id, website);
+    const comment =
+      which === "first" ? commentary.comments[0] : commentary.comments.at(-1);
+    assert.ok(comment !== undefined, "The commentary has no comments.");
+    assert.equal(comment.text.toString(), says);
   },
 );
 

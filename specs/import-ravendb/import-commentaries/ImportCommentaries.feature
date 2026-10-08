@@ -89,6 +89,64 @@ Feature: Importing the old sites' commentaries
       When the commentary is imported
       Then the commentary "Live from Court 1" of the tournament kept for "tournaments/13" on "croquetscores.com" is written by the account that created it
 
+  Rule: A title too long for the site is shortened, and kept whole as the first comment
+
+    The old sites let a title run longer than the site does, which is 100
+    characters (`CommentaryTitle.feature`), so that a title fits a line of the
+    list on a phone. Such a commentary is brought over rather than refused,
+    called the first 97 characters of its title and "...", so that it is
+    plain that more was said. Nothing of what its writer wrote is lost: the
+    whole title is its first comment, before the comments the old site kept,
+    written by its writer when the commentary was started. A title as long as
+    the site allows, or shorter, is kept whole and adds no comment.
+
+    Scenario: A commentary with a title too long is called the first 97 characters of it and "..."
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the championship in the rain"
+      When the commentary is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the ch..."
+
+    Scenario: The whole title is the first comment
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the championship in the rain"
+      And comment 1 says "Play has started."
+      When the commentary is imported
+      Then the first comment of the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the ch..." of the tournament kept for "tournaments/12" on "croquetscores.com" says "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the championship in the rain"
+
+    Scenario: The comments the old site kept come after the whole title
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the championship in the rain"
+      And comment 1 says "Play has started."
+      When the commentary is imported
+      Then the last comment of the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the ch..." of the tournament kept for "tournaments/12" on "croquetscores.com" says "Play has started."
+
+    Scenario: The whole title was written when the commentary was started
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the championship in the rain"
+      And comment 1 says "Play has started."
+      And comment 1 was written at "2014-03-01T09:15:00.0000000"
+      When the commentary is imported
+      Then the first comment of the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the ch..." of the tournament kept for "tournaments/12" on "croquetscores.com" was written at "2014-03-01T09:15:00Z"
+
+    Scenario: A commentary with a title too long and no comments has the whole title as its one comment
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the championship in the rain"
+      When the commentary is imported
+      Then the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the ch..." of the tournament kept for "tournaments/12" on "croquetscores.com" has 1 comment
+
+    Scenario: A title as long as the site allows is kept whole
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the champ"
+      When the commentary is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the champ"
+
+    Scenario: A title as long as the site allows adds no comment
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the champ"
+      And comment 1 says "Play has started."
+      When the commentary is imported
+      Then the commentary "Live from Court 1 of the Spring Open, where Sam Someone and Alex Another play the final of the champ" of the tournament kept for "tournaments/12" on "croquetscores.com" has 1 comment
+
   Rule: Comments are added in the order they were written
 
     Scenario: A comment becomes a comment of the commentary

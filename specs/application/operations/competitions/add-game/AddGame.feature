@@ -170,9 +170,19 @@ Feature: Adding a game's score to a competition
       When the reader signed in to the account for "organiser@example.com" adds a game of "Sam Someone" beating a player "Block A" of "Spring Open" does not have
       Then it is refused with "Competition.NoSuchPlayer"
 
-    Scenario: A second game of a match the block says is the best of 1 is refused
+    Scenario: A second game between two players of a block the best of 1 is kept
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" adds the game of "Alex Another" beating "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      Then "Block A" of "Spring Open" has the score of "Alex Another" beating "Sam Someone" 26 to 20
+
+    Scenario: A game of a match the block says is the best of 3, already decided, is refused as the competition refuses it
+      Given the block is to be the best of 3
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 10 in "Block B" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Alex Another" beating "Sam Someone" 26 to 20 in "Block B" of "Spring Open"
       Then it is refused with "Competition.MatchDecided"
 
     Scenario: A second game of a match the block says is the best of 3 is kept

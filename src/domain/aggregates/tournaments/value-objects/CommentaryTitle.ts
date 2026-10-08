@@ -52,6 +52,9 @@ const titles = new Validator<string, CommentaryTitleErrorCode>({
  * wherever it is shown.
  */
 export class CommentaryTitle {
+  /** The most characters a title holds, as a reader counts them. */
+  static readonly mostCharacters = MOST_CHARACTERS;
+
   readonly #given: string;
 
   private constructor(given: string) {

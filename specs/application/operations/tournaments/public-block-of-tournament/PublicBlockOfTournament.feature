@@ -23,6 +23,11 @@ Feature: A block of a tournament, for anybody to read
   played, so it is answered, and said to be withdrawn, but it counts for
   nothing too (`withdrawGame.feature`).
 
+  In a block whose matches are the best of 1, which is played in rounds, two
+  players can meet more than once (`addGame.feature`), and each game is a
+  match of its own: a player has won as many matches as games, against
+  whoever they were.
+
   A player has won a match when they have won more than half the games it is
   the best of, so two of a best of 3, and two of a best of 2. A match not yet
   decided, or shared one each in a best of 2, is won by neither. A player
@@ -315,6 +320,26 @@ Feature: A block of a tournament, for anybody to read
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
       When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the block "Sam Someone" is answered with 1 match won
+
+    Scenario: Two players meeting in two rounds of a best of 1 play two matches
+      Given the block is to be the best of 1
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 2 matches won
+
+    Scenario: A match lost in each of two rounds of a best of 1 is two matches lost
+      Given the block is to be the best of 1
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with 2 matches lost
 
     Scenario: A match won with an archived game is not won
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"

@@ -7,3 +7,24 @@
 ## Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
+
+## Importing Changes
+
+### Commentaries
+
+#### Comment
+
+Change maximum comment length to 100,000
+
+### Tournament - Teams
+
+When importing a tournament whose type is teams. 
+
+- Read all competitions to get:
+    - all teams in the tournament
+    - the minimum start date
+    - the maximum finish date
+- Import the tournament with minimum start date and maximum finish date.
+- Add unique team names to tournament
+- Add players to teams
+- Add scores

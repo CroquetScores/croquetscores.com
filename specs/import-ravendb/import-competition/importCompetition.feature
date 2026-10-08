@@ -67,6 +67,53 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then "blocks/30" on "croquetscores.com" is not kept as any competition
 
+  Rule: Two competitions of a tournament with the same name are told apart by a number
+
+    The site tells a tournament's competitions apart by their names, in any
+    case, and the old sites did not. A competition named as one of its
+    tournament's others already is, in any case, is named with the first
+    number from 2 that makes it a name none of them has, as "A Block (2)", as a
+    tournament player and a commentary are.
+
+    Scenario: The second competition with a name is numbered
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "A Block (2)"
+
+    Scenario: The first competition with a name keeps it
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "A Block"
+
+    Scenario: A name the same in another case is numbered
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "a block"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "a block (2)"
+
+    Scenario: The third competition with a name is numbered past the second
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the competition is imported
+      And the block "blocks/32" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "A Block (3)"
+
   Rule: An archived competition is left behind
 
     Scenario: An archived competition is not kept as any competition

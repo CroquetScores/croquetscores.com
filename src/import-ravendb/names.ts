@@ -51,6 +51,25 @@ export const tournamentNameToImport = (name: string): string => {
   return lengthened(cased);
 };
 
+// Characters as a reader counts them, as charactersIn counts them, so that a
+// text is cut between two of them and never within one.
+const graphemes = new Intl.Segmenter();
+
+/**
+ * `text` cut to its first `most` characters less three, as a reader counts
+ * them, and "...", so that it is plain that more was said; or `text` as it is
+ * where it holds no more than `most`. Spaces left at the cut are taken off, so
+ * that the "..." follows the last word cut.
+ */
+export const shortenedTo = (text: string, most: number): string => {
+  if (charactersIn(text) <= most) return text;
+  const kept = [...graphemes.segment(text)]
+    .slice(0, most - 3)
+    .map(({ segment }) => segment)
+    .join("");
+  return `${kept.trimEnd()}...`;
+};
+
 /**
  * `name`, or where one of `taken` is the same name in any case, the name
  * followed by the first number from 2 that makes it a name nobody has, as

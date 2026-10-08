@@ -12,7 +12,7 @@ import type { ImportDatabase } from "./ImportDatabase.js";
 import type { ImportedAccounts } from "./ImportedAccounts.js";
 import { describedFailure } from "./ImportRefused.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
-import { numberedApart } from "./names.js";
+import { numberedApart, shortenedTo } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
@@ -74,14 +74,17 @@ export class ImportCommentaries implements Importer<OldCommentary> {
         at,
       );
 
+      // The old sites let a title run longer than the site does. One that did
+      // is shortened, and kept whole as the first comment, so that nothing
+      // its writer wrote is lost.
+      const whole = document.Title.trim();
+      const shortened = shortenedTo(whole, CommentaryTitle.mostCharacters);
+
       // The site tells a tournament's commentaries apart by their titles, in
       // any case, and the old sites did not.
       const taken = await this.listed.taken(tournament.id);
       const title = CommentaryTitle.from(
-        numberedApart(
-          CommentaryTitle.from(document.Title).toString(),
-          taken.titles,
-        ),
+        numberedApart(CommentaryTitle.from(shortened).toString(), taken.titles),
       );
       tournament.allowWritingCommentary();
       const commentary = Commentary.start(
@@ -92,6 +95,17 @@ export class ImportCommentaries implements Importer<OldCommentary> {
         writer,
         at,
       );
+
+      // Written by its writer when the commentary was started, before every
+      // comment the old site kept.
+      if (shortened !== whole) {
+        commentary.addComment(
+          CommentId.create(),
+          CommentText.from(whole),
+          writer,
+          at,
+        );
+      }
 
       // Numbered from 1 among those not archived, as the error names them.
       for (const [index, comment] of comments.entries()) {

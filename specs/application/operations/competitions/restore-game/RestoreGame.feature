@@ -29,6 +29,7 @@ Feature: Restoring an archived score
     And the moment "2026-09-26T10:00:00Z"
     And "organiser@example.com" has an account, confirmed, called "Ollie Organiser"
     And "organiser@example.com" has created the tournament "Spring Open"
+    And the block is to be the best of 3
     And "organiser@example.com" has added the block "Block A" to "Spring Open"
     And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
     And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
@@ -68,6 +69,7 @@ Feature: Restoring an archived score
 
     Scenario: A score of a match decided without it since is refused as the competition refuses it
       Given "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 5 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" restores the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       Then it is refused with "Competition.MatchDecided"
 
