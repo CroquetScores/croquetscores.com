@@ -561,6 +561,20 @@ export const spanish: Language = {
       "Un encuentro tiene que ser al mejor de al menos 1 partida.",
     "KnockoutDraw.EvenBestOf":
       "Un encuentro de eliminatoria tiene que tener ganador, así que es al mejor de un número impar de partidas.",
+    "admin.hover.tournaments.new": "Crear un torneo nuevo",
+    "admin.hover.tournaments.manage":
+      "Gestionar los jugadores, equipos, competiciones y resultados de este torneo",
+    "admin.hover.tournaments.edit": "Cambiar los datos de este torneo",
+    "admin.hover.tournaments.scores":
+      "Introducir los resultados de este torneo",
+    "admin.hover.tournaments.players":
+      "Ocuparse de los jugadores de este torneo",
+    "admin.hover.competitions.view":
+      "Abrir esta competición para ver e introducir sus jugadores y resultados",
+    "admin.hover.tests.view":
+      "Abrir este test para ver e introducir sus resultados",
+    "admin.hover.teams.view":
+      "Abrir este equipo para ver y gestionar sus jugadores",
     "admin.hover.modal.cancel": "Cerrar esto sin guardar nada",
     "admin.hover.modal.ok": "Cerrar este mensaje",
     "admin.hover.tab": "Mostrar la pestaña {name}",

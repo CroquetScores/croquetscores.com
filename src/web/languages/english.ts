@@ -627,6 +627,16 @@ export const english: Language = {
     "KnockoutDraw.EvenBestOf":
       "A knockout's match has to have a winner, so it is the best of an odd number of games.",
     // Every modal dialog's way out, since the page beneath cannot be reached.
+    "admin.hover.tournaments.new": "Create a new tournament",
+    "admin.hover.tournaments.manage":
+      "Manage this tournament's players, teams, competitions and scores",
+    "admin.hover.tournaments.edit": "Change this tournament's details",
+    "admin.hover.tournaments.scores": "Enter this tournament's scores",
+    "admin.hover.tournaments.players": "Look after this tournament's players",
+    "admin.hover.competitions.view":
+      "Open this competition to see and enter its players and scores",
+    "admin.hover.tests.view": "Open this test to see and enter its scores",
+    "admin.hover.teams.view": "Open this team to see and manage its players",
     "admin.hover.modal.cancel": "Close this without keeping anything",
     "admin.hover.modal.ok": "Close this message",
     "admin.hover.tab": "Show the {name} tab",

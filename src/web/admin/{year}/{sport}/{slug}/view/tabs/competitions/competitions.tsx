@@ -174,7 +174,12 @@ export const CompetitionsTab = ({
                       </button>,
                     ]
                   : []),
-                <a key="view" className="button" href={pageOf(competition)}>
+                <a
+                  key="view"
+                  className="button"
+                  href={pageOf(competition)}
+                  title={say("admin.hover.competitions.view")}
+                >
                   {say("admin.competitions.view")}
                 </a>,
                 ...(part === "manager"

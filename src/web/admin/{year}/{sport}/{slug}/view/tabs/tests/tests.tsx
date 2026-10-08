@@ -276,7 +276,12 @@ export const TestsTab = ({
                       </button>,
                     ]
                   : []),
-                <a key="view" className="button" href={pageOf(test)}>
+                <a
+                  key="view"
+                  className="button"
+                  href={pageOf(test)}
+                  title={say("admin.hover.tests.view")}
+                >
                   {say("admin.tests.view")}
                 </a>,
                 ...(part === "manager"
