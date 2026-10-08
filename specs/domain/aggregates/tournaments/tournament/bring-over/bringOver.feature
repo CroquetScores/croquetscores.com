@@ -2,8 +2,8 @@ Feature: Bringing a tournament over from the old sites
 
   A tournament brought over from the old sites (`ImportTournaments.feature`)
   begins as a created one does (`create.feature`), with everything creating
-  says and every refusal creating makes, but for one thing: where it is
-  found. A created tournament is found at a slug made from its name, and the
+  says and every refusal creating makes, but for two things. The first is
+  where it is found. A created tournament is found at a slug made from its name, and the
   first of its numbered forms that nobody has. A tournament brought over is
   found at the slug the old site gave it, since links to it are all over the
   web, and the old site had often renamed it since.
@@ -14,6 +14,14 @@ Feature: Bringing a tournament over from the old sites
   tournament of its own. The year and the sport are the tournament's, as
   they are for a created one, so that the address still says when and what
   it was.
+
+  The second is how far ahead it may finish. A created tournament finishes
+  before the year after next, so that a year typed wrongly in its finish is
+  caught as it is entered. A tournament brought over was entered long ago,
+  and keeps the finish the old site gave it, so that a slip in its finish
+  does not lose it, its games and the links to it. Its start is held as a
+  created one's, the years counted from its start, since the old sites kept
+  no moment a tournament was created at, so its start is always within them.
 
   Being brought over is recorded as its creation is, since the tournament
   rebuilt from it is a tournament like any other.
@@ -77,6 +85,14 @@ Feature: Bringing a tournament over from the old sites
       And the tournament is to finish at "2014-03-01T00:00:00Z"
       When a tournament is brought over at the slug "canterbury-open"
       Then it is refused with "Tournament.FinishesBeforeStarts"
+
+  Rule: A tournament brought over keeps the finish the old site gave it
+
+    Scenario: A tournament that finishes after the year after next is brought over
+      Given the tournament is to start at "2014-03-01T00:00:00Z"
+      And the tournament is to finish at "2041-03-03T00:00:00Z"
+      When a tournament is brought over at the slug "canterbury-open"
+      Then it is not refused
 
   Rule: A tournament rebuilt from being brought over is found where it was brought over to
 

@@ -85,6 +85,12 @@ Feature: Changing what a tournament is
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
       Then it is refused with "Tournament.StartsAfterNextYear"
 
+    Scenario: A finish in the year after next is refused as the tournament refuses it
+      Given the update starts it at "2027-12-31T00:00:00Z"
+      And the update finishes it at "2028-01-01T00:00:00Z"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then it is refused with "Tournament.FinishesAfterNextYear"
+
     Scenario: Allowing drawn games in a tournament counting towards the world rankings is refused as the tournament refuses it
       Given the update allows drawn games
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"

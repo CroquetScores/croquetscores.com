@@ -41,6 +41,7 @@ const withWorldRankings = ["ac", "gc"];
 const fieldOfRefusal: Readonly<Record<string, string>> = {
   "Tournament.FinishesBeforeStarts": "finishes",
   "Tournament.StartsAfterNextYear": "starts",
+  "Tournament.FinishesAfterNextYear": "finishes",
   "Tournament.RegionNotInCountry": "region",
   "Tournament.SportNotOffered": "sport",
   "Tournament.FormatNotOffered": "format",

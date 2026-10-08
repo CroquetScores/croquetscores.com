@@ -163,6 +163,14 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then it is refused with "Tournament.StartsAfterNextYear"
 
+    Scenario: Updating to finish in the year after next is refused
+      Given a stream where a tournament was created starting at "2026-10-03T00:00:00Z"
+      And the tournament is rebuilt from the stream
+      And the update starts it at "2027-12-31T00:00:00Z"
+      And the update finishes it at "2028-01-01T00:00:00Z"
+      When the tournament is updated
+      Then it is refused with "Tournament.FinishesAfterNextYear"
+
     Scenario: A tournament played by teams updated to draw a level test does
       Given a stream where a tournament was created in the format "Teams"
       And the tournament is rebuilt from the stream
