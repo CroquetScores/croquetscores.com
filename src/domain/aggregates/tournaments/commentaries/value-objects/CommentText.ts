@@ -5,7 +5,7 @@ import { Validator } from "../../../../common/validation/Validator.js";
 export type CommentTextErrorCode =
   "CommentText.Missing" | "CommentText.TooLong";
 
-const MOST_CHARACTERS = 10_000;
+const MOST_CHARACTERS = 100_000;
 
 const texts = new Validator<string, CommentTextErrorCode>({
   fields: [

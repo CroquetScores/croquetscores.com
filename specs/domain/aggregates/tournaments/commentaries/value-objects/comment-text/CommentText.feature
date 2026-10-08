@@ -11,11 +11,12 @@ Feature: What a comment says
   more than a comment needs and the source of fault after fault, and drawing
   with HTML turned off is what keeps a page safe, whatever is kept.
 
-  A comment is between 1 and 10,000 characters, counted as a reader counts
-  them. A comment is a few lines written on a phone at the side of a lawn,
-  and 10,000 characters is several screens of them: enough for a long report
-  of a day's play, and short of a page that has to be scrolled past to reach
-  the next comment.
+  A comment is between 1 and 100,000 characters, counted as a reader counts
+  them. A comment is most often a few lines written on a phone at the side of
+  a lawn, but the old sites kept comments far longer, whole reports of a
+  day's play, and they are brought over as they were written
+  (`ImportCommentaries.feature`), so that what their writers wrote can still
+  be read, and edited and kept again, here.
 
   Whitespace at either end is taken off, and the comment kept without it, so
   that a comment of nothing but spaces is missing. Whitespace within it is
@@ -39,7 +40,7 @@ Feature: What a comment says
       When the comment "See <https://example.com/draw>" is made
       Then the comment is written "See <https://example.com/draw>"
 
-  Rule: A comment is between 1 and 10,000 characters
+  Rule: A comment is between 1 and 100,000 characters
 
     Scenario Outline: A comment of an allowed length is accepted
       When a comment of <length> characters is made
@@ -48,10 +49,10 @@ Feature: What a comment says
       Examples:
         | length |
         | 1      |
-        | 10000  |
+        | 100000 |
 
-    Scenario: A comment longer than 10,000 characters is refused
-      When a comment of 10001 characters is made
+    Scenario: A comment longer than 100,000 characters is refused
+      When a comment of 100001 characters is made
       Then it is refused for breaking "CommentText.TooLong"
 
     Scenario: No comment at all is refused
@@ -60,8 +61,8 @@ Feature: What a comment says
 
   Rule: Characters are counted as a reader counts them
 
-    Scenario: A comment of 10,000 letters, each with its accent typed after it, is accepted
-      When a comment of 10000 accented letters is made with each accent typed after its letter
+    Scenario: A comment of 100,000 letters, each with its accent typed after it, is accepted
+      When a comment of 100000 accented letters is made with each accent typed after its letter
       Then it is not refused
 
   Rule: Whitespace at either end is not part of the comment

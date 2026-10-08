@@ -10,21 +10,12 @@
 
 ## Importing Changes
 
-### Commentaries
+### Tournament
 
-#### Comment
+#### Tournament Players
 
-Change maximum comment length to 100,000
+When importing tournament players do not import byes; however you need to keep their ids in memory so when you import the competition players you know where to add the fixed code for byes.
 
-### Tournament - Teams
+#### Empty Competitions
 
-When importing a tournament whose type is teams. 
-
-- Read all competitions to get:
-    - all teams in the tournament
-    - the minimum start date
-    - the maximum finish date
-- Import the tournament with minimum start date and maximum finish date.
-- Add unique team names to tournament
-- Add players to teams
-- Add scores
+If Tournament.Competitions is empty do not import the tournament.

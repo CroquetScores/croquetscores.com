@@ -353,6 +353,16 @@ Given(
   },
 );
 
+// A character that takes four bytes to keep, and twelve to send in a form, the
+// most any one character takes: a comment of them at the most a comment may
+// be is the largest a comment's form can be.
+When(
+  "a comment of {int} characters each four bytes long is typed",
+  async function (this: SpecWorld, length: number) {
+    await typeComment(this, "😀".repeat(length));
+  },
+);
+
 // Filling a box takes away what it held first, as a reader selecting it all
 // and typing over it does.
 Given(
