@@ -6,6 +6,10 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
+import type {
+  FindsAccountByAddress,
+  HoldsAccount,
+} from "./accountsByAddress.js";
 import { SignIn } from "./SignIn.js";
 
 /** Every way signing in is refused. */
@@ -18,15 +22,8 @@ export type SignInErrorCode = "SignIn.Failed";
 export class SignInRefused extends Refused<SignInErrorCode> {}
 
 /** What signing in asks of where accounts are found by their address. */
-export interface AccountsByAddressForSigningIn {
-  find(address: EmailAddress): Promise<AccountId | undefined>;
-
-  /**
-   * Holds `account` until the request is done, so that signings in to it at
-   * once take turns rather than each reading it before any has changed it.
-   */
-  hold(account: AccountId): Promise<void>;
-}
+export interface AccountsByAddressForSigningIn
+  extends FindsAccountByAddress, HoldsAccount {}
 
 /**
  * Signing in with an email address and a password.

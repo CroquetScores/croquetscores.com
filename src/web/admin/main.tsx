@@ -11,12 +11,16 @@ import { createRoot } from "react-dom/client";
 // drop-down list's label lay over the choice it showed.
 import "../../../assets/site.css";
 import { App } from "./App.js";
+import { NewerBuild, watchForANewerBuild } from "./newerBuild.js";
 
 const container = document.getElementById("root");
 if (container === null) throw new Error("The admin SPA has no mount point.");
 
+watchForANewerBuild();
+
 createRoot(container).render(
   <StrictMode>
     <App />
+    <NewerBuild />
   </StrictMode>,
 );

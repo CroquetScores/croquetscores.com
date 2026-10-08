@@ -7,12 +7,7 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
-
-/** What giving somebody something asks of where accounts are found. */
-export interface AccountsByAddress {
-  /** The account at `address`, or nothing where no account is found there. */
-  find(address: EmailAddress): Promise<AccountId | undefined>;
-}
+import type { FindsAccountByAddress } from "./accountsByAddress.js";
 
 /**
  * The account at `emailAddress`, as it was typed, where it can be given
@@ -27,7 +22,7 @@ export interface AccountsByAddress {
  */
 export const accountThatCanBeGiven = async (
   accounts: AggregateRepository<Account, AccountId>,
-  accountsByAddress: AccountsByAddress,
+  accountsByAddress: FindsAccountByAddress,
   emailAddress: string,
 ): Promise<Account | undefined> => {
   const found = await accountsByAddress.find(EmailAddress.from(emailAddress));

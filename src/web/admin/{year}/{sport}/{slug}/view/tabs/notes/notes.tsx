@@ -4,7 +4,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { type NoteListed, NotePanel } from "./notePanel.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
-import "../listed.css";
+import "../../../../../../listed.css";
 
 // The Notes tab (notes-tab.feature): the notes a tournament's managers wrote
 // for its readers, the most recently written first, each by its title and

@@ -8,6 +8,7 @@ import Fastify, { type FastifyInstance } from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
+import { createHash } from "node:crypto";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
@@ -208,7 +209,10 @@ import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSe
 import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
 import { KeyedEmailAddressHasher } from "../infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEmailsWritten } from "../infrastructure/email/PostgresEmailsWritten.js";
-import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventStore.js";
+import {
+  PostgresEventStore,
+  type StoredEvent,
+} from "../infrastructure/event-store/PostgresEventStore.js";
 import { PostgresHandledRequests } from "../infrastructure/database/PostgresHandledRequests.js";
 import { PostgresFailedSignIns } from "../infrastructure/database/PostgresFailedSignIns.js";
 import { PostgresPasswordResetAskings } from "../infrastructure/database/PostgresPasswordResetAskings.js";
@@ -235,7 +239,11 @@ import {
   type GoogleEndpoints,
 } from "../infrastructure/identity/GoogleOpenIdConnect.js";
 import { apiV1 } from "./api/v1/index.js";
-import { adminPage, builtAdminPage } from "./common/adminPage.js";
+import {
+  adminBuildHeader,
+  adminPage,
+  builtAdminPage,
+} from "./common/adminPage.js";
 import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
@@ -394,6 +402,19 @@ export interface Application {
   readonly commentariesByTournament: CommentariesByTournament;
   /** The tournaments each account has a part in, as the read model keeps them. */
   readonly tournamentsByAccount: TournamentsByAccount;
+  /**
+   * Makes every read model again from every event kept, in one transaction,
+   * and answers how many events that was. For the maintenance script that
+   * rebuilds them (scripts/rebuild-read-models.mjs); no route calls it.
+   */
+  readonly rebuildReadModels: () => Promise<number>;
+  /**
+   * Re-encrypts every account's key, and every email waiting with no account,
+   * with `newSiteKey`, in one transaction, and rewrites no event. For the
+   * maintenance script that changes ACCOUNT_ENCRYPTION_KEY
+   * (scripts/change-site-key.mjs); no route calls it.
+   */
+  readonly changeSiteKey: (newSiteKey: string) => Promise<void>;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -449,11 +470,30 @@ const registerAssets = (server: FastifyInstance, assets: Assets): void => {
 // only begins the same way, such as /admin/administrators.
 const administratorsOnly = /^\/admin\/administrator(?:[/?#]|$)/;
 
+// The admin's page as it was built, read once, so that the page served and the
+// build it is named as are the same reading of it, or nothing where the admin
+// has not been built.
+const builtPageIn = (adminRoot: string): string | undefined => {
+  const page = join(adminRoot, "index.html");
+  return existsSync(page) ? readFileSync(page, "utf8") : undefined;
+};
+
+// What the admin was built to, which changes whenever the admin does: the
+// built page names the files Vite hashed, so a hash of the page is a hash of
+// them. Not the server's own version, which changes with a deploy that left the
+// admin as it was, and would have every open tab offered a reload for nothing.
+const buildOf = (page: string | undefined): string =>
+  page === undefined
+    ? "not built"
+    : createHash("sha256").update(page).digest("hex").slice(0, 16);
+
 const registerAdmin = async (
   server: FastifyInstance,
   adminRoot: string,
+  page: string | undefined,
+  build: () => string,
 ): Promise<void> => {
-  if (!existsSync(adminRoot)) {
+  if (page === undefined) {
     // A fresh clone has not built the SPA yet. Say so, rather than 404ing as
     // though /admin were not a thing this application has.
     const notBuilt = (): never => {
@@ -475,9 +515,7 @@ const registerAdmin = async (
     prefix: "/admin/assets/",
     wildcard: false,
   });
-  const built = builtAdminPage(
-    readFileSync(join(adminRoot, "index.html"), "utf8"),
-  );
+  const built = builtAdminPage(page);
   server.get("/admin", (_request, reply) => reply.redirect("/admin/", 308));
   // What every other page is sent with, for the same reason: the page is now
   // drawn from the reader's cookies and the languages their browser asks for.
@@ -499,13 +537,19 @@ const registerAdmin = async (
       .header("cache-control", "private, no-cache")
       .header("vary", "Cookie, Accept-Language")
       .type("text/html; charset=utf-8")
-      .send(adminPage(built, request));
+      .send(adminPage(built, request, build()));
   });
 };
 
 export interface ApplicationOptions {
   /** Off for the specs, whose output is the scenario list and not a request log. */
   readonly logger?: boolean;
+  /**
+   * What the admin's build is called, asked afresh for every page and every
+   * answer of the API. What the admin was built to, unless a scenario says
+   * otherwise: a scenario deploys the site again by answering something else.
+   */
+  readonly build?: () => string | undefined;
   /** Where the time comes from. The machine's clock, unless a scenario sets one. */
   readonly clock?: Clock;
   /**
@@ -559,6 +603,11 @@ export interface ApplicationOptions {
    * it checks what Google says.
    */
   readonly googleEndpoints?: GoogleEndpoints;
+}
+
+/** A read model that can be made again from every event kept. */
+interface RebuildableReadModel {
+  rebuildFrom(events: readonly StoredEvent[]): Promise<void>;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -615,8 +664,10 @@ export const buildApplication = async (
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
 
-  // Every read model's projection, each given every event as it is appended.
-  const projections: readonly Projection[] = [
+  // Every read model, each given every event as it is appended and each made
+  // again from every event by the maintenance script that rebuilds them. One
+  // list, so that a read model is never projected and left out of a rebuild.
+  const readModels: readonly (Projection & RebuildableReadModel)[] = [
     accountsByEmailAddress,
     accountsByGoogleAccount,
     accountsByRole,
@@ -630,14 +681,35 @@ export const buildApplication = async (
   // On the unit of work the mediator's transactions use, so that what a
   // command's handler appends, and what every projection writes of it, is kept
   // in the command's transaction or not at all.
-  const eventStore = new ProjectingEventStore(
-    new PostgresEventStore(
-      unitOfWork,
-      options.events ?? events(),
-      new AccountEventSealing(accountKeys),
-    ),
-    options.projections ?? projections,
+  const keptEvents = new PostgresEventStore(
+    unitOfWork,
+    options.events ?? events(),
+    new AccountEventSealing(accountKeys),
   );
+  const eventStore = new ProjectingEventStore(
+    keptEvents,
+    options.projections ?? readModels,
+  );
+  // Everything it changes is changed in one transaction, so that a change
+  // that fails leaves every key as it was. The application goes on using the
+  // key it was made with; the setting is changed and the site started again.
+  const changeSiteKey = (newSiteKey: string): Promise<void> =>
+    unitOfWork.inTransaction(() => accountKeys.changeSiteKey(newSiteKey));
+  // Reading every event is not something the EventStore the application
+  // hands out can do, since no command or query has any business doing it, so
+  // the maintenance script that rebuilds the read models asks for it here, and
+  // a route cannot. The application's own read models are rebuilt, and never
+  // a scenario's stand-in projections, which are examples rather than read
+  // models. One transaction, so that a rebuild that fails leaves every read
+  // model as it was, and one that is running is not seen half done.
+  const rebuildReadModels = (): Promise<number> =>
+    unitOfWork.inTransaction(async () => {
+      const everyEvent = await keptEvents.readAll();
+      for (const readModel of readModels) {
+        await readModel.rebuildFrom(everyEvent);
+      }
+      return everyEvent.length;
+    });
 
   // Emails are written from the site's catalogues, with links made from the
   // site's configured address and never a request's, and written to files in
@@ -1147,6 +1219,17 @@ export const buildApplication = async (
   // another site by forgetting to ask.
   refuseCrossSite(server, config.canonicalHost);
 
+  // Every answer of the API names the build the site is serving, so that an
+  // admin left open across a deploy learns of it (newerBuild.feature).
+  const adminRoot = join(repositoryRoot, "dist", "admin");
+  const adminPageBuilt = builtPageIn(adminRoot);
+  const builtAs = buildOf(adminPageBuilt);
+  const build = (): string => options.build?.() ?? builtAs;
+  server.addHook("onSend", (request, reply, payload, done) => {
+    if (request.url.startsWith("/api/v1/"))
+      reply.header(adminBuildHeader, build());
+    done(null, payload);
+  });
   await server.register(apiV1, { prefix: "/api/v1", assets });
   await server.register(
     auth({
@@ -1158,7 +1241,7 @@ export const buildApplication = async (
 
   registerAssets(server, assets);
 
-  await registerAdmin(server, join(repositoryRoot, "dist", "admin"));
+  await registerAdmin(server, adminRoot, adminPageBuilt, build);
 
   registerThemeRoute(server);
   registerLanguageRoute(server);
@@ -1294,6 +1377,8 @@ export const buildApplication = async (
     managerNotesByTournament,
     commentariesByTournament,
     tournamentsByAccount,
+    rebuildReadModels,
+    changeSiteKey,
   };
 };
 

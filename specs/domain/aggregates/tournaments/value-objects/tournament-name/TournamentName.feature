@@ -17,6 +17,14 @@ Feature: The name a tournament is known by
   have a case, so the digits and punctuation in it count for nothing, and a
   name written in a script with no capitals, such as Chinese, is neither.
 
+  A tournament is found at an address made from its name
+  (`tournament-address`), and a name with no letter or digit in it, such as
+  "?????", makes none (`Slug.feature`), so it is refused as a name rather than
+  left to fail where the tournament is created. A slug takes the accents off
+  letters, so a name of nothing but accents makes none either, and is refused
+  the same: what is asked is whether a slug can be made of the name, as the
+  slug would make it.
+
   Two tournaments may be called the same thing, since the same tournament is
   played every year. What tells them apart is their address, and that is the
   tournament's to make, not the name's.
@@ -109,3 +117,26 @@ Feature: The name a tournament is known by
         | name     |
         | 李小龍杯 |
         | 2026     |
+
+  Rule: A tournament name has a letter or a digit in it
+
+    Scenario Outline: A name with neither a letter nor a digit is refused
+      When the tournament name "<name>" is made
+      Then it is refused for breaking "TournamentName.NoLetterOrDigit"
+
+      Examples:
+        | name  |
+        | ????? |
+        | ———   |
+        | 🏆🏆🏆 |
+        | ͺͺͺ   |
+
+    Scenario Outline: A name with a letter or a digit is accepted
+      When the tournament name "<name>" is made
+      Then it is not refused
+
+      Examples:
+        | name   |
+        | ?? 1   |
+        | 🏆 Cup |
+        | 李小龍 |

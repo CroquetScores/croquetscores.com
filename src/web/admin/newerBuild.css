@@ -1,0 +1,28 @@
+/* The offer to reload, set over the foot of whatever the reader is on, where
+   it is seen without covering the page's heading. As wide as the window, so
+   that on a phone the message and the button have a line each. */
+.newer-build {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+}
+
+/* Pressed with a thumb, so as tall as anything else that is. */
+.newer-build button {
+  min-height: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--accent-ink);
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}

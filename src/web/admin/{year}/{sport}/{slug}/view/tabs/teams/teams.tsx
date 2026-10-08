@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { say } from "../../../../../../words.js";
 import { TeamDialog, type TeamAsItIs } from "../../modal-dialogs/team/team.js";
-import { noOption, optionFace } from "../optionFace.js";
+import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
-import "../listed.css";
+import "../../../../../../listed.css";
 
 // The Teams tab (teams-tab.feature) of a tournament played by teams: the teams
 // in use in the tournament's order, each with its short name and the flag it

@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { CarryForwardDialog } from "../../modal-dialogs/carry-forward/carry-forward.js";
-import { noOption, optionFace } from "../../../../../view/tabs/optionFace.js";
+import { noOption, optionFace } from "../../../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../../../api.js";
-import "../../../../../view/tabs/listed.css";
+import "../../../../../../../../listed.css";
 
 // A competition's Players tab (competition-players-tab.feature): a drop-down
 // of the tournament's players not in the competition, with Add Player, above

@@ -1,3 +1,4 @@
+import { canMakeASlug } from "../../../common/canMakeASlug.js";
 import { charactersIn } from "../../../common/charactersIn.js";
 import { Validator } from "../../../common/validation/Validator.js";
 
@@ -7,7 +8,8 @@ export type TournamentNameErrorCode =
   | "TournamentName.TooShort"
   | "TournamentName.TooLong"
   | "TournamentName.AllLowerCase"
-  | "TournamentName.AllCapitals";
+  | "TournamentName.AllCapitals"
+  | "TournamentName.NoLetterOrDigit";
 
 const FEWEST_CHARACTERS = 3;
 const MOST_CHARACTERS = 254;
@@ -45,6 +47,15 @@ const names = new Validator<string, TournamentNameErrorCode>({
       field: "name",
       code: "TournamentName.AllCapitals",
       isBrokenBy: (given) => hasCase(given) && given === given.toUpperCase(),
+    },
+    // A tournament is found at an address made from its name, and a name with
+    // no letter or digit makes none (Slug.ts). Refused here so that the admin
+    // is told beside the name, rather than the handler throwing where the
+    // address is made.
+    {
+      field: "name",
+      code: "TournamentName.NoLetterOrDigit",
+      isBrokenBy: (given) => given !== "" && !canMakeASlug(given),
     },
   ],
 });

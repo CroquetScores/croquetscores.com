@@ -85,6 +85,23 @@ export abstract class Id {
     return this.#value;
   }
 
+  /**
+   * The part of an id after its kind, which no other id has: how an address
+   * names a thing by its id, and the slug nothing else can be found at.
+   */
+  get uuid(): string {
+    return Id.uuidOf(this.#value);
+  }
+
+  /**
+   * The part of the writing `written` after its kind, for a place that has
+   * only the text of an id, such as a row of a read model. Not checked: a
+   * writing with no kind is answered whole.
+   */
+  static uuidOf(written: string): string {
+    return written.slice(written.indexOf("/") + 1);
+  }
+
   /** Two ids are the same when they are written the same. */
   equals(other: Id | undefined): boolean {
     return other instanceof Id && this.#value === other.#value;

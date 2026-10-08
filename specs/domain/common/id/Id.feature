@@ -39,6 +39,23 @@ Feature: Telling one thing from another
       And another new id is minted
       Then the two ids differ
 
+  Rule: The uuid of an id can be had without its kind
+
+    The part of an id after its kind is what some places want on their own: an
+    address that names a thing by it, or a slug that nothing else can be found
+    at, since no other id has it. It is the same whether the id is held as an
+    id or only as the text it is written as, as it is in a page that was handed
+    a row of a read model.
+
+    Scenario: An id gives its uuid
+      Given the example kind of id
+      When an id is read from "example/123e4567-e89b-42d3-a456-426614174000"
+      Then its uuid is "123e4567-e89b-42d3-a456-426614174000"
+
+    Scenario: A writing gives its uuid
+      When the uuid is taken from the writing "example/123e4567-e89b-42d3-a456-426614174000"
+      Then the uuid taken is "123e4567-e89b-42d3-a456-426614174000"
+
   Rule: An id cannot be altered once it is made
 
     An id that could be changed after it was made would name nothing in

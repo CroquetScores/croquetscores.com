@@ -41,14 +41,11 @@ const beginnings: readonly string[] = [
   "account-brought-over",
 ];
 
-const uuidOf = (account: AccountId): string =>
-  account.value.slice(account.value.indexOf("/") + 1);
-
 // What a forgotten account is read back as, field by field.
 const forgotten = (field: string, account: AccountId): string => {
-  if (field === "name") return `Account Forgotten ${uuidOf(account)}`;
-  if (field === "subject") return `google-account-forgotten-${uuidOf(account)}`;
-  return `account-forgotten-${uuidOf(account)}@croquetscores.com`;
+  if (field === "name") return `Account Forgotten ${account.uuid}`;
+  if (field === "subject") return `google-account-forgotten-${account.uuid}`;
+  return `account-forgotten-${account.uuid}@croquetscores.com`;
 };
 
 export class AccountEventSealing implements KeptEventSealing {

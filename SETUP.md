@@ -8,24 +8,24 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 
 ## 1. Requirements, and the decisions they force
 
-| Requirement                                       | Decision                                                                                        |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| TypeScript                                        | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                          |
-| Postgres in Docker                                | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI                |
-| Auth: email address + password                    | argon2id hashing, opaque session cookie for browsers                                            |
-| Auth: Google and Facebook                         | Google over OIDC, Facebook over OAuth 2.0 + Graph                                               |
-| Auth: an API for mobile apps                      | Bearer JWT access token + rotating refresh token, same endpoints as the web API                 |
-| Web: an API                                       | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                             |
-| Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                             |
-| Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                             |
-| Gherkin                                           | Cucumber.js, the only test runner                                                               |
-| CI via GitHub                                     | Actions: lint, typecheck, build, then the whole spec suite against the compose database         |
-| Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape         |
-| Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                      |
-| `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                 |
-| No `/tests` folder                                | Stated as a rule below so nobody adds one back                                                  |
-| No ambient clock                                  | Every command carries `requestedAt`; the domain is told the time, never asks for it             |
-| A real browser for what only a browser can answer | Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one |
+| Requirement                                       | Decision                                                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| TypeScript                                        | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                                     |
+| Postgres in Docker                                | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI                           |
+| Auth: email address + password                    | argon2id hashing, opaque session cookie for browsers                                                       |
+| Auth: Google and Facebook                         | Google over OIDC, Facebook over OAuth 2.0 + Graph                                                          |
+| Auth: an API for mobile apps                      | Bearer JWT access token + rotating refresh token, same endpoints as the web API                            |
+| Web: an API                                       | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                                        |
+| Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                                        |
+| Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                                        |
+| Gherkin                                           | Cucumber.js, the only test runner                                                                          |
+| CI via GitHub                                     | Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database |
+| Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape                    |
+| Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                                 |
+| `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                            |
+| No `/tests` folder                                | Stated as a rule below so nobody adds one back                                                             |
+| No ambient clock                                  | Every command carries `requestedAt`; the domain is told the time, never asks for it                        |
+| A real browser for what only a browser can answer | Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one            |
 
 **Two decisions confirmed, and recorded here so they are not reopened by accident:**
 
@@ -407,7 +407,7 @@ What the store must do is specified in `specs/application/services/event-store/`
 
 Projections are not checkpointed and do not chase the log. A projection runs **in the same transaction as the append that produced the events**, so a command either records what happened and updates every read model it touches, or does neither. That trades throughput for two things worth more here: a read model is never stale, and there is no half-applied middle state to reason about, no catch-up worker to supervise, and no checkpoint to drift.
 
-Rebuilding a read model is therefore a deliberate act rather than a background one, and an infrastructure task rather than an application one: a maintenance script under `/scripts` replays what has been stored, in the order it was stored, through the projections, having truncated their tables first. Projections stay idempotent so a rebuild can be run twice without harm.
+Rebuilding a read model is therefore a deliberate act rather than a background one, and an infrastructure task rather than an application one: `npm run db:rebuild-read-models` (`scripts/rebuild-read-models.mjs`) empties every read model and replays what has been stored through all of them, in one transaction, so that a rebuild that fails leaves them as they were. It goes through `buildApplication`, which keeps the list of read models that can be rebuilt beside the list of projections, so the script cannot rebuild a different set from the one the site keeps; `readAll` is on the Postgres store and not on the `EventStore` the application hands out, so only `Application.rebuildReadModels` can ask for every event, and no route calls it. Each stream is replayed in the order it was stored, and a read model works whichever stream comes first, since the table records no order across streams. Projections stay idempotent so a rebuild can be run twice without harm. The site is stopped first, since an event appended while the rebuild is reading is missing from what it reads.
 
 ### 7.6 Accounts and the three ways in
 
@@ -416,6 +416,8 @@ An `Account` aggregate holding an email address, an optional password credential
 1. **Email address and password.** argon2id, one hash per account, never logged and never returned. A wrong password and an unknown email address report the same failure and take the same time.
 2. **Google.** OIDC. Browsers go through a redirect with PKCE and `state`; mobile apps post the `id_token` their native SDK obtained. Both verify against Google's JWKS and match on the `sub` claim — never on the email address, which can change hands where a subject cannot.
 3. **Facebook.** OAuth 2.0, then a Graph `/me` call for the id and, where granted, the email address. Facebook may withhold it entirely, so nothing may require an account to have one.
+
+**The two keys an account depends on, and which can be changed.** `ACCOUNT_ENCRYPTION_KEY` encrypts each account's own key, and each of those encrypts what is personal in that account's events; changing it re-encrypts the account keys and the emails waiting with no account, and no event. `npm run db:change-site-key` (`scripts/change-site-key.mjs`) does so in one transaction, with the key the site is using in `ACCOUNT_ENCRYPTION_KEY` and the new one in `NEW_ACCOUNT_ENCRYPTION_KEY`, and afterwards the setting is changed to the new key; the site is stopped meanwhile. `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` is never changed. The hash it makes of an email address is kept in the event that registered the account, and events are never rewritten, so a new key would find no account by its address, and rebuilding would not help since the rebuild reads the same events. The alternative, keeping every key the hash has been made with and finding an address by each, was not taken: it would make every lookup as many lookups as there have been keys, for a key nobody has a reason to change. If it is ever lost or leaked, the way forward is a decision to be made then, with accounts being asked for their address again, and not a script made now.
 
 What happens when a Google sign-in arrives carrying the email address of an existing password account is a security decision, not an implementation detail. It gets its own scenarios and its own acceptance.
 
@@ -468,7 +470,7 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 - A tag given on the command line is added to the profile's rather than replacing it: `npm run test:nodb -- --tags @browser` runs the scenarios that are both.
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
-- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:features -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
+- Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:nobrowser -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber, which is why CI asks of a script that runs Cucumber directly. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
 - tsx is applied twice over, once to each kind of thread. The npm script runs Cucumber's bin through tsx, which is what the main thread loads the steps with. A worker thread does not inherit that, so `loader` names `cucumber-loader.mjs`, which Cucumber registers in each worker before loading anything: tsx's own hooks, handed the empty options that Cucumber does not give them and without which tsx takes itself to have been started with Node's deprecated `--loader` flag and refuses to run. Steps execute as TypeScript with no build step either way.
 
 ### 8.1 Scenarios that need a database
@@ -504,7 +506,7 @@ The `@postgres` hooks have to run before the `@browser` ones, because a scenario
 
 That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
 
-CI installs Chromium and only Chromium. A second engine is a second download on every run, and wants a reason.
+CI does not run the `@browser` scenarios, and so installs no browser: `test:nobrowser` is what it runs. They are run by hand, with `npm run test:browser`, wherever a change touches what they check. If CI is to run them again, it installs Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
 
 ### 8.3 Gherkin conventions
 
@@ -754,7 +756,7 @@ code-review.md
 `.github/workflows/ci.yml` runs on every pull request and on nothing else, since `main` is only reached by squash-merging a pull request whose run passed on its own branch. It is two jobs, and the file itself is where what each does is said, with why beside it:
 
 - `build` installs, lints, typechecks and builds.
-- `tests` waits on it, and runs every scenario in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
+- `tests` waits on it, and runs every scenario but the `@browser` ones (`npm run test:nobrowser`) in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
 
 Nothing is kept of a run but what GitHub shows of it: a failing scenario is read off the log of the shard it failed in, and run again locally.
 

@@ -4,10 +4,8 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AddRole } from "./AddRole.js";
-import {
-  type AccountsByAddress,
-  accountThatCanBeGiven,
-} from "./accountsThatCanBeGiven.js";
+import { accountThatCanBeGiven } from "./accountsThatCanBeGiven.js";
+import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import {
   RoleOperationRefused,
   administratorAsking,
@@ -23,7 +21,7 @@ export class AddRoleHandler extends CommandHandler<AddRole, void> {
 
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly accountsByAddress: AccountsByAddress,
+    private readonly accountsByAddress: FindsAccountByAddress,
   ) {
     super();
   }

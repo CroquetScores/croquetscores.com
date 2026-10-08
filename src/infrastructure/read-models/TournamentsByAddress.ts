@@ -7,6 +7,7 @@ import type { Sport } from "../../domain/aggregates/tournaments/value-objects/Sp
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
+import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 /**
  * Every address a tournament has ever been found at, kept in step with every
@@ -19,6 +20,13 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
   async project(
     stream: Id,
     _firstEvent: number,
+    events: readonly DomainEvent[],
+  ): Promise<void> {
+    await this.#project(stream.value, events);
+  }
+
+  async #project(
+    stream: string,
     events: readonly DomainEvent[],
   ): Promise<void> {
     const connection = this.unitOfWork.connection();
@@ -38,17 +46,29 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
          values ($1, $2)
          on conflict (address) do update set address = excluded.address
            where tournaments_by_address.tournament_id = excluded.tournament_id`,
-        [event.address, stream.value],
+        [event.address, stream],
       );
       const { rows } = await connection.query<{ tournament_id: string }>(
         `select tournament_id from tournaments_by_address where address = $1`,
         [event.address],
       );
-      if (rows[0]?.tournament_id !== stream.value) {
+      if (rows[0]?.tournament_id !== stream) {
         throw new Error(
           `${event.address} already leads to another tournament.`,
         );
       }
+    }
+  }
+
+  /**
+   * Makes the table again from `events`, every event there is, each projected
+   * as it was when it was appended. An address once held is held for good, so
+   * the tournament that holds it is the same whichever stream is read first.
+   */
+  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
+    await this.unitOfWork.connection().query(`truncate tournaments_by_address`);
+    for (const { stream, event } of events) {
+      await this.#project(stream, [event]);
     }
   }
 

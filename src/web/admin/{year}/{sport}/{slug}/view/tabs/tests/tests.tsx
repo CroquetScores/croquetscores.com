@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { dayWritten } from "../../../../../../../common/dates.js";
 import { knows, say } from "../../../../../../words.js";
 import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
-import { noOption, optionFace } from "../optionFace.js";
+import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
-import "../listed.css";
+import "../../../../../../listed.css";
 
 // The Tests tab (tests-tab.feature) of a tournament played by teams, which
 // does for its tests what the Competitions tab does for a Standard

@@ -478,6 +478,8 @@ export const english: Language = {
     // The admin's words. The admin draws them in the browser, so the server
     // says them into its page as it sends it (adminPage.ts): these, and the
     // tournament's refusals below.
+    "admin.newerBuild.message": "A newer version of this site is available.",
+    "admin.newerBuild.reload": "Reload",
     "admin.title": "Admin",
     "admin.tournaments.new": "New Tournament",
     "admin.tournaments.none": "No tournaments",
@@ -614,6 +616,8 @@ export const english: Language = {
     "admin.competition.otherwise": "This competition cannot be kept as it is.",
     "CompetitionName.Missing": "Enter a name.",
     "CompetitionName.TooLong": "A name can be at most 254 characters.",
+    "CompetitionName.NoLetterOrDigit":
+      "A name needs a letter or a digit in it.",
     "Tournament.KnockoutPlayerHasGames":
       "Players in this draw have games, so its places cannot change.",
     "Tournament.CompetitionNameTaken":
@@ -979,6 +983,7 @@ export const english: Language = {
     "TournamentName.TooLong": "That name is too long.",
     "TournamentName.AllLowerCase": "A name is not written all in lower case.",
     "TournamentName.AllCapitals": "A name is not written all in capitals.",
+    "TournamentName.NoLetterOrDigit": "A name needs a letter or a digit in it.",
     "ReadOnlyDate.Unreadable": "Give the day.",
     "Tournament.FinishesBeforeStarts":
       "A tournament cannot finish before it starts.",

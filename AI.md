@@ -91,7 +91,7 @@ npm run test:changed
 
 It is narrowed because the whole suite takes long enough that running it after every change holds the work up, and nearly all of what it runs has nothing to do with the change in front of it. A gate that slow stops being run, which is worse than a gate that is narrow.
 
-Nothing is given up by narrowing it, because CI runs every scenario, against a real database and a real browser, on every pull request, split four ways across runners of their own so that the run takes less time. It does not run them again on `main`, which a pull request only reaches once its scenarios have passed. The full suite is still what has to pass before anything reaches `main`. It is simply not what has to pass before saying a morning's work is done.
+Nothing is given up by narrowing it, because CI runs every scenario but the `@browser` ones, against a real database, on every pull request, split four ways across runners of their own so that the run takes less time. It does not run them again on `main`, which a pull request only reaches once its scenarios have passed. The `@browser` scenarios are not run there, so run `npm run test:browser` by hand when a change touches what they check. Everything else is still what has to pass before anything reaches `main`. It is simply not what has to pass before saying a morning's work is done.
 
 Run `npm test` by hand where a change reaches further than its own feature: anything under `specs/support/`, anything in `src/domain/common/`, anything most of the suite is standing on. Judgement is wanted here, and the cost of being wrong is one CI run.
 

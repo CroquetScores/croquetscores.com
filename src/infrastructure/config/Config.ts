@@ -25,9 +25,12 @@ export interface Config {
   readonly sessionCookieSecret: string;
   readonly tokenSigningKey: string;
   // The site's key, which each account's own key is encrypted with, and the
-  // key an email address is hashed with to find its account. Neither is ever
-  // to be made again once anything is kept with it: a new one leaves what the
-  // old one kept unreadable, or unfound.
+  // key an email address is hashed with to find its account. The first is
+  // changed by npm run db:change-site-key, which re-encrypts what it kept; set
+  // to another any other way, it leaves what it kept unreadable. The second is
+  // never changed: the hash it made is kept in the event that registered each
+  // account, which is never rewritten, so a new one would find no account by
+  // its address.
   readonly accountEncryptionKey: string;
   readonly accountEmailAddressHashKey: string;
   // The address the site's emails are sent from, the name they are sent from

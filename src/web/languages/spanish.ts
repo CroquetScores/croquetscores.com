@@ -425,6 +425,8 @@ export const spanish: Language = {
     "years.label": "Años",
     "years.earlier": "Años anteriores",
 
+    "admin.newerBuild.message": "Hay una versión más reciente de este sitio.",
+    "admin.newerBuild.reload": "Recargar",
     "admin.title": "Administración",
     "admin.tournaments.new": "Nuevo torneo",
     "admin.tournaments.none": "No hay torneos",
@@ -548,6 +550,8 @@ export const spanish: Language = {
     "CompetitionName.Missing": "Introduce un nombre.",
     "CompetitionName.TooLong":
       "Un nombre puede tener como mucho 254 caracteres.",
+    "CompetitionName.NoLetterOrDigit":
+      "Un nombre necesita una letra o un número.",
     "Tournament.KnockoutPlayerHasGames":
       "Hay jugadores de este cuadro con partidos, así que sus plazas no pueden cambiar.",
     "Tournament.CompetitionNameTaken":
@@ -888,6 +892,8 @@ export const spanish: Language = {
     "TournamentName.AllLowerCase":
       "Un nombre no se escribe todo en minúsculas.",
     "TournamentName.AllCapitals": "Un nombre no se escribe todo en mayúsculas.",
+    "TournamentName.NoLetterOrDigit":
+      "Un nombre necesita una letra o un número.",
     "ReadOnlyDate.Unreadable": "Indica el día.",
     "Tournament.FinishesBeforeStarts":
       "Un torneo no puede terminar antes de empezar.",

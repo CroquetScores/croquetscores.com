@@ -10,21 +10,8 @@ import type { EmailAddressHasher } from "../../services/EmailAddressHasher.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 import type { EmailsWritten } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
+import type { ReservesAddress } from "./accountsByAddress.js";
 import { RegisterAccount } from "./RegisterAccount.js";
-
-/** What registering asks of where accounts are found by their address. */
-export interface AccountsByAddress {
-  /**
-   * Reserves `address` for `account`, and says who holds it afterwards: the
-   * account given when this registration reserved it, and whoever already held
-   * it when it did not. Always somebody.
-   *
-   * Reserving rather than looking and then writing, because between a look
-   * that found nothing and the writing that followed it another registration
-   * can have taken the address, and then both would make an account for it.
-   */
-  reserve(address: EmailAddress, account: AccountId): Promise<AccountId>;
-}
 
 // What registering writes, and what link each carries: the purpose the link is
 // made for, or nothing where the email carries none of registering's own. Said
@@ -80,7 +67,7 @@ export class RegisterAccountHandler extends CommandHandler<
 
   constructor(
     private readonly accounts: AggregateRepository<Account, AccountId>,
-    private readonly byAddress: AccountsByAddress,
+    private readonly byAddress: ReservesAddress,
     private readonly addresses: EmailAddressHasher,
     private readonly queue: EmailQueue,
     private readonly written: EmailsWritten,

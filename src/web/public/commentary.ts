@@ -22,6 +22,7 @@ import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import { CommentaryOperationRefused } from "../../application/operations/commentaries/commentaryOperations.js";
 import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
+import { Id } from "../../domain/common/Id.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
@@ -362,8 +363,7 @@ export const goneSinceAsked = (failure: unknown): boolean =>
 export const commentPath = (
   commentary: { readonly address: string },
   comment: { readonly id: string },
-): string =>
-  `/${commentary.address}/comments/${comment.id.slice(comment.id.indexOf("/") + 1)}/edit`;
+): string => `/${commentary.address}/comments/${Id.uuidOf(comment.id)}/edit`;
 
 /** Where the page that asks before deleting a comment is. */
 export const deletePathOf = (

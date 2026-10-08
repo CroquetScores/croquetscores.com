@@ -19,6 +19,7 @@ import { GoogleAccountLinked } from "../../domain/aggregates/accounts/events/Goo
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
+import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
 export class AccountsByGoogleAccount implements Projection, Finding {
   constructor(
@@ -36,6 +37,13 @@ export class AccountsByGoogleAccount implements Projection, Finding {
     _firstEvent: number,
     events: readonly DomainEvent[],
   ): Promise<void> {
+    await this.#project(stream.value, events);
+  }
+
+  async #project(
+    stream: string,
+    events: readonly DomainEvent[],
+  ): Promise<void> {
     const connection = this.unitOfWork.connection();
     for (const event of events) {
       if (event instanceof GoogleAccountLinked) {
@@ -43,14 +51,29 @@ export class AccountsByGoogleAccount implements Projection, Finding {
           `insert into accounts_by_google_account (account_id, subject_hash)
            values ($1, $2)
            on conflict (account_id) do nothing`,
-          [stream.value, this.#hash(event.subject)],
+          [stream, this.#hash(event.subject)],
         );
       } else if (event instanceof AccountForgotten) {
         await connection.query(
           `delete from accounts_by_google_account where account_id = $1`,
-          [stream.value],
+          [stream],
         );
       }
+    }
+  }
+
+  /**
+   * Makes the table again from `events`, every event there is, each projected
+   * as it was when it was appended. A link and the forgetting of its account
+   * are both in that account's own stream, so which stream is read first
+   * changes nothing.
+   */
+  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
+    await this.unitOfWork
+      .connection()
+      .query(`truncate accounts_by_google_account`);
+    for (const { stream, event } of events) {
+      await this.#project(stream, [event]);
     }
   }
 

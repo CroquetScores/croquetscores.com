@@ -64,6 +64,7 @@ Feature: Changing what a tournament is
       Examples:
         | field   | value       | code                           |
         | name    | SPRING OPEN | TournamentName.AllCapitals     |
+        | name    | ?????       | TournamentName.NoLetterOrDigit |
         | sport   | xx          | Sport.Unknown                  |
         | country | zz          | UpdateTournament.NoSuchCountry |
 

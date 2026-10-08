@@ -321,10 +321,10 @@ Feature: Creating a tournament
       When a tournament is created
       Then the tournament has been found at 1 address
 
-    Scenario: A name that makes no slug is refused as a slug is
+    Scenario: A name that makes no slug is refused as a name, before the tournament is asked
       Given the tournament name "— ! —"
       When a tournament is created
-      Then it is refused for breaking "Slug.Empty"
+      Then it is refused for breaking "TournamentName.NoLetterOrDigit"
 
   Rule: A tournament is not found at an address somebody else has
 

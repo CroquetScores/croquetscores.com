@@ -118,6 +118,12 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-open" is opened
       Then the page is headed "Spring Open"
 
+    Scenario: An old address in another script leads to the tournament's address now
+      Given "organiser@example.com" has created the tournament "Кубок"
+      And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
+      When the page at "/2026/ac/кубок" is opened
+      Then the page is headed "Кубок"
+
   Rule: Every game in use is listed, the most recently added first
 
     Scenario: The game added most recently is first

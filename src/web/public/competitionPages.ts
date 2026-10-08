@@ -349,8 +349,10 @@ export const registerCompetitionPages = (
           // An address the tournament has moved on from leads to the same
           // address where it is now, for good, so that a link kept from
           // before still works. It chooses nothing until it is followed.
+          // Encoded, since a slug keeps letters of any script, and a Location
+          // outside Latin-1 is refused.
           if (asked.address !== address) {
-            return reply.redirect(`${here}${path}`, 301);
+            return reply.redirect(encodeURI(`${here}${path}`), 301);
           }
 
           const view = viewOf(request);
