@@ -121,7 +121,11 @@ export const CompetitionsTab = ({
       type="button"
       className="button"
       onClick={() => void act(competition, action)}
-      {...optionFace(action, say(`admin.competitions.${action}`))}
+      {...optionFace(
+        action,
+        say(`admin.competitions.${action}`),
+        say(`admin.hover.competitions.${action}`),
+      )}
     />
   );
 
@@ -137,6 +141,7 @@ export const CompetitionsTab = ({
           <button
             type="button"
             className="button"
+            title={say("admin.hover.competitions.add")}
             onClick={() => {
               setAdding(true);
             }}
@@ -160,6 +165,7 @@ export const CompetitionsTab = ({
                         key="edit"
                         type="button"
                         className="button"
+                        title={say("admin.hover.competitions.edit")}
                         onClick={() => {
                           setEditing(competition);
                         }}
@@ -168,7 +174,12 @@ export const CompetitionsTab = ({
                       </button>,
                     ]
                   : []),
-                <a key="view" className="button" href={pageOf(competition)}>
+                <a
+                  key="view"
+                  className="button"
+                  href={pageOf(competition)}
+                  title={say("admin.hover.competitions.view")}
+                >
                   {say("admin.competitions.view")}
                 </a>,
                 ...(part === "manager"

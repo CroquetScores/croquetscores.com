@@ -356,6 +356,11 @@ export const TestDialog = ({
         test === undefined ? "admin.test.addTitle" : "admin.test.editTitle",
       )}
       action={say(test === undefined ? "admin.test.add" : "admin.test.save")}
+      hover={
+        test === undefined
+          ? say("admin.hover.dialog.test.add")
+          : say("admin.hover.dialog.test.save")
+      }
       act={() => void send()}
       cancel={close}
       busy={sending}

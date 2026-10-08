@@ -222,7 +222,11 @@ export const People = ({
           />
         )}
       </Field>
-      <button className="button button-submit" type="submit">
+      <button
+        className="button button-submit"
+        type="submit"
+        title={say("admin.hover.people.add")}
+      >
         {say(words.add)}
       </button>
     </form>
@@ -271,6 +275,7 @@ export const People = ({
                     <button
                       type="button"
                       className="button"
+                      title={say("admin.hover.people.remove")}
                       onClick={() => {
                         setRemoving(person);
                       }}
@@ -293,6 +298,7 @@ export const People = ({
         <ModalDialog
           title={say(words.removeTitle)}
           action={say("admin.people.remove")}
+          hover={say("admin.hover.people.remove")}
           act={() => void remove(removing)}
           cancel={() => {
             setRemoving(undefined);

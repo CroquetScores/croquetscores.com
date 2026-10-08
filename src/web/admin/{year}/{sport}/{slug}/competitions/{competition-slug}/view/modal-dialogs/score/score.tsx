@@ -421,6 +421,11 @@ export const ScoreDialog = ({
       action={say(
         correcting === undefined ? "admin.score.add" : "admin.score.save",
       )}
+      hover={
+        correcting === undefined
+          ? say("admin.hover.dialog.score.add")
+          : say("admin.hover.dialog.score.save")
+      }
       act={() => void send()}
       cancel={close}
       busy={sending}

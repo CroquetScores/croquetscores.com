@@ -188,6 +188,11 @@ export const TeamPlayerDialog = ({
       action={say(
         player === undefined ? "admin.player.add" : "admin.player.save",
       )}
+      hover={
+        player === undefined
+          ? say("admin.hover.dialog.player.add")
+          : say("admin.hover.dialog.player.save")
+      }
       act={() => void send()}
       cancel={close}
       busy={sending}

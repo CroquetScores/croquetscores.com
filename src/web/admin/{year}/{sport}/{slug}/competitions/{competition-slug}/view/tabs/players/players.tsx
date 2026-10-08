@@ -219,7 +219,11 @@ export const CompetitionPlayersTab = ({
           void act(player, action);
         }
       }}
-      {...optionFace(action, say(`admin.competitionPlayers.${action}`))}
+      {...optionFace(
+        action,
+        say(`admin.competitionPlayers.${action}`),
+        say(`admin.hover.competitionPlayers.${action}`),
+      )}
     />
   );
 
@@ -312,6 +316,7 @@ export const CompetitionPlayersTab = ({
           <button
             type="button"
             className="button"
+            title={say("admin.hover.competitionPlayers.add")}
             onClick={() => {
               if (chosen !== "") void add();
             }}
@@ -401,6 +406,7 @@ export const CompetitionPlayersTab = ({
         <ModalDialog
           title={say(`admin.competitionPlayers.${confirming.action}Title`)}
           action={say(`admin.competitionPlayers.${confirming.action}`)}
+          hover={say(`admin.hover.competitionPlayers.${confirming.action}`)}
           act={() => {
             const { player, action } = confirming;
             setConfirming(undefined);

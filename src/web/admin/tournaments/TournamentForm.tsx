@@ -134,6 +134,8 @@ interface Props {
   readonly title: string;
   /** The words on the one button, which says what the form does. */
   readonly button: string;
+  /** What that button says, when it is pointed at. */
+  readonly hover: string;
   /** Nothing for a new tournament, which begins empty but for what is decided. */
   readonly begins?: Begins | undefined;
   /**
@@ -146,6 +148,7 @@ interface Props {
 export const TournamentForm = ({
   title,
   button,
+  hover,
   begins,
   send,
 }: Props): React.JSX.Element => {
@@ -537,7 +540,11 @@ export const TournamentForm = ({
               />
             </div>
             <div className="dialog-buttons">
-              <button className="button button-submit" type="submit">
+              <button
+                className="button button-submit"
+                type="submit"
+                title={hover}
+              >
                 {button}
               </button>
             </div>

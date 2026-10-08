@@ -1,16 +1,27 @@
 // What a listed row's option shows. Up and Down are arrows, which say which
 // way they move a row in less room than their words, so that a row's options
 // fit a phone; they are named by their words for a reader who cannot see
-// them, and for one who points at them.
+// them. Every option says what it does to one who points at it, in `hover`.
 
 const arrows = { up: "↑", down: "↓" } as const;
 
-/** What the button for `action` shows, given the `words` it is named by. */
+const faceOf = (action: string, words: string): React.JSX.Element | string =>
+  action === "up" || action === "down" ? (
+    <span aria-hidden="true">{arrows[action]}</span>
+  ) : (
+    words
+  );
+
+/**
+ * What the button for `action` shows, given the `words` it is named by and
+ * what it says when pointed at, in `hover`.
+ */
 export const optionFace = (
   action: string,
   words: string,
+  hover: string,
 ):
-  | { readonly children: string }
+  | { readonly title: string; readonly children: string }
   | {
       readonly "aria-label": string;
       readonly title: string;
@@ -19,10 +30,10 @@ export const optionFace = (
   action === "up" || action === "down"
     ? {
         "aria-label": words,
-        title: words,
+        title: hover,
         children: <span aria-hidden="true">{arrows[action]}</span>,
       }
-    : { children: words };
+    : { title: hover, children: words };
 
 /**
  * The room the button for `action` would take, on a row that does not offer
@@ -34,6 +45,6 @@ export const optionFace = (
  */
 export const noOption = (action: string, words: string): React.JSX.Element => (
   <span key={`no-${action}`} className="button option-space" aria-hidden="true">
-    {optionFace(action, words).children}
+    {faceOf(action, words)}
   </span>
 );

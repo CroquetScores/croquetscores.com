@@ -117,7 +117,12 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
       return tournament.archived
         ? []
         : [
-            <a key="players" className="button" href={at}>
+            <a
+              key="players"
+              className="button"
+              href={at}
+              title={say("admin.hover.tournaments.players")}
+            >
               {say("admin.tournaments.players")}
             </a>,
           ];
@@ -126,7 +131,12 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
       return tournament.archived
         ? []
         : [
-            <a key="scores" className="button" href={at}>
+            <a
+              key="scores"
+              className="button"
+              href={at}
+              title={say("admin.hover.tournaments.scores")}
+            >
               {say("admin.tournaments.scores")}
             </a>,
           ];
@@ -137,6 +147,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
           key="restore"
           type="button"
           className="button"
+          title={say("admin.hover.tournaments.restore")}
           onClick={() => void act(tournament, "restore")}
         >
           {say("admin.tournaments.restore")}
@@ -144,16 +155,27 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
       ];
     }
     return [
-      <a key="manage" className="button" href={at}>
+      <a
+        key="manage"
+        className="button"
+        href={at}
+        title={say("admin.hover.tournaments.manage")}
+      >
         {say("admin.tournaments.manage")}
       </a>,
-      <a key="edit" className="button" href={`${at}/edit`}>
+      <a
+        key="edit"
+        className="button"
+        href={`${at}/edit`}
+        title={say("admin.hover.tournaments.edit")}
+      >
         {say("admin.tournaments.edit")}
       </a>,
       <button
         key="archive"
         type="button"
         className="button"
+        title={say("admin.hover.tournaments.archive")}
         onClick={() => void act(tournament, "archive")}
       >
         {say("admin.tournaments.archive")}
@@ -180,7 +202,11 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                 push it off a phone's screen. Offered to every reader, since
                 anybody signed in can create a tournament and manage it. */}
             <p>
-              <a className="button" href="/admin/tournaments/new">
+              <a
+                className="button"
+                href="/admin/tournaments/new"
+                title={say("admin.hover.tournaments.new")}
+              >
                 {say("admin.tournaments.new")}
               </a>
             </p>

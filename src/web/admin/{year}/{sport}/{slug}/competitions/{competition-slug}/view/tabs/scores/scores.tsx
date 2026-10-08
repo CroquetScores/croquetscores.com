@@ -185,6 +185,8 @@ export const ScoresTab = ({
       <span className="listed-score">
         <span className="score-winner">{game.winner}</span>{" "}
         <span className="score-winner-score">{game.winnerScore}</span>{" "}
+        {say("admin.score.beat")}
+        <br />
         <span className="score-loser">{game.loser}</span>{" "}
         <span className="score-loser-score">{game.loserScore}</span>
       </span>
@@ -265,6 +267,7 @@ export const ScoresTab = ({
           type="button"
           className="button"
           data-action="edit"
+          title={say("admin.hover.scores.edit")}
           onClick={() => {
             setCorrecting(game);
           }}
@@ -276,6 +279,7 @@ export const ScoresTab = ({
         <button
           type="button"
           className="button"
+          title={say("admin.hover.scores.restore")}
           onClick={() => void act(game, "restore")}
         >
           {say("admin.scores.restore")}
@@ -284,6 +288,7 @@ export const ScoresTab = ({
         <button
           type="button"
           className="button"
+          title={say("admin.hover.scores.archive")}
           onClick={() => void act(game, "archive")}
         >
           {say("admin.scores.archive")}
@@ -301,6 +306,7 @@ export const ScoresTab = ({
         <button
           type="button"
           className="button"
+          title={say("admin.hover.scores.unwithdraw")}
           onClick={() => void act(game, "unwithdraw")}
         >
           {say("admin.scores.unwithdraw")}
@@ -309,6 +315,7 @@ export const ScoresTab = ({
         <button
           type="button"
           className="button"
+          title={say("admin.hover.scores.withdraw")}
           onClick={() => void act(game, "withdraw")}
         >
           {say("admin.scores.withdraw")}
@@ -331,7 +338,11 @@ export const ScoresTab = ({
                 className="button"
                 data-action={direction}
                 onClick={() => void act(game, direction)}
-                {...optionFace(direction, words)}
+                {...optionFace(
+                  direction,
+                  words,
+                  say(`admin.hover.scores.${direction}`),
+                )}
               />
             ) : (
               noOption(direction, words)
@@ -351,6 +362,7 @@ export const ScoresTab = ({
         <button
           type="button"
           className="button"
+          title={say("admin.hover.scores.add")}
           onClick={() => {
             if (kind !== "knockout") {
               setAdding(true);
@@ -407,6 +419,7 @@ export const ScoresTab = ({
         <ModalDialog
           title={say("admin.scores.drawNotFilledTitle")}
           action={say("admin.modal.ok")}
+          hover={say("admin.hover.modal.ok")}
           act={() => {
             setUnfilled(false);
           }}

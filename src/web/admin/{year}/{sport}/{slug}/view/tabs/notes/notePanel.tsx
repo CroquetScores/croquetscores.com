@@ -364,11 +364,24 @@ export const NotePanel = ({
           had can still be left. */}
       <div className="note-panel-buttons">
         {ready ? (
-          <button className="button button-submit" type="submit">
+          <button
+            className="button button-submit"
+            type="submit"
+            title={say(
+              note === undefined
+                ? "admin.hover.note.add"
+                : "admin.hover.note.save",
+            )}
+          >
             {say(note === undefined ? "admin.note.add" : "admin.note.save")}
           </button>
         ) : null}
-        <button className="button" type="button" onClick={close}>
+        <button
+          className="button"
+          type="button"
+          title={say("admin.hover.modal.cancel")}
+          onClick={close}
+        >
           {say("admin.modal.cancel")}
         </button>
       </div>

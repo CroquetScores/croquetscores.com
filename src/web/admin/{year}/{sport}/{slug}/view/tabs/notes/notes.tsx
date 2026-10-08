@@ -91,6 +91,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
         <button
           type="button"
           className="listed-name"
+          title={say("admin.hover.notes.edit")}
           onClick={() => {
             write(note);
           }}
@@ -105,6 +106,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
           type="button"
           className="button"
           data-action="edit"
+          title={say("admin.hover.notes.edit")}
           onClick={() => {
             write(note);
           }}
@@ -115,6 +117,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
           type="button"
           className="button"
           data-action="delete"
+          title={say("admin.hover.notes.delete")}
           onClick={() => {
             setDeleting(note);
           }}
@@ -138,6 +141,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
             <button
               type="button"
               className="button"
+              title={say("admin.hover.notes.add")}
               onClick={() => {
                 write("adding");
               }}
@@ -172,6 +176,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
         <ModalDialog
           title={say("admin.notes.deleteTitle")}
           action={say("admin.notes.delete")}
+          hover={say("admin.hover.notes.delete")}
           act={() => {
             const note = deleting;
             setDeleting(undefined);

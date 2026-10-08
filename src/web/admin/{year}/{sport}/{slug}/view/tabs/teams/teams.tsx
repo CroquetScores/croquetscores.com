@@ -107,7 +107,11 @@ export const TeamsTab = ({
         if (action === "edit") setDialog(team);
         else void act(team, action);
       }}
-      {...optionFace(action, say(`admin.teams.${action}`))}
+      {...optionFace(
+        action,
+        say(`admin.teams.${action}`),
+        say(`admin.hover.teams.${action}`),
+      )}
     />
   );
 
@@ -168,7 +172,12 @@ export const TeamsTab = ({
               // Edit before View, as a competition's is, so that what is done
               // to a team is offered ahead of going to it.
               ...(manages ? [button(team, "edit")] : []),
-              <a key="view" className="button" href={pageOf(team)}>
+              <a
+                key="view"
+                className="button"
+                href={pageOf(team)}
+                title={say("admin.hover.teams.view")}
+              >
                 {say("admin.teams.view")}
               </a>,
               ...(anyArchive
@@ -198,6 +207,7 @@ export const TeamsTab = ({
           <button
             type="button"
             className="button"
+            title={say("admin.hover.teams.add")}
             onClick={() => {
               setDialog("adding");
             }}
