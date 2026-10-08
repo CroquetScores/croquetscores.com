@@ -5,14 +5,16 @@ import type { Tournament } from "../../../domain/aggregates/tournaments/Tourname
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import type { AccountsByAddress } from "./tournamentOperations.js";
-import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import {
   TournamentOperationRefused,
   askedBy,
   tournamentFor,
 } from "./tournamentOperations.js";
 import { AddScorer } from "./AddScorer.js";
+import {
+  type AccountsByAddress,
+  accountThatCanBeGiven,
+} from "../accounts/accountsThatCanBeGiven.js";
 
 /**
  * Making somebody a scorer of a tournament, named by their email address,
@@ -36,15 +38,12 @@ export class AddScorerHandler extends CommandHandler<AddScorer, void> {
       command.tournament,
       "AddScorer",
     );
-    // Refused the same way however the address came to have no account that
-    // can sign in, so that the manager learns no more about somebody else's
-    // address than that it cannot be made a scorer.
-    const found = await this.accountsByAddress.find(
-      EmailAddress.from(command.emailAddress),
+    const account = await accountThatCanBeGiven(
+      this.accounts,
+      this.accountsByAddress,
+      command.emailAddress,
     );
-    const account =
-      found === undefined ? undefined : await this.accounts.load(found);
-    if (account === undefined || !account.confirmed || account.forgotten) {
+    if (account === undefined) {
       throw new TournamentOperationRefused(
         "AddScorer.NoSuchAccount",
         "The address has no account that can be made a scorer.",
