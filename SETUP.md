@@ -751,10 +751,10 @@ code-review.md
 
 ## 13. CI
 
-`.github/workflows/ci.yml` is two jobs, and the file itself is where what each does is said, with why beside it:
+`.github/workflows/ci.yml` runs on every pull request and on nothing else, since `main` is only reached by squash-merging a pull request whose run passed on its own branch. It is two jobs, and the file itself is where what each does is said, with why beside it:
 
-- `build` installs, lints, typechecks and builds, on every pull request and every push to `main`.
-- `tests` waits on it, and runs every scenario in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others. It does not run on `main`, which is only reached by squash-merging a pull request whose scenarios passed on its own branch.
+- `build` installs, lints, typechecks and builds.
+- `tests` waits on it, and runs every scenario in four shards side by side, each on a runner of its own with a Postgres of its own, a quarter of the suite each with Cucumber's `--shard`, two workers to a runner. A shard that fails does not stop the others.
 
 Nothing is kept of a run but what GitHub shows of it: a failing scenario is read off the log of the shard it failed in, and run again locally.
 
