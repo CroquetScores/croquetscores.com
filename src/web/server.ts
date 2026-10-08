@@ -208,7 +208,10 @@ import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSe
 import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
 import { KeyedEmailAddressHasher } from "../infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEmailsWritten } from "../infrastructure/email/PostgresEmailsWritten.js";
-import { PostgresEventStore } from "../infrastructure/event-store/PostgresEventStore.js";
+import {
+  PostgresEventStore,
+  type StoredEvent,
+} from "../infrastructure/event-store/PostgresEventStore.js";
 import { PostgresHandledRequests } from "../infrastructure/database/PostgresHandledRequests.js";
 import { PostgresFailedSignIns } from "../infrastructure/database/PostgresFailedSignIns.js";
 import { PostgresPasswordResetAskings } from "../infrastructure/database/PostgresPasswordResetAskings.js";
@@ -394,6 +397,12 @@ export interface Application {
   readonly commentariesByTournament: CommentariesByTournament;
   /** The tournaments each account has a part in, as the read model keeps them. */
   readonly tournamentsByAccount: TournamentsByAccount;
+  /**
+   * Makes every read model again from every event kept, in one transaction,
+   * and answers how many events that was. For the maintenance script that
+   * rebuilds them (scripts/rebuild-read-models.mjs); no route calls it.
+   */
+  readonly rebuildReadModels: () => Promise<number>;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -563,6 +572,11 @@ export interface ApplicationOptions {
 
 // Every kind of event the application records, each named once by the name it
 // is kept under, and how it is read back.
+/** A read model that can be made again from every event kept. */
+interface RebuildableReadModel {
+  rebuildFrom(events: readonly StoredEvent[]): Promise<void>;
+}
+
 const events = (): EventRegistry =>
   nameManagerNoteEvents(
     nameCommentaryEvents(
@@ -630,14 +644,40 @@ export const buildApplication = async (
   // On the unit of work the mediator's transactions use, so that what a
   // command's handler appends, and what every projection writes of it, is kept
   // in the command's transaction or not at all.
+  const keptEvents = new PostgresEventStore(
+    unitOfWork,
+    options.events ?? events(),
+    new AccountEventSealing(accountKeys),
+  );
   const eventStore = new ProjectingEventStore(
-    new PostgresEventStore(
-      unitOfWork,
-      options.events ?? events(),
-      new AccountEventSealing(accountKeys),
-    ),
+    keptEvents,
     options.projections ?? projections,
   );
+
+  // Every read model that can be made again from the events. Reading every
+  // event is not something the EventStore the application hands out can do,
+  // since no command or query has any business doing it, so the maintenance
+  // script that rebuilds the read models asks for it here, and a route cannot.
+  const rebuildable: readonly RebuildableReadModel[] = [
+    accountsByEmailAddress,
+    accountsByGoogleAccount,
+    accountsByRole,
+    tournamentsByAddress,
+    tournamentsByAccount,
+    tournamentsByWebsite,
+    managerNotesByTournament,
+    commentariesByTournament,
+  ];
+  const rebuildReadModels = (): Promise<number> =>
+    // One transaction, so that a rebuild that fails leaves every read model
+    // as it was, and one that is running is not seen half done.
+    unitOfWork.inTransaction(async () => {
+      const everyEvent = await keptEvents.readAll();
+      for (const readModel of rebuildable) {
+        await readModel.rebuildFrom(everyEvent);
+      }
+      return everyEvent.length;
+    });
 
   // Emails are written from the site's catalogues, with links made from the
   // site's configured address and never a request's, and written to files in
@@ -1294,6 +1334,7 @@ export const buildApplication = async (
     managerNotesByTournament,
     commentariesByTournament,
     tournamentsByAccount,
+    rebuildReadModels,
   };
 };
 
