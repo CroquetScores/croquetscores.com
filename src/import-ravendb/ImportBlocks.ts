@@ -2,9 +2,22 @@ import {
   type ImportingCompetitions,
   importCompetition,
 } from "./importCompetition.js";
+import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { Block } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfWorkedOut } from "./bestOfImported.js";
+
+// Blocks of a tournament that finished before this are left behind where
+// nothing was entered in them or played (ImportBlocks.feature).
+const UNUSED_BEFORE = Date.UTC(2026, 9, 1);
+
+// Whether `document` is a block added and never used, no player entered and
+// no game played, of a tournament that finished before UNUSED_BEFORE. One of
+// a tournament finishing then or later may yet be filled.
+const isUnused = (document: Block, tournament: Tournament): boolean =>
+  document.Players._Players.length === 0 &&
+  document.Games._Games.length === 0 &&
+  tournament.finishes.toDate().getTime() < UNUSED_BEFORE;
 
 /**
  * Brings the old sites' blocks over as blocks, each the best of what it was, or
@@ -22,18 +35,21 @@ export class ImportBlocks implements Importer<Block> {
       carriesForward: true,
       // A bye has no place in a block, which has no draw: the site has byes
       // only in a knockout, so one the old sites listed here is left out.
-      shape: (document, listed) => ({
-        entries: listed.filter((entry) => !entry.bye),
-        add: (tournament, id, name, by, at) => {
-          tournament.addBlock(
-            id,
-            name,
-            bestOfWorkedOut(document.BestOf, document.Games._Games),
-            by,
-            at,
-          );
-        },
-      }),
+      shape: (document, listed, inTournament) =>
+        isUnused(document, inTournament)
+          ? undefined
+          : {
+              entries: listed.filter((entry) => !entry.bye),
+              add: (tournament, id, name, by, at) => {
+                tournament.addBlock(
+                  id,
+                  name,
+                  bestOfWorkedOut(document.BestOf, document.Games._Games),
+                  by,
+                  at,
+                );
+              },
+            },
     });
   }
 }

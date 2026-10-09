@@ -82,6 +82,40 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
+  Rule: A block with no players and no games, of a tournament finished before 1 October 2026, is left behind
+
+    The old sites kept blocks that were added to a tournament and never used:
+    no player was entered in them and no game played. One of a tournament
+    that finished before 1 October 2026 is left behind without an error. One
+    of a tournament finishing on that day or later may yet be filled, and is
+    brought over.
+
+    Scenario: An empty block of a tournament that finished before 1 October 2026 is not kept
+      Given a tournament "tournaments/14" on "croquetscores.com" finishing on "2026-09-30T00:00:00.0000000" is imported
+      And the block "blocks/30" of "tournaments/14" on "croquetscores.com"
+      When the competition is imported
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving an empty block of a finished tournament behind is not an error
+      Given a tournament "tournaments/14" on "croquetscores.com" finishing on "2026-09-30T00:00:00.0000000" is imported
+      And the block "blocks/30" of "tournaments/14" on "croquetscores.com"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: An empty block of a tournament that finishes on 1 October 2026 is kept
+      Given a tournament "tournaments/14" on "croquetscores.com" finishing on "2026-10-01T00:00:00.0000000" is imported
+      And the block "blocks/30" of "tournaments/14" on "croquetscores.com"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is a block
+
+    Scenario: A block with a player, of a tournament that finished before 1 October 2026, is kept
+      Given a tournament "tournaments/14" on "croquetscores.com" finishing on "2026-09-30T00:00:00.0000000" is imported
+      And player 7 of "tournaments/14" on "croquetscores.com" is imported as "Sam Someone"
+      And the block "blocks/30" of "tournaments/14" on "croquetscores.com"
+      And player 7 is in the competition
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is a block
+
   Rule: What a player carried forward is carried forward, unless it was nothing
 
     The old sites kept the six counts a player carried forward as numbers,

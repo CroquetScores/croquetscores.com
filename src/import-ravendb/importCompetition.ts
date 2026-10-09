@@ -59,7 +59,11 @@ export type Shaped =
 /** Whether a kind of competition keeps what its players carried forward. */
 export interface CompetitionKind<TDocument extends OldCompetition> {
   readonly carriesForward: boolean;
-  shape(document: TDocument, listed: readonly Listed[]): Shaped;
+  shape(
+    document: TDocument,
+    listed: readonly Listed[],
+    tournament: Tournament,
+  ): Shaped;
 }
 
 /** What importing a competition reads from and writes to. */
@@ -183,7 +187,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       );
       listed.push(became === bye ? { bye: true } : { bye: false, player });
     }
-    const shaped = kind.shape(document, listed);
+    const shaped = kind.shape(document, listed, tournament);
     if (shaped === undefined) return;
 
     // Done as the tournament's first manager, who created it, when it was

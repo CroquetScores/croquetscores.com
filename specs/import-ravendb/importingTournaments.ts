@@ -734,6 +734,15 @@ Given(
   },
 );
 
+// Started and finished on the one day, so that a scenario says only when it
+// finished.
+Given(
+  "a tournament {string} on {string} finishing on {string} is imported",
+  async function (this: SpecWorld, id: string, website: string, day: string) {
+    await tournamentImported(this, id, website, { Start: day, Finish: day });
+  },
+);
+
 Given(
   "a tournament {string} on {string} of the type {string} is imported",
   async function (this: SpecWorld, id: string, website: string, type: string) {
