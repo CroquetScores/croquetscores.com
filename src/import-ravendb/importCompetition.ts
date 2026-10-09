@@ -52,6 +52,12 @@ export type Listed =
 export type Shaped =
   | {
       readonly entries: readonly Listed[];
+      /** What of the document was accepted in shaping it, said once it is added. */
+      readonly accepted?: readonly {
+        readonly what: string;
+        readonly code: string;
+        readonly why: string;
+      }[];
       readonly gamesInOrder?: (games: readonly OldGame[]) => readonly OldGame[];
       readonly add: (
         tournament: Tournament,
@@ -258,6 +264,9 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournament.id.value,
       competitionId.value,
     );
+    for (const { what, code, why } of shaped.accepted ?? []) {
+      await errors.accepted(what, code, why);
+    }
     for (const [number, playerId] of broughtOver) {
       await database.recordImportedPlayer(
         website,

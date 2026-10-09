@@ -5,7 +5,8 @@ import {
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { Block } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
-import { bestOfWorkedOut } from "./bestOfImported.js";
+import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
+import { bestOfWorkedOut, metPastTheirMatch } from "./bestOfImported.js";
 
 // Blocks of a tournament that finished before this are left behind where
 // nothing was entered in them or played (ImportBlocks.feature).
@@ -21,9 +22,11 @@ const isUnused = (document: Block, tournament: Tournament): boolean =>
 
 /**
  * Brings the old sites' blocks over as blocks, each the best of what it was, or
- * of what its games say where it was kept as the best of less than 1,
- * with what each player carried forward into it (ImportBlocks.feature). What
- * every competition brings over is importCompetition's.
+ * of what its games say where it was kept as the best of less than 1, or of 1
+ * where two of its players met again once their match was decided, which is
+ * said as accepted, with what each player carried forward into it
+ * (ImportBlocks.feature). What every competition brings over is
+ * importCompetition's.
  */
 export class ImportBlocks implements Importer<Block> {
   readonly collection = "Blocks";
@@ -35,21 +38,30 @@ export class ImportBlocks implements Importer<Block> {
       carriesForward: true,
       // A bye has no place in a block, which has no draw: the site has byes
       // only in a knockout, so one the old sites listed here is left out.
-      shape: (document, listed, inTournament) =>
-        isUnused(document, inTournament)
-          ? undefined
-          : {
-              entries: listed.filter((entry) => !entry.bye),
-              add: (tournament, id, name, by, at) => {
-                tournament.addBlock(
-                  id,
-                  name,
-                  bestOfWorkedOut(document.BestOf, document.Games._Games),
-                  by,
-                  at,
-                );
-              },
-            },
+      shape: (document, listed, inTournament) => {
+        if (isUnused(document, inTournament)) return undefined;
+        const worked = bestOfWorkedOut(document.BestOf, document.Games._Games);
+        // Played in rounds, each game its own match, where two players met
+        // again once their match was decided.
+        const inRounds =
+          worked.games > 1 && metPastTheirMatch(document.Games._Games, worked);
+        const bestOf = inRounds ? BestOf.from(1) : worked;
+        return {
+          entries: listed.filter((entry) => !entry.bye),
+          accepted: inRounds
+            ? [
+                {
+                  what: "",
+                  code: "ImportBlocks.PlayedInRounds",
+                  why: `Kept as the best of ${String(worked.games)}, and two of its players met again once their match was decided, so brought over as the best of 1, played in rounds.`,
+                },
+              ]
+            : [],
+          add: (tournament, id, name, by, at) => {
+            tournament.addBlock(id, name, bestOf, by, at);
+          },
+        };
+      },
     });
   }
 }

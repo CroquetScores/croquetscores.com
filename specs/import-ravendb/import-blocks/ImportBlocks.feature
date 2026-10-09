@@ -10,6 +10,17 @@ Feature: Importing the old sites' blocks
   made odd by one more where it is even, or 1 where none played more than one
   or none played at all.
 
+  Some managers had two players of a block meet again once their match was
+  decided, playing the block through more than once: blocks/8481 was kept as
+  the best of 3, and its four players met six to eight times each. The site
+  takes no game between two players whose match is decided, but a block of
+  single games is played in rounds, and two players meet in as many rounds as
+  it has (`addGame.feature`). So a block where any two players met more
+  often than one match of its best-of holds is the best of 1, every game
+  between them its own match, and is said as accepted, with the tournament
+  it is of (`AcceptedImportErrors.feature`), rather than have its later games
+  kept as errors.
+
   Background:
     Given the users are imported
     And the tournaments are imported
@@ -81,6 +92,101 @@ Feature: Importing the old sites' blocks
       And the block's matches are the best of -1
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
+
+  Rule: A block whose players met more often than one match holds is the best of 1
+
+    Sam Someone beats Alex Other twice, which decides a match of the best of
+    3, and Alex beats Sam in a third game.
+
+    Scenario: A block whose players met after their match was decided is the best of 1
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
+
+    Scenario: Every game of a block whose players met after their match was decided is brought over
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 3 games
+
+    Scenario: A block whose players met after their match was decided is not an error
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A block made the best of 1 is said as accepted
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      When the competition is imported
+      Then "croquetscores.com/blocks/30" is accepted as "ImportBlocks.PlayedInRounds"
+
+    Scenario: A block whose players met no more often than one match holds keeps its best-of
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block that keeps its best-of is not said as accepted
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then nothing is accepted of "croquetscores.com/blocks/30"
 
   Rule: A block with no players and no games, of a tournament finished before 1 October 2026, is left behind
 
