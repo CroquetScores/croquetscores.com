@@ -50,16 +50,31 @@ const shortNameOf = (name: string): string =>
 const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
 
+// Team matches whose expected matches the old site kept wrongly, by the
+// website and the document, each worked out from its games whatever was kept
+// (ImportTeamMatches.feature). TeamMatches/360, Egypt against Wales at the
+// 2012 GC World Team Championship, was kept as expected to have 3 matches and
+// played 6.
+const WORKED_OUT: ReadonlySet<string> = new Set([
+  "croquetscores.com/teammatches/360",
+]);
+
 /**
  * How many matches a team match is expected to have (ImportTeamMatches.feature):
- * as many as the old site kept, but where it kept 1, which it kept for many
- * whatever was played in them, as many as its games say. For each two
- * players who met, the games between them over its best-of, rounded up, so
- * that a match won two games to one is one match; and never fewer than 1.
- * Its games against a bye are no games, and say nothing.
+ * as many as the old site kept, but as many as its games say where it kept 1,
+ * which it kept for many whatever was played in them, or where the import
+ * names it as one whose number is known to be wrong (WORKED_OUT). Its games
+ * say, for each two players who met, the games between them over its
+ * best-of, rounded up, so that a match won two games to one is one match; and
+ * never fewer than 1. Its games against a bye are no games, and say nothing.
  */
-const expectedMatchesOf = (document: TeamMatch): number => {
-  if (document.ExpectedMatches !== 1) return document.ExpectedMatches;
+const expectedMatchesOf = (document: TeamMatch, documentId: string): number => {
+  if (
+    document.ExpectedMatches !== 1 &&
+    !WORKED_OUT.has(documentId.toLowerCase())
+  ) {
+    return document.ExpectedMatches;
+  }
   const byes = new Set(
     document.Players._Players
       .filter((player) => isOldBye(player.Name))
@@ -178,7 +193,9 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           secondTeam: second.id,
           starts: dayOf(document.Start),
           finishes: dayOf(document.Finish),
-          expectedMatches: ExpectedMatches.from(expectedMatchesOf(document)),
+          expectedMatches: ExpectedMatches.from(
+            expectedMatchesOf(document, documentId),
+          ),
           bestOf: bestOfImported(document.BestOf),
           group: TestGroup.from(document.Group ?? ""),
         },

@@ -151,7 +151,10 @@ Feature: Importing the old sites' team matches
     team match expected to have 1 is expected to have as many as its games
     say: for each two players who met, the games between them over its
     best-of, rounded up, so that a match won two games to one is one match,
-    and never fewer than 1. Any other number is the manager's, and is kept.
+    and never fewer than 1. Any other number is the manager's, and is kept,
+    but for a team match the import names as one whose number is known to be
+    wrong, as croquetscores.com's TeamMatches/360 is, kept as expected to have
+    3 matches and played as 6: its matches are worked out from its games too.
 
     Scenario: A test starts on the day its team match started
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -244,6 +247,60 @@ Feature: Importing the old sites' team matches
       And the team match was expected to have 1 match
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 1 match
+
+    Scenario: A team match the import names as wrong is expected to have the matches its games say
+      Given the team match "TeamMatches/360" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And player 5 is in the team match
+      And player 5 represents "Egypt"
+      And player 6 is in the team match
+      And player 6 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 5
+      And game 3 was lost by player 6
+      And game 4 was won by player 1
+      And game 4 was lost by player 4
+      When the team match is imported
+      Then the test kept for "TeamMatches/360" on "croquetscores.com" is expected to have 4 matches
+
+    Scenario: Another team match expected to have more than 1 match keeps it, whatever was played
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And player 5 is in the team match
+      And player 5 represents "Egypt"
+      And player 6 is in the team match
+      And player 6 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 5
+      And game 3 was lost by player 6
+      And game 4 was won by player 1
+      And game 4 was lost by player 4
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 3 matches
 
     Scenario: A team match expected to have more than 1 match keeps it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
