@@ -569,12 +569,15 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" has 1 game
 
-  Rule: A player who withdrew is withdrawn once their games are added
+  Rule: A player who withdrew is withdrawn once their last game is added
 
     The old sites marked a player withdrawn whatever they had played, and a
-    knockout gave their opponent the match from then on. Their games are
-    added first, so that what they played before withdrawing counts, as it
-    did there.
+    knockout gave their opponent the match from then on. A player is withdrawn
+    straight after their last game is added, so that what they played before
+    withdrawing counts, as it did there, and before any game is added where
+    they played none, so that whoever was to play them next goes on, as they
+    did there, before the games they went on to play are added
+    (`ImportKnockouts.feature`).
 
     Scenario: A player who withdrew has withdrawn
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"

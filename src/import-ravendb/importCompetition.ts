@@ -131,6 +131,7 @@ export const addGames = async (
   website: Website,
   by: AccountId,
   ordered: (games: readonly OldGame[]) => readonly OldGame[] = gamesInOrder,
+  afterGame: (game: OldGame) => Promise<void> = () => Promise.resolve(),
 ): Promise<void> => {
   for (const game of ordered(games)) {
     try {
@@ -157,18 +158,20 @@ export const addGames = async (
     } catch (failure) {
       await errors.gameRefused(game, nameOf, failure);
     }
+    await afterGame(game);
   }
 };
 
 /**
- * Brings one of the old sites' blocks, knockouts or Swisses over as `kind`
- * says (importCompetition.feature): added to the tournament it became, its
- * players entered in the order the old sites listed them, what each carried
- * forward kept where the kind keeps it, its games added, and those who
- * withdrew withdrawn once their games are. A player the tournament's players
- * no longer listed is brought over from the competition's list, and a game
- * against a bye is left out, each said as accepted. A player or a game the
- * site refuses is kept as an error naming it, and the rest are brought over.
+ * Brings one of the old sites' blocks, knockouts or Swisses over as `kind` says
+ * (importCompetition.feature): added to the tournament it became, its players
+ * entered in the order the old sites listed them, what each carried forward
+ * kept where the kind keeps it, its games added, and those who withdrew
+ * withdrawn once their last game is, or before any where they played none. A
+ * player the tournament's players no longer listed is brought over from the
+ * competition's list, and a game against a bye is left out, each said as
+ * accepted. A player or a game the site refuses is kept as an error naming it,
+ * and the rest are brought over.
  *
  * An archived competition is left behind. The tournament, the competition
  * and the record of it are kept in one transaction.
@@ -290,7 +293,8 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const competition = Competition.rebuiltFrom(competitionId, []);
     const told = toldOf(tournament, competitionId);
     const entered = new Map<number, CompetitionPlayerId>();
-    const withdrew: CompetitionPlayerId[] = [];
+    // Each player who withdrew, by the number the old sites gave them.
+    const withdrew = new Map<number, CompetitionPlayerId>();
 
     // Each entered last, so that the competition's order is the order the old
     // sites listed them in, which a knockout is drawn in.
@@ -321,7 +325,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           at,
         );
         entered.set(player._Id, playerId);
-        if (player.IsWithdrawn) withdrew.push(playerId);
+        if (player.IsWithdrawn) withdrew.set(player._Id, playerId);
         // A player whose counts were all 0 carried nothing: the old sites
         // kept 0 where nobody typed anything.
         const carried = carriedOf(player);
@@ -344,6 +348,35 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         AGAINST_A_BYE.why,
       );
     }
+    // A player who withdrew is withdrawn straight after their last game is
+    // added, so that what they played counts, and before any is where they
+    // played none, so that whoever was to play them next goes on before the
+    // games they went on to play are added. Whoever has a game still to come
+    // once every game is, as a play-off the kind leaves out, is withdrawn
+    // last.
+    const withdraw = async (number: number): Promise<void> => {
+      const playerId = withdrew.get(number);
+      if (playerId === undefined) return;
+      withdrew.delete(number);
+      try {
+        competition.withdrawPlayer(playerId, told, by, at);
+      } catch (failure) {
+        await errors.refused(`withdrawing ${playerId.value}`, failure);
+      }
+    };
+    const gamesLeft = new Map<number, number>();
+    for (const number of withdrew.keys()) {
+      gamesLeft.set(
+        number,
+        played.Games._Games.filter(
+          (game) =>
+            game.Winner.PlayerId === number || game.Loser.PlayerId === number,
+        ).length,
+      );
+    }
+    for (const [number, left] of gamesLeft) {
+      if (left === 0) await withdraw(number);
+    }
     await addGames(
       errors,
       competition,
@@ -354,15 +387,16 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       Website.from(website),
       by,
       shaped.gamesInOrder,
+      async (game) => {
+        for (const number of [game.Winner.PlayerId, game.Loser.PlayerId]) {
+          const left = gamesLeft.get(number);
+          if (left === undefined) continue;
+          gamesLeft.set(number, left - 1);
+          if (left - 1 === 0) await withdraw(number);
+        }
+      },
     );
-
-    for (const playerId of withdrew) {
-      try {
-        competition.withdrawPlayer(playerId, told, by, at);
-      } catch (failure) {
-        await errors.refused(`withdrawing ${playerId.value}`, failure);
-      }
-    }
+    for (const number of [...withdrew.keys()]) await withdraw(number);
 
     await competitions.save(competition);
   });

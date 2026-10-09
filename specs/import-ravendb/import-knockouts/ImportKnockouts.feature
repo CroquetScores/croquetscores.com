@@ -567,6 +567,111 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then nothing is accepted of "croquetscores.com/knockouts/30"
 
+  Rule: Whoever was to play a player who withdrew goes on
+
+    The old sites gave a match to the opponent of a player marked withdrawn,
+    who went on to the next round without a game, and the site does too
+    (`withdrawPlayer.feature`). So a player who withdrew is withdrawn before
+    the games whoever was to play them went on to play are added
+    (`importCompetition.feature`): before any game where they played none,
+    and straight after their last game where they played some.
+
+    Ben Baker withdrew before playing Ann Able, and Ann goes on to beat Cat
+    Cole, who beat Dan Dunn. In a knockout of eight, Ann beats Ben and then
+    withdraws, and Cat goes on, past Ann, to beat Eve East in the final.
+
+    Scenario: The games of whoever was to play a player who withdrew before playing are added
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 2 withdrew
+      And game 1 was won by player 3
+      And game 1 was lost by player 4
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 2 games
+
+    Scenario: Whoever was to play a player who withdrew before playing going on is not an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 2 withdrew
+      And game 1 was won by player 3
+      And game 1 was lost by player 4
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
+    Scenario: The games of whoever was to play a player who withdrew after winning are added
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Eve East"
+      And player 6 of "tournaments/12" on "croquetscores.com" is imported as "Fay Ford"
+      And player 7 of "tournaments/12" on "croquetscores.com" is imported as "Gus Gray"
+      And player 8 of "tournaments/12" on "croquetscores.com" is imported as "Hal Hart"
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 8
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 5 is in the competition
+      And player 6 is in the competition
+      And player 7 is in the competition
+      And player 8 is in the competition
+      And player 1 withdrew
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 5
+      And game 3 was lost by player 6
+      And game 4 was won by player 7
+      And game 4 was lost by player 8
+      And game 5 was won by player 5
+      And game 5 was lost by player 7
+      And game 6 was won by player 3
+      And game 6 was lost by player 5
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 6 games
+
+    Scenario: Whoever was to play a player who withdrew after winning going on is not an error
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Eve East"
+      And player 6 of "tournaments/12" on "croquetscores.com" is imported as "Fay Ford"
+      And player 7 of "tournaments/12" on "croquetscores.com" is imported as "Gus Gray"
+      And player 8 of "tournaments/12" on "croquetscores.com" is imported as "Hal Hart"
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 8
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 5 is in the competition
+      And player 6 is in the competition
+      And player 7 is in the competition
+      And player 8 is in the competition
+      And player 1 withdrew
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 5
+      And game 3 was lost by player 6
+      And game 4 was won by player 7
+      And game 4 was lost by player 8
+      And game 5 was won by player 5
+      And game 5 was lost by player 7
+      And game 6 was won by player 3
+      And game 6 was lost by player 5
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
   Rule: Nothing is carried forward in a knockout
 
     Scenario: A player's counts are left behind
