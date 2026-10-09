@@ -70,12 +70,55 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then importing the team match is refused with "ImportTeamMatches.NotTwoTeams"
 
-    Scenario: A team match of a tournament not played by teams is refused
+  Rule: A team match of a tournament not played by teams is left behind where it has no games, and refused where it has
+
+    The old sites let a Standard tournament have a team match. The site keeps
+    tests only in a tournament played by teams, so a team match of any other
+    tournament is not brought over.
+    One with no games has nothing in it to lose, and is left behind without
+    an error. One with games is refused, saying which tournament and which
+    team match, so that whoever reads it can find both on the old site.
+
+    Scenario: A team match with no games of a tournament not played by teams is not kept
       Given a tournament "tournaments/12" on "croquetscores.com" is imported
       And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       When the team match is imported
-      Then importing the team match is refused with "Tournament.NotPlayedByTeams"
+      Then "teammatches/52" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a team match with no games of a tournament not played by teams behind is not an error
+      Given a tournament "tournaments/12" on "croquetscores.com" is imported
+      And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/52"
+
+    Scenario: A team match with games of a tournament not played by teams is refused
+      Given a tournament "tournaments/12" on "croquetscores.com" is imported
+      And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then importing the team match is refused with "ImportTeamMatches.NotPlayedByTeams"
+
+    Scenario: The refusal names the tournament and the team match
+      Given a tournament "tournaments/12" on "croquetscores.com" is imported
+      And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/52" says "croquetscores.com/tournaments/12"
+      And the error kept for "croquetscores.com/teammatches/52" says "croquetscores.com/teammatches/52"
 
   Rule: An archived team match is left behind
 

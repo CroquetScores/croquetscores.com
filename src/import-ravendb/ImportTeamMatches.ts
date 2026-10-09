@@ -110,6 +110,17 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         tournamentDocument,
       );
 
+      // The site keeps tests only in a tournament played by teams. A team
+      // match of any other with no games has nothing in it to lose; one with
+      // games is refused naming both, for whoever reads it to find them.
+      if (!tournament.format.isTeamFormat) {
+        if (document.Games._Games.length === 0) return;
+        throw new ImportRefused(
+          "ImportTeamMatches.NotPlayedByTeams",
+          `The team match ${documentId} has games, and its tournament ${website}/${tournamentDocument} is not played by teams.`,
+        );
+      }
+
       const split = document.Name.indexOf(VERSUS);
       if (split === -1) {
         throw new ImportRefused(
