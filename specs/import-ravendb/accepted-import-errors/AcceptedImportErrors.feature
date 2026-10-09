@@ -34,7 +34,7 @@ Feature: What the import accepted, said in a file
   Rule: Beginning the file deletes what the last import said
 
     Scenario: What the last import said is gone once the file is begun
-      Given the file of accepted import errors says "left over"
+      Given the file of accepted import errors was left saying "left over"
       When the file of accepted import errors is begun
       Then the file of accepted import errors does not say "left over"
 

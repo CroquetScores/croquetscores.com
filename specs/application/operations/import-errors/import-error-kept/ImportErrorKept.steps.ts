@@ -71,37 +71,37 @@ const tournamentAnswered = (world: SpecWorld) => {
 };
 
 Then(
-  "the tournament answered is called {string}",
+  "the import error's tournament is called {string}",
   function (this: SpecWorld, name: string) {
     assert.equal(tournamentAnswered(this).name, name);
   },
 );
 
 Then(
-  "the tournament answered is at {string}",
+  "the import error's tournament is at {string}",
   function (this: SpecWorld, address: string) {
     assert.equal(tournamentAnswered(this).address, address);
   },
 );
 
 Then(
-  "the tournament answered was on {string}",
+  "the import error's tournament was on {string}",
   function (this: SpecWorld, website: string) {
     assert.equal(tournamentAnswered(this).website, website);
   },
 );
 
 Then(
-  "the competition answered is called {string}",
+  "the import error's competition is called {string}",
   function (this: SpecWorld, name: string) {
     assert.equal(tournamentAnswered(this).competitionName, name);
   },
 );
 
-Then("no competition is answered", function (this: SpecWorld) {
+Then("the import error is of no competition", function (this: SpecWorld) {
   assert.equal(tournamentAnswered(this).competitionName, undefined);
 });
 
-Then("no tournament is answered", function (this: SpecWorld) {
+Then("the import error is of no tournament", function (this: SpecWorld) {
   assert.equal(answered(this).tournament, undefined);
 });

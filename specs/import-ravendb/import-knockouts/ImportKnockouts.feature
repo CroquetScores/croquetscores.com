@@ -529,7 +529,7 @@ Feature: Importing the old sites' knockouts
       And game 4 was won by player 2
       And game 4 was lost by player 1
       When the competition is imported
-      Then "game 4" of "croquetscores.com/knockouts/10088" is accepted as "Competition.NotDrawnToMeet"
+      Then "game 3" of "croquetscores.com/knockouts/10088" is accepted as "Competition.NotDrawnToMeet"
 
     Scenario: What is accepted of a knockout is of its tournament
       Given the knockout "knockouts/10088" of "tournaments/12" on "croquetscores.com"

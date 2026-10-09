@@ -53,7 +53,7 @@ After(async function (this: SpecWorld) {
 });
 
 Given(
-  "the file of accepted import errors says {string}",
+  "the file of accepted import errors was left saying {string}",
   async function (this: SpecWorld, said: string) {
     await writeFile(sayingOf(this).path, said);
   },
@@ -64,8 +64,8 @@ Given(
 const begin = async function (this: SpecWorld): Promise<void> {
   await sayingOf(this).file.begin(new Date(), 0);
 };
+// Once, for Given and When alike: Cucumber matches a step whatever its word.
 Given("the file of accepted import errors is begun", begin);
-When("the file of accepted import errors is begun", begin);
 
 When(
   "the file of accepted import errors is begun at {string}",
