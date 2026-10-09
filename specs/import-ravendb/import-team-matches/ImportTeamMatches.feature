@@ -471,6 +471,12 @@ Feature: Importing the old sites' team matches
 
   Rule: A team's short name is what the old sites called it where there was little room
 
+    A short name another team of the tournament has is numbered apart from
+    it, within a short name's 10 characters, or within the team's name where
+    that is shorter, since the site refuses a short name longer than its
+    name: "Newcastle", beside "Newcastle NPCC" cut to "Newcastle", is
+    "Newcast 2", and not "Newcastl 2".
+
     Scenario Outline: A team is given a short name
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "<team> vs Other"
@@ -525,6 +531,18 @@ Feature: Importing the old sites' team matches
       And the team match is called "New Zealand A's vs New Zealand C's"
       When the team match is imported
       Then the team "New Zealand C's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zeal 3"
+
+    Scenario: A short name numbered apart is no longer than the team's name
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Newcastle NPCC vs Newcastle"
+      When the team match is imported
+      Then the team "Newcastle" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "Newcast 2"
+
+    Scenario: A team whose short name would be longer than its name is brought over
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Newcastle NPCC vs Newcastle"
+      When the team match is imported
+      Then "teammatches/50" on "croquetscores.com" is kept as a test
 
     Scenario: Two teams with a short name between them are both brought over
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"

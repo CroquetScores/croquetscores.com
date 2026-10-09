@@ -93,15 +93,19 @@ const matchesPlayedIn = (document: TeamMatch): number => {
 
 /**
  * `shortName`, or where one of `taken` is the same in any case, as many of
- * its first characters as leave room for a space and a number within a short
- * name's 10, and the first number from 2 that makes it one none of `taken`
- * is, as "New Zeal 2". Two teams can share their first 10 characters, as
- * "New Zealand A's" and "New Zealand B's" do, and the site tells a
- * tournament's teams apart by their short names.
+ * its first characters as leave room for a space and a number within `most`,
+ * and the first number from 2 that makes it one none of `taken` is, as "New
+ * Zeal 2". Two teams can share their first 10 characters, as "New Zealand
+ * A's" and "New Zealand B's" do, and the site tells a tournament's teams
+ * apart by their short names. `most` is a short name's 10, or fewer where
+ * the team's name is shorter, since the site refuses a short name longer
+ * than the name: "Newcastle" beside "Newcastle NPCC", cut to "Newcastle", is
+ * "Newcast 2".
  */
 const shortNameApart = (
   shortName: string,
   taken: readonly string[],
+  most: number,
 ): string => {
   const isTaken = (candidate: string): boolean =>
     taken.some((each) => sameName(each, candidate));
@@ -109,7 +113,7 @@ const shortNameApart = (
   for (let number = 2; ; number += 1) {
     const after = ` ${String(number)}`;
     const kept = [...shortName]
-      .slice(0, MOST_IN_A_SHORT_NAME - after.length)
+      .slice(0, Math.max(0, most - after.length))
       .join("")
       .trimEnd();
     const numbered = `${kept}${after}`;
@@ -371,6 +375,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         shortName: shortNameApart(
           shortNameOf(name),
           tournament.teams.map((team) => team.shortName.toString()),
+          Math.min(MOST_IN_A_SHORT_NAME, charactersIn(name)),
         ),
         flag: flagOf(name),
       },

@@ -29,7 +29,7 @@ import {
   tournamentBecome,
 } from "./ImportTournamentPlayers.js";
 import { ImportRefused } from "./ImportRefused.js";
-import { numberedApart } from "./names.js";
+import { competitionNameToImport, numberedApart } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
 import type {
   Competition as OldCompetition,
@@ -208,7 +208,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     // compares it.
     const name = CompetitionName.from(
       numberedApart(
-        CompetitionName.from(document.Name).toString(),
+        CompetitionName.from(competitionNameToImport(document.Name)).toString(),
         tournament.competitions.map(({ reference }) =>
           reference.name.toString(),
         ),

@@ -416,6 +416,18 @@ export class ImportDatabase implements ImportErrors {
     return Number(rows[0]?.count ?? 0);
   }
 
+  /**
+   * Whether any error was kept against `documentId`, in any case, as the old
+   * sites compared their ids.
+   */
+  async hasErrorsFor(documentId: string): Promise<boolean> {
+    const { rows } = await this.#pool.query(
+      "select 1 from import_errors where lower(document_id) = lower($1) limit 1",
+      [documentId],
+    );
+    return rows.length > 0;
+  }
+
   /** What was kept against `documentId`, in the order it was kept. */
   async errorsFor(documentId: string): Promise<string[]> {
     const { rows } = await this.#pool.query<{ error_message: string }>(

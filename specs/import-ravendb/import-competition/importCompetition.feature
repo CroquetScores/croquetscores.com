@@ -123,6 +123,26 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "A Block (3)"
 
+  Rule: A name with no letter or digit says the import corrected it
+
+    The site refuses a competition's name with no letter or digit, which
+    makes no slug for its address, and the old sites accepted some, as "!".
+    Rather than leave the competition behind, " - Import correction" is added
+    to it, which gives it some and tells a manager that the import changed
+    it, as a tournament's name too short is (`ImportTournaments.feature`).
+
+    Scenario: A name with no letter or digit says the import corrected it
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "!"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "! - Import correction"
+
+    Scenario: A competition with no letter or digit in its name is not refused
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "!"
+      When the competition is imported
+      Then importing the competition is not refused
+
   Rule: An archived competition is left behind
 
     Scenario: An archived competition is not kept as any competition

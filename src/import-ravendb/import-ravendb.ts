@@ -72,6 +72,7 @@ import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
 import { ImportWorldRankingPlayerNames } from "./ImportWorldRankingPlayerNames.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
+import { MissingTournamentsFile } from "./MissingTournaments.js";
 import { RefuseLeftOvers } from "./RefuseLeftOvers.js";
 import {
   type Importer,
@@ -156,6 +157,15 @@ try {
     "http://localhost:3000",
     CORRECTED,
   );
+  // Whatever names a tournament the old sites no longer had, said in a file
+  // of its own rather than kept as an error.
+  const missing = new MissingTournamentsFile(
+    join(
+      import.meta.dirname,
+      "../../docs/import-from-ravendb/missing-tournaments.md",
+    ),
+  );
+  await missing.begin();
   const began = new Date();
   await accepting.begin(began, errorsBefore);
   await correcting.begin(began, errorsBefore);
@@ -271,7 +281,7 @@ try {
     parts.players,
     ...parts.competitions,
     parts.commentaries,
-  ].map(({ collection }) => new RefuseLeftOvers(collection, database));
+  ].map(({ collection }) => new RefuseLeftOvers(collection, database, missing));
 
   // The site's roles, given as soon as their holders' accounts are brought
   // over, rather than once everything is, so that an import that stops partway

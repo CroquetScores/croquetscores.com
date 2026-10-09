@@ -1,17 +1,22 @@
 @postgres
-Feature: Refusing whatever names a tournament that was never there
+Feature: Finding whatever names a tournament that was never there
 
   A tournament brings over everything that names it
   (`ImportWholeTournaments.feature`), so a document naming a tournament the
   old site no longer had is reached by no tournament. Once every tournament
   has been read, each collection of documents that name one is read, and
-  every document whose tournament was never read is refused, and so kept as
-  an error (`runImporter.feature`). Without it, an import that kept no
-  errors could still have left documents behind that nobody read.
+  every document whose tournament was never read is found. Without it, an
+  import could have left documents behind that nobody read.
+
+  A document naming a tournament the old site no longer had is not kept as
+  an error, since there is nothing in it anyone could put right. It is said
+  instead in docs/import-from-ravendb/missing-tournaments.md, with the
+  tournament it names (`MissingTournaments.feature`).
 
   A tournament the old site could not be asked about is not kept as read
-  (`ImportWholeTournaments.feature`), so what names it is refused here too,
-  as a tournament's that was not there to bring it over.
+  (`ImportWholeTournaments.feature`) either, but it was there, and an error
+  is kept against it. What names it is refused here, and so kept as an error
+  (`runImporter.feature`), since the tournament could be read another time.
 
   A document whose tournament was read is passed over, whatever became of
   the tournament: one brought over took it, one archived left it behind, and
@@ -24,12 +29,12 @@ Feature: Refusing whatever names a tournament that was never there
     And the tournaments are imported
     And a tournament "tournaments/12" on "croquetscores.com"
 
-  Rule: A document naming a tournament never read is kept as an error
+  Rule: A document naming a tournament not there is said to name a missing tournament
 
-    Scenario Outline: A document naming a tournament not there is kept as an error
+    Scenario Outline: A document naming a tournament not there is said to name a missing one
       Given the <kind> "<document>" of "tournaments/99" on "croquetscores.com"
       When the documents no tournament took are looked for
-      Then the error kept for "croquetscores.com/<document>" says "RefuseLeftOvers.NoTournament"
+      Then "croquetscores.com/<document>" is said to name the missing tournament "tournaments/99"
 
       Examples:
         | kind       | document             |
@@ -40,18 +45,32 @@ Feature: Refusing whatever names a tournament that was never there
         | team match | teammatches/50       |
         | commentary | commentaries/5       |
 
-    Scenario: A document of a tournament the old site could not be asked about is kept as an error
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And "croquetscores.com" fails when asked which "Blocks" name a tournament
-      And the tournament "tournaments/12" on "croquetscores.com" is imported
+    Scenario: A document naming a tournament not there is not an error
+      Given the block "blocks/30" of "tournaments/99" on "croquetscores.com"
       When the documents no tournament took are looked for
-      Then the error kept for "croquetscores.com/blocks/30" says "RefuseLeftOvers.NoTournament"
+      Then no error is kept for "croquetscores.com/blocks/30"
 
-    Scenario: An archived document naming a tournament not there is not an error
+    Scenario: An archived document naming a tournament not there is not said to name a missing one
       Given the block "blocks/30" of "tournaments/99" on "croquetscores.com"
       And the competition was archived
       When the documents no tournament took are looked for
-      Then no error is kept for "croquetscores.com/blocks/30"
+      Then "croquetscores.com/blocks/30" is not said to name a missing tournament
+
+  Rule: A document of a tournament there but not read is kept as an error
+
+    Scenario: A document of a tournament the old site could not be asked about is kept as an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And "croquetscores.com" fails when asked which "Blocks" name a tournament
+      And the tournaments of "croquetscores.com" are read as the import reads them
+      When the documents no tournament took are looked for
+      Then the error kept for "croquetscores.com/blocks/30" says "RefuseLeftOvers.TournamentNotRead"
+
+    Scenario: A document of a tournament the old site could not be asked about is not said to name a missing one
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And "croquetscores.com" fails when asked which "Blocks" name a tournament
+      And the tournaments of "croquetscores.com" are read as the import reads them
+      When the documents no tournament took are looked for
+      Then "croquetscores.com/blocks/30" is not said to name a missing tournament
 
   Rule: A document naming a tournament that was read is passed over
 

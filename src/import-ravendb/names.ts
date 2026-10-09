@@ -1,3 +1,4 @@
+import { canMakeASlug } from "../domain/common/canMakeASlug.js";
 import { charactersIn } from "../domain/common/charactersIn.js";
 
 // The names the old sites accepted and the site refuses, changed only as far
@@ -9,7 +10,8 @@ const FEWEST_CHARACTERS = 3;
 // Added to a name too short, which makes it long enough and tells whoever
 // reads it next where it came from, so that they can name it better: a
 // person's that it was imported, and a tournament's that the import
-// corrected it. A competition's is never too short.
+// corrected it. A competition's is never too short, but one with no letter
+// or digit says the import corrected it too.
 const IMPORTED = " - Imported";
 const IMPORT_CORRECTION = " - Import correction";
 
@@ -52,6 +54,19 @@ export const tournamentNameToImport = (name: string): string => {
       ? titleCased(trimmed)
       : trimmed;
   return lengthened(cased, IMPORT_CORRECTION);
+};
+
+/**
+ * A competition's name the old sites accepted, as the site will take it. The
+ * site refuses one with no letter or digit, which makes no slug for its
+ * address, as "!", so one says the import corrected it, which gives it some.
+ * One with none at all is left with none, and refused.
+ */
+export const competitionNameToImport = (name: string): string => {
+  const trimmed = name.trim();
+  return trimmed !== "" && !canMakeASlug(trimmed)
+    ? trimmed + IMPORT_CORRECTION
+    : trimmed;
 };
 
 // Characters as a reader counts them, as charactersIn counts them, so that a
