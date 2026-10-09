@@ -190,6 +190,93 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then importing the competition is not refused
 
+  Rule: A game against a bye is left out, and said as accepted
+
+    The old sites kept a game against their bye where a manager entered one,
+    won or lost by a player who had nobody to play. It is no game that was
+    played, and the site has no player for a bye to have played it: a block
+    or a Swiss has no bye, and a knockout's bye puts the player drawn
+    against it through without a game. So a game against a bye is left out,
+    whichever kind of competition it is in, and said as accepted, with the
+    tournament it is of (`AcceptedImportErrors.feature`), rather than kept as
+    an error. The other games are added as they were.
+
+    Scenario: A game against a bye in a block is not added
+      Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 1 game
+
+    Scenario: A game a bye won is not added
+      Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 9
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 0 games
+
+    Scenario: Leaving a game against a bye out is not an error
+      Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A game against a bye left out is said as accepted
+      Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      When the competition is imported
+      Then "game 1" of "croquetscores.com/blocks/30" is accepted as "ImportCompetition.AgainstABye"
+
+    Scenario: A game against a bye in a knockout is not added
+      Given the knockouts are imported
+      And player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 2
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 0 games
+
+    Scenario: Leaving a game against a bye out of a knockout is not an error
+      Given the knockouts are imported
+      And player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 2
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
+    Scenario: A game between two players is not said as accepted
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      When the competition is imported
+      Then nothing is accepted of "croquetscores.com/blocks/30"
+
   Rule: A competition's games are added in the order the old site numbered them
 
     Scenario: A game becomes a game of the competition

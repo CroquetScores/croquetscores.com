@@ -544,8 +544,8 @@ Feature: Importing the old sites' team matches
     a player named as a bye is left out of the teams, and kept as the bye by
     the number the old site gave them in the tournament, as a tournament's
     bye is, so that every team match of the tournament knows them for one. A
-    game against a bye is no game that was played, and is left out too.
-    Neither is an error.
+    game against a bye is no game that was played, and is left out too, and
+    said as accepted (`AcceptedImportErrors.feature`). Neither is an error.
 
     Scenario: A player named as a bye is not a player of the team
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -598,6 +598,20 @@ Feature: Importing the old sites' team matches
       And game 1 was lost by player 8
       When the team match is imported
       Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game against a bye left out is said as accepted
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then "game 1" of "croquetscores.com/teammatches/50" is accepted as "ImportCompetition.AgainstABye"
 
   Rule: A test's games are between the players of its teams
 

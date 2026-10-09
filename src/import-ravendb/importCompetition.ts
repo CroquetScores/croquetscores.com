@@ -88,6 +88,12 @@ const carriedOf = (player: OldCompetitionPlayer) => ({
   hoopsAgainst: player.CarryForward.AgainstHoops,
 });
 
+/** What is said of a game against a bye, left out as accepted. */
+export const AGAINST_A_BYE = {
+  code: "ImportCompetition.AgainstABye",
+  why: "A game against the old site's bye, which was no game played, left out.",
+} as const;
+
 /** The old games of a competition, in the order the old sites numbered them. */
 export const gamesInOrder = (games: readonly OldGame[]): OldGame[] =>
   [...games].sort((one, other) => one.Id - other.Id);
@@ -142,8 +148,9 @@ export const addGames = async (
  * says (importCompetition.feature): added to the tournament it became, its
  * players entered in the order the old sites listed them, what each carried
  * forward kept where the kind keeps it, its games added, and those who
- * withdrew withdrawn once their games are. A player or a game the site
- * refuses is kept as an error naming it, and the rest are brought over.
+ * withdrew withdrawn once their games are. A game against a bye is left out,
+ * and said as accepted. A player or a game the site refuses is kept as an
+ * error naming it, and the rest are brought over.
  *
  * An archived competition is left behind. The tournament, the competition
  * and the record of it are kept in one transaction.
@@ -188,15 +195,28 @@ export const importCompetition = async <TDocument extends OldCompetition>(
 
     const bye = TournamentPlayerId.bye().value;
     const listed: Listed[] = [];
+    const byes = new Set<number>();
     for (const player of document.Players._Players) {
       const became = await database.findPlayerOf(
         website,
         tournamentDocument,
         player._Id,
       );
+      if (became === bye) byes.add(player._Id);
       listed.push(became === bye ? { bye: true } : { bye: false, player });
     }
-    const shaped = kind.shape(document, listed, tournament);
+    // A game against a bye is no game that was played, and is left out before
+    // anything is worked out from the games.
+    const againstABye = (game: OldGame): boolean =>
+      byes.has(game.Winner.PlayerId) || byes.has(game.Loser.PlayerId);
+    const played = {
+      ...document,
+      Games: {
+        ...document.Games,
+        _Games: document.Games._Games.filter((game) => !againstABye(game)),
+      },
+    };
+    const shaped = kind.shape(played, listed, tournament);
     if (shaped === undefined) return;
 
     // Done as the tournament's first manager, who created it, when it was
@@ -259,10 +279,18 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       }
     }
 
+    for (const game of gamesInOrder(document.Games._Games)) {
+      if (!againstABye(game)) continue;
+      await errors.accepted(
+        `game ${String(game.Id)}`,
+        AGAINST_A_BYE.code,
+        AGAINST_A_BYE.why,
+      );
+    }
     await addGames(
       errors,
       competition,
-      document.Games._Games,
+      played.Games._Games,
       (number) => entered.get(number),
       told,
       Website.from(website),

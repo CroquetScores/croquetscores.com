@@ -12,13 +12,21 @@ import { charactersIn } from "../domain/common/charactersIn.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Website } from "../domain/common/Website.js";
 import { DocumentErrors } from "./AcceptedImportErrors.js";
-import { type ImportingCompetitions, addGames } from "./importCompetition.js";
+import {
+  AGAINST_A_BYE,
+  type ImportingCompetitions,
+  addGames,
+  gamesInOrder,
+} from "./importCompetition.js";
 import { ImportRefused, describedFailure } from "./ImportRefused.js";
 import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
 import { nameToImport, numberedApart } from "./names.js";
 import { dayOf } from "./newtonsoft.js";
 import { oldShortNameOf, stateNamed } from "./oldSites.js";
-import type { TeamMatch } from "./ravendb-models/Competition.js";
+import type {
+  Game as OldGame,
+  TeamMatch,
+} from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfImported } from "./bestOfImported.js";
 import { isOldBye } from "./ImportTournamentPlayers.js";
@@ -302,20 +310,28 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       }
 
       const competition = Competition.rebuiltFrom(competitionId, []);
+      const errors = new DocumentErrors(
+        database,
+        accepting,
+        documentId,
+        website,
+        tournament,
+      );
+      // A game against a bye is no game that was played.
+      const againstABye = (game: OldGame): boolean =>
+        byes.has(game.Winner.PlayerId) || byes.has(game.Loser.PlayerId);
+      for (const game of gamesInOrder(document.Games._Games)) {
+        if (!againstABye(game)) continue;
+        await errors.accepted(
+          `game ${String(game.Id)}`,
+          AGAINST_A_BYE.code,
+          AGAINST_A_BYE.why,
+        );
+      }
       await addGames(
-        new DocumentErrors(
-          database,
-          accepting,
-          documentId,
-          website,
-          tournament,
-        ),
+        errors,
         competition,
-        // A game against a bye is no game that was played.
-        document.Games._Games.filter(
-          (game) =>
-            !byes.has(game.Winner.PlayerId) && !byes.has(game.Loser.PlayerId),
-        ),
+        document.Games._Games.filter((game) => !againstABye(game)),
         (number) => players.get(number),
         toldOf(tournament, competitionId),
         Website.from(website),
