@@ -143,15 +143,78 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the first player of the competition kept for "blocks/30" on "croquetscores.com" is "Sam Someone"
 
-    Scenario: A player who was no tournament player brought over is kept as an error
+  Rule: A player the tournament's players no longer listed is brought over from the competition
+
+    The old sites let a manager take a player out of the tournament's players
+    while a competition still listed them, with the games they had played in
+    it. The competition's own list still says who they were, so they are
+    brought over from it, as the tournament's players are
+    (`ImportTournamentPlayers.feature`): added to the tournament, and kept by
+    the number the old site gave them, so that every competition listing them
+    finds the one player. One named as a bye is kept as the bye. That is not
+    an error, since nothing was lost, and is said as accepted, with the
+    tournament it is of (`AcceptedImportErrors.feature`). A player the site
+    refuses is kept as an error naming them, and the rest are entered.
+
+    Scenario: A player the tournament did not list is entered in the competition
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
+      And player 9 is called "Pat Missing"
       When the competition is imported
-      Then the error kept for "croquetscores.com/blocks/30" says "player 9"
+      Then "Pat Missing" is in the competition kept for "blocks/30" on "croquetscores.com"
+
+    Scenario: A player the tournament did not list becomes a player of the tournament
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then player 9 of "tournaments/12" on "croquetscores.com" is kept as "Pat Missing"
+
+    Scenario: A player the tournament did not list is one player in every competition listing them
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
+
+    Scenario: Bringing over a player the tournament did not list is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: Bringing over a player the tournament did not list is said as accepted
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then "player 9" of "croquetscores.com/blocks/30" is accepted as "ImportCompetition.PlayerNotInTournament"
+
+    Scenario: A bye the tournament did not list is kept as the bye
+      Given the Swiss "swisses/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And player 9 is called "Bye"
+      When the competition is imported
+      Then the competition kept for "swisses/30" on "croquetscores.com" has 1 player
+
+    Scenario: A player the tournament did not list, whom the site refuses, is kept as an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "????"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "TournamentPlayer.NoLetterOrDigit"
 
     Scenario: The players after one refused are entered
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
+      And player 9 is called "????"
       And player 7 is in the competition
       When the competition is imported
       Then "Sam Someone" is in the competition kept for "blocks/30" on "croquetscores.com"

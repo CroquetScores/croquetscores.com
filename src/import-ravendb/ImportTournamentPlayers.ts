@@ -1,8 +1,10 @@
 import type { AggregateRepository } from "../application/common/AggregateRepository.js";
+import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { TournamentPlayerId } from "../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { Flags } from "../domain/aggregates/tournaments/value-objects/Flags.js";
+import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { describedFailure } from "./ImportRefused.js";
@@ -28,6 +30,36 @@ export const flagOf = (representing: string | null): string | undefined => {
   if (representing === null || representing.trim() === "") return undefined;
   const old = oldFlagOf(representing.trim());
   return old === undefined ? undefined : Flags.thereAre.find(old)?.toString();
+};
+
+/**
+ * Adds the old sites' player called `Name`, representing `Representing`, to
+ * `tournament`, as the site will take them: their name numbered apart from
+ * any the tournament's players have, and flying the flag of whatever they
+ * represent. The player's id, or the refusal thrown where the site refuses
+ * them.
+ */
+export const addOldPlayer = (
+  tournament: Tournament,
+  player: { readonly Name: string; readonly Representing: string | null },
+  by: AccountId,
+  at: ReadOnlyDate,
+): TournamentPlayerId => {
+  const playerId = TournamentPlayerId.create();
+  tournament.addPlayer(
+    playerId,
+    {
+      name: numberedApart(
+        nameToImport(player.Name),
+        tournament.players.map((each) => each.name.toString()),
+      ),
+      representing: player.Representing ?? undefined,
+      flag: flagOf(player.Representing),
+    },
+    by,
+    at,
+  );
+  return playerId;
 };
 
 /**
@@ -103,20 +135,7 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
           continue;
         }
         try {
-          const playerId = TournamentPlayerId.create();
-          tournament.addPlayer(
-            playerId,
-            {
-              name: numberedApart(
-                nameToImport(player.Name),
-                tournament.players.map((each) => each.name.toString()),
-              ),
-              representing: player.Representing ?? undefined,
-              flag: flagOf(player.Representing),
-            },
-            by,
-            at,
-          );
+          const playerId = addOldPlayer(tournament, player, by, at);
           added.push({ number: player._Id, id: playerId.value });
         } catch (failure) {
           await this.database.recordError(

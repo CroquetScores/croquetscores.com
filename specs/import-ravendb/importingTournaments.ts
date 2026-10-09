@@ -1064,6 +1064,14 @@ Then(
 );
 
 Then(
+  /^the tournament kept for "(.*)" on "(.*)" has (\d+) players?$/,
+  async function (this: SpecWorld, id: string, website: string, count: string) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    assert.equal(tournament.players.length, Number(count));
+  },
+);
+
+Then(
   "the tournament kept for {string} on {string} has the team {string}",
   async function (this: SpecWorld, id: string, website: string, name: string) {
     const tournament = await tournamentKeptFor(this, id, website);

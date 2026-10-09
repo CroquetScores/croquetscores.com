@@ -23,7 +23,11 @@ import {
   DocumentErrors,
 } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { tournamentBecome } from "./ImportTournamentPlayers.js";
+import {
+  addOldPlayer,
+  isOldBye,
+  tournamentBecome,
+} from "./ImportTournamentPlayers.js";
 import { numberedApart } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
 import type {
@@ -148,9 +152,10 @@ export const addGames = async (
  * says (importCompetition.feature): added to the tournament it became, its
  * players entered in the order the old sites listed them, what each carried
  * forward kept where the kind keeps it, its games added, and those who
- * withdrew withdrawn once their games are. A game against a bye is left out,
- * and said as accepted. A player or a game the site refuses is kept as an
- * error naming it, and the rest are brought over.
+ * withdrew withdrawn once their games are. A player the tournament's players
+ * no longer listed is brought over from the competition's list, and a game
+ * against a bye is left out, each said as accepted. A player or a game the
+ * site refuses is kept as an error naming it, and the rest are brought over.
  *
  * An archived competition is left behind. The tournament, the competition
  * and the record of it are kept in one transaction.
@@ -193,15 +198,40 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       ),
     );
 
+    // Done as the tournament's first manager, who created it, when it was
+    // created.
+    const [by] = tournament.managers;
+    if (by === undefined) throw new Error("The tournament has no manager.");
+    const at = tournament.starts;
+
     const bye = TournamentPlayerId.bye().value;
     const listed: Listed[] = [];
     const byes = new Set<number>();
+    // Each player the tournament's players no longer listed, brought over from
+    // the competition's own list, and kept by their number once the
+    // tournament is, so that every competition listing them finds the one
+    // player. One the site refuses is kept as an error once, here.
+    const broughtOver = new Map<number, string>();
+    const refused = new Set<number>();
     for (const player of document.Players._Players) {
-      const became = await database.findPlayerOf(
-        website,
-        tournamentDocument,
-        player._Id,
-      );
+      let became =
+        broughtOver.get(player._Id) ??
+        (await database.findPlayerOf(website, tournamentDocument, player._Id));
+      if (
+        became === undefined &&
+        !refused.has(player._Id) &&
+        !tournament.format.isTeamFormat
+      ) {
+        try {
+          became = isOldBye(player.Name)
+            ? bye
+            : addOldPlayer(tournament, player, by, at).value;
+          broughtOver.set(player._Id, became);
+        } catch (failure) {
+          refused.add(player._Id);
+          await errors.refused(`player ${String(player._Id)}`, failure);
+        }
+      }
       if (became === bye) byes.add(player._Id);
       listed.push(became === bye ? { bye: true } : { bye: false, player });
     }
@@ -219,11 +249,6 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const shaped = kind.shape(played, listed, tournament);
     if (shaped === undefined) return;
 
-    // Done as the tournament's first manager, who created it, when it was
-    // created.
-    const [by] = tournament.managers;
-    if (by === undefined) throw new Error("The tournament has no manager.");
-    const at = tournament.starts;
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
     await tournaments.save(tournament);
@@ -233,6 +258,19 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournament.id.value,
       competitionId.value,
     );
+    for (const [number, playerId] of broughtOver) {
+      await database.recordImportedPlayer(
+        website,
+        tournamentDocument,
+        number,
+        playerId,
+      );
+      await errors.accepted(
+        `player ${String(number)}`,
+        "ImportCompetition.PlayerNotInTournament",
+        "A player the tournament's players no longer listed, brought over from the competition's own list.",
+      );
+    }
 
     const competition = Competition.rebuiltFrom(competitionId, []);
     const told = toldOf(tournament, competitionId);
@@ -247,6 +285,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         continue;
       }
       const { player } = entry;
+      if (refused.has(player._Id)) continue;
       try {
         const became = await database.findPlayerOf(
           website,
