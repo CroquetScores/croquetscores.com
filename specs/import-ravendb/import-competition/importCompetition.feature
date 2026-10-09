@@ -323,6 +323,16 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then "game 1" of "croquetscores.com/blocks/30" is accepted as "ImportCompetition.AgainstABye"
 
+    Scenario: A game against a bye left out is said for a person, naming where it was
+      Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      When the competition is imported
+      Then what is accepted of "croquetscores.com/blocks/30" names "Spring Open - A Block"
+
     Scenario: A game against a bye in a knockout is not added
       Given the knockouts are imported
       And player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye

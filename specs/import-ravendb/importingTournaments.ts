@@ -1124,18 +1124,31 @@ Then(
 );
 
 Then(
-  "what is accepted of {string} is of the tournament at {string} on {string}",
+  "what is accepted of {string} is at {string} on the new site and {string} on the old site",
   function (
     this: SpecWorld,
     documentId: string,
-    address: string,
-    website: string,
+    newSitePath: string,
+    oldSitePath: string,
   ) {
     const said = acceptedOf(this, documentId);
     assert.ok(said.length > 0, `Nothing of ${documentId} is accepted.`);
     for (const accepted of said) {
-      assert.equal(accepted.address, address);
-      assert.equal(accepted.website, website);
+      assert.equal(accepted.newSitePath, newSitePath);
+      assert.equal(accepted.oldSitePath, oldSitePath);
     }
+  },
+);
+
+// By what it names rather than by its wording, which is said once, where
+// what is accepted is.
+Then(
+  "what is accepted of {string} names {string}",
+  function (this: SpecWorld, documentId: string, named: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(
+      said.some((accepted) => accepted.description.includes(named)),
+      `Nothing accepted of ${documentId} names ${named}: ${inspect(said)}`,
+    );
   },
 );

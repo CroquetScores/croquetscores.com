@@ -4,7 +4,7 @@ import { dirname } from "node:path";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
-import { gameSummary, playerSummary } from "./errorSummaries.js";
+import { gameSaid, placeOf, playerSaid, reasonOf } from "./errorSummaries.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Game as OldGame } from "./ravendb-models/Competition.js";
 import { numbers } from "./runImporter.js";
@@ -18,16 +18,21 @@ import { numbers } from "./runImporter.js";
 export interface Accepted {
   /** The document, with its website, as "croquetscores.com/knockouts/10088". */
   readonly documentId: string;
-  /** The address of the tournament the document is of, as "2014/ac/spring-open". */
-  readonly address: string;
   /** The old site the document is of, as "croquetscores.com". */
   readonly website: string;
+  /**
+   * Where the document is on the site, without a leading slash: its
+   * competition's page once it is added, or its tournament's.
+   */
+  readonly newSitePath: string;
+  /** Where the document was on the old site, the same way. */
+  readonly oldSitePath: string;
   /** What of the document was accepted, as "game 12", or "" for the whole of it. */
   readonly what: string;
   /** What was accepted, as a refusal's code or a code of the import's own. */
   readonly code: string;
-  /** Why it was accepted. */
-  readonly why: string;
+  /** What was accepted and why, said for a person. */
+  readonly description: string;
 }
 
 /** Where what the import accepted is said (AcceptedImportErrors.feature). */
@@ -36,12 +41,14 @@ export interface AcceptedImportErrors {
 }
 
 /**
- * Says what the import accepts in a Markdown file, a line each, linking to the
- * tournament on the new site, at `newSite`, and on the old site the document
- * is of, at the same address. The import begins by emptying it, so that the
- * file says only what the last import accepted. Written a line at a time
- * rather than once importing is finished, so that an import that stops
- * partway through still says what it accepted before it stopped.
+ * Says what the import accepts in a Markdown file, each under a heading of its
+ * code and its document, with the document's whole address on the new site,
+ * at `newSite`, and on the old site it was on, written out rather than as
+ * links, and what was accepted said for a person. The import begins by
+ * emptying it, so that the file says only what the last import accepted.
+ * Written as each is accepted rather than once importing is finished, so that
+ * an import that stops partway through still says what it accepted before it
+ * stopped.
  *
  * It begins by saying when the import began, by the machine's own clock, and
  * how many errors and things accepted the import before kept, counted before
@@ -72,35 +79,44 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
         `Import began ${at.toLocaleString()}.\n\n` +
         `Previous import: ${counted(errorsBefore)} import errors, ${counted(acceptedBefore)} accepted import errors.\n\n` +
         "What the last import accepted from the old sites rather than keeping " +
-        "as an error, each with the tournament it is of. Written by " +
-        "`npm run import:ravendb`, which deletes it first.\n\n",
+        "as an error, each with where it is on the new site and the old. " +
+        "Written by `npm run import:ravendb`, which deletes it first.\n\n",
     );
   }
 
-  /** Ends the file, saying that this import kept `errors` errors. */
+  /**
+   * Ends the file, saying that this import kept `errors` errors. What it
+   * follows ends with a blank line already.
+   */
   async end(errors: number): Promise<void> {
     await appendFile(
       this.path,
-      `\nThis import: ${counted(errors)} import errors, ${counted(this.#accepted)} accepted import errors.\n`,
+      `This import: ${counted(errors)} import errors, ${counted(this.#accepted)} accepted import errors.\n`,
     );
   }
 
   async accept(accepted: Accepted): Promise<void> {
     this.#accepted += 1;
-    const { address, website } = accepted;
-    const what = accepted.what === "" ? "" : ` ${accepted.what}:`;
+    const what = accepted.what === "" ? "" : ` ${accepted.what}`;
     await appendFile(
       this.path,
-      `- [${address}](${this.newSite}/${address}) ([old site](https://${website}/${address})) ${accepted.documentId}:${what} ${accepted.code}: ${accepted.why}\n`,
+      `## ${accepted.code}: ${accepted.documentId}${what}\n\n` +
+        `New site: ${this.newSite}/${accepted.newSitePath}\n` +
+        `Old site: https://${accepted.website}/${accepted.oldSitePath}\n\n` +
+        `${accepted.description}\n\n`,
     );
   }
 
-  // How many things the file says were accepted, a line each, or nothing
-  // where there is no file to count.
+  // How many things the file says were accepted, a heading each, or a line
+  // each as the file was written before, or nothing where there is no file
+  // to count.
   async #acceptedInFile(): Promise<number | undefined> {
     try {
       const said = await readFile(this.path, "utf8");
-      return said.split("\n").filter((line) => line.startsWith("- ")).length;
+      return said
+        .split("\n")
+        .filter((line) => line.startsWith("## ") || line.startsWith("- ["))
+        .length;
     } catch {
       return undefined;
     }
@@ -145,6 +161,24 @@ const acceptedErrorOf = (
       accepted.code === code,
   );
 };
+
+/**
+ * A refused game or player said for a person, as the error it was refused
+ * with, or as accepted for `why`.
+ */
+interface Said {
+  refused(failure: unknown): string;
+  accepted(why: string): string;
+}
+
+// The game as it is said for a person: who won and lost it, and the scores
+// as they were typed.
+const gameOf = (game: OldGame, nameOf: (number: number) => string) => ({
+  winner: nameOf(game.Winner.PlayerId),
+  winnerScore: game.Winner.Score._Score,
+  loser: nameOf(game.Loser.PlayerId),
+  loserScore: game.Loser.Score._Score,
+});
 
 /**
  * The competition of the old sites a document was: what it was called, the
@@ -229,35 +263,49 @@ export class DocumentErrors {
   }
 
   /**
-   * Keeps `failure` of `what` of the document, as "game 12", with its
-   * `summary` where there is one, unless it is accepted.
+   * Where the document is on the site and on the old site, and what it is of,
+   * as it stands: the competition's page once it is added.
    */
-  async refused(
-    what: string,
-    failure: unknown,
-    summary?: string,
-  ): Promise<void> {
+  #of(): ErrorOf {
+    return errorOf(
+      this.tournament,
+      this.competition === undefined
+        ? undefined
+        : {
+            ...this.competition,
+            ...(this.#newSitePath === undefined
+              ? {}
+              : { newSitePath: this.#newSitePath }),
+          },
+    );
+  }
+
+  /** Where the document is, said for a person, as "Spring Open - A Block". */
+  get place(): string {
+    return placeOf(this.tournament.name.toString(), this.competition?.name);
+  }
+
+  /**
+   * Keeps `failure` of `what` of the document, as "game 12", said for a
+   * person by `said`, as "Game Tim 26 beat Trev 0 in Spring Open - A Block",
+   * where there is a saying, unless it is accepted.
+   */
+  async refused(what: string, failure: unknown, said?: Said): Promise<void> {
     const accepted = acceptedErrorOf(this.documentId, failure);
     if (accepted === undefined) {
       await this.errors.recordError(
         this.documentId,
         `${what}: ${describedFailure(failure)}`,
-        errorOf(
-          this.tournament,
-          this.competition === undefined
-            ? undefined
-            : {
-                ...this.competition,
-                ...(this.#newSitePath === undefined
-                  ? {}
-                  : { newSitePath: this.#newSitePath }),
-              },
-        ),
-        summary,
+        this.#of(),
+        said?.refused(failure),
       );
       return;
     }
-    await this.accepted(what, accepted.code, accepted.why);
+    await this.accepted(
+      what,
+      accepted.code,
+      said === undefined ? accepted.why : said.accepted(accepted.why),
+    );
   }
 
   /** Keeps `failure` of `game`, said as who beat whom, where, and why. */
@@ -266,20 +314,25 @@ export class DocumentErrors {
     nameOf: (number: number) => string,
     failure: unknown,
   ): Promise<void> {
-    await this.refused(
+    const said = gameSaid(gameOf(game, nameOf), this.place);
+    await this.refused(`game ${String(game.Id)}`, failure, {
+      refused: (refusal) => `${said} because ${reasonOf(refusal)}.`,
+      accepted: (why) =>
+        `${said} was not brought over, and that is accepted: ${why}`,
+    });
+  }
+
+  /** Says that `game` was left out as `code`, `because` of what. */
+  async gameLeftOut(
+    game: OldGame,
+    nameOf: (number: number) => string,
+    code: string,
+    because: string,
+  ): Promise<void> {
+    await this.accepted(
       `game ${String(game.Id)}`,
-      failure,
-      gameSummary(
-        {
-          winner: nameOf(game.Winner.PlayerId),
-          winnerScore: game.Winner.Score._Score,
-          loser: nameOf(game.Loser.PlayerId),
-          loserScore: game.Loser.Score._Score,
-        },
-        this.tournament.name.toString(),
-        this.competition?.name,
-        failure,
-      ),
+      code,
+      `${gameSaid(gameOf(game, nameOf), this.place)} was left out because ${because}.`,
     );
   }
 
@@ -289,27 +342,33 @@ export class DocumentErrors {
     name: string,
     failure: unknown,
   ): Promise<void> {
-    await this.refused(
-      `player ${String(number)}`,
-      failure,
-      playerSummary(
-        name,
-        this.tournament.name.toString(),
-        this.competition?.name,
-        failure,
-      ),
-    );
+    const said = playerSaid(name, this.place);
+    await this.refused(`player ${String(number)}`, failure, {
+      refused: (refusal) =>
+        `${said} was not entered because ${reasonOf(refusal)}.`,
+      accepted: (why) =>
+        `${said} was not entered, and that is accepted: ${why}`,
+    });
   }
 
-  /** Says that `what` of the document was accepted as `code`, and `why`. */
-  async accepted(what: string, code: string, why: string): Promise<void> {
+  /**
+   * Says that `what` of the document was accepted as `code`, said for a
+   * person by `description`.
+   */
+  async accepted(
+    what: string,
+    code: string,
+    description: string,
+  ): Promise<void> {
+    const of = this.#of();
     await this.accepting.accept({
       documentId: this.documentId,
-      address: this.tournament.address.toString(),
       website: this.website,
+      newSitePath: of.newSitePath,
+      oldSitePath: of.oldSitePath,
       what,
       code,
-      why,
+      description,
     });
   }
 }

@@ -315,7 +315,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         await errors.accepted(
           "",
           "ImportTeamMatches.ExpectedMatchesWorkedOut",
-          `Kept as expected to have ${String(document.ExpectedMatches)} matches, and its games say ${String(played)}.`,
+          `${errors.place} was kept as expected to have ${String(document.ExpectedMatches)} matches, and its games say ${String(played)}, so it is expected to have ${String(played)}.`,
         );
       }
       // A game against a bye is no game that was played.
@@ -323,10 +323,11 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         byes.has(game.Winner.PlayerId) || byes.has(game.Loser.PlayerId);
       for (const game of gamesInOrder(document.Games._Games)) {
         if (!againstABye(game)) continue;
-        await errors.accepted(
-          `game ${String(game.Id)}`,
+        await errors.gameLeftOut(
+          game,
+          nameOfIn(document),
           AGAINST_A_BYE.code,
-          AGAINST_A_BYE.why,
+          AGAINST_A_BYE.because,
         );
       }
       await addGames(

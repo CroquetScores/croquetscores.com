@@ -96,7 +96,7 @@ const carriedOf = (player: OldCompetitionPlayer) => ({
 /** What is said of a game against a bye, left out as accepted. */
 export const AGAINST_A_BYE = {
   code: "ImportCompetition.AgainstABye",
-  why: "A game against the old site's bye, which was no game played, left out.",
+  because: "it was against the old site's bye, and was no game that was played",
 } as const;
 
 /**
@@ -286,7 +286,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       await errors.accepted(
         `player ${String(number)}`,
         "ImportCompetition.PlayerNotInTournament",
-        "A player the tournament's players no longer listed, brought over from the competition's own list.",
+        `Player ${nameOfIn(document)(number)} in ${errors.place} was brought over from the competition's own list, because the tournament's players no longer listed them.`,
       );
     }
 
@@ -342,10 +342,11 @@ export const importCompetition = async <TDocument extends OldCompetition>(
 
     for (const game of gamesInOrder(document.Games._Games)) {
       if (!againstABye(game)) continue;
-      await errors.accepted(
-        `game ${String(game.Id)}`,
+      await errors.gameLeftOut(
+        game,
+        nameOfIn(document),
         AGAINST_A_BYE.code,
-        AGAINST_A_BYE.why,
+        AGAINST_A_BYE.because,
       );
     }
     // A player who withdrew is withdrawn straight after their last game is

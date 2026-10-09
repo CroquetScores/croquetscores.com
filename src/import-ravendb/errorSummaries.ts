@@ -36,28 +36,24 @@ export const reasonOf = (failure: unknown): string => {
 };
 
 /** Where a game or a player was, as "Spring Open - Knockout". */
-const placeOf = (tournament: string, competition: string | undefined) =>
+export const placeOf = (
+  tournament: string,
+  competition: string | undefined,
+): string =>
   competition === undefined ? tournament : `${tournament} - ${competition}`;
 
-/** A game refused, said as who beat whom and by what, where, and why. */
-export const gameSummary = (
+/** A game, said as who beat whom and by what, and `where`. */
+export const gameSaid = (
   game: {
     readonly winner: string;
     readonly winnerScore: string;
     readonly loser: string;
     readonly loserScore: string;
   },
-  tournament: string,
-  competition: string | undefined,
-  failure: unknown,
+  where: string,
 ): string =>
-  `Game ${game.winner} ${game.winnerScore} beat ${game.loser} ${game.loserScore} in ${placeOf(tournament, competition)} because ${reasonOf(failure)}.`;
+  `Game ${game.winner} ${game.winnerScore} beat ${game.loser} ${game.loserScore} in ${where}`;
 
-/** A player refused, said as who, where, and why. */
-export const playerSummary = (
-  name: string,
-  tournament: string,
-  competition: string | undefined,
-  failure: unknown,
-): string =>
-  `Player ${name} in ${placeOf(tournament, competition)} was not entered because ${reasonOf(failure)}.`;
+/** A player, said as who and `where`. */
+export const playerSaid = (name: string, where: string): string =>
+  `Player ${name} in ${where}`;

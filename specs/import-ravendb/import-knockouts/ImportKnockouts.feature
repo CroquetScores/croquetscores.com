@@ -531,7 +531,7 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then "game 3" of "croquetscores.com/knockouts/10088" is accepted as "Competition.NotDrawnToMeet"
 
-    Scenario: What is accepted of a knockout is of its tournament
+    Scenario: What is accepted of a knockout is at it on each site
       Given the knockout "knockouts/10088" of "tournaments/12" on "croquetscores.com"
       And the knockout's size is 4
       And player 1 is in the competition
@@ -547,7 +547,7 @@ Feature: Importing the old sites' knockouts
       And game 4 was won by player 2
       And game 4 was lost by player 1
       When the competition is imported
-      Then what is accepted of "croquetscores.com/knockouts/10088" is of the tournament at "2014/ac/spring-open-12" on "croquetscores.com"
+      Then what is accepted of "croquetscores.com/knockouts/10088" is at "2014/ac/spring-open-12/competitions/knockout" on the new site and "2014/ac/spring-open-12" on the old site
 
     Scenario: The error accepted for one knockout is kept for another
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"

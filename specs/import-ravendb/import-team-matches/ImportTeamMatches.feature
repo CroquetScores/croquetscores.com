@@ -303,6 +303,29 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then "croquetscores.com/teammatches/50" is accepted as "ImportTeamMatches.ExpectedMatchesWorkedOut"
 
+    Scenario: Working a team match's matches out from its games is said for a person, naming the team match
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 4
+      And game 4 was won by player 3
+      And game 4 was lost by player 2
+      When the team match is imported
+      Then what is accepted of "croquetscores.com/teammatches/50" names "Spring Open - Egypt vs Wales"
+
     Scenario: A team match expected to have more than 1 match keeps it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"

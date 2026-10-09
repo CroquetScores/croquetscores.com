@@ -27,9 +27,9 @@ const sayingOf = (world: SpecWorld): Saying => {
 const contentOf = async (world: SpecWorld): Promise<string> =>
   readFile(sayingOf(world).path, "utf8");
 
-// A line each thing accepted is said on, as a Markdown list's item.
+// The heading each thing accepted is said under.
 const linesAccepted = async (world: SpecWorld): Promise<string[]> =>
-  (await contentOf(world)).split("\n").filter((line) => line.startsWith("- "));
+  (await contentOf(world)).split("\n").filter((line) => line.startsWith("## "));
 
 // In a folder of the scenario's own, where nothing is yet.
 Given(
@@ -105,13 +105,16 @@ When(
     website: string,
     code: string,
   ) {
+    // At the tournament's address on both sites, as a document is until it
+    // is a competition of the site's.
     await sayingOf(this).file.accept({
       documentId,
-      address,
       website,
+      newSitePath: address,
+      oldSitePath: address,
       what: `game ${String(game)}`,
       code,
-      why: "Accepted by the scenario.",
+      description: "Accepted by the scenario.",
     });
   },
 );
@@ -130,10 +133,14 @@ Then(
   },
 );
 
+// A line of its own, the address written out rather than as a link.
 Then(
-  "the file of accepted import errors links to {string}",
-  async function (this: SpecWorld, link: string) {
-    assert.ok((await contentOf(this)).includes(`](${link})`));
+  /^the file of accepted import errors says the (new|old) site address "([^"]*)"$/,
+  async function (this: SpecWorld, which: string, address: string) {
+    const label = which === "new" ? "New site" : "Old site";
+    assert.ok(
+      (await contentOf(this)).split("\n").includes(`${label}: ${address}`),
+    );
   },
 );
 

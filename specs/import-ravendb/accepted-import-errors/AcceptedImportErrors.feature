@@ -11,10 +11,12 @@ Feature: What the import accepted, said in a file
   doc/accepted-import-errors.md, a line each, for whoever reads it to look at
   the tournament and see that nothing that mattered was lost.
 
-  A line names the document, what of it was accepted, a code saying what was
-  done, and why, with links to the tournament the document is of, at its
+  Each is headed by a code saying what was done, the document, and what of
+  it was accepted, as "## ImportCompetition.AgainstABye:
+  croquetscores.com/knockouts/2883 game 4". Under it are the document's whole
   address on the new site, which the import is told of, and on the old site
-  the document is of. The import deletes the file before it begins, so
+  it was on, written out rather than as links, each on a line of its own, and
+  then what was accepted and why, said for a person. The import deletes the file before it begins, so
   that the file says only what the last import accepted, and writes it a line
   at a time, so that an import that stops partway through still says what it
   accepted before it stopped.
@@ -42,7 +44,7 @@ Feature: What the import accepted, said in a file
       When the file of accepted import errors is begun
       Then the file of accepted import errors says nothing accepted
 
-  Rule: What is accepted is said a line each, with links to its tournament
+  Rule: What is accepted is said under a heading each, with its addresses and why
 
     Scenario: What is accepted names its document
       Given the file of accepted import errors is begun
@@ -54,20 +56,30 @@ Feature: What the import accepted, said in a file
       When game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is accepted as "Competition.NotDrawnToMeet"
       Then the file of accepted import errors says "Competition.NotDrawnToMeet"
 
-    Scenario: What is accepted links to its tournament on the new site
+    Scenario: What is accepted is headed by its code, its document and what of it
       Given the file of accepted import errors is begun
       When game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is accepted as "Competition.NotDrawnToMeet"
-      Then the file of accepted import errors links to "http://localhost:3000/2014/ac/spring-open"
+      Then the file of accepted import errors says "## Competition.NotDrawnToMeet: croquetscores.com/knockouts/10088 game 4"
 
-    Scenario: What is accepted links to its tournament on the old site
+    Scenario: What is accepted says where it is on the new site
       Given the file of accepted import errors is begun
       When game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is accepted as "Competition.NotDrawnToMeet"
-      Then the file of accepted import errors links to "https://croquetscores.com/2014/ac/spring-open"
+      Then the file of accepted import errors says the new site address "http://localhost:3000/2014/ac/spring-open"
 
-    Scenario: What is accepted of gateballscores.com links to its tournament there
+    Scenario: What is accepted says where it was on the old site
+      Given the file of accepted import errors is begun
+      When game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is accepted as "Competition.NotDrawnToMeet"
+      Then the file of accepted import errors says the old site address "https://croquetscores.com/2014/ac/spring-open"
+
+    Scenario: What is accepted of gateballscores.com says where it was there
       Given the file of accepted import errors is begun
       When game 4 of "gateballscores.com/knockouts/30" of "2014/gb/spring-open" on "gateballscores.com" is accepted as "Competition.NotDrawnToMeet"
-      Then the file of accepted import errors links to "https://gateballscores.com/2014/gb/spring-open"
+      Then the file of accepted import errors says the old site address "https://gateballscores.com/2014/gb/spring-open"
+
+    Scenario: What is accepted says what was accepted, for a person
+      Given the file of accepted import errors is begun
+      When game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is accepted as "Competition.NotDrawnToMeet"
+      Then the file of accepted import errors says "Accepted by the scenario."
 
     Scenario: Each thing accepted is a line of its own
       Given the file of accepted import errors is begun
