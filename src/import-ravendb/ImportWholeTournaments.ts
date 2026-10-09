@@ -55,20 +55,19 @@ export const isArchived = (document: object): boolean =>
  * The old sites wrote every moment alike, so the earliest is the least.
  */
 /**
- * `tournament` as played by teams where it was set up as a Standard
- * tournament listing one competition, a team match, which the site keeps
- * only as a test of a tournament played by teams (ImportWholeTournaments.feature);
- * as it is otherwise.
+ * `tournament` as played by teams where it was set up as a Standard tournament
+ * whose competitions are all team matches, one or more, which the site keeps
+ * only as tests of a tournament played by teams
+ * (ImportWholeTournaments.feature); as it is otherwise.
  */
-const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament => {
-  const [only, ...others] = tournament.Competitions;
-  return tournament.TournamentType.trim().toLowerCase() === "standard" &&
-    others.length === 0 &&
-    only !== undefined &&
-    only.Id.toLowerCase().startsWith("teammatches/")
+const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament =>
+  tournament.TournamentType.trim().toLowerCase() === "standard" &&
+  tournament.Competitions.length > 0 &&
+  tournament.Competitions.every(({ Id }) =>
+    Id.toLowerCase().startsWith("teammatches/"),
+  )
     ? { ...tournament, TournamentType: "teams" }
     : tournament;
-};
 
 const heldOverItsTeamMatches = (
   tournament: OldTournament,
