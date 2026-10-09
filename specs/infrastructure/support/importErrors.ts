@@ -31,3 +31,25 @@ Given(
     );
   },
 );
+
+// Kept with the tournament it is of, and the competition it was, as the
+// import keeps one it knew them for.
+Given(
+  /^the import refused the document "([^"]*)"(?: of the competition "([^"]*)")? of the tournament at "([^"]*)" called "([^"]*)" with "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    competitionName: string | null | undefined,
+    address: string,
+    name: string,
+    message: string,
+  ) {
+    await this.database.query(
+      `insert into import_errors
+         (document_id, error_message,
+          tournament_address, tournament_name, competition_name)
+       values ($1, $2, $3, $4, $5)`,
+      [documentId, message, address, name, competitionName ?? null],
+    );
+  },
+);

@@ -2,6 +2,7 @@
 // (ImportErrorsKept.feature, ImportErrorKept.feature).
 import type {
   KeptImportError,
+  KeptImportErrorTournament,
   KeptImportErrors,
 } from "../../application/services/KeptImportErrors.js";
 import type { UnitOfWork } from "./UnitOfWork.js";
@@ -38,5 +39,32 @@ export class PostgresKeptImportErrors implements KeptImportErrors {
         [documentId],
       );
     return rows.map((row) => row.error_message);
+  }
+
+  // The website is the document id's first part, which the import writes it
+  // as.
+  async tournamentOf(
+    documentId: string,
+  ): Promise<KeptImportErrorTournament | undefined> {
+    const { rows } = await this.unitOfWork.connection().query<{
+      tournament_address: string;
+      tournament_name: string;
+      competition_name: string | null;
+    }>(
+      `select tournament_address, tournament_name, competition_name
+         from import_errors
+        where document_id = $1 and tournament_address is not null
+        order by kept desc
+        limit 1`,
+      [documentId],
+    );
+    const row = rows[0];
+    if (row === undefined) return undefined;
+    return {
+      website: documentId.split("/")[0] ?? "",
+      address: row.tournament_address,
+      name: row.tournament_name,
+      competitionName: row.competition_name ?? undefined,
+    };
   }
 }

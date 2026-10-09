@@ -43,3 +43,22 @@
   overflow-wrap: anywhere;
   font-family: var(--font-mono, monospace);
 }
+
+/* The tournament a document is of, which can be long, wrapped rather than cut
+   short, and its two links side by side, each as tall as a thumb. */
+.import-error-tournament,
+.import-error-competition {
+  overflow-wrap: anywhere;
+}
+
+.import-error-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.import-error-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

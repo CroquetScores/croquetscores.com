@@ -178,13 +178,6 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       website,
       tournamentDocument,
     );
-    const errors = new DocumentErrors(
-      database,
-      accepting,
-      documentId,
-      website,
-      tournament,
-    );
     // The site tells a tournament's competitions apart by their names, in any
     // case, and the old sites did not, so a name another of them has is
     // numbered apart from theirs, archived ones among them, as the tournament
@@ -196,6 +189,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           reference.name.toString(),
         ),
       ),
+    );
+    const errors = new DocumentErrors(
+      database,
+      accepting,
+      documentId,
+      website,
+      tournament,
+      name.toString(),
     );
 
     // Done as the tournament's first manager, who created it, when it was

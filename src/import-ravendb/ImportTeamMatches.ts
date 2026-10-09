@@ -18,7 +18,7 @@ import {
   addGames,
   gamesInOrder,
 } from "./importCompetition.js";
-import { ImportRefused, describedFailure } from "./ImportRefused.js";
+import { ImportRefused } from "./ImportRefused.js";
 import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
 import { nameToImport, numberedApart } from "./names.js";
 import { dayOf } from "./newtonsoft.js";
@@ -173,6 +173,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         document.Name.slice(0, split).trim(),
         document.Name.slice(split + VERSUS.length).trim(),
       ] as const;
+      const errors = new DocumentErrors(
+        database,
+        accepting,
+        documentId,
+        website,
+        tournament,
+        document.Name,
+      );
 
       // Done as the tournament's first manager, who created it, when it was
       // created.
@@ -271,10 +279,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           players.set(player._Id, playerId);
           made.push({ number: player._Id, id: playerId });
         } catch (failure) {
-          await database.recordError(
-            documentId,
-            `player ${String(player._Id)}: ${describedFailure(failure)}`,
-          );
+          await errors.refused(`player ${String(player._Id)}`, failure);
         }
       }
 
@@ -303,13 +308,6 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       }
 
       const competition = Competition.rebuiltFrom(competitionId, []);
-      const errors = new DocumentErrors(
-        database,
-        accepting,
-        documentId,
-        website,
-        tournament,
-      );
       if (played > document.ExpectedMatches) {
         await errors.accepted(
           "",

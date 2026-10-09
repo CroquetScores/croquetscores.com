@@ -112,3 +112,58 @@ Then(
     );
   },
 );
+
+// The tournament and competition an error is kept as of ---------------------
+
+interface KeptOf {
+  readonly tournament_address: string | null;
+  readonly tournament_name: string | null;
+  readonly competition_name: string | null;
+}
+
+// Every error kept against `documentId`, with what it is of.
+const keptOf = async (
+  world: SpecWorld,
+  documentId: string,
+): Promise<readonly KeptOf[]> => {
+  const { rows } = await world.database.query<KeptOf>(
+    `select tournament_address, tournament_name, competition_name
+       from import_errors where document_id = $1 order by kept`,
+    [documentId],
+  );
+  assert.ok(rows.length > 0, `No error is kept for ${documentId}.`);
+  return rows;
+};
+
+Then(
+  "the error kept for {string} is of the tournament at {string} called {string}",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    address: string,
+    name: string,
+  ) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.tournament_address, address);
+      assert.equal(kept.tournament_name, name);
+    }
+  },
+);
+
+Then(
+  "the error kept for {string} is of the competition {string}",
+  async function (this: SpecWorld, documentId: string, name: string) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.competition_name, name);
+    }
+  },
+);
+
+Then(
+  "the error kept for {string} is of no tournament",
+  async function (this: SpecWorld, documentId: string) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.tournament_address, null);
+    }
+  },
+);

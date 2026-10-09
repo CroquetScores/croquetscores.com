@@ -142,3 +142,28 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       When the errors kept are counted
       Then 0 errors are counted
+
+  Rule: An error is kept with the tournament and competition it is of, where they are known
+
+    The administrator's page for a document the import refused links to the
+    tournament it is of, on the site and on the old site, and says what the
+    competition it was is called (`importError.feature`). So an error is kept
+    with the tournament's address and name and the competition's name,
+    where whatever refused the document knew them. One refused before any
+    tournament was known, as a tournament refused itself is, is kept with
+    none.
+
+    Scenario: An error is kept with its tournament
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open"
+      Then the error kept for "croquetscores.com/blocks/30" is of the tournament at "2014/ac/spring-open" called "Spring Open"
+
+    Scenario: An error is kept with its competition
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open"
+      Then the error kept for "croquetscores.com/blocks/30" is of the competition "A Block"
+
+    Scenario: An error kept knowing no tournament is of none
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/tournaments/12" saying "Refused"
+      Then the error kept for "croquetscores.com/tournaments/12" is of no tournament

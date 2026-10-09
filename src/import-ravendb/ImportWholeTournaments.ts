@@ -165,12 +165,33 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
           document: each.document,
         });
       } catch (failure) {
+        // Kept with the tournament, which is over by now, and with what a
+        // competition was called on the old site, since it never became one.
+        const tournament = await this.database.tournamentOf(website, id);
+        const name = (each.document as { Name?: unknown }).Name;
         await this.database.recordError(
           `${website}/${each.id}`,
           describedFailure(failure),
+          tournament === undefined
+            ? undefined
+            : {
+                ...tournament,
+                ...(this.#isCompetition(each.importer) &&
+                typeof name === "string" &&
+                name.trim() !== ""
+                  ? { competitionName: name }
+                  : {}),
+              },
         );
       }
     }
+  }
+
+  // Whether `importer` brings over one of the kinds of competition.
+  #isCompetition(importer: Importer<object>): boolean {
+    return (this.parts.competitions as readonly Importer<object>[]).includes(
+      importer,
+    );
   }
 
   async #naming<TDocument extends object>(

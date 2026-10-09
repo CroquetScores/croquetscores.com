@@ -439,6 +439,28 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "Game.WinnerNotAhead"
 
+    Scenario: A game refused is kept with the tournament it is of
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" is of the tournament at "2014/ac/spring-open-12" called "Spring Open"
+
+    Scenario: A game refused is kept with the competition it is of
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" is of the competition "A Block"
+
     Scenario: The error kept names the game refused
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition

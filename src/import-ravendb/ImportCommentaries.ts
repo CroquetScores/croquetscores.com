@@ -10,6 +10,7 @@ import { CommentaryTitle } from "../domain/aggregates/tournaments/value-objects/
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import type { ImportedAccounts } from "./ImportedAccounts.js";
+import { errorOf } from "./AcceptedImportErrors.js";
 import { describedFailure } from "./ImportRefused.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
 import { numberedApartWithin, shortenedTo } from "./names.js";
@@ -125,6 +126,7 @@ export class ImportCommentaries implements Importer<OldCommentary> {
           await this.database.recordError(
             `${website}/${id}`,
             `comment ${String(index + 1)}: ${describedFailure(failure)}`,
+            errorOf(tournament),
           );
         }
       }

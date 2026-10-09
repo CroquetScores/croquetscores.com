@@ -63,6 +63,24 @@ Given(
   },
 );
 
+Given(
+  "an error is kept for {string} saying {string} of the competition {string} of the tournament at {string} called {string}",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    message: string,
+    competitionName: string,
+    tournamentAddress: string,
+    tournamentName: string,
+  ) {
+    await importDatabaseOf(this).recordError(documentId, message, {
+      tournamentAddress,
+      tournamentName,
+      competitionName,
+    });
+  },
+);
+
 const counted = new WeakMap<SpecWorld, number>();
 
 When("the errors kept are counted", async function (this: SpecWorld) {

@@ -11,6 +11,14 @@ Feature: What the import said of one document it refused, as an administrator re
   tables. A document is therefore answered with every message kept against it,
   in the order they were kept, rather than with one and the other lost.
 
+  Where the import knew the tournament the document is of, it kept the
+  tournament's address and name with the error, and the competition's name
+  where the document was one (`ImportDatabase.feature`). They are answered
+  too, with the old site the document was on, which its id begins with, so
+  that the reader can be taken to the tournament on the site and on the old
+  site, which share its address. A document whose errors knew no tournament
+  is answered with none.
+
   A document id that nothing was kept against is refused as
   `ImportErrorKept.NotFound`. Only an administrator can ask: anybody else is
   refused with `Account.NotAnAdministrator`, whether or not there is such a
@@ -59,6 +67,38 @@ Feature: What the import said of one document it refused, as an administrator re
       And the import refused the document "users/2-A" with "Bad date"
       When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
       Then 1 message is answered
+
+  Rule: The tournament the document is of is answered, where the import knew it
+
+    Scenario: The tournament's name is answered
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the tournament answered is called "Spring Open"
+
+    Scenario: The tournament's address is answered
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the tournament answered is at "2014/ac/spring-open"
+
+    Scenario: The old site the document was on is answered
+      Given the import refused the document "gateballscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/gb/spring-open" called "Spring Open" with "Refused"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "gateballscores.com/blocks/30"
+      Then the tournament answered was on "gateballscores.com"
+
+    Scenario: The competition's name is answered
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the competition answered is called "A Block"
+
+    Scenario: A document that was no competition is answered with none
+      Given the import refused the document "croquetscores.com/commentaries/30" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/commentaries/30"
+      Then no competition is answered
+
+    Scenario: A document whose errors knew no tournament is answered with none
+      Given the import refused the document "users/1-A" with "No email address"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then no tournament is answered
 
   Rule: A document nothing was kept against is refused
 

@@ -5,10 +5,25 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { dropTables } from "../infrastructure/database/dropTables.js";
 import { migrate } from "../infrastructure/database/migrate.js";
 
+/**
+ * The tournament on the site a document the import refused is of, and the
+ * competition it was, where the import knew them.
+ */
+export interface ErrorOf {
+  /** The tournament's address, as "2014/ac/spring-open". */
+  readonly tournamentAddress: string;
+  readonly tournamentName: string;
+  /** Where the document was a competition, what it is called. */
+  readonly competitionName?: string;
+}
+
 /** Where a document the import refused is kept, with why. */
 export interface ImportErrors {
-  /** Keeps `message` against `documentId`, which names its website too. */
-  recordError(documentId: string, message: string): Promise<void>;
+  /**
+   * Keeps `message` against `documentId`, which names its website too, and
+   * the tournament and competition it is `of`, where they are known.
+   */
+  recordError(documentId: string, message: string, of?: ErrorOf): Promise<void>;
 }
 
 /**
@@ -328,11 +343,51 @@ export class ImportDatabase implements ImportErrors {
    * Keeps what went wrong with one document. On the pool rather than in the
    * transaction the document was imported in, which has been rolled back.
    */
-  async recordError(documentId: string, message: string): Promise<void> {
+  async recordError(
+    documentId: string,
+    message: string,
+    of?: ErrorOf,
+  ): Promise<void> {
     await this.#pool.query(
-      "insert into import_errors (document_id, error_message) values ($1, $2)",
-      [documentId, message],
+      `insert into import_errors
+         (document_id, error_message,
+          tournament_address, tournament_name, competition_name)
+       values ($1, $2, $3, $4, $5)`,
+      [
+        documentId,
+        message,
+        of?.tournamentAddress ?? null,
+        of?.tournamentName ?? null,
+        of?.competitionName ?? null,
+      ],
     );
+  }
+
+  /**
+   * The address and the name of the tournament the tournament document
+   * `documentId` on `website` became, as the site has them, for an error of
+   * something naming it once it is over. Nothing where it was not brought
+   * over.
+   */
+  async tournamentOf(
+    website: string,
+    documentId: string,
+  ): Promise<ErrorOf | undefined> {
+    const { rows } = await this.#queryable().query<{
+      address: string;
+      name: string;
+    }>(
+      `select listed.address, listed.name
+         from imported_tournaments imported
+         join tournaments_by_website listed
+           on listed.tournament_id = imported.tournament_id
+        where imported.website = $1 and imported.document_id = $2`,
+      [website, documentId.toLowerCase()],
+    );
+    const row = rows[0];
+    return row === undefined
+      ? undefined
+      : { tournamentAddress: row.address, tournamentName: row.name };
   }
 
   /** How many errors were kept, by whatever kept them. */

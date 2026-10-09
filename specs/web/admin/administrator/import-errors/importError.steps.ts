@@ -90,3 +90,75 @@ Then(
     });
   },
 );
+
+// The tournament the document is of --------------------------------------------
+
+const shownIn = async (
+  world: SpecWorld,
+  selector: string,
+  expected: string,
+): Promise<void> => {
+  await eventually(async () => {
+    assert.equal(
+      await world.browserPage
+        .locator(`main ${selector}`)
+        .innerText({ timeout: 100 }),
+      expected,
+    );
+  });
+};
+
+const leadsTo = async (
+  world: SpecWorld,
+  selector: string,
+  href: string,
+): Promise<void> => {
+  await eventually(async () => {
+    assert.equal(
+      await world.browserPage
+        .locator(`main ${selector}`)
+        .getAttribute("href", { timeout: 100 }),
+      href,
+    );
+  });
+};
+
+Then(
+  "the tournament shown is {string}",
+  async function (this: SpecWorld, name: string) {
+    await shownIn(this, ".import-error-tournament", name);
+  },
+);
+
+Then(
+  "the competition shown is {string}",
+  async function (this: SpecWorld, name: string) {
+    await shownIn(this, ".import-error-competition", name);
+  },
+);
+
+Then(
+  "the link to the tournament on this site leads to {string}",
+  async function (this: SpecWorld, href: string) {
+    await leadsTo(this, "a.import-error-on-this-site", href);
+  },
+);
+
+Then(
+  "the link to the tournament on the old site leads to {string}",
+  async function (this: SpecWorld, href: string) {
+    await leadsTo(this, "a.import-error-on-the-old-site", href);
+  },
+);
+
+// Asked once the document's id is shown, so that the page has been drawn.
+Then("no tournament is shown", async function (this: SpecWorld) {
+  assert.equal(
+    await this.browserPage.locator("main .import-error-tournament").count(),
+    0,
+  );
+  assert.equal(
+    await this.browserPage.locator("main .import-error-links a").count(),
+    0,
+  );
+});

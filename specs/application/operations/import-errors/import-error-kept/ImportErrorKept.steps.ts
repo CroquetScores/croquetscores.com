@@ -63,3 +63,45 @@ Then(
     assert.equal((this.failure as { code?: string } | undefined)?.code, code);
   },
 );
+
+const tournamentAnswered = (world: SpecWorld) => {
+  const { tournament } = answered(world);
+  assert.ok(tournament !== undefined, "No tournament was answered.");
+  return tournament;
+};
+
+Then(
+  "the tournament answered is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(tournamentAnswered(this).name, name);
+  },
+);
+
+Then(
+  "the tournament answered is at {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(tournamentAnswered(this).address, address);
+  },
+);
+
+Then(
+  "the tournament answered was on {string}",
+  function (this: SpecWorld, website: string) {
+    assert.equal(tournamentAnswered(this).website, website);
+  },
+);
+
+Then(
+  "the competition answered is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(tournamentAnswered(this).competitionName, name);
+  },
+);
+
+Then("no competition is answered", function (this: SpecWorld) {
+  assert.equal(tournamentAnswered(this).competitionName, undefined);
+});
+
+Then("no tournament is answered", function (this: SpecWorld) {
+  assert.equal(answered(this).tournament, undefined);
+});

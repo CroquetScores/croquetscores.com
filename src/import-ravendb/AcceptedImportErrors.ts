@@ -2,7 +2,7 @@ import { appendFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
-import type { ImportErrors } from "./ImportDatabase.js";
+import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
 import { describedFailure } from "./ImportRefused.js";
 import { numbers } from "./runImporter.js";
 
@@ -143,10 +143,22 @@ const acceptedErrorOf = (
   );
 };
 
+/** What an error of `tournament`, and of `competitionName` in it, is kept as of. */
+export const errorOf = (
+  tournament: Tournament,
+  competitionName?: string,
+): ErrorOf => ({
+  tournamentAddress: tournament.address.toString(),
+  tournamentName: tournament.name.toString(),
+  ...(competitionName === undefined ? {} : { competitionName }),
+});
+
 /**
  * What goes wrong with, and what is accepted of, one document of a tournament
  * that has been brought over: an error accepted for it (ACCEPTED_ERRORS) is
- * said as accepted, with the tournament, and any other is kept as an error.
+ * said as accepted, with the tournament, and any other is kept as an error
+ * with the tournament and, where the document is one, the competition
+ * `competitionName`.
  */
 export class DocumentErrors {
   constructor(
@@ -155,6 +167,7 @@ export class DocumentErrors {
     readonly documentId: string,
     private readonly website: string,
     private readonly tournament: Tournament,
+    private readonly competitionName?: string,
   ) {}
 
   /** Keeps `failure` of `what` of the document, as "game 12", unless it is accepted. */
@@ -164,6 +177,7 @@ export class DocumentErrors {
       await this.errors.recordError(
         this.documentId,
         `${what}: ${describedFailure(failure)}`,
+        errorOf(this.tournament, this.competitionName),
       );
       return;
     }

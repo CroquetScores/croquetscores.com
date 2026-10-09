@@ -7,6 +7,7 @@ import { Flags } from "../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
+import { errorOf } from "./AcceptedImportErrors.js";
 import { describedFailure } from "./ImportRefused.js";
 import { nameToImport, numberedApart } from "./names.js";
 import { oldFlagOf } from "./oldSites.js";
@@ -141,6 +142,7 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
           await this.database.recordError(
             `${website}/${id}`,
             `player ${String(player._Id)}: ${describedFailure(failure)}`,
+            errorOf(tournament),
           );
         }
       }

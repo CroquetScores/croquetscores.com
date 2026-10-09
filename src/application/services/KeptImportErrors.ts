@@ -7,6 +7,20 @@ export interface KeptImportError {
 }
 
 /**
+ * The tournament on the site a document the import refused is of, and the
+ * competition it was, as the import kept them.
+ */
+export interface KeptImportErrorTournament {
+  /** The old site the document was on, as "croquetscores.com". */
+  readonly website: string;
+  /** The tournament's address, the same on the site and the old site. */
+  readonly address: string;
+  readonly name: string;
+  /** Where the document was a competition, what it was called. */
+  readonly competitionName: string | undefined;
+}
+
+/**
  * Where the errors the import kept are found (ImportErrorsKept.feature,
  * ImportErrorKept.feature). The import writes them, and nothing here does.
  */
@@ -22,4 +36,12 @@ export interface KeptImportErrors {
    * kept. None where nothing was.
    */
   messagesOf(documentId: string): Promise<readonly string[]>;
+
+  /**
+   * The tournament `documentId` is of, as the last error kept against it
+   * that knew it says. Nothing where none did.
+   */
+  tournamentOf(
+    documentId: string,
+  ): Promise<KeptImportErrorTournament | undefined>;
 }
