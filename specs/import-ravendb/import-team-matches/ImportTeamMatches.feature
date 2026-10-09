@@ -148,11 +148,10 @@ Feature: Importing the old sites' team matches
     The old sites kept many team matches as expected to have 1 match, whatever
     was played in them, and the site refuses a game that would start a match
     beyond those a test is expected to have (`gamesInATest.feature`). So a
-    team match expected to have 1 is
-    expected to have as many as its games say: for each two players who met,
-    the games between them over its best-of, rounded up, so that a match won
-    two games to one is one match, and never fewer than 1. Any other number
-    is the manager's, and is kept.
+    team match expected to have 1 is expected to have as many as its games
+    say: for each two players who met, the games between them over its
+    best-of, rounded up, so that a match won two games to one is one match,
+    and never fewer than 1. Any other number is the manager's, and is kept.
 
     Scenario: A test starts on the day its team match started
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
