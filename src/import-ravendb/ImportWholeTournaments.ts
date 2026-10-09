@@ -1,7 +1,11 @@
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
-import type { Competition as OldCompetition } from "./ravendb-models/Competition.js";
+import type {
+  Competition as OldCompetition,
+  TeamMatch as OldTeamMatch,
+} from "./ravendb-models/Competition.js";
+import { isPlayedByTeams } from "./ImportTournaments.js";
 import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
@@ -41,6 +45,34 @@ interface Named {
  */
 export const isArchived = (document: object): boolean =>
   (document as { IsArchived?: unknown }).IsArchived === true;
+
+/**
+ * `tournament` held over the days of `named`'s team matches not archived,
+ * where it is played by teams and has one (ImportWholeTournaments.feature):
+ * starting when the first of them started and finishing when the last
+ * finished, which the old sites often did not keep as the tournament's own,
+ * and a test is refused outside its tournament's days. As it is otherwise.
+ * The old sites wrote every moment alike, so the earliest is the least.
+ */
+const heldOverItsTeamMatches = (
+  tournament: OldTournament,
+  named: readonly Named[],
+): OldTournament => {
+  if (!isPlayedByTeams(tournament.TournamentType)) return tournament;
+  const played = named.flatMap(({ document, importer }) =>
+    importer.collection === "TeamMatches" && !isArchived(document)
+      ? [document as OldTeamMatch]
+      : [],
+  );
+  if (played.length === 0) return tournament;
+  const starts = played.map(({ Start }) => Start).sort();
+  const finishes = played.map(({ Finish }) => Finish).sort();
+  return {
+    ...tournament,
+    Start: starts[0] ?? tournament.Start,
+    Finish: finishes.at(-1) ?? tournament.Finish,
+  };
+};
 
 /**
  * Brings each of the old sites' tournaments over with everything that names
@@ -95,7 +127,10 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     await this.database.recordTournamentRead(website, id);
 
     try {
-      await this.parts.tournament.importDocument(read);
+      await this.parts.tournament.importDocument({
+        ...read,
+        document: heldOverItsTeamMatches(document, named),
+      });
     } catch (failure) {
       for (const each of named) {
         if (isArchived(each.document)) continue;

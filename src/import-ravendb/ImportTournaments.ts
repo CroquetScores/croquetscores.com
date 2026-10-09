@@ -63,6 +63,14 @@ const formatOf = (type: string): TournamentFormat => {
   return known;
 };
 
+/**
+ * Whether the old sites' tournament type `type` is played by teams, or not
+ * where it is no type they offered, which bringing the tournament over
+ * refuses.
+ */
+export const isPlayedByTeams = (type: string): boolean =>
+  formats[type.trim().toLowerCase()]?.isTeamFormat ?? false;
+
 const countryOf = (timeZone: string | null): Country => {
   if (timeZone === null || timeZone.trim() === "") {
     throw new ImportRefused(

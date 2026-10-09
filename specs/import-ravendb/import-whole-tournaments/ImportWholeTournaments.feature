@@ -95,6 +95,86 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/12" on "croquetscores.com" is imported
       Then "blocks/31" on "croquetscores.com" is not kept as any competition
 
+  Rule: A tournament played by teams is held over the days of its team matches
+
+    The old sites kept a tournament played by teams with days of its own that
+    were often not the days its team matches were played on, and the site
+    refuses a test outside its tournament's days (`addTest.feature`). So
+    before a tournament played by teams is brought over, every team match
+    naming it is read, and it starts when the first of them started and
+    finishes when the last of them finished. An archived team match says
+    nothing of when the tournament was played. A tournament with no team
+    match not archived keeps its own days, and so does one not played by
+    teams, whatever names it.
+
+    Scenario: A tournament played by teams starts when its first team match started
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And the team match started on "2017-03-26T00:00:00.0000000"
+      And the team match finished on "2017-04-20T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-26T00:00:00Z"
+
+    Scenario: A tournament played by teams finishes when its last team match finished
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And the team match started on "2017-03-26T00:00:00.0000000"
+      And the team match finished on "2017-04-20T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" finishes at "2017-04-26T00:00:00Z"
+
+    Scenario: An archived team match says nothing of the tournament's days
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And the team match started on "2017-03-26T00:00:00.0000000"
+      And the team match finished on "2017-04-20T00:00:00.0000000"
+      And the team match was archived
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-27T00:00:00Z"
+
+    Scenario: A tournament played by teams with no team match keeps its own days
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-01T00:00:00Z"
+
+    Scenario: A tournament not played by teams keeps its own days
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-01T00:00:00Z"
+
   Rule: A tournament's competitions are added in the order it listed them
 
     The order is the old site's, which its manager chose and its readers saw.
