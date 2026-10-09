@@ -352,6 +352,88 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then no error is kept for "croquetscores.com/knockouts/30"
 
+  Rule: Where the players are not listed in the order they were drawn, the draw is worked out from the games
+
+    Some managers listed a knockout's players in the order they were seeded
+    rather than the order they were drawn: four players seeded first to
+    fourth, drawn first against fourth and second against third. Drawn in
+    the order listed, the first round's games would be refused, and a later
+    round's taken as the first's, so the knockout would be brought over
+    wrong. Where the order listed leaves games that are neither in the draw
+    nor play-offs, the draw is worked out from the games instead: in the
+    first round each player against whoever they first played, and in each
+    round after it each match's winner against whoever they played next,
+    the order listed deciding between pairs. That draw is the knockout's
+    where it leaves fewer such games than the order listed did. A knockout
+    whose games fit the order listed is drawn in it.
+
+    Ann Able, Ben Baker, Cat Cole and Dan Dunn are listed in that order, but
+    Ann played Dan, and Ben played Cat, and Ann beat Ben in the final.
+
+    Scenario: A player is drawn against whoever they first played
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 4
+      And game 2 was won by player 2
+      And game 2 was lost by player 3
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then "Ann Able" is drawn against "Dan Dunn" in the competition kept for "knockouts/30" on "croquetscores.com"
+
+    Scenario: The other pair is drawn against each other
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 4
+      And game 2 was won by player 2
+      And game 2 was lost by player 3
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then "Ben Baker" is drawn against "Cat Cole" in the competition kept for "knockouts/30" on "croquetscores.com"
+
+    Scenario: Every game of a knockout drawn from its games is brought over
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 4
+      And game 2 was won by player 2
+      And game 2 was lost by player 3
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 3 games
+
+    Scenario: A knockout drawn from its games is not an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 4
+      And game 2 was won by player 2
+      And game 2 was lost by player 3
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
   Rule: A game between two players already knocked out is left out
 
     Some managers kept play-offs in a knockout beside its draw: a game for

@@ -171,6 +171,128 @@ const roundByRound = (
       (roundOf.get(other.Id) ?? Number.MAX_SAFE_INTEGER),
   );
 
+// How many of `games` the knockout drawn as `places` has no place for: given to
+// no match of its draw, and not play-offs either.
+const misfitsOf = (
+  places: readonly Listed[],
+  games: readonly Game[],
+): number => {
+  const { roundOf, knockedOut } = roundsOf(places, games);
+  return games.filter(
+    (game) => !roundOf.has(game.Id) && !isPlayOff(game, roundOf, knockedOut),
+  ).length;
+};
+
+// A place of the draw being worked out: who stands in it, or a bye, and the
+// first-round places beneath it, in the order they are drawn.
+interface Branch {
+  readonly standing: number | "bye" | undefined;
+  readonly places: readonly Listed[];
+}
+
+/**
+ * The places of a knockout drawn as its games say rather than as its players
+ * are listed (ImportKnockouts.feature), for one whose players were listed in
+ * the order they were seeded: in the first round each player against whoever
+ * they first played, and in each round after it each match's winner against
+ * whoever they played next, the order listed deciding between pairs. A place
+ * that played nobody in a round stands against a bye where there is one, and
+ * otherwise against the next left, in the order listed.
+ */
+const drawnFromGames = (
+  listed: readonly Listed[],
+  games: readonly Game[],
+): Listed[] => {
+  const used = new Set<number>();
+  let branches: Branch[] = listed.map((place) => ({
+    standing: place.bye ? "bye" : place.player._Id,
+    places: [place],
+  }));
+  while (branches.length > 1) {
+    const left = [...branches];
+    const paired: [Branch, Branch][] = [];
+    const take = (branch: Branch): void => {
+      left.splice(left.indexOf(branch), 1);
+    };
+    // Each against whoever they played next, in the order listed.
+    for (const branch of branches) {
+      if (!left.includes(branch)) continue;
+      const one = branch.standing;
+      if (typeof one !== "number") continue;
+      // Their earliest game not yet given to a match, and whoever it was
+      // against, where that player is still to be paired.
+      const next = gamesInOrder(games).find(
+        (game) =>
+          !used.has(game.Id) &&
+          (game.Winner.PlayerId === one || game.Loser.PlayerId === one),
+      );
+      const opponent =
+        next === undefined
+          ? undefined
+          : next.Winner.PlayerId === one
+            ? next.Loser.PlayerId
+            : next.Winner.PlayerId;
+      if (opponent === undefined) continue;
+      const against = left.find(
+        (other) => other !== branch && other.standing === opponent,
+      );
+      if (against === undefined) continue;
+      take(branch);
+      take(against);
+      paired.push([branch, against]);
+    }
+    // Then whoever played nobody against a bye, and what is left as listed.
+    for (const branch of [...left]) {
+      if (!left.includes(branch) || branch.standing === "bye") continue;
+      const bye = left.find((other) => other.standing === "bye");
+      if (bye === undefined) continue;
+      take(branch);
+      take(bye);
+      paired.push([branch, bye]);
+    }
+    while (left.length > 1) {
+      const [one, other] = left;
+      if (one === undefined || other === undefined) break;
+      take(one);
+      take(other);
+      paired.push([one, other]);
+    }
+    branches = paired.map(([one, other]) => {
+      const a = one.standing;
+      const b = other.standing;
+      let standing: number | "bye" | undefined;
+      if (typeof a === "number" && typeof b === "number") {
+        const played = games.filter(
+          (game) => !used.has(game.Id) && isBetween(game, a, b),
+        );
+        for (const game of played) used.add(game.Id);
+        const won = (number: number): number =>
+          played.filter((game) => game.Winner.PlayerId === number).length;
+        standing = won(a) > won(b) ? a : won(b) > won(a) ? b : undefined;
+      } else {
+        standing = a === "bye" ? b : b === "bye" ? a : undefined;
+      }
+      return { standing, places: [...one.places, ...other.places] };
+    });
+  }
+  return [...(branches[0]?.places ?? listed)];
+};
+
+/**
+ * The places of a knockout whose players fill it: as they are listed, or as
+ * its games say they were drawn where that leaves fewer of its games with no
+ * place in the draw (ImportKnockouts.feature).
+ */
+const placesOf = (
+  listed: readonly Listed[],
+  games: readonly Game[],
+): Listed[] => {
+  const asListed = misfitsOf(listed, games);
+  if (asListed === 0) return [...listed];
+  const drawn = drawnFromGames(listed, games);
+  return misfitsOf(drawn, games) < asListed ? drawn : [...listed];
+};
+
 /**
  * Brings the old sites' knockouts over as knockouts, drawn as the old sites
  * drew them, byes and all, each round the best of what its games say
@@ -194,7 +316,7 @@ export class ImportKnockouts implements Importer<Knockout> {
         const games = gamesInOrder(document.Games._Games);
         const places =
           listed.length === size
-            ? [...listed]
+            ? placesOf(listed, games)
             : listed.length > size
               ? undefined
               : withByesWorkedOut(listed, games);
