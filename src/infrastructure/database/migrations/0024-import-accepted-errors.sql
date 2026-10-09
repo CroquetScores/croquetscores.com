@@ -16,4 +16,7 @@ create table import_accepted_errors (
 insert into import_accepted_errors (document_id, code, why) values
     ('croquetscores.com/knockouts/10088', 'Competition.NotDrawnToMeet',
      'Play-offs between players knocked out in the first round, kept beside '
-     'the draw, which the site''s knockout has no place for.');
+     'the draw, which the site''s knockout has no place for.'),
+    ('croquetscores.com/knockouts/867', 'Competition.NotDrawnToMeet',
+     'A play-off for third place between the losers of its semi-finals, '
+     'kept beside the final, which the site''s knockout has no place for.');
