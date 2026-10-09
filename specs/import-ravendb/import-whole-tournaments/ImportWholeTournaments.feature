@@ -95,6 +95,51 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/12" on "croquetscores.com" is imported
       Then "blocks/31" on "croquetscores.com" is not kept as any competition
 
+  Rule: A Standard tournament that lists one competition, a team match, is played by teams
+
+    Some managers on the old sites set up a tournament between teams as a
+    Standard tournament with one team match in it. The site keeps a team
+    match only as a test of a tournament played by teams, so such a
+    tournament is brought over as played by teams, and its team match with
+    it, as though it had been set up as one. A Standard tournament listing
+    anything else, or anything besides its team match, is brought over as it
+    was set up.
+
+    Scenario: A Standard tournament that lists one team match is played by teams
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Teams"
+
+    Scenario: The team match of a Standard tournament that lists only it is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "TeamMatches/50" on "croquetscores.com" is kept as a test
+
+    Scenario: A Standard tournament that lists a team match and a block is a Standard tournament
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the tournament lists "blocks/30"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Standard"
+
+    Scenario: A Standard tournament that lists one block is a Standard tournament
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Standard"
+
   Rule: A tournament played by teams is held over the days of its team matches
 
     The old sites kept a tournament played by teams with days of its own that

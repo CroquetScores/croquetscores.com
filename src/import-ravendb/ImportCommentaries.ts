@@ -12,7 +12,7 @@ import type { ImportDatabase } from "./ImportDatabase.js";
 import type { ImportedAccounts } from "./ImportedAccounts.js";
 import { describedFailure } from "./ImportRefused.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
-import { numberedApart, shortenedTo } from "./names.js";
+import { numberedApartWithin, shortenedTo } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
@@ -74,18 +74,23 @@ export class ImportCommentaries implements Importer<OldCommentary> {
         at,
       );
 
-      // The old sites let a title run longer than the site does. One that did
-      // is shortened, and kept whole as the first comment, so that nothing
-      // its writer wrote is lost.
+      // The old sites let a title run longer than the site does, and did not
+      // tell a tournament's commentaries apart by their titles, as the site
+      // does in any case. So a title too long is shortened, and one another
+      // commentary has is numbered apart, shortened to leave room for its
+      // number, and either is kept whole as the first comment, so that
+      // nothing its writer wrote is lost. Asked of the title as the site
+      // would take it first, so that one it refuses for anything but its
+      // length is refused for that.
       const whole = document.Title.trim();
-      const shortened = shortenedTo(whole, CommentaryTitle.mostCharacters);
-
-      // The site tells a tournament's commentaries apart by their titles, in
-      // any case, and the old sites did not.
+      const most = CommentaryTitle.mostCharacters;
+      CommentaryTitle.from(shortenedTo(whole, most));
       const taken = await this.listed.taken(tournament.id);
       const title = CommentaryTitle.from(
-        numberedApart(CommentaryTitle.from(shortened).toString(), taken.titles),
+        numberedApartWithin(whole, taken.titles, most),
       );
+      // Shortened, whether for its length or for its number's.
+      const shortened = !title.toString().startsWith(whole);
       tournament.allowWritingCommentary();
       const commentary = Commentary.start(
         CommentaryId.create(),
@@ -98,7 +103,7 @@ export class ImportCommentaries implements Importer<OldCommentary> {
 
       // Written by its writer when the commentary was started, before every
       // comment the old site kept.
-      if (shortened !== whole) {
+      if (shortened) {
         commentary.addComment(
           CommentId.create(),
           CommentText.from(whole),

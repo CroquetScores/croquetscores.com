@@ -71,6 +71,28 @@ export const shortenedTo = (text: string, most: number): string => {
 };
 
 /**
+ * `text` shortened to `most` characters (shortenedTo), or where one of
+ * `taken` is that in any case, `text` shortened to leave room for the first
+ * number from 2 that makes it one none of `taken` is, followed by it, as
+ * "Live from Court 1 ... (2)": numbered apart, and still no more than `most`.
+ * A number added after a title shortened to `most` would take it past it.
+ */
+export const numberedApartWithin = (
+  text: string,
+  taken: readonly string[],
+  most: number,
+): string => {
+  const lowered = new Set(taken.map((each) => each.toLowerCase()));
+  const shortened = shortenedTo(text, most);
+  if (!lowered.has(shortened.toLowerCase())) return shortened;
+  for (let number = 2; ; number += 1) {
+    const after = ` (${String(number)})`;
+    const numbered = `${shortenedTo(text, most - charactersIn(after))}${after}`;
+    if (!lowered.has(numbered.toLowerCase())) return numbered;
+  }
+};
+
+/**
  * `name`, or where one of `taken` is the same name in any case, the name
  * followed by the first number from 2 that makes it a name nobody has, as
  * "Sam Someone (2)". The old sites told two players apart by their name and

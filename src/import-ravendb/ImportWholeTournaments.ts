@@ -54,6 +54,22 @@ export const isArchived = (document: object): boolean =>
  * and a test is refused outside its tournament's days. As it is otherwise.
  * The old sites wrote every moment alike, so the earliest is the least.
  */
+/**
+ * `tournament` as played by teams where it was set up as a Standard
+ * tournament listing one competition, a team match, which the site keeps
+ * only as a test of a tournament played by teams (ImportWholeTournaments.feature);
+ * as it is otherwise.
+ */
+const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament => {
+  const [only, ...others] = tournament.Competitions;
+  return tournament.TournamentType.trim().toLowerCase() === "standard" &&
+    others.length === 0 &&
+    only !== undefined &&
+    only.Id.toLowerCase().startsWith("teammatches/")
+    ? { ...tournament, TournamentType: "teams" }
+    : tournament;
+};
+
 const heldOverItsTeamMatches = (
   tournament: OldTournament,
   named: readonly Named[],
@@ -129,7 +145,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     try {
       await this.parts.tournament.importDocument({
         ...read,
-        document: heldOverItsTeamMatches(document, named),
+        document: heldOverItsTeamMatches(setUpAsPlayedByTeams(document), named),
       });
     } catch (failure) {
       for (const each of named) {
