@@ -328,9 +328,22 @@ export class ImportDatabase implements ImportErrors {
    * Keeps what went wrong with one document. On the pool rather than in the
    * transaction the document was imported in, which has been rolled back.
    */
+  /**
+   * Keeps `message` against `documentId`, unless an error of its code has
+   * been accepted for the document (import_accepted_errors). A message says
+   * its code first, or after what of the document it names, as
+   * "game 12: Competition.NotDrawnToMeet: ...".
+   */
   async recordError(documentId: string, message: string): Promise<void> {
     await this.#pool.query(
-      "insert into import_errors (document_id, error_message) values ($1, $2)",
+      `insert into import_errors (document_id, error_message)
+       select $1::text, $2::text
+        where not exists (
+          select 1 from import_accepted_errors accepted
+           where accepted.document_id = $1::text
+             and ($2::text like accepted.code || ':%'
+                  or $2::text like '%: ' || accepted.code || ':%')
+        )`,
       [documentId, message],
     );
   }

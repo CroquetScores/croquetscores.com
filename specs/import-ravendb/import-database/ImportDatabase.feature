@@ -142,3 +142,37 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       When the errors kept are counted
       Then 0 errors are counted
+
+  Rule: An error accepted for a document is not kept
+
+    Some of what the import refuses has been looked at, and accepted: it is
+    the old site's, it is not wrong, and there is nothing to put right. A
+    knockout in 2014 kept play-offs between players knocked out in its first
+    round beside its draw (knockouts/10088), which the site's knockout has no
+    place for. An error accepted is accepted for one document and one
+    refusal's code, whichever of the document's games or players it names,
+    and with why, in a table of its own made with the site's own tables, so
+    that it is there again whenever the database is emptied. An error
+    accepted is not kept, and so not counted, and an error of another code,
+    or of another document, is kept as any is.
+
+    Scenario: An error accepted for a document is not kept
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/knockouts/10088" saying "game 12: Competition.NotDrawnToMeet: CompetitionRefused: These players are not currently drawn to play each other in the knockout."
+      Then no error is kept for "croquetscores.com/knockouts/10088"
+
+    Scenario: An error accepted for a document is not counted
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/knockouts/10088" saying "game 12: Competition.NotDrawnToMeet: CompetitionRefused: These players are not currently drawn to play each other in the knockout."
+      When the errors kept are counted
+      Then 0 errors are counted
+
+    Scenario: An error of another code for the document is kept
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/knockouts/10088" saying "game 3: Competition.MatchDecided: CompetitionRefused: Their match is decided."
+      Then an error is kept for "croquetscores.com/knockouts/10088"
+
+    Scenario: The same error for another document is kept
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/knockouts/74" saying "game 12: Competition.NotDrawnToMeet: CompetitionRefused: These players are not currently drawn to play each other in the knockout."
+      Then an error is kept for "croquetscores.com/knockouts/74"
