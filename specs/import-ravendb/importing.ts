@@ -185,3 +185,36 @@ Then(
     }
   },
 );
+
+// The summaries kept against `documentId`, none where none was.
+const summariesOf = async (
+  world: SpecWorld,
+  documentId: string,
+): Promise<readonly string[]> => {
+  const { rows } = await world.database.query<{ summary: string }>(
+    `select summary from import_errors
+      where document_id = $1 and summary is not null order by kept`,
+    [documentId],
+  );
+  return rows.map((row) => row.summary);
+};
+
+// By what it names rather than by its wording, which is said once, in
+// errorSummaries.ts.
+Then(
+  "the summary kept for {string} names {string}",
+  async function (this: SpecWorld, documentId: string, named: string) {
+    const summaries = await summariesOf(this, documentId);
+    assert.ok(
+      summaries.some((summary) => summary.includes(named)),
+      `No summary kept for ${documentId} names ${named}: ${summaries.join("; ")}`,
+    );
+  },
+);
+
+Then(
+  "no summary is kept for {string}",
+  async function (this: SpecWorld, documentId: string) {
+    assert.deepEqual(await summariesOf(this, documentId), []);
+  },
+);

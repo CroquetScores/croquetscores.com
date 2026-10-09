@@ -173,3 +173,21 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       And an error is kept for "croquetscores.com/tournaments/12" saying "Refused"
       Then the error kept for "croquetscores.com/tournaments/12" is of no tournament
+
+  Rule: An error is kept with what went wrong said for a person, where there is a saying
+
+    The administrator's pages show, above what the code that failed wrote,
+    what went wrong said for a person, as "Game Tim 26 beat Trev 0 in Spring
+    Open - Knockout because they are not drawn to play each other."
+    (`importCompetition.feature`). It is kept with the error, where whatever
+    refused the document said it so, and is none otherwise.
+
+    Scenario: An error is kept with what went wrong said for a person
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused", said for a person as "Game Tim 26 beat Trev 0"
+      Then the summary kept for "croquetscores.com/blocks/30" names "Game Tim 26 beat Trev 0"
+
+    Scenario: An error kept with no saying has none
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
+      Then no summary is kept for "croquetscores.com/blocks/30"

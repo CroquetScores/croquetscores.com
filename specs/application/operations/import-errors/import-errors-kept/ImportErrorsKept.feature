@@ -5,7 +5,8 @@ Feature: The documents the import refused, as an administrator lists them
   (`ImportDatabase.feature`). An administrator lists them to see what was
   left behind (`importErrors.feature`), so the application answers with a row
   for each error kept, which is the document's id and the first line of the
-  error's message. The whole message is for the page of the one document
+  error's message, with what went wrong said for a person where the import
+  said it so. The whole message is for the page of the one document
   (`ImportErrorKept.feature`): a message runs to many lines, and a list of
   them would be read down for its first.
 
@@ -49,6 +50,19 @@ Feature: The documents the import refused, as an administrator lists them
     Scenario: Nothing kept answers no rows
       When the reader signed in to the account for "admin@example.com" lists the import errors
       Then 0 rows are answered
+
+  Rule: A row is answered with what went wrong said for a person, where the import said it so
+
+    Scenario: An error kept said for a person is answered with it
+      Given the import refused the document "croquetscores.com/blocks/30" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is said for a person as "Game Tim 26 beat Trev 0"
+      When the reader signed in to the account for "admin@example.com" lists the import errors
+      Then the first row answered is said for a person as "Game Tim 26 beat Trev 0"
+
+    Scenario: An error kept with no saying is answered with none
+      Given the import refused the document "users/1-A" with "No email address"
+      When the reader signed in to the account for "admin@example.com" lists the import errors
+      Then the first row answered is said for a person as nothing
 
   Rule: Only the first line of a message is answered
 

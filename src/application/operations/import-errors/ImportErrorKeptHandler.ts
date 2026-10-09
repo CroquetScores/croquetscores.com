@@ -51,6 +51,7 @@ export class ImportErrorKeptHandler extends QueryHandler<
     return {
       documentId: query.documentId,
       messages,
+      summaries: await this.kept.summariesOf(query.documentId),
       tournament: await this.kept.tournamentOf(query.documentId),
     };
   }

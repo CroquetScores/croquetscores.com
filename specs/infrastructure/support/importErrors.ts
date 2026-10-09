@@ -71,3 +71,15 @@ Given(
     );
   },
 );
+
+// What went wrong said for a person, as the import keeps it with a refused
+// game or player.
+Given(
+  "the import error of {string} is said for a person as {string}",
+  async function (this: SpecWorld, documentId: string, summary: string) {
+    await this.database.query(
+      "update import_errors set summary = $2 where document_id = $1",
+      [documentId, summary],
+    );
+  },
+);

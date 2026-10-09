@@ -25,9 +25,15 @@ export interface ErrorOf {
 export interface ImportErrors {
   /**
    * Keeps `message` against `documentId`, which names its website too, and
-   * the tournament and competition it is `of`, where they are known.
+   * the tournament and competition it is `of`, where they are known, and
+   * what went wrong said for a person, its `summary`, where there is one.
    */
-  recordError(documentId: string, message: string, of?: ErrorOf): Promise<void>;
+  recordError(
+    documentId: string,
+    message: string,
+    of?: ErrorOf,
+    summary?: string,
+  ): Promise<void>;
 }
 
 /**
@@ -351,13 +357,14 @@ export class ImportDatabase implements ImportErrors {
     documentId: string,
     message: string,
     of?: ErrorOf,
+    summary?: string,
   ): Promise<void> {
     await this.#pool.query(
       `insert into import_errors
          (document_id, error_message,
           tournament_address, tournament_name, competition_name,
-          new_site_path, old_site_path)
-       values ($1, $2, $3, $4, $5, $6, $7)`,
+          new_site_path, old_site_path, summary)
+       values ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         documentId,
         message,
@@ -366,6 +373,7 @@ export class ImportDatabase implements ImportErrors {
         of?.competitionName ?? null,
         of?.newSitePath ?? null,
         of?.oldSitePath ?? null,
+        summary ?? null,
       ],
     );
   }

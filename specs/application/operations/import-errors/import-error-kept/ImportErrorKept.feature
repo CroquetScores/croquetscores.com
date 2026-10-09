@@ -118,6 +118,19 @@ Feature: What the import said of one document it refused, as an administrator re
       When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
       Then the import error is of no tournament
 
+  Rule: What went wrong is answered said for a person, where the import said it so
+
+    Scenario: An error said for a person is answered with it
+      Given the import refused the document "croquetscores.com/blocks/30" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is said for a person as "Game Tim 26 beat Trev 0"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the import error is said for a person as "Game Tim 26 beat Trev 0"
+
+    Scenario: An error with no saying is answered with none
+      Given the import refused the document "users/1-A" with "No email address"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "users/1-A"
+      Then the import error is said for a person as nothing
+
   Rule: A document nothing was kept against is refused
 
     Scenario: A document that was not refused is not found

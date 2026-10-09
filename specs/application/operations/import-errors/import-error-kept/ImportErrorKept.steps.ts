@@ -116,3 +116,17 @@ Then(
     );
   },
 );
+
+Then(
+  "the import error is said for a person as {string}",
+  function (this: SpecWorld, summary: string) {
+    assert.deepEqual(answered(this).summaries, [summary]);
+  },
+);
+
+Then(
+  "the import error is said for a person as nothing",
+  function (this: SpecWorld) {
+    assert.deepEqual(answered(this).summaries, []);
+  },
+);

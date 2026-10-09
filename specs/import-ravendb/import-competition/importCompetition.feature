@@ -27,6 +27,11 @@ Feature: Importing one of the old sites' competitions
   site made from its name, and on the old site, under "competition/" by the
   slug the old site gave it, or at the tournament where it gave none.
 
+  A refused game or player is kept with what went wrong said for a person as
+  well, by who played or who they are, as the competition's list named them,
+  the scores as they were typed, where, and why: "Game Tim 26 beat Trev 0 in
+  Spring Open - Knockout because they are not drawn to play each other."
+
   An archived competition is not brought over: the old sites archived one to
   be rid of it, and took it out of its tournament's list. That is not an
   error, since nothing went wrong. Which tournament a competition is brought
@@ -214,6 +219,13 @@ Feature: Importing one of the old sites' competitions
       And player 9 is called "????"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "TournamentPlayer.NoLetterOrDigit"
+
+    Scenario: A player refused is said for a person, naming them
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "????"
+      When the competition is imported
+      Then the summary kept for "croquetscores.com/blocks/30" names "????"
 
     Scenario: The players after one refused are entered
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -487,6 +499,45 @@ Feature: Importing one of the old sites' competitions
       And game 1's loser scored "26"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open-12/competitions/a-block" on the new site and "2014/ac/spring-open-12" on the old site
+
+    Scenario: A game refused is said for a person, naming its winner and their score
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 7 is called "Tim Tam"
+      And player 3 is in the competition
+      And player 3 is called "Trev Trent"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the summary kept for "croquetscores.com/blocks/30" names "Tim Tam 3"
+
+    Scenario: A game refused is said for a person, naming its loser and their score
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 7 is called "Tim Tam"
+      And player 3 is in the competition
+      And player 3 is called "Trev Trent"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the summary kept for "croquetscores.com/blocks/30" names "Trev Trent 26"
+
+    Scenario: A game refused is said for a person, naming where it was played
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 7 is called "Tim Tam"
+      And player 3 is in the competition
+      And player 3 is called "Trev Trent"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the summary kept for "croquetscores.com/blocks/30" names "Spring Open - A Block"
 
     Scenario: The error kept names the game refused
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"

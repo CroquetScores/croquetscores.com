@@ -25,6 +25,13 @@
   font-weight: 600;
 }
 
+/* What went wrong said for a person, above the first line the code wrote,
+   which is quieter. */
+.import-error-said {
+  display: grid;
+  gap: var(--space-1);
+}
+
 .import-error-first-line {
   color: var(--ink-muted);
 }
@@ -59,4 +66,12 @@
   display: inline-block;
   min-height: 44px;
   padding-block: var(--space-2);
+}
+
+/* What went wrong with the document, a line each, said for a person. */
+.import-error-summaries {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
 }

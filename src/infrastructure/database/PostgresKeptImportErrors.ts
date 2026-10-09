@@ -18,16 +18,19 @@ export class PostgresKeptImportErrors implements KeptImportErrors {
     const { rows } = await this.unitOfWork.connection().query<{
       document_id: string;
       first_line: string;
+      summary: string | null;
     }>(
       `select document_id,
               split_part(replace(error_message, E'\\r', ''), E'\\n', 1)
-                as first_line
+                as first_line,
+              summary
          from import_errors
         order by first_line, document_id, kept`,
     );
     return rows.map((row) => ({
       documentId: row.document_id,
       firstLine: row.first_line,
+      summary: row.summary ?? undefined,
     }));
   }
 
@@ -39,6 +42,18 @@ export class PostgresKeptImportErrors implements KeptImportErrors {
         [documentId],
       );
     return rows.map((row) => row.error_message);
+  }
+
+  async summariesOf(documentId: string): Promise<readonly string[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ summary: string }>(
+        `select summary from import_errors
+          where document_id = $1 and summary is not null
+          order by kept`,
+        [documentId],
+      );
+    return rows.map((row) => row.summary);
   }
 
   // The website is the document id's first part, which the import writes it

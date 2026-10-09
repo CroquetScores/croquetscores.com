@@ -17,6 +17,7 @@ import {
   type ImportingCompetitions,
   addGames,
   gamesInOrder,
+  nameOfIn,
 } from "./importCompetition.js";
 import { ImportRefused } from "./ImportRefused.js";
 import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
@@ -257,7 +258,8 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           }
           const team = teamRepresented((player.Representing ?? "").trim());
           if (team === undefined) {
-            throw new Error(
+            throw new ImportRefused(
+              "ImportTeamMatches.RepresentsNeitherTeam",
               `The player represents ${String(player.Representing)}, which is neither team.`,
             );
           }
@@ -280,7 +282,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           players.set(player._Id, playerId);
           made.push({ number: player._Id, id: playerId });
         } catch (failure) {
-          await errors.refused(`player ${String(player._Id)}`, failure);
+          await errors.playerRefused(player._Id, player.Name, failure);
         }
       }
 
@@ -332,6 +334,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         competition,
         document.Games._Games.filter((game) => !againstABye(game)),
         (number) => players.get(number),
+        nameOfIn(document),
         toldOf(tournament, competitionId),
         Website.from(website),
         by,

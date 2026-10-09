@@ -4,6 +4,8 @@ export interface KeptImportError {
   readonly documentId: string;
   /** The first line of what the import said, without its line ending. */
   readonly firstLine: string;
+  /** What went wrong, said for a person, where the import said it so. */
+  readonly summary: string | undefined;
 }
 
 /**
@@ -43,6 +45,12 @@ export interface KeptImportErrors {
    * kept. None where nothing was.
    */
   messagesOf(documentId: string): Promise<readonly string[]>;
+
+  /**
+   * What went wrong with `documentId`, said for a person, each error the
+   * import said so in the order they were kept. None where none was.
+   */
+  summariesOf(documentId: string): Promise<readonly string[]>;
 
   /**
    * The tournament `documentId` is of, as the last error kept against it

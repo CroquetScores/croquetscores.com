@@ -20,7 +20,8 @@ Feature: The page where an administrator reads what the import said of one docum
   the old site it was on, each a link, so that the administrator can see what
   was brought over beside what was kept, and then what the tournament is
   called, and what the competition is where the document was one. Where it
-  knew none, the page says nothing of a tournament.
+  knew none, the page says nothing of a tournament. Above the messages, it
+  says what went wrong said for a person, where the import said it so.
 
   A document id nothing was kept against says the document is not found,
   rather than showing an empty page.
@@ -105,6 +106,14 @@ Feature: The page where an administrator reads what the import said of one docum
       When the page at "/admin/administrator/import-errors/users%2F1-A" is opened
       Then the document id shown is "users/1-A"
       And no tournament is shown
+
+  Rule: The page shows what went wrong said for a person, where the import said it so
+
+    Scenario: The page shows what went wrong said for a person
+      Given the import refused the document "croquetscores.com/blocks/30" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is said for a person as "Game Tim 26 beat Trev 0"
+      When the page at "/admin/administrator/import-errors/croquetscores.com%2Fblocks%2F30" is opened
+      Then the page says for a person "Game Tim 26 beat Trev 0"
 
   Rule: A document nothing was kept against is not found
 

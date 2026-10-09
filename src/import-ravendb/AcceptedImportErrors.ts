@@ -4,7 +4,9 @@ import { dirname } from "node:path";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
+import { gameSummary, playerSummary } from "./errorSummaries.js";
 import { describedFailure } from "./ImportRefused.js";
+import type { Game as OldGame } from "./ravendb-models/Competition.js";
 import { numbers } from "./runImporter.js";
 
 /**
@@ -226,8 +228,15 @@ export class DocumentErrors {
     this.#newSitePath = newSitePathOf(this.tournament, id);
   }
 
-  /** Keeps `failure` of `what` of the document, as "game 12", unless it is accepted. */
-  async refused(what: string, failure: unknown): Promise<void> {
+  /**
+   * Keeps `failure` of `what` of the document, as "game 12", with its
+   * `summary` where there is one, unless it is accepted.
+   */
+  async refused(
+    what: string,
+    failure: unknown,
+    summary?: string,
+  ): Promise<void> {
     const accepted = acceptedErrorOf(this.documentId, failure);
     if (accepted === undefined) {
       await this.errors.recordError(
@@ -244,10 +253,52 @@ export class DocumentErrors {
                   : { newSitePath: this.#newSitePath }),
               },
         ),
+        summary,
       );
       return;
     }
     await this.accepted(what, accepted.code, accepted.why);
+  }
+
+  /** Keeps `failure` of `game`, said as who beat whom, where, and why. */
+  async gameRefused(
+    game: OldGame,
+    nameOf: (number: number) => string,
+    failure: unknown,
+  ): Promise<void> {
+    await this.refused(
+      `game ${String(game.Id)}`,
+      failure,
+      gameSummary(
+        {
+          winner: nameOf(game.Winner.PlayerId),
+          winnerScore: game.Winner.Score._Score,
+          loser: nameOf(game.Loser.PlayerId),
+          loserScore: game.Loser.Score._Score,
+        },
+        this.tournament.name.toString(),
+        this.competition?.name,
+        failure,
+      ),
+    );
+  }
+
+  /** Keeps `failure` of the player numbered `number`, said as who, where, and why. */
+  async playerRefused(
+    number: number,
+    name: string,
+    failure: unknown,
+  ): Promise<void> {
+    await this.refused(
+      `player ${String(number)}`,
+      failure,
+      playerSummary(
+        name,
+        this.tournament.name.toString(),
+        this.competition?.name,
+        failure,
+      ),
+    );
   }
 
   /** Says that `what` of the document was accepted as `code`, and `why`. */

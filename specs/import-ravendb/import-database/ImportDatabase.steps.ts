@@ -84,6 +84,23 @@ Given(
 );
 
 Given(
+  "an error is kept for {string} saying {string}, said for a person as {string}",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    message: string,
+    summary: string,
+  ) {
+    await importDatabaseOf(this).recordError(
+      documentId,
+      message,
+      undefined,
+      summary,
+    );
+  },
+);
+
+Given(
   "an error is kept for {string} saying {string} at {string} on the new site and {string} on the old site",
   async function (
     this: SpecWorld,

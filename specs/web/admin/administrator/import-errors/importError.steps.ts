@@ -182,3 +182,10 @@ Then("no tournament is shown", async function (this: SpecWorld) {
     0,
   );
 });
+
+Then(
+  "the page says for a person {string}",
+  async function (this: SpecWorld, summary: string) {
+    await shownIn(this, ".import-error-summary", summary);
+  },
+);

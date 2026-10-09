@@ -7,13 +7,15 @@ import "./importErrors.css";
 // What the import said of one document it refused (importError.feature): the
 // document's id, where the import knew the tournament it is of the document's
 // whole address on this site and on the old site, each a link, and the
-// tournament's and the competition's names, and every message kept against
-// it, whole. A message is put in as text and never as markup, since it was
+// tournament's and the competition's names, what went wrong said for a
+// person where the import said it so, and every message kept against it,
+// whole. A message is put in as text and never as markup, since it was
 // written by the code that failed.
 
 interface ImportErrorOfDocument {
   readonly documentId: string;
   readonly messages: readonly string[];
+  readonly summaries: readonly string[];
   readonly tournament?: {
     readonly website: string;
     readonly address: string;
@@ -105,6 +107,15 @@ export const ImportError = ({ document }: Props): React.JSX.Element => {
                 </p>
               )}
             </>
+          )}
+          {kept.summaries.length === 0 ? null : (
+            <ul className="import-error-summaries">
+              {kept.summaries.map((summary, index) => (
+                <li key={index} className="import-error-summary">
+                  {summary}
+                </li>
+              ))}
+            </ul>
           )}
           {kept.messages.map((message, index) => (
             <pre key={index} className="import-error-message">

@@ -28,6 +28,7 @@ import {
   isOldBye,
   tournamentBecome,
 } from "./ImportTournamentPlayers.js";
+import { ImportRefused } from "./ImportRefused.js";
 import { numberedApart } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
 import type {
@@ -98,6 +99,16 @@ export const AGAINST_A_BYE = {
   why: "A game against the old site's bye, which was no game played, left out.",
 } as const;
 
+/**
+ * What the player numbered `number` of `document` was called, or their number
+ * where it lists nobody numbered so.
+ */
+export const nameOfIn =
+  (document: OldCompetition) =>
+  (number: number): string =>
+    document.Players._Players.find((player) => player._Id === number)?.Name ??
+    `player ${String(number)}`;
+
 /** The old games of a competition, in the order the old sites numbered them. */
 export const gamesInOrder = (games: readonly OldGame[]): OldGame[] =>
   [...games].sort((one, other) => one.Id - other.Id);
@@ -115,6 +126,7 @@ export const addGames = async (
   competition: Competition,
   games: readonly OldGame[],
   playerOf: (number: number) => GamePlayerId | undefined,
+  nameOf: (number: number) => string,
   told: Told,
   website: Website,
   by: AccountId,
@@ -125,7 +137,8 @@ export const addGames = async (
       const winner = playerOf(game.Winner.PlayerId);
       const loser = playerOf(game.Loser.PlayerId);
       if (winner === undefined || loser === undefined) {
-        throw new Error(
+        throw new ImportRefused(
+          "ImportCompetition.PlayerNotInCompetition",
           `A player of the game is not in the competition: ${String(game.Winner.PlayerId)} or ${String(game.Loser.PlayerId)}.`,
         );
       }
@@ -142,7 +155,7 @@ export const addGames = async (
         momentOf(game.CreatedAt),
       );
     } catch (failure) {
-      await errors.refused(`game ${String(game.Id)}`, failure);
+      await errors.gameRefused(game, nameOf, failure);
     }
   }
 };
@@ -230,7 +243,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           broughtOver.set(player._Id, became);
         } catch (failure) {
           refused.add(player._Id);
-          await errors.refused(`player ${String(player._Id)}`, failure);
+          await errors.playerRefused(player._Id, player.Name, failure);
         }
       }
       if (became === bye) byes.add(player._Id);
@@ -295,7 +308,10 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           player._Id,
         );
         if (became === undefined) {
-          throw new Error("The player was not brought over to the tournament.");
+          throw new ImportRefused(
+            "ImportCompetition.PlayerNotBroughtOver",
+            "The player was not brought over to the tournament.",
+          );
         }
         const playerId = competition.enterPlayer(
           TournamentPlayerId.from(became),
@@ -316,7 +332,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           competition.changeCarryForward(playerId, carried, told, by, at);
         }
       } catch (failure) {
-        await errors.refused(`player ${String(player._Id)}`, failure);
+        await errors.playerRefused(player._Id, player.Name, failure);
       }
     }
 
@@ -333,6 +349,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       competition,
       played.Games._Games,
       (number) => entered.get(number),
+      nameOfIn(document),
       told,
       Website.from(website),
       by,
