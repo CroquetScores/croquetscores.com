@@ -1,6 +1,7 @@
 import { appendFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
+import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
 import { describedFailure } from "./ImportRefused.js";
@@ -143,15 +144,63 @@ const acceptedErrorOf = (
   );
 };
 
-/** What an error of `tournament`, and of `competitionName` in it, is kept as of. */
+/**
+ * The competition of the old sites a document was: what it was called, the
+ * slug the old site gave it, and its path on the site once it is added.
+ */
+export interface CompetitionOf {
+  readonly name: string;
+  readonly oldSlug?: string | null | undefined;
+  readonly newSitePath?: string;
+}
+
+/**
+ * Where a competition the old site gave `oldSlug` was on it, under its
+ * tournament's `address`, which is the same on both sites: its own page, or
+ * the tournament's where it had no slug.
+ */
+export const oldSitePathOf = (
+  address: string,
+  oldSlug: string | null | undefined,
+): string =>
+  oldSlug === undefined || oldSlug === null || oldSlug === ""
+    ? address
+    : `${address}/competition/${oldSlug}`;
+
+/**
+ * What an error of `tournament`, and of the `competition` in it, is kept as
+ * of: on the site, the competition's page once it is added and the
+ * tournament's until then, and on the old site, the competition's page.
+ */
 export const errorOf = (
   tournament: Tournament,
-  competitionName?: string,
-): ErrorOf => ({
-  tournamentAddress: tournament.address.toString(),
-  tournamentName: tournament.name.toString(),
-  ...(competitionName === undefined ? {} : { competitionName }),
-});
+  competition?: CompetitionOf,
+): ErrorOf => {
+  const address = tournament.address.toString();
+  return {
+    tournamentAddress: address,
+    tournamentName: tournament.name.toString(),
+    newSitePath: competition?.newSitePath ?? address,
+    oldSitePath: oldSitePathOf(address, competition?.oldSlug),
+    ...(competition === undefined ? {} : { competitionName: competition.name }),
+  };
+};
+
+/**
+ * The path on the site of the competition `id` of `tournament`: a test's
+ * under its tests, and any other's under its competitions.
+ */
+export const newSitePathOf = (
+  tournament: Tournament,
+  id: CompetitionId,
+): string | undefined => {
+  const found = tournament.competitions.find(({ reference }) =>
+    reference.id.equals(id),
+  );
+  if (found === undefined) return undefined;
+  const base = found.shape.kind === "test" ? "tests" : "competitions";
+  return `${tournament.address.toString()}/${base}/${found.reference.slug.toString()}`;
+};
 
 /**
  * What goes wrong with, and what is accepted of, one document of a tournament
@@ -161,14 +210,21 @@ export const errorOf = (
  * `competitionName`.
  */
 export class DocumentErrors {
+  #newSitePath: string | undefined;
+
   constructor(
     private readonly errors: ImportErrors,
     private readonly accepting: AcceptedImportErrors,
     readonly documentId: string,
     private readonly website: string,
     private readonly tournament: Tournament,
-    private readonly competitionName?: string,
+    private readonly competition?: Omit<CompetitionOf, "newSitePath">,
   ) {}
+
+  /** That the competition the document was is now `id` of the tournament. */
+  added(id: CompetitionId): void {
+    this.#newSitePath = newSitePathOf(this.tournament, id);
+  }
 
   /** Keeps `failure` of `what` of the document, as "game 12", unless it is accepted. */
   async refused(what: string, failure: unknown): Promise<void> {
@@ -177,7 +233,17 @@ export class DocumentErrors {
       await this.errors.recordError(
         this.documentId,
         `${what}: ${describedFailure(failure)}`,
-        errorOf(this.tournament, this.competitionName),
+        errorOf(
+          this.tournament,
+          this.competition === undefined
+            ? undefined
+            : {
+                ...this.competition,
+                ...(this.#newSitePath === undefined
+                  ? {}
+                  : { newSitePath: this.#newSitePath }),
+              },
+        ),
       );
       return;
     }

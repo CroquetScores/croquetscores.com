@@ -119,6 +119,8 @@ interface KeptOf {
   readonly tournament_address: string | null;
   readonly tournament_name: string | null;
   readonly competition_name: string | null;
+  readonly new_site_path: string | null;
+  readonly old_site_path: string | null;
 }
 
 // Every error kept against `documentId`, with what it is of.
@@ -127,7 +129,8 @@ const keptOf = async (
   documentId: string,
 ): Promise<readonly KeptOf[]> => {
   const { rows } = await world.database.query<KeptOf>(
-    `select tournament_address, tournament_name, competition_name
+    `select tournament_address, tournament_name, competition_name,
+            new_site_path, old_site_path
        from import_errors where document_id = $1 order by kept`,
     [documentId],
   );
@@ -164,6 +167,21 @@ Then(
   async function (this: SpecWorld, documentId: string) {
     for (const kept of await keptOf(this, documentId)) {
       assert.equal(kept.tournament_address, null);
+    }
+  },
+);
+
+Then(
+  "the error kept for {string} is at {string} on the new site and {string} on the old site",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    newSitePath: string,
+    oldSitePath: string,
+  ) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.new_site_path, newSitePath);
+      assert.equal(kept.old_site_path, oldSitePath);
     }
   },
 );

@@ -53,3 +53,21 @@ Given(
     );
   },
 );
+
+// Where its document is on each site, as the import keeps it with every error
+// of the document.
+Given(
+  "the import error of {string} is at {string} on the new site and {string} on the old site",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    newSitePath: string,
+    oldSitePath: string,
+  ) {
+    await this.database.query(
+      `update import_errors set new_site_path = $2, old_site_path = $3
+        where document_id = $1`,
+      [documentId, newSitePath, oldSitePath],
+    );
+  },
+);

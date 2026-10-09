@@ -137,17 +137,35 @@ Then(
   },
 );
 
+// This site's address is wherever the scenario's site is served from.
+const thisSite = (world: SpecWorld, path: string): string =>
+  `${new URL(world.browserPage.url()).origin}${path}`;
+
 Then(
-  "the link to the tournament on this site leads to {string}",
-  async function (this: SpecWorld, href: string) {
-    await leadsTo(this, "a.import-error-on-this-site", href);
+  "the new site address shown is this site's {string}",
+  async function (this: SpecWorld, path: string) {
+    await shownIn(this, ".import-error-new-site a", thisSite(this, path));
   },
 );
 
 Then(
-  "the link to the tournament on the old site leads to {string}",
+  "the new site address leads to this site's {string}",
+  async function (this: SpecWorld, path: string) {
+    await leadsTo(this, ".import-error-new-site a", thisSite(this, path));
+  },
+);
+
+Then(
+  "the old site address shown is {string}",
+  async function (this: SpecWorld, address: string) {
+    await shownIn(this, ".import-error-old-site a", address);
+  },
+);
+
+Then(
+  "the old site address leads to {string}",
   async function (this: SpecWorld, href: string) {
-    await leadsTo(this, "a.import-error-on-the-old-site", href);
+    await leadsTo(this, ".import-error-old-site a", href);
   },
 );
 
@@ -158,7 +176,9 @@ Then("no tournament is shown", async function (this: SpecWorld) {
     0,
   );
   assert.equal(
-    await this.browserPage.locator("main .import-error-links a").count(),
+    await this.browserPage
+      .locator("main .import-error-new-site, main .import-error-old-site")
+      .count(),
     0,
   );
 });

@@ -90,6 +90,7 @@ export interface WrittenGame {
 export interface WrittenCompetition {
   Tournament: { Id: string };
   Name: string;
+  Slug?: string;
   Players: { _Players: WrittenCompetitionPlayer[] };
   Games: { _Games: WrittenGame[] };
   IsArchived: boolean;

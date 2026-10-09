@@ -179,7 +179,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         documentId,
         website,
         tournament,
-        document.Name,
+        { name: document.Name, oldSlug: document.Slug },
       );
 
       // Done as the tournament's first manager, who created it, when it was
@@ -209,6 +209,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         by,
         at,
       );
+      errors.added(competitionId);
 
       // A player is on the team they represented, which they wrote as the
       // team match named it, or by the team's name here, or by either before

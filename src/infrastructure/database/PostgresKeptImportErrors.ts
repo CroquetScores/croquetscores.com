@@ -50,8 +50,11 @@ export class PostgresKeptImportErrors implements KeptImportErrors {
       tournament_address: string;
       tournament_name: string;
       competition_name: string | null;
+      new_site_path: string | null;
+      old_site_path: string | null;
     }>(
-      `select tournament_address, tournament_name, competition_name
+      `select tournament_address, tournament_name, competition_name,
+              new_site_path, old_site_path
          from import_errors
         where document_id = $1 and tournament_address is not null
         order by kept desc
@@ -65,6 +68,9 @@ export class PostgresKeptImportErrors implements KeptImportErrors {
       address: row.tournament_address,
       name: row.tournament_name,
       competitionName: row.competition_name ?? undefined,
+      // The tournament's page, where an error was kept before the paths were.
+      newSitePath: row.new_site_path ?? row.tournament_address,
+      oldSitePath: row.old_site_path ?? row.tournament_address,
     };
   }
 }

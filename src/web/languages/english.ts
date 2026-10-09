@@ -590,8 +590,8 @@ export const english: Language = {
     "admin.importError.documentId": "Document id",
     "admin.importError.tournament": "Tournament",
     "admin.importError.competition": "Competition",
-    "admin.importError.onThisSite": "On this site",
-    "admin.importError.onTheOldSite": "On the old site",
+    "admin.importError.newSite": "New site",
+    "admin.importError.oldSite": "Old site",
     "ImportErrorKept.NotFound":
       "The import kept no error against that document.",
     "admin.competitionView.otherwise":

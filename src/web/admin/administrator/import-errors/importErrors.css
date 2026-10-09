@@ -44,21 +44,19 @@
   font-family: var(--font-mono, monospace);
 }
 
-/* The tournament a document is of, which can be long, wrapped rather than cut
-   short, and its two links side by side, each as tall as a thumb. */
+/* Where the document is on each site, and the tournament it is of, which can
+   be long, wrapped rather than cut short on a phone, each link as tall as a
+   thumb. */
+.import-error-new-site,
+.import-error-old-site,
 .import-error-tournament,
 .import-error-competition {
   overflow-wrap: anywhere;
 }
 
-.import-error-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-
-.import-error-links a {
-  display: inline-flex;
-  align-items: center;
+.import-error-new-site a,
+.import-error-old-site a {
+  display: inline-block;
   min-height: 44px;
+  padding-block: var(--space-2);
 }

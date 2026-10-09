@@ -1,4 +1,5 @@
 import type { ImportDatabase } from "./ImportDatabase.js";
+import { oldSitePathOf } from "./AcceptedImportErrors.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
 import type {
@@ -167,8 +168,14 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       } catch (failure) {
         // Kept with the tournament, which is over by now, and with what a
         // competition was called on the old site, since it never became one.
+        // On the site, it is the tournament's page that can be read; on the
+        // old site, a competition's own.
         const tournament = await this.database.tournamentOf(website, id);
-        const name = (each.document as { Name?: unknown }).Name;
+        const { Name: name, Slug: slug } = each.document as {
+          Name?: unknown;
+          Slug?: unknown;
+        };
+        const competition = this.#isCompetition(each.importer);
         await this.database.recordError(
           `${website}/${each.id}`,
           describedFailure(failure),
@@ -176,7 +183,12 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
             ? undefined
             : {
                 ...tournament,
-                ...(this.#isCompetition(each.importer) &&
+                newSitePath: tournament.tournamentAddress,
+                oldSitePath: oldSitePathOf(
+                  tournament.tournamentAddress,
+                  competition && typeof slug === "string" ? slug : undefined,
+                ),
+                ...(competition &&
                 typeof name === "string" &&
                 name.trim() !== ""
                   ? { competitionName: name }

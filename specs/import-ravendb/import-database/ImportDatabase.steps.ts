@@ -77,6 +77,26 @@ Given(
       tournamentAddress,
       tournamentName,
       competitionName,
+      newSitePath: tournamentAddress,
+      oldSitePath: tournamentAddress,
+    });
+  },
+);
+
+Given(
+  "an error is kept for {string} saying {string} at {string} on the new site and {string} on the old site",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    message: string,
+    newSitePath: string,
+    oldSitePath: string,
+  ) {
+    await importDatabaseOf(this).recordError(documentId, message, {
+      tournamentAddress: "2014/ac/spring-open",
+      tournamentName: "Spring Open",
+      newSitePath,
+      oldSitePath,
     });
   },
 );

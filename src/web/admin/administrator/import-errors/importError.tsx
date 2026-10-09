@@ -5,11 +5,11 @@ import { knows, say } from "../../words.js";
 import "./importErrors.css";
 
 // What the import said of one document it refused (importError.feature): the
-// document's id, the tournament it is of and the competition it was, where the
-// import knew them, with links to the tournament on this site and on the old
-// site, which share its address, and every message kept against it, whole. A
-// message is put in as text and never as markup, since it was written by the
-// code that failed.
+// document's id, where the import knew the tournament it is of the document's
+// whole address on this site and on the old site, each a link, and the
+// tournament's and the competition's names, and every message kept against
+// it, whole. A message is put in as text and never as markup, since it was
+// written by the code that failed.
 
 interface ImportErrorOfDocument {
   readonly documentId: string;
@@ -19,8 +19,16 @@ interface ImportErrorOfDocument {
     readonly address: string;
     readonly name: string;
     readonly competitionName?: string;
+    readonly newSitePath: string;
+    readonly oldSitePath: string;
   };
 }
+
+// The whole address, shown as well as followed, so that it can be read and
+// copied as it is.
+const AddressLink = ({ href }: { readonly href: string }) => (
+  <a href={href}>{href}</a>
+);
 
 interface Props {
   /** The document's id, as the address writes it. */
@@ -70,6 +78,18 @@ export const ImportError = ({ document }: Props): React.JSX.Element => {
           </p>
           {kept.tournament === undefined ? null : (
             <>
+              <p className="import-error-new-site">
+                <span>{say("admin.importError.newSite")}: </span>
+                <AddressLink
+                  href={`${window.location.origin}/${kept.tournament.newSitePath}`}
+                />
+              </p>
+              <p className="import-error-old-site">
+                <span>{say("admin.importError.oldSite")}: </span>
+                <AddressLink
+                  href={`https://${kept.tournament.website}/${kept.tournament.oldSitePath}`}
+                />
+              </p>
               <p>
                 <span>{say("admin.importError.tournament")}: </span>
                 <strong className="import-error-tournament">
@@ -84,20 +104,6 @@ export const ImportError = ({ document }: Props): React.JSX.Element => {
                   </strong>
                 </p>
               )}
-              <p className="import-error-links">
-                <a
-                  className="import-error-on-this-site"
-                  href={`/${kept.tournament.address}`}
-                >
-                  {say("admin.importError.onThisSite")}
-                </a>{" "}
-                <a
-                  className="import-error-on-the-old-site"
-                  href={`https://${kept.tournament.website}/${kept.tournament.address}`}
-                >
-                  {say("admin.importError.onTheOldSite")}
-                </a>
-              </p>
             </>
           )}
           {kept.messages.map((message, index) => (

@@ -300,7 +300,9 @@ Feature: Importing each of the old sites' tournaments with everything that names
     of what names it are brought over all the same: one block the site cannot
     take would otherwise leave a whole tournament behind. The error is kept
     with the tournament, which has been brought over by then, for whoever
-    reads it to find.
+    reads it to find: at the tournament's page on the site, since the
+    competition never became one there, and at the competition's own on the
+    old site.
 
     Scenario: A refused competition is kept as an error against its document
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -313,6 +315,13 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And the block "blocks/30" is called ""
       When the tournament is imported
       Then the error kept for "croquetscores.com/blocks/30" is of the tournament at "2014/ac/spring-open-12" called "Spring Open"
+
+    Scenario: A refused competition is kept at its tournament on the site and at itself on the old site
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And its slug on the old site was "block-a"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open-12" on the new site and "2014/ac/spring-open-12/competition/block-a" on the old site
 
     Scenario: The tournament of a refused competition is not refused
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"

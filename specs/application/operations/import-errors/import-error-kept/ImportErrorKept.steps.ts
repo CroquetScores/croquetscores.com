@@ -105,3 +105,14 @@ Then("the import error is of no competition", function (this: SpecWorld) {
 Then("the import error is of no tournament", function (this: SpecWorld) {
   assert.equal(answered(this).tournament, undefined);
 });
+
+Then(
+  /^the import error's document is at "([^"]*)" on the (new|old) site$/,
+  function (this: SpecWorld, path: string, which: string) {
+    const tournament = tournamentAnswered(this);
+    assert.equal(
+      which === "new" ? tournament.newSitePath : tournament.oldSitePath,
+      path,
+    );
+  },
+);

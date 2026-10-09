@@ -15,6 +15,10 @@ export interface ErrorOf {
   readonly tournamentName: string;
   /** Where the document was a competition, what it is called. */
   readonly competitionName?: string;
+  /** Where the document is on the site, without a leading slash. */
+  readonly newSitePath: string;
+  /** Where the document was on the old site, without a leading slash. */
+  readonly oldSitePath: string;
 }
 
 /** Where a document the import refused is kept, with why. */
@@ -351,14 +355,17 @@ export class ImportDatabase implements ImportErrors {
     await this.#pool.query(
       `insert into import_errors
          (document_id, error_message,
-          tournament_address, tournament_name, competition_name)
-       values ($1, $2, $3, $4, $5)`,
+          tournament_address, tournament_name, competition_name,
+          new_site_path, old_site_path)
+       values ($1, $2, $3, $4, $5, $6, $7)`,
       [
         documentId,
         message,
         of?.tournamentAddress ?? null,
         of?.tournamentName ?? null,
         of?.competitionName ?? null,
+        of?.newSitePath ?? null,
+        of?.oldSitePath ?? null,
       ],
     );
   }
@@ -372,7 +379,10 @@ export class ImportDatabase implements ImportErrors {
   async tournamentOf(
     website: string,
     documentId: string,
-  ): Promise<ErrorOf | undefined> {
+  ): Promise<
+    | { readonly tournamentAddress: string; readonly tournamentName: string }
+    | undefined
+  > {
     const { rows } = await this.#queryable().query<{
       address: string;
       name: string;

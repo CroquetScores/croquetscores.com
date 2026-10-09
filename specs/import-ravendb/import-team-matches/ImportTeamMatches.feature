@@ -685,6 +685,19 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the error kept for "croquetscores.com/teammatches/50" says "Competition.SameTeam"
 
+    Scenario: A game refused is kept at the test's page on the site and the team match's on the old site
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And its slug on the old site was "new-zealand-vs-england"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" is at "2014/ac/spring-open-13/tests/nzl-v-eng" on the new site and "2014/ac/spring-open-13/competition/new-zealand-vs-england" on the old site
+
     Scenario: The games after one refused are added
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"

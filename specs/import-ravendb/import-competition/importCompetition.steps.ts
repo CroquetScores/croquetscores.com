@@ -30,6 +30,14 @@ Given(
   },
 );
 
+// Whatever is being written, a block or a team match alike.
+Given(
+  "its slug on the old site was {string}",
+  function (this: SpecWorld, slug: string) {
+    competitionWritten(this).Slug = slug;
+  },
+);
+
 Given("the competition was archived", function (this: SpecWorld) {
   competitionWritten(this).IsArchived = true;
 });

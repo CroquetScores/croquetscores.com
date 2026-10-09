@@ -18,6 +18,13 @@ export interface KeptImportErrorTournament {
   readonly name: string;
   /** Where the document was a competition, what it was called. */
   readonly competitionName: string | undefined;
+  /**
+   * Where the document can be read on the site, without a leading slash: the
+   * competition's page, or the tournament's where it is no competition there.
+   */
+  readonly newSitePath: string;
+  /** Where the document could be read on the old site, the same way. */
+  readonly oldSitePath: string;
 }
 
 /**

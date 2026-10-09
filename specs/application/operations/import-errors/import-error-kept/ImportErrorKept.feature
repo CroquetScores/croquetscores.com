@@ -14,10 +14,11 @@ Feature: What the import said of one document it refused, as an administrator re
   Where the import knew the tournament the document is of, it kept the
   tournament's address and name with the error, and the competition's name
   where the document was one (`ImportDatabase.feature`). They are answered
-  too, with the old site the document was on, which its id begins with, so
-  that the reader can be taken to the tournament on the site and on the old
-  site, which share its address. A document whose errors knew no tournament
-  is answered with none.
+  too, with the old site the document was on, which its id begins with, and
+  the paths the document can be read at on the site and on the old site, so
+  that the reader can be taken to it on each. An error kept before the import
+  kept those paths is answered with the tournament's address for both. A
+  document whose errors knew no tournament is answered with none.
 
   A document id that nothing was kept against is refused as
   `ImportErrorKept.NotFound`. Only an administrator can ask: anybody else is
@@ -89,6 +90,23 @@ Feature: What the import said of one document it refused, as an administrator re
       Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
       When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
       Then the import error's competition is called "A Block"
+
+    Scenario: Where the document is on the new site is answered
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the import error's document is at "2014/ac/spring-open/competitions/a-block" on the new site
+
+    Scenario: Where the document was on the old site is answered
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the import error's document is at "2014/ac/spring-open/competition/block-a" on the old site
+
+    Scenario: An error kept without where its document is answers its tournament's address
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      When the reader signed in to the account for "admin@example.com" reads the import error of "croquetscores.com/blocks/30"
+      Then the import error's document is at "2014/ac/spring-open" on the new site
 
     Scenario: A document that was no competition is answered with none
       Given the import refused the document "croquetscores.com/commentaries/30" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"

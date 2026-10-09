@@ -21,7 +21,11 @@ Feature: Importing one of the old sites' competitions
   game the site refuses is kept as an error against the competition's
   document, naming which, and the rest are brought over all the same: one
   game the site cannot take would otherwise leave every other game in the
-  competition behind.
+  competition behind. An error is kept with the tournament and the
+  competition (`ImportDatabase.feature`), and with where the competition can
+  be read on the site, under its tournament's competitions by the slug the
+  site made from its name, and on the old site, under "competition/" by the
+  slug the old site gave it, or at the tournament where it gave none.
 
   An archived competition is not brought over: the old sites archived one to
   be rid of it, and took it out of its tournament's list. That is not an
@@ -460,6 +464,29 @@ Feature: Importing one of the old sites' competitions
       And game 1's loser scored "26"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" is of the competition "A Block"
+
+    Scenario: A game refused is kept at the competition's pages on each site
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      And its slug on the old site was "block-a"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open-12/competitions/a-block" on the new site and "2014/ac/spring-open-12/competition/block-a" on the old site
+
+    Scenario: A competition the old site gave no slug is kept at its tournament's page there
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open-12/competitions/a-block" on the new site and "2014/ac/spring-open-12" on the old site
 
     Scenario: The error kept names the game refused
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"

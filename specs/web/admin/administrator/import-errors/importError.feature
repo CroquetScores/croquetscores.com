@@ -15,12 +15,12 @@ Feature: The page where an administrator reads what the import said of one docum
   code that failed, and may well hold what looks like markup.
 
   Where the import knew the tournament the document is of
-  (`ImportErrorKept.feature`), the page says what the tournament is called,
-  and what the competition is where the document was one, and links to the
-  tournament on this site and on the old site the document was on, at the
-  address they share, so that the administrator can see what was brought
-  over beside what was kept. Where it knew none, the page says nothing of a
-  tournament.
+  (`ImportErrorKept.feature`), the page says, after the document's id, the
+  whole address of the document on the new site, which is this one, and on
+  the old site it was on, each a link, so that the administrator can see what
+  was brought over beside what was kept, and then what the tournament is
+  called, and what the competition is where the document was one. Where it
+  knew none, the page says nothing of a tournament.
 
   A document id nothing was kept against says the document is not found,
   rather than showing an empty page.
@@ -76,15 +76,29 @@ Feature: The page where an administrator reads what the import said of one docum
       When the page at "/admin/administrator/import-errors/croquetscores.com%2Fblocks%2F30" is opened
       Then the competition shown is "A Block"
 
-    Scenario: The page links to the tournament on this site
+    Scenario: The page shows where the document is on the new site
       Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
       When the page at "/admin/administrator/import-errors/croquetscores.com%2Fblocks%2F30" is opened
-      Then the link to the tournament on this site leads to "/2014/ac/spring-open"
+      Then the new site address shown is this site's "/2014/ac/spring-open/competitions/a-block"
 
-    Scenario: The page links to the tournament on the old site
+    Scenario: The page links to where the document is on the new site
       Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
       When the page at "/admin/administrator/import-errors/croquetscores.com%2Fblocks%2F30" is opened
-      Then the link to the tournament on the old site leads to "https://croquetscores.com/2014/ac/spring-open"
+      Then the new site address leads to this site's "/2014/ac/spring-open/competitions/a-block"
+
+    Scenario: The page shows where the document was on the old site
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      When the page at "/admin/administrator/import-errors/croquetscores.com%2Fblocks%2F30" is opened
+      Then the old site address shown is "https://croquetscores.com/2014/ac/spring-open/competition/block-a"
+
+    Scenario: The page links to where the document was on the old site
+      Given the import refused the document "croquetscores.com/blocks/30" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      When the page at "/admin/administrator/import-errors/croquetscores.com%2Fblocks%2F30" is opened
+      Then the old site address leads to "https://croquetscores.com/2014/ac/spring-open/competition/block-a"
 
     Scenario: A document whose errors knew no tournament shows none
       Given the import refused the document "users/1-A" with "No email address"

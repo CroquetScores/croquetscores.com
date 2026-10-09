@@ -524,8 +524,8 @@ export const spanish: Language = {
     "admin.importError.documentId": "Id del documento",
     "admin.importError.tournament": "Torneo",
     "admin.importError.competition": "Competición",
-    "admin.importError.onThisSite": "En este sitio",
-    "admin.importError.onTheOldSite": "En el sitio antiguo",
+    "admin.importError.newSite": "Sitio nuevo",
+    "admin.importError.oldSite": "Sitio antiguo",
     "ImportErrorKept.NotFound":
       "La importación no guardó ningún error de ese documento.",
     "admin.competitionView.otherwise":

@@ -196,7 +196,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       documentId,
       website,
       tournament,
-      name.toString(),
+      { name: name.toString(), oldSlug: document.Slug },
     );
 
     // Done as the tournament's first manager, who created it, when it was
@@ -252,6 +252,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
 
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
+    errors.added(competitionId);
     await tournaments.save(tournament);
     await database.recordImportedCompetition(
       website,

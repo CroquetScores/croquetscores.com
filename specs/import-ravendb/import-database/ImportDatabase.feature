@@ -148,7 +148,8 @@ Feature: The database an import empties and fills
     The administrator's page for a document the import refused links to the
     tournament it is of, on the site and on the old site, and says what the
     competition it was is called (`importError.feature`). So an error is kept
-    with the tournament's address and name and the competition's name,
+    with the tournament's address and name, the competition's name, and the
+    paths its document can be read at on the site and on the old site,
     where whatever refused the document knew them. One refused before any
     tournament was known, as a tournament refused itself is, is kept with
     none.
@@ -162,6 +163,11 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       And an error is kept for "croquetscores.com/blocks/30" saying "Refused" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open"
       Then the error kept for "croquetscores.com/blocks/30" is of the competition "A Block"
+
+    Scenario: An error is kept with where its document is on each site
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
 
     Scenario: An error kept knowing no tournament is of none
       Given the import's database is emptied
