@@ -1,9 +1,10 @@
-import { appendFile, mkdir, rm, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ImportErrors } from "./ImportDatabase.js";
 import { describedFailure } from "./ImportRefused.js";
+import { numbers } from "./runImporter.js";
 
 /**
  * What the import accepted of one document rather than keeping it as an
@@ -38,27 +39,51 @@ export interface AcceptedImportErrors {
  * file says only what the last import accepted. Written a line at a time
  * rather than once importing is finished, so that an import that stops
  * partway through still says what it accepted before it stopped.
+ *
+ * It begins by saying when the import began, by the machine's own clock, and
+ * how many errors and things accepted the import before kept, counted before
+ * either is emptied, and ends by saying how many this one kept, so that one
+ * import can be held against the last.
  */
 export class AcceptedImportErrorsFile implements AcceptedImportErrors {
+  #accepted = 0;
+
   constructor(
     private readonly path: string,
     private readonly newSite: string,
   ) {}
 
-  /** Deletes what the last import said, and begins the file again. */
-  async begin(): Promise<void> {
+  /**
+   * Deletes what the last import said, and begins the file again, saying
+   * that it began `at`, and that the last import kept `errorsBefore` errors,
+   * or that they could not be counted.
+   */
+  async begin(at: Date, errorsBefore: number | undefined): Promise<void> {
+    const acceptedBefore = await this.#acceptedInFile();
+    this.#accepted = 0;
     await rm(this.path, { force: true });
     await mkdir(dirname(this.path), { recursive: true });
     await writeFile(
       this.path,
       "# Accepted import errors\n\n" +
+        `Import began ${at.toLocaleString()}.\n\n` +
+        `Previous import: ${counted(errorsBefore)} import errors, ${counted(acceptedBefore)} accepted import errors.\n\n` +
         "What the last import accepted from the old sites rather than keeping " +
         "as an error, each with the tournament it is of. Written by " +
         "`npm run import:ravendb`, which deletes it first.\n\n",
     );
   }
 
+  /** Ends the file, saying that this import kept `errors` errors. */
+  async end(errors: number): Promise<void> {
+    await appendFile(
+      this.path,
+      `\nThis import: ${counted(errors)} import errors, ${counted(this.#accepted)} accepted import errors.\n`,
+    );
+  }
+
   async accept(accepted: Accepted): Promise<void> {
+    this.#accepted += 1;
     const { address, website } = accepted;
     const what = accepted.what === "" ? "" : ` ${accepted.what}:`;
     await appendFile(
@@ -66,7 +91,21 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
       `- [${address}](${this.newSite}/${address}) ([old site](https://${website}/${address})) ${accepted.documentId}:${what} ${accepted.code}: ${accepted.why}\n`,
     );
   }
+
+  // How many things the file says were accepted, a line each, or nothing
+  // where there is no file to count.
+  async #acceptedInFile(): Promise<number | undefined> {
+    try {
+      const said = await readFile(this.path, "utf8");
+      return said.split("\n").filter((line) => line.startsWith("- ")).length;
+    } catch {
+      return undefined;
+    }
+  }
 }
+
+const counted = (count: number | undefined): string =>
+  count === undefined ? "uncounted" : numbers.format(count);
 
 /**
  * An error that has been looked at and accepted: the old site's, not wrong,

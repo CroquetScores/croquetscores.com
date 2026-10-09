@@ -133,7 +133,15 @@ try {
     join(import.meta.dirname, "../../doc/accepted-import-errors.md"),
     "http://localhost:3000",
   );
-  await accepting.begin();
+  // What the last import kept, counted before the database is emptied of it,
+  // and uncounted in a database no import has made the table in.
+  let errorsBefore: number | undefined;
+  try {
+    errorsBefore = await database.errorCount();
+  } catch {
+    errorsBefore = undefined;
+  }
+  await accepting.begin(new Date(), errorsBefore);
 
   console.log(`Emptying ${where(config.databaseUrl)}`);
   await database.reset();
@@ -331,11 +339,10 @@ try {
   // (ImportDatabase.feature). A role holder with no account, roles not given
   // at all, and a world ranking list that was not read or a failure importing
   // them, are said above and kept nowhere, so are added.
+  const kept = await database.errorCount();
   const errors =
-    (await database.errorCount()) +
-    (withNoAccount?.length ?? 0) +
-    rolesNotGiven +
-    worldRankingErrors;
+    kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
+  await accepting.end(kept);
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
