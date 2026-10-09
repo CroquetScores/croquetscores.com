@@ -4,10 +4,11 @@ import {
 } from "./importCompetition.js";
 import type { Block } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
-import { bestOfImported } from "./bestOfImported.js";
+import { bestOfWorkedOut } from "./bestOfImported.js";
 
 /**
- * Brings the old sites' blocks over as blocks, each the best of what it was,
+ * Brings the old sites' blocks over as blocks, each the best of what it was, or
+ * of what its games say where it was kept as the best of less than 1,
  * with what each player carried forward into it (ImportBlocks.feature). What
  * every competition brings over is importCompetition's.
  */
@@ -27,7 +28,7 @@ export class ImportBlocks implements Importer<Block> {
           tournament.addBlock(
             id,
             name,
-            bestOfImported(document.BestOf),
+            bestOfWorkedOut(document.BestOf, document.Games._Games),
             by,
             at,
           );

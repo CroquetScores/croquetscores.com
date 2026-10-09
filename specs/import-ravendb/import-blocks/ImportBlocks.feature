@@ -4,8 +4,11 @@ Feature: Importing the old sites' blocks
   A block is brought over as every competition is (`importCompetition.feature`).
   What is a block's own is said here: what each of its matches is the best
   of, and what each player carried forward into it. The old sites kept some
-  blocks as the best of 0, which no match can be, and which played as single
-  games, so such a block's matches are the best of 1.
+  blocks as the best of 0, which no match can be. What such a block's matches
+  were the best of is worked out from its games, as a knockout's rounds are
+  (`ImportKnockouts.feature`): the most games any two of its players played,
+  made odd by one more where it is even, or 1 where none played more than one
+  or none played at all.
 
   Background:
     Given the users are imported
@@ -28,9 +31,54 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
 
-    Scenario: A block whose matches were the best of 0 is the best of 1
+    Scenario: A block kept as the best of 0 with no games is the best of 1
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the block's matches are the best of 0
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
+
+    Scenario: A block kept as the best of 0 whose players met once is the best of 1
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 0
+      And player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
+
+    Scenario: A block kept as the best of 0 whose players met three times is the best of 3
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 0
+      And player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block kept as the best of 0 whose players met twice is the best of 3
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 0
+      And player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block kept as the best of less than 0 is worked out the same
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of -1
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
