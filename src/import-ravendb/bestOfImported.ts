@@ -34,33 +34,3 @@ export const bestOfWorkedOut = (
   const most = Math.max(1, ...between.values());
   return BestOf.from(most % 2 === 0 ? most + 1 : most);
 };
-
-/**
- * Whether any two players of `games` met again once a match of `bestOf`
- * between them was decided: once one had won more than half its games, or
- * they had played them all. Their games in the order the old sites numbered
- * them, which the site would add them in.
- */
-export const metPastTheirMatch = (
-  games: readonly Game[],
-  bestOf: BestOf,
-): boolean => {
-  const toWin = Math.floor(bestOf.games / 2) + 1;
-  const between = new Map<string, Map<number, number>>();
-  for (const game of [...games].sort((one, other) => one.Id - other.Id)) {
-    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
-      .sort((one, other) => one - other)
-      .join(" ");
-    const won = between.get(pair) ?? new Map<number, number>();
-    const played = [...won.values()].reduce((sum, wins) => sum + wins, 0);
-    if (
-      played >= bestOf.games ||
-      [...won.values()].some((wins) => wins >= toWin)
-    ) {
-      return true;
-    }
-    won.set(game.Winner.PlayerId, (won.get(game.Winner.PlayerId) ?? 0) + 1);
-    between.set(pair, won);
-  }
-  return false;
-};
