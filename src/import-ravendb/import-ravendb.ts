@@ -3,9 +3,10 @@
 // its players, its blocks, knockouts, Swisses and team matches, and its
 // commentaries, and last whatever names a tournament that was not there, as
 // an error. What it accepted rather than keeping as an error is said in
-// doc/accepted-import-error.md, which it deletes first. Once every site is over, the site's roles are given to whoever
-// holds them, and the players the world rankings know are imported from the
-// rankings' own lists, since emptying the database emptied them too.
+// doc/accepted-import-errors.md, which it deletes first. Once every site is
+// over, the site's roles are given to whoever holds them, and the players the
+// world rankings know are imported from the rankings' own lists, since
+// emptying the database emptied them too.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -126,8 +127,11 @@ try {
   const unitOfWork = new UnitOfWork(pool);
   const database = new ImportDatabase(pool, unitOfWork);
 
+  // Linking to the tournaments on the development site, where an import is
+  // looked at, as well as on the old sites.
   const accepting = new AcceptedImportErrorsFile(
-    join(import.meta.dirname, "../../doc/accepted-import-error.md"),
+    join(import.meta.dirname, "../../doc/accepted-import-errors.md"),
+    "http://localhost:3000",
   );
   await accepting.begin();
 

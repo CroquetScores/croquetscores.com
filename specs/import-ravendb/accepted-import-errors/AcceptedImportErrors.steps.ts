@@ -33,14 +33,14 @@ const linesAccepted = async (world: SpecWorld): Promise<string[]> =>
 
 // In a folder of the scenario's own, where nothing is yet.
 Given(
-  "a file of accepted import errors of the scenario's own",
-  async function (this: SpecWorld) {
+  "a file of accepted import errors of the scenario's own, for the new site at {string}",
+  async function (this: SpecWorld, newSite: string) {
     const folder = await mkdtemp(join(tmpdir(), "accepted-import-errors-"));
-    const path = join(folder, "accepted-import-error.md");
+    const path = join(folder, "accepted-import-errors.md");
     sayings.set(this, {
       folder,
       path,
-      file: new AcceptedImportErrorsFile(path),
+      file: new AcceptedImportErrorsFile(path, newSite),
     });
   },
 );
@@ -78,7 +78,7 @@ When(
     await sayingOf(this).file.accept({
       documentId,
       address,
-      link: `https://${website}/${address}`,
+      website,
       what: `game ${String(game)}`,
       code,
       why: "Accepted by the scenario.",

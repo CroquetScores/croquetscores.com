@@ -16,8 +16,8 @@ export interface Accepted {
   readonly documentId: string;
   /** The address of the tournament the document is of, as "2014/ac/spring-open". */
   readonly address: string;
-  /** Where the tournament is on its website. */
-  readonly link: string;
+  /** The old site the document is of, as "croquetscores.com". */
+  readonly website: string;
   /** What of the document was accepted, as "game 12", or "" for the whole of it. */
   readonly what: string;
   /** What was accepted, as a refusal's code or a code of the import's own. */
@@ -32,14 +32,18 @@ export interface AcceptedImportErrors {
 }
 
 /**
- * Says what the import accepts in a Markdown file, a line each, which the
- * import begins by emptying, so that the file says only what the last import
- * accepted. Written a line at a time rather than once importing is finished,
- * so that an import that stops partway through still says what it accepted
- * before it stopped.
+ * Says what the import accepts in a Markdown file, a line each, linking to the
+ * tournament on the new site, at `newSite`, and on the old site the document
+ * is of, at the same address. The import begins by emptying it, so that the
+ * file says only what the last import accepted. Written a line at a time
+ * rather than once importing is finished, so that an import that stops
+ * partway through still says what it accepted before it stopped.
  */
 export class AcceptedImportErrorsFile implements AcceptedImportErrors {
-  constructor(private readonly path: string) {}
+  constructor(
+    private readonly path: string,
+    private readonly newSite: string,
+  ) {}
 
   /** Deletes what the last import said, and begins the file again. */
   async begin(): Promise<void> {
@@ -55,17 +59,14 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
   }
 
   async accept(accepted: Accepted): Promise<void> {
+    const { address, website } = accepted;
     const what = accepted.what === "" ? "" : ` ${accepted.what}:`;
     await appendFile(
       this.path,
-      `- [${accepted.address}](${accepted.link}) ${accepted.documentId}:${what} ${accepted.code}: ${accepted.why}\n`,
+      `- [${address}](${this.newSite}/${address}) ([old site](https://${website}/${address})) ${accepted.documentId}:${what} ${accepted.code}: ${accepted.why}\n`,
     );
   }
 }
-
-/** Where `tournament` of `website` is, as its readers reach it. */
-export const linkOf = (website: string, tournament: Tournament): string =>
-  `https://${website}/${tournament.address.toString()}`;
 
 /**
  * An error that has been looked at and accepted: the old site's, not wrong,
@@ -135,7 +136,7 @@ export class DocumentErrors {
     await this.accepting.accept({
       documentId: this.documentId,
       address: this.tournament.address.toString(),
-      link: linkOf(this.website, this.tournament),
+      website: this.website,
       what,
       code,
       why,

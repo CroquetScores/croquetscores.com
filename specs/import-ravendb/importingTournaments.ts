@@ -1119,10 +1119,18 @@ Then(
 );
 
 Then(
-  "what is accepted of {string} links to {string}",
-  function (this: SpecWorld, documentId: string, link: string) {
+  "what is accepted of {string} is of the tournament at {string} on {string}",
+  function (
+    this: SpecWorld,
+    documentId: string,
+    address: string,
+    website: string,
+  ) {
     const said = acceptedOf(this, documentId);
     assert.ok(said.length > 0, `Nothing of ${documentId} is accepted.`);
-    for (const accepted of said) assert.equal(accepted.link, link);
+    for (const accepted of said) {
+      assert.equal(accepted.address, address);
+      assert.equal(accepted.website, website);
+    }
   },
 );
