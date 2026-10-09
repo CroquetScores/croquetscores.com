@@ -59,31 +59,13 @@ const shortNameOf = (name: string): string =>
 const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
 
-// Team matches whose expected matches the old site kept wrongly, by the
-// website and the document, each worked out from its games whatever was kept
-// (ImportTeamMatches.feature). TeamMatches/360, Egypt against Wales at the
-// 2012 GC World Team Championship, was kept as expected to have 3 matches and
-// played 6.
-const WORKED_OUT: ReadonlySet<string> = new Set([
-  "croquetscores.com/teammatches/360",
-]);
-
 /**
- * How many matches a team match is expected to have (ImportTeamMatches.feature):
- * as many as the old site kept, but as many as its games say where it kept 1,
- * which it kept for many whatever was played in them, or where the import
- * names it as one whose number is known to be wrong (WORKED_OUT). Its games
- * say, for each two players who met, the games between them over its
- * best-of, rounded up, so that a match won two games to one is one match; and
- * never fewer than 1. Its games against a bye are no games, and say nothing.
+ * How many matches a team match's games say it had (ImportTeamMatches.feature):
+ * for each two players who met, the games between them over its best-of,
+ * rounded up, so that a match won two games to one is one match. Its games
+ * against a bye are no games, and say nothing.
  */
-const expectedMatchesOf = (document: TeamMatch, documentId: string): number => {
-  if (
-    document.ExpectedMatches !== 1 &&
-    !WORKED_OUT.has(documentId.toLowerCase())
-  ) {
-    return document.ExpectedMatches;
-  }
+const matchesPlayedIn = (document: TeamMatch): number => {
   const byes = new Set(
     document.Players._Players
       .filter((player) => isOldBye(player.Name))
@@ -100,7 +82,7 @@ const expectedMatchesOf = (document: TeamMatch, documentId: string): number => {
   const bestOf = bestOfImported(document.BestOf).games;
   let matches = 0;
   for (const games of between.values()) matches += Math.ceil(games / bestOf);
-  return Math.max(1, matches);
+  return matches;
 };
 
 /**
@@ -195,6 +177,10 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       const first = this.#teamCalled(tournament, written[0], by, at);
       const second = this.#teamCalled(tournament, written[1], by, at);
 
+      // As many as the old site kept, or as many as its games say where they
+      // say more, since it kept many as fewer than were played.
+      const played = matchesPlayedIn(document);
+      const expectedMatches = Math.max(1, document.ExpectedMatches, played);
       const competitionId = CompetitionId.create();
       tournament.addTest(
         competitionId,
@@ -203,9 +189,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           secondTeam: second.id,
           starts: dayOf(document.Start),
           finishes: dayOf(document.Finish),
-          expectedMatches: ExpectedMatches.from(
-            expectedMatchesOf(document, documentId),
-          ),
+          expectedMatches: ExpectedMatches.from(expectedMatches),
           bestOf: bestOfImported(document.BestOf),
           group: TestGroup.from(document.Group ?? ""),
         },
@@ -317,6 +301,13 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         website,
         tournament,
       );
+      if (played > document.ExpectedMatches) {
+        await errors.accepted(
+          "",
+          "ImportTeamMatches.ExpectedMatchesWorkedOut",
+          `Kept as expected to have ${String(document.ExpectedMatches)} matches, and its games say ${String(played)}.`,
+        );
+      }
       // A game against a bye is no game that was played.
       const againstABye = (game: OldGame): boolean =>
         byes.has(game.Winner.PlayerId) || byes.has(game.Loser.PlayerId);
