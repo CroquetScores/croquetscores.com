@@ -145,6 +145,15 @@ Feature: Importing the old sites' team matches
 
   Rule: A test has the days, the matches, the best-of and the group its team match had
 
+    The old sites kept many team matches as expected to have 1 match, whatever
+    was played in them, and the site refuses a game that would start a match
+    beyond those a test is expected to have (`gamesInATest.feature`). So a
+    team match expected to have 1 is
+    expected to have as many as its games say: for each two players who met,
+    the games between them over its best-of, rounded up, so that a match won
+    two games to one is one match, and never fewer than 1. Any other number
+    is the manager's, and is kept.
+
     Scenario: A test starts on the day its team match started
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match started on "2014-03-01T00:00:00.0000000"
@@ -160,6 +169,97 @@ Feature: Importing the old sites' team matches
     Scenario: A test is expected to have the matches its team match was
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match was expected to have 6 matches
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 6 matches
+
+    Scenario: A team match expected to have 1 match is expected to have one a pair of players, in single games
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And player 3 is in the team match
+      And player 3 represents "New Zealand"
+      And player 4 is in the team match
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 4
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 3 matches
+
+    Scenario: A team match expected to have 1 match is expected to have one a pair of players, whatever they played of their best-of
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And player 3 is in the team match
+      And player 3 represents "New Zealand"
+      And player 4 is in the team match
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 3
+      And game 3 was lost by player 4
+      And game 4 was won by player 4
+      And game 4 was lost by player 3
+      And game 5 was won by player 3
+      And game 5 was lost by player 4
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 2 matches
+
+    Scenario: Two players who played more games than their best-of played as many matches as it takes
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 2
+      And game 3 was lost by player 1
+      And game 4 was won by player 2
+      And game 4 was lost by player 1
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 2 matches
+
+    Scenario: A team match expected to have 1 match with no games is expected to have 1
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 1 match
+
+    Scenario: A team match expected to have more than 1 match keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 6 matches
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And player 3 is in the team match
+      And player 3 represents "New Zealand"
+      And player 4 is in the team match
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 6 matches
 

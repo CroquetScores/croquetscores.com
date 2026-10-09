@@ -54,7 +54,7 @@ Given(
 );
 
 Given(
-  "the team match was expected to have {int} matches",
+  "the team match was expected to have {int} match(es)",
   function (this: SpecWorld, matches: number) {
     competitionWritten(this).ExpectedMatches = matches;
   },
@@ -142,7 +142,7 @@ Then(
 );
 
 Then(
-  "the test kept for {string} on {string} is expected to have {int} matches",
+  "the test kept for {string} on {string} is expected to have {int} match(es)",
   async function (
     this: SpecWorld,
     id: string,

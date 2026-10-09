@@ -51,6 +51,35 @@ const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
 
 /**
+ * How many matches a team match is expected to have (ImportTeamMatches.feature):
+ * as many as the old site kept, but where it kept 1, which it kept for many
+ * whatever was played in them, as many as its games say. For each two
+ * players who met, the games between them over its best-of, rounded up, so
+ * that a match won two games to one is one match; and never fewer than 1.
+ * Its games against a bye are no games, and say nothing.
+ */
+const expectedMatchesOf = (document: TeamMatch): number => {
+  if (document.ExpectedMatches !== 1) return document.ExpectedMatches;
+  const byes = new Set(
+    document.Players._Players
+      .filter((player) => isOldBye(player.Name))
+      .map((player) => player._Id),
+  );
+  const between = new Map<string, number>();
+  for (const game of document.Games._Games) {
+    const { PlayerId: winner } = game.Winner;
+    const { PlayerId: loser } = game.Loser;
+    if (byes.has(winner) || byes.has(loser)) continue;
+    const pair = [winner, loser].sort((one, other) => one - other).join(" ");
+    between.set(pair, (between.get(pair) ?? 0) + 1);
+  }
+  const bestOf = bestOfImported(document.BestOf).games;
+  let matches = 0;
+  for (const games of between.values()) matches += Math.ceil(games / bestOf);
+  return Math.max(1, matches);
+};
+
+/**
  * `shortName`, or where one of `taken` is the same in any case, as many of
  * its first characters as leave room for a space and a number within a short
  * name's 10, and the first number from 2 that makes it one none of `taken`
@@ -149,7 +178,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           secondTeam: second.id,
           starts: dayOf(document.Start),
           finishes: dayOf(document.Finish),
-          expectedMatches: ExpectedMatches.from(document.ExpectedMatches),
+          expectedMatches: ExpectedMatches.from(expectedMatchesOf(document)),
           bestOf: bestOfImported(document.BestOf),
           group: TestGroup.from(document.Group ?? ""),
         },
