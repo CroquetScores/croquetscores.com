@@ -16,6 +16,13 @@ Feature: Importing the old sites' team matches
   is short enough, and its first 10 characters where it is not. A team named
   for a country flies that country's flag.
 
+  The site tells a tournament's teams apart by their short names, in any case,
+  and two teams of one tournament can have the same first 10 characters, as
+  "New Zealand A's" and "New Zealand B's" do. They are two teams, so the
+  second made is given a short name of its own: as many of its first
+  characters as leave room for a space and a number, and the first number
+  from 2 that makes it a short name none of the others has, as "New Zeal 2".
+
   A player of a team match is a player of the team they represented, made
   the first time a team match of the tournament has them. The old sites
   numbered a tournament's players once for all its team matches, so a player
@@ -231,11 +238,38 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "Canterbury" of the tournament kept for "tournaments/13" on "croquetscores.com" flies no flag
 
-    Scenario: A short name another team has is refused
+    Scenario: A short name another team has is numbered apart from it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
-      And the team match is called "Canterbury Croquet Club vs Canterbury Cougars"
+      And the team match is called "New Zealand A's vs New Zealand B's"
       When the team match is imported
-      Then importing the team match is refused with "Tournament.TeamShortNameTaken"
+      Then the team "New Zealand B's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zeal 2"
+
+    Scenario: The first team with a short name keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand B's"
+      When the team match is imported
+      Then the team "New Zealand A's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zealan"
+
+    Scenario: A short name the same in another case is numbered apart
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Canterbury vs CANTERBURY Cougars"
+      When the team match is imported
+      Then the team "CANTERBURY Cougars" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "CANTERBU 2"
+
+    Scenario: A third team with a short name is numbered past the second
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand B's"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand C's"
+      When the team match is imported
+      Then the team "New Zealand C's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zeal 3"
+
+    Scenario: Two teams with a short name between them are both brought over
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand B's"
+      When the team match is imported
+      Then "teammatches/50" on "croquetscores.com" is kept as a test
 
   Rule: A player is a player of the team they represented
 

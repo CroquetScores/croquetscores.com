@@ -49,6 +49,32 @@ const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
 
 /**
+ * `shortName`, or where one of `taken` is the same in any case, as many of
+ * its first characters as leave room for a space and a number within a short
+ * name's 10, and the first number from 2 that makes it one none of `taken`
+ * is, as "New Zeal 2". Two teams can share their first 10 characters, as
+ * "New Zealand A's" and "New Zealand B's" do, and the site tells a
+ * tournament's teams apart by their short names.
+ */
+const shortNameApart = (
+  shortName: string,
+  taken: readonly string[],
+): string => {
+  const isTaken = (candidate: string): boolean =>
+    taken.some((each) => sameName(each, candidate));
+  if (!isTaken(shortName)) return shortName;
+  for (let number = 2; ; number += 1) {
+    const after = ` ${String(number)}`;
+    const kept = [...shortName]
+      .slice(0, MOST_IN_A_SHORT_NAME - after.length)
+      .join("")
+      .trimEnd();
+    const numbered = `${kept}${after}`;
+    if (!isTaken(numbered)) return numbered;
+  }
+};
+
+/**
  * Brings the old sites' team matches over as tests between their two teams,
  * the first named first (ImportTeamMatches.feature). A team is made the first
  * time a team match of its tournament names it, and a player of it the first
@@ -221,7 +247,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     if (already !== undefined) return already;
     tournament.addTeam(
       TeamId.create(),
-      { name, shortName: shortNameOf(name), flag: flagOf(name) },
+      {
+        name,
+        shortName: shortNameApart(
+          shortNameOf(name),
+          tournament.teams.map((team) => team.shortName.toString()),
+        ),
+        flag: flagOf(name),
+      },
       by,
       at,
     );
