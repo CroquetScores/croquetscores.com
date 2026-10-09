@@ -370,7 +370,12 @@ export const aTournament = (
 ): WrittenTournament => ({
   Name: "Spring Open",
   Start: "2014-03-01T00:00:00.0000000",
-  Finish: "2014-03-03T00:00:00.0000000",
+  // On the day blocks stop being left behind for having nothing in them
+  // (ImportBlocks.feature), so that a block a scenario writes with nothing in
+  // it is brought over unless the scenario says when the tournament finished.
+  // A tournament brought over may finish any time after it starts
+  // (bringOver.feature).
+  Finish: "2026-10-01T00:00:00.0000000",
   Slug: `spring-open-${id
     .slice(id.indexOf("/") + 1)
     .toLowerCase()
@@ -929,6 +934,20 @@ Then(
     const { refused } = importingOf(this);
     assert.ok(refused !== undefined, "Importing was not refused.");
     assert.equal((refused as { code?: unknown }).code, code, inspect(refused));
+  },
+);
+
+// By what its message says, for a refusal whose code is not the whole of it.
+Then(
+  /^importing the (?:tournament|players|competition|team match|commentary) is refused saying "(.*)"$/,
+  function (this: SpecWorld, says: string) {
+    const { refused } = importingOf(this);
+    assert.ok(refused !== undefined, "Importing was not refused.");
+    const message = (refused as { message?: unknown }).message;
+    assert.ok(
+      typeof message === "string" && message.includes(says),
+      inspect(refused),
+    );
   },
 );
 

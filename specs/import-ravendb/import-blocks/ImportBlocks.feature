@@ -38,9 +38,9 @@ Feature: Importing the old sites' blocks
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
     Scenario: A block kept as the best of 0 whose players met once is the best of 1
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the block's matches are the best of 0
-      And player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
@@ -49,9 +49,9 @@ Feature: Importing the old sites' blocks
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
     Scenario: A block kept as the best of 0 whose players met three times is the best of 3
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the block's matches are the best of 0
-      And player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
@@ -64,9 +64,9 @@ Feature: Importing the old sites' blocks
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
 
     Scenario: A block kept as the best of 0 whose players met twice is the best of 3
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the block's matches are the best of 0
-      And player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7

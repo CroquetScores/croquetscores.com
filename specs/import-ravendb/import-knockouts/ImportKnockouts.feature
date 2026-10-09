@@ -442,29 +442,11 @@ Feature: Importing the old sites' knockouts
     only between two players drawn to meet, and has no place for one between
     two players who have each lost a match of it already. Such a game is left
     out, and that is not an error. A game between a player knocked out and
-    one still in is not a play-off, and is refused as any game whose players
-    are not drawn to meet is.
+    one still in, as Ann Able is, never having lost, is not a play-off, and
+    is refused as any game whose players are not drawn to meet is.
 
     Ann Able beats Ben Baker and Cat Cole beats Dan Dunn, and Ann beats Cat
     in the final. Ben and Dan, the semi-finals' losers, play for third place.
-
-    Scenario: A play-off between two players knocked out is not a game of the knockout
-      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
-      And the knockout's size is 4
-      And player 1 is in the competition
-      And player 2 is in the competition
-      And player 3 is in the competition
-      And player 4 is in the competition
-      And game 1 was won by player 1
-      And game 1 was lost by player 2
-      And game 2 was won by player 3
-      And game 2 was lost by player 4
-      And game 3 was won by player 1
-      And game 3 was lost by player 3
-      And game 4 was won by player 2
-      And game 4 was lost by player 4
-      When the competition is imported
-      Then the competition kept for "knockouts/30" on "croquetscores.com" has 3 games
 
     Scenario: Leaving a play-off out is not an error
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
@@ -498,7 +480,7 @@ Feature: Importing the old sites' knockouts
       And game 3 was won by player 1
       And game 3 was lost by player 3
       And game 4 was won by player 2
-      And game 4 was lost by player 3
+      And game 4 was lost by player 1
       When the competition is imported
       Then the error kept for "croquetscores.com/knockouts/30" says "Competition.NotDrawnToMeet"
 

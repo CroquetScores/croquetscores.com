@@ -117,8 +117,8 @@ Feature: Importing the old sites' team matches
       And game 1 was won by player 7
       And game 1 was lost by player 8
       When the team match is imported
-      Then the error kept for "croquetscores.com/teammatches/52" says "croquetscores.com/tournaments/12"
-      And the error kept for "croquetscores.com/teammatches/52" says "croquetscores.com/teammatches/52"
+      Then importing the team match is refused saying "croquetscores.com/tournaments/12"
+      And importing the team match is refused saying "croquetscores.com/teammatches/52"
 
   Rule: An archived team match is left behind
 
