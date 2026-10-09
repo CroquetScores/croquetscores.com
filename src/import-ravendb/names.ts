@@ -7,12 +7,15 @@ import { charactersIn } from "../domain/common/charactersIn.js";
 const FEWEST_CHARACTERS = 3;
 
 // Added to a name too short, which makes it long enough and tells whoever
-// reads it next where it came from, so that they can name it better.
+// reads it next where it came from, so that they can name it better: a
+// person's that it was imported, and a tournament's that the import
+// corrected it. A competition's is never too short.
 const IMPORTED = " - Imported";
+const IMPORT_CORRECTION = " - Import correction";
 
-const lengthened = (trimmed: string): string =>
+const lengthened = (trimmed: string, added = IMPORTED): string =>
   trimmed !== "" && charactersIn(trimmed) < FEWEST_CHARACTERS
-    ? trimmed + IMPORTED
+    ? trimmed + added
     : trimmed;
 
 /**
@@ -37,8 +40,8 @@ const titleCased = (text: string): string =>
 /**
  * A tournament's name the old sites accepted, as the site will take it. The
  * site refuses one all in capitals or all in small letters, so either is
- * written in title case, and then one too short says it was imported, as a
- * person's does. One with capitals and small letters keeps its case, which was
+ * written in title case, and then one too short says the import corrected
+ * it. One with capitals and small letters keeps its case, which was
  * somebody's choice.
  */
 export const tournamentNameToImport = (name: string): string => {
@@ -48,7 +51,7 @@ export const tournamentNameToImport = (name: string): string => {
     (trimmed === trimmed.toUpperCase() || trimmed === trimmed.toLowerCase())
       ? titleCased(trimmed)
       : trimmed;
-  return lengthened(cased);
+  return lengthened(cased, IMPORT_CORRECTION);
 };
 
 // Characters as a reader counts them, as charactersIn counts them, so that a

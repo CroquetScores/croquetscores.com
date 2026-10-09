@@ -422,27 +422,29 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "NSW Open"
 
-  Rule: A name shorter than 3 characters says it was imported
+  Rule: A name shorter than 3 characters says the import corrected it
 
     The site refuses a name shorter than 3 characters, and the old sites
-    accepted some. Rather than leave the tournament behind, " - Imported" is
-    added to it, which makes it long enough and tells a manager where it came
-    from, so that they can name it better. Every name the import brings over
-    is lengthened the same way (`ImportUsers.feature`).
+    accepted some. Rather than leave the tournament behind, " - Import
+    correction" is added to it, which makes it long enough and tells a manager
+    that the import changed it, so that they can name it better. A person's
+    name is lengthened with " - Imported" (`ImportUsers.feature`). A
+    competition's name is never too short: the site takes a name of one
+    character, as a block called "A".
 
-    Scenario: A name shorter than 3 characters says it was imported
+    Scenario: A name shorter than 3 characters says the import corrected it
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "Ok"
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Imported"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Import correction"
 
     Scenario: A name shorter than 3 characters in capitals is written in title case first
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "OK"
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Imported"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Import correction"
 
     Scenario: A name of 3 characters is left as it was
       Given a tournament "tournaments/12" on "croquetscores.com"
