@@ -484,6 +484,89 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then the error kept for "croquetscores.com/knockouts/30" says "Competition.NotDrawnToMeet"
 
+  Rule: An error accepted for a knockout is said as accepted rather than kept
+
+    Some of what the import refuses has been looked at, and accepted: it is
+    the old site's, it is not wrong, and there is nothing to put right, as
+    for croquetscores.com's knockouts/10088, whose games the site refuses as
+    between players not drawn to meet. An error is accepted for one document and one
+    refusal's code, whichever of the document's games it names, and is said
+    with the tournament it is of (`AcceptedImportErrors.feature`) rather than
+    kept among the import's errors. An error of another document is kept as
+    any is.
+
+    Scenario: An error accepted for a knockout is not kept
+      Given the knockout "knockouts/10088" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      And game 4 was won by player 2
+      And game 4 was lost by player 1
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/10088"
+
+    Scenario: An error accepted for a knockout is said as accepted
+      Given the knockout "knockouts/10088" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      And game 4 was won by player 2
+      And game 4 was lost by player 1
+      When the competition is imported
+      Then "game 4" of "croquetscores.com/knockouts/10088" is accepted as "Competition.NotDrawnToMeet"
+
+    Scenario: What is accepted of a knockout links to its tournament
+      Given the knockout "knockouts/10088" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      And game 4 was won by player 2
+      And game 4 was lost by player 1
+      When the competition is imported
+      Then what is accepted of "croquetscores.com/knockouts/10088" links to "https://croquetscores.com/2014/ac/spring-open-12"
+
+    Scenario: The error accepted for one knockout is kept for another
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      And game 4 was won by player 2
+      And game 4 was lost by player 1
+      When the competition is imported
+      Then nothing is accepted of "croquetscores.com/knockouts/30"
+
   Rule: Nothing is carried forward in a knockout
 
     Scenario: A player's counts are left behind

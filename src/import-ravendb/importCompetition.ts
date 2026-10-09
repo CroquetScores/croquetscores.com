@@ -18,8 +18,11 @@ import { CompetitionName } from "../domain/aggregates/tournaments/value-objects/
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Website } from "../domain/common/Website.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
+import {
+  type AcceptedImportErrors,
+  DocumentErrors,
+} from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { describedFailure } from "./ImportRefused.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
 import { numberedApart } from "./names.js";
 import { momentOf } from "./newtonsoft.js";
@@ -72,6 +75,7 @@ export interface ImportingCompetitions {
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
   readonly database: ImportDatabase;
+  readonly accepting: AcceptedImportErrors;
 }
 
 // Each count a player carried, as the site names it.
@@ -93,11 +97,11 @@ export const gamesInOrder = (games: readonly OldGame[]): OldGame[] =>
  * the old sites numbered them where nothing says otherwise, each at the moment
  * the old sites kept it at. A game whose player is
  * not in the competition, or that the site refuses, is kept as an error
- * against `documentId` naming it, and the rest are added all the same.
+ * against the document naming it, unless it is accepted, and the rest are
+ * added all the same.
  */
 export const addGames = async (
-  database: ImportDatabase,
-  documentId: string,
+  errors: DocumentErrors,
   competition: Competition,
   games: readonly OldGame[],
   playerOf: (number: number) => GamePlayerId | undefined,
@@ -128,10 +132,7 @@ export const addGames = async (
         momentOf(game.CreatedAt),
       );
     } catch (failure) {
-      await database.recordError(
-        documentId,
-        `game ${String(game.Id)}: ${describedFailure(failure)}`,
-      );
+      await errors.refused(`game ${String(game.Id)}`, failure);
     }
   }
 };
@@ -152,7 +153,8 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   { website, id, document }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
-  const { unitOfWork, tournaments, competitions, database } = importing;
+  const { unitOfWork, tournaments, competitions, database, accepting } =
+    importing;
   const documentId = `${website}/${id}`;
   if (document.IsArchived) return;
 
@@ -163,6 +165,13 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournaments,
       website,
       tournamentDocument,
+    );
+    const errors = new DocumentErrors(
+      database,
+      accepting,
+      documentId,
+      website,
+      tournament,
     );
     // The site tells a tournament's competitions apart by their names, in any
     // case, and the old sites did not, so a name another of them has is
@@ -246,16 +255,12 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           competition.changeCarryForward(playerId, carried, told, by, at);
         }
       } catch (failure) {
-        await database.recordError(
-          documentId,
-          `player ${String(player._Id)}: ${describedFailure(failure)}`,
-        );
+        await errors.refused(`player ${String(player._Id)}`, failure);
       }
     }
 
     await addGames(
-      database,
-      documentId,
+      errors,
       competition,
       document.Games._Games,
       (number) => entered.get(number),
@@ -269,10 +274,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       try {
         competition.withdrawPlayer(playerId, told, by, at);
       } catch (failure) {
-        await database.recordError(
-          documentId,
-          `withdrawing ${playerId.value}: ${describedFailure(failure)}`,
-        );
+        await errors.refused(`withdrawing ${playerId.value}`, failure);
       }
     }
 

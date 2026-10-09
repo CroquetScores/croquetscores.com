@@ -2,13 +2,16 @@
 // old sites over into it from RavenDB: their users, then each tournament with
 // its players, its blocks, knockouts, Swisses and team matches, and its
 // commentaries, and last whatever names a tournament that was not there, as
-// an error. Once every site is over, the site's roles are given to whoever
+// an error. What it accepted rather than keeping as an error is said in
+// doc/accepted-import-error.md, which it deletes first. Once every site is over, the site's roles are given to whoever
 // holds them, and the players the world rankings know are imported from the
 // rankings' own lists, since emptying the database emptied them too.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
 // site, so that what it writes is what the site reads.
+import { join } from "node:path";
+
 import { AggregateRepository } from "../application/common/AggregateRepository.js";
 import { ProjectingEventStore } from "../application/common/ProjectingEventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
@@ -50,6 +53,7 @@ import {
   worldRankingSportNames,
 } from "../infrastructure/services/WorldRankingWebsite.js";
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { AcceptedImportErrorsFile } from "./AcceptedImportErrors.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -122,6 +126,11 @@ try {
   const unitOfWork = new UnitOfWork(pool);
   const database = new ImportDatabase(pool, unitOfWork);
 
+  const accepting = new AcceptedImportErrorsFile(
+    join(import.meta.dirname, "../../doc/accepted-import-error.md"),
+  );
+  await accepting.begin();
+
   console.log(`Emptying ${where(config.databaseUrl)}`);
   await database.reset();
 
@@ -180,7 +189,13 @@ try {
     eventStore,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
-  const importing = { unitOfWork, tournaments, competitions, database };
+  const importing = {
+    unitOfWork,
+    tournaments,
+    competitions,
+    database,
+    accepting,
+  };
   // One for every importer that names a user, so that a user is one account
   // wherever they are named.
   const importedAccounts = new ImportedAccounts(

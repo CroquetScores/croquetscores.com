@@ -24,6 +24,10 @@ import { CompetitionId } from "../../src/domain/aggregates/tournaments/primitive
 import { TournamentId } from "../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
 import type { CompetitionInTournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
+import type {
+  Accepted,
+  AcceptedImportErrors,
+} from "../../src/import-ravendb/AcceptedImportErrors.js";
 import { ImportBlocks } from "../../src/import-ravendb/ImportBlocks.js";
 import { ImportCommentaries } from "../../src/import-ravendb/ImportCommentaries.js";
 import { ImportedAccounts } from "../../src/import-ravendb/ImportedAccounts.js";
@@ -220,6 +224,16 @@ interface Importers {
   readonly commentaries: ImportCommentaries;
 }
 
+/** What a scenario's import accepted, kept for the scenario to read. */
+class AcceptedInScenario implements AcceptedImportErrors {
+  readonly said: Accepted[] = [];
+
+  accept(accepted: Accepted): Promise<void> {
+    this.said.push(accepted);
+    return Promise.resolve();
+  }
+}
+
 interface Importing {
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
@@ -227,6 +241,7 @@ interface Importing {
   /** The commentaries of each tournament, as the read model of them has them. */
   readonly commentariesByTournament: CommentariesByTournament;
   readonly importers: Importers;
+  readonly accepted: AcceptedInScenario;
   writing?: Writing;
   /** The tournament written last, which "the tournament" means. */
   tournament?: Writing & { readonly kind: "tournament" };
@@ -275,7 +290,14 @@ export const importingOf = (world: SpecWorld): Importing => {
     store,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
-  const importing = { unitOfWork, tournaments, competitions, database };
+  const accepted = new AcceptedInScenario();
+  const importing = {
+    unitOfWork,
+    tournaments,
+    competitions,
+    database,
+    accepting: accepted,
+  };
   const importedAccounts = new ImportedAccounts(
     accountRepository,
     accounts.hasher,
@@ -310,6 +332,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     competitions,
     commentaries,
     commentariesByTournament,
+    accepted,
     importers: {
       whole: (website) =>
         new ImportWholeTournaments(
@@ -1048,5 +1071,50 @@ Then(
       tournament.teams.some((team) => team.name.toString() === name),
       `It has ${tournament.teams.map((team) => team.name.toString()).join(", ")}.`,
     );
+  },
+);
+
+// What was accepted rather than kept as an error -----------------------------------
+
+const acceptedOf = (world: SpecWorld, documentId: string): Accepted[] =>
+  importingOf(world).accepted.said.filter(
+    (accepted) => accepted.documentId === documentId,
+  );
+
+Then(
+  "{string} is accepted as {string}",
+  function (this: SpecWorld, documentId: string, code: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(
+      said.some((accepted) => accepted.code === code),
+      `Nothing of ${documentId} is accepted as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "{string} of {string} is accepted as {string}",
+  function (this: SpecWorld, what: string, documentId: string, code: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(
+      said.some((accepted) => accepted.what === what && accepted.code === code),
+      `${what} of ${documentId} is not accepted as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "nothing is accepted of {string}",
+  function (this: SpecWorld, documentId: string) {
+    assert.deepEqual(acceptedOf(this, documentId), []);
+  },
+);
+
+Then(
+  "what is accepted of {string} links to {string}",
+  function (this: SpecWorld, documentId: string, link: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(said.length > 0, `Nothing of ${documentId} is accepted.`);
+    for (const accepted of said) assert.equal(accepted.link, link);
   },
 );

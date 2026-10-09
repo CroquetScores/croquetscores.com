@@ -11,6 +11,7 @@ import { TestGroup } from "../domain/aggregates/tournaments/value-objects/TestGr
 import { charactersIn } from "../domain/common/charactersIn.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Website } from "../domain/common/Website.js";
+import { DocumentErrors } from "./AcceptedImportErrors.js";
 import { type ImportingCompetitions, addGames } from "./importCompetition.js";
 import { ImportRefused, describedFailure } from "./ImportRefused.js";
 import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
@@ -141,7 +142,8 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     id,
     document,
   }: ReadDocument<TeamMatch>): Promise<void> {
-    const { unitOfWork, tournaments, competitions, database } = this.importing;
+    const { unitOfWork, tournaments, competitions, database, accepting } =
+      this.importing;
     const documentId = `${website}/${id}`;
     if (document.IsArchived) return;
 
@@ -301,8 +303,13 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
 
       const competition = Competition.rebuiltFrom(competitionId, []);
       await addGames(
-        database,
-        documentId,
+        new DocumentErrors(
+          database,
+          accepting,
+          documentId,
+          website,
+          tournament,
+        ),
         competition,
         // A game against a bye is no game that was played.
         document.Games._Games.filter(
