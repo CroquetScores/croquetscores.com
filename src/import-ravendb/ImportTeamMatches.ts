@@ -20,6 +20,8 @@ import { oldShortNameOf, stateNamed } from "./oldSites.js";
 import type { TeamMatch } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfImported } from "./bestOfImported.js";
+import { isOldBye } from "./ImportTournamentPlayers.js";
+import { TournamentPlayerId } from "../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 
 // How the old sites named a team match: "Team A vs Team B".
 const VERSUS = " vs ";
@@ -158,6 +160,12 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
 
       const players = new Map<number, TeamPlayerId>();
       const made: { readonly number: number; readonly id: TeamPlayerId }[] = [];
+      // A player named as a bye is no player of a team, and is kept as the
+      // bye by their number, as a tournament's bye is, so that every team
+      // match of the tournament knows them for one (ImportTeamMatches.feature).
+      const bye = TournamentPlayerId.bye().value;
+      const byes = new Set<number>();
+      const byesMade: number[] = [];
       for (const player of document.Players._Players) {
         try {
           const already = await database.findPlayerOf(
@@ -165,6 +173,15 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             tournamentDocument,
             player._Id,
           );
+          if (already === bye) {
+            byes.add(player._Id);
+            continue;
+          }
+          if (already === undefined && isOldBye(player.Name)) {
+            byes.add(player._Id);
+            byesMade.push(player._Id);
+            continue;
+          }
           if (already !== undefined) {
             players.set(player._Id, TeamPlayerId.from(already));
             continue;
@@ -216,13 +233,25 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           playerId.value,
         );
       }
+      for (const number of byesMade) {
+        await database.recordImportedPlayer(
+          website,
+          tournamentDocument,
+          number,
+          bye,
+        );
+      }
 
       const competition = Competition.rebuiltFrom(competitionId, []);
       await addGames(
         database,
         documentId,
         competition,
-        document.Games._Games,
+        // A game against a bye is no game that was played.
+        document.Games._Games.filter(
+          (game) =>
+            !byes.has(game.Winner.PlayerId) && !byes.has(game.Loser.PlayerId),
+        ),
         (number) => players.get(number),
         toldOf(tournament, competitionId),
         Website.from(website),

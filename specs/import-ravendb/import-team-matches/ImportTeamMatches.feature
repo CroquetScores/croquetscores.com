@@ -336,6 +336,70 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
 
+  Rule: A player named as a bye is no player of a team
+
+    The old sites let a team match have a bye, a player called "Bye", or "Bye
+    1" and so on, standing in for a player a team did not have. The site
+    refuses a team player named as one, as it does a tournament player
+    (`ImportTournamentPlayers.feature`), and a test has no place for a bye. So
+    a player named as a bye is left out of the teams, and kept as the bye by
+    the number the old site gave them in the tournament, as a tournament's
+    bye is, so that every team match of the tournament knows them for one. A
+    game against a bye is no game that was played, and is left out too.
+    Neither is an error.
+
+    Scenario: A player named as a bye is not a player of the team
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has 0 players
+
+    Scenario: A player named as a bye is kept as the bye
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      When the team match is imported
+      Then player 8 of "tournaments/13" on "croquetscores.com" is kept as the bye
+
+    Scenario: A game against a bye is not a game of the test
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 0 games
+
+    Scenario: Leaving a bye and its game out is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
   Rule: A test's games are between the players of its teams
 
     Scenario: A game becomes a game of the test
