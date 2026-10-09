@@ -76,7 +76,8 @@ const odd = (games: number): number => (games % 2 === 0 ? games + 1 : games);
  * time they showed one: the most games any match of the round had, made odd,
  * and never fewer than the round before. A round with no games is the best of
  * what the round before was, or of 1 where it is the first. And which round
- * each game is of, by its number, for the games to be added round by round.
+ * each game is of, by its number, for the games to be added round by round,
+ * and which players lost a match, so are knocked out.
  *
  * A match's games are the games between its two players not already given to
  * a match, and its winner is whoever won more of them, or whoever met a bye.
@@ -84,10 +85,15 @@ const odd = (games: number): number => (games % 2 === 0 ? games + 1 : games);
 const roundsOf = (
   places: readonly Listed[],
   games: readonly Game[],
-): { readonly rounds: number[]; readonly roundOf: Map<number, number> } => {
+): {
+  readonly rounds: number[];
+  readonly roundOf: Map<number, number>;
+  readonly knockedOut: Set<number>;
+} => {
   const used = new Set<number>();
   const rounds: number[] = [];
   const roundOf = new Map<number, number>();
+  const knockedOut = new Set<number>();
   let standing: (number | "bye" | undefined)[] = places.map((place) =>
     place.bye ? "bye" : place.player._Id,
   );
@@ -108,13 +114,14 @@ const roundsOf = (
         most = Math.max(most, played.length);
         const won = (number: number): number =>
           played.filter((game) => game.Winner.PlayerId === number).length;
-        through.push(
+        const winner =
           won(one) > won(other)
             ? one
             : won(other) > won(one)
               ? other
-              : undefined,
-        );
+              : undefined;
+        if (winner !== undefined) knockedOut.add(winner === one ? other : one);
+        through.push(winner);
       } else if (one === "bye") {
         through.push(other);
       } else if (other === "bye") {
@@ -127,8 +134,24 @@ const roundsOf = (
     rounds.push(Math.max(before, most === 0 ? before : odd(most)));
     standing = through;
   }
-  return { rounds, roundOf };
+  return { rounds, roundOf, knockedOut };
 };
+
+/**
+ * Whether `game` is a play-off: given to no match of the draw, and between two
+ * players who have each lost a match of it already, as a game for third place
+ * between the losers of the semi-finals is (ImportKnockouts.feature). The
+ * site's knockout has no place for one, so it is left out, and that is not an
+ * error.
+ */
+const isPlayOff = (
+  game: Game,
+  roundOf: ReadonlyMap<number, number>,
+  knockedOut: ReadonlySet<number>,
+): boolean =>
+  !roundOf.has(game.Id) &&
+  knockedOut.has(game.Winner.PlayerId) &&
+  knockedOut.has(game.Loser.PlayerId);
 
 /**
  * `games` round by round, the first round first, and each round's in the
@@ -176,11 +199,15 @@ export class ImportKnockouts implements Importer<Knockout> {
               ? undefined
               : withByesWorkedOut(listed, games);
         if (places?.length !== size) return undefined;
-        const { rounds, roundOf } = roundsOf(places, games);
+        const { rounds, roundOf, knockedOut } = roundsOf(places, games);
         const draw = KnockoutDraw.from(size, rounds);
         return {
           entries: places,
-          gamesInOrder: (toAdd) => roundByRound(toAdd, roundOf),
+          gamesInOrder: (toAdd) =>
+            roundByRound(
+              toAdd.filter((game) => !isPlayOff(game, roundOf, knockedOut)),
+              roundOf,
+            ),
           add: (tournament, id, name, by, at) => {
             tournament.addKnockout(id, name, draw, by, at);
           },
