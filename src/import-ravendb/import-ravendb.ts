@@ -1,12 +1,14 @@
-// "npm run import:ravendb". Empties the site's database, then brings the
-// old sites over into it from RavenDB: their users, then each tournament with
-// its players, its blocks, knockouts, Swisses and team matches, and its
-// commentaries, and last whatever names a tournament that was not there, as
-// an error. What it accepted rather than keeping as an error is said in
-// doc/accepted-import-errors.md, which it deletes first. Once every site is
-// over, the site's roles are given to whoever holds them, and the players the
-// world rankings know are imported from the rankings' own lists, since
-// emptying the database emptied them too.
+// "npm run import:ravendb". Empties the site's database, then brings the old
+// sites over into it from RavenDB: their users, then each tournament with its
+// players, its blocks, knockouts, Swisses and team matches, and its
+// commentaries, and last whatever names a tournament that was not there, as an
+// error. What it accepted rather than keeping as an error is said in
+// docs/import-from-ravendb/accepted-import-errors.md, and what it corrected of
+// what the old sites kept in docs/import-from-ravendb/import-corrections.md,
+// each of which it deletes first. Once every site is over, the site's roles are
+// given to whoever holds them, and the players the world rankings know are
+// imported from the rankings' own lists, since emptying the database emptied
+// them too.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
@@ -54,7 +56,7 @@ import {
   worldRankingSportNames,
 } from "../infrastructure/services/WorldRankingWebsite.js";
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
-import { AcceptedImportErrorsFile } from "./AcceptedImportErrors.js";
+import { AcceptedImportErrorsFile, CORRECTED } from "./AcceptedImportErrors.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -130,7 +132,10 @@ try {
   // Linking to the tournaments on the development site, where an import is
   // looked at, as well as on the old sites.
   const accepting = new AcceptedImportErrorsFile(
-    join(import.meta.dirname, "../../doc/accepted-import-errors.md"),
+    join(
+      import.meta.dirname,
+      "../../docs/import-from-ravendb/accepted-import-errors.md",
+    ),
     "http://localhost:3000",
   );
   // What the last import kept, counted before the database is emptied of it,
@@ -141,7 +146,19 @@ try {
   } catch {
     errorsBefore = undefined;
   }
-  await accepting.begin(new Date(), errorsBefore);
+  // What it corrected of what the old sites kept, as a team match's
+  // expected matches, said the same way in a file of its own.
+  const correcting = new AcceptedImportErrorsFile(
+    join(
+      import.meta.dirname,
+      "../../docs/import-from-ravendb/import-corrections.md",
+    ),
+    "http://localhost:3000",
+    CORRECTED,
+  );
+  const began = new Date();
+  await accepting.begin(began, errorsBefore);
+  await correcting.begin(began, errorsBefore);
 
   console.log(`Emptying ${where(config.databaseUrl)}`);
   await database.reset();
@@ -207,6 +224,7 @@ try {
     competitions,
     database,
     accepting,
+    correcting,
   };
   // One for every importer that names a user, so that a user is one account
   // wherever they are named.
@@ -343,6 +361,7 @@ try {
   const errors =
     kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
   await accepting.end(kept);
+  await correcting.end(kept);
 
   console.log(
     `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,

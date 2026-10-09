@@ -4,7 +4,10 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { AcceptedImportErrorsFile } from "../../../src/import-ravendb/AcceptedImportErrors.js";
+import {
+  AcceptedImportErrorsFile,
+  CORRECTED,
+} from "../../../src/import-ravendb/AcceptedImportErrors.js";
 import type { SpecWorld } from "../../support/world.js";
 
 interface Saying {
@@ -41,6 +44,19 @@ Given(
       folder,
       path,
       file: new AcceptedImportErrorsFile(path, newSite),
+    });
+  },
+);
+
+// The same file, in the same folder, for what the import corrected.
+Given(
+  "the file is of import corrections, for the new site at {string}",
+  function (this: SpecWorld, newSite: string) {
+    const { folder, path } = sayingOf(this);
+    sayings.set(this, {
+      folder,
+      path,
+      file: new AcceptedImportErrorsFile(path, newSite, CORRECTED),
     });
   },
 );
@@ -170,11 +186,11 @@ Then(
 // 7,806 import errors, 2 accepted import errors.", the number's separators
 // taken out.
 Then(
-  /^the file of accepted import errors says (the previous|this) import kept (\d+|uncounted) (import errors|accepted import errors)$/,
+  /^the file of accepted import errors says (the previous|this) import kept (\d+|uncounted) (import errors|accepted import errors|import corrections)$/,
   async function (this: SpecWorld, which: string, count: string, what: string) {
     const heading = which === "this" ? "This import" : "Previous import";
     const found = new RegExp(
-      `^${heading}: (\\S+) import errors, (\\S+) accepted import errors\\.$`,
+      `^${heading}: (\\S+) import errors, (\\S+) (?:accepted import errors|import corrections)\\.$`,
       "m",
     ).exec(await contentOf(this));
     assert.ok(found !== null, `The file says nothing of ${which} import.`);

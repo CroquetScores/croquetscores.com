@@ -244,6 +244,8 @@ interface Importing {
   readonly commentariesByTournament: CommentariesByTournament;
   readonly importers: Importers;
   readonly accepted: AcceptedInScenario;
+  /** What the scenario's import corrected, kept the same way. */
+  readonly corrected: AcceptedInScenario;
   writing?: Writing;
   /** The tournament written last, which "the tournament" means. */
   tournament?: Writing & { readonly kind: "tournament" };
@@ -296,12 +298,14 @@ export const importingOf = (world: SpecWorld): Importing => {
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
   const accepted = new AcceptedInScenario();
+  const corrected = new AcceptedInScenario();
   const importing = {
     unitOfWork,
     tournaments,
     competitions,
     database,
     accepting: accepted,
+    correcting: corrected,
   };
   const importedAccounts = new ImportedAccounts(
     accountRepository,
@@ -338,6 +342,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     commentaries,
     commentariesByTournament,
     accepted,
+    corrected,
     importers: {
       whole: (website) =>
         new ImportWholeTournaments(
@@ -1149,6 +1154,42 @@ Then(
     assert.ok(
       said.some((accepted) => accepted.description.includes(named)),
       `Nothing accepted of ${documentId} names ${named}: ${inspect(said)}`,
+    );
+  },
+);
+
+// What was corrected of what the old sites kept --------------------------------
+
+const correctedOf = (world: SpecWorld, documentId: string): Accepted[] =>
+  importingOf(world).corrected.said.filter(
+    (corrected) => corrected.documentId === documentId,
+  );
+
+Then(
+  "{string} is corrected as {string}",
+  function (this: SpecWorld, documentId: string, code: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      said.some((corrected) => corrected.code === code),
+      `Nothing of ${documentId} is corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "nothing is corrected of {string}",
+  function (this: SpecWorld, documentId: string) {
+    assert.deepEqual(correctedOf(this, documentId), []);
+  },
+);
+
+Then(
+  "what is corrected of {string} names {string}",
+  function (this: SpecWorld, documentId: string, named: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      said.some((corrected) => corrected.description.includes(named)),
+      `Nothing corrected of ${documentId} names ${named}: ${inspect(said)}`,
     );
   },
 );

@@ -154,8 +154,10 @@ Feature: Importing the old sites' team matches
     where they say more: for each two players who met, the games between
     them over its best-of, rounded up, so that a match won two games to one
     is one match. Never fewer than 1. Where its games say more, that is not
-    an error, and is said as accepted, with the tournament it is of
-    (`AcceptedImportErrors.feature`).
+    an error, and is said as corrected, with where the team match is on the
+    new site and the old, in a file of corrections of its own, written as the
+    accepted import errors are (`AcceptedImportErrors.feature`), and not
+    among them.
 
     Scenario: A test starts on the day its team match started
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -276,7 +278,7 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 4 matches
 
-    Scenario: Working a team match's matches out from its games is said as accepted
+    Scenario: Working a team match's matches out from its games is said as corrected
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "Egypt vs Wales"
       And the team match was expected to have 3 matches
@@ -301,7 +303,30 @@ Feature: Importing the old sites' team matches
       And game 4 was won by player 1
       And game 4 was lost by player 4
       When the team match is imported
-      Then "croquetscores.com/teammatches/50" is accepted as "ImportTeamMatches.ExpectedMatchesWorkedOut"
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.ExpectedMatchesWorkedOut"
+
+    Scenario: Working a team match's matches out from its games is not said as accepted
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 4
+      And game 4 was won by player 3
+      And game 4 was lost by player 2
+      When the team match is imported
+      Then nothing is accepted of "croquetscores.com/teammatches/50"
 
     Scenario: Working a team match's matches out from its games is said for a person, naming the team match
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -324,7 +349,7 @@ Feature: Importing the old sites' team matches
       And game 4 was won by player 3
       And game 4 was lost by player 2
       When the team match is imported
-      Then what is accepted of "croquetscores.com/teammatches/50" names "Spring Open - Egypt vs Wales"
+      Then what is corrected of "croquetscores.com/teammatches/50" names "Spring Open - Egypt vs Wales"
 
     Scenario: A team match expected to have more than 1 match keeps it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -343,7 +368,7 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 6 matches
 
-    Scenario: A team match whose games say no more matches than it was expected to have is not said as accepted
+    Scenario: A team match whose games say no more matches than it was expected to have is not said as corrected
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       And the team match was expected to have 6 matches
@@ -354,7 +379,7 @@ Feature: Importing the old sites' team matches
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the team match is imported
-      Then nothing is accepted of "croquetscores.com/teammatches/50"
+      Then nothing is corrected of "croquetscores.com/teammatches/50"
 
     Scenario: A test's matches are the best of what its team match's were
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"

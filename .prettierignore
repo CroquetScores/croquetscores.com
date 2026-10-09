@@ -3,5 +3,6 @@ reports/
 node_modules/
 package-lock.json
 
-# Written by every import, which deletes it first.
-doc/accepted-import-errors.md
+# Written by every import, which deletes them first.
+docs/import-from-ravendb/accepted-import-errors.md
+docs/import-from-ravendb/import-corrections.md

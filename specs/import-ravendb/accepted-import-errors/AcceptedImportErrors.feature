@@ -3,23 +3,23 @@ Feature: What the import accepted, said in a file
   Not everything the import cannot bring over as the old site kept it is an
   error. Some of what the site refuses has been looked at and accepted
   (`ImportKnockouts.feature`), and some the import works around: a game
-  against a bye left out (`importCompetition.feature`), a player brought over
-  from a competition that the tournament's players no longer listed, or a
-  team match's expected matches worked out from its games
-  (`ImportTeamMatches.feature`). None of it is kept among the import's
-  errors, which are what someone has to put right. Each is said instead in
-  doc/accepted-import-errors.md, a line each, for whoever reads it to look at
-  the tournament and see that nothing that mattered was lost.
+  against a bye left out (`importCompetition.feature`), or a player brought
+  over from a competition that the tournament's players no longer listed.
+  None of it is kept among the import's errors, which are what someone has to
+  put right. Each is said instead in
+  docs/import-from-ravendb/accepted-import-errors.md, under a heading each,
+  for whoever reads it to look at the tournament and see that nothing that
+  mattered was lost.
 
   Each is headed by a code saying what was done, the document, and what of
   it was accepted, as "## ImportCompetition.AgainstABye:
   croquetscores.com/knockouts/2883 game 4". Under it are the document's whole
   address on the new site, which the import is told of, and on the old site
   it was on, written out rather than as links, each on a line of its own, and
-  then what was accepted and why, said for a person. The import deletes the file before it begins, so
-  that the file says only what the last import accepted, and writes it a line
-  at a time, so that an import that stops partway through still says what it
-  accepted before it stopped.
+  then what was accepted and why, said for a person. The import deletes the
+  file before it begins, so that the file says only what the last import
+  accepted, and writes each as it is accepted, so that an import that stops
+  partway through still says what it accepted before it stopped.
 
   The file begins by saying when the import began, by the clock of the
   machine it ran on, and how many errors the import before it kept in
@@ -29,6 +29,13 @@ Feature: What the import accepted, said in a file
   the last. What cannot be counted, as the errors of a database no import
   has written to, or the things accepted where there was no file, is said
   to be uncounted.
+
+  What the import corrected of what the old sites kept, as a team match's
+  expected matches where its games say more (`ImportTeamMatches.feature`), is
+  not accepted as an error is, and is said in
+  docs/import-from-ravendb/import-corrections.md instead, written the same
+  way, with the same beginning and end, headed Import corrections, and
+  counting what it says as import corrections.
 
   Background:
     Given a file of accepted import errors of the scenario's own, for the new site at "http://localhost:3000"
@@ -132,3 +139,17 @@ Feature: What the import accepted, said in a file
       And the file of accepted import errors is begun
       When the file of accepted import errors is ended with 12 errors kept
       Then the file of accepted import errors says this import kept 0 accepted import errors
+
+  Rule: What the import corrected is said the same way, headed and counted as corrections
+
+    Scenario: A file of corrections is headed as one
+      Given the file is of import corrections, for the new site at "http://localhost:3000"
+      When the file of accepted import errors is begun
+      Then the file of accepted import errors says "# Import corrections"
+
+    Scenario: A file of corrections counts what it says as corrections
+      Given the file is of import corrections, for the new site at "http://localhost:3000"
+      And the file of accepted import errors is begun
+      And game 4 of "croquetscores.com/teammatches/360" of "2012/gc/world-team" on "croquetscores.com" is accepted as "ImportTeamMatches.ExpectedMatchesWorkedOut"
+      When the file of accepted import errors is ended with 12 errors kept
+      Then the file of accepted import errors says this import kept 1 import corrections

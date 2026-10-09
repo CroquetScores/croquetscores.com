@@ -138,8 +138,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     id,
     document,
   }: ReadDocument<TeamMatch>): Promise<void> {
-    const { unitOfWork, tournaments, competitions, database, accepting } =
-      this.importing;
+    const {
+      unitOfWork,
+      tournaments,
+      competitions,
+      database,
+      accepting,
+      correcting,
+    } = this.importing;
     const documentId = `${website}/${id}`;
     if (document.IsArchived) return;
 
@@ -177,6 +183,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       const errors = new DocumentErrors(
         database,
         accepting,
+        correcting,
         documentId,
         website,
         tournament,
@@ -312,7 +319,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
 
       const competition = Competition.rebuiltFrom(competitionId, []);
       if (played > document.ExpectedMatches) {
-        await errors.accepted(
+        await errors.corrected(
           "",
           "ImportTeamMatches.ExpectedMatchesWorkedOut",
           `${errors.place} was kept as expected to have ${String(document.ExpectedMatches)} matches, and its games say ${String(played)}, so it is expected to have ${String(played)}.`,

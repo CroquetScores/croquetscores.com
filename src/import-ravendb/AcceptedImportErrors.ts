@@ -41,6 +41,38 @@ export interface AcceptedImportErrors {
 }
 
 /**
+ * What a file of what the import said is headed, what it counts what it says
+ * as, and what it says it holds.
+ */
+export interface Saying {
+  readonly title: string;
+  /** As "accepted import errors", after a number. */
+  readonly counted: string;
+  readonly about: string;
+}
+
+/** The file of errors the import accepted rather than keeping. */
+export const ACCEPTED: Saying = {
+  title: "Accepted import errors",
+  counted: "accepted import errors",
+  about:
+    "What the last import accepted from the old sites rather than keeping " +
+    "as an error, each with where it is on the new site and the old.",
+};
+
+/**
+ * The file of what the import corrected of what the old sites kept, as a
+ * team match's expected matches where its games say more.
+ */
+export const CORRECTED: Saying = {
+  title: "Import corrections",
+  counted: "import corrections",
+  about:
+    "What the last import corrected of what the old sites kept, each with " +
+    "where it is on the new site and the old.",
+};
+
+/**
  * Says what the import accepts in a Markdown file, each under a heading of its
  * code and its document, with the document's whole address on the new site,
  * at `newSite`, and on the old site it was on, written out rather than as
@@ -54,6 +86,9 @@ export interface AcceptedImportErrors {
  * how many errors and things accepted the import before kept, counted before
  * either is emptied, and ends by saying how many this one kept, so that one
  * import can be held against the last.
+ *
+ * What the import corrected is said in a file of its own the same way, headed
+ * and counted as `saying` says.
  */
 export class AcceptedImportErrorsFile implements AcceptedImportErrors {
   #accepted = 0;
@@ -61,6 +96,7 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
   constructor(
     private readonly path: string,
     private readonly newSite: string,
+    private readonly saying: Saying = ACCEPTED,
   ) {}
 
   /**
@@ -73,14 +109,13 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
     this.#accepted = 0;
     await rm(this.path, { force: true });
     await mkdir(dirname(this.path), { recursive: true });
+    const { title, counted: noun, about } = this.saying;
     await writeFile(
       this.path,
-      "# Accepted import errors\n\n" +
+      `# ${title}\n\n` +
         `Import began ${at.toLocaleString()}.\n\n` +
-        `Previous import: ${counted(errorsBefore)} import errors, ${counted(acceptedBefore)} accepted import errors.\n\n` +
-        "What the last import accepted from the old sites rather than keeping " +
-        "as an error, each with where it is on the new site and the old. " +
-        "Written by `npm run import:ravendb`, which deletes it first.\n\n",
+        `Previous import: ${counted(errorsBefore)} import errors, ${counted(acceptedBefore)} ${noun}.\n\n` +
+        `${about} Written by \`npm run import:ravendb\`, which deletes it first.\n\n`,
     );
   }
 
@@ -91,7 +126,7 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
   async end(errors: number): Promise<void> {
     await appendFile(
       this.path,
-      `This import: ${counted(errors)} import errors, ${counted(this.#accepted)} accepted import errors.\n`,
+      `This import: ${counted(errors)} import errors, ${counted(this.#accepted)} ${this.saying.counted}.\n`,
     );
   }
 
@@ -251,6 +286,7 @@ export class DocumentErrors {
   constructor(
     private readonly errors: ImportErrors,
     private readonly accepting: AcceptedImportErrors,
+    private readonly correcting: AcceptedImportErrors,
     readonly documentId: string,
     private readonly website: string,
     private readonly tournament: Tournament,
@@ -360,8 +396,24 @@ export class DocumentErrors {
     code: string,
     description: string,
   ): Promise<void> {
+    await this.accepting.accept(this.#said(what, code, description));
+  }
+
+  /**
+   * Says that `what` of the document was corrected as `code`, said for a
+   * person by `description`.
+   */
+  async corrected(
+    what: string,
+    code: string,
+    description: string,
+  ): Promise<void> {
+    await this.correcting.accept(this.#said(what, code, description));
+  }
+
+  #said(what: string, code: string, description: string): Accepted {
     const of = this.#of();
-    await this.accepting.accept({
+    return {
       documentId: this.documentId,
       website: this.website,
       newSitePath: of.newSitePath,
@@ -369,6 +421,6 @@ export class DocumentErrors {
       what,
       code,
       description,
-    });
+    };
   }
 }

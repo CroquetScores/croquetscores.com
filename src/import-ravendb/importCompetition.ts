@@ -81,6 +81,8 @@ export interface ImportingCompetitions {
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
   readonly database: ImportDatabase;
   readonly accepting: AcceptedImportErrors;
+  /** Where what the import corrected is said, the same way. */
+  readonly correcting: AcceptedImportErrors;
 }
 
 // Each count a player carried, as the site names it.
@@ -181,8 +183,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   { website, id, document }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
-  const { unitOfWork, tournaments, competitions, database, accepting } =
-    importing;
+  const {
+    unitOfWork,
+    tournaments,
+    competitions,
+    database,
+    accepting,
+    correcting,
+  } = importing;
   const documentId = `${website}/${id}`;
   if (document.IsArchived) return;
 
@@ -209,6 +217,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const errors = new DocumentErrors(
       database,
       accepting,
+      correcting,
       documentId,
       website,
       tournament,
