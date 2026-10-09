@@ -59,6 +59,11 @@ const shortNameOf = (name: string): string =>
 const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
 
+// A name without what is in brackets at its end, as "Real Club Puerta de
+// Hierro" of "Real Club Puerta de Hierro (Group A)".
+const beforeBrackets = (name: string): string =>
+  name.replace(/\s*\([^()]*\)$/, "").trim();
+
 /**
  * How many matches a team match's games say it had (ImportTeamMatches.feature):
  * for each two players who met, the games between them over its best-of,
@@ -198,10 +203,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       );
 
       // A player is on the team they represented, which they wrote as the
-      // team match named it, or by the team's name here.
+      // team match named it, or by the team's name here, or by either before
+      // the group some managers named in brackets after it.
       const represents = (representing: string, at: 0 | 1, team: Team) =>
-        sameName(representing, written[at]) ||
-        sameName(representing, team.name.toString());
+        [written[at], team.name.toString()].some(
+          (name) =>
+            sameName(representing, name) ||
+            sameName(representing, beforeBrackets(name)),
+        );
       const teamRepresented = (representing: string): Team | undefined =>
         represents(representing, 0, first)
           ? first

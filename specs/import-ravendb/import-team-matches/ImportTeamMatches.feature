@@ -486,6 +486,11 @@ Feature: Importing the old sites' team matches
 
   Rule: A player is a player of the team they represented
 
+    Some managers named a team match's teams with what group they were in, in
+    brackets after the team's name, as "Real Club Puerta de Hierro (Group A)",
+    and their players as representing the team by its name alone. A player
+    representing what a team is named before the brackets is a player of it.
+
     Scenario: A player representing a team is a player of it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
@@ -510,6 +515,33 @@ Feature: Importing the old sites' team matches
       And player 7 is in the team match
       And player 7 is called "Sam Someone"
       And player 7 represents "Australia"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
+
+    Scenario: A player representing a team named with its group in brackets is a player of it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Club One (Group A) vs Club Two (Group A)"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Club One"
+      When the team match is imported
+      Then the team "Club One (Group A)" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone"
+
+    Scenario: A player representing a team named with its group in brackets is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Club One (Group A) vs Club Two (Group A)"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Club One"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A player representing only what is in a team's brackets is kept as an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Club One (Group A) vs Club Two (Group A)"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Group A"
       When the team match is imported
       Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
 
