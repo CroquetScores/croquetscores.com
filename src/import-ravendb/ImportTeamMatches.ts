@@ -65,6 +65,19 @@ const shortNameOf = (name: string): string =>
 const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
 
+// Whether two players' names are the same name, in any case and with any
+// spaces, and without the number a team puts after a name it has twice, as
+// "Sam Someone (2)".
+const sameBaseName = (one: string, other: string): boolean => {
+  const base = (name: string): string =>
+    name
+      .replace(/\s*\(\d+\)\s*$/, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  return base(one) === base(other);
+};
+
 // A name without what is in brackets at its end, as "Real Club Puerta de
 // Hierro" of "Real Club Puerta de Hierro (Group A)".
 const beforeBrackets = (name: string): string =>
@@ -386,16 +399,25 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             const theirs = tournament.teams.find((each) =>
               each.players.some((one) => one.id.equals(known)),
             );
+            // The same player where they are of the same team and have
+            // the same name, in any case and with any spaces. Of the same
+            // team under another name, or of another team, they are the
+            // player of this name in their own team.
+            const theirName = theirs?.players
+              .find((one) => one.id.equals(known))
+              ?.name.toString();
             if (
               team === undefined ||
               theirs === undefined ||
-              theirs.id.equals(team.id)
+              (theirs.id.equals(team.id) &&
+                theirName !== undefined &&
+                sameBaseName(theirName, nameToImport(player.Name)))
             ) {
               players.set(player._Id, known);
               continue;
             }
             const named = team.players.find((one) =>
-              sameName(one.name.toString(), nameToImport(player.Name)),
+              sameBaseName(one.name.toString(), nameToImport(player.Name)),
             );
             if (named !== undefined) {
               players.set(player._Id, named.id);
