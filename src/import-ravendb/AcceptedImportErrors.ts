@@ -358,14 +358,17 @@ export class DocumentErrors {
     });
   }
 
-  /** Says that `game` was left out as `code`, `because` of what. */
+  /**
+   * Says that `game` was left out as `code`, `because` of what, as a
+   * correction of what the old site kept.
+   */
   async gameLeftOut(
     game: OldGame,
     nameOf: (number: number) => string,
     code: string,
     because: string,
   ): Promise<void> {
-    await this.accepted(
+    await this.corrected(
       `game ${String(game.Id)}`,
       code,
       `${gameSaid(gameOf(game, nameOf), this.place)} was left out because ${because}.`,

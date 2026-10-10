@@ -95,7 +95,7 @@ const carriedOf = (player: OldCompetitionPlayer) => ({
   hoopsAgainst: player.CarryForward.AgainstHoops,
 });
 
-/** What is said of a game against a bye, left out as accepted. */
+/** What is said of a game against a bye, left out as corrected. */
 export const AGAINST_A_BYE = {
   code: "ImportCompetition.AgainstABye",
   because: "it was against the old site's bye, and was no game that was played",

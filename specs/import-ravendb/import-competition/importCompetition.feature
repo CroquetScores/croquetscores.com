@@ -289,16 +289,17 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then importing the competition is not refused
 
-  Rule: A game against a bye is left out, and said as accepted
+  Rule: A game against a bye is left out, and said as corrected
 
     The old sites kept a game against their bye where a manager entered one,
     won or lost by a player who had nobody to play. It is no game that was
     played, and the site has no player for a bye to have played it: a block
     or a Swiss has no bye, and a knockout's bye puts the player drawn
     against it through without a game. So a game against a bye is left out,
-    whichever kind of competition it is in, and said as accepted, with the
-    tournament it is of (`AcceptedImportErrors.feature`), rather than kept as
-    an error. The other games are added as they were.
+    whichever kind of competition it is in, and said as corrected, with
+    where it is on the new site and the old, in the file of import
+    corrections (`AcceptedImportErrors.feature`), rather than kept as an
+    error or said as accepted. The other games are added as they were.
 
     Scenario: A game against a bye in a block is not added
       Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
@@ -333,7 +334,7 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then no error is kept for "croquetscores.com/blocks/30"
 
-    Scenario: A game against a bye left out is said as accepted
+    Scenario: A game against a bye left out is said as corrected
       Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
@@ -341,7 +342,17 @@ Feature: Importing one of the old sites' competitions
       And game 1 was won by player 7
       And game 1 was lost by player 9
       When the competition is imported
-      Then "game 1" of "croquetscores.com/blocks/30" is accepted as "ImportCompetition.AgainstABye"
+      Then "game 1" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.AgainstABye"
+
+    Scenario: A game against a bye left out is not said as accepted
+      Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 9 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 9
+      When the competition is imported
+      Then nothing is accepted of "croquetscores.com/blocks/30"
 
     Scenario: A game against a bye left out is said for a person, naming where it was
       Given player 9 of "tournaments/12" on "croquetscores.com" was the old site's bye
@@ -351,7 +362,7 @@ Feature: Importing one of the old sites' competitions
       And game 1 was won by player 7
       And game 1 was lost by player 9
       When the competition is imported
-      Then what is accepted of "croquetscores.com/blocks/30" names "Spring Open - A Block"
+      Then what is corrected of "croquetscores.com/blocks/30" names "Spring Open - A Block"
 
     Scenario: A game against a bye in a knockout is not added
       Given the knockouts are imported
@@ -377,14 +388,14 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then no error is kept for "croquetscores.com/knockouts/30"
 
-    Scenario: A game between two players is not said as accepted
+    Scenario: A game between two players is not said as corrected
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
       And game 1 was lost by player 3
       When the competition is imported
-      Then nothing is accepted of "croquetscores.com/blocks/30"
+      Then nothing is corrected of "croquetscores.com/blocks/30"
 
   Rule: A competition's games are added in the order the old site numbered them
 

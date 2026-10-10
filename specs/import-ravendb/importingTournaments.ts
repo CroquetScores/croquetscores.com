@@ -1177,6 +1177,19 @@ Then(
 );
 
 Then(
+  "{string} of {string} is corrected as {string}",
+  function (this: SpecWorld, what: string, documentId: string, code: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      said.some(
+        (corrected) => corrected.what === what && corrected.code === code,
+      ),
+      `${what} of ${documentId} is not corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
   "nothing is corrected of {string}",
   function (this: SpecWorld, documentId: string) {
     assert.deepEqual(correctedOf(this, documentId), []);
