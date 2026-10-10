@@ -759,6 +759,250 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then no error is kept for "croquetscores.com/knockouts/30"
 
+  Rule: A draw as listed is kept where a player who withdrew is taken to have lost
+
+    Where the old sites listed every place of a knockout, the listed draw is
+    kept if it fits the games, and one worked out from the games is not
+    preferred to it unless it fits them better. A player marked withdrawn who
+    played no game against whoever they were drawn against lost that match,
+    as the site has it (`withdrawPlayer.feature`), so whoever they were
+    drawn against went on to the next round without a game, and the games
+    that player went on to play belong to the draw as listed.
+
+    croquetscores.com's knockouts/1985, the Shield knockout of the 2013 GC
+    World Championship, listed sixteen places with five byes and Fay Ford, who
+    had withdrawn, drawn against a bye. Hal Hart, drawn against Gus Gray and
+    through to round 2 beating him, went on to the semi-final with no game
+    against Fay, who had lost her match by withdrawing.
+
+    Scenario: A draw as listed that fits the games once a player who withdrew has lost is kept
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Eve East"
+      And player 6 of "tournaments/12" on "croquetscores.com" is imported as "Fay Ford"
+      And player 7 of "tournaments/12" on "croquetscores.com" is imported as "Gus Gray"
+      And player 8 of "tournaments/12" on "croquetscores.com" is imported as "Hal Hart"
+      And player 9 of "tournaments/12" on "croquetscores.com" is imported as "Ida Ives"
+      And player 10 of "tournaments/12" on "croquetscores.com" is imported as "Jon Jones"
+      And player 11 of "tournaments/12" on "croquetscores.com" is imported as "Kim King"
+      And player 20 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 21 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 22 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 23 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 24 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 16
+      And player 1 is in the competition
+      And player 20 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 21 is in the competition
+      And player 22 is in the competition
+      And player 5 is in the competition
+      And player 6 is in the competition
+      And player 23 is in the competition
+      And player 7 is in the competition
+      And player 8 is in the competition
+      And player 9 is in the competition
+      And player 10 is in the competition
+      And player 24 is in the competition
+      And player 11 is in the competition
+      And player 6 withdrew
+      And game 1 was won by player 3
+      And game 1 was lost by player 2
+      And game 2 was won by player 8
+      And game 2 was lost by player 7
+      And game 3 was won by player 9
+      And game 3 was lost by player 10
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 5 was won by player 5
+      And game 5 was lost by player 4
+      And game 6 was won by player 11
+      And game 6 was lost by player 9
+      And game 7 was won by player 1
+      And game 7 was lost by player 5
+      And game 8 was won by player 11
+      And game 8 was lost by player 8
+      And game 9 was won by player 11
+      And game 9 was lost by player 1
+      And game 10 was won by player 1
+      And game 10 was lost by player 11
+      And game 11 was won by player 1
+      And game 11 was lost by player 11
+      When the competition is imported
+      Then "Ann Able" is drawn against a bye in the competition kept for "knockouts/30" on "croquetscores.com"
+
+    Scenario: The pairs of a draw kept as listed are as the old site listed them
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Eve East"
+      And player 6 of "tournaments/12" on "croquetscores.com" is imported as "Fay Ford"
+      And player 7 of "tournaments/12" on "croquetscores.com" is imported as "Gus Gray"
+      And player 8 of "tournaments/12" on "croquetscores.com" is imported as "Hal Hart"
+      And player 9 of "tournaments/12" on "croquetscores.com" is imported as "Ida Ives"
+      And player 10 of "tournaments/12" on "croquetscores.com" is imported as "Jon Jones"
+      And player 11 of "tournaments/12" on "croquetscores.com" is imported as "Kim King"
+      And player 20 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 21 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 22 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 23 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 24 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 16
+      And player 1 is in the competition
+      And player 20 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 21 is in the competition
+      And player 22 is in the competition
+      And player 5 is in the competition
+      And player 6 is in the competition
+      And player 23 is in the competition
+      And player 7 is in the competition
+      And player 8 is in the competition
+      And player 9 is in the competition
+      And player 10 is in the competition
+      And player 24 is in the competition
+      And player 11 is in the competition
+      And player 6 withdrew
+      And game 1 was won by player 3
+      And game 1 was lost by player 2
+      And game 2 was won by player 8
+      And game 2 was lost by player 7
+      And game 3 was won by player 9
+      And game 3 was lost by player 10
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 5 was won by player 5
+      And game 5 was lost by player 4
+      And game 6 was won by player 11
+      And game 6 was lost by player 9
+      And game 7 was won by player 1
+      And game 7 was lost by player 5
+      And game 8 was won by player 11
+      And game 8 was lost by player 8
+      And game 9 was won by player 11
+      And game 9 was lost by player 1
+      And game 10 was won by player 1
+      And game 10 was lost by player 11
+      And game 11 was won by player 1
+      And game 11 was lost by player 11
+      When the competition is imported
+      Then "Ben Baker" is drawn against "Cat Cole" in the competition kept for "knockouts/30" on "croquetscores.com"
+
+    Scenario: Every game of a draw kept as listed is added
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Eve East"
+      And player 6 of "tournaments/12" on "croquetscores.com" is imported as "Fay Ford"
+      And player 7 of "tournaments/12" on "croquetscores.com" is imported as "Gus Gray"
+      And player 8 of "tournaments/12" on "croquetscores.com" is imported as "Hal Hart"
+      And player 9 of "tournaments/12" on "croquetscores.com" is imported as "Ida Ives"
+      And player 10 of "tournaments/12" on "croquetscores.com" is imported as "Jon Jones"
+      And player 11 of "tournaments/12" on "croquetscores.com" is imported as "Kim King"
+      And player 20 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 21 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 22 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 23 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 24 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 16
+      And player 1 is in the competition
+      And player 20 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 21 is in the competition
+      And player 22 is in the competition
+      And player 5 is in the competition
+      And player 6 is in the competition
+      And player 23 is in the competition
+      And player 7 is in the competition
+      And player 8 is in the competition
+      And player 9 is in the competition
+      And player 10 is in the competition
+      And player 24 is in the competition
+      And player 11 is in the competition
+      And player 6 withdrew
+      And game 1 was won by player 3
+      And game 1 was lost by player 2
+      And game 2 was won by player 8
+      And game 2 was lost by player 7
+      And game 3 was won by player 9
+      And game 3 was lost by player 10
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 5 was won by player 5
+      And game 5 was lost by player 4
+      And game 6 was won by player 11
+      And game 6 was lost by player 9
+      And game 7 was won by player 1
+      And game 7 was lost by player 5
+      And game 8 was won by player 11
+      And game 8 was lost by player 8
+      And game 9 was won by player 11
+      And game 9 was lost by player 1
+      And game 10 was won by player 1
+      And game 10 was lost by player 11
+      And game 11 was won by player 1
+      And game 11 was lost by player 11
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 11 games
+
+    Scenario: A draw kept as listed with a player who withdrew is not an error
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Eve East"
+      And player 6 of "tournaments/12" on "croquetscores.com" is imported as "Fay Ford"
+      And player 7 of "tournaments/12" on "croquetscores.com" is imported as "Gus Gray"
+      And player 8 of "tournaments/12" on "croquetscores.com" is imported as "Hal Hart"
+      And player 9 of "tournaments/12" on "croquetscores.com" is imported as "Ida Ives"
+      And player 10 of "tournaments/12" on "croquetscores.com" is imported as "Jon Jones"
+      And player 11 of "tournaments/12" on "croquetscores.com" is imported as "Kim King"
+      And player 20 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 21 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 22 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 23 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And player 24 of "tournaments/12" on "croquetscores.com" was the old site's bye
+      And the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 16
+      And player 1 is in the competition
+      And player 20 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And player 21 is in the competition
+      And player 22 is in the competition
+      And player 5 is in the competition
+      And player 6 is in the competition
+      And player 23 is in the competition
+      And player 7 is in the competition
+      And player 8 is in the competition
+      And player 9 is in the competition
+      And player 10 is in the competition
+      And player 24 is in the competition
+      And player 11 is in the competition
+      And player 6 withdrew
+      And game 1 was won by player 3
+      And game 1 was lost by player 2
+      And game 2 was won by player 8
+      And game 2 was lost by player 7
+      And game 3 was won by player 9
+      And game 3 was lost by player 10
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 5 was won by player 5
+      And game 5 was lost by player 4
+      And game 6 was won by player 11
+      And game 6 was lost by player 9
+      And game 7 was won by player 1
+      And game 7 was lost by player 5
+      And game 8 was won by player 11
+      And game 8 was lost by player 8
+      And game 9 was won by player 11
+      And game 9 was lost by player 1
+      And game 10 was won by player 1
+      And game 10 was lost by player 11
+      And game 11 was won by player 1
+      And game 11 was lost by player 11
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
   Rule: A player who never played the match they were drawn in gives their opponent a walkover
 
     Many managers kept no game for a walkover: a player went on to the next

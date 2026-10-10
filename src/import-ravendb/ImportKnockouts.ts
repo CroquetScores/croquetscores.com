@@ -100,6 +100,13 @@ const roundsOf = (
   let standing: (number | "bye" | undefined)[] = places.map((place) =>
     place.bye ? "bye" : place.player._Id,
   );
+  // A player marked withdrawn who played no game against whoever they were
+  // drawn against lost that match, as the site has it (KnockoutPlay.ts).
+  const withdrawn = new Set(
+    places.flatMap((place) =>
+      !place.bye && place.player.IsWithdrawn ? [place.player._Id] : [],
+    ),
+  );
   while (standing.length > 1) {
     let most = 0;
     const through: (number | "bye" | undefined)[] = [];
@@ -116,18 +123,27 @@ const roundsOf = (
         }
         const won = (number: number): number =>
           played.filter((game) => game.Winner.PlayerId === number).length;
-        const winner =
+        const byGames =
           won(one) > won(other)
             ? one
             : won(other) > won(one)
               ? other
               : undefined;
+        // Where no game decided it, whoever of the two did not withdraw won,
+        // if only one of them did.
+        const winner =
+          byGames ??
+          (withdrawn.has(one) && !withdrawn.has(other)
+            ? other
+            : withdrawn.has(other) && !withdrawn.has(one)
+              ? one
+              : undefined);
         // As many games as were played, and as many as the winner's wins
         // need: two wins decide a best of 3, three a best of 5.
         most = Math.max(
           most,
           played.length,
-          winner === undefined ? 0 : 2 * won(winner) - 1,
+          byGames === undefined ? 0 : 2 * won(byGames) - 1,
         );
         if (winner !== undefined) knockedOut.add(winner === one ? other : one);
         through.push(winner);
