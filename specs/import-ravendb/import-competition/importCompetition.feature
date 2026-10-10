@@ -572,14 +572,115 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "Game.LoserMarked"
 
-  Rule: A game the site refuses is kept as an error, and the other games are added
+  Rule: A game is won by whoever scored more, whoever the old site said won it
 
-    Scenario: A game won with fewer points is kept as an error
+    Some games were kept the wrong way round: their winner scored fewer
+    points than their loser. The site refuses a game whose winner is not
+    ahead (`addGame.feature`), but who won a game is what its scores say, and
+    not who the old site said, so the winner is whoever scored more, with
+    the scores they scored. On equal points the winner is whoever's score is
+    marked as the winner's, as "5w". A game on equal points with neither
+    marked, or both, does not say who won, and is left as the old site kept
+    it. That is said as corrected (`AcceptedImportErrors.feature`), and
+    everything worked out from who won, as a knockout's draw, is worked out
+    from who won by the scores (`ImportKnockouts.feature`).
+
+    Scenario: A game whose winner scored fewer points is added
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
       And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 1 game
+
+    Scenario: A game whose winner scored fewer points is won by whoever scored more
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" was won by "Alex Other"
+
+    Scenario: A game whose winner scored fewer points keeps the scores each scored
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" has the winner's score "26"
+
+    Scenario: A game whose winner scored fewer points is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A game whose winner scored fewer points is said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 3
+      And game 1's loser scored "26"
+      When the competition is imported
+      Then "game 1" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.WinnerFromScore"
+
+    Scenario: A game on equal points won by the one marked is won by them
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "5"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5w"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" was won by "Alex Other"
+
+    Scenario: A game on equal points with both marked is still refused
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "6w"
+      And game 1 was lost by player 3
+      And game 1's loser scored "6w"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Game.LoserMarked"
+
+    Scenario: A game whose winner scored more is not said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "3"
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
+  Rule: A game the site refuses is kept as an error, and the other games are added
+
+    Scenario: A game on equal points with no mark is kept as an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
@@ -590,7 +691,7 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
@@ -601,7 +702,7 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
@@ -612,7 +713,7 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       And its slug on the old site was "block-a"
@@ -624,7 +725,7 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
@@ -637,11 +738,11 @@ Feature: Importing one of the old sites' competitions
       And player 3 is in the competition
       And player 3 is called "Trev Trent"
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
-      Then the summary kept for "croquetscores.com/blocks/30" names "Tim Tam 3"
+      Then the summary kept for "croquetscores.com/blocks/30" names "Tim Tam 26"
 
     Scenario: A game refused is said for a person, naming its loser and their score
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -650,7 +751,7 @@ Feature: Importing one of the old sites' competitions
       And player 3 is in the competition
       And player 3 is called "Trev Trent"
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
@@ -663,7 +764,7 @@ Feature: Importing one of the old sites' competitions
       And player 3 is in the competition
       And player 3 is called "Trev Trent"
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported
@@ -674,7 +775,7 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       And player 3 is in the competition
       And game 1 was won by player 7
-      And game 1's winner scored "3"
+      And game 1's winner scored "26"
       And game 1 was lost by player 3
       And game 1's loser scored "26"
       When the competition is imported

@@ -108,6 +108,44 @@ export const AGAINST_A_BYE = {
 } as const;
 
 /**
+ * `document` with each game won by whoever scored more, whoever the old site
+ * said won it (importCompetition.feature): the winner and the loser put the
+ * other way round, with the scores each scored, where the loser scored more,
+ * or where they scored as many and only the loser's score is marked as a
+ * winner's. A game on equal points with neither marked, or both, is as it
+ * was, and so is one whose scores cannot be read. The games put right are
+ * answered too, as they are now, to be said as corrected.
+ */
+export const withWinnersFromScores = <TDocument extends OldCompetition>(
+  document: TDocument,
+  website: Website,
+): { readonly document: TDocument; readonly swapped: readonly OldGame[] } => {
+  const swapped: OldGame[] = [];
+  const games = document.Games._Games.map((game) => {
+    try {
+      const winner = Score.read(game.Winner.Score._Score, website);
+      const loser = Score.read(game.Loser.Score._Score, website);
+      const equal = !loser.isMoreThan(winner) && !winner.isMoreThan(loser);
+      if (!(
+        loser.isMoreThan(winner) ||
+        (equal && loser.marked && !winner.marked)
+      )) {
+        return game;
+      }
+    } catch {
+      return game;
+    }
+    const put: OldGame = { ...game, Winner: game.Loser, Loser: game.Winner };
+    swapped.push(put);
+    return put;
+  });
+  return {
+    document: { ...document, Games: { ...document.Games, _Games: games } },
+    swapped,
+  };
+};
+
+/**
  * `document` with the list of players and the list of games the old site
  * left out kept as lists of none: it kept some, as TeamMatches/28862, with
  * neither list there at all (ImportTeamMatches.feature). Read once, where a
@@ -279,7 +317,10 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   { website, id, document: read }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
-  const document = withItsLists(read);
+  const { document, swapped } = withWinnersFromScores(
+    withItsLists(read),
+    Website.from(website),
+  );
   const {
     unitOfWork,
     tournaments,
@@ -375,6 +416,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
     errors.added(competitionId);
+    for (const game of swapped) {
+      await errors.gameCorrected(
+        game,
+        nameOfIn(document),
+        "ImportCompetition.WinnerFromScore",
+        "was kept the other way round, and is brought over as won by the player who scored more.",
+      );
+    }
     for (const { code, says } of shaped.corrected ?? []) {
       await errors.corrected("", code, `${errors.place} ${says}`);
     }

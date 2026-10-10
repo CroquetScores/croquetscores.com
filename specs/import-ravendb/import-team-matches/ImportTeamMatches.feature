@@ -1305,6 +1305,52 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "Australia" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
 
+  Rule: A game of a team match is won by whoever scored more
+
+    Scenario: A game of a team match whose winner scored fewer points is won by whoever scored more
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Alex Other"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 8
+      And game 1's loser scored "26"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 1 game
+
+    Scenario: A game of a team match whose winner scored fewer points is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 8
+      And game 1's loser scored "26"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game of a team match whose winner scored fewer points is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 8
+      And game 1's loser scored "26"
+      When the team match is imported
+      Then "game 1" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.WinnerFromScore"
+
   Rule: A player named as a bye is no player of a team
 
     The old sites let a team match have a bye, a player called "Bye", or "Bye

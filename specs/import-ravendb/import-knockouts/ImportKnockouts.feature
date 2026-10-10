@@ -849,6 +849,51 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then "Dan Dunn" has not withdrawn from the competition kept for "knockouts/30" on "croquetscores.com"
 
+  Rule: A knockout is worked out from who won by the scores
+
+    Who won a game is what its scores say (`importCompetition.feature`), so a
+    game kept the wrong way round is worked out as the other player's win:
+    the draw's rounds, who went on, and which games are play-offs.
+
+    Ben Baker is recorded as beating Ann Able, scoring 3 to her 7, so Ann
+    won, and goes on to beat Cat Cole in the final.
+
+    Scenario: The games of a knockout with a game kept the wrong way round are all added
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 2
+      And game 1's winner scored "3"
+      And game 1 was lost by player 1
+      And game 1's loser scored "7"
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 3 games
+
+    Scenario: A knockout with a game kept the wrong way round is not an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 2
+      And game 1's winner scored "3"
+      And game 1 was lost by player 1
+      And game 1's loser scored "7"
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
   Rule: Nothing is carried forward in a knockout
 
     Scenario: A player's counts are left behind
