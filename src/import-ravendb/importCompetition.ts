@@ -159,16 +159,16 @@ export const addGames = async (
 ): Promise<void> => {
   const inOrder = ordered(games);
   for (const [index, game] of inOrder.entries()) {
-    const add = (): void => {
-      const winner = playerOf(game.Winner.PlayerId);
-      const loser = playerOf(game.Loser.PlayerId);
+    const add = (adding: OldGame): void => {
+      const winner = playerOf(adding.Winner.PlayerId);
+      const loser = playerOf(adding.Loser.PlayerId);
       if (winner === undefined || loser === undefined) {
         throw new ImportRefused(
           "ImportCompetition.PlayerNotInCompetition",
-          `A player of the game is not in the competition: ${String(game.Winner.PlayerId)} or ${String(game.Loser.PlayerId)}.`,
+          `A player of the game is not in the competition: ${String(adding.Winner.PlayerId)} or ${String(adding.Loser.PlayerId)}.`,
         );
       }
-      const winnerScore = Score.read(game.Winner.Score._Score, website);
+      const winnerScore = Score.read(adding.Winner.Score._Score, website);
       competition.addGame(
         GameId.create(),
         {
@@ -176,28 +176,35 @@ export const addGames = async (
           winnerScore,
           loser,
           loserScore: Score.read(
-            walkoverWritten(game.Loser.Score._Score, winnerScore),
+            walkoverWritten(adding.Loser.Score._Score, winnerScore),
             website,
           ),
         },
         told,
         by,
-        momentOf(game.CreatedAt),
+        momentOf(adding.CreatedAt),
       );
     };
     try {
       // Added again for as long as what refused it is put right, which a
-      // walkover the old site kept no game for is.
+      // walkover the old site kept no game for is, or added as the game it
+      // was put right as, once, which is said as corrected only once it is
+      // added. Where that is refused too, the game is refused as it was.
+      let refused: unknown;
+      let instead: Instead | undefined;
       for (;;) {
         try {
-          add();
+          add(instead?.game ?? game);
           break;
         } catch (failure) {
-          if (!(await putRight(game, failure, inOrder.slice(index)))) {
-            throw failure;
-          }
+          refused ??= failure;
+          if (instead !== undefined) throw refused;
+          const put = await putRight(game, failure, inOrder.slice(index));
+          if (put === false) throw refused;
+          if (put !== true) instead = put;
         }
       }
+      await instead?.corrected();
       const loserScore = game.Loser.Score._Score;
       const written = walkoverWritten(
         loserScore,
@@ -220,14 +227,20 @@ export const addGames = async (
 
 /**
  * Whether what refused `game` has been put right, so that it can be added
- * again: given what refused it, and the games still to be added from it on,
- * itself first.
+ * again, or the game it was put right as, to be added in its place: given
+ * what refused it, and the games still to be added from it on, itself first.
  */
 export type PutRight = (
   game: OldGame,
   failure: unknown,
   toCome: readonly OldGame[],
-) => Promise<boolean>;
+) => Promise<boolean | Instead>;
+
+/** A game added in place of one refused, and how it is said as corrected. */
+export interface Instead {
+  readonly game: OldGame;
+  corrected(): Promise<void>;
+}
 
 /**
  * The loser's score `typed`, but where it is 0 marked as a winner's, as "0W",

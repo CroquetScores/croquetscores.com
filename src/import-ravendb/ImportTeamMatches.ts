@@ -18,6 +18,7 @@ import {
   addGames,
   gamesInOrder,
   nameOfIn,
+  type PutRight,
   withItsLists,
 } from "./importCompetition.js";
 import { ImportRefused } from "./ImportRefused.js";
@@ -93,6 +94,24 @@ const reordered = (
     inOrder.includes(game.Id) ? (named[next++] ?? game) : game,
   );
 };
+
+// A pair, rather than one player: a name with ",", "/", "&" or "and" in it,
+// as "Ann Able & Ben Baker" (ImportTeamMatches.feature).
+const isAPair = (name: string): boolean => /,|\/|&|\band\b/i.test(name);
+
+const scoresOf = (game: OldGame): string =>
+  `${String(game.Winner.PlayerId)} ${game.Winner.Score._Score} ${String(game.Loser.PlayerId)} ${game.Loser.Score._Score}`;
+
+const playedBetween = (
+  games: readonly OldGame[],
+  one: number,
+  other: number,
+): boolean =>
+  games.some(
+    (game) =>
+      (game.Winner.PlayerId === one && game.Loser.PlayerId === other) ||
+      (game.Winner.PlayerId === other && game.Loser.PlayerId === one),
+  );
 
 /**
  * How many matches a team match's games say it had (ImportTeamMatches.feature):
@@ -405,18 +424,103 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           `${errors.place} has its games ${inOrder.join(", ")} added in that order, the order they were played in, rather than the order they were entered in.`,
         );
       }
+      // A game of a team match of single games refused because its two
+      // players already met was most often entered against the wrong one:
+      // it is the game against whoever on the other team one of them has
+      // not played, of the same kind, single or pair, where there is one
+      // only. One with the very scores of a game they already played is
+      // the same game entered twice, and is not (ImportTeamMatches.feature).
+      const gamesPlayed = document.Games._Games.filter(
+        (game) => !againstABye(game),
+      );
+      const nameOf = nameOfIn(document);
+      const sideOf = (number: number): Team | undefined => {
+        const player = document.Players._Players.find(
+          (each) => each._Id === number,
+        );
+        return player === undefined
+          ? undefined
+          : teamRepresented((player.Representing ?? "").trim());
+      };
+      const opponentCorrected: PutRight = (game, failure) => {
+        const refusedAs = (failure as { code?: unknown }).code;
+        if (
+          refusedAs !== "Competition.MatchDecided" ||
+          bestOfImported(document.BestOf).games !== 1
+        ) {
+          return Promise.resolve(false);
+        }
+        if (
+          gamesPlayed.some(
+            (each) => each !== game && scoresOf(each) === scoresOf(game),
+          )
+        ) {
+          return Promise.resolve(false);
+        }
+        const winner = game.Winner.PlayerId;
+        const loser = game.Loser.PlayerId;
+        // Whoever, on the side of `replaced`, `kept` has not played.
+        const notPlayed = (kept: number, replaced: number): number[] => {
+          const side = sideOf(replaced);
+          if (side === undefined) return [];
+          return document.Players._Players
+            .map((each) => each._Id)
+            .filter(
+              (number) =>
+                number !== replaced &&
+                players.has(number) &&
+                sideOf(number)?.id.equals(side.id) === true &&
+                isAPair(nameOf(number)) === isAPair(nameOf(replaced)) &&
+                !playedBetween(gamesPlayed, kept, number),
+            );
+        };
+        const insteadOfLoser = notPlayed(winner, loser);
+        const insteadOfWinner = notPlayed(loser, winner);
+        if (insteadOfLoser.length + insteadOfWinner.length !== 1) {
+          return Promise.resolve(false);
+        }
+        const [newLoser] = insteadOfLoser;
+        const [newWinner] = insteadOfWinner;
+        const kept = newLoser === undefined ? loser : winner;
+        const replaced = newLoser === undefined ? winner : loser;
+        const playing = newLoser ?? newWinner ?? replaced;
+        const corrected: OldGame = {
+          ...game,
+          Winner: {
+            ...game.Winner,
+            PlayerId: newWinner ?? winner,
+          },
+          Loser: { ...game.Loser, PlayerId: newLoser ?? loser },
+        };
+        return Promise.resolve({
+          game: corrected,
+          corrected: async () => {
+            // Played from then on, so that no other game is put right as
+            // the one it now is.
+            gamesPlayed[gamesPlayed.indexOf(game)] = corrected;
+            await errors.gameCorrected(
+              game,
+              nameOf,
+              "ImportTeamMatches.OpponentCorrected",
+              `was entered against ${nameOf(replaced)}, whom ${nameOf(kept)} had already played, and is brought over against ${nameOf(playing)}, whom ${nameOf(kept)} had not.`,
+            );
+          },
+        });
+      };
       await addGames(
         errors,
         competition,
-        document.Games._Games.filter((game) => !againstABye(game)),
+        gamesPlayed,
         (number) => players.get(number),
-        nameOfIn(document),
+        nameOf,
         toldOf(tournament, competitionId),
         Website.from(website),
         by,
         inOrder === undefined
           ? gamesInOrder
           : (games) => reordered(games, inOrder),
+        undefined,
+        opponentCorrected,
       );
       await competitions.save(competition);
     });

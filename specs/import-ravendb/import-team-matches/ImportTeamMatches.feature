@@ -571,6 +571,275 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then "teammatches/50" on "croquetscores.com" is kept as a test
 
+  Rule: A game against a player already played is a game against the one not played
+
+    The old sites kept many team matches whose two players met again in a
+    match of single games, which the site refuses, since a test's two
+    players meet in one match (`gamesInATest.feature`). Most were a game
+    entered against the wrong player: the one already played, in place of
+    the one who was not. So a game of a team match of single games refused
+    because its two players already met is a game against whoever on the
+    other team one of them has not played in the team match, of the same
+    kind, single or pair, where there is one only, and the site then takes
+    it. A pair is a player whose name has ",", "/", "&" or "and" in it. That
+    is said as corrected (`AcceptedImportErrors.feature`). Where there is no
+    one, or more than one, or the game has the very scores of one the two
+    already played, which is the same game entered twice, or the team
+    match's matches are the best of more than 1, the game is refused as it
+    always was.
+
+    Ann Able beats Cat Cole, and Ben Baker beats Dan Dunn and Cat Cole, all
+    of England. Ann then beats Cat again, but Ann has not played Dan, so
+    that game was Ann against Dan.
+
+    Scenario: A game against a player already played is a game against the one not played
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 4 games
+
+    Scenario: A game against a player already played, put right, is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game against a player already played, put right, is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then "game 4" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.OpponentCorrected"
+
+    Scenario: A game against a player already played is said as corrected, naming the player not played
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then what is corrected of "croquetscores.com/teammatches/50" names "Dan Dunn"
+
+    Scenario: A game with more than one player not played is still refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And player 5 is in the team match
+      And player 5 is called "Eve East"
+      And player 5 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+
+    Scenario: A single is not taken for a pair not played
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And player 4 is called "Dan Dunn & Fay Ford"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+
+    Scenario: A game with the very scores of one already played is still refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "5"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+
+    Scenario: A game of a team match whose matches are the best of more than 1 is still refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      And game 5 was won by player 1
+      And game 5 was lost by player 3
+      And game 5's loser scored "1"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+
   Rule: The games of a team match the import names are added in the order it names
 
     Some team matches had their games entered out of the order they were
