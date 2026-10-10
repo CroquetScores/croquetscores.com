@@ -181,9 +181,10 @@ Feature: Importing one of the old sites' competitions
     (`ImportTournamentPlayers.feature`): added to the tournament, and kept by
     the number the old site gave them, so that every competition listing them
     finds the one player. One named as a bye is kept as the bye. That is not
-    an error, since nothing was lost, and is said as accepted, with the
-    tournament it is of (`AcceptedImportErrors.feature`). A player the site
-    refuses is kept as an error naming them, and the rest are entered.
+    an error, since nothing was lost, and is said as corrected, with where it
+    is on the new site and the old, in the file of import corrections
+    (`AcceptedImportErrors.feature`), and not said as accepted. A player the
+    site refuses is kept as an error naming them, and the rest are entered.
 
     Scenario: A player the tournament did not list is entered in the competition
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -218,12 +219,19 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then no error is kept for "croquetscores.com/blocks/30"
 
-    Scenario: Bringing over a player the tournament did not list is said as accepted
+    Scenario: Bringing over a player the tournament did not list is said as corrected
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "Pat Missing"
       When the competition is imported
-      Then "player 9" of "croquetscores.com/blocks/30" is accepted as "ImportCompetition.PlayerNotInTournament"
+      Then "player 9" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.PlayerNotInTournament"
+
+    Scenario: Bringing over a player the tournament did not list is not said as accepted
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then nothing is accepted of "croquetscores.com/blocks/30"
 
     Scenario: A bye the tournament did not list is kept as the bye
       Given the Swiss "swisses/30" of "tournaments/12" on "croquetscores.com"

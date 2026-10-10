@@ -9,7 +9,3 @@
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
 
 ## Importing Changes
-
-### ImportCompetition.PlayerNotInTournament
-
-Record these items as currently are but in docs\import-from-ravendb\import-corrections.md

@@ -292,7 +292,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         number,
         playerId,
       );
-      await errors.accepted(
+      await errors.corrected(
         `player ${String(number)}`,
         "ImportCompetition.PlayerNotInTournament",
         `Player ${nameOfIn(document)(number)} in ${errors.place} was brought over from the competition's own list, because the tournament's players no longer listed them.`,

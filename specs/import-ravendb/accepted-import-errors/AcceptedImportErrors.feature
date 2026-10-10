@@ -2,11 +2,8 @@ Feature: What the import accepted, said in a file
 
   Not everything the import cannot bring over as the old site kept it is an
   error. Some of what the site refuses has been looked at and accepted
-  (`ImportKnockouts.feature`), and some the import works around: a player
-  brought over from a competition that the tournament's players no longer
-  listed (`importCompetition.feature`).
-  None of it is kept among the import's errors, which are what someone has to
-  put right. Each is said instead in
+  (`ImportKnockouts.feature`). None of it is kept among the import's errors,
+  which are what someone has to put right. Each is said instead in
   docs/import-from-ravendb/accepted-import-errors.md, under a heading each,
   for whoever reads it to look at the tournament and see that nothing that
   mattered was lost.
@@ -31,8 +28,10 @@ Feature: What the import accepted, said in a file
   to be uncounted.
 
   What the import corrected of what the old sites kept, as a game against a
-  bye left out (`importCompetition.feature`), or a team match's expected
-  matches where its games say more (`ImportTeamMatches.feature`), is
+  bye left out or a player brought over from a competition that the
+  tournament's players no longer listed (`importCompetition.feature`), or a
+  team match's expected matches where its games say more
+  (`ImportTeamMatches.feature`), is
   not accepted as an error is, and is said in
   docs/import-from-ravendb/import-corrections.md instead, written the same
   way, with the same beginning and end, headed Import corrections, and
