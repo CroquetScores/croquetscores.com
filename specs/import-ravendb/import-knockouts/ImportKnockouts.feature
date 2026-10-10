@@ -672,6 +672,96 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then no error is kept for "croquetscores.com/knockouts/30"
 
+  Rule: A player who never played the match they were drawn in gives their opponent a walkover
+
+    Many managers kept no game for a walkover: a player went on to the next
+    round, and whoever they were drawn against played no game at all. The
+    site takes a game only between two players drawn to meet, and a match
+    with no game is not decided, so every game of the player who went on was
+    refused. So where a game is refused because a player's match before it
+    is not decided, and whoever they were drawn against in it played them no
+    game and plays none from then on, that player is withdrawn, which gives
+    the match to their opponent (`withdrawPlayer.feature`), and the game is
+    added after all. That is said as corrected
+    (`AcceptedImportErrors.feature`). Whoever plays on, later in the order
+    the games are added, gave no walkover, and the game is refused as it
+    always was.
+
+    Cat Cole played no game against Dan Dunn, and Ann Able, who beat Ben
+    Baker, beat Cat in the final.
+
+    Scenario: The games of a player whose opponent gave a walkover are added
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 2 games
+
+    Scenario: A walkover is not an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
+    Scenario: Whoever gave a walkover has withdrawn
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then "Dan Dunn" has withdrawn from the competition kept for "knockouts/30" on "croquetscores.com"
+
+    Scenario: A walkover is said as corrected
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then "game 2" of "croquetscores.com/knockouts/30" is corrected as "ImportKnockouts.Walkover"
+
+    Scenario: A player who plays on later gave no walkover
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      And game 3 was won by player 4
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then "Dan Dunn" has not withdrawn from the competition kept for "knockouts/30" on "croquetscores.com"
+
   Rule: Nothing is carried forward in a knockout
 
     Scenario: A player's counts are left behind

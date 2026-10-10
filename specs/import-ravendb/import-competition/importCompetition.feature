@@ -505,6 +505,73 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the first game of the competition kept for "blocks/30" on "croquetscores.com" was won by "Sam Someone"
 
+  Rule: A walkover written as the loser's 0 marked won is written as the walkover it was
+
+    Some managers wrote a walkover as a game whose loser scored 0 with the
+    mark a winner's score has, as "7" beat "0W". The site refuses a loser's
+    score marked as the winner's (`addGame.feature`), so the walkover was
+    lost, and the winner never went on. A loser's 0 marked so, against a
+    winner's score that is not, has its "W" written "w/o", as "0w/o", which
+    is no mark, and the game is added. That is said as corrected
+    (`AcceptedImportErrors.feature`). A loser's score of more than 0 marked
+    so, or one against a winner's that is marked too, is refused as it
+    always was.
+
+    Scenario: A walkover written as the loser's "0W" is added
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 3
+      And game 1's loser scored "0W"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 1 game
+
+    Scenario: A walkover written as the loser's "0W" has the loser's score written "0w/o"
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 3
+      And game 1's loser scored "0W"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" has the loser's score "0w/o"
+
+    Scenario: A walkover written as the loser's "0W" is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 3
+      And game 1's loser scored "0W"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A walkover written as the loser's "0W" is said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 3
+      And game 1's loser scored "0W"
+      When the competition is imported
+      Then "game 1" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.WalkoverWritten"
+
+    Scenario: A loser's score of more than 0 marked won is still refused
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5W"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Game.LoserMarked"
+
   Rule: A game the site refuses is kept as an error, and the other games are added
 
     Scenario: A game won with fewer points is kept as an error

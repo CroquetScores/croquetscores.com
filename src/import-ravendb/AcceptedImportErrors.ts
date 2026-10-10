@@ -360,6 +360,23 @@ export class DocumentErrors {
   }
 
   /**
+   * Says that `game` was corrected as `code`, and how, `after` the game said
+   * for a person, as a correction of what the old site kept.
+   */
+  async gameCorrected(
+    game: OldGame,
+    nameOf: (number: number) => string,
+    code: string,
+    after: string,
+  ): Promise<void> {
+    await this.corrected(
+      `game ${String(game.Id)}`,
+      code,
+      `${gameSaid(gameOf(game, nameOf), this.place)} ${after}`,
+    );
+  }
+
+  /**
    * Says that `game` was left out as `code`, `because` of what, as a
    * correction of what the old site kept.
    */

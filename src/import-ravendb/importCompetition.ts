@@ -155,9 +155,11 @@ export const addGames = async (
   by: AccountId,
   ordered: (games: readonly OldGame[]) => readonly OldGame[] = gamesInOrder,
   afterGame: (game: OldGame) => Promise<void> = () => Promise.resolve(),
+  putRight: PutRight = () => Promise.resolve(false),
 ): Promise<void> => {
-  for (const game of ordered(games)) {
-    try {
+  const inOrder = ordered(games);
+  for (const [index, game] of inOrder.entries()) {
+    const add = (): void => {
       const winner = playerOf(game.Winner.PlayerId);
       const loser = playerOf(game.Loser.PlayerId);
       if (winner === undefined || loser === undefined) {
@@ -166,24 +168,76 @@ export const addGames = async (
           `A player of the game is not in the competition: ${String(game.Winner.PlayerId)} or ${String(game.Loser.PlayerId)}.`,
         );
       }
+      const winnerScore = Score.read(game.Winner.Score._Score, website);
       competition.addGame(
         GameId.create(),
         {
           winner,
-          winnerScore: Score.read(game.Winner.Score._Score, website),
+          winnerScore,
           loser,
-          loserScore: Score.read(game.Loser.Score._Score, website),
+          loserScore: Score.read(
+            walkoverWritten(game.Loser.Score._Score, winnerScore),
+            website,
+          ),
         },
         told,
         by,
         momentOf(game.CreatedAt),
       );
+    };
+    try {
+      // Added again for as long as what refused it is put right, which a
+      // walkover the old site kept no game for is.
+      for (;;) {
+        try {
+          add();
+          break;
+        } catch (failure) {
+          if (!(await putRight(game, failure, inOrder.slice(index)))) {
+            throw failure;
+          }
+        }
+      }
+      const loserScore = game.Loser.Score._Score;
+      const written = walkoverWritten(
+        loserScore,
+        Score.read(game.Winner.Score._Score, website),
+      );
+      if (written !== loserScore) {
+        await errors.gameCorrected(
+          game,
+          nameOf,
+          "ImportCompetition.WalkoverWritten",
+          `had the walkover written as the loser's "${loserScore}", which marks a winner's score, and it is written "${written}".`,
+        );
+      }
     } catch (failure) {
       await errors.gameRefused(game, nameOf, failure);
     }
     await afterGame(game);
   }
 };
+
+/**
+ * Whether what refused `game` has been put right, so that it can be added
+ * again: given what refused it, and the games still to be added from it on,
+ * itself first.
+ */
+export type PutRight = (
+  game: OldGame,
+  failure: unknown,
+  toCome: readonly OldGame[],
+) => Promise<boolean>;
+
+/**
+ * The loser's score `typed`, but where it is 0 marked as a winner's, as "0W",
+ * against a `winnerScore` not marked, a walkover written so, with its "W"
+ * written "w/o", which is no mark (importCompetition.feature).
+ */
+const walkoverWritten = (typed: string, winnerScore: Score): string =>
+  !winnerScore.marked && /^0\s*w$/i.test(typed.trim())
+    ? `${typed.trim().slice(0, -1)}w/o`
+    : typed;
 
 /**
  * Brings one of the old sites' blocks, knockouts or Swisses over as `kind` says
@@ -409,6 +463,50 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     for (const [number, left] of gamesLeft) {
       if (left === 0) await withdraw(number);
     }
+    // A game refused because a player's match before it is not decided, where
+    // whoever they were drawn against played them no game and plays none from
+    // then on: that player gave a walkover, which the old site kept no game
+    // for, and is withdrawn, which gives the match to their opponent
+    // (ImportKnockouts.feature).
+    const numberOf = (id: CompetitionPlayerId): number | undefined =>
+      [...entered].find(([, entrant]) => entrant.equals(id))?.[0];
+    const plays = (game: OldGame, number: number): boolean =>
+      game.Winner.PlayerId === number || game.Loser.PlayerId === number;
+    const walkover: PutRight = async (game, failure, toCome) => {
+      if (
+        (failure as { code?: unknown }).code !== "Competition.NotDrawnToMeet"
+      ) {
+        return false;
+      }
+      let given = false;
+      for (const number of [game.Winner.PlayerId, game.Loser.PlayerId]) {
+        const id = entered.get(number);
+        if (id === undefined) continue;
+        const against = competition.drawnAgainst(id, told);
+        const theirs = against === undefined ? undefined : numberOf(against);
+        if (against === undefined || theirs === undefined) continue;
+        const between = competition.games.some(
+          (each) =>
+            (each.winner.equals(id) && each.loser.equals(against)) ||
+            (each.winner.equals(against) && each.loser.equals(id)),
+        );
+        if (between || toCome.some((each) => plays(each, theirs))) continue;
+        try {
+          competition.withdrawPlayer(against, told, by, at);
+        } catch {
+          continue;
+        }
+        withdrew.delete(theirs);
+        given = true;
+        await errors.gameCorrected(
+          game,
+          nameOfIn(document),
+          "ImportKnockouts.Walkover",
+          `came after a walkover the old site kept no game for: ${nameOfIn(document)(theirs)} played ${nameOfIn(document)(number)} no game, and is withdrawn, so that ${nameOfIn(document)(number)} goes on.`,
+        );
+      }
+      return given;
+    };
     await addGames(
       errors,
       competition,
@@ -427,6 +525,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           if (left - 1 === 0) await withdraw(number);
         }
       },
+      walkover,
     );
     for (const number of [...withdrew.keys()]) await withdraw(number);
 
