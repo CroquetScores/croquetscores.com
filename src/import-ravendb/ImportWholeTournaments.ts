@@ -89,6 +89,14 @@ const STANDARD: ReadonlySet<string> = new Set([
   "croquetscores.com/tournaments/80204",
 ]);
 
+// Tournaments left behind with everything that names them, by the website
+// and the document, with why (ImportWholeTournaments.feature):
+// tournaments/82149, the Mt Albert Croquet Club Rose Bowl Tournament, whose
+// block and team match had no games.
+const LEFT_BEHIND: ReadonlyMap<string, string> = new Map([
+  ["croquetscores.com/tournaments/82149", "No games"],
+]);
+
 /**
  * A block brought over as a team match: played over its tournament's days,
  * and expected to have as many matches as its games say (ImportTeamMatches.ts).
@@ -164,6 +172,21 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     // played, whatever names it.
     if (document.IsArchived || document.Competitions.length === 0) {
       await this.database.recordTournamentRead(website, id);
+      return;
+    }
+    // Left behind the same way where the import names it, and said as
+    // corrected, with why.
+    const why = LEFT_BEHIND.get(`${website}/${id}`.toLowerCase());
+    if (why !== undefined) {
+      await this.database.recordTournamentRead(website, id);
+      await this.#corrected(
+        website,
+        id,
+        document,
+        undefined,
+        "ImportWholeTournaments.LeftBehind",
+        why,
+      );
       return;
     }
 

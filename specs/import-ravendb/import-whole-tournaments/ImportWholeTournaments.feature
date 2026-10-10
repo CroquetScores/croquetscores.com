@@ -489,6 +489,56 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament is imported
       Then no error is kept for "croquetscores.com/tournamentplayers/40"
 
+  Rule: A tournament the import names is left behind with everything that names it
+
+    Some tournaments are not worth bringing over, as croquetscores.com's
+    tournaments/82149, the Mt Albert Croquet Club Rose Bowl Tournament in
+    2025, whose block and team match had no games. Such a tournament the
+    import names is left behind with everything that names it, as an
+    archived one is, and that is not an error. It is said as corrected, with
+    why, as "No games" (`AcceptedImportErrors.feature`), on no page of the
+    new site.
+
+    Scenario: A tournament the import names is not kept as any tournament
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then "tournaments/82149" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: What names a tournament the import names is not kept as any competition
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a tournament the import names behind is not refused
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then importing the tournament is not refused
+
+    Scenario: A tournament the import names is said as corrected
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then "croquetscores.com/tournaments/82149" is corrected as "ImportWholeTournaments.LeftBehind"
+
+    Scenario: A tournament the import names is said as corrected with why
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then what is corrected of "croquetscores.com/tournaments/82149" names "No games"
+
   Rule: A tournament that lists no competition is left behind with everything that names it
 
     Scenario: A tournament that lists no competition is not kept as any tournament

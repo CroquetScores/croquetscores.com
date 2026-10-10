@@ -9,7 +9,3 @@
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
 
 ## Importing Changes
-
-### https://croquetscores.com/2025/gc/mt-albert-croquet-club-rose-bowl-tournament
-
-Do not import. Add to import-corrections.md with message `No games`
