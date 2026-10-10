@@ -53,6 +53,12 @@ export type Listed =
 export type Shaped =
   | {
       readonly entries: readonly Listed[];
+      /**
+       * What of the competition was corrected in shaping it, said once it is
+       * added: a code, and what happened to it, which begins with what it
+       * was.
+       */
+      readonly corrected?: readonly { code: string; says: string }[];
       readonly gamesInOrder?: (games: readonly OldGame[]) => readonly OldGame[];
       readonly add: (
         tournament: Tournament,
@@ -369,6 +375,9 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
     errors.added(competitionId);
+    for (const { code, says } of shaped.corrected ?? []) {
+      await errors.corrected("", code, `${errors.place} ${says}`);
+    }
     await tournaments.save(tournament);
     await database.recordImportedCompetition(
       website,
