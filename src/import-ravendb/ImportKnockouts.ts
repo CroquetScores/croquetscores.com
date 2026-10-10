@@ -73,8 +73,11 @@ const odd = (games: number): number => (games % 2 === 0 ? games + 1 : games);
 /**
  * What each round of a knockout drawn as `places` is the best of, the first
  * round first, worked out from its games as the old sites worked it out each
- * time they showed one: the most games any match of the round had, made odd,
- * and never fewer than the round before. A round with no games is the best of
+ * time they showed one: what the longest match of the round needed, made odd,
+ * and never fewer than the round before. A match needed as many games as were
+ * played in it, and as many as make a winner of whoever won it, which takes
+ * one more than half the best-of, so three wins make it at least a best of 5.
+ * A round with no games is the best of
  * what the round before was, or of 1 where it is the first. And which round
  * each game is of, by its number, for the games to be added round by round,
  * and which players lost a match, so are knocked out.
@@ -111,7 +114,6 @@ const roundsOf = (
           used.add(game.Id);
           roundOf.set(game.Id, rounds.length);
         }
-        most = Math.max(most, played.length);
         const won = (number: number): number =>
           played.filter((game) => game.Winner.PlayerId === number).length;
         const winner =
@@ -120,6 +122,13 @@ const roundsOf = (
             : won(other) > won(one)
               ? other
               : undefined;
+        // As many games as were played, and as many as the winner's wins
+        // need: two wins decide a best of 3, three a best of 5.
+        most = Math.max(
+          most,
+          played.length,
+          winner === undefined ? 0 : 2 * won(winner) - 1,
+        );
         if (winner !== undefined) knockedOut.add(winner === one ? other : one);
         through.push(winner);
       } else if (one === "bye") {

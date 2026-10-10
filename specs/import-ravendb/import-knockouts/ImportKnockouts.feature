@@ -27,12 +27,15 @@ Feature: Importing the old sites' knockouts
   put right in it that the import could then bring over.
 
   The old sites never kept what a knockout's rounds were the best of. They
-  worked it out each time from the games: the most games any match of the
-  round had, made odd by one more where it was even, and never fewer than
-  the round before. The site keeps a best-of for each round, so it is worked
-  out the same way once, when the knockout is brought over, and a round with
-  no games yet is the best of what the round before was, or of 1 where it is
-  the first.
+  worked it out each time from the games: what the longest match of the round
+  needed, made odd by one more where it was even, and never fewer than the
+  round before. A match needed as many games as were played in it, and as
+  many as make a winner of whoever won it: a best of 5 takes three wins, so
+  a match won three games to none was a best of 5, and not a best of 3,
+  which two wins decide. The site keeps a best-of for each round, so it is
+  worked out the same way once, when the knockout is brought over, and a
+  round with no games yet is the best of what the round before was, or of 1
+  where it is the first.
 
   A knockout's games are added round by round, the first round first, and
   each round's in the order the old site numbered them. The old sites took a
@@ -234,7 +237,7 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then importing the competition is not refused
 
-  Rule: Each round is the best of the most games a match in it had, made odd
+  Rule: Each round is the best of what its longest match needed, made odd
 
     Scenario: A round of single games is the best of 1
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
@@ -271,6 +274,90 @@ Feature: Importing the old sites' knockouts
       And game 2 was lost by player 2
       When the competition is imported
       Then round 1 of the competition kept for "knockouts/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A round with a match won three games to none is the best of 5
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then round 1 of the competition kept for "knockouts/30" on "croquetscores.com" is the best of 5
+
+    Scenario: A round with a match won three games to one is the best of 5
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 2
+      And game 2 was lost by player 1
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 4 was won by player 1
+      And game 4 was lost by player 2
+      When the competition is imported
+      Then round 1 of the competition kept for "knockouts/30" on "croquetscores.com" is the best of 5
+
+    Scenario: Every game of a match won three games to none is added
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 3 games
+
+    Scenario: A final won three games to none is added without an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 5 was won by player 1
+      And game 5 was lost by player 3
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
+    Scenario: A final won three games to none has all its games added
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 5 was won by player 1
+      And game 5 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 5 games
 
     Scenario: A round is the best of no fewer than the round before
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
