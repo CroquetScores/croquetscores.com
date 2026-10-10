@@ -227,6 +227,42 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then "croquetscores.com/blocks/100678" is corrected as "ImportWholeTournaments.BlockAsTeamMatch"
 
+  Rule: A tournament the import names as Standard is brought over as one
+
+    The old site kept some tournaments as played by teams that had no team
+    match to play, as croquetscores.com's tournaments/80204, the Murphy Shield
+    LPG Southport v Chester, which listed only a block, and the site has no
+    block in a tournament played by teams. Such a tournament the import names
+    is brought over as a Standard tournament, with its competitions. That is
+    said as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: A tournament the import names as Standard is a Standard tournament
+      Given a tournament "tournaments/80204" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/80204" on "croquetscores.com"
+      When the tournament "tournaments/80204" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/80204" on "croquetscores.com" is in the format "Standard"
+
+    Scenario: The block of a tournament the import names as Standard is brought over
+      Given a tournament "tournaments/80204" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/80204" on "croquetscores.com"
+      When the tournament "tournaments/80204" on "croquetscores.com" is imported
+      Then "blocks/30" on "croquetscores.com" is kept as a competition of the tournament kept for "tournaments/80204" on "croquetscores.com"
+
+    Scenario: A tournament the import names as Standard is said as corrected
+      Given a tournament "tournaments/80204" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/80204" on "croquetscores.com"
+      When the tournament "tournaments/80204" on "croquetscores.com" is imported
+      Then "croquetscores.com/tournaments/80204" is corrected as "ImportWholeTournaments.ImportedAsStandard"
+
   Rule: A tournament played by teams is held over the days of its team matches
 
     The old sites kept a tournament played by teams with days of its own that

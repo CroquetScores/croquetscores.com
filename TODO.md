@@ -10,10 +10,6 @@
 
 ## Importing Changes
 
-### https://croquetscores.com/admin/2025/gc/murphy-shield-lpg-southport-v-chester
-
-Import this as a standard tournament
-
 ### https://croquetscores.com/2025/gc/mt-albert-croquet-club-rose-bowl-tournament
 
 Do not import. Add to import-corrections.md with message `No games`

@@ -81,6 +81,14 @@ const TEAM_MATCHES: ReadonlySet<string> = new Set([
   "croquetscores.com/blocks/100678",
 ]);
 
+// Tournaments the old sites kept as played by teams that were not, by the
+// website and the document (ImportWholeTournaments.feature):
+// tournaments/80204, the Murphy Shield LPG Southport v Chester, with no team
+// match, only a block.
+const STANDARD: ReadonlySet<string> = new Set([
+  "croquetscores.com/tournaments/80204",
+]);
+
 /**
  * A block brought over as a team match: played over its tournament's days,
  * and expected to have as many matches as its games say (ImportTeamMatches.ts).
@@ -189,10 +197,16 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     );
     await this.database.recordTournamentRead(website, id);
 
+    // A tournament the import names as Standard is set up as one, whatever
+    // the old site said.
+    const standard = STANDARD.has(`${website}/${id}`.toLowerCase());
+    const setUp = standard
+      ? { ...document, TournamentType: "standard" }
+      : setUpAsPlayedByTeams(document);
     try {
       await this.parts.tournament.importDocument({
         ...read,
-        document: heldOverItsTeamMatches(setUpAsPlayedByTeams(document), named),
+        document: heldOverItsTeamMatches(setUp, named),
       });
     } catch (failure) {
       for (const each of named) {
@@ -203,6 +217,17 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         );
       }
       throw failure;
+    }
+
+    if (standard) {
+      await this.#corrected(
+        website,
+        id,
+        document,
+        undefined,
+        "ImportWholeTournaments.ImportedAsStandard",
+        `${document.Name} was kept as played by teams, with no team match to play, and is brought over as a Standard tournament.`,
+      );
     }
 
     for (const each of named) {
