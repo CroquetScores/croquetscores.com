@@ -8,7 +8,8 @@ Feature: The page where an administrator reads the documents the import refused
   can see what was left behind and why.
 
   It is headed Import Errors, and lists a row for each error kept: the
-  document's id, and the first line of the error's message. The rows are in
+  document's id, what went wrong said for a person where the import said it
+  so, and the first line of the error's message. The rows are in
   the order they are answered in, alphabetical by that first line. A row leads
   to the page of its document (`importError.feature`). Where nothing was kept,
   the page says there are no import errors rather than showing an empty list.
@@ -39,6 +40,12 @@ Feature: The page where an administrator reads the documents the import refused
       Given the import refused the document "users/1-A" with "No email address" then "at line 4"
       When the page at "/admin/administrator/import-errors" is opened
       Then the first row's message is "No email address"
+
+    Scenario: A row has what went wrong said for a person
+      Given the import refused the document "croquetscores.com/blocks/30" with "Refused"
+      And the import error of "croquetscores.com/blocks/30" is said for a person as "Game Tim 26 beat Trev 0"
+      When the page at "/admin/administrator/import-errors" is opened
+      Then the first row is said for a person as "Game Tim 26 beat Trev 0"
 
     Scenario: A row does not have the later lines of its message
       Given the import refused the document "users/1-A" with "No email address" then "at line 4"

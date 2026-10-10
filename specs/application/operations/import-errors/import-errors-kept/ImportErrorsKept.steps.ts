@@ -50,3 +50,17 @@ Then(
     assert.equal((this.failure as { code?: string } | undefined)?.code, code);
   },
 );
+
+Then(
+  "the first row answered is said for a person as {string}",
+  function (this: SpecWorld, summary: string) {
+    assert.equal(rowsAnswered(this)[0]?.summary, summary);
+  },
+);
+
+Then(
+  "the first row answered is said for a person as nothing",
+  function (this: SpecWorld) {
+    assert.equal(rowsAnswered(this)[0]?.summary, undefined);
+  },
+);

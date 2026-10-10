@@ -63,6 +63,61 @@ Given(
   },
 );
 
+Given(
+  "an error is kept for {string} saying {string} of the competition {string} of the tournament at {string} called {string}",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    message: string,
+    competitionName: string,
+    tournamentAddress: string,
+    tournamentName: string,
+  ) {
+    await importDatabaseOf(this).recordError(documentId, message, {
+      tournamentAddress,
+      tournamentName,
+      competitionName,
+      newSitePath: tournamentAddress,
+      oldSitePath: tournamentAddress,
+    });
+  },
+);
+
+Given(
+  "an error is kept for {string} saying {string}, said for a person as {string}",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    message: string,
+    summary: string,
+  ) {
+    await importDatabaseOf(this).recordError(
+      documentId,
+      message,
+      undefined,
+      summary,
+    );
+  },
+);
+
+Given(
+  "an error is kept for {string} saying {string} at {string} on the new site and {string} on the old site",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    message: string,
+    newSitePath: string,
+    oldSitePath: string,
+  ) {
+    await importDatabaseOf(this).recordError(documentId, message, {
+      tournamentAddress: "2014/ac/spring-open",
+      tournamentName: "Spring Open",
+      newSitePath,
+      oldSitePath,
+    });
+  },
+);
+
 const counted = new WeakMap<SpecWorld, number>();
 
 When("the errors kept are counted", async function (this: SpecWorld) {

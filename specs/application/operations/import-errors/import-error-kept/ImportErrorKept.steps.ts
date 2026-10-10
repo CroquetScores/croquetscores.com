@@ -63,3 +63,70 @@ Then(
     assert.equal((this.failure as { code?: string } | undefined)?.code, code);
   },
 );
+
+const tournamentAnswered = (world: SpecWorld) => {
+  const { tournament } = answered(world);
+  assert.ok(tournament !== undefined, "No tournament was answered.");
+  return tournament;
+};
+
+Then(
+  "the import error's tournament is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(tournamentAnswered(this).name, name);
+  },
+);
+
+Then(
+  "the import error's tournament is at {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(tournamentAnswered(this).address, address);
+  },
+);
+
+Then(
+  "the import error's tournament was on {string}",
+  function (this: SpecWorld, website: string) {
+    assert.equal(tournamentAnswered(this).website, website);
+  },
+);
+
+Then(
+  "the import error's competition is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(tournamentAnswered(this).competitionName, name);
+  },
+);
+
+Then("the import error is of no competition", function (this: SpecWorld) {
+  assert.equal(tournamentAnswered(this).competitionName, undefined);
+});
+
+Then("the import error is of no tournament", function (this: SpecWorld) {
+  assert.equal(answered(this).tournament, undefined);
+});
+
+Then(
+  /^the import error's document is at "([^"]*)" on the (new|old) site$/,
+  function (this: SpecWorld, path: string, which: string) {
+    const tournament = tournamentAnswered(this);
+    assert.equal(
+      which === "new" ? tournament.newSitePath : tournament.oldSitePath,
+      path,
+    );
+  },
+);
+
+Then(
+  "the import error is said for a person as {string}",
+  function (this: SpecWorld, summary: string) {
+    assert.deepEqual(answered(this).summaries, [summary]);
+  },
+);
+
+Then(
+  "the import error is said for a person as nothing",
+  function (this: SpecWorld) {
+    assert.deepEqual(answered(this).summaries, []);
+  },
+);

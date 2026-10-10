@@ -22,6 +22,7 @@ import {
   loadCommentary,
   rememberComment,
 } from "./commentaryRequests.js";
+import { charactersIn } from "../../../../src/domain/common/charactersIn.js";
 
 // The steps more than one of a commentary's operations uses: what was done
 // before the request the scenario is about, and what the commentary is
@@ -147,6 +148,24 @@ Then(
   async function (this: SpecWorld, title: string, name: string, text: string) {
     const texts = await textsIn(this, title, name);
     assert.ok(texts.includes(text), `It has ${inspect(texts)}.`);
+  },
+);
+
+// By its length, counted as a reader counts it, for a comment too long to
+// write out.
+Then(
+  "the commentary {string} of {string} has a comment of {int} characters",
+  async function (
+    this: SpecWorld,
+    title: string,
+    name: string,
+    length: number,
+  ) {
+    const texts = await textsIn(this, title, name);
+    assert.ok(
+      texts.some((text) => charactersIn(text) === length),
+      `It has comments of ${inspect(texts.map((text) => charactersIn(text)))} characters.`,
+    );
   },
 );
 

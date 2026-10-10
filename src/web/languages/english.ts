@@ -588,6 +588,10 @@ export const english: Language = {
     "admin.importErrors.otherwise": "Something went wrong on the site.",
     "admin.importError.title": "Import Error",
     "admin.importError.documentId": "Document id",
+    "admin.importError.tournament": "Tournament",
+    "admin.importError.competition": "Competition",
+    "admin.importError.newSite": "New site",
+    "admin.importError.oldSite": "Old site",
     "ImportErrorKept.NotFound":
       "The import kept no error against that document.",
     "admin.competitionView.otherwise":

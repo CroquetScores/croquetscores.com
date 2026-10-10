@@ -24,6 +24,10 @@ import { CompetitionId } from "../../src/domain/aggregates/tournaments/primitive
 import { TournamentId } from "../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
 import type { CompetitionInTournament } from "../../src/domain/aggregates/tournaments/Tournament.js";
+import type {
+  Accepted,
+  AcceptedImportErrors,
+} from "../../src/import-ravendb/AcceptedImportErrors.js";
 import { ImportBlocks } from "../../src/import-ravendb/ImportBlocks.js";
 import { ImportCommentaries } from "../../src/import-ravendb/ImportCommentaries.js";
 import { ImportedAccounts } from "../../src/import-ravendb/ImportedAccounts.js";
@@ -44,6 +48,7 @@ import type {
 } from "../../src/import-ravendb/runImporter.js";
 import { TournamentsByAccount } from "../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByAddress } from "../../src/infrastructure/read-models/TournamentsByAddress.js";
+import { TournamentsByWebsite } from "../../src/infrastructure/read-models/TournamentsByWebsite.js";
 import { accountsOf } from "../infrastructure/support/accounts.js";
 import { unitOfWorkOf } from "../infrastructure/support/transactions.js";
 import type { SpecWorld } from "../support/world.js";
@@ -85,6 +90,7 @@ export interface WrittenGame {
 export interface WrittenCompetition {
   Tournament: { Id: string };
   Name: string;
+  Slug?: string;
   Players: { _Players: WrittenCompetitionPlayer[] };
   Games: { _Games: WrittenGame[] };
   IsArchived: boolean;
@@ -220,6 +226,16 @@ interface Importers {
   readonly commentaries: ImportCommentaries;
 }
 
+/** What a scenario's import accepted, kept for the scenario to read. */
+class AcceptedInScenario implements AcceptedImportErrors {
+  readonly said: Accepted[] = [];
+
+  accept(accepted: Accepted): Promise<void> {
+    this.said.push(accepted);
+    return Promise.resolve();
+  }
+}
+
 interface Importing {
   readonly tournaments: AggregateRepository<Tournament, TournamentId>;
   readonly competitions: AggregateRepository<Competition, CompetitionId>;
@@ -227,6 +243,9 @@ interface Importing {
   /** The commentaries of each tournament, as the read model of them has them. */
   readonly commentariesByTournament: CommentariesByTournament;
   readonly importers: Importers;
+  readonly accepted: AcceptedInScenario;
+  /** What the scenario's import corrected, kept the same way. */
+  readonly corrected: AcceptedInScenario;
   writing?: Writing;
   /** The tournament written last, which "the tournament" means. */
   tournament?: Writing & { readonly kind: "tournament" };
@@ -255,6 +274,9 @@ export const importingOf = (world: SpecWorld): Importing => {
     accounts.byGoogleAccount,
     new TournamentsByAddress(unitOfWork),
     new TournamentsByAccount(unitOfWork),
+    // Where an error of a document refused whole finds its tournament's name
+    // and address, as it does in the import.
+    new TournamentsByWebsite(unitOfWork),
     commentariesByTournament,
   ]);
   // Wrapped rather than handed over as they are: a static passed on its own is
@@ -275,7 +297,16 @@ export const importingOf = (world: SpecWorld): Importing => {
     store,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
-  const importing = { unitOfWork, tournaments, competitions, database };
+  const accepted = new AcceptedInScenario();
+  const corrected = new AcceptedInScenario();
+  const importing = {
+    unitOfWork,
+    tournaments,
+    competitions,
+    database,
+    accepting: accepted,
+    correcting: corrected,
+  };
   const importedAccounts = new ImportedAccounts(
     accountRepository,
     accounts.hasher,
@@ -310,6 +341,8 @@ export const importingOf = (world: SpecWorld): Importing => {
     competitions,
     commentaries,
     commentariesByTournament,
+    accepted,
+    corrected,
     importers: {
       whole: (website) =>
         new ImportWholeTournaments(
@@ -321,6 +354,7 @@ export const importingOf = (world: SpecWorld): Importing => {
             commentaries: commentaryImporter,
           },
           database,
+          corrected,
         ),
       tournaments: tournamentImporter,
       players,
@@ -370,7 +404,12 @@ export const aTournament = (
 ): WrittenTournament => ({
   Name: "Spring Open",
   Start: "2014-03-01T00:00:00.0000000",
-  Finish: "2014-03-03T00:00:00.0000000",
+  // On the day blocks stop being left behind for having nothing in them
+  // (ImportBlocks.feature), so that a block a scenario writes with nothing in
+  // it is brought over unless the scenario says when the tournament finished.
+  // A tournament brought over may finish any time after it starts
+  // (bringOver.feature).
+  Finish: "2026-10-01T00:00:00.0000000",
   Slug: `spring-open-${id
     .slice(id.indexOf("/") + 1)
     .toLowerCase()
@@ -378,7 +417,10 @@ export const aTournament = (
   CreatedBy: { Id: "users/1" },
   Managers: [],
   Scorers: [],
-  Competitions: [],
+  // One no document is, since a tournament that lists no competition is left
+  // behind (ImportWholeTournaments.feature). A scenario about what one lists
+  // says it, or that it lists nothing.
+  Competitions: [{ Id: "blocks/0" }],
   SportType: website === "gateballscores.com" ? "GB" : "AC",
   TournamentType: "standard",
   TimeZoneId: "AUS Eastern Standard Time",
@@ -731,6 +773,15 @@ Given(
   },
 );
 
+// Started and finished on the one day, so that a scenario says only when it
+// finished.
+Given(
+  "a tournament {string} on {string} finishing on {string} is imported",
+  async function (this: SpecWorld, id: string, website: string, day: string) {
+    await tournamentImported(this, id, website, { Start: day, Finish: day });
+  },
+);
+
 Given(
   "a tournament {string} on {string} of the type {string} is imported",
   async function (this: SpecWorld, id: string, website: string, type: string) {
@@ -920,6 +971,20 @@ Then(
   },
 );
 
+// By what its message says, for a refusal whose code is not the whole of it.
+Then(
+  /^importing the (?:tournament|players|competition|team match|commentary) is refused saying "(.*)"$/,
+  function (this: SpecWorld, says: string) {
+    const { refused } = importingOf(this);
+    assert.ok(refused !== undefined, "Importing was not refused.");
+    const message = (refused as { message?: unknown }).message;
+    assert.ok(
+      typeof message === "string" && message.includes(says),
+      inspect(refused),
+    );
+  },
+);
+
 Then(
   /^importing the (?:tournament|players|competition|team match|commentary) is not refused$/,
   function (this: SpecWorld) {
@@ -1010,12 +1075,135 @@ Then(
 );
 
 Then(
+  /^the tournament kept for "(.*)" on "(.*)" has (\d+) players?$/,
+  async function (this: SpecWorld, id: string, website: string, count: string) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    assert.equal(tournament.players.length, Number(count));
+  },
+);
+
+Then(
   "the tournament kept for {string} on {string} has the team {string}",
   async function (this: SpecWorld, id: string, website: string, name: string) {
     const tournament = await tournamentKeptFor(this, id, website);
     assert.ok(
       tournament.teams.some((team) => team.name.toString() === name),
       `It has ${tournament.teams.map((team) => team.name.toString()).join(", ")}.`,
+    );
+  },
+);
+
+// What was accepted rather than kept as an error -----------------------------------
+
+const acceptedOf = (world: SpecWorld, documentId: string): Accepted[] =>
+  importingOf(world).accepted.said.filter(
+    (accepted) => accepted.documentId === documentId,
+  );
+
+Then(
+  "{string} is accepted as {string}",
+  function (this: SpecWorld, documentId: string, code: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(
+      said.some((accepted) => accepted.code === code),
+      `Nothing of ${documentId} is accepted as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "{string} of {string} is accepted as {string}",
+  function (this: SpecWorld, what: string, documentId: string, code: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(
+      said.some((accepted) => accepted.what === what && accepted.code === code),
+      `${what} of ${documentId} is not accepted as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "nothing is accepted of {string}",
+  function (this: SpecWorld, documentId: string) {
+    assert.deepEqual(acceptedOf(this, documentId), []);
+  },
+);
+
+Then(
+  "what is accepted of {string} is at {string} on the new site and {string} on the old site",
+  function (
+    this: SpecWorld,
+    documentId: string,
+    newSitePath: string,
+    oldSitePath: string,
+  ) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(said.length > 0, `Nothing of ${documentId} is accepted.`);
+    for (const accepted of said) {
+      assert.equal(accepted.newSitePath, newSitePath);
+      assert.equal(accepted.oldSitePath, oldSitePath);
+    }
+  },
+);
+
+// By what it names rather than by its wording, which is said once, where
+// what is accepted is.
+Then(
+  "what is accepted of {string} names {string}",
+  function (this: SpecWorld, documentId: string, named: string) {
+    const said = acceptedOf(this, documentId);
+    assert.ok(
+      said.some((accepted) => accepted.description.includes(named)),
+      `Nothing accepted of ${documentId} names ${named}: ${inspect(said)}`,
+    );
+  },
+);
+
+// What was corrected of what the old sites kept --------------------------------
+
+const correctedOf = (world: SpecWorld, documentId: string): Accepted[] =>
+  importingOf(world).corrected.said.filter(
+    (corrected) => corrected.documentId === documentId,
+  );
+
+Then(
+  "{string} is corrected as {string}",
+  function (this: SpecWorld, documentId: string, code: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      said.some((corrected) => corrected.code === code),
+      `Nothing of ${documentId} is corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "{string} of {string} is corrected as {string}",
+  function (this: SpecWorld, what: string, documentId: string, code: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      said.some(
+        (corrected) => corrected.what === what && corrected.code === code,
+      ),
+      `${what} of ${documentId} is not corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "nothing is corrected of {string}",
+  function (this: SpecWorld, documentId: string) {
+    assert.deepEqual(correctedOf(this, documentId), []);
+  },
+);
+
+Then(
+  "what is corrected of {string} names {string}",
+  function (this: SpecWorld, documentId: string, named: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      said.some((corrected) => corrected.description.includes(named)),
+      `Nothing corrected of ${documentId} names ${named}: ${inspect(said)}`,
     );
   },
 );

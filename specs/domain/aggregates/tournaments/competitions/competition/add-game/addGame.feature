@@ -27,7 +27,13 @@ Feature: Adding a game to a competition
   more games than the other could still win, or every game of it has been
   played, so a game between two players whose match is decided is refused. A
   drawn game (`Game.feature`) is one of the match's games played, but won by
-  neither of them. A
+  neither of them.
+
+  A block whose matches are the best of 1 is played in rounds instead, as the
+  Australian President's Eights is, every player meeting every other once in
+  each round: each game is a match of its own, and two players can meet in as
+  many rounds as the block has. So a game in it is refused only for what any
+  game is, as a game in a Swiss is. A
   Swiss pairs its players round by round, and two players can meet in more
   than one round, so a game in a Swiss is refused only for what any game is.
 
@@ -228,13 +234,22 @@ Feature: Adding a game to a competition
       When the game of "Chris Third" beating "Sam Someone" 26 to 3 is added
       Then it is refused with "Competition.GameAlreadyAdded"
 
-  Rule: In a block, two players play one match of the block's best-of
+  Rule: In a block whose matches are the best of 1, two players can meet more than once
 
-    Scenario: A second game between two players whose match is the best of 1 is refused
+    Scenario: A second game between two players of a block the best of 1 is added
       Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the competition is rebuilt from its stream
       When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
-      Then it is refused with "Competition.MatchDecided"
+      Then the competition has 2 games
+
+    Scenario: A third game between two players of a block the best of 1 is added
+      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 5 is added
+      Then the competition has 3 games
+
+  Rule: In a block, two players play one match of the block's best-of, where it is more than 1
 
     Scenario: A game between two other players of the block is added
       Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
@@ -265,12 +280,14 @@ Feature: Adding a game to a competition
       When the game of "Sam Someone" beating "Alex Another" 26 to 5 is added
       Then it is refused with "Competition.MatchDecided"
 
-    Scenario: A match whose only game is archived is not decided
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
-      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
+    Scenario: A match whose deciding game is archived is not decided
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was archived
       And the competition is rebuilt from its stream
       When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
-      Then the competition has 2 games
+      Then the competition has 3 games
 
     Scenario: A game of a match the best of 3 with two drawn games is added
       Given drawn games are allowed

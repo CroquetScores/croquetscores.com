@@ -25,6 +25,13 @@ Feature: Importing each of the old sites' tournaments with everything that names
   competitions not archived are missing from the list too. Going by the list
   would leave those behind without a word.
 
+  But a tournament that lists no competition at all is left behind, with
+  everything that names it, as an archived one is: the old sites kept
+  tournaments that were started and never played, and one with nothing
+  listed is taken for one of those, even where something names it. The
+  scenarios here are of a tournament that lists a competition no document
+  is, unless they say otherwise.
+
   Background:
     Given the users are imported
     And the tournaments are imported
@@ -73,8 +80,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has the commentary "Live from Court 1"
 
     Scenario: A competition the tournament does not list is brought over
-      Given the tournament lists nothing
-      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       When the tournament is imported
       Then "blocks/30" on "croquetscores.com" is kept as a competition of the tournament kept for "tournaments/12" on "croquetscores.com"
 
@@ -88,6 +94,254 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And the block "blocks/31" of "tournaments/13" on "croquetscores.com"
       When the tournament "tournaments/12" on "croquetscores.com" is imported
       Then "blocks/31" on "croquetscores.com" is not kept as any competition
+
+  Rule: A Standard tournament that lists only team matches is played by teams
+
+    Some managers on the old sites set up a tournament between teams as a
+    Standard tournament with team matches in it. The site keeps a team match
+    only as a test of a tournament played by teams, so a Standard tournament
+    whose competitions are all team matches, one or more, is brought over as
+    played by teams, and its team matches with it, as though it had been set
+    up as one. A Standard tournament listing anything else, or anything
+    besides its team matches, is brought over as it was set up.
+
+    Scenario: A Standard tournament that lists one team match is played by teams
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Teams"
+
+    Scenario: A Standard tournament that lists two team matches is played by teams
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the tournament lists "TeamMatches/51"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match "TeamMatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Teams"
+
+    Scenario: The team match of a Standard tournament that lists only it is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "TeamMatches/50" on "croquetscores.com" is kept as a test
+
+    Scenario: A Standard tournament that lists a team match and a block is a Standard tournament
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "TeamMatches/50"
+      And the tournament lists "blocks/30"
+      And the team match "TeamMatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Standard"
+
+    Scenario: A Standard tournament that lists one block is a Standard tournament
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Standard"
+
+  Rule: A block the import names as a team match is brought over as one
+
+    The old site kept some team matches as blocks of a tournament played by
+    teams, which the site has no place for, as croquetscores.com's
+    blocks/100678, Club de Golf Xaz vs Real Club de Golf de La Coruna, whose
+    players each represented one of the two clubs. Such a block the import
+    names is brought over as a team match (`ImportTeamMatches.feature`),
+    played over its tournament's days, and expected to have as many matches
+    as its games say. That is said as corrected
+    (`AcceptedImportErrors.feature`).
+
+    Scenario: A block the import names as a team match is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "blocks/100678" on "croquetscores.com" is kept as a test
+
+    Scenario: The games of a block brought over as a team match are added
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the test kept for "blocks/100678" on "croquetscores.com" has 1 game
+
+    Scenario: A block brought over as a team match is not an error
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no error is kept for "croquetscores.com/blocks/100678"
+
+    Scenario: A block brought over as a team match is said as corrected
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "croquetscores.com/blocks/100678" is corrected as "ImportWholeTournaments.BlockAsTeamMatch"
+
+  Rule: A tournament the import names as Standard is brought over as one
+
+    The old site kept some tournaments as played by teams that had no team
+    match to play, as croquetscores.com's tournaments/80204, the Murphy Shield
+    LPG Southport v Chester, which listed only a block, and the site has no
+    block in a tournament played by teams. Such a tournament the import names
+    is brought over as a Standard tournament, with its competitions. That is
+    said as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: A tournament the import names as Standard is a Standard tournament
+      Given a tournament "tournaments/80204" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/80204" on "croquetscores.com"
+      When the tournament "tournaments/80204" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/80204" on "croquetscores.com" is in the format "Standard"
+
+    Scenario: The block of a tournament the import names as Standard is brought over
+      Given a tournament "tournaments/80204" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/80204" on "croquetscores.com"
+      When the tournament "tournaments/80204" on "croquetscores.com" is imported
+      Then "blocks/30" on "croquetscores.com" is kept as a competition of the tournament kept for "tournaments/80204" on "croquetscores.com"
+
+    Scenario: A tournament the import names as Standard is said as corrected
+      Given a tournament "tournaments/80204" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/80204" on "croquetscores.com"
+      When the tournament "tournaments/80204" on "croquetscores.com" is imported
+      Then "croquetscores.com/tournaments/80204" is corrected as "ImportWholeTournaments.ImportedAsStandard"
+
+  Rule: A tournament played by teams is held over the days of its team matches
+
+    The old sites kept a tournament played by teams with days of its own that
+    were often not the days its team matches were played on, and the site
+    refuses a test outside its tournament's days (`addTest.feature`). So
+    before a tournament played by teams is brought over, every team match
+    naming it is read, and it starts when the first of them started and
+    finishes when the last of them finished. An archived team match says
+    nothing of when the tournament was played. A tournament with no team
+    match not archived keeps its own days, and so does one not played by
+    teams, whatever names it.
+
+    Scenario: A tournament played by teams starts when its first team match started
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And the team match started on "2017-03-26T00:00:00.0000000"
+      And the team match finished on "2017-04-20T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-26T00:00:00Z"
+
+    Scenario: A tournament played by teams finishes when its last team match finished
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And the team match started on "2017-03-26T00:00:00.0000000"
+      And the team match finished on "2017-04-20T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" finishes at "2017-04-26T00:00:00Z"
+
+    Scenario: An archived team match says nothing of the tournament's days
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And the team match started on "2017-03-26T00:00:00.0000000"
+      And the team match finished on "2017-04-20T00:00:00.0000000"
+      And the team match was archived
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-27T00:00:00Z"
+
+    Scenario: A tournament played by teams with no team match keeps its own days
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-01T00:00:00Z"
+
+    Scenario: A tournament not played by teams keeps its own days
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament started on "2017-03-01T00:00:00.0000000"
+      And the tournament finished on "2017-03-02T00:00:00.0000000"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs New Zealand"
+      And the team match started on "2017-03-27T00:00:00.0000000"
+      And the team match finished on "2017-04-26T00:00:00.0000000"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" starts at "2017-03-01T00:00:00Z"
 
   Rule: A tournament's competitions are added in the order it listed them
 
@@ -155,13 +409,30 @@ Feature: Importing each of the old sites' tournaments with everything that names
     A competition or a commentary the site refuses is kept as an error
     against its own document, as it always was. The tournament and the rest
     of what names it are brought over all the same: one block the site cannot
-    take would otherwise leave a whole tournament behind.
+    take would otherwise leave a whole tournament behind. The error is kept
+    with the tournament, which has been brought over by then, for whoever
+    reads it to find: at the tournament's page on the site, since the
+    competition never became one there, and at the competition's own on the
+    old site.
 
     Scenario: A refused competition is kept as an error against its document
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the block "blocks/30" is called ""
       When the tournament is imported
       Then the error kept for "croquetscores.com/blocks/30" says "CompetitionName.Missing"
+
+    Scenario: A refused competition is kept with its tournament
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the error kept for "croquetscores.com/blocks/30" is of the tournament at "2014/ac/spring-open-12" called "Spring Open"
+
+    Scenario: A refused competition is kept at its tournament on the site and at itself on the old site
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And its slug on the old site was "block-a"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open-12" on the new site and "2014/ac/spring-open-12/competition/block-a" on the old site
 
     Scenario: The tournament of a refused competition is not refused
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -217,6 +488,84 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And player 1 is called "Sam Someone"
       When the tournament is imported
       Then no error is kept for "croquetscores.com/tournamentplayers/40"
+
+  Rule: A tournament the import names is left behind with everything that names it
+
+    Some tournaments are not worth bringing over, as croquetscores.com's
+    tournaments/82149, the Mt Albert Croquet Club Rose Bowl Tournament in
+    2025, whose block and team match had no games. Such a tournament the
+    import names is left behind with everything that names it, as an
+    archived one is, and that is not an error. It is said as corrected, with
+    why, as "No games" (`AcceptedImportErrors.feature`), on no page of the
+    new site.
+
+    Scenario: A tournament the import names is not kept as any tournament
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then "tournaments/82149" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: What names a tournament the import names is not kept as any competition
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a tournament the import names behind is not refused
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then importing the tournament is not refused
+
+    Scenario: A tournament the import names is said as corrected
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then "croquetscores.com/tournaments/82149" is corrected as "ImportWholeTournaments.LeftBehind"
+
+    Scenario: A tournament the import names is said as corrected with why
+      Given a tournament "tournaments/82149" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/82149" on "croquetscores.com"
+      When the tournament "tournaments/82149" on "croquetscores.com" is imported
+      Then what is corrected of "croquetscores.com/tournaments/82149" names "No games"
+
+  Rule: A tournament that lists no competition is left behind with everything that names it
+
+    Scenario: A tournament that lists no competition is not kept as any tournament
+      Given the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: Leaving a tournament that lists no competition behind is not refused
+      Given the tournament lists nothing
+      When the tournament is imported
+      Then importing the tournament is not refused
+
+    Scenario: A competition naming a tournament that lists none is not kept as any competition
+      Given the tournament lists nothing
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a competition naming a tournament that lists none behind is not an error
+      Given the tournament lists nothing
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A tournament that lists a competition is kept
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
 
   Rule: A tournament whose documents cannot be asked for is not brought over
 

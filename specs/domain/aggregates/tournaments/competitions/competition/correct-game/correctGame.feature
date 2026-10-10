@@ -174,7 +174,9 @@ Feature: Correcting a competition's game
       Then it is refused for breaking "Game.SamePlayer"
 
     Scenario: A game corrected to players whose match is decided is refused
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
       And the game of "Chris Third" beating "Pat Fourth" 26 to 3 was added to it
       And the competition is rebuilt from its stream
       When the game of "Chris Third" beating "Pat Fourth" 26 to 3 is corrected to "Sam Someone" beating "Alex Another" 26 to 3

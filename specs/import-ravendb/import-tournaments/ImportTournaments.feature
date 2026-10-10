@@ -168,17 +168,29 @@ Feature: Importing the old sites' tournaments
   Rule: A tournament is in the country its time zone says, and in no region
 
     The old sites kept no country, which the site asks of every tournament.
-    The time zone each tournament was kept in is the nearest thing to one, so
-    the import holds a list of the time zones the old sites' tournaments used
-    and the country each means. A time zone does not say which of a
-    country's regions a tournament was in, so it is in none, which the site
-    allows (`create.feature`), and a manager can choose one afterwards. A
-    tournament with no time zone, or one not on the list, is refused rather
-    than guessed at, so that what it needs is added to the list.
+    The time zone each tournament was kept in is the nearest thing to one.
+    The old sites ran on Windows, so every time zone they kept is one of
+    Windows', and the import holds a list of every one of them and the
+    country each means: the country of the zone the Unicode Consortium's
+    list of them (CLDR) gives it for the world as a whole, so that a zone no
+    tournament has used yet is known when one does. A time zone does not say
+    which of a country's regions a tournament was in, so it is in none, which
+    the site allows (`create.feature`), and a manager can choose one
+    afterwards.
+
+    Some time zones mean no country: an hour from UTC, as "UTC-11", which
+    the sea keeps, and "South Sudan Standard Time", whose country the site
+    does not have. A tournament kept in one, with no time zone, or with one
+    not on the list, is refused rather than guessed at.
 
     "GMT Standard Time" and "W. Europe Standard Time" are each kept by several
     countries, and are taken as England's, where the old sites' tournaments kept
     in them were played; a manager can move one played elsewhere.
+
+    Three that mean no country are taken as one all the same, since the old
+    sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
+    as England's, and "UTC+13" as New Zealand's. A manager can move one played
+    elsewhere.
 
     A tournament kept in "Pacific Standard Time (Mexico)" is read as kept in
     "Pacific Standard Time", whose tournaments were played in the United
@@ -201,10 +213,17 @@ Feature: Importing the old sites' tournaments
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
 
       Examples:
-        | time zone               | country |
-        | GMT Standard Time       | england |
-        | W. Europe Standard Time | england |
-        | Morocco Standard Time   | ma      |
+        | time zone                    | country |
+        | GMT Standard Time            | england |
+        | W. Europe Standard Time      | england |
+        | Morocco Standard Time        | ma      |
+        | Romance Standard Time        | fr      |
+        | Arabian Standard Time        | ae      |
+        | Argentina Standard Time      | ar      |
+        | Canada Central Standard Time | ca      |
+        | UTC                          | england |
+        | Dateline Standard Time       | england |
+        | UTC+13                       | nz      |
 
     Scenario: A tournament kept in Mexico's Pacific time is in the country of Pacific time
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -233,6 +252,18 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then importing the tournament is refused with "ImportTournaments.UnknownTimeZone"
+
+    Scenario Outline: A time zone that means no country the site has is refused
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "<time zone>"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then importing the tournament is refused with "ImportTournaments.UnknownTimeZone"
+
+      Examples:
+        | time zone                 |
+        | UTC-11                    |
+        | South Sudan Standard Time |
 
   Rule: A tournament's subtitle is read as the old site showed it
 
@@ -391,27 +422,29 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "NSW Open"
 
-  Rule: A name shorter than 3 characters says it was imported
+  Rule: A name shorter than 3 characters says the import corrected it
 
     The site refuses a name shorter than 3 characters, and the old sites
-    accepted some. Rather than leave the tournament behind, " - Imported" is
-    added to it, which makes it long enough and tells a manager where it came
-    from, so that they can name it better. Every name the import brings over
-    is lengthened the same way (`ImportUsers.feature`).
+    accepted some. Rather than leave the tournament behind, " - Import
+    correction" is added to it, which makes it long enough and tells a manager
+    that the import changed it, so that they can name it better. A person's
+    name is lengthened with " - Imported" (`ImportUsers.feature`). A
+    competition's name is never too short: the site takes a name of one
+    character, as a block called "A".
 
-    Scenario: A name shorter than 3 characters says it was imported
+    Scenario: A name shorter than 3 characters says the import corrected it
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "Ok"
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Imported"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Import correction"
 
     Scenario: A name shorter than 3 characters in capitals is written in title case first
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "OK"
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Imported"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is called "Ok - Import correction"
 
     Scenario: A name of 3 characters is left as it was
       Given a tournament "tournaments/12" on "croquetscores.com"

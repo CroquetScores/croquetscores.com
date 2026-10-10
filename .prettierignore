@@ -2,3 +2,8 @@ dist/
 reports/
 node_modules/
 package-lock.json
+
+# Written by every import, which deletes them first.
+docs/import-from-ravendb/accepted-import-errors.md
+docs/import-from-ravendb/import-corrections.md
+docs/import-from-ravendb/missing-tournaments.md

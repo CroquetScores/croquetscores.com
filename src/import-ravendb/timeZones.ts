@@ -1,37 +1,25 @@
 // The country each time zone the old sites' tournaments were kept in means
 // (ImportTournaments.feature), by its code here. The old sites kept no country,
-// and the time zone is the nearest thing to one. A zone a tournament is refused
-// for not being here is added here, once it is known which country its
-// tournaments were played in.
+// and the time zone is the nearest thing to one. Every zone Windows keeps means
+// the country windowsTimeZones.ts gives it, but where the old sites'
+// tournaments say otherwise.
+import { windowsTimeZones } from "./windowsTimeZones.js";
+
+// Zones taken as a country other than the one they mean for the world as a
+// whole. "GMT Standard Time" is Great Britain's, Ireland's and Portugal's
+// alike, and "W. Europe Standard Time" is kept by much of western Europe. Each
+// is taken as England's, where the old tournaments kept in it were played; a
+// manager can move one played elsewhere.
 //
-// "GMT Standard Time" is Great Britain's, Ireland's and Portugal's alike, and
-// "W. Europe Standard Time" is kept by much of western Europe. Each is taken
-// as England's, where the old tournaments kept in it were played; a manager
-// can move one played elsewhere.
-const countryCodes: Readonly<Record<string, string>> = {
-  "AUS Eastern Standard Time": "au",
-  "AUS Central Standard Time": "au",
-  "Cen. Australia Standard Time": "au",
-  "E. Australia Standard Time": "au",
-  "Tasmania Standard Time": "au",
-  "W. Australia Standard Time": "au",
-  "Lord Howe Standard Time": "au",
-  "New Zealand Standard Time": "nz",
-  "Chatham Islands Standard Time": "nz",
+// Three zones that mean no country are taken as one all the same, since the
+// old sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
+// as England's, and "UTC+13" as New Zealand's.
+const chosen: Readonly<Record<string, string>> = {
   "GMT Standard Time": "england",
   "W. Europe Standard Time": "england",
-  "Morocco Standard Time": "ma",
-  "Eastern Standard Time": "us",
-  "Central Standard Time": "us",
-  "Mountain Standard Time": "us",
-  "US Mountain Standard Time": "us",
-  "Pacific Standard Time": "us",
-  "Alaskan Standard Time": "us",
-  "Hawaiian Standard Time": "us",
-  "South Africa Standard Time": "za",
-  "Egypt Standard Time": "eg",
-  "Tokyo Standard Time": "jp",
-  "China Standard Time": "cn",
+  UTC: "england",
+  "Dateline Standard Time": "england",
+  "UTC+13": "nz",
 };
 
 // Time zones read as another, which the old sites' managers chose for
@@ -43,5 +31,7 @@ const readAs: Readonly<Record<string, string>> = {
 };
 
 /** The code of the country `timeZone` means, or nothing where the import does not know it. */
-export const countryOfTimeZone = (timeZone: string): string | undefined =>
-  countryCodes[readAs[timeZone] ?? timeZone];
+export const countryOfTimeZone = (timeZone: string): string | undefined => {
+  const read = readAs[timeZone] ?? timeZone;
+  return chosen[read] ?? windowsTimeZones[read];
+};

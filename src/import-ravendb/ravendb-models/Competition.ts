@@ -39,6 +39,11 @@ export interface Game {
 export interface Competition {
   readonly Tournament: Reference;
   readonly Name: string;
+  /**
+   * Where it was on the old site under its tournament's address, after
+   * "competition/". Not read by every scenario's document, so not always there.
+   */
+  readonly Slug?: string | null;
   /** Kept as objects holding the lists, as Newtonsoft wrote them. */
   readonly Players: { readonly _Players: readonly CompetitionPlayer[] };
   readonly Games: { readonly _Games: readonly Game[] };

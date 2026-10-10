@@ -17,6 +17,15 @@ export type TournamentPlayerErrorCode =
   | "TournamentPlayer.NamedBye"
   | "TournamentPlayer.NoLetterOrDigit";
 
+/**
+ * Whether `name` names a bye rather than a person, which a tournament player
+ * is refused for: a name that begins with "bye", in any case, where no letter
+ * follows it, since the word ends where anything but a letter comes. So
+ * "Bye 2" is a bye and "Byers" is a name.
+ */
+export const isNamedBye = (name: string): boolean =>
+  /^bye(?!\p{L})/iu.test(name.trim());
+
 // A whole number the platform holds exactly. One beyond that is not reliably
 // the number it was given, so two orders could be told apart by nothing.
 const orders = new Validator<number, TournamentPlayerErrorCode>({
@@ -150,9 +159,8 @@ export class TournamentPlayer {
   } {
     const name = PersonName.from(details.name);
     // A knockout's byes are entered as byes, so a player standing in for one
-    // would be drawn, and played, as a person. The word ends where anything
-    // but a letter comes, so "Bye 2" is a bye and "Byers" is a name.
-    if (/^bye(?!\p{L})/iu.test(details.name.trim())) {
+    // would be drawn, and played, as a person.
+    if (isNamedBye(details.name)) {
       throw new ValidationError<TournamentPlayerErrorCode>(
         "TournamentPlayer.NamedBye",
       );

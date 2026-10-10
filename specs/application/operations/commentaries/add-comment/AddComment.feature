@@ -71,8 +71,8 @@ Feature: Adding a comment to a commentary
       Then it is refused with "Request.Invalid"
       And the first rule broken is "CommentText.Missing"
 
-    Scenario: A comment longer than 10,000 characters is refused for it
-      When the reader signed in to the account for "writer@example.com" adds a comment of 10001 characters to "Day one" of "Spring Open"
+    Scenario: A comment longer than 100,000 characters is refused for it
+      When the reader signed in to the account for "writer@example.com" adds a comment of 100001 characters to "Day one" of "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "CommentText.TooLong"
 

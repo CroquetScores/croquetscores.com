@@ -128,3 +128,17 @@ Then(
     });
   },
 );
+
+Then(
+  "the first row is said for a person as {string}",
+  async function (this: SpecWorld, summary: string) {
+    await eventually(async () => {
+      assert.equal(
+        await rowAt(this, "first")
+          .locator(".import-error-summary")
+          .innerText({ timeout: 100 }),
+        summary,
+      );
+    });
+  },
+);

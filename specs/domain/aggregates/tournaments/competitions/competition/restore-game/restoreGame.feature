@@ -51,7 +51,9 @@ Feature: Restoring a competition's archived game
       Then the competition's first game is of "Sam Someone" beating "Alex Another"
 
     Scenario: A restored game decides its match again
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was restored
       And the competition is rebuilt from its stream
@@ -89,9 +91,11 @@ Feature: Restoring a competition's archived game
   Rule: A game is restored only where it could be added
 
     Scenario: A game whose match has since been decided without it is refused
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
       And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 26 to 17 is restored
       Then it is refused with "Competition.MatchDecided"
@@ -127,9 +131,11 @@ Feature: Restoring a competition's archived game
       Then it is refused with "Competition.MatchDecided"
 
     Scenario: A refused game stays archived
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was archived
       And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 26 to 17 is restored
       Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 is archived

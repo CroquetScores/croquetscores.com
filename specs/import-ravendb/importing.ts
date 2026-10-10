@@ -112,3 +112,109 @@ Then(
     );
   },
 );
+
+// The tournament and competition an error is kept as of ---------------------
+
+interface KeptOf {
+  readonly tournament_address: string | null;
+  readonly tournament_name: string | null;
+  readonly competition_name: string | null;
+  readonly new_site_path: string | null;
+  readonly old_site_path: string | null;
+}
+
+// Every error kept against `documentId`, with what it is of.
+const keptOf = async (
+  world: SpecWorld,
+  documentId: string,
+): Promise<readonly KeptOf[]> => {
+  const { rows } = await world.database.query<KeptOf>(
+    `select tournament_address, tournament_name, competition_name,
+            new_site_path, old_site_path
+       from import_errors where document_id = $1 order by kept`,
+    [documentId],
+  );
+  assert.ok(rows.length > 0, `No error is kept for ${documentId}.`);
+  return rows;
+};
+
+Then(
+  "the error kept for {string} is of the tournament at {string} called {string}",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    address: string,
+    name: string,
+  ) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.tournament_address, address);
+      assert.equal(kept.tournament_name, name);
+    }
+  },
+);
+
+Then(
+  "the error kept for {string} is of the competition {string}",
+  async function (this: SpecWorld, documentId: string, name: string) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.competition_name, name);
+    }
+  },
+);
+
+Then(
+  "the error kept for {string} is of no tournament",
+  async function (this: SpecWorld, documentId: string) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.tournament_address, null);
+    }
+  },
+);
+
+Then(
+  "the error kept for {string} is at {string} on the new site and {string} on the old site",
+  async function (
+    this: SpecWorld,
+    documentId: string,
+    newSitePath: string,
+    oldSitePath: string,
+  ) {
+    for (const kept of await keptOf(this, documentId)) {
+      assert.equal(kept.new_site_path, newSitePath);
+      assert.equal(kept.old_site_path, oldSitePath);
+    }
+  },
+);
+
+// The summaries kept against `documentId`, none where none was.
+const summariesOf = async (
+  world: SpecWorld,
+  documentId: string,
+): Promise<readonly string[]> => {
+  const { rows } = await world.database.query<{ summary: string }>(
+    `select summary from import_errors
+      where document_id = $1 and summary is not null order by kept`,
+    [documentId],
+  );
+  return rows.map((row) => row.summary);
+};
+
+// By what it names rather than by its wording, which is said once, in
+// errorSummaries.ts.
+Then(
+  "the summary kept for {string} names {string}",
+  async function (this: SpecWorld, documentId: string, named: string) {
+    const summaries = await summariesOf(this, documentId);
+    assert.ok(
+      summaries.some((summary) => summary.includes(named)),
+      `No summary kept for ${documentId} names ${named}: ${summaries.join("; ")}`,
+    );
+  },
+);
+
+Then(
+  "no summary is kept for {string}",
+  async function (this: SpecWorld, documentId: string) {
+    assert.deepEqual(await summariesOf(this, documentId), []);
+  },
+);

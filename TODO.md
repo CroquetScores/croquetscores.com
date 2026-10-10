@@ -7,3 +7,5 @@
 ## Sending email
 
 - **Infrastructure.** A mail provider for sending real email, and its settings. `FileEmailSender` stands in until then.
+
+## Importing Changes

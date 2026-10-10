@@ -5,10 +5,35 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { dropTables } from "../infrastructure/database/dropTables.js";
 import { migrate } from "../infrastructure/database/migrate.js";
 
+/**
+ * The tournament on the site a document the import refused is of, and the
+ * competition it was, where the import knew them.
+ */
+export interface ErrorOf {
+  /** The tournament's address, as "2014/ac/spring-open". */
+  readonly tournamentAddress: string;
+  readonly tournamentName: string;
+  /** Where the document was a competition, what it is called. */
+  readonly competitionName?: string;
+  /** Where the document is on the site, without a leading slash. */
+  readonly newSitePath: string;
+  /** Where the document was on the old site, without a leading slash. */
+  readonly oldSitePath: string;
+}
+
 /** Where a document the import refused is kept, with why. */
 export interface ImportErrors {
-  /** Keeps `message` against `documentId`, which names its website too. */
-  recordError(documentId: string, message: string): Promise<void>;
+  /**
+   * Keeps `message` against `documentId`, which names its website too, and
+   * the tournament and competition it is `of`, where they are known, and
+   * what went wrong said for a person, its `summary`, where there is one.
+   */
+  recordError(
+    documentId: string,
+    message: string,
+    of?: ErrorOf,
+    summary?: string,
+  ): Promise<void>;
 }
 
 /**
@@ -328,11 +353,59 @@ export class ImportDatabase implements ImportErrors {
    * Keeps what went wrong with one document. On the pool rather than in the
    * transaction the document was imported in, which has been rolled back.
    */
-  async recordError(documentId: string, message: string): Promise<void> {
+  async recordError(
+    documentId: string,
+    message: string,
+    of?: ErrorOf,
+    summary?: string,
+  ): Promise<void> {
     await this.#pool.query(
-      "insert into import_errors (document_id, error_message) values ($1, $2)",
-      [documentId, message],
+      `insert into import_errors
+         (document_id, error_message,
+          tournament_address, tournament_name, competition_name,
+          new_site_path, old_site_path, summary)
+       values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        documentId,
+        message,
+        of?.tournamentAddress ?? null,
+        of?.tournamentName ?? null,
+        of?.competitionName ?? null,
+        of?.newSitePath ?? null,
+        of?.oldSitePath ?? null,
+        summary ?? null,
+      ],
     );
+  }
+
+  /**
+   * The address and the name of the tournament the tournament document
+   * `documentId` on `website` became, as the site has them, for an error of
+   * something naming it once it is over. Nothing where it was not brought
+   * over.
+   */
+  async tournamentOf(
+    website: string,
+    documentId: string,
+  ): Promise<
+    | { readonly tournamentAddress: string; readonly tournamentName: string }
+    | undefined
+  > {
+    const { rows } = await this.#queryable().query<{
+      address: string;
+      name: string;
+    }>(
+      `select listed.address, listed.name
+         from imported_tournaments imported
+         join tournaments_by_website listed
+           on listed.tournament_id = imported.tournament_id
+        where imported.website = $1 and imported.document_id = $2`,
+      [website, documentId.toLowerCase()],
+    );
+    const row = rows[0];
+    return row === undefined
+      ? undefined
+      : { tournamentAddress: row.address, tournamentName: row.name };
   }
 
   /** How many errors were kept, by whatever kept them. */
@@ -341,6 +414,18 @@ export class ImportDatabase implements ImportErrors {
       "select count(*) as count from import_errors",
     );
     return Number(rows[0]?.count ?? 0);
+  }
+
+  /**
+   * Whether any error was kept against `documentId`, in any case, as the old
+   * sites compared their ids.
+   */
+  async hasErrorsFor(documentId: string): Promise<boolean> {
+    const { rows } = await this.#pool.query(
+      "select 1 from import_errors where lower(document_id) = lower($1) limit 1",
+      [documentId],
+    );
+    return rows.length > 0;
   }
 
   /** What was kept against `documentId`, in the order it was kept. */

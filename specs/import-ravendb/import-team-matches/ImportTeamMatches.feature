@@ -16,6 +16,13 @@ Feature: Importing the old sites' team matches
   is short enough, and its first 10 characters where it is not. A team named
   for a country flies that country's flag.
 
+  The site tells a tournament's teams apart by their short names, in any case,
+  and two teams of one tournament can have the same first 10 characters, as
+  "New Zealand A's" and "New Zealand B's" do. They are two teams, so the
+  second made is given a short name of its own: as many of its first
+  characters as leave room for a space and a number, and the first number
+  from 2 that makes it a short name none of the others has, as "New Zeal 2".
+
   A player of a team match is a player of the team they represented, made
   the first time a team match of the tournament has them. The old sites
   numbered a tournament's players once for all its team matches, so a player
@@ -63,12 +70,76 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then importing the team match is refused with "ImportTeamMatches.NotTwoTeams"
 
-    Scenario: A team match of a tournament not played by teams is refused
+  Rule: A team match of a tournament not played by teams is left behind where it has no games, and refused where it has
+
+    The old sites let a Standard tournament have a team match. The site keeps
+    tests only in a tournament played by teams, so a team match of any other
+    tournament is not brought over.
+    One with no games has nothing in it to lose, and is left behind without
+    an error. One with games is refused, saying which tournament and which
+    team match, so that whoever reads it can find both on the old site.
+
+    Scenario: A team match with no games of a tournament not played by teams is not kept
       Given a tournament "tournaments/12" on "croquetscores.com" is imported
       And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       When the team match is imported
-      Then importing the team match is refused with "Tournament.NotPlayedByTeams"
+      Then "teammatches/52" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a team match with no games of a tournament not played by teams behind is not an error
+      Given a tournament "tournaments/12" on "croquetscores.com" is imported
+      And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/52"
+
+    Scenario: A team match with games of a tournament not played by teams is refused
+      Given a tournament "tournaments/12" on "croquetscores.com" is imported
+      And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then importing the team match is refused with "ImportTeamMatches.NotPlayedByTeams"
+
+    Scenario: The refusal names the tournament and the team match
+      Given a tournament "tournaments/12" on "croquetscores.com" is imported
+      And the team match "teammatches/52" of "tournaments/12" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then importing the team match is refused saying "croquetscores.com/tournaments/12"
+      And importing the team match is refused saying "croquetscores.com/teammatches/52"
+
+  Rule: A team match kept with no list of players or of games has none
+
+    The old site kept some team matches with no list of players and no list
+    of games at all, as TeamMatches/28862, Queanbeyan vs Canberra in the
+    2022 Blackall Cup, rather than lists that held nothing. Such a team match
+    is brought over as one that had no players and no games.
+
+    Scenario: A team match kept with no lists is brought over
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Queanbeyan vs Canberra"
+      And it was kept with no list of players or of games
+      When the team match is imported
+      Then "teammatches/50" on "croquetscores.com" is kept as a test
+
+    Scenario: Bringing over a team match kept with no lists is not refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Queanbeyan vs Canberra"
+      And it was kept with no list of players or of games
+      When the team match is imported
+      Then importing the team match is not refused
 
   Rule: An archived team match is left behind
 
@@ -95,6 +166,20 @@ Feature: Importing the old sites' team matches
 
   Rule: A test has the days, the matches, the best-of and the group its team match had
 
+    The old sites kept many team matches as expected to have fewer matches
+    than were played in them: 1, whatever was played, or 3 where 6 were, as
+    croquetscores.com's TeamMatches/360 was. The site refuses a game that
+    would start a match beyond those a test is expected to have
+    (`gamesInATest.feature`). So a team match is expected to have as many
+    matches as it was kept as expected to have, or as many as its games say
+    where they say more: for each two players who met, the games between
+    them over its best-of, rounded up, so that a match won two games to one
+    is one match. Never fewer than 1. Where its games say more, that is not
+    an error, and is said as corrected, with where the team match is on the
+    new site and the old, in a file of corrections of its own, written as the
+    accepted import errors are (`AcceptedImportErrors.feature`), and not
+    among them.
+
     Scenario: A test starts on the day its team match started
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match started on "2014-03-01T00:00:00.0000000"
@@ -113,11 +198,221 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 6 matches
 
+    Scenario: A team match expected to have 1 match is expected to have one a pair of players, in single games
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And player 3 is in the team match
+      And player 3 represents "New Zealand"
+      And player 4 is in the team match
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 4
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 3 matches
+
+    Scenario: A team match expected to have 1 match is expected to have one a pair of players, whatever they played of their best-of
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And player 3 is in the team match
+      And player 3 represents "New Zealand"
+      And player 4 is in the team match
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 3
+      And game 3 was lost by player 4
+      And game 4 was won by player 4
+      And game 4 was lost by player 3
+      And game 5 was won by player 3
+      And game 5 was lost by player 4
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 2 matches
+
+    Scenario: Two players who played more games than their best-of played as many matches as it takes
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 2
+      And game 3 was lost by player 1
+      And game 4 was won by player 2
+      And game 4 was lost by player 1
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 2 matches
+
+    Scenario: A team match expected to have 1 match with no games is expected to have 1
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 1 match
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 1 match
+
+    Scenario: A team match whose games say more matches than it was expected to have is expected to have as many as they say
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And player 5 is in the team match
+      And player 5 represents "Egypt"
+      And player 6 is in the team match
+      And player 6 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 5
+      And game 3 was lost by player 6
+      And game 4 was won by player 1
+      And game 4 was lost by player 4
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 4 matches
+
+    Scenario: Working a team match's matches out from its games is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And player 5 is in the team match
+      And player 5 represents "Egypt"
+      And player 6 is in the team match
+      And player 6 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 5
+      And game 3 was lost by player 6
+      And game 4 was won by player 1
+      And game 4 was lost by player 4
+      When the team match is imported
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.ExpectedMatchesWorkedOut"
+
+    Scenario: Working a team match's matches out from its games is not said as accepted
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 4
+      And game 4 was won by player 3
+      And game 4 was lost by player 2
+      When the team match is imported
+      Then nothing is accepted of "croquetscores.com/teammatches/50"
+
+    Scenario: Working a team match's matches out from its games is said for a person, naming the team match
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Egypt vs Wales"
+      And the team match was expected to have 3 matches
+      And player 1 is in the team match
+      And player 1 represents "Egypt"
+      And player 2 is in the team match
+      And player 2 represents "Wales"
+      And player 3 is in the team match
+      And player 3 represents "Egypt"
+      And player 4 is in the team match
+      And player 4 represents "Wales"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 4
+      And game 4 was won by player 3
+      And game 4 was lost by player 2
+      When the team match is imported
+      Then what is corrected of "croquetscores.com/teammatches/50" names "Spring Open - Egypt vs Wales"
+
+    Scenario: A team match expected to have more than 1 match keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 6 matches
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And player 3 is in the team match
+      And player 3 represents "New Zealand"
+      And player 4 is in the team match
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is expected to have 6 matches
+
+    Scenario: A team match whose games say no more matches than it was expected to have is not said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match was expected to have 6 matches
+      And player 1 is in the team match
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the team match is imported
+      Then nothing is corrected of "croquetscores.com/teammatches/50"
+
     Scenario: A test's matches are the best of what its team match's were
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match's matches were the best of 3
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" is the best of 3
+
+    Scenario: A team match whose matches were the best of 0 is the best of 1
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match's matches were the best of 0
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" is the best of 1
 
     Scenario: A test is in the group its team match was in
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -197,6 +492,12 @@ Feature: Importing the old sites' team matches
 
   Rule: A team's short name is what the old sites called it where there was little room
 
+    A short name another team of the tournament has is numbered apart from
+    it, within a short name's 10 characters, or within the team's name where
+    that is shorter, since the site refuses a short name longer than its
+    name: "Newcastle", beside "Newcastle NPCC" cut to "Newcastle", is
+    "Newcast 2", and not "Newcastl 2".
+
     Scenario Outline: A team is given a short name
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "<team> vs Other"
@@ -225,13 +526,573 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "Canterbury" of the tournament kept for "tournaments/13" on "croquetscores.com" flies no flag
 
-    Scenario: A short name another team has is refused
+    Scenario: A short name another team has is numbered apart from it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
-      And the team match is called "Canterbury Croquet Club vs Canterbury Cougars"
+      And the team match is called "New Zealand A's vs New Zealand B's"
       When the team match is imported
-      Then importing the team match is refused with "Tournament.TeamShortNameTaken"
+      Then the team "New Zealand B's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zeal 2"
+
+    Scenario: The first team with a short name keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand B's"
+      When the team match is imported
+      Then the team "New Zealand A's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zealan"
+
+    Scenario: A short name the same in another case is numbered apart
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Canterbury vs CANTERBURY Cougars"
+      When the team match is imported
+      Then the team "CANTERBURY Cougars" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "CANTERBU 2"
+
+    Scenario: A third team with a short name is numbered past the second
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand B's"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand C's"
+      When the team match is imported
+      Then the team "New Zealand C's" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "New Zeal 3"
+
+    Scenario: A short name numbered apart is no longer than the team's name
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Newcastle NPCC vs Newcastle"
+      When the team match is imported
+      Then the team "Newcastle" of the tournament kept for "tournaments/13" on "croquetscores.com" has the short name "Newcast 2"
+
+    Scenario: A team whose short name would be longer than its name is brought over
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Newcastle NPCC vs Newcastle"
+      When the team match is imported
+      Then "teammatches/50" on "croquetscores.com" is kept as a test
+
+    Scenario: Two teams with a short name between them are both brought over
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand A's vs New Zealand B's"
+      When the team match is imported
+      Then "teammatches/50" on "croquetscores.com" is kept as a test
+
+  Rule: A game against a player already played is a game against the one not played
+
+    The old sites kept many team matches whose two players met again in a
+    match of single games, which the site refuses, since a test's two
+    players meet in one match (`gamesInATest.feature`). Most were a game
+    entered against the wrong player: the one already played, in place of
+    the one who was not. So a game of a team match of single games refused
+    because its two players already met is a game against whoever on the
+    other team one of them has not played in the team match, of the same
+    kind, single or pair, where there is one only, and the site then takes
+    it. A pair is a player whose name has ",", "/", "&" or "and" in it. That
+    is said as corrected (`AcceptedImportErrors.feature`). Where there is no
+    one, or more than one, the two met again, and the next rule says what
+    becomes of the game. Where the game has the very scores of one the two
+    already played, which is the same game entered twice, or the team
+    match's matches are the best of more than 1, it is refused as it always
+    was.
+
+    Ann Able beats Cat Cole, and Ben Baker beats Dan Dunn and Cat Cole, all
+    of England. Ann then beats Cat again, but Ann has not played Dan, so
+    that game was Ann against Dan.
+
+    Scenario: A game against a player already played is a game against the one not played
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 4 games
+
+    Scenario: A game against a player already played, put right, is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game against a player already played, put right, is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then "game 4" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.OpponentCorrected"
+
+    Scenario: A game against a player already played is said as corrected, naming the player not played
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then what is corrected of "croquetscores.com/teammatches/50" names "Dan Dunn"
+
+    Scenario: A game with more than one player not played is a meeting again
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And player 5 is in the team match
+      And player 5 is called "Eve East"
+      And player 5 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Cat Cole - meet again"
+
+    Scenario: A single is not taken for a pair not played, and meets again
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And player 4 is called "Dan Dunn & Fay Ford"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Cat Cole - meet again"
+
+    Scenario: A game with the very scores of one already played is still refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "5"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+
+    Scenario: A game of a team match whose matches are the best of more than 1 is still refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "2"
+      And game 5 was won by player 1
+      And game 5 was lost by player 3
+      And game 5's loser scored "1"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+
+  Rule: Two players who met again play the second time against a player made for it
+
+    Many team matches had the same two players meet again once their match
+    was decided, as a team match played through twice, which the site
+    refuses, since a test's two players meet in one match. Where the game
+    is not one entered against the wrong player (the rule before), nor the
+    very scores of another, and the two played more games than one match of
+    the team match's best-of holds, the loser of the game is played by a
+    player made for it on their team, called by their name and " - meet
+    again", the first time one is needed, and the game is added between the
+    winner and that player. That is said as corrected
+    (`AcceptedImportErrors.feature`). The games of the same meeting again,
+    in a match of more than one game, are all against that player, whoever
+    won them. Two players who met a third time play it against another,
+    numbered apart, as "Ann Able - meet again (2)".
+
+    Scenario: A game of two players who met again is added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 3
+      And game 2 was lost by player 1
+      And game 2's loser scored "4"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 2 games
+
+    Scenario: The loser of a game of two players who met again is a player made for it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 3
+      And game 2 was lost by player 1
+      And game 2's loser scored "4"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ann Able - meet again"
+
+    Scenario: A game of two players who met again is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 3
+      And game 2 was lost by player 1
+      And game 2's loser scored "4"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game of two players who met again is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 3
+      And game 2 was lost by player 1
+      And game 2's loser scored "4"
+      When the team match is imported
+      Then "game 2" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.MeetAgain"
+
+    Scenario: Two players who met a third time play it against another player made for it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 3
+      And game 2 was lost by player 1
+      And game 2's loser scored "4"
+      And game 3 was won by player 3
+      And game 3 was lost by player 1
+      And game 3's loser scored "3"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ann Able - meet again (2)"
+
+    Scenario: The games of a meeting again in a match of more than one game are all against one player made for it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      And game 2's loser scored "4"
+      And game 3 was won by player 3
+      And game 3 was lost by player 1
+      And game 3's loser scored "3"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "6"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 2 players
+
+    Scenario: Every game of a meeting again in a match of more than one game is added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 1
+      And game 2 was lost by player 3
+      And game 2's loser scored "4"
+      And game 3 was won by player 3
+      And game 3 was lost by player 1
+      And game 3's loser scored "3"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "6"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 4 games
+
+  Rule: The games of a team match the import names are added in the order it names
+
+    Some team matches had their games entered out of the order they were
+    played, so that a match the site would find decided had a game still to
+    come. Where it is known what order they were played in, the import names
+    the team match and the order: croquetscores.com's TeamMatches/359,
+    Germany vs Belgium at the 2012 GC World Team Championship, where Bruno
+    Hess beat Charles-Eric Vilain 7-4, lost 3-7, and won 7-5, entered as
+    games 6, 17 and 10 were played. The games named take the places they had
+    between them, and every other game keeps its own. That is not an error,
+    and is said as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: The games of a team match the import names are all added
+      Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Germany vs Belgium"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Bruno Hess"
+      And player 1 represents "Germany"
+      And player 2 is in the team match
+      And player 2 is called "Charles-Eric Vilain"
+      And player 2 represents "Belgium"
+      And game 6 was won by player 1
+      And game 6's winner scored "7"
+      And game 6 was lost by player 2
+      And game 6's loser scored "4"
+      And game 10 was won by player 1
+      And game 10's winner scored "7"
+      And game 10 was lost by player 2
+      And game 10's loser scored "5"
+      And game 17 was won by player 2
+      And game 17's winner scored "7"
+      And game 17 was lost by player 1
+      And game 17's loser scored "3"
+      When the team match is imported
+      Then the test kept for "TeamMatches/359" on "croquetscores.com" has 3 games
+
+    Scenario: Adding the games of a team match the import names in its order is not an error
+      Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Germany vs Belgium"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Bruno Hess"
+      And player 1 represents "Germany"
+      And player 2 is in the team match
+      And player 2 is called "Charles-Eric Vilain"
+      And player 2 represents "Belgium"
+      And game 6 was won by player 1
+      And game 6's winner scored "7"
+      And game 6 was lost by player 2
+      And game 6's loser scored "4"
+      And game 10 was won by player 1
+      And game 10's winner scored "7"
+      And game 10 was lost by player 2
+      And game 10's loser scored "5"
+      And game 17 was won by player 2
+      And game 17's winner scored "7"
+      And game 17 was lost by player 1
+      And game 17's loser scored "3"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/TeamMatches/359"
+
+    Scenario: Adding the games of a team match the import names in its order is said as corrected
+      Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Germany vs Belgium"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Bruno Hess"
+      And player 1 represents "Germany"
+      And player 2 is in the team match
+      And player 2 is called "Charles-Eric Vilain"
+      And player 2 represents "Belgium"
+      And game 6 was won by player 1
+      And game 6's winner scored "7"
+      And game 6 was lost by player 2
+      And game 6's loser scored "4"
+      And game 10 was won by player 1
+      And game 10's winner scored "7"
+      And game 10 was lost by player 2
+      And game 10's loser scored "5"
+      And game 17 was won by player 2
+      And game 17's winner scored "7"
+      And game 17 was lost by player 1
+      And game 17's loser scored "3"
+      When the team match is imported
+      Then "croquetscores.com/TeamMatches/359" is corrected as "ImportTeamMatches.GamesReordered"
 
   Rule: A player is a player of the team they represented
+
+    Some managers named a team match's teams with what group they were in, in
+    brackets after the team's name, as "Real Club Puerta de Hierro (Group A)",
+    and their players as representing the team by its name alone. A player
+    representing what a team is named before the brackets is a player of it.
 
     Scenario: A player representing a team is a player of it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -257,6 +1118,33 @@ Feature: Importing the old sites' team matches
       And player 7 is in the team match
       And player 7 is called "Sam Someone"
       And player 7 represents "Australia"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
+
+    Scenario: A player representing a team named with its group in brackets is a player of it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Club One (Group A) vs Club Two (Group A)"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Club One"
+      When the team match is imported
+      Then the team "Club One (Group A)" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone"
+
+    Scenario: A player representing a team named with its group in brackets is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Club One (Group A) vs Club Two (Group A)"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Club One"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A player representing only what is in a team's brackets is kept as an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Club One (Group A) vs Club Two (Group A)"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Group A"
       When the team match is imported
       Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
 
@@ -296,6 +1184,251 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
 
+  Rule: A number the old site gave a player of another team is not taken for theirs
+
+    A player is found again by the number the old site gave them in the
+    tournament, so that a player in two team matches is one player. But the
+    old site sometimes gave a number to two people, of two teams: in
+    TeamMatches/28518 of the 2021 Egypt League, number 9 was Hanan Bendary &
+    Hussin Bedir of Gzera Club, where every other team match had it as Ahmed
+    Hany of ElRwad Club. So a number found again as a player of another team
+    than the one the player represents here is not taken for theirs: they
+    are the player of the same name in the team they represent, made the
+    first time, and their games are theirs.
+
+    Ann Able played for New Zealand as number 9, and Ben Baker, also number
+    9, plays for Australia, and beats Cat Cole of England.
+
+    Scenario: A player whose number another team's player had is a player of their own team
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "Australia" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ben Baker"
+
+    Scenario: The games of a player whose number another team's player had are added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the test kept for "teammatches/51" on "croquetscores.com" has 1 game
+
+    Scenario: A player whose number another team's player had is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/51"
+
+    Scenario: The player whose number it was keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then player 9 of "tournaments/13" on "croquetscores.com" is kept as a player of "New Zealand"
+
+    Scenario: A player whose number another team's player had, named again, is the one player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      And the team match is imported
+      And the team match "teammatches/52" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      When the team match is imported
+      Then the team "Australia" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
+
+  Rule: A game of a team match is won by whoever scored more
+
+    Scenario: A game of a team match whose winner scored fewer points is won by whoever scored more
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Alex Other"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 8
+      And game 1's loser scored "26"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 1 game
+
+    Scenario: A game of a team match whose winner scored fewer points is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 8
+      And game 1's loser scored "26"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game of a team match whose winner scored fewer points is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "3"
+      And game 1 was lost by player 8
+      And game 1's loser scored "26"
+      When the team match is imported
+      Then "game 1" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.WinnerFromScore"
+
+  Rule: A player named as a bye is no player of a team
+
+    The old sites let a team match have a bye, a player called "Bye", or "Bye
+    1" and so on, standing in for a player a team did not have. The site
+    refuses a team player named as one, as it does a tournament player
+    (`ImportTournamentPlayers.feature`), and a test has no place for a bye. So
+    a player named as a bye is left out of the teams, and kept as the bye by
+    the number the old site gave them in the tournament, as a tournament's
+    bye is, so that every team match of the tournament knows them for one. A
+    game against a bye is no game that was played, and is left out too, and
+    said as corrected (`AcceptedImportErrors.feature`). Neither is an error.
+
+    Scenario: A player named as a bye is not a player of the team
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has 0 players
+
+    Scenario: A player named as a bye is kept as the bye
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      When the team match is imported
+      Then player 8 of "tournaments/13" on "croquetscores.com" is kept as the bye
+
+    Scenario: A game against a bye is not a game of the test
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 0 games
+
+    Scenario: Leaving a bye and its game out is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game against a bye left out is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Bye 1"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then "game 1" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.AgainstABye"
+
   Rule: A test's games are between the players of its teams
 
     Scenario: A game becomes a game of the test
@@ -321,6 +1454,31 @@ Feature: Importing the old sites' team matches
       And game 1 was lost by player 8
       When the team match is imported
       Then the error kept for "croquetscores.com/teammatches/50" says "Competition.SameTeam"
+
+    Scenario: A game refused is said for a person, naming the team match it was in
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the summary kept for "croquetscores.com/teammatches/50" names "Spring Open - New Zealand vs England"
+
+    Scenario: A game refused is kept at the test's page on the site and the team match's on the old site
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And its slug on the old site was "new-zealand-vs-england"
+      And player 7 is in the team match
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" is at "2014/ac/spring-open-13/tests/nzl-v-eng" on the new site and "2014/ac/spring-open-13/competition/new-zealand-vs-england" on the old site
 
     Scenario: The games after one refused are added
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"

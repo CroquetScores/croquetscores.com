@@ -6,6 +6,7 @@ import type { TournamentPlayer } from "../../../src/domain/aggregates/tournament
 import type { SpecWorld } from "../../support/world.js";
 import { importDatabaseOf } from "../importing.js";
 import { startWriting, tournamentKeptFor } from "../importingTournaments.js";
+import { TournamentPlayerId } from "../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 
 Given(
   "the players {string} of {string} on {string}",
@@ -97,6 +98,21 @@ Then(
   async function (this: SpecWorld, name: string, id: string, website: string) {
     const tournament = await tournamentKeptFor(this, id, website);
     assert.equal(playerCalled(tournament, name).flag, undefined);
+  },
+);
+
+Then(
+  "player {int} of {string} on {string} is kept as the bye",
+  async function (
+    this: SpecWorld,
+    number: number,
+    id: string,
+    website: string,
+  ) {
+    assert.equal(
+      await importDatabaseOf(this).findPlayerOf(website, id, number),
+      TournamentPlayerId.bye().value,
+    );
   },
 );
 

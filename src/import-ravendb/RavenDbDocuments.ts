@@ -2,6 +2,7 @@ import { DocumentStore } from "ravendb";
 
 import type { TournamentDocuments } from "./ImportWholeTournaments.js";
 import type { DocumentSource } from "./runImporter.js";
+import { withoutNullCharacters } from "./withoutNullCharacters.js";
 
 /**
  * How long asking what names a tournament waits for RavenDB's index. The
@@ -52,9 +53,12 @@ export class RavenDbDocuments implements DocumentSource, TournamentDocuments {
         `from ${collection} limit ${String(skip)}, ${String(take)}`,
       )
       .all();
+    // Its id asked of the document as read, which is the one the session
+    // knows, and the document imported without the null characters some of
+    // the old sites' text has in it (withoutNullCharacters.feature).
     return documents.map((document) => ({
       id: session.advanced.getMetadataFor(document)["@id"] as string,
-      document,
+      document: withoutNullCharacters(document),
     }));
   }
 
@@ -75,9 +79,12 @@ export class RavenDbDocuments implements DocumentSource, TournamentDocuments {
       .rawQuery<TDocument>(`from ${collection} where Tournament.Id = ${quoted}`)
       .waitForNonStaleResults(WAIT_FOR_INDEX_MILLISECONDS)
       .all();
+    // Its id asked of the document as read, which is the one the session
+    // knows, and the document imported without the null characters some of
+    // the old sites' text has in it (withoutNullCharacters.feature).
     return documents.map((document) => ({
       id: session.advanced.getMetadataFor(document)["@id"] as string,
-      document,
+      document: withoutNullCharacters(document),
     }));
   }
 

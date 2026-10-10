@@ -47,6 +47,18 @@ export type CommentaryParams = {
 };
 
 // What answers a commentary's pages as ones that are not there.
+
+/**
+ * The largest body adding or editing a comment takes. A comment may be
+ * 100,000 characters (CommentText.ts), counted as a reader counts them, and a
+ * form sends every byte of a character outside ASCII as three: an emoji takes
+ * twelve, and one of several joined into one character, as a family is, takes
+ * far more. So eight MiB rather than the 1 MiB every other request is held to,
+ * as a manager's note's is. The comment's own rule is still what refuses one
+ * too long.
+ */
+export const commentBodyLimit = 8 * 1024 * 1024;
+
 const notThere: readonly string[] = [
   "PublicCommentaryOfTournament.NoSuchTournament",
   "PublicCommentaryOfTournament.NoSuchCommentary",
@@ -600,6 +612,7 @@ export const registerCommentaryPage = (
 
   server.post<{ Params: CommentaryParams }>(
     `${path}/comments`,
+    { bodyLimit: commentBodyLimit },
     async (request, reply) => {
       // Back to the commentary once signed in, rather than to the address
       // comments are sent to, which is no page to come back to.

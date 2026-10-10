@@ -1,4 +1,5 @@
 import { Query } from "../../common/Query.js";
+import type { KeptImportErrorTournament } from "../../services/KeptImportErrors.js";
 
 /** What the import said of one document it refused. */
 export interface ImportErrorOfDocument {
@@ -6,6 +7,16 @@ export interface ImportErrorOfDocument {
   readonly documentId: string;
   /** Every message kept against it, whole, in the order they were kept. */
   readonly messages: readonly string[];
+  /**
+   * What went wrong with it, said for a person, for each error the import
+   * said so, in the order they were kept.
+   */
+  readonly summaries: readonly string[];
+  /**
+   * The tournament it is of, and the competition it was, where the import
+   * knew them.
+   */
+  readonly tournament: KeptImportErrorTournament | undefined;
 }
 
 /**

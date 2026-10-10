@@ -48,6 +48,11 @@ export class ImportErrorKeptHandler extends QueryHandler<
         "The import kept no error against that document.",
       );
     }
-    return { documentId: query.documentId, messages };
+    return {
+      documentId: query.documentId,
+      messages,
+      summaries: await this.kept.summariesOf(query.documentId),
+      tournament: await this.kept.tournamentOf(query.documentId),
+    };
   }
 }

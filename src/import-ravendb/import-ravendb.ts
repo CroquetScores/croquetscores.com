@@ -1,14 +1,20 @@
-// "npm run import:ravendb". Empties the site's database, then brings the
-// old sites over into it from RavenDB: their users, then each tournament with
-// its players, its blocks, knockouts, Swisses and team matches, and its
-// commentaries, and last whatever names a tournament that was not there, as
-// an error. Once every site is over, the site's roles are given to whoever
-// holds them, and the players the world rankings know are imported from the
-// rankings' own lists, since emptying the database emptied them too.
+// "npm run import:ravendb". Empties the site's database, then brings the old
+// sites over into it from RavenDB: their users, then each tournament with its
+// players, its blocks, knockouts, Swisses and team matches, and its
+// commentaries, and last whatever names a tournament that was not there, as an
+// error. What it accepted rather than keeping as an error is said in
+// docs/import-from-ravendb/accepted-import-errors.md, and what it corrected of
+// what the old sites kept in docs/import-from-ravendb/import-corrections.md,
+// each of which it deletes first. Once every site is over, the site's roles are
+// given to whoever holds them, and the players the world rankings know are
+// imported from the rankings' own lists, since emptying the database emptied
+// them too.
 //
 // The second place, beside src/web/server.ts, where concrete implementations
 // are chosen and wired: the import is put together from the same parts as the
 // site, so that what it writes is what the site reads.
+import { join } from "node:path";
+
 import { AggregateRepository } from "../application/common/AggregateRepository.js";
 import { ProjectingEventStore } from "../application/common/ProjectingEventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
@@ -50,6 +56,7 @@ import {
   worldRankingSportNames,
 } from "../infrastructure/services/WorldRankingWebsite.js";
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { AcceptedImportErrorsFile, CORRECTED } from "./AcceptedImportErrors.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -63,15 +70,23 @@ import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
 import { ImportWorldRankingPlayerNames } from "./ImportWorldRankingPlayerNames.js";
+import { ImportRefused } from "./ImportRefused.js";
+import { readImportArguments } from "./importArguments.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
+import { MissingTournamentsFile } from "./MissingTournaments.js";
 import { RefuseLeftOvers } from "./RefuseLeftOvers.js";
 import {
   type Importer,
   minutesAndSeconds,
   numbers,
   runImporter,
+  stoppingAfter,
 } from "./runImporter.js";
+
+// Says, to the one place that asks for the world rankings, that the import
+// stopped before them.
+class StoppedBeforeRankings extends Error {}
 
 // Who holds each of the site's roles, by the addresses their users had on the
 // old sites (GiveRoles.feature).
@@ -82,6 +97,10 @@ const ROLE_HOLDERS: RoleHolders = {
     "richard.bilton30@talktalk.net",
   ],
 };
+
+// The old site every role holder was a user of, whose users are imported
+// before the roles are given.
+const ROLE_HOLDERS_SITE = "croquetscores.com";
 
 // What the import says of the world ranking players as it imports them. In
 // English, as the rest of what it says is: it is read by whoever runs it, not
@@ -111,12 +130,64 @@ const where = (url: string): string => {
 
 loadEnvFile();
 const config = loadImportConfig();
+// Refused before the database it would empty is touched.
+const switches = (() => {
+  try {
+    return readImportArguments(process.argv.slice(2));
+  } catch (failure) {
+    if (failure instanceof ImportRefused) {
+      console.error(`${failure.code}: ${failure.message}`);
+      process.exit(1);
+    }
+    throw failure;
+  }
+})();
 const started = Date.now();
 
 const pool = createPool(config.databaseUrl);
 try {
   const unitOfWork = new UnitOfWork(pool);
   const database = new ImportDatabase(pool, unitOfWork);
+
+  // Linking to the tournaments on the development site, where an import is
+  // looked at, as well as on the old sites.
+  const accepting = new AcceptedImportErrorsFile(
+    join(
+      import.meta.dirname,
+      "../../docs/import-from-ravendb/accepted-import-errors.md",
+    ),
+    "http://localhost:3000",
+  );
+  // What the last import kept, counted before the database is emptied of it,
+  // and uncounted in a database no import has made the table in.
+  let errorsBefore: number | undefined;
+  try {
+    errorsBefore = await database.errorCount();
+  } catch {
+    errorsBefore = undefined;
+  }
+  // What it corrected of what the old sites kept, as a team match's
+  // expected matches, said the same way in a file of its own.
+  const correcting = new AcceptedImportErrorsFile(
+    join(
+      import.meta.dirname,
+      "../../docs/import-from-ravendb/import-corrections.md",
+    ),
+    "http://localhost:3000",
+    CORRECTED,
+  );
+  // Whatever names a tournament the old sites no longer had, said in a file
+  // of its own rather than kept as an error.
+  const missing = new MissingTournamentsFile(
+    join(
+      import.meta.dirname,
+      "../../docs/import-from-ravendb/missing-tournaments.md",
+    ),
+  );
+  await missing.begin();
+  const began = new Date();
+  await accepting.begin(began, errorsBefore);
+  await correcting.begin(began, errorsBefore);
 
   console.log(`Emptying ${where(config.databaseUrl)}`);
   await database.reset();
@@ -176,7 +247,14 @@ try {
     eventStore,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
-  const importing = { unitOfWork, tournaments, competitions, database };
+  const importing = {
+    unitOfWork,
+    tournaments,
+    competitions,
+    database,
+    accepting,
+    correcting,
+  };
   // One for every importer that names a user, so that a user is one account
   // wherever they are named.
   const importedAccounts = new ImportedAccounts(
@@ -222,7 +300,35 @@ try {
     parts.players,
     ...parts.competitions,
     parts.commentaries,
-  ].map(({ collection }) => new RefuseLeftOvers(collection, database));
+  ].map(({ collection }) => new RefuseLeftOvers(collection, database, missing));
+
+  // The site's roles, given as soon as their holders' accounts are brought
+  // over, rather than once everything is, so that an import that stops partway
+  // through the tournaments still leaves the site an administrator, without
+  // whom nobody can give a role on the site. Every holder was a user of
+  // croquetscores.com, so they are given once its users are imported, before
+  // its tournaments.
+  let withNoAccount: readonly string[] | undefined;
+  const giveRoles = async (): Promise<void> => {
+    console.log("Giving the site's roles");
+    withNoAccount = await new GiveRoles(unitOfWork, accounts, database).give(
+      ROLE_HOLDERS,
+      ReadOnlyDate.from(new Date()),
+    );
+    for (const address of withNoAccount) {
+      console.error(
+        `No user was brought over as ${address}, who holds a role.`,
+      );
+    }
+  };
+
+  // Asked to stop once this many errors are kept, the import stops reading,
+  // and goes on to say what it found (importArguments.feature).
+  const stop =
+    switches.stopAfterErrors === undefined
+      ? undefined
+      : stoppingAfter(database, switches.stopAfterErrors);
+  let stopped = false;
 
   for (const website of config.ravenDbDatabases) {
     const documents = new RavenDbDocuments(config.ravenDbUrl, website);
@@ -230,29 +336,41 @@ try {
     // took once every tournament has taken what it would.
     const importers: readonly Importer<object>[] = [
       users,
-      new ImportWholeTournaments(documents, parts, database),
+      new ImportWholeTournaments(documents, parts, database, correcting),
       ...leftOvers,
     ];
     try {
       for (const importer of importers) {
         console.log(`${website} ${importer.collection}`);
-        await runImporter(documents, database, importer);
+        const run = await runImporter(
+          documents,
+          database,
+          importer,
+          undefined,
+          stop,
+        );
+        if (run.stopped) {
+          stopped = true;
+          break;
+        }
+        if (importer === users && website === ROLE_HOLDERS_SITE) {
+          await giveRoles();
+        }
       }
     } finally {
       documents.dispose();
     }
+    if (stopped) break;
   }
 
-  // After every website, since a user of either old site may hold one, and
-  // one of both is one account.
-  console.log("Giving the site's roles");
-  const withNoAccount = await new GiveRoles(
-    unitOfWork,
-    accounts,
-    database,
-  ).give(ROLE_HOLDERS, ReadOnlyDate.from(new Date()));
-  for (const address of withNoAccount) {
-    console.error(`No user was brought over as ${address}, who holds a role.`);
+  // An import not of croquetscores.com gives no role, which is said and
+  // counted rather than left for an empty list of administrators to show. One
+  // that stopped is not an import of any, and says nothing of it.
+  const rolesNotGiven = withNoAccount === undefined && !stopped ? 1 : 0;
+  if (withNoAccount === undefined && !stopped) {
+    console.error(
+      `The site's roles were not given, since ${ROLE_HOLDERS_SITE} was not imported.`,
+    );
   }
 
   // Last, since nothing brought over names them, and the rankings' site is
@@ -265,6 +383,9 @@ try {
   // is still said, and counted, after it.
   let worldRankingErrors = 0;
   try {
+    // Not asked of an import that stopped, which is looking at what it kept so
+    // far, and the rankings' site is the slowest thing it asks.
+    if (stopped) throw new StoppedBeforeRankings();
     let notRead = 0;
     await new ImportWorldRankingPlayerNames({
       lists: new WorldRankingWebsite(),
@@ -280,19 +401,31 @@ try {
       }
     });
   } catch (failure) {
-    console.error("The world ranking players were not all imported.", failure);
-    worldRankingErrors += 1;
+    if (failure instanceof StoppedBeforeRankings) {
+      console.log("The world ranking players were not imported.");
+    } else {
+      console.error(
+        "The world ranking players were not all imported.",
+        failure,
+      );
+      worldRankingErrors += 1;
+    }
   }
   // Counted from what was kept rather than added up from each collection's
   // reading, since a tournament keeps the errors of what names it itself
-  // (ImportDatabase.feature). A role holder with no account, and a world
-  // ranking list that was not read or a failure importing them, are said
-  // above and kept nowhere, so are added.
+  // (ImportDatabase.feature). A role holder with no account, roles not given
+  // at all, and a world ranking list that was not read or a failure importing
+  // them, are said above and kept nowhere, so are added.
+  const kept = await database.errorCount();
   const errors =
-    (await database.errorCount()) + withNoAccount.length + worldRankingErrors;
+    kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
+  await accepting.end(kept);
+  await correcting.end(kept);
 
   console.log(
-    `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
+    stopped
+      ? `Stopped importing after ${numbers.format(kept)} errors, as asked to after ${numbers.format(switches.stopAfterErrors ?? 0)}, in ${minutesAndSeconds(Date.now() - started)}.`
+      : `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
   );
 } finally {
   await pool.end();

@@ -148,11 +148,15 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
 // player, against whoever `opponentOf` says each was against. A match is won
 // by whoever wins more than half the games it is the best of: so a match not
 // yet decided, or shared in a best of an even number, is decided for neither.
+// A block the best of 1 is played in rounds, and two players can meet in
+// more than one, so each game is a match of its own rather than every game
+// against one opponent being one.
 const matchesDecidedIn = (
   games: readonly Game[],
   opponentOf: (game: Game) => string,
   bestOf: number,
 ): number => {
+  if (bestOf === 1) return games.length;
   const byOpponent = new Map<string, number>();
   for (const game of games) {
     const opponent = opponentOf(game);

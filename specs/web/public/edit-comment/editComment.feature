@@ -126,7 +126,7 @@ Feature: A commentary's writer can edit or delete any of its comments
     Scenario: What was typed is put back
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page to edit the comment "Sam is two hoops up" is open
-      And a comment of 10001 characters is typed in place of what it held
+      And a comment of 100001 characters is typed in place of what it held
       When the comment is submitted
       Then the comment box holds what was typed
 

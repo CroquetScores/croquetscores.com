@@ -30,6 +30,28 @@ Given(
   },
 );
 
+// Whatever is being written, a block or a team match alike.
+Given(
+  "its slug on the old site was {string}",
+  function (this: SpecWorld, slug: string) {
+    competitionWritten(this).Slug = slug;
+  },
+);
+
+// As the old site kept TeamMatches/28862, with neither list there at all,
+// rather than with lists that hold nothing.
+Given(
+  "it was kept with no list of players or of games",
+  function (this: SpecWorld) {
+    const written = competitionWritten(this) as unknown as Record<
+      string,
+      unknown
+    >;
+    delete written["Players"];
+    delete written["Games"];
+  },
+);
+
 Given("the competition was archived", function (this: SpecWorld) {
   competitionWritten(this).IsArchived = true;
 });

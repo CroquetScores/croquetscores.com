@@ -38,6 +38,7 @@ import { themeOf } from "../common/theme.js";
 import {
   type CommentaryParams,
   commentaryOf,
+  commentBodyLimit,
   commentBox,
   commentDrawn,
   commentPath,
@@ -155,55 +156,62 @@ ${commentBox(speakingOf(request), {
     });
   });
 
-  server.post<{ Params: Params }>(`${comment}/edit`, async (request, reply) => {
-    const reader = readerOf(request);
-    if (reader === undefined) return toSignIn(request, reply);
-    const found = await foundFor(request);
-    if (found === undefined) return reply.callNotFound();
-    const typed = typedFrom(request.body)["text"] ?? "";
-    try {
-      await request.server.mediator.send(
-        new EditComment(
-          reader.value,
-          found.asked.commentary.tournament,
-          found.asked.commentary.id,
-          found.comment.id,
-          typed,
-          request.requestedAt,
-        ),
-      );
-    } catch (failure) {
-      if (
-        failure instanceof AccountRefused &&
-        failure.code === "Account.Forgotten"
-      ) {
-        return toSignIn(request, reply);
-      }
-      if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
-        return reply.callNotFound();
-      }
-      if (!(failure instanceof RequestInvalid)) throw failure;
-      const speaking = speakingOf(request);
-      return editPage(
-        request,
-        reply,
-        found,
-        {
-          typed,
-          messages: failure.broken.map((rule) =>
-            speaking.knows(rule.code)
-              ? speaking.say(rule.code)
-              : speaking.say("form.otherwise"),
+  server.post<{ Params: Params }>(
+    `${comment}/edit`,
+    { bodyLimit: commentBodyLimit },
+    async (request, reply) => {
+      const reader = readerOf(request);
+      if (reader === undefined) return toSignIn(request, reply);
+      const found = await foundFor(request);
+      if (found === undefined) return reply.callNotFound();
+      const typed = typedFrom(request.body)["text"] ?? "";
+      try {
+        await request.server.mediator.send(
+          new EditComment(
+            reader.value,
+            found.asked.commentary.tournament,
+            found.asked.commentary.id,
+            found.comment.id,
+            typed,
+            request.requestedAt,
           ),
-        },
-        422,
+        );
+      } catch (failure) {
+        if (
+          failure instanceof AccountRefused &&
+          failure.code === "Account.Forgotten"
+        ) {
+          return toSignIn(request, reply);
+        }
+        if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
+          return reply.callNotFound();
+        }
+        if (!(failure instanceof RequestInvalid)) throw failure;
+        const speaking = speakingOf(request);
+        return editPage(
+          request,
+          reply,
+          found,
+          {
+            typed,
+            messages: failure.broken.map((rule) =>
+              speaking.knows(rule.code)
+                ? speaking.say(rule.code)
+                : speaking.say("form.otherwise"),
+            ),
+          },
+          422,
+        );
+      }
+      // Encoded, here and once deleted, since a slug keeps letters of any
+      // script, and an address in the Location header that is not encoded is
+      // refused for them.
+      return reply.redirect(
+        encodeURI(`/${found.asked.commentary.address}`),
+        303,
       );
-    }
-    // Encoded, here and once deleted, since a slug keeps letters of any
-    // script, and an address in the Location header that is not encoded is
-    // refused for them.
-    return reply.redirect(encodeURI(`/${found.asked.commentary.address}`), 303);
-  });
+    },
+  );
 
   server.get<{ Params: Params }>(
     `${comment}/delete`,

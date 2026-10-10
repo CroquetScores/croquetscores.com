@@ -313,6 +313,13 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       When the comment is submitted
       Then the commentary "Day one" of "Spring Open" has the comment "Sam is two hoops up"
 
+    Scenario: A comment as long as a comment may be is added, whatever it is written in
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/day-one" is open
+      And a comment of 100000 characters each four bytes long is typed
+      When the comment is submitted
+      Then the commentary "Day one" of "Spring Open" has a comment of 100000 characters
+
     Scenario: A comment written is shown as the last comment
       Given "writer@example.com" has added the comment "Sam is two hoops up" to "Day one" of "Spring Open"
       And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -369,7 +376,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
     Scenario: What was typed is put back
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/day-one" is open
-      And a comment of 10001 characters is typed
+      And a comment of 100001 characters is typed
       When the comment is submitted
       Then the comment box holds what was typed
 
@@ -450,7 +457,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
 
     Scenario: What was typed is left in the box when it is refused in place
       Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
-      And a comment of 10001 characters is typed
+      And a comment of 100001 characters is typed
       When the comment is submitted
       Then the comment box says the message for "CommentText.TooLong"
       And the comment box holds what was typed

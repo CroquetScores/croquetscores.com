@@ -174,7 +174,9 @@ Feature: Withdrawing a competition's game, and reversing it
       Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 is not withdrawn
 
     Scenario: A game whose withdrawal is reversed decides its match again
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was withdrawn
       And the withdrawal of the game of "Sam Someone" beating "Alex Another" 26 to 17 was reversed
       And the competition is rebuilt from its stream
@@ -210,9 +212,11 @@ Feature: Withdrawing a competition's game, and reversing it
   Rule: A withdrawal is reversed only where the game could be added
 
     Scenario: A game whose match has since been played without it is refused
-      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      Given the competition is a block, each match the best of 3
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
       And the game of "Sam Someone" beating "Alex Another" 26 to 17 was withdrawn
       And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
       And the competition is rebuilt from its stream
       When the withdrawal of the game of "Sam Someone" beating "Alex Another" 26 to 17 is reversed
       Then it is refused with "Competition.MatchDecided"

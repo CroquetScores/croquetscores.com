@@ -4,9 +4,18 @@ Feature: Giving the site's roles once the users are imported
   An account can hold two roles, Administrator and World Ranking Officer
   (`addRole.feature`). Nothing on the site gives a role yet, and the import
   empties the database before it brings anything over, so the import gives
-  them: once the users of every website are brought over, each address it
-  names for a role is given that role. Which addresses hold which role is
+  them: once the users of croquetscores.com are brought over, each address
+  it names for a role is given that role. Which addresses hold which role is
   the import's to say, beside where it is put together (`import-ravendb.ts`).
+
+  They are given then, before any tournament is brought over, rather than
+  once everything is, so that an import that stops partway through the
+  tournaments still leaves the site an administrator, without whom nobody can
+  give a role on the site. Every holder was a user of croquetscores.com, so
+  its users are all that need be brought over first. One who was only a user
+  of gateballscores.com would be named as having no account, since their
+  user is brought over later, and an import not of croquetscores.com at all
+  says that it gave no role.
 
   An address is found among the users the import brought over, compared as
   the site compares an email address, so a user is given a role whichever of

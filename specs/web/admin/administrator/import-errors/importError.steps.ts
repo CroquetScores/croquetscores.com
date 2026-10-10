@@ -90,3 +90,102 @@ Then(
     });
   },
 );
+
+// The tournament the document is of --------------------------------------------
+
+const shownIn = async (
+  world: SpecWorld,
+  selector: string,
+  expected: string,
+): Promise<void> => {
+  await eventually(async () => {
+    assert.equal(
+      await world.browserPage
+        .locator(`main ${selector}`)
+        .innerText({ timeout: 100 }),
+      expected,
+    );
+  });
+};
+
+const leadsTo = async (
+  world: SpecWorld,
+  selector: string,
+  href: string,
+): Promise<void> => {
+  await eventually(async () => {
+    assert.equal(
+      await world.browserPage
+        .locator(`main ${selector}`)
+        .getAttribute("href", { timeout: 100 }),
+      href,
+    );
+  });
+};
+
+Then(
+  "the tournament shown is {string}",
+  async function (this: SpecWorld, name: string) {
+    await shownIn(this, ".import-error-tournament", name);
+  },
+);
+
+Then(
+  "the competition shown is {string}",
+  async function (this: SpecWorld, name: string) {
+    await shownIn(this, ".import-error-competition", name);
+  },
+);
+
+// This site's address is wherever the scenario's site is served from.
+const thisSite = (world: SpecWorld, path: string): string =>
+  `${new URL(world.browserPage.url()).origin}${path}`;
+
+Then(
+  "the new site address shown is this site's {string}",
+  async function (this: SpecWorld, path: string) {
+    await shownIn(this, ".import-error-new-site a", thisSite(this, path));
+  },
+);
+
+Then(
+  "the new site address leads to this site's {string}",
+  async function (this: SpecWorld, path: string) {
+    await leadsTo(this, ".import-error-new-site a", thisSite(this, path));
+  },
+);
+
+Then(
+  "the old site address shown is {string}",
+  async function (this: SpecWorld, address: string) {
+    await shownIn(this, ".import-error-old-site a", address);
+  },
+);
+
+Then(
+  "the old site address leads to {string}",
+  async function (this: SpecWorld, href: string) {
+    await leadsTo(this, ".import-error-old-site a", href);
+  },
+);
+
+// Asked once the document's id is shown, so that the page has been drawn.
+Then("no tournament is shown", async function (this: SpecWorld) {
+  assert.equal(
+    await this.browserPage.locator("main .import-error-tournament").count(),
+    0,
+  );
+  assert.equal(
+    await this.browserPage
+      .locator("main .import-error-new-site, main .import-error-old-site")
+      .count(),
+    0,
+  );
+});
+
+Then(
+  "the page says for a person {string}",
+  async function (this: SpecWorld, summary: string) {
+    await shownIn(this, ".import-error-summary", summary);
+  },
+);

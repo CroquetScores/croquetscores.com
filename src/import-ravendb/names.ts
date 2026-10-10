@@ -1,3 +1,4 @@
+import { canMakeASlug } from "../domain/common/canMakeASlug.js";
 import { charactersIn } from "../domain/common/charactersIn.js";
 
 // The names the old sites accepted and the site refuses, changed only as far
@@ -7,12 +8,16 @@ import { charactersIn } from "../domain/common/charactersIn.js";
 const FEWEST_CHARACTERS = 3;
 
 // Added to a name too short, which makes it long enough and tells whoever
-// reads it next where it came from, so that they can name it better.
+// reads it next where it came from, so that they can name it better: a
+// person's that it was imported, and a tournament's that the import
+// corrected it. A competition's is never too short, but one with no letter
+// or digit says the import corrected it too.
 const IMPORTED = " - Imported";
+const IMPORT_CORRECTION = " - Import correction";
 
-const lengthened = (trimmed: string): string =>
+const lengthened = (trimmed: string, added = IMPORTED): string =>
   trimmed !== "" && charactersIn(trimmed) < FEWEST_CHARACTERS
-    ? trimmed + IMPORTED
+    ? trimmed + added
     : trimmed;
 
 /**
@@ -37,8 +42,8 @@ const titleCased = (text: string): string =>
 /**
  * A tournament's name the old sites accepted, as the site will take it. The
  * site refuses one all in capitals or all in small letters, so either is
- * written in title case, and then one too short says it was imported, as a
- * person's does. One with capitals and small letters keeps its case, which was
+ * written in title case, and then one too short says the import corrected
+ * it. One with capitals and small letters keeps its case, which was
  * somebody's choice.
  */
 export const tournamentNameToImport = (name: string): string => {
@@ -48,7 +53,61 @@ export const tournamentNameToImport = (name: string): string => {
     (trimmed === trimmed.toUpperCase() || trimmed === trimmed.toLowerCase())
       ? titleCased(trimmed)
       : trimmed;
-  return lengthened(cased);
+  return lengthened(cased, IMPORT_CORRECTION);
+};
+
+/**
+ * A competition's name the old sites accepted, as the site will take it. The
+ * site refuses one with no letter or digit, which makes no slug for its
+ * address, as "!", so one says the import corrected it, which gives it some.
+ * One with none at all is left with none, and refused.
+ */
+export const competitionNameToImport = (name: string): string => {
+  const trimmed = name.trim();
+  return trimmed !== "" && !canMakeASlug(trimmed)
+    ? trimmed + IMPORT_CORRECTION
+    : trimmed;
+};
+
+// Characters as a reader counts them, as charactersIn counts them, so that a
+// text is cut between two of them and never within one.
+const graphemes = new Intl.Segmenter();
+
+/**
+ * `text` cut to its first `most` characters less three, as a reader counts
+ * them, and "...", so that it is plain that more was said; or `text` as it is
+ * where it holds no more than `most`. Spaces left at the cut are taken off, so
+ * that the "..." follows the last word cut.
+ */
+export const shortenedTo = (text: string, most: number): string => {
+  if (charactersIn(text) <= most) return text;
+  const kept = [...graphemes.segment(text)]
+    .slice(0, most - 3)
+    .map(({ segment }) => segment)
+    .join("");
+  return `${kept.trimEnd()}...`;
+};
+
+/**
+ * `text` shortened to `most` characters (shortenedTo), or where one of
+ * `taken` is that in any case, `text` shortened to leave room for the first
+ * number from 2 that makes it one none of `taken` is, followed by it, as
+ * "Live from Court 1 ... (2)": numbered apart, and still no more than `most`.
+ * A number added after a title shortened to `most` would take it past it.
+ */
+export const numberedApartWithin = (
+  text: string,
+  taken: readonly string[],
+  most: number,
+): string => {
+  const lowered = new Set(taken.map((each) => each.toLowerCase()));
+  const shortened = shortenedTo(text, most);
+  if (!lowered.has(shortened.toLowerCase())) return shortened;
+  for (let number = 2; ; number += 1) {
+    const after = ` (${String(number)})`;
+    const numbered = `${shortenedTo(text, most - charactersIn(after))}${after}`;
+    if (!lowered.has(numbered.toLowerCase())) return numbered;
+  }
 };
 
 /**

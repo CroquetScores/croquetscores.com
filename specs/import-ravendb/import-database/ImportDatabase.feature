@@ -142,3 +142,52 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       When the errors kept are counted
       Then 0 errors are counted
+
+  Rule: An error is kept with the tournament and competition it is of, where they are known
+
+    The administrator's page for a document the import refused links to the
+    tournament it is of, on the site and on the old site, and says what the
+    competition it was is called (`importError.feature`). So an error is kept
+    with the tournament's address and name, the competition's name, and the
+    paths its document can be read at on the site and on the old site,
+    where whatever refused the document knew them. One refused before any
+    tournament was known, as a tournament refused itself is, is kept with
+    none.
+
+    Scenario: An error is kept with its tournament
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open"
+      Then the error kept for "croquetscores.com/blocks/30" is of the tournament at "2014/ac/spring-open" called "Spring Open"
+
+    Scenario: An error is kept with its competition
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" of the competition "A Block" of the tournament at "2014/ac/spring-open" called "Spring Open"
+      Then the error kept for "croquetscores.com/blocks/30" is of the competition "A Block"
+
+    Scenario: An error is kept with where its document is on each site
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      Then the error kept for "croquetscores.com/blocks/30" is at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+
+    Scenario: An error kept knowing no tournament is of none
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/tournaments/12" saying "Refused"
+      Then the error kept for "croquetscores.com/tournaments/12" is of no tournament
+
+  Rule: An error is kept with what went wrong said for a person, where there is a saying
+
+    The administrator's pages show, above what the code that failed wrote,
+    what went wrong said for a person, as "Game Tim 26 beat Trev 0 in Spring
+    Open - Knockout because they are not drawn to play each other."
+    (`importCompetition.feature`). It is kept with the error, where whatever
+    refused the document said it so, and is none otherwise.
+
+    Scenario: An error is kept with what went wrong said for a person
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused", said for a person as "Game Tim 26 beat Trev 0"
+      Then the summary kept for "croquetscores.com/blocks/30" names "Game Tim 26 beat Trev 0"
+
+    Scenario: An error kept with no saying has none
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
+      Then no summary is kept for "croquetscores.com/blocks/30"
