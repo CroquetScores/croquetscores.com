@@ -43,7 +43,31 @@ export interface DocumentSource {
 export interface ImporterRun {
   readonly read: number;
   readonly errors: number;
+  /** Whether it stopped before the end of its collection, asked to. */
+  readonly stopped: boolean;
 }
+
+/**
+ * Whether the import is to stop now (runImporter.feature), asked after each
+ * document.
+ */
+export type Stop = () => Promise<boolean>;
+
+/** Where the errors the import has kept are counted. */
+export interface ErrorsCounted {
+  errorCount(): Promise<number>;
+}
+
+/**
+ * Stops once `errors` has kept `limit` errors, of whatever collection and
+ * whatever kept them, which is why they are counted where they are kept
+ * rather than added up as each document is refused: a tournament keeps the
+ * errors of what names it.
+ */
+export const stoppingAfter =
+  (errors: ErrorsCounted, limit: number): Stop =>
+  async () =>
+    (await errors.errorCount()) >= limit;
 
 /** A count as it is shown: `1,234`. */
 export const numbers = new Intl.NumberFormat("en-AU");
@@ -57,17 +81,20 @@ export const minutesAndSeconds = (milliseconds: number): string => {
 /**
  * Reads every document in the importer's collection, a page at a time, and
  * hands each to the importer in turn (runImporter.feature). `show` is given
- * the progress as it goes, for whoever is watching.
+ * the progress as it goes, for whoever is watching. It stops after the
+ * document that `stop` says to stop after, where it is given one.
  */
 export const runImporter = async <TDocument extends object>(
   source: DocumentSource,
   errors: ImportErrors,
   importer: Importer<TDocument>,
   show: (text: string) => void = (text) => process.stdout.write(text),
+  stop?: Stop,
 ): Promise<ImporterRun> => {
   const started = Date.now();
   let read = 0;
   let refused = 0;
+  let stopped = false;
 
   for (;;) {
     const page = await source.page<TDocument>(
@@ -95,16 +122,20 @@ export const runImporter = async <TDocument extends object>(
       show(
         `\r${numbers.format(read)} with ${numbers.format(refused)} errors. ${id}\x1b[K`,
       );
+      if (stop !== undefined && (await stop())) {
+        stopped = true;
+        break;
+      }
     }
 
     // A page short of full is the last. A full one may be too, which costs one
     // more asking that comes back empty.
-    if (page.length < PAGE_SIZE) break;
+    if (stopped || page.length < PAGE_SIZE) break;
   }
 
   show(
-    `\rRead ${numbers.format(read)} with ${numbers.format(refused)} errors in ${minutesAndSeconds(Date.now() - started)} minutes.\x1b[K\n`,
+    `\r${stopped ? "Stopped after" : "Read"} ${numbers.format(read)} with ${numbers.format(refused)} errors in ${minutesAndSeconds(Date.now() - started)} minutes.\x1b[K\n`,
   );
 
-  return { read, errors: refused };
+  return { read, errors: refused, stopped };
 };

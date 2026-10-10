@@ -70,6 +70,8 @@ import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
 import { ImportWorldRankingPlayerNames } from "./ImportWorldRankingPlayerNames.js";
+import { ImportRefused } from "./ImportRefused.js";
+import { readImportArguments } from "./importArguments.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
 import { MissingTournamentsFile } from "./MissingTournaments.js";
@@ -79,7 +81,12 @@ import {
   minutesAndSeconds,
   numbers,
   runImporter,
+  stoppingAfter,
 } from "./runImporter.js";
+
+// Says, to the one place that asks for the world rankings, that the import
+// stopped before them.
+class StoppedBeforeRankings extends Error {}
 
 // Who holds each of the site's roles, by the addresses their users had on the
 // old sites (GiveRoles.feature).
@@ -123,6 +130,18 @@ const where = (url: string): string => {
 
 loadEnvFile();
 const config = loadImportConfig();
+// Refused before the database it would empty is touched.
+const switches = (() => {
+  try {
+    return readImportArguments(process.argv.slice(2));
+  } catch (failure) {
+    if (failure instanceof ImportRefused) {
+      console.error(`${failure.code}: ${failure.message}`);
+      process.exit(1);
+    }
+    throw failure;
+  }
+})();
 const started = Date.now();
 
 const pool = createPool(config.databaseUrl);
@@ -303,6 +322,14 @@ try {
     }
   };
 
+  // Asked to stop once this many errors are kept, the import stops reading,
+  // and goes on to say what it found (importArguments.feature).
+  const stop =
+    switches.stopAfterErrors === undefined
+      ? undefined
+      : stoppingAfter(database, switches.stopAfterErrors);
+  let stopped = false;
+
   for (const website of config.ravenDbDatabases) {
     const documents = new RavenDbDocuments(config.ravenDbUrl, website);
     // Users before the tournaments that name them, and what no tournament
@@ -315,7 +342,17 @@ try {
     try {
       for (const importer of importers) {
         console.log(`${website} ${importer.collection}`);
-        await runImporter(documents, database, importer);
+        const run = await runImporter(
+          documents,
+          database,
+          importer,
+          undefined,
+          stop,
+        );
+        if (run.stopped) {
+          stopped = true;
+          break;
+        }
         if (importer === users && website === ROLE_HOLDERS_SITE) {
           await giveRoles();
         }
@@ -323,12 +360,14 @@ try {
     } finally {
       documents.dispose();
     }
+    if (stopped) break;
   }
 
   // An import not of croquetscores.com gives no role, which is said and
-  // counted rather than left for an empty list of administrators to show.
-  const rolesNotGiven = withNoAccount === undefined ? 1 : 0;
-  if (withNoAccount === undefined) {
+  // counted rather than left for an empty list of administrators to show. One
+  // that stopped is not an import of any, and says nothing of it.
+  const rolesNotGiven = withNoAccount === undefined && !stopped ? 1 : 0;
+  if (withNoAccount === undefined && !stopped) {
     console.error(
       `The site's roles were not given, since ${ROLE_HOLDERS_SITE} was not imported.`,
     );
@@ -344,6 +383,9 @@ try {
   // is still said, and counted, after it.
   let worldRankingErrors = 0;
   try {
+    // Not asked of an import that stopped, which is looking at what it kept so
+    // far, and the rankings' site is the slowest thing it asks.
+    if (stopped) throw new StoppedBeforeRankings();
     let notRead = 0;
     await new ImportWorldRankingPlayerNames({
       lists: new WorldRankingWebsite(),
@@ -359,8 +401,15 @@ try {
       }
     });
   } catch (failure) {
-    console.error("The world ranking players were not all imported.", failure);
-    worldRankingErrors += 1;
+    if (failure instanceof StoppedBeforeRankings) {
+      console.log("The world ranking players were not imported.");
+    } else {
+      console.error(
+        "The world ranking players were not all imported.",
+        failure,
+      );
+      worldRankingErrors += 1;
+    }
   }
   // Counted from what was kept rather than added up from each collection's
   // reading, since a tournament keeps the errors of what names it itself
@@ -374,7 +423,9 @@ try {
   await correcting.end(kept);
 
   console.log(
-    `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
+    stopped
+      ? `Stopped importing after ${numbers.format(kept)} errors, as asked to after ${numbers.format(switches.stopAfterErrors ?? 0)}, in ${minutesAndSeconds(Date.now() - started)}.`
+      : `Completed importing in ${minutesAndSeconds(Date.now() - started)}. With ${numbers.format(errors)} errors.`,
   );
 } finally {
   await pool.end();

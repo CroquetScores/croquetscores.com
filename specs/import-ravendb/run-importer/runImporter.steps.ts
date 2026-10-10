@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 
 import {
   runImporter,
+  stoppingAfter,
   type DocumentSource,
   type ImporterRun,
   type ReadDocument,
@@ -48,6 +49,10 @@ class Errors implements ErrorsKept {
   recordError(documentId: string, message: string): Promise<void> {
     this.kept.push({ documentId, message });
     return Promise.resolve();
+  }
+
+  errorCount(): Promise<number> {
+    return Promise.resolve(this.kept.length);
   }
 
   errorsFor(documentId: string): Promise<readonly string[]> {
@@ -133,33 +138,59 @@ Given(
   },
 );
 
+const runOver = async (
+  world: SpecWorld,
+  website: string,
+  stopAfter?: number,
+): Promise<void> => {
+  const state = runningOf(world);
+  state.run = await runImporter(
+    siteOf(world, website),
+    state.errors,
+    {
+      collection: state.collection,
+      importDocument(read: ReadDocument<Document>): Promise<void> {
+        state.handed.push(read);
+        if (state.refuses.has(read.id)) {
+          const code = state.refuses.get(read.id);
+          const message = `Refused ${read.id}`;
+          return Promise.reject(
+            code === undefined
+              ? new Error(message)
+              : new ImportRefused(code, message),
+          );
+        }
+        return Promise.resolve();
+      },
+    },
+    () => {},
+    stopAfter === undefined
+      ? undefined
+      : stoppingAfter(state.errors, stopAfter),
+  );
+};
+
 When(
   "the importer is run over {string}",
   async function (this: SpecWorld, website: string) {
-    const state = runningOf(this);
-    state.run = await runImporter(
-      siteOf(this, website),
-      state.errors,
-      {
-        collection: state.collection,
-        importDocument(read: ReadDocument<Document>): Promise<void> {
-          state.handed.push(read);
-          if (state.refuses.has(read.id)) {
-            const code = state.refuses.get(read.id);
-            const message = `Refused ${read.id}`;
-            return Promise.reject(
-              code === undefined
-                ? new Error(message)
-                : new ImportRefused(code, message),
-            );
-          }
-          return Promise.resolve();
-        },
-      },
-      () => {},
-    );
+    await runOver(this, website);
   },
 );
+
+When(
+  "the importer is run over {string}, stopping after {int} error(s)",
+  async function (this: SpecWorld, website: string, count: number) {
+    await runOver(this, website, count);
+  },
+);
+
+Then("the run was stopped", function (this: SpecWorld) {
+  assert.equal(runOf(this).stopped, true);
+});
+
+Then("the run was not stopped", function (this: SpecWorld) {
+  assert.equal(runOf(this).stopped, false);
+});
 
 Then(
   "the importer was handed {int} document(s)",
