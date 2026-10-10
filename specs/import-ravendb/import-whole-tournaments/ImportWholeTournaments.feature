@@ -152,23 +152,28 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Standard"
 
-  Rule: A block the import names as a team match is brought over as one
+  Rule: A block, knockout or Swiss of a tournament played by teams is tried as a team match
 
-    The old site kept some team matches as blocks of a tournament played by
-    teams, which the site has no place for, as croquetscores.com's
+    The site has no block, knockout or Swiss in a tournament played by teams:
+    its competitions are tests between its teams. The old sites let a manager
+    add one all the same, and some were team matches kept so, as croquetscores.com's
     blocks/100678, Club de Golf Xaz vs Real Club de Golf de La Coruna, whose
-    players each represented one of the two clubs. Such a block the import
-    names is brought over as a team match (`ImportTeamMatches.feature`),
-    played over its tournament's days, and expected to have as many matches
-    as its games say. That is said as corrected
-    (`AcceptedImportErrors.feature`).
+    players each represented one of its two clubs. So where a block, a
+    knockout or a Swiss of a tournament played by teams is named for two
+    teams, "A vs B" or "A v B", and its players each represent one of them, it is
+    tried as a team match (`ImportTeamMatches.feature`), played over the
+    tournament's days and expected to have as many matches as its games say.
+    Where that works it is brought over as one, and said as corrected
+    (`AcceptedImportErrors.feature`). Where it is not named for two teams,
+    or a player represents neither, or it is refused, it is refused as it
+    always was, as the competition it is.
 
-    Scenario: A block the import names as a team match is brought over as a test
+    Scenario: A block of a tournament played by teams named for two teams is brought over as a test
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament is of the type "teams"
       And the tournament lists nothing
-      And the tournament lists "blocks/100678"
-      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
       And the competition is called "Club Xaz vs Club Coruna"
       And player 1 is in the competition
       And player 1 represents "Club Xaz"
@@ -177,14 +182,46 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then "blocks/100678" on "croquetscores.com" is kept as a test
+      Then "blocks/30" on "croquetscores.com" is kept as a test
+
+    Scenario: A knockout of a tournament played by teams named for two teams is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "knockouts/30" on "croquetscores.com" is kept as a test
+
+    Scenario: A Swiss of a tournament played by teams named for two teams is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "swisses/30"
+      And the Swiss "swisses/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "swisses/30" on "croquetscores.com" is kept as a test
 
     Scenario: The games of a block brought over as a team match are added
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament is of the type "teams"
       And the tournament lists nothing
-      And the tournament lists "blocks/100678"
-      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
       And the competition is called "Club Xaz vs Club Coruna"
       And player 1 is in the competition
       And player 1 represents "Club Xaz"
@@ -193,14 +230,14 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the test kept for "blocks/100678" on "croquetscores.com" has 1 game
+      Then the test kept for "blocks/30" on "croquetscores.com" has 1 game
 
     Scenario: A block brought over as a team match is not an error
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament is of the type "teams"
       And the tournament lists nothing
-      And the tournament lists "blocks/100678"
-      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
       And the competition is called "Club Xaz vs Club Coruna"
       And player 1 is in the competition
       And player 1 represents "Club Xaz"
@@ -209,14 +246,14 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then no error is kept for "croquetscores.com/blocks/100678"
+      Then no error is kept for "croquetscores.com/blocks/30"
 
     Scenario: A block brought over as a team match is said as corrected
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament is of the type "teams"
       And the tournament lists nothing
-      And the tournament lists "blocks/100678"
-      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
       And the competition is called "Club Xaz vs Club Coruna"
       And player 1 is in the competition
       And player 1 represents "Club Xaz"
@@ -225,7 +262,87 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then "croquetscores.com/blocks/100678" is corrected as "ImportWholeTournaments.BlockAsTeamMatch"
+      Then "croquetscores.com/blocks/30" is corrected as "ImportWholeTournaments.ImportedAsTeamMatch"
+
+    Scenario: A block named for two teams with "v" between them is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz v Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "blocks/30" on "croquetscores.com" is kept as a test
+
+    Scenario: The teams of a block named with "v" between them are the two it names
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz v Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has the team "Club Coruna"
+
+    Scenario: A block not named for two teams is still refused
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Tournament.PlayedByTeams"
+
+    Scenario: A block named for two teams whose players represent neither is still refused
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Nobody"
+      And player 2 is in the competition
+      And player 2 represents "Nowhere"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Tournament.PlayedByTeams"
+
+    Scenario: A block still refused is not said as corrected
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
 
   Rule: A tournament the import names as Standard is brought over as one
 

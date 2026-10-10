@@ -3,6 +3,7 @@ import {
   type AcceptedImportErrors,
   oldSitePathOf,
 } from "./AcceptedImportErrors.js";
+import { couldBeATeamMatch, namedForTwoTeams } from "./ImportTeamMatches.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
 import type {
@@ -40,6 +41,14 @@ export interface TournamentParts {
 interface Named {
   readonly id: string;
   readonly document: object;
+  /**
+   * What it was before it was tried as a team match: brought over as that
+   * where it is not.
+   */
+  readonly original?: {
+    readonly document: object;
+    readonly importer: Importer<object>;
+  };
   readonly importer: Importer<object>;
 }
 
@@ -73,14 +82,6 @@ const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament =>
     ? { ...tournament, TournamentType: "teams" }
     : tournament;
 
-// Blocks the old sites kept that were team matches, by the website and the
-// document (ImportWholeTournaments.feature): blocks/100678, Club de Golf Xaz
-// vs Real Club de Golf de La Coruna, a block of a tournament played by teams
-// whose players each represented one of the two clubs.
-const TEAM_MATCHES: ReadonlySet<string> = new Set([
-  "croquetscores.com/blocks/100678",
-]);
-
 // Tournaments the old sites kept as played by teams that were not, by the
 // website and the document (ImportWholeTournaments.feature):
 // tournaments/80204, the Murphy Shield LPG Southport v Chester, with no team
@@ -98,16 +99,36 @@ const LEFT_BEHIND: ReadonlyMap<string, string> = new Map([
 ]);
 
 /**
- * A block brought over as a team match: played over its tournament's days,
- * and expected to have as many matches as its games say (ImportTeamMatches.ts).
+ * A block, knockout or Swiss tried as a team match: played over its
+ * tournament's days, the best of what it was kept as or of 1, and expected to
+ * have as many matches as its games say (ImportTeamMatches.ts).
  */
-const asTeamMatch = (block: object, tournament: OldTournament): object => ({
-  ...block,
-  Start: tournament.Start,
-  Finish: tournament.Finish,
-  ExpectedMatches: 1,
-  Group: null,
-});
+const asTeamMatch = (
+  competition: object,
+  tournament: OldTournament,
+): object => {
+  const { BestOf: kept, Name: name } = competition as {
+    BestOf?: unknown;
+    Name?: unknown;
+  };
+  return {
+    ...competition,
+    // Written "A vs B", as a team match is named.
+    Name: typeof name === "string" ? (namedForTwoTeams(name) ?? name) : name,
+    BestOf: typeof kept === "number" && kept > 0 ? kept : 1,
+    Start: tournament.Start,
+    Finish: tournament.Finish,
+    ExpectedMatches: 1,
+    Group: null,
+  };
+};
+
+// What a kind of competition is called in what is said of it.
+const KINDS: Readonly<Record<string, string>> = {
+  Blocks: "block",
+  Knockouts: "knockout",
+  Swisses: "Swiss",
+};
 
 /**
  * Where the tournament `document` was on its old site, as "2025/gc/rose-bowl":
@@ -197,35 +218,42 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       this.#naming(this.parts.commentaries, id),
       ...this.parts.competitions.map((importer) => this.#naming(importer, id)),
     ]);
-    // A block the import names as a team match is brought over by what
-    // brings over team matches.
-    const teamMatches: Importer<object> | undefined =
-      this.parts.competitions.find(
-        ({ collection }) => collection === "TeamMatches",
-      );
-    const named = [
-      ...players,
-      ...this.#inListedOrder(document, competitions.flat()),
-      ...commentaries,
-    ].map((each) =>
-      teamMatches !== undefined &&
-      TEAM_MATCHES.has(`${website}/${each.id}`.toLowerCase())
-        ? {
-            ...each,
-            document: asTeamMatch(each.document, document),
-            importer: teamMatches,
-            asTeamMatch: true,
-          }
-        : each,
-    );
-    await this.database.recordTournamentRead(website, id);
-
     // A tournament the import names as Standard is set up as one, whatever
     // the old site said.
     const standard = STANDARD.has(`${website}/${id}`.toLowerCase());
     const setUp = standard
       ? { ...document, TournamentType: "standard" }
       : setUpAsPlayedByTeams(document);
+
+    // A block, knockout or Swiss of a tournament played by teams, which the
+    // site has no place for, that is named for two teams and whose players
+    // each represent one, is tried as a team match, by what brings over team
+    // matches, and is brought over as what it was where that is refused.
+    const teamMatches: Importer<object> | undefined =
+      this.parts.competitions.find(
+        ({ collection }) => collection === "TeamMatches",
+      );
+    const tried = (each: Named): Named =>
+      teamMatches !== undefined &&
+      isPlayedByTeams(setUp.TournamentType) &&
+      each.importer.collection in KINDS &&
+      !isArchived(each.document) &&
+      couldBeATeamMatch(
+        each.document as Parameters<typeof couldBeATeamMatch>[0],
+      )
+        ? {
+            ...each,
+            document: asTeamMatch(each.document, document),
+            importer: teamMatches,
+            original: { document: each.document, importer: each.importer },
+          }
+        : each;
+    const named = [
+      ...players,
+      ...this.#inListedOrder(document, competitions.flat()),
+      ...commentaries,
+    ].map(tried);
+    await this.database.recordTournamentRead(website, id);
     try {
       await this.parts.tournament.importDocument({
         ...read,
@@ -253,23 +281,37 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       );
     }
 
-    for (const each of named) {
+    for (const tryAsTeamMatch of named) {
+      let each: Named = tryAsTeamMatch;
+      if (tryAsTeamMatch.original !== undefined) {
+        // Tried as a team match. Where it is refused, whatever it kept is
+        // rolled back with it, and it is brought over as what it was.
+        try {
+          await tryAsTeamMatch.importer.importDocument({
+            website,
+            id: tryAsTeamMatch.id,
+            document: tryAsTeamMatch.document,
+          });
+          const kind = KINDS[tryAsTeamMatch.original.importer.collection];
+          await this.#corrected(
+            website,
+            id,
+            document,
+            tryAsTeamMatch,
+            "ImportWholeTournaments.ImportedAsTeamMatch",
+            `${(tryAsTeamMatch.document as { Name?: string }).Name ?? tryAsTeamMatch.id} was kept as a ${kind ?? "competition"} of a tournament played by teams, which the site has no place for, and is brought over as a team match.`,
+          );
+          continue;
+        } catch {
+          each = { ...tryAsTeamMatch, ...tryAsTeamMatch.original };
+        }
+      }
       try {
         await each.importer.importDocument({
           website,
           id: each.id,
           document: each.document,
         });
-        if ("asTeamMatch" in each) {
-          await this.#corrected(
-            website,
-            id,
-            document,
-            each,
-            "ImportWholeTournaments.BlockAsTeamMatch",
-            `${(each.document as { Name?: string }).Name ?? each.id} was kept as a block of a tournament played by teams, which the site has no place for, and is brought over as a team match.`,
-          );
-        }
       } catch (failure) {
         // Kept with the tournament, which is over by now, and with what a
         // competition was called on the old site, since it never became one.

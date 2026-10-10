@@ -116,6 +116,54 @@ const playedBetween = (
       (game.Winner.PlayerId === other && game.Loser.PlayerId === one),
   );
 
+// "v" or "vs" between two names, as "Glamorgan v Bristol".
+const VERSUS_WORD = /\s+(?:vs|v)\s+/i;
+
+/**
+ * `name` written "A vs B", as a team match is named, where it is named for two
+ * teams with "v" or "vs" between them; nothing where it is not.
+ */
+export const namedForTwoTeams = (name: string): string | undefined => {
+  const found = VERSUS_WORD.exec(name);
+  if (found === null) return undefined;
+  return `${name.slice(0, found.index).trim()}${VERSUS}${name.slice(found.index + found[0].length).trim()}`;
+};
+
+/**
+ * Whether `document` could be brought over as a team match
+ * (ImportWholeTournaments.feature): it is named for two teams, "A vs B", it
+ * has a player, and every player who is no bye represents one of them, as a
+ * team match's players do. Asked of a block, knockout or Swiss of a
+ * tournament played by teams before it is tried as one, so that one whose
+ * players would all be refused is not.
+ */
+export const couldBeATeamMatch = (document: {
+  readonly Name: string;
+  readonly Players: {
+    readonly _Players: readonly {
+      readonly Name: string;
+      readonly Representing: string | null;
+    }[];
+  };
+}): boolean => {
+  const named = namedForTwoTeams(document.Name);
+  if (named === undefined) return false;
+  const split = named.indexOf(VERSUS);
+  const names = [
+    named.slice(0, split).trim(),
+    named.slice(split + VERSUS.length).trim(),
+  ].flatMap((name) => [name, teamNameOf(name), beforeBrackets(name)]);
+  const players = document.Players._Players.filter(
+    (player) => !isOldBye(player.Name),
+  );
+  return (
+    players.length > 0 &&
+    players.every((player) =>
+      names.some((name) => sameName((player.Representing ?? "").trim(), name)),
+    )
+  );
+};
+
 /**
  * How many matches a team match's games say it had (ImportTeamMatches.feature):
  * for each two players who met, the games between them over its best-of,
