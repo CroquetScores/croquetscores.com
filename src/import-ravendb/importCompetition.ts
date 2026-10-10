@@ -150,7 +150,9 @@ export const addGames = async (
   games: readonly OldGame[],
   playerOf: (number: number) => GamePlayerId | undefined,
   nameOf: (number: number) => string,
-  told: Told,
+  // Asked again for each game, where what the competition is told can change
+  // as its games are added, as a test's teams do when a player is made.
+  told: Told | (() => Told),
   website: Website,
   by: AccountId,
   ordered: (games: readonly OldGame[]) => readonly OldGame[] = gamesInOrder,
@@ -180,7 +182,7 @@ export const addGames = async (
             website,
           ),
         },
-        told,
+        typeof told === "function" ? told() : told,
         by,
         momentOf(adding.CreatedAt),
       );

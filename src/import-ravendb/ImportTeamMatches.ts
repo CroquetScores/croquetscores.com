@@ -5,6 +5,7 @@ import { CompetitionId } from "../domain/aggregates/tournaments/primitives/Compe
 import { TeamId } from "../domain/aggregates/tournaments/primitives/TeamId.js";
 import { TeamPlayerId } from "../domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import type { Team } from "../domain/aggregates/tournaments/Team.js";
+import type { TeamPlayer } from "../domain/aggregates/tournaments/TeamPlayer.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { ExpectedMatches } from "../domain/aggregates/tournaments/value-objects/ExpectedMatches.js";
 import { TestGroup } from "../domain/aggregates/tournaments/value-objects/TestGroup.js";
@@ -17,6 +18,7 @@ import {
   type ImportingCompetitions,
   addGames,
   gamesInOrder,
+  type Instead,
   nameOfIn,
   type PutRight,
   withItsLists,
@@ -507,21 +509,160 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           },
         });
       };
+      // Two players who met again once their match was decided, in a game not
+      // entered against the wrong player nor the very scores of another, who
+      // played more games than one match of the best-of holds: the loser is
+      // played by a player made for it on their team, called by their name
+      // and " - meet again", and the game is added between the winner and
+      // them. The games of one meeting again are all against that player,
+      // whoever won them, and a third meeting is against another, numbered
+      // apart (ImportTeamMatches.feature).
+      let told = toldOf(tournament, competitionId);
+      const bestOf = bestOfImported(document.BestOf).games;
+      // A player made for meeting again has a number of the import's own,
+      // below any the old sites gave, so that a game can name them.
+      const numbered = new Map<string, number>();
+      const numberOf = (id: TeamPlayerId): number => {
+        const found = numbered.get(id.value);
+        if (found !== undefined) return found;
+        const number = -1 - numbered.size;
+        numbered.set(id.value, number);
+        players.set(number, id);
+        return number;
+      };
+      const teamOfPlayer = (id: TeamPlayerId): Team | undefined =>
+        tournament.teams.find((team) =>
+          team.players.some((player) => player.id.equals(id)),
+        );
+      const meetingAgainName = (number: number): string =>
+        `${nameToImport(nameOf(number))} - meet again`;
+      // The players made for `number` meeting again, in the order made.
+      const meetingAgainOf = (number: number): TeamPlayer[] => {
+        const id = players.get(number);
+        const team = id === undefined ? undefined : teamOfPlayer(id);
+        if (team === undefined) return [];
+        const made = meetingAgainName(number);
+        return team.players.filter((player) => {
+          const name = player.name.toString();
+          return name === made || name.startsWith(`${made} (`);
+        });
+      };
+      const decidedBetween = (one: TeamPlayerId, other: TeamPlayerId) => {
+        const between = competition.games.filter(
+          (game) =>
+            !game.archived &&
+            ((game.winner.equals(one) && game.loser.equals(other)) ||
+              (game.winner.equals(other) && game.loser.equals(one))),
+        );
+        const needed = Math.floor(bestOf / 2) + 1;
+        return (
+          between.length >= bestOf ||
+          [one, other].some(
+            (id) =>
+              between.filter((game) => !game.drawn && game.winner.equals(id))
+                .length >= needed,
+          )
+        );
+      };
+      const meetAgain: PutRight = (game, failure) => {
+        const refusedAs = (failure as { code?: unknown }).code;
+        const winner = game.Winner.PlayerId;
+        const loser = game.Loser.PlayerId;
+        const winnerId = players.get(winner);
+        const loserId = players.get(loser);
+        if (
+          refusedAs !== "Competition.MatchDecided" ||
+          winnerId === undefined ||
+          loserId === undefined ||
+          gamesPlayed.some(
+            (each) => each !== game && scoresOf(each) === scoresOf(game),
+          ) ||
+          gamesPlayed.filter(
+            (each) =>
+              (each.Winner.PlayerId === winner &&
+                each.Loser.PlayerId === loser) ||
+              (each.Winner.PlayerId === loser &&
+                each.Loser.PlayerId === winner),
+          ).length <= bestOf
+        ) {
+          return Promise.resolve(false);
+        }
+        const instead = (replaced: number, playedBy: TeamPlayer): Instead => ({
+          game: {
+            ...game,
+            Winner: {
+              ...game.Winner,
+              PlayerId: replaced === winner ? numberOf(playedBy.id) : winner,
+            },
+            Loser: {
+              ...game.Loser,
+              PlayerId: replaced === loser ? numberOf(playedBy.id) : loser,
+            },
+          },
+          corrected: () =>
+            errors.gameCorrected(
+              game,
+              nameOf,
+              "ImportTeamMatches.MeetAgain",
+              `came once ${nameOf(winner)} and ${nameOf(loser)} had met in a match already decided, and ${nameOf(replaced)} is played in it by ${playedBy.name.toString()}, a player made for meeting again, since two players of a test meet in one match.`,
+            ),
+        });
+        // A meeting again of the two already begun, and not decided, on
+        // whichever side it was made for.
+        for (const [side, other] of [
+          [winner, loserId],
+          [loser, winnerId],
+        ] as const) {
+          const begun = meetingAgainOf(side).find(
+            (player) => !decidedBetween(player.id, other),
+          );
+          if (begun !== undefined) return Promise.resolve(instead(side, begun));
+        }
+        const team = teamOfPlayer(loserId);
+        if (team === undefined) return Promise.resolve(false);
+        const madeId = TeamPlayerId.create();
+        tournament.addTeamPlayer(
+          team.id,
+          madeId,
+          {
+            name: numberedApart(
+              meetingAgainName(loser),
+              (teamOfPlayer(loserId)?.players ?? []).map((each) =>
+                each.name.toString(),
+              ),
+            ),
+          },
+          by,
+          at,
+        );
+        told = toldOf(tournament, competitionId);
+        const made = teamOfPlayer(madeId)?.players.find((each) =>
+          each.id.equals(madeId),
+        );
+        return Promise.resolve(
+          made === undefined ? false : instead(loser, made),
+        );
+      };
       await addGames(
         errors,
         competition,
         gamesPlayed,
         (number) => players.get(number),
         nameOf,
-        toldOf(tournament, competitionId),
+        () => told,
         Website.from(website),
         by,
         inOrder === undefined
           ? gamesInOrder
           : (games) => reordered(games, inOrder),
         undefined,
-        opponentCorrected,
+        async (game, failure, toCome) => {
+          const put = await opponentCorrected(game, failure, toCome);
+          return put === false ? meetAgain(game, failure, toCome) : put;
+        },
       );
+      // Again, for the players made for meeting again.
+      await tournaments.save(tournament);
       await competitions.save(competition);
     });
   }
