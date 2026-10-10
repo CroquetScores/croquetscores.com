@@ -263,6 +263,158 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
+  Rule: A pair's second and third games are added the other way round where the third would come after their match was decided
+
+    Some managers entered a match of the best of 3 out of order: a player won
+    two games, and the third was entered, after, as the second. The site finds
+    a match decided after the second win, and refuses a game after it
+    (`addGame.feature`), so before any game of a block kept as the best of
+    more than 1 is added, the games each pair played are tested in the order
+    they were entered. Where the third would be refused because the first two
+    decided the match, and the second and third the other way round would all
+    be accepted, they are added the other way round. Where they would not, as
+    where one player won all three, or the best-of is too few for a third
+    game, they are added as entered, and the third is refused as it always
+    was. That is said as corrected (`AcceptedImportErrors.feature`).
+
+    Sam Someone beat Alex Other twice, and Alex beat Sam in the game entered
+    third, so it was the second played.
+
+    Scenario: A pair's third game that would come after their match was decided is added
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 4 games
+
+    Scenario: A pair's games added the other way round are not an error
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A pair's games added the other way round are said as corrected
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then "croquetscores.com/blocks/30" is corrected as "ImportBlocks.GamesReordered"
+
+    Scenario: A pair's games added the other way round are said naming the pair
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And player 7 is called "Sam Someone"
+      And player 3 is called "Alex Other"
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then what is corrected of "croquetscores.com/blocks/30" names "Sam Someone and Alex Other"
+
+    Scenario: A pair's games that were entered in order are not said as corrected
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
+    Scenario: A pair who played three games won by one player keep the order they were entered in
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
+
+    Scenario: A block of the best of 2 keeps the order the games were entered in
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 2
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      And game 4 was won by player 7
+      And game 4 was lost by player 5
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
+
   Rule: A block with no players and no games, of a tournament finished before 1 October 2026, is left behind
 
     The old sites kept blocks that were added to a tournament and never used:

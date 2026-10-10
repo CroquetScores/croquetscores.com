@@ -1,6 +1,7 @@
 import {
   type ImportingCompetitions,
   importCompetition,
+  nameOfIn,
 } from "./importCompetition.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { Block, Game } from "./ravendb-models/Competition.js";
@@ -19,6 +20,61 @@ const isUnused = (document: Block, tournament: Tournament): boolean =>
   document.Players._Players.length === 0 &&
   document.Games._Games.length === 0 &&
   tournament.finishes.toDate().getTime() < UNUSED_BEFORE;
+
+// Whether a match of the best of `bestOf` is decided by `played`, the games
+// already played between two players, as the site finds it: one of them has
+// won more than half, or they have played them all (Competition.ts).
+const decidedAfter = (played: readonly Game[], bestOf: number): boolean => {
+  const needed = Math.floor(bestOf / 2) + 1;
+  const wins = new Map<number, number>();
+  for (const game of played) {
+    wins.set(game.Winner.PlayerId, (wins.get(game.Winner.PlayerId) ?? 0) + 1);
+  }
+  return (
+    played.length >= bestOf || [...wins.values()].some((won) => won >= needed)
+  );
+};
+
+/**
+ * `games` in the order they were entered, but with the second and third games
+ * of a pair added the other way round where the third would come after their
+ * match of the best of `bestOf` was decided and the other way round would
+ * all be accepted (ImportBlocks.feature). The pairs it did that for are
+ * answered too, as the two games, to be said as corrected.
+ */
+export const secondAndThirdReversed = (
+  games: readonly Game[],
+  bestOf: number,
+): { ordered: Game[]; reversed: readonly [Game, Game][] } => {
+  const ordered = [...games].sort((one, other) => one.Id - other.Id);
+  const byPair = new Map<string, number[]>();
+  ordered.forEach((game, at) => {
+    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
+      .sort((one, other) => one - other)
+      .join(" ");
+    byPair.set(pair, [...(byPair.get(pair) ?? []), at]);
+  });
+  const reversed: [Game, Game][] = [];
+  for (const places of byPair.values()) {
+    const [at1, at2, at3] = places;
+    if (at1 === undefined || at2 === undefined || at3 === undefined) continue;
+    const [first, second, third] = [at1, at2, at3].map((at) => ordered[at]);
+    if (first === undefined || second === undefined || third === undefined) {
+      continue;
+    }
+    if (
+      !decidedAfter([first, second], bestOf) ||
+      decidedAfter([first], bestOf) ||
+      decidedAfter([first, third], bestOf)
+    ) {
+      continue;
+    }
+    ordered[at2] = third;
+    ordered[at3] = second;
+    reversed.push([second, third]);
+  }
+  return { ordered, reversed };
+};
 
 /**
  * Whether every pair of the `players` of a block played exactly `bestOf`
@@ -84,16 +140,31 @@ export class ImportBlocks implements Importer<Block> {
           document.BestOf,
         );
         const bestOf = inRounds ? BestOf.from(1) : worked;
+        // Tested before any game is added, for a block kept as the best of
+        // more than 1 that was not played in rounds.
+        const { ordered, reversed } = secondAndThirdReversed(
+          document.Games._Games,
+          bestOf.games,
+        );
+        const nameOf = nameOfIn(document);
         return {
           entries,
-          corrected: inRounds
-            ? [
-                {
-                  code: "ImportBlocks.PlayedInRounds",
-                  says: `was kept as the best of ${String(worked.games)}, and every pair of its players played ${String(worked.games)} games, so it was played in rounds of single games and is brought over as the best of 1.`,
-                },
-              ]
-            : [],
+          gamesInOrder: () => ordered,
+          corrected: [
+            ...(inRounds
+              ? [
+                  {
+                    code: "ImportBlocks.PlayedInRounds",
+                    says: `was kept as the best of ${String(worked.games)}, and every pair of its players played ${String(worked.games)} games, so it was played in rounds of single games and is brought over as the best of 1.`,
+                  },
+                ]
+              : []),
+            ...reversed.map(([second, third]) => ({
+              code: "ImportBlocks.GamesReordered",
+              what: `games ${String(second.Id)} and ${String(third.Id)}`,
+              says: `has the second and third games between ${nameOf(second.Winner.PlayerId)} and ${nameOf(second.Loser.PlayerId)}, games ${String(second.Id)} and ${String(third.Id)}, added the other way round, since the third came after their match of the best of ${String(bestOf.games)} was decided.`,
+            })),
+          ],
           add: (tournament, id, name, by, at) => {
             tournament.addBlock(id, name, bestOf, by, at);
           },

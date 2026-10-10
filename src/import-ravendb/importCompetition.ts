@@ -58,7 +58,12 @@ export type Shaped =
        * added: a code, and what happened to it, which begins with what it
        * was.
        */
-      readonly corrected?: readonly { code: string; says: string }[];
+      readonly corrected?: readonly {
+        code: string;
+        says: string;
+        /** What of the document, as "games 14 and 15", or "" for all of it. */
+        what?: string;
+      }[];
       readonly gamesInOrder?: (games: readonly OldGame[]) => readonly OldGame[];
       readonly add: (
         tournament: Tournament,
@@ -424,8 +429,8 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         "was kept the other way round, and is brought over as won by the player who scored more.",
       );
     }
-    for (const { code, says } of shaped.corrected ?? []) {
-      await errors.corrected("", code, `${errors.place} ${says}`);
+    for (const { code, says, what } of shaped.corrected ?? []) {
+      await errors.corrected(what ?? "", code, `${errors.place} ${says}`);
     }
     await tournaments.save(tournament);
     await database.recordImportedCompetition(
