@@ -143,6 +143,20 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then importing the competition is not refused
 
+  Rule: A competition kept with no list of players or of games has none
+
+    The old site kept some competitions with no list of players and no list
+    of games at all, rather than lists that held nothing
+    (`ImportTeamMatches.feature`). Such a competition is brought over as one
+    that had no players and no games.
+
+    Scenario: A competition kept with no lists is brought over
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "A Block"
+      And it was kept with no list of players or of games
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the competition "A Block"
+
   Rule: An archived competition is left behind
 
     Scenario: An archived competition is not kept as any competition

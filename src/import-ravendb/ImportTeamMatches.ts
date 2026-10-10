@@ -18,6 +18,7 @@ import {
   addGames,
   gamesInOrder,
   nameOfIn,
+  withItsLists,
 } from "./importCompetition.js";
 import { ImportRefused } from "./ImportRefused.js";
 import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
@@ -168,8 +169,9 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
   async importDocument({
     website,
     id,
-    document,
+    document: read,
   }: ReadDocument<TeamMatch>): Promise<void> {
+    const document = withItsLists(read);
     const {
       unitOfWork,
       tournaments,
@@ -291,11 +293,35 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             byesMade.push(player._Id);
             continue;
           }
-          if (already !== undefined) {
-            players.set(player._Id, TeamPlayerId.from(already));
-            continue;
-          }
           const team = teamRepresented((player.Representing ?? "").trim());
+          // A number found again is the player it was, unless they are a
+          // player of another team than the one they represent here: the old
+          // site sometimes gave a number to two people, of two teams. Then
+          // they are the player of the same name in their own team, made the
+          // first time, and the number stays the other player's.
+          let numbered = true;
+          if (already !== undefined) {
+            const known = TeamPlayerId.from(already);
+            const theirs = tournament.teams.find((each) =>
+              each.players.some((one) => one.id.equals(known)),
+            );
+            if (
+              team === undefined ||
+              theirs === undefined ||
+              theirs.id.equals(team.id)
+            ) {
+              players.set(player._Id, known);
+              continue;
+            }
+            const named = team.players.find((one) =>
+              sameName(one.name.toString(), nameToImport(player.Name)),
+            );
+            if (named !== undefined) {
+              players.set(player._Id, named.id);
+              continue;
+            }
+            numbered = false;
+          }
           if (team === undefined) {
             throw new ImportRefused(
               "ImportTeamMatches.RepresentsNeitherTeam",
@@ -319,7 +345,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             at,
           );
           players.set(player._Id, playerId);
-          made.push({ number: player._Id, id: playerId });
+          if (numbered) made.push({ number: player._Id, id: playerId });
         } catch (failure) {
           await errors.playerRefused(player._Id, player.Name, failure);
         }

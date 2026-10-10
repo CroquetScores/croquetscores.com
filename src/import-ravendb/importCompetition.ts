@@ -102,6 +102,27 @@ export const AGAINST_A_BYE = {
 } as const;
 
 /**
+ * `document` with the list of players and the list of games the old site
+ * left out kept as lists of none: it kept some, as TeamMatches/28862, with
+ * neither list there at all (ImportTeamMatches.feature). Read once, where a
+ * competition is read, so that nothing past it meets a list that is not
+ * there.
+ */
+export const withItsLists = <TDocument extends OldCompetition>(
+  document: TDocument,
+): TDocument => {
+  const kept = document as {
+    readonly Players?: { readonly _Players?: unknown };
+    readonly Games?: { readonly _Games?: unknown };
+  };
+  return {
+    ...document,
+    Players: { ...kept.Players, _Players: kept.Players?._Players ?? [] },
+    Games: { ...kept.Games, _Games: kept.Games?._Games ?? [] },
+  };
+};
+
+/**
  * What the player numbered `number` of `document` was called, or their number
  * where it lists nobody numbered so.
  */
@@ -180,9 +201,10 @@ export const addGames = async (
  */
 export const importCompetition = async <TDocument extends OldCompetition>(
   importing: ImportingCompetitions,
-  { website, id, document }: ReadDocument<TDocument>,
+  { website, id, document: read }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
+  const document = withItsLists(read);
   const {
     unitOfWork,
     tournaments,

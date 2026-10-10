@@ -120,6 +120,27 @@ Feature: Importing the old sites' team matches
       Then importing the team match is refused saying "croquetscores.com/tournaments/12"
       And importing the team match is refused saying "croquetscores.com/teammatches/52"
 
+  Rule: A team match kept with no list of players or of games has none
+
+    The old site kept some team matches with no list of players and no list
+    of games at all, as TeamMatches/28862, Queanbeyan vs Canberra in the
+    2022 Blackall Cup, rather than lists that held nothing. Such a team match
+    is brought over as one that had no players and no games.
+
+    Scenario: A team match kept with no lists is brought over
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Queanbeyan vs Canberra"
+      And it was kept with no list of players or of games
+      When the team match is imported
+      Then "teammatches/50" on "croquetscores.com" is kept as a test
+
+    Scenario: Bringing over a team match kept with no lists is not refused
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Queanbeyan vs Canberra"
+      And it was kept with no list of players or of games
+      When the team match is imported
+      Then importing the team match is not refused
+
   Rule: An archived team match is left behind
 
     Scenario: An archived team match is not kept as any test
@@ -733,6 +754,127 @@ Feature: Importing the old sites' team matches
       And player 8 represents "New Zealand"
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
+
+  Rule: A number the old site gave a player of another team is not taken for theirs
+
+    A player is found again by the number the old site gave them in the
+    tournament, so that a player in two team matches is one player. But the
+    old site sometimes gave a number to two people, of two teams: in
+    TeamMatches/28518 of the 2021 Egypt League, number 9 was Hanan Bendary &
+    Hussin Bedir of Gzera Club, where every other team match had it as Ahmed
+    Hany of ElRwad Club. So a number found again as a player of another team
+    than the one the player represents here is not taken for theirs: they
+    are the player of the same name in the team they represent, made the
+    first time, and their games are theirs.
+
+    Ann Able played for New Zealand as number 9, and Ben Baker, also number
+    9, plays for Australia, and beats Cat Cole of England.
+
+    Scenario: A player whose number another team's player had is a player of their own team
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "Australia" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ben Baker"
+
+    Scenario: The games of a player whose number another team's player had are added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the test kept for "teammatches/51" on "croquetscores.com" has 1 game
+
+    Scenario: A player whose number another team's player had is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/51"
+
+    Scenario: The player whose number it was keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then player 9 of "tournaments/13" on "croquetscores.com" is kept as a player of "New Zealand"
+
+    Scenario: A player whose number another team's player had, named again, is the one player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "England"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      And the team match is imported
+      And the team match "teammatches/52" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Australia vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "Australia"
+      When the team match is imported
+      Then the team "Australia" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
 
   Rule: A player named as a bye is no player of a team
 

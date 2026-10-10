@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import type { Team } from "../../../src/domain/aggregates/tournaments/Team.js";
 import type { Tournament } from "../../../src/domain/aggregates/tournaments/Tournament.js";
 import type { SpecWorld } from "../../support/world.js";
+import { importDatabaseOf } from "../importing.js";
 import {
   aCompetition,
   competitionKeptFor,
@@ -285,5 +286,24 @@ Then(
   ) {
     const tournament = await tournamentKeptFor(this, id, website);
     assert.equal(teamNamed(tournament, name).players.length, Number(count));
+  },
+);
+
+Then(
+  "player {int} of {string} on {string} is kept as a player of {string}",
+  async function (
+    this: SpecWorld,
+    number: number,
+    id: string,
+    website: string,
+    team: string,
+  ) {
+    const kept = await importDatabaseOf(this).findPlayerOf(website, id, number);
+    assert.ok(kept !== undefined, `Player ${String(number)} is not kept.`);
+    const tournament = await tournamentKeptFor(this, id, website);
+    const theirs = tournament.teams.find((each) =>
+      each.players.some((player) => player.id.value === kept),
+    );
+    assert.equal(theirs?.name.toString(), team);
   },
 );
