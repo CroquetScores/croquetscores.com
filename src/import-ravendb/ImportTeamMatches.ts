@@ -65,6 +65,34 @@ const sameName = (one: string, other: string): boolean =>
 const beforeBrackets = (name: string): string =>
   name.replace(/\s*\([^()]*\)$/, "").trim();
 
+// Team matches whose games were entered out of the order they were played,
+// by the website and the document, with the numbers of the games in the order
+// they were played (ImportTeamMatches.feature). TeamMatches/359, Germany vs
+// Belgium at the 2012 GC World Team Championship: Bruno Hess beat
+// Charles-Eric Vilain 7-4, lost 3-7, and won 7-5.
+const PLAYED_IN_ORDER: ReadonlyMap<string, readonly number[]> = new Map([
+  ["croquetscores.com/teammatches/359", [6, 17, 10]],
+]);
+
+/**
+ * `games` in the order the old sites numbered them, but those `inOrder`
+ * names in the order it names them, in the places they had between them, so
+ * that every other game keeps its own.
+ */
+const reordered = (
+  games: readonly OldGame[],
+  inOrder: readonly number[],
+): OldGame[] => {
+  const numbered = gamesInOrder(games);
+  const named = inOrder
+    .map((id) => numbered.find((game) => game.Id === id))
+    .filter((game): game is OldGame => game !== undefined);
+  let next = 0;
+  return numbered.map((game) =>
+    inOrder.includes(game.Id) ? (named[next++] ?? game) : game,
+  );
+};
+
 /**
  * How many matches a team match's games say it had (ImportTeamMatches.feature):
  * for each two players who met, the games between them over its best-of,
@@ -341,6 +369,16 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           AGAINST_A_BYE.because,
         );
       }
+      // Where the import names the order its games were played in, they are
+      // added in it, and said as corrected.
+      const inOrder = PLAYED_IN_ORDER.get(documentId.toLowerCase());
+      if (inOrder !== undefined) {
+        await errors.corrected(
+          "",
+          "ImportTeamMatches.GamesReordered",
+          `${errors.place} has its games ${inOrder.join(", ")} added in that order, the order they were played in, rather than the order they were entered in.`,
+        );
+      }
       await addGames(
         errors,
         competition,
@@ -350,6 +388,9 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         toldOf(tournament, competitionId),
         Website.from(website),
         by,
+        inOrder === undefined
+          ? gamesInOrder
+          : (games) => reordered(games, inOrder),
       );
       await competitions.save(competition);
     });

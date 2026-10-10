@@ -550,6 +550,93 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then "teammatches/50" on "croquetscores.com" is kept as a test
 
+  Rule: The games of a team match the import names are added in the order it names
+
+    Some team matches had their games entered out of the order they were
+    played, so that a match the site would find decided had a game still to
+    come. Where it is known what order they were played in, the import names
+    the team match and the order: croquetscores.com's TeamMatches/359,
+    Germany vs Belgium at the 2012 GC World Team Championship, where Bruno
+    Hess beat Charles-Eric Vilain 7-4, lost 3-7, and won 7-5, entered as
+    games 6, 17 and 10 were played. The games named take the places they had
+    between them, and every other game keeps its own. That is not an error,
+    and is said as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: The games of a team match the import names are all added
+      Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Germany vs Belgium"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Bruno Hess"
+      And player 1 represents "Germany"
+      And player 2 is in the team match
+      And player 2 is called "Charles-Eric Vilain"
+      And player 2 represents "Belgium"
+      And game 6 was won by player 1
+      And game 6's winner scored "7"
+      And game 6 was lost by player 2
+      And game 6's loser scored "4"
+      And game 10 was won by player 1
+      And game 10's winner scored "7"
+      And game 10 was lost by player 2
+      And game 10's loser scored "5"
+      And game 17 was won by player 2
+      And game 17's winner scored "7"
+      And game 17 was lost by player 1
+      And game 17's loser scored "3"
+      When the team match is imported
+      Then the test kept for "TeamMatches/359" on "croquetscores.com" has 3 games
+
+    Scenario: Adding the games of a team match the import names in its order is not an error
+      Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Germany vs Belgium"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Bruno Hess"
+      And player 1 represents "Germany"
+      And player 2 is in the team match
+      And player 2 is called "Charles-Eric Vilain"
+      And player 2 represents "Belgium"
+      And game 6 was won by player 1
+      And game 6's winner scored "7"
+      And game 6 was lost by player 2
+      And game 6's loser scored "4"
+      And game 10 was won by player 1
+      And game 10's winner scored "7"
+      And game 10 was lost by player 2
+      And game 10's loser scored "5"
+      And game 17 was won by player 2
+      And game 17's winner scored "7"
+      And game 17 was lost by player 1
+      And game 17's loser scored "3"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/TeamMatches/359"
+
+    Scenario: Adding the games of a team match the import names in its order is said as corrected
+      Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "Germany vs Belgium"
+      And the team match's matches were the best of 3
+      And player 1 is in the team match
+      And player 1 is called "Bruno Hess"
+      And player 1 represents "Germany"
+      And player 2 is in the team match
+      And player 2 is called "Charles-Eric Vilain"
+      And player 2 represents "Belgium"
+      And game 6 was won by player 1
+      And game 6's winner scored "7"
+      And game 6 was lost by player 2
+      And game 6's loser scored "4"
+      And game 10 was won by player 1
+      And game 10's winner scored "7"
+      And game 10 was lost by player 2
+      And game 10's loser scored "5"
+      And game 17 was won by player 2
+      And game 17's winner scored "7"
+      And game 17 was lost by player 1
+      And game 17's loser scored "3"
+      When the team match is imported
+      Then "croquetscores.com/TeamMatches/359" is corrected as "ImportTeamMatches.GamesReordered"
+
   Rule: A player is a player of the team they represented
 
     Some managers named a team match's teams with what group they were in, in
