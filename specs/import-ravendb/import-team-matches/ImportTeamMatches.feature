@@ -585,9 +585,10 @@ Feature: Importing the old sites' team matches
     is said as corrected (`AcceptedImportErrors.feature`). Where there is no
     one, or more than one, the two met again, and the next rule says what
     becomes of the game. Where the game has the very scores of one the two
-    already played, which is the same game entered twice, or the team
-    match's matches are the best of more than 1, it is refused as it always
-    was.
+    already played, which is the same game entered twice, it is left out, as
+    every competition leaves one out (`importCompetition.feature`), and the
+    other rules here do not apply to it. Where the team match's matches are
+    the best of more than 1, it is refused as it always was.
 
     Ann Able beats Cat Cole, and Ben Baker beats Dan Dunn and Cat Cole, all
     of England. Ann then beats Cat again, but Ann has not played Dan, so
@@ -777,7 +778,7 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Cat Cole - meet again"
 
-    Scenario: A game with the very scores of one already played is still refused
+    Scenario: A game with the very scores of one already played is left out
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       And player 1 is in the team match
@@ -805,7 +806,37 @@ Feature: Importing the old sites' team matches
       And game 4 was lost by player 3
       And game 4's loser scored "5"
       When the team match is imported
-      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game with the very scores of one already played is said as corrected, not put against another player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "5"
+      When the team match is imported
+      Then "game 4" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.DuplicateGame"
 
     Scenario: A game of a team match whose matches are the best of more than 1 is still refused
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"

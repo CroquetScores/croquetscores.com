@@ -673,6 +673,193 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
+  Rule: A game entered twice is left out the second time, where it would come after the match was decided
+
+    The old sites kept some games twice, with the same two players and the
+    very same scores, as a scorer saving what they had already saved. Where
+    the second would be refused because the two players' match was already
+    decided (`addGame.feature`), it is left out, and that is not an error.
+    Said as corrected (`AcceptedImportErrors.feature`). Where it would not,
+    two games are two games, as two matches of the best of 5 can have the
+    same scores. A game with other scores is not the same game, and is
+    refused as it always was, and one won by the other player with the same
+    scores is not either, and is left to the rules for a pair's games entered
+    out of order (`ImportBlocks.feature`).
+
+    Scenario: A game entered twice that would come after the match was decided is left out
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 7
+      And game 3's winner scored "26"
+      And game 3 was lost by player 3
+      And game 3's loser scored "5"
+      And game 4 was won by player 7
+      And game 4's winner scored "26"
+      And game 4 was lost by player 5
+      And game 4's loser scored "2"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 3 games
+
+    Scenario: A game left out for being entered twice is not an error
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 7
+      And game 3's winner scored "26"
+      And game 3 was lost by player 3
+      And game 3's loser scored "5"
+      And game 4 was won by player 7
+      And game 4's winner scored "26"
+      And game 4 was lost by player 5
+      And game 4's loser scored "2"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A game left out for being entered twice is said as corrected
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 7
+      And game 3's winner scored "26"
+      And game 3 was lost by player 3
+      And game 3's loser scored "5"
+      And game 4 was won by player 7
+      And game 4's winner scored "26"
+      And game 4 was lost by player 5
+      And game 4's loser scored "2"
+      When the competition is imported
+      Then "game 3" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.DuplicateGame"
+
+    Scenario: A game with other scores than the one before it is still refused
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 7
+      And game 3's winner scored "26"
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 7
+      And game 4's winner scored "26"
+      And game 4 was lost by player 5
+      And game 4's loser scored "2"
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
+
+    Scenario: A game won by the other player with the same scores is not left out
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 3
+      And game 3's winner scored "26"
+      And game 3 was lost by player 7
+      And game 3's loser scored "5"
+      And game 4 was won by player 7
+      And game 4's winner scored "26"
+      And game 4 was lost by player 5
+      And game 4's loser scored "2"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 4 games
+
+    Scenario: A game entered twice that is not refused is added both times
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 5
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 7
+      And game 3's winner scored "26"
+      And game 3 was lost by player 5
+      And game 3's loser scored "2"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 3 games
+
+    Scenario: A game entered twice that is not refused is not said as corrected
+      Given player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 5
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And player 5 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 7
+      And game 2's winner scored "26"
+      And game 2 was lost by player 3
+      And game 2's loser scored "5"
+      And game 3 was won by player 7
+      And game 3's winner scored "26"
+      And game 3 was lost by player 5
+      And game 3's loser scored "2"
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
   Rule: A game the site refuses is kept as an error, and the other games are added
 
     Scenario: A game on equal points with no mark is kept as an error

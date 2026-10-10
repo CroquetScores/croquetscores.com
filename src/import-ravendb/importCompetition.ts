@@ -209,6 +209,8 @@ export const addGames = async (
   putRight: PutRight = () => Promise.resolve(false),
 ): Promise<void> => {
   const inOrder = ordered(games);
+  // The games added so far, as they were added.
+  const added: OldGame[] = [];
   for (const [index, game] of inOrder.entries()) {
     const add = (adding: OldGame): void => {
       const winner = playerOf(adding.Winner.PlayerId);
@@ -243,6 +245,7 @@ export const addGames = async (
       // added. Where that is refused too, the game is refused as it was.
       let refused: unknown;
       let instead: Instead | undefined;
+      let duplicate = false;
       for (;;) {
         try {
           add(instead?.game ?? game);
@@ -250,24 +253,44 @@ export const addGames = async (
         } catch (failure) {
           refused ??= failure;
           if (instead !== undefined) throw refused;
+          // A game entered twice, which would come after its match was
+          // decided, is left out the second time.
+          if (
+            (failure as { code?: unknown }).code ===
+              "Competition.MatchDecided" &&
+            added.some((each) => sameGame(each, game))
+          ) {
+            duplicate = true;
+            break;
+          }
           const put = await putRight(game, failure, inOrder.slice(index));
           if (put === false) throw refused;
           if (put !== true) instead = put;
         }
       }
-      await instead?.corrected();
-      const loserScore = game.Loser.Score._Score;
-      const written = walkoverWritten(
-        loserScore,
-        Score.read(game.Winner.Score._Score, website),
-      );
-      if (written !== loserScore) {
+      if (duplicate) {
         await errors.gameCorrected(
           game,
           nameOf,
-          "ImportCompetition.WalkoverWritten",
-          `had the walkover written as the loser's "${loserScore}", which marks a winner's score, and it is written "${written}".`,
+          "ImportCompetition.DuplicateGame",
+          "was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.",
         );
+      } else {
+        added.push(instead?.game ?? game);
+        await instead?.corrected();
+        const loserScore = game.Loser.Score._Score;
+        const written = walkoverWritten(
+          loserScore,
+          Score.read(game.Winner.Score._Score, website),
+        );
+        if (written !== loserScore) {
+          await errors.gameCorrected(
+            game,
+            nameOf,
+            "ImportCompetition.WalkoverWritten",
+            `had the walkover written as the loser's "${loserScore}", which marks a winner's score, and it is written "${written}".`,
+          );
+        }
       }
     } catch (failure) {
       await errors.gameRefused(game, nameOf, failure);
@@ -275,6 +298,14 @@ export const addGames = async (
     await afterGame(game);
   }
 };
+
+// Whether two games are the same game entered twice: the same two players,
+// the same winner, and the very same scores as they were typed.
+const sameGame = (one: OldGame, other: OldGame): boolean =>
+  one.Winner.PlayerId === other.Winner.PlayerId &&
+  one.Loser.PlayerId === other.Loser.PlayerId &&
+  one.Winner.Score._Score.trim() === other.Winner.Score._Score.trim() &&
+  one.Loser.Score._Score.trim() === other.Loser.Score._Score.trim();
 
 /**
  * Whether what refused `game` has been put right, so that it can be added

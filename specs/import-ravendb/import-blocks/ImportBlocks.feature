@@ -393,6 +393,8 @@ Feature: Importing the old sites' blocks
       And game 3 was lost by player 3
       And game 4 was won by player 7
       And game 4 was lost by player 5
+      And game 2's loser scored "1"
+      And game 3's loser scored "2"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
 
@@ -412,6 +414,7 @@ Feature: Importing the old sites' blocks
       And game 3 was lost by player 3
       And game 4 was won by player 7
       And game 4 was lost by player 5
+      And game 3's loser scored "1"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
 
