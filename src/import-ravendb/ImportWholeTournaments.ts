@@ -1,5 +1,8 @@
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { oldSitePathOf } from "./AcceptedImportErrors.js";
+import {
+  type AcceptedImportErrors,
+  oldSitePathOf,
+} from "./AcceptedImportErrors.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
 import type {
@@ -70,6 +73,33 @@ const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament =>
     ? { ...tournament, TournamentType: "teams" }
     : tournament;
 
+// Blocks the old sites kept that were team matches, by the website and the
+// document (ImportWholeTournaments.feature): blocks/100678, Club de Golf Xaz
+// vs Real Club de Golf de La Coruna, a block of a tournament played by teams
+// whose players each represented one of the two clubs.
+const TEAM_MATCHES: ReadonlySet<string> = new Set([
+  "croquetscores.com/blocks/100678",
+]);
+
+/**
+ * A block brought over as a team match: played over its tournament's days,
+ * and expected to have as many matches as its games say (ImportTeamMatches.ts).
+ */
+const asTeamMatch = (block: object, tournament: OldTournament): object => ({
+  ...block,
+  Start: tournament.Start,
+  Finish: tournament.Finish,
+  ExpectedMatches: 1,
+  Group: null,
+});
+
+/**
+ * Where the tournament `document` was on its old site, as "2025/gc/rose-bowl":
+ * the year it started, its sport, and its slug.
+ */
+const oldAddressOf = (document: OldTournament): string =>
+  `${document.Start.slice(0, 4)}/${document.SportType.trim().toLowerCase()}/${document.Slug}`;
+
 const heldOverItsTeamMatches = (
   tournament: OldTournament,
   named: readonly Named[],
@@ -116,6 +146,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     private readonly documents: TournamentDocuments,
     private readonly parts: TournamentParts,
     private readonly database: ImportDatabase,
+    private readonly correcting: AcceptedImportErrors,
   ) {}
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
@@ -135,11 +166,27 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       this.#naming(this.parts.commentaries, id),
       ...this.parts.competitions.map((importer) => this.#naming(importer, id)),
     ]);
+    // A block the import names as a team match is brought over by what
+    // brings over team matches.
+    const teamMatches: Importer<object> | undefined =
+      this.parts.competitions.find(
+        ({ collection }) => collection === "TeamMatches",
+      );
     const named = [
       ...players,
       ...this.#inListedOrder(document, competitions.flat()),
       ...commentaries,
-    ];
+    ].map((each) =>
+      teamMatches !== undefined &&
+      TEAM_MATCHES.has(`${website}/${each.id}`.toLowerCase())
+        ? {
+            ...each,
+            document: asTeamMatch(each.document, document),
+            importer: teamMatches,
+            asTeamMatch: true,
+          }
+        : each,
+    );
     await this.database.recordTournamentRead(website, id);
 
     try {
@@ -165,6 +212,16 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
           id: each.id,
           document: each.document,
         });
+        if ("asTeamMatch" in each) {
+          await this.#corrected(
+            website,
+            id,
+            document,
+            each,
+            "ImportWholeTournaments.BlockAsTeamMatch",
+            `${(each.document as { Name?: string }).Name ?? each.id} was kept as a block of a tournament played by teams, which the site has no place for, and is brought over as a team match.`,
+          );
+        }
       } catch (failure) {
         // Kept with the tournament, which is over by now, and with what a
         // competition was called on the old site, since it never became one.
@@ -197,6 +254,33 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         );
       }
     }
+  }
+
+  // Says that `each`, or the tournament `id` itself where it is undefined,
+  // was corrected as `code`, with where it is on the site, the tournament's
+  // page where it was brought over, and on the old site.
+  async #corrected(
+    website: string,
+    id: string,
+    document: OldTournament,
+    each: Named | undefined,
+    code: string,
+    description: string,
+  ): Promise<void> {
+    const tournament = await this.database.tournamentOf(website, id);
+    const slug = (each?.document as { Slug?: unknown } | undefined)?.Slug;
+    await this.correcting.accept({
+      documentId: `${website}/${each?.id ?? id}`,
+      website,
+      newSitePath: tournament?.tournamentAddress,
+      oldSitePath: oldSitePathOf(
+        oldAddressOf(document),
+        typeof slug === "string" ? slug : undefined,
+      ),
+      what: "",
+      code,
+      description,
+    });
   }
 
   // Whether `importer` brings over one of the kinds of competition.

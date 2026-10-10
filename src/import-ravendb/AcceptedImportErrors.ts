@@ -22,9 +22,10 @@ export interface Accepted {
   readonly website: string;
   /**
    * Where the document is on the site, without a leading slash: its
-   * competition's page once it is added, or its tournament's.
+   * competition's page once it is added, or its tournament's; nowhere where
+   * its tournament was not brought over.
    */
-  readonly newSitePath: string;
+  readonly newSitePath: string | undefined;
   /** Where the document was on the old site, the same way. */
   readonly oldSitePath: string;
   /** What of the document was accepted, as "game 12", or "" for the whole of it. */
@@ -136,7 +137,7 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
     await appendFile(
       this.path,
       `## ${accepted.code}: ${accepted.documentId}${what}\n\n` +
-        `New site: ${this.newSite}/${accepted.newSitePath}\n` +
+        `New site: ${accepted.newSitePath === undefined ? "not brought over" : `${this.newSite}/${accepted.newSitePath}`}\n` +
         `Old site: https://${accepted.website}/${accepted.oldSitePath}\n\n` +
         `${accepted.description}\n\n`,
     );

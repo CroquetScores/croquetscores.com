@@ -152,6 +152,81 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the tournament kept for "tournaments/13" on "croquetscores.com" is in the format "Standard"
 
+  Rule: A block the import names as a team match is brought over as one
+
+    The old site kept some team matches as blocks of a tournament played by
+    teams, which the site has no place for, as croquetscores.com's
+    blocks/100678, Club de Golf Xaz vs Real Club de Golf de La Coruna, whose
+    players each represented one of the two clubs. Such a block the import
+    names is brought over as a team match (`ImportTeamMatches.feature`),
+    played over its tournament's days, and expected to have as many matches
+    as its games say. That is said as corrected
+    (`AcceptedImportErrors.feature`).
+
+    Scenario: A block the import names as a team match is brought over as a test
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "blocks/100678" on "croquetscores.com" is kept as a test
+
+    Scenario: The games of a block brought over as a team match are added
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the test kept for "blocks/100678" on "croquetscores.com" has 1 game
+
+    Scenario: A block brought over as a team match is not an error
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no error is kept for "croquetscores.com/blocks/100678"
+
+    Scenario: A block brought over as a team match is said as corrected
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/100678"
+      And the block "blocks/100678" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Club Xaz vs Club Coruna"
+      And player 1 is in the competition
+      And player 1 represents "Club Xaz"
+      And player 2 is in the competition
+      And player 2 represents "Club Coruna"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "croquetscores.com/blocks/100678" is corrected as "ImportWholeTournaments.BlockAsTeamMatch"
+
   Rule: A tournament played by teams is held over the days of its team matches
 
     The old sites kept a tournament played by teams with days of its own that

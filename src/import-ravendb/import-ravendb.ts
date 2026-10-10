@@ -309,7 +309,7 @@ try {
     // took once every tournament has taken what it would.
     const importers: readonly Importer<object>[] = [
       users,
-      new ImportWholeTournaments(documents, parts, database),
+      new ImportWholeTournaments(documents, parts, database, correcting),
       ...leftOvers,
     ];
     try {
