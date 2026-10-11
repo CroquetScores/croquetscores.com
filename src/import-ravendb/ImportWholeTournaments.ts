@@ -1,3 +1,4 @@
+import { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import {
   type AcceptedImportErrors,
@@ -14,6 +15,7 @@ import { isPlayedByTeams } from "./ImportTournaments.js";
 import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
+import type { SeeNotes } from "./SeeNotes.js";
 
 /** One of the old sites' databases, asked for what names a tournament. */
 export interface TournamentDocuments {
@@ -198,6 +200,14 @@ const hasTieMarked = (document: object): boolean =>
     ),
   );
 
+// Tournaments that started before this keep what could not be brought over in
+// a Swiss, with a note (ImportWholeTournaments.feature).
+const BEFORE_NOTES = "2026-01-01";
+
+// What follows the name of a competition brought over as a Swiss, for the
+// games it could not be brought over with.
+const SEE_NOTES_SUFFIX = " - See Notes";
+
 // What follows the name of a tournament played by teams in the name of the
 // Standard tournament its blocks are brought over into.
 const BLOCK_SUFFIX = " - Block";
@@ -263,6 +273,8 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     private readonly parts: TournamentParts,
     private readonly database: ImportDatabase,
     private readonly correcting: AcceptedImportErrors,
+    /** What writes the note of a competition that could not be brought over. */
+    private readonly seeNotes?: SeeNotes,
   ) {}
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
@@ -499,6 +511,86 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
               },
         );
       }
+      if (tournamentId === id) {
+        await this.#seenInNotes(read, setUp, each);
+      }
+    }
+  }
+
+  /**
+   * Where a block, knockout or Swiss of a Standard tournament that started
+   * before 2026 could not be brought over as it was, whether it was refused,
+   * left behind or kept with an error, its games are brought over as a Swiss
+   * called as it was with " - See Notes" after it, the writer of notes is
+   * made a manager of the tournament, and a note says where its games are
+   * (ImportWholeTournaments.feature). Nothing where no user at the writer's
+   * address was brought over.
+   */
+  async #seenInNotes(
+    read: ReadDocument<OldTournament>,
+    setUp: OldTournament,
+    each: Named,
+  ): Promise<void> {
+    const { website, id, document } = read;
+    const kind = KINDS[each.importer.collection];
+    const swisses = this.parts.competitions.find(
+      ({ collection }) => collection === "Swisses",
+    );
+    const games =
+      (each.document as { Games?: { _Games?: readonly unknown[] } }).Games
+        ?._Games ?? [];
+    if (
+      this.seeNotes === undefined ||
+      swisses === undefined ||
+      kind === undefined ||
+      isArchived(each.document) ||
+      isPlayedByTeams(setUp.TournamentType) ||
+      document.Start >= BEFORE_NOTES ||
+      games.length === 0
+    ) {
+      return;
+    }
+    const cannot =
+      (await this.database.findCompetitionOf(website, each.id)) === undefined ||
+      (await this.database.hasErrorsFor(`${website}/${each.id}`));
+    if (!cannot) return;
+    const writer = await this.seeNotes.writer();
+    if (writer === undefined) return;
+
+    const name = (each.document as { Name?: string }).Name ?? each.id;
+    const swissId = `${each.id}/see-notes`;
+    try {
+      await swisses.importDocument({
+        website,
+        id: swissId,
+        document: {
+          ...(each.document as OldCompetition),
+          Name: `${name}${SEE_NOTES_SUFFIX}`,
+        },
+      });
+      const made = await this.database.findCompetitionOf(website, swissId);
+      if (made === undefined) return;
+      await this.seeNotes.write(
+        website,
+        id,
+        name,
+        kind,
+        CompetitionId.from(made.competitionId),
+        writer,
+      );
+      await this.#corrected(
+        website,
+        id,
+        document,
+        each,
+        "ImportWholeTournaments.SeeNotes",
+        `${name} was a ${kind} that could not be brought over as one, and its games are in the Swiss ${name}${SEE_NOTES_SUFFIX}, as a note of the tournament says.`,
+      );
+    } catch (failure) {
+      await this.database.recordError(
+        `${website}/${swissId}`,
+        describedFailure(failure),
+      );
     }
   }
 

@@ -645,6 +645,316 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the competition kept for "blocks/95636" on "croquetscores.com" is in a tournament called "Spring Open - Block"
 
+  Rule: A competition of a Standard tournament that started before 2026 that cannot be brought over is a Swiss, with a note
+
+    A competition that cannot be brought over as it was, because it was
+    refused, or left behind, or kept with a game that was refused, loses its
+    games. For a Standard tournament that started before 1 January 2026 they
+    are brought over in a Swiss of the tournament's, called as the
+    competition was with " - See Notes" after it, with every game in the order
+    they were entered. Whoever the old sites knew as croquetscores@gmail.com
+    is made a manager of the tournament, and a note of theirs, titled as the
+    competition was called, says that in the old system it was a block,
+    knockout or Swiss, that its games could not be brought over in the
+    format and are recorded in order in a Swiss, and what to quote in a
+    query: the Swiss's address, on croquetscores.com or gateballscores.com,
+    whichever the tournament was on. That is said as corrected
+    (`AcceptedImportErrors.feature`). It is done only where a user was
+    brought over as croquetscores@gmail.com, which is who writes the note.
+
+    Scenario: A block that cannot be brought over is also a Swiss called as it was with See Notes
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Block - See Notes"
+
+    Scenario: The Swiss has every game of the block, including the one refused
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/30/see-notes" on "croquetscores.com" has 3 games
+
+    Scenario: The writer of notes is made a manager of the tournament
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is managed by the account for "croquetscores@gmail.com"
+
+    Scenario: A note is written titled as the competition was called
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has a note called "A Block"
+
+    Scenario: The note says what the competition was
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the note called "A Block" of the tournament kept for "tournaments/13" on "croquetscores.com" says "was a `block`"
+
+    Scenario: The note says where the Swiss is
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the note called "A Block" of the tournament kept for "tournaments/13" on "croquetscores.com" says "`https://croquetscores.com/2014/ac/spring-open-13/competitions/a-block-see-notes`"
+
+    Scenario: The note says where the Swiss is on gateballscores.com for a gateball tournament
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "gateballscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "gateballscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "gateballscores.com" is imported
+      Then the note called "A Block" of the tournament kept for "tournaments/13" on "gateballscores.com" says "`https://gateballscores.com/2014/gb/spring-open-13/competitions/a-block-see-notes`"
+
+    Scenario: The note says who to ask
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the note called "A Block" of the tournament kept for "tournaments/13" on "croquetscores.com" says "email croquetscores@gmail.com"
+
+    Scenario: A competition said to be in a Swiss is said as corrected
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "croquetscores.com/blocks/30" is corrected as "ImportWholeTournaments.SeeNotes"
+
+    Scenario: A knockout left behind is also a Swiss
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Draw - See Notes"
+
+    Scenario: A knockout left behind is said in its note as a knockout
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the note called "A Draw" of the tournament kept for "tournaments/13" on "croquetscores.com" says "was a `knockout`"
+
+    Scenario: A competition brought over whole is no Swiss
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Block"
+
+    Scenario: A competition brought over whole has no note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has no note
+
+    Scenario: A tournament that started in 2026 is not given a Swiss
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the tournament started on "2026-01-01T00:00:00.0000000"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Block"
+
+    Scenario: No Swiss is made where no user was brought over as the writer of notes
+            And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Block"
+
   Rule: A tournament with a score marked in text as a tie allows drawn games
 
     Some scorers wrote a game on equal points as a tie in words or a sign, as

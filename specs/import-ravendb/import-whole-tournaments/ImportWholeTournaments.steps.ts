@@ -4,7 +4,9 @@ import { strict as assert } from "node:assert";
 import { CompetitionMoved } from "../../../src/domain/aggregates/tournaments/events/CompetitionMoved.js";
 import { accountsOf } from "../../infrastructure/support/accounts.js";
 import type { SpecWorld } from "../../support/world.js";
+import { ManagerNoteId } from "../../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import { importDatabaseOf } from "../importing.js";
+import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import {
   type WrittenCompetition,
   competitionKeptFor,
@@ -178,5 +180,86 @@ Then(
     const first = await competitionKeptFor(this, one, website);
     const second = await competitionKeptFor(this, other, website);
     assert.equal(first.tournament.id.value, second.tournament.id.value);
+  },
+);
+
+// The notes it wrote -------------------------------------------------------------
+
+Then(
+  "the tournament kept for {string} on {string} is managed by the account for {string}",
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    address: string,
+  ) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    const found = await this.asARequest(() =>
+      accountsOf(this).readModel.find(EmailAddress.from(address)),
+    );
+    assert.ok(found !== undefined, `No account is reached at ${address}.`);
+    assert.ok(tournament.manages(found), `${address} is not a manager.`);
+  },
+);
+
+const noteCalled = async (
+  world: SpecWorld,
+  id: string,
+  website: string,
+  title: string,
+) => {
+  const tournament = await tournamentKeptFor(world, id, website);
+  const { managerNotes, managerNotesByTournament } = importingOf(world);
+  const headings = await world.asARequest(() =>
+    managerNotesByTournament.of(tournament.id),
+  );
+  const heading = headings.find((each) => each.title === title);
+  return { heading, managerNotes };
+};
+
+Then(
+  "the tournament kept for {string} on {string} has a note called {string}",
+  async function (this: SpecWorld, id: string, website: string, title: string) {
+    const { heading } = await noteCalled(this, id, website, title);
+    assert.ok(heading !== undefined, `It has no note called ${title}.`);
+  },
+);
+
+Then(
+  "the tournament kept for {string} on {string} has no note",
+  async function (this: SpecWorld, id: string, website: string) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    const { managerNotesByTournament } = importingOf(this);
+    const headings = await this.asARequest(() =>
+      managerNotesByTournament.of(tournament.id),
+    );
+    assert.deepEqual(headings, []);
+  },
+);
+
+Then(
+  "the note called {string} of the tournament kept for {string} on {string} says {string}",
+  async function (
+    this: SpecWorld,
+    title: string,
+    id: string,
+    website: string,
+    says: string,
+  ) {
+    const { heading, managerNotes } = await noteCalled(
+      this,
+      id,
+      website,
+      title,
+    );
+    assert.ok(heading !== undefined, `It has no note called ${title}.`);
+    const note = await this.asARequest(() =>
+      managerNotes.load(ManagerNoteId.from(heading.id)),
+    );
+    const description = note?.description?.toString() ?? "";
+    assert.ok(
+      description.includes(says),
+      `The note does not say ${says}: ${description}`,
+    );
   },
 );

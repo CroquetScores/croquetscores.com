@@ -26,6 +26,8 @@ import { nameManagerNoteEvents } from "../domain/aggregates/tournaments/manager-
 import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
 import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
+import { ManagerNote } from "../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
+import type { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
@@ -69,6 +71,7 @@ import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
+import { SeeNotes } from "./SeeNotes.js";
 import { ImportWorldRankingPlayerNames } from "./ImportWorldRankingPlayerNames.js";
 import { ImportRefused } from "./ImportRefused.js";
 import { readImportArguments } from "./importArguments.js";
@@ -200,6 +203,7 @@ try {
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
   // Every one of the site's read models, kept in step with everything
   // brought over, as the site keeps them with everything it records.
+  const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const eventStore = new ProjectingEventStore(
     new PostgresEventStore(
       unitOfWork,
@@ -222,13 +226,17 @@ try {
       new TournamentsByAddress(unitOfWork),
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
-      new ManagerNotesByTournament(unitOfWork),
+      managerNotesByTournament,
       commentariesByTournament,
     ],
   );
   const accounts = new AggregateRepository(
     eventStore,
     (id: AccountId, events) => Account.rebuiltFrom(id, events),
+  );
+  const managerNotes = new AggregateRepository(
+    eventStore,
+    (id: ManagerNoteId, events) => ManagerNote.rebuiltFrom(id, events),
   );
   const passwords = new ImportedPasswordHasher(
     new Argon2id(),
@@ -246,6 +254,15 @@ try {
   const commentaries = new AggregateRepository(
     eventStore,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
+  );
+  // What says, in a note, where the games of a competition that could not be
+  // brought over are.
+  const seeNotes = new SeeNotes(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
   );
   const importing = {
     unitOfWork,
@@ -336,7 +353,13 @@ try {
     // took once every tournament has taken what it would.
     const importers: readonly Importer<object>[] = [
       users,
-      new ImportWholeTournaments(documents, parts, database, correcting),
+      new ImportWholeTournaments(
+        documents,
+        parts,
+        database,
+        correcting,
+        seeNotes,
+      ),
       ...leftOvers,
     ];
     try {
