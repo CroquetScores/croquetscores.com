@@ -267,8 +267,47 @@ import {
   stampRequests,
   type Clock,
 } from "./common/requestedAt.js";
+import { afrikaans } from "./languages/afrikaans.js";
+import { chinese } from "./languages/chinese.js";
+import { dutch } from "./languages/dutch.js";
+import { egyptian } from "./languages/egyptian.js";
 import { english } from "./languages/english.js";
+import { french } from "./languages/french.js";
+import { german } from "./languages/german.js";
+import { italian } from "./languages/italian.js";
+import { japanese } from "./languages/japanese.js";
+import { korean } from "./languages/korean.js";
+import { maori } from "./languages/maori.js";
+import { polish } from "./languages/polish.js";
+import { portuguese } from "./languages/portuguese.js";
+import { russian } from "./languages/russian.js";
 import { spanish } from "./languages/spanish.js";
+import { swedish } from "./languages/swedish.js";
+import { welsh } from "./languages/welsh.js";
+
+// English first, because it is the language a reader gets where the site has
+// none of the ones their browser asks for, and the one a word missing from
+// another falls back to. The rest follow in the order of their names in
+// English, which is the order the footer offers them in.
+const offeredLanguages = [
+  english,
+  afrikaans,
+  chinese,
+  dutch,
+  egyptian,
+  french,
+  german,
+  italian,
+  japanese,
+  korean,
+  maori,
+  polish,
+  portuguese,
+  russian,
+  spanish,
+  swedish,
+  welsh,
+];
 import { auth } from "./auth/index.js";
 import {
   GoogleUnreachable,
@@ -717,7 +756,7 @@ export const buildApplication = async (
   // Emails are written from the site's catalogues, with links made from the
   // site's configured address and never a request's, and written to files in
   // temp/ until there is a mail provider.
-  const languages = options.languages ?? [english, spanish];
+  const languages = options.languages ?? offeredLanguages;
   const where = siteAddress(config.canonicalHost, config.port);
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,

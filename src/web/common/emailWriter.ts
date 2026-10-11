@@ -8,7 +8,7 @@ import type {
   WrittenEmail,
 } from "../../application/services/EmailWriter.js";
 import { Refused } from "../../domain/common/Refused.js";
-import { speakingIn, type Language } from "./language.js";
+import { directionAttribute, speakingIn, type Language } from "./language.js";
 import { escape } from "./escape.js";
 
 /** Every reason writing an email can be refused. */
@@ -176,7 +176,7 @@ export const emailWriter = (
     return {
       subject,
       body: `<!doctype html>
-<html lang="${escape(chosen.tag)}">
+<html lang="${escape(chosen.tag)}"${directionAttribute(chosen)}>
   <head>
     <meta charset="utf-8">
     <title>${escape(subject)}</title>

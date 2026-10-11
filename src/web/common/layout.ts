@@ -4,7 +4,11 @@
 import { accountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
-import type { Speaking } from "./language.js";
+import {
+  directionAttribute,
+  nameDirectionAttribute,
+  type Speaking,
+} from "./language.js";
 import { markdownWithoutHtml } from "./markdown.js";
 import { themes, type Theme } from "./theme.js";
 
@@ -299,7 +303,7 @@ const languageChoice = (speaking: Speaking, path: string): string => {
   const options = speaking.offered
     .map((language) => {
       const current = language.tag === speaking.language.tag ? " selected" : "";
-      return `              <option value="${escape(language.tag)}" lang="${escape(language.tag)}"${current}>${escape(language.name)}</option>`;
+      return `              <option value="${escape(language.tag)}" lang="${escape(language.tag)}"${nameDirectionAttribute(language)}${current}>${escape(language.name)}</option>`;
     })
     .join("\n");
 
@@ -379,7 +383,7 @@ ${themeChoice(footer.speaking, footer.theme, footer.path)}${languageChoice(foote
     </footer>`;
 
 export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
-<html lang="${escape(shell.speaking.language.tag)}"${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
+<html lang="${escape(shell.speaking.language.tag)}"${directionAttribute(shell.speaking.language)}${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

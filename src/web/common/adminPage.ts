@@ -9,7 +9,7 @@
 import type { FastifyRequest } from "fastify";
 
 import { escape } from "./escape.js";
-import { type Speaking, speakingOf } from "./language.js";
+import { directionAttribute, type Speaking, speakingOf } from "./language.js";
 import { siteBar, siteFooter, tryWebsiteBanner } from "./layout.js";
 import { hasPassword, signedIn } from "./reader.js";
 import { siteNameOf, websiteOf } from "./site.js";
@@ -113,7 +113,7 @@ export const adminPage = (
       // what the admin draws itself — the months it dates a tournament by —
       // is drawn in whatever the page says it is in.
       .replace(html, (_whole, attributes: string) => {
-        const said = `<html lang="${escape(lang)}"${attributes.replace(/\s+lang="[^"]*"/, "")}`;
+        const said = `<html lang="${escape(lang)}"${directionAttribute(speaking.language)}${attributes.replace(/\s+(?:lang|dir)="[^"]*"/g, "")}`;
         return theme === "system"
           ? `${said}>`
           : `${said} data-theme="${theme}">`;
