@@ -204,6 +204,13 @@ const hasTieMarked = (document: object): boolean =>
 // a Swiss, with a note (ImportWholeTournaments.feature).
 const BEFORE_NOTES = "2026-01-01";
 
+// The kinds of competition brought over whole or as a Swiss, not in part, by
+// the collection each is in, and what each is called.
+const TRIED_FIRST: Readonly<Record<string, string>> = {
+  Blocks: "block",
+  Knockouts: "knockout",
+};
+
 // What follows the name of a competition brought over as a Swiss, for the
 // games it could not be brought over with.
 const SEE_NOTES_SUFFIX = " - See Notes";
@@ -462,14 +469,16 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
             },
           };
         }
-        // A knockout whose games are kept in a Swiss where it cannot be
-        // brought over is tried first, and brought over whole or not at all.
+        // A block or knockout whose games are kept in a Swiss where it
+        // cannot be brought over is tried first, and brought over whole or
+        // not at all.
+        const triedFirst = TRIED_FIRST[each.importer.collection];
         if (
-          each.importer.collection === "Knockouts" &&
+          triedFirst !== undefined &&
           tournamentId === id &&
           (await this.#isForNotes(read, setUp, each))
         ) {
-          toImport = { ...toImport, AllOrNothing: true };
+          toImport = { ...toImport, AllOrNothingAs: triedFirst };
         }
         await each.importer.importDocument({
           website,

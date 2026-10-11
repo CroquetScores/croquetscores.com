@@ -640,7 +640,10 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     if (shaped === undefined) {
       if (dry !== undefined) {
         dry.leftBehind = true;
-        await errors.notBroughtOverAs("knockout", dry);
+        await errors.notBroughtOverAs(
+          document.AllOrNothingAs ?? "competition",
+          dry,
+        );
       }
       return;
     }
@@ -831,13 +834,16 @@ export const importCompetition = async <TDocument extends OldCompetition>(
 
     await competitions.save(competition);
     if (dry !== undefined && dry.refused.length > 0) {
-      await errors.notBroughtOverAs("knockout", dry);
+      await errors.notBroughtOverAs(
+        document.AllOrNothingAs ?? "competition",
+        dry,
+      );
     }
   };
 
   // Tried first where it is to be whole or not at all: where the site would
   // refuse any of it, it is not brought over, and nothing is kept of it.
-  if (document.AllOrNothing === true) {
+  if (document.AllOrNothingAs !== undefined) {
     const dry = new DryRun();
     try {
       await bringOver(dry);
