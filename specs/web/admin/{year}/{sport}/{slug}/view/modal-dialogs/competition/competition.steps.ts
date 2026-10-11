@@ -368,6 +368,20 @@ Then(
 );
 
 Then(
+  "the competition {string} of {string} is played in {int} round(s)",
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    rounds: number,
+  ) {
+    const shape = await shapeOf(this, tournament, name);
+    assert.equal(shape.kind, "block", `${name} is a ${shape.kind}.`);
+    if (shape.kind === "block") assert.equal(shape.rounds.count, rounds);
+  },
+);
+
+Then(
   "the knockout {string} of {string} has {int} places",
   async function (
     this: SpecWorld,

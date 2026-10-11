@@ -1,5 +1,6 @@
 import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
+import { matchesBetween } from "../../../domain/aggregates/tournaments/competitions/matchesBetween.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -81,6 +82,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     );
     const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
+    const matches = decidedMatchesOf(counting, bestOf);
     const address = tournament.address.toString();
     const players = competition.players.flatMap((entered): PlayerOfBlock[] => {
       const player = tournament.players.find((each) =>
@@ -114,10 +116,10 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
           address: `${address}/players/${player.slug.toString()}`,
           withdrawn: entered.withdrawn,
           matchesWon:
-            matchesDecidedIn(won, (game) => game.loser.value, bestOf) +
-            carried("matchWins"),
+            matches.filter((match) => match.winner === entered.id.value)
+              .length + carried("matchWins"),
           matchesLost:
-            matchesDecidedIn(lost, (game) => game.winner.value, bestOf) +
+            matches.filter((match) => match.loser === entered.id.value).length +
             carried("matchLosses"),
           gamesWon: won.length + carried("gameWins"),
           netGames:
@@ -136,7 +138,11 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       competitions: competitionsInUse(tournament),
-      block: { name: reference.name.toString(), bestOf },
+      block: {
+        name: reference.name.toString(),
+        bestOf,
+        rounds: shape.rounds.count,
+      },
       players,
       games: games.map((game) => ({
         winner: game.winner.value,
@@ -152,25 +158,35 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
   }
 }
 
-// The matches decided among `games`, every one of them won by the same
-// player, against whoever `opponentOf` says each was against. A match is won
-// by whoever wins more than half the games it is the best of: so a match not
-// yet decided, or shared in a best of an even number, is decided for neither.
-// A block the best of 1 is played in rounds, and two players can meet in
-// more than one, so each game is a match of its own rather than every game
-// against one opponent being one.
-const matchesDecidedIn = (
+// The matches among `games` that somebody won, each with its winner and its
+// loser. Each pair's games, in the order they were added, are cut into
+// matches (matchesBetween.ts), as the competition cuts them, so that two
+// players of a block played in rounds, or the best of 1, play a match in each.
+// A match is won by whoever wins more than half the games it is the best of:
+// so a match not yet decided, or shared in a best of an even number, is won by
+// neither.
+const decidedMatchesOf = (
   games: readonly Game[],
-  opponentOf: (game: Game) => string,
   bestOf: number,
-): number => {
-  if (bestOf === 1) return games.length;
-  const byOpponent = new Map<string, number>();
+): { readonly winner: string; readonly loser: string }[] => {
+  const byPair = new Map<string, Game[]>();
   for (const game of games) {
-    const opponent = opponentOf(game);
-    byOpponent.set(opponent, (byOpponent.get(opponent) ?? 0) + 1);
+    const pair = [game.winner.value, game.loser.value].sort().join(" ");
+    byPair.set(pair, [...(byPair.get(pair) ?? []), game]);
   }
-  return [...byOpponent.values()].filter((wins) => wins * 2 > bestOf).length;
+  return [...byPair.values()].flatMap((theirs) =>
+    matchesBetween(theirs, bestOf).flatMap((match) => {
+      const [first] = match.games;
+      if (first === undefined) return [];
+      const wins = (id: string): number =>
+        match.games.filter((each) => !each.drawn && each.winner.value === id)
+          .length;
+      const [one, other] = [first.winner.value, first.loser.value];
+      if (wins(one) * 2 > bestOf) return [{ winner: one, loser: other }];
+      if (wins(other) * 2 > bestOf) return [{ winner: other, loser: one }];
+      return [];
+    }),
+  );
 };
 
 // The share of the matches a player has decided that they have won, and

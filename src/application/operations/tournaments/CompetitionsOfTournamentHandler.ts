@@ -98,6 +98,13 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
           group: shape.group?.toString(),
           hasGames: (played.get(reference.id.value)?.matchesStarted ?? 0) > 0,
         });
+      } else if (shape.kind === "block") {
+        listed.push({
+          ...about,
+          kind: shape.kind,
+          bestOf: shape.bestOf.games,
+          rounds: shape.rounds.count,
+        });
       } else {
         listed.push({ ...about, kind: shape.kind, bestOf: shape.bestOf.games });
       }

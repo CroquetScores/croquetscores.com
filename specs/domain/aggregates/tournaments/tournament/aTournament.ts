@@ -71,6 +71,7 @@ interface CompetitionSaid {
   id?: string;
   name?: string;
   bestOf?: number;
+  rounds?: number;
 }
 
 interface Scenario {

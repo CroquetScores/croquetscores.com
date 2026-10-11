@@ -6,6 +6,8 @@ import {
   aCompetition,
   competitionKeptFor,
   competitionWritten,
+  gamesInUse,
+  nameOf,
   startWriting,
 } from "../importingTournaments.js";
 
@@ -40,6 +42,41 @@ Then(
   async function (this: SpecWorld, id: string, website: string, kind: string) {
     const { inTournament } = await competitionKeptFor(this, id, website);
     assert.equal(inTournament.shape.kind, KINDS[kind]);
+  },
+);
+
+Then(
+  "the competition kept for {string} on {string} is played in {int} round(s)",
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    rounds: number,
+  ) {
+    const { inTournament } = await competitionKeptFor(this, id, website);
+    const { shape } = inTournament;
+    assert.ok(shape.kind === "block", `It is a ${shape.kind}.`);
+    assert.equal(shape.rounds.count, rounds);
+  },
+);
+
+Then(
+  /^the (second|third) game of the competition kept for "(.*)" on "(.*)" was won by "(.*)"$/,
+  async function (
+    this: SpecWorld,
+    which: string,
+    id: string,
+    website: string,
+    name: string,
+  ) {
+    const { tournament, competition } = await competitionKeptFor(
+      this,
+      id,
+      website,
+    );
+    const game = gamesInUse(competition)[which === "second" ? 1 : 2];
+    assert.ok(game !== undefined, `The competition has no ${which} game.`);
+    assert.equal(nameOf(tournament, competition, game.winner), name);
   },
 );
 

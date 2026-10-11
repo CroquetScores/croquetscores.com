@@ -254,7 +254,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     id,
     document: read,
   }: ReadDocument<TeamMatch>): Promise<void> {
-    const { document, swapped } = withWinnersFromScores(
+    const { document, swapped, marked } = withWinnersFromScores(
       withItsLists(read),
       Website.from(website),
     );
@@ -344,6 +344,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           nameOfIn(document),
           "ImportCompetition.WinnerFromScore",
           "was kept the other way round, and is brought over as won by the player who scored more.",
+        );
+      }
+      for (const game of marked) {
+        await errors.gameCorrected(
+          game,
+          nameOfIn(document),
+          "ImportCompetition.EqualScoreMarked",
+          "was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.",
         );
       }
 

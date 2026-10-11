@@ -235,6 +235,8 @@ Feature: The names a tournament's events are kept under
         | a tournament's player being moved         | order           |
         | the tournament's players being spaced out | playerIds       |
         | a block being added                       | order           |
+        | a block being added                       | rounds          |
+        | a block being updated                     | rounds          |
         | a knockout being added                    | rounds          |
         | a competition being archived              | competitionId   |
         | a competition being archived              | order           |

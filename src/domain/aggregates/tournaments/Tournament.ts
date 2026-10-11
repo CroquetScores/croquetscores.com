@@ -63,6 +63,7 @@ import {
   type TournamentPlayerDetails,
 } from "./TournamentPlayer.js";
 import { BestOf } from "./value-objects/BestOf.js";
+import { Rounds } from "./value-objects/Rounds.js";
 import { CompetitionName } from "./value-objects/CompetitionName.js";
 import { ExpectedMatches } from "./value-objects/ExpectedMatches.js";
 import { TestGroup } from "./value-objects/TestGroup.js";
@@ -202,7 +203,11 @@ export interface TestPlayed {
 
 /** What each kind of competition is besides what every competition is. */
 export type CompetitionShape =
-  | { readonly kind: "block"; readonly bestOf: BestOf }
+  | {
+      readonly kind: "block";
+      readonly bestOf: BestOf;
+      readonly rounds: Rounds;
+    }
   | { readonly kind: "knockout"; readonly draw: KnockoutDraw }
   | { readonly kind: "swiss"; readonly bestOf: BestOf }
   | {
@@ -845,11 +850,15 @@ export class Tournament extends AggregateRoot {
     this.record(new TournamentPlayerRestored(id.value, by, at));
   }
 
-  /** That a block called `name`, the best of `bestOf`, was added. */
+  /**
+   * That a block called `name`, the best of `bestOf`, was added, played in
+   * `rounds`.
+   */
   addBlock(
     id: CompetitionId,
     name: CompetitionName,
     bestOf: BestOf,
+    rounds: Rounds,
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
@@ -862,6 +871,7 @@ export class Tournament extends AggregateRoot {
         slug,
         order,
         bestOf.games,
+        rounds.count,
         by,
         at,
       ),
@@ -916,24 +926,36 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That the block `id` is now called `name` and is the best of `bestOf`. Its
-   * slug and its order are kept. An update that changes nothing records
-   * nothing.
+   * That the block `id` is now called `name`, is the best of `bestOf` and is
+   * played in `rounds`. Its slug and its order are kept. An update that
+   * changes nothing records nothing.
    */
   updateBlock(
     id: CompetitionId,
     name: CompetitionName,
     bestOf: BestOf,
+    rounds: Rounds,
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "block", name);
     if (found.shape.kind !== "block") return;
-    if (found.reference.name.equals(name) && found.shape.bestOf.equals(bestOf))
+    if (
+      found.reference.name.equals(name) &&
+      found.shape.bestOf.equals(bestOf) &&
+      found.shape.rounds.equals(rounds)
+    )
       return;
     this.record(
-      new BlockUpdated(id.value, name.toString(), bestOf.games, by, at),
+      new BlockUpdated(
+        id.value,
+        name.toString(),
+        bestOf.games,
+        rounds.count,
+        by,
+        at,
+      ),
     );
   }
 
@@ -1584,6 +1606,7 @@ export class Tournament extends AggregateRoot {
       this.#competitionAdded(event, {
         kind: "block",
         bestOf: BestOf.from(event.bestOf),
+        rounds: Rounds.from(event.rounds),
       });
     } else if (event instanceof KnockoutAdded) {
       this.#competitionAdded(event, {
@@ -1599,6 +1622,7 @@ export class Tournament extends AggregateRoot {
       this.#competitionUpdated(event.competitionId, event.name, {
         kind: "block",
         bestOf: BestOf.from(event.bestOf),
+        rounds: Rounds.from(event.rounds),
       });
     } else if (event instanceof KnockoutUpdated) {
       this.#competitionUpdated(event.competitionId, event.name, {

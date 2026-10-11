@@ -18,6 +18,7 @@ import { GameId } from "../../../../../../src/domain/aggregates/tournaments/comp
 import { Score } from "../../../../../../src/domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { KnockoutDraw } from "../../../../../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
+import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import { Website } from "../../../../../../src/domain/common/Website.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import {
@@ -49,7 +50,26 @@ Given(
     const scenario = scenarioOf(this);
     scenario.told = {
       ...scenario.told,
-      shape: { kind: "block", bestOf: BestOf.from(games) },
+      shape: {
+        kind: "block",
+        bestOf: BestOf.from(games),
+        rounds: Rounds.from(1),
+      },
+    };
+  },
+);
+
+Given(
+  "the competition is a block, each match the best of {int}, played in {int} rounds",
+  function (this: SpecWorld, games: number, rounds: number) {
+    const scenario = scenarioOf(this);
+    scenario.told = {
+      ...scenario.told,
+      shape: {
+        kind: "block",
+        bestOf: BestOf.from(games),
+        rounds: Rounds.from(rounds),
+      },
     };
   },
 );

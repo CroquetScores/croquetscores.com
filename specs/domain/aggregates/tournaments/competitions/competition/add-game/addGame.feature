@@ -318,6 +318,103 @@ Feature: Adding a game to a competition
       When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
       Then it is refused with "Competition.MatchDecided"
 
+  Rule: In a block played in rounds, two players play one match of the block's best-of in each
+
+    A block says how many rounds it is played in (`Rounds.feature`), and two
+    players play as many matches as there are rounds. Their games, in the
+    order they were added, are cut into matches: a match is the games from
+    the one that follows a decided match to the one that decides it, a
+    match being decided as above. A game that begins another match is added
+    while they have played fewer matches than there are rounds, and refused
+    as decided once they have played them all.
+
+    Scenario: A game that begins a second match is added
+      Given the competition is a block, each match the best of 3, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 20 is added
+      Then the competition has 3 games
+
+    Scenario: A game that continues a second match is added
+      Given the competition is a block, each match the best of 3, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 5 is added
+      Then the competition has 4 games
+
+    Scenario: A game after every match is decided is refused
+      Given the competition is a block, each match the best of 3, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 3 is added
+      Then it is refused with "Competition.MatchDecided"
+
+    Scenario: A match won 2 to 1 is followed by another
+      Given the competition is a block, each match the best of 3, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 10 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 5 is added
+      Then the competition has 4 games
+
+    Scenario: A game of a third match is added where there are three rounds
+      Given the competition is a block, each match the best of 3, played in 3 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 3 is added
+      Then the competition has 5 games
+
+    Scenario: A game after three decided matches is refused
+      Given the competition is a block, each match the best of 3, played in 3 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 3 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 4 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Alex Another" beating "Sam Someone" 26 to 1 is added
+      Then it is refused with "Competition.MatchDecided"
+
+    Scenario: A match whose deciding game is archived is not decided
+      Given the competition is a block, each match the best of 3, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was archived
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 3 is added
+      Then the competition has 5 games
+
+    Scenario: Two other players have their own matches in each round
+      Given the competition is a block, each match the best of 3, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 10 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 5 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Chris Third" beating "Sam Someone" 26 to 3 is added
+      Then the competition has 5 games
+
+    Scenario: Rounds are not a limit where matches are the best of 1
+      Given the competition is a block, each match the best of 1, played in 2 rounds
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the game of "Alex Another" beating "Sam Someone" 26 to 20 was added to it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 5 is added
+      Then the competition has 3 games
+
   Rule: In a Swiss, two players can meet more than once
 
     Scenario: A second game between the same two players of a Swiss is added

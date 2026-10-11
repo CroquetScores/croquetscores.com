@@ -5,6 +5,7 @@ import { BlockAdded } from "../../../../../../src/domain/aggregates/tournaments/
 import { CompetitionId } from "../../../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import {
   ask,
@@ -26,6 +27,23 @@ Given(
         CompetitionId.from(id),
         CompetitionName.from(name),
         BestOf.from(1),
+        Rounds.from(1),
+        byOf(this),
+        now(this),
+      ),
+    );
+  },
+);
+
+Given(
+  "the block {string} was added to it to be played in {int} rounds",
+  function (this: SpecWorld, name: string, rounds: number) {
+    happened(this, (tournament) =>
+      tournament.addBlock(
+        CompetitionId.create(),
+        CompetitionName.from(name),
+        BestOf.from(1),
+        Rounds.from(rounds),
         byOf(this),
         now(this),
       ),
@@ -62,6 +80,7 @@ Given(
           slug,
           (at + 1) * 10_000,
           1,
+          1,
           byOf(this),
           now(this),
         ),
@@ -81,12 +100,22 @@ Given(
   },
 );
 
+Given(
+  "the block is to be played in {int} rounds",
+  function (this: SpecWorld, rounds: number) {
+    scenarioOf(this).competition.rounds = rounds;
+  },
+);
+
 When("the block {string} is added", function (this: SpecWorld, name: string) {
+  const { bestOf, rounds } = scenarioOf(this).competition;
   ask(this, (tournament) =>
     tournament.addBlock(
       competitionIdOf(this),
       CompetitionName.from(name),
-      BestOf.from(scenarioOf(this).competition.bestOf ?? 1),
+      BestOf.from(bestOf ?? 1),
+      // Played once, where the scenario says nothing else.
+      Rounds.from(rounds ?? 1),
       byOf(this),
       now(this),
     ),

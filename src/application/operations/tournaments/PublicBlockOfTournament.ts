@@ -80,6 +80,8 @@ export interface BlockToRead {
     readonly name: string;
     /** How many games each match between two of its players is the best of. */
     readonly bestOf: number;
+    /** How many matches of it two of its players play: one unless it says. */
+    readonly rounds: number;
   };
   /** Every player entered in it, withdrawn or not, in the block's order. */
   readonly players: readonly PlayerOfBlock[];

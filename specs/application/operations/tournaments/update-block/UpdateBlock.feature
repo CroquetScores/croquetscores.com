@@ -11,7 +11,7 @@ Feature: Changing what a tournament's block is
   (`onlyManagers.feature`).
 
   An update says the block's name and what it is the best of again, each
-  asked its own rules on the way in. The block keeps its slug and its order.
+  asked its own rules on the way in, and the rounds it is played in again. The block keeps its slug and its order.
   An update that changes nothing records nothing. What is said here of
   updating a block is said of updating a knockout (`UpdateKnockout.feature`)
   and a Swiss (`UpdateSwiss.feature`) too.
@@ -45,6 +45,11 @@ Feature: Changing what a tournament's block is
       When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
       Then the tournament's competition "Block A" is the best of 3
 
+    Scenario: The block is played in the rounds it was updated to
+      Given the update makes the competition played in 3 rounds
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
+      Then the tournament's competition "Block A" is played in 3 rounds
+
     Scenario: Updating the block is recorded as done by whoever asked
       Given the update calls the competition "Block One"
       When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
@@ -62,6 +67,12 @@ Feature: Changing what a tournament's block is
       When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "BestOf.TooSmall"
+
+    Scenario: A number of rounds that could not be one is refused for it
+      Given the update makes the competition played in 0 rounds
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "Rounds.TooSmall"
 
   Rule: What the tournament asks is the tournament's to refuse
 

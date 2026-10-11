@@ -548,6 +548,7 @@ export const spanish: Language = {
     "admin.competition.name": "Nombre",
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Al mejor de",
+    "admin.competition.rounds": "Rondas",
     "admin.competition.places": "Plazas",
     "admin.competition.round": "Ronda {number}",
     "admin.competition.bestOfs": "Al mejor de",
@@ -571,6 +572,8 @@ export const spanish: Language = {
     "BestOf.NotWhole": "Introduce un número entero de partidas.",
     "BestOf.TooSmall":
       "Un encuentro tiene que ser al mejor de al menos 1 partida.",
+    "Rounds.NotWhole": "Introduce un número entero de rondas.",
+    "Rounds.TooSmall": "Un bloque tiene que jugarse en al menos 1 ronda.",
     "KnockoutDraw.EvenBestOf":
       "Un encuentro de eliminatoria tiene que tener ganador, así que es al mejor de un número impar de partidas.",
     "admin.hover.tournaments.new": "Crear un torneo nuevo",

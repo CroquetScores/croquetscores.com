@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 
 import { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
 import { TournamentPlayerId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
+import { Rounds } from "../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import { BestOf } from "../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { CompetitionId } from "../../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
@@ -102,6 +103,7 @@ Given(
         CompetitionId.create(),
         CompetitionName.from(name),
         BestOf.from(1),
+        Rounds.from(1),
         byOf(this),
         now(this),
       ),
@@ -231,6 +233,13 @@ Given(
   "the update makes the competition the best of {int}",
   function (this: SpecWorld, games: number) {
     scenarioOf(this).competitionUpdate.bestOf = games;
+  },
+);
+
+Given(
+  "the update makes the competition played in {int} rounds",
+  function (this: SpecWorld, rounds: number) {
+    scenarioOf(this).competitionUpdate.rounds = rounds;
   },
 );
 
@@ -450,6 +459,15 @@ Then(
       "A knockout is the best of each round.",
     );
     assert.equal(shape.bestOf.games, games);
+  },
+);
+
+Then(
+  "the tournament's competition {string} is played in {int} round(s)",
+  function (this: SpecWorld, name: string, rounds: number) {
+    const { shape } = competitionNamed(tournamentOf(this), name);
+    assert.ok(shape.kind === "block", `${name} is a ${shape.kind}.`);
+    assert.equal(shape.rounds.count, rounds);
   },
 );
 

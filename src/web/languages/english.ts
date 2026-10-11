@@ -616,6 +616,7 @@ export const english: Language = {
     "admin.competition.name": "Name",
     "admin.competition.kind": "Kind",
     "admin.competition.bestOf": "Best of",
+    "admin.competition.rounds": "Rounds",
     "admin.competition.places": "Places",
     "admin.competition.round": "Round {number}",
     "admin.competition.bestOfs": "Best ofs",
@@ -637,6 +638,8 @@ export const english: Language = {
       "Another competition in this tournament already has that name.",
     "BestOf.NotWhole": "Enter a whole number of games.",
     "BestOf.TooSmall": "A match has to be the best of at least 1 game.",
+    "Rounds.NotWhole": "Enter a whole number of rounds.",
+    "Rounds.TooSmall": "A block has to be played in at least 1 round.",
     "KnockoutDraw.EvenBestOf":
       "A knockout's match has to have a winner, so it is the best of an odd number of games.",
     // Every modal dialog's way out, since the page beneath cannot be reached.

@@ -7,6 +7,7 @@ import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js"
 import type { Block, Game } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
+import { Rounds } from "../domain/aggregates/tournaments/value-objects/Rounds.js";
 import { bestOfWorkedOut } from "./bestOfImported.js";
 
 // Blocks of a tournament that finished before this are left behind where
@@ -110,6 +111,42 @@ const playedInRounds = (
 };
 
 /**
+ * How many rounds a block was played in where every pair of its players, in
+ * the order their games were entered, played whole matches of the best of
+ * `bestOf` and at least one pair played more than one: the most matches any
+ * pair played. Nothing where no pair did, or where any pair's last match was
+ * not finished (ImportBlocks.feature).
+ */
+export const roundsPlayed = (
+  games: readonly Game[],
+  bestOf: number,
+): number | undefined => {
+  if (bestOf <= 1) return undefined;
+  const byPair = new Map<string, Game[]>();
+  for (const game of [...games].sort((one, other) => one.Id - other.Id)) {
+    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
+      .sort((one, other) => one - other)
+      .join(" ");
+    byPair.set(pair, [...(byPair.get(pair) ?? []), game]);
+  }
+  let most = 0;
+  for (const theirs of byPair.values()) {
+    let matches = 0;
+    let match: Game[] = [];
+    for (const game of theirs) {
+      match.push(game);
+      if (decidedAfter(match, bestOf)) {
+        matches += 1;
+        match = [];
+      }
+    }
+    if (match.length > 0) return undefined;
+    most = Math.max(most, matches);
+  }
+  return most > 1 ? most : undefined;
+};
+
+/**
  * Brings the old sites' blocks over as blocks, each the best of what it was, or
  * of what its games say where it was kept as the best of less than 1, or the
  * best of 1 where it was kept as the best of more than 1 and every pair of
@@ -140,12 +177,23 @@ export class ImportBlocks implements Importer<Block> {
           document.BestOf,
         );
         const bestOf = inRounds ? BestOf.from(1) : worked;
+        // Or kept as it was, and played in as many rounds as its pairs
+        // played whole matches of it.
+        const rounds = inRounds
+          ? undefined
+          : roundsPlayed(document.Games._Games, bestOf.games);
         // Tested before any game is added, for a block kept as the best of
-        // more than 1 that was not played in rounds.
-        const { ordered, reversed } = secondAndThirdReversed(
-          document.Games._Games,
-          bestOf.games,
-        );
+        // more than 1 that was not played in rounds: a block that was has
+        // second and third games that are the second match's, not misordered.
+        const { ordered, reversed } =
+          rounds === undefined
+            ? secondAndThirdReversed(document.Games._Games, bestOf.games)
+            : {
+                ordered: [...document.Games._Games].sort(
+                  (one, other) => one.Id - other.Id,
+                ),
+                reversed: [],
+              };
         const nameOf = nameOfIn(document);
         return {
           entries,
@@ -159,6 +207,14 @@ export class ImportBlocks implements Importer<Block> {
                   },
                 ]
               : []),
+            ...(rounds === undefined
+              ? []
+              : [
+                  {
+                    code: "ImportBlocks.PlayedInSeveralRounds",
+                    says: `was kept as the best of ${String(bestOf.games)}, and its pairs played it as up to ${String(rounds)} matches each of the best of ${String(bestOf.games)}, a round robin more than once, so it is brought over played in ${String(rounds)} rounds.`,
+                  },
+                ]),
             ...reversed.map(([second, third]) => ({
               code: "ImportBlocks.GamesReordered",
               what: `games ${String(second.Id)} and ${String(third.Id)}`,
@@ -166,7 +222,14 @@ export class ImportBlocks implements Importer<Block> {
             })),
           ],
           add: (tournament, id, name, by, at) => {
-            tournament.addBlock(id, name, bestOf, by, at);
+            tournament.addBlock(
+              id,
+              name,
+              bestOf,
+              Rounds.from(rounds ?? 1),
+              by,
+              at,
+            );
           },
         };
       },

@@ -8,8 +8,8 @@ Feature: Adding a block to a tournament
   else, a scorer among them, is refused with `Tournament.NotAManager`
   (`onlyManagers.feature`).
 
-  The block's name and what each of its matches is the best of are asked their
-  own rules on the way in, and a request that breaks one is refused with
+  The block's name, what each of its matches is the best of and the rounds it
+  is played in are asked their own rules on the way in, and a request that breaks one is refused with
   `Request.Invalid` and the first rule it breaks. What the tournament asks of
   a competition — a name no other has, a slug unlike every other's, an order
   above the rest — is the tournament's (`addBlock.feature`), and what is said
@@ -38,6 +38,11 @@ Feature: Adding a block to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
       Then the tournament's competition "Block A" is the best of 2
 
+    Scenario: The block is played in the rounds it was added as
+      Given the block is to be played in 2 rounds
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" is played in 2 rounds
+
     Scenario: The answer is the block's id
       When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
       Then it is answered with the id of the tournament's competition "Block A"
@@ -63,6 +68,12 @@ Feature: Adding a block to a tournament
         |         | 1     | CompetitionName.Missing |
         | ???     | 1     | CompetitionName.NoLetterOrDigit |
         | Block A | 0     | BestOf.TooSmall         |
+
+    Scenario: A number of rounds that could not be one is refused for it
+      Given the block is to be played in 0 rounds
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "Rounds.TooSmall"
 
     Scenario: A block that breaks a rule is not added
       Given the block is to be the best of 0

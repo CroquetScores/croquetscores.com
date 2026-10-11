@@ -124,29 +124,54 @@ export const AGAINST_A_BYE = {
 export const withWinnersFromScores = <TDocument extends OldCompetition>(
   document: TDocument,
   website: Website,
-): { readonly document: TDocument; readonly swapped: readonly OldGame[] } => {
+): {
+  readonly document: TDocument;
+  readonly swapped: readonly OldGame[];
+  readonly marked: readonly OldGame[];
+} => {
   const swapped: OldGame[] = [];
+  const marked: OldGame[] = [];
   const games = document.Games._Games.map((game) => {
     try {
       const winner = Score.read(game.Winner.Score._Score, website);
       const loser = Score.read(game.Loser.Score._Score, website);
       const equal = !loser.isMoreThan(winner) && !winner.isMoreThan(loser);
-      if (!(
+      if (
         loser.isMoreThan(winner) ||
         (equal && loser.marked && !winner.marked)
-      )) {
-        return game;
+      ) {
+        const put: OldGame = {
+          ...game,
+          Winner: game.Loser,
+          Loser: game.Winner,
+        };
+        swapped.push(put);
+        return put;
+      }
+      // Equal points and neither marked: the old site's winner won it, as
+      // the site says a game on equal points was, with a "w" on their score.
+      // Only where the score is no more than its digits, which a mark follows.
+      const typed = game.Winner.Score._Score.trim();
+      if (equal && !winner.marked && !loser.marked && /^\d+$/.test(typed)) {
+        const put: OldGame = {
+          ...game,
+          Winner: {
+            ...game.Winner,
+            Score: { ...game.Winner.Score, _Score: `${typed}w` },
+          },
+        };
+        marked.push(put);
+        return put;
       }
     } catch {
-      return game;
+      // A score that cannot be read is left as it was.
     }
-    const put: OldGame = { ...game, Winner: game.Loser, Loser: game.Winner };
-    swapped.push(put);
-    return put;
+    return game;
   });
   return {
     document: { ...document, Games: { ...document.Games, _Games: games } },
     swapped,
+    marked,
   };
 };
 
@@ -353,7 +378,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   { website, id, document: read }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
-  const { document, swapped } = withWinnersFromScores(
+  const { document, swapped, marked } = withWinnersFromScores(
     withItsLists(read),
     Website.from(website),
   );
@@ -458,6 +483,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         nameOfIn(document),
         "ImportCompetition.WinnerFromScore",
         "was kept the other way round, and is brought over as won by the player who scored more.",
+      );
+    }
+    for (const game of marked) {
+      await errors.gameCorrected(
+        game,
+        nameOfIn(document),
+        "ImportCompetition.EqualScoreMarked",
+        "was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.",
       );
     }
     for (const { code, says, what } of shaped.corrected ?? []) {
