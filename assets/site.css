@@ -322,7 +322,7 @@ a:hover {
 /* The first focusable thing on the page, past the navigation. */
 .skip-link {
   position: absolute;
-  left: var(--space-3);
+  inset-inline-start: var(--space-3);
   top: var(--space-3);
   z-index: 10;
   padding: var(--space-2) var(--space-4);
@@ -465,7 +465,7 @@ a:hover {
    at the other: the bar spreads what is in it, and without this the navigation
    would sit in the middle once the menu joined it. */
 .site-bar-inner > .menu {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* The account menu: the last thing in the header, a person that opens on what
@@ -510,7 +510,7 @@ a:hover {
 
 .account-menu-links {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   z-index: 5;
   margin-top: var(--space-2);
   padding: var(--space-2);
@@ -544,7 +544,7 @@ a:hover {
   background: none;
   color: var(--link);
   font: inherit;
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
 }
@@ -608,7 +608,7 @@ a:hover {
 
 .menu-links {
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   z-index: 5;
   margin-top: var(--space-2);
   padding: var(--space-2);
@@ -875,7 +875,7 @@ main {
 .language-box label {
   position: absolute;
   top: -2px;
-  left: calc(var(--space-3) + 1px);
+  inset-inline-start: calc(var(--space-3) + 1px);
   margin-inline-start: calc(-1 * var(--space-1));
   padding-inline: var(--space-1);
   transform: translateY(-50%);
@@ -988,7 +988,7 @@ main {
 .field-box .field-label {
   position: absolute;
   top: 50%;
-  left: var(--space-3);
+  inset-inline-start: var(--space-3);
   max-width: calc(100% - 2 * var(--space-3));
   overflow: hidden;
   transform: translateY(-50%);
@@ -2167,12 +2167,12 @@ html:has(dialog:modal) {
   }
 
   .knockout-onward {
-    right: var(--space-2);
+    inset-inline-end: var(--space-2);
     animation-name: knockout-onward;
   }
 
   .knockout-back {
-    left: var(--space-2);
+    inset-inline-start: var(--space-2);
     animation-name: knockout-back;
   }
 }
@@ -2193,7 +2193,7 @@ html:has(dialog:modal) {
 @container scroll-state(scrollable: inline) {
   .knockout-edge {
     position: sticky;
-    left: 0;
+    inset-inline-start: 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -2222,7 +2222,7 @@ html:has(dialog:modal) {
 }
 
 .knockout-edge-onward {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 @container scroll-state(scrollable: right) {
@@ -2289,7 +2289,7 @@ html:has(dialog:modal) {
   flex: 1;
   flex-direction: column;
   justify-content: space-around;
-  padding-right: var(--space-3);
+  padding-inline-end: var(--space-3);
 }
 
 /* The bracket, as the old site drew it: a line from the middle of each match
@@ -2299,25 +2299,25 @@ html:has(dialog:modal) {
   content: "";
   position: absolute;
   top: 25%;
-  right: 0;
+  inset-inline-end: 0;
   bottom: 25%;
   width: var(--space-3);
   border: 1px solid var(--ink-muted);
-  border-left: 0;
+  border-inline-start: 0;
 }
 
 /* The line on from the bracket before, into the middle of each match of a
    later round: a pair's two at a quarter and three quarters of the way down,
    the final's alone at half. */
 .knockout-round + .knockout-round .knockout-pair {
-  padding-left: var(--space-3);
+  padding-inline-start: var(--space-3);
 }
 
 .knockout-round + .knockout-round .knockout-pair::before {
   content: "";
   position: absolute;
   top: 25%;
-  left: 0;
+  inset-inline-start: 0;
   width: var(--space-3);
   height: 50%;
   border-top: 1px solid var(--ink-muted);
@@ -2325,7 +2325,7 @@ html:has(dialog:modal) {
 }
 
 .knockout-pair-alone {
-  padding-right: 0;
+  padding-inline-end: 0;
 }
 
 .knockout-pair-alone::after {
@@ -2559,7 +2559,7 @@ html:has(dialog:modal) {
 }
 
 .team-summary .team-summary-starts {
-  border-left: 3px solid var(--table-rule);
+  border-inline-start: 3px solid var(--table-rule);
 }
 
 .team-summary th,

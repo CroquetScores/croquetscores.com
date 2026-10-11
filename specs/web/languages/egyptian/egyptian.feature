@@ -47,6 +47,22 @@ Feature: The site can be read in Egyptian Arabic
       Then the page is in "ar-EG"
 
     @browser @postgres
+    Scenario: A browser asking for Arabic without a country gets Egyptian
+      Given a viewport 1200 pixels wide
+      And a site offering the languages it is served with
+      And a browser that asks for "ar"
+      When the home page is opened
+      Then the page is in "ar-EG"
+
+    @browser @postgres
+    Scenario: A browser asking for Arabic as another country writes it gets Egyptian
+      Given a viewport 1200 pixels wide
+      And a site offering the languages it is served with
+      And a browser that asks for "ar-SA"
+      When the home page is opened
+      Then the page is in "ar-EG"
+
+    @browser @postgres
     Scenario: A browser asking for neither still gets English
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
@@ -93,6 +109,22 @@ Feature: The site can be read in Egyptian Arabic
       And a browser that asks for "ar-EG"
       When the home page is opened
       Then the page reads from right to left
+
+    @browser @postgres
+    Scenario: The list of languages says which way Egyptian is read
+      Given a viewport 1200 pixels wide
+      And a site offering the languages it is served with
+      And a browser that asks for "en"
+      When the home page is opened
+      Then the language "ar-EG" is offered reading from right to left
+
+    @browser @postgres
+    Scenario: The list of languages says which way English is read
+      Given a viewport 1200 pixels wide
+      And a site offering the languages it is served with
+      And a browser that asks for "ar-EG"
+      When the home page is opened
+      Then the language "en" is offered reading from left to right
 
     @browser @postgres
     Scenario: A page in English reads from left to right

@@ -113,7 +113,7 @@ export const adminPage = (
       // what the admin draws itself — the months it dates a tournament by —
       // is drawn in whatever the page says it is in.
       .replace(html, (_whole, attributes: string) => {
-        const said = `<html lang="${escape(lang)}"${directionAttribute(speaking.language)}${attributes.replace(/\s+lang="[^"]*"/, "")}`;
+        const said = `<html lang="${escape(lang)}"${directionAttribute(speaking.language)}${attributes.replace(/\s+(?:lang|dir)="[^"]*"/g, "")}`;
         return theme === "system"
           ? `${said}>`
           : `${said} data-theme="${theme}">`;

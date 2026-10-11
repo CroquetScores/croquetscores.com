@@ -132,3 +132,30 @@ Then("the page reads from right to left", async function (this: SpecWorld) {
 Then("the page reads from left to right", async function (this: SpecWorld) {
   assert.notEqual(await direction(this), "rtl");
 });
+
+// Said on each language in the list, so that its name reads the way its own
+// language does whichever way the page around it is read.
+const offeredReading = async (
+  world: SpecWorld,
+  tag: string,
+): Promise<string | null> => {
+  const offered = world.browserPage.locator(
+    `form.language select option[value=${JSON.stringify(tag)}]`,
+  );
+  assert.equal(await offered.count(), 1, `${tag} is not offered.`);
+  return offered.getAttribute("dir");
+};
+
+Then(
+  "the language {string} is offered reading from right to left",
+  async function (this: SpecWorld, tag: string) {
+    assert.equal(await offeredReading(this, tag), "rtl");
+  },
+);
+
+Then(
+  "the language {string} is offered reading from left to right",
+  async function (this: SpecWorld, tag: string) {
+    assert.equal(await offeredReading(this, tag), "ltr");
+  },
+);

@@ -48,6 +48,14 @@ export interface Speaking {
 export const directionAttribute = (language: Language): string =>
   language.direction === undefined ? "" : ` dir="${language.direction}"`;
 
+/**
+ * The `dir` attribute for a language's name in a list, which always says which
+ * way, since the page around the list may be read the other way and the name
+ * would otherwise take that way from it.
+ */
+export const nameDirectionAttribute = (language: Language): string =>
+  ` dir="${language.direction ?? "ltr"}"`;
+
 export const languageCookie = "language";
 
 const wordsFor = (
@@ -105,6 +113,18 @@ const offeredAs = (
         (language) => language.tag.toLowerCase() === tag.toLowerCase(),
       );
 
+const baseOf = (tag: string): string => tag.split("-")[0] ?? tag;
+
+// A browser asking for Arabic, or for Arabic as Saudi Arabia writes it, gets
+// the Arabic the site has even though that is one country's: the reader asked
+// for the language, and a form of it is nearer than English. Tried last, so an
+// exact or a base match anywhere in the list wins over it.
+const offeredAsAFormOf = (
+  base: string,
+  offered: readonly Language[],
+): Language | undefined =>
+  offered.find((language) => baseOf(language.tag).toLowerCase() === base);
+
 /** The language `request` is answered in. */
 export const languageFor = (
   request: FastifyRequest,
@@ -115,7 +135,9 @@ export const languageFor = (
 
   for (const tag of askedFor(request.headers["accept-language"])) {
     const found =
-      offeredAs(tag, offered) ?? offeredAs(tag.split("-")[0], offered);
+      offeredAs(tag, offered) ??
+      offeredAs(baseOf(tag), offered) ??
+      offeredAsAFormOf(baseOf(tag), offered);
     if (found !== undefined) return found;
   }
 

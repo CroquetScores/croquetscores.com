@@ -4,7 +4,11 @@
 import { accountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
-import { directionAttribute, type Speaking } from "./language.js";
+import {
+  directionAttribute,
+  nameDirectionAttribute,
+  type Speaking,
+} from "./language.js";
 import { markdownWithoutHtml } from "./markdown.js";
 import { themes, type Theme } from "./theme.js";
 
@@ -299,7 +303,7 @@ const languageChoice = (speaking: Speaking, path: string): string => {
   const options = speaking.offered
     .map((language) => {
       const current = language.tag === speaking.language.tag ? " selected" : "";
-      return `              <option value="${escape(language.tag)}" lang="${escape(language.tag)}"${directionAttribute(language)}${current}>${escape(language.name)}</option>`;
+      return `              <option value="${escape(language.tag)}" lang="${escape(language.tag)}"${nameDirectionAttribute(language)}${current}>${escape(language.name)}</option>`;
     })
     .join("\n");
 
