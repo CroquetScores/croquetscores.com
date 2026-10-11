@@ -121,13 +121,15 @@ const namedForItsPlayersTeams = (document: object): object => {
   const teams: string[] = [];
   for (const player of Players?._Players ?? []) {
     const team = (player.Representing ?? "").trim();
-    if (team !== "" && !teams.includes(team.toLowerCase())) {
+    if (
+      team !== "" &&
+      !teams.some((each) => each.toLowerCase() === team.toLowerCase())
+    ) {
       teams.push(team);
     }
   }
-  const distinct = [...new Set(teams.map((team) => team.toLowerCase()))];
   const [one, other] = teams;
-  return distinct.length === 2 && one !== undefined && other !== undefined
+  return teams.length === 2 && one !== undefined && other !== undefined
     ? { ...document, Name: `${one} vs ${other}` }
     : document;
 };

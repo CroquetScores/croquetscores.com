@@ -506,6 +506,8 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And player 1 represents "Southport"
       And player 2 is in the competition
       And player 2 represents "Leicester"
+      And player 3 is in the competition
+      And player 3 represents "Southport"
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the tournament "tournaments/13" on "croquetscores.com" is imported
