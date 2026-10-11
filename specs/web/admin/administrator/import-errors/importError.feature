@@ -24,7 +24,9 @@ Feature: The page where an administrator reads what the import said of one docum
   says what went wrong said for a person, where the import said it so.
 
   A document id nothing was kept against says the document is not found,
-  rather than showing an empty page.
+  rather than showing an empty page. So does an address whose document id is
+  not a well-formed escape, as one mistyped, since no id the page itself leads
+  to is written so.
 
   The admin draws the page itself, so every scenario here runs scripts, and it
   is read on a phone's width, as the rest of the admin is.
@@ -119,6 +121,10 @@ Feature: The page where an administrator reads what the import said of one docum
 
     Scenario: The page says the document is not found
       When the page at "/admin/administrator/import-errors/users%2F9-A" is opened
+      Then the page says the document is not found
+
+    Scenario: An address with a malformed escape says the document is not found
+      When the page at "/admin/administrator/import-errors/%E0%A4%A" is opened
       Then the page says the document is not found
 
   Rule: The page is in the reader's language

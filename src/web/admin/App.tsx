@@ -28,6 +28,18 @@ const yearIn = (path: string): number | "this year" | undefined => {
   return year === undefined ? undefined : Number(year);
 };
 
+// The page's own addresses always write the id with encodeURIComponent, so
+// an escape that will not decode was typed or damaged on the way. Left to
+// throw, it would unmount the whole admin; kept as written, it names no
+// document anything was kept against, and the page says so.
+const documentOf = (segment: string): string => {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+};
+
 export const App = (): React.JSX.Element => {
   const [path, setPath] = useState(window.location.pathname);
 
@@ -118,7 +130,7 @@ export const App = (): React.JSX.Element => {
               ) : importErrorOf !== undefined ? (
                 <ImportError
                   key={importErrorOf}
-                  document={decodeURIComponent(importErrorOf)}
+                  document={documentOf(importErrorOf)}
                 />
               ) : (
                 <h1>{say("admin.administrator.title")}</h1>
