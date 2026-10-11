@@ -77,6 +77,17 @@ export const secondAndThirdReversed = (
   return { ordered, reversed };
 };
 
+// Blocks of a tournament the import names as played in rounds of matches of
+// a best-of, by the website and the tournament document, whatever the blocks
+// were kept as (ImportBlocks.feature): tournaments/72520, the WCA Sunday GC
+// Handicap Interclub, a double round robin of matches of the best of 3.
+const NAMED_TOURNAMENTS: ReadonlyMap<
+  string,
+  { readonly bestOf: number; readonly rounds: number }
+> = new Map([
+  ["croquetscores.com/tournaments/72520", { bestOf: 3, rounds: 2 }],
+]);
+
 /**
  * Whether every pair of the `players` of a block played exactly `bestOf`
  * games of `games` between them, and no pair or player more: the block was
@@ -176,12 +187,25 @@ export class ImportBlocks implements Importer<Block> {
           document.Games._Games,
           document.BestOf,
         );
-        const bestOf = inRounds ? BestOf.from(1) : worked;
+        // Or, where the import names its tournament, the best-of and the
+        // rounds it names, whatever it was kept as.
+        const named = NAMED_TOURNAMENTS.get(
+          `${read.website}/${document.Tournament.Id}`.toLowerCase(),
+        );
+        const bestOf =
+          named !== undefined
+            ? BestOf.from(named.bestOf)
+            : inRounds
+              ? BestOf.from(1)
+              : worked;
         // Or kept as it was, and played in as many rounds as its pairs
         // played whole matches of it.
-        const rounds = inRounds
-          ? undefined
-          : roundsPlayed(document.Games._Games, bestOf.games);
+        const rounds =
+          named !== undefined
+            ? named.rounds
+            : inRounds
+              ? undefined
+              : roundsPlayed(document.Games._Games, bestOf.games);
         // Tested before any game is added, for a block kept as the best of
         // more than 1 that was not played in rounds: a block that was has
         // second and third games that are the second match's, not misordered.
@@ -199,7 +223,15 @@ export class ImportBlocks implements Importer<Block> {
           entries,
           gamesInOrder: () => ordered,
           corrected: [
-            ...(inRounds
+            ...(named !== undefined
+              ? [
+                  {
+                    code: "ImportBlocks.TournamentRounds",
+                    says: `was kept as the best of ${String(worked.games)}, and is brought over as the best of ${String(named.bestOf)}, played in ${String(named.rounds)} rounds, as the tournament was played.`,
+                  },
+                ]
+              : []),
+            ...(inRounds && named === undefined
               ? [
                   {
                     code: "ImportBlocks.PlayedInRounds",
@@ -207,7 +239,7 @@ export class ImportBlocks implements Importer<Block> {
                   },
                 ]
               : []),
-            ...(rounds === undefined
+            ...(rounds === undefined || named !== undefined
               ? []
               : [
                   {

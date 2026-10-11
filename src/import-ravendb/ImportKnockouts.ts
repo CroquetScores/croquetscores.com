@@ -319,6 +319,31 @@ const placesOf = (
 };
 
 /**
+ * The places of a knockout of `size` places whose players, byes the old sites
+ * listed among them, are fewer: the difference made up in byes, and the
+ * players put where the games say they stood (ImportKnockouts.feature). Either
+ * the byes worked out going down the list, or the draw worked out from the
+ * games with the byes added at the end, whichever leaves fewer of the games
+ * with no place in it, and the first where they leave as many.
+ */
+export const placesWithByesAdded = (
+  listed: readonly Listed[],
+  size: number,
+  games: readonly Game[],
+): Listed[] => {
+  const asListed = withByesWorkedOut(listed, games);
+  const filled = [
+    ...listed,
+    ...Array.from({ length: size - listed.length }, () => BYE),
+  ];
+  const drawn = placesOf(filled, games);
+  return asListed.length === size &&
+    misfitsOf(asListed, games) <= misfitsOf(drawn, games)
+    ? asListed
+    : drawn;
+};
+
+/**
  * Brings the old sites' knockouts over as knockouts, drawn as the old sites
  * drew them, byes and all, each round the best of what its games say
  * (ImportKnockouts.feature). One whose draw cannot be worked out is left
@@ -344,12 +369,22 @@ export class ImportKnockouts implements Importer<Knockout> {
             ? placesOf(listed, games)
             : listed.length > size
               ? undefined
-              : withByesWorkedOut(listed, games);
+              : placesWithByesAdded(listed, size, games);
         if (places?.length !== size) return undefined;
+        const added = size - listed.length;
         const { rounds, roundOf, knockedOut } = roundsOf(places, games);
         const draw = KnockoutDraw.from(size, rounds);
         return {
           entries: places,
+          corrected:
+            added > 0
+              ? [
+                  {
+                    code: "ImportKnockouts.ByesAdded",
+                    says: `was kept with ${String(listed.length)} players for ${String(size)} places, and is brought over with ${String(added)} byes added, the players where their games say they stood.`,
+                  },
+                ]
+              : [],
           gamesInOrder: (toAdd) =>
             roundByRound(
               toAdd.filter((game) => !isPlayOff(game, roundOf, knockedOut)),

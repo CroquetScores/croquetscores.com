@@ -173,7 +173,30 @@ const asTeamMatch = (
 // Mountain Challenge, a round robin of teams with no players of their own.
 const OWN_TOURNAMENT: ReadonlySet<string> = new Set([
   "croquetscores.com/blocks/95635",
+  "croquetscores.com/blocks/95636",
 ]);
+
+// A score marked in text as a tie: "2 Tied", "5 Draw", "5=" or "6w tie".
+const TIE = /(^|[^a-z])(?:tied|tie|draw)(?![a-z])|=/i;
+
+// Whether any game of `document` has a score marked in text as a tie.
+const hasTieMarked = (document: object): boolean =>
+  (
+    (
+      document as {
+        Games?: {
+          _Games?: readonly {
+            Winner: { Score: { _Score: string } };
+            Loser: { Score: { _Score: string } };
+          }[];
+        };
+      }
+    ).Games?._Games ?? []
+  ).some((game) =>
+    [game.Winner.Score._Score, game.Loser.Score._Score].some((score) =>
+      TIE.test(score),
+    ),
+  );
 
 // What follows the name of a tournament played by teams in the name of the
 // Standard tournament its blocks are brought over into.
@@ -317,10 +340,18 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       ...commentaries,
     ].map(tried);
     await this.database.recordTournamentRead(website, id);
+    // A tie marked in text in any of its competitions, which the site keeps
+    // only where the tournament allows drawn games.
+    const drawn = named.some(
+      ({ document: each }) => !isArchived(each) && hasTieMarked(each),
+    );
     try {
       await this.parts.tournament.importDocument({
         ...read,
-        document: heldOverItsTeamMatches(setUp, named),
+        document: {
+          ...heldOverItsTeamMatches(setUp, named),
+          ...(drawn ? { DrawsAllowed: true } : {}),
+        },
       });
     } catch (failure) {
       for (const each of named) {
@@ -331,6 +362,17 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         );
       }
       throw failure;
+    }
+
+    if (drawn) {
+      await this.#corrected(
+        website,
+        id,
+        document,
+        undefined,
+        "ImportWholeTournaments.DrawsAllowed",
+        `${document.Name} had scores marked in text as a tie, as "2 Tied", and is brought over allowing drawn games.`,
+      );
     }
 
     if (standard) {

@@ -130,16 +130,21 @@ export const withWinnersFromScores = <TDocument extends OldCompetition>(
   readonly marked: readonly OldGame[];
   readonly unmarked: readonly OldGame[];
   readonly rounded: readonly OldGame[];
+  readonly bracketed: readonly OldGame[];
 } => {
   const swapped: OldGame[] = [];
   const marked: OldGame[] = [];
   const unmarked: OldGame[] = [];
   const rounded: OldGame[] = [];
+  const bracketed: OldGame[] = [];
   const games = document.Games._Games.map((kept) => {
-    // A half point rounded up first, so that what follows is worked out from
-    // the scores the site will have.
-    const game = withHalfPointsRounded(kept);
-    if (game !== kept) rounded.push(kept);
+    // A half point rounded up first, and a count in brackets taken off a
+    // winner's mark, so that what follows is worked out from the scores the
+    // site will have.
+    const roundedUp = withHalfPointsRounded(kept);
+    if (roundedUp !== kept) rounded.push(kept);
+    const game = withBracketsRemoved(roundedUp);
+    if (game !== roundedUp) bracketed.push(roundedUp);
     try {
       const winner = Score.read(game.Winner.Score._Score, website);
       const loser = Score.read(game.Loser.Score._Score, website);
@@ -195,6 +200,37 @@ export const withWinnersFromScores = <TDocument extends OldCompetition>(
     marked,
     unmarked,
     rounded,
+    bracketed,
+  };
+};
+
+// `typed` as its points where it is a winner's mark with a count in brackets
+// after it, as "5 w (5)"; nothing where it is not.
+const withoutBracketedCount = (typed: string): string | undefined =>
+  /^(\d+)\s*[wW]\s*\(\d+\)$/.exec(typed.trim())?.[1];
+
+// `game` with either score's mark and bracketed count taken off, or `game`
+// itself where neither has one.
+const withBracketsRemoved = (game: OldGame): OldGame => {
+  const winner = withoutBracketedCount(game.Winner.Score._Score);
+  const loser = withoutBracketedCount(game.Loser.Score._Score);
+  if (winner === undefined && loser === undefined) return game;
+  return {
+    ...game,
+    Winner: {
+      ...game.Winner,
+      Score: {
+        ...game.Winner.Score,
+        _Score: winner ?? game.Winner.Score._Score,
+      },
+    },
+    Loser: {
+      ...game.Loser,
+      Score: {
+        ...game.Loser.Score,
+        _Score: loser ?? game.Loser.Score._Score,
+      },
+    },
   };
 };
 
@@ -252,6 +288,14 @@ export const saidOfScoresCorrected = async (
       nameOf,
       "ImportCompetition.HalfPointRoundedUp",
       "was kept with a score written with a half point, which the site has no place for, and is brought over with it rounded up to the next whole number.",
+    );
+  }
+  for (const game of corrected.bracketed) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.BracketedCountRemoved",
+      "was kept with a winner's mark and a count in brackets after its score, which are taken off, leaving its points.",
     );
   }
   for (const game of corrected.swapped) {

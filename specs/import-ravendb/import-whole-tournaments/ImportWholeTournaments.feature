@@ -344,13 +344,14 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
-  Rule: The block blocks/95635 of a tournament played by teams is a block of a tournament of its own
+  Rule: The blocks blocks/95635 and blocks/95636 of a tournament played by teams are blocks of a tournament of its own
 
     A block has no place in a tournament played by teams, and the import
-    does not make one of any: croquetscores.com's blocks/95635, Eastern, of
-    the 2024 Mountain Challenge, was a round robin of six teams, and has no
-    players of its own to be a test between. It is named, and brought over
-    as a block of a Standard tournament made for it, with the details of the
+    does not make one of any: croquetscores.com's blocks/95635, Eastern, and
+    blocks/95636, Western, of the 2024 Mountain Challenge, were round robins
+    of six teams, and have no players of their own to be a test between.
+    They are named, and brought over as blocks of a Standard tournament made
+    for them, with the details of the
     tournament it was in, called as that is with " - Block" after it, and
     found at its slug followed by "-block". That is said as corrected
     (`AcceptedImportErrors.feature`). Any other block of a tournament played
@@ -602,6 +603,120 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And the Swiss "swisses/28068" of "tournaments/13" on "croquetscores.com"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then what is corrected of "croquetscores.com/swisses/28068" names "No games"
+
+    Scenario: The blocks/95635 and blocks/95636 are in the one tournament of their own
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the tournament lists "blocks/95636"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And the block "blocks/95636" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Western"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competitions kept for "blocks/95635" and "blocks/95636" on "croquetscores.com" are in the same tournament
+
+    Scenario: blocks/95636 is in a tournament called as its tournament is, with " - Block"
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95636"
+      And the block "blocks/95636" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Western"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/95636" on "croquetscores.com" is in a tournament called "Spring Open - Block"
+
+  Rule: A tournament with a score marked in text as a tie allows drawn games
+
+    Some scorers wrote a game on equal points as a tie in words or a sign, as
+    "2 Tied", "5 Draw", "5=" or "6w tie". Such a game was not won by anybody,
+    which the site keeps only where the tournament allows drawn games
+    (`addGame.feature`). So a tournament with a score in any of its
+    competitions marked as "Tied", "Draw", "tie" or "=" allows drawn games,
+    and is said as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario Outline: A tournament with a tie marked in text allows drawn games
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "<mark>"
+      And game 1 was lost by player 2
+      And game 1's loser scored "<mark>"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" allows drawn games
+
+      Examples:
+        | mark   |
+        | 2 Tied |
+        | 5 Draw |
+        | 5=     |
+        | 6w tie |
+        | 4 TIED |
+
+    Scenario: A game marked as a tie is kept
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "2 Tied"
+      And game 1 was lost by player 2
+      And game 1's loser scored "2 Tied"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 1 game
+
+    Scenario: A tournament with no tie marked in text does not allow drawn games
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "26tp"
+      And game 1 was lost by player 2
+      And game 1's loser scored "3"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" does not allow drawn games
+
+    Scenario: A tournament that allows drawn games for a tie marked in text is said as corrected
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "2 Tied"
+      And game 1 was lost by player 2
+      And game 1's loser scored "2 Tied"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "croquetscores.com/tournaments/13" is corrected as "ImportWholeTournaments.DrawsAllowed"
 
   Rule: A tournament the import names as Standard is brought over as one
 

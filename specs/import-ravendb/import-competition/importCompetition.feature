@@ -862,6 +862,69 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then "game 1" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.HalfPointRoundedUp"
 
+  Rule: A winner's mark with a count in brackets after it is left as the winner's mark
+
+    Some scorers wrote how a game on equal points was won after the winner's
+    mark, as "5 w (5)" against "5": the mark and the count in brackets are
+    taken off, leaving the points, and the game is then a game on equal
+    points won by whoever the old site said, as the rule above says. That is
+    said as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: A winner's mark with a count in brackets is a game won on equal points
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "5 w (5)"
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" has the winner's score "5w"
+
+    Scenario: A winner's mark in capitals with a count in brackets is a game won on equal points
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "7W (6)"
+      And game 1 was lost by player 3
+      And game 1's loser scored "7"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" has the winner's score "7w"
+
+    Scenario: A game with a count in brackets is won by whoever the old site said
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "8 w (4)"
+      And game 1 was lost by player 3
+      And game 1's loser scored "8"
+      When the competition is imported
+      Then the first game of the competition kept for "blocks/30" on "croquetscores.com" was won by "Sam Someone"
+
+    Scenario: A game with a count in brackets is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "8 w (4)"
+      And game 1 was lost by player 3
+      And game 1's loser scored "8"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A game with a count in brackets is said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1's winner scored "8 w (4)"
+      And game 1 was lost by player 3
+      And game 1's loser scored "8"
+      When the competition is imported
+      Then "game 1" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.BracketedCountRemoved"
+
   Rule: A game entered twice is left out the second time, where it would come after the match was decided
 
     The old sites kept some games twice, with the same two players and the

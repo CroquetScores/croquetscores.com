@@ -466,6 +466,46 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is played in 1 round
 
+  Rule: The blocks of tournaments/72520 are the best of 3, played in 2 rounds
+
+    croquetscores.com's tournaments/72520, the WCA Sunday GC Handicap
+    Interclub, was a double round robin of matches of the best of 3, kept as
+    the best of 5 or of 1 with every pair's games between them. Each of its
+    blocks is brought over as the best of 3 and played in 2 rounds, and said
+    as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: A block of tournaments/72520 is the best of 3
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      And the block's matches are the best of 5
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block of tournaments/72520 is played in 2 rounds
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      And the block's matches are the best of 5
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 2 rounds
+
+    Scenario: A block of tournaments/72520 kept as the best of 1 is the best of 3
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      And the block's matches are the best of 1
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block of tournaments/72520 is said as corrected
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      When the competition is imported
+      Then "croquetscores.com/blocks/30" is corrected as "ImportBlocks.TournamentRounds"
+
+    Scenario: A block of any other tournament is not said as corrected for it
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
   Rule: A pair's second and third games are added the other way round where the third would come after their match was decided
 
     Some managers entered a match of the best of 3 out of order: a player won
