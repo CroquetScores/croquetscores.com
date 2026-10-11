@@ -7,6 +7,7 @@ import type { SpecWorld } from "../../support/world.js";
 import { importDatabaseOf } from "../importing.js";
 import {
   type WrittenCompetition,
+  competitionKeptFor,
   importTournamentCalled,
   importingOf,
   tournamentKeptFor,
@@ -116,5 +117,66 @@ Then(
       events.filter((event) => event instanceof CompetitionMoved).length,
       0,
     );
+  },
+);
+
+// A block of a tournament of its own ---------------------------------------------
+
+Then(
+  "the competition kept for {string} on {string} is in a tournament called {string}",
+  async function (this: SpecWorld, id: string, website: string, name: string) {
+    const { tournament } = await competitionKeptFor(this, id, website);
+    assert.equal(tournament.name.toString(), name);
+  },
+);
+
+Then(
+  "the competition kept for {string} on {string} is in a tournament not played by teams",
+  async function (this: SpecWorld, id: string, website: string) {
+    const { tournament } = await competitionKeptFor(this, id, website);
+    assert.equal(tournament.format.isTeamFormat, false);
+  },
+);
+
+Then(
+  "the competition kept for {string} on {string} is in a tournament that starts and finishes as the tournament kept for {string} on {string}",
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    oldId: string,
+    oldWebsite: string,
+  ) {
+    const { tournament } = await competitionKeptFor(this, id, website);
+    const old = await tournamentKeptFor(this, oldId, oldWebsite);
+    assert.equal(
+      tournament.starts.toDate().getTime(),
+      old.starts.toDate().getTime(),
+    );
+    assert.equal(
+      tournament.finishes.toDate().getTime(),
+      old.finishes.toDate().getTime(),
+    );
+  },
+);
+
+Then(
+  "no competition of the tournament kept for {string} on {string} is called {string}",
+  async function (this: SpecWorld, id: string, website: string, name: string) {
+    assert.ok(!(await competitionNames(this, id, website)).includes(name));
+  },
+);
+
+Then(
+  "the competitions kept for {string} and {string} on {string} are in the same tournament",
+  async function (
+    this: SpecWorld,
+    one: string,
+    other: string,
+    website: string,
+  ) {
+    const first = await competitionKeptFor(this, one, website);
+    const second = await competitionKeptFor(this, other, website);
+    assert.equal(first.tournament.id.value, second.tournament.id.value);
   },
 );

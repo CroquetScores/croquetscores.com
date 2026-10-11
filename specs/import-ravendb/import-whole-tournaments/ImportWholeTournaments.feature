@@ -344,6 +344,130 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
+  Rule: The block blocks/95635 of a tournament played by teams is a block of a tournament of its own
+
+    A block has no place in a tournament played by teams, and the import
+    does not make one of any: croquetscores.com's blocks/95635, Eastern, of
+    the 2024 Mountain Challenge, was a round robin of six teams, and has no
+    players of its own to be a test between. It is named, and brought over
+    as a block of a Standard tournament made for it, with the details of the
+    tournament it was in, called as that is with " - Block" after it, and
+    found at its slug followed by "-block". That is said as corrected
+    (`AcceptedImportErrors.feature`). Any other block of a tournament played
+    by teams is refused as it always was.
+
+    Scenario: The block is in a tournament called as its tournament is, with " - Block"
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/95635" on "croquetscores.com" is in a tournament called "Spring Open - Block"
+
+    Scenario: The block is in a tournament not played by teams
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/95635" on "croquetscores.com" is in a tournament not played by teams
+
+    Scenario: The block is in a tournament that starts and finishes as the old one did
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/95635" on "croquetscores.com" is in a tournament that starts and finishes as the tournament kept for "tournaments/13" on "croquetscores.com"
+
+    Scenario: The block is a block of that tournament
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/95635" on "croquetscores.com" is a block
+
+    Scenario: The block is not a competition of the tournament it was in
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no competition of the tournament kept for "tournaments/13" on "croquetscores.com" is called "Eastern"
+
+    Scenario: The block is not an error
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no error is kept for "croquetscores.com/blocks/95635"
+
+    Scenario: The block is said as corrected
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is of the type "teams"
+      And the tournament lists nothing
+      And the tournament lists "blocks/95635"
+      And the block "blocks/95635" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "Eastern"
+      And player 1 is in the competition
+      And player 1 represents "Lake Toxaway"
+      And player 2 is in the competition
+      And player 2 represents "High Hampton"
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "croquetscores.com/blocks/95635" is corrected as "ImportWholeTournaments.ImportedInATournamentOfItsOwn"
+
   Rule: A tournament the import names as Standard is brought over as one
 
     The old site kept some tournaments as played by teams that had no team

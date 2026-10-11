@@ -123,6 +123,18 @@ const asTeamMatch = (
   };
 };
 
+// Blocks of a tournament played by teams that are brought over as blocks of a
+// Standard tournament of their own, by the website and the document
+// (ImportWholeTournaments.feature): blocks/95635, Eastern, of the 2024
+// Mountain Challenge, a round robin of teams with no players of their own.
+const OWN_TOURNAMENT: ReadonlySet<string> = new Set([
+  "croquetscores.com/blocks/95635",
+]);
+
+// What follows the name of a tournament played by teams in the name of the
+// Standard tournament its blocks are brought over into.
+const BLOCK_SUFFIX = " - Block";
+
 // What a kind of competition is called in what is said of it.
 const KINDS: Readonly<Record<string, string>> = {
   Blocks: "block",
@@ -281,6 +293,9 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       );
     }
 
+    // The tournament of its own that the tournament's blocks were brought
+    // over into, made the first time one is.
+    let ownTournamentId: string | undefined;
     for (const tryAsTeamMatch of named) {
       let each: Named = tryAsTeamMatch;
       if (tryAsTeamMatch.original !== undefined) {
@@ -306,18 +321,51 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
           each = { ...tryAsTeamMatch, ...tryAsTeamMatch.original };
         }
       }
+      // Where it is a block of a tournament played by teams, which the site
+      // has no place for and which was not a team match, it is brought over
+      // into a Standard tournament made for it.
+      let tournamentId = id;
       try {
+        let toImport = each.document;
+        if (
+          OWN_TOURNAMENT.has(`${website}/${each.id}`.toLowerCase()) &&
+          isPlayedByTeams(setUp.TournamentType) &&
+          !isArchived(each.document)
+        ) {
+          ownTournamentId ??= await this.#ownTournament(read);
+          tournamentId = ownTournamentId;
+          toImport = {
+            ...each.document,
+            Tournament: {
+              ...(each.document as { Tournament: object }).Tournament,
+              Id: ownTournamentId,
+            },
+          };
+        }
         await each.importer.importDocument({
           website,
           id: each.id,
-          document: each.document,
+          document: toImport,
         });
+        if (tournamentId !== id) {
+          await this.#corrected(
+            website,
+            tournamentId,
+            document,
+            each,
+            "ImportWholeTournaments.ImportedInATournamentOfItsOwn",
+            `${(each.document as { Name?: string }).Name ?? each.id} was kept as a block of a tournament played by teams, which the site has no place for, and is brought over as a block of the Standard tournament ${document.Name}${BLOCK_SUFFIX}, made for it.`,
+          );
+        }
       } catch (failure) {
         // Kept with the tournament, which is over by now, and with what a
         // competition was called on the old site, since it never became one.
         // On the site, it is the tournament's page that can be read; on the
         // old site, a competition's own.
-        const tournament = await this.database.tournamentOf(website, id);
+        const tournament = await this.database.tournamentOf(
+          website,
+          tournamentId,
+        );
         const { Name: name, Slug: slug } = each.document as {
           Name?: unknown;
           Slug?: unknown;
@@ -344,6 +392,25 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         );
       }
     }
+  }
+
+  // Brings over, as a Standard tournament of its own, the tournament `read`
+  // was, called as it was with " - Block" after it and found at its slug
+  // followed by "-block"; and answers the document id it is kept under, which
+  // is the old tournament's followed by "/block".
+  async #ownTournament(read: ReadDocument<OldTournament>): Promise<string> {
+    const id = `${read.id}/block`;
+    await this.parts.tournament.importDocument({
+      website: read.website,
+      id,
+      document: {
+        ...read.document,
+        Name: `${read.document.Name}${BLOCK_SUFFIX}`,
+        Slug: `${read.document.Slug}-block`,
+        TournamentType: "standard",
+      },
+    });
+    return id;
   }
 
   // Says that `each`, or the tournament `id` itself where it is undefined,
