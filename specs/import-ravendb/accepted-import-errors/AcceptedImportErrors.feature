@@ -153,3 +153,44 @@ Feature: What the import accepted, said in a file
       And game 4 of "croquetscores.com/teammatches/360" of "2012/gc/world-team" on "croquetscores.com" is accepted as "ImportTeamMatches.ExpectedMatchesWorkedOut"
       When the file of accepted import errors is ended with 12 errors kept
       Then the file of accepted import errors says this import kept 1 import corrections
+
+  Rule: Once the import is finished what it said is in order of its code
+
+    What is said is written as it is found, so that an import that stops
+    partway through still says what it said before it stopped, and so is in
+    the order the import found it. Once the import is finished the file is
+    put in order of the code each is said under, so that all of one kind are
+    together, and those with the same code stay in the order they were found.
+
+    Scenario: What is said under codes found in another order is in order of its code
+      Given a file of accepted import errors of the scenario's own, for the new site at "https://croquetscores.com"
+      And the file of accepted import errors is begun
+      And game 1 of "croquetscores.com/blocks/30" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportKnockouts.Zebra"
+      And game 1 of "croquetscores.com/blocks/31" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      When the file of accepted import errors is ended with 0 errors kept
+      Then the file of accepted import errors says "ImportBlocks.Aardvark: croquetscores.com/blocks/31" before "ImportKnockouts.Zebra: croquetscores.com/blocks/30"
+
+    Scenario: What is said under the same code stays in the order it was found
+      Given a file of accepted import errors of the scenario's own, for the new site at "https://croquetscores.com"
+      And the file of accepted import errors is begun
+      And game 1 of "croquetscores.com/blocks/32" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      And game 1 of "croquetscores.com/knockouts/30" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      And game 1 of "croquetscores.com/blocks/31" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      When the file of accepted import errors is ended with 0 errors kept
+      Then the file of accepted import errors says "croquetscores.com/blocks/32" before "croquetscores.com/knockouts/30"
+
+    Scenario: What is said under the same code keeps its place among those found after
+      Given a file of accepted import errors of the scenario's own, for the new site at "https://croquetscores.com"
+      And the file of accepted import errors is begun
+      And game 1 of "croquetscores.com/blocks/32" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      And game 1 of "croquetscores.com/knockouts/30" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      And game 1 of "croquetscores.com/blocks/31" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportBlocks.Aardvark"
+      When the file of accepted import errors is ended with 0 errors kept
+      Then the file of accepted import errors says "croquetscores.com/knockouts/30" before "croquetscores.com/blocks/31"
+
+    Scenario: The file still says how many errors the import kept once it is in order
+      Given a file of accepted import errors of the scenario's own, for the new site at "https://croquetscores.com"
+      And the file of accepted import errors is begun
+      And game 1 of "croquetscores.com/blocks/30" of "2026/ac/spring-open" on "croquetscores.com" is accepted as "ImportKnockouts.Zebra"
+      When the file of accepted import errors is ended with 4 errors kept
+      Then the file of accepted import errors says "This import: 4 import errors, 1 accepted import errors."

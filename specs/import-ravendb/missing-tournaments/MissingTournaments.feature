@@ -36,3 +36,32 @@ Feature: The documents that name a missing tournament, said in a file
       When "croquetscores.com/TournamentPlayers/68718" is written as naming the missing tournament "tournaments/67856"
       And "croquetscores.com/TournamentPlayers/68719" is written as naming the missing tournament "tournaments/67857"
       Then the file of missing tournaments has the line "tournaments/67857 croquetscores.com/TournamentPlayers/68719"
+
+  Rule: Once the import is finished the documents are in order of their kind
+
+    The documents are written as they are found, so that an import that
+    stops partway through still says what it found. Once the import is
+    finished they are put in order of the kind of document each is, so that
+    all of one kind are together, as every TournamentPlayers document is, in
+    any case, and those of one kind stay in the order they were found.
+
+    Scenario: Documents of another kind found first come after
+      Given the file of missing tournaments is begun
+      And "croquetscores.com/TournamentPlayers/68718" is written as naming the missing tournament "tournaments/67856"
+      And "croquetscores.com/knockouts/51145" is written as naming the missing tournament "tournaments/67856"
+      When the file of missing tournaments is ended
+      Then the file of missing tournaments has the line "tournaments/67856 croquetscores.com/knockouts/51145" before the line "tournaments/67856 croquetscores.com/TournamentPlayers/68718"
+
+    Scenario: Documents of one kind stay in the order they were found
+      Given the file of missing tournaments is begun
+      And "croquetscores.com/knockouts/51147" is written as naming the missing tournament "tournaments/67857"
+      And "croquetscores.com/commentaries/23041" is written as naming the missing tournament "tournaments/67857"
+      And "croquetscores.com/knockouts/51145" is written as naming the missing tournament "tournaments/67856"
+      When the file of missing tournaments is ended
+      Then the file of missing tournaments has the line "tournaments/67857 croquetscores.com/knockouts/51147" before the line "tournaments/67856 croquetscores.com/knockouts/51145"
+
+    Scenario: The file is still headed Missing Tournaments once it is in order
+      Given the file of missing tournaments is begun
+      And "croquetscores.com/knockouts/51145" is written as naming the missing tournament "tournaments/67856"
+      When the file of missing tournaments is ended
+      Then the file of missing tournaments says "# Missing Tournaments"

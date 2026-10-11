@@ -421,6 +421,7 @@ try {
     kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
   await accepting.end(kept);
   await correcting.end(kept);
+  await missing.end();
 
   console.log(
     stopped

@@ -125,6 +125,7 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
    * follows ends with a blank line already.
    */
   async end(errors: number): Promise<void> {
+    await this.#putInOrder();
     await appendFile(
       this.path,
       `This import: ${counted(errors)} import errors, ${counted(this.#accepted)} ${this.saying.counted}.\n`,
@@ -141,6 +142,22 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
         `Old site: https://${accepted.website}/${accepted.oldSitePath}\n\n` +
         `${accepted.description}\n\n`,
     );
+  }
+
+  // The file with what it says in order of the code each is said under, so
+  // that all of one kind are together, and those of one code in the order they
+  // were found (a sort that keeps the order of equals).
+  async #putInOrder(): Promise<void> {
+    const said = await readFile(this.path, "utf8");
+    const [header = "", ...entries] = said.split(/^(?=## )/m);
+    const codeOf = (entry: string): string =>
+      /^## ([^:\n]*)/.exec(entry)?.[1] ?? "";
+    entries.sort((one, other) => {
+      const first = codeOf(one);
+      const second = codeOf(other);
+      return first < second ? -1 : first > second ? 1 : 0;
+    });
+    await writeFile(this.path, header + entries.join(""));
   }
 
   // How many things the file says were accepted, a heading each, or a line

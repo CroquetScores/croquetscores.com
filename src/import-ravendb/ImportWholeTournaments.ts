@@ -88,7 +88,49 @@ const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament =>
 // match, only a block.
 const STANDARD: ReadonlySet<string> = new Set([
   "croquetscores.com/tournaments/80204",
+  "croquetscores.com/tournaments/74867",
 ]);
+
+// Blocks of a tournament played by teams that are brought over as team
+// matches between the two teams their players represent, though they are not
+// named for them, by the website and the document
+// (ImportWholeTournaments.feature): blocks/109616, Phyllis Court '4+' v
+// Hurlingham, and blocks/110682, the Murphy Shield.
+const AS_TEAM_MATCH: ReadonlySet<string> = new Set([
+  "croquetscores.com/blocks/109616",
+  "croquetscores.com/blocks/110682",
+]);
+
+// Competitions left behind, by the website and the document, with why
+// (ImportWholeTournaments.feature): swisses/28068, the Confirmed Entries of
+// the Park CC Grand Prix Easter Teams Tournament, with no games.
+const LEFT_BEHIND_COMPETITIONS: ReadonlyMap<string, string> = new Map([
+  ["croquetscores.com/swisses/28068", "No games"],
+]);
+
+/**
+ * `document` named "A vs B" for the two teams its players represent, in the
+ * order they first appear; as it is where they do not represent exactly two.
+ */
+const namedForItsPlayersTeams = (document: object): object => {
+  const { Players } = document as {
+    Players?: {
+      _Players?: readonly { Name: string; Representing: string | null }[];
+    };
+  };
+  const teams: string[] = [];
+  for (const player of Players?._Players ?? []) {
+    const team = (player.Representing ?? "").trim();
+    if (team !== "" && !teams.includes(team.toLowerCase())) {
+      teams.push(team);
+    }
+  }
+  const distinct = [...new Set(teams.map((team) => team.toLowerCase()))];
+  const [one, other] = teams;
+  return distinct.length === 2 && one !== undefined && other !== undefined
+    ? { ...document, Name: `${one} vs ${other}` }
+    : document;
+};
 
 // Tournaments left behind with everything that names them, by the website
 // and the document, with why (ImportWholeTournaments.feature):
@@ -245,21 +287,28 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       this.parts.competitions.find(
         ({ collection }) => collection === "TeamMatches",
       );
-    const tried = (each: Named): Named =>
-      teamMatches !== undefined &&
-      isPlayedByTeams(setUp.TournamentType) &&
-      each.importer.collection in KINDS &&
-      !isArchived(each.document) &&
-      couldBeATeamMatch(
-        each.document as Parameters<typeof couldBeATeamMatch>[0],
-      )
+    const tried = (each: Named): Named => {
+      if (
+        teamMatches === undefined ||
+        !isPlayedByTeams(setUp.TournamentType) ||
+        !(each.importer.collection in KINDS) ||
+        isArchived(each.document)
+      ) {
+        return each;
+      }
+      // One the import names is named for its players' two teams first.
+      const named = AS_TEAM_MATCH.has(`${website}/${each.id}`.toLowerCase())
+        ? namedForItsPlayersTeams(each.document)
+        : each.document;
+      return couldBeATeamMatch(named as Parameters<typeof couldBeATeamMatch>[0])
         ? {
             ...each,
-            document: asTeamMatch(each.document, document),
+            document: asTeamMatch(named, document),
             importer: teamMatches,
             original: { document: each.document, importer: each.importer },
           }
         : each;
+    };
     const named = [
       ...players,
       ...this.#inListedOrder(document, competitions.flat()),
@@ -298,6 +347,21 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     let ownTournamentId: string | undefined;
     for (const tryAsTeamMatch of named) {
       let each: Named = tryAsTeamMatch;
+      // Left behind, and said as corrected, with why.
+      const leftBehind = LEFT_BEHIND_COMPETITIONS.get(
+        `${website}/${each.id}`.toLowerCase(),
+      );
+      if (leftBehind !== undefined) {
+        await this.#corrected(
+          website,
+          id,
+          document,
+          each,
+          "ImportWholeTournaments.CompetitionLeftBehind",
+          `${(each.document as { Name?: string }).Name ?? each.id} was left behind: ${leftBehind}.`,
+        );
+        continue;
+      }
       if (tryAsTeamMatch.original !== undefined) {
         // Tried as a team match. Where it is refused, whatever it kept is
         // rolled back with it, and it is brought over as what it was.

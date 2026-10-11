@@ -1,4 +1,4 @@
-import { appendFile, mkdir, rm, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
 /**
@@ -22,10 +22,14 @@ export interface MissingTournaments {
  * says only what the last import found, and writes each as it is found.
  */
 export class MissingTournamentsFile implements MissingTournaments {
+  // What is said, a line each, in the order it was found.
+  #said: string[] = [];
+
   constructor(private readonly path: string) {}
 
   /** Deletes what the last import said, and begins the file again. */
   async begin(): Promise<void> {
+    this.#said = [];
     await rm(this.path, { force: true });
     await mkdir(dirname(this.path), { recursive: true });
     await writeFile(
@@ -37,6 +41,26 @@ export class MissingTournamentsFile implements MissingTournaments {
   }
 
   async missing(tournamentId: string, documentId: string): Promise<void> {
-    await appendFile(this.path, `${tournamentId} ${documentId}\n`);
+    const line = `${tournamentId} ${documentId}\n`;
+    this.#said.push(line);
+    await appendFile(this.path, line);
+  }
+
+  /**
+   * Puts what was said in order of the kind of document each is, in any case,
+   * those of one kind in the order they were found, once the import is
+   * finished.
+   */
+  async end(): Promise<void> {
+    const kindOf = (line: string): string =>
+      (line.split(" ")[1]?.split("/")[1] ?? "").toLowerCase();
+    const ordered = [...this.#said].sort((one, other) => {
+      const first = kindOf(one);
+      const second = kindOf(other);
+      return first < second ? -1 : first > second ? 1 : 0;
+    });
+    const said = await readFile(this.path, "utf8");
+    const header = said.slice(0, said.length - this.#said.join("").length);
+    await writeFile(this.path, header + ordered.join(""));
   }
 }

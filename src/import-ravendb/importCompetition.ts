@@ -128,10 +128,18 @@ export const withWinnersFromScores = <TDocument extends OldCompetition>(
   readonly document: TDocument;
   readonly swapped: readonly OldGame[];
   readonly marked: readonly OldGame[];
+  readonly unmarked: readonly OldGame[];
+  readonly rounded: readonly OldGame[];
 } => {
   const swapped: OldGame[] = [];
   const marked: OldGame[] = [];
-  const games = document.Games._Games.map((game) => {
+  const unmarked: OldGame[] = [];
+  const rounded: OldGame[] = [];
+  const games = document.Games._Games.map((kept) => {
+    // A half point rounded up first, so that what follows is worked out from
+    // the scores the site will have.
+    const game = withHalfPointsRounded(kept);
+    if (game !== kept) rounded.push(kept);
     try {
       const winner = Score.read(game.Winner.Score._Score, website);
       const loser = Score.read(game.Loser.Score._Score, website);
@@ -146,6 +154,19 @@ export const withWinnersFromScores = <TDocument extends OldCompetition>(
           Loser: game.Winner,
         };
         swapped.push(put);
+        return put;
+      }
+      // Equal points and both marked: the old site's winner won it, and the
+      // loser's mark, which the site refuses, is taken off.
+      if (equal && winner.marked && loser.marked) {
+        const put: OldGame = {
+          ...game,
+          Loser: {
+            ...game.Loser,
+            Score: { ...game.Loser.Score, _Score: String(loser.points) },
+          },
+        };
+        unmarked.push(put);
         return put;
       }
       // Equal points and neither marked: the old site's winner won it, as
@@ -172,7 +193,91 @@ export const withWinnersFromScores = <TDocument extends OldCompetition>(
     document: { ...document, Games: { ...document.Games, _Games: games } },
     swapped,
     marked,
+    unmarked,
+    rounded,
   };
+};
+
+// `typed` with a fraction that is more than nothing rounded up to the next
+// whole number, and what follows kept, as "3.5w" to "4w"; nothing where it
+// has none.
+const roundedUp = (typed: string): string | undefined => {
+  const [, whole, fraction, rest] =
+    /^(\d+)\.(\d+)(.*)$/s.exec(typed.trim()) ?? [];
+  if (whole === undefined || fraction === undefined || rest === undefined) {
+    return undefined;
+  }
+  return /[1-9]/.test(fraction)
+    ? `${String(Number(whole) + 1)}${rest}`
+    : undefined;
+};
+
+// `game` with either score's half point rounded up, or `game` itself where
+// neither has one.
+const withHalfPointsRounded = (game: OldGame): OldGame => {
+  const winner = roundedUp(game.Winner.Score._Score);
+  const loser = roundedUp(game.Loser.Score._Score);
+  if (winner === undefined && loser === undefined) return game;
+  return {
+    ...game,
+    Winner: {
+      ...game.Winner,
+      Score: {
+        ...game.Winner.Score,
+        _Score: winner ?? game.Winner.Score._Score,
+      },
+    },
+    Loser: {
+      ...game.Loser,
+      Score: {
+        ...game.Loser.Score,
+        _Score: loser ?? game.Loser.Score._Score,
+      },
+    },
+  };
+};
+
+/**
+ * Says what was corrected of a document's scores: each rounded, taken the
+ * right way round, or marked (importCompetition.feature).
+ */
+export const saidOfScoresCorrected = async (
+  errors: DocumentErrors,
+  nameOf: (number: number) => string,
+  corrected: ReturnType<typeof withWinnersFromScores>,
+): Promise<void> => {
+  for (const game of corrected.rounded) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.HalfPointRoundedUp",
+      "was kept with a score written with a half point, which the site has no place for, and is brought over with it rounded up to the next whole number.",
+    );
+  }
+  for (const game of corrected.swapped) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.WinnerFromScore",
+      "was kept the other way round, and is brought over as won by the player who scored more.",
+    );
+  }
+  for (const game of corrected.marked) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.EqualScoreMarked",
+      "was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.",
+    );
+  }
+  for (const game of corrected.unmarked) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.LoserMarkRemoved",
+      "was kept on equal points with both scores marked, and is brought over with the loser's mark taken off, so that the player the old site said won it did.",
+    );
+  }
 };
 
 /**
@@ -378,10 +483,11 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   { website, id, document: read }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
-  const { document, swapped, marked } = withWinnersFromScores(
+  const scored = withWinnersFromScores(
     withItsLists(read),
     Website.from(website),
   );
+  const { document } = scored;
   const {
     unitOfWork,
     tournaments,
@@ -477,22 +583,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
     errors.added(competitionId);
-    for (const game of swapped) {
-      await errors.gameCorrected(
-        game,
-        nameOfIn(document),
-        "ImportCompetition.WinnerFromScore",
-        "was kept the other way round, and is brought over as won by the player who scored more.",
-      );
-    }
-    for (const game of marked) {
-      await errors.gameCorrected(
-        game,
-        nameOfIn(document),
-        "ImportCompetition.EqualScoreMarked",
-        "was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.",
-      );
-    }
+    await saidOfScoresCorrected(errors, nameOfIn(document), scored);
     for (const { code, says, what } of shaped.corrected ?? []) {
       await errors.corrected(what ?? "", code, `${errors.place} ${says}`);
     }

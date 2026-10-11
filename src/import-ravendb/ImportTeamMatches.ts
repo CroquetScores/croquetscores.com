@@ -21,6 +21,7 @@ import {
   type Instead,
   nameOfIn,
   type PutRight,
+  saidOfScoresCorrected,
   withItsLists,
   withWinnersFromScores,
 } from "./importCompetition.js";
@@ -254,10 +255,11 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     id,
     document: read,
   }: ReadDocument<TeamMatch>): Promise<void> {
-    const { document, swapped, marked } = withWinnersFromScores(
+    const scored = withWinnersFromScores(
       withItsLists(read),
       Website.from(website),
     );
+    const { document } = scored;
     const {
       unitOfWork,
       tournaments,
@@ -338,22 +340,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         at,
       );
       errors.added(competitionId);
-      for (const game of swapped) {
-        await errors.gameCorrected(
-          game,
-          nameOfIn(document),
-          "ImportCompetition.WinnerFromScore",
-          "was kept the other way round, and is brought over as won by the player who scored more.",
-        );
-      }
-      for (const game of marked) {
-        await errors.gameCorrected(
-          game,
-          nameOfIn(document),
-          "ImportCompetition.EqualScoreMarked",
-          "was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.",
-        );
-      }
+      await saidOfScoresCorrected(errors, nameOfIn(document), scored);
 
       // A player is on the team they represented, which they wrote as the
       // team match named it, or by the team's name here, or by either before

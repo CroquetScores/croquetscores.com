@@ -81,6 +81,25 @@ Then(
   },
 );
 
+When(
+  "the file of missing tournaments is ended",
+  async function (this: SpecWorld) {
+    await sayingOf(this).file.end();
+  },
+);
+
+Then(
+  "the file of missing tournaments has the line {string} before the line {string}",
+  async function (this: SpecWorld, first: string, second: string) {
+    const lines = (await contentOf(this)).split("\n");
+    const at = lines.indexOf(first);
+    const then = lines.indexOf(second);
+    assert.ok(at !== -1, `It does not have the line ${first}.`);
+    assert.ok(then !== -1, `It does not have the line ${second}.`);
+    assert.ok(at < then, `${first} is not before ${second}.`);
+  },
+);
+
 Then(
   "the file of missing tournaments has the line {string}",
   async function (this: SpecWorld, line: string) {
