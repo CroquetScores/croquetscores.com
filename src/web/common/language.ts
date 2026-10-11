@@ -18,6 +18,11 @@ export interface Language {
   readonly tag: string;
   /** Its name, written in itself, which is how a reader looks for it. */
   readonly name: string;
+  /**
+   * Which way it is written. Left out for the languages written left to right,
+   * which are nearly all, so that only one that is not has to say so.
+   */
+  readonly direction?: "rtl";
   readonly words: Words;
 }
 
@@ -38,6 +43,10 @@ export interface Speaking {
   /** Whether there are words for `key`, for what a page may or may not have. */
   readonly knows: (key: string) => boolean;
 }
+
+/** The `dir` attribute for a page in `language`, with its leading space, or nothing. */
+export const directionAttribute = (language: Language): string =>
+  language.direction === undefined ? "" : ` dir="${language.direction}"`;
 
 export const languageCookie = "language";
 
