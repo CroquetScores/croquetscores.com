@@ -372,6 +372,42 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             ? second
             : undefined;
 
+      // A player who represents what is neither team is of the team opposite
+      // their opponent's, where one of their games is against a player who
+      // represents one of the two (ImportTeamMatches.feature). Worked out
+      // again for as long as another is found, so that a player whose
+      // opponent was put right is put right too.
+      const ofTeam = new Map<number, Team>();
+      for (const player of document.Players._Players) {
+        const team = teamRepresented((player.Representing ?? "").trim());
+        if (team !== undefined && !isOldBye(player.Name)) {
+          ofTeam.set(player._Id, team);
+        }
+      }
+      const putRight = new Map<number, Team>();
+      for (let found = true; found;) {
+        found = false;
+        for (const player of document.Players._Players) {
+          if (isOldBye(player.Name) || ofTeam.has(player._Id)) continue;
+          for (const game of gamesInOrder(document.Games._Games)) {
+            const opponent =
+              game.Winner.PlayerId === player._Id
+                ? game.Loser.PlayerId
+                : game.Loser.PlayerId === player._Id
+                  ? game.Winner.PlayerId
+                  : undefined;
+            const theirs =
+              opponent === undefined ? undefined : ofTeam.get(opponent);
+            if (theirs === undefined) continue;
+            const opposite = theirs.id.equals(first.id) ? second : first;
+            ofTeam.set(player._Id, opposite);
+            putRight.set(player._Id, opposite);
+            found = true;
+            break;
+          }
+        }
+      }
+
       const players = new Map<number, TeamPlayerId>();
       const made: { readonly number: number; readonly id: TeamPlayerId }[] = [];
       // A player named as a bye is no player of a team, and is kept as the
@@ -396,7 +432,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             byesMade.push(player._Id);
             continue;
           }
-          const team = teamRepresented((player.Representing ?? "").trim());
+          const team = ofTeam.get(player._Id);
+          if (putRight.has(player._Id)) {
+            await errors.corrected(
+              `player ${String(player._Id)}`,
+              "ImportTeamMatches.TeamCorrected",
+              `Player ${nameOfIn(document)(player._Id)} in ${errors.place} was kept as representing ${(player.Representing ?? "").trim() === "" ? "no team" : (player.Representing ?? "").trim()}, which is neither team, and is brought over as a player of ${team?.name.toString() ?? ""}, the team opposite the player they played.`,
+            );
+          }
           // A number found again is the player it was, unless they are a
           // player of another team than the one they represent here: the old
           // site sometimes gave a number to two people, of two teams. Then

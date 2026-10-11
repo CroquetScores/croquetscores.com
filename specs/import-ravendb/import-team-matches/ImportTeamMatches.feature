@@ -687,6 +687,110 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then "games 2 and 3" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.SecondAndThirdReversed"
 
+  Rule: A player representing a team that is not in the match is of the team opposite their opponent's
+
+    A player's team was sometimes written wrong, as a team that is neither of
+    the match's two. A game is between a player of each team
+    (`addGame.feature`), so before the games are added, a player who
+    represents neither team and played a player who represents one of them is
+    of the other team: the one opposite their opponent's. Where their
+    opponent was put right the same way, so is a player who played them. A
+    player who played nobody of either team, or only players of neither, is
+    refused as they were. That is said as corrected
+    (`AcceptedImportErrors.feature`).
+
+    Ann Able represents New Zealand, and Ben Baker represents Australia, which
+    is not in the match, and played her.
+
+    Scenario: A player representing neither team is of the team opposite their opponent's
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ben Baker"
+
+    Scenario: A player put right is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: The game of a player put right is added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 1 game
+
+    Scenario: A player put right is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then "player 8" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.TeamCorrected"
+
+    Scenario: A player who played a player put right is put right too
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "Wales"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      And game 2 was won by player 8
+      And game 2 was lost by player 9
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Cat Cole"
+
+    Scenario: Two players who represent neither team are kept as errors
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Wales"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
+
   Rule: A game against a player already played is a game against the one not played
 
     The old sites kept many team matches whose two players met again in a
