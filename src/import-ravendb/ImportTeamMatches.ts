@@ -12,7 +12,7 @@ import { TestGroup } from "../domain/aggregates/tournaments/value-objects/TestGr
 import { charactersIn } from "../domain/common/charactersIn.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Website } from "../domain/common/Website.js";
-import { DocumentErrors } from "./AcceptedImportErrors.js";
+import { DocumentErrors, oldSitePathOf } from "./AcceptedImportErrors.js";
 import {
   AGAINST_A_BYE,
   type ImportingCompetitions,
@@ -34,6 +34,7 @@ import type {
   Game as OldGame,
   TeamMatch,
 } from "./ravendb-models/Competition.js";
+import type { ImportErrorsNote } from "./ImportErrorsNote.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfImported } from "./bestOfImported.js";
 import { isOldBye } from "./ImportTournamentPlayers.js";
@@ -248,7 +249,11 @@ const shortNameApart = (
 export class ImportTeamMatches implements Importer<TeamMatch> {
   readonly collection = "TeamMatches";
 
-  constructor(private readonly importing: ImportingCompetitions) {}
+  constructor(
+    private readonly importing: ImportingCompetitions,
+    /** What says, in a note, the games between players of one team. */
+    private readonly notes?: ImportErrorsNote,
+  ) {}
 
   async importDocument({
     website,
@@ -270,6 +275,12 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     } = this.importing;
     const documentId = `${website}/${id}`;
     if (document.IsArchived) return;
+
+    // A game between two players of one team is said in a note of the
+    // tournament's, by whoever writes notes, where there is one to write
+    // them; otherwise it is kept as an error.
+    const writer = await this.notes?.writer();
+    const sameTeam: OldGame[] = [];
 
     await unitOfWork.inTransaction(async () => {
       const tournamentDocument = document.Tournament.Id;
@@ -310,6 +321,8 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         website,
         tournament,
         { name: document.Name, oldSlug: document.Slug },
+        undefined,
+        writer === undefined ? undefined : (game) => sameTeam.push(game),
       );
 
       // Done as the tournament's first manager, who created it, when it was
@@ -742,6 +755,48 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       await tournaments.save(tournament);
       await competitions.save(competition);
     });
+
+    if (
+      this.notes !== undefined &&
+      writer !== undefined &&
+      sameTeam.length > 0
+    ) {
+      const nameOf = nameOfIn(document);
+      const players = new Map(
+        document.Players._Players.map((player) => [player._Id, player]),
+      );
+      // "Ann Able (New Zealand) 26", the player as the old site had them.
+      const said = (number: number, score: string): string => {
+        const team = (players.get(number)?.Representing ?? "").trim();
+        return `${nameOf(number)}${team === "" ? "" : ` (${team})`} ${score.trim()}`;
+      };
+      await this.notes.add(
+        website,
+        document.Tournament.Id,
+        document.Name,
+        sameTeam.map(
+          (game) =>
+            `${said(game.Winner.PlayerId, game.Winner.Score._Score)} beat ${said(game.Loser.PlayerId, game.Loser.Score._Score)}`,
+        ),
+        writer,
+      );
+      const where = await database.tournamentOf(
+        website,
+        document.Tournament.Id,
+      );
+      await correcting.accept({
+        documentId,
+        website,
+        newSitePath: where?.tournamentAddress,
+        oldSitePath: oldSitePathOf(
+          where?.tournamentAddress ?? "",
+          document.Slug,
+        ),
+        what: "",
+        code: "ImportTeamMatches.ImportErrorsNoted",
+        description: `${document.Name} had ${String(sameTeam.length)} ${sameTeam.length === 1 ? "game" : "games"} between players of the same team, which a test cannot hold, and they are said in the note Import Errors of the tournament, which croquetscores@gmail.com is made a manager to write.`,
+      });
+    }
   }
 
   // The tournament's team the old sites called `written`, made the first time

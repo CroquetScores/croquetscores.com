@@ -63,8 +63,8 @@ export class SeeNotes {
     kind: string,
     swiss: CompetitionId,
     writer: AccountId,
-  ): Promise<void> {
-    await this.unitOfWork.inTransaction(async () => {
+  ): Promise<string> {
+    return this.unitOfWork.inTransaction(async () => {
       const tournament = await tournamentBecome(
         this.database,
         this.tournaments,
@@ -82,7 +82,8 @@ export class SeeNotes {
       const path = newSitePathOf(tournament, swiss);
       // At the website the tournament was on, croquetscores.com or
       // gateballscores.com, whichever the import is bringing it over from.
-      const address = `https://${website}/${path ?? tournament.address.toString()}`;
+      const where = path ?? tournament.address.toString();
+      const address = `https://${website}/${where}`;
       await this.notes.save(
         ManagerNote.add(
           ManagerNoteId.create(),
@@ -102,6 +103,7 @@ export class SeeNotes {
           at,
         ),
       );
+      return where;
     });
   }
 }

@@ -577,11 +577,14 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         document: {
           ...(each.document as OldCompetition),
           Name: `${name}${SEE_NOTES_SUFFIX}`,
+          // A game the Swiss refuses is said as corrected, not kept as an
+          // error: the competition's own refusals are what were found.
+          InSeeNotes: true,
         },
       });
       const made = await this.database.findCompetitionOf(website, swissId);
       if (made === undefined) return;
-      await this.seeNotes.write(
+      const path = await this.seeNotes.write(
         website,
         id,
         name,
@@ -589,6 +592,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         CompetitionId.from(made.competitionId),
         writer,
       );
+      // Said at the Swiss's page, which is where the games are.
       await this.#corrected(
         website,
         id,
@@ -596,11 +600,17 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         each,
         "ImportWholeTournaments.SeeNotes",
         `${name} was a ${kind} that could not be brought over as one, and its games are in the Swiss ${name}${SEE_NOTES_SUFFIX}, as a note of the tournament says.`,
+        path,
       );
     } catch (failure) {
-      await this.database.recordError(
-        `${website}/${swissId}`,
-        describedFailure(failure),
+      // Not an error: what could not be made is said as corrected.
+      await this.#corrected(
+        website,
+        id,
+        document,
+        each,
+        "ImportWholeTournaments.SeeNotesNotMade",
+        `${name} was a ${kind} that could not be brought over as one, and the Swiss ${name}${SEE_NOTES_SUFFIX} for its games could not be made: ${describedFailure(failure)}`,
       );
     }
   }
@@ -659,13 +669,15 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     each: Named | undefined,
     code: string,
     description: string,
+    // Where it is on the site where that is not its tournament's page.
+    newSitePath?: string,
   ): Promise<void> {
     const tournament = await this.database.tournamentOf(website, id);
     const slug = (each?.document as { Slug?: unknown } | undefined)?.Slug;
     await this.correcting.accept({
       documentId: `${website}/${each?.id ?? id}`,
       website,
-      newSitePath: tournament?.tournamentAddress,
+      newSitePath: newSitePath ?? tournament?.tournamentAddress,
       oldSitePath: oldSitePathOf(
         oldAddressOf(document),
         typeof slug === "string" ? slug : undefined,

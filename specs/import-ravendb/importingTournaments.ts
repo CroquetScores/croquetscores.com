@@ -14,6 +14,7 @@ import { ProjectingEventStore } from "../../src/application/common/ProjectingEve
 import { CommentariesByTournament } from "../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { ManagerNotesByTournament } from "../../src/infrastructure/read-models/ManagerNotesByTournament.js";
 import { SeeNotes } from "../../src/import-ravendb/SeeNotes.js";
+import { ImportErrorsNote } from "../../src/import-ravendb/ImportErrorsNote.js";
 import { ManagerNote } from "../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
 import type { ManagerNoteId } from "../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import { Account } from "../../src/domain/aggregates/accounts/Account.js";
@@ -340,7 +341,17 @@ export const importingOf = (world: SpecWorld): Importing => {
   const blocks = new ImportBlocks(importing);
   const knockouts = new ImportKnockouts(importing);
   const swisses = new ImportSwisses(importing);
-  const teamMatches = new ImportTeamMatches(importing);
+  const teamMatches = new ImportTeamMatches(
+    importing,
+    new ImportErrorsNote(
+      unitOfWork,
+      tournaments,
+      managerNotes,
+      managerNotesByTournament,
+      database,
+      seeNotes,
+    ),
+  );
   const commentaryImporter = new ImportCommentaries(
     unitOfWork,
     tournaments,
@@ -1209,6 +1220,18 @@ Then(
         (corrected) => corrected.what === what && corrected.code === code,
       ),
       `${what} of ${documentId} is not corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "what is corrected of {string} is at {string} on the new site",
+  function (this: SpecWorld, documentId: string, newSitePath: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(said.length > 0, `Nothing of ${documentId} is corrected.`);
+    assert.ok(
+      said.some((corrected) => corrected.newSitePath === newSitePath),
+      `Nothing of ${documentId} is corrected at ${newSitePath}: ${inspect(said)}`,
     );
   },
 );

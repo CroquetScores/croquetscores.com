@@ -829,6 +829,69 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the note called "A Block" of the tournament kept for "tournaments/13" on "croquetscores.com" says "email croquetscores@gmail.com"
 
+    Scenario: A competition said to be in a Swiss is said as corrected at the Swiss
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 2
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then what is corrected of "croquetscores.com/blocks/30" is at "2014/ac/spring-open-13/competitions/a-block-see-notes" on the new site
+
+    Scenario: A game the Swiss refuses is not kept as an error
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no error is kept for "croquetscores.com/blocks/30/see-notes"
+
+    Scenario: A game the Swiss refuses is said as corrected
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Block"
+      And the block's matches are the best of 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 1
+      And game 2 was lost by player 2
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      And game 3's winner scored "21"
+      And game 3's loser scored "7"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then "game 3" of "croquetscores.com/blocks/30/see-notes" is corrected as "ImportCompetition.RefusedInSeeNotes"
+
     Scenario: A competition said to be in a Swiss is said as corrected
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And a tournament "tournaments/13" on "croquetscores.com"

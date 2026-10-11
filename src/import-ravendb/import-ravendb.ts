@@ -64,6 +64,7 @@ import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
 import { ImportDatabase } from "./ImportDatabase.js";
 import { ImportedAccounts } from "./ImportedAccounts.js";
+import { ImportErrorsNote } from "./ImportErrorsNote.js";
 import { ImportKnockouts } from "./ImportKnockouts.js";
 import { ImportSwisses } from "./ImportSwisses.js";
 import { ImportTeamMatches } from "./ImportTeamMatches.js";
@@ -264,6 +265,16 @@ try {
     managerNotesByTournament,
     database,
   );
+  // What says, in a note, the games between players of one team, which the
+  // site has no place for in a test.
+  const importErrorsNote = new ImportErrorsNote(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
+    seeNotes,
+  );
   const importing = {
     unitOfWork,
     tournaments,
@@ -302,7 +313,7 @@ try {
       new ImportBlocks(importing),
       new ImportKnockouts(importing),
       new ImportSwisses(importing),
-      new ImportTeamMatches(importing),
+      new ImportTeamMatches(importing, importErrorsNote),
     ],
     commentaries: new ImportCommentaries(
       unitOfWork,

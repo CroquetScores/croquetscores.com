@@ -55,6 +55,13 @@ export interface Competition {
    * cannot be (ImportWholeTournaments.feature).
    */
   readonly AllOrNothingAs?: string;
+  /**
+   * Not kept by the old sites: set by the import on the Swiss that holds the
+   * games of a competition it could not bring over, so that a game it
+   * refuses is said as corrected rather than kept as an error
+   * (ImportWholeTournaments.feature).
+   */
+  readonly InSeeNotes?: boolean;
 }
 
 /** A competition where every player meets every other. */

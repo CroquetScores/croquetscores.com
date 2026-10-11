@@ -226,6 +226,18 @@ Then(
 );
 
 Then(
+  "the tournament kept for {string} on {string} has {int} note(s)",
+  async function (this: SpecWorld, id: string, website: string, count: number) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    const { managerNotesByTournament } = importingOf(this);
+    const headings = await this.asARequest(() =>
+      managerNotesByTournament.of(tournament.id),
+    );
+    assert.equal(headings.length, count);
+  },
+);
+
+Then(
   "the tournament kept for {string} on {string} has no note",
   async function (this: SpecWorld, id: string, website: string) {
     const tournament = await tournamentKeptFor(this, id, website);
@@ -234,6 +246,33 @@ Then(
       managerNotesByTournament.of(tournament.id),
     );
     assert.deepEqual(headings, []);
+  },
+);
+
+Then(
+  "the note called {string} of the tournament kept for {string} on {string} does not say {string}",
+  async function (
+    this: SpecWorld,
+    title: string,
+    id: string,
+    website: string,
+    says: string,
+  ) {
+    const { heading, managerNotes } = await noteCalled(
+      this,
+      id,
+      website,
+      title,
+    );
+    assert.ok(heading !== undefined, `It has no note called ${title}.`);
+    const note = await this.asARequest(() =>
+      managerNotes.load(ManagerNoteId.from(heading.id)),
+    );
+    const description = note?.description?.toString() ?? "";
+    assert.ok(
+      !description.includes(says),
+      `The note says ${says}: ${description}`,
+    );
   },
 );
 

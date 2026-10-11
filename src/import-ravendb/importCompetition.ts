@@ -586,6 +586,8 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournament,
       { name: name.toString(), oldSlug: document.Slug },
       dry,
+      undefined,
+      document.InSeeNotes === true,
     );
 
     // Done as the tournament's first manager, who created it, when it was

@@ -322,6 +322,13 @@ export class DocumentErrors {
     private readonly competition?: Omit<CompetitionOf, "newSitePath">,
     // Where it is being tried first, nothing is kept, only found out.
     private readonly dry?: DryRun,
+    // Where a game between two players of one team is said in a note of the
+    // tournament's rather than kept as an error (ImportTeamMatches.feature).
+    private readonly sameTeam?: (game: OldGame) => void,
+    // Where the document is the Swiss that holds the games of a competition
+    // that could not be brought over, a game it refuses is said as corrected,
+    // not kept as an error.
+    private readonly inSeeNotes = false,
   ) {}
 
   /** That the competition the document was is now `id` of the tournament. */
@@ -367,6 +374,14 @@ export class DocumentErrors {
       }
       return;
     }
+    if (this.inSeeNotes && accepted === undefined) {
+      await this.corrected(
+        what,
+        "ImportCompetition.RefusedInSeeNotes",
+        said?.refused(failure) ?? `${what}: ${describedFailure(failure)}`,
+      );
+      return;
+    }
     if (accepted === undefined) {
       await this.errors.recordError(
         this.documentId,
@@ -390,6 +405,18 @@ export class DocumentErrors {
     failure: unknown,
   ): Promise<void> {
     const said = gameSaid(gameOf(game, nameOf), this.place);
+    if (
+      this.sameTeam !== undefined &&
+      (failure as { code?: unknown } | null)?.code === "Competition.SameTeam"
+    ) {
+      this.sameTeam(game);
+      await this.corrected(
+        `game ${String(game.Id)}`,
+        "ImportTeamMatches.SameTeamNoted",
+        `${said} was not brought over, since its players play for the same team, and is said in a note of the tournament's.`,
+      );
+      return;
+    }
     await this.refused(`game ${String(game.Id)}`, failure, {
       refused: (refusal) => `${said} because ${reasonOf(refusal)}.`,
       accepted: (why) =>
