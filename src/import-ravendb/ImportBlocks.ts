@@ -46,8 +46,23 @@ const decidedAfter = (played: readonly Game[], bestOf: number): boolean => {
 export const secondAndThirdReversed = (
   games: readonly Game[],
   bestOf: number,
+): { ordered: Game[]; reversed: readonly [Game, Game][] } =>
+  secondAndThirdReversedIn(
+    [...games].sort((one, other) => one.Id - other.Id),
+    bestOf,
+  );
+
+/**
+ * As `secondAndThirdReversed`, for `games` already in the order they are to be
+ * added in, which is kept apart from the second and third games of each pair
+ * it puts the other way round: a team match is added in its own order
+ * (ImportTeamMatches.feature).
+ */
+export const secondAndThirdReversedIn = (
+  games: readonly Game[],
+  bestOf: number,
 ): { ordered: Game[]; reversed: readonly [Game, Game][] } => {
-  const ordered = [...games].sort((one, other) => one.Id - other.Id);
+  const ordered = [...games];
   const byPair = new Map<string, number[]>();
   ordered.forEach((game, at) => {
     const pair = [game.Winner.PlayerId, game.Loser.PlayerId]

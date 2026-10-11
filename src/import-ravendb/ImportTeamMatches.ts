@@ -13,6 +13,7 @@ import { charactersIn } from "../domain/common/charactersIn.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Website } from "../domain/common/Website.js";
 import { DocumentErrors, oldSitePathOf } from "./AcceptedImportErrors.js";
+import { secondAndThirdReversedIn } from "./ImportBlocks.js";
 import {
   AGAINST_A_BYE,
   type ImportingCompetitions,
@@ -733,6 +734,32 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           made === undefined ? false : instead(loser, made),
         );
       };
+      // The order they are added in: as the old site numbered them, or the
+      // order the import names; and then each pair's second and third games
+      // the other way round where the third would come after their match was
+      // decided and the other way round would all be accepted, as it is for a
+      // block (ImportTeamMatches.feature).
+      const bestOfGames = bestOfImported(document.BestOf).games;
+      const inOrderToAdd = (games: readonly OldGame[]): OldGame[] =>
+        secondAndThirdReversedIn(
+          inOrder === undefined
+            ? gamesInOrder(games)
+            : reordered(games, inOrder),
+          bestOfGames,
+        ).ordered;
+      const { reversed } = secondAndThirdReversedIn(
+        inOrder === undefined
+          ? gamesInOrder(gamesPlayed)
+          : reordered(gamesPlayed, inOrder),
+        bestOfGames,
+      );
+      for (const [second, third] of reversed) {
+        await errors.corrected(
+          `games ${String(second.Id)} and ${String(third.Id)}`,
+          "ImportTeamMatches.SecondAndThirdReversed",
+          `${errors.place} has the second and third games between ${nameOf(second.Winner.PlayerId)} and ${nameOf(second.Loser.PlayerId)}, games ${String(second.Id)} and ${String(third.Id)}, added the other way round, since the third came after their match of the best of ${String(bestOfGames)} was decided.`,
+        );
+      }
       await addGames(
         errors,
         competition,
@@ -742,9 +769,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         () => told,
         Website.from(website),
         by,
-        inOrder === undefined
-          ? gamesInOrder
-          : (games) => reordered(games, inOrder),
+        (games) => inOrderToAdd(games),
         undefined,
         async (game, failure, toCome) => {
           const put = await opponentCorrected(game, failure, toCome);

@@ -571,6 +571,122 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then "teammatches/50" on "croquetscores.com" is kept as a test
 
+  Rule: A match's games are added so that none comes after the match was decided
+
+    A pair's match of the best of 3 is decided by the second win, and the site
+    refuses a game after it (`addGame.feature`). A match was sometimes entered
+    out of order: a player won two games, and the game the other player won
+    was entered, after, as the third, when it was the second played. So
+    before any game of a match is added, each pair's games are tested in the
+    order they are to be added in: where the third would come after the first
+    two decided the match, and the second and third the other way round would
+    all be accepted, they are added the other way round. That is said as
+    corrected (`AcceptedImportErrors.feature`).
+
+    Nadine El Manoufy & Mostafa Eissa beat Ghada Karam & Shukry Aziz 7 to 4
+    and 7 to 5, and lost to them 4 to 7 in the game entered third, which was
+    the second played.
+
+    Scenario: The third game of a match already decided is added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 3 games
+
+    Scenario: The game the other pair won is added second
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then the second game of the test kept for "teammatches/50" on "croquetscores.com" was won by "Ghada Karam & Shukry Aziz"
+
+    Scenario: The game added the other way round is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: The game added the other way round is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then "games 2 and 3" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.SecondAndThirdReversed"
+
   Rule: A game against a player already played is a game against the one not played
 
     The old sites kept many team matches whose two players met again in a
@@ -984,7 +1100,7 @@ Feature: Importing the old sites' team matches
     Scenario: The games of a meeting again in a match of more than one game are all against one player made for it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
-      And the team match's matches were the best of 3
+      And the team match's matches were the best of 2
       And player 1 is in the team match
       And player 1 is called "Ann Able"
       And player 1 represents "New Zealand"
