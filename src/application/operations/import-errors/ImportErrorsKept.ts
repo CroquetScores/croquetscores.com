@@ -2,9 +2,9 @@ import { Query } from "../../common/Query.js";
 import type { KeptImportError } from "../../services/KeptImportErrors.js";
 
 /**
- * The errors the import kept, each as the document's id and the first line of
- * its message, in alphabetical order of that line, as the account the reader
- * is signed in to lists them (ImportErrorsKept.feature).
+ * The documents the import refused, each as the document's id and the first
+ * line of the first error kept against it, in order of the documents' ids, as
+ * the account the reader is signed in to lists them (ImportErrorsKept.feature).
  *
  * Only an administrator can ask: anybody else is refused with
  * `Account.NotAnAdministrator`.

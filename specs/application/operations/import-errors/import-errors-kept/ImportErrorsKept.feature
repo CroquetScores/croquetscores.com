@@ -4,16 +4,16 @@ Feature: The documents the import refused, as an administrator lists them
   The import from the old sites keeps a document it refused, with why
   (`ImportDatabase.feature`). An administrator lists them to see what was
   left behind (`importErrors.feature`), so the application answers with a row
-  for each error kept, which is the document's id and the first line of the
-  error's message, with what went wrong said for a person where the import
-  said it so. The whole message is for the page of the one document
-  (`ImportErrorKept.feature`): a message runs to many lines, and a list of
-  them would be read down for its first.
+  for each document refused, which is the document's id and the first line of
+  the first error kept against it, with what went wrong said for a person
+  where the import said it so. A document refused more than once is one row,
+  and every error kept against it is for the page of the one document
+  (`ImportErrorKept.feature`), whole: a message runs to many lines, and a list
+  of them would be read down for its first.
 
-  The rows are answered in alphabetical order of that first line, so that
-  documents refused for the same reason are together. Rows with the same first
-  line are answered by their document ids, so that the order is the same every
-  time it is asked for.
+  The rows are answered in order of their documents' ids, so that the order is
+  the same every time it is asked for, and a document is found where its id
+  puts it.
 
   The errors are kept in a table of Postgres's own, which the site makes with
   its other tables, so that a site the import has never run on answers none
@@ -29,7 +29,7 @@ Feature: The documents the import refused, as an administrator lists them
     And "admin@example.com" has been given the role "Administrator"
     And "someone@example.com" has an account, confirmed, called "Sam Someone"
 
-  Rule: A row is answered for each error kept
+  Rule: A row is answered for each document refused
 
     Scenario: An error kept is answered with its document's id
       Given the import refused the document "users/1-A" with "No email address"
@@ -46,6 +46,18 @@ Feature: The documents the import refused, as an administrator lists them
       And the import refused the document "users/2-A" with "No name"
       When the reader signed in to the account for "admin@example.com" lists the import errors
       Then 2 rows are answered
+
+    Scenario: Two errors kept against one document are one row
+      Given the import refused the document "users/1-A" with "No email address"
+      And the import refused the document "users/1-A" with "No name"
+      When the reader signed in to the account for "admin@example.com" lists the import errors
+      Then 1 row is answered
+
+    Scenario: A document refused twice is answered with the first error kept
+      Given the import refused the document "users/1-A" with "No email address"
+      And the import refused the document "users/1-A" with "No name"
+      When the reader signed in to the account for "admin@example.com" lists the import errors
+      Then the first row answered has the first line "No email address"
 
     Scenario: Nothing kept answers no rows
       When the reader signed in to the account for "admin@example.com" lists the import errors
@@ -86,24 +98,24 @@ Feature: The documents the import refused, as an administrator lists them
       When the reader signed in to the account for "admin@example.com" lists the import errors
       Then the first row answered has the first line "No email address"
 
-  Rule: The rows are answered in alphabetical order of the first line
+  Rule: The rows are answered in order of their documents' ids
 
-    Scenario: The rows are answered by their first lines
-      Given the import refused the document "users/1-A" with "No name"
-      And the import refused the document "users/2-A" with "Bad date"
+    Scenario: The rows are answered by their document ids
+      Given the import refused the document "users/2-A" with "Bad date"
+      And the import refused the document "users/1-A" with "No name"
       When the reader signed in to the account for "admin@example.com" lists the import errors
-      Then the first row answered is for the document "users/2-A"
+      Then the first row answered is for the document "users/1-A"
 
-    Scenario: A second line does not change the order
-      Given the import refused the document "users/1-A" with "Bad date" then "zzz"
-      And the import refused the document "users/2-A" with "Bad date" then "aaa"
-      And the import refused the document "users/3-A" with "A different reason"
+    Scenario: What the message says does not change the order
+      Given the import refused the document "users/1-A" with "Zzz"
+      And the import refused the document "users/2-A" with "Aaa"
       When the reader signed in to the account for "admin@example.com" lists the import errors
-      Then the first row answered is for the document "users/3-A"
+      Then the first row answered is for the document "users/1-A"
 
-    Scenario: Rows with the same first line are answered by their document ids
+    Scenario: The order is of ids, not of when they were kept
       Given the import refused the document "users/2-A" with "Bad date"
       And the import refused the document "users/1-A" with "Bad date"
+      And the import refused the document "users/2-A" with "Another"
       When the reader signed in to the account for "admin@example.com" lists the import errors
       Then the first row answered is for the document "users/1-A"
 
