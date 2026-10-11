@@ -955,6 +955,206 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Block"
 
+  Rule: A knockout is brought over whole or as a Swiss, not in part
+
+    A knockout of a tournament whose competitions are kept in a Swiss where
+    they cannot be brought over (the rule above) is tried first, before the
+    competition is made. Where every game would be taken, it is brought over
+    as a knockout. Where the site would refuse any of its games, or its draw
+    cannot be worked out, it is not made at all, no error is kept for it, and
+    its games are in its Swiss, so that nobody reads a draw with games
+    missing beside a Swiss that has them all. That is said as corrected, with
+    the first game refused (`AcceptedImportErrors.feature`). A knockout of a
+    tournament that started in 2026, which is given no Swiss, is brought over
+    in part as it always was.
+
+    Scenario: A knockout whose games would all be taken is brought over as a knockout
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" is a knockout
+
+    Scenario: A knockout whose games would all be taken has no Swiss
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 3
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Draw"
+
+    Scenario: A knockout with a game the site would refuse is not made
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no competition of the tournament kept for "tournaments/13" on "croquetscores.com" is called "A Draw"
+
+    Scenario: A knockout with a game the site would refuse is a Swiss
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Draw - See Notes"
+
+    Scenario: A knockout with a game the site would refuse is not kept as an error
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
+    Scenario: A knockout with a game the site would refuse is said as corrected, and why
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then what is corrected of "croquetscores.com/knockouts/30" names "could not be brought over whole as a knockout"
+
+    Scenario: A knockout that cannot be drawn is a Swiss, and is said as corrected
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 2
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Draw - See Notes"
+
+    Scenario: A knockout of a tournament that started in 2026 is brought over in part
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the tournament started on "2026-01-01T00:00:00.0000000"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the error kept for "croquetscores.com/knockouts/30" says "Game.SamePlayer"
+
+    Scenario: A knockout is brought over in part where no user was brought over to write the note
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "knockouts/30"
+      And the knockout "knockouts/30" of "tournaments/13" on "croquetscores.com"
+      And the competition is called "A Draw"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And player 4 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      And game 2 was won by player 3
+      And game 2 was lost by player 4
+      And game 3 was won by player 1
+      And game 3 was lost by player 1
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the error kept for "croquetscores.com/knockouts/30" says "Game.SamePlayer"
+
   Rule: A tournament with a score marked in text as a tie allows drawn games
 
     Some scorers wrote a game on equal points as a tie in words or a sign, as

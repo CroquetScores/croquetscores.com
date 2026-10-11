@@ -292,6 +292,17 @@ export const newSitePathOf = (
 };
 
 /**
+ * What a document that is brought over whole or not at all found out when it
+ * was tried first, in a transaction rolled back (importCompetition.ts): what
+ * the site would have refused of it, each said for a person, and whether it
+ * was left behind because it could not be worked out.
+ */
+export class DryRun {
+  readonly refused: string[] = [];
+  leftBehind = false;
+}
+
+/**
  * What goes wrong with, and what is accepted of, one document of a tournament
  * that has been brought over: an error accepted for it (ACCEPTED_ERRORS) is
  * said as accepted, with the tournament, and any other is kept as an error
@@ -309,6 +320,8 @@ export class DocumentErrors {
     private readonly website: string,
     private readonly tournament: Tournament,
     private readonly competition?: Omit<CompetitionOf, "newSitePath">,
+    // Where it is being tried first, nothing is kept, only found out.
+    private readonly dry?: DryRun,
   ) {}
 
   /** That the competition the document was is now `id` of the tournament. */
@@ -346,6 +359,14 @@ export class DocumentErrors {
    */
   async refused(what: string, failure: unknown, said?: Said): Promise<void> {
     const accepted = acceptedErrorOf(this.documentId, failure);
+    if (this.dry !== undefined) {
+      if (accepted === undefined) {
+        this.dry.refused.push(
+          said?.refused(failure) ?? `${what}: ${describedFailure(failure)}`,
+        );
+      }
+      return;
+    }
     if (accepted === undefined) {
       await this.errors.recordError(
         this.documentId,
@@ -434,6 +455,7 @@ export class DocumentErrors {
     code: string,
     description: string,
   ): Promise<void> {
+    if (this.dry !== undefined) return;
     await this.accepting.accept(this.#said(what, code, description));
   }
 
@@ -446,7 +468,27 @@ export class DocumentErrors {
     code: string,
     description: string,
   ): Promise<void> {
+    if (this.dry !== undefined) return;
     await this.correcting.accept(this.#said(what, code, description));
+  }
+
+  /**
+   * Says, in what was corrected, that the document could not be brought over
+   * whole as a `kind`, and why: what was refused of it in the trial, or that
+   * its draw could not be worked out. Said even in a trial, which is what
+   * finds out.
+   */
+  async notBroughtOverAs(kind: string, dry: DryRun): Promise<void> {
+    const why = dry.leftBehind
+      ? "its draw cannot be worked out from its players and games"
+      : `${String(dry.refused.length)} of its games would be refused, the first being: ${dry.refused[0] ?? ""}`;
+    await this.correcting.accept(
+      this.#said(
+        "",
+        "ImportCompetition.NotBroughtOverWhole",
+        `${this.place} could not be brought over whole as a ${kind}: ${why}`,
+      ),
+    );
   }
 
   #said(what: string, code: string, description: string): Accepted {

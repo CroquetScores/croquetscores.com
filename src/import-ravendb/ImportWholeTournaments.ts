@@ -462,6 +462,15 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
             },
           };
         }
+        // A knockout whose games are kept in a Swiss where it cannot be
+        // brought over is tried first, and brought over whole or not at all.
+        if (
+          each.importer.collection === "Knockouts" &&
+          tournamentId === id &&
+          (await this.#isForNotes(read, setUp, each))
+        ) {
+          toImport = { ...toImport, AllOrNothing: true };
+        }
         await each.importer.importDocument({
           website,
           id: each.id,
@@ -536,17 +545,10 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     const swisses = this.parts.competitions.find(
       ({ collection }) => collection === "Swisses",
     );
-    const games =
-      (each.document as { Games?: { _Games?: readonly unknown[] } }).Games
-        ?._Games ?? [];
     if (
-      this.seeNotes === undefined ||
       swisses === undefined ||
       kind === undefined ||
-      isArchived(each.document) ||
-      isPlayedByTeams(setUp.TournamentType) ||
-      document.Start >= BEFORE_NOTES ||
-      games.length === 0
+      !(await this.#isForNotes(read, setUp, each))
     ) {
       return;
     }
@@ -554,8 +556,8 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       (await this.database.findCompetitionOf(website, each.id)) === undefined ||
       (await this.database.hasErrorsFor(`${website}/${each.id}`));
     if (!cannot) return;
-    const writer = await this.seeNotes.writer();
-    if (writer === undefined) return;
+    const writer = await this.seeNotes?.writer();
+    if (this.seeNotes === undefined || writer === undefined) return;
 
     const name = (each.document as { Name?: string }).Name ?? each.id;
     const swissId = `${each.id}/see-notes`;
@@ -592,6 +594,31 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         describedFailure(failure),
       );
     }
+  }
+
+  /**
+   * Whether the competition `each` is one whose games are kept in a Swiss with
+   * a note where it cannot be brought over: a block, knockout or Swiss with
+   * games, not archived, of a Standard tournament that started before 2026,
+   * where a user was brought over to write the note.
+   */
+  async #isForNotes(
+    read: ReadDocument<OldTournament>,
+    setUp: OldTournament,
+    each: Named,
+  ): Promise<boolean> {
+    const games =
+      (each.document as { Games?: { _Games?: readonly unknown[] } }).Games
+        ?._Games ?? [];
+    return (
+      this.seeNotes !== undefined &&
+      KINDS[each.importer.collection] !== undefined &&
+      !isArchived(each.document) &&
+      !isPlayedByTeams(setUp.TournamentType) &&
+      read.document.Start < BEFORE_NOTES &&
+      games.length > 0 &&
+      (await this.seeNotes.writer()) !== undefined
+    );
   }
 
   // Brings over, as a Standard tournament of its own, the tournament `read`

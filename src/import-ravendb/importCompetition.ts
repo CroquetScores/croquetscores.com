@@ -21,6 +21,7 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import {
   type AcceptedImportErrors,
   DocumentErrors,
+  DryRun,
 } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import {
@@ -543,7 +544,20 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   const documentId = `${website}/${id}`;
   if (document.IsArchived) return;
 
-  await unitOfWork.inTransaction(async () => {
+  // Said by a trial that is rolled back, to say it was only a trial.
+  class TrialDone extends Error {}
+
+  // Brought over, or tried first where it is to be brought over whole or not
+  // at all: in a transaction that is rolled back, with nothing said or kept,
+  // finding out what the site would refuse of it.
+  const bringOver = async (dry: DryRun | undefined): Promise<void> => {
+    await unitOfWork.inTransaction(async () => {
+      await work(dry);
+      if (dry !== undefined) throw new TrialDone();
+    });
+  };
+
+  const work = async (dry: DryRun | undefined): Promise<void> => {
     const tournamentDocument = document.Tournament.Id;
     const tournament = await tournamentBecome(
       database,
@@ -571,6 +585,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       website,
       tournament,
       { name: name.toString(), oldSlug: document.Slug },
+      dry,
     );
 
     // Done as the tournament's first manager, who created it, when it was
@@ -622,7 +637,13 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       },
     };
     const shaped = kind.shape(played, listed, tournament);
-    if (shaped === undefined) return;
+    if (shaped === undefined) {
+      if (dry !== undefined) {
+        dry.leftBehind = true;
+        await errors.notBroughtOverAs("knockout", dry);
+      }
+      return;
+    }
 
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
@@ -809,5 +830,21 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     for (const number of [...withdrew.keys()]) await withdraw(number);
 
     await competitions.save(competition);
-  });
+    if (dry !== undefined && dry.refused.length > 0) {
+      await errors.notBroughtOverAs("knockout", dry);
+    }
+  };
+
+  // Tried first where it is to be whole or not at all: where the site would
+  // refuse any of it, it is not brought over, and nothing is kept of it.
+  if (document.AllOrNothing === true) {
+    const dry = new DryRun();
+    try {
+      await bringOver(dry);
+    } catch (failure) {
+      if (!(failure instanceof TrialDone)) throw failure;
+    }
+    if (dry.leftBehind || dry.refused.length > 0) return;
+  }
+  await bringOver(undefined);
 };
