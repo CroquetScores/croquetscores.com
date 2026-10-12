@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough, isUnderlined } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -244,6 +245,26 @@ Then(
 );
 
 Then(
+  /^the name of "(.*)" in the grid is underlined$/,
+  async function (this: SpecWorld, name: string) {
+    assert.ok(
+      await isUnderlined(rowOf(this, name).locator(".player-name")),
+      "The name is not underlined.",
+    );
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the grid is (not )?struck through$/,
+  async function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(
+      await isStruckThrough(rowOf(this, name).locator(".player-name")),
+      not === null,
+    );
+  },
+);
+
+Then(
   /^the (first|second|third) score where "(.*)" meets "(.*)" is struck through$/,
   async function (
     this: SpecWorld,
@@ -252,19 +273,7 @@ Then(
     opponent: string,
   ) {
     const score = await scoreWhere(this, which, player, opponent);
-    assert.match(
-      await score.evaluate(
-        (element: unknown) =>
-          (
-            globalThis as unknown as {
-              getComputedStyle(element: unknown): {
-                textDecorationLine: string;
-              };
-            }
-          ).getComputedStyle(element).textDecorationLine,
-      ),
-      /line-through/,
-    );
+    assert.ok(await isStruckThrough(score), "The score is not struck through.");
   },
 );
 

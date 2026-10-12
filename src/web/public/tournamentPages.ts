@@ -150,7 +150,8 @@ export const competitionNamed = (
  * in brackets, and the flag they fly, named by what it is the flag of. Nothing
  * is left in the place of what they have none of. Each part is marked with
  * `kind` and what it is, as "game-name", so that a page can draw its own; the
- * name leads to `href` where one is given.
+ * name leads to `href` where one is given, and is struck through where
+ * `withdrawn` says they have withdrawn from the competition being shown.
  */
 export const playerShown = (
   {
@@ -166,12 +167,17 @@ export const playerShown = (
   speaking: Speaking,
   assets: Assets,
   href?: string,
+  // Said by whoever shows a competition's player, rather than read off the
+  // player, so that a game's players, who are answered with whether they
+  // have withdrawn on some pages and not others, are never marked.
+  withdrawn = false,
 ): string => {
   const flown = flag === undefined ? undefined : Flags.thereAre.find(flag);
+  const marked = withdrawn ? " data-withdrawn" : "";
   return [
     href === undefined
-      ? `<span class="${kind}-name">${escape(name)}</span>`
-      : `<a class="${kind}-name" href="${escape(href)}">${escape(name)}</a>`,
+      ? `<span class="${kind}-name"${marked}>${escape(name)}</span>`
+      : `<a class="${kind}-name"${marked} href="${escape(href)}">${escape(name)}</a>`,
     ...(representing === undefined
       ? []
       : [
@@ -233,10 +239,10 @@ export interface GameShown {
   readonly loserScore: string;
   readonly drawn: boolean;
   /**
-   * Whether it was played but counts for nothing (`withdrawGame.feature`),
-   * where whatever lists it says so. Nothing is the same as not.
+   * Whether it was played but counts for nothing (`withdrawGame.feature`,
+   * `withdrawPlayer.feature`), so that it is struck through.
    */
-  readonly withdrawn?: boolean;
+  readonly withdrawn: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;
 }
@@ -259,7 +265,7 @@ export const gameShown = (
   const result = say(played.drawn ? "tournament.drewWith" : "tournament.beat");
   // Struck through, and said to be withdrawn for whatever reads the page
   // aloud, as a block's grid says it.
-  const withdrawn = played.withdrawn === true;
+  const { withdrawn } = played;
   const said = withdrawn
     ? `              <p class="visually-hidden">${escape(say("block.gameWithdrawn"))}</p>
 `

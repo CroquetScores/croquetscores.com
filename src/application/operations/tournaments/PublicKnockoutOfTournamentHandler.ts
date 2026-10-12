@@ -94,10 +94,9 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "" };
+    const told = toldOf(tournament, reference.id);
 
-    const matches = competition.knockoutMatches(
-      toldOf(tournament, reference.id),
-    );
+    const matches = competition.knockoutMatches(told);
     const players = competition.players;
     // Worked out a round at a time, since where the draw's play has nobody in
     // a later round, the round before says why.
@@ -171,6 +170,9 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       competitions: competitionsInUse(tournament),
       knockout: { name: reference.name.toString() },
       rounds,
+      // None is answered as withdrawn: a knockout's game cannot be, and a
+      // withdrawn player's games there count, since each decided a match
+      // that stands.
       games: competition.games
         .filter((game) => !game.archived)
         .map((game) => ({

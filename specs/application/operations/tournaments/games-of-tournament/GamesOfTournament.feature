@@ -20,6 +20,12 @@ Feature: The games of a tournament, for anybody to read
   answered, as everywhere games are counted, and nor are the games of an
   archived competition, which is set aside.
 
+  A withdrawn game (`withdrawGame.feature`), and every game of a player who
+  has withdrawn from the competition it was played in
+  (`withdrawPlayer.feature`), was played, so it is answered, but it is
+  answered as withdrawn, since it counts for nothing and the page strikes it
+  through.
+
   The tournament is asked for by its address on the website being read, as
   "2026/ac/spring-open", as a reader's browser names it. An address the
   tournament has moved on from still finds it, since a link to it may have
@@ -234,6 +240,25 @@ Feature: The games of a tournament, for anybody to read
       Given "organiser@example.com" has renamed the player "Sam Someone" in "Spring Open" to "Sam Someone-Else"
       When the games of the tournament at "2026/ac/spring-open" are asked for
       Then the first game answered is of "Sam Someone-Else" beating "Alex Another"
+
+  Rule: A game that counts for nothing is answered as withdrawn
+
+    Scenario: A withdrawn game is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the first game of the tournament answered was withdrawn
+
+    Scenario: A withdrawn player's game is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the first game of the tournament answered was withdrawn
+
+    Scenario: A game that counts is not answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the games of the tournament at "2026/ac/spring-open" are asked for
+      Then the first game of the tournament answered was not withdrawn
 
   Rule: Each player is answered with what they represent and the flag they fly
 

@@ -146,6 +146,13 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) game of the tournament answered was (not )?withdrawn$/,
+  function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(gameAnswered(this, which).withdrawn, not === null);
+  },
+);
+
+Then(
   /^the (first|second|third) game answered was won with "(.*)"$/,
   function (this: SpecWorld, which: string, score: string) {
     assert.equal(gameAnswered(this, which).winnerScore, score);

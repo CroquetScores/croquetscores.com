@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -77,6 +78,16 @@ Then(
     assert.equal(
       await rowOf(this, name).locator(".block-summary-withdrawn").count(),
       says === "says" ? 1 : 0,
+    );
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the summary is (not )?struck through$/,
+  async function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(
+      await isStruckThrough(rowOf(this, name).locator(".player-name")),
+      not === null,
     );
   },
 );

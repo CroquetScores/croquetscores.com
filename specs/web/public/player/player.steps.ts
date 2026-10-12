@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -57,6 +58,24 @@ Then(
 
 const noGames = (world: SpecWorld): Locator =>
   world.browserPage.locator("main .player-games-none");
+
+Then(
+  /^the (first|second|third) of the player's games is (not )?marked as withdrawn$/,
+  async function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(
+      (await games(this).nth(placeOf(which)).getAttribute("data-withdrawn")) !==
+        null,
+      not === null,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) of the player's games is struck through$/,
+  async function (this: SpecWorld, which: string) {
+    assert.ok(await isStruckThrough(games(this).nth(placeOf(which))));
+  },
+);
 
 Then("the page says the player has no games", async function (this: SpecWorld) {
   assert.equal(await noGames(this).count(), 1);

@@ -9,6 +9,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  countsForNothingIn,
 } from "../competitions/competitionOperations.js";
 import type { PlayerInGame } from "./GamesOfTournament.js";
 import {
@@ -90,13 +91,21 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "", address };
+    // What counts for nothing is still among the results and the games, and
+    // said to be withdrawn, so that the pages strike it through.
+    const countsForNothing = countsForNothingIn(
+      competition,
+      tournament,
+      reference.id,
+    );
 
     const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
       const player = named.get(entered.id.value);
       if (player === undefined) return [];
-      // What is not carried forward counts as nothing carried.
+      // What is not carried forward counts as nothing carried, and so does
+      // all of it where the player has withdrawn, as their games do.
       const carried = (count: CarryForwardCount): number =>
-        entered.carryForward.of(count) ?? 0;
+        entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
       const results = games.flatMap((game): ResultOfSwiss[] => {
         const won = game.winner.equals(entered.id);
         if (!won && !game.loser.equals(entered.id)) return [];
@@ -109,11 +118,10 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
             opponent: { name: opponent.name, address: opponent.address },
             result: game.drawn ? "drawn" : won ? "won" : "lost",
             margin: theirs.points - against.points,
-            withdrawn: game.withdrawn,
+            withdrawn: countsForNothing(game),
           },
         ];
       });
-      // A withdrawn game is among the results, but counts for nothing.
       const counting = results.filter(({ withdrawn }) => !withdrawn);
       return [
         {
@@ -150,7 +158,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
         loser: named.get(game.loser.value) ?? nameless,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
-        withdrawn: game.withdrawn,
+        withdrawn: countsForNothing(game),
         addedAt: game.addedAt,
       })),
     };
@@ -161,17 +169,20 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
 // games won first, then the more net hoops, and otherwise as they were, since
 // a sort that keeps the order of equals leaves them in the Swiss's. A player
 // who has played no game has no share, and comes after every player who has,
-// since nothing yet says where they stand.
+// since nothing yet says where they stand; a withdrawn player comes after
+// everybody who has not withdrawn, since they have left the Swiss.
 const rankingOf = (players: readonly PlayerOfSwiss[]): PlayerOfSwiss[] => {
   const shareOf = ({ gamesWon, gamesPlayed }: PlayerOfSwiss): number =>
     gamesWon / gamesPlayed;
-  const played = players.filter(({ gamesPlayed }) => gamesPlayed > 0);
-  const unplayed = players.filter(({ gamesPlayed }) => gamesPlayed === 0);
+  const playing = players.filter(({ withdrawn }) => !withdrawn);
+  const played = playing.filter(({ gamesPlayed }) => gamesPlayed > 0);
+  const unplayed = playing.filter(({ gamesPlayed }) => gamesPlayed === 0);
   return [
     ...[...played].sort(
       (one, other) =>
         shareOf(other) - shareOf(one) || other.netHoops - one.netHoops,
     ),
     ...unplayed,
+    ...players.filter(({ withdrawn }) => withdrawn),
   ];
 };

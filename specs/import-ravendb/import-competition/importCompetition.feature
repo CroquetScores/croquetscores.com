@@ -805,10 +805,13 @@ Feature: Importing one of the old sites' competitions
     The old sites marked a player withdrawn whatever they had played, and a
     knockout gave their opponent the match from then on. A player is withdrawn
     straight after their last game is added, so that what they played before
-    withdrawing counts, as it did there, and before any game is added where
-    they played none, so that whoever was to play them next goes on, as they
-    did there, before the games they went on to play are added
-    (`ImportKnockouts.feature`).
+    withdrawing is brought over, and before any game is added where they
+    played none, so that whoever was to play them next goes on, as they did
+    there, before the games they went on to play are added
+    (`ImportKnockouts.feature`). What a withdrawn player's games count for is
+    the site's rule, not the import's: in a block or a Swiss they count for
+    nothing and are struck through, and in a knockout they decided matches
+    that stand (`withdrawPlayer.feature`).
 
     Scenario: A player who withdrew has withdrawn
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"

@@ -46,7 +46,11 @@ export interface GameOfBlock {
   readonly loser: string;
   readonly loserScore: string;
   readonly drawn: boolean;
-  /** Whether it was played but counts for nothing (`withdrawGame.feature`). */
+  /**
+   * Whether it was played but counts for nothing: withdrawn itself
+   * (`withdrawGame.feature`), or a withdrawn player's
+   * (`withdrawPlayer.feature`).
+   */
   readonly withdrawn: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;

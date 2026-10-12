@@ -46,11 +46,24 @@ export const blockOrderOfPlay =
     );
   };
 
+// A knockout's and a test's games are never withdrawn: neither kind can
+// withdraw a game, and a withdrawn player's games in a knockout decided
+// matches that stand.
+const neverWithdrawn = <Played extends object>(
+  games: readonly Played[],
+): (Played & { readonly withdrawn: false })[] =>
+  games.map((game) => ({ ...game, withdrawn: false as const }));
+
 /** What draws a knockout's order of play. */
 export const knockoutOrderOfPlay =
   (assets: Assets): DrawView<KnockoutToRead> =>
   (asked, speaking, request) =>
-    orderOfPlay(asked.games, request.requestedAt.toDate(), speaking, assets);
+    orderOfPlay(
+      neverWithdrawn(asked.games),
+      request.requestedAt.toDate(),
+      speaking,
+      assets,
+    );
 
 /** What draws a Swiss's order of play. */
 export const swissOrderOfPlay =
@@ -62,4 +75,9 @@ export const swissOrderOfPlay =
 export const testOrderOfPlay =
   (assets: Assets): DrawView<TestToRead> =>
   (asked, speaking, request) =>
-    orderOfPlay(asked.games, request.requestedAt.toDate(), speaking, assets);
+    orderOfPlay(
+      neverWithdrawn(asked.games),
+      request.requestedAt.toDate(),
+      speaking,
+      assets,
+    );

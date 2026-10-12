@@ -76,7 +76,7 @@ const sideNamed = (
       const withdrawn = player.withdrawn
         ? ` <span class="knockout-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
-      return `${playerShown(player, "player", speaking, assets, `/${player.address}`)}${withdrawn}`;
+      return `${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}`;
     }
     case "bye":
       return `<span class="knockout-bye">${escape(say("knockout.bye"))}</span>`;
@@ -87,7 +87,9 @@ const sideNamed = (
 
 // The side at `which` of `match`, on a row of its own: who it is, then its
 // score in each game the match is the best of, marked won or lost for it by
-// more than its colour, and empty for a game not played.
+// more than its colour, and empty for a game not played. A withdrawn
+// player's scores are not struck through, as a block's are, since each of
+// their games decided a match that stands.
 const sideRow = (
   match: MatchOfKnockout,
   which: WhichSide,

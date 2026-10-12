@@ -92,7 +92,7 @@ export const swissTable = (
         ? `\n                <td class="swiss-results">${player.results.map(resultShown(speaking)).join(", ")}</td>`
         : "";
       return `              <tr>
-                <th scope="row" class="swiss-player">${playerShown(player, "player", speaking, assets, `/${player.address}`)}${withdrawn}</th>
+                <th scope="row" class="swiss-player">${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>
 ${columns.map(({ of }) => `                <td class="swiss-total">${escape(of(player))}</td>`).join("\n")}${results}
               </tr>`;
     })

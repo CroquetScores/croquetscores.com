@@ -94,7 +94,7 @@ const grid = (
         ? ` <span class="block-grid-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
       return `              <tr class="block-grid-row">
-                <th scope="row" class="block-grid-player">${playerShown(player, "player", speaking, assets, `/${player.address}`)}${withdrawn}</th>
+                <th scope="row" class="block-grid-player">${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>
 ${cells.join("\n")}
 ${totals.map(({ of }) => `                <td class="block-grid-total">${escape(String(of(player)))}</td>`).join("\n")}
               </tr>`;

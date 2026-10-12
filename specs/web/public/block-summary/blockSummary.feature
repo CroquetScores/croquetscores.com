@@ -9,7 +9,9 @@ Feature: A block's summary ranks its players
 
   A row is headed by the player as the tournament's other pages show one:
   their name, leading to their own page, what they represent and their flag.
-  A withdrawn player's row says they have withdrawn. Beside them are the
+  A withdrawn player's row says they have withdrawn, and their name is struck
+  through, since their games count for nothing
+  (`PublicBlockOfTournament.feature`). Beside them are the
   matches they have won, headed "Wins", the matches they have lost, headed
   "Losses", and their net hoops, headed "Net Hoops" and, being two words, on
   two lines as the grid's headings are. Where each match is a single game, a
@@ -87,6 +89,22 @@ Feature: A block's summary ranks its players
     Scenario: A player who has not withdrawn does not say so
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the row of "Sam Someone" in the summary does not say they have withdrawn
+
+    Scenario: A withdrawn player's name is struck through
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Alex Another" in the summary is struck through
+
+    Scenario: A player who has not withdrawn is not struck through
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Sam Someone" in the summary is not struck through
+
+    Scenario: A withdrawn player's games are not counted
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "Wins" of "Sam Someone" in the summary are "0"
 
   Rule: Beside each player are their wins, their losses and their net hoops
 

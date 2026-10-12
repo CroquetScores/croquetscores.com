@@ -8,6 +8,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  countsForNothingIn,
 } from "../competitions/competitionOperations.js";
 import {
   type GameOfPlayer,
@@ -140,6 +141,11 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
           return opponents.get(found?.tournamentPlayerId.value ?? "") ?? nobody;
         };
       }
+      const countsForNothing = countsForNothingIn(
+        competition,
+        tournament,
+        reference.id,
+      );
       const where = competitions[at]!;
       entered.push(where);
       for (const game of competition.games) {
@@ -151,6 +157,7 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
           opponent: opponentOf(won ? game.loser.value : game.winner.value),
           score: String(won ? game.winnerScore : game.loserScore),
           opponentScore: String(won ? game.loserScore : game.winnerScore),
+          withdrawn: countsForNothing(game),
           competition: where,
           addedAt: game.addedAt,
         });

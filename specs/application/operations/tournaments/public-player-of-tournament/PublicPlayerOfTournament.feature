@@ -16,6 +16,11 @@ Feature: A player of a tournament, for anybody to read
   it was played in. An archived game is not answered, nor are the games of an
   archived competition, as everywhere games are counted.
 
+  A withdrawn game (`withdrawGame.feature`), and every game in a competition
+  the player or their opponent has withdrawn from (`withdrawPlayer.feature`),
+  was played, so it is answered, but it is answered as withdrawn, since it
+  counts for nothing and the page strikes it through.
+
   The page is a section of the tournament's, so the tournament is answered
   with it as its games are (`GamesOfTournament.feature`): its name, where it
   is found now, and its competitions in use with where each is found, for the
@@ -182,6 +187,31 @@ Feature: A player of a tournament, for anybody to read
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
       Then the first game answered was played in "Block A"
+
+  Rule: A game that counts for nothing is answered as withdrawn
+
+    Scenario: A withdrawn game is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the player answered was withdrawn
+
+    Scenario: A game of the player's own after they withdrew is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the player answered was withdrawn
+
+    Scenario: A game against a withdrawn opponent is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the player answered was withdrawn
+
+    Scenario: A game that counts is not answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the player "sam-someone" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the player answered was not withdrawn
 
   Rule: Every competition the player is entered in that is in use is answered, the last of the tournament's first
 

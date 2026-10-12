@@ -10,6 +10,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  countsForNothingIn,
 } from "../competitions/competitionOperations.js";
 import {
   type BlockToRead,
@@ -71,8 +72,14 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
-    // A withdrawn game is shown, but counts for nothing.
-    const counting = games.filter((game) => !game.withdrawn);
+    // What counts for nothing is still shown, and answered as withdrawn, so
+    // that the pages strike it through.
+    const countsForNothing = countsForNothingIn(
+      competition,
+      tournament,
+      reference.id,
+    );
+    const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();
     const players = competition.players.flatMap((entered): PlayerOfBlock[] => {
@@ -90,9 +97,10 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
       const lost = theirs.filter(
         (game) => !game.drawn && game.loser.equals(entered.id),
       );
-      // What is not carried forward counts as nothing carried.
+      // What is not carried forward counts as nothing carried, and so does
+      // all of it where the player has withdrawn, as their games do.
       const carried = (count: CarryForwardCount): number =>
-        entered.carryForward.of(count) ?? 0;
+        entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
       const hoops = theirs.reduce((net, game) => {
         const margin = game.winnerScore.points - game.loserScore.points;
         return net + (game.winner.equals(entered.id) ? margin : -margin);
@@ -136,7 +144,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         loser: game.loser.value,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
-        withdrawn: game.withdrawn,
+        withdrawn: countsForNothing(game),
         addedAt: game.addedAt,
       })),
       ranked: rankingOf(players).map(({ id }) => id),
@@ -172,9 +180,14 @@ const shareOf = ({ matchesWon, matchesLost }: PlayerOfBlock): number =>
 
 // `players` ranked as the old site's summary ranked them: the greater share of
 // matches won first, then the more net hoops, and otherwise as they were,
-// since a sort that keeps the order of equals leaves them in the block's.
+// since a sort that keeps the order of equals leaves them in the block's. A
+// withdrawn player comes after everybody who has not withdrawn, since their
+// games count for nothing, which would otherwise rank them, with no share
+// and no hoops, above a player still in the block who has played and lost.
 const rankingOf = (players: readonly PlayerOfBlock[]): PlayerOfBlock[] =>
   [...players].sort(
     (one, other) =>
-      shareOf(other) - shareOf(one) || other.netHoops - one.netHoops,
+      Number(one.withdrawn) - Number(other.withdrawn) ||
+      shareOf(other) - shareOf(one) ||
+      other.netHoops - one.netHoops,
   );

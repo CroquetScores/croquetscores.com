@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -201,6 +202,25 @@ Then(
 );
 
 Then(
+  new RegExp(`^${SIDE} (does not have|has) its name struck through$`),
+  async function (
+    this: SpecWorld,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+    has: string,
+  ) {
+    assert.equal(
+      await isStruckThrough(
+        sideAt(this, side, match, round, view).locator(".player-name"),
+      ),
+      has === "has",
+    );
+  },
+);
+
+Then(
   new RegExp(`^${SIDE} is beneath its first$`),
   async function (
     this: SpecWorld,
@@ -260,6 +280,44 @@ Then(
       ),
       points,
     );
+  },
+);
+
+Then(
+  new RegExp(`^${SCORE} is (not )?struck through$`),
+  async function (
+    this: SpecWorld,
+    score: string,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+    not: string | null,
+  ) {
+    assert.equal(
+      await isStruckThrough(scoreAt(this, score, side, match, round, view)),
+      not === null,
+    );
+  },
+);
+
+Then(
+  new RegExp(`^${SCORE} is (not )?said to be withdrawn$`),
+  async function (
+    this: SpecWorld,
+    score: string,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+    not: string | null,
+  ) {
+    const aloud = await said(
+      scoreAt(this, score, side, match, round, view).locator(
+        ".visually-hidden",
+      ),
+    );
+    assert.equal(/\bwithdrawn\b/.test(aloud), not === null, aloud);
   },
 );
 

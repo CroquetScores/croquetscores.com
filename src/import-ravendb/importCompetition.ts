@@ -512,12 +512,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         AGAINST_A_BYE.because,
       );
     }
-    // A player who withdrew is withdrawn straight after their last game is
-    // added, so that what they played counts, and before any is where they
-    // played none, so that whoever was to play them next goes on before the
-    // games they went on to play are added. Whoever has a game still to come
-    // once every game is, as a play-off the kind leaves out, is withdrawn
-    // last.
+    // A withdrawn player can have no game added (CompetitionPlayer.Withdrawn),
+    // so a player who withdrew is withdrawn straight after their last game is
+    // added, and before any is where they played none, so that whoever was to
+    // play them next goes on before the games they went on to play are
+    // added. What their games then count for is the site's rule
+    // (Competition.countsForNothing), not the import's. Whoever has a game
+    // still to come once every game is, as a play-off the kind leaves out, is
+    // withdrawn last.
     const withdraw = async (number: number): Promise<void> => {
       const playerId = withdrew.get(number);
       if (playerId === undefined) return;

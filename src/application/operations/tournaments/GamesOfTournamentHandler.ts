@@ -8,6 +8,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  countsForNothingIn,
 } from "../competitions/competitionOperations.js";
 import {
   type GameOfTournament,
@@ -69,6 +70,11 @@ export class GamesOfTournamentHandler extends QueryHandler<
     const games: GameOfTournament[] = [];
     for (const [at, { reference }] of inUse.entries()) {
       const competition = await competitionOf(this.competitions, reference.id);
+      const countsForNothing = countsForNothingIn(
+        competition,
+        tournament,
+        reference.id,
+      );
       for (const game of competition.games) {
         if (game.archived || game.addedAt === undefined) continue;
         games.push({
@@ -77,6 +83,7 @@ export class GamesOfTournamentHandler extends QueryHandler<
           loser: playerFor(competition, game.loser.value),
           loserScore: String(game.loserScore),
           drawn: game.drawn,
+          withdrawn: countsForNothing(game),
           competition: competitions[at]!,
           addedAt: game.addedAt,
         });

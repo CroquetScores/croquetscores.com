@@ -25,6 +25,11 @@ Feature: A knockout of a tournament, for anybody to read
   the flag they fly, where their own page is found, and whether they have
   withdrawn.
 
+  A knockout's games are never answered as withdrawn: a game of its own
+  cannot be withdrawn (`withdrawGame.feature`), and a withdrawn player's
+  games there count, unlike a block's or a Swiss's, since each decided a
+  match that stands (`withdrawPlayer.feature`, `KnockoutPlay.feature`).
+
   A match is answered with its games, oldest first, each with which side won
   it and both scores as they were typed, and with its winner once it is
   decided: the side that has won more than half the games it is the best of,
