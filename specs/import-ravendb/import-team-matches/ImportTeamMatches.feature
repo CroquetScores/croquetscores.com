@@ -2200,3 +2200,35 @@ Feature: Importing the old sites' team matches
       And game 1's loser scored "3"
       When the team match is imported
       Then the error kept for "croquetscores.com/teammatches/50" says "Competition.SameTeam"
+
+  Rule: A tournament where a game of a team match could not be added is managed by whoever reads what could not be brought over
+
+    As for any competition (`importCompetition.feature`): after everything
+    else is tried, a game the site still refuses, as one of a player the team
+    match does not list, makes croquetscores@gmail.com a manager of the
+    tournament, said as corrected. A game between players of one team is said
+    in a note instead (the rule above).
+
+    Scenario: A tournament where a game of a team match could not be added is managed by croquetscores@gmail.com
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 99
+      When the team match is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is managed by the account for "croquetscores@gmail.com"
+
+    Scenario: A team match where a game could not be added is said as corrected for the manager
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 99
+      When the team match is imported
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.ManagerAdded"

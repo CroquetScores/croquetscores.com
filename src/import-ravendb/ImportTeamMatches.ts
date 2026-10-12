@@ -282,6 +282,9 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     // them; otherwise it is kept as an error.
     const writer = await this.notes?.writer();
     const sameTeam: OldGame[] = [];
+    // How many of its games were kept as errors, once it is brought over.
+    let refusedGames = 0;
+    let refusedSaid: readonly string[] = [];
 
     await unitOfWork.inTransaction(async () => {
       const tournamentDocument = document.Tournament.Id;
@@ -819,10 +822,39 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           return put === false ? meetAgain(game, failure, toCome) : put;
         },
       );
+      refusedGames = errors.gamesRefused;
+      refusedSaid = errors.gamesRefusedSaid;
       // Again, for the players made for meeting again.
       await tournaments.save(tournament);
       await competitions.save(competition);
     });
+
+    // Where a game could not be added after everything else was tried,
+    // whoever reads what could not be brought over is made a manager of the
+    // tournament.
+    const { managers } = this.importing;
+    if (refusedGames > 0 && managers !== undefined) {
+      const manager = await managers.writer();
+      if (manager !== undefined) {
+        await managers.makeManager(website, document.Tournament.Id, manager);
+        const where = await database.tournamentOf(
+          website,
+          document.Tournament.Id,
+        );
+        await correcting.accept({
+          documentId,
+          website,
+          newSitePath: where?.tournamentAddress,
+          oldSitePath: oldSitePathOf(
+            where?.tournamentAddress ?? "",
+            document.Slug,
+          ),
+          what: "",
+          code: "ImportCompetition.ManagerAdded",
+          description: `${document.Name} had ${String(refusedGames)} ${refusedGames === 1 ? "game" : "games"} that could not be added, so croquetscores@gmail.com is made a manager of the tournament. ${refusedSaid.join(" ")}`,
+        });
+      }
+    }
 
     if (
       this.notes !== undefined &&

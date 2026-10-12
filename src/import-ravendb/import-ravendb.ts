@@ -282,6 +282,7 @@ try {
     database,
     accepting,
     correcting,
+    managers: seeNotes,
   };
   // One for every importer that names a user, so that a user is one account
   // wherever they are named.

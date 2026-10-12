@@ -327,6 +327,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     database,
     accepting: accepted,
     correcting: corrected,
+    managers: seeNotes,
   };
   const importedAccounts = new ImportedAccounts(
     accountRepository,

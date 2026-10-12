@@ -22,6 +22,7 @@ import {
   type AcceptedImportErrors,
   DocumentErrors,
   DryRun,
+  oldSitePathOf,
 } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import {
@@ -95,6 +96,22 @@ export interface ImportingCompetitions {
   readonly accepting: AcceptedImportErrors;
   /** Where what the import corrected is said, the same way. */
   readonly correcting: AcceptedImportErrors;
+  /**
+   * Makes croquetscores@gmail.com a manager of a tournament where a game of
+   * one of its competitions could not be added, so that they can see it.
+   */
+  readonly managers?: ManagerOfRefused;
+}
+
+/** What makes the account that reads what could not be brought over a manager. */
+export interface ManagerOfRefused {
+  /** Who it makes a manager, or nothing where no user was brought over as them. */
+  writer(): Promise<AccountId | undefined>;
+  makeManager(
+    website: string,
+    tournamentDocumentId: string,
+    writer: AccountId,
+  ): Promise<void>;
 }
 
 // Each count a player carried, as the site names it.
@@ -550,6 +567,10 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   // Brought over, or tried first where it is to be brought over whole or not
   // at all: in a transaction that is rolled back, with nothing said or kept,
   // finding out what the site would refuse of it.
+  // How many of its games were kept as errors, once it is brought over.
+  let refusedGames = 0;
+  let refusedSaid: readonly string[] = [];
+
   const bringOver = async (dry: DryRun | undefined): Promise<void> => {
     await unitOfWork.inTransaction(async () => {
       await work(dry);
@@ -833,6 +854,8 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       walkover,
     );
     for (const number of [...withdrew.keys()]) await withdraw(number);
+    refusedGames = errors.gamesRefused;
+    refusedSaid = errors.gamesRefusedSaid;
 
     await competitions.save(competition);
     if (dry !== undefined && dry.refused.length > 0) {
@@ -855,4 +878,27 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     if (dry.leftBehind || dry.refused.length > 0) return;
   }
   await bringOver(undefined);
+
+  // Where a game could not be added after everything else was tried, whoever
+  // reads what could not be brought over is made a manager of the tournament.
+  if (refusedGames > 0 && importing.managers !== undefined) {
+    const writer = await importing.managers.writer();
+    if (writer !== undefined) {
+      const tournamentDocument = document.Tournament.Id;
+      await importing.managers.makeManager(website, tournamentDocument, writer);
+      const where = await database.tournamentOf(website, tournamentDocument);
+      await correcting.accept({
+        documentId,
+        website,
+        newSitePath: where?.tournamentAddress,
+        oldSitePath: oldSitePathOf(
+          where?.tournamentAddress ?? "",
+          document.Slug,
+        ),
+        what: "",
+        code: "ImportCompetition.ManagerAdded",
+        description: `${document.Name} had ${String(refusedGames)} ${refusedGames === 1 ? "game" : "games"} that could not be added, so croquetscores@gmail.com is made a manager of the tournament. ${refusedSaid.join(" ")}`,
+      });
+    }
+  }
 };

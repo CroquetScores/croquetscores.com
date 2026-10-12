@@ -1112,6 +1112,75 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
+  Rule: A tournament where a game could not be added is managed by whoever reads what could not be brought over
+
+    After everything else is tried to bring a game over, and the site still
+    refuses it, croquetscores@gmail.com is made a manager of the tournament,
+    so that what could not be brought over is theirs to see. That is said as
+    corrected (`AcceptedImportErrors.feature`), once for the competition. It
+    is done only where a user was brought over as croquetscores@gmail.com, and
+    only for a game kept as an error: one put right, left out as a duplicate,
+    or against a bye is not.
+
+    Scenario: A tournament where a game could not be added is managed by croquetscores@gmail.com
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is managed by the account for "croquetscores@gmail.com"
+
+    Scenario: A game that could not be added with the manager added is still an error
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Game.SamePlayer"
+
+    Scenario: A competition where a game could not be added is said as corrected for the manager
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then "croquetscores.com/blocks/30" is corrected as "ImportCompetition.ManagerAdded"
+
+    Scenario: The correction for the manager says each game that could not be added
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then what is corrected of "croquetscores.com/blocks/30" names "because a player cannot play themselves"
+
+    Scenario: A competition whose games were all added does not make the manager
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
+    Scenario: A game that could not be added is only an error where nobody reads it
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "Game.SamePlayer"
+
   Rule: A game the site refuses is kept as an error, and the other games are added
 
     Scenario: A game on equal points with more than digits is kept as an error

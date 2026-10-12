@@ -311,6 +311,22 @@ export class DryRun {
  */
 export class DocumentErrors {
   #newSitePath: string | undefined;
+  #gamesRefused = 0;
+  readonly #gamesRefusedSaid: string[] = [];
+
+  /** Each game kept as an error, said for a person, in the order refused. */
+  get gamesRefusedSaid(): readonly string[] {
+    return this.#gamesRefusedSaid;
+  }
+
+  /**
+   * How many games were kept as errors: refused, and not put right, said in a
+   * note, accepted or left to a Swiss, so that whoever reads the errors is
+   * made a manager of the tournament where a game could not be added.
+   */
+  get gamesRefused(): number {
+    return this.#gamesRefused;
+  }
 
   constructor(
     private readonly errors: ImportErrors,
@@ -373,6 +389,16 @@ export class DocumentErrors {
         );
       }
       return;
+    }
+    if (
+      what.startsWith("game ") &&
+      accepted === undefined &&
+      !this.inSeeNotes
+    ) {
+      this.#gamesRefused += 1;
+      this.#gamesRefusedSaid.push(
+        said?.refused(failure) ?? `${what}: ${describedFailure(failure)}`,
+      );
     }
     if (this.inSeeNotes && accepted === undefined) {
       await this.corrected(
