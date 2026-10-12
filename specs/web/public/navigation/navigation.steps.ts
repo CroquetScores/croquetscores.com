@@ -254,7 +254,7 @@ Then(
 
 const accountItem = (world: SpecWorld, item: string) =>
   world.browserPage.locator(`${group} a`, {
-    hasText: new RegExp(`^${item}$`),
+    hasText: new RegExp(`^${item.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
   });
 
 Then(

@@ -177,19 +177,19 @@ const menu = (bar: AccountMenu): string => {
 
   return `          <details class="menu">
           <summary><span class="visually-hidden">${escape(speaking.say("navigation.menu"))}</span></summary>
-          <div class="menu-panel">
-          <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
-            <ul>
+            <div class="menu-panel">
+              <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
+                <ul>
 ${items}
-            </ul>
-          </nav>
-          <nav class="menu-account" aria-labelledby="menu-account-heading">
-            <p class="menu-account-heading" id="menu-account-heading">${escape(speaking.say("account.menu"))}</p>
-            <ul>
+                </ul>
+              </nav>
+              <nav class="menu-account" aria-label="${escape(speaking.say("account.menu"))}">
+                <p class="menu-account-heading" aria-hidden="true">${escape(speaking.say("account.menu"))}</p>
+                <ul>
 ${accountItems(bar).join("\n")}
-            </ul>
-          </nav>
-          </div>
+                </ul>
+              </nav>
+            </div>
         </details>`;
 };
 
