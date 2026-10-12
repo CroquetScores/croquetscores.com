@@ -67,7 +67,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^10.11.0",
-    "playwright": "^1.63.0",
+    "playwright": "^1.64.0",
     "prettier": "^3.9.9",
     "ravendb": "4.2.3",
     "react": "^19.3.0",
