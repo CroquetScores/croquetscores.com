@@ -157,10 +157,16 @@ export const playerShown = (
     name,
     representing,
     flag,
+    withdrawn,
   }: {
     readonly name: string;
     readonly representing?: string | undefined;
     readonly flag?: string | undefined;
+    /**
+     * Whether they have withdrawn from the competition being shown, which
+     * strikes their name through, since what they played counts for nothing.
+     */
+    readonly withdrawn?: boolean | undefined;
   },
   kind: string,
   speaking: Speaking,
@@ -168,10 +174,11 @@ export const playerShown = (
   href?: string,
 ): string => {
   const flown = flag === undefined ? undefined : Flags.thereAre.find(flag);
+  const marked = withdrawn === true ? " data-withdrawn" : "";
   return [
     href === undefined
-      ? `<span class="${kind}-name">${escape(name)}</span>`
-      : `<a class="${kind}-name" href="${escape(href)}">${escape(name)}</a>`,
+      ? `<span class="${kind}-name"${marked}>${escape(name)}</span>`
+      : `<a class="${kind}-name"${marked} href="${escape(href)}">${escape(name)}</a>`,
     ...(representing === undefined
       ? []
       : [

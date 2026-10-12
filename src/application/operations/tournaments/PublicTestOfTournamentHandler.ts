@@ -134,12 +134,15 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
         bestOf: shape.bestOf.games,
       },
       matches,
+      // A team's player cannot withdraw from a test, so none of its games is
+      // struck through.
       games: games.map((game) => ({
         winner: shown.get(game.winner.value) ?? nameless,
         winnerScore: game.winnerScore.toString(),
         loser: shown.get(game.loser.value) ?? nameless,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
+        withdrawn: false,
         addedAt: game.addedAt,
       })),
     };

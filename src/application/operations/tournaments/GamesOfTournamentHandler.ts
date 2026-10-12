@@ -69,6 +69,11 @@ export class GamesOfTournamentHandler extends QueryHandler<
     const games: GameOfTournament[] = [];
     for (const [at, { reference }] of inUse.entries()) {
       const competition = await competitionOf(this.competitions, reference.id);
+      // A test's games name a team's players, who cannot withdraw from it,
+      // so there nobody is found and nothing is withdrawn for it.
+      const withdrawn = (written: string): boolean =>
+        competition.players.find((player) => player.id.value === written)
+          ?.withdrawn ?? false;
       for (const game of competition.games) {
         if (game.archived || game.addedAt === undefined) continue;
         games.push({
@@ -77,6 +82,10 @@ export class GamesOfTournamentHandler extends QueryHandler<
           loser: playerFor(competition, game.loser.value),
           loserScore: String(game.loserScore),
           drawn: game.drawn,
+          withdrawn:
+            game.withdrawn ||
+            withdrawn(game.winner.value) ||
+            withdrawn(game.loser.value),
           competition: competitions[at]!,
           addedAt: game.addedAt,
         });

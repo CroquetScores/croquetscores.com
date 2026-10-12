@@ -248,6 +248,13 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) game of the knockout answered was (not )?withdrawn$/,
+  function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(answered(this).games[placeOf(which)]?.withdrawn, not === null);
+  },
+);
+
+Then(
   /^(\d+) games? of the knockout (?:is|are) answered$/,
   function (this: SpecWorld, count: string) {
     assert.equal(answered(this).games.length, Number(count));

@@ -20,7 +20,8 @@ Feature: A competition's order of play lists its games, oldest first
   takes its place, beside the winner, where a reader's eye starts on a game.
   A withdrawn game was played, so it is listed, but it counts for nothing
   (`withdrawGame.feature`), so it is struck through and said to be
-  withdrawn, as the grid shows it.
+  withdrawn, as the grid shows it, and so is every game of a player who has
+  withdrawn (`PublicBlockOfTournament.feature`).
 
   Like the grid, it is headed by the competition's name, offers the three
   views with Order of Play marked as the one being read, and its sections are
@@ -113,6 +114,18 @@ Feature: A competition's order of play lists its games, oldest first
     Scenario: A withdrawn game is struck through
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is struck through
+
+    Scenario: A withdrawn player's game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is marked as withdrawn
+
+    Scenario: A withdrawn player's game is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
       Then the first game is struck through
 
@@ -255,6 +268,12 @@ Feature: A competition's order of play lists its games, oldest first
       And the server's clock reads "2026-10-03T10:12:00Z"
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
       Then the first line of the first game is beside "12 min"
+
+    Scenario: A knockout's withdrawn player's game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
+      Then the first game is marked as withdrawn
 
     Scenario: A knockout's order of play marks it as the view being read
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened

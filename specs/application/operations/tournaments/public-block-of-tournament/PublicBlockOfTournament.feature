@@ -13,8 +13,8 @@ Feature: A block of a tournament, for anybody to read
   Each player is answered with their name, what they represent and the flag
   they fly, as the tournament's other pages show a player, where their own
   page is found, and whether they have withdrawn. A withdrawn player is still
-  answered, since the games they played still stand. A player removed from
-  the block is not.
+  answered, since the games they played still stand, though they count for
+  nothing. A player removed from the block is not.
 
   Each game is answered with its winner, the winner's score, its loser, the
   loser's score, whether it was drawn and when it was added, the scores as
@@ -275,6 +275,83 @@ Feature: A block of a tournament, for anybody to read
       And "organiser@example.com" has withdrawn the score of "Alex Another" beating "Sam Someone" in "Block A" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the first player of the block ranked is "Sam Someone"
+
+  Rule: A withdrawn player's games count for nothing, for them and for whoever they played
+
+    A player who withdraws partway through a block has played some of the
+    others and not the rest, so counting the games they did play would rank
+    the players they met above the players they did not for a reason that has
+    nothing to do with how anybody played. So every game of theirs comes out
+    of the reckoning on both sides, as a withdrawn game does, and comes back
+    into it if their withdrawal is reversed. The games are still answered,
+    since they were played, and answered as withdrawn, so that the pages
+    strike them through as they strike a withdrawn game. Where the games a
+    player has played are to stand, as the first round's do in the Australian
+    President's Eights, the player is not withdrawn: the games not to count
+    are withdrawn one at a time instead.
+
+    Scenario: A withdrawn player's game is not a game won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 0 games won
+
+    Scenario: A game against a withdrawn player is not a game won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 0 games won
+
+    Scenario: A match won against a withdrawn player is not won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 0 matches won
+
+    Scenario: A match lost to a withdrawn player is not lost
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with 0 matches lost
+
+    Scenario: A withdrawn player's game counts for nothing in net hoops
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with net hoops of 0
+
+    Scenario: A withdrawn player's game ranks nobody higher
+      Given "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Sam Someone"
+
+    Scenario: A withdrawn player's game is still answered
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the block answered was won by "Sam Someone"
+
+    Scenario: A withdrawn player's game is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the block answered was withdrawn
+
+    Scenario: A game against a withdrawn player is answered as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first game of the block answered was withdrawn
+
+    Scenario: A game of a player whose withdrawal was reversed counts again
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      And "organiser@example.com" has reversed the withdrawal of the player "Sam Someone" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 1 game won
 
   Rule: A player's matches are the matches they have won
 

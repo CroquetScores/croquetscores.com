@@ -29,6 +29,12 @@ export interface GameOfTournament {
   readonly loserScore: string;
   /** Whether it is on equal points with no mark, and so won by neither. */
   readonly drawn: boolean;
+  /**
+   * Whether it was played but counts for nothing: withdrawn itself
+   * (`withdrawGame.feature`), or a withdrawn player's
+   * (`withdrawPlayer.feature`).
+   */
+  readonly withdrawn: boolean;
   readonly competition: CompetitionOfTournament;
   readonly addedAt: ReadOnlyDate;
 }

@@ -71,8 +71,21 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
-    // A withdrawn game is shown, but counts for nothing.
-    const counting = games.filter((game) => !game.withdrawn);
+    // A withdrawn game is shown, but counts for nothing, and so is every
+    // game of a withdrawn player, for both its players: a player who left
+    // partway met some of the others and not the rest, and what they played
+    // must not rank those they met above those they did not. Each is
+    // answered as withdrawn, so that the pages strike it through.
+    const withdrawn = new Set(
+      competition.players
+        .filter((entered) => entered.withdrawn)
+        .map((entered) => entered.id.value),
+    );
+    const countsForNothing = (game: Game): boolean =>
+      game.withdrawn ||
+      withdrawn.has(game.winner.value) ||
+      withdrawn.has(game.loser.value);
+    const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();
     const players = competition.players.flatMap((entered): PlayerOfBlock[] => {
@@ -136,7 +149,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         loser: game.loser.value,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
-        withdrawn: game.withdrawn,
+        withdrawn: countsForNothing(game),
         addedAt: game.addedAt,
       })),
       ranked: rankingOf(players).map(({ id }) => id),

@@ -1,4 +1,5 @@
 import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -90,6 +91,20 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "", address };
+    // A withdrawn game is shown, but counts for nothing, and so is every
+    // game of a withdrawn player, for either side: a player who left partway
+    // met some of the others and not the rest, and what they played must not
+    // rank those they met above those they did not. Each is said to be
+    // withdrawn, so that the pages strike it through.
+    const withdrawn = new Set(
+      competition.players
+        .filter((entered) => entered.withdrawn)
+        .map((entered) => entered.id.value),
+    );
+    const countsForNothing = (game: Game): boolean =>
+      game.withdrawn ||
+      withdrawn.has(game.winner.value) ||
+      withdrawn.has(game.loser.value);
 
     const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
       const player = named.get(entered.id.value);
@@ -109,11 +124,10 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
             opponent: { name: opponent.name, address: opponent.address },
             result: game.drawn ? "drawn" : won ? "won" : "lost",
             margin: theirs.points - against.points,
-            withdrawn: game.withdrawn,
+            withdrawn: countsForNothing(game),
           },
         ];
       });
-      // A withdrawn game is among the results, but counts for nothing.
       const counting = results.filter(({ withdrawn }) => !withdrawn);
       return [
         {
@@ -150,7 +164,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
         loser: named.get(game.loser.value) ?? nameless,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
-        withdrawn: game.withdrawn,
+        withdrawn: countsForNothing(game),
         addedAt: game.addedAt,
       })),
     };

@@ -32,6 +32,12 @@ export interface GameOfPlayer {
   /** The player's score and their opponent's, each as it was typed. */
   readonly score: string;
   readonly opponentScore: string;
+  /**
+   * Whether it was played but counts for nothing: withdrawn itself
+   * (`withdrawGame.feature`), or played in a competition the player or their
+   * opponent has withdrawn from (`withdrawPlayer.feature`).
+   */
+  readonly withdrawn: boolean;
   readonly competition: CompetitionOfTournament;
   readonly addedAt: ReadOnlyDate;
 }

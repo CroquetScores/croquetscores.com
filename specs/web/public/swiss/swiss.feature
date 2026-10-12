@@ -14,7 +14,8 @@ Feature: A Swiss's grid ranks its players with their results
   The grid is a table as the old site's was (`PublicSwissOfTournament.feature`):
   a row for each player, ranked, headed by the player as the tournament's
   other pages show one, their name leading to their own page, what they
-  represent and their flag, and saying so where they have withdrawn. Beside
+  represent and their flag, and saying so where they have withdrawn, their
+  name struck through. Beside
   them are the games they have played, headed "Games", the games they have
   won, headed "Wins", the share of their games they have won, headed "Win %"
   and written to one decimal place, as "75.0%", and their results, headed
@@ -33,6 +34,9 @@ Feature: A Swiss's grid ranks its players with their results
   saying which. A withdrawn game was played, so it is among the results, but
   it counts for nothing (`withdrawGame.feature`), so it is marked as
   withdrawn, struck through, and left out of the games, wins and win share.
+  So is every game of a withdrawn player, theirs and their opponents', since
+  what they played must not rank those they met above those they did not
+  (`PublicSwissOfTournament.feature`).
 
   On a phone the results wrap within their column, and where the table is
   still wider than the window it scrolls across within the page, as a
@@ -97,6 +101,15 @@ Feature: A Swiss's grid ranks its players with their results
       Given "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the row of "Alex Another" in the Swiss says they have withdrawn
+
+    Scenario: A withdrawn player's name is struck through
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the name of "Alex Another" in the Swiss is struck through
+
+    Scenario: A player who has not withdrawn is not struck through
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the name of "Sam Someone" in the Swiss is not struck through
 
   Rule: Beside each player are their games, wins, win share and results
 
@@ -210,6 +223,24 @@ Feature: A Swiss's grid ranks its players with their results
     Scenario: A withdrawn game is not among the games played
       Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
       And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the "Games" of "Sam Someone" in the Swiss are "0"
+
+    Scenario: A withdrawn player's result is marked as withdrawn in their opponent's row
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is marked as withdrawn
+
+    Scenario: A withdrawn player's result is struck through
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Alex Another" in the Swiss is struck through
+
+    Scenario: A withdrawn player's game is not among the games played
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the "Games" of "Sam Someone" in the Swiss are "0"
 

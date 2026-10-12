@@ -1897,6 +1897,13 @@ html:has(dialog:modal) {
   min-height: 44px;
 }
 
+/* A player who has withdrawn from the competition being shown is struck
+   through wherever it names them, as their games are, since what they played
+   counts for nothing. */
+.player-name[data-withdrawn] {
+  text-decoration: line-through;
+}
+
 /* A player's page: their competitions first on a phone, since they are short
    and say where the player is playing before the games say how, and from the
    tournament's page's width up the games first, with the competitions in a
@@ -1956,6 +1963,12 @@ html:has(dialog:modal) {
 .player-games-list > li:nth-child(even),
 .player-competitions-list > li:nth-child(even) {
   background: var(--surface);
+}
+
+/* A game that counts for nothing is struck through, as the tournament's page
+   strikes it. */
+.player-game[data-withdrawn] {
+  text-decoration: line-through;
 }
 
 .player-games-none,
@@ -2429,10 +2442,27 @@ html:has(dialog:modal) {
   text-decoration: underline;
 }
 
+/* Struck through as everywhere, and still so when pointed at. */
+.knockout .player-name[data-withdrawn],
+.knockout-summary .player-name[data-withdrawn] {
+  text-decoration: line-through;
+}
+
+.knockout .player-name[data-withdrawn]:hover,
+.knockout-summary .player-name[data-withdrawn]:hover {
+  text-decoration: line-through underline;
+}
+
 .knockout-score {
   width: 1.75rem;
   text-align: center;
   white-space: nowrap;
+}
+
+/* The scores of a match a withdrawn player was in, both sides', since what
+   they played counts for nothing, though the match stands. */
+.knockout-score[data-withdrawn] {
+  text-decoration: line-through;
 }
 
 .knockout-withdrawn,

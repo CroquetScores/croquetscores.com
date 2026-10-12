@@ -43,6 +43,22 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
     }),
   });
 
+// Whether `found` is drawn struck through, as the page's own scripting would
+// see it, which the specs are not compiled to know.
+const struckThrough = async (found: Locator): Promise<boolean> =>
+  /line-through/.test(
+    await found.evaluate(
+      (element: unknown) =>
+        (
+          globalThis as unknown as {
+            getComputedStyle(element: unknown): {
+              textDecorationLine: string;
+            };
+          }
+        ).getComputedStyle(element).textDecorationLine,
+    ),
+  );
+
 // Where `name` is along every line of the grid: their column's place among
 // the players', and one more along a line, past the row's heading.
 const columnOf = async (world: SpecWorld, name: string): Promise<number> => {
@@ -238,6 +254,16 @@ Then(
     const score = await scoreWhere(this, which, player, opponent);
     assert.equal(
       (await score.getAttribute("data-withdrawn")) !== null,
+      not === null,
+    );
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the grid is (not )?struck through$/,
+  async function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(
+      await struckThrough(rowOf(this, name).locator(".player-name")),
       not === null,
     );
   },

@@ -10,7 +10,9 @@ Feature: A block's page shows its results as a grid
   The grid has a row for each player entered in the block, in the block's
   order, headed by the player as the tournament's other pages show one: their
   name, leading to their own page, what they represent and their flag. A
-  withdrawn player's row says they have withdrawn.
+  withdrawn player's row says they have withdrawn, and their name is struck
+  through, as are their games, which count for nothing
+  (`PublicBlockOfTournament.feature`).
 
   It has a column for each player too, in the same order, so that the cell
   where a player's row meets their opponent's column holds the games between
@@ -245,6 +247,35 @@ Feature: A block's page shows its results as a grid
     Scenario: A withdrawn game is not counted in the totals
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the "Games" of "Sam Someone" in the grid are "0"
+
+  Rule: A withdrawn player's name and games are struck through, and their games count for nothing
+
+    Scenario: A withdrawn player's name is struck through
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the name of "Alex Another" in the grid is struck through
+
+    Scenario: A player who has not withdrawn is not struck through
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the name of "Sam Someone" in the grid is not struck through
+
+    Scenario: A withdrawn player's game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first score where "Alex Another" meets "Sam Someone" is marked as withdrawn
+
+    Scenario: A withdrawn player's game is struck through in their opponent's row too
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is struck through
+
+    Scenario: A withdrawn player's game is not counted in the totals
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the "Games" of "Sam Someone" in the grid are "0"
 

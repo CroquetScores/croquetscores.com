@@ -35,6 +35,22 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
     has: world.browserPage.locator(".player-name", { hasText: name }),
   });
 
+// Whether `found` is drawn struck through, as the page's own scripting would
+// see it, which the specs are not compiled to know.
+const struckThrough = async (found: Locator): Promise<boolean> =>
+  /line-through/.test(
+    await found.evaluate(
+      (element: unknown) =>
+        (
+          globalThis as unknown as {
+            getComputedStyle(element: unknown): {
+              textDecorationLine: string;
+            };
+          }
+        ).getComputedStyle(element).textDecorationLine,
+    ),
+  );
+
 When(
   "the name of {string} in the summary is pressed",
   async function (this: SpecWorld, name: string) {
@@ -77,6 +93,16 @@ Then(
     assert.equal(
       await rowOf(this, name).locator(".block-summary-withdrawn").count(),
       says === "says" ? 1 : 0,
+    );
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the summary is (not )?struck through$/,
+  async function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(
+      await struckThrough(rowOf(this, name).locator(".player-name")),
+      not === null,
     );
   },
 );

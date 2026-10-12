@@ -126,6 +126,9 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
       let theirs = player.id.value;
       let opponentOf = (written: string): Opponent =>
         opponents.get(written) ?? nobody;
+      // A team's player cannot withdraw from a test, so nothing is withdrawn
+      // there.
+      let withdrawn: (written: string) => boolean = () => false;
       if (shape.kind !== "test") {
         const entry = competition.players.find((each) =>
           each.tournamentPlayerId.equals(player.id),
@@ -139,6 +142,9 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
           );
           return opponents.get(found?.tournamentPlayerId.value ?? "") ?? nobody;
         };
+        withdrawn = (written: string): boolean =>
+          competition.players.find((each) => each.id.value === written)
+            ?.withdrawn ?? false;
       }
       const where = competitions[at]!;
       entered.push(where);
@@ -151,6 +157,10 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
           opponent: opponentOf(won ? game.loser.value : game.winner.value),
           score: String(won ? game.winnerScore : game.loserScore),
           opponentScore: String(won ? game.loserScore : game.winnerScore),
+          withdrawn:
+            game.withdrawn ||
+            withdrawn(game.winner.value) ||
+            withdrawn(game.loser.value),
           competition: where,
           addedAt: game.addedAt,
         });

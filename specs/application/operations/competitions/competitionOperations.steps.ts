@@ -380,6 +380,26 @@ Given(
 );
 
 Given(
+  "{string} has reversed the withdrawal of the player {string} from {string} of {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    competition: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    await sent(
+      this,
+      await asTheReader(this, address),
+      await named(this, tournament, competition, player),
+      reversing,
+    );
+    doneAs(this);
+  },
+);
+
+Given(
   new RegExp(
     `^"([^"]*)" has given the player "([^"]*)" in "([^"]*)" of "([^"]*)" a carry forward of ${COUNT} of ${NUMBER}$`,
   ),

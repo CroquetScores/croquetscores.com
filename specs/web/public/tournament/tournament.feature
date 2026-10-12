@@ -48,6 +48,11 @@ Feature: A tournament's page lists its games, the most recent first
   leads to an address that answers `404` until the feature that provides it
   lands.
 
+  A withdrawn game, and every game of a player who has withdrawn from the
+  competition it was played in, is listed, since it was played, but struck
+  through and said to be withdrawn, since it counts for nothing
+  (`GamesOfTournament.feature`).
+
   An address a tournament has moved on from leads to where it is found now,
   so that a link kept from before still works. An address no tournament of
   the website has been found at is not a page, and nor is an archived
@@ -212,6 +217,37 @@ Feature: A tournament's page lists its games, the most recent first
       And "Sam Someone" has beaten "Alex Another" 17 to 17 in "Block A" of "Autumn Open"
       When the page at "/2026/ac/autumn-open" is opened
       Then the first line of the first game ends with "drew with"
+
+  Rule: A game that counts for nothing is struck through
+
+    Scenario: A withdrawn game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first game is marked as withdrawn
+
+    Scenario: A withdrawn game is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first game is struck through
+
+    Scenario: A withdrawn player's game is marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first game is marked as withdrawn
+
+    Scenario: A withdrawn player's game is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first game is struck through
+
+    Scenario: A game that counts is not marked as withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the first game is not marked as withdrawn
 
   Rule: Beside a game is its competition and how long ago it was added
 

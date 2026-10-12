@@ -27,6 +27,22 @@ const competitions = (world: SpecWorld): Locator =>
 const said = async (found: Locator): Promise<string> =>
   ((await found.textContent()) ?? "").replace(/\s+/g, " ").trim();
 
+// Whether `found` is drawn struck through, as the page's own scripting would
+// see it, which the specs are not compiled to know.
+const struckThrough = async (found: Locator): Promise<boolean> =>
+  /line-through/.test(
+    await found.evaluate(
+      (element: unknown) =>
+        (
+          globalThis as unknown as {
+            getComputedStyle(element: unknown): {
+              textDecorationLine: string;
+            };
+          }
+        ).getComputedStyle(element).textDecorationLine,
+    ),
+  );
+
 When(
   /^the opponent in the (first|second|third) of the player's games is pressed$/,
   async function (this: SpecWorld, which: string) {
@@ -57,6 +73,24 @@ Then(
 
 const noGames = (world: SpecWorld): Locator =>
   world.browserPage.locator("main .player-games-none");
+
+Then(
+  /^the (first|second|third) of the player's games is (not )?marked as withdrawn$/,
+  async function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(
+      (await games(this).nth(placeOf(which)).getAttribute("data-withdrawn")) !==
+        null,
+      not === null,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third) of the player's games is struck through$/,
+  async function (this: SpecWorld, which: string) {
+    assert.ok(await struckThrough(games(this).nth(placeOf(which))));
+  },
+);
 
 Then("the page says the player has no games", async function (this: SpecWorld) {
   assert.equal(await noGames(this).count(), 1);

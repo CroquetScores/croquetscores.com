@@ -77,6 +77,13 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) game of the player answered was (not )?withdrawn$/,
+  function (this: SpecWorld, which: string, not: string | null) {
+    assert.equal(gameAnswered(this, which).withdrawn, not === null);
+  },
+);
+
+Then(
   /^the (first|second|third) game answered was played to "(.*)" against "(.*)"$/,
   function (
     this: SpecWorld,

@@ -22,7 +22,11 @@ Feature: A knockout's grid draws its draw round by round
   two sides one above the other. A side is a player, shown as the
   tournament's other pages show one, their name leading to their own page, a
   bye, said as "Bye", or a place not yet known, left empty until the match
-  before it is decided. A withdrawn player says they have withdrawn. Beside
+  before it is decided. A withdrawn player says they have withdrawn, and
+  their name is struck through, as are the scores of their matches, since
+  what they played counts for nothing wherever else it is shown
+  (`PublicKnockoutOfTournament.feature`); the match stands as it was
+  decided. Beside
   each side is a cell for each game the match is the best of, holding the
   side's score in that game as it was typed, oldest first, and empty for a
   game not played. Each score is marked as won or lost, as the block's grid
@@ -154,6 +158,15 @@ Feature: A knockout's grid draws its draw round by round
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then the second side of the first match of the first round in the grid says they have withdrawn
 
+    Scenario: A withdrawn player's name is struck through
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the second side of the first match of the first round in the grid has its name struck through
+
+    Scenario: A player who has not withdrawn is not struck through
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the first side of the first match of the first round in the grid does not have its name struck through
+
     Scenario: A bye is said as a bye
       Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"
@@ -197,6 +210,23 @@ Feature: A knockout's grid draws its draw round by round
       Given "Sam Someone" has beaten "Alex Another" 26tp to 17 in "Finals" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then the first score of the first side of the first match of the first round in the grid is "26tp"
+
+    Scenario: A withdrawn player's score is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the first score of the second side of the first match of the first round in the grid is struck through
+
+    Scenario: The other side's score against a withdrawn player is struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the first score of the first side of the first match of the first round in the grid is struck through
+
+    Scenario: A score between players who have not withdrawn is not struck through
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the first score of the first side of the first match of the first round in the grid is not struck through
 
     Scenario: The games are oldest first
       Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Finals" of "Spring Open"
