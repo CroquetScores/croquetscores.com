@@ -12,7 +12,7 @@ Press **Add Note**, above the list. A panel takes the place of the list, since a
 
 **Title** is required, and is what the note is listed by. It is plain text.
 
-**Description** is written in Markdown, as an issue on GitHub is, and can be left empty where the title says all there is to say. The toolbar above the box writes the Markdown for you: Heading, Bold, Italic, Quote, Code, Link, Numbered list, Bulleted list and Task list. Each works on what is selected, or at the start of each line selected, or puts the cursor where the words go.
+**Description** is written in Markdown and can be left empty where the title says all there is to say. The toolbar above the box writes the Markdown for you: Heading, Bold, Italic, Quote, Code, Link, Numbered list, Bulleted list and Task list. Each works on what is selected, or at the start of each line selected, or puts the cursor where the words go.
 
 **Preview** shows the note as a reader will see it on its page.
 
@@ -28,6 +28,6 @@ Press a note's title, or its **Edit**, to open the panel on that note. Press **S
 
 A note that no longer applies is deleted. A note deleted is gone for good, so **Delete** asks first.
 
-![The question asked before deleting a note](images/delete-note-asks.png)
+![The question asked before deleting as note](images/delete-note-asks.png)
 
 Next: [Managers and scorers](managers-and-scorers.md).
