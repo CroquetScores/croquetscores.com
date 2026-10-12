@@ -12,7 +12,7 @@ Press **Add Note**, above the list. A panel takes the place of the list, since a
 
 **Title** is required, and is what the note is listed by. It is plain text.
 
-**Description** is written in Markdown, as an issue on GitHub is, and can be left empty where the title says all there is to say. The toolbar above the box writes the Markdown for you: Heading, Bold, Italic, Quote, Code, Link, Numbered list, Bulleted list and Task list. Each works on what is selected, or at the start of each line selected, or puts the cursor where the words go.
+**Description** is written in Markdown and can be left empty where the title says all there is to say. The toolbar above the box writes the Markdown for you: Heading, Bold, Italic, Quote, Code, Link, Numbered list, Bulleted list and Task list. Each works on what is selected, or at the start of each line selected, or puts the cursor where the words go.
 
 **Preview** shows the note as a reader will see it on its page.
 
