@@ -50,32 +50,6 @@ export class SeeNotes {
 
   /**
    * Makes the writer a manager of the tournament the tournament document
-   * `tournamentDocumentId` on `website` became, where they are not, so that a
-   * game that could not be added is theirs to read (importCompetition.feature).
-   */
-  async makeManager(
-    website: string,
-    tournamentDocumentId: string,
-    writer: AccountId,
-  ): Promise<void> {
-    await this.unitOfWork.inTransaction(async () => {
-      const tournament = await tournamentBecome(
-        this.database,
-        this.tournaments,
-        website,
-        tournamentDocumentId,
-      );
-      // Done as the tournament's first manager, who created it, when it was
-      // created.
-      const [by] = tournament.managers;
-      if (by === undefined) throw new Error("The tournament has no manager.");
-      tournament.addManager(writer, by, tournament.starts);
-      await this.tournaments.save(tournament);
-    });
-  }
-
-  /**
-   * Makes the writer a manager of the tournament the tournament document
    * `tournamentDocumentId` on `website` became, where they are not, and
    * writes the note of the competition `name`, which was a `kind`, whose
    * games are the Swiss `swiss` of it, titled as it was called. Kept in one

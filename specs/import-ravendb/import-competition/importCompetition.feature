@@ -1112,17 +1112,21 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
-  Rule: A tournament where a game could not be added is managed by whoever reads what could not be brought over
+  Rule: A game that could not be added is said in a note of the tournament, and is no error
 
     After everything else is tried to bring a game over, and the site still
-    refuses it, croquetscores@gmail.com is made a manager of the tournament,
-    so that what could not be brought over is theirs to see. That is said as
-    corrected (`AcceptedImportErrors.feature`), once for the competition. It
-    is done only where a user was brought over as croquetscores@gmail.com, and
-    only for a game kept as an error: one put right, left out as a duplicate,
-    or against a bye is not.
+    refuses it, it is said in a note of the tournament's called Import Errors,
+    written by croquetscores@gmail.com, who is made a manager of the
+    tournament to write it. The note has a heading for each competition and a
+    line for each game, who beat whom with each one's team or club and score,
+    and why it could not be added, in words for a reader of the tournament
+    rather than for whoever reads the import. It is said as corrected
+    (`AcceptedImportErrors.feature`), for each game and once for the
+    competition, and is not kept as an error. It is done only where a user was
+    brought over as croquetscores@gmail.com, and only for a game that was
+    refused: one put right, left out as a duplicate or against a bye is not.
 
-    Scenario: A tournament where a game could not be added is managed by croquetscores@gmail.com
+    Scenario: The tournament where a game could not be added is managed by croquetscores@gmail.com
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
@@ -1132,7 +1136,7 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is managed by the account for "croquetscores@gmail.com"
 
-    Scenario: A game that could not be added with the manager added is still an error
+    Scenario: A game that could not be added is no error
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
@@ -1140,9 +1144,9 @@ Feature: Importing one of the old sites' competitions
       And game 1 was won by player 7
       And game 1 was lost by player 7
       When the competition is imported
-      Then the error kept for "croquetscores.com/blocks/30" says "Game.SamePlayer"
+      Then no error is kept for "croquetscores.com/blocks/30"
 
-    Scenario: A competition where a game could not be added is said as corrected for the manager
+    Scenario: A game that could not be added is said as corrected
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
@@ -1150,9 +1154,9 @@ Feature: Importing one of the old sites' competitions
       And game 1 was won by player 7
       And game 1 was lost by player 7
       When the competition is imported
-      Then "croquetscores.com/blocks/30" is corrected as "ImportCompetition.ManagerAdded"
+      Then "game 1" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.GameNoted"
 
-    Scenario: The correction for the manager says each game that could not be added
+    Scenario: A competition with a game that could not be added is said as corrected
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
@@ -1160,7 +1164,47 @@ Feature: Importing one of the old sites' competitions
       And game 1 was won by player 7
       And game 1 was lost by player 7
       When the competition is imported
-      Then what is corrected of "croquetscores.com/blocks/30" names "because a player cannot play themselves"
+      Then "croquetscores.com/blocks/30" is corrected as "ImportCompetition.ImportErrorsNoted"
+
+    Scenario: The tournament has a note called Import Errors
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has a note called "Import Errors"
+
+    Scenario: The note has a heading for the competition
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/12" on "croquetscores.com" says "### A Block"
+
+    Scenario: The note says why the game could not be added in plain words
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/12" on "croquetscores.com" says "Not added because the game was recorded with the same player on both sides."
+
+    Scenario: The correction for the game says why
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 7
+      When the competition is imported
+      Then what is corrected of "croquetscores.com/blocks/30" names "because the game was recorded with the same player on both sides"
 
     Scenario: A competition whose games were all added does not make the manager
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"

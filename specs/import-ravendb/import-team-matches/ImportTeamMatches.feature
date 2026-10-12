@@ -1855,9 +1855,11 @@ Feature: Importing the old sites' team matches
     section for each team match, headed by its name, with a line for each
     game, the winner, the loser and each one's team and score. There is one
     note for the tournament, and each team match with such a game adds its
-    section. That is said as corrected (`AcceptedImportErrors.feature`), and
-    is not an error. Where no user was brought over as
-    croquetscores@gmail.com, it is kept as an error as it always was.
+    section, and why it could not be added. That is said as corrected
+    (`AcceptedImportErrors.feature`), and is not an error. Where no user was
+    brought over as croquetscores@gmail.com, it is kept as an error as it
+    always was. Any other game the site refuses is said the same way
+    (`importCompetition.feature`).
 
     Scenario: The tournament has a note called Import Errors
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
@@ -1897,7 +1899,7 @@ Feature: Importing the old sites' team matches
       And game 1 was lost by player 8
       And game 1's loser scored "3"
       When the team match is imported
-      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "The following games could not be imported into the new version of Croquet Scores"
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "The following games could not be added to the new version of Croquet Scores"
 
     Scenario: The note has a section for the team match
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
@@ -1977,7 +1979,7 @@ Feature: Importing the old sites' team matches
       And game 1 was lost by player 8
       And game 1's loser scored "3"
       When the team match is imported
-      Then "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.ImportErrorsNoted"
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.ImportErrorsNoted"
 
     Scenario: A game said in a note is not an error
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
@@ -2017,7 +2019,7 @@ Feature: Importing the old sites' team matches
       And game 1 was lost by player 8
       And game 1's loser scored "3"
       When the team match is imported
-      Then "game 1" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.SameTeamNoted"
+      Then "game 1" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.GameNoted"
 
     Scenario: A game of players of different teams is not in the note
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
@@ -2206,8 +2208,8 @@ Feature: Importing the old sites' team matches
     As for any competition (`importCompetition.feature`): after everything
     else is tried, a game the site still refuses, as one of a player the team
     match does not list, makes croquetscores@gmail.com a manager of the
-    tournament, said as corrected. A game between players of one team is said
-    in a note instead (the rule above).
+    tournament, and is said in the note, as a game between players of one
+    team is (the rule above).
 
     Scenario: A tournament where a game of a team match could not be added is managed by croquetscores@gmail.com
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
@@ -2231,4 +2233,4 @@ Feature: Importing the old sites' team matches
       And game 1 was won by player 7
       And game 1 was lost by player 99
       When the team match is imported
-      Then "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.ManagerAdded"
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.ImportErrorsNoted"

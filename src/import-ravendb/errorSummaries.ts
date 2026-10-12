@@ -28,6 +28,47 @@ const REASONS: Readonly<Record<string, string>> = {
   "TournamentPlayer.NoLetterOrDigit": "their name has no letter or digit",
 };
 
+// Why the site refused a game, said for a reader of the tournament rather
+// than for whoever reads the import, as a clause after "because".
+const PLAIN_REASONS: Readonly<Record<string, string>> = {
+  "Competition.NotDrawnToMeet":
+    "the two players were not due to meet at that stage of the knockout's draw",
+  "Competition.MatchDecided": "their match had already been decided",
+  "Competition.ExpectedMatchesReached":
+    "the team match already had as many matches as it was expected to have",
+  "Competition.SameTeam": "both players are on the same team",
+  "Competition.NoSuchPlayer": "a player is not on either of the two teams",
+  "Competition.DrawNotFilled": "the knockout's draw was not full",
+  "Competition.PlayerAlreadyEntered":
+    "a player was already entered in the competition",
+  "CompetitionPlayer.Withdrawn":
+    "a player had already withdrawn from the competition",
+  "Game.SamePlayer": "the game was recorded with the same player on both sides",
+  "Game.WinnerNotAhead":
+    "the winner's score was not higher than the loser's score",
+  "Game.LoserMarked": "the loser's score was marked as a winning score",
+  "ImportCompetition.PlayerNotInCompetition":
+    "a player of the game is not entered in the competition",
+  "ImportCompetition.PlayerNotBroughtOver":
+    "a player of the game could not be brought over to the tournament",
+  "ImportTeamMatches.RepresentsNeitherTeam":
+    "a player was recorded as representing a team that is not in the match",
+  "PersonName.TooLong": "a player's name is too long",
+  "TournamentPlayer.NoLetterOrDigit":
+    "a player's name has no letter or digit in it",
+};
+
+/**
+ * Why `failure` was refused, said for a reader of the tournament, as the end of
+ * a sentence beginning "because" (ImportTeamMatches.feature).
+ */
+export const plainReasonOf = (failure: unknown): string => {
+  const code = (failure as { code?: unknown } | null)?.code;
+  return typeof code === "string" && PLAIN_REASONS[code] !== undefined
+    ? PLAIN_REASONS[code]
+    : "the new site's rules do not allow it";
+};
+
 /** Why `failure` was refused, by its code, or that its code was not known. */
 export const reasonOf = (failure: unknown): string => {
   const code = (failure as { code?: unknown } | null)?.code;

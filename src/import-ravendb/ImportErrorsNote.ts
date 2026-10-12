@@ -11,12 +11,41 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
 import type { SeeNotes } from "./SeeNotes.js";
+import { plainReasonOf } from "./errorSummaries.js";
+import type { Game as OldGame } from "./ravendb-models/Competition.js";
 
 /** What the tournament's note of what could not be brought over is titled. */
 export const IMPORT_ERRORS_TITLE = "Import Errors";
 
 const INTRO =
-  "The following games could not be imported into the new version of Croquet Scores";
+  "The following games could not be added to the new version of Croquet Scores. The reason is given with each game.";
+
+// A player of a game as the note says them: their name, and the team or club
+// they represented where they had one, as "Ann Able (New Zealand)".
+interface PlayerOfGame {
+  readonly _Id: number;
+  readonly Representing: string | null;
+}
+
+/**
+ * A game that could not be added as a line of the note: who beat whom, with
+ * each one's team or club and score, and why it could not be added, said for a
+ * reader of the tournament.
+ */
+export const noteLineOf = (
+  game: OldGame,
+  failure: unknown,
+  players: readonly PlayerOfGame[],
+  nameOf: (number: number) => string,
+): string => {
+  const said = (number: number, score: string): string => {
+    const team = (
+      players.find((player) => player._Id === number)?.Representing ?? ""
+    ).trim();
+    return `${nameOf(number)}${team === "" ? "" : ` (${team})`} ${score.trim()}`;
+  };
+  return `${said(game.Winner.PlayerId, game.Winner.Score._Score)} beat ${said(game.Loser.PlayerId, game.Loser.Score._Score)}. Not added because ${plainReasonOf(failure)}.`;
+};
 
 /**
  * Says, in a note of the tournament's, the games of its team matches that

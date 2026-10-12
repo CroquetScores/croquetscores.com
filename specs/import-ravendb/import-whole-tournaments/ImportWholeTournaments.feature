@@ -871,7 +871,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then no error is kept for "croquetscores.com/blocks/30/see-notes"
 
-    Scenario: A game the Swiss refuses is said as corrected
+    Scenario: A game the Swiss refuses is said as corrected, in the note
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing
@@ -890,7 +890,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 3's winner scored "21"
       And game 3's loser scored "7"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then "game 3" of "croquetscores.com/blocks/30/see-notes" is corrected as "ImportCompetition.RefusedInSeeNotes"
+      Then "game 3" of "croquetscores.com/blocks/30/see-notes" is corrected as "ImportCompetition.GameNoted"
 
     Scenario: A competition said to be in a Swiss is said as corrected
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
@@ -1175,7 +1175,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the last competition of the tournament kept for "tournaments/13" on "croquetscores.com" is "A Draw - See Notes"
 
-    Scenario: A knockout of a tournament that started in 2026 is brought over in part
+    Scenario: A knockout of a tournament that started in 2026 is brought over in part, and the game it could not add is said in the note
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing
@@ -1195,7 +1195,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 3 was won by player 1
       And game 3 was lost by player 1
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the error kept for "croquetscores.com/knockouts/30" says "Game.SamePlayer"
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has a note called "Import Errors"
 
     Scenario: A knockout is brought over in part where no user was brought over to write the note
       Given a tournament "tournaments/13" on "croquetscores.com"
@@ -1280,7 +1280,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then what is corrected of "croquetscores.com/blocks/30" names "could not be brought over whole as a block"
 
-    Scenario: A block of a tournament that started in 2026 is brought over in part
+    Scenario: A block of a tournament that started in 2026 is brought over in part, and the game it could not add is said in the note
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
       And a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing
@@ -1300,7 +1300,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 3's winner scored "21"
       And game 3's loser scored "7"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has a note called "Import Errors"
 
   Rule: A tournament with a score marked in text as a tie allows drawn games
 

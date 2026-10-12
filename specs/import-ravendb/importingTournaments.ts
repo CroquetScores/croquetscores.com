@@ -320,6 +320,14 @@ export const importingOf = (world: SpecWorld): Importing => {
   );
   const accepted = new AcceptedInScenario();
   const corrected = new AcceptedInScenario();
+  const importErrorsNote = new ImportErrorsNote(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
+    seeNotes,
+  );
   const importing = {
     unitOfWork,
     tournaments,
@@ -327,7 +335,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     database,
     accepting: accepted,
     correcting: corrected,
-    managers: seeNotes,
+    notes: importErrorsNote,
   };
   const importedAccounts = new ImportedAccounts(
     accountRepository,
@@ -342,17 +350,7 @@ export const importingOf = (world: SpecWorld): Importing => {
   const blocks = new ImportBlocks(importing);
   const knockouts = new ImportKnockouts(importing);
   const swisses = new ImportSwisses(importing);
-  const teamMatches = new ImportTeamMatches(
-    importing,
-    new ImportErrorsNote(
-      unitOfWork,
-      tournaments,
-      managerNotes,
-      managerNotesByTournament,
-      database,
-      seeNotes,
-    ),
-  );
+  const teamMatches = new ImportTeamMatches(importing);
   const commentaryImporter = new ImportCommentaries(
     unitOfWork,
     tournaments,

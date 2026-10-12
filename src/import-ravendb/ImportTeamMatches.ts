@@ -35,7 +35,7 @@ import type {
   Game as OldGame,
   TeamMatch,
 } from "./ravendb-models/Competition.js";
-import type { ImportErrorsNote } from "./ImportErrorsNote.js";
+import { noteLineOf } from "./ImportErrorsNote.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfImported } from "./bestOfImported.js";
 import { isOldBye } from "./ImportTournamentPlayers.js";
@@ -250,11 +250,7 @@ const shortNameApart = (
 export class ImportTeamMatches implements Importer<TeamMatch> {
   readonly collection = "TeamMatches";
 
-  constructor(
-    private readonly importing: ImportingCompetitions,
-    /** What says, in a note, the games between players of one team. */
-    private readonly notes?: ImportErrorsNote,
-  ) {}
+  constructor(private readonly importing: ImportingCompetitions) {}
 
   async importDocument({
     website,
@@ -277,14 +273,11 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     const documentId = `${website}/${id}`;
     if (document.IsArchived) return;
 
-    // A game between two players of one team is said in a note of the
-    // tournament's, by whoever writes notes, where there is one to write
-    // them; otherwise it is kept as an error.
-    const writer = await this.notes?.writer();
-    const sameTeam: OldGame[] = [];
-    // How many of its games were kept as errors, once it is brought over.
-    let refusedGames = 0;
-    let refusedSaid: readonly string[] = [];
+    // A game that cannot be added, after everything else was tried, is said in
+    // a note of the tournament's by whoever writes notes, where there is one to
+    // write them; otherwise it is kept as an error.
+    const writer = await this.importing.notes?.writer();
+    const noted: { game: OldGame; failure: unknown }[] = [];
 
     await unitOfWork.inTransaction(async () => {
       const tournamentDocument = document.Tournament.Id;
@@ -326,7 +319,9 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         tournament,
         { name: document.Name, oldSlug: document.Slug },
         undefined,
-        writer === undefined ? undefined : (game) => sameTeam.push(game),
+        writer === undefined
+          ? undefined
+          : (game, failure) => noted.push({ game, failure }),
       );
 
       // Done as the tournament's first manager, who created it, when it was
@@ -822,61 +817,22 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           return put === false ? meetAgain(game, failure, toCome) : put;
         },
       );
-      refusedGames = errors.gamesRefused;
-      refusedSaid = errors.gamesRefusedSaid;
       // Again, for the players made for meeting again.
       await tournaments.save(tournament);
       await competitions.save(competition);
     });
 
-    // Where a game could not be added after everything else was tried,
-    // whoever reads what could not be brought over is made a manager of the
-    // tournament.
-    const { managers } = this.importing;
-    if (refusedGames > 0 && managers !== undefined) {
-      const manager = await managers.writer();
-      if (manager !== undefined) {
-        await managers.makeManager(website, document.Tournament.Id, manager);
-        const where = await database.tournamentOf(
-          website,
-          document.Tournament.Id,
-        );
-        await correcting.accept({
-          documentId,
-          website,
-          newSitePath: where?.tournamentAddress,
-          oldSitePath: oldSitePathOf(
-            where?.tournamentAddress ?? "",
-            document.Slug,
-          ),
-          what: "",
-          code: "ImportCompetition.ManagerAdded",
-          description: `${document.Name} had ${String(refusedGames)} ${refusedGames === 1 ? "game" : "games"} that could not be added, so croquetscores@gmail.com is made a manager of the tournament. ${refusedSaid.join(" ")}`,
-        });
-      }
-    }
-
-    if (
-      this.notes !== undefined &&
-      writer !== undefined &&
-      sameTeam.length > 0
-    ) {
+    // Said in a note of the tournament's, which makes croquetscores@gmail.com
+    // a manager, and said as corrected, once for the team match.
+    const { notes } = this.importing;
+    if (notes !== undefined && writer !== undefined && noted.length > 0) {
       const nameOf = nameOfIn(document);
-      const players = new Map(
-        document.Players._Players.map((player) => [player._Id, player]),
-      );
-      // "Ann Able (New Zealand) 26", the player as the old site had them.
-      const said = (number: number, score: string): string => {
-        const team = (players.get(number)?.Representing ?? "").trim();
-        return `${nameOf(number)}${team === "" ? "" : ` (${team})`} ${score.trim()}`;
-      };
-      await this.notes.add(
+      await notes.add(
         website,
         document.Tournament.Id,
         document.Name,
-        sameTeam.map(
-          (game) =>
-            `${said(game.Winner.PlayerId, game.Winner.Score._Score)} beat ${said(game.Loser.PlayerId, game.Loser.Score._Score)}`,
+        noted.map(({ game, failure }) =>
+          noteLineOf(game, failure, document.Players._Players, nameOf),
         ),
         writer,
       );
@@ -893,8 +849,8 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           document.Slug,
         ),
         what: "",
-        code: "ImportTeamMatches.ImportErrorsNoted",
-        description: `${document.Name} had ${String(sameTeam.length)} ${sameTeam.length === 1 ? "game" : "games"} between players of the same team, which a test cannot hold, and they are said in the note Import Errors of the tournament, which croquetscores@gmail.com is made a manager to write.`,
+        code: "ImportCompetition.ImportErrorsNoted",
+        description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
       });
     }
   }

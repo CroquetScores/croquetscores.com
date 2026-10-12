@@ -282,7 +282,7 @@ try {
     database,
     accepting,
     correcting,
-    managers: seeNotes,
+    notes: importErrorsNote,
   };
   // One for every importer that names a user, so that a user is one account
   // wherever they are named.
@@ -314,7 +314,7 @@ try {
       new ImportBlocks(importing),
       new ImportKnockouts(importing),
       new ImportSwisses(importing),
-      new ImportTeamMatches(importing, importErrorsNote),
+      new ImportTeamMatches(importing),
     ],
     commentaries: new ImportCommentaries(
       unitOfWork,

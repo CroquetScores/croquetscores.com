@@ -577,9 +577,6 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         document: {
           ...(each.document as OldCompetition),
           Name: `${name}${SEE_NOTES_SUFFIX}`,
-          // A game the Swiss refuses is said as corrected, not kept as an
-          // error: the competition's own refusals are what were found.
-          InSeeNotes: true,
         },
       });
       const made = await this.database.findCompetitionOf(website, swissId);

@@ -25,6 +25,7 @@ import {
   oldSitePathOf,
 } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
+import { type ImportErrorsNote, noteLineOf } from "./ImportErrorsNote.js";
 import {
   addOldPlayer,
   isOldBye,
@@ -97,21 +98,11 @@ export interface ImportingCompetitions {
   /** Where what the import corrected is said, the same way. */
   readonly correcting: AcceptedImportErrors;
   /**
-   * Makes croquetscores@gmail.com a manager of a tournament where a game of
-   * one of its competitions could not be added, so that they can see it.
+   * Says, in a note of the tournament's, a game that could not be added, and
+   * makes croquetscores@gmail.com a manager of the tournament to write it
+   * (ImportCompetition.feature).
    */
-  readonly managers?: ManagerOfRefused;
-}
-
-/** What makes the account that reads what could not be brought over a manager. */
-export interface ManagerOfRefused {
-  /** Who it makes a manager, or nothing where no user was brought over as them. */
-  writer(): Promise<AccountId | undefined>;
-  makeManager(
-    website: string,
-    tournamentDocumentId: string,
-    writer: AccountId,
-  ): Promise<void>;
+  readonly notes?: ImportErrorsNote;
 }
 
 // Each count a player carried, as the site names it.
@@ -567,9 +558,10 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   // Brought over, or tried first where it is to be brought over whole or not
   // at all: in a transaction that is rolled back, with nothing said or kept,
   // finding out what the site would refuse of it.
-  // How many of its games were kept as errors, once it is brought over.
-  let refusedGames = 0;
-  let refusedSaid: readonly string[] = [];
+  // The games that could not be added, with what refused each, where there is
+  // a note to say them in, which is said once the competition is brought over.
+  const writer = await importing.notes?.writer();
+  const noted: { game: OldGame; failure: unknown }[] = [];
 
   const bringOver = async (dry: DryRun | undefined): Promise<void> => {
     await unitOfWork.inTransaction(async () => {
@@ -607,8 +599,9 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournament,
       { name: name.toString(), oldSlug: document.Slug },
       dry,
-      undefined,
-      document.InSeeNotes === true,
+      writer === undefined
+        ? undefined
+        : (game, failure) => noted.push({ game, failure }),
     );
 
     // Done as the tournament's first manager, who created it, when it was
@@ -854,8 +847,6 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       walkover,
     );
     for (const number of [...withdrew.keys()]) await withdraw(number);
-    refusedGames = errors.gamesRefused;
-    refusedSaid = errors.gamesRefusedSaid;
 
     await competitions.save(competition);
     if (dry !== undefined && dry.refused.length > 0) {
@@ -879,26 +870,33 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   }
   await bringOver(undefined);
 
-  // Where a game could not be added after everything else was tried, whoever
-  // reads what could not be brought over is made a manager of the tournament.
-  if (refusedGames > 0 && importing.managers !== undefined) {
-    const writer = await importing.managers.writer();
-    if (writer !== undefined) {
-      const tournamentDocument = document.Tournament.Id;
-      await importing.managers.makeManager(website, tournamentDocument, writer);
-      const where = await database.tournamentOf(website, tournamentDocument);
-      await correcting.accept({
-        documentId,
-        website,
-        newSitePath: where?.tournamentAddress,
-        oldSitePath: oldSitePathOf(
-          where?.tournamentAddress ?? "",
-          document.Slug,
-        ),
-        what: "",
-        code: "ImportCompetition.ManagerAdded",
-        description: `${document.Name} had ${String(refusedGames)} ${refusedGames === 1 ? "game" : "games"} that could not be added, so croquetscores@gmail.com is made a manager of the tournament. ${refusedSaid.join(" ")}`,
-      });
-    }
+  // Said in a note of the tournament's, which makes croquetscores@gmail.com a
+  // manager, and said as corrected, once for the competition.
+  if (
+    noted.length > 0 &&
+    importing.notes !== undefined &&
+    writer !== undefined
+  ) {
+    const tournamentDocument = document.Tournament.Id;
+    const nameOf = nameOfIn(document);
+    await importing.notes.add(
+      website,
+      tournamentDocument,
+      document.Name,
+      noted.map(({ game, failure }) =>
+        noteLineOf(game, failure, document.Players._Players, nameOf),
+      ),
+      writer,
+    );
+    const where = await database.tournamentOf(website, tournamentDocument);
+    await correcting.accept({
+      documentId,
+      website,
+      newSitePath: where?.tournamentAddress,
+      oldSitePath: oldSitePathOf(where?.tournamentAddress ?? "", document.Slug),
+      what: "",
+      code: "ImportCompetition.ImportErrorsNoted",
+      description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
+    });
   }
 };

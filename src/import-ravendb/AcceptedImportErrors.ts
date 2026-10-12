@@ -4,7 +4,13 @@ import { dirname } from "node:path";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
-import { gameSaid, placeOf, playerSaid, reasonOf } from "./errorSummaries.js";
+import {
+  gameSaid,
+  placeOf,
+  plainReasonOf,
+  playerSaid,
+  reasonOf,
+} from "./errorSummaries.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Game as OldGame } from "./ravendb-models/Competition.js";
 import { numbers } from "./runImporter.js";
@@ -311,22 +317,6 @@ export class DryRun {
  */
 export class DocumentErrors {
   #newSitePath: string | undefined;
-  #gamesRefused = 0;
-  readonly #gamesRefusedSaid: string[] = [];
-
-  /** Each game kept as an error, said for a person, in the order refused. */
-  get gamesRefusedSaid(): readonly string[] {
-    return this.#gamesRefusedSaid;
-  }
-
-  /**
-   * How many games were kept as errors: refused, and not put right, said in a
-   * note, accepted or left to a Swiss, so that whoever reads the errors is
-   * made a manager of the tournament where a game could not be added.
-   */
-  get gamesRefused(): number {
-    return this.#gamesRefused;
-  }
 
   constructor(
     private readonly errors: ImportErrors,
@@ -338,13 +328,10 @@ export class DocumentErrors {
     private readonly competition?: Omit<CompetitionOf, "newSitePath">,
     // Where it is being tried first, nothing is kept, only found out.
     private readonly dry?: DryRun,
-    // Where a game between two players of one team is said in a note of the
-    // tournament's rather than kept as an error (ImportTeamMatches.feature).
-    private readonly sameTeam?: (game: OldGame) => void,
-    // Where the document is the Swiss that holds the games of a competition
-    // that could not be brought over, a game it refuses is said as corrected,
-    // not kept as an error.
-    private readonly inSeeNotes = false,
+    // Where a game that cannot be added is said in a note of the tournament's
+    // rather than kept as an error (ImportCompetition.feature): given the game
+    // and what refused it.
+    private readonly noted?: (game: OldGame, failure: unknown) => void,
   ) {}
 
   /** That the competition the document was is now `id` of the tournament. */
@@ -390,24 +377,6 @@ export class DocumentErrors {
       }
       return;
     }
-    if (
-      what.startsWith("game ") &&
-      accepted === undefined &&
-      !this.inSeeNotes
-    ) {
-      this.#gamesRefused += 1;
-      this.#gamesRefusedSaid.push(
-        said?.refused(failure) ?? `${what}: ${describedFailure(failure)}`,
-      );
-    }
-    if (this.inSeeNotes && accepted === undefined) {
-      await this.corrected(
-        what,
-        "ImportCompetition.RefusedInSeeNotes",
-        said?.refused(failure) ?? `${what}: ${describedFailure(failure)}`,
-      );
-      return;
-    }
     if (accepted === undefined) {
       await this.errors.recordError(
         this.documentId,
@@ -431,15 +400,18 @@ export class DocumentErrors {
     failure: unknown,
   ): Promise<void> {
     const said = gameSaid(gameOf(game, nameOf), this.place);
+    // A game that cannot be added, after everything else was tried, is said
+    // in a note of the tournament's, with why, and is no error.
     if (
-      this.sameTeam !== undefined &&
-      (failure as { code?: unknown } | null)?.code === "Competition.SameTeam"
+      this.noted !== undefined &&
+      this.dry === undefined &&
+      acceptedErrorOf(this.documentId, failure) === undefined
     ) {
-      this.sameTeam(game);
+      this.noted(game, failure);
       await this.corrected(
         `game ${String(game.Id)}`,
-        "ImportTeamMatches.SameTeamNoted",
-        `${said} was not brought over, since its players play for the same team, and is said in a note of the tournament's.`,
+        "ImportCompetition.GameNoted",
+        `${said} could not be added, because ${plainReasonOf(failure)}, and is said in the note Import Errors of the tournament.`,
       );
       return;
     }
