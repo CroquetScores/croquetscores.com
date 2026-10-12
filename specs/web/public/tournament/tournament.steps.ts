@@ -4,6 +4,7 @@ import type { Locator } from "playwright";
 
 import { Flags } from "../../../../src/domain/aggregates/tournaments/value-objects/Flags.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 import { unmarkedWithin } from "../../support/marks.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -89,18 +90,8 @@ Then(
   /^the (first|second|third) game is struck through$/,
   async function (this: SpecWorld, which: string) {
     for (const line of ["first", "second"]) {
-      assert.match(
-        await lineOf(this, line, which).evaluate(
-          (element: unknown) =>
-            (
-              globalThis as unknown as {
-                getComputedStyle(element: unknown): {
-                  textDecorationLine: string;
-                };
-              }
-            ).getComputedStyle(element).textDecorationLine,
-        ),
-        /line-through/,
+      assert.ok(
+        await isStruckThrough(lineOf(this, line, which)),
         `The ${line} line is not struck through.`,
       );
     }

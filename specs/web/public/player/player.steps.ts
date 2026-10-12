@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -26,22 +27,6 @@ const competitions = (world: SpecWorld): Locator =>
 // What is said, as a reader reads it, one space between each word.
 const said = async (found: Locator): Promise<string> =>
   ((await found.textContent()) ?? "").replace(/\s+/g, " ").trim();
-
-// Whether `found` is drawn struck through, as the page's own scripting would
-// see it, which the specs are not compiled to know.
-const struckThrough = async (found: Locator): Promise<boolean> =>
-  /line-through/.test(
-    await found.evaluate(
-      (element: unknown) =>
-        (
-          globalThis as unknown as {
-            getComputedStyle(element: unknown): {
-              textDecorationLine: string;
-            };
-          }
-        ).getComputedStyle(element).textDecorationLine,
-    ),
-  );
 
 When(
   /^the opponent in the (first|second|third) of the player's games is pressed$/,
@@ -88,7 +73,7 @@ Then(
 Then(
   /^the (first|second|third) of the player's games is struck through$/,
   async function (this: SpecWorld, which: string) {
-    assert.ok(await struckThrough(games(this).nth(placeOf(which))));
+    assert.ok(await isStruckThrough(games(this).nth(placeOf(which))));
   },
 );
 

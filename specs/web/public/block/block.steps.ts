@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -42,22 +43,6 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
       hasText: new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
     }),
   });
-
-// Whether `found` is drawn struck through, as the page's own scripting would
-// see it, which the specs are not compiled to know.
-const struckThrough = async (found: Locator): Promise<boolean> =>
-  /line-through/.test(
-    await found.evaluate(
-      (element: unknown) =>
-        (
-          globalThis as unknown as {
-            getComputedStyle(element: unknown): {
-              textDecorationLine: string;
-            };
-          }
-        ).getComputedStyle(element).textDecorationLine,
-    ),
-  );
 
 // Where `name` is along every line of the grid: their column's place among
 // the players', and one more along a line, past the row's heading.
@@ -263,7 +248,7 @@ Then(
   /^the name of "(.*)" in the grid is (not )?struck through$/,
   async function (this: SpecWorld, name: string, not: string | null) {
     assert.equal(
-      await struckThrough(rowOf(this, name).locator(".player-name")),
+      await isStruckThrough(rowOf(this, name).locator(".player-name")),
       not === null,
     );
   },
@@ -278,19 +263,7 @@ Then(
     opponent: string,
   ) {
     const score = await scoreWhere(this, which, player, opponent);
-    assert.match(
-      await score.evaluate(
-        (element: unknown) =>
-          (
-            globalThis as unknown as {
-              getComputedStyle(element: unknown): {
-                textDecorationLine: string;
-              };
-            }
-          ).getComputedStyle(element).textDecorationLine,
-      ),
-      /line-through/,
-    );
+    assert.ok(await isStruckThrough(score), "The score is not struck through.");
   },
 );
 

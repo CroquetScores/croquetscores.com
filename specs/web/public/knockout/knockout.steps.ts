@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -65,22 +66,6 @@ const scoreAt = (
 // What is said, as a reader reads it, one space between each word.
 const said = async (found: Locator): Promise<string> =>
   ((await found.textContent()) ?? "").replace(/\s+/g, " ").trim();
-
-// Whether `found` is drawn struck through, as the page's own scripting would
-// see it, which the specs are not compiled to know.
-const struckThrough = async (found: Locator): Promise<boolean> =>
-  /line-through/.test(
-    await found.evaluate(
-      (element: unknown) =>
-        (
-          globalThis as unknown as {
-            getComputedStyle(element: unknown): {
-              textDecorationLine: string;
-            };
-          }
-        ).getComputedStyle(element).textDecorationLine,
-    ),
-  );
 
 const boxOf = async (found: Locator) => {
   const box = await found.boundingBox();
@@ -227,7 +212,7 @@ Then(
     has: string,
   ) {
     assert.equal(
-      await struckThrough(
+      await isStruckThrough(
         sideAt(this, side, match, round, view).locator(".player-name"),
       ),
       has === "has",
@@ -310,9 +295,29 @@ Then(
     not: string | null,
   ) {
     assert.equal(
-      await struckThrough(scoreAt(this, score, side, match, round, view)),
+      await isStruckThrough(scoreAt(this, score, side, match, round, view)),
       not === null,
     );
+  },
+);
+
+Then(
+  new RegExp(`^${SCORE} is (not )?said to be withdrawn$`),
+  async function (
+    this: SpecWorld,
+    score: string,
+    side: string,
+    match: string,
+    round: string,
+    view: string,
+    not: string | null,
+  ) {
+    const aloud = await said(
+      scoreAt(this, score, side, match, round, view).locator(
+        ".visually-hidden",
+      ),
+    );
+    assert.equal(/\bwithdrawn\b/.test(aloud), not === null, aloud);
   },
 );
 

@@ -88,7 +88,8 @@ const sideNamed = (
 // The side at `which` of `match`, on a row of its own: who it is, then its
 // score in each game the match is the best of, marked won or lost for it by
 // more than its colour, and empty for a game not played. Where either side
-// has withdrawn, the scores of both are struck through, as every page
+// has withdrawn, the scores of both are struck through and said to be
+// withdrawn, as a block's grid says a withdrawn game, since every page
 // strikes what a withdrawn player played, though the match stands.
 const sideRow = (
   match: MatchOfKnockout,
@@ -101,14 +102,16 @@ const sideRow = (
   const known = side.is === "player" || side.is === "bye";
   const withdrawn = match.sides.some(
     (each) => each.is === "player" && each.player.withdrawn,
-  )
-    ? " data-withdrawn"
-    : "";
+  );
   const cells = Array.from({ length: bestOf }, (_, at) => {
     const game = match.games[at];
     if (game === undefined) return `<td class="knockout-score"></td>`;
     const result = game.winner === which ? "won" : "lost";
-    return `<td class="knockout-score"${withdrawn}><span class="knockout-${result}"><span class="knockout-points">${escape(game.scores[which])}</span> <span class="visually-hidden">${escape(speaking.say(`block.${result}`))}</span></span></td>`;
+    const said = [
+      speaking.say(`block.${result}`),
+      ...(withdrawn ? [speaking.say("block.gameWithdrawn")] : []),
+    ].join(", ");
+    return `<td class="knockout-score"${withdrawn ? " data-withdrawn" : ""}><span class="knockout-${result}"><span class="knockout-points">${escape(game.scores[which])}</span> <span class="visually-hidden">${escape(said)}</span></span></td>`;
   });
   return `<tr class="knockout-side${known ? "" : " knockout-side-unknown"}"><th scope="row" class="knockout-name">${sideNamed(side, speaking, assets)}</th>${cells.join("")}</tr>`;
 };

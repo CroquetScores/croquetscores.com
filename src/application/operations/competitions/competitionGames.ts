@@ -1,4 +1,5 @@
 import type { Competition } from "../../../domain/aggregates/tournaments/competitions/Competition.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { TeamPlayerId } from "../../../domain/aggregates/tournaments/primitives/TeamPlayerId.js";
@@ -10,6 +11,30 @@ import type {
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { Games } from "../../services/Games.js";
 import type { Competitions } from "./competitionOperations.js";
+
+/**
+ * Whether a game of `competition` was played but counts for nothing, wherever
+ * games are counted or shown: a withdrawn game (`withdrawGame.feature`), or
+ * any game of a player who has withdrawn from the competition
+ * (`withdrawPlayer.feature`), on both sides, since a player who left partway
+ * met some of the others and not the rest, and what they played must not
+ * rank those they met above those they did not. A test's games name a
+ * team's players, who cannot withdraw from it, so there only a withdrawn
+ * game counts for nothing.
+ */
+export const countsForNothingIn = (
+  competition: Competition,
+): ((game: Game) => boolean) => {
+  const withdrawn = new Set(
+    competition.players
+      .filter((entered) => entered.withdrawn)
+      .map((entered) => entered.id.value),
+  );
+  return (game) =>
+    game.withdrawn ||
+    withdrawn.has(game.winner.value) ||
+    withdrawn.has(game.loser.value);
+};
 
 /**
  * What has been played in `competition`, a test: a match is started once its

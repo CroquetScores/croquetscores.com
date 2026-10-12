@@ -11,6 +11,7 @@ import {
   competitionOf,
   toldOf,
 } from "../competitions/competitionOperations.js";
+import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type KnockoutToRead,
   type MatchOfKnockout,
@@ -94,6 +95,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "" };
+    const countsForNothing = countsForNothingIn(competition);
 
     const matches = competition.knockoutMatches(
       toldOf(tournament, reference.id),
@@ -181,9 +183,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
           loser: shown.get(game.loser.value) ?? nameless,
           loserScore: game.loserScore.toString(),
           drawn: game.drawn,
-          withdrawn:
-            (shown.get(game.winner.value)?.withdrawn ?? false) ||
-            (shown.get(game.loser.value)?.withdrawn ?? false),
+          withdrawn: countsForNothing(game),
           addedAt: game.addedAt,
         })),
     };

@@ -1,5 +1,4 @@
 import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -7,6 +6,7 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
+import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type Competitions,
   competitionOf,
@@ -91,20 +91,9 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "", address };
-    // A withdrawn game is shown, but counts for nothing, and so is every
-    // game of a withdrawn player, for either side: a player who left partway
-    // met some of the others and not the rest, and what they played must not
-    // rank those they met above those they did not. Each is said to be
-    // withdrawn, so that the pages strike it through.
-    const withdrawn = new Set(
-      competition.players
-        .filter((entered) => entered.withdrawn)
-        .map((entered) => entered.id.value),
-    );
-    const countsForNothing = (game: Game): boolean =>
-      game.withdrawn ||
-      withdrawn.has(game.winner.value) ||
-      withdrawn.has(game.loser.value);
+    // What counts for nothing is still among the results and the games, and
+    // said to be withdrawn, so that the pages strike it through.
+    const countsForNothing = countsForNothingIn(competition);
 
     const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
       const player = named.get(entered.id.value);

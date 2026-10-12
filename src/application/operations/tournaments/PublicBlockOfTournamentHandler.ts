@@ -7,6 +7,7 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
+import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type Competitions,
   competitionOf,
@@ -71,20 +72,9 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
-    // A withdrawn game is shown, but counts for nothing, and so is every
-    // game of a withdrawn player, for both its players: a player who left
-    // partway met some of the others and not the rest, and what they played
-    // must not rank those they met above those they did not. Each is
-    // answered as withdrawn, so that the pages strike it through.
-    const withdrawn = new Set(
-      competition.players
-        .filter((entered) => entered.withdrawn)
-        .map((entered) => entered.id.value),
-    );
-    const countsForNothing = (game: Game): boolean =>
-      game.withdrawn ||
-      withdrawn.has(game.winner.value) ||
-      withdrawn.has(game.loser.value);
+    // What counts for nothing is still shown, and answered as withdrawn, so
+    // that the pages strike it through.
+    const countsForNothing = countsForNothingIn(competition);
     const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();

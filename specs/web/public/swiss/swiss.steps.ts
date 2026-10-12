@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again.
@@ -39,22 +40,6 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
 
 const resultOf = (world: SpecWorld, which: string, name: string): Locator =>
   rowOf(world, name).locator(".swiss-result").nth(placeOf(which));
-
-// Whether `found` is drawn struck through, as the page's own scripting would
-// see it, which the specs are not compiled to know.
-const struckThrough = async (found: Locator): Promise<boolean> =>
-  /line-through/.test(
-    await found.evaluate(
-      (element: unknown) =>
-        (
-          globalThis as unknown as {
-            getComputedStyle(element: unknown): {
-              textDecorationLine: string;
-            };
-          }
-        ).getComputedStyle(element).textDecorationLine,
-    ),
-  );
 
 When(
   "the name of {string} in the Swiss is pressed",
@@ -100,7 +85,7 @@ Then(
   /^the name of "(.*)" in the Swiss is (not )?struck through$/,
   async function (this: SpecWorld, name: string, not: string | null) {
     assert.equal(
-      await struckThrough(rowOf(this, name).locator(".player-name")),
+      await isStruckThrough(rowOf(this, name).locator(".player-name")),
       not === null,
     );
   },
@@ -193,18 +178,9 @@ Then(
 Then(
   /^the (first|second|third) result of "(.*)" in the Swiss is struck through$/,
   async function (this: SpecWorld, which: string, name: string) {
-    assert.match(
-      await resultOf(this, which, name).evaluate(
-        (element: unknown) =>
-          (
-            globalThis as unknown as {
-              getComputedStyle(element: unknown): {
-                textDecorationLine: string;
-              };
-            }
-          ).getComputedStyle(element).textDecorationLine,
-      ),
-      /line-through/,
+    assert.ok(
+      await isStruckThrough(resultOf(this, which, name)),
+      "The result is not struck through.",
     );
   },
 );

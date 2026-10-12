@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { isStruckThrough } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -34,22 +35,6 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
   rows(world).filter({
     has: world.browserPage.locator(".player-name", { hasText: name }),
   });
-
-// Whether `found` is drawn struck through, as the page's own scripting would
-// see it, which the specs are not compiled to know.
-const struckThrough = async (found: Locator): Promise<boolean> =>
-  /line-through/.test(
-    await found.evaluate(
-      (element: unknown) =>
-        (
-          globalThis as unknown as {
-            getComputedStyle(element: unknown): {
-              textDecorationLine: string;
-            };
-          }
-        ).getComputedStyle(element).textDecorationLine,
-    ),
-  );
 
 When(
   "the name of {string} in the summary is pressed",
@@ -101,7 +86,7 @@ Then(
   /^the name of "(.*)" in the summary is (not )?struck through$/,
   async function (this: SpecWorld, name: string, not: string | null) {
     assert.equal(
-      await struckThrough(rowOf(this, name).locator(".player-name")),
+      await isStruckThrough(rowOf(this, name).locator(".player-name")),
       not === null,
     );
   },
