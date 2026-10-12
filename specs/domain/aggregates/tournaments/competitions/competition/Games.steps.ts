@@ -640,6 +640,27 @@ Then(
 );
 
 Then(
+  new RegExp(
+    `^the competition's ${GAME.replace("the game", "game")} counts( for nothing)?$`,
+  ),
+  function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+    forNothing: string | null,
+  ) {
+    const competition = competitionOf(this);
+    const said = [winner, loser, winnerScore, loserScore];
+    assert.equal(
+      competition.countsForNothing(gameSaid(this, competition, said)),
+      forNothing !== null,
+    );
+  },
+);
+
+Then(
   "the player {string} has a game in use",
   function (this: SpecWorld, name: string) {
     const competition = competitionOf(this);

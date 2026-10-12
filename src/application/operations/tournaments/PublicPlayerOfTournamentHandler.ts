@@ -1,4 +1,5 @@
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
@@ -9,7 +10,6 @@ import {
   type Competitions,
   competitionOf,
 } from "../competitions/competitionOperations.js";
-import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type GameOfPlayer,
   type Opponent,
@@ -141,7 +141,8 @@ export class PublicPlayerOfTournamentHandler extends QueryHandler<
           return opponents.get(found?.tournamentPlayerId.value ?? "") ?? nobody;
         };
       }
-      const countsForNothing = countsForNothingIn(competition);
+      const countsForNothing = (game: Game): boolean =>
+        competition.countsForNothing(game);
       const where = competitions[at]!;
       entered.push(where);
       for (const game of competition.games) {

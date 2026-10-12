@@ -76,7 +76,7 @@ const sideNamed = (
       const withdrawn = player.withdrawn
         ? ` <span class="knockout-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
-      return `${playerShown(player, "player", speaking, assets, `/${player.address}`)}${withdrawn}`;
+      return `${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}`;
     }
     case "bye":
       return `<span class="knockout-bye">${escape(say("knockout.bye"))}</span>`;
@@ -87,10 +87,9 @@ const sideNamed = (
 
 // The side at `which` of `match`, on a row of its own: who it is, then its
 // score in each game the match is the best of, marked won or lost for it by
-// more than its colour, and empty for a game not played. Where either side
-// has withdrawn, the scores of both are struck through and said to be
-// withdrawn, as a block's grid says a withdrawn game, since every page
-// strikes what a withdrawn player played, though the match stands.
+// more than its colour, and empty for a game not played. A withdrawn
+// player's game is struck through on both sides and said to be withdrawn,
+// as a block's grid says a withdrawn game, though the match stands.
 const sideRow = (
   match: MatchOfKnockout,
   which: WhichSide,
@@ -100,18 +99,15 @@ const sideRow = (
 ): string => {
   const side = match.sides[which];
   const known = side.is === "player" || side.is === "bye";
-  const withdrawn = match.sides.some(
-    (each) => each.is === "player" && each.player.withdrawn,
-  );
   const cells = Array.from({ length: bestOf }, (_, at) => {
     const game = match.games[at];
     if (game === undefined) return `<td class="knockout-score"></td>`;
     const result = game.winner === which ? "won" : "lost";
     const said = [
       speaking.say(`block.${result}`),
-      ...(withdrawn ? [speaking.say("block.gameWithdrawn")] : []),
+      ...(game.withdrawn ? [speaking.say("block.gameWithdrawn")] : []),
     ].join(", ");
-    return `<td class="knockout-score"${withdrawn ? " data-withdrawn" : ""}><span class="knockout-${result}"><span class="knockout-points">${escape(game.scores[which])}</span> <span class="visually-hidden">${escape(said)}</span></span></td>`;
+    return `<td class="knockout-score"${game.withdrawn ? " data-withdrawn" : ""}><span class="knockout-${result}"><span class="knockout-points">${escape(game.scores[which])}</span> <span class="visually-hidden">${escape(said)}</span></span></td>`;
   });
   return `<tr class="knockout-side${known ? "" : " knockout-side-unknown"}"><th scope="row" class="knockout-name">${sideNamed(side, speaking, assets)}</th>${cells.join("")}</tr>`;
 };

@@ -36,6 +36,11 @@ export type WhichSide = 0 | 1;
 export interface GameOfMatch {
   readonly winner: WhichSide;
   readonly scores: readonly [string, string];
+  /**
+   * Whether it is a withdrawn player's, and so struck through where it is
+   * shown (`withdrawPlayer.feature`), though the match stands.
+   */
+  readonly withdrawn: boolean;
 }
 
 /** A match of a knockout. */

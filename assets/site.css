@@ -1899,9 +1899,14 @@ html:has(dialog:modal) {
 
 /* A player who has withdrawn from the competition being shown is struck
    through wherever it names them, as their games are, since what they played
-   counts for nothing. */
+   counts for nothing. The line alone is set, so that a name that is a link
+   keeps its underline and the thickness every link has. */
 .player-name[data-withdrawn] {
-  text-decoration: line-through;
+  text-decoration-line: line-through;
+}
+
+a.player-name[data-withdrawn] {
+  text-decoration-line: line-through underline;
 }
 
 /* A player's page: their competitions first on a phone, since they are short
@@ -2442,15 +2447,16 @@ html:has(dialog:modal) {
   text-decoration: underline;
 }
 
-/* Struck through as everywhere, and still so when pointed at. */
-.knockout .player-name[data-withdrawn],
-.knockout-summary .player-name[data-withdrawn] {
-  text-decoration: line-through;
+/* Struck through as everywhere, and still so when pointed at, with the
+   underline a knockout's name has only then. */
+.knockout a.player-name[data-withdrawn],
+.knockout-summary a.player-name[data-withdrawn] {
+  text-decoration-line: line-through;
 }
 
-.knockout .player-name[data-withdrawn]:hover,
-.knockout-summary .player-name[data-withdrawn]:hover {
-  text-decoration: line-through underline;
+.knockout a.player-name[data-withdrawn]:hover,
+.knockout-summary a.player-name[data-withdrawn]:hover {
+  text-decoration-line: line-through underline;
 }
 
 .knockout-score {

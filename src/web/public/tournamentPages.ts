@@ -150,31 +150,30 @@ export const competitionNamed = (
  * in brackets, and the flag they fly, named by what it is the flag of. Nothing
  * is left in the place of what they have none of. Each part is marked with
  * `kind` and what it is, as "game-name", so that a page can draw its own; the
- * name leads to `href` where one is given.
+ * name leads to `href` where one is given, and is struck through where
+ * `withdrawn` says they have withdrawn from the competition being shown.
  */
 export const playerShown = (
   {
     name,
     representing,
     flag,
-    withdrawn,
   }: {
     readonly name: string;
     readonly representing?: string | undefined;
     readonly flag?: string | undefined;
-    /**
-     * Whether they have withdrawn from the competition being shown, which
-     * strikes their name through, since what they played counts for nothing.
-     */
-    readonly withdrawn?: boolean | undefined;
   },
   kind: string,
   speaking: Speaking,
   assets: Assets,
   href?: string,
+  // Said by whoever shows a competition's player, rather than read off the
+  // player, so that a game's players, who are answered with whether they
+  // have withdrawn on some pages and not others, are never marked.
+  withdrawn = false,
 ): string => {
   const flown = flag === undefined ? undefined : Flags.thereAre.find(flag);
-  const marked = withdrawn === true ? " data-withdrawn" : "";
+  const marked = withdrawn ? " data-withdrawn" : "";
   return [
     href === undefined
       ? `<span class="${kind}-name"${marked}>${escape(name)}</span>`

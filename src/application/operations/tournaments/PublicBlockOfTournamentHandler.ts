@@ -7,7 +7,6 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
-import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type Competitions,
   competitionOf,
@@ -74,7 +73,8 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     const games = competition.games.filter((game) => !game.archived);
     // What counts for nothing is still shown, and answered as withdrawn, so
     // that the pages strike it through.
-    const countsForNothing = countsForNothingIn(competition);
+    const countsForNothing = (game: Game): boolean =>
+      competition.countsForNothing(game);
     const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();

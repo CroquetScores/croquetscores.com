@@ -1,4 +1,5 @@
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
@@ -9,7 +10,6 @@ import {
   type Competitions,
   competitionOf,
 } from "../competitions/competitionOperations.js";
-import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type GameOfTournament,
   GamesOfTournament,
@@ -70,7 +70,8 @@ export class GamesOfTournamentHandler extends QueryHandler<
     const games: GameOfTournament[] = [];
     for (const [at, { reference }] of inUse.entries()) {
       const competition = await competitionOf(this.competitions, reference.id);
-      const countsForNothing = countsForNothingIn(competition);
+      const countsForNothing = (game: Game): boolean =>
+        competition.countsForNothing(game);
       for (const game of competition.games) {
         if (game.archived || game.addedAt === undefined) continue;
         games.push({

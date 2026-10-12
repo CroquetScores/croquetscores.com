@@ -15,7 +15,11 @@ export interface ListedGame {
   readonly archived: boolean;
   /** Whether it could be archived now, as the competition would say. */
   readonly archivable: boolean;
-  /** Whether it was played but no longer counts. */
+  /**
+   * Whether it was withdrawn (`withdrawGame.feature`), which a manager
+   * reverses here. A withdrawn player's games count for nothing too, but
+   * that is the player's state, said on the players' tab, and not this.
+   */
   readonly withdrawn: boolean;
   /** Whether it could be withdrawn now, as the competition would say. */
   readonly withdrawable: boolean;

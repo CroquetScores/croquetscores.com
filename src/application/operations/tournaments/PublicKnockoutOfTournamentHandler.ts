@@ -1,4 +1,5 @@
 import type { Side } from "../../../domain/aggregates/tournaments/competitions/KnockoutPlay.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -11,7 +12,6 @@ import {
   competitionOf,
   toldOf,
 } from "../competitions/competitionOperations.js";
-import { countsForNothingIn } from "../competitions/competitionGames.js";
 import {
   type KnockoutToRead,
   type MatchOfKnockout,
@@ -95,7 +95,8 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "" };
-    const countsForNothing = countsForNothingIn(competition);
+    const countsForNothing = (game: Game): boolean =>
+      competition.countsForNothing(game);
 
     const matches = competition.knockoutMatches(
       toldOf(tournament, reference.id),
@@ -156,6 +157,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
                 return {
                   winner,
                   scores: winner === 0 ? [won, lost] : [lost, won],
+                  withdrawn: countsForNothing(game),
                 };
               }),
               winner: whichIs(match.winner),

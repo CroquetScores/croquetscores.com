@@ -11,8 +11,8 @@ Feature: A block's page shows its results as a grid
   order, headed by the player as the tournament's other pages show one: their
   name, leading to their own page, what they represent and their flag. A
   withdrawn player's row says they have withdrawn, and their name is struck
-  through, as are their games, which count for nothing
-  (`PublicBlockOfTournament.feature`).
+  through, still underlined as the link it is, as are their games, which
+  count for nothing (`PublicBlockOfTournament.feature`).
 
   It has a column for each player too, in the same order, so that the cell
   where a player's row meets their opponent's column holds the games between
@@ -260,6 +260,11 @@ Feature: A block's page shows its results as a grid
     Scenario: A player who has not withdrawn is not struck through
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the name of "Sam Someone" in the grid is not struck through
+
+    Scenario: A withdrawn player's name is still underlined, as a link is
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the name of "Alex Another" in the grid is underlined
 
     Scenario: A withdrawn player's game is marked as withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"

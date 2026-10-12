@@ -994,8 +994,29 @@ export class Competition extends AggregateRoot {
     }
   }
 
-  // The games that count: those neither archived nor withdrawn, in the order
-  // they were added.
+  /**
+   * Whether `game` counts for nothing wherever games are counted or shown:
+   * archived, withdrawn (`withdrawGame.feature`), or a withdrawn player's
+   * (`withdrawPlayer.feature`), on both sides, since a player who left
+   * partway met some of the others and not the rest, and what they played
+   * must not rank those they met above those they did not. A knockout's
+   * matches are the one place that does not ask this: a withdrawn player's
+   * games there decided matches that stand (`KnockoutPlay.feature`).
+   */
+  countsForNothing(game: Game): boolean {
+    const withdrawn = (id: GamePlayerId): boolean =>
+      this.#players.get(id.value)?.withdrawn ?? false;
+    return (
+      game.archived ||
+      game.withdrawn ||
+      withdrawn(game.winner) ||
+      withdrawn(game.loser)
+    );
+  }
+
+  // The games that decide a knockout's matches: those neither archived nor
+  // withdrawn, in the order they were added. Not `countsForNothing`, since a
+  // withdrawn player's games there decided matches that stand.
   #counting(): Game[] {
     return this.games.filter((game) => !game.archived && !game.withdrawn);
   }

@@ -3,7 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
-import { isStruckThrough } from "../../support/struckThrough.js";
+import { isStruckThrough, isUnderlined } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -240,6 +240,16 @@ Then(
     assert.equal(
       (await score.getAttribute("data-withdrawn")) !== null,
       not === null,
+    );
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the grid is underlined$/,
+  async function (this: SpecWorld, name: string) {
+    assert.ok(
+      await isUnderlined(rowOf(this, name).locator(".player-name")),
+      "The name is not underlined.",
     );
   },
 );
