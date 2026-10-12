@@ -1,14 +1,14 @@
 # Running a standard tournament
 
-A standard tournament is one played between players entered one by one: a club weekend, an open, a championship. Its players are entered into blocks, knockouts and Swisses, and its scores go up as they are played. This guide takes a manager from signing in to a tournament whose results its players can follow on their phones.
+A standard tournament is one played between players entered one by one: a club weekend, an open, a championship. Its players are entered into blocks, knockouts and Swisses, and its scores go up as they are played. This guide takes a manager from signing in to a tournament whose results are availabe to the public.
 
 It stands on its own. Nothing in it depends on the guide to a tournament played by teams, which is written separately.
 
 ## Before you start
 
-You need an account. Register with your email address, follow the link the site emails you, and choose a name and a password. Once you have signed in, press **Admin** in the green bar at the top of every page. Any signed-in reader can create a tournament, and whoever creates one is its first manager.
+You need an account. Click [here](/account/register) to register an account.
 
-Everything a manager does is done in the admin. The public pages, where players and spectators follow the tournament, are drawn from what the admin holds, so nothing has to be published: a score entered is on the public pages at once.
+Everything a manager does is done in the admin section of the website. The public pages, where players and spectators follow the tournament, are drawn from what the admin holds, so nothing has to be published: a score entered is on the public pages at once.
 
 ## The pages in order
 
@@ -28,7 +28,7 @@ The admin's front door lists the tournaments you have a part in, one year at a t
 
 ![The list of tournaments in the admin](images/admin-list.png)
 
-A tournament's name, or **Manage**, opens its page. Everything there is to run is in five tabs beneath its name: **Players**, **Competitions**, **Notes**, **Managers** and **Scorers**. The page opens on Players, since the players are the first thing entered.
+Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in five tabs beneath its name: **Players**, **Competitions**, **Notes**, **Managers** and **Scorers**. The page opens on Players, since the players are the first thing entered.
 
 ![A tournament's page, on its Competitions tab](images/tournament-page.png)
 
