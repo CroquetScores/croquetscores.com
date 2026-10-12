@@ -2,7 +2,7 @@
 
 Tryck på **Ny turnering** ovanför listan över turneringar i administrationen. Den ligger ovanför listan i stället för under den, så att en lång lista inte trycker den utanför en telefons skärm.
 
-![Formuläret för en ny turnering, ifyllt för en turnering som spelas av lag](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Formuläret för en ny turnering, ifyllt för en turnering som spelas av lag](images/new-tournament.png)
 
 Formuläret frågar efter allt en turnering börjar med. Det som betyder mest här är **Format**, som är det som gör en turnering till en som spelas av lag.
 
@@ -39,7 +39,7 @@ Standard är det enda format som inte spelas av lag, och är inte det du vill ha
 
 Tryck på **Skapa turnering**. Du förs till turneringens sida i administrationen, öppnad på fliken Lag, och du är dess första turneringsledare. Den listas i administrationen under det år den startar.
 
-![En nyskapad turnering, ännu utan lag](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![En nyskapad turnering, ännu utan lag](images/tournament-page-empty.png)
 
 Turneringens offentliga adress bildas av dess år, dess sport och dess namn, som `/2026/ac/trans-tasman-tests`. Den behåller den adressen när namnet rättas senare, så att en länk som redan har skickats fortfarande hittar den; den flyttar bara när det år den startar, eller dess sport, ändras.
 

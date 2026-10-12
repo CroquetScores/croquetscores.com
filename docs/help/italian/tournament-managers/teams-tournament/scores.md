@@ -2,7 +2,7 @@
 
 La pagina di un test si apre dal suo nome nella scheda Test, o dalla barra verde scuro. È intestata con i nomi completi delle sue squadre, come "Australia v New Zealand", con sotto quanti incontri deve avere e di quante partite è al meglio ciascuno. I suoi punteggi sono la pagina, senza schede. Un organizzatore e un segnapunti vedono la stessa pagina, perché un segnapunti può fare a un punteggio tutto ciò che può fare un organizzatore.
 
-![La pagina di un test, con i suoi punteggi](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![La pagina di un test, con i suoi punteggi](images/test-page-panel.png)
 
 ## Come sono disposti i punteggi
 
@@ -12,7 +12,7 @@ I punteggi sono disposti per squadra anziché per chi ha vinto, in una tabella i
 
 Premi **Aggiungi punteggio**, sopra l'elenco. La finestra si legge come un risultato si dice a voce: il vincitore e il suo punteggio, poi "ha battuto", poi lo sconfitto e il suo punteggio.
 
-![La finestra Aggiungi punteggio sulla pagina di un test](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![La finestra Aggiungi punteggio sulla pagina di un test](images/add-test-score-dialog.png)
 
 Il vincitore si sceglie tra i giocatori in uso di entrambe le squadre, sotto il nome di ciascuna squadra, prima i giocatori della prima squadra e quelli di ogni squadra nell'ordine della squadra. All'inizio non è scelto nessuno. Una volta scelto il vincitore, lo sconfitto viene proposto solo dall'altra squadra, perché una partita tra due giocatori della stessa squadra non è una partita tra le squadre. Un giocatore archiviato non viene proposto.
 

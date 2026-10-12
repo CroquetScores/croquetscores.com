@@ -2,13 +2,13 @@
 
 Auf dem Reiter **Hinweise** der Turnierseite schreibt die Turnierleitung, was die Spieler im Lauf des Turniers wissen müssen: den Spielplan, eine Änderung der Plätze, die Zeit des Mittagessens. Leser finden sie auf der öffentlichen Seite Hinweise des Turniers, und ein Hinweis, den sie nicht gelesen haben, ist dort mit einem roten Sternchen markiert, das auch den Bereich Hinweise auf jeder Seite des Turniers markiert, bis sie ihn öffnen.
 
-![Der Reiter Hinweise](../../../english/tournament-managers/teams-tournament/images/notes-tab.png)
+![Der Reiter Hinweise](images/notes-tab.png)
 
 ## Einen Hinweis schreiben
 
 Drücke **Hinweis hinzufügen** über der Liste. Ein Bereich tritt an die Stelle der Liste, weil ein Hinweis ausführlich geschrieben wird und den Platz braucht.
 
-![Der Hinweisbereich, auf seinem Reiter Schreiben](../../../english/tournament-managers/teams-tournament/images/note-panel.png)
+![Der Hinweisbereich, auf seinem Reiter Schreiben](images/note-panel.png)
 
 **Titel** ist Pflicht und ist das, womit der Hinweis aufgeführt wird. Er ist reiner Text.
 
@@ -16,7 +16,7 @@ Drücke **Hinweis hinzufügen** über der Liste. Ein Bereich tritt an die Stelle
 
 **Vorschau** zeigt den Hinweis so, wie ein Leser ihn auf seiner Seite sehen wird.
 
-![Der Hinweisbereich, auf seinem Reiter Vorschau](../../../english/tournament-managers/teams-tournament/images/note-preview.png)
+![Der Hinweisbereich, auf seinem Reiter Vorschau](images/note-preview.png)
 
 Drücke **Hinzufügen**. Der Hinweis wird gespeichert, die Liste kommt mit ihm ganz oben zurück, und er steht sofort auf der öffentlichen Seite Hinweise.
 
@@ -28,6 +28,6 @@ Drücke den Titel eines Hinweises oder sein **Bearbeiten**, um den Bereich für 
 
 Ein Hinweis, der nicht mehr gilt, wird gelöscht. Ein gelöschter Hinweis ist für immer weg, deshalb fragt **Löschen** zuerst.
 
-![Die Frage vor dem Löschen eines Hinweises](../../../english/tournament-managers/teams-tournament/images/delete-note-asks.png)
+![Die Frage vor dem Löschen eines Hinweises](images/delete-note-asks.png)
 
 Weiter: [Turnierleitung und Ergebniserfasser](managers-and-scorers.md).

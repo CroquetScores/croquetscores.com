@@ -6,7 +6,7 @@ Er wordt niets gepubliceerd: de openbare pagina's worden opgebouwd uit wat het b
 
 De pagina van het toernooi staat op zijn jaar, zijn sport en zijn naam, als `/2026/ac/trans-tasman-tests`. Ze heeft de naam van het toernooi als kop, met de ondertitel eronder. Ze toont elke partij in gebruik, de laatst toegevoegde eerst, zodat een lezer die terugkomt ziet wat er sindsdien is gebeurd. Elke partij noemt de winnaar, zijn team en zijn score, dan de verliezer en de zijne, met de testmatch waarin ze is gespeeld en hoe lang geleden ze is toegevoegd.
 
-![De openbare pagina van het toernooi](../../../english/tournament-managers/teams-tournament/images/public-tournament.png)
+![De openbare pagina van het toernooi](images/public-tournament.png)
 
 De donkergroene balk biedt de onderdelen van het toernooi: **Recent**, wat deze pagina is, **Overzicht**, **Spelers**, **Notities** en **Commentaar**, dan de testmatches. Een testmatch wordt gezegd als de korte namen van haar teams met "vs" ertussen, als "AUS vs NZ". Testmatches in een groep worden niet een voor een aangeboden: de groep is één onderdeel, genoemd zoals de groep heet, op de plaats waar haar eerste testmatch zou staan. Notities is gemarkeerd met een rood sterretje zolang er een notitie is die de lezer niet heeft gelezen.
 
@@ -20,13 +20,13 @@ Een toernooi met een testmatch in een groep heeft geen Overzicht. De pagina van 
 
 De pagina van een groep toont hoe de teams van de groep ervoor staan, alleen de testmatches van de groep meegerekend, in de tabel die het overzicht gebruikt. Boven de tabel, in een eigen rij, biedt ze **Overzicht**, wat deze pagina is, en elk van de testmatches van de groep, met een link naar de pagina van de testmatch.
 
-![De pagina van een groep](../../../english/tournament-managers/teams-tournament/images/public-group.png)
+![De pagina van een groep](images/public-group.png)
 
 ## Een testmatch
 
 De pagina van een testmatch heeft de volledige namen van haar teams als kop, als "Australia vs New Zealand", en zegt waarvan elke wedstrijd de beste is. Haar tabel heeft de twee teams als kop, het eerste links. Elke gespeelde wedstrijd is een rij, in de volgorde waarin ze begon, met de speler van het eerste team links, die van het tweede team rechts, en de partijen van de wedstrijd ertussen, elk eerst de score van de eerste kant en dan die van de tweede, met die van de winnaar gemarkeerd. Onder de wedstrijden staan de partijen en poortjes van elk team, en, waar elke wedstrijd de beste van meer dan één is, zijn gewonnen wedstrijden, elk aan zijn eigen kant.
 
-![De pagina van een testmatch](../../../english/tournament-managers/teams-tournament/images/public-test.png)
+![De pagina van een testmatch](images/public-test.png)
 
 Een testmatch wordt op twee manieren getoond, aangeboden op de regel van haar naam: **Rooster**, wat deze tabel is, en **Speelschema**, dat elke partij van de testmatch toont, oudste eerst. Een testmatch in een groep biedt het Overzicht en de testmatches van haar groep in een rij boven haar kop, met deze testmatch gemarkeerd.
 
@@ -34,7 +34,7 @@ Een testmatch wordt op twee manieren getoond, aangeboden op de regel van haar na
 
 De pagina Spelers toont de spelers team voor team: elk team onder een kop met zijn naam, in de volgorde van de teams in het toernooi, en zijn spelers eronder op alfabetische volgorde.
 
-![De openbare pagina Spelers van het toernooi](../../../english/tournament-managers/teams-tournament/images/public-players.png)
+![De openbare pagina Spelers van het toernooi](images/public-players.png)
 
 ## Notities
 

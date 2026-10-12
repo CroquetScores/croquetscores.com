@@ -4,13 +4,13 @@ Fliken **Spelare** på en turnerings sida är där dess spelare läggs till, rä
 
 Spelarna läggs till här en gång, i turneringen. Vilka tävlingar var och en spelar i väljs efteråt, på varje tävlings egen sida, bland de spelare som har lagts till här. Se [Sätta in spelare i en tävling](entering-players-in-a-competition.md).
 
-![Fliken Spelare, med tillagda spelare och en arkiverad](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![Fliken Spelare, med tillagda spelare och en arkiverad](images/players-tab.png)
 
 ## Lägga till spelare
 
 Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över sidan.
 
-![Dialogrutan Lägg till spelare, ifylld](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![Dialogrutan Lägg till spelare, ifylld](images/add-player-dialog.png)
 
 **Namn** krävs. Det är spelarens namn så som det visas på varje sida, mellan 3 och 254 tecken. Två spelare i en turnering kan inte ha samma namn, hur det än skrivs med stora och små bokstäver; där två spelare verkligen delar namn, skilj dem åt i själva namnet, som "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Medan du skriver ett namn erbjuds de spelare världsrankingen känner till vars 
 
 Tryck på **Lägg till**. Spelaren läggs till, dialogrutan säger det, och fälten töms för nästa spelare, med markören tillbaka i namnet. Lägg till hela listan på det sättet, och tryck sedan på **Avbryt** för att stänga dialogrutan. Avbryt sparar ingenting som inte redan har lagts till.
 
-![Dialogrutan efter att en spelare har lagts till](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![Dialogrutan efter att en spelare har lagts till](images/add-player-dialog-added.png)
 
 En spelare heter aldrig "Bye". En utslagsturnerings frilotter läggs till i själva utslagsturneringen, där dess spelare sätts in, så ett namn vars första ord är det engelska "bye" godtas inte, och dialogrutan förklarar varför.
 
@@ -32,7 +32,7 @@ En spelare heter aldrig "Bye". En utslagsturnerings frilotter läggs till i sjä
 
 Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna samma dialogruta på den spelaren, med rubriken Redigera spelare. Ändra det som är fel och tryck på **Spara**, som sparar ändringen och stänger dialogrutan. En spelare vars namn rättas behåller det världsrankingnamn spelaren hade, eftersom rankingen fortfarande känner spelaren under det.
 
-![Dialogrutan Redigera spelare](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![Dialogrutan Redigera spelare](images/edit-player-dialog.png)
 
 En spelare som rättas här rättas överallt: i varje tävling spelaren är med i, och på varje offentlig sida.
 
@@ -48,6 +48,6 @@ En spelare som har spelat något parti kan inte arkiveras, eftersom partierna d�
 
 Att arkivera en spelare som inte är med i någon tävling frågar inte först, eftersom att återställa spelaren sätter tillbaka allt. Att arkivera en spelare som är med i någon tävling frågar först, eftersom arkiveringen tar bort spelaren från varje tävling spelaren är med i, och återställningen inte sätter tillbaka spelaren i dem.
 
-![Frågan som ställs innan en spelare som är med i tävlingar arkiveras](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![Frågan som ställs innan en spelare som är med i tävlingar arkiveras](images/archive-player-asks.png)
 
 Nästa: [Tävlingar](competitions.md).

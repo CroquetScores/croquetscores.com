@@ -2,7 +2,7 @@
 
 Karta **Konkurencje** na stronie turnieju to miejsce, gdzie dodaje się jego konkurencje, ustawia je w kolejności i odkłada na bok. Konkurencja to blok, system pucharowy albo system szwajcarski. Każda ma własną stronę, na której zgłasza się jej zawodników i wprowadza jej wyniki.
 
-![Karta Konkurencje, z konkurencjami każdego rodzaju i jedną zarchiwizowaną](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![Karta Konkurencje, z konkurencjami każdego rodzaju i jedną zarchiwizowaną](images/competitions-tab.png)
 
 ## Dodawanie konkurencji
 
@@ -16,9 +16,9 @@ Naciśnij **Dodaj konkurencję**, nad listą. Nad stroną otwiera się okno dial
 
 Blok i system szwajcarski pytają tylko, z ilu partii każdy mecz jest **najlepszy z**, co zaczyna się na 1. Najlepszy z 3 wygrywa ten, kto wygra dwie partie. Może to być liczba parzysta, bo w bloku albo w systemie szwajcarskim zawodnika szereguje się według wygranych partii, a mecz z dwóch partii podzielonych po jednej jest rezultatem jak każdy inny.
 
-![Okno Dodaj konkurencję dla bloku](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![Okno Dodaj konkurencję dla bloku](images/add-competition-block.png)
 
-![Okno Dodaj konkurencję dla systemu szwajcarskiego](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![Okno Dodaj konkurencję dla systemu szwajcarskiego](images/add-competition-swiss.png)
 
 ### System pucharowy
 
@@ -26,7 +26,7 @@ System pucharowy pyta, ile **miejsc** ma jego drabinka i z ilu partii najlepsza 
 
 Drabinka ma tyle rund, ile trzeba, by zmniejszyć o połowę jej miejsca do jednego, więc drabinka o 8 miejscach ma trzy rundy. Okno pyta, z ilu partii najlepsza jest każda z nich, razem pod **Najlepszy z, według rund**, w kolejności rozgrywania. Ostatnie trzy nazywają się tak, jak mówi się o rundach drabinki, **Ćwierćfinały**, **Półfinały** i **Finał**, a wcześniejsze – numerem, od Rundy 1. Wybranie więcej miejsc dodaje rundy na początku drabinki, a wybranie mniej odbiera je od początku, więc to, co wpisano dla finału, nadal należy do finału. Każda runda jest najlepsza z nieparzystej liczby partii, bo mecz pucharowy musi mieć zwycięzcę.
 
-![Okno Dodaj konkurencję dla systemu pucharowego o 4 miejscach](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![Okno Dodaj konkurencję dla systemu pucharowego o 4 miejscach](images/add-competition-knockout.png)
 
 ### Dodawanie kilku naraz
 

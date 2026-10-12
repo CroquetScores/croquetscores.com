@@ -2,7 +2,7 @@
 
 Ett lags sida öppnas från dess namn, eller dess **Visa**, på fliken Lag. Den har lagets namn som rubrik, med kortnamnet inom parentes, och dess flagga, så att en turneringsledare som kom till fel lag ser det på en gång. Den har en enda sak att visa, lagets spelare, så listan är sidan.
 
-![Ett lags sida, med dess spelare och en arkiverad](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![Ett lags sida, med dess spelare och en arkiverad](images/team-page.png)
 
 Det mörkgröna fältet på ett lags sida leder till turneringen och till varje lag i bruk med dess kortnamn, så att spelarna läggs till lag för lag utan att gå tillbaka till fliken Lag.
 
@@ -12,7 +12,7 @@ En spelare i ett lag hör till det laget ensamt, representerar laget och för la
 
 Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över sidan.
 
-![Dialogrutan Lägg till spelare på ett lags sida](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Dialogrutan Lägg till spelare på ett lags sida](images/add-team-player-dialog.png)
 
 **Namn** krävs, mellan 3 och 254 tecken. Två spelare i ett lag kan inte ha samma namn, hur det än skrivs med stora och små bokstäver; en spelare i ett annat lag får dela det.
 

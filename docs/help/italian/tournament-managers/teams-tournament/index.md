@@ -30,11 +30,11 @@ Una **squadra** è una compagine, come l'Australia, con un nome, un nome breve c
 
 La porta d'ingresso dell'amministrazione elenca i tornei in cui hai un ruolo, un anno alla volta.
 
-![L'elenco dei tornei nell'amministrazione](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![L'elenco dei tornei nell'amministrazione](images/admin-list.png)
 
 Premendo il nome di un torneo, o **Gestisci**, si apre la sua pagina. Tutto ciò che c'è da gestire sta in cinque schede sotto il suo nome: **Squadre**, **Test**, **Note**, **Organizzatori** e **Segnapunti**. La pagina si apre su Squadre, perché le squadre sono la prima cosa che si crea.
 
-![La pagina di un torneo, sulla scheda Test](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![La pagina di un torneo, sulla scheda Test](images/tournament-page.png)
 
 La barra verde scuro sotto l'intestazione serve a spostarsi tra le pagine. Sulla pagina del torneo e sulla pagina di un test porta al torneo, come **Torneo**, e a ciascun test con il suo nome. Sulla pagina di una squadra porta invece al torneo e a ciascuna squadra con il suo nome breve, perché un organizzatore sulla pagina di una squadra sta inserendo i giocatori squadra per squadra. La pagina in cui ti trovi è segnata in nero.
 

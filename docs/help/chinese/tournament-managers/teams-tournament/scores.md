@@ -2,7 +2,7 @@
 
 对抗赛的页面从“对抗赛”标签页上它的名称打开，或者从深绿色条打开。页面以两支队伍的全名为标题，如“Australia v New Zealand”，下方是它预计有多少场比赛以及每场是几局决胜。它的比分就是页面，没有标签页。管理员和记分员看到同一个页面，因为记分员可以对比分做管理员能做的一切。
 
-![一场对抗赛的页面，带有它的比分](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![一场对抗赛的页面，带有它的比分](images/test-page-panel.png)
 
 ## 比分如何排列
 
@@ -12,7 +12,7 @@
 
 按列表上方的**添加比分**。对话框读起来就像口头报结果：胜者及其得分，然后是“击败”，然后是负者及其得分。
 
-![对抗赛页面上的“添加比分”对话框](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![对抗赛页面上的“添加比分”对话框](images/add-test-score-dialog.png)
 
 胜者从两支队伍正在使用的选手中选择，列在各队名称之下，第一队的选手在前，每队的选手按队伍的顺序排列。一开始谁都没有被选中。选定胜者之后，负者只从另一支队伍提供，因为同一队两位选手之间的一局不是队伍之间的一局。已归档的选手不会被提供。
 

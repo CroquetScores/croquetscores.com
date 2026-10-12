@@ -2,7 +2,7 @@
 
 Pwyswch **Twrnamaint newydd** uwchben y rhestr o dwrnameintiau yn yr adran weinyddu. Mae uwchben y rhestr yn hytrach nag oddi tani, fel na fydd rhestr hir yn ei wthio oddi ar sgrin ffôn.
 
-![Ffurflen y twrnamaint newydd, wedi'i llenwi](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Ffurflen y twrnamaint newydd, wedi'i llenwi](images/new-tournament.png)
 
 Mae'r ffurflen yn gofyn am bopeth y mae twrnamaint yn dechrau ag ef. Nid yw twrnamaint o'r math cyffredin ond enw, dau ddyddiad a gwlad i ffwrdd: caiff popeth arall ei benderfynu drosoch a gellir ei newid.
 

@@ -2,7 +2,7 @@
 
 A aba **Testes** da página de um torneio é onde os testes entre as suas equipes são adicionados, alterados, colocados em ordem e postos de lado. Um teste é uma das competições do torneio: um confronto entre duas equipes, chamado pelos seus nomes abreviados, como "AUS x NZ", disputado como um número de partidas entre um jogador de cada equipe. Cada teste tem uma página própria, onde os seus placares são inseridos.
 
-![A aba Testes, com três testes em um grupo](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![A aba Testes, com três testes em um grupo](images/tests-tab.png)
 
 Cada teste diz o seu nome, os dias em que é disputado, quantas partidas se espera que tenha e de quantos jogos é cada uma, como "6 partidas, melhor de 3", e o seu grupo quando está em um.
 
@@ -10,13 +10,13 @@ Cada teste diz o seu nome, os dias em que é disputado, quantas partidas se espe
 
 Um teste é entre duas equipes em uso, então enquanto o torneio tem menos de duas a aba diz isso onde Adicionar teste estaria, e leva à aba Equipes.
 
-![A aba Testes antes de haver duas equipes](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![A aba Testes antes de haver duas equipes](images/tests-tab-two-teams-needed.png)
 
 ## Adicionar um teste
 
 Pressione **Adicionar teste**, acima da lista. Um diálogo abre sobre a página, lendo-se na ordem em que um teste se diz em voz alta.
 
-![O diálogo Adicionar teste, preenchido](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![O diálogo Adicionar teste, preenchido](images/add-test-dialog.png)
 
 **Equipe A** e **Equipe B** são escolhidas, cada uma, entre as equipes em uso do torneio, pelo nome, na ordem do torneio. Nenhuma vem escolhida de início, para que um teste nunca seja adicionado entre equipes que você não escolheu. Equipe B oferece todas as equipes menos a escolhida como Equipe A, porque uma equipe não disputa um teste contra si mesma. A Equipe A é a primeira equipe: os seus jogadores ficam à esquerda na página do teste e na página pública. Um teste não tem um nome próprio a digitar; ele é chamado pelos nomes abreviados das suas equipes.
 
@@ -30,13 +30,13 @@ Pressione **Adicionar teste**, acima da lista. Um diálogo abre sobre a página,
 
 Pressione **Adicionar**. O teste é adicionado, o diálogo diz qual pelo seu nome, e as equipes são esvaziadas para o próximo, com os dias, as partidas previstas, o melhor de e o grupo deixados como estavam: os testes são adicionados uma rodada de cada vez, entre equipes que se enfrentam no mesmo dia, então o próximo teste da rodada é só as suas duas equipes. Pressione **Cancelar** quando todos estiverem inseridos.
 
-![O diálogo depois que um teste é adicionado](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![O diálogo depois que um teste é adicionado](images/add-test-dialog-added.png)
 
 ## Alterar um teste
 
 **Editar** abre o mesmo diálogo no teste, com o título Editar teste, começado como o teste está. Pressione **Salvar** para guardar a alteração.
 
-![O diálogo Editar teste](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![O diálogo Editar teste](images/edit-test-dialog.png)
 
 Um teste com jogos em uso mantém as suas equipes: o diálogo as mostra, mas elas não podem ser alteradas. O resto pode ser alterado, dentro do que já foi disputado: partidas previstas em menor número que as partidas já começadas são recusadas, e também um melhor de menor que o maior número de jogos que dois jogadores já disputaram.
 

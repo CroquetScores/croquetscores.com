@@ -2,7 +2,7 @@
 
 在管理后台的锦标赛列表上方按**新建锦标赛**。它放在列表上方而不是下方，这样很长的列表也不会把它推出手机屏幕之外。
 
-![填好的新建锦标赛表单](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![填好的新建锦标赛表单](images/new-tournament.png)
 
 表单询问锦标赛开始时所需的一切。一个普通的锦标赛只差一个名称、两个日期和一个国家或地区：其余的都已为你决定好，并且可以更改。
 

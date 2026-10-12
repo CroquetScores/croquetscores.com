@@ -2,7 +2,7 @@
 
 관리 화면의 대회 목록 위에 있는 **새 대회**를 눌러요. 목록이 길어져도 휴대폰 화면 밖으로 밀려나지 않도록, 목록 아래가 아니라 위에 있어요.
 
-![팀으로 치르는 대회로 내용을 채운 새 대회 양식](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![팀으로 치르는 대회로 내용을 채운 새 대회 양식](images/new-tournament.png)
 
 양식은 대회가 시작하는 데 필요한 모든 것을 물어요. 여기서 가장 중요한 것은 **방식**이에요. 방식이 대회를 팀으로 치르는 대회로 만들어 주니까요.
 
@@ -39,7 +39,7 @@
 
 **대회 만들기**를 눌러요. 관리 화면의 대회 페이지로 이동하는데, 팀 탭이 열린 상태이고, 내가 그 대회의 첫 운영자가 돼요. 대회는 관리 화면에서 시작하는 해 아래에 나열돼요.
 
-![아직 팀이 없는, 새로 만든 대회](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![아직 팀이 없는, 새로 만든 대회](images/tournament-page-empty.png)
 
 대회의 공개 주소는 `/2026/ac/trans-tasman-tests`처럼 연도, 종목, 이름으로 만들어져요. 나중에 이름을 고쳐도 주소는 그대로여서, 이미 보낸 링크로도 찾을 수 있어요. 시작하는 해나 종목이 바뀔 때만 주소가 옮겨져요.
 

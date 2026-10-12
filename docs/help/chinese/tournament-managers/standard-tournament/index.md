@@ -26,11 +26,11 @@
 
 管理后台的首页列出你参与的锦标赛，一次显示一年。
 
-![管理后台中的锦标赛列表](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![管理后台中的锦标赛列表](images/admin-list.png)
 
 按锦标赛的名称或**管理**，打开它的页面。所有要运作的东西都在它名称下方的五个标签页里：**选手**、**赛事**、**备注**、**管理员**和**记分员**。页面打开时停在“选手”上，因为选手是最先录入的东西。
 
-![一个锦标赛的页面，停在“赛事”标签页上](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![一个锦标赛的页面，停在“赛事”标签页上](images/tournament-page.png)
 
 页眉下方的深绿色条用于在页面之间移动。它以**锦标赛**通向锦标赛本身，并以名称通向它的每个赛事，这样你就能从锦标赛去到某个赛事、在赛事之间来回，而不必回到“赛事”标签页。你所在的页面以黑色标出。
 

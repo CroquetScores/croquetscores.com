@@ -4,13 +4,13 @@ La scheda **Giocatori** della pagina di un torneo è dove i suoi giocatori vengo
 
 I giocatori si inseriscono qui una volta sola, nel torneo. In quali competizioni gioca ciascuno si sceglie dopo, sulla pagina di ogni competizione, tra i giocatori inseriti qui. Vedi [Inserire i giocatori in una competizione](entering-players-in-a-competition.md).
 
-![La scheda Giocatori, con dei giocatori inseriti e uno archiviato](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![La scheda Giocatori, con dei giocatori inseriti e uno archiviato](images/players-tab.png)
 
 ## Aggiungere i giocatori
 
 Premi **Aggiungi giocatore**, sopra l'elenco. Si apre una finestra di dialogo sopra la pagina.
 
-![La finestra Aggiungi giocatore, compilata](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![La finestra Aggiungi giocatore, compilata](images/add-player-dialog.png)
 
 **Nome** è obbligatorio. È il nome del giocatore come comparirà su ogni pagina, tra 3 e 254 caratteri. Due giocatori di uno stesso torneo non possono avere lo stesso nome, comunque siano scritte le maiuscole; dove due giocatori hanno davvero lo stesso nome, distinguili nel nome stesso, come "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Mentre scrivi un nome, vengono proposti i giocatori noti alle classifiche mondia
 
 Premi **Aggiungi**. Il giocatore viene aggiunto, la finestra lo dice, e i suoi campi si svuotano per il giocatore successivo, con il cursore di nuovo nel nome. Aggiungi tutto l'elenco in questo modo, poi premi **Annulla** per chiudere la finestra. Annulla non conserva nulla che non fosse già stato aggiunto.
 
-![La finestra dopo che un giocatore è stato aggiunto](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![La finestra dopo che un giocatore è stato aggiunto](images/add-player-dialog-added.png)
 
 Un giocatore non si chiama mai "Bye". I bye di un'eliminazione diretta si aggiungono nell'eliminazione diretta stessa, dove si inseriscono i suoi giocatori, quindi un nome la cui prima parola è "bye" viene rifiutato, e la finestra spiega perché.
 
@@ -32,7 +32,7 @@ Un giocatore non si chiama mai "Bye". I bye di un'eliminazione diretta si aggiun
 
 Premi il nome di un giocatore, o il suo **Modifica**, per aprire la stessa finestra su quel giocatore, intitolata Modifica giocatore. Cambia ciò che non va e premi **Salva**, che conserva la modifica e chiude la finestra. Un giocatore il cui nome viene corretto mantiene il nome nella classifica mondiale che aveva, perché le classifiche lo conoscono ancora con quello.
 
-![La finestra Modifica giocatore](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![La finestra Modifica giocatore](images/edit-player-dialog.png)
 
 Un giocatore corretto qui è corretto ovunque: in ogni competizione in cui si trova, e su ogni pagina pubblica.
 
@@ -48,6 +48,6 @@ Un giocatore che ha giocato una qualsiasi partita non può essere archiviato, pe
 
 Archiviare un giocatore che non è in nessuna competizione non chiede prima, perché ripristinarlo rimette tutto a posto. Archiviare un giocatore che è in una qualsiasi competizione chiede prima, perché archiviarlo lo toglie da ogni competizione in cui si trova, e ripristinarlo non lo rimette dentro.
 
-![La domanda posta prima di archiviare un giocatore che è in delle competizioni](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![La domanda posta prima di archiviare un giocatore che è in delle competizioni](images/archive-player-asks.png)
 
 Avanti: [Competizioni](competitions.md).

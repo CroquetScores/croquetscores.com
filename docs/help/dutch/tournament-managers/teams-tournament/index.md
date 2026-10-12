@@ -30,11 +30,11 @@ Een **team** is een ploeg, zoals Australië, met een naam, een korte naam zoals 
 
 De voordeur van het beheer toont de toernooien waar jij een rol in hebt, één jaar tegelijk.
 
-![De lijst met toernooien in het beheer](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![De lijst met toernooien in het beheer](images/admin-list.png)
 
 Door op de naam van een toernooi te drukken, of op **Beheren**, open je zijn pagina. Alles wat er te leiden valt, zit in vijf tabbladen onder de naam: **Teams**, **Testmatches**, **Notities**, **Beheerders** en **Scorers**. De pagina opent op Teams, omdat de teams het eerste zijn wat je opzet.
 
-![De pagina van een toernooi, op het tabblad Testmatches](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![De pagina van een toernooi, op het tabblad Testmatches](images/tournament-page.png)
 
 De donkergroene balk onder de kop is om tussen pagina's te bewegen. Op de pagina van het toernooi en op de pagina van een testmatch leidt ze naar het toernooi, als **Toernooi**, en naar elke testmatch bij naam. Op de pagina van een team leidt ze in plaats daarvan naar het toernooi en naar elk team bij zijn korte naam, omdat een beheerder op de pagina van een team spelers team voor team invoert. De pagina waar je op staat, is zwart gemarkeerd.
 

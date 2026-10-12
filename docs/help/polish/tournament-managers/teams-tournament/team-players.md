@@ -2,7 +2,7 @@
 
 Stronę drużyny otwiera się z jej nazwy albo jej **Zobacz** na karcie Drużyny. Jej nagłówkiem jest nazwa drużyny ze skrótem nazwy w nawiasie i jej flaga, by organizator, który trafił do niewłaściwej drużyny, zobaczył to od razu. Ma jedną rzecz do pokazania, zawodników drużyny, więc lista jest całą stroną.
 
-![Strona drużyny, z jej zawodnikami i jednym zarchiwizowanym](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![Strona drużyny, z jej zawodnikami i jednym zarchiwizowanym](images/team-page.png)
 
 Ciemnozielony pasek na stronie drużyny prowadzi do turnieju i do każdej drużyny w użyciu po jej skrócie, by zawodników zgłaszać drużyna po drużynie bez wracania do karty Drużyny.
 
@@ -12,7 +12,7 @@ Zawodnik w drużynie należy tylko do tej drużyny, reprezentuje ją i gra pod j
 
 Naciśnij **Dodaj zawodnika**, nad listą. Nad stroną otwiera się okno dialogowe.
 
-![Okno Dodaj zawodnika na stronie drużyny](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Okno Dodaj zawodnika na stronie drużyny](images/add-team-player-dialog.png)
 
 **Imię i nazwisko** jest wymagane, od 3 do 254 znaków. Dwóch zawodników w jednej drużynie nie może mieć tej samej nazwy, niezależnie od wielkości liter; zawodnik w innej drużynie może ją mieć.
 

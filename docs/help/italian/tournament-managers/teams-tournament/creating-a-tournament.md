@@ -2,7 +2,7 @@
 
 Premi **Nuovo torneo** sopra l'elenco dei tornei nell'amministrazione. Sta sopra l'elenco anziché sotto, così un elenco lungo non lo spinge fuori dallo schermo di un telefono.
 
-![Il modulo del nuovo torneo, compilato per un torneo a squadre](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Il modulo del nuovo torneo, compilato per un torneo a squadre](images/new-tournament.png)
 
 Il modulo chiede tutto ciò con cui un torneo comincia. Ciò che conta di più qui è il **Formato**, che è ciò che rende un torneo un torneo a squadre.
 
@@ -39,7 +39,7 @@ Standard è l'unico formato che non è a squadre, e non è ciò che vuoi qui. Ga
 
 Premi **Crea torneo**. Vieni portato alla pagina del torneo nell'amministrazione, aperta sulla scheda Squadre, e sei il suo primo organizzatore. È elencato nell'amministrazione sotto l'anno in cui comincia.
 
-![Un torneo appena creato, ancora senza squadre](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Un torneo appena creato, ancora senza squadre](images/tournament-page-empty.png)
 
 L'indirizzo pubblico del torneo è formato dal suo anno, dal suo sport e dal suo nome, come `/2026/ac/trans-tasman-tests`. Mantiene quell'indirizzo quando il nome viene corretto più tardi, così un link già inviato lo trova ancora; si sposta solo quando cambia l'anno in cui comincia, o il suo sport.
 

@@ -2,7 +2,7 @@
 
 锦标赛页面的**赛事**标签页是添加、排序和搁置赛事的地方。赛事是小组赛、淘汰赛或瑞士制。每个赛事都有自己的页面，选手在那里录入，比分也在那里填写。
 
-![“赛事”标签页，有各种类型的赛事，其中一个已归档](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![“赛事”标签页，有各种类型的赛事，其中一个已归档](images/competitions-tab.png)
 
 ## 添加赛事
 
@@ -16,9 +16,9 @@
 
 小组赛和瑞士制只询问每场比赛是**几局决胜**，一开始是 1。三局决胜由先赢两局的人获胜。它可以是偶数，因为在小组赛或瑞士制中，选手按赢得的局数排名，两局各赢一局的比赛和其他结果一样是一个结果。
 
-![小组赛的“添加赛事”对话框](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![小组赛的“添加赛事”对话框](images/add-competition-block.png)
 
-![瑞士制的“添加赛事”对话框](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![瑞士制的“添加赛事”对话框](images/add-competition-swiss.png)
 
 ### 淘汰赛
 
@@ -26,7 +26,7 @@
 
 抽签有多少轮，取决于把名额减半到一个需要多少次，所以 8 个名额的抽签有三轮。对话框在**各轮几局决胜**下一起询问每一轮是几局决胜，按比赛的先后顺序排列。最后三轮按人们谈论抽签轮次的叫法命名：**四分之一决赛**、**半决赛**和**决赛**，它们之前的轮次按编号命名，第 1 轮在先。选择更多名额会在抽签开头增加轮次，选择更少则从开头减去，所以为决赛输入的内容仍然属于决赛。每一轮都是奇数局决胜，因为淘汰赛的比赛必须有一个胜者。
 
-![4 个名额的淘汰赛的“添加赛事”对话框](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![4 个名额的淘汰赛的“添加赛事”对话框](images/add-competition-knockout.png)
 
 ### 一次添加多个
 

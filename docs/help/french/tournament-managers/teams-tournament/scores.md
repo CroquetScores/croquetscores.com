@@ -2,7 +2,7 @@
 
 La page d’un test s’ouvre depuis son nom sur l’onglet Tests, ou depuis la barre vert foncé. Elle est coiffée des noms complets de ses équipes, comme « Australia v New Zealand », avec dessous le nombre de matchs qu’il doit avoir et au meilleur de combien de parties se joue chacun. Ses résultats sont la page, sans onglets. Un gestionnaire et un marqueur voient la même page, puisqu’un marqueur peut faire à un résultat tout ce qu’un gestionnaire peut faire.
 
-![La page d’un test, avec ses résultats](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![La page d’un test, avec ses résultats](images/test-page-panel.png)
 
 ## Comment les résultats sont présentés
 
@@ -12,7 +12,7 @@ Les résultats sont présentés par équipe plutôt que par vainqueur, dans une 
 
 Appuyez sur **Ajouter un résultat**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
 
-![La boîte de dialogue Ajouter un résultat sur la page d’un test](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![La boîte de dialogue Ajouter un résultat sur la page d’un test](images/add-test-score-dialog.png)
 
 Le vainqueur se choisit parmi les joueurs en service des deux équipes, sous le nom de chaque équipe, les joueurs de la première équipe en premier et ceux de chaque équipe dans l’ordre de l’équipe. Personne n’est choisi au départ. Une fois le vainqueur choisi, le perdant n’est proposé que dans l’autre équipe, puisqu’une partie entre deux joueurs de la même équipe n’est pas une partie entre les équipes. Un joueur archivé n’est pas proposé.
 

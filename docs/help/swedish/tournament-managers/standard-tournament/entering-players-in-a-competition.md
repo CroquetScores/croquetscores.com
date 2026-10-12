@@ -4,7 +4,7 @@ En tävlings sida öppnas från dess namn på fliken Tävlingar, eller från det
 
 En spelare i en tävling är en av turneringens spelare, så de sätts in genom att väljas i stället för att skrivas. Allt om dem utom deras plats i tävlingen, och det de för över in i den, ändras på turneringens flik Spelare.
 
-![Ett blocks flik Spelare, med fyra insatta spelare](../../../english/tournament-managers/standard-tournament/images/competition-players-tab.png)
+![Ett blocks flik Spelare, med fyra insatta spelare](images/competition-players-tab.png)
 
 ## Lägga till en spelare
 
@@ -16,13 +16,13 @@ Turneringens arkiverade spelare erbjuds inte.
 
 En utslagsturnering spelas först när varje plats i dess lottning är fylld, och de platser spelarna lämnar över fylls med frilotter. Så i en utslagsturnering erbjuder rullgardinslistan **Frilott** först, före spelarna, och fortsätter erbjuda den hur många frilotter som än läggs till, eftersom en lottning kan behöva flera.
 
-![En utslagsturnering med fyra platser, med tre spelare och en frilott](../../../english/tournament-managers/standard-tournament/images/knockout-players.png)
+![En utslagsturnering med fyra platser, med tre spelare och en frilott](images/knockout-players.png)
 
 En frilott placeras i lottningen som en spelare: den kan flyttas upp och ned och tas bort, men den kan inte dras tillbaka, eftersom den inte spelar något. En spelare som sätts in i en utslagsturnering vars alla platser är fyllda godtas inte, och fliken säger det under rullgardinslistan.
 
 Ordningen på en utslagsturnerings spelare är dess lottning. De två första platserna möts i den första matchen, de två nästa i den nästa, och så vidare. Lägg spelarna i den ordning lottningen ska spelas i innan något resultat skrivs in, eftersom spelarna ligger fast när utslagsturneringen har ett parti i bruk: ingen kan läggas till, tas bort eller flyttas. En spelare kan fortfarande dras tillbaka.
 
-![En utslagsturnering när ett parti har skrivits in: ingen kan läggas till, flyttas eller tas bort](../../../english/tournament-managers/standard-tournament/images/knockout-players-fixed.png)
+![En utslagsturnering när ett parti har skrivits in: ingen kan läggas till, flyttas eller tas bort](images/knockout-players-fixed.png)
 
 ## Ordning
 
@@ -32,7 +32,7 @@ Spelarna listas i tävlingens ordning, som är den ordning en utslagsturnering l
 
 **För över resultat** säger vad en spelare tar med sig in i en tävling från spel som inte fördes här: resultaten från ett tidigare skede, eller från partier som spelades innan tävlingen fördes här. Det erbjuds i ett block och en schweizer, som har en ställning för det att räknas i, och inte i en utslagsturnering.
 
-![Dialogrutan För över resultat](../../../english/tournament-managers/standard-tournament/images/carry-forward-dialog.png)
+![Dialogrutan För över resultat](images/carry-forward-dialog.png)
 
 Dialogrutan frågar efter sex tal: vunna och förlorade matcher, vunna och förlorade partier, och bågar för och emot. Varje tal är frivilligt. Ett tal som lämnas tomt för inte över något, vilket inte är detsamma som att föra över 0, så att den som ändrar det senare ser det som det lämnades. Tryck på **Spara** för att spara alla sex.
 
@@ -40,7 +40,7 @@ Dialogrutan frågar efter sex tal: vunna och förlorade matcher, vunna och förl
 
 **Ta bort** tar ut en spelare som satts in av misstag. Spelaren förblir en av turneringens spelare och erbjuds igen i rullgardinslistan, men ingenting behålls av spelarens plats i tävlingen, så Ta bort frågar först.
 
-![Frågan som ställs innan en spelare tas bort](../../../english/tournament-managers/standard-tournament/images/remove-player-asks.png)
+![Frågan som ställs innan en spelare tas bort](images/remove-player-asks.png)
 
 En spelare som har något parti i bruk i tävlingen kan inte tas bort, eftersom partierna då skulle vara mot någon som inte längre finns där, och erbjuds inte Ta bort. En spelare vars enda partier är arkiverade kan tas bort, och de arkiverade resultaten följer med.
 
@@ -50,10 +50,10 @@ En spelare som har något parti i bruk i tävlingen kan inte tas bort, eftersom 
 
 Dra tillbaka frågar först, eftersom det ändrar tävlingens utgång: de partier spelaren inte har spelat avgörs utan spelaren.
 
-![Frågan som ställs innan en spelare dras tillbaka](../../../english/tournament-managers/standard-tournament/images/withdraw-player-asks.png)
+![Frågan som ställs innan en spelare dras tillbaka](images/withdraw-player-asks.png)
 
 En tillbakadragen spelare erbjuder bara **Ta tillbaka**, som sätter spelaren tillbaka bland dem som spelar, efter dem som stannade, utan att fråga.
 
-![Ett block med en tillbakadragen spelare](../../../english/tournament-managers/standard-tournament/images/competition-players-withdrawn.png)
+![Ett block med en tillbakadragen spelare](images/competition-players-withdrawn.png)
 
 Nästa: [Resultat](scores.md).

@@ -2,13 +2,13 @@
 
 Die **Notas**-oortjie van 'n toernooi se bladsy is waar sy bestuurders skryf wat die spelers moet weet terwyl die toernooi aan die gang is: die speelorde, 'n verandering aan die bane, die tyd van middagete. Lesers vind hulle op die toernooi se openbare Notas-bladsy, en 'n nota wat hulle nie gelees het nie, word daar met 'n rooi sterretjie gemerk, wat ook die Notas-afdeling op elke bladsy van die toernooi merk totdat hulle dit oopmaak.
 
-![Die Notas-oortjie](../../../english/tournament-managers/teams-tournament/images/notes-tab.png)
+![Die Notas-oortjie](images/notes-tab.png)
 
 ## Hoe om 'n nota te skryf
 
 Druk op **Voeg nota by**, bo die lys. 'n Paneel neem die plek van die lys in, want 'n nota word uitgebreid geskryf en het die ruimte nodig.
 
-![Die notapaneel, op sy Skryf-oortjie](../../../english/tournament-managers/teams-tournament/images/note-panel.png)
+![Die notapaneel, op sy Skryf-oortjie](images/note-panel.png)
 
 **Titel** is verpligtend, en is waaronder die nota gelys word. Dit is gewone teks.
 
@@ -16,7 +16,7 @@ Druk op **Voeg nota by**, bo die lys. 'n Paneel neem die plek van die lys in, wa
 
 **Voorskou** wys die nota soos 'n leser dit op sy bladsy sal sien.
 
-![Die notapaneel, op sy Voorskou-oortjie](../../../english/tournament-managers/teams-tournament/images/note-preview.png)
+![Die notapaneel, op sy Voorskou-oortjie](images/note-preview.png)
 
 Druk op **Voeg by**. Die nota word gehou, die lys kom terug met dit bo-aan, en dit is dadelik op die openbare Notas-bladsy.
 
@@ -28,6 +28,6 @@ Druk op 'n nota se titel, of op sy **Wysig**, om die paneel op daardie nota oop 
 
 'n Nota wat nie meer geld nie, word geskrap. 'n Geskrapte nota is vir altyd weg, so **Skrap** vra eers.
 
-![Die vraag wat gevra word voordat 'n nota geskrap word](../../../english/tournament-managers/teams-tournament/images/delete-note-asks.png)
+![Die vraag wat gevra word voordat 'n nota geskrap word](images/delete-note-asks.png)
 
 Volgende: [Bestuurders en telers](managers-and-scorers.md).

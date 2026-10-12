@@ -2,7 +2,7 @@
 
 Pwyswch **Twrnamaint newydd** uwchben y rhestr o dwrnameintiau yn yr adran weinyddu. Mae uwchben y rhestr yn hytrach nag oddi tani, fel na fydd rhestr hir yn ei wthio oddi ar sgrin ffôn.
 
-![Ffurflen y twrnamaint newydd, wedi'i llenwi ar gyfer twrnamaint a chwaraeir gan dimau](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Ffurflen y twrnamaint newydd, wedi'i llenwi ar gyfer twrnamaint a chwaraeir gan dimau](images/new-tournament.png)
 
 Mae'r ffurflen yn gofyn am bopeth y mae twrnamaint yn dechrau ag ef. Y peth pwysicaf yma yw'r **Fformat**, sef yr hyn sy'n gwneud twrnamaint yn un a chwaraeir gan dimau.
 
@@ -39,7 +39,7 @@ Safonol yw'r un fformat na chwaraeir gan dimau, ac nid dyna rydych ei eisiau yma
 
 Pwyswch **Creu twrnamaint**. Cewch eich tywys i dudalen y twrnamaint yn yr adran weinyddu, ar agor ar ei thab Timau, a chi yw ei reolwr cyntaf. Caiff ei restru yn yr adran weinyddu o dan y flwyddyn y mae'n dechrau ynddi.
 
-![Twrnamaint sydd newydd ei greu, heb dimau eto](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Twrnamaint sydd newydd ei greu, heb dimau eto](images/tournament-page-empty.png)
 
 Gwneir cyfeiriad cyhoeddus y twrnamaint o'i flwyddyn, ei gamp a'i enw, fel `/2026/ac/trans-tasman-tests`. Mae'n cadw'r cyfeiriad hwnnw pan gaiff ei enw ei gywiro'n ddiweddarach, fel bod dolen a anfonwyd eisoes yn dal i ddod o hyd iddo; mae'n symud dim ond pan fydd y flwyddyn y mae'n dechrau ynddi, neu ei gamp, yn newid.
 

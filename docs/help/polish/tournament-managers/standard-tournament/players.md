@@ -4,13 +4,13 @@ Karta **Zawodnicy** na stronie turnieju to miejsce, gdzie zgłasza się jego zaw
 
 Zawodników zgłasza się tutaj raz, do turnieju. To, w których konkurencjach każdy gra, wybiera się potem, na stronie każdej konkurencji, spośród zawodników zgłoszonych tutaj. Zobacz [Zgłaszanie zawodników do konkurencji](entering-players-in-a-competition.md).
 
-![Karta Zawodnicy, ze zgłoszonymi zawodnikami i jednym zarchiwizowanym](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![Karta Zawodnicy, ze zgłoszonymi zawodnikami i jednym zarchiwizowanym](images/players-tab.png)
 
 ## Dodawanie zawodników
 
 Naciśnij **Dodaj zawodnika**, nad listą. Nad stroną otwiera się okno dialogowe.
 
-![Okno Dodaj zawodnika, wypełnione](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![Okno Dodaj zawodnika, wypełnione](images/add-player-dialog.png)
 
 **Imię i nazwisko** jest wymagane. To nazwa zawodnika, jaka będzie pokazywana na każdej stronie, od 3 do 254 znaków. Dwóch zawodników w jednym turnieju nie może mieć tej samej nazwy, niezależnie od wielkości liter; gdy dwóch zawodników naprawdę nazywa się tak samo, odróżnij ich w samej nazwie, jak „Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Gdy wpisujesz nazwę, podpowiadani są zawodnicy znani rankingom światowym, kt�
 
 Naciśnij **Dodaj**. Zawodnik zostaje dodany, okno o tym mówi, a jego pola są opróżniane dla następnego zawodnika, z kursorem z powrotem w nazwie. Dodaj w ten sposób całą listę, a potem naciśnij **Anuluj**, by zamknąć okno. Anuluj nie zachowuje nic, co nie zostało już dodane.
 
-![Okno po dodaniu zawodnika](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![Okno po dodaniu zawodnika](images/add-player-dialog-added.png)
 
 Zawodnik nigdy nie nazywa się „Bye" (angielskie słowo na wolny los). Wolne losy systemu pucharowego dodaje się w samym systemie pucharowym, tam gdzie zgłasza się jego zawodników, więc nazwa, której pierwszym słowem jest „bye", jest odrzucana, a okno wyjaśnia dlaczego.
 
@@ -32,7 +32,7 @@ Zawodnik nigdy nie nazywa się „Bye" (angielskie słowo na wolny los). Wolne l
 
 Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Zmień to, co jest nie tak, i naciśnij **Zapisz**, co zachowuje zmianę i zamyka okno. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał, bo rankingi nadal znają go pod nią.
 
-![Okno Edytuj zawodnika](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![Okno Edytuj zawodnika](images/edit-player-dialog.png)
 
 Zawodnik poprawiony tutaj jest poprawiony wszędzie: w każdej konkurencji, w której jest, i na każdej stronie publicznej.
 
@@ -48,6 +48,6 @@ Zawodnika, który rozegrał jakąkolwiek partię, nie można zarchiwizować, bo 
 
 Archiwizowanie zawodnika, który nie jest w żadnej konkurencji, nie pyta najpierw, bo przywrócenie go przywraca wszystko. Archiwizowanie zawodnika, który jest w jakiejkolwiek konkurencji, najpierw pyta, bo archiwizowanie usuwa go z każdej konkurencji, w której jest, a przywrócenie go z powrotem nie wstawia.
 
-![Pytanie zadawane przed zarchiwizowaniem zawodnika, który jest w konkurencjach](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![Pytanie zadawane przed zarchiwizowaniem zawodnika, który jest w konkurencjach](images/archive-player-asks.png)
 
 Dalej: [Konkurencje](competitions.md).

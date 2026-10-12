@@ -26,11 +26,11 @@ Wszystko, co robi organizator, robi w sekcji administracji strony. Strony public
 
 Strona wejściowa administracji wymienia turnieje, w których masz jakąś rolę, po jednym roku naraz.
 
-![Lista turniejów w administracji](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![Lista turniejów w administracji](images/admin-list.png)
 
 Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w pięciu kartach pod jego nazwą: **Zawodnicy**, **Konkurencje**, **Notatki**, **Organizatorzy** i **Wprowadzający wyniki**. Strona otwiera się na karcie Zawodnicy, bo zawodnicy są pierwszą rzeczą, którą się wprowadza.
 
-![Strona turnieju, na karcie Konkurencje](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![Strona turnieju, na karcie Konkurencje](images/tournament-page.png)
 
 Ciemnozielony pasek pod nagłówkiem służy do przechodzenia między stronami. Prowadzi do turnieju, jako **Turniej**, i do każdej z jego konkurencji po nazwie, więc można przejść z turnieju do konkurencji i między konkurencjami bez wracania przez kartę Konkurencje. Strona, na której jesteś, jest zaznaczona na czarno.
 

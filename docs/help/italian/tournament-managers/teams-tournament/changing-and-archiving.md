@@ -4,7 +4,7 @@
 
 Nell'elenco dei tornei nell'amministrazione, premi **Modifica** sul torneo. Il modulo è quello che lo ha creato, già compilato com'è il torneo. Cambia ciò che non va e premi **Aggiorna torneo**.
 
-![Il modulo Modifica torneo](../../../english/tournament-managers/teams-tournament/images/edit-tournament.png)
+![Il modulo Modifica torneo](images/edit-tournament.png)
 
 I giorni del torneo si possono allargare qui quando un test ha bisogno di un giorno fuori da essi, perché un test si gioca all'interno del suo torneo. Un formato a squadre si può cambiare con un altro, perché il torneo contiene le stesse cose in ciascuno. Una volta che il torneo contiene una qualsiasi squadra o un qualsiasi test, contando anche quelli archiviati, non può più essere cambiato nel formato Standard, che ha giocatori e competizioni al loro posto.
 
@@ -16,7 +16,7 @@ Solo un organizzatore può modificare un torneo. A un segnapunti, o a chiunque a
 
 L'amministrazione elenca un anno alla volta, cominciando da quest'anno, dal torneo più recente. Gli anni in cui hai un torneo sono schede nella barra verde scuro, dal più recente; dove ce ne sono più di quanti stiano su un telefono, i più vecchi sono in un menu a discesa alla fine della riga. L'anno è nell'indirizzo, quindi a un anno si può puntare con un link.
 
-![L'elenco dei tornei](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![L'elenco dei tornei](images/admin-list.png)
 
 ## Archiviare un torneo
 

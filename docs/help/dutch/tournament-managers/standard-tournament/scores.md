@@ -2,13 +2,13 @@
 
 Het tabblad **Scores** van de pagina van een competitie is waar haar partijen worden ingevoerd, gecorrigeerd en opzijgezet. Een scorer ziet alleen dit tabblad, en kan erop alles doen wat een beheerder kan.
 
-![Het tabblad Scores van een poule, met scores in gebruik, een teruggetrokken score en een gearchiveerde](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![Het tabblad Scores van een poule, met scores in gebruik, een teruggetrokken score en een gearchiveerde](images/scores-tab.png)
 
 ## Een score invoeren
 
 Druk op **Score toevoegen**, boven de lijst. Het dialoogvenster leest zoals een uitslag wordt uitgesproken: de winnaar en zijn score, dan "versloeg", dan de verliezer en zijn score.
 
-![Het dialoogvenster Score toevoegen, ingevuld](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![Het dialoogvenster Score toevoegen, ingevuld](images/add-score-dialog.png)
 
 De winnaar en de verliezer worden elk gekozen uit de spelende spelers van de competitie, in de volgorde van de competitie. Om te beginnen is niemand gekozen, zodat een partij nooit wordt genoteerd op naam van een speler die je niet hebt gekozen. In een knock-out kiest het kiezen van de winnaar ook tegen wie die is geloot als verliezer, waar je het kunt zien en een ander kunt kiezen.
 
@@ -18,7 +18,7 @@ Een partij die met gelijke punten is gewonnen, zoals wanneer ze door de tijd wor
 
 Druk op **Partij toevoegen**. De partij wordt toegevoegd, het dialoogvenster zegt welke, en de velden worden leeggemaakt voor de volgende, omdat scores in een reeks komen die aan het einde van een ronde van een bord worden afgelezen. Druk op **Annuleren** zodra ze er allemaal in staan.
 
-![Het dialoogvenster nadat een partij is toegevoegd](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![Het dialoogvenster nadat een partij is toegevoegd](images/add-score-dialog-added.png)
 
 Wat wordt geweigerd, staat onder het veld waar het over gaat: een winnaar of verliezer die niet is gekozen, een score die niet is getypt of niet met een cijfer begint, dezelfde speler als beide, een score van een verliezer die als gewonnen is gemarkeerd, of een score van een winnaar die lager is dan die van de verliezer. In een knock-out worden twee spelers die niet tegen elkaar zijn geloot boven de velden geweigerd.
 
@@ -26,7 +26,7 @@ Wat wordt geweigerd, staat onder het veld waar het over gaat: een winnaar of ver
 
 Een knock-out wordt pas gespeeld wanneer elke plaats in de loting een speler of een vrijloting bevat. Tot dan legt Score toevoegen uit waarom er geen scores kunnen worden toegevoegd, in plaats van het dialoogvenster te openen.
 
-![Wat Score toevoegen zegt in een knock-out waarvan de loting niet is gevuld](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Wat Score toevoegen zegt in een knock-out waarvan de loting niet is gevuld](images/draw-not-filled.png)
 
 ## De lijst met scores
 
@@ -36,7 +36,7 @@ De scores in gebruik staan in de volgorde waarin ze zijn ingevoerd, oudste eerst
 
 **Bewerken** opent hetzelfde dialoogvenster op die score, met de titel Score bewerken, met de spelers gekozen en de scores zoals ze zijn getypt. Druk op **Opslaan** om de correctie te bewaren en het dialoogvenster te sluiten.
 
-![Het dialoogvenster Score bewerken](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![Het dialoogvenster Score bewerken](images/edit-score-dialog.png)
 
 Een correctie behoudt de uitslag: een gewonnen partij blijft gewonnen, en een gelijkgespeelde partij blijft gelijk. Een partij waarvan de uitslag fout was, archiveer je en voer je opnieuw in.
 

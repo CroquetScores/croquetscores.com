@@ -2,13 +2,13 @@
 
 Karta **Drużyny** na stronie turnieju to miejsce, gdzie dodaje się jego drużyny, poprawia je, ustawia w kolejności i odkłada na bok. To karta, na której otwiera się strona, bo drużyny są pierwszą rzeczą, którą się tworzy. Test rozgrywają dwie drużyny, więc zanim będzie można dodać jakikolwiek test, potrzebne są co najmniej dwie.
 
-![Karta Drużyny, z trzema drużynami i jedną zarchiwizowaną](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![Karta Drużyny, z trzema drużynami i jedną zarchiwizowaną](images/teams-tab.png)
 
 ## Dodawanie drużyny
 
 Naciśnij **Dodaj drużynę**, nad listą. Nad stroną otwiera się okno dialogowe.
 
-![Okno Dodaj drużynę, wypełnione](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![Okno Dodaj drużynę, wypełnione](images/add-team-dialog.png)
 
 **Nazwa** jest wymagana: pełna nazwa drużyny, jak „Australia", która jest nagłówkiem strony drużyny i tabel na stronach publicznych. Dwie drużyny w jednym turnieju nie mogą mieć tej samej nazwy.
 
@@ -18,13 +18,13 @@ Naciśnij **Dodaj drużynę**, nad listą. Nad stroną otwiera się okno dialogo
 
 Naciśnij **Dodaj**. Drużyna zostaje dodana, okno o tym mówi, a jego pola są opróżniane dla następnej. Dodaj w ten sposób całą listę, a potem naciśnij **Anuluj**, by zamknąć okno. Anuluj nie zachowuje nic, co nie zostało już dodane.
 
-![Okno po dodaniu drużyny](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![Okno po dodaniu drużyny](images/add-team-dialog-added.png)
 
 ## Poprawianie drużyny
 
 Naciśnij **Edytuj** przy drużynie, by otworzyć to samo okno na tej drużynie, zatytułowane Edytuj drużynę. Zmień to, co jest nie tak, i naciśnij **Zapisz**. Drużyna, której skrót nazwy się zmienia, jest wszędzie nazywana nowym, więc jej testy zmieniają nazwę razem z nią.
 
-![Okno Edytuj drużynę](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![Okno Edytuj drużynę](images/edit-team-dialog.png)
 
 ## Kolejność
 

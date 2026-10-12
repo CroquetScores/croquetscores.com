@@ -2,13 +2,13 @@
 
 Die **Spanne**-oortjie van 'n toernooi se bladsy is waar sy spanne bygevoeg, reggestel, in volgorde geplaas en eenkant gesit word. Dit is die oortjie waarop die bladsy oopmaak, want die spanne is die eerste ding wat opgestel word. 'n Toets is tussen twee spanne, so minstens twee is nodig voordat enige toets bygevoeg kan word.
 
-![Die Spanne-oortjie, met drie spanne en een geargiveer](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![Die Spanne-oortjie, met drie spanne en een geargiveer](images/teams-tab.png)
 
 ## Hoe om 'n span by te voeg
 
 Druk op **Voeg span by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
-![Die dialoog Voeg span by, ingevul](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![Die dialoog Voeg span by, ingevul](images/add-team-dialog.png)
 
 **Naam** is verpligtend: die span se volle naam, soos "Australia", wat die opskrif van die span se bladsy en van die openbare bladsye se tabelle is. Twee spanne in een toernooi kan nie dieselfde naam hê nie.
 
@@ -18,13 +18,13 @@ Druk op **Voeg span by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
 Druk op **Voeg by**. Die span word bygevoeg, die dialoog sê so, en sy velde word leeggemaak vir die volgende. Voeg die hele lys so by, en druk dan op **Kanselleer** om die dialoog toe te maak. Kanselleer hou niks wat nie reeds bygevoeg is nie.
 
-![Die dialoog nadat 'n span bygevoeg is](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![Die dialoog nadat 'n span bygevoeg is](images/add-team-dialog-added.png)
 
 ## Hoe om 'n span reg te stel
 
 Druk op 'n span se **Wysig** om dieselfde dialoog op daardie span oop te maak, met die titel Wysig span. Verander wat verkeerd is en druk op **Stoor**. 'n Span waarvan die kortnaam verander, word oral by die nuwe een genoem, so sy toetse word daarmee saam hernoem.
 
-![Die dialoog Wysig span](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![Die dialoog Wysig span](images/edit-team-dialog.png)
 
 ## Volgorde
 

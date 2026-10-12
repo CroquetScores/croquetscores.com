@@ -26,11 +26,11 @@ Tudo o que um organizador faz é feito na seção de administração do site. As
 
 A porta de entrada da administração lista os torneios de que você participa, um ano de cada vez.
 
-![A lista de torneios na administração](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![A lista de torneios na administração](images/admin-list.png)
 
 Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em cinco abas abaixo do nome: **Jogadores**, **Competições**, **Notas**, **Organizadores** e **Apontadores**. A página abre em Jogadores, porque os jogadores são a primeira coisa a inserir.
 
-![A página de um torneio, na aba Competições](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![A página de um torneio, na aba Competições](images/tournament-page.png)
 
 A barra verde-escura abaixo do cabeçalho serve para ir de uma página a outra. Ela leva ao torneio, como **Torneio**, e a cada uma das suas competições pelo nome, para que você possa ir do torneio a uma competição e de uma competição a outra sem voltar pela aba Competições. A página em que você está é marcada em preto.
 

@@ -26,11 +26,11 @@ Alles wat een beheerder doet, gebeurt in het beheergedeelte van de website. De o
 
 De voordeur van het beheer toont de toernooien waar jij een rol in hebt, één jaar tegelijk.
 
-![De lijst met toernooien in het beheer](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![De lijst met toernooien in het beheer](images/admin-list.png)
 
 Door op de naam van een toernooi te drukken, of op **Beheren**, open je zijn pagina. Alles wat er te leiden valt, zit in vijf tabbladen onder de naam: **Spelers**, **Competities**, **Notities**, **Beheerders** en **Scorers**. De pagina opent op Spelers, omdat de spelers het eerste zijn wat je invoert.
 
-![De pagina van een toernooi, op het tabblad Competities](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![De pagina van een toernooi, op het tabblad Competities](images/tournament-page.png)
 
 De donkergroene balk onder de kop is om tussen pagina's te bewegen. Ze leidt naar het toernooi, als **Toernooi**, en naar elk van zijn competities bij naam, zodat je van het toernooi naar een competitie en tussen competities kunt gaan zonder terug te gaan via het tabblad Competities. De pagina waar je op staat, is zwart gemarkeerd.
 

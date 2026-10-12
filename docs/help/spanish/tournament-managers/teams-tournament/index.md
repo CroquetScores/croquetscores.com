@@ -30,11 +30,11 @@ Un **equipo** es un bando, como Australia, con un nombre, un nombre corto como "
 
 La puerta de entrada de la administración lista los torneos en los que participas, un año a la vez.
 
-![La lista de torneos en la administración](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![La lista de torneos en la administración](images/admin-list.png)
 
 Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en cinco pestañas bajo su nombre: **Equipos**, **Tests**, **Notas**, **Gestores** y **Anotadores**. La página se abre en Equipos, porque los equipos son lo primero que se prepara.
 
-![La página de un torneo, en su pestaña Tests](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![La página de un torneo, en su pestaña Tests](images/tournament-page.png)
 
 La barra verde oscuro bajo la cabecera sirve para moverse entre páginas. En la página del torneo y en la de un test lleva al torneo, como **Torneo**, y a cada test por su nombre. En la página de un equipo lleva en cambio al torneo y a cada equipo por su nombre corto, porque un gestor en la página de un equipo está inscribiendo jugadores equipo por equipo. La página en la que estás se marca en negro.
 

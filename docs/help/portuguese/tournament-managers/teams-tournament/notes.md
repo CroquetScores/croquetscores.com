@@ -2,13 +2,13 @@
 
 A aba **Notas** da página de um torneio é onde os seus organizadores escrevem o que os jogadores precisam saber enquanto o torneio acontece: a ordem de jogo, uma mudança de gramados, a hora do almoço. Os leitores as encontram na página pública Notas do torneio, e uma nota que ainda não leram é marcada lá com um asterisco vermelho, que marca também a seção Notas em todas as páginas do torneio até que a abram.
 
-![A aba Notas](../../../english/tournament-managers/teams-tournament/images/notes-tab.png)
+![A aba Notas](images/notes-tab.png)
 
 ## Escrever uma nota
 
 Pressione **Adicionar nota**, acima da lista. Um painel toma o lugar da lista, porque uma nota é escrita por extenso e precisa de espaço.
 
-![O painel de nota, na aba Escrever](../../../english/tournament-managers/teams-tournament/images/note-panel.png)
+![O painel de nota, na aba Escrever](images/note-panel.png)
 
 **Título** é obrigatório, e é aquilo pelo que a nota é listada. É texto simples.
 
@@ -16,7 +16,7 @@ Pressione **Adicionar nota**, acima da lista. Um painel toma o lugar da lista, p
 
 **Pré-visualizar** mostra a nota como um leitor a verá na sua página.
 
-![O painel de nota, na aba Pré-visualizar](../../../english/tournament-managers/teams-tournament/images/note-preview.png)
+![O painel de nota, na aba Pré-visualizar](images/note-preview.png)
 
 Pressione **Adicionar**. A nota é guardada, a lista volta com ela no topo, e ela está na página pública Notas na mesma hora.
 
@@ -28,6 +28,6 @@ Pressione o título de uma nota, ou o seu **Editar**, para abrir o painel nessa 
 
 Uma nota que não vale mais é excluída. Uma nota excluída desaparece para sempre, então **Excluir** pergunta antes.
 
-![A pergunta feita antes de excluir uma nota](../../../english/tournament-managers/teams-tournament/images/delete-note-asks.png)
+![A pergunta feita antes de excluir uma nota](images/delete-note-asks.png)
 
 A seguir: [Organizadores e apontadores](managers-and-scorers.md).

@@ -2,7 +2,7 @@
 
 Pēhia **Whakataetae hou** i runga i te rārangi whakataetae i te Whakahaere. Kei runga i te rārangi, kaua kei raro, kia kore ai e tīpakohia atu i te mata o te waea pūkoro e tētahi rārangi roa.
 
-![Te puka whakataetae hou, kua whakaurua ngā mea](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Te puka whakataetae hou, kua whakaurua ngā mea](images/new-tournament.png)
 
 Ka pātai te puka mō ngā mea katoa e tīmata ai tētahi whakataetae. Mō tētahi whakataetae o te momo noa, he ingoa, e rua ngā rā me tētahi whenua anake te mea e toe ana: ko ngā mea katoa atu kua whakatauhia mōu, ā, ka taea te whakarerekē.
 

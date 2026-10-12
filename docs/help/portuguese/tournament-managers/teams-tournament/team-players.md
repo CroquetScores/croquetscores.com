@@ -2,7 +2,7 @@
 
 A página de uma equipe é aberta pelo seu nome, ou pelo seu **Ver**, na aba Equipes. Tem como cabeçalho o nome da equipe com o nome abreviado entre parênteses, e a sua bandeira, para que um organizador que veio à equipe errada perceba na mesma hora. Ela tem uma única coisa a mostrar, os jogadores da equipe, então a lista é a página.
 
-![A página de uma equipe, com os seus jogadores e um arquivado](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![A página de uma equipe, com os seus jogadores e um arquivado](images/team-page.png)
 
 A barra verde-escura na página de uma equipe leva ao torneio e a cada equipe em uso pelo nome abreviado, para que os jogadores sejam inscritos equipe por equipe sem voltar à aba Equipes.
 
@@ -12,7 +12,7 @@ Um jogador de uma equipe pertence só a essa equipe, representa a equipe e leva 
 
 Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a página.
 
-![O diálogo Adicionar jogador na página de uma equipe](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![O diálogo Adicionar jogador na página de uma equipe](images/add-team-player-dialog.png)
 
 **Nome** é obrigatório, entre 3 e 254 caracteres. Dois jogadores de uma mesma equipe não podem ter o mesmo nome, sejam quais forem as maiúsculas; um jogador de outra equipe pode tê-lo.
 

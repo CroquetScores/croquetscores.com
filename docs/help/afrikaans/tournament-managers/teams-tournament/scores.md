@@ -2,7 +2,7 @@
 
 'n Toets se bladsy word oopgemaak vanaf sy naam op die Toetse-oortjie, of vanaf die donkergroen balk. Dit het sy spanne se volle name as opskrif, soos "Australia v New Zealand", met hoeveel wedstryde dit verwag word om te hê en waarvan elkeen die beste is daaronder. Sy uitslae is die bladsy, sonder oortjies. 'n Bestuurder en 'n teller sien dieselfde bladsy, want 'n teller kan aan 'n uitslag alles doen wat 'n bestuurder kan.
 
-!['n Toets se bladsy, met sy uitslae](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+!['n Toets se bladsy, met sy uitslae](images/test-page-panel.png)
 
 ## Hoe die uitslae uiteengesit is
 
@@ -12,7 +12,7 @@ Die uitslae word per span uiteengesit eerder as volgens wie gewen het, in 'n tab
 
 Druk op **Voeg uitslag by**, bo die lys. Die dialoog lees soos 'n uitslag hardop gesê word: die wenner en hul punte, dan "het gewen teen", dan die verloorder en hul punte.
 
-![Die dialoog Voeg uitslag by op 'n toets se bladsy](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Die dialoog Voeg uitslag by op 'n toets se bladsy](images/add-test-score-dialog.png)
 
 Die wenner word gekies uit albei spanne se spelers in gebruik, onder elke span se naam, die eerste span se spelers eerste en elke span s'n in die span se volgorde. Niemand is om mee te begin gekies nie. Sodra die wenner gekies is, word die verloorder net uit die ander span aangebied, want 'n spel tussen twee spelers van dieselfde span is nie 'n spel tussen die spanne nie. 'n Geargiveerde speler word nie aangebied nie.
 

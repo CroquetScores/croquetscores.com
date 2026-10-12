@@ -4,7 +4,7 @@
 
 赛事中的选手是锦标赛的选手之一，所以是通过选择而不是通过输入来录入的。除了他们在赛事中的位置和带入赛事的结转之外，关于他们的一切都在锦标赛的“选手”标签页上更改。
 
-![一个小组赛的“选手”标签页，已录入四位选手](../../../english/tournament-managers/standard-tournament/images/competition-players-tab.png)
+![一个小组赛的“选手”标签页，已录入四位选手](images/competition-players-tab.png)
 
 ## 添加选手
 
@@ -16,13 +16,13 @@
 
 淘汰赛只有在抽签的每个名额都填满之后才能进行，选手剩下的名额用轮空填满。所以在淘汰赛中，下拉列表先提供**轮空**，再提供选手，并且无论添加了多少个轮空都继续提供它，因为一次抽签可能需要好几个。
 
-![四个名额的淘汰赛，有三位选手和一个轮空](../../../english/tournament-managers/standard-tournament/images/knockout-players.png)
+![四个名额的淘汰赛，有三位选手和一个轮空](images/knockout-players.png)
 
 轮空像选手一样排入抽签：它可以上移下移和移除，但不能退赛，因为它不打任何比赛。在每个名额都已填满的淘汰赛中录入选手会被拒绝，标签页会在下拉列表下方说明。
 
 淘汰赛选手的顺序就是它的抽签。前两个名额在第一场比赛中相遇，接下来两个在下一场相遇，依此类推。在录入任何比分之前，把选手排成抽签要进行的顺序，因为一旦淘汰赛有了正在使用的一局，它的选手就固定了：谁都不能被添加、移除或移动。选手仍然可以退赛。
 
-![录入一局之后的淘汰赛：谁都不能被添加、移动或移除](../../../english/tournament-managers/standard-tournament/images/knockout-players-fixed.png)
+![录入一局之后的淘汰赛：谁都不能被添加、移动或移除](images/knockout-players-fixed.png)
 
 ## 顺序
 
@@ -32,7 +32,7 @@
 
 **结转**说明选手从没有在此记分的比赛中带入赛事的内容：更早阶段的成绩，或者在该赛事在这里记分之前进行的比赛。它在小组赛和瑞士制中提供，因为它们有可以计入的排名，而在淘汰赛中不提供。
 
-![“结转”对话框](../../../english/tournament-managers/standard-tournament/images/carry-forward-dialog.png)
+![“结转”对话框](images/carry-forward-dialog.png)
 
 对话框询问六个数字：比赛胜场和负场、胜局和负局、得球门和失球门。每个数字都是可选的。留空的数字不结转任何东西，这和结转 0 不一样，这样之后更改它的人看到的就是它被留下时的样子。按**保存**保存全部六个。
 
@@ -40,7 +40,7 @@
 
 **移除**取出误录的选手。他们仍然是锦标赛的选手，并会再次出现在下拉列表中，但他们在赛事中的位置不会保留任何东西，所以“移除”会先询问。
 
-![移除选手之前所问的问题](../../../english/tournament-managers/standard-tournament/images/remove-player-asks.png)
+![移除选手之前所问的问题](images/remove-player-asks.png)
 
 在赛事中有任何正在使用的局的选手不能移除，因为那样一来那些局就成了与一个已不存在的人打的，所以不会提供“移除”。只有已归档的局的选手可以移除，他们已归档的比分随他们一起离开。
 
@@ -50,10 +50,10 @@
 
 退赛会先询问，因为它改变赛事的结果：该选手没有打的局在没有他们的情况下决定。
 
-![让选手退赛之前所问的问题](../../../english/tournament-managers/standard-tournament/images/withdraw-player-asks.png)
+![让选手退赛之前所问的问题](images/withdraw-player-asks.png)
 
 已退赛的选手只提供**取消退赛**，它把他们放回正在比赛的选手之中，排在留下的选手之后，不会询问。
 
-![有一位已退赛选手的小组赛](../../../english/tournament-managers/standard-tournament/images/competition-players-withdrawn.png)
+![有一位已退赛选手的小组赛](images/competition-players-withdrawn.png)
 
 下一页：[比分](scores.md)。

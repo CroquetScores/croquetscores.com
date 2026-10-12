@@ -4,13 +4,13 @@ L’onglet **Joueurs** de la page d’un tournoi est l’endroit où ses joueurs
 
 Les joueurs sont inscrits ici une fois, dans le tournoi. Les compétitions que chacun joue se choisissent ensuite, sur la page de chaque compétition, parmi les joueurs inscrits ici. Voir [Inscrire des joueurs dans une compétition](entering-players-in-a-competition.md).
 
-![L’onglet Joueurs, avec des joueurs inscrits et un archivé](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![L’onglet Joueurs, avec des joueurs inscrits et un archivé](images/players-tab.png)
 
 ## Ajouter des joueurs
 
 Appuyez sur **Ajouter un joueur**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page.
 
-![La boîte de dialogue Ajouter un joueur, remplie](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![La boîte de dialogue Ajouter un joueur, remplie](images/add-player-dialog.png)
 
 **Nom** est obligatoire. C’est le nom du joueur tel qu’il s’affichera sur chaque page, entre 3 et 254 caractères. Deux joueurs d’un même tournoi ne peuvent pas porter le même nom, quelles qu’en soient les majuscules ; quand deux joueurs partagent vraiment un nom, distinguez-les dans le nom lui-même, comme « Andrew Hobbs (2) ».
 
@@ -24,7 +24,7 @@ Appuyez sur **Ajouter un joueur**, au-dessus de la liste. Une boîte de dialogue
 
 Appuyez sur **Ajouter**. Le joueur est ajouté, la boîte de dialogue le dit, et ses champs se vident pour le joueur suivant, le curseur revenu dans le nom. Ajoutez toute la liste ainsi, puis appuyez sur **Annuler** pour fermer la boîte de dialogue. Annuler ne garde rien qui n’ait déjà été ajouté.
 
-![La boîte de dialogue après l’ajout d’un joueur](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![La boîte de dialogue après l’ajout d’un joueur](images/add-player-dialog-added.png)
 
 Un joueur ne s’appelle jamais « Bye » (le mot anglais pour exempt). Les exempts d’une élimination directe s’ajoutent dans l’élimination directe elle-même, là où ses joueurs sont inscrits ; un nom dont le premier mot est « bye » est donc refusé, et la boîte de dialogue explique pourquoi.
 
@@ -32,7 +32,7 @@ Un joueur ne s’appelle jamais « Bye » (le mot anglais pour exempt). Les ex
 
 Appuyez sur le nom d’un joueur, ou sur son **Modifier**, pour ouvrir la même boîte de dialogue sur ce joueur, intitulée Modifier le joueur. Changez ce qui est faux et appuyez sur **Enregistrer**, qui garde la modification et ferme la boîte de dialogue. Un joueur dont le nom est corrigé garde le nom dans le classement mondial qu’il avait, puisque le classement le connaît toujours sous ce nom.
 
-![La boîte de dialogue Modifier le joueur](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![La boîte de dialogue Modifier le joueur](images/edit-player-dialog.png)
 
 Un joueur corrigé ici est corrigé partout : dans chaque compétition où il est, et sur chaque page publique.
 
@@ -48,6 +48,6 @@ Un joueur qui a joué une partie ne peut pas être archivé, puisque ses parties
 
 Archiver un joueur qui n’est dans aucune compétition ne demande pas d’abord, puisque le restaurer remet tout en place. Archiver un joueur qui est dans une compétition demande d’abord, parce qu’archiver le retire de chaque compétition où il est, et que le restaurer ne l’y remet pas.
 
-![La question posée avant d’archiver un joueur qui est dans des compétitions](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![La question posée avant d’archiver un joueur qui est dans des compétitions](images/archive-player-asks.png)
 
 Suite : [Compétitions](competitions.md).

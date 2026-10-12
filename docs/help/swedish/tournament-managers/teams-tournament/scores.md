@@ -2,7 +2,7 @@
 
 En testmatchs sida öppnas från dess namn på fliken Testmatcher, eller från det mörkgröna fältet. Den har lagens fullständiga namn som rubrik, som "Australia v New Zealand", med hur många matcher den förväntas ha och vad var och en spelas bäst av under. Dess resultat är sidan, utan flikar. En turneringsledare och en resultatförare ser samma sida, eftersom en resultatförare kan göra allt med ett resultat som en turneringsledare kan.
 
-![En testmatchs sida, med dess resultat](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![En testmatchs sida, med dess resultat](images/test-page-panel.png)
 
 ## Så är resultaten uppställda
 
@@ -12,7 +12,7 @@ Resultaten är uppställda lag för lag i stället för efter vem som vann, i en
 
 Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
 
-![Dialogrutan Lägg till resultat på en testmatchs sida](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Dialogrutan Lägg till resultat på en testmatchs sida](images/add-test-score-dialog.png)
 
 Vinnaren väljs bland båda lagens spelare i bruk, under varje lags namn, det första lagets spelare först och varje lags i lagets ordning. Ingen är vald från början. När vinnaren är vald erbjuds förloraren bara från det andra laget, eftersom ett parti mellan två spelare i samma lag inte är ett parti mellan lagen. En arkiverad spelare erbjuds inte.
 

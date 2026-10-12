@@ -2,13 +2,13 @@
 
 La pestaña **Resultados** de la página de una competición es donde sus partidas se introducen, se corrigen y se apartan. Un anotador ve solo esta pestaña, y puede hacer en ella todo lo que hace un gestor.
 
-![La pestaña Resultados de un bloque, con resultados en uso, uno retirado y uno archivado](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![La pestaña Resultados de un bloque, con resultados en uso, uno retirado y uno archivado](images/scores-tab.png)
 
 ## Introducir un resultado
 
 Pulsa **Añadir resultado**, encima de la lista. El diálogo se lee como se dice un resultado en voz alta: el ganador y sus puntos, después "ganó a", después el perdedor y sus puntos.
 
-![El diálogo Añadir resultado, rellenado](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![El diálogo Añadir resultado, rellenado](images/add-score-dialog.png)
 
 El ganador y el perdedor se eligen cada uno de entre los jugadores de la competición que siguen jugando, en el orden de la competición. Al principio no hay nadie elegido, para que una partida nunca se apunte a un jugador que no has elegido. En una eliminatoria, elegir al ganador elige como perdedor a quien le toca enfrentarse en el cuadro, donde puedes verlo y elegir a otro.
 
@@ -18,7 +18,7 @@ Una partida ganada con los puntos igualados, como cuando la detiene el tiempo y 
 
 Pulsa **Añadir partida**. La partida se añade, el diálogo dice cuál y los campos se vacían para la siguiente, porque los resultados llegan en tanda, leídos de un tablón al final de una ronda. Pulsa **Cancelar** cuando estén todos.
 
-![El diálogo después de añadir una partida](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![El diálogo después de añadir una partida](images/add-score-dialog-added.png)
 
 Lo que se rechaza se dice bajo el campo al que se refiere: un ganador o un perdedor sin elegir, un resultado sin escribir o que no empieza por un dígito, el mismo jugador en ambos lados, los puntos del perdedor marcados como ganados, o los puntos del ganador por detrás de los del perdedor. En una eliminatoria, dos jugadores a los que no les toca enfrentarse se rechazan encima de los campos.
 
@@ -26,7 +26,7 @@ Lo que se rechaza se dice bajo el campo al que se refiere: un ganador o un perde
 
 Una eliminatoria se juega solo cuando cada plaza de su cuadro tiene un jugador o un bye. Hasta entonces, Añadir resultado explica por qué no se pueden añadir resultados en vez de abrir el diálogo.
 
-![Lo que dice Añadir resultado en una eliminatoria con el cuadro incompleto](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Lo que dice Añadir resultado en una eliminatoria con el cuadro incompleto](images/draw-not-filled.png)
 
 ## La lista de resultados
 
@@ -36,7 +36,7 @@ Los resultados en uso se listan en el orden en que se introdujeron, el más anti
 
 **Editar** abre el mismo diálogo sobre ese resultado, titulado Editar resultado, con sus jugadores elegidos y sus puntos tal como se escribieron. Pulsa **Guardar** para guardar la corrección y cerrar el diálogo.
 
-![El diálogo Editar resultado](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![El diálogo Editar resultado](images/edit-score-dialog.png)
 
 Una corrección mantiene el desenlace: una partida ganada sigue ganada, y una empatada sigue empatada. Una partida cuyo desenlace estaba mal se archiva y se introduce de nuevo.
 

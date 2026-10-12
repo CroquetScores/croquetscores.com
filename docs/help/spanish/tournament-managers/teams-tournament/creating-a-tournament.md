@@ -2,7 +2,7 @@
 
 Pulsa **Nuevo torneo**, encima de la lista de torneos de la administración. Está encima de la lista y no debajo para que una lista larga no lo saque de la pantalla de un teléfono.
 
-![El formulario de nuevo torneo, rellenado para un torneo por equipos](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![El formulario de nuevo torneo, rellenado para un torneo por equipos](images/new-tournament.png)
 
 El formulario pide todo aquello con lo que empieza un torneo. Lo que más importa aquí es el **Formato**, que es lo que hace que un torneo sea por equipos.
 
@@ -39,7 +39,7 @@ Estándar es el único formato que no es por equipos, y no es el que quieres aqu
 
 Pulsa **Crear torneo**. Se te lleva a la página del torneo en la administración, abierta en su pestaña Equipos, y eres su primer gestor. Queda listado en la administración bajo el año en que empieza.
 
-![Un torneo recién creado, todavía sin equipos](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Un torneo recién creado, todavía sin equipos](images/tournament-page-empty.png)
 
 La dirección pública del torneo se forma con su año, su deporte y su nombre, como `/2026/ac/trans-tasman-tests`. Conserva esa dirección cuando más adelante se corrige su nombre, para que un enlace ya enviado siga encontrándolo; solo se mueve cuando cambia el año en que empieza o su deporte.
 

@@ -2,7 +2,7 @@
 
 Fliken **Testmatcher** på en turnerings sida är där testmatcherna mellan dess lag läggs till, ändras, ordnas och läggs undan. En testmatch är en av turneringens tävlingar: en kamp mellan två lag, kallad med deras kortnamn, som "AUS v NZ", spelad som ett antal matcher mellan en spelare från varje lag. Varje testmatch har en egen sida, där dess resultat skrivs in.
 
-![Fliken Testmatcher, med tre testmatcher i en grupp](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![Fliken Testmatcher, med tre testmatcher i en grupp](images/tests-tab.png)
 
 Varje testmatch anger sitt namn, de dagar den spelas, hur många matcher den förväntas ha och vad var och en spelas bäst av, som "6 matcher, bäst av 3", och sin grupp där den är med i en.
 
@@ -10,13 +10,13 @@ Varje testmatch anger sitt namn, de dagar den spelas, hur många matcher den fö
 
 En testmatch spelas mellan två lag i bruk, så medan turneringen har färre än två säger fliken det där Lägg till testmatch skulle stå, och leder till fliken Lag.
 
-![Fliken Testmatcher innan det finns två lag](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![Fliken Testmatcher innan det finns två lag](images/tests-tab-two-teams-needed.png)
 
 ## Lägga till en testmatch
 
 Tryck på **Lägg till testmatch**, ovanför listan. En dialogruta öppnas över sidan, i den ordning en testmatch sägs högt.
 
-![Dialogrutan Lägg till testmatch, ifylld](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![Dialogrutan Lägg till testmatch, ifylld](images/add-test-dialog.png)
 
 **Lag A** och **Lag B** väljs var för sig bland turneringens lag i bruk, med namn, i turneringens ordning. Inget är valt från början, så att en testmatch aldrig läggs till mellan lag du inte valde. Lag B erbjuder varje lag utom det som valts som Lag A, eftersom ett lag inte spelar testmatch mot sig självt. Lag A är det första laget: dess spelare står till vänster på testmatchens sida och på den offentliga sidan. En testmatch har inget eget namn att skriva; den kallas med sina lags kortnamn.
 
@@ -30,13 +30,13 @@ Tryck på **Lägg till testmatch**, ovanför listan. En dialogruta öppnas över
 
 Tryck på **Lägg till**. Testmatchen läggs till, dialogrutan säger vilken med dess namn, och lagen töms för nästa, med dagarna, de förväntade matcherna, bäst av och gruppen kvar som de var: testmatcher läggs till en omgång i taget, mellan lag som möts samma dag, så omgångens nästa testmatch är bara dess två lag. Tryck på **Avbryt** när alla är inlagda.
 
-![Dialogrutan efter att en testmatch har lagts till](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![Dialogrutan efter att en testmatch har lagts till](images/add-test-dialog-added.png)
 
 ## Ändra en testmatch
 
 **Redigera** öppnar samma dialogruta på testmatchen, med rubriken Redigera testmatch, ifylld som testmatchen är. Tryck på **Spara** för att spara ändringen.
 
-![Dialogrutan Redigera testmatch](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![Dialogrutan Redigera testmatch](images/edit-test-dialog.png)
 
 En testmatch med partier i bruk behåller sina lag: dialogrutan visar dem men de kan inte ändras. Det övriga kan ändras, inom ramen för det som har spelats: färre förväntade matcher än de matcher som redan startat godtas inte, och inte heller ett bäst av som är lägre än det största antal partier två spelare har spelat.
 

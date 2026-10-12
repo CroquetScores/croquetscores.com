@@ -6,7 +6,7 @@
 
 锦标赛的页面位于它的年份、项目和名称之下，如 `/2026/ac/spring-open`。它以锦标赛的名称为标题，副标题在下方。它列出正在使用的每一局，最近添加的在先，这样再次回来的读者能看到此后发生了什么。每一局说明胜者、他们代表什么、他们的旗帜和得分，然后是负者及其得分，连同进行该局的赛事以及它是多久以前添加的。
 
-![锦标赛的公开页面](../../../english/tournament-managers/standard-tournament/images/public-tournament.png)
+![锦标赛的公开页面](images/public-tournament.png)
 
 深绿色条提供锦标赛的各个栏目：**近期**，也就是本页，**选手**、**备注**和**评论**，然后是正在使用的每个赛事，按“赛事”标签页上的顺序。当有读者尚未阅读的备注时，“备注”以红色星号标出。
 
@@ -14,11 +14,11 @@
 
 小组赛的页面以网格显示它的成绩：按小组赛的顺序为每位选手安排一行和一列，两位选手之间的局位于行与列相交处，每一局对行上的选手标为胜、负或平。选手的各列之后是每位选手的总计。当每场比赛只有一局时，总计是胜局数和净胜球门；当一场比赛是多局决胜时，总计是比赛、净胜局、局和净胜球门。
 
-![小组赛的网格](../../../english/tournament-managers/standard-tournament/images/public-block-grid.png)
+![小组赛的网格](images/public-block-grid.png)
 
 小组赛有三种显示方式，在它名称所在的那一行提供：**表格**、**概要**和**比赛顺序**。概要是适合手机的那种：选手按名次排列，带有他们的胜、负和净胜球门。比赛顺序列出每一局，最早的在先。读者选择一种视图之后，每个赛事都保持这种视图，直到他们选择另一种。
 
-![小组赛的概要](../../../english/tournament-managers/standard-tournament/images/public-block-summary.png)
+![小组赛的概要](images/public-block-summary.png)
 
 已退赛选手的那一行会说明这一点。已作废的比分加删除线显示，并且不计入任何东西。已归档的比分不显示。
 
@@ -26,7 +26,7 @@
 
 淘汰赛的页面逐轮画出它的抽签，从第一轮到决赛每轮一列，每场比赛的两方上下排列，比赛是几局决胜就有几个格子。后一轮的比赛立于两场比赛旁边，它就在这两场比赛的胜者之间进行。在手机上，抽签横向滚动，带有去往决赛和返回的箭头。
 
-![淘汰赛的抽签](../../../english/tournament-managers/standard-tournament/images/public-knockout.png)
+![淘汰赛的抽签](images/public-knockout.png)
 
 ## 瑞士制
 
@@ -40,7 +40,7 @@
 
 “备注”页面列出锦标赛的备注，最近写的在先，每条通向它自己的页面，并说明它是多久以前写的。读者尚未阅读的备注以红色星号标出，直到他们打开它。
 
-![锦标赛的公开“备注”页面](../../../english/tournament-managers/standard-tournament/images/public-notes.png)
+![锦标赛的公开“备注”页面](images/public-notes.png)
 
 ## 会移动的地址
 

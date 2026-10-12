@@ -4,7 +4,7 @@
 
 In die lys toernooie in die administrasie, druk op **Wysig** by die toernooi. Die vorm is dié wat dit geskep het, begin soos die toernooi is. Verander wat verkeerd is en druk op **Dateer toernooi op**.
 
-![Die vorm Wysig toernooi](../../../english/tournament-managers/teams-tournament/images/edit-tournament.png)
+![Die vorm Wysig toernooi](images/edit-tournament.png)
 
 Die toernooi se dae kan hier verbreed word waar 'n toets 'n dag buite hulle nodig het, want 'n toets word binne sy toernooi gespeel. Een formaat tussen spanne kan vir 'n ander verruil word, want die toernooi bevat in elkeen dieselfde dinge. Sodra die toernooi enige span of toets bevat, geargiveerdes ingereken, kan dit nie na die formaat Standaard verander word nie, wat in plaas daarvan spelers en kompetisies het.
 
@@ -16,7 +16,7 @@ Net 'n bestuurder kan 'n toernooi verander. 'n Teller, of enigiemand anders, wor
 
 Die administrasie lys een jaar op 'n slag, beginnende met vanjaar, nuutste toernooi eerste. Die jare waarin jy 'n toernooi het, is oortjies in die donkergroen balk, nuutste eerste; waar daar meer is as wat op 'n foon pas, is die oudstes in 'n aftreklys aan die einde van die ry. Die jaar is in die adres, so daar kan na 'n jaar geskakel word.
 
-![Die lys toernooie](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Die lys toernooie](images/admin-list.png)
 
 ## Hoe om 'n toernooi te argiveer
 

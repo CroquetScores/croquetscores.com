@@ -1,7 +1,7 @@
 // "npm run build:help". Turns the Markdown of docs/help into what the site
 // reads: for each language folder, a JSON file of title and HTML for every page
-// under dist/help/<language tag>/, and the pictures once under
-// dist/help/images/.
+// under dist/help/<language tag>/, and each language's pictures under
+// dist/help/images/<language tag>/.
 //
 // Each folder is named for its language's file in src/web/languages, and the
 // tag is read from there rather than written down a second time here, so that
@@ -74,7 +74,14 @@ for (const folder of languageFolders) {
   }
 
   for (const file of filesBelow(join(source, folder))) {
-    if (!file.endsWith(".md")) continue;
+    // A picture is kept under the language that made it, since it shows the
+    // site in that language. A language with none of its own is shown English's.
+    if (!file.endsWith(".md")) {
+      const picture = join(built, "images", language.tag, helpImageName(file));
+      mkdirSync(dirname(picture), { recursive: true });
+      cpSync(join(source, folder, file), picture);
+      continue;
+    }
     const page = convertHelpPage(
       readFileSync(join(source, folder, file), "utf8"),
       file,
@@ -96,13 +103,6 @@ for (const folder of languageFolders) {
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, JSON.stringify({ title: page.title, html: page.html }));
   }
-}
-
-for (const file of filesBelow(english)) {
-  if (file.endsWith(".md")) continue;
-  const out = join(built, "images", helpImageName(file));
-  mkdirSync(dirname(out), { recursive: true });
-  cpSync(join(english, file), out);
 }
 
 if (problems.length > 0) {

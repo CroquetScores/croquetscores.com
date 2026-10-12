@@ -6,7 +6,7 @@ No se publica nada: las páginas públicas se construyen a partir de lo que guar
 
 La página del torneo está en su año, su deporte y su nombre, como `/2026/ac/spring-open`. La encabeza el nombre del torneo, con su subtítulo debajo. Lista todas las partidas en uso, la añadida más recientemente primero, para que un lector que vuelve vea lo que ha pasado desde entonces. Cada partida dice el ganador, a quién representa, su bandera y sus puntos, después el perdedor y los suyos, con la competición en que se jugó y cuánto hace que se añadió.
 
-![La página pública del torneo](../../../english/tournament-managers/standard-tournament/images/public-tournament.png)
+![La página pública del torneo](images/public-tournament.png)
 
 La barra verde oscuro ofrece las secciones del torneo: **Recientes**, que es esta página, **Jugadores**, **Notas** y **Comentarios**, y después cada competición en uso, en el orden en que las tiene la pestaña Competiciones. Notas se marca con un asterisco rojo mientras haya una nota que el lector no ha leído.
 
@@ -14,11 +14,11 @@ La barra verde oscuro ofrece las secciones del torneo: **Recientes**, que es est
 
 La página de un bloque muestra sus resultados como un cuadro: una fila y una columna por cada jugador en el orden del bloque, con las partidas entre dos jugadores donde la fila se cruza con la columna, cada una marcada como ganada, perdida o empatada para el jugador de la fila. Tras las columnas de los jugadores vienen los totales de cada uno. Cuando cada encuentro es una sola partida, son victorias y aros netos; cuando un encuentro es al mejor de más de una, son encuentros, partidas netas, partidas y aros netos.
 
-![El cuadro de un bloque](../../../english/tournament-managers/standard-tournament/images/public-block-grid.png)
+![El cuadro de un bloque](images/public-block-grid.png)
 
 Un bloque se muestra de tres maneras, ofrecidas en la línea de su nombre: **Cuadro**, **Resumen** y **Orden de juego**. El resumen es el pensado para un teléfono: los jugadores clasificados, con sus victorias, derrotas y aros netos. El orden de juego lista todas las partidas, la más antigua primero. Un lector que elige una vista la conserva para todas las competiciones hasta que elige otra.
 
-![El resumen de un bloque](../../../english/tournament-managers/standard-tournament/images/public-block-summary.png)
+![El resumen de un bloque](images/public-block-summary.png)
 
 La fila de un jugador retirado lo dice. Un resultado retirado se muestra tachado y no cuenta para nada. Un resultado archivado no se muestra.
 
@@ -26,7 +26,7 @@ La fila de un jugador retirado lo dice. Un resultado retirado se muestra tachado
 
 La página de una eliminatoria dibuja su cuadro ronda a ronda, una columna por cada ronda desde la primera hasta la final, con los dos lados de cada encuentro uno sobre otro y una celda por cada partida de las que el encuentro es al mejor de. El encuentro de una ronda posterior está junto a los dos encuentros entre cuyos ganadores se juega. En un teléfono el cuadro se desplaza a los lados, con flechas hacia la final y de vuelta.
 
-![El cuadro de una eliminatoria](../../../english/tournament-managers/standard-tournament/images/public-knockout.png)
+![El cuadro de una eliminatoria](images/public-knockout.png)
 
 ## Un suizo
 
@@ -40,7 +40,7 @@ La página Jugadores lista a todos los jugadores del torneo que no están archiv
 
 La página Notas lista las notas del torneo, la escrita más recientemente primero, cada una llevando a su propia página y diciendo cuánto hace que se escribió. Una nota que el lector no ha leído se marca con un asterisco rojo hasta que la abre.
 
-![La página pública Notas del torneo](../../../english/tournament-managers/standard-tournament/images/public-notes.png)
+![La página pública Notas del torneo](images/public-notes.png)
 
 ## Direcciones que se mueven
 

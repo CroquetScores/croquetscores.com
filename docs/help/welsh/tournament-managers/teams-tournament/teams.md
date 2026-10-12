@@ -2,13 +2,13 @@
 
 Tab **Timau** tudalen twrnamaint yw lle caiff ei dimau eu hychwanegu, eu cywiro, eu rhoi mewn trefn, a'u rhoi o'r neilltu. Dyma'r tab y mae'r dudalen yn agor arno, gan mai'r timau yw'r peth cyntaf a osodir i fyny. Mae test rhwng dau dîm, felly mae angen o leiaf dau cyn y gellir ychwanegu unrhyw test.
 
-![Y tab Timau, â thri thîm ac un wedi'i archifo](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![Y tab Timau, â thri thîm ac un wedi'i archifo](images/teams-tab.png)
 
 ## Ychwanegu tîm
 
 Pwyswch **Ychwanegu tîm**, uwchben y rhestr. Mae deialog yn agor dros y dudalen.
 
-![Y ddeialog Ychwanegu tîm, wedi'i llenwi](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![Y ddeialog Ychwanegu tîm, wedi'i llenwi](images/add-team-dialog.png)
 
 Mae **Enw** yn ofynnol: enw llawn y tîm, fel "Australia", sydd ar ben tudalen y tîm a thablau'r tudalennau cyhoeddus. Ni all dau dîm yn yr un twrnamaint gael yr un enw.
 
@@ -18,13 +18,13 @@ Dangosir **Baner** wrth ochr enw'r tîm lle bynnag y mae'n ymddangos. Gellir ei 
 
 Pwyswch **Ychwanegu**. Caiff y tîm ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y nesaf. Ychwanegwch y rhestr gyfan fel hyn, yna pwyswch **Canslo** i gau'r ddeialog. Nid yw Canslo yn cadw dim nad oedd eisoes wedi'i ychwanegu.
 
-![Y ddeialog ar ôl i dîm gael ei ychwanegu](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![Y ddeialog ar ôl i dîm gael ei ychwanegu](images/add-team-dialog-added.png)
 
 ## Cywiro tîm
 
 Pwyswch **Golygu** tîm i agor yr un ddeialog ar y tîm hwnnw, dan y teitl Golygu tîm. Newidiwch beth sydd o'i le a phwyswch **Cadw**. Caiff tîm y mae ei enw byr yn newid ei alw wrth yr un newydd ym mhob man, felly caiff ei destau eu hailenwi gydag ef.
 
-![Y ddeialog Golygu tîm](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![Y ddeialog Golygu tîm](images/edit-team-dialog.png)
 
 ## Trefn
 

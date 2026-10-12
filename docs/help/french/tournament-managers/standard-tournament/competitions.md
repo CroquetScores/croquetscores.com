@@ -2,7 +2,7 @@
 
 L’onglet **Compétitions** de la page d’un tournoi est l’endroit où ses compétitions sont ajoutées, mises en ordre et mises de côté. Une compétition est une poule, une élimination directe ou un système suisse. Chacune a sa propre page, où ses joueurs sont inscrits et ses résultats saisis.
 
-![L’onglet Compétitions, avec des compétitions de chaque type et une archivée](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![L’onglet Compétitions, avec des compétitions de chaque type et une archivée](images/competitions-tab.png)
 
 ## Ajouter une compétition
 
@@ -16,9 +16,9 @@ Appuyez sur **Ajouter une compétition**, au-dessus de la liste. Une boîte de d
 
 Une poule et un système suisse ne demandent que **au meilleur des** combien de parties se joue chaque rencontre, ce qui commence à 1. Au meilleur des 3 se gagne par celui qui remporte deux parties. Le nombre peut être pair, puisque dans une poule ou un système suisse un joueur est classé par les parties qu’il gagne, et qu’une rencontre de deux parties partagées une chacune est un résultat comme un autre.
 
-![La boîte de dialogue Ajouter une compétition pour une poule](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![La boîte de dialogue Ajouter une compétition pour une poule](images/add-competition-block.png)
 
-![La boîte de dialogue Ajouter une compétition pour un système suisse](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![La boîte de dialogue Ajouter une compétition pour un système suisse](images/add-competition-swiss.png)
 
 ### Une élimination directe
 
@@ -26,7 +26,7 @@ Une élimination directe demande combien de **places** compte son tableau, et au
 
 Un tableau a autant de tours qu’il en faut pour ramener ses places à une, de sorte qu’un tableau de 8 places a trois tours. La boîte de dialogue demande au meilleur de combien se joue chacun, ensemble sous **Au meilleur des**, dans l’ordre où ils se jouent. Les trois derniers sont nommés comme on parle des tours d’un tableau, **Quarts**, **Demis** et **Finale**, et ceux d’avant par leur numéro, Tour 1 en premier. Choisir plus de places ajoute des tours au début du tableau, et en choisir moins en retire au début, de sorte que ce qui a été tapé pour la finale reste celui de la finale. Chaque tour se joue au meilleur d’un nombre impair de parties, puisqu’une rencontre d’élimination directe doit avoir un vainqueur.
 
-![La boîte de dialogue Ajouter une compétition pour une élimination directe de 4 places](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![La boîte de dialogue Ajouter une compétition pour une élimination directe de 4 places](images/add-competition-knockout.png)
 
 ### En ajouter plusieurs à la suite
 

@@ -26,11 +26,11 @@ Ko ngā mahi katoa a te kaiwhakahaere ka mahia i te wāhanga Whakahaere o te pae
 
 Ko te kuaha o mua o te Whakahaere ka rārangi i ngā whakataetae e whai wāhi ana koe, kotahi te tau i te wā kotahi.
 
-![Te rārangi whakataetae i te Whakahaere](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![Te rārangi whakataetae i te Whakahaere](images/admin-list.png)
 
 Ina pēhia te ingoa o tētahi whakataetae, **Whakahaere** rānei, ka tuwhera tōna whārangi. Ko ngā mea katoa hei whakahaere kei roto i ngā ripa e rima i raro i tōna ingoa: **Ngā kaitākaro**, **Ngā tauwhāinga**, **Ngā tuhipoka**, **Ngā kaiwhakahaere** me **Ngā kaikaute**. Ka tuwhera te whārangi ki Ngā kaitākaro, nā te mea ko te whakauru kaitākaro te mea tuatahi ka whakaurua.
 
-![Te whārangi o tētahi whakataetae, i tōna ripa Ngā tauwhāinga](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![Te whārangi o tētahi whakataetae, i tōna ripa Ngā tauwhāinga](images/tournament-page.png)
 
 Ko te pae kākāriki pōuri i raro i te pane hei neke i waenga i ngā whārangi. Ka arahi ki te whakataetae, ko **Whakataetae**, me ia tauwhāinga o te whakataetae mā tōna ingoa, kia taea ai te haere mai i te whakataetae ki tētahi tauwhāinga, me te neke i waenga i ngā tauwhāinga, me te kore e hoki i te ripa Ngā tauwhāinga. Ko te whārangi e noho ana koe ki runga kua tohua ki te mangu.
 

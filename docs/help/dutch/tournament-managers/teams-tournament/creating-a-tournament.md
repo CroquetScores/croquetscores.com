@@ -2,7 +2,7 @@
 
 Druk op **Nieuw toernooi** boven de lijst met toernooien in het beheer. De knop staat boven de lijst en niet eronder, zodat een lange lijst hem niet van het scherm van een telefoon duwt.
 
-![Het formulier voor een nieuw toernooi, ingevuld voor een toernooi tussen teams](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Het formulier voor een nieuw toernooi, ingevuld voor een toernooi tussen teams](images/new-tournament.png)
 
 Het formulier vraagt alles waarmee een toernooi begint. Wat hier het meest telt, is de **Toernooivorm**, die van een toernooi een toernooi tussen teams maakt.
 
@@ -39,7 +39,7 @@ Standaard is de enige vorm die niet tussen teams wordt gespeeld, en is niet wat 
 
 Druk op **Toernooi aanmaken**. Je komt op de pagina van het toernooi in het beheer, geopend op het tabblad Teams, en jij bent zijn eerste beheerder. Het staat in het beheer onder het jaar waarin het begint.
 
-![Een pas aangemaakt toernooi, nog zonder teams](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Een pas aangemaakt toernooi, nog zonder teams](images/tournament-page-empty.png)
 
 Het openbare adres van het toernooi wordt gemaakt uit zijn jaar, zijn sport en zijn naam, als `/2026/ac/trans-tasman-tests`. Het houdt dat adres wanneer de naam later wordt gecorrigeerd, zodat een al verstuurde link het nog vindt; het verhuist alleen wanneer het jaar waarin het begint, of de sport, verandert.
 

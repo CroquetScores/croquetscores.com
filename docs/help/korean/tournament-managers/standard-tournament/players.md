@@ -4,13 +4,13 @@
 
 선수는 여기서 대회에 한 번만 등록해요. 각 선수가 어느 경기 종목에 나가는지는 그 뒤에, 각 경기 종목의 페이지에서 여기 등록된 선수 중에서 골라요. [경기 종목에 선수 넣기](entering-players-in-a-competition.md)를 보세요.
 
-![선수들이 등록되어 있고 한 명이 보관된 선수 탭](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![선수들이 등록되어 있고 한 명이 보관된 선수 탭](images/players-tab.png)
 
 ## 선수 추가하기
 
 목록 위의 **선수 추가**를 눌러요. 페이지 위에 대화 상자가 열려요.
 
-![내용을 채운 선수 추가 대화 상자](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![내용을 채운 선수 추가 대화 상자](images/add-player-dialog.png)
 
 **이름**은 꼭 써야 해요. 모든 페이지에 보일 선수의 이름으로, 3자 이상 254자 이하예요. 한 대회의 두 선수는 대소문자가 달라도 같은 이름을 가질 수 없어요. 정말로 이름이 같은 두 선수가 있다면, "Andrew Hobbs (2)"처럼 이름 자체에서 구별해 주세요.
 
@@ -24,7 +24,7 @@
 
 **추가**를 눌러요. 선수가 추가되고, 대화 상자가 그렇게 알려 주고, 다음 선수를 위해 필드가 비워지며 커서는 이름으로 돌아가요. 이렇게 명단을 전부 추가한 뒤 **취소**를 눌러 대화 상자를 닫아요. 취소는 아직 추가하지 않은 것은 저장하지 않아요.
 
-![선수를 추가한 뒤의 대화 상자](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![선수를 추가한 뒤의 대화 상자](images/add-player-dialog-added.png)
 
 선수의 이름을 "Bye"로 할 수는 없어요. 녹아웃의 부전승은 녹아웃 자체에서, 선수를 넣는 자리에서 추가하기 때문에, 첫 단어가 영어 단어 "bye"인 이름은 거부되고, 대화 상자가 그 이유를 설명해요.
 
@@ -32,7 +32,7 @@
 
 선수의 이름이나 **수정**을 누르면 같은 대화 상자가 그 선수로 열리고, 제목은 선수 수정이에요. 틀린 것을 고치고 **저장**을 누르면 변경 내용이 저장되고 대화 상자가 닫혀요. 이름을 고친 선수는 가지고 있던 세계 랭킹 이름을 그대로 유지해요. 랭킹은 여전히 그 이름으로 선수를 알고 있으니까요.
 
-![선수 수정 대화 상자](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![선수 수정 대화 상자](images/edit-player-dialog.png)
 
 여기서 고친 선수는 모든 곳에서 고쳐져요. 들어 있는 모든 경기 종목에서, 그리고 모든 공개 페이지에서요.
 
@@ -48,6 +48,6 @@
 
 어느 경기 종목에도 들어 있지 않은 선수를 보관할 때는 먼저 묻지 않아요. 복원하면 모든 것이 돌아오니까요. 어느 경기 종목에든 들어 있는 선수를 보관할 때는 먼저 물어요. 보관하면 들어 있던 모든 경기 종목에서 빠지고, 복원해도 다시 들어가지 않기 때문이에요.
 
-![경기 종목에 들어 있는 선수를 보관하기 전에 묻는 질문](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![경기 종목에 들어 있는 선수를 보관하기 전에 묻는 질문](images/archive-player-asks.png)
 
 다음: [경기 종목](competitions.md).

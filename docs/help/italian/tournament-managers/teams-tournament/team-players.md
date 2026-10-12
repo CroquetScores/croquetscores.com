@@ -2,7 +2,7 @@
 
 La pagina di una squadra si apre dal suo nome, o dal suo **Vedi**, nella scheda Squadre. È intestata con il nome della squadra con il suo nome breve tra parentesi, e la sua bandiera, così un organizzatore arrivato alla squadra sbagliata se ne accorge subito. Ha una sola cosa da mostrare, i giocatori della squadra, quindi l'elenco è la pagina.
 
-![La pagina di una squadra, con i suoi giocatori e uno archiviato](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![La pagina di una squadra, con i suoi giocatori e uno archiviato](images/team-page.png)
 
 La barra verde scuro sulla pagina di una squadra porta al torneo e a ciascuna squadra in uso con il suo nome breve, così i giocatori si inseriscono squadra per squadra senza tornare alla scheda Squadre.
 
@@ -12,7 +12,7 @@ Un giocatore di una squadra appartiene a quella squadra sola, rappresenta la squ
 
 Premi **Aggiungi giocatore**, sopra l'elenco. Si apre una finestra di dialogo sopra la pagina.
 
-![La finestra Aggiungi giocatore sulla pagina di una squadra](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![La finestra Aggiungi giocatore sulla pagina di una squadra](images/add-team-player-dialog.png)
 
 **Nome** è obbligatorio, tra 3 e 254 caratteri. Due giocatori di una stessa squadra non possono avere lo stesso nome, comunque siano scritte le maiuscole; un giocatore di un'altra squadra può averlo uguale.
 

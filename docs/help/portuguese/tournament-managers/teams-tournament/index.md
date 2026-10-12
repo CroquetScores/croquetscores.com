@@ -30,11 +30,11 @@ Uma **equipe** é um lado, como a Austrália, com um nome, um nome abreviado com
 
 A porta de entrada da administração lista os torneios de que você participa, um ano de cada vez.
 
-![A lista de torneios na administração](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![A lista de torneios na administração](images/admin-list.png)
 
 Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em cinco abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores** e **Apontadores**. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
 
-![A página de um torneio, na aba Testes](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![A página de um torneio, na aba Testes](images/tournament-page.png)
 
 A barra verde-escura abaixo do cabeçalho serve para ir de uma página a outra. Na página do torneio e na página de um teste, ela leva ao torneio, como **Torneio**, e a cada teste pelo nome. Na página de uma equipe, ela leva ao torneio e a cada equipe pelo nome abreviado, porque um organizador na página de uma equipe está inscrevendo jogadores equipe por equipe. A página em que você está é marcada em preto.
 

@@ -2,7 +2,7 @@
 
 Pressione **Novo torneio**, acima da lista de torneios na administração. Ele fica acima da lista, e não abaixo, para que uma lista longa não o empurre para fora da tela de um telefone.
 
-![O formulário de novo torneio, preenchido para um torneio disputado por equipes](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![O formulário de novo torneio, preenchido para um torneio disputado por equipes](images/new-tournament.png)
 
 O formulário pede tudo com que um torneio começa. O que mais importa aqui é o **Formato**, que é o que faz de um torneio um torneio disputado por equipes.
 
@@ -39,7 +39,7 @@ Padrão é o único formato não disputado por equipes, e não é o que você qu
 
 Pressione **Criar torneio**. Você é levado à página do torneio na administração, aberta na aba Equipes, e passa a ser o seu primeiro organizador. Ele é listado na administração sob o ano em que começa.
 
-![Um torneio recém-criado, ainda sem equipes](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Um torneio recém-criado, ainda sem equipes](images/tournament-page-empty.png)
 
 O endereço público do torneio é formado pelo seu ano, a sua modalidade e o seu nome, como `/2026/ac/trans-tasman-tests`. Ele mantém esse endereço quando o nome é corrigido mais tarde, para que um link já enviado continue a encontrá-lo; ele só muda quando o ano em que começa, ou a modalidade, muda.
 

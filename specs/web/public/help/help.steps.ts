@@ -1,10 +1,12 @@
 import { defineParameterType, Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
   helpLibraryIn,
   helpLibraryWithout,
+  helpLibraryWithoutImage,
 } from "../../../../src/web/common/helpLibrary.js";
 import { languageCookie } from "../../../../src/web/common/language.js";
 import { egyptian } from "../../../../src/web/languages/egyptian.js";
@@ -184,3 +186,75 @@ Then(
 Then("every picture is found", async function (this: SpecWorld) {
   await everyThatLeadsSomewhere(this, "src", "/help/images/");
 });
+
+// The folders of docs/help the languages' pictures are made into.
+const folders = new Map<Language, string>([
+  [english, "english"],
+  [welsh, "welsh"],
+  [french, "french"],
+  [german, "german"],
+  [egyptian, "egyptian"],
+]);
+
+const pictures = new WeakMap<
+  SpecWorld,
+  { name: string; bytes: Buffer; headers: Headers }
+>();
+
+Given(
+  "the help has no {helpLanguage} picture {string}",
+  async function (this: SpecWorld, language: Language, name: string) {
+    const without = helpLibraryWithoutImage(
+      helpLibraryIn(dist),
+      language.tag,
+      name,
+    );
+    sites.set(this, await anApplicationWithHelp(this, without));
+  },
+);
+
+When(
+  "the help picture {string} is opened",
+  async function (this: SpecWorld, name: string) {
+    const response = await ask(this, `/help/images/${name}`);
+    assert.equal(response.status, 200);
+    pictures.set(this, {
+      name,
+      bytes: Buffer.from(await response.arrayBuffer()),
+      headers: response.headers,
+    });
+  },
+);
+
+Then(
+  "the picture is the {helpLanguage} one",
+  function (this: SpecWorld, language: Language) {
+    const shown = pictures.get(this);
+    assert.ok(shown !== undefined, "No picture was opened.");
+    const [kind, section, file] = shown.name.split("/");
+    const made = readFileSync(
+      join(
+        dist,
+        "..",
+        "..",
+        "docs",
+        "help",
+        folders.get(language)!,
+        kind!,
+        section!,
+        "images",
+        file!,
+      ),
+    );
+    assert.ok(shown.bytes.equals(made), "The picture is not that language's.");
+  },
+);
+
+Then(
+  "the picture varies by the language the reader has chosen",
+  function (this: SpecWorld) {
+    const vary = pictures.get(this)?.headers.get("vary") ?? "";
+    assert.ok(vary.includes("Cookie"));
+    assert.ok(vary.includes("Accept-Language"));
+  },
+);

@@ -4,7 +4,7 @@
 
 Na liście turniejów w administracji naciśnij **Edytuj** przy turnieju. Formularz jest tym samym, który go utworzył, wypełniony tak, jak turniej wygląda teraz. Zmień to, co jest nie tak, i naciśnij **Zaktualizuj turniej**.
 
-![Formularz Edytuj turniej](../../../english/tournament-managers/teams-tournament/images/edit-tournament.png)
+![Formularz Edytuj turniej](images/edit-tournament.png)
 
 Dni turnieju można tu rozszerzyć, gdy test potrzebuje dnia poza nimi, bo test rozgrywa się w obrębie jego turnieju. Jeden format drużynowy można zmienić na inny, bo turniej w każdym z nich przechowuje to samo. Gdy turniej ma już jakąkolwiek drużynę lub test, licząc też zarchiwizowane, nie można go zmienić na format Standardowy, który zamiast tego ma zawodników i konkurencje.
 
@@ -16,7 +16,7 @@ Turniej może zmienić tylko organizator. Wprowadzający wyniki, jak każdy inny
 
 Administracja wymienia jeden rok naraz, zaczynając od bieżącego, od najnowszego turnieju. Lata, w których masz turniej, są kartami na ciemnozielonym pasku, od najnowszego; gdy jest ich więcej, niż mieści się na telefonie, najstarsze są na liście rozwijanej na końcu rzędu. Rok jest w adresie, więc do roku można podać link.
 
-![Lista turniejów](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Lista turniejów](images/admin-list.png)
 
 ## Archiwizowanie turnieju
 

@@ -2,7 +2,7 @@
 
 Die Seite eines Tests wird über seinen Namen auf dem Reiter Tests oder über die dunkelgrüne Leiste geöffnet. Ihre Überschrift sind die vollen Namen seiner Mannschaften, etwa „Australia v New Zealand“, mit der Zahl der erwarteten Begegnungen und dem Best of jeder darunter. Seine Ergebnisse sind die Seite, ohne Reiter. Ein Turnierleiter und ein Ergebniserfasser sehen dieselbe Seite, weil ein Ergebniserfasser mit einem Ergebnis alles tun kann, was ein Turnierleiter kann.
 
-![Die Seite eines Tests, mit seinen Ergebnissen](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![Die Seite eines Tests, mit seinen Ergebnissen](images/test-page-panel.png)
 
 ## Wie die Ergebnisse angeordnet sind
 
@@ -12,7 +12,7 @@ Die Ergebnisse sind nach Mannschaft angeordnet und nicht danach, wer gewonnen ha
 
 Drücke **Ergebnis hinzufügen** über der Liste. Der Dialog liest sich, wie ein Ergebnis gesagt wird: der Sieger und seine Punkte, dann „schlug“, dann der Verlierer und seine Punkte.
 
-![Der Dialog Ergebnis hinzufügen auf der Seite eines Tests](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Der Dialog Ergebnis hinzufügen auf der Seite eines Tests](images/add-test-score-dialog.png)
 
 Der Sieger wird aus den Spielern beider Mannschaften in Gebrauch gewählt, unter dem Namen jeder Mannschaft, die Spieler der ersten Mannschaft zuerst und die jeder Mannschaft in ihrer Reihenfolge. Zu Beginn ist niemand gewählt. Sobald der Sieger gewählt ist, wird der Verlierer nur aus der anderen Mannschaft angeboten, weil ein Spiel zwischen zwei Spielern derselben Mannschaft kein Spiel zwischen den Mannschaften ist. Ein archivierter Spieler wird nicht angeboten.
 

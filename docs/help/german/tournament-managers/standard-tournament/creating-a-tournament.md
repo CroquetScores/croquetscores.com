@@ -2,7 +2,7 @@
 
 Drücke **Neues Turnier** über der Liste der Turniere in der Verwaltung. Der Knopf steht über der Liste und nicht darunter, damit eine lange Liste ihn nicht vom Bildschirm eines Telefons schiebt.
 
-![Das Formular für ein neues Turnier, ausgefüllt](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Das Formular für ein neues Turnier, ausgefüllt](images/new-tournament.png)
 
 Das Formular fragt nach allem, womit ein Turnier beginnt. Für ein gewöhnliches Turnier genügen ein Name, zwei Tage und ein Land: Alles andere wird für dich entschieden und lässt sich ändern.
 

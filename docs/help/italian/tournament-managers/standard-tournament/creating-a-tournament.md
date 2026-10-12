@@ -2,7 +2,7 @@
 
 Premi **Nuovo torneo** sopra l'elenco dei tornei nell'amministrazione. Sta sopra l'elenco anziché sotto, così un elenco lungo non lo spinge fuori dallo schermo di un telefono.
 
-![Il modulo del nuovo torneo, compilato](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Il modulo del nuovo torneo, compilato](images/new-tournament.png)
 
 Il modulo chiede tutto ciò con cui un torneo comincia. Per un torneo del tipo comune bastano un nome, due giorni e un paese: tutto il resto è deciso per te e si può cambiare.
 

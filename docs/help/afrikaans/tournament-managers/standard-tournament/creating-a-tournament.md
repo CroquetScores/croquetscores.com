@@ -2,7 +2,7 @@
 
 Druk op **Nuwe toernooi** bo die lys toernooie in die administrasie. Dit is bo die lys eerder as daaronder, sodat 'n lang lys dit nie van 'n foon se skerm af druk nie.
 
-![Die vorm vir 'n nuwe toernooi, ingevul](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Die vorm vir 'n nuwe toernooi, ingevul](images/new-tournament.png)
 
 Die vorm vra vir alles waarmee 'n toernooi begin. 'n Toernooi van die gewone soort is net 'n naam, twee dae en 'n land ver: alles anders word vir jou besluit en kan verander word.
 

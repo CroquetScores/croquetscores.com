@@ -4,13 +4,13 @@
 
 选手在这里录入一次，进入锦标赛。每位选手参加哪些赛事是之后在每个赛事自己的页面上，从这里录入的选手中选择的。见[把选手录入赛事](entering-players-in-a-competition.md)。
 
-![“选手”标签页，已录入若干选手，其中一位已归档](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![“选手”标签页，已录入若干选手，其中一位已归档](images/players-tab.png)
 
 ## 添加选手
 
 按列表上方的**添加选手**。一个对话框覆在页面上打开。
 
-![填好的“添加选手”对话框](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![填好的“添加选手”对话框](images/add-player-dialog.png)
 
 **姓名**是必填的。它是选手在每个页面上显示的姓名，长度在 3 到 254 个字符之间。同一个锦标赛中的两位选手不能同名，无论大小写如何；如果两位选手确实同名，就在姓名本身里把他们区分开，如“Andrew Hobbs (2)”。
 
@@ -24,7 +24,7 @@
 
 按**添加**。选手被添加，对话框说明了这一点，各字段清空以便录入下一位选手，光标回到姓名处。用这种方式添加完整份名单，然后按**取消**关闭对话框。取消不会保存任何尚未添加的内容。
 
-![添加一位选手之后的对话框](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![添加一位选手之后的对话框](images/add-player-dialog-added.png)
 
 选手绝不能叫“Bye”。淘汰赛的轮空在淘汰赛自身录入选手的地方添加，所以第一个词是英文“bye”的姓名会被拒绝，对话框会说明原因。
 
@@ -32,7 +32,7 @@
 
 按选手的姓名或其**编辑**，在该选手上打开同一个对话框，标题为“编辑选手”。改正错误之处并按**保存**，这会保存更改并关闭对话框。姓名被更正的选手保留原有的世界排名姓名，因为排名仍然以此知道他们。
 
-![“编辑选手”对话框](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![“编辑选手”对话框](images/edit-player-dialog.png)
 
 在这里更正的选手处处都被更正：在他们参加的每个赛事中，以及在每个公开页面上。
 
@@ -48,6 +48,6 @@
 
 归档一位不在任何赛事中的选手不会先询问，因为恢复他们就能把一切放回原处。归档一位在某个赛事中的选手会先询问，因为归档会把他们从所参加的每个赛事中移除，而恢复他们并不会把他们放回去。
 
-![归档一位参加了赛事的选手之前所问的问题](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![归档一位参加了赛事的选手之前所问的问题](images/archive-player-asks.png)
 
 下一页：[赛事](competitions.md)。

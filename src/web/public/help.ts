@@ -37,19 +37,27 @@ export const registerHelpPages = (
   assets: Assets,
   library: HelpLibrary,
 ): void => {
-  // A picture is one file whatever language the page is in, so it is the one
-  // answer that does not depend on the reader, and may be kept.
+  // A picture shows the site in a language, so it is the reader's language's
+  // where it has been made, and the first language's where it has not, as a
+  // page is. It varies by language for the same reason a page does.
   server.get<{ Params: { "*": string } }>(
     `${helpImagesPath}/*`,
     async (request, reply) => {
       const name = request.params["*"];
-      const image = await library.image(name);
+      const speaking = speakingOf(request);
+      const fallback = server.languages[0];
+      const image =
+        (await library.image(speaking.language.tag, name)) ??
+        (fallback === undefined
+          ? undefined
+          : await library.image(fallback.tag, name));
       if (image === undefined) {
         reply.callNotFound();
         return reply;
       }
       return reply
-        .header("cache-control", "public, max-age=86400")
+        .header("cache-control", "private, max-age=86400")
+        .header("vary", "Cookie, Accept-Language")
         .type(typeOf(name))
         .send(image);
     },

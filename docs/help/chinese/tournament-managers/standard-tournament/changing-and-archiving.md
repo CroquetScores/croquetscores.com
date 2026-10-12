@@ -4,7 +4,7 @@
 
 在管理后台的锦标赛列表中，按锦标赛上的**编辑**。表单就是创建它的那份，以锦标赛现有的内容开始。改正错误之处并按**更新锦标赛**。
 
-![“编辑锦标赛”表单](../../../english/tournament-managers/standard-tournament/images/edit-tournament.png)
+![“编辑锦标赛”表单](images/edit-tournament.png)
 
 一旦锦标赛有了任何选手或赛事，已归档的也算，它的赛制就不能再改为团体赛制，团体赛制有的是队伍和对抗赛。
 
@@ -16,12 +16,12 @@
 
 管理后台一次列出一年，从今年开始，最新的锦标赛在先。你有锦标赛的年份是深绿色条上的标签页，最新的在先；当手机上放不下那么多时，最早的几年放在这一行末尾的下拉列表里。年份在地址中，所以可以链接到某一年。
 
-![锦标赛列表](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![锦标赛列表](images/admin-list.png)
 
 ## 归档锦标赛
 
 列表中锦标赛上的**归档**把它搁置一旁。它仍然列出，加上删除线，排在正在使用的锦标赛之后，但只提供**恢复**：它在管理后台中的页面和它的公开页面都关闭，直到它被恢复。归档不会先询问，因为恢复可以撤销它。
 
-![列表中一个已归档的锦标赛](../../../english/tournament-managers/standard-tournament/images/admin-list-archived.png)
+![列表中一个已归档的锦标赛](images/admin-list-archived.png)
 
 下一页：[公众看到什么](what-the-public-sees.md)。

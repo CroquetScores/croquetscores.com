@@ -2,7 +2,7 @@
 
 La pestaña **Competiciones** de la página de un torneo es donde sus competiciones se añaden, se ponen en orden y se apartan. Una competición es un bloque, una eliminatoria o un suizo. Cada una tiene página propia, donde se inscriben sus jugadores y se introducen sus resultados.
 
-![La pestaña Competiciones, con competiciones de cada tipo y una archivada](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![La pestaña Competiciones, con competiciones de cada tipo y una archivada](images/competitions-tab.png)
 
 ## Añadir una competición
 
@@ -16,9 +16,9 @@ Pulsa **Añadir competición**, encima de la lista. Se abre un diálogo sobre la
 
 Un bloque y un suizo preguntan solo **al mejor de** cuántas partidas es cada encuentro, que empieza en 1. Al mejor de 3 lo gana quien gane dos partidas. Puede ser un número par, porque en un bloque o en un suizo un jugador se clasifica por las partidas que gana, y un encuentro de dos partidas repartidas una a cada uno es un resultado como cualquier otro.
 
-![El diálogo Añadir competición para un bloque](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![El diálogo Añadir competición para un bloque](images/add-competition-block.png)
 
-![El diálogo Añadir competición para un suizo](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![El diálogo Añadir competición para un suizo](images/add-competition-swiss.png)
 
 ### Una eliminatoria
 
@@ -26,7 +26,7 @@ Una eliminatoria pregunta cuántas **plazas** tiene su cuadro, y al mejor de cu�
 
 Un cuadro tiene tantas rondas como hacen falta para reducir sus plazas a una, así que un cuadro de 8 plazas tiene tres rondas. El diálogo pregunta al mejor de cuántas es cada una, juntas bajo **Al mejor de**, en el orden en que se juegan. Las tres últimas se nombran como se habla de las rondas de un cuadro, **Cuartos**, **Semis** y **Final**, y las anteriores por su número, Ronda 1 la primera. Elegir más plazas añade rondas al principio del cuadro, y elegir menos las quita del principio, de modo que lo escrito para la final sigue siendo de la final. Cada ronda es al mejor de un número impar de partidas, porque un encuentro de eliminatoria tiene que tener ganador.
 
-![El diálogo Añadir competición para una eliminatoria de 4 plazas](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![El diálogo Añadir competición para una eliminatoria de 4 plazas](images/add-competition-knockout.png)
 
 ### Añadir varias de una vez
 

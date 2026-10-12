@@ -2,13 +2,13 @@
 
 La pestaña **Equipos** de la página de un torneo es donde sus equipos se añaden, se corrigen, se ponen en orden y se apartan. Es la pestaña en la que se abre la página, porque los equipos son lo primero que se prepara. Un test es entre dos equipos, así que hacen falta al menos dos antes de poder añadir ningún test.
 
-![La pestaña Equipos, con tres equipos y uno archivado](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![La pestaña Equipos, con tres equipos y uno archivado](images/teams-tab.png)
 
 ## Añadir un equipo
 
 Pulsa **Añadir equipo**, encima de la lista. Se abre un diálogo sobre la página.
 
-![El diálogo Añadir equipo, rellenado](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![El diálogo Añadir equipo, rellenado](images/add-team-dialog.png)
 
 **Nombre** es obligatorio: el nombre completo del equipo, como "Australia", que encabeza la página del equipo y las tablas de las páginas públicas. Dos equipos de un mismo torneo no pueden tener el mismo nombre.
 
@@ -18,13 +18,13 @@ Pulsa **Añadir equipo**, encima de la lista. Se abre un diálogo sobre la pági
 
 Pulsa **Añadir**. El equipo se añade, el diálogo lo dice y sus campos se vacían para el siguiente. Añade toda la lista de este modo y después pulsa **Cancelar** para cerrar el diálogo. Cancelar no guarda nada que no estuviera ya añadido.
 
-![El diálogo después de añadir un equipo](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![El diálogo después de añadir un equipo](images/add-team-dialog-added.png)
 
 ## Corregir un equipo
 
 Pulsa el **Editar** de un equipo para abrir el mismo diálogo sobre ese equipo, titulado Editar equipo. Cambia lo que esté mal y pulsa **Guardar**. Un equipo cuyo nombre corto cambia se llama por el nuevo en todas partes, así que sus tests cambian de nombre con él.
 
-![El diálogo Editar equipo](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![El diálogo Editar equipo](images/edit-team-dialog.png)
 
 ## Orden
 

@@ -4,6 +4,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json && npm run build:admin && npm run build:help",
     "build:help": "tsx scripts/build-help.mjs",
+    "help:screenshots": "tsx scripts/help-screenshots.mjs",
     "build:admin": "vite build",
     "build:admin:alongside": "vite build --emptyOutDir=false",
     "dev": "tsx watch src/web/server.ts",

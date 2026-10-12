@@ -2,7 +2,7 @@
 
 Appuyez sur **Nouveau tournoi**, au-dessus de la liste des tournois dans l’administration. Il est au-dessus de la liste plutôt qu’en dessous, pour qu’une longue liste ne le pousse pas hors de l’écran d’un téléphone.
 
-![Le formulaire de nouveau tournoi, rempli pour un tournoi par équipes](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Le formulaire de nouveau tournoi, rempli pour un tournoi par équipes](images/new-tournament.png)
 
 Le formulaire demande tout ce avec quoi un tournoi commence. Ce qui compte le plus ici est le **Format**, qui est ce qui fait d’un tournoi un tournoi par équipes.
 
@@ -39,7 +39,7 @@ Standard est le seul format qui ne se joue pas par équipes, et ce n’est pas c
 
 Appuyez sur **Créer le tournoi**. Vous arrivez sur la page du tournoi dans l’administration, ouverte sur son onglet Équipes, et vous êtes son premier gestionnaire. Il est listé dans l’administration sous l’année où il commence.
 
-![Un tournoi tout juste créé, sans équipe encore](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Un tournoi tout juste créé, sans équipe encore](images/tournament-page-empty.png)
 
 L’adresse publique du tournoi est faite de son année, de son sport et de son nom, comme `/2026/ac/trans-tasman-tests`. Il garde cette adresse quand son nom est corrigé plus tard, pour qu’un lien déjà envoyé le retrouve ; il ne déménage que si l’année où il commence, ou son sport, change.
 

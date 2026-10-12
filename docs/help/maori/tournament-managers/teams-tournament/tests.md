@@ -2,7 +2,7 @@
 
 Ko te ripa **Ngā Test** o te whārangi o tētahi whakataetae te wāhi e tāpiria ai, e whakarerekētia ai, e whakaraupapatia ai, e whakatārewatia ai hoki ngā Test i waenga i ōna kapa. He tauwhāinga o te whakataetae te Test: he whakataetae i waenga i ngā kapa e rua, e kīia ana mā ō rāua ingoa poto, pēnei i te "AUS v NZ", he mea tākaro hei maha ngā tukinga i waenga i tētahi kaitākaro o ia kapa. He whārangi motuhake tō ia Test, ko te wāhi tērā e whakaurua ai ōna hua.
 
-![Te ripa Ngā Test, e toru ngā Test i tētahi rōpū](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![Te ripa Ngā Test, e toru ngā Test i tētahi rōpū](images/tests-tab.png)
 
 Ka kī ia Test i tōna ingoa, ngā rā e tākarohia ai, te maha o ngā tukinga e tūmanakohia ana mōna me te pai rawa o te aha o ia mea, pēnei i te "6 tukinga, te pai rawa o te 3", me tōna rōpū ina kei tētahi.
 
@@ -10,13 +10,13 @@ Ka kī ia Test i tōna ingoa, ngā rā e tākarohia ai, te maha o ngā tukinga e
 
 He Test i waenga i ngā kapa e rua e whakamahia ana, nō reira ina iti iho i te rua ngā kapa o te whakataetae ka kī te ripa i tērā ki te wāhi e noho ai a Tāpiri Test, ā, ka arahi ki te ripa Ngā kapa.
 
-![Te ripa Ngā Test i mua i te rua o ngā kapa](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![Te ripa Ngā Test i mua i te rua o ngā kapa](images/tests-tab-two-teams-needed.png)
 
 ## Te tāpiri i tētahi Test
 
 Pēhia **Tāpiri Test**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi, e pānuitia ana i te raupapa e kī reo nui ai tētahi Test.
 
-![Te pouaka kōrero Tāpiri Test, kua whakaurua ngā mea](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![Te pouaka kōrero Tāpiri Test, kua whakaurua ngā mea](images/add-test-dialog.png)
 
 Ka kōwhiria **Kapa A** me **Kapa B** mai i ngā kapa o te whakataetae e whakamahia ana, mā te ingoa, i te raupapa o te whakataetae. Kāore tētahi e kōwhiria i te tīmatanga, kia kore ai e tāpiria tētahi Test i waenga i ngā kapa kāore i kōwhiria e koe. Ka tuku a Kapa B i ngā kapa katoa haunga te mea i kōwhiria hei Kapa A, nā te mea kāore te kapa e tākaro i tētahi Test ki a ia ake. Ko Kapa A te kapa tuatahi: kei te taha mauī ōna kaitākaro i te whārangi o te Test me te whārangi tūmatanui. Kāore he ingoa ake a tētahi Test hei tuhi; ka kīia mā ngā ingoa poto o ōna kapa.
 
@@ -30,13 +30,13 @@ Ko **Rōpū** te rōpū e noho ai te Test, ina tākarohia te kaupapa ki ngā rō
 
 Pēhia **Tāpiri**. Ka tāpiritia te Test, ka kī te pouaka kōrero ko tēhea mā tōna ingoa, ā, ka whakakorea ngā kapa mō te mea e whai ake nei, ka waiho ngā rā, ngā tukinga e tūmanakohia ana, te pai rawa o te aha me te rōpū pēnei i mua: ka tāpiria ngā Test i te rauna kotahi i te wā, i waenga i ngā kapa e tūtaki ana i te rā kotahi, nō reira ko ngā kapa e rua anake te Test e whai ake nei o te rauna. Pēhia **Whakakore** ina oti katoa te whakauru.
 
-![Te pouaka kōrero i muri i te tāpiri o tētahi Test](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![Te pouaka kōrero i muri i te tāpiri o tētahi Test](images/add-test-dialog-added.png)
 
 ## Te whakarerekē i tētahi Test
 
 Ka whakatuwheratia e **Whakatika** te pouaka kōrero ōrite ki runga i te Test, ko Whakatika Test tōna taitara, ka tīmata pēnei i te Test. Pēhia **Penapena** hei penapena i te huringa.
 
-![Te pouaka kōrero Whakatika Test](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![Te pouaka kōrero Whakatika Test](images/edit-test-dialog.png)
 
 Ka mau tonu i tētahi Test he tākaro ōna e whakamahia ana ōna kapa: ka whakaaturia e te pouaka kōrero, engari kāore e taea te whakarerekē. Ka taea te whakarerekē i te toenga, i roto i te mea kua tākarohia: ka whakahēngia ngā tukinga e tūmanakohia ana he iti iho i ngā tukinga kua tīmata kē, pērā hoki te pai rawa o te aha he iti iho i te nui rawa o ngā tākaro kua tākarohia e ngā kaitākaro e rua.
 

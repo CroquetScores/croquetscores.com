@@ -2,7 +2,7 @@
 
 Tryck på **Ny turnering** ovanför listan över turneringar i administrationen. Den ligger ovanför listan i stället för under den, så att en lång lista inte trycker den utanför en telefons skärm.
 
-![Formuläret för en ny turnering, ifyllt](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Formuläret för en ny turnering, ifyllt](images/new-tournament.png)
 
 Formuläret frågar efter allt en turnering börjar med. En turnering av det vanliga slaget är bara ett namn, två dagar och ett land bort: allt annat avgörs åt dig och kan ändras.
 

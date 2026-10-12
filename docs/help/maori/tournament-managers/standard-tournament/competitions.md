@@ -2,7 +2,7 @@
 
 Ko te ripa **Ngā tauwhāinga** o te whārangi o tētahi whakataetae te wāhi e tāpiria ai ōna tauwhāinga, e whakaraupapatia ai, e whakatārewatia ai hoki. He poraka, he whakawātea, he Swiss rānei tētahi tauwhāinga. He whārangi motuhake tō ia tauwhāinga, ko te wāhi tērā e whakaurua ai ōna kaitākaro me ōna hua.
 
-![Te ripa Ngā tauwhāinga, he tauwhāinga o ia momo me tētahi kua pūrangatia](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![Te ripa Ngā tauwhāinga, he tauwhāinga o ia momo me tētahi kua pūrangatia](images/competitions-tab.png)
 
 ## Te tāpiri i tētahi tauwhāinga
 
@@ -16,9 +16,9 @@ Pēhia **Tāpiri tauwhāinga**, i runga i te rārangi. Ka tuwhera tētahi pouaka
 
 Ka pātai te poraka me te Swiss i te mea anake e **te pai rawa o te** ia tukinga, ka tīmata ki te 1. Ka toa i te pai rawa o te 3 te tangata e toa ana i ngā tākaro e rua. Ka taea he tau e wehea ana ki te rua, nā te mea i roto i te poraka, i te Swiss rānei, ka raupapatia te kaitākaro mā ngā tākaro e toa ai ia, ā, ko te tukinga o ngā tākaro e rua i toa ai tētahi i tētahi he hua pērā i ētahi atu.
 
-![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi poraka](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi poraka](images/add-competition-block.png)
 
-![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi Swiss](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi Swiss](images/add-competition-swiss.png)
 
 ### He whakawātea
 
@@ -26,7 +26,7 @@ Ka pātai te whakawātea i te maha o **ngā tūnga** o tōna tūtohi, me te pai 
 
 He rite te maha o ngā rauna o tētahi tūtohi ki te maha e hiahiatia ana hei haurua i ōna tūnga ki te kotahi, nō reira e toru ngā rauna o tētahi tūtohi e 8 ngā tūnga. Ka pātai te pouaka kōrero i te pai rawa o te aha o ia rauna, ā-tahi i raro i **Te pai rawa o te**, i te raupapa e tākarohia ai. Ko ngā mea whakamutunga e toru e whakaingoatia ana pēnei i te kōrero mō ngā rauna o tētahi tūtohi, **Hauwhā**, **Haurua** me **Whakamutunga**, ā, ko ērā i mua i a rātou mā tō rātou tau, ko Rauna 1 te tuatahi. Ina kōwhiria he tūnga maha ake, ka tāpiria ētahi rauna ki te tīmatanga o te tūtohi, ā, ina kōwhiria he torutoru ake, ka tangohia i te tīmatanga, nō reira ko te mea i tuhia mō te whakamutunga ko te whakamutunga tonu. Ko ia rauna te pai rawa o tētahi tau tākaro e kore e wehea ki te rua, nā te mea me whai toa te tukinga o tētahi whakawātea.
 
-![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi whakawātea e 4 ngā tūnga](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi whakawātea e 4 ngā tūnga](images/add-competition-knockout.png)
 
 ### Te tāpiri i ētahi maha i te wā kotahi
 

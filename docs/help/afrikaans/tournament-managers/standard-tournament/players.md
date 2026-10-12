@@ -4,13 +4,13 @@ Die **Spelers**-oortjie van 'n toernooi se bladsy is waar sy spelers ingeskryf, 
 
 Spelers word hier een keer ingeskryf, in die toernooi. In watter kompetisies elkeen speel, word daarna gekies, op elke kompetisie se eie bladsy, uit die spelers wat hier ingeskryf is. Kyk by [Hoe om spelers in 'n kompetisie in te skryf](entering-players-in-a-competition.md).
 
-![Die Spelers-oortjie, met spelers ingeskryf en een geargiveer](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![Die Spelers-oortjie, met spelers ingeskryf en een geargiveer](images/players-tab.png)
 
 ## Hoe om spelers by te voeg
 
 Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
-![Die dialoog Voeg speler by, ingevul](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![Die dialoog Voeg speler by, ingevul](images/add-player-dialog.png)
 
 **Naam** is verpligtend. Dit is die speler se naam soos dit op elke bladsy gewys sal word, tussen 3 en 254 karakters. Twee spelers in een toernooi kan nie dieselfde naam hê nie, hoe dit ook al met hoofletters geskryf is; waar twee spelers werklik 'n naam deel, onderskei hulle in die naam self, soos "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Soos jy 'n naam tik, word die spelers wat die wêreldranglys ken en wie se name 
 
 Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde word leeggemaak vir die volgende speler, met die wyser terug in die naam. Voeg die hele lys so by, en druk dan op **Kanselleer** om die dialoog toe te maak. Kanselleer hou niks wat nie reeds bygevoeg is nie.
 
-![Die dialoog nadat 'n speler bygevoeg is](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![Die dialoog nadat 'n speler bygevoeg is](images/add-player-dialog-added.png)
 
 'n Speler word nooit "Bye" genoem nie. 'n Uitskakeling se byes word in die uitskakeling self bygevoeg, waar sy spelers ingeskryf word, so 'n naam waarvan die eerste woord die Engelse "bye" is, word geweier, en die dialoog verduidelik hoekom.
 
@@ -32,7 +32,7 @@ Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde w
 
 Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie speler oop te maak, met die titel Wysig speler. Verander wat verkeerd is en druk op **Stoor**, wat die verandering hou en die dialoog toemaak. 'n Speler wie se naam reggestel word, hou die naam op die wêreldranglys wat hulle gehad het, want die ranglys ken hulle steeds daaronder.
 
-![Die dialoog Wysig speler](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![Die dialoog Wysig speler](images/edit-player-dialog.png)
 
 'n Speler wat hier reggestel word, word oral reggestel: in elke kompetisie waarin hulle is, en op elke openbare bladsy.
 
@@ -48,6 +48,6 @@ Die spelers word in die toernooi se volgorde gelys, wat die volgorde is waarin h
 
 Om 'n speler te argiveer wat in geen kompetisie is nie, vra nie eers nie, want om hulle te herstel sit alles terug. Om 'n speler te argiveer wat in enige kompetisie is, vra eers, omdat argivering hulle uit elke kompetisie verwyder waarin hulle is, en herstel hulle nie terugsit nie.
 
-![Die vraag wat gevra word voordat 'n speler wat in kompetisies is, geargiveer word](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![Die vraag wat gevra word voordat 'n speler wat in kompetisies is, geargiveer word](images/archive-player-asks.png)
 
 Volgende: [Kompetisies](competitions.md).

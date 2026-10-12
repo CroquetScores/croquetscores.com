@@ -2,7 +2,7 @@
 
 Ka whakatuwherahia te whārangi o tētahi kapa mai i tōna ingoa, mai i tōna **Titiro** rānei, i te ripa Ngā kapa. Ko te ingoa o te kapa tōna pane, me tōna ingoa poto i roto i ngā taiaho, me tōna haki, kia kite tonu te kaiwhakahaere kua tae ia ki te kapa hē. Kotahi anake te mea hei whakaatu, ko ngā kaitākaro o te kapa, nō reira ko te rārangi te whārangi.
 
-![Te whārangi o tētahi kapa, me ōna kaitākaro me tētahi kua pūrangatia](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![Te whārangi o tētahi kapa, me ōna kaitākaro me tētahi kua pūrangatia](images/team-page.png)
 
 Ka arahi te pae kākāriki pōuri i te whārangi o tētahi kapa ki te whakataetae me ia kapa e whakamahia ana mā tōna ingoa poto, kia whakaurua ai ngā kaitākaro kapa ki te kapa me te kore e hoki ki te ripa Ngā kapa.
 
@@ -12,7 +12,7 @@ Nō te kapa anake tētahi kaitākaro i tētahi kapa, ka tohu i te kapa, ā, ka k
 
 Pēhia **Tāpiri kaitākaro**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi.
 
-![Te pouaka kōrero Tāpiri kaitākaro i te whārangi o tētahi kapa](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Te pouaka kōrero Tāpiri kaitākaro i te whārangi o tētahi kapa](images/add-team-player-dialog.png)
 
 E hiahiatia ana te **Ingoa**, kei waenga i te 3 me te 254 ngā tohu. Kāore e taea e ngā kaitākaro e rua o tētahi kapa te whai i te ingoa kotahi, ahakoa pēhea te whakamahi i ngā pū rahi; ka taea e tētahi kaitākaro o tētahi atu kapa te whai i taua ingoa.
 

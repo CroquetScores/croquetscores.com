@@ -2,13 +2,13 @@
 
 Het tabblad **Teams** van de pagina van een toernooi is waar zijn teams worden toegevoegd, gecorrigeerd, op volgorde gezet en opzijgezet. Het is het tabblad waarop de pagina opent, omdat de teams het eerste zijn wat je opzet. Een testmatch gaat tussen twee teams, dus er zijn minstens twee nodig voordat een testmatch kan worden toegevoegd.
 
-![Het tabblad Teams, met drie teams en één gearchiveerd](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![Het tabblad Teams, met drie teams en één gearchiveerd](images/teams-tab.png)
 
 ## Een team toevoegen
 
 Druk op **Team toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina.
 
-![Het dialoogvenster Team toevoegen, ingevuld](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![Het dialoogvenster Team toevoegen, ingevuld](images/add-team-dialog.png)
 
 **Naam** is verplicht: de volledige naam van het team, als "Australia", die de kop vormt van de pagina van het team en van de tabellen op de openbare pagina's. Twee teams in één toernooi kunnen niet dezelfde naam hebben.
 
@@ -18,13 +18,13 @@ Druk op **Team toevoegen**, boven de lijst. Er opent een dialoogvenster over de 
 
 Druk op **Toevoegen**. Het team wordt toegevoegd, het dialoogvenster zegt dat, en de velden worden leeggemaakt voor het volgende. Voeg zo de hele lijst toe, en druk dan op **Annuleren** om het dialoogvenster te sluiten. Annuleren bewaart niets wat niet al was toegevoegd.
 
-![Het dialoogvenster nadat een team is toegevoegd](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![Het dialoogvenster nadat een team is toegevoegd](images/add-team-dialog-added.png)
 
 ## Een team corrigeren
 
 Druk op **Bewerken** bij een team om hetzelfde dialoogvenster op dat team te openen, met de titel Team bewerken. Verander wat fout is en druk op **Opslaan**. Een team waarvan de korte naam verandert, wordt overal met de nieuwe aangeduid, dus zijn testmatches worden mee hernoemd.
 
-![Het dialoogvenster Team bewerken](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![Het dialoogvenster Team bewerken](images/edit-team-dialog.png)
 
 ## Volgorde
 

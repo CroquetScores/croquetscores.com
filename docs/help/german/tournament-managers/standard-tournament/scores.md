@@ -2,13 +2,13 @@
 
 Auf dem Reiter **Ergebnisse** der Wettbewerbsseite werden die Spiele des Wettbewerbs eingegeben, korrigiert und beiseitegelegt. Ein Ergebniserfasser sieht nur diesen Reiter und kann dort alles tun, was ein Turnierleiter kann.
 
-![Der Reiter Ergebnisse einer Gruppe, mit Ergebnissen in Gebrauch, einem zurückgezogenen und einem archivierten](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![Der Reiter Ergebnisse einer Gruppe, mit Ergebnissen in Gebrauch, einem zurückgezogenen und einem archivierten](images/scores-tab.png)
 
 ## Ein Ergebnis eingeben
 
 Drücke **Ergebnis hinzufügen** über der Liste. Der Dialog liest sich, wie ein Ergebnis gesagt wird: der Sieger und seine Punkte, dann „schlug“, dann der Verlierer und seine Punkte.
 
-![Der Dialog Ergebnis hinzufügen, ausgefüllt](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![Der Dialog Ergebnis hinzufügen, ausgefüllt](images/add-score-dialog.png)
 
 Sieger und Verlierer werden jeweils aus den spielenden Spielern des Wettbewerbs gewählt, in der Reihenfolge des Wettbewerbs. Zu Beginn ist niemand gewählt, damit ein Spiel nie einem Spieler zugeschrieben wird, den du nicht gewählt hast. In einer K.-o.-Runde wählt die Wahl des Siegers den, gegen den er gelost ist, als Verlierer, wo du es sehen und einen anderen wählen kannst.
 
@@ -18,7 +18,7 @@ Ein Spiel, das bei gleichen Punkten gewonnen wurde, etwa weil es durch die Zeit 
 
 Drücke **Spiel hinzufügen**. Das Spiel wird hinzugefügt, der Dialog sagt welches, und die Felder werden für das nächste geleert, weil Ergebnisse am Ende einer Runde im Schwung von einer Tafel abgelesen werden. Drücke **Abbrechen**, wenn alle drin sind.
 
-![Der Dialog, nachdem ein Spiel hinzugefügt wurde](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![Der Dialog, nachdem ein Spiel hinzugefügt wurde](images/add-score-dialog-added.png)
 
 Was abgelehnt wird, steht unter dem Feld, um das es geht: ein nicht gewählter Sieger oder Verlierer, nicht eingegebene oder nicht mit einer Ziffer beginnende Punkte, derselbe Spieler als beides, als gewonnen markierte Punkte des Verlierers oder Punkte des Siegers, die hinter denen des Verlierers liegen. In einer K.-o.-Runde werden zwei Spieler, die nicht gegeneinander gelost sind, über den Feldern abgelehnt.
 
@@ -26,7 +26,7 @@ Was abgelehnt wird, steht unter dem Feld, um das es geht: ein nicht gewählter S
 
 Eine K.-o.-Runde wird erst gespielt, wenn jeder Platz ihrer Auslosung einen Spieler oder ein Freilos hat. Bis dahin erklärt Ergebnis hinzufügen, warum keine Ergebnisse hinzugefügt werden können, statt den Dialog zu öffnen.
 
-![Was Ergebnis hinzufügen in einer K.-o.-Runde sagt, deren Auslosung nicht gefüllt ist](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Was Ergebnis hinzufügen in einer K.-o.-Runde sagt, deren Auslosung nicht gefüllt ist](images/draw-not-filled.png)
 
 ## Die Liste der Ergebnisse
 
@@ -36,7 +36,7 @@ Die Ergebnisse in Gebrauch sind in der Reihenfolge ihrer Eingabe aufgeführt, da
 
 **Bearbeiten** öffnet denselben Dialog für dieses Ergebnis, mit dem Titel Ergebnis bearbeiten, mit seinen Spielern gewählt und seinen Punkten, wie sie eingegeben wurden. Drücke **Speichern**, um die Korrektur zu speichern und den Dialog zu schließen.
 
-![Der Dialog Ergebnis bearbeiten](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![Der Dialog Ergebnis bearbeiten](images/edit-score-dialog.png)
 
 Eine Korrektur behält das Ergebnis bei: Ein gewonnenes Spiel bleibt gewonnen, und ein unentschiedenes bleibt unentschieden. Ein Spiel, dessen Ergebnis falsch war, wird archiviert und neu eingegeben.
 

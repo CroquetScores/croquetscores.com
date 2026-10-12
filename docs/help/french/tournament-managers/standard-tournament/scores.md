@@ -2,13 +2,13 @@
 
 L’onglet **Résultats** de la page d’une compétition est l’endroit où ses parties sont saisies, corrigées et mises de côté. Un marqueur ne voit que cet onglet, et peut y faire tout ce qu’un gestionnaire peut faire.
 
-![L’onglet Résultats d’une poule, avec des résultats en service, un retiré et un archivé](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![L’onglet Résultats d’une poule, avec des résultats en service, un retiré et un archivé](images/scores-tab.png)
 
 ## Saisir un résultat
 
 Appuyez sur **Ajouter un résultat**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
 
-![La boîte de dialogue Ajouter un résultat, remplie](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![La boîte de dialogue Ajouter un résultat, remplie](images/add-score-dialog.png)
 
 Le vainqueur et le perdant se choisissent chacun parmi les joueurs de la compétition qui jouent encore, dans l’ordre de la compétition. Personne n’est choisi au départ, pour qu’une partie ne soit jamais mise au compte d’un joueur que vous n’avez pas choisi. Dans une élimination directe, choisir le vainqueur choisit comme perdant celui contre qui il est tiré, là où vous pouvez le voir et en choisir un autre.
 
@@ -18,7 +18,7 @@ Une partie gagnée à points égaux, comme lorsqu’elle est arrêtée au temps 
 
 Appuyez sur **Ajouter la partie**. La partie est ajoutée, la boîte de dialogue dit laquelle, et les champs se vident pour la suivante, puisque les résultats arrivent par séries, lus sur un tableau à la fin d’un tour. Appuyez sur **Annuler** une fois qu’ils sont tous saisis.
 
-![La boîte de dialogue après l’ajout d’une partie](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![La boîte de dialogue après l’ajout d’une partie](images/add-score-dialog-added.png)
 
 Ce qui est refusé est dit sous le champ concerné : un vainqueur ou un perdant non choisi, des points non tapés ou ne commençant pas par un chiffre, le même joueur des deux côtés, les points du perdant marqués comme gagnés, ou les points du vainqueur derrière ceux du perdant. Dans une élimination directe, deux joueurs qui ne sont pas tirés l’un contre l’autre sont refusés au-dessus des champs.
 
@@ -26,7 +26,7 @@ Ce qui est refusé est dit sous le champ concerné : un vainqueur ou un perdant
 
 Une élimination directe ne se joue qu’une fois que chaque place de son tableau tient un joueur ou un exempt. Jusque-là, Ajouter un résultat explique pourquoi les résultats ne peuvent pas être ajoutés, plutôt que d’ouvrir la boîte de dialogue.
 
-![Ce que dit Ajouter un résultat dans une élimination directe dont le tableau n’est pas rempli](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Ce que dit Ajouter un résultat dans une élimination directe dont le tableau n’est pas rempli](images/draw-not-filled.png)
 
 ## La liste des résultats
 
@@ -36,7 +36,7 @@ Les résultats en service sont listés dans l’ordre où ils ont été saisis, 
 
 **Modifier** ouvre la même boîte de dialogue sur ce résultat, intitulée Modifier le résultat, avec ses joueurs choisis et ses points tels qu’ils ont été tapés. Appuyez sur **Enregistrer** pour garder la correction et fermer la boîte de dialogue.
 
-![La boîte de dialogue Modifier le résultat](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![La boîte de dialogue Modifier le résultat](images/edit-score-dialog.png)
 
 Une correction garde l’issue : une partie gagnée reste gagnée, et une partie nulle reste nulle. Une partie dont l’issue était fausse s’archive et se saisit de nouveau.
 

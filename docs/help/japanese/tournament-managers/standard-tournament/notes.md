@@ -2,13 +2,13 @@
 
 大会のページの**お知らせ**タブでは、運営者が、大会の進行中に選手が知るべきことを書きます。形式、試合順の変更、昼食の時間などです。読者は大会の公開お知らせページでこれを見ます。まだ読んでいないお知らせには赤いアスタリスクが付き、大会のすべてのページのお知らせセクションにも、開くまで同じ印が付きます。
 
-![お知らせタブ、2件のお知らせ](../../../english/tournament-managers/standard-tournament/images/notes-tab.png)
+![お知らせタブ、2件のお知らせ](images/notes-tab.png)
 
 ## お知らせを書く
 
 一覧の上にある**お知らせを追加**を押します。一覧の代わりにパネルが表示されます。お知らせは長く書くもので、場所が必要だからです。
 
-![お知らせパネル、書くタブ](../../../english/tournament-managers/standard-tournament/images/note-panel.png)
+![お知らせパネル、書くタブ](images/note-panel.png)
 
 **タイトル**は必須で、お知らせが一覧に表示されるときの名前です。プレーンテキストです。
 
@@ -16,7 +16,7 @@
 
 **プレビュー**は、読者がページで見るとおりにお知らせを表示します。
 
-![お知らせパネル、プレビュータブ](../../../english/tournament-managers/standard-tournament/images/note-preview.png)
+![お知らせパネル、プレビュータブ](images/note-preview.png)
 
 **追加**を押します。お知らせが保存され、一覧がそのお知らせを先頭にして戻り、すぐに公開お知らせページに載ります。
 
@@ -28,6 +28,6 @@
 
 もう当てはまらないお知らせは削除します。削除したお知らせは完全になくなるので、**削除**は先に確認を求めます。
 
-![お知らせを削除する前の確認](../../../english/tournament-managers/standard-tournament/images/delete-note-asks.png)
+![お知らせを削除する前の確認](images/delete-note-asks.png)
 
 次：[運営者と記録係](managers-and-scorers.md)。

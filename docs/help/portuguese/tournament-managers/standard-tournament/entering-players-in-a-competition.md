@@ -4,7 +4,7 @@ A página de uma competição é aberta pelo seu nome na aba Competições, ou p
 
 Um jogador de uma competição é um dos jogadores do torneio, então os jogadores são inscritos escolhendo-os, e não digitando-os. Tudo sobre eles, exceto a sua posição na competição e o que transportam para ela, é alterado na aba Jogadores do torneio.
 
-![A aba Jogadores de um grupo, com quatro jogadores inscritos](../../../english/tournament-managers/standard-tournament/images/competition-players-tab.png)
+![A aba Jogadores de um grupo, com quatro jogadores inscritos](images/competition-players-tab.png)
 
 ## Adicionar um jogador
 
@@ -16,13 +16,13 @@ Os jogadores arquivados do torneio não são oferecidos.
 
 Uma eliminatória só é disputada depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em uma eliminatória a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.
 
-![Uma eliminatória de quatro vagas com três jogadores e um bye](../../../english/tournament-managers/standard-tournament/images/knockout-players.png)
+![Uma eliminatória de quatro vagas com três jogadores e um bye](images/knockout-players.png)
 
 Um bye é colocado na chave como um jogador: pode ser subido, descido e removido, mas não pode ser retirado, porque não joga nada. Um jogador inscrito em uma eliminatória cujas vagas estão todas preenchidas é recusado, e a aba diz isso abaixo da lista suspensa.
 
 A ordem dos jogadores de uma eliminatória é a sua chave. As duas primeiras vagas se enfrentam na primeira partida, as duas seguintes na seguinte, e assim por diante. Coloque os jogadores na ordem em que a chave será disputada antes que algum placar seja inserido, porque depois que a eliminatória tem um jogo em uso os seus jogadores ficam fixos: ninguém pode ser adicionado, removido ou movido. Um jogador ainda pode ser retirado.
 
-![Uma eliminatória depois que um jogo foi inserido: ninguém pode ser adicionado, movido ou removido](../../../english/tournament-managers/standard-tournament/images/knockout-players-fixed.png)
+![Uma eliminatória depois que um jogo foi inserido: ninguém pode ser adicionado, movido ou removido](images/knockout-players-fixed.png)
 
 ## Ordem
 
@@ -32,7 +32,7 @@ Os jogadores são listados na ordem da competição, que é a ordem em que uma e
 
 **Transportar** diz o que um jogador traz para uma competição de jogos cujo placar não foi registrado nela: os resultados de uma fase anterior, ou de jogos disputados antes de a competição ter os seus placares registrados aqui. É oferecido em um grupo e em um suíço, que têm uma classificação em que isso conta, e não em uma eliminatória.
 
-![O diálogo Transportar](../../../english/tournament-managers/standard-tournament/images/carry-forward-dialog.png)
+![O diálogo Transportar](images/carry-forward-dialog.png)
 
 O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdidos, e arcos a favor e contra. Todas são opcionais. Uma contagem deixada vazia não transporta nada, o que não é o mesmo que transportar 0, para que quem a alterar depois a veja como foi deixada. Pressione **Salvar** para guardar as seis.
 
@@ -40,7 +40,7 @@ O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdi
 
 **Remover** tira um jogador inscrito por engano. Ele continua sendo um dos jogadores do torneio, e volta a ser oferecido na lista suspensa, mas nada da sua posição na competição é guardado, então Remover pergunta antes.
 
-![A pergunta feita antes de remover um jogador](../../../english/tournament-managers/standard-tournament/images/remove-player-asks.png)
+![A pergunta feita antes de remover um jogador](images/remove-player-asks.png)
 
 Um jogador que tem algum jogo em uso na competição não pode ser removido, porque os jogos passariam a ser contra alguém que não está mais lá, e não recebe Remover. Um jogador cujos únicos jogos estão arquivados pode ser, e os seus placares arquivados vão com ele.
 
@@ -50,10 +50,10 @@ Um jogador que tem algum jogo em uso na competição não pode ser removido, por
 
 Retirar pergunta antes, porque muda o desfecho da competição: os jogos que o jogador não disputou são decididos sem ele.
 
-![A pergunta feita antes de retirar um jogador](../../../english/tournament-managers/standard-tournament/images/withdraw-player-asks.png)
+![A pergunta feita antes de retirar um jogador](images/withdraw-player-asks.png)
 
 Um jogador retirado oferece apenas **Desfazer a retirada**, que o põe de volta entre os que jogam, depois dos que ficaram, sem perguntar.
 
-![Um grupo com um jogador retirado](../../../english/tournament-managers/standard-tournament/images/competition-players-withdrawn.png)
+![Um grupo com um jogador retirado](images/competition-players-withdrawn.png)
 
 A seguir: [Placares](scores.md).

@@ -4,13 +4,13 @@ A aba **Jogadores** da página de um torneio é onde os seus jogadores são insc
 
 Os jogadores são inscritos aqui uma vez, no torneio. Em que competições cada um joga é escolhido depois, na página de cada competição, entre os jogadores inscritos aqui. Veja [Inscrever jogadores em uma competição](entering-players-in-a-competition.md).
 
-![A aba Jogadores, com jogadores inscritos e um arquivado](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![A aba Jogadores, com jogadores inscritos e um arquivado](images/players-tab.png)
 
 ## Adicionar jogadores
 
 Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a página.
 
-![O diálogo Adicionar jogador, preenchido](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![O diálogo Adicionar jogador, preenchido](images/add-player-dialog.png)
 
 **Nome** é obrigatório. É o nome do jogador como será mostrado em todas as páginas, entre 3 e 254 caracteres. Dois jogadores de um mesmo torneio não podem ter o mesmo nome, sejam quais forem as maiúsculas; quando dois jogadores realmente têm o mesmo nome, distinga-os no próprio nome, como "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Conforme você digita um nome, são oferecidos os jogadores que os rankings mund
 
 Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus campos são esvaziados para o próximo jogador, com o cursor de volta no nome. Adicione a lista inteira desse jeito e depois pressione **Cancelar** para fechar o diálogo. Cancelar não guarda nada que ainda não tenha sido adicionado.
 
-![O diálogo depois que um jogador é adicionado](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![O diálogo depois que um jogador é adicionado](images/add-player-dialog-added.png)
 
 Um jogador nunca se chama "Bye". Os byes de uma eliminatória são adicionados na própria eliminatória, onde os seus jogadores são inscritos, então um nome cuja primeira palavra é a palavra inglesa "bye" é recusado, e o diálogo explica por quê.
 
@@ -32,7 +32,7 @@ Um jogador nunca se chama "Bye". Os byes de uma eliminatória são adicionados n
 
 Pressione o nome de um jogador, ou o seu **Editar**, para abrir o mesmo diálogo nesse jogador, com o título Editar jogador. Altere o que está errado e pressione **Salvar**, que guarda a alteração e fecha o diálogo. Um jogador cujo nome é corrigido mantém o nome no ranking mundial que tinha, porque os rankings continuam a conhecê-lo por ele.
 
-![O diálogo Editar jogador](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![O diálogo Editar jogador](images/edit-player-dialog.png)
 
 Um jogador corrigido aqui é corrigido em todo lugar: em todas as competições em que está, e em todas as páginas públicas.
 
@@ -48,6 +48,6 @@ Um jogador que já disputou algum jogo não pode ser arquivado, porque os jogos 
 
 Arquivar um jogador que não está em nenhuma competição não pergunta antes, porque restaurá-lo põe tudo de volta no lugar. Arquivar um jogador que está em alguma competição pergunta antes, porque arquivar o remove de todas as competições em que está, e restaurá-lo não o põe de volta nelas.
 
-![A pergunta feita antes de arquivar um jogador que está em competições](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![A pergunta feita antes de arquivar um jogador que está em competições](images/archive-player-asks.png)
 
 A seguir: [Competições](competitions.md).

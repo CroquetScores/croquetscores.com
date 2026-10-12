@@ -4,7 +4,7 @@ Ka whakatuwherahia te whārangi o tētahi tauwhāinga mai i tōna ingoa i te rip
 
 He kaitākaro o te whakataetae te kaitākaro i tētahi tauwhāinga, nō reira ka whakaurua mā te kōwhiri i a rātou, kaua mā te tuhi. Ko ngā mea katoa e pā ana ki a rātou, haunga tō rātou tūnga i te tauwhāinga me ngā mea e kawea whakamua ana e rātou ki roto, ka whakarerekētia i te ripa Ngā kaitākaro o te whakataetae.
 
-![Te ripa Ngā kaitākaro o tētahi poraka, e whā ngā kaitākaro kua whakaurua](../../../english/tournament-managers/standard-tournament/images/competition-players-tab.png)
+![Te ripa Ngā kaitākaro o tētahi poraka, e whā ngā kaitākaro kua whakaurua](images/competition-players-tab.png)
 
 ## Te tāpiri i tētahi kaitākaro
 
@@ -16,13 +16,13 @@ Kāore ngā kaitākaro kua pūrangatia o te whakataetae e tukuna.
 
 Ka tākarohia anake tētahi whakawātea ina oti te whakakī i ngā tūnga katoa o tōna tūtohi, ā, ko ngā tūnga e toe ana i ōna kaitākaro ka whakakīia ki ngā Bye. Nō reira i tētahi whakawātea ka tuku te rārangi taka iho i a **Bye** i te tuatahi, i mua i ngā kaitākaro, ā, ka tuku tonu ahakoa te maha o ngā Bye ka tāpiria, nā te mea tērā pea he maha ngā mea e hiahiatia ana e tētahi tūtohi.
 
-![He whakawātea e whā ngā tūnga, e toru ngā kaitākaro me tētahi Bye](../../../english/tournament-managers/standard-tournament/images/knockout-players.png)
+![He whakawātea e whā ngā tūnga, e toru ngā kaitākaro me tētahi Bye](images/knockout-players.png)
 
 Ka whakanohoia tētahi Bye ki te tūtohi pēnei i tētahi kaitākaro: ka taea te whakapiki, te whakaheke me te tango, engari kāore e taea te unu, nā te mea kāore ia e tākaro i tētahi mea. Ka whakahēngia tētahi kaitākaro e whakaurua ana ki tētahi whakawātea kua kī katoa ōna tūnga, ā, ka kī te ripa i tērā i raro i te rārangi taka iho.
 
 Ko te raupapa o ngā kaitākaro o tētahi whakawātea tōna tūtohi. Ka tūtaki ngā tūnga tuatahi e rua i te tukinga tuatahi, ngā tūnga e rua e whai ake nei i te tukinga e whai ake nei, me pēnā tonu. Whakanohoia ngā kaitākaro ki te raupapa e tākarohia ai te tūtohi i mua i te whakauru i tētahi hua, nā te mea ina whai tākaro e whakamahia ana te whakawātea, ka mau tonu ōna kaitākaro: kāore e taea te tāpiri, te tango, te neke rānei i tētahi. Ka taea tonu e tētahi kaitākaro te unu.
 
-![He whakawātea ina whakaurua he tākaro: kāore e taea te tāpiri, te neke, te tango rānei i tētahi](../../../english/tournament-managers/standard-tournament/images/knockout-players-fixed.png)
+![He whakawātea ina whakaurua he tākaro: kāore e taea te tāpiri, te neke, te tango rānei i tētahi](images/knockout-players-fixed.png)
 
 ## Te raupapa
 
@@ -32,7 +32,7 @@ Ka rārangitia ngā kaitākaro i te raupapa o te tauwhāinga, ko te raupapa tēr
 
 Ka kī te **Kawe whakamua** i te mea e kawe mai ana tētahi kaitākaro ki tētahi tauwhāinga mai i te tākaro kāore i kautehia e koe: ngā hua o tētahi wāhanga o mua, o ngā tākaro rānei i tākarohia i mua i te kautenga o te tauwhāinga ki konei. Ka tukuna i roto i te poraka me te Swiss, he tūnga tō rāua e kaute ai, ā, kāore i te whakawātea.
 
-![Te pouaka kōrero Kawe whakamua](../../../english/tournament-managers/standard-tournament/images/carry-forward-dialog.png)
+![Te pouaka kōrero Kawe whakamua](images/carry-forward-dialog.png)
 
 Ka pātai te pouaka kōrero mō ngā tatau e ono: ngā tukinga i toa me te hinga, ngā tākaro i toa me te hinga, me ngā hupa mō me ki. He mea kōwhiri ia tatau. Ko te tatau ka waiho hei kau kāore he mea e kawea whakamua, ehara tērā i te ōrite ki te kawe whakamua i te 0, kia kite ai te tangata ka whakarerekē i muri mai i te āhua i waihotia ai. Pēhia **Penapena** hei penapena i te ono katoa.
 
@@ -40,7 +40,7 @@ Ka pātai te pouaka kōrero mō ngā tatau e ono: ngā tukinga i toa me te hinga
 
 Ka tango **Tango** i tētahi kaitākaro i whakaurua hētia. Ka noho tonu ia hei kaitākaro o te whakataetae, ā, ka tukuna anō e te rārangi taka iho, engari kāore he mea e penapenahia mō tōna tūnga i te tauwhāinga, nō reira ka pātai a Tango i te tuatahi.
 
-![Te pātai ka pātaihia i mua i te tango i tētahi kaitākaro](../../../english/tournament-managers/standard-tournament/images/remove-player-asks.png)
+![Te pātai ka pātaihia i mua i te tango i tētahi kaitākaro](images/remove-player-asks.png)
 
 Kāore e taea te tango i tētahi kaitākaro he tākaro ōna e whakamahia ana i te tauwhāinga, nā te mea ka tū aua tākaro ki tētahi kua kore nei i reira, ā, kāore a Tango e tukuna ki a ia. Ka taea te tango i tētahi kaitākaro he pūrangatia anake ōna tākaro, ā, ka haere tahi ōna hua kua pūrangatia i a ia.
 
@@ -50,10 +50,10 @@ Mō te kaitākaro e kore e tākaro anō i te tauwhāinga te **Unuhia**. Ka noho 
 
 Ka pātai a Unuhia i te tuatahi, nā te mea ka huri i te putanga o te tauwhāinga: ka whakatauhia ngā tākaro kāore anō kia tākarohia e te kaitākaro me te kore ia.
 
-![Te pātai ka pātaihia i mua i te unu i tētahi kaitākaro](../../../english/tournament-managers/standard-tournament/images/withdraw-player-asks.png)
+![Te pātai ka pātaihia i mua i te unu i tētahi kaitākaro](images/withdraw-player-asks.png)
 
 Ko **Whakakore i te unuhanga** anake tāna e tuku ai i te kaitākaro kua unuhia, ka whakahoki i a ia ki waenga i ērā e tākaro ana, i muri i ērā i noho, me te kore e pātai.
 
-![He poraka me tētahi kaitākaro kua unuhia](../../../english/tournament-managers/standard-tournament/images/competition-players-withdrawn.png)
+![He poraka me tētahi kaitākaro kua unuhia](images/competition-players-withdrawn.png)
 
 E whai ake nei: [Ngā hua](scores.md).

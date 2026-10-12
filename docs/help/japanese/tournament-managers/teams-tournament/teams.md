@@ -2,13 +2,13 @@
 
 大会のページの**チーム**タブでは、大会のチームを追加し、訂正し、並べ替え、除外します。最初に設定するのはチームなので、ページはこのタブで開きます。テストマッチは2つのチームの間で行うので、テストマッチを追加する前に少なくとも2チームが必要です。
 
-![チームタブ、3チームと1つのアーカイブ済みチーム](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![チームタブ、3チームと1つのアーカイブ済みチーム](images/teams-tab.png)
 
 ## チームの追加
 
 一覧の上にある**チームを追加**を押します。ページの上にダイアログが開きます。
 
-![チームの追加ダイアログ、入力済み](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![チームの追加ダイアログ、入力済み](images/add-team-dialog.png)
 
 **名称**は必須です。「Australia」のようなチームの正式名称で、チームのページと公開ページの表の見出しになります。1つの大会で2つのチームが同じ名称を持つことはできません。
 
@@ -18,13 +18,13 @@
 
 **追加**を押します。チームが追加され、ダイアログがそう告げ、項目は次のために空になります。この方法で一覧全体を追加してから、**キャンセル**を押してダイアログを閉じます。キャンセルは、まだ追加していない内容を何も保存しません。
 
-![チームを追加した後のダイアログ](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![チームを追加した後のダイアログ](images/add-team-dialog-added.png)
 
 ## チームの訂正
 
 チームの**編集**を押すと、同じダイアログが「チームの編集」というタイトルでそのチームについて開きます。誤っている箇所を直して**保存**を押します。略称を変更したチームは、あらゆる場所で新しい略称で呼ばれるので、そのテストマッチの名前も変わります。
 
-![チームの編集ダイアログ](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![チームの編集ダイアログ](images/edit-team-dialog.png)
 
 ## 順序
 

@@ -2,7 +2,7 @@
 
 Die Seite einer Mannschaft wird über ihren Namen oder ihr **Ansehen** auf dem Reiter Mannschaften geöffnet. Ihre Überschrift ist der Name der Mannschaft mit dem Kurznamen in Klammern und ihrer Flagge, damit ein Turnierleiter, der zur falschen Mannschaft gekommen ist, es sofort sieht. Sie hat nur eines zu zeigen, die Spieler der Mannschaft, die Liste ist also die Seite.
 
-![Die Seite einer Mannschaft, mit ihren Spielern und einem archivierten](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![Die Seite einer Mannschaft, mit ihren Spielern und einem archivierten](images/team-page.png)
 
 Die dunkelgrüne Leiste auf der Seite einer Mannschaft führt zum Turnier und zu jeder Mannschaft in Gebrauch mit ihrem Kurznamen, damit die Spieler Mannschaft für Mannschaft eingegeben werden können, ohne zum Reiter Mannschaften zurückzugehen.
 
@@ -12,7 +12,7 @@ Ein Spieler einer Mannschaft gehört allein zu dieser Mannschaft, vertritt die M
 
 Drücke **Spieler hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite.
 
-![Der Dialog Spieler hinzufügen auf der Seite einer Mannschaft](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Der Dialog Spieler hinzufügen auf der Seite einer Mannschaft](images/add-team-player-dialog.png)
 
 **Name** ist Pflicht, zwischen 3 und 254 Zeichen lang. Zwei Spieler einer Mannschaft können nicht denselben Namen haben, wie auch immer er groß- und kleingeschrieben ist; ein Spieler einer anderen Mannschaft darf ihn teilen.
 

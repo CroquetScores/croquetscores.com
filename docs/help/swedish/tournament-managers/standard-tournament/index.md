@@ -26,11 +26,11 @@ Allt en turneringsledare gör görs i webbplatsens administrationsdel. De offent
 
 Administrationens startsida listar de turneringar du har en del i, ett år i taget.
 
-![Listan över turneringar i administrationen](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![Listan över turneringar i administrationen](images/admin-list.png)
 
 Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i fem flikar under dess namn: **Spelare**, **Tävlingar**, **Anteckningar**, **Turneringsledare** och **Resultatförare**. Sidan öppnas på Spelare, eftersom spelarna är det första som läggs till.
 
-![En turnerings sida, på fliken Tävlingar](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![En turnerings sida, på fliken Tävlingar](images/tournament-page.png)
 
 Det mörkgröna fältet under sidhuvudet är till för att gå mellan sidor. Det leder till turneringen, som **Turnering**, och till var och en av dess tävlingar med namn, så att du kan gå från turneringen till en tävling och mellan tävlingar utan att gå tillbaka via fliken Tävlingar. Sidan du är på är markerad i svart.
 

@@ -2,7 +2,7 @@
 
 Appuyez sur **Nouveau tournoi**, au-dessus de la liste des tournois dans l’administration. Il est au-dessus de la liste plutôt qu’en dessous, pour qu’une longue liste ne le pousse pas hors de l’écran d’un téléphone.
 
-![Le formulaire de nouveau tournoi, rempli](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Le formulaire de nouveau tournoi, rempli](images/new-tournament.png)
 
 Le formulaire demande tout ce avec quoi un tournoi commence. Un tournoi de la sorte ordinaire tient en un nom, deux dates et un pays : tout le reste est décidé pour vous et peut être changé.
 

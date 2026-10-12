@@ -2,7 +2,7 @@
 
 Naciśnij **Nowy turniej** nad listą turniejów w administracji. Przycisk jest nad listą, a nie pod nią, by długa lista nie zepchnęła go poza ekran telefonu.
 
-![Formularz nowego turnieju, wypełniony dla turnieju drużynowego](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Formularz nowego turnieju, wypełniony dla turnieju drużynowego](images/new-tournament.png)
 
 Formularz pyta o wszystko, z czym turniej się zaczyna. Najważniejszy jest tu **Format**, bo to on czyni turniej drużynowym.
 
@@ -39,7 +39,7 @@ Standardowy to jedyny format, który nie jest drużynowy, i nie tego tu chcesz. 
 
 Naciśnij **Utwórz turniej**. Trafiasz na stronę turnieju w administracji, otwartą na karcie Drużyny, i jesteś jego pierwszym organizatorem. Jest wymieniony w administracji pod rokiem, w którym się zaczyna.
 
-![Nowo utworzony turniej, jeszcze bez drużyn](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Nowo utworzony turniej, jeszcze bez drużyn](images/tournament-page-empty.png)
 
 Publiczny adres turnieju składa się z jego roku, dyscypliny i nazwy, jak `/2026/ac/trans-tasman-tests`. Turniej zachowuje ten adres, gdy jego nazwa zostanie później poprawiona, by już wysłany link nadal go znajdował; przenosi się tylko wtedy, gdy zmieni się rok, w którym się zaczyna, albo jego dyscyplina.
 

@@ -2,7 +2,7 @@
 
 Karta **Testy** na stronie turnieju to miejsce, gdzie dodaje się testy między jego drużynami, zmienia je, ustawia w kolejności i odkłada na bok. Test jest jedną z konkurencji turnieju: pojedynkiem dwóch drużyn, nazywanym ich skrótami, jak „AUS v NZ", rozgrywanym jako pewna liczba meczów między zawodnikiem jednej i drugiej drużyny. Każdy test ma własną stronę, na której wprowadza się jego wyniki.
 
-![Karta Testy, z trzema testami w grupie](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![Karta Testy, z trzema testami w grupie](images/tests-tab.png)
 
 Każdy test podaje swoją nazwę, dni, w których jest rozgrywany, ile meczów ma mieć i z ilu partii każdy jest najlepszy, jak „Mecze: 6, najlepszy z 3", oraz swoją grupę, jeśli w jakiejś jest.
 
@@ -10,13 +10,13 @@ Każdy test podaje swoją nazwę, dni, w których jest rozgrywany, ile meczów m
 
 Test rozgrywają dwie drużyny w użyciu, więc gdy turniej ma mniej niż dwie, karta mówi o tym tam, gdzie byłoby Dodaj test, i prowadzi do karty Drużyny.
 
-![Karta Testy, zanim są dwie drużyny](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![Karta Testy, zanim są dwie drużyny](images/tests-tab-two-teams-needed.png)
 
 ## Dodawanie testu
 
 Naciśnij **Dodaj test**, nad listą. Nad stroną otwiera się okno dialogowe, które czyta się w kolejności, w jakiej mówi się o teście na głos.
 
-![Okno Dodaj test, wypełnione](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![Okno Dodaj test, wypełnione](images/add-test-dialog.png)
 
 **Drużyna A** i **Drużyna B** są wybierane spośród drużyn turnieju w użyciu, po nazwie, w kolejności turnieju. Na początku żadna nie jest wybrana, by test nigdy nie został dodany między drużynami, których nie wybrano. Drużyna B oferuje każdą drużynę poza wybraną jako Drużyna A, bo drużyna nie rozgrywa testu przeciwko sobie. Drużyna A jest pierwszą drużyną: jej zawodnicy są po lewej na stronie testu i na stronie publicznej. Test nie ma własnej nazwy do wpisania; nazywa się go skrótami nazw jego drużyn.
 
@@ -30,13 +30,13 @@ Naciśnij **Dodaj test**, nad listą. Nad stroną otwiera się okno dialogowe, k
 
 Naciśnij **Dodaj**. Test zostaje dodany, okno mówi który, podając jego nazwę, a drużyny są opróżniane dla następnego, z dniami, oczekiwaną liczbą meczów, liczbą partii i grupą pozostawionymi tak, jak były: testy dodaje się runda po rundzie, między drużynami, które spotykają się tego samego dnia, więc następny test rundy to tylko jego dwie drużyny. Naciśnij **Anuluj**, gdy wszystkie są już dodane.
 
-![Okno po dodaniu testu](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![Okno po dodaniu testu](images/add-test-dialog-added.png)
 
 ## Zmiana testu
 
 **Edytuj** otwiera to samo okno na teście, zatytułowane Edytuj test, wypełnione tak, jak test wygląda teraz. Naciśnij **Zapisz**, by zachować zmianę.
 
-![Okno Edytuj test](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![Okno Edytuj test](images/edit-test-dialog.png)
 
 Test z partiami w użyciu zachowuje swoje drużyny: okno je pokazuje, ale nie można ich zmienić. Resztę można zmienić w granicach tego, co rozegrano: oczekiwana liczba meczów mniejsza niż liczba już rozpoczętych jest odrzucana, podobnie jak liczba partii mniejsza niż najwięcej partii, jakie rozegrało ze sobą dwoje zawodników.
 

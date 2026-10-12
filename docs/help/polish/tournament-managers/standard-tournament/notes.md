@@ -2,13 +2,13 @@
 
 Karta **Notatki** na stronie turnieju to miejsce, gdzie jego organizatorzy piszą to, co zawodnicy muszą wiedzieć w trakcie turnieju: format, zmianę w kolejności gier, godzinę obiadu. Czytelnicy znajdują je na publicznej stronie Notatki turnieju, a notatka, której nie przeczytali, jest tam oznaczona czerwoną gwiazdką, która oznacza też sekcję Notatki na każdej stronie turnieju, dopóki jej nie otworzą.
 
-![Karta Notatki, z dwiema notatkami](../../../english/tournament-managers/standard-tournament/images/notes-tab.png)
+![Karta Notatki, z dwiema notatkami](images/notes-tab.png)
 
 ## Pisanie notatki
 
 Naciśnij **Dodaj notatkę**, nad listą. Miejsce listy zajmuje panel, bo notatkę pisze się obszernie i potrzebuje ona miejsca.
 
-![Panel notatki, na karcie Pisanie](../../../english/tournament-managers/standard-tournament/images/note-panel.png)
+![Panel notatki, na karcie Pisanie](images/note-panel.png)
 
 **Tytuł** jest wymagany i to po nim notatka jest wymieniana. Jest zwykłym tekstem.
 
@@ -16,7 +16,7 @@ Naciśnij **Dodaj notatkę**, nad listą. Miejsce listy zajmuje panel, bo notatk
 
 **Podgląd** pokazuje notatkę tak, jak zobaczy ją czytelnik na jej stronie.
 
-![Panel notatki, na karcie Podgląd](../../../english/tournament-managers/standard-tournament/images/note-preview.png)
+![Panel notatki, na karcie Podgląd](images/note-preview.png)
 
 Naciśnij **Dodaj**. Notatka zostaje zachowana, lista wraca z nią na górze, a notatka jest od razu na publicznej stronie Notatki.
 
@@ -28,6 +28,6 @@ Naciśnij tytuł notatki albo jej **Edytuj**, by otworzyć panel na tej notatce.
 
 Notatkę, która już nie obowiązuje, usuwa się. Usunięta notatka znika na dobre, więc **Usuń** najpierw pyta.
 
-![Pytanie zadawane przed usunięciem notatki](../../../english/tournament-managers/standard-tournament/images/delete-note-asks.png)
+![Pytanie zadawane przed usunięciem notatki](images/delete-note-asks.png)
 
 Dalej: [Organizatorzy i wprowadzający wyniki](managers-and-scorers.md).

@@ -2,7 +2,7 @@
 
 Auf dem Reiter **Wettbewerbe** der Turnierseite werden die Wettbewerbe des Turniers hinzugefügt, geordnet und beiseitegelegt. Ein Wettbewerb ist eine Gruppe, eine K.-o.-Runde oder ein Schweizer System. Jeder hat eine eigene Seite, auf der seine Spieler aufgenommen und seine Ergebnisse eingegeben werden.
 
-![Der Reiter Wettbewerbe, mit Wettbewerben jeder Art und einem archivierten](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![Der Reiter Wettbewerbe, mit Wettbewerben jeder Art und einem archivierten](images/competitions-tab.png)
 
 ## Einen Wettbewerb hinzufügen
 
@@ -16,9 +16,9 @@ Drücke **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich übe
 
 Eine Gruppe und ein Schweizer System fragen nur, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, das auf 1 beginnt. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einer Gruppe oder einem Schweizer System ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
 
-![Der Dialog Wettbewerb hinzufügen für eine Gruppe](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![Der Dialog Wettbewerb hinzufügen für eine Gruppe](images/add-competition-block.png)
 
-![Der Dialog Wettbewerb hinzufügen für ein Schweizer System](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![Der Dialog Wettbewerb hinzufügen für ein Schweizer System](images/add-competition-swiss.png)
 
 ### Eine K.-o.-Runde
 
@@ -26,7 +26,7 @@ Eine K.-o.-Runde fragt, wie viele **Plätze** ihre Auslosung hat und über wie v
 
 Eine Auslosung hat so viele Runden, wie es braucht, um ihre Plätze auf einen zu halbieren; eine Auslosung mit 8 Plätzen hat also drei Runden. Der Dialog fragt für jede, über wie viele Spiele sie höchstens geht, zusammen unter **Best of**, in der Reihenfolge, in der sie gespielt werden. Die letzten drei heißen so, wie man von den Runden einer Auslosung spricht, **Viertelfinale**, **Halbfinale** und **Finale**, und alle davor nach ihrer Nummer, Runde 1 zuerst. Mehr Plätze zu wählen fügt Runden am Anfang der Auslosung hinzu, und weniger zu wählen nimmt sie am Anfang weg, sodass das, was für das Finale eingegeben wurde, weiterhin das des Finales ist. Jede Runde geht über eine ungerade Zahl von Spielen, weil eine Begegnung in einer K.-o.-Runde einen Sieger braucht.
 
-![Der Dialog Wettbewerb hinzufügen für eine K.-o.-Runde mit 4 Plätzen](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![Der Dialog Wettbewerb hinzufügen für eine K.-o.-Runde mit 4 Plätzen](images/add-competition-knockout.png)
 
 ### Mehrere auf einmal hinzufügen
 

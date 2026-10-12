@@ -4,13 +4,13 @@ Tab **Chwaraewyr** tudalen twrnamaint yw lle caiff ei chwaraewyr eu rhoi i mewn,
 
 Rhoddir chwaraewyr i mewn yma unwaith, i'r twrnamaint. Dewisir ym mha gystadlaethau y mae pob un yn chwarae wedyn, ar dudalen pob cystadleuaeth ei hun, o'r chwaraewyr a roddwyd i mewn yma. Gweler [Rhoi chwaraewyr mewn cystadleuaeth](entering-players-in-a-competition.md).
 
-![Y tab Chwaraewyr, â chwaraewyr wedi'u rhoi i mewn ac un wedi'i archifo](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![Y tab Chwaraewyr, â chwaraewyr wedi'u rhoi i mewn ac un wedi'i archifo](images/players-tab.png)
 
 ## Ychwanegu chwaraewyr
 
 Pwyswch **Ychwanegu chwaraewr**, uwchben y rhestr. Mae deialog yn agor dros y dudalen.
 
-![Y ddeialog Ychwanegu chwaraewr, wedi'i llenwi](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![Y ddeialog Ychwanegu chwaraewr, wedi'i llenwi](images/add-player-dialog.png)
 
 Mae **Enw** yn ofynnol. Dyma enw'r chwaraewr fel y caiff ei ddangos ar bob tudalen, rhwng 3 a 254 o gymeriadau. Ni all dau chwaraewr yn yr un twrnamaint gael yr un enw, sut bynnag y caiff ei briflythrennu; lle mae dau chwaraewr yn rhannu enw mewn gwirionedd, gwahaniaethwch rhyngddynt yn yr enw ei hun, fel "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Wrth i chi deipio enw, cynigir y chwaraewyr y mae safleoedd y byd yn eu hadnabod
 
 Pwyswch **Ychwanegu**. Caiff y chwaraewr ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y chwaraewr nesaf, â'r cyrchwr yn ôl yn yr enw. Ychwanegwch y rhestr gyfan fel hyn, yna pwyswch **Canslo** i gau'r ddeialog. Nid yw Canslo yn cadw dim nad oedd eisoes wedi'i ychwanegu.
 
-![Y ddeialog ar ôl i chwaraewr gael ei ychwanegu](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![Y ddeialog ar ôl i chwaraewr gael ei ychwanegu](images/add-player-dialog-added.png)
 
 Ni chaiff chwaraewr byth ei alw'n "Bye". Caiff byes cystadleuaeth taro allan eu hychwanegu yn y gystadleuaeth ei hun, lle bynnag y rhoddir ei chwaraewyr i mewn, felly gwrthodir enw y mae ei air cyntaf yn y gair Saesneg "bye", ac mae'r ddeialog yn egluro pam.
 
@@ -32,7 +32,7 @@ Ni chaiff chwaraewr byth ei alw'n "Bye". Caiff byes cystadleuaeth taro allan eu 
 
 Pwyswch enw chwaraewr, neu ei **Golygu**, i agor yr un ddeialog ar y chwaraewr hwnnw, dan y teitl Golygu chwaraewr. Newidiwch beth sydd o'i le a phwyswch **Cadw**, sy'n cadw'r newid ac yn cau'r ddeialog. Mae chwaraewr y caiff ei enw ei gywiro yn cadw'r enw ar Safleoedd y Byd a oedd ganddo, gan fod y safleoedd yn dal i'w adnabod wrtho.
 
-![Y ddeialog Golygu chwaraewr](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![Y ddeialog Golygu chwaraewr](images/edit-player-dialog.png)
 
 Mae chwaraewr a gywirir yma wedi'i gywiro ym mhob man: ym mhob cystadleuaeth y mae ynddi, ac ar bob tudalen gyhoeddus.
 
@@ -48,6 +48,6 @@ Ni ellir archifo chwaraewr sydd wedi chwarae unrhyw gêm, gan y byddai'r gemau w
 
 Nid yw archifo chwaraewr nad yw mewn unrhyw gystadleuaeth yn gofyn yn gyntaf, gan fod ei adfer yn rhoi popeth yn ôl. Mae archifo chwaraewr sydd mewn unrhyw gystadleuaeth yn gofyn yn gyntaf, am fod archifo yn ei dynnu o bob cystadleuaeth y mae ynddi, ac nid yw ei adfer yn ei roi yn ôl.
 
-![Y cwestiwn a ofynnir cyn archifo chwaraewr sydd mewn cystadlaethau](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![Y cwestiwn a ofynnir cyn archifo chwaraewr sydd mewn cystadlaethau](images/archive-player-asks.png)
 
 Nesaf: [Cystadlaethau](competitions.md).

@@ -2,7 +2,7 @@
 
 대회 페이지의 **경기 종목** 탭은 대회의 경기 종목을 추가하고, 순서를 정하고, 치워 두는 곳이에요. 경기 종목은 블록, 녹아웃, 스위스 중 하나예요. 경기 종목마다 페이지가 하나씩 있어서, 거기서 선수를 넣고 점수를 입력해요.
 
-![각 유형의 경기 종목이 있고 하나가 보관된 경기 종목 탭](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![각 유형의 경기 종목이 있고 하나가 보관된 경기 종목 탭](images/competitions-tab.png)
 
 ## 경기 종목 추가하기
 
@@ -16,9 +16,9 @@
 
 블록과 스위스는 각 매치가 몇 판 **다승제**인지만 물어요. 처음에는 1이에요. 3판 다승제는 두 게임을 이긴 쪽이 매치를 이겨요. 짝수여도 괜찮아요. 블록이나 스위스에서는 이긴 게임 수로 순위를 매기기 때문에, 두 게임을 하나씩 나눠 가진 매치도 다른 결과와 똑같은 결과예요.
 
-![블록을 위한 경기 종목 추가 대화 상자](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![블록을 위한 경기 종목 추가 대화 상자](images/add-competition-block.png)
 
-![스위스를 위한 경기 종목 추가 대화 상자](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![스위스를 위한 경기 종목 추가 대화 상자](images/add-competition-swiss.png)
 
 ### 녹아웃
 
@@ -26,7 +26,7 @@
 
 대진표의 라운드 수는 자리 수를 절반씩 줄여 하나가 될 때까지의 횟수예요. 그래서 8자리 대진표에는 라운드가 셋 있어요. 대화 상자는 각 라운드가 몇 판 다승제인지를 **라운드별 다승제** 아래에 치르는 순서대로 함께 물어요. 마지막 세 라운드는 대진표의 라운드를 부르는 대로 **8강**, **준결승**, **결승**이라 하고, 그 앞의 라운드는 1라운드부터 번호로 불러요. 자리 수를 늘리면 대진표의 앞쪽에 라운드가 더해지고, 줄이면 앞쪽에서 빼기 때문에, 결승에 입력한 값은 그대로 결승의 것이에요. 녹아웃의 매치에는 승자가 있어야 하므로, 각 라운드는 홀수 판 다승제예요.
 
-![4자리 녹아웃을 위한 경기 종목 추가 대화 상자](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![4자리 녹아웃을 위한 경기 종목 추가 대화 상자](images/add-competition-knockout.png)
 
 ### 여러 개를 한 번에 추가하기
 

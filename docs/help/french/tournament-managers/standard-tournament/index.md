@@ -26,11 +26,11 @@ Tout ce que fait un gestionnaire se fait dans la partie administration du site. 
 
 La page d’entrée de l’administration liste les tournois auxquels vous participez, une année à la fois.
 
-![La liste des tournois dans l’administration](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![La liste des tournois dans l’administration](images/admin-list.png)
 
 Appuyer sur le nom d’un tournoi, ou sur **Gérer**, ouvre sa page. Tout ce qu’il y a à organiser tient dans cinq onglets sous son nom : **Joueurs**, **Compétitions**, **Notes**, **Gestionnaires** et **Marqueurs**. La page s’ouvre sur Joueurs, puisque les joueurs sont la première chose que l’on saisit.
 
-![La page d’un tournoi, sur son onglet Compétitions](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![La page d’un tournoi, sur son onglet Compétitions](images/tournament-page.png)
 
 La barre vert foncé sous l’en-tête sert à passer d’une page à l’autre. Elle mène au tournoi, sous **Tournoi**, et à chacune de ses compétitions par son nom, de sorte que vous pouvez aller du tournoi à une compétition et d’une compétition à l’autre sans repasser par l’onglet Compétitions. La page où vous êtes est marquée en noir.
 

@@ -2,7 +2,7 @@
 
 Druk op **Nuwe toernooi** bo die lys toernooie in die administrasie. Dit is bo die lys eerder as daaronder, sodat 'n lang lys dit nie van 'n foon se skerm af druk nie.
 
-![Die vorm vir 'n nuwe toernooi, ingevul vir 'n toernooi tussen spanne](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Die vorm vir 'n nuwe toernooi, ingevul vir 'n toernooi tussen spanne](images/new-tournament.png)
 
 Die vorm vra vir alles waarmee 'n toernooi begin. Wat hier die meeste saak maak, is die **Formaat**, wat 'n toernooi een tussen spanne maak.
 
@@ -39,7 +39,7 @@ Standaard is die een formaat wat nie tussen spanne gespeel word nie, en is nie w
 
 Druk op **Skep toernooi**. Jy word na die toernooi se bladsy in die administrasie geneem, oop op sy Spanne-oortjie, en jy is sy eerste bestuurder. Dit word in die administrasie gelys onder die jaar waarin dit begin.
 
-!['n Pas geskepte toernooi, nog sonder spanne](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+!['n Pas geskepte toernooi, nog sonder spanne](images/tournament-page-empty.png)
 
 Die toernooi se openbare adres word uit sy jaar, sy sport en sy naam gemaak, soos `/2026/ac/trans-tasman-tests`. Dit hou daardie adres wanneer sy naam later reggestel word, sodat 'n skakel wat reeds gestuur is dit steeds vind; dit skuif net wanneer die jaar waarin dit begin, of sy sport, verander.
 

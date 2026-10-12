@@ -26,11 +26,11 @@ Alles, was ein Turnierleiter tut, geschieht im Verwaltungsbereich der Website. D
 
 Die Eingangsseite der Verwaltung listet die Turniere, an denen du beteiligt bist, jeweils für ein Jahr.
 
-![Die Liste der Turniere in der Verwaltung](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![Die Liste der Turniere in der Verwaltung](images/admin-list.png)
 
 Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in fünf Reitern unter seinem Namen: **Spieler**, **Wettbewerbe**, **Hinweise**, **Turnierleitung** und **Ergebniserfasser**. Die Seite öffnet sich auf Spieler, weil die Spieler als Erstes eingegeben werden.
 
-![Die Seite eines Turniers, auf dem Reiter Wettbewerbe](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![Die Seite eines Turniers, auf dem Reiter Wettbewerbe](images/tournament-page.png)
 
 Die dunkelgrüne Leiste unter der Kopfzeile dient dem Wechsel zwischen Seiten. Sie führt zum Turnier, als **Turnier**, und zu jedem seiner Wettbewerbe mit Namen, sodass du vom Turnier zu einem Wettbewerb und zwischen Wettbewerben wechseln kannst, ohne über den Reiter Wettbewerbe zurückzugehen. Die Seite, auf der du bist, ist schwarz markiert.
 

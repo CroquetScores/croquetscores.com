@@ -2,13 +2,13 @@
 
 Auf dem Reiter **Mannschaften** der Turnierseite werden die Mannschaften des Turniers hinzugefügt, korrigiert, geordnet und beiseitegelegt. Es ist der Reiter, auf dem sich die Seite öffnet, weil die Mannschaften als Erstes angelegt werden. Ein Test findet zwischen zwei Mannschaften statt, es braucht also mindestens zwei, bevor ein Test hinzugefügt werden kann.
 
-![Der Reiter Mannschaften, mit drei Mannschaften und einer archivierten](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![Der Reiter Mannschaften, mit drei Mannschaften und einer archivierten](images/teams-tab.png)
 
 ## Eine Mannschaft hinzufügen
 
 Drücke **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite.
 
-![Der Dialog Mannschaft hinzufügen, ausgefüllt](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![Der Dialog Mannschaft hinzufügen, ausgefüllt](images/add-team-dialog.png)
 
 **Name** ist Pflicht: der volle Name der Mannschaft, etwa „Australia“, der die Seite der Mannschaft und die Tabellen der öffentlichen Seiten überschreibt. Zwei Mannschaften eines Turniers können nicht denselben Namen haben.
 
@@ -18,13 +18,13 @@ Drücke **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich übe
 
 Drücke **Hinzufügen**. Die Mannschaft wird hinzugefügt, der Dialog sagt es, und seine Felder werden für die nächste geleert. Gib so die ganze Liste ein und drücke dann **Abbrechen**, um den Dialog zu schließen. Abbrechen speichert nichts, was nicht schon hinzugefügt war.
 
-![Der Dialog, nachdem eine Mannschaft hinzugefügt wurde](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![Der Dialog, nachdem eine Mannschaft hinzugefügt wurde](images/add-team-dialog-added.png)
 
 ## Eine Mannschaft korrigieren
 
 Drücke das **Bearbeiten** einer Mannschaft, um denselben Dialog für diese Mannschaft zu öffnen, mit dem Titel Mannschaft bearbeiten. Ändere, was falsch ist, und drücke **Speichern**. Eine Mannschaft, deren Kurzname sich ändert, heißt überall nach dem neuen, ihre Tests werden also mit ihm umbenannt.
 
-![Der Dialog Mannschaft bearbeiten](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![Der Dialog Mannschaft bearbeiten](images/edit-team-dialog.png)
 
 ## Reihenfolge
 

@@ -30,11 +30,11 @@ Une **équipe** est un camp, comme l’Australie, avec un nom, un nom court comm
 
 La page d’entrée de l’administration liste les tournois auxquels vous participez, une année à la fois.
 
-![La liste des tournois dans l’administration](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![La liste des tournois dans l’administration](images/admin-list.png)
 
 Appuyer sur le nom d’un tournoi, ou sur **Gérer**, ouvre sa page. Tout ce qu’il y a à organiser tient dans cinq onglets sous son nom : **Équipes**, **Tests**, **Notes**, **Gestionnaires** et **Marqueurs**. La page s’ouvre sur Équipes, puisque les équipes sont la première chose que l’on constitue.
 
-![La page d’un tournoi, sur son onglet Tests](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![La page d’un tournoi, sur son onglet Tests](images/tournament-page.png)
 
 La barre vert foncé sous l’en-tête sert à passer d’une page à l’autre. Sur la page du tournoi et sur celle d’un test, elle mène au tournoi, sous **Tournoi**, et à chaque test par son nom. Sur la page d’une équipe, elle mène au tournoi et à chaque équipe par son nom court, puisqu’un gestionnaire sur la page d’une équipe inscrit les joueurs équipe par équipe. La page où vous êtes est marquée en noir.
 

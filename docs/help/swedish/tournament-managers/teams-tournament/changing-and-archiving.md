@@ -4,7 +4,7 @@
 
 I listan över turneringar i administrationen, tryck på **Redigera** på turneringen. Formuläret är det som skapade den, ifyllt som turneringen är. Ändra det som är fel och tryck på **Uppdatera turnering**.
 
-![Formuläret Redigera turnering](../../../english/tournament-managers/teams-tournament/images/edit-tournament.png)
+![Formuläret Redigera turnering](images/edit-tournament.png)
 
 Turneringens dagar kan vidgas här där en testmatch behöver en dag utanför dem, eftersom en testmatch spelas inom sin turnering. Ett format som spelas av lag kan bytas mot ett annat, eftersom turneringen innehåller samma saker i vart och ett. När turneringen innehåller något lag eller någon testmatch, arkiverade inräknade, kan den inte ändras till formatet Standard, som har spelare och tävlingar i stället.
 
@@ -16,7 +16,7 @@ Bara en turneringsledare kan ändra en turnering. En resultatförare, eller vem 
 
 Administrationen listar ett år i taget, med början på det här året, nyaste turnering först. De år du har en turnering i är flikar i det mörkgröna fältet, nyast först; där det finns fler än vad som ryms på en telefon ligger de äldsta i en rullgardinslista i slutet av raden. Året finns i adressen, så det går att länka till ett år.
 
-![Listan över turneringar](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Listan över turneringar](images/admin-list.png)
 
 ## Arkivera en turnering
 

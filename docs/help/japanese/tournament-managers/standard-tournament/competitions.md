@@ -2,7 +2,7 @@
 
 大会のページの**部門**タブでは、大会の部門を追加し、並べ替え、除外します。部門とは、ブロック戦、ノックアウト戦、スイスドローのいずれかです。それぞれに専用のページがあり、そこで選手を登録し、スコアを入力します。
 
-![部門タブ、各種類の部門と1つのアーカイブ済み部門](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![部門タブ、各種類の部門と1つのアーカイブ済み部門](images/competitions-tab.png)
 
 ## 部門の追加
 
@@ -16,9 +16,9 @@
 
 ブロック戦とスイスドローでは、各対戦の**ゲーム数**だけを尋ねます。最初は1です。3ゲーム制なら、2ゲームを勝った方が勝ちです。偶数でも構いません。ブロック戦やスイスドローでは選手は勝ったゲーム数で順位付けされるので、2ゲームを1つずつ分け合った対戦も、ほかと同じ1つの結果だからです。
 
-![ブロック戦の部門の追加ダイアログ](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![ブロック戦の部門の追加ダイアログ](images/add-competition-block.png)
 
-![スイスドローの部門の追加ダイアログ](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![スイスドローの部門の追加ダイアログ](images/add-competition-swiss.png)
 
 ### ノックアウト戦
 
@@ -26,7 +26,7 @@
 
 組み合わせのラウンド数は、順位数を1になるまで半分にしていく回数です。8枠の組み合わせなら3ラウンドです。ダイアログでは各ラウンドのゲーム数を**各ラウンドのゲーム数**の下にまとめて、行われる順に尋ねます。最後の3つは組み合わせのラウンドの呼び方どおり**準々決勝**、**準決勝**、**決勝**と呼ばれ、それより前のラウンドは第1ラウンドから番号で呼ばれます。順位数を増やすと組み合わせの先頭にラウンドが加わり、減らすと先頭から取り除かれるので、決勝に入力した値はそのまま決勝のものです。各ラウンドのゲーム数は奇数です。ノックアウト戦の対戦には勝者が必要だからです。
 
-![4枠のノックアウト戦の部門の追加ダイアログ](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![4枠のノックアウト戦の部門の追加ダイアログ](images/add-competition-knockout.png)
 
 ### 複数をまとめて追加する
 

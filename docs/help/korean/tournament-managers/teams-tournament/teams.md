@@ -2,13 +2,13 @@
 
 대회 페이지의 **팀** 탭은 대회의 팀을 추가하고, 고치고, 순서를 정하고, 치워 두는 곳이에요. 팀을 가장 먼저 만들기 때문에, 페이지는 이 탭에서 열려요. 테스트는 두 팀 사이에서 치르므로, 테스트를 추가하려면 먼저 팀이 둘 이상 있어야 해요.
 
-![팀 셋이 있고 하나가 보관된 팀 탭](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![팀 셋이 있고 하나가 보관된 팀 탭](images/teams-tab.png)
 
 ## 팀 추가하기
 
 목록 위의 **팀 추가**를 눌러요. 페이지 위에 대화 상자가 열려요.
 
-![내용을 채운 팀 추가 대화 상자](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![내용을 채운 팀 추가 대화 상자](images/add-team-dialog.png)
 
 **이름**은 꼭 써야 해요. "Australia"처럼 팀의 전체 이름으로, 팀 페이지와 공개 페이지의 표에서 제목이 돼요. 한 대회의 두 팀은 같은 이름을 가질 수 없어요.
 
@@ -18,13 +18,13 @@
 
 **추가**를 눌러요. 팀이 추가되고, 대화 상자가 그렇게 알려 주고, 다음 팀을 위해 필드가 비워져요. 이렇게 명단을 전부 추가한 뒤 **취소**를 눌러 대화 상자를 닫아요. 취소는 아직 추가하지 않은 것은 저장하지 않아요.
 
-![팀을 추가한 뒤의 대화 상자](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![팀을 추가한 뒤의 대화 상자](images/add-team-dialog-added.png)
 
 ## 팀 고치기
 
 팀의 **수정**을 누르면 같은 대화 상자가 그 팀으로 열리고, 제목은 팀 수정이에요. 틀린 것을 고치고 **저장**을 눌러요. 약칭을 바꾼 팀은 모든 곳에서 새 약칭으로 불리기 때문에, 그 팀의 테스트도 함께 이름이 바뀌어요.
 
-![팀 수정 대화 상자](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![팀 수정 대화 상자](images/edit-team-dialog.png)
 
 ## 순서
 

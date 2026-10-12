@@ -2,7 +2,7 @@
 
 Agorir tudalen test o'i enw ar y tab Testau, neu o'r bar gwyrdd tywyll. Enwau llawn ei dimau sydd ar ei phen, fel "Australia v New Zealand", â sawl gornest y disgwylir iddo ei chael a beth yw pob un y gorau o oddi tanynt. Ei ganlyniadau yw'r dudalen, heb dabiau. Mae rheolwr a sgoriwr yn gweld yr un dudalen, gan y gall sgoriwr wneud i ganlyniad bopeth y gall rheolwr ei wneud.
 
-![Tudalen test, â'i ganlyniadau](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![Tudalen test, â'i ganlyniadau](images/test-page-panel.png)
 
 ## Sut mae'r canlyniadau wedi'u gosod
 
@@ -12,7 +12,7 @@ Gosodir y canlyniadau yn ôl tîm yn hytrach nag yn ôl pwy a enillodd, mewn tab
 
 Pwyswch **Ychwanegu canlyniad**, uwchben y rhestr. Mae'r ddeialog yn darllen fel y dywedir canlyniad ar lafar: yr enillydd a'i sgôr, yna "a gurodd", yna'r collwr a'i sgôr.
 
-![Y ddeialog Ychwanegu canlyniad ar dudalen test](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Y ddeialog Ychwanegu canlyniad ar dudalen test](images/add-test-score-dialog.png)
 
 Dewisir yr enillydd o chwaraewyr y ddau dîm sydd yn eu lle, o dan enw pob tîm, chwaraewyr y tîm cyntaf yn gyntaf a chwaraewyr pob tîm yn nhrefn y tîm. Ni ddewisir neb i ddechrau. Unwaith y dewisir yr enillydd, cynigir y collwr o'r tîm arall yn unig, gan nad yw gêm rhwng dau chwaraewr o'r un tîm yn gêm rhwng y timau. Ni chynigir chwaraewr a archifwyd.
 

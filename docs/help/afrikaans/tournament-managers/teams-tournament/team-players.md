@@ -2,7 +2,7 @@
 
 'n Span se bladsy word oopgemaak vanaf sy naam, of sy **Bekyk**, op die Spanne-oortjie. Dit het die span se naam as opskrif, met sy kortnaam tussen hakies, en sy vlag, sodat 'n bestuurder wat by die verkeerde span uitgekom het dit dadelik sien. Dit het een ding om te wys, die span se spelers, so die lys is die bladsy.
 
-!['n Span se bladsy, met sy spelers en een geargiveer](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+!['n Span se bladsy, met sy spelers en een geargiveer](images/team-page.png)
 
 Die donkergroen balk op 'n span se bladsy lei na die toernooi en na elke span in gebruik by sy kortnaam, sodat die spelers span vir span ingeskryf kan word sonder om terug te gaan na die Spanne-oortjie.
 
@@ -12,7 +12,7 @@ Die donkergroen balk op 'n span se bladsy lei na die toernooi en na elke span in
 
 Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
-![Die dialoog Voeg speler by op 'n span se bladsy](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Die dialoog Voeg speler by op 'n span se bladsy](images/add-team-player-dialog.png)
 
 **Naam** is verpligtend, tussen 3 en 254 karakters. Twee spelers in een span kan nie dieselfde naam hê nie, hoe dit ook al met hoofletters geskryf is; 'n speler in 'n ander span mag dit deel.
 

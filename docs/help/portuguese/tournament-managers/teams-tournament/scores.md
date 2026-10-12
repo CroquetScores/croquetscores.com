@@ -2,7 +2,7 @@
 
 A página de um teste é aberta pelo seu nome na aba Testes, ou pela barra verde-escura. Tem como cabeçalho os nomes completos das suas equipes, como "Australia x New Zealand", com quantas partidas se espera que ele tenha e de quantos jogos é cada uma abaixo. Os seus placares são a página, sem abas. Um organizador e um apontador veem a mesma página, porque um apontador pode fazer com um placar tudo o que um organizador pode.
 
-![A página de um teste, com os seus placares](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![A página de um teste, com os seus placares](images/test-page-panel.png)
 
 ## Como os placares são dispostos
 
@@ -12,7 +12,7 @@ Os placares são dispostos por equipe, e não por quem ganhou, em uma tabela enc
 
 Pressione **Adicionar placar**, acima da lista. O diálogo se lê como um resultado se diz em voz alta: o vencedor e o seu placar, depois "venceu", depois o perdedor e o seu placar.
 
-![O diálogo Adicionar placar na página de um teste](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![O diálogo Adicionar placar na página de um teste](images/add-test-score-dialog.png)
 
 O vencedor é escolhido entre os jogadores em uso das duas equipes, sob o nome de cada equipe, os jogadores da primeira equipe primeiro e os de cada equipe na ordem da equipe. Ninguém vem escolhido de início. Depois que o vencedor é escolhido, o perdedor é oferecido só da outra equipe, porque um jogo entre dois jogadores da mesma equipe não é um jogo entre as equipes. Um jogador arquivado não é oferecido.
 

@@ -4,13 +4,13 @@ Het tabblad **Spelers** van de pagina van een toernooi is waar zijn spelers word
 
 Spelers worden hier eenmalig ingevoerd, in het toernooi. In welke competities elke speler speelt, kies je daarna, op de eigen pagina van elke competitie, uit de spelers die hier zijn ingevoerd. Zie [Spelers in een competitie plaatsen](entering-players-in-a-competition.md).
 
-![Het tabblad Spelers, met ingevoerde spelers en één gearchiveerde](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![Het tabblad Spelers, met ingevoerde spelers en één gearchiveerde](images/players-tab.png)
 
 ## Spelers toevoegen
 
 Druk op **Speler toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina.
 
-![Het dialoogvenster Speler toevoegen, ingevuld](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![Het dialoogvenster Speler toevoegen, ingevuld](images/add-player-dialog.png)
 
 **Naam** is verplicht. Het is de naam van de speler zoals die op elke pagina wordt getoond, tussen 3 en 254 tekens. Twee spelers in één toernooi kunnen niet dezelfde naam hebben, hoe het hoofdlettergebruik ook is; waar twee spelers echt dezelfde naam hebben, maak je het onderscheid in de naam zelf, als "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Terwijl je een naam typt, worden de spelers die de wereldranglijst kent en van w
 
 Druk op **Toevoegen**. De speler wordt toegevoegd, het dialoogvenster zegt dat, en de velden worden leeggemaakt voor de volgende speler, met de cursor terug in de naam. Voeg zo de hele lijst toe, en druk dan op **Annuleren** om het dialoogvenster te sluiten. Annuleren bewaart niets wat niet al was toegevoegd.
 
-![Het dialoogvenster nadat een speler is toegevoegd](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![Het dialoogvenster nadat een speler is toegevoegd](images/add-player-dialog-added.png)
 
 Een speler heet nooit "Bye". De vrijlotingen van een knock-out worden in de knock-out zelf toegevoegd, waar ook de spelers worden geplaatst, dus een naam waarvan het eerste woord het Engelse "bye" is, wordt geweigerd, en het dialoogvenster legt uit waarom.
 
@@ -32,7 +32,7 @@ Een speler heet nooit "Bye". De vrijlotingen van een knock-out worden in de knoc
 
 Druk op de naam van een speler, of op **Bewerken**, om hetzelfde dialoogvenster op die speler te openen, met de titel Speler bewerken. Verander wat fout is en druk op **Opslaan**, wat de wijziging bewaart en het dialoogvenster sluit. Een speler van wie de naam wordt gecorrigeerd, houdt de naam op de wereldranglijst die die had, omdat de ranglijst hem nog onder die naam kent.
 
-![Het dialoogvenster Speler bewerken](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![Het dialoogvenster Speler bewerken](images/edit-player-dialog.png)
 
 Een speler die hier wordt gecorrigeerd, is overal gecorrigeerd: in elke competitie waarin die speelt, en op elke openbare pagina.
 
@@ -48,6 +48,6 @@ Een speler die een partij heeft gespeeld, kan niet worden gearchiveerd, omdat de
 
 Het archiveren van een speler die in geen enkele competitie zit, vraagt niet eerst, omdat herstellen alles terugzet. Het archiveren van een speler die in een competitie zit, vraagt wel eerst, omdat archiveren de speler uit elke competitie haalt waarin die zit, en herstellen de speler daar niet in terugzet.
 
-![De vraag die wordt gesteld voordat een speler die in competities zit wordt gearchiveerd](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![De vraag die wordt gesteld voordat een speler die in competities zit wordt gearchiveerd](images/archive-player-asks.png)
 
 Volgende: [Competities](competitions.md).

@@ -2,7 +2,7 @@
 
 De pagina van een testmatch open je via haar naam op het tabblad Testmatches, of via de donkergroene balk. Ze heeft de volledige namen van de teams als kop, als "Australia v New Zealand", met daaronder hoeveel wedstrijden ze naar verwachting heeft en waarvan elke de beste is. Haar scores zijn de pagina, zonder tabbladen. Een beheerder en een scorer zien dezelfde pagina, omdat een scorer met een score alles kan doen wat een beheerder kan.
 
-![De pagina van een testmatch, met haar scores](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![De pagina van een testmatch, met haar scores](images/test-page-panel.png)
 
 ## Hoe de scores zijn ingedeeld
 
@@ -12,7 +12,7 @@ De scores zijn ingedeeld per team in plaats van naar wie heeft gewonnen, in een 
 
 Druk op **Score toevoegen**, boven de lijst. Het dialoogvenster leest zoals een uitslag wordt uitgesproken: de winnaar en zijn score, dan "versloeg", dan de verliezer en zijn score.
 
-![Het dialoogvenster Score toevoegen op de pagina van een testmatch](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Het dialoogvenster Score toevoegen op de pagina van een testmatch](images/add-test-score-dialog.png)
 
 De winnaar wordt gekozen uit de spelers in gebruik van beide teams, onder de naam van elk team, de spelers van het eerste team eerst en die van elk team in de volgorde van het team. Om te beginnen is niemand gekozen. Zodra de winnaar is gekozen, wordt de verliezer alleen uit het andere team aangeboden, omdat een partij tussen twee spelers van hetzelfde team geen partij tussen de teams is. Een gearchiveerde speler wordt niet aangeboden.
 

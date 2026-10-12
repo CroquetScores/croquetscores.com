@@ -2,13 +2,13 @@
 
 赛事页面的**比分**标签页是录入、更正和搁置各局的地方。记分员只看到这个标签页，并且可以在上面做管理员能做的一切。
 
-![一个小组赛的“比分”标签页，有正在使用的比分、一个已作废的比分和一个已归档的比分](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![一个小组赛的“比分”标签页，有正在使用的比分、一个已作废的比分和一个已归档的比分](images/scores-tab.png)
 
 ## 录入比分
 
 按列表上方的**添加比分**。对话框读起来就像口头报结果：胜者及其得分，然后是“击败”，然后是负者及其得分。
 
-![填好的“添加比分”对话框](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![填好的“添加比分”对话框](images/add-score-dialog.png)
 
 胜者和负者各从赛事中正在比赛的选手里按赛事的顺序选择。一开始谁都没有被选中，这样一局绝不会记在你没有选择的选手头上。在淘汰赛中，选择胜者就选定了抽签中与之对阵的人作为负者，你可以看到并换成另一位。
 
@@ -18,7 +18,7 @@
 
 按**添加这一局**。这一局被添加，对话框说明是哪一局，各字段清空以便录入下一局，因为比分是在一轮结束时从记分板上成批读下来的。全部录入之后按**取消**。
 
-![添加一局之后的对话框](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![添加一局之后的对话框](images/add-score-dialog-added.png)
 
 被拒绝的内容会在相关字段下方说明：没有选择胜者或负者、没有输入比分或比分不以数位开头、同一位选手既是胜者又是负者、负者的得分带有获胜标记，或者胜者的得分低于负者。在淘汰赛中，两位没有被抽到对阵的选手会在字段上方被拒绝。
 
@@ -26,7 +26,7 @@
 
 淘汰赛只有在抽签的每个名额都有一位选手或一个轮空时才能进行。在那之前，“添加比分”会说明为什么不能添加比分，而不是打开对话框。
 
-![抽签未排满的淘汰赛中“添加比分”所说的话](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![抽签未排满的淘汰赛中“添加比分”所说的话](images/draw-not-filled.png)
 
 ## 比分列表
 
@@ -36,7 +36,7 @@
 
 **编辑**在该比分上打开同一个对话框，标题为“编辑比分”，选手已选中，比分按输入时的样子显示。按**保存**保存更正并关闭对话框。
 
-![“编辑比分”对话框](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![“编辑比分”对话框](images/edit-score-dialog.png)
 
 更正保持结果不变：赢了的一局仍然是赢，平局仍然是平局。结果错了的一局应归档后重新录入。
 

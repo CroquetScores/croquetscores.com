@@ -4,13 +4,13 @@ Ko te ripa **Ngā kaitākaro** o te whārangi o tētahi whakataetae te wāhi e w
 
 Ka whakaurua ngā kaitākaro ki konei kotahi, ki roto i te whakataetae. Ko ngā tauwhāinga ka tākaro ai ia kaitākaro ka kōwhiria i muri mai, i te whārangi o ia tauwhāinga, mai i ngā kaitākaro kua whakaurua ki konei. Tirohia [Te whakauru kaitākaro ki tētahi tauwhāinga](entering-players-in-a-competition.md).
 
-![Te ripa Ngā kaitākaro, kua whakaurua ngā kaitākaro me tētahi kua pūrangatia](../../../english/tournament-managers/standard-tournament/images/players-tab.png)
+![Te ripa Ngā kaitākaro, kua whakaurua ngā kaitākaro me tētahi kua pūrangatia](images/players-tab.png)
 
 ## Te tāpiri i ngā kaitākaro
 
 Pēhia **Tāpiri kaitākaro**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi.
 
-![Te pouaka kōrero Tāpiri kaitākaro, kua whakaurua ngā mea](../../../english/tournament-managers/standard-tournament/images/add-player-dialog.png)
+![Te pouaka kōrero Tāpiri kaitākaro, kua whakaurua ngā mea](images/add-player-dialog.png)
 
 E hiahiatia ana te **Ingoa**. Ko te ingoa o te kaitākaro tērā e whakaaturia ai i ia whārangi, kei waenga i te 3 me te 254 ngā tohu. Kāore e taea e ngā kaitākaro e rua o tētahi whakataetae te whai i te ingoa kotahi, ahakoa pēhea te whakamahi i ngā pū rahi; ina he ingoa kotahi tā ngā kaitākaro e rua, wehea rāua i te ingoa ake, pēnei i te "Andrew Hobbs (2)".
 
@@ -24,7 +24,7 @@ Ina tuhi koe i tētahi ingoa, ka tukuna ngā kaitākaro e mōhiotia ana e te rau
 
 Pēhia **Tāpiri**. Ka tāpiritia te kaitākaro, ka kī te pouaka kōrero i tērā, ā, ka whakakorea ōna āpure mō te kaitākaro e whai ake nei, ka hoki te tohu ki te ingoa. Tāpiria te rārangi katoa pēnei, kātahi ka pēhi i **Whakakore** hei kati i te pouaka kōrero. Kāore a Whakakore e penapena i tētahi mea kāore anō kia tāpiritia.
 
-![Te pouaka kōrero i muri i te tāpiri o tētahi kaitākaro](../../../english/tournament-managers/standard-tournament/images/add-player-dialog-added.png)
+![Te pouaka kōrero i muri i te tāpiri o tētahi kaitākaro](images/add-player-dialog-added.png)
 
 Kāore tētahi kaitākaro e kīia ko "Bye". Ka tāpiria ngā Bye o tētahi whakawātea ki te whakawātea ake, ahakoa kei hea ngā kaitākaro e whakaurua ana, nō reira ka whakahēngia he ingoa ko "bye" tōna kupu tuatahi, ā, ka whakamārama te pouaka kōrero he aha ai. Ko "bye" te kupu Ingarihi e whakahēngia ana e te pae.
 
@@ -32,7 +32,7 @@ Kāore tētahi kaitākaro e kīia ko "Bye". Ka tāpiria ngā Bye o tētahi whaka
 
 Pēhia te ingoa o tētahi kaitākaro, tōna **Whakatika** rānei, hei whakatuwhera i te pouaka kōrero ōrite ki runga i taua kaitākaro, ko Whakatika kaitākaro tōna taitara. Whakarerekētia te mea e hē ana, ka pēhi i **Penapena**, ka penapena i te huringa, ā, ka kati i te pouaka kōrero. Ka mau tonu i te kaitākaro kua whakatikaina tōna ingoa te ingoa i te raupapa o te ao i a ia, nā te mea e mōhio tonu ana te raupapa ki a ia mā tērā.
 
-![Te pouaka kōrero Whakatika kaitākaro](../../../english/tournament-managers/standard-tournament/images/edit-player-dialog.png)
+![Te pouaka kōrero Whakatika kaitākaro](images/edit-player-dialog.png)
 
 Ka whakatikaina i konei te kaitākaro i ngā wāhi katoa: i ia tauwhāinga e uru ana ia, me ia whārangi tūmatanui.
 
@@ -48,6 +48,6 @@ Kāore e taea te pūranga i tētahi kaitākaro kua tākaro i tētahi tākaro, n�
 
 Kāore te pūranga i tētahi kaitākaro kāore i tētahi tauwhāinga e pātai i te tuatahi, nā te mea ka whakahokia ngā mea katoa e te whakahoki. Ka pātai te pūranga i tētahi kaitākaro kei tētahi tauwhāinga i te tuatahi, nā te mea ka tangohia ia i ia tauwhāinga e uru ana ia e te pūranga, ā, kāore te whakahoki e whakahoki i a ia ki reira.
 
-![Te pātai ka pātaihia i mua i te pūranga i tētahi kaitākaro kei ngā tauwhāinga](../../../english/tournament-managers/standard-tournament/images/archive-player-asks.png)
+![Te pātai ka pātaihia i mua i te pūranga i tētahi kaitākaro kei ngā tauwhāinga](images/archive-player-asks.png)
 
 E whai ake nei: [Ngā tauwhāinga](competitions.md).

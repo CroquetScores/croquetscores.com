@@ -4,7 +4,7 @@
 
 I te rārangi whakataetae i te Whakahaere, pēhia **Whakatika** ki te whakataetae. Ko te puka tērā nāna i waihanga, ka tīmata pērā i te whakataetae. Whakarerekētia te mea e hē ana, ka pēhi i **Whakahou whakataetae**.
 
-![Te puka Whakatika whakataetae](../../../english/tournament-managers/teams-tournament/images/edit-tournament.png)
+![Te puka Whakatika whakataetae](images/edit-tournament.png)
 
 Ka taea te whakawhānui i ngā rā o te whakataetae i konei ina hiahia tētahi Test ki tētahi rā i waho i a rātou, nā te mea ka tākarohia tētahi Test i roto i tōna whakataetae. Ka taea te whakarerekē i tētahi hōputu e tākarohia ana e ngā kapa ki tētahi atu, nā te mea ka puritia e te whakataetae ngā mea ōrite i ia tētahi. Ina whai kapa, Test rānei te whakataetae, tae atu ki ērā kua pūrangatia, kāore e taea te whakarerekē ki te hōputu Paerewa, he kaitākaro me ngā tauwhāinga kē ōna.
 
@@ -16,7 +16,7 @@ Ko te kaiwhakahaere anake e taea ai te whakarerekē i tētahi whakataetae. Ka k�
 
 Ka rārangi te Whakahaere kotahi te tau i te wā kotahi, ka tīmata ki tēnei tau, ko te whakataetae hou rawa i te tuatahi. Ko ngā tau e whai whakataetae ai koe he ripa i te pae kākāriki pōuri, ko te hou rawa i te tuatahi; ina nui ake te maha i tō te waea pūkoro e whai wāhi ai, kei te rārangi taka iho i te pito o te haupae ngā mea tawhito rawa. Kei te wāhitau te tau, nō reira ka taea te hono ki tētahi tau.
 
-![Te rārangi whakataetae](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Te rārangi whakataetae](images/admin-list.png)
 
 ## Te pūranga i tētahi whakataetae
 

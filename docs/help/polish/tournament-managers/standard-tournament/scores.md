@@ -2,13 +2,13 @@
 
 Karta **Wyniki** na stronie konkurencji to miejsce, gdzie wprowadza się jej partie, poprawia je i odkłada na bok. Wprowadzający wyniki widzi tylko tę kartę i może na niej robić wszystko to, co organizator.
 
-![Karta Wyniki bloku, z wynikami w użyciu, wynikiem wycofanym i zarchiwizowanym](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![Karta Wyniki bloku, z wynikami w użyciu, wynikiem wycofanym i zarchiwizowanym](images/scores-tab.png)
 
 ## Wprowadzanie wyniku
 
 Naciśnij **Dodaj wynik**, nad listą. Okno czyta się tak, jak mówi się rezultat na głos: zwycięzca i jego wynik, potem „wygrywa z", potem przegrany i jego wynik.
 
-![Okno Dodaj wynik, wypełnione](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![Okno Dodaj wynik, wypełnione](images/add-score-dialog.png)
 
 Zwycięzcę i przegranego wybiera się spośród grających zawodników konkurencji, w kolejności konkurencji. Na początku nikt nie jest wybrany, by partia nigdy nie została zapisana zawodnikowi, którego nie wybrano. W systemie pucharowym wybranie zwycięzcy wybiera jako przegranego tego, z kim jest rozlosowany, tam gdzie to widzisz i możesz wybrać innego.
 
@@ -18,7 +18,7 @@ Partia wygrana przy równych punktach, jak wtedy, gdy przerwano ją z powodu cza
 
 Naciśnij **Dodaj partię**. Partia zostaje dodana, okno mówi która, a pola są opróżniane dla następnej, bo wyniki przychodzą partiami, odczytane z tablicy na koniec rundy. Naciśnij **Anuluj**, gdy wszystkie są już wprowadzone.
 
-![Okno po dodaniu partii](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![Okno po dodaniu partii](images/add-score-dialog-added.png)
 
 To, co odrzucono, jest powiedziane pod polem, którego dotyczy: niewybrany zwycięzca lub przegrany, wynik niewpisany albo niezaczynający się od cyfry, ten sam zawodnik po obu stronach, wynik przegranego oznaczony jako wygrana albo wynik zwycięzcy niższy niż przegranego. W systemie pucharowym dwóch zawodników, którzy nie są rozlosowani do gry ze sobą, jest odrzucanych nad polami.
 
@@ -26,7 +26,7 @@ To, co odrzucono, jest powiedziane pod polem, którego dotyczy: niewybrany zwyci
 
 System pucharowy rozgrywa się dopiero wtedy, gdy każde miejsce w jego drabince zajmuje zawodnik albo wolny los. Do tego czasu Dodaj wynik wyjaśnia, dlaczego nie można dodać wyników, zamiast otwierać okno.
 
-![Co mówi Dodaj wynik w systemie pucharowym, którego drabinka nie jest zapełniona](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Co mówi Dodaj wynik w systemie pucharowym, którego drabinka nie jest zapełniona](images/draw-not-filled.png)
 
 ## Lista wyników
 
@@ -36,7 +36,7 @@ Wyniki w użyciu są wymienione w kolejności wprowadzania, od najstarszego, by 
 
 **Edytuj** otwiera to samo okno na tym wyniku, zatytułowane Edytuj wynik, z wybranymi zawodnikami i wynikami takimi, jak je wpisano. Naciśnij **Zapisz**, by zachować poprawkę i zamknąć okno.
 
-![Okno Edytuj wynik](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![Okno Edytuj wynik](images/edit-score-dialog.png)
 
 Poprawka zachowuje rezultat: wygrana partia pozostaje wygrana, a zremisowana – zremisowana. Partię, której rezultat był błędny, archiwizuje się i wprowadza ponownie.
 

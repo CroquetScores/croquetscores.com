@@ -30,11 +30,11 @@ Ett **lag** är en sida, till exempel Australien, med ett namn, ett kortnamn som
 
 Administrationens startsida listar de turneringar du har en del i, ett år i taget.
 
-![Listan över turneringar i administrationen](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Listan över turneringar i administrationen](images/admin-list.png)
 
 Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i fem flikar under dess namn: **Lag**, **Testmatcher**, **Anteckningar**, **Turneringsledare** och **Resultatförare**. Sidan öppnas på Lag, eftersom lagen är det första som sätts upp.
 
-![En turnerings sida, på fliken Testmatcher](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![En turnerings sida, på fliken Testmatcher](images/tournament-page.png)
 
 Det mörkgröna fältet under sidhuvudet är till för att gå mellan sidor. På turneringens sida och på en testmatchs sida leder det till turneringen, som **Turnering**, och till varje testmatch med dess namn. På ett lags sida leder det i stället till turneringen och till varje lag med dess kortnamn, eftersom en turneringsledare på ett lags sida lägger till spelare lag för lag. Sidan du är på är markerad i svart.
 

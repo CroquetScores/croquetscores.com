@@ -4,7 +4,7 @@
 
 Yn y rhestr o dwrnameintiau yn yr adran weinyddu, pwyswch **Golygu** ar y twrnamaint. Y ffurflen yw'r un a'i creodd, wedi'i dechrau fel y mae'r twrnamaint. Newidiwch beth sydd o'i le a phwyswch **Diweddaru'r twrnamaint**.
 
-![Y ffurflen Golygu twrnamaint](../../../english/tournament-managers/teams-tournament/images/edit-tournament.png)
+![Y ffurflen Golygu twrnamaint](images/edit-tournament.png)
 
 Gellir lledu dyddiau'r twrnamaint yma lle mae ar test angen diwrnod y tu allan iddynt, gan y chwaraeir test o fewn ei dwrnamaint. Gellir newid un fformat a chwaraeir gan dimau am un arall, gan fod y twrnamaint yn cynnwys yr un pethau ym mhob un. Unwaith y bydd gan y twrnamaint unrhyw dîm neu test, a'r rhai a archifwyd yn cyfrif, ni ellir ei newid i'r fformat Safonol, sydd â chwaraewyr a chystadlaethau yn eu lle.
 
@@ -16,7 +16,7 @@ Dim ond rheolwr all newid twrnamaint. Dywedir hynny wrth sgoriwr, neu unrhyw un 
 
 Mae'r adran weinyddu yn rhestru un flwyddyn ar y tro, gan ddechrau â'r flwyddyn hon, y twrnamaint mwyaf newydd yn gyntaf. Mae'r blynyddoedd y mae gennych dwrnamaint ynddynt yn dabiau yn y bar gwyrdd tywyll, y mwyaf newydd yn gyntaf; lle mae mwy nag sy'n ffitio ar ffôn, mae'r hynaf mewn cwymplen ar ddiwedd y rhes. Mae'r flwyddyn yn y cyfeiriad, felly gellir dolennu at flwyddyn.
 
-![Y rhestr o dwrnameintiau](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Y rhestr o dwrnameintiau](images/admin-list.png)
 
 ## Archifo twrnamaint
 

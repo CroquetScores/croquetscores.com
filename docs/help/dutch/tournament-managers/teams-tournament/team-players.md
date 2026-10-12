@@ -2,7 +2,7 @@
 
 De pagina van een team open je via zijn naam, of via **Bekijken**, op het tabblad Teams. Ze heeft de naam van het team als kop, met de korte naam tussen haakjes, en zijn vlag, zodat een beheerder die bij het verkeerde team is uitgekomen dat meteen ziet. Ze heeft één ding te tonen, de spelers van het team, dus de lijst is de pagina.
 
-![De pagina van een team, met zijn spelers en één gearchiveerde](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![De pagina van een team, met zijn spelers en één gearchiveerde](images/team-page.png)
 
 De donkergroene balk op de pagina van een team leidt naar het toernooi en naar elk team in gebruik bij zijn korte naam, zodat de spelers team voor team worden ingevoerd zonder terug te gaan naar het tabblad Teams.
 
@@ -12,7 +12,7 @@ Een speler in een team hoort alleen bij dat team, vertegenwoordigt het team, en 
 
 Druk op **Speler toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina.
 
-![Het dialoogvenster Speler toevoegen op de pagina van een team](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Het dialoogvenster Speler toevoegen op de pagina van een team](images/add-team-player-dialog.png)
 
 **Naam** is verplicht, tussen 3 en 254 tekens. Twee spelers in één team kunnen niet dezelfde naam hebben, hoe het hoofdlettergebruik ook is; een speler in een ander team mag dezelfde naam hebben.
 

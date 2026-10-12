@@ -2,7 +2,7 @@
 
 Druk op **Nieuw toernooi** boven de lijst met toernooien in het beheer. De knop staat boven de lijst en niet eronder, zodat een lange lijst hem niet van het scherm van een telefoon duwt.
 
-![Het formulier voor een nieuw toernooi, ingevuld](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Het formulier voor een nieuw toernooi, ingevuld](images/new-tournament.png)
 
 Het formulier vraagt alles waarmee een toernooi begint. Een toernooi van de gewone soort is een naam, twee dagen en een land verwijderd: alles verder wordt voor je bepaald en kan worden gewijzigd.
 

@@ -2,7 +2,7 @@
 
 Stronę testu otwiera się z jego nazwy na karcie Testy albo z ciemnozielonego paska. Jej nagłówkiem są pełne nazwy jego drużyn, jak „Australia v New Zealand", a pod nim to, ile meczów test ma mieć i z ilu partii każdy jest najlepszy. Jego wyniki są całą stroną, bez kart. Organizator i wprowadzający wyniki widzą tę samą stronę, bo wprowadzający wyniki może zrobić z wynikiem wszystko to, co organizator.
 
-![Strona testu, z jego wynikami](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![Strona testu, z jego wynikami](images/test-page-panel.png)
 
 ## Jak ułożone są wyniki
 
@@ -12,7 +12,7 @@ Wyniki są ułożone według drużyn, a nie według tego, kto wygrał, w tabeli,
 
 Naciśnij **Dodaj wynik**, nad listą. Okno czyta się tak, jak mówi się rezultat na głos: zwycięzca i jego wynik, potem „wygrywa z", potem przegrany i jego wynik.
 
-![Okno Dodaj wynik na stronie testu](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Okno Dodaj wynik na stronie testu](images/add-test-score-dialog.png)
 
 Zwycięzcę wybiera się spośród zawodników w użyciu obu drużyn, pod nazwą każdej drużyny, najpierw zawodników pierwszej drużyny, a zawodników każdej drużyny w kolejności drużyny. Na początku nikt nie jest wybrany. Gdy zwycięzca jest wybrany, przegrany jest oferowany tylko z drugiej drużyny, bo partia między dwoma zawodnikami tej samej drużyny nie jest partią między drużynami. Zarchiwizowany zawodnik nie jest oferowany.
 

@@ -2,7 +2,7 @@
 
 La scheda **Competizioni** della pagina di un torneo è dove le sue competizioni vengono aggiunte, messe in ordine e messe da parte. Una competizione è un girone, un'eliminazione diretta o un sistema svizzero. Ciascuna ha una pagina sua, dove si inseriscono i suoi giocatori e i suoi punteggi.
 
-![La scheda Competizioni, con competizioni di ogni tipo e una archiviata](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![La scheda Competizioni, con competizioni di ogni tipo e una archiviata](images/competitions-tab.png)
 
 ## Aggiungere una competizione
 
@@ -16,9 +16,9 @@ Premi **Aggiungi competizione**, sopra l'elenco. Si apre una finestra di dialogo
 
 Un girone e un sistema svizzero chiedono solo di quante partite è **al meglio di** ciascun incontro, che comincia da 1. Al meglio di 3 vince chi vince due partite. Può essere un numero pari, perché in un girone o in un sistema svizzero un giocatore è classificato per le partite che vince, e un incontro di due partite finito una a una è un risultato come un altro.
 
-![La finestra Aggiungi competizione per un girone](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![La finestra Aggiungi competizione per un girone](images/add-competition-block.png)
 
-![La finestra Aggiungi competizione per un sistema svizzero](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![La finestra Aggiungi competizione per un sistema svizzero](images/add-competition-swiss.png)
 
 ### Un'eliminazione diretta
 
@@ -26,7 +26,7 @@ Un'eliminazione diretta chiede quanti **posti** ha il suo tabellone, e di quante
 
 Un tabellone ha tanti turni quanti ne servono per dimezzare i suoi posti fino a uno, quindi un tabellone di 8 posti ha tre turni. La finestra chiede di quante partite è al meglio ciascuno, tutti insieme sotto **Al meglio di, per turno**, nell'ordine in cui si giocano. Gli ultimi tre sono chiamati come si chiamano i turni di un tabellone, **Quarti**, **Semifinali** e **Finale**, e quelli prima con il loro numero, Turno 1 per primo. Scegliere più posti aggiunge turni all'inizio del tabellone, e sceglierne meno li toglie dall'inizio, così ciò che è stato scritto per la finale resta della finale. Ogni turno è al meglio di un numero impari di partite, perché un incontro a eliminazione diretta deve avere un vincitore.
 
-![La finestra Aggiungi competizione per un'eliminazione diretta di 4 posti](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![La finestra Aggiungi competizione per un'eliminazione diretta di 4 posti](images/add-competition-knockout.png)
 
 ### Aggiungerne diverse in una volta
 

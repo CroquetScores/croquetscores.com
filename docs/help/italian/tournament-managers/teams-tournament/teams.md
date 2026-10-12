@@ -2,13 +2,13 @@
 
 La scheda **Squadre** della pagina di un torneo è dove le sue squadre vengono aggiunte, corrette, messe in ordine e messe da parte. È la scheda su cui si apre la pagina, perché le squadre sono la prima cosa che si crea. Un test è tra due squadre, quindi ne servono almeno due prima che si possa aggiungere un test.
 
-![La scheda Squadre, con tre squadre e una archiviata](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![La scheda Squadre, con tre squadre e una archiviata](images/teams-tab.png)
 
 ## Aggiungere una squadra
 
 Premi **Aggiungi squadra**, sopra l'elenco. Si apre una finestra di dialogo sopra la pagina.
 
-![La finestra Aggiungi squadra, compilata](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![La finestra Aggiungi squadra, compilata](images/add-team-dialog.png)
 
 **Nome** è obbligatorio: il nome completo della squadra, come "Australia", che intesta la pagina della squadra e le tabelle delle pagine pubbliche. Due squadre di uno stesso torneo non possono avere lo stesso nome.
 
@@ -18,13 +18,13 @@ Premi **Aggiungi squadra**, sopra l'elenco. Si apre una finestra di dialogo sopr
 
 Premi **Aggiungi**. La squadra viene aggiunta, la finestra lo dice, e i suoi campi si svuotano per la successiva. Aggiungi tutto l'elenco in questo modo, poi premi **Annulla** per chiudere la finestra. Annulla non conserva nulla che non fosse già stato aggiunto.
 
-![La finestra dopo che una squadra è stata aggiunta](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![La finestra dopo che una squadra è stata aggiunta](images/add-team-dialog-added.png)
 
 ## Correggere una squadra
 
 Premi **Modifica** su una squadra per aprire la stessa finestra su quella squadra, intitolata Modifica squadra. Cambia ciò che non va e premi **Salva**. Una squadra il cui nome breve cambia viene chiamata con quello nuovo ovunque, quindi i suoi test vengono rinominati con lei.
 
-![La finestra Modifica squadra](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![La finestra Modifica squadra](images/edit-team-dialog.png)
 
 ## Ordine
 

@@ -2,7 +2,7 @@
 
 La página de un test se abre desde su nombre en la pestaña Tests, o desde la barra verde oscuro. La encabezan los nombres completos de sus equipos, como "Australia v New Zealand", con cuántos partidos se prevé que tenga y al mejor de cuántas partidas es cada uno debajo. Sus resultados son la página, sin pestañas. Un gestor y un anotador ven la misma página, porque un anotador puede hacer con un resultado todo lo que hace un gestor.
 
-![La página de un test, con sus resultados](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![La página de un test, con sus resultados](images/test-page-panel.png)
 
 ## Cómo se disponen los resultados
 
@@ -12,7 +12,7 @@ Los resultados se disponen por equipo y no por quién ganó, en una tabla encabe
 
 Pulsa **Añadir resultado**, encima de la lista. El diálogo se lee como se dice un resultado en voz alta: el ganador y sus puntos, después "ganó a", después el perdedor y sus puntos.
 
-![El diálogo Añadir resultado en la página de un test](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![El diálogo Añadir resultado en la página de un test](images/add-test-score-dialog.png)
 
 El ganador se elige de entre los jugadores en uso de ambos equipos, bajo el nombre de cada equipo, los jugadores del primer equipo primero y los de cada equipo en el orden del equipo. Al principio no hay nadie elegido. Una vez elegido el ganador, el perdedor se ofrece solo del otro equipo, porque una partida entre dos jugadores del mismo equipo no es una partida entre los equipos. Un jugador archivado no se ofrece.
 

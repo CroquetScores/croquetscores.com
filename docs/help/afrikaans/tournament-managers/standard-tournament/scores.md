@@ -2,13 +2,13 @@
 
 Die **Uitslae**-oortjie van 'n kompetisie se bladsy is waar sy spelle ingevoer, reggestel en eenkant gesit word. 'n Teller sien net hierdie oortjie, en kan daarop alles doen wat 'n bestuurder kan.
 
-!['n Blok se Uitslae-oortjie, met uitslae in gebruik, 'n onttrekte uitslag en 'n geargiveerde een](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+!['n Blok se Uitslae-oortjie, met uitslae in gebruik, 'n onttrekte uitslag en 'n geargiveerde een](images/scores-tab.png)
 
 ## Hoe om 'n uitslag in te voer
 
 Druk op **Voeg uitslag by**, bo die lys. Die dialoog lees soos 'n uitslag hardop gesê word: die wenner en hul punte, dan "het gewen teen", dan die verloorder en hul punte.
 
-![Die dialoog Voeg uitslag by, ingevul](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![Die dialoog Voeg uitslag by, ingevul](images/add-score-dialog.png)
 
 Die wenner en die verloorder word elk gekies uit die kompetisie se spelers wat speel, in die kompetisie se volgorde. Niemand is om mee te begin gekies nie, sodat 'n spel nooit teen 'n speler aangeteken word wat jy nie gekies het nie. In 'n uitskakeling kies die keuse van die wenner as verloorder die een teen wie hulle getrek is, waar jy dit kan sien en 'n ander kan kies.
 
@@ -18,7 +18,7 @@ Punte word getik soos die teller hulle neergeskryf het: die getal punte, en wat 
 
 Druk op **Voeg spel by**. Die spel word bygevoeg, die dialoog sê watter, en die velde word leeggemaak vir die volgende, want uitslae kom in 'n bondel wat aan die einde van 'n ronde van 'n bord af gelees word. Druk op **Kanselleer** sodra hulle almal in is.
 
-![Die dialoog nadat 'n spel bygevoeg is](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![Die dialoog nadat 'n spel bygevoeg is](images/add-score-dialog-added.png)
 
 Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verloorder wat nie gekies is nie, punte wat nie getik is nie of nie met 'n syfer begin nie, dieselfde speler as albei, 'n verloorder se punte wat as gewen gemerk is, of 'n wenner se punte wat agter die verloorder s'n is. In 'n uitskakeling word twee spelers wat nie getrek is om teen mekaar te speel nie, bo die velde geweier.
 
@@ -26,7 +26,7 @@ Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verlo
 
 'n Uitskakeling word eers gespeel wanneer elke plek in sy rooster 'n speler of 'n bye het. Tot dan verduidelik Voeg uitslag by hoekom uitslae nie bygevoeg kan word nie, eerder as om die dialoog oop te maak.
 
-![Wat Voeg uitslag by sê in 'n uitskakeling waarvan die rooster nie gevul is nie](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Wat Voeg uitslag by sê in 'n uitskakeling waarvan die rooster nie gevul is nie](images/draw-not-filled.png)
 
 ## Die lys uitslae
 
@@ -36,7 +36,7 @@ Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, ouds
 
 **Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Druk op **Stoor** om die regstelling te hou en die dialoog toe te maak.
 
-![Die dialoog Wysig uitslag](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![Die dialoog Wysig uitslag](images/edit-score-dialog.png)
 
 'n Regstelling behou die uitslag: 'n gewonne spel bly gewonne, en 'n gelykopspel bly gelykop. 'n Spel waarvan die uitslag verkeerd was, word geargiveer en weer ingevoer.
 

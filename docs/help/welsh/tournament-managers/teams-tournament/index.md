@@ -30,11 +30,11 @@ Mae **tîm** yn ochr, fel Awstralia, ag enw, enw byr fel "AUS", a baner. Mae gan
 
 Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran ynddynt, un flwyddyn ar y tro.
 
-![Y rhestr o dwrnameintiau yn yr adran weinyddu](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
 Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn pum tab o dan ei enw: **Timau**, **Testau**, **Nodiadau**, **Rheolwyr** a **Sgorwyr**. Mae'r dudalen yn agor ar Timau, gan mai'r timau yw'r peth cyntaf a osodir i fyny.
 
-![Tudalen twrnamaint, ar ei thab Testau](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![Tudalen twrnamaint, ar ei thab Testau](images/tournament-page.png)
 
 Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Ar dudalen y twrnamaint ac ar dudalen test mae'n arwain at y twrnamaint, fel **Twrnamaint**, ac at bob test wrth ei enw. Ar dudalen tîm mae'n arwain at y twrnamaint ac at bob tîm wrth ei enw byr yn lle hynny, gan fod rheolwr ar dudalen un tîm yn rhoi chwaraewyr i mewn dîm wrth dîm. Mae'r dudalen rydych arni wedi'i marcio mewn du.
 

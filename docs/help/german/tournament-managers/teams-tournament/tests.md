@@ -2,7 +2,7 @@
 
 Auf dem Reiter **Tests** der Turnierseite werden die Tests zwischen den Mannschaften des Turniers hinzugefügt, geändert, geordnet und beiseitegelegt. Ein Test ist einer der Wettbewerbe des Turniers: ein Wettkampf zwischen zwei Mannschaften, nach ihren Kurznamen benannt, etwa „AUS v NZ“, gespielt als eine Anzahl von Begegnungen zwischen je einem Spieler jeder Mannschaft. Jeder Test hat eine eigene Seite, auf der seine Ergebnisse eingegeben werden.
 
-![Der Reiter Tests, mit drei Tests in einer Gruppe](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![Der Reiter Tests, mit drei Tests in einer Gruppe](images/tests-tab.png)
 
 Jeder Test nennt seinen Namen, die Tage, an denen er gespielt wird, wie viele Begegnungen er voraussichtlich hat und über wie viele Spiele jede höchstens geht, etwa „6 Begegnungen, Best of 3“, und seine Gruppe, wenn er in einer ist.
 
@@ -10,13 +10,13 @@ Jeder Test nennt seinen Namen, die Tage, an denen er gespielt wird, wie viele Be
 
 Ein Test findet zwischen zwei Mannschaften in Gebrauch statt; solange das Turnier weniger als zwei hat, sagt der Reiter das dort, wo Test hinzufügen stünde, und führt zum Reiter Mannschaften.
 
-![Der Reiter Tests, bevor es zwei Mannschaften gibt](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![Der Reiter Tests, bevor es zwei Mannschaften gibt](images/tests-tab-two-teams-needed.png)
 
 ## Einen Test hinzufügen
 
 Drücke **Test hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und liest sich in der Reihenfolge, in der ein Test gesagt wird.
 
-![Der Dialog Test hinzufügen, ausgefüllt](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![Der Dialog Test hinzufügen, ausgefüllt](images/add-test-dialog.png)
 
 **Mannschaft A** und **Mannschaft B** werden jeweils aus den Mannschaften des Turniers in Gebrauch gewählt, nach Namen, in der Reihenfolge des Turniers. Zu Beginn ist keine gewählt, damit ein Test nie zwischen Mannschaften hinzugefügt wird, die du nicht gewählt hast. Mannschaft B bietet jede Mannschaft an außer der als Mannschaft A gewählten, weil eine Mannschaft keinen Test gegen sich selbst spielt. Mannschaft A ist die erste Mannschaft: Ihre Spieler stehen auf der Seite des Tests und auf der öffentlichen Seite links. Ein Test hat keinen eigenen Namen zum Eingeben; er heißt nach den Kurznamen seiner Mannschaften.
 
@@ -30,13 +30,13 @@ Drücke **Test hinzufügen** über der Liste. Ein Dialog öffnet sich über der 
 
 Drücke **Hinzufügen**. Der Test wird hinzugefügt, der Dialog sagt mit seinem Namen welcher, und die Mannschaften werden für den nächsten geleert, während die Tage, die erwarteten Begegnungen, das Best of und die Gruppe bleiben, wie sie waren: Tests werden Runde für Runde hinzugefügt, zwischen Mannschaften, die sich am selben Tag treffen, der nächste Test der Runde sind also nur seine zwei Mannschaften. Drücke **Abbrechen**, wenn alle drin sind.
 
-![Der Dialog, nachdem ein Test hinzugefügt wurde](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![Der Dialog, nachdem ein Test hinzugefügt wurde](images/add-test-dialog-added.png)
 
 ## Einen Test ändern
 
 **Bearbeiten** öffnet denselben Dialog für den Test, mit dem Titel Test bearbeiten, so vorbelegt, wie der Test ist. Drücke **Speichern**, um die Änderung zu speichern.
 
-![Der Dialog Test bearbeiten](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![Der Dialog Test bearbeiten](images/edit-test-dialog.png)
 
 Ein Test mit Spielen in Gebrauch behält seine Mannschaften: Der Dialog zeigt sie, aber sie lassen sich nicht ändern. Der Rest lässt sich ändern, im Rahmen dessen, was gespielt wurde: Weniger erwartete Begegnungen als schon begonnen haben, werden abgelehnt, ebenso ein Best of unter der höchsten Zahl von Spielen, die zwei Spieler schon gespielt haben.
 

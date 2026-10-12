@@ -2,13 +2,13 @@
 
 La scheda **Note** della pagina di un torneo è dove i suoi organizzatori scrivono ciò che i giocatori devono sapere mentre il torneo va avanti: il formato, un cambiamento nell'ordine di gioco, l'ora del pranzo. I lettori le trovano sulla pagina pubblica Note del torneo, e una nota che non hanno letto è segnata lì con un asterisco rosso, che segna anche la sezione Note su ogni pagina del torneo finché non la aprono.
 
-![La scheda Note, con due note](../../../english/tournament-managers/standard-tournament/images/notes-tab.png)
+![La scheda Note, con due note](images/notes-tab.png)
 
 ## Scrivere una nota
 
 Premi **Aggiungi nota**, sopra l'elenco. Un pannello prende il posto dell'elenco, perché una nota si scrive per esteso e ha bisogno di spazio.
 
-![Il pannello della nota, sulla scheda Scrivi](../../../english/tournament-managers/standard-tournament/images/note-panel.png)
+![Il pannello della nota, sulla scheda Scrivi](images/note-panel.png)
 
 **Titolo** è obbligatorio, ed è ciò con cui la nota è elencata. È testo semplice.
 
@@ -16,7 +16,7 @@ Premi **Aggiungi nota**, sopra l'elenco. Un pannello prende il posto dell'elenco
 
 **Anteprima** mostra la nota come la vedrà un lettore sulla sua pagina.
 
-![Il pannello della nota, sulla scheda Anteprima](../../../english/tournament-managers/standard-tournament/images/note-preview.png)
+![Il pannello della nota, sulla scheda Anteprima](images/note-preview.png)
 
 Premi **Aggiungi**. La nota viene conservata, l'elenco torna con lei in cima, ed è subito sulla pagina pubblica Note.
 
@@ -28,6 +28,6 @@ Premi il titolo di una nota, o il suo **Modifica**, per aprire il pannello su qu
 
 Una nota che non vale più si elimina. Una nota eliminata è persa per sempre, quindi **Elimina** chiede prima.
 
-![La domanda posta prima di eliminare una nota](../../../english/tournament-managers/standard-tournament/images/delete-note-asks.png)
+![La domanda posta prima di eliminare una nota](images/delete-note-asks.png)
 
 Avanti: [Organizzatori e segnapunti](managers-and-scorers.md).

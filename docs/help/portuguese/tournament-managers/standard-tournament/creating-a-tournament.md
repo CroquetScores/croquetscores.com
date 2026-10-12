@@ -2,7 +2,7 @@
 
 Pressione **Novo torneio**, acima da lista de torneios na administração. Ele fica acima da lista, e não abaixo, para que uma lista longa não o empurre para fora da tela de um telefone.
 
-![O formulário de novo torneio, preenchido](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![O formulário de novo torneio, preenchido](images/new-tournament.png)
 
 O formulário pede tudo com que um torneio começa. Um torneio do tipo comum está a um nome, dois dias e um país de distância: todo o resto é decidido por você e pode ser alterado.
 

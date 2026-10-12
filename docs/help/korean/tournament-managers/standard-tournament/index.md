@@ -26,11 +26,11 @@
 
 관리 화면의 첫 페이지에는 내가 관여하는 대회가 한 해씩 나열돼요.
 
-![관리 화면의 대회 목록](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![관리 화면의 대회 목록](images/admin-list.png)
 
 대회 이름이나 **운영**을 누르면 대회 페이지가 열려요. 운영할 모든 것은 이름 아래의 다섯 탭에 있어요: **선수**, **경기 종목**, **공지**, **운영자**, **기록원**. 선수를 가장 먼저 등록하기 때문에, 페이지는 선수 탭에서 열려요.
 
-![경기 종목 탭이 열린 대회 페이지](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![경기 종목 탭이 열린 대회 페이지](images/tournament-page.png)
 
 헤더 아래의 짙은 녹색 막대는 페이지 사이를 오가는 데 써요. **대회**로 대회 페이지에, 그리고 각 경기 종목의 이름으로 그 경기 종목에 갈 수 있어서, 경기 종목 탭을 거쳐 돌아가지 않고도 대회에서 경기 종목으로, 경기 종목 사이로 옮겨 갈 수 있어요. 지금 보고 있는 페이지는 검은색으로 표시돼요.
 

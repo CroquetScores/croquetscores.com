@@ -26,11 +26,11 @@ Todo lo que hace un gestor se hace en la sección de administración del sitio w
 
 La puerta de entrada de la administración lista los torneos en los que participas, un año a la vez.
 
-![La lista de torneos en la administración](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![La lista de torneos en la administración](images/admin-list.png)
 
 Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en cinco pestañas bajo su nombre: **Jugadores**, **Competiciones**, **Notas**, **Gestores** y **Anotadores**. La página se abre en Jugadores, porque los jugadores son lo primero que se introduce.
 
-![La página de un torneo, en su pestaña Competiciones](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![La página de un torneo, en su pestaña Competiciones](images/tournament-page.png)
 
 La barra verde oscuro bajo la cabecera sirve para moverse entre páginas. Lleva al torneo, como **Torneo**, y a cada una de sus competiciones por su nombre, de modo que puedes ir del torneo a una competición y de una competición a otra sin volver a pasar por la pestaña Competiciones. La página en la que estás se marca en negro.
 

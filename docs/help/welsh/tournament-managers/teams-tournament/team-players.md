@@ -2,7 +2,7 @@
 
 Agorir tudalen tîm o'i enw, neu ei **Gweld**, ar y tab Timau. Enw'r tîm sydd ar ei phen â'i enw byr mewn cromfachau, a'i faner, fel bod rheolwr a ddaeth i'r tîm anghywir yn gweld hynny ar unwaith. Mae ganddi un peth i'w ddangos, chwaraewyr y tîm, felly'r rhestr yw'r dudalen.
 
-![Tudalen tîm, â'i chwaraewyr ac un wedi'i archifo](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![Tudalen tîm, â'i chwaraewyr ac un wedi'i archifo](images/team-page.png)
 
 Mae'r bar gwyrdd tywyll ar dudalen tîm yn arwain at y twrnamaint ac at bob tîm sydd yn ei le wrth ei enw byr, fel y rhoddir y chwaraewyr i mewn dîm wrth dîm heb fynd yn ôl i'r tab Timau.
 
@@ -12,7 +12,7 @@ Mae chwaraewr mewn tîm yn perthyn i'r tîm hwnnw yn unig, yn cynrychioli'r tîm
 
 Pwyswch **Ychwanegu chwaraewr**, uwchben y rhestr. Mae deialog yn agor dros y dudalen.
 
-![Y ddeialog Ychwanegu chwaraewr ar dudalen tîm](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![Y ddeialog Ychwanegu chwaraewr ar dudalen tîm](images/add-team-player-dialog.png)
 
 Mae **Enw** yn ofynnol, rhwng 3 a 254 o gymeriadau. Ni all dau chwaraewr yn yr un tîm gael yr un enw, sut bynnag y caiff ei briflythrennu; gall chwaraewr mewn tîm arall ei rannu.
 

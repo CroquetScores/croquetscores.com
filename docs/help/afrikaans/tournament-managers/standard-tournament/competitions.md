@@ -2,7 +2,7 @@
 
 Die **Kompetisies**-oortjie van 'n toernooi se bladsy is waar sy kompetisies bygevoeg, in volgorde geplaas en eenkant gesit word. 'n Kompetisie is 'n blok, 'n uitskakeling of 'n Switserse kompetisie. Elkeen het 'n eie bladsy, waar sy spelers ingeskryf word en sy uitslae ingaan.
 
-![Die Kompetisies-oortjie, met kompetisies van elke soort en een geargiveer](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![Die Kompetisies-oortjie, met kompetisies van elke soort en een geargiveer](images/competitions-tab.png)
 
 ## Hoe om 'n kompetisie by te voeg
 
@@ -16,9 +16,9 @@ Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop e
 
 'n Blok en 'n Switserse kompetisie vra net waarvan elke wedstryd die **beste van** is, wat op 1 begin. Die beste van 3 word gewen deur wie ook al twee spelle wen. Dit mag 'n ewe getal wees, want in 'n blok of 'n Switserse kompetisie word 'n speler gerangskik volgens die spelle wat hulle wen, en 'n wedstryd van twee spelle wat een elk gedeel word, is 'n uitslag soos enige ander.
 
-![Die dialoog Voeg kompetisie by vir 'n blok](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![Die dialoog Voeg kompetisie by vir 'n blok](images/add-competition-block.png)
 
-![Die dialoog Voeg kompetisie by vir 'n Switserse kompetisie](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![Die dialoog Voeg kompetisie by vir 'n Switserse kompetisie](images/add-competition-swiss.png)
 
 ### 'n Uitskakeling
 
@@ -26,7 +26,7 @@ Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop e
 
 'n Rooster het soveel rondes as wat dit neem om sy plekke tot een te halveer, so 'n rooster van 8 plekke het drie rondes. Die dialoog vra waarvan elkeen die beste is, saam onder **Beste van**, in die volgorde waarin hulle gespeel word. Die laaste drie word genoem soos 'n rooster se rondes genoem word, **Kwarteindrondtes**, **Halfeindrondtes** en **Eindstryd**, en enige daarvoor by hul nommer, Ronde 1 eerste. Om meer plekke te kies, voeg rondes aan die begin van die rooster by, en om minder te kies, neem hulle aan die begin weg, sodat wat vir die eindstryd getik is steeds dié van die eindstryd is. Elke ronde is die beste van 'n onewe getal spelle, want 'n uitskakeling se wedstryd moet 'n wenner hê.
 
-![Die dialoog Voeg kompetisie by vir 'n uitskakeling van 4 plekke](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![Die dialoog Voeg kompetisie by vir 'n uitskakeling van 4 plekke](images/add-competition-knockout.png)
 
 ### Hoe om verskeie op 'n slag by te voeg
 

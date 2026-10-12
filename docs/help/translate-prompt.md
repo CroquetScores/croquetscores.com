@@ -20,7 +20,7 @@ Read the comment at the top of the language's catalogue first. It says how the l
 
 - **Markdown structure.** Headings, bold, lists, links, image lines and the `Next:` line at the foot of a page stay where they are and as they are. Only the words change.
 - **Links.** The target of a link stays as written, since the file it points at has the same name in every language. The text of the link is translated.
-- **Images.** The screenshots are of the English site, and there is one set of them. Do not copy them. Point each image at the English one with a relative path, so `images/players-tab.png` becomes `../../../english/tournament-managers/standard-tournament/images/players-tab.png` from a page that deep. Translate the alt text, since a reader who cannot see the picture reads that.
+- **Images.** Each language has screenshots of its own, of the site in that language, made by `npm run help:screenshots -- <language folder>` and kept beside its pages. Do not copy them. Point each image at `images/<name>.png`, as the English page does, whatever the language: the site shows a language the English picture where it has not made one of its own. Translate the alt text, since a reader who cannot see the picture reads that.
 - **Examples.** Names used as examples, such as "Andrew Hobbs (2)" and "Canterbury Croquet Club", stay as they are. They are examples of a name, not words of a language.
 - **Quoted words the site checks.** Where the help quotes a word the site itself tests for, such as a player name beginning "bye", keep the English word in the quotation, because that is the word the site refuses. Say in the sentence that it is the English word if the language needs that said.
 
@@ -33,6 +33,6 @@ Translate meaning, not words. The English is plain and direct, in short sentence
 ## Done when
 
 - Every `.md` under `docs/help/english` has a counterpart at the same path under every other language's folder.
-- Every link in every translated page resolves to a file that exists, and every image path resolves to a screenshot under `docs/help/english`.
+- Every link in every translated page resolves to a file that exists, and every image path names a screenshot under `docs/help/english`.
 - Every bolded word on a translated page is the word the language's catalogue shows for it, or English where the catalogue has none.
 - No English prose is left on a translated page other than the examples, the quoted words the site checks, and the names the catalogue keeps in English.

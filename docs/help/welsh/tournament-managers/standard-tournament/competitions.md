@@ -2,7 +2,7 @@
 
 Tab **Cystadlaethau** tudalen twrnamaint yw lle caiff ei gystadlaethau eu hychwanegu, eu rhoi mewn trefn, a'u rhoi o'r neilltu. Mae cystadleuaeth yn floc, yn gystadleuaeth taro allan neu'n gystadleuaeth Swisaidd. Mae gan bob un dudalen ei hun, lle rhoddir ei chwaraewyr i mewn a lle mae ei chanlyniadau'n mynd.
 
-![Y tab Cystadlaethau, â chystadlaethau o bob math ac un wedi'i harchifo](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![Y tab Cystadlaethau, â chystadlaethau o bob math ac un wedi'i harchifo](images/competitions-tab.png)
 
 ## Ychwanegu cystadleuaeth
 
@@ -16,9 +16,9 @@ Pwyswch **Ychwanegu cystadleuaeth**, uwchben y rhestr. Mae deialog yn agor dros 
 
 Nid yw bloc a chystadleuaeth Swisaidd ond yn gofyn beth yw pob gornest **y gorau o**, sy'n dechrau ar 1. Enillir y gorau o 3 gan bwy bynnag sy'n ennill dwy gêm. Gall fod yn eilrif, gan fod chwaraewr mewn bloc neu gystadleuaeth Swisaidd yn cael ei safle yn ôl y gemau y mae'n eu hennill, ac mae gornest o ddwy gêm wedi'u rhannu un yr un yn ganlyniad fel unrhyw un arall.
 
-![Y ddeialog Ychwanegu cystadleuaeth ar gyfer bloc](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![Y ddeialog Ychwanegu cystadleuaeth ar gyfer bloc](images/add-competition-block.png)
 
-![Y ddeialog Ychwanegu cystadleuaeth ar gyfer cystadleuaeth Swisaidd](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![Y ddeialog Ychwanegu cystadleuaeth ar gyfer cystadleuaeth Swisaidd](images/add-competition-swiss.png)
 
 ### Cystadleuaeth taro allan
 
@@ -26,7 +26,7 @@ Mae cystadleuaeth taro allan yn gofyn sawl **lle** sydd gan ei siart, a beth yw 
 
 Mae gan siart gymaint o rowndiau ag sydd ei angen i haneru ei lleoedd i un, felly mae gan siart o 8 lle dair rownd. Mae'r ddeialog yn gofyn beth yw pob un y gorau o, gyda'i gilydd o dan **Y gorau o**, yn y drefn y cânt eu chwarae. Enwir y tair olaf fel y sonnir am rowndiau siart, **Wyth olaf**, **Cynderfynol** a **Terfynol**, ac unrhyw rai o'u blaen wrth eu rhif, Rownd 1 yn gyntaf. Mae dewis mwy o leoedd yn ychwanegu rowndiau ar ddechrau'r siart, a dewis llai yn eu tynnu o'r dechrau, felly mae'r hyn a deipiwyd ar gyfer y rownd derfynol yn dal i fod yn eiddo iddi. Mae pob rownd y gorau o odrif o gemau, gan fod yn rhaid i ornest taro allan gael enillydd.
 
-![Y ddeialog Ychwanegu cystadleuaeth ar gyfer cystadleuaeth taro allan o 4 lle](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![Y ddeialog Ychwanegu cystadleuaeth ar gyfer cystadleuaeth taro allan o 4 lle](images/add-competition-knockout.png)
 
 ### Ychwanegu sawl un ar y tro
 

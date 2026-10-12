@@ -14,8 +14,11 @@ export interface HelpPage {
 export interface HelpLibrary {
   /** The page called `name` in the language with `tag`, if it has been written. */
   readonly page: (tag: string, name: string) => Promise<HelpPage | undefined>;
-  /** A picture, with the name {@link helpImageName} gives it. */
-  readonly image: (name: string) => Promise<Buffer | undefined>;
+  /**
+   * A picture, with the name {@link helpImageName} gives it, as the language
+   * with `tag` has made it: the screenshots show the site in that language.
+   */
+  readonly image: (tag: string, name: string) => Promise<Buffer | undefined>;
 }
 
 const imagesFolder = "images";
@@ -63,7 +66,7 @@ export const helpLibraryIn = (directory: string): HelpLibrary => ({
       ? undefined
       : (JSON.parse(found.toString("utf8")) as HelpPage);
   },
-  image: (name) => readIn(directory, [imagesFolder, name]),
+  image: (tag, name) => readIn(directory, [imagesFolder, tag, name]),
 });
 
 /** `library` as it would be if `tag` had not written the page called `name`. */
@@ -77,4 +80,17 @@ export const helpLibraryWithout = (
       ? Promise.resolve(undefined)
       : library.page(askedTag, askedName),
   image: library.image,
+});
+
+/** `library` as it would be if `tag` had not made the picture called `name`. */
+export const helpLibraryWithoutImage = (
+  library: HelpLibrary,
+  tag: string,
+  name: string,
+): HelpLibrary => ({
+  page: library.page,
+  image: (askedTag, askedName) =>
+    askedTag === tag && askedName === name
+      ? Promise.resolve(undefined)
+      : library.image(askedTag, askedName),
 });

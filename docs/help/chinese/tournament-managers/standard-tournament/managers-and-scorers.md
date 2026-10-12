@@ -6,15 +6,15 @@
 
 **管理员**标签页按被设为管理员的先后顺序列出谁在运作这个锦标赛，你自己的姓名标为你的。锦标赛在这里被分享，或者移交。
 
-![“管理员”标签页](../../../english/tournament-managers/standard-tournament/images/managers-tab.png)
+![“管理员”标签页](images/managers-tab.png)
 
 某人通过电子邮件地址被设为管理员。把地址输入列表上方的字段并按**添加管理员**。该地址必须属于一个已注册并已确认的账户；没有账户的地址会在字段下方被拒绝，网站对此不会多说。被设为管理员的记分员不再是记分员。
 
-![一个不能被设为管理员的地址](../../../english/tournament-managers/standard-tournament/images/managers-tab-refused.png)
+![一个不能被设为管理员的地址](images/managers-tab-refused.png)
 
 **移除**撤掉一位管理员。被移除的管理员不保留任何东西，所以“移除”会先询问；如果想要他们回来，用他们的地址再次设为管理员。锦标赛总有一位管理员，所以最后一位不提供“移除”。
 
-![移除管理员之前所问的问题](../../../english/tournament-managers/standard-tournament/images/remove-manager-asks.png)
+![移除管理员之前所问的问题](images/remove-manager-asks.png)
 
 你可以撤掉自己。这时问题会说明这意味着什么：你失去自己回到这个锦标赛的途径，页面上没有人能为你撤销。另一位管理员可以再次把你设为管理员。
 
@@ -22,11 +22,11 @@
 
 **记分员**标签页是记分员版的“管理员”标签页，用法相同：列表上方是电子邮件地址和**添加记分员**，每一位上有**移除**。
 
-![“记分员”标签页](../../../english/tournament-managers/standard-tournament/images/scorers-tab.png)
+![“记分员”标签页](images/scorers-tab.png)
 
 记分员在管理后台自己的列表中看到这个锦标赛，以**比分**取代“管理”，并且只向他们提供它的赛事：没有选手、备注、管理员或记分员。在赛事页面上他们只看到“比分”标签页，在那里他们可以像管理员一样录入、更正、归档和恢复比分。谁参加赛事由管理员决定。
 
-![记分员看到的锦标赛页面](../../../english/tournament-managers/standard-tournament/images/scorer-tournament-page.png)
+![记分员看到的锦标赛页面](images/scorer-tournament-page.png)
 
 管理员不会被设为记分员，因为管理员已经能做记分员能做的一切。锦标赛不需要记分员，所以每位记分员都可以移除，包括最后一位。
 

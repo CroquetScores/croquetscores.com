@@ -2,7 +2,7 @@
 
 Het tabblad **Competities** van de pagina van een toernooi is waar zijn competities worden toegevoegd, op volgorde gezet en opzijgezet. Een competitie is een poule, een knock-out of een Zwitsers systeem. Elke competitie heeft een eigen pagina, waar haar spelers worden geplaatst en haar scores worden ingevoerd.
 
-![Het tabblad Competities, met competities van elke soort en één gearchiveerde](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![Het tabblad Competities, met competities van elke soort en één gearchiveerde](images/competitions-tab.png)
 
 ## Een competitie toevoegen
 
@@ -16,9 +16,9 @@ Druk op **Competitie toevoegen**, boven de lijst. Er opent een dialoogvenster ov
 
 Een poule en een Zwitsers systeem vragen alleen waarvan elke wedstrijd de **Beste van** is, wat op 1 begint. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een poule of een Zwitsers systeem een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
 
-![Het dialoogvenster Competitie toevoegen voor een poule](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![Het dialoogvenster Competitie toevoegen voor een poule](images/add-competition-block.png)
 
-![Het dialoogvenster Competitie toevoegen voor een Zwitsers systeem](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![Het dialoogvenster Competitie toevoegen voor een Zwitsers systeem](images/add-competition-swiss.png)
 
 ### Een knock-out
 
@@ -26,7 +26,7 @@ Een knock-out vraagt hoeveel **Plaatsen** de loting heeft, en waarvan elke ronde
 
 Een loting heeft zoveel rondes als nodig is om de plaatsen te halveren tot één, dus een loting van 8 plaatsen heeft drie rondes. Het dialoogvenster vraagt waarvan elke ronde de beste is, samen onder **Beste van per ronde**, in de volgorde waarin ze worden gespeeld. De laatste drie heten zoals de rondes van een loting worden genoemd, **Kwartfinales**, **Halve finales** en **Finale**, en de rondes daarvóór bij hun nummer, Ronde 1 eerst. Meer plaatsen kiezen voegt rondes toe aan het begin van de loting, en minder kiezen haalt ze weg aan het begin, zodat wat voor de finale is getypt nog steeds van de finale is. Elke ronde is de beste van een oneven aantal partijen, omdat een wedstrijd in een knock-out een winnaar moet hebben.
 
-![Het dialoogvenster Competitie toevoegen voor een knock-out van 4 plaatsen](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![Het dialoogvenster Competitie toevoegen voor een knock-out van 4 plaatsen](images/add-competition-knockout.png)
 
 ### Meerdere tegelijk toevoegen
 

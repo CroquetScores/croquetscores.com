@@ -2,7 +2,7 @@
 
 Pulsa **Nuevo torneo**, encima de la lista de torneos de la administración. Está encima de la lista y no debajo para que una lista larga no lo saque de la pantalla de un teléfono.
 
-![El formulario de nuevo torneo, rellenado](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![El formulario de nuevo torneo, rellenado](images/new-tournament.png)
 
 El formulario pide todo aquello con lo que empieza un torneo. Un torneo de los corrientes está a un nombre, dos días y un país de distancia: todo lo demás se decide por ti y se puede cambiar.
 

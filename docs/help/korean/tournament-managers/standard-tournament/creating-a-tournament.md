@@ -2,7 +2,7 @@
 
 관리 화면의 대회 목록 위에 있는 **새 대회**를 눌러요. 목록이 길어져도 휴대폰 화면 밖으로 밀려나지 않도록, 목록 아래가 아니라 위에 있어요.
 
-![내용을 채운 새 대회 양식](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![내용을 채운 새 대회 양식](images/new-tournament.png)
 
 양식은 대회가 시작하는 데 필요한 모든 것을 물어요. 보통의 대회라면 이름, 두 날짜, 나라만 있으면 돼요. 나머지는 알아서 정해지고, 나중에 바꿀 수 있어요.
 

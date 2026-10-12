@@ -2,13 +2,13 @@
 
 Fliken **Resultat** på en tävlings sida är där dess partier skrivs in, rättas och läggs undan. En resultatförare ser bara den här fliken, och kan göra allt på den som en turneringsledare kan.
 
-![Ett blocks flik Resultat, med resultat i bruk, ett tillbakadraget resultat och ett arkiverat](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![Ett blocks flik Resultat, med resultat i bruk, ett tillbakadraget resultat och ett arkiverat](images/scores-tab.png)
 
 ## Skriva in ett resultat
 
 Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
 
-![Dialogrutan Lägg till resultat, ifylld](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![Dialogrutan Lägg till resultat, ifylld](images/add-score-dialog.png)
 
 Vinnaren och förloraren väljs var för sig bland tävlingens spelare som spelar, i tävlingens ordning. Ingen är vald från början, så att ett parti aldrig skrivs på en spelare du inte valde. I en utslagsturnering väljer valet av vinnare den som vinnaren är lottad mot som förlorare, där du kan se det och välja en annan.
 
@@ -18,7 +18,7 @@ Ett parti som vunnits på lika poäng, som när det stoppas av tiden och avgörs
 
 Tryck på **Lägg till parti**. Partiet läggs till, dialogrutan säger vilket, och fälten töms för nästa, eftersom resultaten kommer i en bunt läst från en tavla i slutet av en omgång. Tryck på **Avbryt** när alla är inlagda.
 
-![Dialogrutan efter att ett parti har lagts till](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![Dialogrutan efter att ett parti har lagts till](images/add-score-dialog-added.png)
 
 Det som inte godtas sägs under det fält det gäller: en vinnare eller förlorare som inte valts, ett resultat som inte skrivits eller inte börjar med en siffra, samma spelare som båda, en förlorares resultat markerat som vunnet, eller en vinnares resultat lägre än förlorarens. I en utslagsturnering godtas inte två spelare som inte är lottade att mötas, och det sägs ovanför fälten.
 
@@ -26,7 +26,7 @@ Det som inte godtas sägs under det fält det gäller: en vinnare eller förlora
 
 En utslagsturnering spelas först när varje plats i dess lottning har en spelare eller en frilott. Till dess förklarar Lägg till resultat varför resultat inte kan läggas till, i stället för att öppna dialogrutan.
 
-![Vad Lägg till resultat säger i en utslagsturnering vars lottning inte är fylld](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Vad Lägg till resultat säger i en utslagsturnering vars lottning inte är fylld](images/draw-not-filled.png)
 
 ## Listan över resultat
 
@@ -36,7 +36,7 @@ Resultaten i bruk listas i den ordning de skrevs in, äldst först, så att list
 
 **Redigera** öppnar samma dialogruta på det resultatet, med rubriken Redigera resultat, med dess spelare valda och dess resultat som de skrevs. Tryck på **Spara** för att spara rättelsen och stänga dialogrutan.
 
-![Dialogrutan Redigera resultat](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![Dialogrutan Redigera resultat](images/edit-score-dialog.png)
 
 En rättelse behåller utgången: ett vunnet parti förblir vunnet, och ett oavgjort parti förblir oavgjort. Ett parti vars utgång var fel arkiveras och skrivs in igen.
 

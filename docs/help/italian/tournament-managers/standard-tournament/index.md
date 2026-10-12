@@ -26,11 +26,11 @@ Tutto ciò che fa un organizzatore lo fa nella sezione di amministrazione del si
 
 La porta d'ingresso dell'amministrazione elenca i tornei in cui hai un ruolo, un anno alla volta.
 
-![L'elenco dei tornei nell'amministrazione](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![L'elenco dei tornei nell'amministrazione](images/admin-list.png)
 
 Premendo il nome di un torneo, o **Gestisci**, si apre la sua pagina. Tutto ciò che c'è da gestire sta in cinque schede sotto il suo nome: **Giocatori**, **Competizioni**, **Note**, **Organizzatori** e **Segnapunti**. La pagina si apre su Giocatori, perché i giocatori sono la prima cosa che si inserisce.
 
-![La pagina di un torneo, sulla scheda Competizioni](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![La pagina di un torneo, sulla scheda Competizioni](images/tournament-page.png)
 
 La barra verde scuro sotto l'intestazione serve a spostarsi tra le pagine. Porta al torneo, come **Torneo**, e a ciascuna delle sue competizioni per nome, così puoi passare dal torneo a una competizione e da una competizione all'altra senza tornare dalla scheda Competizioni. La pagina in cui ti trovi è segnata in nero.
 

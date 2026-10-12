@@ -2,7 +2,7 @@
 
 Het tabblad **Testmatches** van de pagina van een toernooi is waar de testmatches tussen zijn teams worden toegevoegd, gewijzigd, op volgorde gezet en opzijgezet. Een testmatch is een van de competities van het toernooi: een krachtmeting tussen twee teams, aangeduid met hun korte namen, als "AUS v NZ", gespeeld als een aantal wedstrijden tussen een speler van elk team. Elke testmatch heeft een eigen pagina, waar haar scores worden ingevoerd.
 
-![Het tabblad Testmatches, met drie testmatches in een groep](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![Het tabblad Testmatches, met drie testmatches in een groep](images/tests-tab.png)
 
 Elke testmatch noemt haar naam, de dagen waarop ze wordt gespeeld, hoeveel wedstrijden ze naar verwachting heeft en waarvan elke de beste is, als "6 wedstrijden, beste van 3", en haar groep als ze in een groep zit.
 
@@ -10,13 +10,13 @@ Elke testmatch noemt haar naam, de dagen waarop ze wordt gespeeld, hoeveel wedst
 
 Een testmatch gaat tussen twee teams in gebruik, dus zolang het toernooi er minder dan twee heeft, zegt het tabblad dat waar Testmatch toevoegen zou staan, en leidt het naar het tabblad Teams.
 
-![Het tabblad Testmatches voordat er twee teams zijn](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![Het tabblad Testmatches voordat er twee teams zijn](images/tests-tab-two-teams-needed.png)
 
 ## Een testmatch toevoegen
 
 Druk op **Testmatch toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina, dat leest in de volgorde waarin een testmatch wordt uitgesproken.
 
-![Het dialoogvenster Testmatch toevoegen, ingevuld](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![Het dialoogvenster Testmatch toevoegen, ingevuld](images/add-test-dialog.png)
 
 **Team A** en **Team B** worden elk gekozen uit de teams in gebruik van het toernooi, bij naam, in de volgorde van het toernooi. Om te beginnen is geen van beide gekozen, zodat een testmatch nooit wordt toegevoegd tussen teams die je niet hebt gekozen. Team B biedt elk team aan behalve het team dat als Team A is gekozen, omdat een team geen testmatch tegen zichzelf speelt. Team A is het eerste team: zijn spelers staan links op de pagina van de testmatch en op de openbare pagina. Een testmatch heeft geen eigen naam om te typen; ze wordt aangeduid met de korte namen van haar teams.
 
@@ -30,13 +30,13 @@ Druk op **Testmatch toevoegen**, boven de lijst. Er opent een dialoogvenster ove
 
 Druk op **Toevoegen**. De testmatch wordt toegevoegd, het dialoogvenster zegt welke bij haar naam, en de teams worden leeggemaakt voor de volgende, met de dagen, de verwachte wedstrijden, de beste-van en de groep zoals ze waren: testmatches worden per ronde toegevoegd, tussen teams die elkaar op dezelfde dag treffen, dus de volgende testmatch van de ronde is alleen haar twee teams. Druk op **Annuleren** zodra ze er allemaal in staan.
 
-![Het dialoogvenster nadat een testmatch is toegevoegd](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![Het dialoogvenster nadat een testmatch is toegevoegd](images/add-test-dialog-added.png)
 
 ## Een testmatch wijzigen
 
 **Bewerken** opent hetzelfde dialoogvenster op de testmatch, met de titel Testmatch bewerken, ingevuld zoals de testmatch is. Druk op **Opslaan** om de wijziging te bewaren.
 
-![Het dialoogvenster Testmatch bewerken](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![Het dialoogvenster Testmatch bewerken](images/edit-test-dialog.png)
 
 Een testmatch met partijen in gebruik houdt haar teams: het dialoogvenster toont ze, maar ze kunnen niet worden gewijzigd. De rest kan worden gewijzigd, binnen wat er is gespeeld: minder verwachte wedstrijden dan er al zijn begonnen, worden geweigerd, en zo ook een beste-van kleiner dan het grootste aantal partijen dat twee spelers hebben gespeeld.
 

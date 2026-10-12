@@ -4,7 +4,7 @@
 
 Nell'elenco dei tornei nell'amministrazione, premi **Modifica** sul torneo. Il modulo è quello che lo ha creato, già compilato com'è il torneo. Cambia ciò che non va e premi **Aggiorna torneo**.
 
-![Il modulo Modifica torneo](../../../english/tournament-managers/standard-tournament/images/edit-tournament.png)
+![Il modulo Modifica torneo](images/edit-tournament.png)
 
 Una volta che il torneo contiene un qualsiasi giocatore o una qualsiasi competizione, contando anche quelli archiviati, il suo formato non può più essere cambiato in uno a squadre, che ha squadre e test al loro posto.
 
@@ -16,12 +16,12 @@ Solo un organizzatore può modificare un torneo. A un segnapunti, o a chiunque a
 
 L'amministrazione elenca un anno alla volta, cominciando da quest'anno, dal torneo più recente. Gli anni in cui hai un torneo sono schede nella barra verde scuro, dal più recente; dove ce ne sono più di quanti stiano su un telefono, i più vecchi sono in un menu a discesa alla fine della riga. L'anno è nell'indirizzo, quindi a un anno si può puntare con un link.
 
-![L'elenco dei tornei](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![L'elenco dei tornei](images/admin-list.png)
 
 ## Archiviare un torneo
 
 **Archivia** su un torneo nell'elenco lo mette da parte. È ancora elencato, barrato e dopo i tornei in uso, ma offre solo **Ripristina**: la sua pagina nell'amministrazione, e le sue pagine pubbliche, sono chiuse finché non viene ripristinato. Archiviare non chiede prima, perché ripristinare lo annulla.
 
-![Un torneo archiviato nell'elenco](../../../english/tournament-managers/standard-tournament/images/admin-list-archived.png)
+![Un torneo archiviato nell'elenco](images/admin-list-archived.png)
 
 Avanti: [Che cosa vede il pubblico](what-the-public-sees.md).

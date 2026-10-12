@@ -30,11 +30,11 @@ Ko te **kapa** he taha, pēnei i a Ahitereiria, he ingoa tōna, he ingoa poto p�
 
 Ko te kuaha o mua o te Whakahaere ka rārangi i ngā whakataetae e whai wāhi ana koe, kotahi te tau i te wā kotahi.
 
-![Te rārangi whakataetae i te Whakahaere](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Te rārangi whakataetae i te Whakahaere](images/admin-list.png)
 
 Ina pēhia te ingoa o tētahi whakataetae, **Whakahaere** rānei, ka tuwhera tōna whārangi. Ko ngā mea katoa hei whakahaere kei roto i ngā ripa e rima i raro i tōna ingoa: **Ngā kapa**, **Ngā Test**, **Ngā tuhipoka**, **Ngā kaiwhakahaere** me **Ngā kaikaute**. Ka tuwhera te whārangi ki Ngā kapa, nā te mea ko ngā kapa te mea tuatahi ka whakaritea.
 
-![Te whārangi o tētahi whakataetae, i tōna ripa Ngā Test](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+![Te whārangi o tētahi whakataetae, i tōna ripa Ngā Test](images/tournament-page.png)
 
 Ko te pae kākāriki pōuri i raro i te pane hei neke i waenga i ngā whārangi. I te whārangi o te whakataetae me te whārangi o tētahi Test ka arahi ki te whakataetae, ko **Whakataetae**, me ia Test mā tōna ingoa. I te whārangi o tētahi kapa ka arahi ki te whakataetae me ia kapa mā tōna ingoa poto, nā te mea e whakauru kaitākaro ana te kaiwhakahaere i te whārangi o tētahi kapa, kapa ki te kapa. Ko te whārangi e noho ana koe ki runga kua tohua ki te mangu.
 

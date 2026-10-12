@@ -2,7 +2,7 @@
 
 A aba **Competições** da página de um torneio é onde as suas competições são adicionadas, colocadas em ordem e postas de lado. Uma competição é um grupo, uma eliminatória ou um suíço. Cada uma tem uma página própria, onde os seus jogadores são inscritos e os seus placares são inseridos.
 
-![A aba Competições, com competições de cada tipo e uma arquivada](../../../english/tournament-managers/standard-tournament/images/competitions-tab.png)
+![A aba Competições, com competições de cada tipo e uma arquivada](images/competitions-tab.png)
 
 ## Adicionar uma competição
 
@@ -16,9 +16,9 @@ Pressione **Adicionar competição**, acima da lista. Um diálogo abre sobre a p
 
 Um grupo e um suíço perguntam apenas de quantos jogos cada partida é **melhor de**, que começa em 1. Uma melhor de 3 é ganha por quem vence dois jogos. Pode ser um número par, porque em um grupo ou em um suíço um jogador é classificado pelos jogos que ganha, e uma partida de dois jogos dividida um a um é um resultado como qualquer outro.
 
-![O diálogo Adicionar competição para um grupo](../../../english/tournament-managers/standard-tournament/images/add-competition-block.png)
+![O diálogo Adicionar competição para um grupo](images/add-competition-block.png)
 
-![O diálogo Adicionar competição para um suíço](../../../english/tournament-managers/standard-tournament/images/add-competition-swiss.png)
+![O diálogo Adicionar competição para um suíço](images/add-competition-swiss.png)
 
 ### Uma eliminatória
 
@@ -26,7 +26,7 @@ Uma eliminatória pergunta quantas **vagas** a sua chave tem, e de quantos jogos
 
 Uma chave tem tantas rodadas quantas forem necessárias para reduzir as suas vagas pela metade até uma, então uma chave de 8 vagas tem três rodadas. O diálogo pergunta de quantos jogos é cada uma, todas juntas sob **Melhor de, por fase**, na ordem em que são disputadas. As três últimas são chamadas como se fala das rodadas de uma chave, **Quartas**, **Semifinais** e **Final**, e as anteriores pelo número, Rodada 1 primeiro. Escolher mais vagas acrescenta rodadas no início da chave, e escolher menos as tira do início, então o que foi digitado para a final continua sendo da final. Cada rodada é melhor de um número ímpar de jogos, porque a partida de uma eliminatória precisa ter um vencedor.
 
-![O diálogo Adicionar competição para uma eliminatória de 4 vagas](../../../english/tournament-managers/standard-tournament/images/add-competition-knockout.png)
+![O diálogo Adicionar competição para uma eliminatória de 4 vagas](images/add-competition-knockout.png)
 
 ### Adicionar várias de uma vez
 

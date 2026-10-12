@@ -2,7 +2,7 @@
 
 Naciśnij **Nowy turniej** nad listą turniejów w administracji. Przycisk jest nad listą, a nie pod nią, by długa lista nie zepchnęła go poza ekran telefonu.
 
-![Formularz nowego turnieju, wypełniony](../../../english/tournament-managers/standard-tournament/images/new-tournament.png)
+![Formularz nowego turnieju, wypełniony](images/new-tournament.png)
 
 Formularz pyta o wszystko, z czym turniej się zaczyna. Od turnieju zwyczajnego rodzaju dzielą cię nazwa, dwa dni i kraj: wszystko inne jest ustalone za ciebie i można to zmienić.
 

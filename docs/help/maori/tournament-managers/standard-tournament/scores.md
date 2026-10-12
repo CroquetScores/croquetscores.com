@@ -2,13 +2,13 @@
 
 Ko te ripa **Ngā hua** o te whārangi o tētahi tauwhāinga te wāhi e whakaurua ai, e whakatikaina ai, e whakatārewatia ai hoki ōna tākaro. Ka kite te kaikaute i tēnei ripa anake, ā, ka taea e ia ngā mea katoa i runga i a ia e taea ana e te kaiwhakahaere.
 
-![Te ripa Ngā hua o tētahi poraka, he hua e whakamahia ana, he hua kua unuhia me tētahi kua pūrangatia](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![Te ripa Ngā hua o tētahi poraka, he hua e whakamahia ana, he hua kua unuhia me tētahi kua pūrangatia](images/scores-tab.png)
 
 ## Te whakauru i tētahi hua
 
 Pēhia **Tāpiri hua**, i runga i te rārangi. Ka pānuitia te pouaka kōrero pēnei i te kī reo nui i tētahi hua: te toa me tana hua, kātahi ko "i toa i a", kātahi ko te hinga me tana hua.
 
-![Te pouaka kōrero Tāpiri hua, kua whakaurua ngā mea](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![Te pouaka kōrero Tāpiri hua, kua whakaurua ngā mea](images/add-score-dialog.png)
 
 Ka kōwhiria te toa me te hinga mai i ngā kaitākaro o te tauwhāinga e tākaro ana, i te raupapa o te tauwhāinga. Kāore tētahi e kōwhiria i te tīmatanga, kia kore ai e tuhia tētahi tākaro ki tētahi kaitākaro kāore i kōwhiria e koe. I tētahi whakawātea, ina kōwhiria te toa ka kōwhiria ko wai tana hoa i te tūtohi hei hinga, ki te wāhi e kite ai koe, e taea ai hoki te kōwhiri i tētahi atu.
 
@@ -18,7 +18,7 @@ Ko tētahi tākaro i toa i runga i ngā tohu ōrite, pēnei ina mutu i te wā, �
 
 Pēhia **Tāpiri tākaro**. Ka tāpiritia te tākaro, ka kī te pouaka kōrero ko tēhea, ā, ka whakakorea ngā āpure mō te mea e whai ake nei, nā te mea ka tae mai ngā hua ā-rōpū, he mea pānui i te papa i te mutunga o tētahi rauna. Pēhia **Whakakore** ina oti katoa te whakauru.
 
-![Te pouaka kōrero i muri i te tāpiri o tētahi tākaro](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![Te pouaka kōrero i muri i te tāpiri o tētahi tākaro](images/add-score-dialog-added.png)
 
 Ko te mea e whakahēngia ka kīia i raro i te āpure e pā ana ki a ia: he toa, he hinga rānei kāore i kōwhiria, he hua kāore i tuhia, kāore rānei i tīmata ki te tau takitahi, te kaitākaro kotahi hei tētahi me tētahi, te hua a te hinga kua tohua hei toa, te hua a te toa kei muri i ā te hinga rānei. I tētahi whakawātea, ka whakahēngia ngā kaitākaro e rua kāore i tūtohia kia tūtaki, ā, ka kīia i runga i ngā āpure.
 
@@ -26,7 +26,7 @@ Ko te mea e whakahēngia ka kīia i raro i te āpure e pā ana ki a ia: he toa, 
 
 Ka tākarohia anake tētahi whakawātea ina whai kaitākaro, Bye rānei ia tūnga o tōna tūtohi. Mō tēnei wā, ka whakamārama a Tāpiri hua he aha ai kāore e taea te tāpiri hua, kaua e whakatuwhera i te pouaka kōrero.
 
-![Te mea e kī ai a Tāpiri hua i tētahi whakawātea kāore anō kia kī tōna tūtohi](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Te mea e kī ai a Tāpiri hua i tētahi whakawātea kāore anō kia kī tōna tūtohi](images/draw-not-filled.png)
 
 ## Te rārangi hua
 
@@ -36,7 +36,7 @@ Ka rārangitia ngā hua e whakamahia ana i te raupapa i whakaurua ai, ko te tawh
 
 Ka whakatuwheratia e **Whakatika** te pouaka kōrero ōrite ki runga i taua hua, ko Whakatika hua tōna taitara, kua kōwhiria ōna kaitākaro, ā, kei a ia ōna hua pēnei i tā rātou i tuhi ai. Pēhia **Penapena** hei penapena i te whakatika, ā, hei kati i te pouaka kōrero.
 
-![Te pouaka kōrero Whakatika hua](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![Te pouaka kōrero Whakatika hua](images/edit-score-dialog.png)
 
 Ka mau tonu te hua i te whakatika: ka noho tonu te tākaro i toa hei toa, ā, ka noho tonu te tākaro taurite hei taurite. Ka pūrangatia te tākaro he hē te hua, ka whakauru anō.
 

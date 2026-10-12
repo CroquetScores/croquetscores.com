@@ -70,3 +70,27 @@ Feature: The help is read in the language the site is shown in
     Scenario: A picture on a page
       When the help page "tournament-managers/standard-tournament/scores" is opened
       Then every picture is found
+
+  Rule: A picture shows the site in the language of the page
+
+    The pictures are photographs of the admin and the public pages, and the
+    words in them are the site's, so each language has its own, made by
+    npm run help:screenshots. Where a language has not got one, the picture
+    is the English one, since a picture in the wrong language is better than
+    none.
+
+    Scenario: A picture made for the reader's language
+      Given the reader has chosen Welsh
+      When the help picture "tournament-managers/standard-tournament/players-tab.png" is opened
+      Then the picture is the Welsh one
+
+    Scenario: A picture not made for the reader's language
+      Given the reader has chosen Welsh
+      And the help has no Welsh picture "tournament-managers/standard-tournament/players-tab.png"
+      When the help picture "tournament-managers/standard-tournament/players-tab.png" is opened
+      Then the picture is the English one
+
+    Scenario: The picture varies by the language the reader has chosen
+      Given the reader has chosen Welsh
+      When the help picture "tournament-managers/standard-tournament/players-tab.png" is opened
+      Then the picture varies by the language the reader has chosen

@@ -26,11 +26,11 @@ Gwneir popeth a wna rheolwr yn adran weinyddu'r wefan. Caiff y tudalennau cyhoed
 
 Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran ynddynt, un flwyddyn ar y tro.
 
-![Y rhestr o dwrnameintiau yn yr adran weinyddu](../../../english/tournament-managers/standard-tournament/images/admin-list.png)
+![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
 Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn pum tab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr** a **Sgorwyr**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
 
-![Tudalen twrnamaint, ar ei thab Cystadlaethau](../../../english/tournament-managers/standard-tournament/images/tournament-page.png)
+![Tudalen twrnamaint, ar ei thab Cystadlaethau](images/tournament-page.png)
 
 Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Mae'n arwain at y twrnamaint, fel **Twrnamaint**, ac at bob un o'i gystadlaethau wrth ei henw, fel y gallwch fynd o'r twrnamaint i gystadleuaeth a rhwng cystadlaethau heb fynd yn ôl trwy'r tab Cystadlaethau. Mae'r dudalen rydych arni wedi'i marcio mewn du.
 

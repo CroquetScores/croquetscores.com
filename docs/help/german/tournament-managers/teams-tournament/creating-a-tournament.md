@@ -2,7 +2,7 @@
 
 Drücke **Neues Turnier** über der Liste der Turniere in der Verwaltung. Der Knopf steht über der Liste und nicht darunter, damit eine lange Liste ihn nicht vom Bildschirm eines Telefons schiebt.
 
-![Das Formular für ein neues Turnier, ausgefüllt für ein Mannschaftsturnier](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Das Formular für ein neues Turnier, ausgefüllt für ein Mannschaftsturnier](images/new-tournament.png)
 
 Das Formular fragt nach allem, womit ein Turnier beginnt. Am wichtigsten ist hier das **Format**, denn es macht ein Turnier zu einem Mannschaftsturnier.
 
@@ -39,7 +39,7 @@ Standard ist das einzige Format, das nicht von Mannschaften gespielt wird, und n
 
 Drücke **Turnier anlegen**. Du kommst auf die Seite des Turniers in der Verwaltung, geöffnet auf dem Reiter Mannschaften, und du bist sein erster Turnierleiter. Es wird in der Verwaltung unter dem Jahr aufgeführt, in dem es beginnt.
 
-![Ein eben angelegtes Turnier, noch ohne Mannschaften](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![Ein eben angelegtes Turnier, noch ohne Mannschaften](images/tournament-page-empty.png)
 
 Die öffentliche Adresse des Turniers wird aus seinem Jahr, seiner Sportart und seinem Namen gebildet, etwa `/2026/ac/trans-tasman-tests`. Es behält diese Adresse, wenn sein Name später korrigiert wird, damit ein schon verschickter Link es noch findet; sie ändert sich nur, wenn sich das Jahr seines Beginns oder seine Sportart ändert.
 

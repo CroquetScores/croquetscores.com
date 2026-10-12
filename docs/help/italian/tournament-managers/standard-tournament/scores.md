@@ -2,13 +2,13 @@
 
 La scheda **Punteggi** della pagina di una competizione è dove le sue partite vengono inserite, corrette e messe da parte. Un segnapunti vede solo questa scheda, e può farvi tutto ciò che può fare un organizzatore.
 
-![La scheda Punteggi di un girone, con punteggi in uso, un punteggio ritirato e uno archiviato](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![La scheda Punteggi di un girone, con punteggi in uso, un punteggio ritirato e uno archiviato](images/scores-tab.png)
 
 ## Inserire un punteggio
 
 Premi **Aggiungi punteggio**, sopra l'elenco. La finestra si legge come un risultato si dice a voce: il vincitore e il suo punteggio, poi "ha battuto", poi lo sconfitto e il suo punteggio.
 
-![La finestra Aggiungi punteggio, compilata](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![La finestra Aggiungi punteggio, compilata](images/add-score-dialog.png)
 
 Il vincitore e lo sconfitto si scelgono ciascuno tra i giocatori della competizione che stanno giocando, nell'ordine della competizione. All'inizio non è scelto nessuno, così una partita non viene mai segnata a un giocatore che non hai scelto. In un'eliminazione diretta, scegliere il vincitore sceglie come sconfitto chi è sorteggiato contro di lui, dove puoi vederlo e sceglierne un altro.
 
@@ -18,7 +18,7 @@ Una partita vinta a punti pari, come quando viene fermata per il tempo e decisa 
 
 Premi **Aggiungi partita**. La partita viene aggiunta, la finestra dice quale, e i campi si svuotano per la successiva, perché i punteggi arrivano a gruppi letti da un tabellone alla fine di un turno. Premi **Annulla** quando ci sono tutti.
 
-![La finestra dopo che una partita è stata aggiunta](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![La finestra dopo che una partita è stata aggiunta](images/add-score-dialog-added.png)
 
 Ciò che viene rifiutato è detto sotto il campo a cui si riferisce: un vincitore o uno sconfitto non scelto, un punteggio non scritto o che non comincia con una cifra, lo stesso giocatore in entrambi i ruoli, il punteggio di uno sconfitto segnato come vinto, o il punteggio di un vincitore inferiore a quello dello sconfitto. In un'eliminazione diretta, due giocatori che non sono sorteggiati per incontrarsi vengono rifiutati sopra i campi.
 
@@ -26,7 +26,7 @@ Ciò che viene rifiutato è detto sotto il campo a cui si riferisce: un vincitor
 
 Un'eliminazione diretta si gioca solo quando ogni posto del suo tabellone è occupato da un giocatore o da un bye. Fino ad allora, Aggiungi punteggio spiega perché non si possono aggiungere punteggi anziché aprire la finestra.
 
-![Che cosa dice Aggiungi punteggio in un'eliminazione diretta il cui tabellone non è completo](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![Che cosa dice Aggiungi punteggio in un'eliminazione diretta il cui tabellone non è completo](images/draw-not-filled.png)
 
 ## L'elenco dei punteggi
 
@@ -36,7 +36,7 @@ I punteggi in uso sono elencati nell'ordine in cui sono stati inseriti, dal più
 
 **Modifica** apre la stessa finestra su quel punteggio, intitolata Modifica punteggio, con i suoi giocatori scelti e i suoi punteggi come sono stati scritti. Premi **Salva** per conservare la correzione e chiudere la finestra.
 
-![La finestra Modifica punteggio](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![La finestra Modifica punteggio](images/edit-score-dialog.png)
 
 Una correzione mantiene il risultato: una partita vinta resta vinta, e una partita pareggiata resta pareggiata. Una partita il cui risultato era sbagliato si archivia e si inserisce di nuovo.
 

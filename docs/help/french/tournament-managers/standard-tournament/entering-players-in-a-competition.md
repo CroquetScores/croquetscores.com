@@ -4,7 +4,7 @@ La page d’une compétition s’ouvre depuis son nom sur l’onglet Compétitio
 
 Un joueur d’une compétition est l’un des joueurs du tournoi ; on l’inscrit donc en le choisissant plutôt qu’en le tapant. Tout ce qui le concerne, hormis sa place dans la compétition et ce qu’il y reporte, se modifie sur l’onglet Joueurs du tournoi.
 
-![L’onglet Joueurs d’une poule, avec quatre joueurs inscrits](../../../english/tournament-managers/standard-tournament/images/competition-players-tab.png)
+![L’onglet Joueurs d’une poule, avec quatre joueurs inscrits](images/competition-players-tab.png)
 
 ## Ajouter un joueur
 
@@ -16,13 +16,13 @@ Les joueurs archivés du tournoi ne sont pas proposés.
 
 Une élimination directe ne se joue qu’une fois chaque place de son tableau remplie, et les places que ses joueurs laissent libres sont remplies par des exempts. Dans une élimination directe, la liste déroulante propose donc **Exempt** en premier, avant les joueurs, et continue de le proposer quel que soit le nombre d’exempts ajoutés, puisqu’un tableau peut en avoir besoin de plusieurs.
 
-![Une élimination directe de quatre places avec trois joueurs et un exempt](../../../english/tournament-managers/standard-tournament/images/knockout-players.png)
+![Une élimination directe de quatre places avec trois joueurs et un exempt](images/knockout-players.png)
 
 Un exempt est placé dans le tableau comme un joueur : il peut être monté, descendu et retiré, mais il ne peut pas être déclaré forfait, puisqu’il ne joue rien. Un joueur inscrit dans une élimination directe dont toutes les places sont remplies est refusé, et l’onglet le dit sous la liste déroulante.
 
 L’ordre des joueurs d’une élimination directe est son tableau. Les deux premières places se rencontrent dans la première rencontre, les deux suivantes dans la suivante, et ainsi de suite. Mettez les joueurs dans l’ordre où le tableau doit se jouer avant de saisir le moindre résultat, car dès que l’élimination directe a une partie en service ses joueurs sont figés : personne ne peut être ajouté, retiré ni déplacé. Un joueur peut encore être déclaré forfait.
 
-![Une élimination directe une fois une partie saisie : personne ne peut être ajouté, déplacé ni retiré](../../../english/tournament-managers/standard-tournament/images/knockout-players-fixed.png)
+![Une élimination directe une fois une partie saisie : personne ne peut être ajouté, déplacé ni retiré](images/knockout-players-fixed.png)
 
 ## Ordre
 
@@ -32,7 +32,7 @@ Les joueurs sont listés dans l’ordre de la compétition, qui est l’ordre da
 
 **Report** dit ce qu’un joueur apporte dans une compétition d’un jeu qu’elle n’a pas comptabilisé : les résultats d’une étape antérieure, ou de parties jouées avant que la compétition ne soit comptabilisée ici. Il est proposé dans une poule et un système suisse, qui ont un classement où le compter, et pas dans une élimination directe.
 
-![La boîte de dialogue Report](../../../english/tournament-managers/standard-tournament/images/carry-forward-dialog.png)
+![La boîte de dialogue Report](images/carry-forward-dialog.png)
 
 La boîte de dialogue demande six nombres : matchs gagnés et perdus, parties gagnées et perdues, et arceaux pour et contre. Chaque nombre est facultatif. Un nombre laissé vide ne reporte rien, ce qui n’est pas la même chose que reporter 0, pour que celui qui le modifie plus tard le voie tel qu’il a été laissé. Appuyez sur **Enregistrer** pour garder les six.
 
@@ -40,7 +40,7 @@ La boîte de dialogue demande six nombres : matchs gagnés et perdus, parties g
 
 **Retirer** sort un joueur inscrit par erreur. Il reste l’un des joueurs du tournoi, et la liste déroulante le propose de nouveau, mais rien de sa place dans la compétition n’est gardé ; Retirer demande donc d’abord.
 
-![La question posée avant de retirer un joueur](../../../english/tournament-managers/standard-tournament/images/remove-player-asks.png)
+![La question posée avant de retirer un joueur](images/remove-player-asks.png)
 
 Un joueur qui a une partie en service dans la compétition ne peut pas être retiré, puisque ses parties seraient alors contre quelqu’un qui n’est plus là, et n’a pas de Retirer. Un joueur dont toutes les parties sont archivées peut l’être, et ses résultats archivés partent avec lui.
 
@@ -50,10 +50,10 @@ Un joueur qui a une partie en service dans la compétition ne peut pas être ret
 
 Déclarer forfait demande d’abord, puisque cela change l’issue de la compétition : les parties que le joueur n’a pas jouées sont décidées sans lui.
 
-![La question posée avant de déclarer un joueur forfait](../../../english/tournament-managers/standard-tournament/images/withdraw-player-asks.png)
+![La question posée avant de déclarer un joueur forfait](images/withdraw-player-asks.png)
 
 Un joueur forfait n’offre plus que **Annuler le forfait**, qui le remet parmi ceux qui jouent, après ceux qui sont restés, sans demander.
 
-![Une poule avec un joueur forfait](../../../english/tournament-managers/standard-tournament/images/competition-players-withdrawn.png)
+![Une poule avec un joueur forfait](images/competition-players-withdrawn.png)
 
 Suite : [Résultats](scores.md).

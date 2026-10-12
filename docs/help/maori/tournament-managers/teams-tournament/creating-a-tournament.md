@@ -2,7 +2,7 @@
 
 Pēhia **Whakataetae hou** i runga i te rārangi whakataetae i te Whakahaere. Kei runga i te rārangi, kaua kei raro, kia kore ai e tīpakohia atu i te mata o te waea pūkoro e tētahi rārangi roa.
 
-![Te puka whakataetae hou, kua whakaurua ngā mea mō tētahi whakataetae ā-kapa](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![Te puka whakataetae hou, kua whakaurua ngā mea mō tētahi whakataetae ā-kapa](images/new-tournament.png)
 
 Ka pātai te puka mō ngā mea katoa e tīmata ai tētahi whakataetae. Ko te mea nui rawa i konei ko te **Hōputu**, ko ia hoki te mea e meinga ai tētahi whakataetae hei whakataetae ā-kapa.
 
@@ -39,7 +39,7 @@ Ko Paerewa te hōputu kotahi kāore e tākarohia ana e ngā kapa, ā, ehara i te
 
 Pēhia **Waihanga whakataetae**. Ka kawea koe ki te whārangi o te whakataetae i te Whakahaere, kua tuwhera ki tōna ripa Ngā kapa, ā, ko koe tōna kaiwhakahaere tuatahi. Ka rārangitia i te Whakahaere i raro i te tau e tīmata ai.
 
-![He whakataetae katahi anō ka waihangatia, kāore anō he kapa](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![He whakataetae katahi anō ka waihangatia, kāore anō he kapa](images/tournament-page-empty.png)
 
 Ka hangaia te wāhitau tūmatanui o te whakataetae mai i tōna tau, tōna hākinakina me tōna ingoa, pēnei i te `/2026/ac/trans-tasman-tests`. Ka mau tonu i a ia taua wāhitau ina whakatikaina tōna ingoa i muri mai, kia kitea tonu ai e te hononga kua tukuna kē; ka neke anake ina rerekē te tau e tīmata ai, tōna hākinakina rānei.
 

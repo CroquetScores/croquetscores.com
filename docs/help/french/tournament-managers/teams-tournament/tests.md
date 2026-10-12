@@ -2,7 +2,7 @@
 
 L’onglet **Tests** de la page d’un tournoi est l’endroit où les tests entre ses équipes sont ajoutés, modifiés, mis en ordre et mis de côté. Un test est l’une des compétitions du tournoi : une confrontation entre deux équipes, désignée par leurs noms courts, comme « AUS v NZ », jouée sous forme d’un certain nombre de matchs entre un joueur de chaque équipe. Chaque test a sa propre page, où ses résultats sont saisis.
 
-![L’onglet Tests, avec trois tests dans un groupe](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![L’onglet Tests, avec trois tests dans un groupe](images/tests-tab.png)
 
 Chaque test dit son nom, les jours où il se joue, le nombre de matchs qu’il doit avoir et au meilleur de combien de parties se joue chacun, comme « 6 matchs, au meilleur des 3 », et son groupe quand il en a un.
 
@@ -10,13 +10,13 @@ Chaque test dit son nom, les jours où il se joue, le nombre de matchs qu’il d
 
 Un test oppose deux équipes en service ; tant que le tournoi en a moins de deux, l’onglet le dit là où serait Ajouter un test, et mène à l’onglet Équipes.
 
-![L’onglet Tests avant qu’il y ait deux équipes](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![L’onglet Tests avant qu’il y ait deux équipes](images/tests-tab-two-teams-needed.png)
 
 ## Ajouter un test
 
 Appuyez sur **Ajouter un test**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page, dans l’ordre où l’on annonce un test à voix haute.
 
-![La boîte de dialogue Ajouter un test, remplie](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![La boîte de dialogue Ajouter un test, remplie](images/add-test-dialog.png)
 
 **Équipe A** et **Équipe B** se choisissent chacune parmi les équipes en service du tournoi, par leur nom, dans l’ordre du tournoi. Aucune n’est choisie au départ, pour qu’un test ne soit jamais ajouté entre des équipes que vous n’avez pas choisies. Équipe B propose chaque équipe sauf celle choisie comme Équipe A, puisqu’une équipe ne joue pas de test contre elle-même. Équipe A est la première équipe : ses joueurs sont à gauche sur la page du test et sur la page publique. Un test n’a pas de nom à taper ; il est désigné par les noms courts de ses équipes.
 
@@ -30,13 +30,13 @@ Appuyez sur **Ajouter un test**, au-dessus de la liste. Une boîte de dialogue s
 
 Appuyez sur **Ajouter**. Le test est ajouté, la boîte de dialogue dit lequel par son nom, et les équipes se vident pour le suivant, les jours, les matchs prévus, le nombre de parties et le groupe restant tels quels : les tests s’ajoutent par tour, entre des équipes qui se rencontrent le même jour, de sorte que le test suivant du tour n’est que ses deux équipes. Appuyez sur **Annuler** une fois qu’ils sont tous saisis.
 
-![La boîte de dialogue après l’ajout d’un test](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![La boîte de dialogue après l’ajout d’un test](images/add-test-dialog-added.png)
 
 ## Modifier un test
 
 **Modifier** ouvre la même boîte de dialogue sur le test, intitulée Modifier le test, remplie telle que le test est. Appuyez sur **Enregistrer** pour garder la modification.
 
-![La boîte de dialogue Modifier le test](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![La boîte de dialogue Modifier le test](images/edit-test-dialog.png)
 
 Un test qui a des parties en service garde ses équipes : la boîte de dialogue les montre, mais elles ne peuvent pas être changées. Le reste peut l’être, dans les limites de ce qui a été joué : des matchs prévus moins nombreux que les matchs déjà commencés sont refusés, de même qu’un nombre de parties inférieur au plus grand nombre de parties que deux joueurs ont déjà jouées.
 

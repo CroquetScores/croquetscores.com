@@ -2,7 +2,7 @@
 
 Ka whakatuwheratia te whārangi o tētahi Test mai i tōna ingoa i te ripa Ngā Test, mai i te pae kākāriki pōuri rānei. Ko ngā ingoa katoa o ōna kapa tōna pane, pēnei i a "Australia v New Zealand", me te maha o ngā tukinga e tūmanakohia ana mōna me te pai rawa o te aha o ia mea i raro. Ko ōna hua te whārangi, kāore he ripa. He whārangi ōrite tā te kaiwhakahaere me te kaikaute e kite ai, nā te mea ka taea e te kaikaute ngā mea katoa ki tētahi hua e taea ana e te kaiwhakahaere.
 
-![Te whārangi o tētahi Test, me ōna hua](../../../english/tournament-managers/teams-tournament/images/test-page-panel.png)
+![Te whārangi o tētahi Test, me ōna hua](images/test-page-panel.png)
 
 ## Te whakatakoto o ngā hua
 
@@ -12,7 +12,7 @@ Ka whakatakotoria ngā hua mā te kapa, kaua mā te toa, ki tētahi tēpu e whai
 
 Pēhia **Tāpiri hua**, i runga i te rārangi. Ka pānuitia te pouaka kōrero pēnei i te kī reo nui i tētahi hua: te toa me tana hua, kātahi ko "i toa i a", kātahi ko te hinga me tana hua.
 
-![Te pouaka kōrero Tāpiri hua i te whārangi o tētahi Test](../../../english/tournament-managers/teams-tournament/images/add-test-score-dialog.png)
+![Te pouaka kōrero Tāpiri hua i te whārangi o tētahi Test](images/add-test-score-dialog.png)
 
 Ka kōwhiria te toa mai i ngā kaitākaro o ngā kapa e rua e whakamahia ana, i raro i te ingoa o ia kapa, ko ngā kaitākaro o te kapa tuatahi i te tuatahi, ā, ko ō ia kapa i te raupapa o te kapa. Kāore tētahi e kōwhiria i te tīmatanga. Ina kōwhiria te toa, ka tukuna te hinga mai i te kapa tērā atu anake, nā te mea ehara te tākaro i waenga i ngā kaitākaro e rua o te kapa kotahi i te tākaro i waenga i ngā kapa. Kāore te kaitākaro kua pūrangatia e tukuna.
 

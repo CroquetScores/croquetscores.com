@@ -2,7 +2,7 @@
 
 La page d’une équipe s’ouvre depuis son nom, ou son **Voir**, sur l’onglet Équipes. Elle est coiffée du nom de l’équipe avec son nom court entre parenthèses, et de son drapeau, pour qu’un gestionnaire arrivé sur la mauvaise équipe s’en aperçoive aussitôt. Elle n’a qu’une chose à montrer, les joueurs de l’équipe ; la liste est donc la page.
 
-![La page d’une équipe, avec ses joueurs et un archivé](../../../english/tournament-managers/teams-tournament/images/team-page.png)
+![La page d’une équipe, avec ses joueurs et un archivé](images/team-page.png)
 
 La barre vert foncé sur la page d’une équipe mène au tournoi et à chaque équipe en service par son nom court, pour que les joueurs s’inscrivent équipe par équipe sans repasser par l’onglet Équipes.
 
@@ -12,7 +12,7 @@ Un joueur d’une équipe appartient à cette seule équipe, la représente, et 
 
 Appuyez sur **Ajouter un joueur**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page.
 
-![La boîte de dialogue Ajouter un joueur sur la page d’une équipe](../../../english/tournament-managers/teams-tournament/images/add-team-player-dialog.png)
+![La boîte de dialogue Ajouter un joueur sur la page d’une équipe](images/add-team-player-dialog.png)
 
 **Nom** est obligatoire, entre 3 et 254 caractères. Deux joueurs d’une même équipe ne peuvent pas porter le même nom, quelles qu’en soient les majuscules ; un joueur d’une autre équipe peut le partager.
 

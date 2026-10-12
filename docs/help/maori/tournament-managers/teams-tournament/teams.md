@@ -2,13 +2,13 @@
 
 Ko te ripa **Ngā kapa** o te whārangi o tētahi whakataetae te wāhi e tāpiria ai, e whakatikaina ai, e whakaraupapatia ai, e whakatārewatia ai hoki ōna kapa. Ko te ripa tērā e tuwhera ai te whārangi, nā te mea ko ngā kapa te mea tuatahi ka whakaritea. He Test i waenga i ngā kapa e rua, nō reira me rua neke atu i mua i te tāpiri i tētahi Test.
 
-![Te ripa Ngā kapa, e toru ngā kapa me tētahi kua pūrangatia](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![Te ripa Ngā kapa, e toru ngā kapa me tētahi kua pūrangatia](images/teams-tab.png)
 
 ## Te tāpiri i tētahi kapa
 
 Pēhia **Tāpiri kapa**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi.
 
-![Te pouaka kōrero Tāpiri kapa, kua whakaurua ngā mea](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![Te pouaka kōrero Tāpiri kapa, kua whakaurua ngā mea](images/add-team-dialog.png)
 
 E hiahiatia ana te **Ingoa**: te ingoa katoa o te kapa, pēnei i a "Australia", ko ia te pane o te whārangi o te kapa me ngā tēpu o ngā whārangi tūmatanui. Kāore e taea e ngā kapa e rua o tētahi whakataetae te whai i te ingoa kotahi.
 
@@ -18,13 +18,13 @@ Ko **Haki** te haki e whakaaturia ana i te taha o te ingoa o te kapa ki ngā wā
 
 Pēhia **Tāpiri**. Ka tāpiritia te kapa, ka kī te pouaka kōrero i tērā, ā, ka whakakorea ōna āpure mō te kapa e whai ake nei. Tāpiria te rārangi katoa pēnei, kātahi ka pēhi i **Whakakore** hei kati i te pouaka kōrero. Kāore a Whakakore e penapena i tētahi mea kāore anō kia tāpiritia.
 
-![Te pouaka kōrero i muri i te tāpiri o tētahi kapa](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![Te pouaka kōrero i muri i te tāpiri o tētahi kapa](images/add-team-dialog-added.png)
 
 ## Te whakatika i tētahi kapa
 
 Pēhia te **Whakatika** a tētahi kapa hei whakatuwhera i te pouaka kōrero ōrite ki runga i taua kapa, ko Whakatika kapa tōna taitara. Whakarerekētia te mea e hē ana, ka pēhi i **Penapena**. Ka kīia te kapa kua rerekē tōna ingoa poto mā te mea hou ki ngā wāhi katoa, nō reira ka whakaingoatia anōtia ōna Test i a ia.
 
-![Te pouaka kōrero Whakatika kapa](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![Te pouaka kōrero Whakatika kapa](images/edit-team-dialog.png)
 
 ## Te raupapa
 

@@ -2,7 +2,7 @@
 
 Tab **Testau** tudalen twrnamaint yw lle caiff y testau rhwng ei dimau eu hychwanegu, eu newid, eu rhoi mewn trefn, a'u rhoi o'r neilltu. Mae test yn un o gystadlaethau'r twrnamaint: gornest rhwng dau dîm, a elwir wrth eu henwau byr, fel "AUS v NZ", a chwaraeir fel nifer o ornestau rhwng chwaraewr o bob tîm. Mae gan bob test dudalen ei hun, lle mae ei ganlyniadau'n mynd.
 
-![Y tab Testau, â thri thest mewn grŵp](../../../english/tournament-managers/teams-tournament/images/tests-tab.png)
+![Y tab Testau, â thri thest mewn grŵp](images/tests-tab.png)
 
 Mae pob test yn dweud ei enw, y dyddiau y caiff ei chwarae, sawl gornest y disgwylir iddo ei chael a beth yw pob un y gorau o, fel "6 gornest, y gorau o 3", a'i grŵp lle mae mewn un.
 
@@ -10,13 +10,13 @@ Mae pob test yn dweud ei enw, y dyddiau y caiff ei chwarae, sawl gornest y disgw
 
 Mae test rhwng dau dîm sydd yn eu lle, felly tra bo gan y twrnamaint lai na dau mae'r tab yn dweud hynny lle byddai Ychwanegu test, ac yn arwain at y tab Timau.
 
-![Y tab Testau cyn bod dau dîm](../../../english/tournament-managers/teams-tournament/images/tests-tab-two-teams-needed.png)
+![Y tab Testau cyn bod dau dîm](images/tests-tab-two-teams-needed.png)
 
 ## Ychwanegu test
 
 Pwyswch **Ychwanegu test**, uwchben y rhestr. Mae deialog yn agor dros y dudalen, yn darllen yn y drefn y dywedir test ar lafar.
 
-![Y ddeialog Ychwanegu test, wedi'i llenwi](../../../english/tournament-managers/teams-tournament/images/add-test-dialog.png)
+![Y ddeialog Ychwanegu test, wedi'i llenwi](images/add-test-dialog.png)
 
 Dewisir **Tîm A** a **Tîm B**, bob un, o dimau'r twrnamaint sydd yn eu lle, wrth eu henw, yn nhrefn y twrnamaint. Ni ddewisir yr un o'r ddau i ddechrau, fel na ychwanegir test byth rhwng timau na ddewisasoch. Mae Tîm B yn cynnig pob tîm ac eithrio'r un a ddewiswyd fel Tîm A, gan nad yw tîm yn chwarae test yn erbyn ei hun. Tîm A yw'r tîm cyntaf: mae ei chwaraewyr ar y chwith ar dudalen y test a'r dudalen gyhoeddus. Nid oes gan test enw ei hun i'w deipio; caiff ei alw wrth enwau byr ei dimau.
 
@@ -30,13 +30,13 @@ Dewisir **Tîm A** a **Tîm B**, bob un, o dimau'r twrnamaint sydd yn eu lle, wr
 
 Pwyswch **Ychwanegu**. Caiff y test ei ychwanegu, mae'r ddeialog yn dweud pa un wrth ei enw, a chaiff y timau eu gwagio ar gyfer y nesaf, â'r dyddiau, y gornestau disgwyliedig, y gorau o a'r grŵp wedi'u gadael fel yr oeddent: ychwanegir testau rownd ar y tro, rhwng timau sy'n cwrdd ar yr un diwrnod, felly nid yw test nesaf y rownd ond ei ddau dîm yn unig. Pwyswch **Canslo** unwaith y bydd pob un i mewn.
 
-![Y ddeialog ar ôl i test gael ei ychwanegu](../../../english/tournament-managers/teams-tournament/images/add-test-dialog-added.png)
+![Y ddeialog ar ôl i test gael ei ychwanegu](images/add-test-dialog-added.png)
 
 ## Newid test
 
 Mae **Golygu** yn agor yr un ddeialog ar y test, dan y teitl Golygu test, wedi'i dechrau fel y mae'r test. Pwyswch **Cadw** i gadw'r newid.
 
-![Y ddeialog Golygu test](../../../english/tournament-managers/teams-tournament/images/edit-test-dialog.png)
+![Y ddeialog Golygu test](images/edit-test-dialog.png)
 
 Mae test â gemau yn eu lle yn cadw ei dimau: mae'r ddeialog yn eu dangos ond ni ellir eu newid. Gellir newid y gweddill, o fewn yr hyn a chwaraewyd: gwrthodir gornestau disgwyliedig sy'n llai na'r gornestau sydd eisoes wedi dechrau, ac felly hefyd y gorau o sy'n llai na'r nifer fwyaf o gemau y mae unrhyw ddau chwaraewr wedi'u chwarae.
 

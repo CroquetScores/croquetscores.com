@@ -2,13 +2,13 @@
 
 锦标赛页面的**队伍**标签页是添加、更正、排序和搁置队伍的地方。它是页面打开时所停的标签页，因为队伍是最先设置的东西。对抗赛在两支队伍之间进行，所以在添加任何对抗赛之前至少需要两支队伍。
 
-![“队伍”标签页，有三支队伍，其中一支已归档](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![“队伍”标签页，有三支队伍，其中一支已归档](images/teams-tab.png)
 
 ## 添加队伍
 
 按列表上方的**添加队伍**。一个对话框覆在页面上打开。
 
-![填好的“添加队伍”对话框](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![填好的“添加队伍”对话框](images/add-team-dialog.png)
 
 **名称**是必填的：队伍的全名，如“Australia”，它是队伍页面和公开页面各表格的标题。同一个锦标赛中的两支队伍不能同名。
 
@@ -18,13 +18,13 @@
 
 按**添加**。队伍被添加，对话框说明了这一点，各字段清空以便录入下一支。用这种方式添加完整份名单，然后按**取消**关闭对话框。取消不会保存任何尚未添加的内容。
 
-![添加一支队伍之后的对话框](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![添加一支队伍之后的对话框](images/add-team-dialog-added.png)
 
 ## 更正队伍
 
 按队伍的**编辑**，在该队伍上打开同一个对话框，标题为“编辑队伍”。改正错误之处并按**保存**。简称改变的队伍处处都以新简称称呼，所以它的对抗赛也随之改名。
 
-![“编辑队伍”对话框](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![“编辑队伍”对话框](images/edit-team-dialog.png)
 
 ## 顺序
 

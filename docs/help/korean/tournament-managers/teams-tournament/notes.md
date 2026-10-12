@@ -2,13 +2,13 @@
 
 대회 페이지의 **공지** 탭은 대회가 진행되는 동안 선수들이 알아야 할 것을 운영자가 쓰는 곳이에요. 경기 순서, 코트 변경, 점심 시간 같은 것이에요. 읽는 사람은 대회의 공개 공지 페이지에서 공지를 보고, 아직 읽지 않은 공지는 거기에 빨간 별표로 표시돼요. 그 별표는 열어 볼 때까지 대회의 모든 페이지에서 공지 섹션에도 표시돼요.
 
-![공지 탭](../../../english/tournament-managers/teams-tournament/images/notes-tab.png)
+![공지 탭](images/notes-tab.png)
 
 ## 공지 쓰기
 
 목록 위의 **공지 추가**를 눌러요. 공지는 길게 쓰는 것이라 자리가 필요하기 때문에, 목록 자리에 패널이 들어와요.
 
-![작성 탭이 열린 공지 패널](../../../english/tournament-managers/teams-tournament/images/note-panel.png)
+![작성 탭이 열린 공지 패널](images/note-panel.png)
 
 **제목**은 꼭 써야 하고, 공지가 목록에 오르는 이름이에요. 일반 텍스트예요.
 
@@ -16,7 +16,7 @@
 
 **미리보기**는 읽는 사람이 공지 페이지에서 보게 될 모습을 보여 줘요.
 
-![미리보기 탭이 열린 공지 패널](../../../english/tournament-managers/teams-tournament/images/note-preview.png)
+![미리보기 탭이 열린 공지 패널](images/note-preview.png)
 
 **추가**를 눌러요. 공지가 저장되고, 목록이 그 공지를 맨 위에 두고 돌아오며, 공개 공지 페이지에 바로 올라가요.
 
@@ -28,6 +28,6 @@
 
 더 이상 해당되지 않는 공지는 삭제해요. 삭제한 공지는 영영 사라지기 때문에, **삭제**는 먼저 물어요.
 
-![공지를 삭제하기 전에 묻는 질문](../../../english/tournament-managers/teams-tournament/images/delete-note-asks.png)
+![공지를 삭제하기 전에 묻는 질문](images/delete-note-asks.png)
 
 다음: [운영자와 기록원](managers-and-scorers.md).

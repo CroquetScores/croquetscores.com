@@ -30,11 +30,11 @@ Alles wat 'n bestuurder doen, word in die administrasie-afdeling van die werf ge
 
 Die voordeur van die administrasie lys die toernooie waarby jy betrokke is, een jaar op 'n slag.
 
-![Die lys toernooie in die administrasie](../../../english/tournament-managers/teams-tournament/images/admin-list.png)
+![Die lys toernooie in die administrasie](images/admin-list.png)
 
 Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in vyf oortjies onder sy naam: **Spanne**, **Toetse**, **Notas**, **Bestuurders** en **Telers**. Die bladsy maak op Spanne oop, want die spanne is die eerste ding wat opgestel word.
 
-!['n Toernooi se bladsy, op sy Toetse-oortjie](../../../english/tournament-managers/teams-tournament/images/tournament-page.png)
+!['n Toernooi se bladsy, op sy Toetse-oortjie](images/tournament-page.png)
 
 Die donkergroen balk onder die kopstuk is om tussen bladsye te beweeg. Op die toernooi se bladsy en op 'n toets se bladsy lei dit na die toernooi, as **Toernooi**, en na elke toets by sy naam. Op 'n span se bladsy lei dit eerder na die toernooi en na elke span by sy kortnaam, want 'n bestuurder op een span se bladsy is besig om spelers span vir span in te skryf. Die bladsy waarop jy is, word in swart gemerk.
 

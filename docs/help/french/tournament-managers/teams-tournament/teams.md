@@ -2,13 +2,13 @@
 
 L’onglet **Équipes** de la page d’un tournoi est l’endroit où ses équipes sont ajoutées, corrigées, mises en ordre et mises de côté. C’est l’onglet sur lequel la page s’ouvre, puisque les équipes sont la première chose que l’on constitue. Un test oppose deux équipes ; il en faut donc au moins deux avant de pouvoir ajouter un test.
 
-![L’onglet Équipes, avec trois équipes et une archivée](../../../english/tournament-managers/teams-tournament/images/teams-tab.png)
+![L’onglet Équipes, avec trois équipes et une archivée](images/teams-tab.png)
 
 ## Ajouter une équipe
 
 Appuyez sur **Ajouter une équipe**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page.
 
-![La boîte de dialogue Ajouter une équipe, remplie](../../../english/tournament-managers/teams-tournament/images/add-team-dialog.png)
+![La boîte de dialogue Ajouter une équipe, remplie](images/add-team-dialog.png)
 
 **Nom** est obligatoire : le nom complet de l’équipe, comme « Australia », qui coiffe la page de l’équipe et les tables des pages publiques. Deux équipes d’un même tournoi ne peuvent pas porter le même nom.
 
@@ -18,13 +18,13 @@ Appuyez sur **Ajouter une équipe**, au-dessus de la liste. Une boîte de dialog
 
 Appuyez sur **Ajouter**. L’équipe est ajoutée, la boîte de dialogue le dit, et ses champs se vident pour la suivante. Ajoutez toute la liste ainsi, puis appuyez sur **Annuler** pour fermer la boîte de dialogue. Annuler ne garde rien qui n’ait déjà été ajouté.
 
-![La boîte de dialogue après l’ajout d’une équipe](../../../english/tournament-managers/teams-tournament/images/add-team-dialog-added.png)
+![La boîte de dialogue après l’ajout d’une équipe](images/add-team-dialog-added.png)
 
 ## Corriger une équipe
 
 Appuyez sur le **Modifier** d’une équipe pour ouvrir la même boîte de dialogue sur cette équipe, intitulée Modifier l’équipe. Changez ce qui est faux et appuyez sur **Enregistrer**. Une équipe dont le nom court change est désignée par le nouveau partout ; ses tests sont donc renommés avec elle.
 
-![La boîte de dialogue Modifier l’équipe](../../../english/tournament-managers/teams-tournament/images/edit-team-dialog.png)
+![La boîte de dialogue Modifier l’équipe](images/edit-team-dialog.png)
 
 ## Ordre
 

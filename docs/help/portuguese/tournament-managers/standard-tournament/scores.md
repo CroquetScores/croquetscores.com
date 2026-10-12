@@ -2,13 +2,13 @@
 
 A aba **Placares** da página de uma competição é onde os seus jogos são inseridos, corrigidos e postos de lado. Um apontador vê apenas esta aba, e pode fazer nela tudo o que um organizador pode.
 
-![A aba Placares de um grupo, com placares em uso, um anulado e um arquivado](../../../english/tournament-managers/standard-tournament/images/scores-tab.png)
+![A aba Placares de um grupo, com placares em uso, um anulado e um arquivado](images/scores-tab.png)
 
 ## Inserir um placar
 
 Pressione **Adicionar placar**, acima da lista. O diálogo se lê como um resultado se diz em voz alta: o vencedor e o seu placar, depois "venceu", depois o perdedor e o seu placar.
 
-![O diálogo Adicionar placar, preenchido](../../../english/tournament-managers/standard-tournament/images/add-score-dialog.png)
+![O diálogo Adicionar placar, preenchido](images/add-score-dialog.png)
 
 O vencedor e o perdedor são escolhidos, cada um, entre os jogadores da competição que estão jogando, na ordem da competição. Ninguém vem escolhido de início, para que um jogo nunca seja registrado contra um jogador que você não escolheu. Em uma eliminatória, escolher o vencedor escolhe como perdedor quem está sorteado para enfrentá-lo, onde você pode ver e escolher outro.
 
@@ -18,7 +18,7 @@ Um jogo ganho com pontos iguais, como quando é interrompido pelo tempo e decidi
 
 Pressione **Adicionar jogo**. O jogo é adicionado, o diálogo diz qual, e os campos são esvaziados para o próximo, porque os placares chegam em lote, lidos de um quadro no fim de uma rodada. Pressione **Cancelar** quando todos estiverem inseridos.
 
-![O diálogo depois que um jogo é adicionado](../../../english/tournament-managers/standard-tournament/images/add-score-dialog-added.png)
+![O diálogo depois que um jogo é adicionado](images/add-score-dialog-added.png)
 
 O que é recusado é dito abaixo do campo a que se refere: um vencedor ou perdedor não escolhido, um placar não digitado ou que não começa com um dígito, o mesmo jogador nos dois lados, um placar de perdedor marcado como ganho, ou um placar de vencedor menor que o do perdedor. Em uma eliminatória, dois jogadores que não estão sorteados para se enfrentar são recusados acima dos campos.
 
@@ -26,7 +26,7 @@ O que é recusado é dito abaixo do campo a que se refere: um vencedor ou perded
 
 Uma eliminatória só é disputada depois que todas as vagas da sua chave têm um jogador ou um bye. Até então, Adicionar placar explica por que não é possível adicionar placares, em vez de abrir o diálogo.
 
-![O que Adicionar placar diz em uma eliminatória cuja chave não está preenchida](../../../english/tournament-managers/standard-tournament/images/draw-not-filled.png)
+![O que Adicionar placar diz em uma eliminatória cuja chave não está preenchida](images/draw-not-filled.png)
 
 ## A lista de placares
 
@@ -36,7 +36,7 @@ Os placares em uso são listados na ordem em que foram inseridos, o mais antigo 
 
 **Editar** abre o mesmo diálogo nesse placar, com o título Editar placar, com os seus jogadores escolhidos e os seus placares como foram digitados. Pressione **Salvar** para guardar a correção e fechar o diálogo.
 
-![O diálogo Editar placar](../../../english/tournament-managers/standard-tournament/images/edit-score-dialog.png)
+![O diálogo Editar placar](images/edit-score-dialog.png)
 
 Uma correção mantém o resultado: um jogo ganho continua ganho, e um jogo empatado continua empatado. Um jogo cujo resultado estava errado é arquivado e inserido de novo.
 

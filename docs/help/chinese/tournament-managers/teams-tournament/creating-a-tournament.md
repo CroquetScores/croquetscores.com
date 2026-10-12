@@ -2,7 +2,7 @@
 
 在管理后台的锦标赛列表上方按**新建锦标赛**。它放在列表上方而不是下方，这样很长的列表也不会把它推出手机屏幕之外。
 
-![为团体锦标赛填好的新建锦标赛表单](../../../english/tournament-managers/teams-tournament/images/new-tournament.png)
+![为团体锦标赛填好的新建锦标赛表单](images/new-tournament.png)
 
 表单询问锦标赛开始时所需的一切。这里最要紧的是**赛制**，正是它使一个锦标赛成为团体锦标赛。
 
@@ -39,7 +39,7 @@
 
 按**创建锦标赛**。你会被带到锦标赛在管理后台中的页面，停在它的“队伍”标签页上，而你是它的第一位管理员。它列在管理后台中它开始的那一年下。
 
-![一个新创建的锦标赛，还没有队伍](../../../english/tournament-managers/teams-tournament/images/tournament-page-empty.png)
+![一个新创建的锦标赛，还没有队伍](images/tournament-page-empty.png)
 
 锦标赛的公开地址由它的年份、项目和名称组成，如 `/2026/ac/trans-tasman-tests`。之后更正名称时它保留这个地址，这样已经发出去的链接仍然能找到它；只有当它开始的年份或项目改变时它才会移动。
 
