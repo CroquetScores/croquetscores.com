@@ -1,14 +1,14 @@
 # Running a tournament played by teams
 
-A tournament played by teams is one where sides meet, rather than players entered one by one: a test series between two countries, an interstate shield, a world team championship. Its teams are set up with their players, the tests between teams are added, and each test's games go up as they are played. This guide takes a manager from signing in to a tournament whose results its players can follow on their phones.
+A tournament played by teams is one where sides meet, rather than players entered one by one: a test series between two countries, an interstate shield, a world team championship. Its teams are set up with their players, the tests between teams are added, and each test's games go up as they are played. This guide takes a manager from signing in to a tournament whose results are available to the public.
 
 It stands on its own. Nothing in it depends on the guide to a standard tournament, which is written separately.
 
 ## Before you start
 
-You need an account. Register with your email address, follow the link the site emails you, and choose a name and a password. Once you have signed in, press **Admin** in the green bar at the top of every page. Any signed-in reader can create a tournament, and whoever creates one is its first manager.
+You need an account. Click [here](/account/register) to register an account.
 
-Everything a manager does is done in the admin. The public pages, where players and spectators follow the tournament, are drawn from what the admin holds, so nothing has to be published: a score entered is on the public pages at once.
+Everything a manager does is done in the admin section of the website. The public pages, where players and spectators follow the tournament, are drawn from what the admin holds, so nothing has to be published: a score entered is on the public pages at once.
 
 ## The words
 
@@ -32,7 +32,7 @@ The admin's front door lists the tournaments you have a part in, one year at a t
 
 ![The list of tournaments in the admin](images/admin-list.png)
 
-A tournament's name, or **Manage**, opens its page. Everything there is to run is in five tabs beneath its name: **Teams**, **Tests**, **Notes**, **Managers** and **Scorers**. The page opens on Teams, since the teams are the first thing set up.
+Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in five tabs beneath its name: **Teams**, **Tests**, **Notes**, **Managers** and **Scorers**. The page opens on Teams, since the teams are the first thing set up.
 
 ![A tournament's page, on its Tests tab](images/tournament-page.png)
 
@@ -47,3 +47,5 @@ The dark green bar beneath the header is for moving between pages. On the tourna
 **What is refused is said beside the field it is about.** Nothing refused is kept, and what you typed stays typed, so that it can be put right rather than typed again.
 
 **The admin works on a phone.** Every button is big enough to press with a thumb, and nothing is wider than the screen.
+
+Next: [Creating a tournament](creating-a-tournament.md).
