@@ -1,8 +1,8 @@
 # Import corrections
 
-Import began 11/10/2026, 4:00:14 pm.
+Import began 12/10/2026, 6:39:50 pm.
 
-Previous import: 3 import errors, 81 import corrections.
+Previous import: 54 import errors, 3,509 import corrections.
 
 What the last import corrected of what the old sites kept, each with where it is on the new site and the old. Written by `npm run import:ravendb`, which deletes it first.
 
@@ -76,20 +76,6 @@ Old site: https://croquetscores.com/2015/gc/nz-national-tournament/competition/o
 
 NZ National GC Tournament - Open Singles Block 3 has the second and third games between Carol Piercy and Michael McClure, games 49 and 50, added the other way round, since the third came after their match of the best of 3 was decided.
 
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/22640 games 32 and 45
-
-New site: http://localhost:3000/2015/gc/saca-doubles-combined-handicap-8/competitions/block
-Old site: https://croquetscores.com/2015/gc/saca-doubles-combined-handicap-8/competition/block
-
-SACA GC Doubles Combined Handicap 8+ - Block has the second and third games between Kate Logan & Judy Stewart and Barrie Wuttke & Bill Ashby, games 32 and 45, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/22640 games 18 and 47
-
-New site: http://localhost:3000/2015/gc/saca-doubles-combined-handicap-8/competitions/block
-Old site: https://croquetscores.com/2015/gc/saca-doubles-combined-handicap-8/competition/block
-
-SACA GC Doubles Combined Handicap 8+ - Block has the second and third games between Robert Weaver & Graeme Thomas and Glen Blatchford & Annie Blatchford, games 18 and 47, added the other way round, since the third came after their match of the best of 3 was decided.
-
 ## ImportBlocks.GamesReordered: croquetscores.com/blocks/23985 games 12 and 19
 
 New site: http://localhost:3000/2015/ac/wellington-open-championship-singles/competitions/section-2
@@ -146,34 +132,6 @@ Old site: https://croquetscores.com/2017/gc/aus-spring-mens-open-championship/co
 
 AUS SA GC Spring Open Men's Singles - Block A has the second and third games between Barry Jennings and Barry Haydon, games 63 and 67, added the other way round, since the third came after their match of the best of 3 was decided.
 
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/31728 games 32 and 33
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-WA GC Forrest Park Summer Nights Teams - Summer Nights has the second and third games between Rev Heads and Gate Crashers, games 32 and 33, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/31728 games 38 and 40
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-WA GC Forrest Park Summer Nights Teams - Summer Nights has the second and third games between The Commotions and TK Tormenators, games 38 and 40, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/31728 games 51 and 56
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-WA GC Forrest Park Summer Nights Teams - Summer Nights has the second and third games between Vintage Crocks and The Three Dees, games 51 and 56, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/31728 games 69 and 70
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-WA GC Forrest Park Summer Nights Teams - Summer Nights has the second and third games between Gate Crashers and Vintage Crocks, games 69 and 70, added the other way round, since the third came after their match of the best of 3 was decided.
-
 ## ImportBlocks.GamesReordered: croquetscores.com/blocks/42241 games 63 and 65
 
 New site: http://localhost:3000/2018/gc/victorian-bronze-medal-1/competitions/bronze-medal
@@ -195,75 +153,12 @@ Old site: https://croquetscores.com/2020/gc/australia-presidents-eights/competit
 
 Australia - GC Presidents Eights - Third Eight has the second and third games between Brenda Wild and Mark Scruton, games 28 and 32, added the other way round, since the third came after their match of the best of 3 was decided.
 
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/65590 games 24 and 26
-
-New site: http://localhost:3000/2020/gc/aus-sa-doubles-combined-handicap-8/competitions/block-a
-Old site: https://croquetscores.com/2020/gc/aus-sa-doubles-combined-handicap-8/competition/block-a
-
-AUS SA Doubles Combined Handicap 8+ - Block A has the second and third games between Kim Millhouse & Ann Millhouse and Barrie Wuttke & David Rowe, games 24 and 26, added the other way round, since the third came after their match of the best of 3 was decided.
-
 ## ImportBlocks.GamesReordered: croquetscores.com/blocks/66209 games 54 and 56
 
 New site: http://localhost:3000/2020/gc/aca-bronze-medal-qld/competitions/block
 Old site: https://croquetscores.com/2020/gc/aca-bronze-medal-qld/competition/block
 
 ACA GC Bronze Medal Qld - Block has the second and third games between Richard Pickvance and Murray Tinker, games 54 and 56, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67076 games 2 and 21
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-National Forest GC Doubles - All Play All has the second and third games between Arthur & Judith Rowe and Paul Durkin & Jane Tewson, games 2 and 21, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67076 games 10 and 11
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-National Forest GC Doubles - All Play All has the second and third games between Paul Durkin & Jane Tewson and Michael Bilton & Pauline Donner, games 10 and 11, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67076 games 23 and 24
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-National Forest GC Doubles - All Play All has the second and third games between Eleanor Ross & Christine Wood and David & Andrea Widdison, games 23 and 24, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67076 games 29 and 30
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-National Forest GC Doubles - All Play All has the second and third games between Jane Pringle & Ann Brookes and Arthur & Judith Rowe, games 29 and 30, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67076 games 34 and 35
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-National Forest GC Doubles - All Play All has the second and third games between David & Andrea Widdison and Paul Durkin & Jane Tewson, games 34 and 35, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67237 games 35 and 36
-
-New site: http://localhost:3000/2020/gc/heretaunga-silver-badge/competitions/block-9-to-16
-Old site: https://croquetscores.com/2020/gc/heretaunga-silver-badge/competition/block-9-to-16
-
-Heretaunga Silver Badge 2020 - Block (9 to 16) has the second and third games between Garry Rigby and Patrick Dingemans, games 35 and 36, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67237 games 67 and 85
-
-New site: http://localhost:3000/2020/gc/heretaunga-silver-badge/competitions/block-9-to-16
-Old site: https://croquetscores.com/2020/gc/heretaunga-silver-badge/competition/block-9-to-16
-
-Heretaunga Silver Badge 2020 - Block (9 to 16) has the second and third games between Sally Rigby and Rimmer Hettinga, games 67 and 85, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/67237 games 87 and 91
-
-New site: http://localhost:3000/2020/gc/heretaunga-silver-badge/competitions/block-9-to-16
-Old site: https://croquetscores.com/2020/gc/heretaunga-silver-badge/competition/block-9-to-16
-
-Heretaunga Silver Badge 2020 - Block (9 to 16) has the second and third games between Richard Walsh and Patrick Dingemans, games 87 and 91, added the other way round, since the third came after their match of the best of 3 was decided.
 
 ## ImportBlocks.GamesReordered: croquetscores.com/blocks/67267 games 40 and 41
 
@@ -328,20 +223,6 @@ Old site: https://croquetscores.com/2022/gc/national-forest-doubles/competition/
 
 National Forest GC Doubles - Plate has the second and third games between Mike Bilton & Pauline Donner and Chris Jackson & Stephanie White, games 9 and 10, added the other way round, since the third came after their match of the best of 3 was decided.
 
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/83338 games 2 and 19
-
-New site: http://localhost:3000/2022/gc/moorabinda-country-all-stars/competitions/a-grade
-Old site: https://croquetscores.com/2022/gc/moorabinda-country-all-stars/competition/a-grade
-
-Moorabinda Country All Stars - A Grade has the second and third games between Bob James and Les Holmes, games 2 and 19, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/83338 games 10 and 13
-
-New site: http://localhost:3000/2022/gc/moorabinda-country-all-stars/competitions/a-grade
-Old site: https://croquetscores.com/2022/gc/moorabinda-country-all-stars/competition/a-grade
-
-Moorabinda Country All Stars - A Grade has the second and third games between Bob James and Dawn Robinson, games 10 and 13, added the other way round, since the third came after their match of the best of 3 was decided.
-
 ## ImportBlocks.GamesReordered: croquetscores.com/blocks/85458 games 18 and 22
 
 New site: http://localhost:3000/2023/gc/usca-gc8s-at-ncc/competitions/fourth-8
@@ -355,20 +236,6 @@ New site: http://localhost:3000/2023/gc/bicc-snake-season-long/competitions/r1-b
 Old site: https://croquetscores.com/2023/gc/bicc-snake-season-long/competition/block-b
 
 BICC Snake Season Long - R1 - Block B has the second and third games between Ruth Percy and James Hall, games 26 and 27, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/88707 games 14 and 15
-
-New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/eastern
-Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/eastern
-
-Mountain Challenge - Eastern has the second and third games between Trillium and Cedar Creek, games 14 and 15, added the other way round, since the third came after their match of the best of 3 was decided.
-
-## ImportBlocks.GamesReordered: croquetscores.com/blocks/88707 games 23 and 24
-
-New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/eastern
-Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/eastern
-
-Mountain Challenge - Eastern has the second and third games between Burlingame and Chattooga, games 23 and 24, added the other way round, since the third came after their match of the best of 3 was decided.
 
 ## ImportBlocks.GamesReordered: croquetscores.com/blocks/86197 games 9 and 10
 
@@ -5851,6 +5718,13 @@ Old site: https://croquetscores.com/2015/gc/11th-wcf-golf-croquet-world-champion
 
 11th WCF Golf Croquet World Championship - Plate D was kept as the best of 2, and every pair of its players played 2 games, so it was played in rounds of single games and is brought over as the best of 1.
 
+## ImportBlocks.PlayedInRounds: croquetscores.com/blocks/112946
+
+New site: http://localhost:3000/2026/gc/community-bank-keilor-east-brunswick-invitation-final/competitions/final
+Old site: https://croquetscores.com/2026/gc/community-bank-keilor-east-brunswick-invitation-final/competition/final
+
+Community Bank Keilor East/Brunswick Invitation - Final was kept as the best of 3, and every pair of its players played 3 games, so it was played in rounds of single games and is brought over as the best of 1.
+
 ## ImportBlocks.PlayedInRounds: gateballscores.com/blocks/1089
 
 New site: http://localhost:3000/2017/gb/newcastle-fun-weekend/competitions/teams
@@ -5927,27 +5801,6 @@ New site: http://localhost:3000/2016/gc/cnz-golf-croquet-nationals/competitions/
 Old site: https://croquetscores.com/2016/gc/cnz-golf-croquet-nationals/competition/limited-singles
 
 CNZ Golf Croquet Nationals - Limited Singles was kept as the best of 2, and its pairs played it as up to 2 matches each of the best of 2, a round robin more than once, so it is brought over played in 2 rounds.
-
-## ImportBlocks.TournamentRounds: croquetscores.com/blocks/89149
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-a
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-a
-
-WCA Sunday GC Handicap Interclub - Group A was kept as the best of 5, and is brought over as the best of 3, played in 2 rounds, as the tournament was played.
-
-## ImportBlocks.TournamentRounds: croquetscores.com/blocks/89150
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-b
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-b
-
-WCA Sunday GC Handicap Interclub - Group B was kept as the best of 5, and is brought over as the best of 3, played in 2 rounds, as the tournament was played.
-
-## ImportBlocks.TournamentRounds: croquetscores.com/blocks/90287
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/final
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/final
-
-WCA Sunday GC Handicap Interclub - Final was kept as the best of 1, and is brought over as the best of 3, played in 2 rounds, as the tournament was played.
 
 ## ImportCompetition.AgainstABye: croquetscores.com/knockouts/2883 game 1
 
@@ -6536,48 +6389,6 @@ New site: http://localhost:3000/2017/gc/pendle-open-golf-tournament/competitions
 Old site: https://croquetscores.com/2017/gc/pendle-open-golf-tournament/competition/places-7-8
 
 Game Derek Buxton  10 beat Bye 1 0 in GC Pendle Open Golf Tournament - Places 7-8 was left out because it was against the old site's bye, and was no game that was played.
-
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23137 game 5
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/finals
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/finals
-
-Game Jan Kral 7 beat Bye 1 0 in Czech republic GC 1st Horicky golf croquet - Finals was left out because it was against the old site's bye, and was no game that was played.
-
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23137 game 6
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/finals
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/finals
-
-Game Michal Kotyk 7 beat Bye 1 0 in Czech republic GC 1st Horicky golf croquet - Finals was left out because it was against the old site's bye, and was no game that was played.
-
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23137 game 7
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/finals
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/finals
-
-Game Ekaterina Norbova 7 beat Bye 1 0 in Czech republic GC 1st Horicky golf croquet - Finals was left out because it was against the old site's bye, and was no game that was played.
-
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23137 game 8
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/finals
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/finals
-
-Game Otakar Stankus 7 beat Bye 1 0 in Czech republic GC 1st Horicky golf croquet - Finals was left out because it was against the old site's bye, and was no game that was played.
-
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23138 game 4
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/plate
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/plate
-
-Game Alena Miskova 7 beat Bye 2 0 in Czech republic GC 1st Horicky golf croquet - Plate was left out because it was against the old site's bye, and was no game that was played.
-
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23138 game 5
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/plate
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/plate
-
-Game Renata Bezdickova 7 beat Bye 2 0 in Czech republic GC 1st Horicky golf croquet - Plate was left out because it was against the old site's bye, and was no game that was played.
 
 ## ImportCompetition.AgainstABye: croquetscores.com/knockouts/24865 game 8
 
@@ -10156,33 +9967,33 @@ Old site: https://croquetscores.com/2024/gc/nowra-advantage-singles/competition/
 
 Game David Knott 7 beat BYE 2 0 in Nowra Advantage singles - Finals was left out because it was against the old site's bye, and was no game that was played.
 
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388 game 1
+## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388/see-notes game 1
 
-New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout
+New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout-see-notes
 Old site: https://croquetscores.com/2024/gc/malone-cup-invitational/competition/championship-knockout
 
-Game Ron Taylor 1 beat Bye- 0 in Malone Cup Invitational - Championship Knockout was left out because it was against the old site's bye, and was no game that was played.
+Game Ron Taylor 1 beat Bye- 0 in Malone Cup Invitational - Championship Knockout - See Notes was left out because it was against the old site's bye, and was no game that was played.
 
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388 game 2
+## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388/see-notes game 2
 
-New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout
+New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout-see-notes
 Old site: https://croquetscores.com/2024/gc/malone-cup-invitational/competition/championship-knockout
 
-Game Mike Carroll 1 beat Bye - 1 0 in Malone Cup Invitational - Championship Knockout was left out because it was against the old site's bye, and was no game that was played.
+Game Mike Carroll 1 beat Bye - 1 0 in Malone Cup Invitational - Championship Knockout - See Notes was left out because it was against the old site's bye, and was no game that was played.
 
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388 game 6
+## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388/see-notes game 6
 
-New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout
+New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout-see-notes
 Old site: https://croquetscores.com/2024/gc/malone-cup-invitational/competition/championship-knockout
 
-Game Mike Carroll 4 beat Bye - 1 0 in Malone Cup Invitational - Championship Knockout was left out because it was against the old site's bye, and was no game that was played.
+Game Mike Carroll 4 beat Bye - 1 0 in Malone Cup Invitational - Championship Knockout - See Notes was left out because it was against the old site's bye, and was no game that was played.
 
-## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388 game 7
+## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59388/see-notes game 7
 
-New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout
+New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout-see-notes
 Old site: https://croquetscores.com/2024/gc/malone-cup-invitational/competition/championship-knockout
 
-Game Ron Taylor 4 beat Bye- 0 in Malone Cup Invitational - Championship Knockout was left out because it was against the old site's bye, and was no game that was played.
+Game Ron Taylor 4 beat Bye- 0 in Malone Cup Invitational - Championship Knockout - See Notes was left out because it was against the old site's bye, and was no game that was played.
 
 ## ImportCompetition.AgainstABye: croquetscores.com/knockouts/59432 game 1
 
@@ -13033,6 +12844,34 @@ Old site: https://croquetscores.com/2026/gc/czechia-ladies-cup/competition/proce
 
 Game Veronika Patrasova 7 beat Bye - 0 in Czechia Ladies cup - Process was left out because it was against the old site's bye, and was no game that was played.
 
+## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23138 game 4
+
+New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/plate
+Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/plate
+
+Game Alena Miskova 7 beat Bye 2 0 in Czech republic GC 1st Horicky golf croquet - Plate was left out because it was against the old site's bye, and was no game that was played.
+
+## ImportCompetition.AgainstABye: croquetscores.com/knockouts/23138 game 5
+
+New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/plate
+Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/plate
+
+Game Renata Bezdickova 7 beat Bye 2 0 in Czech republic GC 1st Horicky golf croquet - Plate was left out because it was against the old site's bye, and was no game that was played.
+
+## ImportCompetition.AgainstABye: croquetscores.com/TeamMatches/5203 game 12
+
+New site: http://localhost:3000/2015/gc/egypt-league-second-round/tests/sporting-c-v-elsherok-c
+Old site: https://croquetscores.com/2015/gc/egypt-league-second-round/competition/sporting-club-vs-elsherok-club
+
+Game Hazem Zaghlol 7 beat Bye 0 in Egypt League ( Second round ) - Sporting Club vs ElSherok Club was left out because it was against the old site's bye, and was no game that was played.
+
+## ImportCompetition.AgainstABye: croquetscores.com/TeamMatches/5203 game 13
+
+New site: http://localhost:3000/2015/gc/egypt-league-second-round/tests/sporting-c-v-elsherok-c
+Old site: https://croquetscores.com/2015/gc/egypt-league-second-round/competition/sporting-club-vs-elsherok-club
+
+Game Hazem Zaghlol 7 beat Bye 0 in Egypt League ( Second round ) - Sporting Club vs ElSherok Club was left out because it was against the old site's bye, and was no game that was played.
+
 ## ImportCompetition.BracketedCountRemoved: croquetscores.com/blocks/98965 game 2
 
 New site: http://localhost:3000/2025/gc/nsw-advantage-singles/competitions/blue-block
@@ -13138,68 +12977,12 @@ Old site: https://croquetscores.com/2013/gc/croquetwest-state-v-barbarians/compe
 
 Game Kim Reynolds 7 beat Peter Hopwood 5 in Croquetwest GC State v Barbarians - State Team vs Barbarians was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/21924 game 25
-
-New site: http://localhost:3000/2015/gc/aca-bronze-medal-qld/competitions/block
-Old site: https://croquetscores.com/2015/gc/aca-bronze-medal-qld/competition/block
-
-Game Ross Rillie 7 beat Geoff Hull 3 in ACA Bronze Medal (Qld) - Block was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/21924 game 42
-
-New site: http://localhost:3000/2015/gc/aca-bronze-medal-qld/competitions/block
-Old site: https://croquetscores.com/2015/gc/aca-bronze-medal-qld/competition/block
-
-Game Dennis Green 7 beat Michael Bertram 5 in ACA Bronze Medal (Qld) - Block was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/22640 game 36
-
-New site: http://localhost:3000/2015/gc/saca-doubles-combined-handicap-8/competitions/block
-Old site: https://croquetscores.com/2015/gc/saca-doubles-combined-handicap-8/competition/block
-
-Game Dianne Love & Trevin Love 7 beat Glen Blatchford & Annie Blatchford 2 in SACA GC Doubles Combined Handicap 8+ - Block was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/22640 game 43
-
-New site: http://localhost:3000/2015/gc/saca-doubles-combined-handicap-8/competitions/block
-Old site: https://croquetscores.com/2015/gc/saca-doubles-combined-handicap-8/competition/block
-
-Game Robert Weaver & Graeme Thomas 7 beat Dianne Love & Trevin Love 4 in SACA GC Doubles Combined Handicap 8+ - Block was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
 ## ImportCompetition.DuplicateGame: croquetscores.com/blocks/39234 game 3
 
 New site: http://localhost:3000/2017/gc/q-to-the-rank/competitions/3
 Old site: https://croquetscores.com/2017/gc/q-to-the-rank/competition/3
 
 Game Karem Metwaly 7 beat Adel Sakr 4 in Q to the rank - 3 was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/31728 game 15
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-Game Hoop Runners 7 beat The Commotions 4 in WA GC Forrest Park Summer Nights Teams - Summer Nights was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/31728 game 18
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-Game Vintage Crocks 7 beat Rechter Scale 1 in WA GC Forrest Park Summer Nights Teams - Summer Nights was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/31728 game 25
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-Game Rev Heads 7 beat The Three Dees 4 in WA GC Forrest Park Summer Nights Teams - Summer Nights was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/31728 game 84
-
-New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
-Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
-
-Game Rechter Scale 7 beat The Commotions 2 in WA GC Forrest Park Summer Nights Teams - Summer Nights was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
 ## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/16515 game 6
 
@@ -13256,34 +13039,6 @@ New site: http://localhost:3000/2020/gc/1st-ireland-spain-womens-test-match/test
 Old site: https://croquetscores.com/2020/gc/1st-ireland-spain-womens-test-match/competition/ireland-vs-spain
 
 Game Blanca Medina 7 beat Clair Whyms 2 in 1st GC Ireland-Spain Women´s Test Match - Ireland vs Spain was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/23585 game 10
-
-New site: http://localhost:3000/2020/gc/poseidon-vs-carpe-croquetum/tests/carpe-croq-v-poseidon-c
-Old site: https://croquetscores.com/2020/gc/poseidon-vs-carpe-croquetum/competition/carpe-croquetum-vs-poseidon-croquet-club
-
-Game Double_CC 7 beat Double_PCC 3 in Poseidon vs. Carpe Croquetum - Carpe Croquetum vs Poseidon Croquet Club  was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/65590 game 36
-
-New site: http://localhost:3000/2020/gc/aus-sa-doubles-combined-handicap-8/competitions/block-a
-Old site: https://croquetscores.com/2020/gc/aus-sa-doubles-combined-handicap-8/competition/block-a
-
-Game Ansi Baumanis & Colleen Lane 7 beat Kim Millhouse & Ann Millhouse 4 in AUS SA Doubles Combined Handicap 8+ - Block A was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/67076 game 8
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-Game David & Andrea Widdison 7 beat Arthur & Judith Rowe 3 in National Forest GC Doubles - All Play All was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/67076 game 43
-
-New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
-Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
-
-Game Paul Durkin & Jane Tewson 7 beat Eleanor Ross & Christine Wood 5 in National Forest GC Doubles - All Play All was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
 ## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/25748 game 8
 
@@ -13439,20 +13194,6 @@ Old site: https://croquetscores.com/2022/gc/big-oyster-chesapeake-bay/competitio
 
 Game James Creasey 7 beat Cindy Shepherd 6 in 2022 Big Oyster - Chesapeake Bay - Plate Block was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/83338 game 14
-
-New site: http://localhost:3000/2022/gc/moorabinda-country-all-stars/competitions/a-grade
-Old site: https://croquetscores.com/2022/gc/moorabinda-country-all-stars/competition/a-grade
-
-Game Dawn Robinson 7 beat Bob James 4 in Moorabinda Country All Stars - A Grade was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/83338 game 15
-
-New site: http://localhost:3000/2022/gc/moorabinda-country-all-stars/competitions/a-grade
-Old site: https://croquetscores.com/2022/gc/moorabinda-country-all-stars/competition/a-grade
-
-Game Les Holmes 7 beat Robyn Dart 5 in Moorabinda Country All Stars - A Grade was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
 ## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/31183 game 50
 
 New site: http://localhost:3000/2023/gc/cai-v-sca-womens-match/tests/cai-v-sca
@@ -13586,13 +13327,6 @@ Old site: https://croquetscores.com/2023/gc/bicc-snake-season-long/competition/b
 
 Game David MacLaren 7 beat Jack Pal 3 in BICC Snake Season Long - R1 - Block B was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/88707 game 39
-
-New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/eastern
-Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/eastern
-
-Game Cedar Creek 7 beat Chattooga 4 in Mountain Challenge - Eastern was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
 ## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/32902 game 53
 
 New site: http://localhost:3000/2023/gc/3rd-ireland-spain-test-match/tests/irl-v-esp
@@ -13613,34 +13347,6 @@ New site: http://localhost:3000/2023/ac/wca-wednesday-interclub-1/tests/wellingt
 Old site: https://croquetscores.com/2023/ac/wca-wednesday-interclub-1/competition/wellington-vs-petone-central
 
 Game Graeme Fisher, Tony Sutich 17 beat Bruce Manuge, Errol McCutcheon 16 in WCA Handicap Wednesday Interclub - Wellington vs Petone Central was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/89149 game 70
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-a
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-a
-
-Game Denise Magner & Chris Magner 7 beat Alison Thorn & Marj Lawson 0 in WCA Sunday GC Handicap Interclub - Group A was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/89149 game 125
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-a
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-a
-
-Game Claire Roberts & Rob Lensen 7 beat Denise Magner & Chris Magner 2 in WCA Sunday GC Handicap Interclub - Group A was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/89150 game 99
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-b
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-b
-
-Game Tony Le Petit & Lyn Le Petit 7 beat Shirley Gay & Ruth Pearce 2 in WCA Sunday GC Handicap Interclub - Group B was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/89150 game 109
-
-New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-b
-Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-b
-
-Game Rob Egginson & David Littlejohn 7 beat Shirley Gay & Ruth Pearce 3 in WCA Sunday GC Handicap Interclub - Group B was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
 ## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/33636 game 3
 
@@ -13795,34 +13501,6 @@ New site: http://localhost:3000/2024/gc/gippsland-regional-pennant/tests/leongat
 Old site: https://croquetscores.com/2024/gc/gippsland-regional-pennant/competition/leongatha-vs-phillip-is
 
 Game Leongatha 3 & Leongatha 4 4 beat Phillip Island 3 & Phillip island 4 0 in Gippsland Regional GC Pennant - Leongatha vs Phillip Is was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/100672 game 12
-
-New site: http://localhost:3000/2025/gc/leonburra-shield/competitions/section-2
-Old site: https://croquetscores.com/2025/gc/leonburra-shield/competition/section-2
-
-Game Leongatha 7 beat Korumburra 4 in Leonburra Shield - Section 2 was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/100672 game 13
-
-New site: http://localhost:3000/2025/gc/leonburra-shield/competitions/section-2
-Old site: https://croquetscores.com/2025/gc/leonburra-shield/competition/section-2
-
-Game Leongatha 7 beat Korumburra 2 in Leonburra Shield - Section 2 was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/100672 game 14
-
-New site: http://localhost:3000/2025/gc/leonburra-shield/competitions/section-2
-Old site: https://croquetscores.com/2025/gc/leonburra-shield/competition/section-2
-
-Game Leongatha 7 beat Korumburra 4 in Leonburra Shield - Section 2 was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
-
-## ImportCompetition.DuplicateGame: croquetscores.com/blocks/100672 game 15
-
-New site: http://localhost:3000/2025/gc/leonburra-shield/competitions/section-2
-Old site: https://croquetscores.com/2025/gc/leonburra-shield/competition/section-2
-
-Game Leongatha 7 beat Korumburra 4 in Leonburra Shield - Section 2 was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.
 
 ## ImportCompetition.DuplicateGame: croquetscores.com/TeamMatches/37951 game 12
 
@@ -14643,6 +14321,440 @@ Old site: https://croquetscores.com/2015/gc/11th-wcf-golf-croquet-world-champion
 
 Game David Roberts 0w beat Evan Newell 0 in 11th WCF Golf Croquet World Championship - Block D was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.
 
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/1796 game 4
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-8/tests/maady-club-v-nasr-city
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-8/competition/maady-club-vs-nasr-city-club
+
+Game EbraHim Mohamed & Ahmed AbdelLatif 7 beat Mohamed Nasr & Mohamed Ayman 6 in Egyptian  cup ( Round 8) - Maady Club vs Nasr City Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/1796 game 5
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-8/tests/maady-club-v-nasr-city
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-8/competition/maady-club-vs-nasr-city-club
+
+Game Mohamed Nasr & Mohamed Ayman 7 beat EbraHim Mohamed & Ahmed AbdelLatif 5 in Egyptian  cup ( Round 8) - Maady Club vs Nasr City Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/1796 game 6
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-8/tests/maady-club-v-nasr-city
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-8/competition/maady-club-vs-nasr-city-club
+
+Game Mohamed Nasr & Mohamed Ayman 7 beat EbraHim Mohamed & Ahmed AbdelLatif 5 in Egyptian  cup ( Round 8) - Maady Club vs Nasr City Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/3455 game 5
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-16-1/tests/elsherok-c-v-gizera-clu
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-16-1/competition/elsherok-club-vs-gizera-club
+
+Game Sherine Hamdy 7 beat Magda Eskandr 5 in Egyptian Cup (Round 16) - ElSherok Club vs Gizera Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/3455 game 6
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-16-1/tests/elsherok-c-v-gizera-clu
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-16-1/competition/elsherok-club-vs-gizera-club
+
+Game Magda Eskandr 7 beat Sherine Hamdy 6 in Egyptian Cup (Round 16) - ElSherok Club vs Gizera Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/3455 game 7
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-16-1/tests/elsherok-c-v-gizera-clu
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-16-1/competition/elsherok-club-vs-gizera-club
+
+Game Magda Eskandr 7 beat Sherine Hamdy 5 in Egyptian Cup (Round 16) - ElSherok Club vs Gizera Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/4170 game 1
+
+New site: http://localhost:3000/2014/gc/croquetwest-pennants-1/tests/cambridg-2-v-sorrento-b
+Old site: https://croquetscores.com/2014/gc/croquetwest-pennants-1/competition/cambridge-b-1-vs-sorrento-b
+
+Game R Cornish M Spencer 7 beat P. Hamilton & T.Harvey 6 in Croquetwest GC Pennants - Cambridge B 1 vs Sorrento B could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/15012/see-notes game 4
+
+New site: http://localhost:3000/2015/ac/championships-of-ireland/competitions/newell-candlestick-draw-see-notes
+Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/newell-candlestick-draw
+
+Game Shelagh Glenanne 0(w/o) beat Aislean McGonigal 0 in Championships of Ireland - Newell Candlestick Draw - See Notes could not be added, because the winner's score was not higher than the loser's score, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/6498 game 1
+
+New site: http://localhost:3000/2015/ac/ca-inter-club-final/tests/cheltenham-v-woking
+Old site: https://croquetscores.com/2015/ac/ca-inter-club-final/competition/cheltenham-vs-woking
+
+Game Jeff Dawson & Malcolm Bigg 26tp(D) beat Chris Williams & Robert Wilkinson 11 in CA Inter Club Final - Cheltenham vs Woking could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/16542 game 3
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3/tests/traralgon-v-lakes-1
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/traralgon-vs-lakes-1
+
+Game Anita North 7 beat Judi Stiles 4 in GCA Pennant - East Gippsland - Traralgon vs Lakes 1 could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/16542 game 14
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3/tests/traralgon-v-lakes-1
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/traralgon-vs-lakes-1
+
+Game Charles Armstrong 7 beat Anita * Judi 6 in GCA Pennant - East Gippsland - Traralgon vs Lakes 1 could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/16549 game 5
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3/tests/bairnsda-2-v-bairnsdale
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/bairnsdale-2-vs-bairnsdale-1
+
+Game David Barrett 7 beat Julie Drummond 4 in GCA Pennant - East Gippsland - Bairnsdale 2 vs Bairnsdale 1 could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/16551 game 4
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3/tests/sale-2-v-bairnsda-3
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/sale-2-vs-bairnsdale-3
+
+Game Betty Clissold 7 beat Deirdre Lebbon 6 in GCA Pennant - East Gippsland - Sale 2 vs Bairnsdale 3 could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/16669 game 3
+
+New site: http://localhost:3000/2018/ac/gca-associatio-pennant-1/tests/bairnsdale-v-leongatha
+Old site: https://croquetscores.com/2018/ac/gca-associatio-pennant-1/competition/sale-vs-traralgon-2-1
+
+Game Sandra & Maryann 20 beat Garry & Jenny 15 in GCA Associatio Pennant - Bairnsdale vs Leongatha could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/16380 game 11
+
+New site: http://localhost:3000/2018/gc/gca-pennant-west/tests/phillip-is-v-wonthagg-2
+Old site: https://croquetscores.com/2018/gc/gca-pennant-west/competition/phillip-island-vs-wonthaggi-2
+
+Game Mike & Lilly 7 beat Neil & Virginia 6 in GCA Pennant - West Gippsland - Phillip Island  vs Wonthaggi 2 could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/53133/see-notes game 20
+
+New site: http://localhost:3000/2019/gc/taree-wild-fig/competitions/block-a-see-notes
+Old site: https://croquetscores.com/2019/gc/taree-wild-fig/competition/block-a
+
+Game Carol Goodman 7 beat Carol Goodman 5 in Taree Wild Fig - Block A - See Notes could not be added, because the game was recorded with the same player on both sides, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/28146 game 12
+
+New site: http://localhost:3000/2021/gc/3rd-world-team-championship-tier-2/tests/sco-v-select-tea
+Old site: https://croquetscores.com/2021/gc/3rd-world-team-championship-tier-2/competition/soctland-vs-select-team
+
+Game Stephen Wright 7 beat Maria Taylor 5 in 3rd GC World Team Championship Tier 2 - Scotland vs Select Team could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/80301/see-notes game 2
+
+New site: http://localhost:3000/2022/a6w/the-jones-invitational-3/competitions/second-flight-see-notes
+Old site: https://croquetscores.com/2022/a6w/the-jones-invitational-3/competition/second-flight
+
+Game George Quallich 11 beat George Quallich 5 in The  2022 Jones Invitational - Second Flight - See Notes could not be added, because the game was recorded with the same player on both sides, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/29795 game 7
+
+New site: http://localhost:3000/2022/ac/wcf-world-teams-tier-2-1/tests/sco-v-swe
+Old site: https://croquetscores.com/2022/ac/wcf-world-teams-tier-2-1/competition/scotland-vs-canada-or-sweden
+
+Game Duncan Reeve 26 beat Lewis Palmer 12 in WCF AC World Teams Tier 2.1 - Scotland vs Sweden could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/29795 game 14
+
+New site: http://localhost:3000/2022/ac/wcf-world-teams-tier-2-1/tests/sco-v-swe
+Old site: https://croquetscores.com/2022/ac/wcf-world-teams-tier-2-1/competition/scotland-vs-canada-or-sweden
+
+Game Chris Martin 26 beat Simon Carlsson 1 in WCF AC World Teams Tier 2.1 - Scotland vs Sweden could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/30296 game 3
+
+New site: http://localhost:3000/2022/gc/cst-handicap-doubles/tests/stratford-v-park-cc
+Old site: https://croquetscores.com/2022/gc/cst-handicap-doubles/competition/stratford-cc-vs-park-cc
+
+Game Lorraine O'Connor (10) & Lois Smith (5) 7 beat Len Hotter (3) & Bronwyn Tonga ( 14) 2 in Croquet South Taranaki - GC Handicap Doubles - Johnstone Shield Round 1 - Stratford CC vs Park CC could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/30298 game 3
+
+New site: http://localhost:3000/2022/gc/cst-handicap-doubles/tests/stratford-v-inglewood
+Old site: https://croquetscores.com/2022/gc/cst-handicap-doubles/competition/stratford-cc-vs-inglewood-cc
+
+Game Eileen Judd (4) & Joan Thomason (10) 7 beat Colleen Wisnewski (11) & Audrey Leach (8) 2 in Croquet South Taranaki - GC Handicap Doubles - Johnstone Shield Round 1 - Stratford CC vs Inglewood CC could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/30808 game 3
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons/tests/park-cc-v-inglewood
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons/competition/park-cc-vs-inglewood-cc
+
+Game Maxine Lister (11) & Joan Gilberd (12) 7 beat Elaine Olsson (5) & Colleen Wisnewski (11) 6 in Croquet South Taranaki - GC Handicap Doubles - John Bull Buttons - Park CC vs Inglewood CC could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/30811 game 3
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons/tests/stratford-v-inglewood
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons/competition/stratford-cc-vs-inglewood-cc
+
+Game Joan Petricevich (14) & Kathleen Pintor (9) 7 beat Max Barnard (12) & Len Hotter (4) 4 in Croquet South Taranaki - GC Handicap Doubles - John Bull Buttons - Stratford CC vs Inglewood CC could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/31004 game 3
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/tests/stratford-v-hawera-cc
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/competition/stratford-cc-vs-hawera-cc
+
+Game Heather Sturgeon (5) & Pam Hughes (9) 7 beat Len Hotter (3) & Glenda Gallagher (12) 3 in Croquet South Taranaki - GC Handicap Doubles - Johnstone Shield Round 2 Redo - Stratford CC vs Hawera CC could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/31006 game 3
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/tests/stratford-v-park-cc
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/competition/stratford-cc-vs-park-cc
+
+Game Leila Martin (2) & Albert Terry (7) 7 beat Eileen Judd (5) & Diane Watson (10) 3 in Croquet South Taranaki - GC Handicap Doubles - Johnstone Shield Round 2 Redo - Stratford CC vs Park CC could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/87946/see-notes game 1
+
+New site: http://localhost:3000/2023/gc/cullasaja-ladies-doubles-championship/competitions/crossblock-see-notes
+Old site: https://croquetscores.com/2023/gc/cullasaja-ladies-doubles-championship/competition/crossblock
+
+Game Rosalie Forrest & Terry Fisher 7 beat Sandy Howard & Laura Walker 4w in Cullasaja Ladies' Doubles Championship - Crossblock - See Notes could not be added, because the loser's score was marked as a winning score, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/32495 game 2
+
+New site: http://localhost:3000/2023/gc/mountain-challenge-1/tests/cedar-cree-v-ccsv
+Old site: https://croquetscores.com/2023/gc/mountain-challenge-1/competition/cedar-creek-vs-ccsv
+
+Game Gary Gamble & Ken Scoggins 7 beat Jim Teel & Pat Cunningham 4 in 2023 Mountain Challenge - Cedar Creek vs CCSV could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 1
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Lyn Stewart 7 beat Edna Kelly 5 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 2
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Alec Bruce 7 beat Ricky Fittock 3 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 3
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Graham Innocent 7 beat Al Minis 5 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 4
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Steve Wallace 7 beat Jenni Sun 1 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 5
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Chris Sims 7 beat Tracey Long 4 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 6
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Barbara Wilson 7 beat Alec Bruce 3 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 7
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Paul Moylan 7 beat Lyn Stewart 5 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 8
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Iain Tait-Kerr 7 beat Greg Bell 6 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 9
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Peter Long 7 beat Al Minis 1 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/34183 game 10
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Game Bev Fagan 7 beat Robyn Roberts 2 in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles could not be added, because a player of the game is not entered in the competition, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/37840 game 2
+
+New site: http://localhost:3000/2025/gc/bush-campbell-croquet-grudge-match/tests/yellow-v-brown
+Old site: https://croquetscores.com/2025/gc/bush-campbell-croquet-grudge-match/competition/yellow-vs-brown
+
+Game JM AE KS 4 beat DS AC EGl 1 in Bush & Campbell Croquet Grudge Match - Yellow vs Brown could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/60052/see-notes game 32
+
+New site: http://localhost:3000/2024/gc/marewa-club-championships/competitions/sweetapple-knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/marewa-club-championships/competition/sweetapple-knockout
+
+Game Chris Gibb 7 beat Chris Gibb 6 in Marewa Club Championships - Sweetapple Knockout - See Notes could not be added, because the game was recorded with the same player on both sides, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/38129 game 8
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-final/tests/sporting-c-v-gezira-clu
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-final/competition/sporting-club-vs-gezira-club
+
+Game Maram Nabil 7 beat Amany Hassan 6 in Egyptian Cup Final - Sporting Club vs Gezira Club could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/38371 game 1
+
+New site: http://localhost:3000/2025/gc/wa-forrest-park-autumn-nites-finals/tests/jp-v-otago
+Old site: https://croquetscores.com/2025/gc/wa-forrest-park-autumn-nites-finals/competition/jp-vs-otago
+
+Game John Gartner & Ed Parravicini 7 beat Richard & Linda Lobb 3 in WA Forrest Park GC Autumn Nites Finals - JP vs Otago could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/39597 game 12
+
+New site: http://localhost:3000/2025/gc/eacf-b-level-league-newport-v-chelmsford-mallets/tests/newport-v-chelmsford
+Old site: https://croquetscores.com/2025/gc/eacf-b-level-league-newport-v-chelmsford-mallets/competition/newport-vs-chelmsford-mallets
+
+Game Helen Manley 7 beat Anne Taylor 5 in EACF B-Level League Newport v Chelmsford Mallets - Newport vs Chelmsford Mallets could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/105281/see-notes game 4
+
+New site: http://localhost:3000/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competitions/group-a-see-notes
+Old site: https://croquetscores.com/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competition/group-a
+
+Game Alison Sutherland 7 beat Karen Kitson 5w in Wanganui Croquet Club 2025-26 Val Mitchell Trophy - Group A - See Notes could not be added, because the loser's score was marked as a winning score, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/40551 game 4
+
+New site: http://localhost:3000/2025/gc/croquetwest-c-grade-pennants/tests/combined-v-forrest-pa
+Old site: https://croquetscores.com/2025/gc/croquetwest-c-grade-pennants/competition/combined-vs-forrest-park-1
+
+Game Gerry Hunt 7 beat Jen Brunt 1 in Croquetwest GC C-Grade Pennants 🦘🦘🦘 - Combined vs Forrest Park could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/40551 game 7
+
+New site: http://localhost:3000/2025/gc/croquetwest-c-grade-pennants/tests/combined-v-forrest-pa
+Old site: https://croquetscores.com/2025/gc/croquetwest-c-grade-pennants/competition/combined-vs-forrest-park-1
+
+Game Shaun O'Brien 7 beat Gerry Hunt 4 in Croquetwest GC C-Grade Pennants 🦘🦘🦘 - Combined vs Forrest Park could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/40809 game 11
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-r-8-1/tests/heliopol-2-v-zamalek-cl
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-r-8-1/competition/heliopolis-club-vs-zamalek-club
+
+Game Hamy Erian 7 beat Mostafa Badr 2 in Egyptian Cup For Single - R 8 - Heliopolis Club vs Zamalek Club could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/40809 game 12
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-r-8-1/tests/heliopol-2-v-zamalek-cl
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-r-8-1/competition/heliopolis-club-vs-zamalek-club
+
+Game Hamy Erian 7 beat Mostafa Badr 2 in Egyptian Cup For Single - R 8 - Heliopolis Club vs Zamalek Club could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/40704 game 15
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-rouned-8-1/tests/nasr-city-v-cairo-club
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-rouned-8-1/competition/nasr-city-club-vs-cairo-club
+
+Game Sandy Hassan 7 beat Asrar Elsaeed 4 in Egyptian Cup Rouned 8 - Nasr City Club vs Cairo Club could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/108228 game 7
+
+New site: http://localhost:3000/2026/gc/st-andrews-club-vs-boca-beach-club/competitions/a
+Old site: https://croquetscores.com/2026/gc/st-andrews-club-vs-boca-beach-club/competition/a
+
+Game V Orsinger and Chris Burnham 6 beat V Orsinger and Chris Burnham 5 in ST Andrews Club vs  Boca Beach club - A could not be added, because the game was recorded with the same player on both sides, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/66404 game 12
+
+New site: http://localhost:3000/2026/gc/nsw-open-singles-championship/competitions/y-knockout-bo3
+Old site: https://croquetscores.com/2026/gc/nsw-open-singles-championship/competition/y-knockout-19-point
+
+Game Sue Sellers 10 beat Jill Sullivan 7 in NSW GC Open Singles Championship - Y knockout (Bo3) could not be added, because the two players were not due to meet at that stage of the knockout's draw, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/109616 game 6
+
+New site: http://localhost:3000/2026/gc/england-7-advanced-at-phyllis-court-blewbury/tests/phyllis-co-v-hurlingham
+Old site: https://croquetscores.com/2026/gc/england-7-advanced-at-phyllis-court-blewbury/competition/swiss
+
+Game Jeff Smith 7 beat Bertie Maxwell 0 in England - Inter-Club Bowl (tier 3) - Phyllis Court '4+' v Hurlingham - Phyllis Court vs Hurlingham could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/blocks/109616 game 17
+
+New site: http://localhost:3000/2026/gc/england-7-advanced-at-phyllis-court-blewbury/tests/phyllis-co-v-hurlingham
+Old site: https://croquetscores.com/2026/gc/england-7-advanced-at-phyllis-court-blewbury/competition/swiss
+
+Game Jeff Smith 7 beat Bertie Maxwell 0 in England - Inter-Club Bowl (tier 3) - Phyllis Court '4+' v Hurlingham - Phyllis Court vs Hurlingham could not be added, because their match had already been decided, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/67134 game 15
+
+New site: http://localhost:3000/2026/gc/wrest-park-open-national-series/competitions/main-knockout
+Old site: https://croquetscores.com/2026/gc/wrest-park-open-national-series/competition/quarter-finals-main-knockout
+
+Game Nick Archer 7 beat Alex Wood 6 in Wrest Park GC Open (National Series) - Main Knockout could not be added, because the two players were not due to meet at that stage of the knockout's draw, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/67292 game 3
+
+New site: http://localhost:3000/2026/ac/ryde-level-advanced/competitions/5th-8th
+Old site: https://croquetscores.com/2026/ac/ryde-level-advanced/competition/5th-8th
+
+Game E John Davis 26 beat Guy Hewitt 23 in Ryde AC Level Advanced - 5th - 8th could not be added, because the two players were not due to meet at that stage of the knockout's draw, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/68363 game 3
+
+New site: http://localhost:3000/2026/gc/sticky-wicket-golf-croquet-singles-tournament/competitions/revenge-plate
+Old site: https://croquetscores.com/2026/gc/sticky-wicket-golf-croquet-singles-tournament/competition/revenge-plate
+
+Game Cameron Warner 7 beat Gary Volpe 4 in 2026 Sticky Wicket Golf Croquet Singles Tournament - Revenge Plate could not be added, because the two players were not due to meet at that stage of the knockout's draw, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/43789 game 7
+
+New site: http://localhost:3000/2026/ac/swcf-advanced-league-div-3-sidmouth-b-vs-kington-langley/tests/sidmouth-b-v-kington-la
+Old site: https://croquetscores.com/2026/ac/swcf-advanced-league-div-3-sidmouth-b-vs-kington-langley/competition/sidmouth-b-vs-kington-langley
+
+Game Colin Walls & Chris Donovan 21 beat John Grimshaw & Tony Mayer 17 in SWCF Advanced AC League Div 3: Sidmouth B vs Kington Langley - Sidmouth B vs Kington Langley could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/knockouts/69030 game 10
+
+New site: http://localhost:3000/2026/gc/australian-womens-singles/competitions/y-finals-positions-9-16
+Old site: https://croquetscores.com/2026/gc/australian-womens-singles/competition/y-finals-positions-9-16
+
+Game Joyce Carbone 10 beat Judy Anderson 8 in Australian GC Womens Singles - Y Finals - Positions 9-16 could not be added, because the two players were not due to meet at that stage of the knockout's draw, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/8992 game 1
+
+New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round/tests/smoha-club-v-maady-club
+Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/smoha-club-vs-maady-club
+
+Game May Ali Maher 7 beat Nehal Ahmed 4 in Egypt League 2016 / 2017 ( First round ) - Smoha Club  vs Maady Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/8992 game 2
+
+New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round/tests/smoha-club-v-maady-club
+Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/smoha-club-vs-maady-club
+
+Game May Ali Maher 7 beat Nehal Ahmed 6 in Egypt League 2016 / 2017 ( First round ) - Smoha Club  vs Maady Club could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/8547 game 2
+
+New site: http://localhost:3000/2016/ac/14-point-teams-wa/tests/marauders-v-como
+Old site: https://croquetscores.com/2016/ac/14-point-teams-wa/competition/marauders-vs-como
+
+Game Coral Broun 9 beat Megan Fardon 7 in WA  AC 14 Point Teams - Marauders vs Como could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.GameNoted: croquetscores.com/TeamMatches/8547 game 7
+
+New site: http://localhost:3000/2016/ac/14-point-teams-wa/tests/marauders-v-como
+Old site: https://croquetscores.com/2016/ac/14-point-teams-wa/competition/marauders-vs-como
+
+Game Pat Zuvela 5 beat Coral Broun 4 in WA  AC 14 Point Teams - Marauders vs Como could not be added, because both players are on the same team, and is said in the note Import Errors of the tournament.
+
 ## ImportCompetition.HalfPointRoundedUp: croquetscores.com/blocks/36261 game 4
 
 New site: http://localhost:3000/2017/ac/cca-interclub/competitions/monday
@@ -14761,6 +14873,356 @@ New site: http://localhost:3000/2018/ac/cca-interclub/competitions/a
 Old site: https://croquetscores.com/2018/ac/cca-interclub/competition/a
 
 Game Barrington 3.5 beat St James Red 3 in CCA AC interclub - A was kept with a score written with a half point, which the site has no place for, and is brought over with it rounded up to the next whole number.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/1796
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-8
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-8/competition/maady-club-vs-nasr-city-club
+
+Maady Club vs Nasr City Club had 3 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/3455
+
+New site: http://localhost:3000/2014/gc/egyptian-cup-round-16-1
+Old site: https://croquetscores.com/2014/gc/egyptian-cup-round-16-1/competition/elsherok-club-vs-gizera-club
+
+ElSherok Club vs Gizera Club had 3 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/4170
+
+New site: http://localhost:3000/2014/gc/croquetwest-pennants-1
+Old site: https://croquetscores.com/2014/gc/croquetwest-pennants-1/competition/cambridge-b-1-vs-sorrento-b
+
+Cambridge B 1 vs Sorrento B had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/15012/see-notes
+
+New site: http://localhost:3000/2015/ac/championships-of-ireland
+Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/newell-candlestick-draw
+
+Newell Candlestick Draw - See Notes had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/6498
+
+New site: http://localhost:3000/2015/ac/ca-inter-club-final
+Old site: https://croquetscores.com/2015/ac/ca-inter-club-final/competition/cheltenham-vs-woking
+
+Cheltenham vs Woking had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/16542
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/traralgon-vs-lakes-1
+
+Traralgon vs Lakes 1 had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/16549
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/bairnsdale-2-vs-bairnsdale-1
+
+Bairnsdale 2 vs Bairnsdale 1 had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/16551
+
+New site: http://localhost:3000/2018/gc/gca-pennant-east-gippsland-3
+Old site: https://croquetscores.com/2018/gc/gca-pennant-east-gippsland-3/competition/sale-2-vs-bairnsdale-3
+
+Sale 2 vs Bairnsdale 3 had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/16669
+
+New site: http://localhost:3000/2018/ac/gca-associatio-pennant-1
+Old site: https://croquetscores.com/2018/ac/gca-associatio-pennant-1/competition/sale-vs-traralgon-2-1
+
+Bairnsdale vs Leongatha had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/16380
+
+New site: http://localhost:3000/2018/gc/gca-pennant-west
+Old site: https://croquetscores.com/2018/gc/gca-pennant-west/competition/phillip-island-vs-wonthaggi-2
+
+Phillip Island  vs Wonthaggi 2 had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/blocks/53133/see-notes
+
+New site: http://localhost:3000/2019/gc/taree-wild-fig
+Old site: https://croquetscores.com/2019/gc/taree-wild-fig/competition/block-a
+
+Block A - See Notes had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/28146
+
+New site: http://localhost:3000/2021/gc/3rd-world-team-championship-tier-2
+Old site: https://croquetscores.com/2021/gc/3rd-world-team-championship-tier-2/competition/soctland-vs-select-team
+
+Scotland vs Select Team had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/blocks/80301/see-notes
+
+New site: http://localhost:3000/2022/a6w/the-jones-invitational-3
+Old site: https://croquetscores.com/2022/a6w/the-jones-invitational-3/competition/second-flight
+
+Second Flight - See Notes had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/28779
+
+New site: http://localhost:3000/2022/gc/brisbane-met-pennants
+Old site: https://croquetscores.com/2022/gc/brisbane-met-pennants/competition/wwynnum-vs-eildon
+
+Wynnum vs Eildon had 0 games that could not be added and 1 player that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/28855
+
+New site: http://localhost:3000/2022/gc/brisbane-met-pennants
+Old site: https://croquetscores.com/2022/gc/brisbane-met-pennants/competition/twin-rivers-vs-wynnum
+
+Twin Rivers vs Wynnum had 0 games that could not be added and 1 player that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/29795
+
+New site: http://localhost:3000/2022/ac/wcf-world-teams-tier-2-1
+Old site: https://croquetscores.com/2022/ac/wcf-world-teams-tier-2-1/competition/scotland-vs-canada-or-sweden
+
+Scotland vs Sweden had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/29546
+
+New site: http://localhost:3000/2022/ac/gippsland-vic-pennant
+Old site: https://croquetscores.com/2022/ac/gippsland-vic-pennant/competition/traralgon-3-vs-traralgon-1
+
+Traralgon 3 vs Traralgon 1 had 0 games that could not be added and 1 player that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/30296
+
+New site: http://localhost:3000/2022/gc/cst-handicap-doubles
+Old site: https://croquetscores.com/2022/gc/cst-handicap-doubles/competition/stratford-cc-vs-park-cc
+
+Stratford CC vs Park CC had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/30298
+
+New site: http://localhost:3000/2022/gc/cst-handicap-doubles
+Old site: https://croquetscores.com/2022/gc/cst-handicap-doubles/competition/stratford-cc-vs-inglewood-cc
+
+Stratford CC vs Inglewood CC had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/30808
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons/competition/park-cc-vs-inglewood-cc
+
+Park CC vs Inglewood CC had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/30811
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-john-bull-buttons/competition/stratford-cc-vs-inglewood-cc
+
+Stratford CC vs Inglewood CC had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/31004
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/competition/stratford-cc-vs-hawera-cc
+
+Stratford CC vs Hawera CC had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/31006
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/competition/stratford-cc-vs-park-cc
+
+Stratford CC vs Park CC had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/blocks/87946/see-notes
+
+New site: http://localhost:3000/2023/gc/cullasaja-ladies-doubles-championship
+Old site: https://croquetscores.com/2023/gc/cullasaja-ladies-doubles-championship/competition/crossblock
+
+Crossblock - See Notes had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/32495
+
+New site: http://localhost:3000/2023/gc/mountain-challenge-1
+Old site: https://croquetscores.com/2023/gc/mountain-challenge-1/competition/cedar-creek-vs-ccsv
+
+Cedar Creek vs CCSV had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/31877
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Wonthaggi Maroon vs Korumburra had 0 games that could not be added and 9 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/33127
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Drouin vs Wonthaggi White had 0 games that could not be added and 25 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/34183
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Forster Singles vs Gloucester Singles had 10 games that could not be added and 17 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/37091
+
+New site: http://localhost:3000/2025/ac/upper-north-is-team-event
+Old site: https://croquetscores.com/2025/ac/upper-north-is-team-event/competition/ak-vs-bop
+
+Auckland vs Bay of Plenty had 0 games that could not be added and 4 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/37840
+
+New site: http://localhost:3000/2025/gc/bush-campbell-croquet-grudge-match
+Old site: https://croquetscores.com/2025/gc/bush-campbell-croquet-grudge-match/competition/yellow-vs-brown
+
+Yellow vs Brown had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/60052/see-notes
+
+New site: http://localhost:3000/2024/gc/marewa-club-championships
+Old site: https://croquetscores.com/2024/gc/marewa-club-championships/competition/sweetapple-knockout
+
+Sweetapple Knockout - See Notes had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/38129
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-final
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-final/competition/sporting-club-vs-gezira-club
+
+Sporting Club vs Gezira Club had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/38371
+
+New site: http://localhost:3000/2025/gc/wa-forrest-park-autumn-nites-finals
+Old site: https://croquetscores.com/2025/gc/wa-forrest-park-autumn-nites-finals/competition/jp-vs-otago
+
+JP vs Otago had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/39597
+
+New site: http://localhost:3000/2025/gc/eacf-b-level-league-newport-v-chelmsford-mallets
+Old site: https://croquetscores.com/2025/gc/eacf-b-level-league-newport-v-chelmsford-mallets/competition/newport-vs-chelmsford-mallets
+
+Newport vs Chelmsford Mallets had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/40332
+
+New site: http://localhost:3000/2025/ac/cnz-teams-event
+Old site: https://croquetscores.com/2025/ac/cnz-teams-event/competition/orewa-cc-vs-whakatane-cc
+
+Orewa CC vs Waireka CC had 0 games that could not be added and 3 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/40501
+
+New site: http://localhost:3000/2025/gc/cti-interclub-intermediate-wecc-r6
+Old site: https://croquetscores.com/2025/gc/cti-interclub-intermediate-wecc-r6/competition/we1-vs-id1
+
+WE1 bye vs ID1 bye had 0 games that could not be added and 3 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/blocks/105281/see-notes
+
+New site: http://localhost:3000/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy
+Old site: https://croquetscores.com/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competition/group-a
+
+Group A - See Notes had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/40551
+
+New site: http://localhost:3000/2025/gc/croquetwest-c-grade-pennants
+Old site: https://croquetscores.com/2025/gc/croquetwest-c-grade-pennants/competition/combined-vs-forrest-park-1
+
+Combined vs Forrest Park had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/40809
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-r-8-1
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-r-8-1/competition/heliopolis-club-vs-zamalek-club
+
+Heliopolis Club vs Zamalek Club had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/40704
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-rouned-8-1
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-rouned-8-1/competition/nasr-city-club-vs-cairo-club
+
+Nasr City Club vs Cairo Club had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/blocks/108228
+
+New site: http://localhost:3000/2026/gc/st-andrews-club-vs-boca-beach-club
+Old site: https://croquetscores.com/2026/gc/st-andrews-club-vs-boca-beach-club/competition/a
+
+A had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/66404
+
+New site: http://localhost:3000/2026/gc/nsw-open-singles-championship
+Old site: https://croquetscores.com/2026/gc/nsw-open-singles-championship/competition/y-knockout-19-point
+
+Y knockout (Bo3) had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/blocks/109616
+
+New site: http://localhost:3000/2026/gc/england-7-advanced-at-phyllis-court-blewbury
+Old site: https://croquetscores.com/2026/gc/england-7-advanced-at-phyllis-court-blewbury/competition/swiss
+
+Phyllis Court vs Hurlingham had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/67134
+
+New site: http://localhost:3000/2026/gc/wrest-park-open-national-series
+Old site: https://croquetscores.com/2026/gc/wrest-park-open-national-series/competition/quarter-finals-main-knockout
+
+Main Knockout had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/67292
+
+New site: http://localhost:3000/2026/ac/ryde-level-advanced
+Old site: https://croquetscores.com/2026/ac/ryde-level-advanced/competition/5th-8th
+
+5th - 8th had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/68363
+
+New site: http://localhost:3000/2026/gc/sticky-wicket-golf-croquet-singles-tournament
+Old site: https://croquetscores.com/2026/gc/sticky-wicket-golf-croquet-singles-tournament/competition/revenge-plate
+
+Revenge Plate had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/43789
+
+New site: http://localhost:3000/2026/ac/swcf-advanced-league-div-3-sidmouth-b-vs-kington-langley
+Old site: https://croquetscores.com/2026/ac/swcf-advanced-league-div-3-sidmouth-b-vs-kington-langley/competition/sidmouth-b-vs-kington-langley
+
+Sidmouth B vs Kington Langley had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/knockouts/69030
+
+New site: http://localhost:3000/2026/gc/australian-womens-singles
+Old site: https://croquetscores.com/2026/gc/australian-womens-singles/competition/y-finals-positions-9-16
+
+Y Finals - Positions 9-16 had 1 game that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/8992
+
+New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round
+Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/smoha-club-vs-maady-club
+
+Smoha Club  vs Maady Club had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
+
+## ImportCompetition.ImportErrorsNoted: croquetscores.com/TeamMatches/8547
+
+New site: http://localhost:3000/2016/ac/14-point-teams-wa
+Old site: https://croquetscores.com/2016/ac/14-point-teams-wa/competition/marauders-vs-como
+
+Marauders vs Como had 2 games that could not be added and 0 players that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.
 
 ## ImportCompetition.LoserMarkRemoved: croquetscores.com/blocks/28708 game 3
 
@@ -15195,6 +15657,1210 @@ New site: http://localhost:3000/2023/gb/sa-presidents-trophy/competitions/round-
 Old site: https://gateballscores.com/2023/gb/sa-presidents-trophy/competition/round-robin
 
 Game Kele Crew [Cheryl & Steve] 13cb beat Brighton Sharks [David and Barry] 13 in SA President's Trophy - Round Robin was kept on equal points with both scores marked, and is brought over with the loser's mark taken off, so that the player the old site said won it did.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/3073
+
+New site: http://localhost:3000/2013/ac/iv-championship-of-czech-republic
+Old site: https://croquetscores.com/2013/ac/iv-championship-of-czech-republic/competition/semifinal
+
+IV. Championship of Czech Republic AC 2013 - Final could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/4902
+
+New site: http://localhost:3000/2013/gc/swiss-golf-croquet-open
+Old site: https://croquetscores.com/2013/gc/swiss-golf-croquet-open/competition/plate-q-finals
+
+Swiss Golf Croquet Open - Plate Q-Finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/4903
+
+New site: http://localhost:3000/2013/gc/swiss-golf-croquet-open
+Old site: https://croquetscores.com/2013/gc/swiss-golf-croquet-open/competition/plate-q-final-losers
+
+Swiss Golf Croquet Open - Plate Q-Final Losers could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/5794
+
+New site: http://localhost:3000/2013/ac/tasmanian-tca-singles-handicap/competitions/knockout
+Old site: https://croquetscores.com/2013/ac/tasmanian-tca-singles-handicap/competition/knockout
+
+Tasmanian TCA AC Singles Handicap - Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game G Keating 26 beat D Johnston 21 in Tasmanian TCA AC Singles Handicap - Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/5986
+
+New site: http://localhost:3000/2013/ac/us-open/competitions/championship-ko
+Old site: https://croquetscores.com/2013/ac/us-open/competition/championship-ko-1
+
+US Open - Championship KO could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Ben Rothman 26tp beat Rich Lamm 9 in US Open - Championship KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/6017
+
+New site: http://localhost:3000/2013/ac/us-open/competitions/a-ladder
+Old site: https://croquetscores.com/2013/ac/us-open/competition/a-ladder
+
+US Open - A Ladder could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Nick Gray 17 beat Pat Dugan 16 in US Open - A Ladder because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/6273
+
+New site: http://localhost:3000/2014/ac/palmerston-north-city-clubs-triton-hearing-tournament-open-championship-singles
+Old site: https://croquetscores.com/2014/ac/palmerston-north-city-clubs-triton-hearing-tournament-open-championship-singles/competition/finals
+
+Palmerston North City Clubs Triton Hearing Tournament Open Championship Singles - Final could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/7139
+
+New site: http://localhost:3000/2014/gc/camridge-cup-wa/competitions/good-egg
+Old site: https://croquetscores.com/2014/gc/camridge-cup-wa/competition/good-egg
+
+Cambridge Cup (WA) - Good Egg could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Kidd O 7 beat Hocking J 1 in Cambridge Cup (WA) - Good Egg because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/8353
+
+New site: http://localhost:3000/2014/gc/queens-birthday-weekend/competitions/final-handicap-19-pt-games
+Old site: https://croquetscores.com/2014/gc/queens-birthday-weekend/competition/final-handicap-19-pt-games
+
+Queen's Birthday Weekend - GC - Final Handicap 19 Pt Games could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Jace Hobbs 10 beat Mike McClure 3 in Queen's Birthday Weekend - GC - Final Handicap 19 Pt Games because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/8833
+
+New site: http://localhost:3000/2014/ac/mallet-sports-on-the-broadwater-ricochet
+Old site: https://croquetscores.com/2014/ac/mallet-sports-on-the-broadwater-ricochet/competition/ricochet-finals
+
+Southport CC -Mallet Sports on the Broadwater- Ricochet - Ricochet Finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/9285
+
+New site: http://localhost:3000/2014/ac/championships-of-ireland/competitions/championship-singles-duff-mathews-perpetual-trophy
+Old site: https://croquetscores.com/2014/ac/championships-of-ireland/competition/champioship-singles-duff-mathews-perpetual-trophy
+
+Championships of Ireland - Championship Singles - Duff Mathews Perpetual Trophy could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game Jarrod Coutts 26 beat Nathaniel Healy 11 in Championships of Ireland - Championship Singles - Duff Mathews Perpetual Trophy because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/14755
+
+New site: http://localhost:3000/2014/ac/ca-chairmans-salver/competitions/double-round-robin
+Old site: https://croquetscores.com/2014/ac/ca-chairmans-salver/competition/double-round-robin
+
+CA Chairman's Salver - Double Round Robin could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Jeff Dawson 26qp beat Gabrielle Higgins 6 in CA Chairman's Salver - Double Round Robin because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/9441
+
+New site: http://localhost:3000/2014/gc/the-10th-egyptian-open-golf-croquet-international-championship/competitions/knockout-stage
+Old site: https://croquetscores.com/2014/gc/the-10th-egyptian-open-golf-croquet-international-championship/competition/knockout-stage
+
+The 10th Egyptian Open Golf Croquet International Championship - KNOCKOUT STAGE could not be brought over whole as a knockout: 9 of its games would be refused, the first being: Game Ahmed Nasr 7 beat Ahmed ElMahdi 6 in The 10th Egyptian Open Golf Croquet International Championship - KNOCKOUT STAGE because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/12259
+
+New site: http://localhost:3000/2015/ac/desert-classic/competitions/competitor-playoffs
+Old site: https://croquetscores.com/2015/ac/desert-classic/competition/competitor-playoffs
+
+Desert Classic - Competitor Playoffs could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Toni Kemp 16 beat Richard Wright 6 in Desert Classic - Competitor Playoffs because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/12833
+
+New site: http://localhost:3000/2015/gc/steuber-prize-a-knockout/competitions/a-flight
+Old site: https://croquetscores.com/2015/gc/steuber-prize-a-knockout/competition/a-flight
+
+Steuber Prize GC A Knockout - A Flight could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Robert Fulford 7 beat Sherif Abdelwahab 2 in Steuber Prize GC A Knockout - A Flight because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/13923
+
+New site: http://localhost:3000/2015/gc/14th-womens-open-ripon-spa
+Old site: https://croquetscores.com/2015/gc/14th-womens-open-ripon-spa/competition/semi-finals
+
+14th Womens Open @ Ripon Spa - Semi Finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/14434
+
+New site: http://localhost:3000/2015/gc/cambridge-wa-presidents-medals/competitions/presidents-medal
+Old site: https://croquetscores.com/2015/gc/cambridge-wa-presidents-medals/competition/presidents-medal
+
+Cambridge WA Presidents Medals - Presidents Medal could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Richard Lee 7 beat David Gould 5 in Cambridge WA Presidents Medals - Presidents Medal because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/14504
+
+New site: http://localhost:3000/2015/gc/british-open-championship/competitions/bowl
+Old site: https://croquetscores.com/2015/gc/british-open-championship/competition/bowl
+
+British GC Open Championship - Bowl could not be brought over whole as a knockout: 4 of its games would be refused, the first being: Game Guy SCURFIELD 7 beat Peter FREER 5 in British GC Open Championship - Bowl because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/14562
+
+New site: http://localhost:3000/2015/gc/czech-republic-5th-telc-croquet-all-round-cup
+Old site: https://croquetscores.com/2015/gc/czech-republic-5th-telc-croquet-all-round-cup/competition/plate-1st-round
+
+Czech Republic GC 5th Telc croquet all-round cup - Plate 1st round could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/21924
+
+New site: http://localhost:3000/2015/gc/aca-bronze-medal-qld/competitions/block
+Old site: https://croquetscores.com/2015/gc/aca-bronze-medal-qld/competition/block
+
+ACA Bronze Medal (Qld) - Block could not be brought over whole as a block: 10 of its games would be refused, the first being: Game Michael Bertram 7 beat Ross Rillie 2 in ACA Bronze Medal (Qld) - Block because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/15012
+
+New site: http://localhost:3000/2015/ac/championships-of-ireland/competitions/newell-candlestick-draw
+Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/newell-candlestick-draw
+
+Championships of Ireland - Newell Candlestick Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Shelagh Glenanne 0(w/o) beat Aislean McGonigal 0 in Championships of Ireland - Newell Candlestick Draw because the winner's score is not ahead of the loser's.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/15014
+
+New site: http://localhost:3000/2015/ac/championships-of-ireland/competitions/handicap-doubles
+Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/handicap-doubles
+
+Championships of Ireland - Handicap Doubles could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game P. Fitzgerald and K. Davidson-Perrins 25ot beat N. Werner and R. Stevens 24 in Championships of Ireland - Handicap Doubles because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/22640
+
+New site: http://localhost:3000/2015/gc/saca-doubles-combined-handicap-8/competitions/block
+Old site: https://croquetscores.com/2015/gc/saca-doubles-combined-handicap-8/competition/block
+
+SACA GC Doubles Combined Handicap 8+ - Block could not be brought over whole as a block: 4 of its games would be refused, the first being: Game Barry Haydon & Barry Jennings 7 beat Dianne Love & Trevin Love 1 in SACA GC Doubles Combined Handicap 8+ - Block because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/15561
+
+New site: http://localhost:3000/2015/ac/country-boys/competitions/2-lives
+Old site: https://croquetscores.com/2015/ac/country-boys/competition/2-lives
+
+2015 Country Boys - 2-Lives could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Brian Cumming 26 beat Matthew Essick 18 in 2015 Country Boys - 2-Lives because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/23618
+
+New site: http://localhost:3000/2015/ac/north-american-amateur/competitions/championship-knockout
+Old site: https://croquetscores.com/2015/ac/north-american-amateur/competition/championship-knockout
+
+North American Amateur - Championship Knockout could not be brought over whole as a block: 2 of its games would be refused, the first being: Game Mike Orgill 12 beat Gary Anderson 11 in North American Amateur - Championship Knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/15780
+
+New site: http://localhost:3000/2015/gc/wa-vic-park-flexi-doubles/competitions/consolation-knockout
+Old site: https://croquetscores.com/2015/gc/wa-vic-park-flexi-doubles/competition/consolation-knockout
+
+WA GC Vic Park Flexi Doubles - Consolation Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Peter Hopwood & Maggie Cussell 7 beat Trish Klemp & Terry Harvey 2 in WA GC Vic Park Flexi Doubles - Consolation Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/16006
+
+New site: http://localhost:3000/2016/ac/desert-classic
+Old site: https://croquetscores.com/2016/ac/desert-classic/competition/championship-second-life
+
+Desert Classic - Championship Second Life could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/16007
+
+New site: http://localhost:3000/2016/ac/desert-classic/competitions/challenger-second-life
+Old site: https://croquetscores.com/2016/ac/desert-classic/competition/challenger-second-life
+
+Desert Classic - Challenger Second Life could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Steve Mossbrook 15 beat Nick Gray 14 in Desert Classic - Challenger Second Life because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/16008
+
+New site: http://localhost:3000/2016/ac/desert-classic/competitions/competitors-second-life
+Old site: https://croquetscores.com/2016/ac/desert-classic/competition/competitors-second-life
+
+Desert Classic - Competitors Second Life could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Jean Engebretson 8 beat Patrick Dugan 7 in Desert Classic - Competitors Second Life because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/16867
+
+New site: http://localhost:3000/2016/ac/north-american-open-sonoma
+Old site: https://croquetscores.com/2016/ac/north-american-open-sonoma/competition/championship
+
+North American Open (Sonoma) - Championship could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/17608
+
+New site: http://localhost:3000/2016/gc/swedish-championship/competitions/finals
+Old site: https://croquetscores.com/2016/gc/swedish-championship/competition/finals
+
+GC Swedish Championship - Finals could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Lewis Palmer 7 beat Eje Elebo 6 in GC Swedish Championship - Finals because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/17933
+
+New site: http://localhost:3000/2016/gc/swiss-championship/competitions/q-finals
+Old site: https://croquetscores.com/2016/gc/swiss-championship/competition/q-finals
+
+Swiss GC Championship 2016 - Q-Finals could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Neil Thomas 7 beat Barbara Perkins 4 in Swiss GC Championship 2016 - Q-Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/31169
+
+New site: http://localhost:3000/2017/ac/jic-invitational/competitions/block-a
+Old site: https://croquetscores.com/2017/ac/jic-invitational/competition/block-a
+
+JIC Invitational - Block A could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Simon Jenkins 26 beat Rich Schiller 4 in JIC Invitational - Block A because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/31521
+
+New site: http://localhost:3000/2017/ac/desert-classic/competitions/championship-knockout-2nd-life
+Old site: https://croquetscores.com/2017/ac/desert-classic/competition/championship-knockout-2nd-life
+
+Desert Classic - Championship Knockout 2nd life could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Ben Rothman 26 beat Peter Trimmer 6 in Desert Classic - Championship Knockout 2nd life because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/20289
+
+New site: http://localhost:3000/2017/ac/desert-classic
+Old site: https://croquetscores.com/2017/ac/desert-classic/competition/challenger-2nd-life
+
+Desert Classic - Challenger 2nd Life could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/20290
+
+New site: http://localhost:3000/2017/ac/desert-classic/competitions/competitors-second-life
+Old site: https://croquetscores.com/2017/ac/desert-classic/competition/competitors-second-life
+
+Desert Classic - Competitors Second Life could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Michael Albert 14 beat Tracey Roche 4 in Desert Classic - Competitors Second Life because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/21445
+
+New site: http://localhost:3000/2017/gc/egyptian-double-mix-1/competitions/b
+Old site: https://croquetscores.com/2017/gc/egyptian-double-mix-1/competition/b
+
+Egyptian Double Mix - B could not be brought over whole as a knockout: 18 of its games would be refused, the first being: Game Salwa Saleh & Wael Shahin 7 beat Pouline Salib & Mohamed Karem 4 in Egyptian Double Mix - B because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/22820
+
+New site: http://localhost:3000/2017/gc/norwegian-championship/competitions/final-knockout
+Old site: https://croquetscores.com/2017/gc/norwegian-championship/competition/final-knockout
+
+Norwegian Championship GC - Final knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Glenn Fauske 7 beat Birger Stene 5 in Norwegian Championship GC - Final knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/24641
+
+New site: http://localhost:3000/2017/gc/cca-knockout
+Old site: https://croquetscores.com/2017/gc/cca-knockout/competition/cca-golf-croquet-knockout
+
+CCA GC Knockout - CCA Golf Croquet Knockout could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/39233
+
+New site: http://localhost:3000/2017/gc/q-to-the-rank/competitions/2
+Old site: https://croquetscores.com/2017/gc/q-to-the-rank/competition/2
+
+Q to the rank - 2 could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Ahmed Aabas 7 beat Wael Abdelwahed 2 in Q to the rank - 2 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/31728
+
+New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights
+Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
+
+WA GC Forrest Park Summer Nights Teams - Summer Nights could not be brought over whole as a block: 23 of its games would be refused, the first being: Game Paratroopers 6 beat Rechter Scale 3 in WA GC Forrest Park Summer Nights Teams - Summer Nights because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/27201
+
+New site: http://localhost:3000/2018/ac/cheltenham-easter-w-e/competitions/main-event
+Old site: https://croquetscores.com/2018/ac/cheltenham-easter-w-e/competition/main-event
+
+Cheltenham Easter WE - Main Event could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Richard M Smith 26 beat Andrew Willis 9 in Cheltenham Easter WE - Main Event because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/29326
+
+New site: http://localhost:3000/2018/ac/european-championship/competitions/bowl
+Old site: https://croquetscores.com/2018/ac/european-championship/competition/bow4
+
+European AC Championship - Bowl could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game Lewis Palmer 26 beat Joi Elebo 0 in European AC Championship - Bowl because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/29344
+
+New site: http://localhost:3000/2018/gc/sm/competitions/knock-out
+Old site: https://croquetscores.com/2018/gc/sm/competition/knock-out
+
+Sm 2018 Gc - Knock-out could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Thomas Ericsson 7 beat Joakim Norbäck 5 in Sm 2018 Gc - Knock-out because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/30709
+
+New site: http://localhost:3000/2018/ac/sa-selectors-invitation-1/competitions/x-event
+Old site: https://croquetscores.com/2018/ac/sa-selectors-invitation-1/competition/x-event
+
+SA Selector's Invitation (Simon Hockey Cup) - X Event could not be brought over whole as a knockout: 9 of its games would be refused, the first being: Game Dwayne McCormack & Virginia Arney 26TP (DM) beat Roger Buddle &Shirley Howlett 7 in SA Selector's Invitation (Simon Hockey Cup) - X Event because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/30711
+
+New site: http://localhost:3000/2018/ac/sa-selectors-invitation-1/competitions/y-5th-place
+Old site: https://croquetscores.com/2018/ac/sa-selectors-invitation-1/competition/y-5ht-place
+
+SA Selector's Invitation (Simon Hockey Cup) - Y (5th Place) could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Mark Senior & Shirlene McBride 16 beat David Wise & John Arney 14 in SA Selector's Invitation (Simon Hockey Cup) - Y (5th Place) because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/32068
+
+New site: http://localhost:3000/2019/gc/cnz-nationals-2/competitions/y-first-round-losers-in-ko
+Old site: https://croquetscores.com/2019/gc/cnz-nationals-2/competition/x-final
+
+CNZ GC Nationals - Y (first round losers in KO) could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Jason Hodgett 7 beat Logan McCorkindale 4 in CNZ GC Nationals - Y (first round losers in KO) because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/53133
+
+New site: http://localhost:3000/2019/gc/taree-wild-fig/competitions/block-a
+Old site: https://croquetscores.com/2019/gc/taree-wild-fig/competition/block-a
+
+Taree Wild Fig - Block A could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Carol Goodman 7 beat Carol Goodman 5 in Taree Wild Fig - Block A because a player cannot play themselves.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/34596
+
+New site: http://localhost:3000/2019/ac/championship-of-county-dublin/competitions/mirabeau-process
+Old site: https://croquetscores.com/2019/ac/championship-of-county-dublin/competition/mirabeau-process
+
+Championship of County Dublin - Mirabeau Process could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Martin Gilmartin 10 beat Anne-Marie McGowan 7 in Championship of County Dublin - Mirabeau Process because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/34913
+
+New site: http://localhost:3000/2019/ac/championship-of-county-dublin
+Old site: https://croquetscores.com/2019/ac/championship-of-county-dublin/competition/mirabeau-marriage
+
+Championship of County Dublin - Mirabeau marriage could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/36420
+
+New site: http://localhost:3000/2019/gc/swiss-open-championship/competitions/s-shield
+Old site: https://croquetscores.com/2019/gc/swiss-open-championship/competition/s-shield
+
+GC Swiss Open Championship - S-Shield could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Neil Thomas 7 beat David Underhill 5 in GC Swiss Open Championship - S-Shield because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/36353
+
+New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/founders-cup-handicap-singles
+Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/founders-cup-handicap-singles
+
+2019 Championships of Ireland - Founders Cup Handicap Singles could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Ann Woulfe-Flanagan 12 beat Anne Marie Mc Gowan 6 in 2019 Championships of Ireland - Founders Cup Handicap Singles because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/36456
+
+New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/alternate-shot-doubles
+Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/alternate-shot-doubles
+
+2019 Championships of Ireland - Alternate Shot Doubles could not be brought over whole as a knockout: 6 of its games would be refused, the first being: Game N Werner & G O'Rourke 26 beat V Johnston & T Kemp 0 in 2019 Championships of Ireland - Alternate Shot Doubles because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/36482
+
+New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/usca-silver-salver-draw
+Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/usca-silver-salver-draw
+
+2019 Championships of Ireland - USCA Silver Salver Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Vickie Johnston 12 beat Diana Stevens 8 in 2019 Championships of Ireland - USCA Silver Salver Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/65590
+
+New site: http://localhost:3000/2020/gc/aus-sa-doubles-combined-handicap-8/competitions/block-a
+Old site: https://croquetscores.com/2020/gc/aus-sa-doubles-combined-handicap-8/competition/block-a
+
+AUS SA Doubles Combined Handicap 8+ - Block A could not be brought over whole as a block: 5 of its games would be refused, the first being: Game Robert Brown & Barbarra Bertram 7 beat Ansi Baumanis & Colleen Lane 2 in AUS SA Doubles Combined Handicap 8+ - Block A because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/42883
+
+New site: http://localhost:3000/2020/ac/irish-championships
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-singles-draw
+
+Irish Championships - Handicap Singles Draw could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/42884
+
+New site: http://localhost:3000/2020/ac/irish-championships
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicapsingles-process
+
+Irish Championships - HandicapSingles Process could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/42886
+
+New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-draw
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-draw
+
+Irish Championships - Handicap Doubles Draw could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game A-M McGowan & S. Briggs 23 beat O’Shaughnessy & A-M Pigot 15 in Irish Championships - Handicap Doubles Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/42887
+
+New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-process
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-process
+
+Irish Championships - Handicap Doubles Process could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game O’Shaughnessy & A-M Pigot 26 beat Osborne Burke & Miller 17 in Irish Championships - Handicap Doubles Process because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/67076
+
+New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all
+Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
+
+National Forest GC Doubles - All Play All could not be brought over whole as a block: 2 of its games would be refused, the first being: Game Eleanor Ross & Christine Wood 7 beat Jane Pringle & Ann Brookes 4 in National Forest GC Doubles - All Play All because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/67237
+
+New site: http://localhost:3000/2020/gc/heretaunga-silver-badge/competitions/block-9-to-16
+Old site: https://croquetscores.com/2020/gc/heretaunga-silver-badge/competition/block-9-to-16
+
+Heretaunga Silver Badge 2020 - Block (9 to 16) could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Patrick Dingemans 7 beat Richard Walsh 4 in Heretaunga Silver Badge 2020 - Block (9 to 16) because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/44961
+
+New site: http://localhost:3000/2020/gc/queensland-directors-doubles-8752/competitions/championship-knockout
+Old site: https://croquetscores.com/2020/gc/queensland-directors-doubles-8752/competition/championship-knockout
+
+Queensland GC Div 2/3 Doubles - Championship Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Randall Whyte & Margaret Powell 6 beat Charles Ernst & Glenn Wran 5 in Queensland GC Div 2/3 Doubles - Championship Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/48257
+
+New site: http://localhost:3000/2021/gc/wa-summer-nights-finals-1/competitions/final-1-2
+Old site: https://croquetscores.com/2021/gc/wa-summer-nights-finals-1/competition/final-1-2
+
+WA GC Summer Nights Final - Final 1/2 could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Robyn Dart & Dianne Bower 7 beat Torben Bak & Kevin Della Bosca 3 in WA GC Summer Nights Final - Final 1/2 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/49575
+
+New site: http://localhost:3000/2021/gc/wa-cambridge-diane-cook-cup
+Old site: https://croquetscores.com/2021/gc/wa-cambridge-diane-cook-cup/competition/5th-8th
+
+WA Cambridge GC Diane Cook Cup - 5th 8th could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/49735
+
+New site: http://localhost:3000/2021/gc/1st-rshecc-spring-trophy/competitions/main-champonship-knockout
+Old site: https://croquetscores.com/2021/gc/1st-rshecc-spring-trophy/competition/main-champonship-knockout
+
+1st GC RSHECC Spring Trophy - Main Champonship Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Jose Maria Alonso-Gamo 7 beat Antonio Sainz de Vicuna 0 in 1st GC RSHECC Spring Trophy - Main Champonship Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/49993
+
+New site: http://localhost:3000/2021/gc/12th-la-fuensanta-spring-trohpy/competitions/plate-knockout
+Old site: https://croquetscores.com/2021/gc/12th-la-fuensanta-spring-trohpy/competition/plate-knockout
+
+12th GC La Fuensanta Spring Trohpy - Plate Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Teresa Abaitua 6 beat Maria Moreno-Luque 5 in 12th GC La Fuensanta Spring Trohpy - Plate Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/50158
+
+New site: http://localhost:3000/2021/gc/lake-carroll-independence-day-shootout
+Old site: https://croquetscores.com/2021/gc/lake-carroll-independence-day-shootout/competition/championship-double-elimination-ko
+
+Lake Carroll Independence Day Open Shootout - Championship Double Elimination KO could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/50201
+
+New site: http://localhost:3000/2021/ac/open-singles-championship/competitions/the-association-plate-draw
+Old site: https://croquetscores.com/2021/ac/open-singles-championship/competition/the-association-plate-draw
+
+CA AC Open Singles Championship - The Association Plate - Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Jamie Burch 26 beat James Hopgood 13 in CA AC Open Singles Championship - The Association Plate - Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/50224
+
+New site: http://localhost:3000/2021/gc/croquetwest-state-mixed-doubles
+Old site: https://croquetscores.com/2021/gc/croquetwest-state-mixed-doubles/competition/7-8
+
+Croquetwest GC State Mixed Doubles - 7/8 could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/50605
+
+New site: http://localhost:3000/2021/ac/cropquetwest-14-point-div-3-singles
+Old site: https://croquetscores.com/2021/ac/cropquetwest-14-point-div-3-singles/competition/consolation-play-off
+
+Cropquetwest AC 14 Point Div 3 Singles - Consolation Play Off could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/50880
+
+New site: http://localhost:3000/2021/a6w/cc-jackson-invitational-1/competitions/championship-bracket
+Old site: https://croquetscores.com/2021/a6w/cc-jackson-invitational-1/competition/championship-bracket
+
+CC Jackson Invitational - Championship Bracket could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Britt Ruby 18 beat George Cochran 12 in CC Jackson Invitational - Championship Bracket because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/50854
+
+New site: http://localhost:3000/2021/gc/2nd-plantation-foundation-benefit-golf-croquet-open/competitions/doubles-championship
+Old site: https://croquetscores.com/2021/gc/2nd-plantation-foundation-benefit-golf-croquet-open/competition/doubles-championship
+
+2nd Plantation Foundation Benefit Golf Croquet Open - Doubles Championship could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Cavers-McMullen 6 beat Bridgewater-Anderson 3 in 2nd Plantation Foundation Benefit Golf Croquet Open - Doubles Championship because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51370
+
+New site: http://localhost:3000/2022/a6w/blaine-davis-invitational/competitions/championship-finals
+Old site: https://croquetscores.com/2022/a6w/blaine-davis-invitational/competition/championship-finals
+
+Blaine Davis Invitational - Championship Finals could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game David Ekstrom 17 beat Lynda Sudderberg 9 in Blaine Davis Invitational - Championship Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51371
+
+New site: http://localhost:3000/2022/a6w/blaine-davis-invitational/competitions/first-flight-finals
+Old site: https://croquetscores.com/2022/a6w/blaine-davis-invitational/competition/first-flight-finals
+
+Blaine Davis Invitational - First Flight Finals could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Steve Grassbaugh 11 beat Oakley Johnson 10 in Blaine Davis Invitational - First Flight Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51372
+
+New site: http://localhost:3000/2022/a6w/blaine-davis-invitational/competitions/second-flight-finals
+Old site: https://croquetscores.com/2022/a6w/blaine-davis-invitational/competition/second-flight-finals
+
+Blaine Davis Invitational - Second Flight Finals could not be brought over whole as a knockout: 8 of its games would be refused, the first being: Game Steve Zoric 14 beat Laurien Trowell 11 in Blaine Davis Invitational - Second Flight Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/80301
+
+New site: http://localhost:3000/2022/a6w/the-jones-invitational-3/competitions/second-flight
+Old site: https://croquetscores.com/2022/a6w/the-jones-invitational-3/competition/second-flight
+
+The  2022 Jones Invitational - Second Flight could not be brought over whole as a block: 1 of its games would be refused, the first being: Game George Quallich 11 beat George Quallich 5 in The  2022 Jones Invitational - Second Flight because a player cannot play themselves.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51384
+
+New site: http://localhost:3000/2022/gc/open-series-cheltenham/competitions/plate
+Old site: https://croquetscores.com/2022/gc/open-series-cheltenham/competition/consolation
+
+GC Open Series Cheltenham - Plate could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Neil Fillery 10 beat Jane Humphreys 6 in GC Open Series Cheltenham - Plate because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51765
+
+New site: http://localhost:3000/2022/gc/chesapeake-bay-rockfish/competitions/championship-knockout
+Old site: https://croquetscores.com/2022/gc/chesapeake-bay-rockfish/competition/championship-knockout
+
+2022 Chesapeake Bay Rockfish - Championship Knockout could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Gil Flowers 7 beat Bo Prillaman 4 in 2022 Chesapeake Bay Rockfish - Championship Knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51766
+
+New site: http://localhost:3000/2022/gc/chesapeake-bay-rockfish/competitions/1st-flight-knockout
+Old site: https://croquetscores.com/2022/gc/chesapeake-bay-rockfish/competition/1st-flight-knockout
+
+2022 Chesapeake Bay Rockfish - 1st Flight Knockout could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Geri O'Neill 7 beat Jo Hofmann 5 in 2022 Chesapeake Bay Rockfish - 1st Flight Knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51877
+
+New site: http://localhost:3000/2022/gc/sussex-county-cc-level-play-singles
+Old site: https://croquetscores.com/2022/gc/sussex-county-cc-level-play-singles/competition/finals
+
+Sussex County CC Level Play Singles - finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51750
+
+New site: http://localhost:3000/2022/gc/geraldton-a-b-grade-l-p-singles/competitions/a-grade
+Old site: https://croquetscores.com/2022/gc/geraldton-a-b-grade-l-p-singles/competition/a-grade
+
+WA Geraldton GC A & B Grade L/P Singles - A Grade could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Paul Dodson 7 beat Paul Christmass 6 in WA Geraldton GC A & B Grade L/P Singles - A Grade because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/51989
+
+New site: http://localhost:3000/2022/gc/wrest-park-open-championship/competitions/shield-finals
+Old site: https://croquetscores.com/2022/gc/wrest-park-open-championship/competition/shield-finals
+
+Wrest Park GC Open Championship - Shield finals could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game Lionel Tibble 7 beat Leslie Heard 5 in Wrest Park GC Open Championship - Shield finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52113
+
+New site: http://localhost:3000/2022/rc/nsw-ricochet-open-doubles
+Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competition/final
+
+NSW Ricochet Open Doubles - Final could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52087
+
+New site: http://localhost:3000/2022/gc/ealing-b-level-series
+Old site: https://croquetscores.com/2022/gc/ealing-b-level-series/competition/play-offs
+
+Ealing GC "B" Level Series - Play-offs could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/81920
+
+New site: http://localhost:3000/2022/gc/chesapeake-bay-summer-tournament/competitions/championship-flight
+Old site: https://croquetscores.com/2022/gc/chesapeake-bay-summer-tournament/competition/championship
+
+2022 Chesapeake Bay Summer GC Tournament - Championship Flight could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Lisa Maloney 7 beat Cristian Miranda 6 in 2022 Chesapeake Bay Summer GC Tournament - Championship Flight because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52577
+
+New site: http://localhost:3000/2022/gc/swedish-championship-golf-croquet-doubles/competitions/slutspel
+Old site: https://croquetscores.com/2022/gc/swedish-championship-golf-croquet-doubles/competition/slutspel
+
+2022 Swedish Championship Golf Croquet Doubles - Slutspel could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Erik Svensson  & Mathias Johansson 7 beat Joi Elebo & Eje Elebo 5 in 2022 Swedish Championship Golf Croquet Doubles - Slutspel because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52900
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/champs-semi-finals
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/champs-semi-finals
+
+2022 Woodlawn Mini-Lobster Tournament - Champs Semi-Finals could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Neil Houghton 20 beat Don Parker 16 in 2022 Woodlawn Mini-Lobster Tournament - Champs Semi-Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52901
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/1st-flight-semi-finals
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/1st-flight-semi-finals
+
+2022 Woodlawn Mini-Lobster Tournament - 1st Flight Semi-Finals could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Steve Zoric 15 beat Anne Carr 14 in 2022 Woodlawn Mini-Lobster Tournament - 1st Flight Semi-Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52902
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/2nd-semi-finals
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/2nd-semi-finals
+
+2022 Woodlawn Mini-Lobster Tournament - 2nd Semi Finals could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Tim McCormick 17 beat Tina Hinckley 12 in 2022 Woodlawn Mini-Lobster Tournament - 2nd Semi Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52903
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/3rd-semi-finals
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/3rd-semi-finals
+
+2022 Woodlawn Mini-Lobster Tournament - 3rd Semi-Finals could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Richard Hayes 14 beat Ellen Fox 13 in 2022 Woodlawn Mini-Lobster Tournament - 3rd Semi-Finals because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52882
+
+New site: http://localhost:3000/2022/gc/australia-womens-singles/competitions/block-b-play-off
+Old site: https://croquetscores.com/2022/gc/australia-womens-singles/competition/block-b-playoff
+
+Australia - GC Women's Singles - Block B Play-off could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Alison Sharpe 2 beat Anne Woodhouse 0 in Australia - GC Women's Singles - Block B Play-off because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/83338
+
+New site: http://localhost:3000/2022/gc/moorabinda-country-all-stars/competitions/a-grade
+Old site: https://croquetscores.com/2022/gc/moorabinda-country-all-stars/competition/a-grade
+
+Moorabinda Country All Stars - A Grade could not be brought over whole as a block: 7 of its games would be refused, the first being: Game Robyn Dart 7 beat Les Holmes 4 in Moorabinda Country All Stars - A Grade because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53174
+
+New site: http://localhost:3000/2022/gc/mosman-prize-for-handicap/competitions/1st-2nd-final
+Old site: https://croquetscores.com/2022/gc/mosman-prize-for-handicap/competition/1st-2nd-finals
+
+Mosman Prize for GC Handicap - 1st/2nd Final could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Rae Upton 7 beat Janelle Wilson 5 in Mosman Prize for GC Handicap - 1st/2nd Final because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53446
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/championship-a-ko
+
+The Jones Invitational - Championship A KO could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53447
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/championship-b-ko
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/championship-b-ko
+
+The Jones Invitational - Championship B KO could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Linda Trifone 16 beat Ronald Eccles 7 in The Jones Invitational - Championship B KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53448
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/first-flight-ko
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/first-flight-ko
+
+The Jones Invitational - First Flight KO could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Ellie Griffith 16 beat Steven Zoric 12 in The Jones Invitational - First Flight KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53449
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/second-flight-ko
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/second-flight-ko
+
+The Jones Invitational - Second Flight KO could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Sandy Janitz 14 beat Jeanette Hodgkins 11 in The Jones Invitational - Second Flight KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53450
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/third-flight-ko
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/third-flight-ko
+
+The Jones Invitational - Third Flight KO could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Christof (Chris) Weihs 14 beat George Claffey III 12 in The Jones Invitational - Third Flight KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53627
+
+New site: http://localhost:3000/2023/a6w/blaine-davis-invitational/competitions/first-flight-knockout
+Old site: https://croquetscores.com/2023/a6w/blaine-davis-invitational/competition/first-flight-knockout
+
+2023 Blaine Davis Invitational - First Flight Knockout could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game Jan Fisher 14 beat John Joseph 13 in 2023 Blaine Davis Invitational - First Flight Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53628
+
+New site: http://localhost:3000/2023/a6w/blaine-davis-invitational/competitions/championship-knockout
+Old site: https://croquetscores.com/2023/a6w/blaine-davis-invitational/competition/championship-knockout
+
+2023 Blaine Davis Invitational - Championship Knockout could not be brought over whole as a knockout: 7 of its games would be refused, the first being: Game Matt Griffith 11 beat Lynda Sudderberg 4 in 2023 Blaine Davis Invitational - Championship Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/53629
+
+New site: http://localhost:3000/2023/a6w/blaine-davis-invitational/competitions/second-flight-knockout
+Old site: https://croquetscores.com/2023/a6w/blaine-davis-invitational/competition/second-flight-knockout
+
+2023 Blaine Davis Invitational - Second Flight Knockout could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game George Claffey III 16 beat Linda Grady 10 in 2023 Blaine Davis Invitational - Second Flight Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/54102
+
+New site: http://localhost:3000/2023/gc/surbiton-championship-open-series/competitions/bowl
+Old site: https://croquetscores.com/2023/gc/surbiton-championship-open-series/competition/bowl
+
+Surbiton GC Championship (Open Series) - Bowl could not be brought over whole as a knockout: 6 of its games would be refused, the first being: Game Richard BROOKS 7 beat Michael Bilton 5 in Surbiton GC Championship (Open Series) - Bowl because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/54103
+
+New site: http://localhost:3000/2023/gc/surbiton-championship-open-series/competitions/shield
+Old site: https://croquetscores.com/2023/gc/surbiton-championship-open-series/competition/shield
+
+Surbiton GC Championship (Open Series) - Shield could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Tim RUSSELL 7 beat Leticia Gonzalez de la Bastida 1 in Surbiton GC Championship (Open Series) - Shield because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/54280
+
+New site: http://localhost:3000/2023/gc/ikskiles-ab-level/competitions/plate
+Old site: https://croquetscores.com/2023/gc/ikskiles-ab-level/competition/plate
+
+Ikskiles AB Level - Plate could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Birute KRUZE 7 beat Jolanta STAFECKA 3 in Ikskiles AB Level - Plate because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/54378
+
+New site: http://localhost:3000/2023/a6w/berkshire-invitational/competitions/second-flight-knockout
+Old site: https://croquetscores.com/2023/a6w/berkshire-invitational/competition/second-flight-knockout
+
+Berkshire Invitational - Second Flight Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Kathleen Green 13 beat Suzanne Laging 12 in Berkshire Invitational - Second Flight Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/54331
+
+New site: http://localhost:3000/2023/ac/championship-of-county-dublin/competitions/coronation-bowls-draw
+Old site: https://croquetscores.com/2023/ac/championship-of-county-dublin/competition/coronation-bowls-draw
+
+Championship of County Dublin - Coronation Bowls draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game J O'Neill & A Woulfe Flanagan 26 beat B Murray & S Briggs 4 in Championship of County Dublin - Coronation Bowls draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/87946
+
+New site: http://localhost:3000/2023/gc/cullasaja-ladies-doubles-championship/competitions/crossblock
+Old site: https://croquetscores.com/2023/gc/cullasaja-ladies-doubles-championship/competition/crossblock
+
+Cullasaja Ladies' Doubles Championship - Crossblock could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Rosalie Forrest & Terry Fisher 7 beat Sandy Howard & Laura Walker 4w in Cullasaja Ladies' Doubles Championship - Crossblock because the loser's score carries a mark only a winner's can.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/55277
+
+New site: http://localhost:3000/2023/gc/ggcc-b-level
+Old site: https://croquetscores.com/2023/gc/ggcc-b-level/competition/5-to-8-ko
+
+GGCC GC B-Level - 5 to 8 KO could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/55373
+
+New site: http://localhost:3000/2023/ac/croquet-championships-of-ireland/competitions/green-cup-draw
+Old site: https://croquetscores.com/2023/ac/croquet-championships-of-ireland/competition/green-cup-draw
+
+Croquet Championships of Ireland - Green Cup Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Conor O'Sullivan 18 beat Tim Furlong 17 in Croquet Championships of Ireland - Green Cup Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/55376
+
+New site: http://localhost:3000/2023/ac/croquet-championships-of-ireland/competitions/championship-doubles-draw
+Old site: https://croquetscores.com/2023/ac/croquet-championships-of-ireland/competition/championship-doubles-draw
+
+Croquet Championships of Ireland - Championship Doubles Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game A. Johnston & D. Johnston 26TP AJ beat D. McGrath & S. Williams 1 in Croquet Championships of Ireland - Championship Doubles Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/88115
+
+New site: http://localhost:3000/2023/gc/bicc-snake-season-long/competitions/blue-flight
+Old site: https://croquetscores.com/2023/gc/bicc-snake-season-long/competition/blue-flight
+
+BICC Snake Season Long - Blue Flight could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Peter Jeffers 7 beat Lisa Stewart 4 in BICC Snake Season Long - Blue Flight because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/88707
+
+New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/eastern
+Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/eastern
+
+Mountain Challenge - Eastern could not be brought over whole as a block: 3 of its games would be refused, the first being: Game Burlingame 6 beat High Hampton 5 in Mountain Challenge - Eastern because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/55682
+
+New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/knockout
+Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/knockout
+
+Mountain Challenge - Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Cedar Creek 7 beat CCSV 6 in Mountain Challenge - Knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/55737
+
+New site: http://localhost:3000/2023/a6w/nycc-osborn-cup
+Old site: https://croquetscores.com/2023/a6w/nycc-osborn-cup/competition/doubles-ko
+
+NYCC Osborn Cup - doubles KO could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/56207
+
+New site: http://localhost:3000/2023/gc/chesapeake-bay-big-oyster/competitions/1st-flight-knockout-3rd-place
+Old site: https://croquetscores.com/2023/gc/chesapeake-bay-big-oyster/competition/1st-flight-1
+
+Chesapeake Bay Big Oyster - 1st Flight Knockout 3rd Place could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Susie Day 7 beat Tom Hennelly 4 in Chesapeake Bay Big Oyster - 1st Flight Knockout 3rd Place because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/89149
+
+New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-a
+Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-a
+
+WCA Sunday GC Handicap Interclub - Group A could not be brought over whole as a block: 9 of its games would be refused, the first being: Game Ron Rosenberg & Denise Ongley 7 beat Claire Roberts & Rob Lensen 3 in WCA Sunday GC Handicap Interclub - Group A because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/89150
+
+New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-b
+Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-b
+
+WCA Sunday GC Handicap Interclub - Group B could not be brought over whole as a block: 4 of its games would be refused, the first being: Game Shirley Gay & Ruth Pearce 5 beat Jennifer Mackrell & Ali Pandelidis 4 in WCA Sunday GC Handicap Interclub - Group B because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/90287
+
+New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/final
+Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/final
+
+WCA Sunday GC Handicap Interclub - Final could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Rob Egginson & David Littlejohn 5 beat Ron Rosenberg & Denise Ongley 4 in WCA Sunday GC Handicap Interclub - Final because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/55815
+
+New site: http://localhost:3000/2023/gc/australia-womens-singles/competitions/consolation-knockout-11-14
+Old site: https://croquetscores.com/2023/gc/australia-womens-singles/competition/consolation-knockout-13-16
+
+Australia - GC Women's Singles - Consolation Knockout 11 - 14 could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Pop Petersen 7 beat Jenifer Rechter 5 in Australia - GC Women's Singles - Consolation Knockout 11 - 14 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/57065
+
+New site: http://localhost:3000/2024/gc/tbc-member-guest/competitions/championship-knockout
+Old site: https://croquetscores.com/2024/gc/tbc-member-guest/competition/championship-knockout
+
+TBC GC Member Guest - Championship Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Thomas Tribby/Tom Cooper 7 beat Conrad Rugart/Tate Russack 5 in TBC GC Member Guest - Championship Knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/91876
+
+New site: http://localhost:3000/2024/ac/western-province-croquet-association-championships/competitions/restricted-b-restricted-h-cap-singles-comb
+Old site: https://croquetscores.com/2024/ac/western-province-croquet-association-championships/competition/restricted-b-restricted-h-cap-singles-comb
+
+Western Province Croquet Association AC Championships - Restricted B/Restricted H/cap Singles comb could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Frances Colman 19 beat Paul Swaffield 17 in Western Province Croquet Association AC Championships - Restricted B/Restricted H/cap Singles comb because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/57249
+
+New site: http://localhost:3000/2024/ac/vic-mcc-chairmans-shield
+Old site: https://croquetscores.com/2024/ac/vic-mcc-chairmans-shield/competition/finals
+
+VIC- MCC Chairman's Shield - Finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/57134
+
+New site: http://localhost:3000/2024/a6w/mission-hills-invitational/competitions/first-flight-doubles-knockout
+Old site: https://croquetscores.com/2024/a6w/mission-hills-invitational/competition/first-flight-doubles-knockout
+
+Mission Hills 2024 Invitational - First Flight Doubles Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Pressler/Pulitzer 20 beat Kalmon/Priddle 9 in Mission Hills 2024 Invitational - First Flight Doubles Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/57798
+
+New site: http://localhost:3000/2024/gc/pb-intercluub-championship/competitions/championship-knockout
+Old site: https://croquetscores.com/2024/gc/pb-intercluub-championship/competition/championship-knockout
+
+PB Intercluub Championship - Championship Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Vernon Pierce/Caryl Firth 7 beat Neill Trimble/Bruce Hindin 5 in PB Intercluub Championship - Championship Knockout because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/57921
+
+New site: http://localhost:3000/2024/gc/bury-a-level-national-tournament/competitions/knockout
+Old site: https://croquetscores.com/2024/gc/bury-a-level-national-tournament/competition/knockout
+
+Bury GC A Level National Tournament - Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Jon Carrington 7 beat Tom Grievson 5 in Bury GC A Level National Tournament - Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/56200
+
+New site: http://localhost:3000/2023/gc/canberra-golf-croquet-veterans-handicap-singles
+Old site: https://croquetscores.com/2023/gc/canberra-golf-croquet-veterans-handicap-singles/competition/finals
+
+Canberra Golf Croquet Veterans Handicap Singles - Finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/58361
+
+New site: http://localhost:3000/2024/gc/sidmouth-a-level-series-0/competitions/main-knock-out
+Old site: https://croquetscores.com/2024/gc/sidmouth-a-level-series-0/competition/main-knock-out
+
+Sidmouth GC 'A' Level Series 0+ - MAIN KNOCK-OUT could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Philip Harris 7 beat Andy Dochniak 4 in Sidmouth GC 'A' Level Series 0+ - MAIN KNOCK-OUT because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/94414
+
+New site: http://localhost:3000/2024/gc/ramsgate-open-championship/competitions/plate
+Old site: https://croquetscores.com/2024/gc/ramsgate-open-championship/competition/plate
+
+Ramsgate GC Open Championship - Plate could not be brought over whole as a block: 2 of its games would be refused, the first being: Game Trevor Longman 7 beat Dave Buckman 6 in Ramsgate GC Open Championship - Plate because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/58759
+
+New site: http://localhost:3000/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competitions/doubles-knockout
+Old site: https://croquetscores.com/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competition/doubles-knockout
+
+2024 CCJ Golf Croquet championship Doubles and Singles - Doubles Knockout could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Mark Saxon/Neville Boschert 4 beat Andrew Mallinson/Curtis Wilson 3 in 2024 CCJ Golf Croquet championship Doubles and Singles - Doubles Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52424
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/handicap-singles
+
+Championships of Ireland - Handicap Singles could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52425
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/usca-salver-draw
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/usca-salver-draw
+
+Championships of Ireland - USCA Salver Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Nicola Kelly 14 beat T. Woulfe Flanagan 8 in Championships of Ireland - USCA Salver Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52427
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/as-doubles-draw
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/as-doubles-draw
+
+Championships of Ireland - AS Doubles Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Harris & McGowan 12 beat Carroll & Pigot 9 in Championships of Ireland - AS Doubles Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/52428
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/as-doubles-process
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/as-doubles-process
+
+Championships of Ireland - AS Doubles Process could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Styles & Healy 26 beat Harris & McGowan 0 in Championships of Ireland - AS Doubles Process because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/58788
+
+New site: http://localhost:3000/2024/ac/east-midlands-championship/competitions/draw
+Old site: https://croquetscores.com/2024/ac/east-midlands-championship/competition/east-midlands-championship-draw
+
+East Midlands Championship - Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Debbie Lines 26tp beat Neil Adams 0 in East Midlands Championship - Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/59041
+
+New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-club-championship
+Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-club-championship
+
+NYCC Club Championship - NYCC Club Championship could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Jay Douglas 11 beat Peter Dempsey 5 in NYCC Club Championship - NYCC Club Championship because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/59042
+
+New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-a-block
+Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-a-block
+
+NYCC Club Championship - NYCC Plate A Block could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Linda Merk 10 beat Angelika Alberstad 4 in NYCC Club Championship - NYCC Plate A Block because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/59043
+
+New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-b-block
+Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-b-block
+
+NYCC Club Championship - NYCC Plate B Block could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game Geoffrey Johnson 11 beat Tyler Hathaway 8 in NYCC Club Championship - NYCC Plate B Block because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/59248
+
+New site: http://localhost:3000/2024/gc/cedar-creek-club-championship/competitions/ko
+Old site: https://croquetscores.com/2024/gc/cedar-creek-club-championship/competition/ko
+
+Cedar Creek Club Championship - KO could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Peter Carlin 7 beat Pat Cunningham 4 in Cedar Creek Club Championship - KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/59388
+
+New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout
+Old site: https://croquetscores.com/2024/gc/malone-cup-invitational/competition/championship-knockout
+
+Malone Cup Invitational - Championship Knockout could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game Mike Carroll 4 beat Ron Taylor 3 in Malone Cup Invitational - Championship Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/59613
+
+New site: http://localhost:3000/2024/gc/nsw-division-1-singles/competitions/z-bo3
+Old site: https://croquetscores.com/2024/gc/nsw-division-1-singles/competition/y-bo3
+
+NSW GC Division 1 Singles - Z (Bo3) could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Sue Sellers 7 beat David Scott 4 in NSW GC Division 1 Singles - Z (Bo3) because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/96995
+
+New site: http://localhost:3000/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competitions/stratford-3-vs-hawera-2
+Old site: https://croquetscores.com/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competition/stratford-vs-hawera
+
+Croquet South Taranaki  Johnstone Shield GC Advantage Doubles  1st round - Stratford 3  vs Hawera 2 could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Sue Williams (4) & Cherol Filbee (8) 7 beat Bronwyn Tonga (11) & Paul Burton (12) 2 in Croquet South Taranaki  Johnstone Shield GC Advantage Doubles  1st round - Stratford 3  vs Hawera 2 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/97001
+
+New site: http://localhost:3000/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competitions/stratford-1-vs-park-3
+Old site: https://croquetscores.com/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competition/stratford-1-vs-park-3
+
+Croquet South Taranaki  Johnstone Shield GC Advantage Doubles  1st round - Stratford 1 vs Park 3 could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Linda Kirdy (5) & Jeanette How (11) 7 beat Graeme Drummond (10) & Gloria Webby (11) 1 in Croquet South Taranaki  Johnstone Shield GC Advantage Doubles  1st round - Stratford 1 vs Park 3 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/97002
+
+New site: http://localhost:3000/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competitions/inglewood-3-vs-hawera-1
+Old site: https://croquetscores.com/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competition/inglewood-3-vs-hawera-1
+
+Croquet South Taranaki  Johnstone Shield GC Advantage Doubles  1st round - Inglewood 3 vs Hawera 1 could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Heather Sturgeon (4) & Kaye Bird (10) 7 beat Joan Petricevich (12) & Bruce Carter (10) 6 in Croquet South Taranaki  Johnstone Shield GC Advantage Doubles  1st round - Inglewood 3 vs Hawera 1 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60868
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-championship-a
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/chammpionship-a
+
+The Jones Invitational - Knockout Championship A could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Adam Lassiter 26 beat Matt Griffith 6 in The Jones Invitational - Knockout Championship A because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60869
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-championship-b
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/championship-b-1
+
+The Jones Invitational - Knockout Championship B could not be brought over whole as a knockout: 4 of its games would be refused, the first being: Game Bob Gannon 14 beat Ronald Millican 10 in The Jones Invitational - Knockout Championship B because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60870
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-first-flight
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/first-flight-1
+
+The Jones Invitational - Knockout First Flight could not be brought over whole as a knockout: 8 of its games would be refused, the first being: Game Ellie Griffith 14 beat William Todd 7 in The Jones Invitational - Knockout First Flight because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60871
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-second-flight
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/second-flight-1
+
+The Jones Invitational - Knockout Second Flight could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Ted Welsh 15 beat Richard (Rick) Hayes 9 in The Jones Invitational - Knockout Second Flight because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60872
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-third-flight
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/third-flight-1
+
+The Jones Invitational - Knockout Third FLight could not be brought over whole as a knockout: 7 of its games would be refused, the first being: Game Rusty Rose 13 beat Karen Weihs 9 in The Jones Invitational - Knockout Third FLight because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60873
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-fourth-flight
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/fourth-flight-1
+
+The Jones Invitational - Knockout Fourth Flight could not be brought over whole as a knockout: 3 of its games would be refused, the first being: Game James Peasley 14 beat Michael Kolowich 12 in The Jones Invitational - Knockout Fourth Flight because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/61360
+
+New site: http://localhost:3000/2025/gc/hawera-club-champs-level-doubles
+Old site: https://croquetscores.com/2025/gc/hawera-club-champs-level-doubles/competition/level-doubles
+
+Hawera Club Champs Level Doubles - Level Doubles could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/61409
+
+New site: http://localhost:3000/2025/a6w/blaine-davis-invitational/competitions/championship-knockout
+Old site: https://croquetscores.com/2025/a6w/blaine-davis-invitational/competition/championship-knockout-1
+
+2025 Blaine Davis Invitational - Championship Knockout could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Matt Griffith 15 beat Ralph Curtis 11 in 2025 Blaine Davis Invitational - Championship Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/61410
+
+New site: http://localhost:3000/2025/a6w/blaine-davis-invitational/competitions/first-flight-knockout
+Old site: https://croquetscores.com/2025/a6w/blaine-davis-invitational/competition/first-flight-knockout
+
+2025 Blaine Davis Invitational - First Flight Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Debbie Martin 10 beat Karen Weihs 9 in 2025 Blaine Davis Invitational - First Flight Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/61322
+
+New site: http://localhost:3000/2025/gc/east-dorset-summer-competitions/competitions/keith-mosley-hcp-ko
+Old site: https://croquetscores.com/2025/gc/east-dorset-summer-competitions/competition/keith-mosley-hcp-ko
+
+East Dorset GC Summer Competitions 2025 - Keith Mosley (Hcp KO) could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Jan Crouch 7 beat David Latimer 6 in East Dorset GC Summer Competitions 2025 - Keith Mosley (Hcp KO) because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/60052
+
+New site: http://localhost:3000/2024/gc/marewa-club-championships/competitions/sweetapple-knockout
+Old site: https://croquetscores.com/2024/gc/marewa-club-championships/competition/sweetapple-knockout
+
+Marewa Club Championships - Sweetapple Knockout could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Peter Stephens 7 beat Bob Couch 4 in Marewa Club Championships - Sweetapple Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/100672
+
+New site: http://localhost:3000/2025/gc/leonburra-shield/competitions/section-2
+Old site: https://croquetscores.com/2025/gc/leonburra-shield/competition/section-2
+
+Leonburra Shield - Section 2 could not be brought over whole as a block: 4 of its games would be refused, the first being: Game Leongatha 7 beat Korumburra 6 in Leonburra Shield - Section 2 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/62122
+
+New site: http://localhost:3000/2025/a6w/usca-6w-southeast-regional/competitions/championship-knockout
+Old site: https://croquetscores.com/2025/a6w/usca-6w-southeast-regional/competition/championship-knockout
+
+USCA 6W Southeast Regional - Championship Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Brian Hovis 15 beat Gil Rocha 5 in USCA 6W Southeast Regional - Championship Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/62660
+
+New site: http://localhost:3000/2025/gc/helenen-cup-doubles-advantage-hamburg
+Old site: https://croquetscores.com/2025/gc/helenen-cup-doubles-advantage-hamburg/competition/main-event
+
+Helenen Cup - GC Doubles Advantage - Hamburg - Main Event could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/62942
+
+New site: http://localhost:3000/2025/gc/ny-state/competitions/first-fl-singles-ko
+Old site: https://croquetscores.com/2025/gc/ny-state/competition/first-fl-singles-ko
+
+NY State GC - First Fl Singles KO could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Amy Hempt 7 beat George Claffey III 5 in NY State GC - First Fl Singles KO because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/62987
+
+New site: http://localhost:3000/2025/gc/swedish-championship-golf-croquet-doubles
+Old site: https://croquetscores.com/2025/gc/swedish-championship-golf-croquet-doubles/competition/top-8
+
+2025 Swedish Championship Golf Croquet Doubles - Top 8 could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/62649
+
+New site: http://localhost:3000/2025/gc/pendle-craven-a-level-0-series/competitions/quarter-final-semi-final-and-final
+Old site: https://croquetscores.com/2025/gc/pendle-craven-a-level-0-series/competition/quarter-final
+
+Pendle &Craven GC A-LEVEL (0+) SERIES - Quarter Final/Semi Final and Final could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Chris Higgins 7 beat Peter Payne 6 in Pendle &Craven GC A-LEVEL (0+) SERIES - Quarter Final/Semi Final and Final because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/63763
+
+New site: http://localhost:3000/2025/gc/nsw-bronze-brooch/competitions/plate-a-knockout
+Old site: https://croquetscores.com/2025/gc/nsw-bronze-brooch/competition/plate-a-knockout
+
+NSW GC Bronze Brooch - Plate A knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game David Jameson 7 beat Mandy Noble 5 in NSW GC Bronze Brooch - Plate A knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/63765
+
+New site: http://localhost:3000/2025/gc/nsw-bronze-brooch/competitions/plate-b-knockout
+Old site: https://croquetscores.com/2025/gc/nsw-bronze-brooch/competition/plate-b-knockout-1
+
+NSW GC Bronze Brooch - Plate B Knockout could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Lyn Cook 7 beat Dianne Bonnitcha 4 in NSW GC Bronze Brooch - Plate B Knockout because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/63910
+
+New site: http://localhost:3000/2025/gc/golf-croquet-championships-of-ireland/competitions/the-maggie-perpetual-trophy-handicap-doubles-draw
+Old site: https://croquetscores.com/2025/gc/golf-croquet-championships-of-ireland/competition/the-maggie-perpetual-trophy-handicap-doubles-draw
+
+Golf Croquet Championships of Ireland - The Maggie Perpetual Trophy Handicap Doubles Draw could not be brought over whole as a knockout: 1 of its games would be refused, the first being: Game Gerald O'Brien & Richard Douglas 6 beat Bruce Hindin & Brian Priestman 3 in Golf Croquet Championships of Ireland - The Maggie Perpetual Trophy Handicap Doubles Draw because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/105281
+
+New site: http://localhost:3000/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competitions/group-a
+Old site: https://croquetscores.com/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competition/group-a
+
+Wanganui Croquet Club 2025-26 Val Mitchell Trophy - Group A could not be brought over whole as a block: 1 of its games would be refused, the first being: Game Alison Sutherland 7 beat Karen Kitson 5w in Wanganui Croquet Club 2025-26 Val Mitchell Trophy - Group A because the loser's score carries a mark only a winner's can.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/105635
+
+New site: http://localhost:3000/2025/gc/victorian-under-21-singles-championship/competitions/round-robin-best-of-3
+Old site: https://croquetscores.com/2025/gc/victorian-under-21-singles-championship/competition/round-robin-best-of-3
+
+Victorian GC Under 21 Singles Championship - Round Robin Best of 3 could not be brought over whole as a block: 1 of its games would be refused, the first being: Game James Mason 7 beat Daniel Broad 1 in Victorian GC Under 21 Singles Championship - Round Robin Best of 3 because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/64890
+
+New site: http://localhost:3000/2025/ac/canberra-croquet-club-handicap-singles-competition
+Old site: https://croquetscores.com/2025/ac/canberra-croquet-club-handicap-singles-competition/competition/singles-final
+
+Canberra Croquet Club AC Handicap Singles Competition - Singles Final could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/blocks/105884
+
+New site: http://localhost:3000/2025/gc/usca-florida-state-tournament/competitions/first-flight
+Old site: https://croquetscores.com/2025/gc/usca-florida-state-tournament/competition/first-flight
+
+USCA Florida State GC Tournament - First Flight could not be brought over whole as a block: 3 of its games would be refused, the first being: Game Trudy Crowetz 7 beat Jason Collins 4 in USCA Florida State GC Tournament - First Flight because their match was already decided.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/8002
+
+New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate
+Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
+
+Czech 6th Golf Cup CCCC Horice - Plate could not be brought over whole as a knockout: 2 of its games would be refused, the first being: Game Petr Kuchta 7 beat Milada Bartova 6 in Czech 6th Golf Cup CCCC Horice - Plate because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: croquetscores.com/knockouts/4994
+
+New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life
+Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
+
+Country Boys - Bottom 8 1-Life could not be brought over whole as a knockout: 5 of its games would be refused, the first being: Game Brian Cumming 26 beat Rich Lamm 0 in Country Boys - Bottom 8 1-Life because they are not drawn to play each other.
+
+## ImportCompetition.NotBroughtOverWhole: gateballscores.com/knockouts/161
+
+New site: http://localhost:3000/2016/gb/victorian-gateball-championships
+Old site: https://gateballscores.com/2016/gb/victorian-gateball-championships/competition/pairs-finals
+
+Victorian Gateball Championships - Pairs Finals could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: gateballscores.com/knockouts/289
+
+New site: http://localhost:3000/2016/gb/gateball-league-geneva
+Old site: https://gateballscores.com/2016/gb/gateball-league-geneva/competition/quarter-finals-of-doubles
+
+Gateball League Geneva - Quarter Finals of Doubles could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
+
+## ImportCompetition.NotBroughtOverWhole: gateballscores.com/knockouts/801
+
+New site: http://localhost:3000/2019/gb/swiss-open-singles-and-doubles
+Old site: https://gateballscores.com/2019/gb/swiss-open-singles-and-doubles/competition/singles-championship
+
+Swiss Open Singles and Doubles - Singles Championship could not be brought over whole as a knockout: its draw cannot be worked out from its players and games
 
 ## ImportCompetition.PlayerNotInTournament: croquetscores.com/blocks/79769 player 6
 
@@ -19088,6 +20754,34 @@ Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competitio
 
 Player Cheryl Patterson & Chris Williamson in NSW Ricochet Open Doubles - Block was brought over from the competition's own list, because the tournament's players no longer listed them.
 
+## ImportCompetition.PlayerNotInTournament: croquetscores.com/knockouts/52113/see-notes player 10
+
+New site: http://localhost:3000/2022/rc/nsw-ricochet-open-doubles/competitions/final-see-notes
+Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competition/final
+
+Player Block winner in NSW Ricochet Open Doubles - Final - See Notes was brought over from the competition's own list, because the tournament's players no longer listed them.
+
+## ImportCompetition.PlayerNotInTournament: croquetscores.com/knockouts/52113/see-notes player 11
+
+New site: http://localhost:3000/2022/rc/nsw-ricochet-open-doubles/competitions/final-see-notes
+Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competition/final
+
+Player Block r/u in NSW Ricochet Open Doubles - Final - See Notes was brought over from the competition's own list, because the tournament's players no longer listed them.
+
+## ImportCompetition.PlayerNotInTournament: croquetscores.com/knockouts/52113/see-notes player 13
+
+New site: http://localhost:3000/2022/rc/nsw-ricochet-open-doubles/competitions/final-see-notes
+Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competition/final
+
+Player Simon Cook and Peter Martin in NSW Ricochet Open Doubles - Final - See Notes was brought over from the competition's own list, because the tournament's players no longer listed them.
+
+## ImportCompetition.PlayerNotInTournament: croquetscores.com/knockouts/52113/see-notes player 14
+
+New site: http://localhost:3000/2022/rc/nsw-ricochet-open-doubles/competitions/final-see-notes
+Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competition/final
+
+Player Graeme Marshall and Roderick Munro in NSW Ricochet Open Doubles - Final - See Notes was brought over from the competition's own list, because the tournament's players no longer listed them.
+
 ## ImportCompetition.PlayerNotInTournament: croquetscores.com/blocks/81415 player 19
 
 New site: http://localhost:3000/2022/gc/qld-open-doubles/competitions/block-a
@@ -19816,6 +21510,454 @@ Old site: https://croquetscores.com/2024/gc/mountain-challenge-block/competition
 
 Player Sky Valley in 2024 Mountain Challenge - Block - Western was brought over from the competition's own list, because the tournament's players no longer listed them.
 
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/28779 player 71
+
+New site: http://localhost:3000/2022/gc/brisbane-met-pennants/tests/wynnum-v-eildon
+Old site: https://croquetscores.com/2022/gc/brisbane-met-pennants/competition/wwynnum-vs-eildon
+
+Player Laurie Webb & Lionel McKennarley in Brisbane Met GC Pennants Div 2 - Wynnum vs Eildon was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/28855 player 71
+
+New site: http://localhost:3000/2022/gc/brisbane-met-pennants/tests/twin-river-v-wynnum
+Old site: https://croquetscores.com/2022/gc/brisbane-met-pennants/competition/twin-rivers-vs-wynnum
+
+Player Laurie Webb & Lionel McKennarley in Brisbane Met GC Pennants Div 2 - Twin Rivers vs Wynnum was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/29546 player 20
+
+New site: http://localhost:3000/2022/ac/gippsland-vic-pennant/tests/traralgo-3-v-traralgon
+Old site: https://croquetscores.com/2022/ac/gippsland-vic-pennant/competition/traralgon-3-vs-traralgon-1
+
+Player Barbara Castles & Deirdre Lebbon in Gippsland (Vic) AC Pennant - Traralgon 3 vs Traralgon 1 was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 68
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Gerry Kool in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 69
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Michael Barber in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 71
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Kathy Ross in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 108
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Kool & Barber in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 109
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Cartwright & Ross in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 110
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Kool & Cartwright in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 111
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Barber & Ross in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 112
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Barber & Cartwright in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/31877 player 113
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/wonthagg-2-v-korumburra
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/wonthaggi-maroon-vs-korumburra
+
+Player Kool & Ross in Gippsland GC Pennant - Wonthaggi Maroon vs Korumburra was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 249
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny & Tom in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 250
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny & Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 251
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny & Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 252
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom & Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 253
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom & Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 255
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Paul Andrews in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 256
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Paul + Tom in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 258
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Paul + Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 257
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Paul +Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 260
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom + Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 259
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom + Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 261
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Virginia + Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 330
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny Morrison McGill in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 331
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny+Tom in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 332
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny+Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 333
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny+Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 334
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom+Neil in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 335
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom+Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 336
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Neil+Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 375
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Neil+Tom in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 536
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny - Hazel in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 538
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny - Tom in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 540
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Penny - Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 539
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom - Hazel in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/33127 player 537
+
+New site: http://localhost:3000/2023/gc/gippsland-pennant/tests/drouin-v-wonthaggi
+Old site: https://croquetscores.com/2023/gc/gippsland-pennant/competition/drouin-vs-wonthaggi-maroon
+
+Player Tom - Virginia in Gippsland GC Pennant - Drouin vs Wonthaggi White was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 1
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Edna Kelly in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 2
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Ricky Fittock in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 3
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Graham Innocent in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 4
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Steve Wallace in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 5
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Tracey Long in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 6
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Barbara Wilson in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 7
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Paul Moylan in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 8
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Iain Tait-Kerr in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 9
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Peter Long in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 10
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Robyn Roberts in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 11
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Lyn Stewart in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 12
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Alec Bruce in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 13
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Al Minis in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 14
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Jenni Sun in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 15
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Chris Sims in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 16
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Greg Bell in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/34183 player 17
+
+New site: http://localhost:3000/2024/gc/mnccc-forster-vs-gloucester-1/tests/forster-si-v-gloucester
+Old site: https://croquetscores.com/2024/gc/mnccc-forster-vs-gloucester-1/competition/forster-vs-gloucester-1
+
+Player Bev Fagan in MNCCC Forster v's Gloucester 2024 - Forster Singles vs Gloucester Singles was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/37091 player 13
+
+New site: http://localhost:3000/2025/ac/upper-north-is-team-event/tests/auckland-v-bay-of-ple
+Old site: https://croquetscores.com/2025/ac/upper-north-is-team-event/competition/ak-vs-bop
+
+Player Nelson Morrow in AC Upper North Island Team Event - Auckland vs Bay of Plenty was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/37091 player 14
+
+New site: http://localhost:3000/2025/ac/upper-north-is-team-event/tests/auckland-v-bay-of-ple
+Old site: https://croquetscores.com/2025/ac/upper-north-is-team-event/competition/ak-vs-bop
+
+Player Pip Rive in AC Upper North Island Team Event - Auckland vs Bay of Plenty was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/37091 player 15
+
+New site: http://localhost:3000/2025/ac/upper-north-is-team-event/tests/auckland-v-bay-of-ple
+Old site: https://croquetscores.com/2025/ac/upper-north-is-team-event/competition/ak-vs-bop
+
+Player Rupert Morrish in AC Upper North Island Team Event - Auckland vs Bay of Plenty was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/37091 player 16
+
+New site: http://localhost:3000/2025/ac/upper-north-is-team-event/tests/auckland-v-bay-of-ple
+Old site: https://croquetscores.com/2025/ac/upper-north-is-team-event/competition/ak-vs-bop
+
+Player Graham Mentzer in AC Upper North Island Team Event - Auckland vs Bay of Plenty was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/40332 player 18
+
+New site: http://localhost:3000/2025/ac/cnz-teams-event/tests/orewa-cc-v-waireka-cc
+Old site: https://croquetscores.com/2025/ac/cnz-teams-event/competition/orewa-cc-vs-whakatane-cc
+
+Player Paddy Chapman & Cindy Clarke in CNZ AC Teams Event - Orewa CC vs Waireka CC was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/40332 player 19
+
+New site: http://localhost:3000/2025/ac/cnz-teams-event/tests/orewa-cc-v-waireka-cc
+Old site: https://croquetscores.com/2025/ac/cnz-teams-event/competition/orewa-cc-vs-whakatane-cc
+
+Player John Christie & Clive Taylor in CNZ AC Teams Event - Orewa CC vs Waireka CC was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/40332 player 20
+
+New site: http://localhost:3000/2025/ac/cnz-teams-event/tests/orewa-cc-v-waireka-cc
+Old site: https://croquetscores.com/2025/ac/cnz-teams-event/competition/orewa-cc-vs-whakatane-cc
+
+Player Steve Clarke & Peter Filbee in CNZ AC Teams Event - Orewa CC vs Waireka CC was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/40501 player 13
+
+New site: http://localhost:3000/2025/gc/cti-interclub-intermediate-wecc-r6/tests/we1-bye-v-id1-bye
+Old site: https://croquetscores.com/2025/gc/cti-interclub-intermediate-wecc-r6/competition/we1-vs-id1
+
+Player Wendy Nash in CTI Interclub Intermediate @ WECC (R6) - WE1 bye vs ID1 bye was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/40501 player 14
+
+New site: http://localhost:3000/2025/gc/cti-interclub-intermediate-wecc-r6/tests/we1-bye-v-id1-bye
+Old site: https://croquetscores.com/2025/gc/cti-interclub-intermediate-wecc-r6/competition/we1-vs-id1
+
+Player Christopher Hick in CTI Interclub Intermediate @ WECC (R6) - WE1 bye vs ID1 bye was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
+## ImportCompetition.PlayerNoted: croquetscores.com/TeamMatches/40501 player 15
+
+New site: http://localhost:3000/2025/gc/cti-interclub-intermediate-wecc-r6/tests/we1-bye-v-id1-bye
+Old site: https://croquetscores.com/2025/gc/cti-interclub-intermediate-wecc-r6/competition/we1-vs-id1
+
+Player Wendy Nash & Christopher Hick in CTI Interclub Intermediate @ WECC (R6) - WE1 bye vs ID1 bye was not entered, because they were recorded as representing a team that is not in the match, and is said in the note Import Errors of the tournament.
+
 ## ImportCompetition.WalkoverWritten: croquetscores.com/knockouts/27938 game 2
 
 New site: http://localhost:3000/2018/gc/hunstanton-a-level/competitions/shield
@@ -20327,20 +22469,6 @@ Old site: https://croquetscores.com/2013/gc/swiss-golf-croquet-open/competition/
 
 Swiss Golf Croquet Open - Plate Semi-Losers was kept with 2 players for 4 places, and is brought over with 2 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/4994
-
-New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life
-Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
-
-Country Boys - Bottom 8 1-Life was kept with 15 players for 16 places, and is brought over with 1 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/5794
-
-New site: http://localhost:3000/2013/ac/tasmanian-tca-singles-handicap/competitions/knockout
-Old site: https://croquetscores.com/2013/ac/tasmanian-tca-singles-handicap/competition/knockout
-
-Tasmanian TCA AC Singles Handicap - Knockout was kept with 10 players for 16 places, and is brought over with 6 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/6658
 
 New site: http://localhost:3000/2014/ac/cnz-english-silver-bronze-medals/competitions/3rd-4th-playoff
@@ -20452,20 +22580,6 @@ New site: http://localhost:3000/2015/ac/quebec-open/competitions/b-flight-finals
 Old site: https://croquetscores.com/2015/ac/quebec-open/competition/b-flight-finals
 
 Quebec Open - B Flight Finals was kept with 4 players for 8 places, and is brought over with 4 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/16007
-
-New site: http://localhost:3000/2016/ac/desert-classic/competitions/challenger-second-life
-Old site: https://croquetscores.com/2016/ac/desert-classic/competition/challenger-second-life
-
-Desert Classic - Challenger Second Life was kept with 7 players for 8 places, and is brought over with 1 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/16008
-
-New site: http://localhost:3000/2016/ac/desert-classic/competitions/competitors-second-life
-Old site: https://croquetscores.com/2016/ac/desert-classic/competition/competitors-second-life
-
-Desert Classic - Competitors Second Life was kept with 7 players for 8 places, and is brought over with 1 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/16290
 
@@ -20592,20 +22706,6 @@ New site: http://localhost:3000/2016/gc/australian-womens-championship/competiti
 Old site: https://croquetscores.com/2016/gc/australian-womens-championship/competition/15th-16th
 
 Australian GC Women's Championship - 15th & 16th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/23137
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/finals
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/finals
-
-Czech republic GC 1st Horicky golf croquet - Finals was kept with 13 players for 16 places, and is brought over with 3 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/23138
-
-New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/plate
-Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/plate
-
-Czech republic GC 1st Horicky golf croquet - Plate was kept with 7 players for 8 places, and is brought over with 1 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/23429
 
@@ -20978,20 +23078,6 @@ Old site: https://croquetscores.com/2020/ac/irish-championships/competition/as-d
 
 Irish Championships - AS Doubles was kept with 15 players for 16 places, and is brought over with 1 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/42886
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-draw
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-draw
-
-Irish Championships - Handicap Doubles Draw was kept with 14 players for 16 places, and is brought over with 2 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/42887
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-process
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-process
-
-Irish Championships - Handicap Doubles Process was kept with 14 players for 16 places, and is brought over with 2 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/43395
 
 New site: http://localhost:3000/2020/gc/york-country-doubles/competitions/a8-v-b8-2
@@ -21335,34 +23421,6 @@ Old site: https://croquetscores.com/2022/gc/js-mixed-doubles/competition/mixed-d
 
 JS Mixed Doubles - Mixed Doubles Process 2 was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/52900
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/champs-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/champs-semi-finals
-
-2022 Woodlawn Mini-Lobster Tournament - Champs Semi-Finals was kept with 3 players for 4 places, and is brought over with 1 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/52901
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/1st-flight-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/1st-flight-semi-finals
-
-2022 Woodlawn Mini-Lobster Tournament - 1st Flight Semi-Finals was kept with 3 players for 4 places, and is brought over with 1 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/52902
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/2nd-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/2nd-semi-finals
-
-2022 Woodlawn Mini-Lobster Tournament - 2nd Semi Finals was kept with 3 players for 4 places, and is brought over with 1 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/52903
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/3rd-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/3rd-semi-finals
-
-2022 Woodlawn Mini-Lobster Tournament - 3rd Semi-Finals was kept with 3 players for 4 places, and is brought over with 1 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/52921
 
 New site: http://localhost:3000/2022/gc/irish-championship/competitions/maggie-cup-reparchage
@@ -21418,27 +23476,6 @@ New site: http://localhost:3000/2023/a6w/ncc-6w-singles/competitions/3rd-flight-
 Old site: https://croquetscores.com/2023/a6w/ncc-6w-singles/competition/3rd-flight-final
 
 NCC 6W Singles - 3rd flight final was kept with 2 players for 8 places, and is brought over with 6 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/53447
-
-New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/championship-b-ko
-Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/championship-b-ko
-
-The Jones Invitational - Championship B KO was kept with 9 players for 16 places, and is brought over with 7 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/53449
-
-New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/second-flight-ko
-Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/second-flight-ko
-
-The Jones Invitational - Second Flight KO was kept with 6 players for 8 places, and is brought over with 2 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/53450
-
-New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/third-flight-ko
-Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/third-flight-ko
-
-The Jones Invitational - Third Flight KO was kept with 6 players for 8 places, and is brought over with 2 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/53572
 
@@ -21762,13 +23799,6 @@ Old site: https://croquetscores.com/2024/a6w/north-carolina-singles/competition/
 
 North Carolina Singles A6W - 1st Flight Losers Bracket 2 was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/58759
-
-New site: http://localhost:3000/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competitions/doubles-knockout
-Old site: https://croquetscores.com/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competition/doubles-knockout
-
-2024 CCJ Golf Croquet championship Doubles and Singles - Doubles Knockout was kept with 6 players for 8 places, and is brought over with 2 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/58868
 
 New site: http://localhost:3000/2024/gc/wcc-renaissance-gala-day/competitions/final
@@ -21797,40 +23827,12 @@ Old site: https://croquetscores.com/2024/gc/bi-xyz/competition/z
 
 Bi Xyz - Z was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/59041
-
-New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-club-championship
-Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-club-championship
-
-NYCC Club Championship - NYCC Club Championship was kept with 18 players for 32 places, and is brought over with 14 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/59042
-
-New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-a-block
-Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-a-block
-
-NYCC Club Championship - NYCC Plate A Block was kept with 10 players for 16 places, and is brought over with 6 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/59043
-
-New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-b-block
-Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-b-block
-
-NYCC Club Championship - NYCC Plate B Block was kept with 8 players for 16 places, and is brought over with 8 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/59078
 
 New site: http://localhost:3000/2024/ac/nottingham-annual-week/competitions/open-advanced-singles-knockout
 Old site: https://croquetscores.com/2024/ac/nottingham-annual-week/competition/open-advanced-singles-knockout
 
 Nottingham Annual Week - Open Advanced Singles Knockout was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/59248
-
-New site: http://localhost:3000/2024/gc/cedar-creek-club-championship/competitions/ko
-Old site: https://croquetscores.com/2024/gc/cedar-creek-club-championship/competition/ko
-
-Cedar Creek Club Championship - KO was kept with 5 players for 8 places, and is brought over with 3 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/59328
 
@@ -21985,13 +23987,6 @@ New site: http://localhost:3000/2025/gc/northampton-invitational-tournament/comp
 Old site: https://croquetscores.com/2025/gc/northampton-invitational-tournament/competition/11-12th-play-off
 
 Northampton Invitational Tournament - 11/12th Play-Off was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/60052
-
-New site: http://localhost:3000/2024/gc/marewa-club-championships/competitions/sweetapple-knockout
-Old site: https://croquetscores.com/2024/gc/marewa-club-championships/competition/sweetapple-knockout
-
-Marewa Club Championships - Sweetapple Knockout was kept with 15 players for 16 places, and is brought over with 1 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/61828
 
@@ -22560,13 +24555,6 @@ Old site: https://croquetscores.com/2026/gc/boys-and-girls-club-tournament/compe
 
 Boys and Girls Club Tournament - Bowl was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/8002
-
-New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate
-Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
-
-Czech 6th Golf Cup CCCC Horice - Plate was kept with 12 players for 16 places, and is brought over with 4 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/68803
 
 New site: http://localhost:3000/2026/a6w/quogue-field-club-american-rules-6-wicket-singles/competitions/championship-knockout
@@ -22595,34 +24583,6 @@ Old site: https://croquetscores.com/2026/gc/ce-national-b-level-final/competitio
 
 CE National GC B-Level Final - Playoff (7th-8th) was kept with 1 players for 2 places, and is brought over with 1 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69266
-
-New site: http://localhost:3000/2026/gc/kohlhof/competitions/championship-knockout
-Old site: https://croquetscores.com/2026/gc/kohlhof/competition/championship-knockout
-
-GC Kohlhof 2026 - Championship Knockout was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69253
-
-New site: http://localhost:3000/2026/gc/kohlhof/competitions/place-3
-Old site: https://croquetscores.com/2026/gc/kohlhof/competition/place-3
-
-GC Kohlhof 2026 - Place 3 was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69254
-
-New site: http://localhost:3000/2026/gc/kohlhof/competitions/place-5
-Old site: https://croquetscores.com/2026/gc/kohlhof/competition/place-5
-
-GC Kohlhof 2026 - Place 5 was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69255
-
-New site: http://localhost:3000/2026/gc/kohlhof/competitions/place-7
-Old site: https://croquetscores.com/2026/gc/kohlhof/competition/place-7
-
-GC Kohlhof 2026 - Place 7 was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69319
 
 New site: http://localhost:3000/2026/gc/carrickmines-golf-croquet-invitational/competitions/championship-knockout
@@ -22643,13 +24603,6 @@ New site: http://localhost:3000/2026/gc/carrickmines-golf-croquet-invitational/c
 Old site: https://croquetscores.com/2026/gc/carrickmines-golf-croquet-invitational/competition/bowl-knockout
 
 Carrickmines Golf Croquet Invitational - Bowl Knockout was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69323
-
-New site: http://localhost:3000/2026/gc/19th-spanish-championship-tier-1-1/competitions/main-championship-knockout
-Old site: https://croquetscores.com/2026/gc/19th-spanish-championship-tier-1-1/competition/main-championship-knockout
-
-19th Spanish Championship- Tier 1 (RCP) - Main Championship Knockout was kept with 0 players for 16 places, and is brought over with 16 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69383
 
@@ -22714,6 +24667,13 @@ Old site: https://croquetscores.com/2026/gc/nsw-division-3-singles/competition/x
 
 NSW GC Division 3 Singles - X 3rd/4th (Bo3) was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
 
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69287
+
+New site: http://localhost:3000/2026/gc/nsw-division-3-singles/competitions/y-knockout
+Old site: https://croquetscores.com/2026/gc/nsw-division-3-singles/competition/y-knockout
+
+NSW GC Division 3 Singles - Y knockout was kept with 3 players for 8 places, and is brought over with 5 byes added, the players where their games say they stood.
+
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69288
 
 New site: http://localhost:3000/2026/gc/nsw-division-3-singles/competitions/y-3rd-4th
@@ -22735,20 +24695,6 @@ Old site: https://croquetscores.com/2026/gc/nsw-division-3-singles/competition/w
 
 NSW GC Division 3 Singles - W 3rd/4th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69478
-
-New site: http://localhost:3000/2026/gc/tgc-el-lo-trophy-1700/competitions/plate-knockout
-Old site: https://croquetscores.com/2026/gc/tgc-el-lo-trophy-1700/competition/plate-knockout
-
-TGC EL&LO Trophy <1700 - Plate Knockout was kept with 0 players for 8 places, and is brought over with 8 byes added, the players where their games say they stood.
-
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69479
-
-New site: http://localhost:3000/2026/gc/tgc-el-lo-trophy-1700/competitions/main-championship-knockout
-Old site: https://croquetscores.com/2026/gc/tgc-el-lo-trophy-1700/competition/main-championship-knockout
-
-TGC EL&LO Trophy <1700 - Main Championship Knockout was kept with 0 players for 8 places, and is brought over with 8 byes added, the players where their games say they stood.
-
 ## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69507
 
 New site: http://localhost:3000/2026/gc/wa-janine-mchardy-trophy/competitions/final
@@ -22756,19 +24702,124 @@ Old site: https://croquetscores.com/2026/gc/wa-janine-mchardy-trophy/competition
 
 WA Janine McHardy Trophy - Final was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69514
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/23137
 
-New site: http://localhost:3000/2026/a6w/nycc-9w-championship/competitions/championship
-Old site: https://croquetscores.com/2026/a6w/nycc-9w-championship/competition/championship
+New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/finals
+Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/finals
 
-NYCC 9W Championship - Championship was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+Czech republic GC 1st Horicky golf croquet - Finals was kept with 12 players for 16 places, and is brought over with 4 byes added, the players where their games say they stood.
 
-## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69515
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/23138
 
-New site: http://localhost:3000/2026/a6w/nycc-9w-championship/competitions/3rd-place
-Old site: https://croquetscores.com/2026/a6w/nycc-9w-championship/competition/3rd-place
+New site: http://localhost:3000/2017/gc/czech-republic-1st-horicky-golf-croquet/competitions/plate
+Old site: https://croquetscores.com/2017/gc/czech-republic-1st-horicky-golf-croquet/competition/plate
 
-NYCC 9W Championship - 3rd Place was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+Czech republic GC 1st Horicky golf croquet - Plate was kept with 7 players for 8 places, and is brought over with 1 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69524
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/championship-singles
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/championship-singles
+
+2026 North American Open - Championship Singles was kept with 0 players for 16 places, and is brought over with 16 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69525
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/championship-singles-3-4th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/championship-singles-3-4th
+
+2026 North American Open - Championship Singles 3-4th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69526
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/championship-singles-5-6th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/championship-singles-5-6th
+
+2026 North American Open - Championship Singles 5-6th was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69527
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/championship-singles-7-8th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/championship-singles-7-8th
+
+2026 North American Open - Championship Singles 7-8th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69528
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/championship-singles-9-10th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/championship-singles-9-10th
+
+2026 North American Open - Championship Singles 9-10th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69529
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/doubles
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/doubles
+
+2026 North American Open - Doubles was kept with 0 players for 16 places, and is brought over with 16 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69530
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/doubles-3-4th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/doubles-3-4th
+
+2026 North American Open - Doubles 3-4th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69531
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/doubles-5-6th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/doubles-5-6th
+
+2026 North American Open - Doubles 5-6th was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69532
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/doubles-7-8th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/doubles-7-8th
+
+2026 North American Open - Doubles 7-8th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69533
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/doubles-9-10th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/doubles-9-10th
+
+2026 North American Open - Doubles 9-10th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69534
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/1st-flight-singles
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/1st-flight-singles
+
+2026 North American Open - 1st Flight Singles was kept with 0 players for 16 places, and is brought over with 16 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69535
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/1st-flight-singles-3-4th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/1st-flight-singles-3-4th
+
+2026 North American Open - 1st Flight Singles 3-4th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69536
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/1st-flight-singles-5-6th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/1st-flight-singles-5-6th
+
+2026 North American Open - 1st Flight Singles 5-6th was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69537
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/1st-flight-singles-7-8th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/1st-flight-singles-7-8th
+
+2026 North American Open - 1st Flight Singles 7-8th was kept with 0 players for 2 places, and is brought over with 2 byes added, the players where their games say they stood.
+
+## ImportKnockouts.ByesAdded: croquetscores.com/knockouts/69538
+
+New site: http://localhost:3000/2026/gc/north-american-open/competitions/1st-flight-singles-9-11th
+Old site: https://croquetscores.com/2026/gc/north-american-open/competition/1st-flight-singles-9-11th
+
+2026 North American Open - 1st Flight Singles 9-11th was kept with 0 players for 4 places, and is brought over with 4 byes added, the players where their games say they stood.
 
 ## ImportKnockouts.ByesAdded: gateballscores.com/knockouts/294
 
@@ -22776,76 +24827,6 @@ New site: http://localhost:3000/2016/gb/gateball-league-geneva/competitions/sing
 Old site: https://gateballscores.com/2016/gb/gateball-league-geneva/competition/singles-knockout
 
 Gateball League Geneva - Singles Knockout was kept with 26 players for 32 places, and is brought over with 6 byes added, the players where their games say they stood.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/4994 game 8
-
-New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life
-Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
-
-Game Matthew Essick 26 beat Brian Cumming 0 in Country Boys - Bottom 8 1-Life came after a walkover the old site kept no game for: Rich Lamm played Matthew Essick no game, and is withdrawn, so that Matthew Essick goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/4994 game 11
-
-New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life
-Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
-
-Game Brian Cumming 26tp beat Matthew Essick 21 in Country Boys - Bottom 8 1-Life came after a walkover the old site kept no game for: Brian Cumming played Brian Cumming no game, and is withdrawn, so that Brian Cumming goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/4994 game 15
-
-New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life
-Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
-
-Game Brian Cumming 26tp beat Stephen Morgan 7 in Country Boys - Bottom 8 1-Life came after a walkover the old site kept no game for: Jeff Soo played Stephen Morgan no game, and is withdrawn, so that Stephen Morgan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/4994 game 15
-
-New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life
-Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
-
-Game Brian Cumming 26tp beat Stephen Morgan 7 in Country Boys - Bottom 8 1-Life came after a walkover the old site kept no game for: Matthew Essick played Stephen Morgan no game, and is withdrawn, so that Stephen Morgan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/5794 game 9
-
-New site: http://localhost:3000/2013/ac/tasmanian-tca-singles-handicap/competitions/knockout
-Old site: https://croquetscores.com/2013/ac/tasmanian-tca-singles-handicap/competition/knockout
-
-Game R Godfrey  26 beat K Jeffery 7 in Tasmanian TCA AC Singles Handicap - Knockout came after a walkover the old site kept no game for: D Johnston played R Godfrey  no game, and is withdrawn, so that R Godfrey  goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/9285 game 12
-
-New site: http://localhost:3000/2014/ac/championships-of-ireland/competitions/championship-singles-duff-mathews-perpetual-trophy
-Old site: https://croquetscores.com/2014/ac/championships-of-ireland/competition/champioship-singles-duff-mathews-perpetual-trophy
-
-Game Jarrod Coutts 26 beat Nathaniel Healy 11 in Championships of Ireland - Championship Singles - Duff Mathews Perpetual Trophy came after a walkover the old site kept no game for: Danny Johnston played Nathaniel Healy no game, and is withdrawn, so that Nathaniel Healy goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/15012 game 3
-
-New site: http://localhost:3000/2015/ac/championships-of-ireland/competitions/newell-candlestick-draw
-Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/newell-candlestick-draw
-
-Game Shelagh Glenanne 12 beat Karen Davidson-Perrins 5 in Championships of Ireland - Newell Candlestick Draw came after a walkover the old site kept no game for: Aislean McGonigal played Shelagh Glenanne no game, and is withdrawn, so that Shelagh Glenanne goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/16007 game 4
-
-New site: http://localhost:3000/2016/ac/desert-classic/competitions/challenger-second-life
-Old site: https://croquetscores.com/2016/ac/desert-classic/competition/challenger-second-life
-
-Game Brian Wasylyk 26 beat Cameron Evans 2 in Desert Classic - Challenger Second Life came after a walkover the old site kept no game for: Nick Gray played Cameron Evans no game, and is withdrawn, so that Cameron Evans goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/16007 game 4
-
-New site: http://localhost:3000/2016/ac/desert-classic/competitions/challenger-second-life
-Old site: https://croquetscores.com/2016/ac/desert-classic/competition/challenger-second-life
-
-Game Brian Wasylyk 26 beat Cameron Evans 2 in Desert Classic - Challenger Second Life came after a walkover the old site kept no game for: Bill Rowat played Cameron Evans no game, and is withdrawn, so that Cameron Evans goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/16008 game 6
-
-New site: http://localhost:3000/2016/ac/desert-classic/competitions/competitors-second-life
-Old site: https://croquetscores.com/2016/ac/desert-classic/competition/competitors-second-life
-
-Game Jean Engebretson 7 beat Toni Kemp 3 in Desert Classic - Competitors Second Life came after a walkover the old site kept no game for: Patrick Dugan played Toni Kemp no game, and is withdrawn, so that Toni Kemp goes on.
 
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/16097 game 5
 
@@ -22861,61 +24842,12 @@ Old site: https://croquetscores.com/2016/gc/wa-cambridge-presidents-medals/compe
 
 Game David Williams 7 beat Jennifer Brand 6 in WA Cambridge President's Medals - Vice-President's Medal came after a walkover the old site kept no game for: Jan Brindall played David Williams no game, and is withdrawn, so that David Williams goes on.
 
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/17933 game 5
-
-New site: http://localhost:3000/2016/gc/swiss-championship/competitions/q-finals
-Old site: https://croquetscores.com/2016/gc/swiss-championship/competition/q-finals
-
-Game Neil Thomas 7 beat Barbara Perkins 4 in Swiss GC Championship 2016 - Q-Finals came after a walkover the old site kept no game for: alexandre huber played Neil Thomas no game, and is withdrawn, so that Neil Thomas goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/17933 game 5
-
-New site: http://localhost:3000/2016/gc/swiss-championship/competitions/q-finals
-Old site: https://croquetscores.com/2016/gc/swiss-championship/competition/q-finals
-
-Game Neil Thomas 7 beat Barbara Perkins 4 in Swiss GC Championship 2016 - Q-Finals came after a walkover the old site kept no game for: Daniel Studerus played Neil Thomas no game, and is withdrawn, so that Neil Thomas goes on.
-
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/20034 game 3
 
 New site: http://localhost:3000/2017/ac/nz-open-championship/competitions/doubles-plate-knockout-y
 Old site: https://croquetscores.com/2017/ac/nz-open-championship/competition/plate-knockout-y
 
 Game Lindsay David & Kerri-Ann Organ 26 beat Paul Stuart & Charles Ostler 10 in NZ Open Championship - Doubles Plate Knockout Y came after a walkover the old site kept no game for: Jarrod Coutts & Phillip Drew played Paul Stuart & Charles Ostler no game, and is withdrawn, so that Paul Stuart & Charles Ostler goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/34596 game 7
-
-New site: http://localhost:3000/2019/ac/championship-of-county-dublin/competitions/mirabeau-process
-Old site: https://croquetscores.com/2019/ac/championship-of-county-dublin/competition/mirabeau-process
-
-Game Conor O'Sullivan 24 beat Geraldine O'Rourke 9 in Championship of County Dublin - Mirabeau Process came after a walkover the old site kept no game for: Martin Gilmartin played Conor O'Sullivan no game, and is withdrawn, so that Conor O'Sullivan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/36420 game 2
-
-New site: http://localhost:3000/2019/gc/swiss-open-championship/competitions/s-shield
-Old site: https://croquetscores.com/2019/gc/swiss-open-championship/competition/s-shield
-
-Game Daniel Studerus 7 beat Arthur Graf 6 in GC Swiss Open Championship - S-Shield came after a walkover the old site kept no game for: Neil Thomas played Daniel Studerus no game, and is withdrawn, so that Daniel Studerus goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/36353 game 24
-
-New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/founders-cup-handicap-singles
-Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/founders-cup-handicap-singles
-
-Game Ann Woulfe-Flanagan 12 beat Anne Marie Mc Gowan 6 in 2019 Championships of Ireland - Founders Cup Handicap Singles came after a walkover the old site kept no game for: Richard M Stevens played Anne Marie Mc Gowan no game, and is withdrawn, so that Anne Marie Mc Gowan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/36353 game 24
-
-New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/founders-cup-handicap-singles
-Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/founders-cup-handicap-singles
-
-Game Ann Woulfe-Flanagan 12 beat Anne Marie Mc Gowan 6 in 2019 Championships of Ireland - Founders Cup Handicap Singles came after a walkover the old site kept no game for: David H Boyd played Anne Marie Mc Gowan no game, and is withdrawn, so that Anne Marie Mc Gowan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/36456 game 16
-
-New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/alternate-shot-doubles
-Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/alternate-shot-doubles
-
-Game S Williams & P Cotter 26 beat R Cardo & D Jupin 0 in 2019 Championships of Ireland - Alternate Shot Doubles came after a walkover the old site kept no game for: J Mc Gowan & AM Mc Gowan played R Cardo & D Jupin no game, and is withdrawn, so that R Cardo & D Jupin goes on.
 
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/39937 game 32
 
@@ -22931,68 +24863,12 @@ Old site: https://croquetscores.com/2020/ac/irish-championships/competition/as-d
 
 Game O’Shaughnessy & Brennan 26 beat Osborne Burke & T. Woulfe Flanagan 0 in Irish Championships - AS Doubles came after a walkover the old site kept no game for: McWeeney & A. Woulfe Flanagan played Osborne Burke & T. Woulfe Flanagan no game, and is withdrawn, so that Osborne Burke & T. Woulfe Flanagan goes on.
 
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/42886 game 8
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-draw
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-draw
-
-Game F. & C. Martin 23 beat McGrath & B. Gillespie 6 in Irish Championships - Handicap Doubles Draw came after a walkover the old site kept no game for: O’Shaughnessy & A-M Pigot played McGrath & B. Gillespie no game, and is withdrawn, so that McGrath & B. Gillespie goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/42886 game 11
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-draw
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-draw
-
-Game F. & C. Martin 26 beat G. O’ Rourke & Furlong 7 in Irish Championships - Handicap Doubles Draw came after a walkover the old site kept no game for: McGrath & B. Gillespie played G. O’ Rourke & Furlong no game, and is withdrawn, so that G. O’ Rourke & Furlong goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/42887 game 10
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-process
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-process
-
-Game F. & C. Martin 24 beat McWeeney & Murphy 18 in Irish Championships - Handicap Doubles Process came after a walkover the old site kept no game for: Osborne Burke & Miller played McWeeney & Murphy no game, and is withdrawn, so that McWeeney & Murphy goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/42887 game 10
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-process
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-process
-
-Game F. & C. Martin 24 beat McWeeney & Murphy 18 in Irish Championships - Handicap Doubles Process came after a walkover the old site kept no game for: Williams & P. Bourke played McWeeney & Murphy no game, and is withdrawn, so that McWeeney & Murphy goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/42887 game 10
-
-New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-process
-Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-process
-
-Game F. & C. Martin 24 beat McWeeney & Murphy 18 in Irish Championships - Handicap Doubles Process came after a walkover the old site kept no game for: Greig & N. Kelly played McWeeney & Murphy no game, and is withdrawn, so that McWeeney & Murphy goes on.
-
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/50366 game 18
 
 New site: http://localhost:3000/2021/ac/championships-of-ireland/competitions/handicap-singles
 Old site: https://croquetscores.com/2021/ac/championships-of-ireland/competition/handicap-singles
 
 Game Russell Harris 26 beat Sandy Greig 12 in Championships of Ireland - Handicap Singles came after a walkover the old site kept no game for: Daniel Bennett played Russell Harris no game, and is withdrawn, so that Russell Harris goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/50880 game 5
-
-New site: http://localhost:3000/2021/a6w/cc-jackson-invitational-1/competitions/championship-bracket
-Old site: https://croquetscores.com/2021/a6w/cc-jackson-invitational-1/competition/championship-bracket
-
-Game Britt Ruby 17 beat Michael Kearns 16 in CC Jackson Invitational - Championship Bracket came after a walkover the old site kept no game for: Ed Becker played Michael Kearns no game, and is withdrawn, so that Michael Kearns goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/50880 game 5
-
-New site: http://localhost:3000/2021/a6w/cc-jackson-invitational-1/competitions/championship-bracket
-Old site: https://croquetscores.com/2021/a6w/cc-jackson-invitational-1/competition/championship-bracket
-
-Game Britt Ruby 17 beat Michael Kearns 16 in CC Jackson Invitational - Championship Bracket came after a walkover the old site kept no game for: George Cochran played Michael Kearns no game, and is withdrawn, so that Michael Kearns goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/50880 game 5
-
-New site: http://localhost:3000/2021/a6w/cc-jackson-invitational-1/competitions/championship-bracket
-Old site: https://croquetscores.com/2021/a6w/cc-jackson-invitational-1/competition/championship-bracket
-
-Game Britt Ruby 17 beat Michael Kearns 16 in CC Jackson Invitational - Championship Bracket came after a walkover the old site kept no game for: Mark Fields played Michael Kearns no game, and is withdrawn, so that Michael Kearns goes on.
 
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/51489 game 2
 
@@ -23008,20 +24884,6 @@ Old site: https://croquetscores.com/2022/gc/elsherok-d-mix-tournament/competitio
 
 Game Abeer Morad & Khaled Younis 7 beat Soha Mostafa & Mohamed Salah 4 in ElSherok D. Mix tournament - Finals came after a walkover the old site kept no game for: Lamia Aafify & Saleb Erian played Soha Mostafa & Mohamed Salah no game, and is withdrawn, so that Soha Mostafa & Mohamed Salah goes on.
 
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/51765 game 12
-
-New site: http://localhost:3000/2022/gc/chesapeake-bay-rockfish/competitions/championship-knockout
-Old site: https://croquetscores.com/2022/gc/chesapeake-bay-rockfish/competition/championship-knockout
-
-Game James Creasey 7 beat Steve Thurston 2 in 2022 Chesapeake Bay Rockfish - Championship Knockout came after a walkover the old site kept no game for: Bo Prillaman played James Creasey no game, and is withdrawn, so that James Creasey goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/51765 game 12
-
-New site: http://localhost:3000/2022/gc/chesapeake-bay-rockfish/competitions/championship-knockout
-Old site: https://croquetscores.com/2022/gc/chesapeake-bay-rockfish/competition/championship-knockout
-
-Game James Creasey 7 beat Steve Thurston 2 in 2022 Chesapeake Bay Rockfish - Championship Knockout came after a walkover the old site kept no game for: Macey White played James Creasey no game, and is withdrawn, so that James Creasey goes on.
-
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/51855 game 2
 
 New site: http://localhost:3000/2022/gc/1st-rshecc-presidents-cup/competitions/main-champonship-knockout
@@ -23029,117 +24891,12 @@ Old site: https://croquetscores.com/2022/gc/1st-rshecc-presidents-cup/competitio
 
 Game Carlos Munoz 7 beat Manuel Alvarez-Sala 4 in 1st GC RSHECC President´s Cup - Main Champonship Knockout came after a walkover the old site kept no game for: Filiberto Cano played Carlos Munoz no game, and is withdrawn, so that Carlos Munoz goes on.
 
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/52900 game 2
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/champs-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/champs-semi-finals
-
-Game Neil Houghton 20 beat Don Parker 16 in 2022 Woodlawn Mini-Lobster Tournament - Champs Semi-Finals came after a walkover the old site kept no game for: Conner Helms played Don Parker no game, and is withdrawn, so that Don Parker goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/52901 game 3
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/1st-flight-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/1st-flight-semi-finals
-
-Game Steve Zoric 15 beat Anne Carr 14 in 2022 Woodlawn Mini-Lobster Tournament - 1st Flight Semi-Finals came after a walkover the old site kept no game for: Lucas Van Allen played Anne Carr no game, and is withdrawn, so that Anne Carr goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/52902 game 1
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/2nd-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/2nd-semi-finals
-
-Game Tim McCormick 17 beat Tina Hinckley 12 in 2022 Woodlawn Mini-Lobster Tournament - 2nd Semi Finals came after a walkover the old site kept no game for: Jan Fisher played Tim McCormick no game, and is withdrawn, so that Tim McCormick goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/52903 game 2
-
-New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/3rd-semi-finals
-Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/3rd-semi-finals
-
-Game Richard Hayes 14 beat Ellen Fox 13 in 2022 Woodlawn Mini-Lobster Tournament - 3rd Semi-Finals came after a walkover the old site kept no game for: Jim Lane played Ellen Fox no game, and is withdrawn, so that Ellen Fox goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/52882 game 2
-
-New site: http://localhost:3000/2022/gc/australia-womens-singles/competitions/block-b-play-off
-Old site: https://croquetscores.com/2022/gc/australia-womens-singles/competition/block-b-playoff
-
-Game Alison Sharpe 2 beat Anne Woodhouse 0 in Australia - GC Women's Singles - Block B Play-off came after a walkover the old site kept no game for: Gerda Lambeck played Alison Sharpe no game, and is withdrawn, so that Alison Sharpe goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/54280 game 6
-
-New site: http://localhost:3000/2023/gc/ikskiles-ab-level/competitions/plate
-Old site: https://croquetscores.com/2023/gc/ikskiles-ab-level/competition/plate
-
-Game Birute KRUZE 7 beat Jolanta STAFECKA 3 in Ikskiles AB Level - Plate came after a walkover the old site kept no game for: Toms LEIDUMS played Birute KRUZE no game, and is withdrawn, so that Birute KRUZE goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/54378 game 10
-
-New site: http://localhost:3000/2023/a6w/berkshire-invitational/competitions/second-flight-knockout
-Old site: https://croquetscores.com/2023/a6w/berkshire-invitational/competition/second-flight-knockout
-
-Game Kathleen Green 13 beat Katie Bull 12 in Berkshire Invitational - Second Flight Knockout came after a walkover the old site kept no game for: Suzanne Laging played Katie Bull no game, and is withdrawn, so that Katie Bull goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/54331 game 7
-
-New site: http://localhost:3000/2023/ac/championship-of-county-dublin/competitions/coronation-bowls-draw
-Old site: https://croquetscores.com/2023/ac/championship-of-county-dublin/competition/coronation-bowls-draw
-
-Game J O'Neill & A Woulfe Flanagan 26 beat B Murray & S Briggs 4 in Championship of County Dublin - Coronation Bowls draw came after a walkover the old site kept no game for: F Carroll & H Spiers played J O'Neill & A Woulfe Flanagan no game, and is withdrawn, so that J O'Neill & A Woulfe Flanagan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/55373 game 9
-
-New site: http://localhost:3000/2023/ac/croquet-championships-of-ireland/competitions/green-cup-draw
-Old site: https://croquetscores.com/2023/ac/croquet-championships-of-ireland/competition/green-cup-draw
-
-Game Conor O'Sullivan 18 beat Tim Furlong 17 in Croquet Championships of Ireland - Green Cup Draw came after a walkover the old site kept no game for: Robert Miller played Conor O'Sullivan no game, and is withdrawn, so that Conor O'Sullivan goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/55376 game 7
-
-New site: http://localhost:3000/2023/ac/croquet-championships-of-ireland/competitions/championship-doubles-draw
-Old site: https://croquetscores.com/2023/ac/croquet-championships-of-ireland/competition/championship-doubles-draw
-
-Game A. Johnston & D. Johnston 26TP AJ beat D. McGrath & S. Williams 1 in Croquet Championships of Ireland - Championship Doubles Draw came after a walkover the old site kept no game for: N. Healy & S. Greig played D. McGrath & S. Williams no game, and is withdrawn, so that D. McGrath & S. Williams goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/57065 game 2
-
-New site: http://localhost:3000/2024/gc/tbc-member-guest/competitions/championship-knockout
-Old site: https://croquetscores.com/2024/gc/tbc-member-guest/competition/championship-knockout
-
-Game Thomas Tribby/Tom Cooper 7 beat Conrad Rugart/Tate Russack 4 in TBC GC Member Guest - Championship Knockout came after a walkover the old site kept no game for: Jeff Scholz/Cami Russack played Thomas Tribby/Tom Cooper no game, and is withdrawn, so that Thomas Tribby/Tom Cooper goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/57134 game 3
-
-New site: http://localhost:3000/2024/a6w/mission-hills-invitational/competitions/first-flight-doubles-knockout
-Old site: https://croquetscores.com/2024/a6w/mission-hills-invitational/competition/first-flight-doubles-knockout
-
-Game Pressler/Pulitzer 20 beat Kalmon/Priddle 9 in Mission Hills 2024 Invitational - First Flight Doubles Knockout came after a walkover the old site kept no game for: Peterkin/Carter played Kalmon/Priddle no game, and is withdrawn, so that Kalmon/Priddle goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/57798 game 2
-
-New site: http://localhost:3000/2024/gc/pb-intercluub-championship/competitions/championship-knockout
-Old site: https://croquetscores.com/2024/gc/pb-intercluub-championship/competition/championship-knockout
-
-Game Neill Trimble/Bruce Hindin 7 beat Vernon Pierce/Caryl Firth 6 in PB Intercluub Championship - Championship Knockout came after a walkover the old site kept no game for: Conrad Rugart/Vickie Johnston played Neill Trimble/Bruce Hindin no game, and is withdrawn, so that Neill Trimble/Bruce Hindin goes on.
-
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/57590 game 2
 
 New site: http://localhost:3000/2024/gc/fletcher-sharpe-invitational/competitions/plate-finals
 Old site: https://croquetscores.com/2024/gc/fletcher-sharpe-invitational/competition/plate-final
 
 Game Michael Lauer 7 beat Felix Gelman-White 6 in Australia - Fletcher Sharpe Invitational 35 & Under - Plate finals came after a walkover the old site kept no game for: Malcolm Fletcher played Michael Lauer no game, and is withdrawn, so that Michael Lauer goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/58759 game 4
-
-New site: http://localhost:3000/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competitions/doubles-knockout
-Old site: https://croquetscores.com/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competition/doubles-knockout
-
-Game Ed Becker/David Trigiani 5 beat Allen Tye/Karla Tye 3 in 2024 CCJ Golf Croquet championship Doubles and Singles - Doubles Knockout came after a walkover the old site kept no game for: Andrew Mallinson/Curtis Wilson played Allen Tye/Karla Tye no game, and is withdrawn, so that Allen Tye/Karla Tye goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/58759 game 4
-
-New site: http://localhost:3000/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competitions/doubles-knockout
-Old site: https://croquetscores.com/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competition/doubles-knockout
-
-Game Ed Becker/David Trigiani 5 beat Allen Tye/Karla Tye 3 in 2024 CCJ Golf Croquet championship Doubles and Singles - Doubles Knockout came after a walkover the old site kept no game for: Mark Fields/Linda Trifone played Allen Tye/Karla Tye no game, and is withdrawn, so that Allen Tye/Karla Tye goes on.
 
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/52431 game 3
 
@@ -23155,89 +24912,12 @@ Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition
 
 Game Johnston & Johnston 26tp beat Greig & Healy 7 in Championships of Ireland - Championship Doubles Process came after a walkover the old site kept no game for: Kelly & McCann played Johnston & Johnston no game, and is withdrawn, so that Johnston & Johnston goes on.
 
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/59041 game 2
-
-New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-club-championship
-Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-club-championship
-
-Game Jay Douglas 11 beat Peter Dempsey 5 in NYCC Club Championship - NYCC Club Championship came after a walkover the old site kept no game for: Geoffrey Johnson played Peter Dempsey no game, and is withdrawn, so that Peter Dempsey goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/59041 game 2
-
-New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-club-championship
-Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-club-championship
-
-Game Jay Douglas 11 beat Peter Dempsey 5 in NYCC Club Championship - NYCC Club Championship came after a walkover the old site kept no game for: Shane Hettler played Peter Dempsey no game, and is withdrawn, so that Peter Dempsey goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/59042 game 6
-
-New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-a-block
-Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-a-block
-
-Game Linda Merk 11 beat Geoffrey Johnson 10 in NYCC Club Championship - NYCC Plate A Block came after a walkover the old site kept no game for: Peter Timmins played Geoffrey Johnson no game, and is withdrawn, so that Geoffrey Johnson goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/59248 game 3
-
-New site: http://localhost:3000/2024/gc/cedar-creek-club-championship/competitions/ko
-Old site: https://croquetscores.com/2024/gc/cedar-creek-club-championship/competition/ko
-
-Game Peter Carlin 7 beat Pat Cunningham 4 in Cedar Creek Club Championship - KO came after a walkover the old site kept no game for: Jim Teel played Pat Cunningham no game, and is withdrawn, so that Pat Cunningham goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/60872 game 11
-
-New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-third-flight
-Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/third-flight-1
-
-Game Rusty Rose 15 beat Mervyn Harvey 12 in The Jones Invitational - Knockout Third FLight came after a walkover the old site kept no game for: Kathie Hart played Rusty Rose no game, and is withdrawn, so that Rusty Rose goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/61322 game 44
-
-New site: http://localhost:3000/2025/gc/east-dorset-summer-competitions/competitions/keith-mosley-hcp-ko
-Old site: https://croquetscores.com/2025/gc/east-dorset-summer-competitions/competition/keith-mosley-hcp-ko
-
-Game William Knight 7 beat Steve Leonard 6 in East Dorset GC Summer Competitions 2025 - Keith Mosley (Hcp KO) came after a walkover the old site kept no game for: Jan Crouch played Steve Leonard no game, and is withdrawn, so that Steve Leonard goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/61322 game 51
-
-New site: http://localhost:3000/2025/gc/east-dorset-summer-competitions/competitions/keith-mosley-hcp-ko
-Old site: https://croquetscores.com/2025/gc/east-dorset-summer-competitions/competition/keith-mosley-hcp-ko
-
-Game Simon Parvin 7 beat David Latimer 4 in East Dorset GC Summer Competitions 2025 - Keith Mosley (Hcp KO) came after a walkover the old site kept no game for: Steve Leonard played David Latimer no game, and is withdrawn, so that David Latimer goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/60052 game 36
-
-New site: http://localhost:3000/2024/gc/marewa-club-championships/competitions/sweetapple-knockout
-Old site: https://croquetscores.com/2024/gc/marewa-club-championships/competition/sweetapple-knockout
-
-Game Peter Stephens 7 beat Bob Couch 4 in Marewa Club Championships - Sweetapple Knockout came after a walkover the old site kept no game for: Tina Duley played Peter Stephens no game, and is withdrawn, so that Peter Stephens goes on.
-
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/57899 game 14
 
 New site: http://localhost:3000/2024/gc/port-alfred-classic-2/competitions/open-handicap-singles-knockout
 Old site: https://croquetscores.com/2024/gc/port-alfred-classic-2/competition/open-handicap-singles-knockout
 
 Game Trevor Welbourne 7 beat Mike Rivett-Carnac 2 in Port Alfred Classic - Open Handicap Singles Knockout came after a walkover the old site kept no game for: Cyril Burrows played Trevor Welbourne no game, and is withdrawn, so that Trevor Welbourne goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/62942 game 7
-
-New site: http://localhost:3000/2025/gc/ny-state/competitions/first-fl-singles-ko
-Old site: https://croquetscores.com/2025/gc/ny-state/competition/first-fl-singles-ko
-
-Game Amy Hempt 7 beat George Claffey III 5 in NY State GC - First Fl Singles KO came after a walkover the old site kept no game for: Jodie Rugart played Amy Hempt no game, and is withdrawn, so that Amy Hempt goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/63763 game 4
-
-New site: http://localhost:3000/2025/gc/nsw-bronze-brooch/competitions/plate-a-knockout
-Old site: https://croquetscores.com/2025/gc/nsw-bronze-brooch/competition/plate-a-knockout
-
-Game David Jameson 7 beat Mandy Noble 5 in NSW GC Bronze Brooch - Plate A knockout came after a walkover the old site kept no game for: Lizabeth Howard Tarn played David Jameson no game, and is withdrawn, so that David Jameson goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/63765 game 4
-
-New site: http://localhost:3000/2025/gc/nsw-bronze-brooch/competitions/plate-b-knockout
-Old site: https://croquetscores.com/2025/gc/nsw-bronze-brooch/competition/plate-b-knockout-1
-
-Game Lyn Cook 7 beat Dianne Bonnitcha 4 in NSW GC Bronze Brooch - Plate B Knockout came after a walkover the old site kept no game for: Michael Malone played Dianne Bonnitcha no game, and is withdrawn, so that Dianne Bonnitcha goes on.
 
 ## ImportKnockouts.Walkover: croquetscores.com/knockouts/67165 game 5
 
@@ -23266,34 +24946,6 @@ New site: http://localhost:3000/2026/gc/sticky-wicket-golf-croquet-singles-tourn
 Old site: https://croquetscores.com/2026/gc/sticky-wicket-golf-croquet-singles-tournament/competition/revenge-plate
 
 Game Cameron Warner 7 beat Gary Volpe 4 in 2026 Sticky Wicket Golf Croquet Singles Tournament - Revenge Plate came after a walkover the old site kept no game for: Darrell DeMoss played Gary Volpe no game, and is withdrawn, so that Gary Volpe goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/8002 game 6
-
-New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate
-Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
-
-Game Petr Kuchta 7 beat Milada Bartova 6 in Czech 6th Golf Cup CCCC Horice - Plate came after a walkover the old site kept no game for: Alena Králová played Milada Bartova no game, and is withdrawn, so that Milada Bartova goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/8002 game 9
-
-New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate
-Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
-
-Game Petr Kuchta 7 beat Tomas Hnat 4 in Czech 6th Golf Cup CCCC Horice - Plate came after a walkover the old site kept no game for: Dagmar Stepankova played Tomas Hnat no game, and is withdrawn, so that Tomas Hnat goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/8002 game 9
-
-New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate
-Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
-
-Game Petr Kuchta 7 beat Tomas Hnat 4 in Czech 6th Golf Cup CCCC Horice - Plate came after a walkover the old site kept no game for: Milada Bartova played Tomas Hnat no game, and is withdrawn, so that Tomas Hnat goes on.
-
-## ImportKnockouts.Walkover: croquetscores.com/knockouts/8002 game 9
-
-New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate
-Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
-
-Game Petr Kuchta 7 beat Tomas Hnat 4 in Czech 6th Golf Cup CCCC Horice - Plate came after a walkover the old site kept no game for: Anna Kralova played Tomas Hnat no game, and is withdrawn, so that Tomas Hnat goes on.
 
 ## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/360
 
@@ -23371,13 +25023,6 @@ New site: http://localhost:3000/2015/ac/sa-vs-invites/tests/sa-v-invites
 Old site: https://croquetscores.com/2015/ac/sa-vs-invites/competition/south-australia-vs-invites
 
 AC SA team vs The rest - South Australia vs Invites was kept as expected to have 1 matches, and its games say 20, so it is expected to have 20.
-
-## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/5156
-
-New site: http://localhost:3000/2015/gc/egypt-league-second-round/tests/zamalek-cl-v-elsherok-c
-Old site: https://croquetscores.com/2015/gc/egypt-league-second-round/competition/zamalek-club-vs-elsherok-club
-
-Egypt League ( Second round ) - Zamalek Club vs ElSherok Club was kept as expected to have 5 matches, and its games say 6, so it is expected to have 6.
 
 ## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/5377
 
@@ -23476,20 +25121,6 @@ New site: http://localhost:3000/2016/gc/wide-bay-burnett-regional-ricochet-penna
 Old site: https://croquetscores.com/2016/gc/wide-bay-burnett-regional-ricochet-pennants-1/competition/sunnyside-vs-bundaberg
 
 Wide Bay/Burnett Regional Ricochet Pennants - Sunnyside vs Bundaberg was kept as expected to have 1 matches, and its games say 3, so it is expected to have 3.
-
-## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/8993
-
-New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round/tests/gzera-club-v-kafr-elshe
-Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/gzera-club-vs-kafr-elshekh-club
-
-Egypt League 2016 / 2017 ( First round ) - Gzera Club vs Kafr ElShekh Club was kept as expected to have 5 matches, and its games say 6, so it is expected to have 6.
-
-## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/8994
-
-New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round/tests/heliopolis-v-eltayaran
-Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/heliopolis-club-vs-eltayaran-club
-
-Egypt League 2016 / 2017 ( First round ) - Heliopolis Club vs ElTayaran Club was kept as expected to have 5 matches, and its games say 6, so it is expected to have 6.
 
 ## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/11687
 
@@ -26837,6 +28468,20 @@ Old site: https://croquetscores.com/2026/gc/croquet-taranaki-north-interclub-pri
 
 Croquet Taranaki (North) Interclub Intermediate RD4 - NP3 vs TS1 was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
 
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/44817
+
+New site: http://localhost:3000/2026/gc/croquet-taranaki-north-interclub-senior-rd5/tests/np1-v-ts
+Old site: https://croquetscores.com/2026/gc/croquet-taranaki-north-interclub-senior-rd5/competition/np1-vs-ts
+
+Croquet Taranaki (North) Interclub Senior RD5 - NP1 vs TS was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/44818
+
+New site: http://localhost:3000/2026/gc/croquet-taranaki-north-interclub-senior-rd5/tests/np2-v-we
+Old site: https://croquetscores.com/2026/gc/croquet-taranaki-north-interclub-senior-rd5/competition/np2-vs-we
+
+Croquet Taranaki (North) Interclub Senior RD5 - NP2 vs WE was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
+
 ## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/20616
 
 New site: http://localhost:3000/2019/ac/surbiton-squad-tournament-1/tests/red-v-white
@@ -26857,6 +28502,55 @@ New site: http://localhost:3000/2026/gc/auckland-interclub-div-3-levels-9-12-h-c
 Old site: https://croquetscores.com/2026/gc/auckland-interclub-div-3-levels-9-12-h-c/competition/epsom-remuera-vs-pt-chevalier
 
 Auckland GC Interclub - Div 3 - Levels 9 - 12 h/c🥉🥉 - Epsom Remuera vs Pt Chevalier was kept as expected to have 9 matches, and its games say 12, so it is expected to have 12.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/44880
+
+New site: http://localhost:3000/2026/gc/croquet-taranaki-north-interclub-primary-rd5/tests/we-1-v-np-2
+Old site: https://croquetscores.com/2026/gc/croquet-taranaki-north-interclub-primary-rd5/competition/we-1-vs-np-2
+
+Croquet Taranaki (North) Interclub Primary RD5 - WE 1 vs NP 2 was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/44882
+
+New site: http://localhost:3000/2026/gc/croquet-taranaki-north-interclub-primary-rd5/tests/ts-v-we-2
+Old site: https://croquetscores.com/2026/gc/croquet-taranaki-north-interclub-primary-rd5/competition/ts-vs-we-2
+
+Croquet Taranaki (North) Interclub Primary RD5 - TS vs WE 2 was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/44870
+
+New site: http://localhost:3000/2026/gc/cti-interclub-intermediate-wecc-r5/tests/ts1-v-np3
+Old site: https://croquetscores.com/2026/gc/cti-interclub-intermediate-wecc-r5/competition/ts1-vs-np3
+
+CTI Interclub Intermediate @ WECC (R5) - TS1 vs NP3 was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/44871
+
+New site: http://localhost:3000/2026/gc/cti-interclub-intermediate-wecc-r5/tests/ts2-v-we1
+Old site: https://croquetscores.com/2026/gc/cti-interclub-intermediate-wecc-r5/competition/ts2-vs-we1
+
+CTI Interclub Intermediate @ WECC (R5) - TS2 vs WE1 was kept as expected to have 1 matches, and its games say 5, so it is expected to have 5.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/5156
+
+New site: http://localhost:3000/2015/gc/egypt-league-second-round/tests/zamalek-cl-v-elsherok-c
+Old site: https://croquetscores.com/2015/gc/egypt-league-second-round/competition/zamalek-club-vs-elsherok-club
+
+Egypt League ( Second round ) - Zamalek Club vs ElSherok Club was kept as expected to have 5 matches, and its games say 6, so it is expected to have 6.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/8993
+
+New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round/tests/gzera-club-v-kafr-elshe
+Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/gzera-club-vs-kafr-elshekh-club
+
+Egypt League 2016 / 2017 ( First round ) - Gzera Club vs Kafr ElShekh Club was kept as expected to have 5 matches, and its games say 6, so it is expected to have 6.
+
+## ImportTeamMatches.ExpectedMatchesWorkedOut: croquetscores.com/TeamMatches/8994
+
+New site: http://localhost:3000/2016/gc/egypt-league-2017-first-round/tests/heliopolis-v-eltayaran
+Old site: https://croquetscores.com/2016/gc/egypt-league-2017-first-round/competition/heliopolis-club-vs-eltayaran-club
+
+Egypt League 2016 / 2017 ( First round ) - Heliopolis Club vs ElTayaran Club was kept as expected to have 5 matches, and its games say 6, so it is expected to have 6.
 
 ## ImportTeamMatches.GamesReordered: croquetscores.com/TeamMatches/359
 
@@ -27886,34 +29580,6 @@ New site: http://localhost:3000/2020/gc/1st-ireland-spain-womens-test-match/test
 Old site: https://croquetscores.com/2020/gc/1st-ireland-spain-womens-test-match/competition/ireland-vs-spain
 
 Game Begona Elzaburu 7 beat Patricia Whitty 4 in 1st GC Ireland-Spain Women´s Test Match - Ireland vs Spain came once Begona Elzaburu and Patricia Whitty had met in a match already decided, and Patricia Whitty is played in it by Patricia Whitty - meet again, a player made for meeting again, since two players of a test meet in one match.
-
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23205 game 2
-
-New site: http://localhost:3000/2020/gc/wa-forrest-park-summer-nights-thursdays/tests/better-bes-v-v-stings
-Old site: https://croquetscores.com/2020/gc/wa-forrest-park-summer-nights-thursdays/competition/better-best-vs-v-stings
-
-Game Val Hogan & Vern Gardam 7 beat Torben Bak  & Kevin Dela Bosca 6 in WA GC Forrest Park Summer Nights Thursdays - Better Best vs V Stings came once Val Hogan & Vern Gardam and Torben Bak  & Kevin Dela Bosca had met in a match already decided, and Torben Bak  & Kevin Dela Bosca is played in it by Torben Bak  & Kevin Dela Bosca - meet again, a player made for meeting again, since two players of a test meet in one match.
-
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23205 game 3
-
-New site: http://localhost:3000/2020/gc/wa-forrest-park-summer-nights-thursdays/tests/better-bes-v-v-stings
-Old site: https://croquetscores.com/2020/gc/wa-forrest-park-summer-nights-thursdays/competition/better-best-vs-v-stings
-
-Game Val Hogan & Vern Gardam 7 beat Torben Bak  & Kevin Dela Bosca 4 in WA GC Forrest Park Summer Nights Thursdays - Better Best vs V Stings came once Val Hogan & Vern Gardam and Torben Bak  & Kevin Dela Bosca had met in a match already decided, and Torben Bak  & Kevin Dela Bosca is played in it by Torben Bak  & Kevin Dela Bosca - meet again (2), a player made for meeting again, since two players of a test meet in one match.
-
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23361 game 3
-
-New site: http://localhost:3000/2020/gc/wa-forrest-park-summer-nights-thursdays/tests/jp-the-e-v-dark-raide
-Old site: https://croquetscores.com/2020/gc/wa-forrest-park-summer-nights-thursdays/competition/jp-the-elf-vs-dark-raiders
-
-Game Ben Boehm & John Rea 7 beat Joyce Carbone & Peter Pekaar 3 in WA GC Forrest Park Summer Nights Thursdays - JP & the Elf vs Dark Raiders came once Ben Boehm & John Rea and Joyce Carbone & Peter Pekaar had met in a match already decided, and Joyce Carbone & Peter Pekaar is played in it by Joyce Carbone & Peter Pekaar - meet again, a player made for meeting again, since two players of a test meet in one match.
-
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23585 game 4
-
-New site: http://localhost:3000/2020/gc/poseidon-vs-carpe-croquetum/tests/carpe-croq-v-poseidon-c
-Old site: https://croquetscores.com/2020/gc/poseidon-vs-carpe-croquetum/competition/carpe-croquetum-vs-poseidon-croquet-club
-
-Game Double_PCC 7 beat Double_CC 3 in Poseidon vs. Carpe Croquetum - Carpe Croquetum vs Poseidon Croquet Club  came once Double_PCC and Double_CC had met in a match already decided, and Double_CC is played in it by Double_CC - meet again, a player made for meeting again, since two players of a test meet in one match.
 
 ## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23649 game 8
 
@@ -31198,13 +32864,6 @@ Old site: https://croquetscores.com/2025/gc/cai-v-fec-womens-match/competition/c
 
 Game Clair Whyms 7 beat Luz Maria Prado 3 in CAI v FEC Women's GC match - CAI vs FEC came once Clair Whyms and Luz Maria Prado had met in a match already decided, and Luz Maria Prado is played in it by Luz Maria Prado - meet again, a player made for meeting again, since two players of a test meet in one match.
 
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40807 game 12
-
-New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-r-8-1/tests/sporting-c-v-gezira-clu
-Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-r-8-1/competition/sporting-club-vs-gezira-club
-
-Game Mostafa Eissa 7 beat Yasser Sayed 4 in Egyptian Cup For Single - R 8 - Sporting Club vs Gezira Club came once Mostafa Eissa and Yasser Sayed had met in a match already decided, and Yasser Sayed is played in it by Yasser Sayed - meet again, a player made for meeting again, since two players of a test meet in one match.
-
 ## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40807 game 13
 
 New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-r-8-1/tests/sporting-c-v-gezira-clu
@@ -31219,13 +32878,6 @@ Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-rouned-16-1/
 
 Game Manal Khodir 7 beat Wafaa Lotfy 5 in Egyptian Cup For Single Rouned 16 - Nasr City Club vs Gezira Club came once Manal Khodir and Wafaa Lotfy had met in a match already decided, and Wafaa Lotfy is played in it by Wafaa Lotfy - meet again, a player made for meeting again, since two players of a test meet in one match.
 
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40477 game 8
-
-New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-rouned-16-1/tests/maady-club-v-shooting-c
-Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-rouned-16-1/competition/maady-club-vs-shooting-club
-
-Game Jana Mohamed Said 7 beat Hemat Mostafa 5 in Egyptian Cup For Single Rouned 16 - Maady Club vs Shooting Club came once Jana Mohamed Said and Hemat Mostafa had met in a match already decided, and Hemat Mostafa is played in it by Hemat Mostafa - meet again, a player made for meeting again, since two players of a test meet in one match.
-
 ## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40477 game 9
 
 New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-rouned-16-1/tests/maady-club-v-shooting-c
@@ -31233,26 +32885,19 @@ Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-rouned-16-1/
 
 Game Jana Mohamed Said 7 beat Hemat Mostafa 4 in Egyptian Cup For Single Rouned 16 - Maady Club vs Shooting Club came once Jana Mohamed Said and Hemat Mostafa had met in a match already decided, and Hemat Mostafa is played in it by Hemat Mostafa - meet again, a player made for meeting again, since two players of a test meet in one match.
 
-## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40463 game 17
-
-New site: http://localhost:3000/2025/gc/egyptian-cup-rouned-16-1/tests/elshams-cl-v-smoha-club
-Old site: https://croquetscores.com/2025/gc/egyptian-cup-rouned-16-1/competition/elshams-club-vs-smoha-club
-
-Game Marwa Mostafa 7 beat Syada Elzahar 5 in Egyptian Cup Rouned 16 - ElShams Club vs Smoha Club came once Marwa Mostafa and Syada Elzahar had met in a match already decided, and Syada Elzahar is played in it by Syada Elzahar - meet again, a player made for meeting again, since two players of a test meet in one match.
-
 ## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40463 game 18
 
 New site: http://localhost:3000/2025/gc/egyptian-cup-rouned-16-1/tests/elshams-cl-v-smoha-club
 Old site: https://croquetscores.com/2025/gc/egyptian-cup-rouned-16-1/competition/elshams-club-vs-smoha-club
 
-Game Syada Elzahar 7 beat Marwa Mostafa 5 in Egyptian Cup Rouned 16 - ElShams Club vs Smoha Club came once Syada Elzahar and Marwa Mostafa had met in a match already decided, and Syada Elzahar is played in it by Syada Elzahar - meet again, a player made for meeting again, since two players of a test meet in one match.
+Game Syada Elzahar 7 beat Marwa Mostafa 5 in Egyptian Cup Rouned 16 - ElShams Club vs Smoha Club came once Syada Elzahar and Marwa Mostafa had met in a match already decided, and Marwa Mostafa is played in it by Marwa Mostafa - meet again, a player made for meeting again, since two players of a test meet in one match.
 
 ## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/40463 game 19
 
 New site: http://localhost:3000/2025/gc/egyptian-cup-rouned-16-1/tests/elshams-cl-v-smoha-club
 Old site: https://croquetscores.com/2025/gc/egyptian-cup-rouned-16-1/competition/elshams-club-vs-smoha-club
 
-Game Marwa Mostafa 7 beat Syada Elzahar 1 in Egyptian Cup Rouned 16 - ElShams Club vs Smoha Club came once Marwa Mostafa and Syada Elzahar had met in a match already decided, and Syada Elzahar is played in it by Syada Elzahar - meet again, a player made for meeting again, since two players of a test meet in one match.
+Game Marwa Mostafa 7 beat Syada Elzahar 1 in Egyptian Cup Rouned 16 - ElShams Club vs Smoha Club came once Marwa Mostafa and Syada Elzahar had met in a match already decided, and Marwa Mostafa is played in it by Marwa Mostafa - meet again, a player made for meeting again, since two players of a test meet in one match.
 
 ## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/41122 game 4
 
@@ -32283,6 +33928,27 @@ Old site: https://croquetscores.com/2026/gc/auckland-interclub-div-2-levels-5-8-
 
 Game Joy Taylor 7 beat Geraldine Lummis 5 in Auckland GC Interclub -  Div 2 - Levels 5 - 8 h/c🥈🥈 - Epsom Remuera vs Orewa came once Joy Taylor and Geraldine Lummis had met in a match already decided, and Geraldine Lummis is played in it by Geraldine Lummis - meet again, a player made for meeting again, since two players of a test meet in one match.
 
+## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23205 game 2
+
+New site: http://localhost:3000/2020/gc/wa-forrest-park-summer-nights-thursdays/tests/better-bes-v-v-stings
+Old site: https://croquetscores.com/2020/gc/wa-forrest-park-summer-nights-thursdays/competition/better-best-vs-v-stings
+
+Game Val Hogan & Vern Gardam 7 beat Torben Bak  & Kevin Dela Bosca 6 in WA GC Forrest Park Summer Nights Thursdays - Better Best vs V Stings came once Val Hogan & Vern Gardam and Torben Bak  & Kevin Dela Bosca had met in a match already decided, and Torben Bak  & Kevin Dela Bosca is played in it by Torben Bak  & Kevin Dela Bosca - meet again, a player made for meeting again, since two players of a test meet in one match.
+
+## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23205 game 3
+
+New site: http://localhost:3000/2020/gc/wa-forrest-park-summer-nights-thursdays/tests/better-bes-v-v-stings
+Old site: https://croquetscores.com/2020/gc/wa-forrest-park-summer-nights-thursdays/competition/better-best-vs-v-stings
+
+Game Val Hogan & Vern Gardam 7 beat Torben Bak  & Kevin Dela Bosca 4 in WA GC Forrest Park Summer Nights Thursdays - Better Best vs V Stings came once Val Hogan & Vern Gardam and Torben Bak  & Kevin Dela Bosca had met in a match already decided, and Torben Bak  & Kevin Dela Bosca is played in it by Torben Bak  & Kevin Dela Bosca - meet again (2), a player made for meeting again, since two players of a test meet in one match.
+
+## ImportTeamMatches.MeetAgain: croquetscores.com/TeamMatches/23361 game 3
+
+New site: http://localhost:3000/2020/gc/wa-forrest-park-summer-nights-thursdays/tests/jp-the-e-v-dark-raide
+Old site: https://croquetscores.com/2020/gc/wa-forrest-park-summer-nights-thursdays/competition/jp-the-elf-vs-dark-raiders
+
+Game Ben Boehm & John Rea 7 beat Joyce Carbone & Peter Pekaar 3 in WA GC Forrest Park Summer Nights Thursdays - JP & the Elf vs Dark Raiders came once Ben Boehm & John Rea and Joyce Carbone & Peter Pekaar had met in a match already decided, and Joyce Carbone & Peter Pekaar is played in it by Joyce Carbone & Peter Pekaar - meet again, a player made for meeting again, since two players of a test meet in one match.
+
 ## ImportTeamMatches.OpponentCorrected: croquetscores.com/TeamMatches/16651 game 6
 
 New site: http://localhost:3000/2018/ac/gca-associatio-pennant-1/tests/drouin-v-traralgon
@@ -32360,6 +34026,146 @@ Old site: https://croquetscores.com/2026/gc/nw-fed-lp-birkdale-v-bury-sovereigns
 
 Game David Artingstall 7 beat Simon Hancock 6 in NW Fed LP GC Birkdale v Bury Sovereigns - Birkdale vs Bury Sovereigns was entered against David Artingstall, whom Simon Hancock had already played, and is brought over against David Aetingstall, whom Simon Hancock had not.
 
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/17335 games 8 and 11
+
+New site: http://localhost:3000/2018/gc/egypt-league-first-round-1/tests/smoha-club-v-shooting-c
+Old site: https://croquetscores.com/2018/gc/egypt-league-first-round-1/competition/smoha-club-vs-shooting-club
+
+Egypt League First Round - Smoha Club vs Shooting Club has the second and third games between Nadine El Manoufy & Mostafa Eissa and Ghada Karam & Shukry Aziz, games 8 and 11, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/22500 games 5 and 7
+
+New site: http://localhost:3000/2020/gc/world-teams-championship-4/tests/zaf-v-irl
+Old site: https://croquetscores.com/2020/gc/world-teams-championship-4/competition/south-africa-vs-ireland
+
+2020 GC World Team Championship Tier 1 - South Africa vs Ireland has the second and third games between Reg Bamford & William Louw and Patrick Fitzgerald & Simon Williams, games 5 and 7, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/29318 games 9 and 18
+
+New site: http://localhost:3000/2022/gc/harrison-cup-1/tests/carpe-croq-v-poseidon-c
+Old site: https://croquetscores.com/2022/gc/harrison-cup-1/competition/carpe-croquetum-vs-poseidon-croquet-club
+
+Harrison Cup 2022 - Carpe Croquetum vs Poseidon Croquet Club has the second and third games between Daniel Larsson and Anton Kamne, games 9 and 18, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/30299 games 2 and 3
+
+New site: http://localhost:3000/2022/gc/cst-handicap-doubles/tests/hawera-cc-v-park-cc
+Old site: https://croquetscores.com/2022/gc/cst-handicap-doubles/competition/hawera-cc-vs-park-cc
+
+Croquet South Taranaki - GC Handicap Doubles - Johnstone Shield Round 1 - Hawera CC vs Park CC has the second and third games between Grant Gilberd (12) & Trevor Lister (5) and Judith Jones (6) & Bev Prankerd (7), games 2 and 3, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/31005 games 2 and 3
+
+New site: http://localhost:3000/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/tests/park-cc-v-inglewood
+Old site: https://croquetscores.com/2023/gc/croquet-south-taranaki-handicap-doubles-johnstone-shield-round-2-redo/competition/park-cc-vs-inglewood-cc
+
+Croquet South Taranaki - GC Handicap Doubles - Johnstone Shield Round 2 Redo - Park CC vs Inglewood CC has the second and third games between Lois Smith (5) & Millie Howatson (10) and Jane Chamberlain (11) & Pauline Stachurski (9), games 2 and 3, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/31369 games 7 and 8
+
+New site: http://localhost:3000/2023/gc/nsw-division-2-pennants-finals/tests/marrickvil-v-mosman-whi
+Old site: https://croquetscores.com/2023/gc/nsw-division-2-pennants-finals/competition/marrickville-vs-mosman-white
+
+NSW GC Division 2 Pennants Finals - Marrickville vs Mosman White has the second and third games between Stephen Catt & Charles Britton and Helen Collings & Penny Patterson, games 7 and 8, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/36887 games 10 and 11
+
+New site: http://localhost:3000/2024/gc/egypt-league-first-round/tests/gezira-clu-v-elghaba-cl
+Old site: https://croquetscores.com/2024/gc/egypt-league-first-round/competition/gezira-club-vs-elghaba-club
+
+Egypt League First round - Gezira Club vs ElGhaba Club has the second and third games between Mohamed Fathy and Saif Hatem, games 10 and 11, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/39042 games 2 and 24
+
+New site: http://localhost:3000/2025/ac/carter-cup-ireland-v-usa-2/tests/irl-v-usa
+Old site: https://croquetscores.com/2025/ac/carter-cup-ireland-v-usa-2/competition/ireland-vs-usa-1
+
+Carter Cup Ireland V USA  AC element also see GC element - Ireland vs USA has the second and third games between Simon Williams and Randy Cardo, games 2 and 24, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/38750 games 2 and 3
+
+New site: http://localhost:3000/2025/gc/nsw-division-2-pennants-southern-act-zone/tests/nowra-v-highlander
+Old site: https://croquetscores.com/2025/gc/nsw-division-2-pennants-southern-act-zone/competition/nowra-vs-highlanders
+
+NSW GC Division 2 Pennants - Southern / ACT Zone - Nowra vs Highlanders has the second and third games between Peter Wheatley & Sandy Alsop and Wayne Worral & Bob Gill, games 2 and 3, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/40807 games 5 and 12
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-r-8-1/tests/sporting-c-v-gezira-clu
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-r-8-1/competition/sporting-club-vs-gezira-club
+
+Egyptian Cup For Single - R 8 - Sporting Club vs Gezira Club has the second and third games between Yasser Sayed and Mostafa Eissa, games 5 and 12, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/40477 games 2 and 8
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-for-single-rouned-16-1/tests/maady-club-v-shooting-c
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-for-single-rouned-16-1/competition/maady-club-vs-shooting-club
+
+Egyptian Cup For Single Rouned 16 - Maady Club vs Shooting Club has the second and third games between Hemat Mostafa and Jana Mohamed Said, games 2 and 8, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.SecondAndThirdReversed: croquetscores.com/TeamMatches/40463 games 7 and 17
+
+New site: http://localhost:3000/2025/gc/egyptian-cup-rouned-16-1/tests/elshams-cl-v-smoha-club
+Old site: https://croquetscores.com/2025/gc/egyptian-cup-rouned-16-1/competition/elshams-club-vs-smoha-club
+
+Egyptian Cup Rouned 16 - ElShams Club vs Smoha Club has the second and third games between Syada Elzahar and Marwa Mostafa, games 7 and 17, added the other way round, since the third came after their match of the best of 3 was decided.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/28274 player 56
+
+New site: http://localhost:3000/2021/gc/croquetwest-a-grade-pennants/tests/gosnells-2-v-forrest-2
+Old site: https://croquetscores.com/2021/gc/croquetwest-a-grade-pennants/competition/gosnells-busselton-vs-forrest-park-nedlands
+
+Player Ian Tarling in Croquetwest GC A-Grade Pennants - Gosnells - Busselton vs Forrest Park - Nedlands was kept as representing Gosnells - York, which is neither team, and is brought over as a player of Gosnells - Busselton, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/39531 player 5
+
+New site: http://localhost:3000/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/tests/budleigh-s-v-nailsea
+Old site: https://croquetscores.com/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/competition/budleigh-salterton-vs-nailsea-and-district
+
+Player Kristian Chambers & James Galpin in SWF Parkstone Trophy Budleigh Salterton v Nailsea & District A - Budleigh Salterton vs Nailsea & District A was kept as representing Nailsea and District, which is neither team, and is brought over as a player of Nailsea & District A, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/39531 player 6
+
+New site: http://localhost:3000/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/tests/budleigh-s-v-nailsea
+Old site: https://croquetscores.com/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/competition/budleigh-salterton-vs-nailsea-and-district
+
+Player Marcus Evans in SWF Parkstone Trophy Budleigh Salterton v Nailsea & District A - Budleigh Salterton vs Nailsea & District A was kept as representing Nailsea and District, which is neither team, and is brought over as a player of Nailsea & District A, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/39531 player 7
+
+New site: http://localhost:3000/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/tests/budleigh-s-v-nailsea
+Old site: https://croquetscores.com/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/competition/budleigh-salterton-vs-nailsea-and-district
+
+Player James Galpin in SWF Parkstone Trophy Budleigh Salterton v Nailsea & District A - Budleigh Salterton vs Nailsea & District A was kept as representing Nailsea and District, which is neither team, and is brought over as a player of Nailsea & District A, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/39531 player 8
+
+New site: http://localhost:3000/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/tests/budleigh-s-v-nailsea
+Old site: https://croquetscores.com/2025/ac/swf-parkstone-trophy-budleigh-salterton-v-nailsea-and-district/competition/budleigh-salterton-vs-nailsea-and-district
+
+Player Kristian Chambers in SWF Parkstone Trophy Budleigh Salterton v Nailsea & District A - Budleigh Salterton vs Nailsea & District A was kept as representing Nailsea and District, which is neither team, and is brought over as a player of Nailsea & District A, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/8548 player 8
+
+New site: http://localhost:3000/2016/ac/14-point-teams-wa/tests/como-v-baylands
+Old site: https://croquetscores.com/2016/ac/14-point-teams-wa/competition/como-vs-baylands
+
+Player Coral Broun in WA  AC 14 Point Teams - Como vs Baylands was kept as representing Marauders, which is neither team, and is brought over as a player of Como, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/8897 player 8
+
+New site: http://localhost:3000/2016/ac/14-point-teams-wa/tests/como-v-cambridge
+Old site: https://croquetscores.com/2016/ac/14-point-teams-wa/competition/como-vs-cambridge
+
+Player Coral Broun in WA  AC 14 Point Teams - Como vs Cambridge was kept as representing Marauders, which is neither team, and is brought over as a player of Como, the team opposite the player they played.
+
+## ImportTeamMatches.TeamCorrected: croquetscores.com/TeamMatches/9185 player 8
+
+New site: http://localhost:3000/2016/ac/14-point-teams-wa/tests/baylands-v-como
+Old site: https://croquetscores.com/2016/ac/14-point-teams-wa/competition/baylands-vs-como
+
+Player Coral Broun in WA  AC 14 Point Teams - Baylands vs Como was kept as representing Marauders, which is neither team, and is brought over as a player of Como, the team opposite the player they played.
+
 ## ImportWholeTournaments.CompetitionLeftBehind: croquetscores.com/swisses/28068
 
 New site: http://localhost:3000/2025/gc/park-cc-grand-prix-easter-teams-tournament
@@ -32395,19 +34201,19 @@ Old site: https://croquetscores.com/2026/gc/canberra-teams-trial
 
 Canberra Teams Trial had scores marked in text as a tie, as "2 Tied", and is brought over allowing drawn games.
 
-## ImportWholeTournaments.ImportedAsStandard: croquetscores.com/tournaments/74867
-
-New site: http://localhost:3000/2024/gc/bccc-71st-annual-tournament
-Old site: https://croquetscores.com/2024/gc/bccc-71st-annual-tournament
-
-BCCC 71st Annual GC Tournament was kept as played by teams, with no team match to play, and is brought over as a Standard tournament.
-
 ## ImportWholeTournaments.ImportedAsStandard: croquetscores.com/tournaments/80204
 
 New site: http://localhost:3000/2025/gc/murphy-shield-lpg-southport-v-chester
 Old site: https://croquetscores.com/2025/gc/murphy-shield-lpg-southport-v-chester
 
 Murphy Shield LPG Southport v Chester was kept as played by teams, with no team match to play, and is brought over as a Standard tournament.
+
+## ImportWholeTournaments.ImportedAsStandard: croquetscores.com/tournaments/74867
+
+New site: http://localhost:3000/2024/gc/bccc-71st-annual-tournament
+Old site: https://croquetscores.com/2024/gc/bccc-71st-annual-tournament
+
+BCCC 71st Annual GC Tournament was kept as played by teams, with no team match to play, and is brought over as a Standard tournament.
 
 ## ImportWholeTournaments.ImportedAsTeamMatch: croquetscores.com/blocks/88131
 
@@ -32458,4 +34264,1250 @@ Old site: https://croquetscores.com/2025/gc/mt-albert-croquet-club-rose-bowl-tou
 
 No games
 
-This import: 512 import errors, 4,636 import corrections.
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/3073
+
+New site: http://localhost:3000/2013/ac/iv-championship-of-czech-republic/competitions/final-see-notes
+Old site: https://croquetscores.com/2013/ac/iv-championship-of-czech-republic/competition/semifinal
+
+Final was a knockout that could not be brought over as one, and its games are in the Swiss Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/4902
+
+New site: http://localhost:3000/2013/gc/swiss-golf-croquet-open/competitions/plate-q-finals-see-notes
+Old site: https://croquetscores.com/2013/gc/swiss-golf-croquet-open/competition/plate-q-finals
+
+Plate Q-Finals was a knockout that could not be brought over as one, and its games are in the Swiss Plate Q-Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/4903
+
+New site: http://localhost:3000/2013/gc/swiss-golf-croquet-open/competitions/plate-q-final-losers-see-notes
+Old site: https://croquetscores.com/2013/gc/swiss-golf-croquet-open/competition/plate-q-final-losers
+
+Plate Q-Final Losers was a knockout that could not be brought over as one, and its games are in the Swiss Plate Q-Final Losers - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/5794
+
+New site: http://localhost:3000/2013/ac/tasmanian-tca-singles-handicap/competitions/knockout-see-notes
+Old site: https://croquetscores.com/2013/ac/tasmanian-tca-singles-handicap/competition/knockout
+
+Knockout  was a knockout that could not be brought over as one, and its games are in the Swiss Knockout  - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/5986
+
+New site: http://localhost:3000/2013/ac/us-open/competitions/championship-ko-see-notes
+Old site: https://croquetscores.com/2013/ac/us-open/competition/championship-ko-1
+
+Championship KO was a knockout that could not be brought over as one, and its games are in the Swiss Championship KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/6017
+
+New site: http://localhost:3000/2013/ac/us-open/competitions/a-ladder-see-notes
+Old site: https://croquetscores.com/2013/ac/us-open/competition/a-ladder
+
+A Ladder was a knockout that could not be brought over as one, and its games are in the Swiss A Ladder - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/6273
+
+New site: http://localhost:3000/2014/ac/palmerston-north-city-clubs-triton-hearing-tournament-open-championship-singles/competitions/final-see-notes
+Old site: https://croquetscores.com/2014/ac/palmerston-north-city-clubs-triton-hearing-tournament-open-championship-singles/competition/finals
+
+Final was a knockout that could not be brought over as one, and its games are in the Swiss Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/7139
+
+New site: http://localhost:3000/2014/gc/camridge-cup-wa/competitions/good-egg-see-notes
+Old site: https://croquetscores.com/2014/gc/camridge-cup-wa/competition/good-egg
+
+Good Egg was a knockout that could not be brought over as one, and its games are in the Swiss Good Egg - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/8353
+
+New site: http://localhost:3000/2014/gc/queens-birthday-weekend/competitions/final-handicap-19-pt-games-see-notes
+Old site: https://croquetscores.com/2014/gc/queens-birthday-weekend/competition/final-handicap-19-pt-games
+
+Final Handicap 19 Pt Games was a knockout that could not be brought over as one, and its games are in the Swiss Final Handicap 19 Pt Games - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/8833
+
+New site: http://localhost:3000/2014/ac/mallet-sports-on-the-broadwater-ricochet/competitions/ricochet-finals-see-notes
+Old site: https://croquetscores.com/2014/ac/mallet-sports-on-the-broadwater-ricochet/competition/ricochet-finals
+
+Ricochet Finals was a knockout that could not be brought over as one, and its games are in the Swiss Ricochet Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/9285
+
+New site: http://localhost:3000/2014/ac/championships-of-ireland/competitions/championship-singles-duff-mathews-perpetual-trophy-see-notes
+Old site: https://croquetscores.com/2014/ac/championships-of-ireland/competition/champioship-singles-duff-mathews-perpetual-trophy
+
+Championship Singles - Duff Mathews Perpetual Trophy was a knockout that could not be brought over as one, and its games are in the Swiss Championship Singles - Duff Mathews Perpetual Trophy - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/14755
+
+New site: http://localhost:3000/2014/ac/ca-chairmans-salver/competitions/double-round-robin-see-notes
+Old site: https://croquetscores.com/2014/ac/ca-chairmans-salver/competition/double-round-robin
+
+Double Round Robin was a block that could not be brought over as one, and its games are in the Swiss Double Round Robin - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/9441
+
+New site: http://localhost:3000/2014/gc/the-10th-egyptian-open-golf-croquet-international-championship/competitions/knockout-stage-see-notes
+Old site: https://croquetscores.com/2014/gc/the-10th-egyptian-open-golf-croquet-international-championship/competition/knockout-stage
+
+KNOCKOUT STAGE was a knockout that could not be brought over as one, and its games are in the Swiss KNOCKOUT STAGE - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/12259
+
+New site: http://localhost:3000/2015/ac/desert-classic/competitions/competitor-playoffs-see-notes
+Old site: https://croquetscores.com/2015/ac/desert-classic/competition/competitor-playoffs
+
+Competitor Playoffs was a knockout that could not be brought over as one, and its games are in the Swiss Competitor Playoffs - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/12833
+
+New site: http://localhost:3000/2015/gc/steuber-prize-a-knockout/competitions/a-flight-see-notes
+Old site: https://croquetscores.com/2015/gc/steuber-prize-a-knockout/competition/a-flight
+
+A Flight was a knockout that could not be brought over as one, and its games are in the Swiss A Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/13923
+
+New site: http://localhost:3000/2015/gc/14th-womens-open-ripon-spa/competitions/semi-finals-see-notes
+Old site: https://croquetscores.com/2015/gc/14th-womens-open-ripon-spa/competition/semi-finals
+
+Semi Finals was a knockout that could not be brought over as one, and its games are in the Swiss Semi Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/14434
+
+New site: http://localhost:3000/2015/gc/cambridge-wa-presidents-medals/competitions/presidents-medal-see-notes
+Old site: https://croquetscores.com/2015/gc/cambridge-wa-presidents-medals/competition/presidents-medal
+
+Presidents Medal was a knockout that could not be brought over as one, and its games are in the Swiss Presidents Medal - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/14504
+
+New site: http://localhost:3000/2015/gc/british-open-championship/competitions/bowl-see-notes
+Old site: https://croquetscores.com/2015/gc/british-open-championship/competition/bowl
+
+Bowl was a knockout that could not be brought over as one, and its games are in the Swiss Bowl - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/14562
+
+New site: http://localhost:3000/2015/gc/czech-republic-5th-telc-croquet-all-round-cup/competitions/plate-1st-round-see-notes
+Old site: https://croquetscores.com/2015/gc/czech-republic-5th-telc-croquet-all-round-cup/competition/plate-1st-round
+
+Plate 1st round was a knockout that could not be brought over as one, and its games are in the Swiss Plate 1st round - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/21924
+
+New site: http://localhost:3000/2015/gc/aca-bronze-medal-qld/competitions/block-see-notes
+Old site: https://croquetscores.com/2015/gc/aca-bronze-medal-qld/competition/block
+
+Block was a block that could not be brought over as one, and its games are in the Swiss Block - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/15012
+
+New site: http://localhost:3000/2015/ac/championships-of-ireland/competitions/newell-candlestick-draw-see-notes
+Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/newell-candlestick-draw
+
+Newell Candlestick Draw was a knockout that could not be brought over as one, and its games are in the Swiss Newell Candlestick Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/15014
+
+New site: http://localhost:3000/2015/ac/championships-of-ireland/competitions/handicap-doubles-see-notes
+Old site: https://croquetscores.com/2015/ac/championships-of-ireland/competition/handicap-doubles
+
+Handicap Doubles was a knockout that could not be brought over as one, and its games are in the Swiss Handicap Doubles - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/22640
+
+New site: http://localhost:3000/2015/gc/saca-doubles-combined-handicap-8/competitions/block-see-notes
+Old site: https://croquetscores.com/2015/gc/saca-doubles-combined-handicap-8/competition/block
+
+Block was a block that could not be brought over as one, and its games are in the Swiss Block - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/15561
+
+New site: http://localhost:3000/2015/ac/country-boys/competitions/2-lives-see-notes
+Old site: https://croquetscores.com/2015/ac/country-boys/competition/2-lives
+
+2-Lives was a knockout that could not be brought over as one, and its games are in the Swiss 2-Lives - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/23618
+
+New site: http://localhost:3000/2015/ac/north-american-amateur/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2015/ac/north-american-amateur/competition/championship-knockout
+
+Championship Knockout was a block that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/15780
+
+New site: http://localhost:3000/2015/gc/wa-vic-park-flexi-doubles/competitions/consolation-knockout-see-notes
+Old site: https://croquetscores.com/2015/gc/wa-vic-park-flexi-doubles/competition/consolation-knockout
+
+Consolation Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Consolation Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/16006
+
+New site: http://localhost:3000/2016/ac/desert-classic/competitions/championship-second-life-see-notes
+Old site: https://croquetscores.com/2016/ac/desert-classic/competition/championship-second-life
+
+Championship Second Life was a knockout that could not be brought over as one, and its games are in the Swiss Championship Second Life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/16007
+
+New site: http://localhost:3000/2016/ac/desert-classic/competitions/challenger-second-life-see-notes
+Old site: https://croquetscores.com/2016/ac/desert-classic/competition/challenger-second-life
+
+Challenger Second Life was a knockout that could not be brought over as one, and its games are in the Swiss Challenger Second Life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/16008
+
+New site: http://localhost:3000/2016/ac/desert-classic/competitions/competitors-second-life-see-notes
+Old site: https://croquetscores.com/2016/ac/desert-classic/competition/competitors-second-life
+
+Competitors Second Life was a knockout that could not be brought over as one, and its games are in the Swiss Competitors Second Life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/16867
+
+New site: http://localhost:3000/2016/ac/north-american-open-sonoma/competitions/championship-see-notes
+Old site: https://croquetscores.com/2016/ac/north-american-open-sonoma/competition/championship
+
+Championship was a knockout that could not be brought over as one, and its games are in the Swiss Championship - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/17608
+
+New site: http://localhost:3000/2016/gc/swedish-championship/competitions/finals-see-notes
+Old site: https://croquetscores.com/2016/gc/swedish-championship/competition/finals
+
+Finals was a knockout that could not be brought over as one, and its games are in the Swiss Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/17933
+
+New site: http://localhost:3000/2016/gc/swiss-championship/competitions/q-finals-see-notes
+Old site: https://croquetscores.com/2016/gc/swiss-championship/competition/q-finals
+
+Q-Finals was a knockout that could not be brought over as one, and its games are in the Swiss Q-Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/31169
+
+New site: http://localhost:3000/2017/ac/jic-invitational/competitions/block-a-see-notes
+Old site: https://croquetscores.com/2017/ac/jic-invitational/competition/block-a
+
+Block A was a block that could not be brought over as one, and its games are in the Swiss Block A - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/31521
+
+New site: http://localhost:3000/2017/ac/desert-classic/competitions/championship-knockout-2nd-life-see-notes
+Old site: https://croquetscores.com/2017/ac/desert-classic/competition/championship-knockout-2nd-life
+
+Championship Knockout 2nd life was a block that could not be brought over as one, and its games are in the Swiss Championship Knockout 2nd life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/20289
+
+New site: http://localhost:3000/2017/ac/desert-classic/competitions/challenger-2nd-life-see-notes
+Old site: https://croquetscores.com/2017/ac/desert-classic/competition/challenger-2nd-life
+
+Challenger 2nd Life was a knockout that could not be brought over as one, and its games are in the Swiss Challenger 2nd Life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/20290
+
+New site: http://localhost:3000/2017/ac/desert-classic/competitions/competitors-second-life-see-notes
+Old site: https://croquetscores.com/2017/ac/desert-classic/competition/competitors-second-life
+
+Competitors Second Life was a knockout that could not be brought over as one, and its games are in the Swiss Competitors Second Life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/21445
+
+New site: http://localhost:3000/2017/gc/egyptian-double-mix-1/competitions/b-see-notes
+Old site: https://croquetscores.com/2017/gc/egyptian-double-mix-1/competition/b
+
+B was a knockout that could not be brought over as one, and its games are in the Swiss B - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/22820
+
+New site: http://localhost:3000/2017/gc/norwegian-championship/competitions/final-knockout-see-notes
+Old site: https://croquetscores.com/2017/gc/norwegian-championship/competition/final-knockout
+
+Final knockout was a knockout that could not be brought over as one, and its games are in the Swiss Final knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/24641
+
+New site: http://localhost:3000/2017/gc/cca-knockout/competitions/cca-golf-croquet-knockout-see-notes
+Old site: https://croquetscores.com/2017/gc/cca-knockout/competition/cca-golf-croquet-knockout
+
+CCA Golf Croquet Knockout was a knockout that could not be brought over as one, and its games are in the Swiss CCA Golf Croquet Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/39233
+
+New site: http://localhost:3000/2017/gc/q-to-the-rank/competitions/2-see-notes
+Old site: https://croquetscores.com/2017/gc/q-to-the-rank/competition/2
+
+2 was a block that could not be brought over as one, and its games are in the Swiss 2 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/31728
+
+New site: http://localhost:3000/2017/gc/forrest-park-summer-nights-doubles/competitions/summer-nights-see-notes
+Old site: https://croquetscores.com/2017/gc/forrest-park-summer-nights-doubles/competition/summer-nights
+
+Summer Nights was a block that could not be brought over as one, and its games are in the Swiss Summer Nights - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/27201
+
+New site: http://localhost:3000/2018/ac/cheltenham-easter-w-e/competitions/main-event-see-notes
+Old site: https://croquetscores.com/2018/ac/cheltenham-easter-w-e/competition/main-event
+
+Main Event was a knockout that could not be brought over as one, and its games are in the Swiss Main Event - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/29326
+
+New site: http://localhost:3000/2018/ac/european-championship/competitions/bowl-see-notes
+Old site: https://croquetscores.com/2018/ac/european-championship/competition/bow4
+
+Bowl was a knockout that could not be brought over as one, and its games are in the Swiss Bowl - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/29344
+
+New site: http://localhost:3000/2018/gc/sm/competitions/knock-out-see-notes
+Old site: https://croquetscores.com/2018/gc/sm/competition/knock-out
+
+Knock-out was a knockout that could not be brought over as one, and its games are in the Swiss Knock-out - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/30709
+
+New site: http://localhost:3000/2018/ac/sa-selectors-invitation-1/competitions/x-event-see-notes
+Old site: https://croquetscores.com/2018/ac/sa-selectors-invitation-1/competition/x-event
+
+X Event was a knockout that could not be brought over as one, and its games are in the Swiss X Event - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/30711
+
+New site: http://localhost:3000/2018/ac/sa-selectors-invitation-1/competitions/y-5th-place-see-notes
+Old site: https://croquetscores.com/2018/ac/sa-selectors-invitation-1/competition/y-5ht-place
+
+Y (5th Place) was a knockout that could not be brought over as one, and its games are in the Swiss Y (5th Place) - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/32068
+
+New site: http://localhost:3000/2019/gc/cnz-nationals-2/competitions/y-first-round-losers-in-ko-see-notes
+Old site: https://croquetscores.com/2019/gc/cnz-nationals-2/competition/x-final
+
+ Y (first round losers in KO) was a knockout that could not be brought over as one, and its games are in the Swiss  Y (first round losers in KO) - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/53133
+
+New site: http://localhost:3000/2019/gc/taree-wild-fig/competitions/block-a-see-notes
+Old site: https://croquetscores.com/2019/gc/taree-wild-fig/competition/block-a
+
+Block A was a block that could not be brought over as one, and its games are in the Swiss Block A - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/34596
+
+New site: http://localhost:3000/2019/ac/championship-of-county-dublin/competitions/mirabeau-process-see-notes
+Old site: https://croquetscores.com/2019/ac/championship-of-county-dublin/competition/mirabeau-process
+
+Mirabeau Process was a knockout that could not be brought over as one, and its games are in the Swiss Mirabeau Process - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/34913
+
+New site: http://localhost:3000/2019/ac/championship-of-county-dublin/competitions/mirabeau-marriage-see-notes
+Old site: https://croquetscores.com/2019/ac/championship-of-county-dublin/competition/mirabeau-marriage
+
+Mirabeau marriage was a knockout that could not be brought over as one, and its games are in the Swiss Mirabeau marriage - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/36420
+
+New site: http://localhost:3000/2019/gc/swiss-open-championship/competitions/s-shield-see-notes
+Old site: https://croquetscores.com/2019/gc/swiss-open-championship/competition/s-shield
+
+S-Shield was a knockout that could not be brought over as one, and its games are in the Swiss S-Shield - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/36353
+
+New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/founders-cup-handicap-singles-see-notes
+Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/founders-cup-handicap-singles
+
+Founders Cup Handicap Singles was a knockout that could not be brought over as one, and its games are in the Swiss Founders Cup Handicap Singles - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/36456
+
+New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/alternate-shot-doubles-see-notes
+Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/alternate-shot-doubles
+
+Alternate Shot Doubles was a knockout that could not be brought over as one, and its games are in the Swiss Alternate Shot Doubles - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/36482
+
+New site: http://localhost:3000/2019/ac/championships-of-ireland/competitions/usca-silver-salver-draw-see-notes
+Old site: https://croquetscores.com/2019/ac/championships-of-ireland/competition/usca-silver-salver-draw
+
+USCA Silver Salver Draw was a knockout that could not be brought over as one, and its games are in the Swiss USCA Silver Salver Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/65590
+
+New site: http://localhost:3000/2020/gc/aus-sa-doubles-combined-handicap-8/competitions/block-a-see-notes
+Old site: https://croquetscores.com/2020/gc/aus-sa-doubles-combined-handicap-8/competition/block-a
+
+Block A was a block that could not be brought over as one, and its games are in the Swiss Block A - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/42883
+
+New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-singles-draw-see-notes
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-singles-draw
+
+Handicap Singles Draw was a knockout that could not be brought over as one, and its games are in the Swiss Handicap Singles Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/42884
+
+New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicapsingles-process-see-notes
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicapsingles-process
+
+HandicapSingles Process was a knockout that could not be brought over as one, and its games are in the Swiss HandicapSingles Process - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/42886
+
+New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-draw-see-notes
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-draw
+
+Handicap Doubles Draw was a knockout that could not be brought over as one, and its games are in the Swiss Handicap Doubles Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/42887
+
+New site: http://localhost:3000/2020/ac/irish-championships/competitions/handicap-doubles-process-see-notes
+Old site: https://croquetscores.com/2020/ac/irish-championships/competition/handicap-doubles-process
+
+Handicap Doubles Process was a knockout that could not be brought over as one, and its games are in the Swiss Handicap Doubles Process - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/67076
+
+New site: http://localhost:3000/2020/gc/national-forest-doubles/competitions/all-play-all-see-notes
+Old site: https://croquetscores.com/2020/gc/national-forest-doubles/competition/all-play-all
+
+All Play All was a block that could not be brought over as one, and its games are in the Swiss All Play All - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/67237
+
+New site: http://localhost:3000/2020/gc/heretaunga-silver-badge/competitions/block-9-to-16-see-notes
+Old site: https://croquetscores.com/2020/gc/heretaunga-silver-badge/competition/block-9-to-16
+
+Block (9 to 16) was a block that could not be brought over as one, and its games are in the Swiss Block (9 to 16) - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/44961
+
+New site: http://localhost:3000/2020/gc/queensland-directors-doubles-8752/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2020/gc/queensland-directors-doubles-8752/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/48257
+
+New site: http://localhost:3000/2021/gc/wa-summer-nights-finals-1/competitions/final-1-2-see-notes
+Old site: https://croquetscores.com/2021/gc/wa-summer-nights-finals-1/competition/final-1-2
+
+Final 1/2 was a knockout that could not be brought over as one, and its games are in the Swiss Final 1/2 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/49575
+
+New site: http://localhost:3000/2021/gc/wa-cambridge-diane-cook-cup/competitions/5th-8th-see-notes
+Old site: https://croquetscores.com/2021/gc/wa-cambridge-diane-cook-cup/competition/5th-8th
+
+5th 8th was a knockout that could not be brought over as one, and its games are in the Swiss 5th 8th - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/49735
+
+New site: http://localhost:3000/2021/gc/1st-rshecc-spring-trophy/competitions/main-champonship-knockout-see-notes
+Old site: https://croquetscores.com/2021/gc/1st-rshecc-spring-trophy/competition/main-champonship-knockout
+
+Main Champonship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Main Champonship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/49993
+
+New site: http://localhost:3000/2021/gc/12th-la-fuensanta-spring-trohpy/competitions/plate-knockout-see-notes
+Old site: https://croquetscores.com/2021/gc/12th-la-fuensanta-spring-trohpy/competition/plate-knockout
+
+Plate Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Plate Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/50158
+
+New site: http://localhost:3000/2021/gc/lake-carroll-independence-day-shootout/competitions/championship-double-elimination-ko-see-notes
+Old site: https://croquetscores.com/2021/gc/lake-carroll-independence-day-shootout/competition/championship-double-elimination-ko
+
+Championship Double Elimination KO was a knockout that could not be brought over as one, and its games are in the Swiss Championship Double Elimination KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/50201
+
+New site: http://localhost:3000/2021/ac/open-singles-championship/competitions/the-association-plate-draw-see-notes
+Old site: https://croquetscores.com/2021/ac/open-singles-championship/competition/the-association-plate-draw
+
+The Association Plate - Draw was a knockout that could not be brought over as one, and its games are in the Swiss The Association Plate - Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/50224
+
+New site: http://localhost:3000/2021/gc/croquetwest-state-mixed-doubles/competitions/7-8-see-notes
+Old site: https://croquetscores.com/2021/gc/croquetwest-state-mixed-doubles/competition/7-8
+
+7/8 was a knockout that could not be brought over as one, and its games are in the Swiss 7/8 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/50605
+
+New site: http://localhost:3000/2021/ac/cropquetwest-14-point-div-3-singles/competitions/consolation-play-off-see-notes
+Old site: https://croquetscores.com/2021/ac/cropquetwest-14-point-div-3-singles/competition/consolation-play-off
+
+Consolation Play Off was a knockout that could not be brought over as one, and its games are in the Swiss Consolation Play Off - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/50880
+
+New site: http://localhost:3000/2021/a6w/cc-jackson-invitational-1/competitions/championship-bracket-see-notes
+Old site: https://croquetscores.com/2021/a6w/cc-jackson-invitational-1/competition/championship-bracket
+
+Championship Bracket was a knockout that could not be brought over as one, and its games are in the Swiss Championship Bracket - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/50854
+
+New site: http://localhost:3000/2021/gc/2nd-plantation-foundation-benefit-golf-croquet-open/competitions/doubles-championship-see-notes
+Old site: https://croquetscores.com/2021/gc/2nd-plantation-foundation-benefit-golf-croquet-open/competition/doubles-championship
+
+Doubles Championship was a knockout that could not be brought over as one, and its games are in the Swiss Doubles Championship - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51370
+
+New site: http://localhost:3000/2022/a6w/blaine-davis-invitational/competitions/championship-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/blaine-davis-invitational/competition/championship-finals
+
+Championship Finals was a knockout that could not be brought over as one, and its games are in the Swiss Championship Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51371
+
+New site: http://localhost:3000/2022/a6w/blaine-davis-invitational/competitions/first-flight-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/blaine-davis-invitational/competition/first-flight-finals
+
+First Flight Finals was a knockout that could not be brought over as one, and its games are in the Swiss First Flight Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51372
+
+New site: http://localhost:3000/2022/a6w/blaine-davis-invitational/competitions/second-flight-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/blaine-davis-invitational/competition/second-flight-finals
+
+Second Flight Finals was a knockout that could not be brought over as one, and its games are in the Swiss Second Flight Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/80301
+
+New site: http://localhost:3000/2022/a6w/the-jones-invitational-3/competitions/second-flight-see-notes
+Old site: https://croquetscores.com/2022/a6w/the-jones-invitational-3/competition/second-flight
+
+Second Flight was a block that could not be brought over as one, and its games are in the Swiss Second Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51384
+
+New site: http://localhost:3000/2022/gc/open-series-cheltenham/competitions/plate-see-notes
+Old site: https://croquetscores.com/2022/gc/open-series-cheltenham/competition/consolation
+
+Plate was a knockout that could not be brought over as one, and its games are in the Swiss Plate - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51765
+
+New site: http://localhost:3000/2022/gc/chesapeake-bay-rockfish/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2022/gc/chesapeake-bay-rockfish/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51766
+
+New site: http://localhost:3000/2022/gc/chesapeake-bay-rockfish/competitions/1st-flight-knockout-see-notes
+Old site: https://croquetscores.com/2022/gc/chesapeake-bay-rockfish/competition/1st-flight-knockout
+
+1st Flight Knockout was a knockout that could not be brought over as one, and its games are in the Swiss 1st Flight Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51877
+
+New site: http://localhost:3000/2022/gc/sussex-county-cc-level-play-singles/competitions/finals-see-notes
+Old site: https://croquetscores.com/2022/gc/sussex-county-cc-level-play-singles/competition/finals
+
+finals was a knockout that could not be brought over as one, and its games are in the Swiss finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51750
+
+New site: http://localhost:3000/2022/gc/geraldton-a-b-grade-l-p-singles/competitions/a-grade-see-notes
+Old site: https://croquetscores.com/2022/gc/geraldton-a-b-grade-l-p-singles/competition/a-grade
+
+A Grade was a knockout that could not be brought over as one, and its games are in the Swiss A Grade - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/51989
+
+New site: http://localhost:3000/2022/gc/wrest-park-open-championship/competitions/shield-finals-see-notes
+Old site: https://croquetscores.com/2022/gc/wrest-park-open-championship/competition/shield-finals
+
+Shield finals was a knockout that could not be brought over as one, and its games are in the Swiss Shield finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52113
+
+New site: http://localhost:3000/2022/rc/nsw-ricochet-open-doubles/competitions/final-see-notes
+Old site: https://croquetscores.com/2022/rc/nsw-ricochet-open-doubles/competition/final
+
+Final was a knockout that could not be brought over as one, and its games are in the Swiss Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52087
+
+New site: http://localhost:3000/2022/gc/ealing-b-level-series/competitions/play-offs-see-notes
+Old site: https://croquetscores.com/2022/gc/ealing-b-level-series/competition/play-offs
+
+Play-offs was a knockout that could not be brought over as one, and its games are in the Swiss Play-offs - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/81920
+
+New site: http://localhost:3000/2022/gc/chesapeake-bay-summer-tournament/competitions/championship-flight-see-notes
+Old site: https://croquetscores.com/2022/gc/chesapeake-bay-summer-tournament/competition/championship
+
+Championship Flight was a block that could not be brought over as one, and its games are in the Swiss Championship Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52577
+
+New site: http://localhost:3000/2022/gc/swedish-championship-golf-croquet-doubles/competitions/slutspel-see-notes
+Old site: https://croquetscores.com/2022/gc/swedish-championship-golf-croquet-doubles/competition/slutspel
+
+Slutspel was a knockout that could not be brought over as one, and its games are in the Swiss Slutspel - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52900
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/champs-semi-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/champs-semi-finals
+
+Champs Semi-Finals was a knockout that could not be brought over as one, and its games are in the Swiss Champs Semi-Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52901
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/1st-flight-semi-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/1st-flight-semi-finals
+
+1st Flight Semi-Finals was a knockout that could not be brought over as one, and its games are in the Swiss 1st Flight Semi-Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52902
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/2nd-semi-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/2nd-semi-finals
+
+2nd Semi Finals was a knockout that could not be brought over as one, and its games are in the Swiss 2nd Semi Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52903
+
+New site: http://localhost:3000/2022/a6w/woodlawn-mini-lobster-tournament/competitions/3rd-semi-finals-see-notes
+Old site: https://croquetscores.com/2022/a6w/woodlawn-mini-lobster-tournament/competition/3rd-semi-finals
+
+3rd Semi-Finals was a knockout that could not be brought over as one, and its games are in the Swiss 3rd Semi-Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52882
+
+New site: http://localhost:3000/2022/gc/australia-womens-singles/competitions/block-b-play-off-see-notes
+Old site: https://croquetscores.com/2022/gc/australia-womens-singles/competition/block-b-playoff
+
+Block B Play-off was a knockout that could not be brought over as one, and its games are in the Swiss Block B Play-off - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/83338
+
+New site: http://localhost:3000/2022/gc/moorabinda-country-all-stars/competitions/a-grade-see-notes
+Old site: https://croquetscores.com/2022/gc/moorabinda-country-all-stars/competition/a-grade
+
+A Grade was a block that could not be brought over as one, and its games are in the Swiss A Grade - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53174
+
+New site: http://localhost:3000/2022/gc/mosman-prize-for-handicap/competitions/1st-2nd-final-see-notes
+Old site: https://croquetscores.com/2022/gc/mosman-prize-for-handicap/competition/1st-2nd-finals
+
+1st/2nd Final was a knockout that could not be brought over as one, and its games are in the Swiss 1st/2nd Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53446
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/championship-a-ko-see-notes
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/championship-a-ko
+
+Championship A KO was a knockout that could not be brought over as one, and its games are in the Swiss Championship A KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53447
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/championship-b-ko-see-notes
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/championship-b-ko
+
+Championship B KO was a knockout that could not be brought over as one, and its games are in the Swiss Championship B KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53448
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/first-flight-ko-see-notes
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/first-flight-ko
+
+First Flight KO was a knockout that could not be brought over as one, and its games are in the Swiss First Flight KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53449
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/second-flight-ko-see-notes
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/second-flight-ko
+
+Second Flight KO was a knockout that could not be brought over as one, and its games are in the Swiss Second Flight KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53450
+
+New site: http://localhost:3000/2023/a6w/the-jones-invitational/competitions/third-flight-ko-see-notes
+Old site: https://croquetscores.com/2023/a6w/the-jones-invitational/competition/third-flight-ko
+
+Third Flight KO was a knockout that could not be brought over as one, and its games are in the Swiss Third Flight KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53627
+
+New site: http://localhost:3000/2023/a6w/blaine-davis-invitational/competitions/first-flight-knockout-see-notes
+Old site: https://croquetscores.com/2023/a6w/blaine-davis-invitational/competition/first-flight-knockout
+
+First Flight Knockout was a knockout that could not be brought over as one, and its games are in the Swiss First Flight Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53628
+
+New site: http://localhost:3000/2023/a6w/blaine-davis-invitational/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2023/a6w/blaine-davis-invitational/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/53629
+
+New site: http://localhost:3000/2023/a6w/blaine-davis-invitational/competitions/second-flight-knockout-see-notes
+Old site: https://croquetscores.com/2023/a6w/blaine-davis-invitational/competition/second-flight-knockout
+
+Second Flight Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Second Flight Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/54102
+
+New site: http://localhost:3000/2023/gc/surbiton-championship-open-series/competitions/bowl-see-notes
+Old site: https://croquetscores.com/2023/gc/surbiton-championship-open-series/competition/bowl
+
+Bowl was a knockout that could not be brought over as one, and its games are in the Swiss Bowl - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/54103
+
+New site: http://localhost:3000/2023/gc/surbiton-championship-open-series/competitions/shield-see-notes
+Old site: https://croquetscores.com/2023/gc/surbiton-championship-open-series/competition/shield
+
+Shield was a knockout that could not be brought over as one, and its games are in the Swiss Shield - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/54280
+
+New site: http://localhost:3000/2023/gc/ikskiles-ab-level/competitions/plate-see-notes
+Old site: https://croquetscores.com/2023/gc/ikskiles-ab-level/competition/plate
+
+Plate was a knockout that could not be brought over as one, and its games are in the Swiss Plate - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/54378
+
+New site: http://localhost:3000/2023/a6w/berkshire-invitational/competitions/second-flight-knockout-see-notes
+Old site: https://croquetscores.com/2023/a6w/berkshire-invitational/competition/second-flight-knockout
+
+Second Flight Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Second Flight Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/54331
+
+New site: http://localhost:3000/2023/ac/championship-of-county-dublin/competitions/coronation-bowls-draw-see-notes
+Old site: https://croquetscores.com/2023/ac/championship-of-county-dublin/competition/coronation-bowls-draw
+
+Coronation Bowls draw was a knockout that could not be brought over as one, and its games are in the Swiss Coronation Bowls draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/87946
+
+New site: http://localhost:3000/2023/gc/cullasaja-ladies-doubles-championship/competitions/crossblock-see-notes
+Old site: https://croquetscores.com/2023/gc/cullasaja-ladies-doubles-championship/competition/crossblock
+
+Crossblock was a block that could not be brought over as one, and its games are in the Swiss Crossblock - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/55277
+
+New site: http://localhost:3000/2023/gc/ggcc-b-level/competitions/5-to-8-ko-see-notes
+Old site: https://croquetscores.com/2023/gc/ggcc-b-level/competition/5-to-8-ko
+
+5 to 8 KO was a knockout that could not be brought over as one, and its games are in the Swiss 5 to 8 KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/55373
+
+New site: http://localhost:3000/2023/ac/croquet-championships-of-ireland/competitions/green-cup-draw-see-notes
+Old site: https://croquetscores.com/2023/ac/croquet-championships-of-ireland/competition/green-cup-draw
+
+Green Cup Draw was a knockout that could not be brought over as one, and its games are in the Swiss Green Cup Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/55376
+
+New site: http://localhost:3000/2023/ac/croquet-championships-of-ireland/competitions/championship-doubles-draw-see-notes
+Old site: https://croquetscores.com/2023/ac/croquet-championships-of-ireland/competition/championship-doubles-draw
+
+Championship Doubles Draw was a knockout that could not be brought over as one, and its games are in the Swiss Championship Doubles Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/88115
+
+New site: http://localhost:3000/2023/gc/bicc-snake-season-long/competitions/blue-flight-see-notes
+Old site: https://croquetscores.com/2023/gc/bicc-snake-season-long/competition/blue-flight
+
+Blue Flight was a block that could not be brought over as one, and its games are in the Swiss Blue Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/88707
+
+New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/eastern-see-notes
+Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/eastern
+
+Eastern was a block that could not be brought over as one, and its games are in the Swiss Eastern - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/55682
+
+New site: http://localhost:3000/2023/gc/mountain-challenge/competitions/knockout-see-notes
+Old site: https://croquetscores.com/2023/gc/mountain-challenge/competition/knockout
+
+Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/55737
+
+New site: http://localhost:3000/2023/a6w/nycc-osborn-cup/competitions/doubles-ko-see-notes
+Old site: https://croquetscores.com/2023/a6w/nycc-osborn-cup/competition/doubles-ko
+
+doubles KO was a knockout that could not be brought over as one, and its games are in the Swiss doubles KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/56207
+
+New site: http://localhost:3000/2023/gc/chesapeake-bay-big-oyster/competitions/1st-flight-knockout-3rd-place-see-notes
+Old site: https://croquetscores.com/2023/gc/chesapeake-bay-big-oyster/competition/1st-flight-1
+
+1st Flight Knockout 3rd Place was a knockout that could not be brought over as one, and its games are in the Swiss 1st Flight Knockout 3rd Place - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/89149
+
+New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-a-see-notes
+Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-a
+
+Group A was a block that could not be brought over as one, and its games are in the Swiss Group A - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/89150
+
+New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/group-b-see-notes
+Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/group-b
+
+Group B was a block that could not be brought over as one, and its games are in the Swiss Group B - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/90287
+
+New site: http://localhost:3000/2023/gc/wca-sunday-interclub/competitions/final-see-notes
+Old site: https://croquetscores.com/2023/gc/wca-sunday-interclub/competition/final
+
+Final was a block that could not be brought over as one, and its games are in the Swiss Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/55815
+
+New site: http://localhost:3000/2023/gc/australia-womens-singles/competitions/consolation-knockout-11-14-see-notes
+Old site: https://croquetscores.com/2023/gc/australia-womens-singles/competition/consolation-knockout-13-16
+
+Consolation Knockout 11 - 14 was a knockout that could not be brought over as one, and its games are in the Swiss Consolation Knockout 11 - 14 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/57065
+
+New site: http://localhost:3000/2024/gc/tbc-member-guest/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/tbc-member-guest/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/91876
+
+New site: http://localhost:3000/2024/ac/western-province-croquet-association-championships/competitions/restricted-b-restricted-h-cap-singles-comb-see-notes
+Old site: https://croquetscores.com/2024/ac/western-province-croquet-association-championships/competition/restricted-b-restricted-h-cap-singles-comb
+
+Restricted B/Restricted H/cap Singles comb was a block that could not be brought over as one, and its games are in the Swiss Restricted B/Restricted H/cap Singles comb - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/57249
+
+New site: http://localhost:3000/2024/ac/vic-mcc-chairmans-shield/competitions/finals-see-notes
+Old site: https://croquetscores.com/2024/ac/vic-mcc-chairmans-shield/competition/finals
+
+Finals was a knockout that could not be brought over as one, and its games are in the Swiss Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/57134
+
+New site: http://localhost:3000/2024/a6w/mission-hills-invitational/competitions/first-flight-doubles-knockout-see-notes
+Old site: https://croquetscores.com/2024/a6w/mission-hills-invitational/competition/first-flight-doubles-knockout
+
+First Flight Doubles Knockout was a knockout that could not be brought over as one, and its games are in the Swiss First Flight Doubles Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/57798
+
+New site: http://localhost:3000/2024/gc/pb-intercluub-championship/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/pb-intercluub-championship/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/57921
+
+New site: http://localhost:3000/2024/gc/bury-a-level-national-tournament/competitions/knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/bury-a-level-national-tournament/competition/knockout
+
+Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/56200
+
+New site: http://localhost:3000/2023/gc/canberra-golf-croquet-veterans-handicap-singles/competitions/finals-see-notes
+Old site: https://croquetscores.com/2023/gc/canberra-golf-croquet-veterans-handicap-singles/competition/finals
+
+Finals was a knockout that could not be brought over as one, and its games are in the Swiss Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/58361
+
+New site: http://localhost:3000/2024/gc/sidmouth-a-level-series-0/competitions/main-knock-out-see-notes
+Old site: https://croquetscores.com/2024/gc/sidmouth-a-level-series-0/competition/main-knock-out
+
+MAIN KNOCK-OUT was a knockout that could not be brought over as one, and its games are in the Swiss MAIN KNOCK-OUT - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/94414
+
+New site: http://localhost:3000/2024/gc/ramsgate-open-championship/competitions/plate-see-notes
+Old site: https://croquetscores.com/2024/gc/ramsgate-open-championship/competition/plate
+
+Plate was a block that could not be brought over as one, and its games are in the Swiss Plate - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/58759
+
+New site: http://localhost:3000/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competitions/doubles-knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/ccj-golf-croquet-championship-doubles-and-singles/competition/doubles-knockout
+
+Doubles Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Doubles Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52424
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/handicap-singles-see-notes
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/handicap-singles
+
+Handicap Singles was a knockout that could not be brought over as one, and its games are in the Swiss Handicap Singles - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52425
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/usca-salver-draw-see-notes
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/usca-salver-draw
+
+USCA Salver Draw was a knockout that could not be brought over as one, and its games are in the Swiss USCA Salver Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52427
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/as-doubles-draw-see-notes
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/as-doubles-draw
+
+AS Doubles Draw was a knockout that could not be brought over as one, and its games are in the Swiss AS Doubles Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/52428
+
+New site: http://localhost:3000/2022/ac/championships-of-ireland/competitions/as-doubles-process-see-notes
+Old site: https://croquetscores.com/2022/ac/championships-of-ireland/competition/as-doubles-process
+
+AS Doubles Process was a knockout that could not be brought over as one, and its games are in the Swiss AS Doubles Process - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/58788
+
+New site: http://localhost:3000/2024/ac/east-midlands-championship/competitions/draw-see-notes
+Old site: https://croquetscores.com/2024/ac/east-midlands-championship/competition/east-midlands-championship-draw
+
+Draw was a knockout that could not be brought over as one, and its games are in the Swiss Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/59041
+
+New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-club-championship-see-notes
+Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-club-championship
+
+NYCC Club Championship was a knockout that could not be brought over as one, and its games are in the Swiss NYCC Club Championship - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/59042
+
+New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-a-block-see-notes
+Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-a-block
+
+NYCC Plate A Block was a knockout that could not be brought over as one, and its games are in the Swiss NYCC Plate A Block - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/59043
+
+New site: http://localhost:3000/2024/a6w/nycc-club-championship/competitions/nycc-plate-b-block-see-notes
+Old site: https://croquetscores.com/2024/a6w/nycc-club-championship/competition/nycc-plate-b-block
+
+NYCC Plate B Block was a knockout that could not be brought over as one, and its games are in the Swiss NYCC Plate B Block - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/59248
+
+New site: http://localhost:3000/2024/gc/cedar-creek-club-championship/competitions/ko-see-notes
+Old site: https://croquetscores.com/2024/gc/cedar-creek-club-championship/competition/ko
+
+KO was a knockout that could not be brought over as one, and its games are in the Swiss KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/59388
+
+New site: http://localhost:3000/2024/gc/malone-cup-invitational/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/malone-cup-invitational/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/59613
+
+New site: http://localhost:3000/2024/gc/nsw-division-1-singles/competitions/z-bo3-see-notes
+Old site: https://croquetscores.com/2024/gc/nsw-division-1-singles/competition/y-bo3
+
+Z (Bo3) was a knockout that could not be brought over as one, and its games are in the Swiss Z (Bo3) - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/96995
+
+New site: http://localhost:3000/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competitions/stratford-3-vs-hawera-2-see-notes
+Old site: https://croquetscores.com/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competition/stratford-vs-hawera
+
+Stratford 3  vs Hawera 2 was a block that could not be brought over as one, and its games are in the Swiss Stratford 3  vs Hawera 2 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/97001
+
+New site: http://localhost:3000/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competitions/stratford-1-vs-park-3-see-notes
+Old site: https://croquetscores.com/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competition/stratford-1-vs-park-3
+
+Stratford 1 vs Park 3 was a block that could not be brought over as one, and its games are in the Swiss Stratford 1 vs Park 3 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/97002
+
+New site: http://localhost:3000/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competitions/inglewood-3-vs-hawera-1-see-notes
+Old site: https://croquetscores.com/2024/gc/cst-johnstone-shield-advantage-doubles-1st-round/competition/inglewood-3-vs-hawera-1
+
+Inglewood 3 vs Hawera 1 was a block that could not be brought over as one, and its games are in the Swiss Inglewood 3 vs Hawera 1 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60868
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-championship-a-see-notes
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/chammpionship-a
+
+Knockout Championship A was a knockout that could not be brought over as one, and its games are in the Swiss Knockout Championship A - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60869
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-championship-b-see-notes
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/championship-b-1
+
+Knockout Championship B was a knockout that could not be brought over as one, and its games are in the Swiss Knockout Championship B - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60870
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-first-flight-see-notes
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/first-flight-1
+
+Knockout First Flight was a knockout that could not be brought over as one, and its games are in the Swiss Knockout First Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60871
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-second-flight-see-notes
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/second-flight-1
+
+Knockout Second Flight was a knockout that could not be brought over as one, and its games are in the Swiss Knockout Second Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60872
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-third-flight-see-notes
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/third-flight-1
+
+Knockout Third FLight was a knockout that could not be brought over as one, and its games are in the Swiss Knockout Third FLight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60873
+
+New site: http://localhost:3000/2025/a6w/the-jones-invitational/competitions/knockout-fourth-flight-see-notes
+Old site: https://croquetscores.com/2025/a6w/the-jones-invitational/competition/fourth-flight-1
+
+Knockout Fourth Flight was a knockout that could not be brought over as one, and its games are in the Swiss Knockout Fourth Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/61360
+
+New site: http://localhost:3000/2025/gc/hawera-club-champs-level-doubles/competitions/level-doubles-see-notes
+Old site: https://croquetscores.com/2025/gc/hawera-club-champs-level-doubles/competition/level-doubles
+
+Level Doubles was a knockout that could not be brought over as one, and its games are in the Swiss Level Doubles - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/61409
+
+New site: http://localhost:3000/2025/a6w/blaine-davis-invitational/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2025/a6w/blaine-davis-invitational/competition/championship-knockout-1
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/61410
+
+New site: http://localhost:3000/2025/a6w/blaine-davis-invitational/competitions/first-flight-knockout-see-notes
+Old site: https://croquetscores.com/2025/a6w/blaine-davis-invitational/competition/first-flight-knockout
+
+First Flight Knockout was a knockout that could not be brought over as one, and its games are in the Swiss First Flight Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/61322
+
+New site: http://localhost:3000/2025/gc/east-dorset-summer-competitions/competitions/keith-mosley-hcp-ko-see-notes
+Old site: https://croquetscores.com/2025/gc/east-dorset-summer-competitions/competition/keith-mosley-hcp-ko
+
+Keith Mosley (Hcp KO) was a knockout that could not be brought over as one, and its games are in the Swiss Keith Mosley (Hcp KO) - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/60052
+
+New site: http://localhost:3000/2024/gc/marewa-club-championships/competitions/sweetapple-knockout-see-notes
+Old site: https://croquetscores.com/2024/gc/marewa-club-championships/competition/sweetapple-knockout
+
+Sweetapple Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Sweetapple Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/100672
+
+New site: http://localhost:3000/2025/gc/leonburra-shield/competitions/section-2-see-notes
+Old site: https://croquetscores.com/2025/gc/leonburra-shield/competition/section-2
+
+Section 2 was a block that could not be brought over as one, and its games are in the Swiss Section 2 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/62122
+
+New site: http://localhost:3000/2025/a6w/usca-6w-southeast-regional/competitions/championship-knockout-see-notes
+Old site: https://croquetscores.com/2025/a6w/usca-6w-southeast-regional/competition/championship-knockout
+
+Championship Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Championship Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/62660
+
+New site: http://localhost:3000/2025/gc/helenen-cup-doubles-advantage-hamburg/competitions/main-event-see-notes
+Old site: https://croquetscores.com/2025/gc/helenen-cup-doubles-advantage-hamburg/competition/main-event
+
+Main Event was a knockout that could not be brought over as one, and its games are in the Swiss Main Event - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/62942
+
+New site: http://localhost:3000/2025/gc/ny-state/competitions/first-fl-singles-ko-see-notes
+Old site: https://croquetscores.com/2025/gc/ny-state/competition/first-fl-singles-ko
+
+First Fl Singles KO was a knockout that could not be brought over as one, and its games are in the Swiss First Fl Singles KO - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/62987
+
+New site: http://localhost:3000/2025/gc/swedish-championship-golf-croquet-doubles/competitions/top-8-see-notes
+Old site: https://croquetscores.com/2025/gc/swedish-championship-golf-croquet-doubles/competition/top-8
+
+Top 8 was a knockout that could not be brought over as one, and its games are in the Swiss Top 8 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/62649
+
+New site: http://localhost:3000/2025/gc/pendle-craven-a-level-0-series/competitions/quarter-final-semi-final-and-final-see-notes
+Old site: https://croquetscores.com/2025/gc/pendle-craven-a-level-0-series/competition/quarter-final
+
+Quarter Final/Semi Final and Final was a knockout that could not be brought over as one, and its games are in the Swiss Quarter Final/Semi Final and Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/63763
+
+New site: http://localhost:3000/2025/gc/nsw-bronze-brooch/competitions/plate-a-knockout-see-notes
+Old site: https://croquetscores.com/2025/gc/nsw-bronze-brooch/competition/plate-a-knockout
+
+Plate A knockout was a knockout that could not be brought over as one, and its games are in the Swiss Plate A knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/63765
+
+New site: http://localhost:3000/2025/gc/nsw-bronze-brooch/competitions/plate-b-knockout-see-notes
+Old site: https://croquetscores.com/2025/gc/nsw-bronze-brooch/competition/plate-b-knockout-1
+
+Plate B Knockout was a knockout that could not be brought over as one, and its games are in the Swiss Plate B Knockout - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/63910
+
+New site: http://localhost:3000/2025/gc/golf-croquet-championships-of-ireland/competitions/the-maggie-perpetual-trophy-handicap-doubles-draw-see-notes
+Old site: https://croquetscores.com/2025/gc/golf-croquet-championships-of-ireland/competition/the-maggie-perpetual-trophy-handicap-doubles-draw
+
+The Maggie Perpetual Trophy Handicap Doubles Draw was a knockout that could not be brought over as one, and its games are in the Swiss The Maggie Perpetual Trophy Handicap Doubles Draw - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/105281
+
+New site: http://localhost:3000/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competitions/group-a-see-notes
+Old site: https://croquetscores.com/2025/gc/wanganui-croquet-club-26-val-mitchell-trophy/competition/group-a
+
+Group A was a block that could not be brought over as one, and its games are in the Swiss Group A - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/105635
+
+New site: http://localhost:3000/2025/gc/victorian-under-21-singles-championship/competitions/round-robin-best-of-3-see-notes
+Old site: https://croquetscores.com/2025/gc/victorian-under-21-singles-championship/competition/round-robin-best-of-3
+
+Round Robin Best of 3 was a block that could not be brought over as one, and its games are in the Swiss Round Robin Best of 3 - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/64890
+
+New site: http://localhost:3000/2025/ac/canberra-croquet-club-handicap-singles-competition/competitions/singles-final-see-notes
+Old site: https://croquetscores.com/2025/ac/canberra-croquet-club-handicap-singles-competition/competition/singles-final
+
+Singles Final was a knockout that could not be brought over as one, and its games are in the Swiss Singles Final - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/blocks/105884
+
+New site: http://localhost:3000/2025/gc/usca-florida-state-tournament/competitions/first-flight-see-notes
+Old site: https://croquetscores.com/2025/gc/usca-florida-state-tournament/competition/first-flight
+
+First Flight was a block that could not be brought over as one, and its games are in the Swiss First Flight - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/8002
+
+New site: http://localhost:3000/2014/gc/czech-6th-golf-cup-cccc-horice/competitions/plate-see-notes
+Old site: https://croquetscores.com/2014/gc/czech-6th-golf-cup-cccc-horice/competition/plate
+
+Plate was a knockout that could not be brought over as one, and its games are in the Swiss Plate - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: croquetscores.com/knockouts/4994
+
+New site: http://localhost:3000/2013/ac/country-boys/competitions/bottom-8-1-life-see-notes
+Old site: https://croquetscores.com/2013/ac/country-boys/competition/bottom-8-1-life
+
+Bottom 8 1-Life was a knockout that could not be brought over as one, and its games are in the Swiss Bottom 8 1-Life - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: gateballscores.com/knockouts/161
+
+New site: http://localhost:3000/2016/gb/victorian-gateball-championships/competitions/pairs-finals-see-notes
+Old site: https://gateballscores.com/2016/gb/victorian-gateball-championships/competition/pairs-finals
+
+Pairs Finals was a knockout that could not be brought over as one, and its games are in the Swiss Pairs Finals - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: gateballscores.com/knockouts/289
+
+New site: http://localhost:3000/2016/gb/gateball-league-geneva/competitions/quarter-finals-of-doubles-see-notes
+Old site: https://gateballscores.com/2016/gb/gateball-league-geneva/competition/quarter-finals-of-doubles
+
+Quarter Finals of Doubles was a knockout that could not be brought over as one, and its games are in the Swiss Quarter Finals of Doubles - See Notes, as a note of the tournament says.
+
+## ImportWholeTournaments.SeeNotes: gateballscores.com/knockouts/801
+
+New site: http://localhost:3000/2019/gb/swiss-open-singles-and-doubles/competitions/singles-championship-see-notes
+Old site: https://gateballscores.com/2019/gb/swiss-open-singles-and-doubles/competition/singles-championship
+
+Singles Championship was a knockout that could not be brought over as one, and its games are in the Swiss Singles Championship - See Notes, as a note of the tournament says.
+
+## RefuseLeftOvers.TournamentMissing: croquetscores.com/commentaries/23041 tournaments/67857
+
+New site: not brought over
+Old site: https://croquetscores.com/
+
+This commentaries document names the tournament tournaments/67857, which the old site no longer had, so it was not brought over.
+
+## RefuseLeftOvers.TournamentMissing: croquetscores.com/commentaries/23042 tournaments/67857
+
+New site: not brought over
+Old site: https://croquetscores.com/
+
+This commentaries document names the tournament tournaments/67857, which the old site no longer had, so it was not brought over.
+
+## RefuseLeftOvers.TournamentMissing: croquetscores.com/knockouts/51145 tournaments/67856
+
+New site: not brought over
+Old site: https://croquetscores.com/
+
+This knockouts document names the tournament tournaments/67856, which the old site no longer had, so it was not brought over.
+
+## RefuseLeftOvers.TournamentMissing: croquetscores.com/knockouts/51147 tournaments/67857
+
+New site: not brought over
+Old site: https://croquetscores.com/
+
+This knockouts document names the tournament tournaments/67857, which the old site no longer had, so it was not brought over.
+
+## RefuseLeftOvers.TournamentMissing: croquetscores.com/TournamentPlayers/68718 tournaments/67856
+
+New site: not brought over
+Old site: https://croquetscores.com/
+
+This TournamentPlayers document names the tournament tournaments/67856, which the old site no longer had, so it was not brought over.
+
+## RefuseLeftOvers.TournamentMissing: croquetscores.com/TournamentPlayers/68719 tournaments/67857
+
+New site: not brought over
+Old site: https://croquetscores.com/
+
+This TournamentPlayers document names the tournament tournaments/67857, which the old site no longer had, so it was not brought over.
+
+This import: 0 import errors, 5,072 import corrections.
