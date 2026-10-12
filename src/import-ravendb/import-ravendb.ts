@@ -2,10 +2,10 @@
 // sites over into it from RavenDB: their users, then each tournament with its
 // players, its blocks, knockouts, Swisses and team matches, and its
 // commentaries, and last whatever names a tournament that was not there, as an
-// error. What it accepted rather than keeping as an error is said in
-// docs/import-from-ravendb/accepted-import-errors.md, and what it corrected of
-// what the old sites kept in docs/import-from-ravendb/import-corrections.md,
-// each of which it deletes first. Once every site is over, the site's roles are
+// error. What it accepted rather than keeping as an error, and what it
+// corrected of what the old sites kept, are said in
+// docs/import-from-ravendb/import-corrections.md, which it deletes first. Once
+// every site is over, the site's roles are
 // given to whoever holds them, and the players the world rankings know are
 // imported from the rankings' own lists, since emptying the database emptied
 // them too.
@@ -152,15 +152,6 @@ try {
   const unitOfWork = new UnitOfWork(pool);
   const database = new ImportDatabase(pool, unitOfWork);
 
-  // Linking to the tournaments on the development site, where an import is
-  // looked at, as well as on the old sites.
-  const accepting = new AcceptedImportErrorsFile(
-    join(
-      import.meta.dirname,
-      "../../docs/import-from-ravendb/accepted-import-errors.md",
-    ),
-    "http://localhost:3000",
-  );
   // What the last import kept, counted before the database is emptied of it,
   // and uncounted in a database no import has made the table in.
   let errorsBefore: number | undefined;
@@ -169,8 +160,10 @@ try {
   } catch {
     errorsBefore = undefined;
   }
-  // What it corrected of what the old sites kept, as a team match's
-  // expected matches, said the same way in a file of its own.
+  // What it corrected of what the old sites kept, as a team match's expected
+  // matches, and what it accepted rather than keeping as an error, said in one
+  // file, linking to the tournaments on the development site, where an import
+  // is looked at, as well as on the old sites.
   const correcting = new AcceptedImportErrorsFile(
     join(
       import.meta.dirname,
@@ -180,7 +173,6 @@ try {
     CORRECTED,
   );
   const began = new Date();
-  await accepting.begin(began, errorsBefore);
   await correcting.begin(began, errorsBefore);
 
   console.log(`Emptying ${where(config.databaseUrl)}`);
@@ -270,7 +262,8 @@ try {
     tournaments,
     competitions,
     database,
-    accepting,
+    // What it accepts is said with what it corrects.
+    accepting: correcting,
     correcting,
     notes: importErrorsNote,
   };
@@ -446,7 +439,6 @@ try {
   const kept = await database.errorCount();
   const errors =
     kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
-  await accepting.end(kept);
   await correcting.end(kept);
 
   console.log(

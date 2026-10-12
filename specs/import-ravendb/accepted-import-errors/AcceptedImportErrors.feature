@@ -3,10 +3,11 @@ Feature: What the import accepted, said in a file
   Not everything the import cannot bring over as the old site kept it is an
   error. Some of what the site refuses has been looked at and accepted
   (`ImportKnockouts.feature`). None of it is kept among the import's errors,
-  which are what someone has to put right. Each is said instead in
-  docs/import-from-ravendb/accepted-import-errors.md, under a heading each,
-  for whoever reads it to look at the tournament and see that nothing that
-  mattered was lost.
+  which are what someone has to put right. Each is said instead in a file
+  headed as this says, under a heading each, for whoever reads it to look at
+  the tournament and see that nothing that mattered was lost. The import says
+  them in docs/import-from-ravendb/import-corrections.md, with what it
+  corrected, and writes no file of its own for them.
 
   Each is headed by a code saying what was done, the document, and what of
   it was accepted, as "## Competition.NotDrawnToMeet:
