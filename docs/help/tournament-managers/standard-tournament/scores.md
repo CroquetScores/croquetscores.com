@@ -50,6 +50,8 @@ In a knockout, the winner of a match goes on to the next round, so a score of a 
 
 ## Withdrawing a score
 
+A player who leaves a competition is usually withdrawn from it, on the Players tab, and that is all that is needed: they play no more, and the games they did play stand but their games no longer count towards wins/losses and hoops. Withdrawing a score is for the rarer case where a game that was played is not to count. In the Australian President's Eights, for instance, the first round's results stand when a player withdraws, and only their second-round games are taken out of the reckoning: withdraw those games.
+
 In a block or a Swiss, a score that was played but is not to count is withdrawn rather than archived. **Withdraw** keeps it among the scores in use, in its place, but struck through and counting for nothing on the public pages. **Unwithdraw** makes it count again. Neither asks first. A knockout's scores are not offered Withdraw, since there a score decides more than the standings.
 
 Next: [Notes](notes.md).
