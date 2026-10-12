@@ -162,3 +162,109 @@ Feature: Finding your way around the public site
       And the home page is open
       When the menu button is pressed
       Then the link "Help" is at least 44 pixels tall
+
+  Rule: Where the navigation is behind a button, so is the account
+
+    The account menu is a person beside the navigation when the navigation is
+    in the open, and there is room for both. On a narrow screen the header
+    has room for the site's name and one button, so the person goes and the
+    account is the last group in what the button opens, headed "Account", with
+    the same pages in it that the person would have opened on, in the same
+    order (`accountMenu.feature`). It is drawn by the same code for both, so a
+    page added to one is in the other.
+
+    Scenario: On a narrow screen the person is not in the header
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then the account menu is not visible
+
+    Scenario: On a wide screen the person is in the header
+      Given a viewport 1200 pixels wide
+      When the home page is opened
+      Then the account menu is visible
+
+    Scenario: On a wide screen the account is not among the links
+      Given a viewport 1200 pixels wide
+      When the home page is opened
+      Then the account group is not visible
+
+    Scenario: Pressing the button reveals the account group
+      Given a viewport 375 pixels wide
+      And the home page is open
+      When the menu button is pressed
+      Then the account group is visible
+
+    Scenario: The account group is headed "Account"
+      Given a viewport 375 pixels wide
+      And the home page is open
+      When the menu button is pressed
+      Then the account group is headed "Account"
+
+    Scenario Outline: A reader not signed in is offered each way in
+      Given a viewport 375 pixels wide
+      And nobody is signed in
+      And the home page is open
+      When the menu button is pressed
+      Then the account group offers "<item>" at "<path>"
+
+      Examples:
+        | item            | path                     |
+        | Register        | /account/register        |
+        | Sign In         | /account/sign-in         |
+        | Forgot Password | /account/forgot-password |
+
+    # Changing the password and the email address are not here: a reader signed
+    # in against the database has signed in with Google and has no password, so
+    # is not offered them. The menu beside the navigation is held to them with
+    # no database (`accountMenu.feature`), and both are drawn by one function.
+    Scenario Outline: A reader signed in is offered each of the account's pages
+      Given a viewport 375 pixels wide
+      And an account for "someone@example.com", confirmed
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the menu button is pressed
+      Then the account group offers "<item>" at "<path>"
+
+      Examples:
+        | item        | path                 |
+        | Profile     | /account/profile     |
+        | Change Name | /account/change-name |
+
+    Scenario: A reader signed in is offered a button to sign out
+      Given a viewport 375 pixels wide
+      And an account for "someone@example.com", confirmed
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the menu button is pressed
+      Then the account group offers a button to sign out
+
+    Scenario: The button's form posts to the sign out path
+      Given a viewport 375 pixels wide
+      And an account for "someone@example.com", confirmed
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the menu button is pressed
+      Then the account group's form posts to "/account/sign-out"
+
+    Scenario: A reader with no password is offered setting one
+      Given a viewport 375 pixels wide
+      And an account for "someone@example.com", confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the menu button is pressed
+      Then the account group offers "Set Password" at "/account/set-password"
+
+    Scenario: A reader with no password is not offered changing it
+      Given a viewport 375 pixels wide
+      And an account for "someone@example.com", confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the home page is open
+      When the menu button is pressed
+      Then the account group does not offer "Change Password"
+
+    Scenario: The account's links can be pressed by a thumb
+      Given a viewport 375 pixels wide
+      And nobody is signed in
+      And the home page is open
+      When the menu button is pressed
+      Then the account group's "Sign In" is at least 44 pixels tall

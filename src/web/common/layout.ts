@@ -1,7 +1,7 @@
 // The shape of every page the public side serves: green header, optional
 // section bar, content in a white panel, green footer. Error pages use it too,
 // because a page that cannot be found is still a page of this site.
-import { accountMenu } from "./accountMenu.js";
+import { accountItems, accountMenu, type AccountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
 import {
@@ -161,11 +161,13 @@ const copyrightOwner = "Tim Murphy";
 // have.
 const paypalButton = "AQ432ABTXDPYU";
 
-const menu = (
-  speaking: Speaking,
-  currentPath: string | undefined,
-  signedIn: boolean,
-): string => {
+// Where the navigation is behind this button the header has room for nothing
+// else, so the account's person is not drawn and its pages are the last group
+// in what the button opens instead (the stylesheet decides which, by width).
+// A group of its own rather than more links in the navigation, so that what the
+// navigation offers is the same at every width.
+const menu = (bar: AccountMenu): string => {
+  const { speaking, currentPath, signedIn } = bar;
   const items = navigation(signedIn)
     .map(({ href, words }) => {
       const here = href === currentPath ? ' aria-current="page"' : "";
@@ -175,11 +177,19 @@ const menu = (
 
   return `          <details class="menu">
           <summary><span class="visually-hidden">${escape(speaking.say("navigation.menu"))}</span></summary>
+          <div class="menu-panel">
           <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
             <ul>
 ${items}
             </ul>
           </nav>
+          <nav class="menu-account" aria-labelledby="menu-account-heading">
+            <p class="menu-account-heading" id="menu-account-heading">${escape(speaking.say("account.menu"))}</p>
+            <ul>
+${accountItems(bar).join("\n")}
+            </ul>
+          </nav>
+          </div>
         </details>`;
 };
 
@@ -341,7 +351,7 @@ export const siteBar = (bar: SiteBar): string => `
           <div class="site-names">
             <a class="site-name" href="/">${escape(bar.siteName)}</a>
 ${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}          </div>
-${menu(bar.speaking, bar.currentPath, bar.signedIn)}
+${menu(bar)}
 ${accountMenu(bar)}
         </div>
       </div>

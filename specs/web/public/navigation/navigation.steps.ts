@@ -215,3 +215,92 @@ Then(
     );
   },
 );
+
+// The account, behind the button ---------------------------------------------------
+
+// The group is found by its own class and not by "nav" or "ul", which the
+// navigation beside it is also made of.
+const group = ".menu-account";
+
+Then("the account menu is visible", async function (this: SpecWorld) {
+  assert.equal(await this.browserPage.isVisible("details.account-menu"), true);
+});
+
+Then("the account menu is not visible", async function (this: SpecWorld) {
+  assert.equal(await this.browserPage.isVisible("details.account-menu"), false);
+});
+
+Then("the account group is visible", async function (this: SpecWorld) {
+  assert.equal(await this.browserPage.isVisible(group), true);
+});
+
+Then("the account group is not visible", async function (this: SpecWorld) {
+  assert.equal(await this.browserPage.isVisible(group), false);
+});
+
+Then(
+  "the account group is headed {string}",
+  async function (this: SpecWorld, heading: string) {
+    assert.equal(
+      (
+        await this.browserPage
+          .locator(`${group} .menu-account-heading`)
+          .textContent()
+      )?.trim(),
+      heading,
+    );
+  },
+);
+
+const accountItem = (world: SpecWorld, item: string) =>
+  world.browserPage.locator(`${group} a`, {
+    hasText: new RegExp(`^${item}$`),
+  });
+
+Then(
+  "the account group offers {string} at {string}",
+  async function (this: SpecWorld, item: string, path: string) {
+    const found = accountItem(this, item);
+    assert.equal(await found.count(), 1, `The group does not offer ${item}.`);
+    assert.equal(await found.getAttribute("href"), path);
+  },
+);
+
+Then(
+  "the account group does not offer {string}",
+  async function (this: SpecWorld, item: string) {
+    assert.equal(await accountItem(this, item).count(), 0);
+  },
+);
+
+Then(
+  "the account group offers a button to sign out",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await this.browserPage.locator(`${group} form button`).count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the account group's form posts to {string}",
+  async function (this: SpecWorld, path: string) {
+    assert.equal(
+      await this.browserPage.locator(`${group} form`).getAttribute("action"),
+      path,
+    );
+  },
+);
+
+Then(
+  "the account group's {string} is at least {int} pixels tall",
+  async function (this: SpecWorld, item: string, height: number) {
+    const box = await accountItem(this, item).boundingBox();
+    assert.ok(box !== null, `${item} has no box to measure.`);
+    assert.ok(
+      box.height >= height,
+      `${item} is ${Math.round(box.height)} pixels tall, and wanted ${height}.`,
+    );
+  },
+);
