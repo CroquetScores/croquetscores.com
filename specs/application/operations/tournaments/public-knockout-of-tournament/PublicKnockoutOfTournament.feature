@@ -320,19 +320,20 @@ Feature: A knockout of a tournament, for anybody to read
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
       Then 0 games of the knockout are answered
 
-  Rule: A withdrawn player's games are answered as withdrawn
+  Rule: A withdrawn player's games are not answered as withdrawn
 
     A knockout's game cannot itself be withdrawn (`withdrawGame.feature`),
-    but a player can (`withdrawPlayer.feature`), and the pages strike through
-    whatever a withdrawn player played, as a block's do, so each game of
-    theirs among the games is answered as withdrawn. The match it was part of
-    stands as it was decided (`KnockoutPlay.feature`).
+    and a withdrawn player's games there count, unlike a block's or a
+    Swiss's (`withdrawPlayer.feature`): each decided a match that stands
+    (`KnockoutPlay.feature`), and a knockout ranks nobody by what they
+    played. So no game of a knockout is answered as withdrawn, and the pages
+    strike none through.
 
-    Scenario: A withdrawn player's game is answered as withdrawn
+    Scenario: A withdrawn player's game is not answered as withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
-      Then the first game of the knockout answered was withdrawn
+      Then the first game of the knockout answered was not withdrawn
 
     Scenario: A game between players who have not withdrawn is not answered as withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"

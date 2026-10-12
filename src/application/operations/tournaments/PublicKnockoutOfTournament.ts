@@ -36,11 +36,6 @@ export type WhichSide = 0 | 1;
 export interface GameOfMatch {
   readonly winner: WhichSide;
   readonly scores: readonly [string, string];
-  /**
-   * Whether it is a withdrawn player's, and so struck through where it is
-   * shown (`withdrawPlayer.feature`), though the match stands.
-   */
-  readonly withdrawn: boolean;
 }
 
 /** A match of a knockout. */
@@ -69,9 +64,11 @@ export interface GameOfKnockout {
   /** Never, since a knockout allows no drawn games, but said as every game is. */
   readonly drawn: boolean;
   /**
-   * Whether it was played but counts for nothing where it is shown, being a
-   * withdrawn player's (`withdrawPlayer.feature`); a knockout's game cannot
-   * itself be withdrawn.
+   * Whether it was played but counts for nothing, so that whatever lists it
+   * strikes it through. Never for a knockout's own game, which cannot be
+   * withdrawn and decided a match that stands even where its player has
+   * withdrawn (`withdrawPlayer.feature`); a Swiss's game, listed the same
+   * way, can be (`PublicSwissOfTournament.feature`).
    */
   readonly withdrawn: boolean;
   /** When it was added, or nothing where that was never kept. */

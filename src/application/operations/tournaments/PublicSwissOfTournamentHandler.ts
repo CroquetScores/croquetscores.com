@@ -10,6 +10,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  toldOf,
 } from "../competitions/competitionOperations.js";
 import type { PlayerInGame } from "./GamesOfTournament.js";
 import {
@@ -93,8 +94,9 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
     const nameless = { name: "", address };
     // What counts for nothing is still among the results and the games, and
     // said to be withdrawn, so that the pages strike it through.
+    const told = toldOf(tournament, reference.id);
     const countsForNothing = (game: Game): boolean =>
-      competition.countsForNothing(game);
+      competition.countsForNothing(game, told);
 
     const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
       const player = named.get(entered.id.value);
@@ -165,17 +167,20 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
 // games won first, then the more net hoops, and otherwise as they were, since
 // a sort that keeps the order of equals leaves them in the Swiss's. A player
 // who has played no game has no share, and comes after every player who has,
-// since nothing yet says where they stand.
+// since nothing yet says where they stand; a withdrawn player comes after
+// everybody who has not withdrawn, since they have left the Swiss.
 const rankingOf = (players: readonly PlayerOfSwiss[]): PlayerOfSwiss[] => {
   const shareOf = ({ gamesWon, gamesPlayed }: PlayerOfSwiss): number =>
     gamesWon / gamesPlayed;
-  const played = players.filter(({ gamesPlayed }) => gamesPlayed > 0);
-  const unplayed = players.filter(({ gamesPlayed }) => gamesPlayed === 0);
+  const playing = players.filter(({ withdrawn }) => !withdrawn);
+  const played = playing.filter(({ gamesPlayed }) => gamesPlayed > 0);
+  const unplayed = playing.filter(({ gamesPlayed }) => gamesPlayed === 0);
   return [
     ...[...played].sort(
       (one, other) =>
         shareOf(other) - shareOf(one) || other.netHoops - one.netHoops,
     ),
     ...unplayed,
+    ...players.filter(({ withdrawn }) => withdrawn),
   ];
 };

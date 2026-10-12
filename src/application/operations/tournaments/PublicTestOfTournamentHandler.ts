@@ -9,6 +9,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  toldOf,
 } from "../competitions/competitionOperations.js";
 import type { WhichSide } from "./PublicKnockoutOfTournament.js";
 import {
@@ -142,7 +143,10 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
         loser: shown.get(game.loser.value) ?? nameless,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
-        withdrawn: competition.countsForNothing(game),
+        withdrawn: competition.countsForNothing(
+          game,
+          toldOf(tournament, reference.id),
+        ),
         addedAt: game.addedAt,
       })),
     };

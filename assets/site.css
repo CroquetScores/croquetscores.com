@@ -2465,12 +2465,6 @@ a.player-name[data-withdrawn] {
   white-space: nowrap;
 }
 
-/* The scores of a match a withdrawn player was in, both sides', since what
-   they played counts for nothing, though the match stands. */
-.knockout-score[data-withdrawn] {
-  text-decoration: line-through;
-}
-
 .knockout-withdrawn,
 .knockout-bye {
   color: var(--ink-muted);

@@ -21,7 +21,9 @@ Feature: A competition's order of play lists its games, oldest first
   A withdrawn game was played, so it is listed, but it counts for nothing
   (`withdrawGame.feature`), so it is struck through and said to be
   withdrawn, as the grid shows it, and so is every game of a player who has
-  withdrawn (`PublicBlockOfTournament.feature`).
+  withdrawn from a block or a Swiss (`PublicBlockOfTournament.feature`). A
+  knockout's are not, since each decided a match that stands
+  (`PublicKnockoutOfTournament.feature`).
 
   Like the grid, it is headed by the competition's name, offers the three
   views with Order of Play marked as the one being read, and its sections are
@@ -269,11 +271,11 @@ Feature: A competition's order of play lists its games, oldest first
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
       Then the first line of the first game is beside "12 min"
 
-    Scenario: A knockout's withdrawn player's game is marked as withdrawn
+    Scenario: A knockout's withdrawn player's game is not marked as withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
-      Then the first game is marked as withdrawn
+      Then the first game is not marked as withdrawn
 
     Scenario: A knockout's order of play marks it as the view being read
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened

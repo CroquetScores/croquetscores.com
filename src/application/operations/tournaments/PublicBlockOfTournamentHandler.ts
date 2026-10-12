@@ -10,6 +10,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  toldOf,
 } from "../competitions/competitionOperations.js";
 import {
   type BlockToRead,
@@ -73,8 +74,9 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     const games = competition.games.filter((game) => !game.archived);
     // What counts for nothing is still shown, and answered as withdrawn, so
     // that the pages strike it through.
+    const told = toldOf(tournament, reference.id);
     const countsForNothing = (game: Game): boolean =>
-      competition.countsForNothing(game);
+      competition.countsForNothing(game, told);
     const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();
@@ -175,9 +177,14 @@ const shareOf = ({ matchesWon, matchesLost }: PlayerOfBlock): number =>
 
 // `players` ranked as the old site's summary ranked them: the greater share of
 // matches won first, then the more net hoops, and otherwise as they were,
-// since a sort that keeps the order of equals leaves them in the block's.
+// since a sort that keeps the order of equals leaves them in the block's. A
+// withdrawn player comes after everybody who has not withdrawn, since their
+// games count for nothing, which would otherwise rank them, with no share
+// and no hoops, above a player still in the block who has played and lost.
 const rankingOf = (players: readonly PlayerOfBlock[]): PlayerOfBlock[] =>
   [...players].sort(
     (one, other) =>
-      shareOf(other) - shareOf(one) || other.netHoops - one.netHoops,
+      Number(one.withdrawn) - Number(other.withdrawn) ||
+      shareOf(other) - shareOf(one) ||
+      other.netHoops - one.netHoops,
   );

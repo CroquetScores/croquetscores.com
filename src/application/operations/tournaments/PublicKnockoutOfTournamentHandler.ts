@@ -1,5 +1,4 @@
 import type { Side } from "../../../domain/aggregates/tournaments/competitions/KnockoutPlay.js";
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -95,12 +94,9 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       });
     }
     const nameless = { name: "" };
-    const countsForNothing = (game: Game): boolean =>
-      competition.countsForNothing(game);
+    const told = toldOf(tournament, reference.id);
 
-    const matches = competition.knockoutMatches(
-      toldOf(tournament, reference.id),
-    );
+    const matches = competition.knockoutMatches(told);
     const players = competition.players;
     // Worked out a round at a time, since where the draw's play has nobody in
     // a later round, the round before says why.
@@ -157,7 +153,6 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
                 return {
                   winner,
                   scores: winner === 0 ? [won, lost] : [lost, won],
-                  withdrawn: countsForNothing(game),
                 };
               }),
               winner: whichIs(match.winner),
@@ -175,8 +170,8 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       competitions: competitionsInUse(tournament),
       knockout: { name: reference.name.toString() },
       rounds,
-      // A withdrawn player's games are struck through wherever they are
-      // listed, as a block's are, though the match each was part of stands.
+      // Asked as every page asks it, though in a knockout a withdrawn
+      // player's games count, since each decided a match that stands.
       games: competition.games
         .filter((game) => !game.archived)
         .map((game) => ({
@@ -185,7 +180,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
           loser: shown.get(game.loser.value) ?? nameless,
           loserScore: game.loserScore.toString(),
           drawn: game.drawn,
-          withdrawn: countsForNothing(game),
+          withdrawn: competition.countsForNothing(game, told),
           addedAt: game.addedAt,
         })),
     };

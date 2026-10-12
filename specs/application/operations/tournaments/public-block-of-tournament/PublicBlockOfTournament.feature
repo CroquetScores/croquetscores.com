@@ -13,8 +13,9 @@ Feature: A block of a tournament, for anybody to read
   Each player is answered with their name, what they represent and the flag
   they fly, as the tournament's other pages show a player, where their own
   page is found, and whether they have withdrawn. A withdrawn player is still
-  answered, since the games they played still stand, though they count for
-  nothing. A player removed from the block is not.
+  answered, with the games they played, which are answered as withdrawn and
+  count for nothing, as the rule below says. A player removed from the block
+  is not.
 
   Each game is answered with its winner, the winner's score, its loser, the
   loser's score, whether it was drawn and when it was added, the scores as
@@ -50,8 +51,12 @@ Feature: A block of a tournament, for anybody to read
   hoops, most first, and where both are the same, in the block's order. A
   share rather than a count, so that a player who has played fewer matches
   is not ranked below one who has simply played more. A player who has
-  decided no match has a share of nothing. Whether this is how a tournament
-  places its players is for its regulations to say, and the summary says so.
+  decided no match has a share of nothing. A withdrawn player is ranked
+  after everybody who has not withdrawn, whatever they played, since their
+  games count for nothing and would otherwise rank them, with no share and
+  no hoops, above a player still in the block who has played and lost.
+  Whether this is how a tournament places its players is for its regulations
+  to say, and the summary says so.
 
   The page is a section of the tournament's, so the tournament is answered
   with it as its players are (`PublicPlayersOfTournament.feature`): its name,
@@ -594,6 +599,14 @@ Feature: A block of a tournament, for anybody to read
       When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
       Then the first player of the block ranked is "Sam Someone"
       And the second player of the block ranked is "Chris Third"
+
+    Scenario: A withdrawn player is ranked after everybody who has not withdrawn
+      Given "Sam Someone" has beaten "Chris Third" 26 to 10 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 10 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the second player of the block ranked is "Chris Third"
+      And the third player of the block ranked is "Alex Another"
 
     Scenario: Players with the same share are ranked by their net hoops
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"

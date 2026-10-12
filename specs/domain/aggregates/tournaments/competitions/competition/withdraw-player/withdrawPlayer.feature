@@ -66,15 +66,15 @@ Feature: Withdrawing a competition's player, and reversing it
       When the player "Sam Someone" is withdrawn
       Then it has recorded 0 events
 
-  Rule: A withdrawn player's games count for nothing
+  Rule: In a block or a Swiss, a withdrawn player's games count for nothing
 
     Wherever games are counted or shown, a withdrawn player's count for
-    nothing, on both sides, as an archived or a withdrawn game does: a player
-    who left partway met some of the others and not the rest, and what they
-    played must not rank those they met above those they did not. A
-    knockout's matches are the one thing that does not ask this, since a
-    withdrawn player's games there decided matches that stand
-    (`KnockoutPlay.feature`).
+    nothing in a block or a Swiss, on both sides, as an archived or a
+    withdrawn game does: a player who left partway met some of the others
+    and not the rest, and what they played must not rank those they met
+    above those they did not. In a knockout they count, since each decided a
+    match that stands (`KnockoutPlay.feature`), and a knockout ranks nobody
+    by what they played.
 
     Scenario: A withdrawn player's game counts for nothing
       Given the tournament player "Alex Another" was entered in it
@@ -117,6 +117,16 @@ Feature: Withdrawing a competition's player, and reversing it
       And the competition is rebuilt from its stream
       When the game of "Sam Someone" beating "Alex Another" 26 to 17 is archived
       Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 counts for nothing
+
+    Scenario: In a knockout, a withdrawn player's game counts
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the tournament player "Alex Another" was entered in it
+      And the tournament player "Pat Player" was entered in it
+      And the tournament player "Kim Keeper" was entered in it
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the player "Sam Someone" withdrew from it
+      When the competition is rebuilt from its stream
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 counts
 
   Rule: A player withdrawn is put last
 

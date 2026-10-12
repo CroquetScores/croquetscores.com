@@ -239,10 +239,10 @@ export interface GameShown {
   readonly loserScore: string;
   readonly drawn: boolean;
   /**
-   * Whether it was played but counts for nothing (`withdrawGame.feature`),
-   * where whatever lists it says so. Nothing is the same as not.
+   * Whether it was played but counts for nothing (`withdrawGame.feature`,
+   * `withdrawPlayer.feature`), so that it is struck through.
    */
-  readonly withdrawn?: boolean;
+  readonly withdrawn: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;
 }
@@ -265,7 +265,7 @@ export const gameShown = (
   const result = say(played.drawn ? "tournament.drewWith" : "tournament.beat");
   // Struck through, and said to be withdrawn for whatever reads the page
   // aloud, as a block's grid says it.
-  const withdrawn = played.withdrawn === true;
+  const { withdrawn } = played;
   const said = withdrawn
     ? `              <p class="visually-hidden">${escape(say("block.gameWithdrawn"))}</p>
 `

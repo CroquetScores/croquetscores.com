@@ -513,11 +513,12 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       );
     }
     // A player who withdrew is withdrawn straight after their last game is
-    // added, so that what they played counts, and before any is where they
-    // played none, so that whoever was to play them next goes on before the
-    // games they went on to play are added. Whoever has a game still to come
-    // once every game is, as a play-off the kind leaves out, is withdrawn
-    // last.
+    // added, so that what they played is brought over, and before any is
+    // where they played none, so that whoever was to play them next goes on
+    // before the games they went on to play are added. What those games
+    // count for is the site's rule (Competition.countsForNothing). Whoever
+    // has a game still to come once every game is, as a play-off the kind
+    // leaves out, is withdrawn last.
     const withdraw = async (number: number): Promise<void> => {
       const playerId = withdrew.get(number);
       if (playerId === undefined) return;

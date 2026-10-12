@@ -1,5 +1,4 @@
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
@@ -9,6 +8,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
+  toldOf,
 } from "../competitions/competitionOperations.js";
 import {
   type GameOfTournament,
@@ -70,8 +70,7 @@ export class GamesOfTournamentHandler extends QueryHandler<
     const games: GameOfTournament[] = [];
     for (const [at, { reference }] of inUse.entries()) {
       const competition = await competitionOf(this.competitions, reference.id);
-      const countsForNothing = (game: Game): boolean =>
-        competition.countsForNothing(game);
+      const told = toldOf(tournament, reference.id);
       for (const game of competition.games) {
         if (game.archived || game.addedAt === undefined) continue;
         games.push({
@@ -80,7 +79,7 @@ export class GamesOfTournamentHandler extends QueryHandler<
           loser: playerFor(competition, game.loser.value),
           loserScore: String(game.loserScore),
           drawn: game.drawn,
-          withdrawn: countsForNothing(game),
+          withdrawn: competition.countsForNothing(game, told),
           competition: competitions[at]!,
           addedAt: game.addedAt,
         });

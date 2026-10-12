@@ -654,7 +654,10 @@ Then(
     const competition = competitionOf(this);
     const said = [winner, loser, winnerScore, loserScore];
     assert.equal(
-      competition.countsForNothing(gameSaid(this, competition, said)),
+      competition.countsForNothing(
+        gameSaid(this, competition, said),
+        toldOf(this),
+      ),
       forNothing !== null,
     );
   },

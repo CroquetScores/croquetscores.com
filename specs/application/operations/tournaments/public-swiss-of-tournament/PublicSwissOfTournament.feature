@@ -31,7 +31,9 @@ Feature: A Swiss of a tournament, for anybody to read
   games they have played that they have won, highest first, then by their net
   hoops, most first, and where both are the same, in the Swiss's order. A
   player who has played no game has no share, and is ranked after every
-  player who has, since nothing yet says where they stand.
+  player who has, since nothing yet says where they stand. A withdrawn
+  player is ranked after everybody who has not withdrawn, whatever they
+  played, since they have left the Swiss.
 
   The pages are a section of the tournament's, so the tournament is answered
   with it as with a block (`PublicBlockOfTournament.feature`): its name,
@@ -358,6 +360,14 @@ Feature: A Swiss of a tournament, for anybody to read
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then the first player of the Swiss ranked is "Sam Someone"
       And the second player of the Swiss ranked is "Alex Another"
+
+    Scenario: A withdrawn player is ranked after everybody who has not withdrawn
+      Given "organiser@example.com" has given the player "Alex Another" in "Zed" of "Spring Open" a carry forward of game wins of 2
+      And "Sam Someone" has beaten "Chris Third" 7 to 4 in "Zed" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the second player of the Swiss ranked is "Chris Third"
+      And the third player of the Swiss ranked is "Alex Another"
 
     Scenario: Players with the same share are ranked by their net hoops
       Given "Alex Another" has beaten "Sam Someone" 7 to 6 in "Zed" of "Spring Open"
