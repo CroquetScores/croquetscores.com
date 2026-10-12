@@ -50,12 +50,15 @@ export interface PlayerOfSwiss extends PublicPlayer {
   readonly results: readonly ResultOfSwiss[];
 }
 
-/**
- * One of a Swiss's games, as its order of play shows it: as a knockout's,
- * though here a game can be withdrawn itself (`withdrawGame.feature`) as
- * well as be a withdrawn player's.
- */
-export type GameOfSwiss = GameOfKnockout;
+/** One of a Swiss's games, as its order of play shows it. */
+export type GameOfSwiss = GameOfKnockout & {
+  /**
+   * Whether it was played but counts for nothing, being withdrawn itself
+   * (`withdrawGame.feature`) or a withdrawn player's
+   * (`withdrawPlayer.feature`).
+   */
+  readonly withdrawn: boolean;
+};
 
 /** A Swiss as its pages show it, and the tournament it is a section of. */
 export interface SwissToRead {

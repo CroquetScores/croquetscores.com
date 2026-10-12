@@ -1014,8 +1014,12 @@ export class Competition extends AggregateRoot {
     );
   }
 
-  // The games that decide a knockout's matches: those neither archived nor
-  // withdrawn, in the order they were added.
+  // The games that fill a match or fix a draw: those neither archived nor
+  // withdrawn, in the order they were added. This is the competition's
+  // structure, and is not `countsForNothing`, which is about standings: a
+  // withdrawn player's games still fill the matches they were played in, so
+  // that a match is not left over-full where their withdrawal is reversed,
+  // and a knockout's matches stand on them.
   #counting(): Game[] {
     return this.games.filter((game) => !game.archived && !game.withdrawn);
   }

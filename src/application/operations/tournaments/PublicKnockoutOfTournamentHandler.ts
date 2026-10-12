@@ -170,8 +170,9 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       competitions: competitionsInUse(tournament),
       knockout: { name: reference.name.toString() },
       rounds,
-      // Asked as every page asks it, though in a knockout a withdrawn
-      // player's games count, since each decided a match that stands.
+      // None is answered as withdrawn: a knockout's game cannot be, and a
+      // withdrawn player's games there count, since each decided a match
+      // that stands.
       games: competition.games
         .filter((game) => !game.archived)
         .map((game) => ({
@@ -180,7 +181,6 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
           loser: shown.get(game.loser.value) ?? nameless,
           loserScore: game.loserScore.toString(),
           drawn: game.drawn,
-          withdrawn: competition.countsForNothing(game, told),
           addedAt: game.addedAt,
         })),
     };

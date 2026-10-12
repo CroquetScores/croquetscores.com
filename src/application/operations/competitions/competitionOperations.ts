@@ -8,6 +8,7 @@ import {
   Competition,
   type Told,
 } from "../../../domain/aggregates/tournaments/competitions/Competition.js";
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
@@ -86,6 +87,21 @@ export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
       })),
     ),
   };
+};
+
+/**
+ * Whether a game of `competition`, which is the tournament's competition
+ * `id`, counts for nothing where games are counted or shown, with what the
+ * tournament told it of itself bound once: so that every page that answers
+ * games asks the same way (`Competition.countsForNothing`).
+ */
+export const countsForNothingIn = (
+  competition: Competition,
+  tournament: Tournament,
+  id: CompetitionId,
+): ((game: Game) => boolean) => {
+  const told = toldOf(tournament, id);
+  return (game) => competition.countsForNothing(game, told);
 };
 
 /**

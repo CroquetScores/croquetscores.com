@@ -10,7 +10,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
-  toldOf,
+  countsForNothingIn,
 } from "../competitions/competitionOperations.js";
 import {
   type BlockToRead,
@@ -74,9 +74,11 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     const games = competition.games.filter((game) => !game.archived);
     // What counts for nothing is still shown, and answered as withdrawn, so
     // that the pages strike it through.
-    const told = toldOf(tournament, reference.id);
-    const countsForNothing = (game: Game): boolean =>
-      competition.countsForNothing(game, told);
+    const countsForNothing = countsForNothingIn(
+      competition,
+      tournament,
+      reference.id,
+    );
     const counting = games.filter((game) => !countsForNothing(game));
     const bestOf = shape.bestOf.games;
     const address = tournament.address.toString();

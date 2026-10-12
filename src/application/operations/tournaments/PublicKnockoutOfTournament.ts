@@ -63,14 +63,6 @@ export interface GameOfKnockout {
   readonly loserScore: string;
   /** Never, since a knockout allows no drawn games, but said as every game is. */
   readonly drawn: boolean;
-  /**
-   * Whether it was played but counts for nothing, so that whatever lists it
-   * strikes it through. Never for a knockout's own game, which cannot be
-   * withdrawn and decided a match that stands even where its player has
-   * withdrawn (`withdrawPlayer.feature`); a Swiss's game, listed the same
-   * way, can be (`PublicSwissOfTournament.feature`).
-   */
-  readonly withdrawn: boolean;
   /** When it was added, or nothing where that was never kept. */
   readonly addedAt: ReadOnlyDate | undefined;
 }

@@ -106,6 +106,11 @@ Feature: A knockout's summary lists its matches round by round
       When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
       Then the second side of the first match of the first round in the summary says they have withdrawn
 
+    Scenario: A withdrawn player's name is struck through
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
+      Then the second side of the first match of the first round in the summary has its name struck through
+
     Scenario: A bye is said as a bye
       Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Plate" of "Spring Open"

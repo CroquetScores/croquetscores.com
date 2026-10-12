@@ -25,6 +25,11 @@ Feature: A knockout of a tournament, for anybody to read
   the flag they fly, where their own page is found, and whether they have
   withdrawn.
 
+  A knockout's games are never answered as withdrawn: a game of its own
+  cannot be withdrawn (`withdrawGame.feature`), and a withdrawn player's
+  games there count, unlike a block's or a Swiss's, since each decided a
+  match that stands (`withdrawPlayer.feature`, `KnockoutPlay.feature`).
+
   A match is answered with its games, oldest first, each with which side won
   it and both scores as they were typed, and with its winner once it is
   decided: the side that has won more than half the games it is the best of,
@@ -319,26 +324,6 @@ Feature: A knockout of a tournament, for anybody to read
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Finals" of "Spring Open"
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
       Then 0 games of the knockout are answered
-
-  Rule: A withdrawn player's games are not answered as withdrawn
-
-    A knockout's game cannot itself be withdrawn (`withdrawGame.feature`),
-    and a withdrawn player's games there count, unlike a block's or a
-    Swiss's (`withdrawPlayer.feature`): each decided a match that stands
-    (`KnockoutPlay.feature`), and a knockout ranks nobody by what they
-    played. So no game of a knockout is answered as withdrawn, and the pages
-    strike none through.
-
-    Scenario: A withdrawn player's game is not answered as withdrawn
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
-      And "organiser@example.com" has withdrawn the player "Alex Another" from "Finals" of "Spring Open"
-      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
-      Then the first game of the knockout answered was not withdrawn
-
-    Scenario: A game between players who have not withdrawn is not answered as withdrawn
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
-      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
-      Then the first game of the knockout answered was not withdrawn
 
   Rule: Only a knockout of a tournament a reader is sent to is answered
 

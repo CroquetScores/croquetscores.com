@@ -1,5 +1,4 @@
 import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
-import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -10,7 +9,7 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
-  toldOf,
+  countsForNothingIn,
 } from "../competitions/competitionOperations.js";
 import type { PlayerInGame } from "./GamesOfTournament.js";
 import {
@@ -94,9 +93,11 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
     const nameless = { name: "", address };
     // What counts for nothing is still among the results and the games, and
     // said to be withdrawn, so that the pages strike it through.
-    const told = toldOf(tournament, reference.id);
-    const countsForNothing = (game: Game): boolean =>
-      competition.countsForNothing(game, told);
+    const countsForNothing = countsForNothingIn(
+      competition,
+      tournament,
+      reference.id,
+    );
 
     const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
       const player = named.get(entered.id.value);

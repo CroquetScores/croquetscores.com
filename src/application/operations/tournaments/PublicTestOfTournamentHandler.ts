@@ -9,7 +9,6 @@ import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type Competitions,
   competitionOf,
-  toldOf,
 } from "../competitions/competitionOperations.js";
 import type { WhichSide } from "./PublicKnockoutOfTournament.js";
 import {
@@ -135,18 +134,12 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
         bestOf: shape.bestOf.games,
       },
       matches,
-      // Never withdrawn, since a test's game cannot be withdrawn and a team's
-      // player cannot withdraw from a test, but asked as every page asks it.
       games: games.map((game) => ({
         winner: shown.get(game.winner.value) ?? nameless,
         winnerScore: game.winnerScore.toString(),
         loser: shown.get(game.loser.value) ?? nameless,
         loserScore: game.loserScore.toString(),
         drawn: game.drawn,
-        withdrawn: competition.countsForNothing(
-          game,
-          toldOf(tournament, reference.id),
-        ),
         addedAt: game.addedAt,
       })),
     };
