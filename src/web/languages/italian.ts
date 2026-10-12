@@ -548,6 +548,7 @@ export const italian: Language = {
     "admin.competition.name": "Nome",
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Al meglio di",
+    "admin.competition.rounds": "Turni",
     "admin.competition.places": "Posti",
     "admin.competition.round": "Turno {number}",
     "admin.competition.bestOfs": "Al meglio di, per turno",
@@ -569,6 +570,8 @@ export const italian: Language = {
       "Un'altra competizione di questo torneo ha già quel nome.",
     "BestOf.NotWhole": "Inserisci un numero intero di partite.",
     "BestOf.TooSmall": "Un incontro deve essere al meglio di almeno 1 partita.",
+    "Rounds.NotWhole": "Inserisci un numero intero di turni.",
+    "Rounds.TooSmall": "Un blocco deve essere giocato in almeno 1 turno.",
     "KnockoutDraw.EvenBestOf":
       "Un incontro a eliminazione diretta deve avere un vincitore, quindi è al meglio di un numero dispari di partite.",
     "admin.hover.tournaments.new": "Crea un nuovo torneo",

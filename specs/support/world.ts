@@ -46,6 +46,7 @@ import type { CompetitionName } from "../../src/domain/aggregates/tournaments/va
 import type { TournamentName } from "../../src/domain/aggregates/tournaments/value-objects/TournamentName.js";
 import type { TournamentAddress } from "../../src/domain/aggregates/tournaments/value-objects/TournamentAddress.js";
 import type { BestOf } from "../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
+import type { Rounds } from "../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import type { KnockoutDraw } from "../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import type { CompetitionReference } from "../../src/domain/aggregates/tournaments/CompetitionReference.js";
 import type { Slug } from "../../src/domain/common/Slug.js";
@@ -366,6 +367,9 @@ export class SpecWorld extends World {
   public sameTournamentAddress: boolean | undefined;
   // The best-of a scenario makes. A failure to make one is kept in `failure`.
   public bestOf: BestOf | undefined;
+  // The number of rounds a scenario makes. A failure to make one is kept in
+  // `failure`.
+  public rounds: Rounds | undefined;
   // What a knockout's draw is to be made from, and the draw made. A failure to
   // make one is kept in `failure`.
   public drawPlaces: number | undefined;

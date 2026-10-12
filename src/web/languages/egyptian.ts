@@ -533,6 +533,7 @@ export const egyptian: Language = {
     "admin.competition.name": "الاسم",
     "admin.competition.kind": "النوع",
     "admin.competition.bestOf": "بأفضل",
+    "admin.competition.rounds": "الجولات",
     "admin.competition.places": "الأماكن",
     "admin.competition.round": "الدور {number}",
     "admin.competition.bestOfs": "بأفضل",
@@ -552,6 +553,8 @@ export const egyptian: Language = {
       "في مسابقة تانية في البطولة دي بنفس الاسم.",
     "BestOf.NotWhole": "اكتب عدد صحيح من الجيمات.",
     "BestOf.TooSmall": "الماتش لازم يكون بأفضل جيم واحد على الأقل.",
+    "Rounds.NotWhole": "اكتب عدد صحيح من الجولات.",
+    "Rounds.TooSmall": "البلوك لازم يتلعب في جولة واحدة على الأقل.",
     "KnockoutDraw.EvenBestOf":
       "ماتش خروج المغلوب لازم يطلع له فايز، فبيكون بأفضل عدد فردي من الجيمات.",
     "admin.hover.tournaments.new": "أنشئ بطولة جديدة",

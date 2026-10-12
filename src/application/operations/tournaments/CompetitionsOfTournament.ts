@@ -12,7 +12,14 @@ export type ListedCompetition = {
   readonly archived: boolean;
 } & (
   | {
-      readonly kind: "block" | "swiss";
+      readonly kind: "block";
+      /** What each match is the best of. */
+      readonly bestOf: number;
+      /** How many matches of it each two players play. */
+      readonly rounds: number;
+    }
+  | {
+      readonly kind: "swiss";
       /** What each match is the best of. */
       readonly bestOf: number;
     }

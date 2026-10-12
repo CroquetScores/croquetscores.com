@@ -533,6 +533,7 @@ export const korean: Language = {
     "admin.competition.name": "이름",
     "admin.competition.kind": "유형",
     "admin.competition.bestOf": "다승제",
+    "admin.competition.rounds": "라운드 수",
     "admin.competition.places": "자리 수",
     "admin.competition.round": "{number}라운드",
     "admin.competition.bestOfs": "라운드별 다승제",
@@ -552,6 +553,8 @@ export const korean: Language = {
       "이 대회의 다른 경기 종목이 이미 그 이름을 쓰고 있어요.",
     "BestOf.NotWhole": "게임 수를 정수로 입력해 주세요.",
     "BestOf.TooSmall": "매치는 최소 1게임 다승제여야 해요.",
+    "Rounds.NotWhole": "라운드 수는 정수로 입력해 주세요.",
+    "Rounds.TooSmall": "블록은 최소 1라운드는 치러야 해요.",
     "KnockoutDraw.EvenBestOf":
       "녹아웃의 매치에는 승자가 있어야 하므로, 홀수 게임 다승제여야 해요.",
     "admin.hover.tournaments.new": "새 대회 만들기",

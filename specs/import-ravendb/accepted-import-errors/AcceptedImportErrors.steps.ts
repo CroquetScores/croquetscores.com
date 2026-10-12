@@ -143,6 +143,18 @@ Then(
 );
 
 Then(
+  "the file of accepted import errors says {string} before {string}",
+  async function (this: SpecWorld, first: string, second: string) {
+    const said = await contentOf(this);
+    const at = said.indexOf(first);
+    const then = said.indexOf(second);
+    assert.ok(at !== -1, `It does not say ${first}.`);
+    assert.ok(then !== -1, `It does not say ${second}.`);
+    assert.ok(at < then, `${first} is not before ${second}.`);
+  },
+);
+
+Then(
   "the file of accepted import errors does not say {string}",
   async function (this: SpecWorld, said: string) {
     assert.ok(!(await contentOf(this)).includes(said));

@@ -261,6 +261,8 @@ export const addBlock = (
       tournament.value,
       name,
       domainScenarioOf(world).competition.bestOf ?? 1,
+      // Played once, where the scenario says nothing else.
+      domainScenarioOf(world).competition.rounds ?? 1,
       momentOf(world),
     ),
     tournament,
@@ -361,6 +363,7 @@ export const updateBlock = async (
       update.id.value,
       update.name,
       update.bestOf,
+      domainScenarioOf(world).competitionUpdate.rounds ?? 1,
       momentOf(world),
     ),
     tournament,

@@ -40,9 +40,12 @@ Then(
   },
 );
 
-Then("{int} rows are answered", function (this: SpecWorld, count: number) {
-  assert.equal(rowsAnswered(this).length, count);
-});
+Then(
+  /^(\d+) rows? (?:is|are) answered$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(rowsAnswered(this).length, Number(count));
+  },
+);
 
 Then(
   "listing the import errors is refused with {string}",

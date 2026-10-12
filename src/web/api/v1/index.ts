@@ -479,6 +479,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                 tournament,
                 name,
                 numberOf(body, "bestOf"),
+                numberOf(body, "rounds"),
                 at,
               ),
       );
@@ -531,6 +532,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                 competition,
                 name,
                 numberOf(body, "bestOf"),
+                numberOf(body, "rounds"),
                 at,
               ),
       );

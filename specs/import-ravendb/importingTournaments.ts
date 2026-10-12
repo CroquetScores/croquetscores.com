@@ -12,6 +12,11 @@ import { inspect } from "node:util";
 import { AggregateRepository } from "../../src/application/common/AggregateRepository.js";
 import { ProjectingEventStore } from "../../src/application/common/ProjectingEventStore.js";
 import { CommentariesByTournament } from "../../src/infrastructure/read-models/CommentariesByTournament.js";
+import { ManagerNotesByTournament } from "../../src/infrastructure/read-models/ManagerNotesByTournament.js";
+import { SeeNotes } from "../../src/import-ravendb/SeeNotes.js";
+import { ImportErrorsNote } from "../../src/import-ravendb/ImportErrorsNote.js";
+import { ManagerNote } from "../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
+import type { ManagerNoteId } from "../../src/domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import { Account } from "../../src/domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import { Commentary } from "../../src/domain/aggregates/tournaments/commentaries/Commentary.js";
@@ -242,6 +247,9 @@ interface Importing {
   readonly commentaries: AggregateRepository<Commentary, CommentaryId>;
   /** The commentaries of each tournament, as the read model of them has them. */
   readonly commentariesByTournament: CommentariesByTournament;
+  readonly managerNotes: AggregateRepository<ManagerNote, ManagerNoteId>;
+  /** The notes of each tournament, as the read model of them has them. */
+  readonly managerNotesByTournament: ManagerNotesByTournament;
   readonly importers: Importers;
   readonly accepted: AcceptedInScenario;
   /** What the scenario's import corrected, kept the same way. */
@@ -269,6 +277,7 @@ export const importingOf = (world: SpecWorld): Importing => {
   const accounts = accountsOf(world);
   const database = importDatabaseOf(world);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
+  const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const store = new ProjectingEventStore(accounts.store, [
     accounts.readModel,
     accounts.byGoogleAccount,
@@ -278,6 +287,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     // and address, as it does in the import.
     new TournamentsByWebsite(unitOfWork),
     commentariesByTournament,
+    managerNotesByTournament,
   ]);
   // Wrapped rather than handed over as they are: a static passed on its own is
   // a method separated from what it was declared on.
@@ -297,8 +307,27 @@ export const importingOf = (world: SpecWorld): Importing => {
     store,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
+  const managerNotes = new AggregateRepository(
+    store,
+    (id: ManagerNoteId, events) => ManagerNote.rebuiltFrom(id, events),
+  );
+  const seeNotes = new SeeNotes(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
+  );
   const accepted = new AcceptedInScenario();
   const corrected = new AcceptedInScenario();
+  const importErrorsNote = new ImportErrorsNote(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
+    seeNotes,
+  );
   const importing = {
     unitOfWork,
     tournaments,
@@ -306,6 +335,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     database,
     accepting: accepted,
     correcting: corrected,
+    notes: importErrorsNote,
   };
   const importedAccounts = new ImportedAccounts(
     accountRepository,
@@ -341,6 +371,8 @@ export const importingOf = (world: SpecWorld): Importing => {
     competitions,
     commentaries,
     commentariesByTournament,
+    managerNotes,
+    managerNotesByTournament,
     accepted,
     corrected,
     importers: {
@@ -355,6 +387,7 @@ export const importingOf = (world: SpecWorld): Importing => {
           },
           database,
           corrected,
+          seeNotes,
         ),
       tournaments: tournamentImporter,
       players,
@@ -1186,6 +1219,18 @@ Then(
         (corrected) => corrected.what === what && corrected.code === code,
       ),
       `${what} of ${documentId} is not corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "what is corrected of {string} is at {string} on the new site",
+  function (this: SpecWorld, documentId: string, newSitePath: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(said.length > 0, `Nothing of ${documentId} is corrected.`);
+    assert.ok(
+      said.some((corrected) => corrected.newSitePath === newSitePath),
+      `Nothing of ${documentId} is corrected at ${newSitePath}: ${inspect(said)}`,
     );
   },
 );

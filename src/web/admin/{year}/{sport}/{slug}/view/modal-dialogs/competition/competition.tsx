@@ -27,7 +27,12 @@ export type CompetitionAsItIs = {
   readonly id: string;
   readonly name: string;
 } & (
-  | { readonly kind: "block" | "swiss"; readonly bestOf: number }
+  | {
+      readonly kind: "block";
+      readonly bestOf: number;
+      readonly rounds: number;
+    }
+  | { readonly kind: "swiss"; readonly bestOf: number }
   | {
       readonly kind: "knockout";
       readonly places: number;
@@ -55,7 +60,7 @@ const typedNumber = (typed: string): number =>
 const fieldOf = (
   code: string,
   kind: Kind,
-): "name" | "bestOf" | "places" | "rounds" | undefined =>
+): "name" | "bestOf" | "places" | "rounds" | "playedIn" | undefined =>
   code.startsWith("CompetitionName.") ||
   code === "Tournament.CompetitionNameTaken"
     ? "name"
@@ -63,11 +68,13 @@ const fieldOf = (
       ? kind === "knockout"
         ? "rounds"
         : "bestOf"
-      : code === "KnockoutDraw.EvenBestOf"
-        ? "rounds"
-        : code.startsWith("KnockoutDraw.")
-          ? "places"
-          : undefined;
+      : code.startsWith("Rounds.")
+        ? "playedIn"
+        : code === "KnockoutDraw.EvenBestOf"
+          ? "rounds"
+          : code.startsWith("KnockoutDraw.")
+            ? "places"
+            : undefined;
 
 // The rules of a round's best-of that what was typed in it breaks, so that a
 // refusal of the rounds is said beside the rounds that earned it.
@@ -110,6 +117,10 @@ export const CompetitionDialog = ({
     competition !== undefined && competition.kind !== "knockout"
       ? String(competition.bestOf)
       : "1",
+  );
+  // How many rounds a block is played in, a field of a block alone.
+  const [playedIn, setPlayedIn] = useState(
+    competition?.kind === "block" ? String(competition.rounds) : "1",
   );
   const [places, setPlaces] = useState(
     competition?.kind === "knockout" ? competition.places : 8,
@@ -168,7 +179,14 @@ export const CompetitionDialog = ({
           body: JSON.stringify(
             kind === "knockout"
               ? { kind, name, places, rounds: rounds.map(typedNumber) }
-              : { kind, name, bestOf: typedNumber(bestOf) },
+              : kind === "block"
+                ? {
+                    kind,
+                    name,
+                    bestOf: typedNumber(bestOf),
+                    rounds: typedNumber(playedIn),
+                  }
+                : { kind, name, bestOf: typedNumber(bestOf) },
           ),
         },
       );
@@ -359,25 +377,50 @@ export const CompetitionDialog = ({
           </fieldset>
         </>
       ) : (
-        <Field
-          name="best-of"
-          label={say("admin.competition.bestOf")}
-          refused={refusedFor("bestOf")}
-        >
-          {(tied) => (
-            <input
-              {...tied}
-              type="text"
-              inputMode="numeric"
-              placeholder=" "
-              autoComplete="off"
-              value={bestOf}
-              onChange={(event) => {
-                setBestOf(event.target.value);
-              }}
-            />
-          )}
-        </Field>
+        <>
+          <Field
+            name="best-of"
+            label={say("admin.competition.bestOf")}
+            refused={refusedFor("bestOf")}
+          >
+            {(tied) => (
+              <input
+                {...tied}
+                type="text"
+                inputMode="numeric"
+                placeholder=" "
+                autoComplete="off"
+                value={bestOf}
+                onChange={(event) => {
+                  setBestOf(event.target.value);
+                }}
+              />
+            )}
+          </Field>
+          {/* A block alone is played in rounds: a Swiss pairs its players as
+              it goes. */}
+          {kind === "block" ? (
+            <Field
+              name="rounds"
+              label={say("admin.competition.rounds")}
+              refused={refusedFor("playedIn")}
+            >
+              {(tied) => (
+                <input
+                  {...tied}
+                  type="text"
+                  inputMode="numeric"
+                  placeholder=" "
+                  autoComplete="off"
+                  value={playedIn}
+                  onChange={(event) => {
+                    setPlayedIn(event.target.value);
+                  }}
+                />
+              )}
+            </Field>
+          ) : null}
+        </>
       )}
     </ModalDialog>
   );

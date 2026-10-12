@@ -1,7 +1,8 @@
 Feature: Changing what a tournament's block is
 
-  A block's name, and what each match in it is the best of, can each be
-  corrected. Updating a block says both again, and the block keeps its id,
+  A block's name, what each match in it is the best of, and the rounds it is
+  played in (`Rounds.feature`) can each be corrected. Updating a block says
+  all three again, and the block keeps its id,
   its order and its slug: a name corrected is still found where it was, as a
   tournament is (`update.feature`). A name another competition has, archived
   or not and of whatever kind, is refused as it is when a competition is
@@ -49,6 +50,14 @@ Feature: Changing what a tournament's block is
       And the update makes the competition the best of 2
       When the block "Block A" is updated
       Then the tournament's competition "Block A" is the best of 2
+
+    Scenario: An updated block is played in the rounds it was updated to
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the update makes the competition played in 3 rounds
+      When the block "Block A" is updated
+      Then the tournament's competition "Block A" is played in 3 rounds
 
     Scenario: A renamed block keeps its slug
       Given a stream where a tournament was created as "Spring Open"
@@ -129,6 +138,22 @@ Feature: Changing what a tournament's block is
       Then it is refused with "Tournament.NotABlock"
 
   Rule: An update that changes nothing records nothing
+
+    Scenario: Updating a block to the rounds it is already played in records nothing
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it to be played in 2 rounds
+      And the tournament is rebuilt from the stream
+      And the update makes the competition played in 2 rounds
+      When the block "Block A" is updated
+      Then it has recorded 0 events
+
+    Scenario: Updating only the rounds of a block records it
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the update makes the competition played in 2 rounds
+      When the block "Block A" is updated
+      Then it has recorded 1 event
 
     Scenario: Updating a block to what it already is records nothing
       Given a stream where a tournament was created as "Spring Open"

@@ -258,6 +258,11 @@ yesOrNo(
   undefined,
 );
 yesOrNo(
+  "the tournament kept for {string} on {string} allows drawn games",
+  (t) => t.drawsAllowed,
+  true,
+);
+yesOrNo(
   "the tournament kept for {string} on {string} does not allow drawn games",
   (t) => t.drawsAllowed,
   false,

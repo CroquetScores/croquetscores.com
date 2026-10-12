@@ -105,6 +105,67 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
         | Knockout |
         | Swiss    |
 
+  Rule: A block asks how many rounds it is played in
+
+    A block is a round robin that may be played more than once, each pair of
+    its players meeting in as many matches as there are rounds. The dialog asks
+    for them under "Rounds", beginning on 1. A Swiss and a knockout do not.
+
+    Scenario: A block asks for the rounds it is played in
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the competition dialog asks for "Rounds"
+
+    Scenario: A block begins on 1 round
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then "Rounds" says "1"
+
+    Scenario Outline: A Swiss and a knockout do not ask for rounds
+      Given "Add Competition" is pressed
+      When the kind "<kind>" is chosen
+      Then the competition dialog does not ask for "Rounds"
+
+      Examples:
+        | kind     |
+        | Swiss    |
+        | Knockout |
+
+    Scenario: A block added is played in the rounds that were typed
+      Given "Add Competition" is pressed
+      And "Block A" is typed as the "Name"
+      And "3" is typed as the "Best of"
+      And "2" is typed as the "Rounds"
+      When "Add" is pressed
+      Then the competition "Block A" of "Spring Open" is played in 2 rounds
+
+    Scenario Outline: A number of rounds that is not a whole number of at least one is refused beside it
+      Given "Add Competition" is pressed
+      And "Block A" is typed as the "Name"
+      And "<rounds>" is typed as the "Rounds"
+      When "Add" is pressed
+      Then "Rounds" is refused with "<code>"
+
+      Examples:
+        | rounds | code            |
+        | 0      | Rounds.TooSmall |
+        | 1.5    | Rounds.NotWhole |
+
+    Scenario: A block's rounds begin as the block's
+      Given the block is to be played in 2 rounds
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Rounds" says "2"
+
+    Scenario: A block's rounds changed are kept
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And "3" is typed as the "Rounds"
+      When "Save" is pressed
+      Then the competition "Block A" of "Spring Open" is played in 3 rounds
+
   Rule: A block and a Swiss ask what each match is the best of
 
     Scenario Outline: A block and a Swiss ask for their name and what each match is the best of

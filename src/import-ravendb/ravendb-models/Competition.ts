@@ -48,6 +48,13 @@ export interface Competition {
   readonly Players: { readonly _Players: readonly CompetitionPlayer[] };
   readonly Games: { readonly _Games: readonly Game[] };
   readonly IsArchived: boolean;
+  /**
+   * Not kept by the old sites: set by the import, to what it is called as a
+   * kind of competition, "block" or "knockout", where it is to be brought over
+   * whole or not at all, because its games are kept in a Swiss where it
+   * cannot be (ImportWholeTournaments.feature).
+   */
+  readonly AllOrNothingAs?: string;
 }
 
 /** A competition where every player meets every other. */

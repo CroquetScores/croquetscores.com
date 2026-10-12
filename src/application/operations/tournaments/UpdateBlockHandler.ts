@@ -8,6 +8,7 @@ import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import { Rounds } from "../../../domain/aggregates/tournaments/value-objects/Rounds.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 import { UpdateBlock } from "./UpdateBlock.js";
 
@@ -36,6 +37,7 @@ export class UpdateBlockHandler extends CommandHandler<UpdateBlock, void> {
       CompetitionId.from(command.competition),
       CompetitionName.from(command.name),
       BestOf.from(command.bestOf),
+      Rounds.from(command.rounds),
       by,
       command.requestedAt,
     );

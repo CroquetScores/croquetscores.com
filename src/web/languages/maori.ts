@@ -552,6 +552,7 @@ export const maori: Language = {
     "admin.competition.name": "Ingoa",
     "admin.competition.kind": "Momo",
     "admin.competition.bestOf": "Te pai rawa o te",
+    "admin.competition.rounds": "Ngā rauna",
     "admin.competition.places": "Ngā tūnga",
     "admin.competition.round": "Rauna {number}",
     "admin.competition.bestOfs": "Te pai rawa o te",
@@ -573,6 +574,9 @@ export const maori: Language = {
     "BestOf.NotWhole": "Whakauruhia he tau katoa o ngā tākaro.",
     "BestOf.TooSmall":
       "Me kotahi te iti rawa o ngā tākaro i te pai rawa o tētahi tukinga.",
+    "Rounds.NotWhole": "Whakauruhia he tau tōpū o ngā rauna.",
+    "Rounds.TooSmall":
+      "Me kotahi te iti rawa o ngā rauna hei tākaro mō tētahi poraka.",
     "KnockoutDraw.EvenBestOf":
       "Me whai toa tētahi tukinga whakawātea, nō reira ko te pai rawa o tētahi tau kāore e wehea ki te rua o ngā tākaro.",
     "admin.hover.tournaments.new": "Waihangatia he whakataetae hou",

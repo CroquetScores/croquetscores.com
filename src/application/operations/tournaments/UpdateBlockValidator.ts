@@ -3,6 +3,7 @@ import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import { Rounds } from "../../../domain/aggregates/tournaments/value-objects/Rounds.js";
 import { brokenBy } from "./tournamentOperations.js";
 import { UpdateBlock } from "./UpdateBlock.js";
 
@@ -17,6 +18,7 @@ export class UpdateBlockValidator extends CommandValidator<UpdateBlock> {
     return [
       ...brokenBy("name", () => CompetitionName.from(command.name)),
       ...brokenBy("bestOf", () => BestOf.from(command.bestOf)),
+      ...brokenBy("rounds", () => Rounds.from(command.rounds)),
     ];
   }
 }

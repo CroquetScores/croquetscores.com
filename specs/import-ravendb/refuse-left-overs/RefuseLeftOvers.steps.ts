@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { MissingTournaments } from "../../../src/import-ravendb/MissingTournaments.js";
+import type { AcceptedImportErrors } from "../../../src/import-ravendb/AcceptedImportErrors.js";
 import { RefuseLeftOvers } from "../../../src/import-ravendb/RefuseLeftOvers.js";
 import { runImporter } from "../../../src/import-ravendb/runImporter.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -44,9 +44,12 @@ When(
     const { importers } = importingOf(this);
     const database = importDatabaseOf(this);
     const found = missingOf(this);
-    const missing: MissingTournaments = {
-      missing: (tournamentId, documentId) => {
-        found.set(documentId, tournamentId);
+    const missing: AcceptedImportErrors = {
+      accept: (accepted) => {
+        // The corrected item names the tournament it is for.
+        if (accepted.code === "RefuseLeftOvers.TournamentMissing") {
+          found.set(accepted.documentId, accepted.what);
+        }
         return Promise.resolve();
       },
     };

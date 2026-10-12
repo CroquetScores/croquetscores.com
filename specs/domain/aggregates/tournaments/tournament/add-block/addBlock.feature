@@ -4,7 +4,9 @@ Feature: Adding a block to a tournament
   players who each play the others, ranked by what they win. A block is added
   with an id of its own, given by whatever adds it, a competition name, and
   how many games each match in it is the best of. A block's best-of may be
-  even, as a best-of may (`BestOf.feature`).
+  even, as a best-of may (`BestOf.feature`). It may also say how many rounds
+  it is played in (`Rounds.feature`), each pair of its players meeting in as
+  many matches as there are rounds, and a block always says.
 
   What the tournament holds of each competition is a reference to it
   (`CompetitionReference.feature`), and this says what the tournament gives
@@ -80,6 +82,19 @@ Feature: Adding a block to a tournament
         | 1     |
         | 2     |
 
+    Scenario Outline: A block added is played in the rounds it was added with
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      And the block is to be played in <rounds> rounds
+      When the block "Block A" is added
+      Then the tournament's competition "Block A" is played in <rounds> rounds
+
+      Examples:
+        | rounds |
+        | 1      |
+        | 2      |
+        | 3      |
+
     Scenario: A block added is not archived
       Given a stream where a tournament was created as "Spring Open"
       And the tournament is rebuilt from the stream
@@ -91,6 +106,12 @@ Feature: Adding a block to a tournament
       And the block "Block A" was added to it
       When the tournament is rebuilt from the stream
       Then the tournament has the competition "Block A"
+
+    Scenario: A tournament rebuilt after a block was added in rounds has them
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it to be played in 3 rounds
+      When the tournament is rebuilt from the stream
+      Then the tournament's competition "Block A" is played in 3 rounds
 
   Rule: No two competitions in a tournament have the same id
 

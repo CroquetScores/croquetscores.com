@@ -21,8 +21,15 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import {
   type AcceptedImportErrors,
   DocumentErrors,
+  DryRun,
+  oldSitePathOf,
 } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
+import {
+  type ImportErrorsNote,
+  noteLineOf,
+  playerNoteLineOf,
+} from "./ImportErrorsNote.js";
 import {
   addOldPlayer,
   isOldBye,
@@ -94,6 +101,12 @@ export interface ImportingCompetitions {
   readonly accepting: AcceptedImportErrors;
   /** Where what the import corrected is said, the same way. */
   readonly correcting: AcceptedImportErrors;
+  /**
+   * Says, in a note of the tournament's, a game that could not be added, and
+   * makes croquetscores@gmail.com a manager of the tournament to write it
+   * (ImportCompetition.feature).
+   */
+  readonly notes?: ImportErrorsNote;
 }
 
 // Each count a player carried, as the site names it.
@@ -124,30 +137,204 @@ export const AGAINST_A_BYE = {
 export const withWinnersFromScores = <TDocument extends OldCompetition>(
   document: TDocument,
   website: Website,
-): { readonly document: TDocument; readonly swapped: readonly OldGame[] } => {
+): {
+  readonly document: TDocument;
+  readonly swapped: readonly OldGame[];
+  readonly marked: readonly OldGame[];
+  readonly unmarked: readonly OldGame[];
+  readonly rounded: readonly OldGame[];
+  readonly bracketed: readonly OldGame[];
+} => {
   const swapped: OldGame[] = [];
-  const games = document.Games._Games.map((game) => {
+  const marked: OldGame[] = [];
+  const unmarked: OldGame[] = [];
+  const rounded: OldGame[] = [];
+  const bracketed: OldGame[] = [];
+  const games = document.Games._Games.map((kept) => {
+    // A half point rounded up first, and a count in brackets taken off a
+    // winner's mark, so that what follows is worked out from the scores the
+    // site will have.
+    const roundedUp = withHalfPointsRounded(kept);
+    if (roundedUp !== kept) rounded.push(kept);
+    const game = withBracketsRemoved(roundedUp);
+    if (game !== roundedUp) bracketed.push(roundedUp);
     try {
       const winner = Score.read(game.Winner.Score._Score, website);
       const loser = Score.read(game.Loser.Score._Score, website);
       const equal = !loser.isMoreThan(winner) && !winner.isMoreThan(loser);
-      if (!(
+      if (
         loser.isMoreThan(winner) ||
         (equal && loser.marked && !winner.marked)
-      )) {
-        return game;
+      ) {
+        const put: OldGame = {
+          ...game,
+          Winner: game.Loser,
+          Loser: game.Winner,
+        };
+        swapped.push(put);
+        return put;
+      }
+      // Equal points and both marked: the old site's winner won it, and the
+      // loser's mark, which the site refuses, is taken off.
+      if (equal && winner.marked && loser.marked) {
+        const put: OldGame = {
+          ...game,
+          Loser: {
+            ...game.Loser,
+            Score: { ...game.Loser.Score, _Score: String(loser.points) },
+          },
+        };
+        unmarked.push(put);
+        return put;
+      }
+      // Equal points and neither marked: the old site's winner won it, as
+      // the site says a game on equal points was, with a "w" on their score.
+      // Only where the score is no more than its digits, which a mark follows.
+      const typed = game.Winner.Score._Score.trim();
+      if (equal && !winner.marked && !loser.marked && /^\d+$/.test(typed)) {
+        const put: OldGame = {
+          ...game,
+          Winner: {
+            ...game.Winner,
+            Score: { ...game.Winner.Score, _Score: `${typed}w` },
+          },
+        };
+        marked.push(put);
+        return put;
       }
     } catch {
-      return game;
+      // A score that cannot be read is left as it was.
     }
-    const put: OldGame = { ...game, Winner: game.Loser, Loser: game.Winner };
-    swapped.push(put);
-    return put;
+    return game;
   });
   return {
     document: { ...document, Games: { ...document.Games, _Games: games } },
     swapped,
+    marked,
+    unmarked,
+    rounded,
+    bracketed,
   };
+};
+
+// `typed` as its points where it is a winner's mark with a count in brackets
+// after it, as "5 w (5)"; nothing where it is not.
+const withoutBracketedCount = (typed: string): string | undefined =>
+  /^(\d+)\s*[wW]\s*\(\d+\)$/.exec(typed.trim())?.[1];
+
+// `game` with either score's mark and bracketed count taken off, or `game`
+// itself where neither has one.
+const withBracketsRemoved = (game: OldGame): OldGame => {
+  const winner = withoutBracketedCount(game.Winner.Score._Score);
+  const loser = withoutBracketedCount(game.Loser.Score._Score);
+  if (winner === undefined && loser === undefined) return game;
+  return {
+    ...game,
+    Winner: {
+      ...game.Winner,
+      Score: {
+        ...game.Winner.Score,
+        _Score: winner ?? game.Winner.Score._Score,
+      },
+    },
+    Loser: {
+      ...game.Loser,
+      Score: {
+        ...game.Loser.Score,
+        _Score: loser ?? game.Loser.Score._Score,
+      },
+    },
+  };
+};
+
+// `typed` with a fraction that is more than nothing rounded up to the next
+// whole number, and what follows kept, as "3.5w" to "4w"; nothing where it
+// has none.
+const roundedUp = (typed: string): string | undefined => {
+  const [, whole, fraction, rest] =
+    /^(\d+)\.(\d+)(.*)$/s.exec(typed.trim()) ?? [];
+  if (whole === undefined || fraction === undefined || rest === undefined) {
+    return undefined;
+  }
+  return /[1-9]/.test(fraction)
+    ? `${String(Number(whole) + 1)}${rest}`
+    : undefined;
+};
+
+// `game` with either score's half point rounded up, or `game` itself where
+// neither has one.
+const withHalfPointsRounded = (game: OldGame): OldGame => {
+  const winner = roundedUp(game.Winner.Score._Score);
+  const loser = roundedUp(game.Loser.Score._Score);
+  if (winner === undefined && loser === undefined) return game;
+  return {
+    ...game,
+    Winner: {
+      ...game.Winner,
+      Score: {
+        ...game.Winner.Score,
+        _Score: winner ?? game.Winner.Score._Score,
+      },
+    },
+    Loser: {
+      ...game.Loser,
+      Score: {
+        ...game.Loser.Score,
+        _Score: loser ?? game.Loser.Score._Score,
+      },
+    },
+  };
+};
+
+/**
+ * Says what was corrected of a document's scores: each rounded, taken the
+ * right way round, or marked (importCompetition.feature).
+ */
+export const saidOfScoresCorrected = async (
+  errors: DocumentErrors,
+  nameOf: (number: number) => string,
+  corrected: ReturnType<typeof withWinnersFromScores>,
+): Promise<void> => {
+  for (const game of corrected.rounded) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.HalfPointRoundedUp",
+      "was kept with a score written with a half point, which the site has no place for, and is brought over with it rounded up to the next whole number.",
+    );
+  }
+  for (const game of corrected.bracketed) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.BracketedCountRemoved",
+      "was kept with a winner's mark and a count in brackets after its score, which are taken off, leaving its points.",
+    );
+  }
+  for (const game of corrected.swapped) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.WinnerFromScore",
+      "was kept the other way round, and is brought over as won by the player who scored more.",
+    );
+  }
+  for (const game of corrected.marked) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.EqualScoreMarked",
+      "was kept on equal points with neither score marked, and its winner's score is marked, so that the player the old site said won it did.",
+    );
+  }
+  for (const game of corrected.unmarked) {
+    await errors.gameCorrected(
+      game,
+      nameOf,
+      "ImportCompetition.LoserMarkRemoved",
+      "was kept on equal points with both scores marked, and is brought over with the loser's mark taken off, so that the player the old site said won it did.",
+    );
+  }
 };
 
 /**
@@ -209,6 +396,8 @@ export const addGames = async (
   putRight: PutRight = () => Promise.resolve(false),
 ): Promise<void> => {
   const inOrder = ordered(games);
+  // The games added so far, as they were added.
+  const added: OldGame[] = [];
   for (const [index, game] of inOrder.entries()) {
     const add = (adding: OldGame): void => {
       const winner = playerOf(adding.Winner.PlayerId);
@@ -243,6 +432,7 @@ export const addGames = async (
       // added. Where that is refused too, the game is refused as it was.
       let refused: unknown;
       let instead: Instead | undefined;
+      let duplicate = false;
       for (;;) {
         try {
           add(instead?.game ?? game);
@@ -250,24 +440,44 @@ export const addGames = async (
         } catch (failure) {
           refused ??= failure;
           if (instead !== undefined) throw refused;
+          // A game entered twice, which would come after its match was
+          // decided, is left out the second time.
+          if (
+            (failure as { code?: unknown }).code ===
+              "Competition.MatchDecided" &&
+            added.some((each) => sameGame(each, game))
+          ) {
+            duplicate = true;
+            break;
+          }
           const put = await putRight(game, failure, inOrder.slice(index));
           if (put === false) throw refused;
           if (put !== true) instead = put;
         }
       }
-      await instead?.corrected();
-      const loserScore = game.Loser.Score._Score;
-      const written = walkoverWritten(
-        loserScore,
-        Score.read(game.Winner.Score._Score, website),
-      );
-      if (written !== loserScore) {
+      if (duplicate) {
         await errors.gameCorrected(
           game,
           nameOf,
-          "ImportCompetition.WalkoverWritten",
-          `had the walkover written as the loser's "${loserScore}", which marks a winner's score, and it is written "${written}".`,
+          "ImportCompetition.DuplicateGame",
+          "was entered twice, with the same players and the very same scores, and is left out the second time, since its match was already decided.",
         );
+      } else {
+        added.push(instead?.game ?? game);
+        await instead?.corrected();
+        const loserScore = game.Loser.Score._Score;
+        const written = walkoverWritten(
+          loserScore,
+          Score.read(game.Winner.Score._Score, website),
+        );
+        if (written !== loserScore) {
+          await errors.gameCorrected(
+            game,
+            nameOf,
+            "ImportCompetition.WalkoverWritten",
+            `had the walkover written as the loser's "${loserScore}", which marks a winner's score, and it is written "${written}".`,
+          );
+        }
       }
     } catch (failure) {
       await errors.gameRefused(game, nameOf, failure);
@@ -275,6 +485,14 @@ export const addGames = async (
     await afterGame(game);
   }
 };
+
+// Whether two games are the same game entered twice: the same two players,
+// the same winner, and the very same scores as they were typed.
+const sameGame = (one: OldGame, other: OldGame): boolean =>
+  one.Winner.PlayerId === other.Winner.PlayerId &&
+  one.Loser.PlayerId === other.Loser.PlayerId &&
+  one.Winner.Score._Score.trim() === other.Winner.Score._Score.trim() &&
+  one.Loser.Score._Score.trim() === other.Loser.Score._Score.trim();
 
 /**
  * Whether what refused `game` has been put right, so that it can be added
@@ -322,10 +540,11 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   { website, id, document: read }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
-  const { document, swapped } = withWinnersFromScores(
+  const scored = withWinnersFromScores(
     withItsLists(read),
     Website.from(website),
   );
+  const { document } = scored;
   const {
     unitOfWork,
     tournaments,
@@ -337,7 +556,26 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   const documentId = `${website}/${id}`;
   if (document.IsArchived) return;
 
-  await unitOfWork.inTransaction(async () => {
+  // Said by a trial that is rolled back, to say it was only a trial.
+  class TrialDone extends Error {}
+
+  // Brought over, or tried first where it is to be brought over whole or not
+  // at all: in a transaction that is rolled back, with nothing said or kept,
+  // finding out what the site would refuse of it.
+  // The games that could not be added, with what refused each, where there is
+  // a note to say them in, which is said once the competition is brought over.
+  const writer = await importing.notes?.writer();
+  const noted: { game: OldGame; failure: unknown }[] = [];
+  const notedPlayers: { number: number; failure: unknown }[] = [];
+
+  const bringOver = async (dry: DryRun | undefined): Promise<void> => {
+    await unitOfWork.inTransaction(async () => {
+      await work(dry);
+      if (dry !== undefined) throw new TrialDone();
+    });
+  };
+
+  const work = async (dry: DryRun | undefined): Promise<void> => {
     const tournamentDocument = document.Tournament.Id;
     const tournament = await tournamentBecome(
       database,
@@ -365,6 +603,13 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       website,
       tournament,
       { name: name.toString(), oldSlug: document.Slug },
+      dry,
+      writer === undefined
+        ? undefined
+        : (game, failure) => noted.push({ game, failure }),
+      writer === undefined
+        ? undefined
+        : (number, failure) => notedPlayers.push({ number, failure }),
     );
 
     // Done as the tournament's first manager, who created it, when it was
@@ -416,19 +661,21 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       },
     };
     const shaped = kind.shape(played, listed, tournament);
-    if (shaped === undefined) return;
+    if (shaped === undefined) {
+      if (dry !== undefined) {
+        dry.leftBehind = true;
+        await errors.notBroughtOverAs(
+          document.AllOrNothingAs ?? "competition",
+          dry,
+        );
+      }
+      return;
+    }
 
     const competitionId = CompetitionId.create();
     shaped.add(tournament, competitionId, name, by, at);
     errors.added(competitionId);
-    for (const game of swapped) {
-      await errors.gameCorrected(
-        game,
-        nameOfIn(document),
-        "ImportCompetition.WinnerFromScore",
-        "was kept the other way round, and is brought over as won by the player who scored more.",
-      );
-    }
+    await saidOfScoresCorrected(errors, nameOfIn(document), scored);
     for (const { code, says, what } of shaped.corrected ?? []) {
       await errors.corrected(what ?? "", code, `${errors.place} ${says}`);
     }
@@ -610,5 +857,64 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     for (const number of [...withdrew.keys()]) await withdraw(number);
 
     await competitions.save(competition);
-  });
+    if (dry !== undefined && dry.refused.length > 0) {
+      await errors.notBroughtOverAs(
+        document.AllOrNothingAs ?? "competition",
+        dry,
+      );
+    }
+  };
+
+  // Tried first where it is to be whole or not at all: where the site would
+  // refuse any of it, it is not brought over, and nothing is kept of it.
+  if (document.AllOrNothingAs !== undefined) {
+    const dry = new DryRun();
+    try {
+      await bringOver(dry);
+    } catch (failure) {
+      if (!(failure instanceof TrialDone)) throw failure;
+    }
+    if (dry.leftBehind || dry.refused.length > 0) return;
+  }
+  await bringOver(undefined);
+
+  // Said in a note of the tournament's, which makes croquetscores@gmail.com a
+  // manager, and said as corrected, once for the competition.
+  if (
+    noted.length + notedPlayers.length > 0 &&
+    importing.notes !== undefined &&
+    writer !== undefined
+  ) {
+    const tournamentDocument = document.Tournament.Id;
+    const nameOf = nameOfIn(document);
+    await importing.notes.add(
+      website,
+      tournamentDocument,
+      document.Name,
+      [
+        ...notedPlayers.map(({ number, failure }) =>
+          playerNoteLineOf(
+            nameOf(number),
+            document.Players._Players.find((each) => each._Id === number)
+              ?.Representing ?? null,
+            failure,
+          ),
+        ),
+        ...noted.map(({ game, failure }) =>
+          noteLineOf(game, failure, document.Players._Players, nameOf),
+        ),
+      ],
+      writer,
+    );
+    const where = await database.tournamentOf(website, tournamentDocument);
+    await correcting.accept({
+      documentId,
+      website,
+      newSitePath: where?.tournamentAddress,
+      oldSitePath: oldSitePathOf(where?.tournamentAddress ?? "", document.Slug),
+      what: "",
+      code: "ImportCompetition.ImportErrorsNoted",
+      description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added and ${String(notedPlayers.length)} ${notedPlayers.length === 1 ? "player" : "players"} that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
+    });
+  }
 };

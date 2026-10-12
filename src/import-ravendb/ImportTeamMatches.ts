@@ -12,7 +12,8 @@ import { TestGroup } from "../domain/aggregates/tournaments/value-objects/TestGr
 import { charactersIn } from "../domain/common/charactersIn.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import { Website } from "../domain/common/Website.js";
-import { DocumentErrors } from "./AcceptedImportErrors.js";
+import { DocumentErrors, oldSitePathOf } from "./AcceptedImportErrors.js";
+import { secondAndThirdReversedIn } from "./ImportBlocks.js";
 import {
   AGAINST_A_BYE,
   type ImportingCompetitions,
@@ -21,6 +22,7 @@ import {
   type Instead,
   nameOfIn,
   type PutRight,
+  saidOfScoresCorrected,
   withItsLists,
   withWinnersFromScores,
 } from "./importCompetition.js";
@@ -33,6 +35,7 @@ import type {
   Game as OldGame,
   TeamMatch,
 } from "./ravendb-models/Competition.js";
+import { noteLineOf, playerNoteLineOf } from "./ImportErrorsNote.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfImported } from "./bestOfImported.js";
 import { isOldBye } from "./ImportTournamentPlayers.js";
@@ -64,6 +67,19 @@ const shortNameOf = (name: string): string =>
 
 const sameName = (one: string, other: string): boolean =>
   one.toLowerCase() === other.toLowerCase();
+
+// Whether two players' names are the same name, in any case and with any
+// spaces, and without the number a team puts after a name it has twice, as
+// "Sam Someone (2)".
+const sameBaseName = (one: string, other: string): boolean => {
+  const base = (name: string): string =>
+    name
+      .replace(/\s*\(\d+\)\s*$/, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  return base(one) === base(other);
+};
 
 // A name without what is in brackets at its end, as "Real Club Puerta de
 // Hierro" of "Real Club Puerta de Hierro (Group A)".
@@ -115,6 +131,54 @@ const playedBetween = (
       (game.Winner.PlayerId === one && game.Loser.PlayerId === other) ||
       (game.Winner.PlayerId === other && game.Loser.PlayerId === one),
   );
+
+// "v" or "vs" between two names, as "Glamorgan v Bristol".
+const VERSUS_WORD = /\s+(?:vs|v)\s+/i;
+
+/**
+ * `name` written "A vs B", as a team match is named, where it is named for two
+ * teams with "v" or "vs" between them; nothing where it is not.
+ */
+export const namedForTwoTeams = (name: string): string | undefined => {
+  const found = VERSUS_WORD.exec(name);
+  if (found === null) return undefined;
+  return `${name.slice(0, found.index).trim()}${VERSUS}${name.slice(found.index + found[0].length).trim()}`;
+};
+
+/**
+ * Whether `document` could be brought over as a team match
+ * (ImportWholeTournaments.feature): it is named for two teams, "A vs B", it
+ * has a player, and every player who is no bye represents one of them, as a
+ * team match's players do. Asked of a block, knockout or Swiss of a
+ * tournament played by teams before it is tried as one, so that one whose
+ * players would all be refused is not.
+ */
+export const couldBeATeamMatch = (document: {
+  readonly Name: string;
+  readonly Players: {
+    readonly _Players: readonly {
+      readonly Name: string;
+      readonly Representing: string | null;
+    }[];
+  };
+}): boolean => {
+  const named = namedForTwoTeams(document.Name);
+  if (named === undefined) return false;
+  const split = named.indexOf(VERSUS);
+  const names = [
+    named.slice(0, split).trim(),
+    named.slice(split + VERSUS.length).trim(),
+  ].flatMap((name) => [name, teamNameOf(name), beforeBrackets(name)]);
+  const players = document.Players._Players.filter(
+    (player) => !isOldBye(player.Name),
+  );
+  return (
+    players.length > 0 &&
+    players.every((player) =>
+      names.some((name) => sameName((player.Representing ?? "").trim(), name)),
+    )
+  );
+};
 
 /**
  * How many matches a team match's games say it had (ImportTeamMatches.feature):
@@ -193,10 +257,11 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     id,
     document: read,
   }: ReadDocument<TeamMatch>): Promise<void> {
-    const { document, swapped } = withWinnersFromScores(
+    const scored = withWinnersFromScores(
       withItsLists(read),
       Website.from(website),
     );
+    const { document } = scored;
     const {
       unitOfWork,
       tournaments,
@@ -207,6 +272,13 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     } = this.importing;
     const documentId = `${website}/${id}`;
     if (document.IsArchived) return;
+
+    // A game that cannot be added, after everything else was tried, is said in
+    // a note of the tournament's by whoever writes notes, where there is one to
+    // write them; otherwise it is kept as an error.
+    const writer = await this.importing.notes?.writer();
+    const noted: { game: OldGame; failure: unknown }[] = [];
+    const notedPlayers: { number: number; failure: unknown }[] = [];
 
     await unitOfWork.inTransaction(async () => {
       const tournamentDocument = document.Tournament.Id;
@@ -247,6 +319,13 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         website,
         tournament,
         { name: document.Name, oldSlug: document.Slug },
+        undefined,
+        writer === undefined
+          ? undefined
+          : (game, failure) => noted.push({ game, failure }),
+        writer === undefined
+          ? undefined
+          : (number, failure) => notedPlayers.push({ number, failure }),
       );
 
       // Done as the tournament's first manager, who created it, when it was
@@ -277,14 +356,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         at,
       );
       errors.added(competitionId);
-      for (const game of swapped) {
-        await errors.gameCorrected(
-          game,
-          nameOfIn(document),
-          "ImportCompetition.WinnerFromScore",
-          "was kept the other way round, and is brought over as won by the player who scored more.",
-        );
-      }
+      await saidOfScoresCorrected(errors, nameOfIn(document), scored);
 
       // A player is on the team they represented, which they wrote as the
       // team match named it, or by the team's name here, or by either before
@@ -301,6 +373,42 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           : represents(representing, 1, second)
             ? second
             : undefined;
+
+      // A player who represents what is neither team is of the team opposite
+      // their opponent's, where one of their games is against a player who
+      // represents one of the two (ImportTeamMatches.feature). Worked out
+      // again for as long as another is found, so that a player whose
+      // opponent was put right is put right too.
+      const ofTeam = new Map<number, Team>();
+      for (const player of document.Players._Players) {
+        const team = teamRepresented((player.Representing ?? "").trim());
+        if (team !== undefined && !isOldBye(player.Name)) {
+          ofTeam.set(player._Id, team);
+        }
+      }
+      const putRight = new Map<number, Team>();
+      for (let found = true; found;) {
+        found = false;
+        for (const player of document.Players._Players) {
+          if (isOldBye(player.Name) || ofTeam.has(player._Id)) continue;
+          for (const game of gamesInOrder(document.Games._Games)) {
+            const opponent =
+              game.Winner.PlayerId === player._Id
+                ? game.Loser.PlayerId
+                : game.Loser.PlayerId === player._Id
+                  ? game.Winner.PlayerId
+                  : undefined;
+            const theirs =
+              opponent === undefined ? undefined : ofTeam.get(opponent);
+            if (theirs === undefined) continue;
+            const opposite = theirs.id.equals(first.id) ? second : first;
+            ofTeam.set(player._Id, opposite);
+            putRight.set(player._Id, opposite);
+            found = true;
+            break;
+          }
+        }
+      }
 
       const players = new Map<number, TeamPlayerId>();
       const made: { readonly number: number; readonly id: TeamPlayerId }[] = [];
@@ -326,7 +434,14 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             byesMade.push(player._Id);
             continue;
           }
-          const team = teamRepresented((player.Representing ?? "").trim());
+          const team = ofTeam.get(player._Id);
+          if (putRight.has(player._Id)) {
+            await errors.corrected(
+              `player ${String(player._Id)}`,
+              "ImportTeamMatches.TeamCorrected",
+              `Player ${nameOfIn(document)(player._Id)} in ${errors.place} was kept as representing ${(player.Representing ?? "").trim() === "" ? "no team" : (player.Representing ?? "").trim()}, which is neither team, and is brought over as a player of ${team?.name.toString() ?? ""}, the team opposite the player they played.`,
+            );
+          }
           // A number found again is the player it was, unless they are a
           // player of another team than the one they represent here: the old
           // site sometimes gave a number to two people, of two teams. Then
@@ -338,16 +453,25 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             const theirs = tournament.teams.find((each) =>
               each.players.some((one) => one.id.equals(known)),
             );
+            // The same player where they are of the same team and have
+            // the same name, in any case and with any spaces. Of the same
+            // team under another name, or of another team, they are the
+            // player of this name in their own team.
+            const theirName = theirs?.players
+              .find((one) => one.id.equals(known))
+              ?.name.toString();
             if (
               team === undefined ||
               theirs === undefined ||
-              theirs.id.equals(team.id)
+              (theirs.id.equals(team.id) &&
+                theirName !== undefined &&
+                sameBaseName(theirName, nameToImport(player.Name)))
             ) {
               players.set(player._Id, known);
               continue;
             }
             const named = team.players.find((one) =>
-              sameName(one.name.toString(), nameToImport(player.Name)),
+              sameBaseName(one.name.toString(), nameToImport(player.Name)),
             );
             if (named !== undefined) {
               players.set(player._Id, named.id);
@@ -655,6 +779,32 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           made === undefined ? false : instead(loser, made),
         );
       };
+      // The order they are added in: as the old site numbered them, or the
+      // order the import names; and then each pair's second and third games
+      // the other way round where the third would come after their match was
+      // decided and the other way round would all be accepted, as it is for a
+      // block (ImportTeamMatches.feature).
+      const bestOfGames = bestOfImported(document.BestOf).games;
+      const inOrderToAdd = (games: readonly OldGame[]): OldGame[] =>
+        secondAndThirdReversedIn(
+          inOrder === undefined
+            ? gamesInOrder(games)
+            : reordered(games, inOrder),
+          bestOfGames,
+        ).ordered;
+      const { reversed } = secondAndThirdReversedIn(
+        inOrder === undefined
+          ? gamesInOrder(gamesPlayed)
+          : reordered(gamesPlayed, inOrder),
+        bestOfGames,
+      );
+      for (const [second, third] of reversed) {
+        await errors.corrected(
+          `games ${String(second.Id)} and ${String(third.Id)}`,
+          "ImportTeamMatches.SecondAndThirdReversed",
+          `${errors.place} has the second and third games between ${nameOf(second.Winner.PlayerId)} and ${nameOf(second.Loser.PlayerId)}, games ${String(second.Id)} and ${String(third.Id)}, added the other way round, since the third came after their match of the best of ${String(bestOfGames)} was decided.`,
+        );
+      }
       await addGames(
         errors,
         competition,
@@ -664,9 +814,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         () => told,
         Website.from(website),
         by,
-        inOrder === undefined
-          ? gamesInOrder
-          : (games) => reordered(games, inOrder),
+        (games) => inOrderToAdd(games),
         undefined,
         async (game, failure, toCome) => {
           const put = await opponentCorrected(game, failure, toCome);
@@ -677,6 +825,52 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
       await tournaments.save(tournament);
       await competitions.save(competition);
     });
+
+    // Said in a note of the tournament's, which makes croquetscores@gmail.com
+    // a manager, and said as corrected, once for the team match.
+    const { notes } = this.importing;
+    if (
+      notes !== undefined &&
+      writer !== undefined &&
+      noted.length + notedPlayers.length > 0
+    ) {
+      const nameOf = nameOfIn(document);
+      await notes.add(
+        website,
+        document.Tournament.Id,
+        document.Name,
+        [
+          ...notedPlayers.map(({ number, failure }) =>
+            playerNoteLineOf(
+              nameOf(number),
+              document.Players._Players.find((each) => each._Id === number)
+                ?.Representing ?? null,
+              failure,
+            ),
+          ),
+          ...noted.map(({ game, failure }) =>
+            noteLineOf(game, failure, document.Players._Players, nameOf),
+          ),
+        ],
+        writer,
+      );
+      const where = await database.tournamentOf(
+        website,
+        document.Tournament.Id,
+      );
+      await correcting.accept({
+        documentId,
+        website,
+        newSitePath: where?.tournamentAddress,
+        oldSitePath: oldSitePathOf(
+          where?.tournamentAddress ?? "",
+          document.Slug,
+        ),
+        what: "",
+        code: "ImportCompetition.ImportErrorsNoted",
+        description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added and ${String(notedPlayers.length)} ${notedPlayers.length === 1 ? "player" : "players"} that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
+      });
+    }
   }
 
   // The tournament's team the old sites called `written`, made the first time

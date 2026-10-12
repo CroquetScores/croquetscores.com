@@ -553,6 +553,7 @@ export const french: Language = {
     "admin.competition.name": "Nom",
     "admin.competition.kind": "Type",
     "admin.competition.bestOf": "Au meilleur des",
+    "admin.competition.rounds": "Tours",
     "admin.competition.places": "Places",
     "admin.competition.round": "Tour {number}",
     "admin.competition.bestOfs": "Au meilleur des",
@@ -575,6 +576,8 @@ export const french: Language = {
     "BestOf.NotWhole": "Saisissez un nombre entier de parties.",
     "BestOf.TooSmall":
       "Une rencontre doit se jouer au meilleur d’au moins 1 partie.",
+    "Rounds.NotWhole": "Saisissez un nombre entier de tours.",
+    "Rounds.TooSmall": "Un bloc doit se jouer en au moins 1 tour.",
     "KnockoutDraw.EvenBestOf":
       "Une rencontre d’élimination directe doit avoir un vainqueur ; elle se joue donc au meilleur d’un nombre impair de parties.",
     "admin.hover.tournaments.new": "Créer un nouveau tournoi",

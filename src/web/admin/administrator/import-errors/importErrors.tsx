@@ -5,9 +5,9 @@ import { knows, say } from "../../words.js";
 import "./importErrors.css";
 
 // The documents the import refused (importErrors.feature): a row for each
-// error kept, the document's id, what went wrong said for a person where the
-// import said it so, and the first line of what the import said, in the order
-// the API sends them. A row is one link, to the page of its document
+// document, its id, what went wrong said for a person where the import said
+// it so, and the first line of what the import said first, in the order the
+// API sends them, which is by the documents' ids. A row is one link, to the page of its document
 // (importError.tsx).
 
 interface KeptImportError {

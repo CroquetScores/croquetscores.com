@@ -18,13 +18,17 @@ Feature: Importing the old sites' knockouts
   Many managers left the byes out instead, and the old sites drew no
   knockout whose players did not fill its places, but kept its games. The
   site plays none until its places are filled. So where the players listed
-  do not fill the knockout, where the byes belong is worked out from the
-  games. Going down the list, a player stands with the player listed after
-  them where each played the other in their first game, and stands against
-  a bye where they did not. Where that fills the knockout's places, it is
-  the draw. Where it does not, nobody can say what the draw was, and the
-  knockout is left behind without an error: there is nothing a person could
-  put right in it that the import could then bring over.
+  do not fill the knockout, the difference is made up in byes, and where
+  they belong is worked out from the games. Going down the list, a player
+  stands with the player listed after them where each played the other in
+  their first game, and stands against a bye where they did not; or, where
+  that leaves more of its games with no place in the draw, the players are
+  put as their games say they were drawn, each first against whoever they
+  first played, and each round's winner against whoever they played next,
+  those who played nobody against a bye. That is said as corrected
+  (`AcceptedImportErrors.feature`). A knockout with more players than places
+  is left behind without an error: there is nothing a person could put
+  right in it that the import could then bring over.
 
   The old sites never kept what a knockout's rounds were the best of. They
   worked it out each time from the games: what the longest match of the round
@@ -197,7 +201,7 @@ Feature: Importing the old sites' knockouts
       When the competition is imported
       Then the competition kept for "knockouts/30" on "croquetscores.com" has 2 games
 
-    Scenario: A knockout whose games do not fill its places is not kept as any competition
+    Scenario: A knockout with fewer players than places has byes added
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
       And the knockout's size is 8
       And player 1 is in the competition
@@ -206,9 +210,9 @@ Feature: Importing the old sites' knockouts
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the competition is imported
-      Then "knockouts/30" on "croquetscores.com" is not kept as any competition
+      Then the competition kept for "knockouts/30" on "croquetscores.com" is a knockout
 
-    Scenario: Leaving a knockout behind whose byes cannot be worked out is not refused
+    Scenario: A knockout with fewer players than places keeps its games
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
       And the knockout's size is 8
       And player 1 is in the competition
@@ -217,7 +221,55 @@ Feature: Importing the old sites' knockouts
       And game 1 was won by player 1
       And game 1 was lost by player 2
       When the competition is imported
-      Then importing the competition is not refused
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 1 game
+
+    Scenario: Adding byes to a knockout is not an error
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 8
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/knockouts/30"
+
+    Scenario: Adding byes to a knockout is said as corrected
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 8
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 2
+      When the competition is imported
+      Then "croquetscores.com/knockouts/30" is corrected as "ImportKnockouts.ByesAdded"
+
+    Scenario: A player listed away from the player they first played is drawn against them
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 2 was won by player 2
+      And game 2 was lost by player 1
+      When the competition is imported
+      Then "Ann Able" is drawn against "Cat Cole" in the competition kept for "knockouts/30" on "croquetscores.com"
+
+    Scenario: The games of a knockout whose players were put where the games say are added
+      Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"
+      And the knockout's size is 4
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 2 was won by player 2
+      And game 2 was lost by player 1
+      When the competition is imported
+      Then the competition kept for "knockouts/30" on "croquetscores.com" has 2 games
 
     Scenario: A knockout with more players than places is not kept as any competition
       Given the knockout "knockouts/30" of "tournaments/12" on "croquetscores.com"

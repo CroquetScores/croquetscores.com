@@ -36,6 +36,7 @@ import {
   knockoutPlay,
   type Match,
 } from "./KnockoutPlay.js";
+import { matchesBetween } from "./matchesBetween.js";
 import { GameId } from "./primitives/GameId.js";
 import {
   CarryForward,
@@ -937,7 +938,8 @@ export class Competition extends AggregateRoot {
 
   // That `game` can count alongside the games that already do, `without` one
   // of them, which is a game being corrected to other players and would no
-  // longer count as it was: in a block, in a match not yet decided; in a
+  // longer count as it was: in a block, in a match not yet decided, two
+  // players playing as many matches as the block has rounds; in a
   // knockout, between the two drawn to meet in one not yet decided. A Swiss
   // asks nothing more of it, nor does a block whose matches are the best of
   // 1, which is played in rounds, each game a match of its own, and two
@@ -954,17 +956,14 @@ export class Competition extends AggregateRoot {
           (each.winner.equals(game.winner) && each.loser.equals(game.loser)) ||
           (each.winner.equals(game.loser) && each.loser.equals(game.winner)),
       );
-      // A drawn game is played, but won by neither.
-      const won = (id: GamePlayerId): number =>
-        played.filter((each) => !each.drawn && each.winner.equals(id)).length;
-      const left = shape.bestOf.games - played.length;
-      const beyondReach = (one: GamePlayerId, other: GamePlayerId) =>
-        won(one) > won(other) + left;
-      if (
-        left <= 0 ||
-        beyondReach(game.winner, game.loser) ||
-        beyondReach(game.loser, game.winner)
-      ) {
+      // Their games, in the order they were added, are cut into matches,
+      // each ending with the game that decides it; the game is refused once
+      // they have played as many as the block has rounds.
+      const rounds = shape.kind === "block" ? shape.rounds.count : 1;
+      const decided = matchesBetween(played, shape.bestOf.games).filter(
+        (match) => match.decided,
+      );
+      if (decided.length >= rounds) {
         refuse("Competition.MatchDecided", "Their match is decided.");
       }
       // A match is started once its two players have a game that counts.

@@ -547,6 +547,7 @@ export const portuguese: Language = {
     "admin.competition.name": "Nome",
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Melhor de",
+    "admin.competition.rounds": "Rodadas",
     "admin.competition.places": "Vagas",
     "admin.competition.round": "Rodada {number}",
     "admin.competition.bestOfs": "Melhor de, por fase",
@@ -568,6 +569,8 @@ export const portuguese: Language = {
       "Outra competição deste torneio já tem esse nome.",
     "BestOf.NotWhole": "Insira um número inteiro de jogos.",
     "BestOf.TooSmall": "Uma partida precisa ser melhor de pelo menos 1 jogo.",
+    "Rounds.NotWhole": "Digite um número inteiro de rodadas.",
+    "Rounds.TooSmall": "Um bloco precisa ser jogado em pelo menos 1 rodada.",
     "KnockoutDraw.EvenBestOf":
       "A partida de uma eliminatória precisa ter um vencedor, então é melhor de um número ímpar de jogos.",
     "admin.hover.tournaments.new": "Criar um novo torneio",

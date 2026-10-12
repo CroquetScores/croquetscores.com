@@ -10,8 +10,9 @@ Feature: Finding whatever names a tournament that was never there
 
   A document naming a tournament the old site no longer had is not kept as
   an error, since there is nothing in it anyone could put right. It is said
-  instead in docs/import-from-ravendb/missing-tournaments.md, with the
-  tournament it names (`MissingTournaments.feature`).
+  instead as corrected in docs/import-from-ravendb/import-corrections.md
+  (`AcceptedImportErrors.feature`), under the code
+  `RefuseLeftOvers.TournamentMissing`, with the tournament it names.
 
   A tournament the old site could not be asked about is not kept as read
   (`ImportWholeTournaments.feature`) either, but it was there, and an error
@@ -29,9 +30,9 @@ Feature: Finding whatever names a tournament that was never there
     And the tournaments are imported
     And a tournament "tournaments/12" on "croquetscores.com"
 
-  Rule: A document naming a tournament not there is said to name a missing tournament
+  Rule: A document naming a tournament not there is said as corrected, naming the missing tournament
 
-    Scenario Outline: A document naming a tournament not there is said to name a missing one
+    Scenario Outline: A document naming a tournament not there is said as corrected, naming it
       Given the <kind> "<document>" of "tournaments/99" on "croquetscores.com"
       When the documents no tournament took are looked for
       Then "croquetscores.com/<document>" is said to name the missing tournament "tournaments/99"

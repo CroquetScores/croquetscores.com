@@ -153,9 +153,10 @@ export class ImportTournaments implements Importer<OldTournament> {
           country,
           subtitle: subtitleOf(document.Notes),
           // Nothing the old sites never said is claimed: none of them allowed
-          // a drawn game, and none said the rest.
+          // a drawn game, but for those the import found a tie marked in text
+          // in (ImportWholeTournaments.feature), and none said the rest.
           handicap: false,
-          drawsAllowed: false,
+          drawsAllowed: document.DrawsAllowed === true,
           worldRankings: false,
           national: false,
           international: false,

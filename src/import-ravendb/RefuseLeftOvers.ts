@@ -1,7 +1,7 @@
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { isArchived } from "./ImportWholeTournaments.js";
 import { ImportRefused } from "./ImportRefused.js";
-import type { MissingTournaments } from "./MissingTournaments.js";
+import type { AcceptedImportErrors } from "./AcceptedImportErrors.js";
 import type { Reference } from "./ravendb-models/Tournament.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 
@@ -20,8 +20,10 @@ export interface NamingATournament {
  * longer had is reached by nothing else, and could otherwise have been left
  * behind without anyone reading it.
  *
- * One naming a tournament the old site no longer had is said to be among
- * `missing`, since nothing in it could be put right. One naming a tournament
+ * One naming a tournament the old site no longer had is said as corrected,
+ * with the tournament it names, since nothing in it could be put right. It
+ * is no error, and is not brought over, so it has no page on the new site.
+ * One naming a tournament
  * that was there but was not read, which has an error kept against it, as
  * one the old site could not be asked about, is refused, and so kept as an
  * error, since the tournament could be read another time.
@@ -33,7 +35,8 @@ export class RefuseLeftOvers implements Importer<NamingATournament> {
   constructor(
     readonly collection: string,
     private readonly database: ImportDatabase,
-    private readonly missing: MissingTournaments,
+    /** Where what the import corrected is said (import-corrections.md). */
+    private readonly correcting: AcceptedImportErrors,
   ) {}
 
   async importDocument({
@@ -50,6 +53,15 @@ export class RefuseLeftOvers implements Importer<NamingATournament> {
         `The tournament ${tournament} it names was there, but was not read.`,
       );
     }
-    await this.missing.missing(tournament, `${website}/${id}`);
+    await this.correcting.accept({
+      documentId: `${website}/${id}`,
+      website,
+      newSitePath: undefined,
+      // The tournament is gone, and nothing says where the document was.
+      oldSitePath: "",
+      what: tournament,
+      code: "RefuseLeftOvers.TournamentMissing",
+      description: `This ${this.collection} document names the tournament ${tournament}, which the old site no longer had, so it was not brought over.`,
+    });
   }
 }

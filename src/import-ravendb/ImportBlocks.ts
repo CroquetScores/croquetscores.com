@@ -7,6 +7,7 @@ import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js"
 import type { Block, Game } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
+import { Rounds } from "../domain/aggregates/tournaments/value-objects/Rounds.js";
 import { bestOfWorkedOut } from "./bestOfImported.js";
 
 // Blocks of a tournament that finished before this are left behind where
@@ -45,8 +46,23 @@ const decidedAfter = (played: readonly Game[], bestOf: number): boolean => {
 export const secondAndThirdReversed = (
   games: readonly Game[],
   bestOf: number,
+): { ordered: Game[]; reversed: readonly [Game, Game][] } =>
+  secondAndThirdReversedIn(
+    [...games].sort((one, other) => one.Id - other.Id),
+    bestOf,
+  );
+
+/**
+ * As `secondAndThirdReversed`, for `games` already in the order they are to be
+ * added in, which is kept apart from the second and third games of each pair
+ * it puts the other way round: a team match is added in its own order
+ * (ImportTeamMatches.feature).
+ */
+export const secondAndThirdReversedIn = (
+  games: readonly Game[],
+  bestOf: number,
 ): { ordered: Game[]; reversed: readonly [Game, Game][] } => {
-  const ordered = [...games].sort((one, other) => one.Id - other.Id);
+  const ordered = [...games];
   const byPair = new Map<string, number[]>();
   ordered.forEach((game, at) => {
     const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
@@ -75,6 +91,17 @@ export const secondAndThirdReversed = (
   }
   return { ordered, reversed };
 };
+
+// Blocks of a tournament the import names as played in rounds of matches of
+// a best-of, by the website and the tournament document, whatever the blocks
+// were kept as (ImportBlocks.feature): tournaments/72520, the WCA Sunday GC
+// Handicap Interclub, a double round robin of matches of the best of 3.
+const NAMED_TOURNAMENTS: ReadonlyMap<
+  string,
+  { readonly bestOf: number; readonly rounds: number }
+> = new Map([
+  ["croquetscores.com/tournaments/72520", { bestOf: 3, rounds: 2 }],
+]);
 
 /**
  * Whether every pair of the `players` of a block played exactly `bestOf`
@@ -110,6 +137,42 @@ const playedInRounds = (
 };
 
 /**
+ * How many rounds a block was played in where every pair of its players, in
+ * the order their games were entered, played whole matches of the best of
+ * `bestOf` and at least one pair played more than one: the most matches any
+ * pair played. Nothing where no pair did, or where any pair's last match was
+ * not finished (ImportBlocks.feature).
+ */
+export const roundsPlayed = (
+  games: readonly Game[],
+  bestOf: number,
+): number | undefined => {
+  if (bestOf <= 1) return undefined;
+  const byPair = new Map<string, Game[]>();
+  for (const game of [...games].sort((one, other) => one.Id - other.Id)) {
+    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
+      .sort((one, other) => one - other)
+      .join(" ");
+    byPair.set(pair, [...(byPair.get(pair) ?? []), game]);
+  }
+  let most = 0;
+  for (const theirs of byPair.values()) {
+    let matches = 0;
+    let match: Game[] = [];
+    for (const game of theirs) {
+      match.push(game);
+      if (decidedAfter(match, bestOf)) {
+        matches += 1;
+        match = [];
+      }
+    }
+    if (match.length > 0) return undefined;
+    most = Math.max(most, matches);
+  }
+  return most > 1 ? most : undefined;
+};
+
+/**
  * Brings the old sites' blocks over as blocks, each the best of what it was, or
  * of what its games say where it was kept as the best of less than 1, or the
  * best of 1 where it was kept as the best of more than 1 and every pair of
@@ -139,19 +202,51 @@ export class ImportBlocks implements Importer<Block> {
           document.Games._Games,
           document.BestOf,
         );
-        const bestOf = inRounds ? BestOf.from(1) : worked;
-        // Tested before any game is added, for a block kept as the best of
-        // more than 1 that was not played in rounds.
-        const { ordered, reversed } = secondAndThirdReversed(
-          document.Games._Games,
-          bestOf.games,
+        // Or, where the import names its tournament, the best-of and the
+        // rounds it names, whatever it was kept as.
+        const named = NAMED_TOURNAMENTS.get(
+          `${read.website}/${document.Tournament.Id}`.toLowerCase(),
         );
+        const bestOf =
+          named !== undefined
+            ? BestOf.from(named.bestOf)
+            : inRounds
+              ? BestOf.from(1)
+              : worked;
+        // Or kept as it was, and played in as many rounds as its pairs
+        // played whole matches of it.
+        const rounds =
+          named !== undefined
+            ? named.rounds
+            : inRounds
+              ? undefined
+              : roundsPlayed(document.Games._Games, bestOf.games);
+        // Tested before any game is added, for a block kept as the best of
+        // more than 1 that was not played in rounds: a block that was has
+        // second and third games that are the second match's, not misordered.
+        const { ordered, reversed } =
+          rounds === undefined
+            ? secondAndThirdReversed(document.Games._Games, bestOf.games)
+            : {
+                ordered: [...document.Games._Games].sort(
+                  (one, other) => one.Id - other.Id,
+                ),
+                reversed: [],
+              };
         const nameOf = nameOfIn(document);
         return {
           entries,
           gamesInOrder: () => ordered,
           corrected: [
-            ...(inRounds
+            ...(named !== undefined
+              ? [
+                  {
+                    code: "ImportBlocks.TournamentRounds",
+                    says: `was kept as the best of ${String(worked.games)}, and is brought over as the best of ${String(named.bestOf)}, played in ${String(named.rounds)} rounds, as the tournament was played.`,
+                  },
+                ]
+              : []),
+            ...(inRounds && named === undefined
               ? [
                   {
                     code: "ImportBlocks.PlayedInRounds",
@@ -159,6 +254,14 @@ export class ImportBlocks implements Importer<Block> {
                   },
                 ]
               : []),
+            ...(rounds === undefined || named !== undefined
+              ? []
+              : [
+                  {
+                    code: "ImportBlocks.PlayedInSeveralRounds",
+                    says: `was kept as the best of ${String(bestOf.games)}, and its pairs played it as up to ${String(rounds)} matches each of the best of ${String(bestOf.games)}, a round robin more than once, so it is brought over played in ${String(rounds)} rounds.`,
+                  },
+                ]),
             ...reversed.map(([second, third]) => ({
               code: "ImportBlocks.GamesReordered",
               what: `games ${String(second.Id)} and ${String(third.Id)}`,
@@ -166,7 +269,14 @@ export class ImportBlocks implements Importer<Block> {
             })),
           ],
           add: (tournament, id, name, by, at) => {
-            tournament.addBlock(id, name, bestOf, by, at);
+            tournament.addBlock(
+              id,
+              name,
+              bestOf,
+              Rounds.from(rounds ?? 1),
+              by,
+              at,
+            );
           },
         };
       },

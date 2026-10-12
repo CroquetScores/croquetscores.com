@@ -43,4 +43,10 @@ export interface Tournament {
   /** That a test level on matches is drawn rather than decided by net games and hoops. */
   readonly DrawnMatchesAreNotDecidedByNetHoops: boolean;
   readonly IsArchived: boolean;
+  /**
+   * Not kept by the old sites: set by the import where a score of one of its
+   * competitions is marked in text as a tie, so that the tournament allows the
+   * drawn games the old sites showed (ImportWholeTournaments.feature).
+   */
+  readonly DrawsAllowed?: boolean;
 }

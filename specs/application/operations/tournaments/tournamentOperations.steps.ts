@@ -409,6 +409,7 @@ Given(
           block,
           // The best of 1, where the scenario says nothing else.
           domainScenarioOf(this).competition.bestOf ?? 1,
+          domainScenarioOf(this).competition.rounds ?? 1,
           momentOf(this),
         ),
       ),

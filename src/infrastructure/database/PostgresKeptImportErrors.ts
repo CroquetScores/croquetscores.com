@@ -10,22 +10,24 @@ import type { UnitOfWork } from "./UnitOfWork.js";
 export class PostgresKeptImportErrors implements KeptImportErrors {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
-  // The first line is cut in Postgres so that a list of them does not carry
-  // every message whole, which run to many lines. A carriage return is taken
-  // out first, so that a message written with Windows line endings has the
-  // same first line as one written without.
+  // A row for each document, the first error kept against it, in order of
+  // the documents' ids. The first line is cut in Postgres so that a list of
+  // them does not carry every message whole, which run to many lines. A
+  // carriage return is taken out first, so that a message written with
+  // Windows line endings has the same first line as one written without.
   async list(): Promise<readonly KeptImportError[]> {
     const { rows } = await this.unitOfWork.connection().query<{
       document_id: string;
       first_line: string;
       summary: string | null;
     }>(
-      `select document_id,
+      `select distinct on (document_id)
+              document_id,
               split_part(replace(error_message, E'\\r', ''), E'\\n', 1)
                 as first_line,
               summary
          from import_errors
-        order by first_line, document_id, kept`,
+        order by document_id, kept`,
     );
     return rows.map((row) => ({
       documentId: row.document_id,

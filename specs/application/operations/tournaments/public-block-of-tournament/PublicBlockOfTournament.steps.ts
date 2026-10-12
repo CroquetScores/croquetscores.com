@@ -69,6 +69,13 @@ Then(
   },
 );
 
+Then(
+  "the block answered is played in {int} round(s)",
+  function (this: SpecWorld, rounds: number) {
+    assert.equal(answered(this).block.rounds, rounds);
+  },
+);
+
 // Its players ------------------------------------------------------------------------
 
 Then(

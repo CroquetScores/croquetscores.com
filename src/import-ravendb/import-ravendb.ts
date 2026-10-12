@@ -2,10 +2,10 @@
 // sites over into it from RavenDB: their users, then each tournament with its
 // players, its blocks, knockouts, Swisses and team matches, and its
 // commentaries, and last whatever names a tournament that was not there, as an
-// error. What it accepted rather than keeping as an error is said in
-// docs/import-from-ravendb/accepted-import-errors.md, and what it corrected of
-// what the old sites kept in docs/import-from-ravendb/import-corrections.md,
-// each of which it deletes first. Once every site is over, the site's roles are
+// error. What it accepted rather than keeping as an error, and what it
+// corrected of what the old sites kept, are said in
+// docs/import-from-ravendb/import-corrections.md, which it deletes first. Once
+// every site is over, the site's roles are
 // given to whoever holds them, and the players the world rankings know are
 // imported from the rankings' own lists, since emptying the database emptied
 // them too.
@@ -26,6 +26,8 @@ import { nameManagerNoteEvents } from "../domain/aggregates/tournaments/manager-
 import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
 import { nameCompetitionEvents } from "../domain/aggregates/tournaments/competitions/events/competitionEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
+import { ManagerNote } from "../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
+import type { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
@@ -62,6 +64,7 @@ import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
 import { ImportDatabase } from "./ImportDatabase.js";
 import { ImportedAccounts } from "./ImportedAccounts.js";
+import { ImportErrorsNote } from "./ImportErrorsNote.js";
 import { ImportKnockouts } from "./ImportKnockouts.js";
 import { ImportSwisses } from "./ImportSwisses.js";
 import { ImportTeamMatches } from "./ImportTeamMatches.js";
@@ -69,12 +72,12 @@ import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
+import { SeeNotes } from "./SeeNotes.js";
 import { ImportWorldRankingPlayerNames } from "./ImportWorldRankingPlayerNames.js";
 import { ImportRefused } from "./ImportRefused.js";
 import { readImportArguments } from "./importArguments.js";
 import { loadImportConfig } from "./loadImportConfig.js";
 import { RavenDbDocuments } from "./RavenDbDocuments.js";
-import { MissingTournamentsFile } from "./MissingTournaments.js";
 import { RefuseLeftOvers } from "./RefuseLeftOvers.js";
 import {
   type Importer,
@@ -149,15 +152,6 @@ try {
   const unitOfWork = new UnitOfWork(pool);
   const database = new ImportDatabase(pool, unitOfWork);
 
-  // Linking to the tournaments on the development site, where an import is
-  // looked at, as well as on the old sites.
-  const accepting = new AcceptedImportErrorsFile(
-    join(
-      import.meta.dirname,
-      "../../docs/import-from-ravendb/accepted-import-errors.md",
-    ),
-    "http://localhost:3000",
-  );
   // What the last import kept, counted before the database is emptied of it,
   // and uncounted in a database no import has made the table in.
   let errorsBefore: number | undefined;
@@ -166,8 +160,10 @@ try {
   } catch {
     errorsBefore = undefined;
   }
-  // What it corrected of what the old sites kept, as a team match's
-  // expected matches, said the same way in a file of its own.
+  // What it corrected of what the old sites kept, as a team match's expected
+  // matches, and what it accepted rather than keeping as an error, said in one
+  // file, linking to the tournaments on the development site, where an import
+  // is looked at, as well as on the old sites.
   const correcting = new AcceptedImportErrorsFile(
     join(
       import.meta.dirname,
@@ -176,17 +172,7 @@ try {
     "http://localhost:3000",
     CORRECTED,
   );
-  // Whatever names a tournament the old sites no longer had, said in a file
-  // of its own rather than kept as an error.
-  const missing = new MissingTournamentsFile(
-    join(
-      import.meta.dirname,
-      "../../docs/import-from-ravendb/missing-tournaments.md",
-    ),
-  );
-  await missing.begin();
   const began = new Date();
-  await accepting.begin(began, errorsBefore);
   await correcting.begin(began, errorsBefore);
 
   console.log(`Emptying ${where(config.databaseUrl)}`);
@@ -200,6 +186,7 @@ try {
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
   // Every one of the site's read models, kept in step with everything
   // brought over, as the site keeps them with everything it records.
+  const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const eventStore = new ProjectingEventStore(
     new PostgresEventStore(
       unitOfWork,
@@ -222,13 +209,17 @@ try {
       new TournamentsByAddress(unitOfWork),
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
-      new ManagerNotesByTournament(unitOfWork),
+      managerNotesByTournament,
       commentariesByTournament,
     ],
   );
   const accounts = new AggregateRepository(
     eventStore,
     (id: AccountId, events) => Account.rebuiltFrom(id, events),
+  );
+  const managerNotes = new AggregateRepository(
+    eventStore,
+    (id: ManagerNoteId, events) => ManagerNote.rebuiltFrom(id, events),
   );
   const passwords = new ImportedPasswordHasher(
     new Argon2id(),
@@ -247,13 +238,34 @@ try {
     eventStore,
     (id: CommentaryId, events) => Commentary.rebuiltFrom(id, events),
   );
+  // What says, in a note, where the games of a competition that could not be
+  // brought over are.
+  const seeNotes = new SeeNotes(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
+  );
+  // What says, in a note, the games between players of one team, which the
+  // site has no place for in a test.
+  const importErrorsNote = new ImportErrorsNote(
+    unitOfWork,
+    tournaments,
+    managerNotes,
+    managerNotesByTournament,
+    database,
+    seeNotes,
+  );
   const importing = {
     unitOfWork,
     tournaments,
     competitions,
     database,
-    accepting,
+    // What it accepts is said with what it corrects.
+    accepting: correcting,
     correcting,
+    notes: importErrorsNote,
   };
   // One for every importer that names a user, so that a user is one account
   // wherever they are named.
@@ -300,7 +312,9 @@ try {
     parts.players,
     ...parts.competitions,
     parts.commentaries,
-  ].map(({ collection }) => new RefuseLeftOvers(collection, database, missing));
+  ].map(
+    ({ collection }) => new RefuseLeftOvers(collection, database, correcting),
+  );
 
   // The site's roles, given as soon as their holders' accounts are brought
   // over, rather than once everything is, so that an import that stops partway
@@ -336,7 +350,13 @@ try {
     // took once every tournament has taken what it would.
     const importers: readonly Importer<object>[] = [
       users,
-      new ImportWholeTournaments(documents, parts, database, correcting),
+      new ImportWholeTournaments(
+        documents,
+        parts,
+        database,
+        correcting,
+        seeNotes,
+      ),
       ...leftOvers,
     ];
     try {
@@ -419,7 +439,6 @@ try {
   const kept = await database.errorCount();
   const errors =
     kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
-  await accepting.end(kept);
   await correcting.end(kept);
 
   console.log(

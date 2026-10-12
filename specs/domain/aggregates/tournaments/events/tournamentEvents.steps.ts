@@ -197,11 +197,14 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       "block-a",
       10000,
       2,
+      // More than the 1 a block is played in unless it says, so that one read
+      // back as played once is found.
+      3,
       causedBy,
       happenedAt,
     ),
   "a block being updated": () =>
-    new BlockUpdated(COMPETITION, "Block One", 3, causedBy, happenedAt),
+    new BlockUpdated(COMPETITION, "Block One", 3, 2, causedBy, happenedAt),
   "a knockout being added": () =>
     new KnockoutAdded(
       COMPETITION,

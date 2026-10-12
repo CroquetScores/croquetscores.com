@@ -137,6 +137,18 @@ Then(
   },
 );
 
+Then(
+  "the competition {string} is answered as played in {int} round(s)",
+  function (this: SpecWorld, name: string, rounds: number) {
+    const competition = competitionCalled(this, name);
+    assert.ok(
+      competition.kind === "block",
+      `${name} is answered as a ${competition.kind}.`,
+    );
+    assert.equal(competition.rounds, rounds);
+  },
+);
+
 const knockoutCalled = (
   world: SpecWorld,
   name: string,

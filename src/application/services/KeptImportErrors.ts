@@ -35,8 +35,9 @@ export interface KeptImportErrorTournament {
  */
 export interface KeptImportErrors {
   /**
-   * Every error kept, by the first line of its message and then by its
-   * document's id, so that the order is the same every time it is asked for.
+   * A row for each document refused, with the first error kept against it, by
+   * the document's id, so that the order is the same every time it is asked
+   * for.
    */
   list(): Promise<readonly KeptImportError[]>;
 

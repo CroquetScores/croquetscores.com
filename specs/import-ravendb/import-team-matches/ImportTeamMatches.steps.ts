@@ -11,6 +11,7 @@ import {
   competitionPlayerWritten,
   competitionWritten,
   gamesInUse,
+  nameOf,
   startWriting,
   tournamentKeptFor,
 } from "../importingTournaments.js";
@@ -103,6 +104,32 @@ const teamNamed = (tournament: Tournament, name: string): Team => {
   );
   return found;
 };
+
+Then(
+  "the first game of the test kept for {string} on {string} was won by {string}",
+  async function (this: SpecWorld, id: string, website: string, name: string) {
+    const { tournament, competition } = await testKeptFor(this, id, website);
+    const [first] = gamesInUse(competition);
+    assert.ok(first !== undefined, "The test has no game.");
+    assert.equal(nameOf(tournament, competition, first.winner), name);
+  },
+);
+
+Then(
+  /^the (second|third) game of the test kept for "(.*)" on "(.*)" was won by "(.*)"$/,
+  async function (
+    this: SpecWorld,
+    which: string,
+    id: string,
+    website: string,
+    name: string,
+  ) {
+    const { tournament, competition } = await testKeptFor(this, id, website);
+    const game = gamesInUse(competition)[which === "second" ? 1 : 2];
+    assert.ok(game !== undefined, `The test has no ${which} game.`);
+    assert.equal(nameOf(tournament, competition, game.winner), name);
+  },
+);
 
 Then(
   "{string} on {string} is kept as a test",

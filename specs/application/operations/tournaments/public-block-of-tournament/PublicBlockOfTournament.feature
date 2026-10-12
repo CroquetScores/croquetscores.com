@@ -27,7 +27,11 @@ Feature: A block of a tournament, for anybody to read
   In a block whose matches are the best of 1, which is played in rounds, two
   players can meet more than once (`addGame.feature`), and each game is a
   match of its own: a player has won as many matches as games, against
-  whoever they were.
+  whoever they were. So can two players of a block played in more than one
+  round, each round a match of the block's best-of: their games, in the
+  order they were added, are cut into matches as the competition cuts them
+  (`addGame.feature`), and each match is won as a match is, by whoever won
+  more than half its games.
 
   A player has won a match when they have won more than half the games it is
   the best of, so two of a best of 3, and two of a best of 2. A match not yet
@@ -450,6 +454,67 @@ Feature: A block of a tournament, for anybody to read
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the block "Alex Another" is answered with 0 matches lost
+
+  Rule: Two players of a block played in rounds play a match in each
+
+    Scenario: The rounds the block is played in are answered
+      Given the block is to be played in 2 rounds
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block answered is played in 2 rounds
+
+    Scenario: A block played once is answered as played in one round
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block answered is played in 1 round
+
+    Scenario: A match won in each round is two matches won
+      Given the block is to be played in 2 rounds
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 5 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 7 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 2 matches won
+
+    Scenario: A match lost in one round and won in the other is a match each
+      Given the block is to be played in 2 rounds
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 5 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 7 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 1 match won
+      And the player of the block "Sam Someone" is answered with 1 match lost
+
+    Scenario: A match of the second round not yet decided is won by neither player
+      Given the block is to be played in 2 rounds
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 5 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 1 match won
+
+    Scenario: A match won two games to one in the second round is a match won
+      Given the block is to be played in 2 rounds
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 5 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 7 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 9 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Sam Someone" is answered with 2 matches won
 
   Rule: A player's games are the games they have won
 

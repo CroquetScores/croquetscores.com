@@ -4,7 +4,14 @@ import { dirname } from "node:path";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
-import { gameSaid, placeOf, playerSaid, reasonOf } from "./errorSummaries.js";
+import {
+  gameSaid,
+  placeOf,
+  plainPlayerReasonOf,
+  plainReasonOf,
+  playerSaid,
+  reasonOf,
+} from "./errorSummaries.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Game as OldGame } from "./ravendb-models/Competition.js";
 import { numbers } from "./runImporter.js";
@@ -125,6 +132,7 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
    * follows ends with a blank line already.
    */
   async end(errors: number): Promise<void> {
+    await this.#putInOrder();
     await appendFile(
       this.path,
       `This import: ${counted(errors)} import errors, ${counted(this.#accepted)} ${this.saying.counted}.\n`,
@@ -141,6 +149,22 @@ export class AcceptedImportErrorsFile implements AcceptedImportErrors {
         `Old site: https://${accepted.website}/${accepted.oldSitePath}\n\n` +
         `${accepted.description}\n\n`,
     );
+  }
+
+  // The file with what it says in order of the code each is said under, so
+  // that all of one kind are together, and those of one code in the order they
+  // were found (a sort that keeps the order of equals).
+  async #putInOrder(): Promise<void> {
+    const said = await readFile(this.path, "utf8");
+    const [header = "", ...entries] = said.split(/^(?=## )/m);
+    const codeOf = (entry: string): string =>
+      /^## ([^:\n]*)/.exec(entry)?.[1] ?? "";
+    entries.sort((one, other) => {
+      const first = codeOf(one);
+      const second = codeOf(other);
+      return first < second ? -1 : first > second ? 1 : 0;
+    });
+    await writeFile(this.path, header + entries.join(""));
   }
 
   // How many things the file says were accepted, a heading each, or a line
@@ -275,6 +299,17 @@ export const newSitePathOf = (
 };
 
 /**
+ * What a document that is brought over whole or not at all found out when it
+ * was tried first, in a transaction rolled back (importCompetition.ts): what
+ * the site would have refused of it, each said for a person, and whether it
+ * was left behind because it could not be worked out.
+ */
+export class DryRun {
+  readonly refused: string[] = [];
+  leftBehind = false;
+}
+
+/**
  * What goes wrong with, and what is accepted of, one document of a tournament
  * that has been brought over: an error accepted for it (ACCEPTED_ERRORS) is
  * said as accepted, with the tournament, and any other is kept as an error
@@ -292,6 +327,15 @@ export class DocumentErrors {
     private readonly website: string,
     private readonly tournament: Tournament,
     private readonly competition?: Omit<CompetitionOf, "newSitePath">,
+    // Where it is being tried first, nothing is kept, only found out.
+    private readonly dry?: DryRun,
+    // Where a game that cannot be added is said in a note of the tournament's
+    // rather than kept as an error (ImportCompetition.feature): given the game
+    // and what refused it.
+    private readonly noted?: (game: OldGame, failure: unknown) => void,
+    // Where a player who cannot be entered is said in the note too, given the
+    // number the old site gave them and what refused them.
+    private readonly notedPlayer?: (number: number, failure: unknown) => void,
   ) {}
 
   /** That the competition the document was is now `id` of the tournament. */
@@ -329,6 +373,14 @@ export class DocumentErrors {
    */
   async refused(what: string, failure: unknown, said?: Said): Promise<void> {
     const accepted = acceptedErrorOf(this.documentId, failure);
+    if (this.dry !== undefined) {
+      if (accepted === undefined) {
+        this.dry.refused.push(
+          said?.refused(failure) ?? `${what}: ${describedFailure(failure)}`,
+        );
+      }
+      return;
+    }
     if (accepted === undefined) {
       await this.errors.recordError(
         this.documentId,
@@ -352,6 +404,21 @@ export class DocumentErrors {
     failure: unknown,
   ): Promise<void> {
     const said = gameSaid(gameOf(game, nameOf), this.place);
+    // A game that cannot be added, after everything else was tried, is said
+    // in a note of the tournament's, with why, and is no error.
+    if (
+      this.noted !== undefined &&
+      this.dry === undefined &&
+      acceptedErrorOf(this.documentId, failure) === undefined
+    ) {
+      this.noted(game, failure);
+      await this.corrected(
+        `game ${String(game.Id)}`,
+        "ImportCompetition.GameNoted",
+        `${said} could not be added, because ${plainReasonOf(failure)}, and is said in the note Import Errors of the tournament.`,
+      );
+      return;
+    }
     await this.refused(`game ${String(game.Id)}`, failure, {
       refused: (refusal) => `${said} because ${reasonOf(refusal)}.`,
       accepted: (why) =>
@@ -400,6 +467,19 @@ export class DocumentErrors {
     failure: unknown,
   ): Promise<void> {
     const said = playerSaid(name, this.place);
+    if (
+      this.notedPlayer !== undefined &&
+      this.dry === undefined &&
+      acceptedErrorOf(this.documentId, failure) === undefined
+    ) {
+      this.notedPlayer(number, failure);
+      await this.corrected(
+        `player ${String(number)}`,
+        "ImportCompetition.PlayerNoted",
+        `${said} was not entered, because ${plainPlayerReasonOf(failure)}, and is said in the note Import Errors of the tournament.`,
+      );
+      return;
+    }
     await this.refused(`player ${String(number)}`, failure, {
       refused: (refusal) =>
         `${said} was not entered because ${reasonOf(refusal)}.`,
@@ -417,6 +497,7 @@ export class DocumentErrors {
     code: string,
     description: string,
   ): Promise<void> {
+    if (this.dry !== undefined) return;
     await this.accepting.accept(this.#said(what, code, description));
   }
 
@@ -429,7 +510,27 @@ export class DocumentErrors {
     code: string,
     description: string,
   ): Promise<void> {
+    if (this.dry !== undefined) return;
     await this.correcting.accept(this.#said(what, code, description));
+  }
+
+  /**
+   * Says, in what was corrected, that the document could not be brought over
+   * whole as a `kind`, and why: what was refused of it in the trial, or that
+   * its draw could not be worked out. Said even in a trial, which is what
+   * finds out.
+   */
+  async notBroughtOverAs(kind: string, dry: DryRun): Promise<void> {
+    const why = dry.leftBehind
+      ? "its draw cannot be worked out from its players and games"
+      : `${String(dry.refused.length)} of its games would be refused, the first being: ${dry.refused[0] ?? ""}`;
+    await this.correcting.accept(
+      this.#said(
+        "",
+        "ImportCompetition.NotBroughtOverWhole",
+        `${this.place} could not be brought over whole as a ${kind}: ${why}`,
+      ),
+    );
   }
 
   #said(what: string, code: string, description: string): Accepted {

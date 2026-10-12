@@ -263,6 +263,249 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then nothing is corrected of "croquetscores.com/blocks/30"
 
+  Rule: A block whose pairs played more than one whole match of its best-of is played in as many rounds
+
+    Some managers played a block as a round robin more than once, each pair
+    meeting in as many matches of the best-of as there were rounds:
+    croquetscores.com's blocks/8481, the best of 3 at the 2013 CNZ Nationals'
+    Limited Doubles, was a triple round robin. A block says how many rounds it
+    is played in (`addBlock.feature`), so where every pair of a block kept as
+    the best of more than 1 has all its games, in the order they were
+    entered, make whole matches of the best-of, and at least one pair has
+    more than one, the block keeps its best-of and is played in as many
+    rounds as the most matches any pair played. That is said as corrected
+    (`AcceptedImportErrors.feature`). Where any pair has a match not
+    finished, it is not, and is brought over as it was.
+
+    Scenario: A block whose pair played two matches of its best-of is played in 2 rounds
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 2 rounds
+
+    Scenario: A block whose pair played three matches is played in 3 rounds
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      And game 5 was won by player 7
+      And game 5 was lost by player 3
+      And game 6 was won by player 7
+      And game 6 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 3 rounds
+
+    Scenario: A block whose pair played matches of two and three games is played in 2 rounds
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      And game 5 was won by player 3
+      And game 5 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 2 rounds
+
+    Scenario: A block played in rounds keeps its best-of
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: Every game of a block played in rounds is added
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      And game 5 was won by player 7
+      And game 5 was lost by player 3
+      And game 6 was won by player 7
+      And game 6 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 6 games
+
+    Scenario: A block played in rounds is not an error
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A block played in rounds is said as corrected
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 3
+      And game 4 was lost by player 7
+      When the competition is imported
+      Then "croquetscores.com/blocks/30" is corrected as "ImportBlocks.PlayedInSeveralRounds"
+
+    Scenario: A pair's second and third games are not added the other way round in a block played in rounds
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      And game 4 was won by player 7
+      And game 4 was lost by player 3
+      And game 5 was won by player 7
+      And game 5 was lost by player 3
+      When the competition is imported
+      Then the third game of the competition kept for "blocks/30" on "croquetscores.com" was won by "Alex Other"
+
+    Scenario: A block whose pair played one match is played in 1 round
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 1 round
+
+    Scenario: A block whose pair played one match is not said as corrected
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
+    Scenario: A block with a match not finished is played in 1 round
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 1 round
+
+  Rule: The blocks of tournaments/72520 are the best of 3, played in 2 rounds
+
+    croquetscores.com's tournaments/72520, the WCA Sunday GC Handicap
+    Interclub, was a double round robin of matches of the best of 3, kept as
+    the best of 5 or of 1 with every pair's games between them. Each of its
+    blocks is brought over as the best of 3 and played in 2 rounds, and said
+    as corrected (`AcceptedImportErrors.feature`).
+
+    Scenario: A block of tournaments/72520 is the best of 3
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      And the block's matches are the best of 5
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block of tournaments/72520 is played in 2 rounds
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      And the block's matches are the best of 5
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is played in 2 rounds
+
+    Scenario: A block of tournaments/72520 kept as the best of 1 is the best of 3
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      And the block's matches are the best of 1
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block of tournaments/72520 is said as corrected
+      Given a tournament "tournaments/72520" on "croquetscores.com" is imported
+      And the block "blocks/30" of "tournaments/72520" on "croquetscores.com"
+      When the competition is imported
+      Then "croquetscores.com/blocks/30" is corrected as "ImportBlocks.TournamentRounds"
+
+    Scenario: A block of any other tournament is not said as corrected for it
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
   Rule: A pair's second and third games are added the other way round where the third would come after their match was decided
 
     Some managers entered a match of the best of 3 out of order: a player won
@@ -393,6 +636,8 @@ Feature: Importing the old sites' blocks
       And game 3 was lost by player 3
       And game 4 was won by player 7
       And game 4 was lost by player 5
+      And game 2's loser scored "1"
+      And game 3's loser scored "2"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
 
@@ -412,6 +657,7 @@ Feature: Importing the old sites' blocks
       And game 3 was lost by player 3
       And game 4 was won by player 7
       And game 4 was lost by player 5
+      And game 3's loser scored "1"
       When the competition is imported
       Then the error kept for "croquetscores.com/blocks/30" says "Competition.MatchDecided"
 

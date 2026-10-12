@@ -519,6 +519,7 @@ export const chinese: Language = {
     "admin.competition.name": "名称",
     "admin.competition.kind": "类型",
     "admin.competition.bestOf": "几局决胜",
+    "admin.competition.rounds": "轮数",
     "admin.competition.places": "名额",
     "admin.competition.round": "第 {number} 轮",
     "admin.competition.bestOfs": "各轮几局决胜",
@@ -538,6 +539,8 @@ export const chinese: Language = {
       "这个锦标赛中的另一个赛事已经用了这个名称。",
     "BestOf.NotWhole": "请输入整数的局数。",
     "BestOf.TooSmall": "一场比赛至少要是 1 局决胜。",
+    "Rounds.NotWhole": "请输入整数轮数。",
+    "Rounds.TooSmall": "一个组至少要打 1 轮。",
     "KnockoutDraw.EvenBestOf":
       "淘汰赛的每场比赛必须分出胜负，所以局数要是奇数的决胜制。",
     "admin.hover.tournaments.new": "创建新的锦标赛",

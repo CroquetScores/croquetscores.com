@@ -19,6 +19,7 @@ import { TeamId } from "../../../../src/domain/aggregates/tournaments/primitives
 import { TeamPlayerId } from "../../../../src/domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import { TournamentPlayerId } from "../../../../src/domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { Tournament } from "../../../../src/domain/aggregates/tournaments/Tournament.js";
+import { Rounds } from "../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import { BestOf } from "../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Countries } from "../../../../src/domain/aggregates/tournaments/value-objects/Countries.js";
@@ -175,7 +176,14 @@ const addCompetition = (
   by: AccountId,
 ): void => {
   if (kind === "block") {
-    tournament.addBlock(id, CompetitionName.from(name), BestOf.from(1), by, at);
+    tournament.addBlock(
+      id,
+      CompetitionName.from(name),
+      BestOf.from(1),
+      Rounds.from(1),
+      by,
+      at,
+    );
   } else if (kind === "knockout") {
     tournament.addKnockout(
       id,

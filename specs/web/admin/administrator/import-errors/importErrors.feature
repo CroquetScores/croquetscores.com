@@ -7,10 +7,10 @@ Feature: The page where an administrator reads the documents the import refused
   the old sites refused (`ImportErrorsKept.feature`), so that an administrator
   can see what was left behind and why.
 
-  It is headed Import Errors, and lists a row for each error kept: the
+  It is headed Import Errors, and lists a row for each document refused: the
   document's id, what went wrong said for a person where the import said it
-  so, and the first line of the error's message. The rows are in
-  the order they are answered in, alphabetical by that first line. A row leads
+  so, and the first line of its first error's message. The rows are in the
+  order they are answered in, by the documents' ids. A row leads
   to the page of its document (`importError.feature`). Where nothing was kept,
   the page says there are no import errors rather than showing an empty list.
 
@@ -52,17 +52,24 @@ Feature: The page where an administrator reads the documents the import refused
       When the page at "/admin/administrator/import-errors" is opened
       Then the first row's message does not include "at line 4"
 
-    Scenario: The rows are in alphabetical order of the first line
+    Scenario: The rows are in order of the documents' ids
+      Given the import refused the document "users/2-A" with "Bad date"
+      And the import refused the document "users/1-A" with "No name"
+      When the page at "/admin/administrator/import-errors" is opened
+      Then the first row's document id is "users/1-A"
+
+    Scenario: A document refused more than once is one row
       Given the import refused the document "users/1-A" with "No name"
+      And the import refused the document "users/1-A" with "Bad date"
       And the import refused the document "users/2-A" with "Bad date"
       When the page at "/admin/administrator/import-errors" is opened
-      Then the first row's document id is "users/2-A"
+      Then the second row's document id is "users/2-A"
 
     Scenario: The second row follows the first
-      Given the import refused the document "users/1-A" with "No name"
-      And the import refused the document "users/2-A" with "Bad date"
+      Given the import refused the document "users/2-A" with "Bad date"
+      And the import refused the document "users/1-A" with "No name"
       When the page at "/admin/administrator/import-errors" is opened
-      Then the second row's document id is "users/1-A"
+      Then the second row's document id is "users/2-A"
 
     Scenario: The page says so where nothing was kept
       When the page at "/admin/administrator/import-errors" is opened

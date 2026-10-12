@@ -571,6 +571,276 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then "teammatches/50" on "croquetscores.com" is kept as a test
 
+  Rule: A match's games are added so that none comes after the match was decided
+
+    A pair's match of the best of 3 is decided by the second win, and the site
+    refuses a game after it (`addGame.feature`). A match was sometimes entered
+    out of order: a player won two games, and the game the other player won
+    was entered, after, as the third, when it was the second played. So
+    before any game of a match is added, each pair's games are tested in the
+    order they are to be added in: where the third would come after the first
+    two decided the match, and the second and third the other way round would
+    all be accepted, they are added the other way round. That is said as
+    corrected (`AcceptedImportErrors.feature`).
+
+    Nadine El Manoufy & Mostafa Eissa beat Ghada Karam & Shukry Aziz 7 to 4
+    and 7 to 5, and lost to them 4 to 7 in the game entered third, which was
+    the second played.
+
+    Scenario: The third game of a match already decided is added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 3 games
+
+    Scenario: The game the other pair won is added second
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then the second game of the test kept for "teammatches/50" on "croquetscores.com" was won by "Ghada Karam & Shukry Aziz"
+
+    Scenario: The game added the other way round is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: The game added the other way round is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And the team match's matches were the best of 3
+      And player 7 is in the team match
+      And player 7 is called "Nadine El Manoufy & Mostafa Eissa"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ghada Karam & Shukry Aziz"
+      And player 8 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "7"
+      And game 1 was lost by player 8
+      And game 1's loser scored "4"
+      And game 2 was won by player 7
+      And game 2's winner scored "7"
+      And game 2 was lost by player 8
+      And game 2's loser scored "5"
+      And game 3 was won by player 8
+      And game 3's winner scored "7"
+      And game 3 was lost by player 7
+      And game 3's loser scored "4"
+      When the team match is imported
+      Then "games 2 and 3" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.SecondAndThirdReversed"
+
+  Rule: A player representing a team that is not in the match is of the team opposite their opponent's
+
+    A player's team was sometimes written wrong, as a team that is neither of
+    the match's two. A game is between a player of each team
+    (`addGame.feature`), so before the games are added, a player who
+    represents neither team and played a player who represents one of them is
+    of the other team: the one opposite their opponent's. Where their
+    opponent was put right the same way, so is a player who played them. A
+    player who played nobody of either team, or only players of neither, is
+    refused as they were. That is said as corrected
+    (`AcceptedImportErrors.feature`).
+
+    Ann Able represents New Zealand, and Ben Baker represents Australia, which
+    is not in the match, and played her.
+
+    Scenario: A player representing neither team is of the team opposite their opponent's
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ben Baker"
+
+    Scenario: A player put right is not an error
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: The game of a player put right is added
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the test kept for "teammatches/50" on "croquetscores.com" has 1 game
+
+    Scenario: A player put right is said as corrected
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then "player 8" of "croquetscores.com/teammatches/50" is corrected as "ImportTeamMatches.TeamCorrected"
+
+    Scenario: A player who played a player put right is put right too
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Australia"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "Wales"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      And game 2 was won by player 8
+      And game 2 was lost by player 9
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Cat Cole"
+
+    Scenario: Two players who represent neither team are kept as errors
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "Australia"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "Wales"
+      And game 1 was won by player 7
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
+
+  Rule: A player who cannot be entered is said in the note of the tournament too
+
+    A player the site cannot enter, as one recorded as representing a team
+    that is not in the match, whose games say nothing of which team they were
+    on, is said in the note Import Errors of the tournament as the games are
+    (the rule above), with the team or club they represented and why, and is
+    not kept as an error. That is said as corrected
+    (`AcceptedImportErrors.feature`). Where no user was brought over as
+    croquetscores@gmail.com, it is kept as an error as it always was.
+
+    Scenario: A player who cannot be entered is said in the note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "Sam Someone (Australia) was not entered because they were recorded as representing a team that is not in the match."
+
+    Scenario: A player who cannot be entered is no error
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A player who cannot be entered is said as corrected
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then "player 7" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.PlayerNoted"
+
+    Scenario: The note says which team match the player was in
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "### New Zealand vs England"
+
   Rule: A game against a player already played is a game against the one not played
 
     The old sites kept many team matches whose two players met again in a
@@ -585,9 +855,10 @@ Feature: Importing the old sites' team matches
     is said as corrected (`AcceptedImportErrors.feature`). Where there is no
     one, or more than one, the two met again, and the next rule says what
     becomes of the game. Where the game has the very scores of one the two
-    already played, which is the same game entered twice, or the team
-    match's matches are the best of more than 1, it is refused as it always
-    was.
+    already played, which is the same game entered twice, it is left out, as
+    every competition leaves one out (`importCompetition.feature`), and the
+    other rules here do not apply to it. Where the team match's matches are
+    the best of more than 1, it is refused as it always was.
 
     Ann Able beats Cat Cole, and Ben Baker beats Dan Dunn and Cat Cole, all
     of England. Ann then beats Cat again, but Ann has not played Dan, so
@@ -777,7 +1048,7 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Cat Cole - meet again"
 
-    Scenario: A game with the very scores of one already played is still refused
+    Scenario: A game with the very scores of one already played is left out
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       And player 1 is in the team match
@@ -805,7 +1076,37 @@ Feature: Importing the old sites' team matches
       And game 4 was lost by player 3
       And game 4's loser scored "5"
       When the team match is imported
-      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.MatchDecided"
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game with the very scores of one already played is said as corrected, not put against another player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 1 is in the team match
+      And player 1 is called "Ann Able"
+      And player 1 represents "New Zealand"
+      And player 2 is in the team match
+      And player 2 is called "Ben Baker"
+      And player 2 represents "New Zealand"
+      And player 3 is in the team match
+      And player 3 is called "Cat Cole"
+      And player 3 represents "England"
+      And player 4 is in the team match
+      And player 4 is called "Dan Dunn"
+      And player 4 represents "England"
+      And game 1 was won by player 1
+      And game 1 was lost by player 3
+      And game 1's loser scored "5"
+      And game 2 was won by player 2
+      And game 2 was lost by player 4
+      And game 2's loser scored "4"
+      And game 3 was won by player 2
+      And game 3 was lost by player 3
+      And game 3's loser scored "6"
+      And game 4 was won by player 1
+      And game 4 was lost by player 3
+      And game 4's loser scored "5"
+      When the team match is imported
+      Then "game 4" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.DuplicateGame"
 
     Scenario: A game of a team match whose matches are the best of more than 1 is still refused
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -953,7 +1254,7 @@ Feature: Importing the old sites' team matches
     Scenario: The games of a meeting again in a match of more than one game are all against one player made for it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
-      And the team match's matches were the best of 3
+      And the team match's matches were the best of 2
       And player 1 is in the team match
       And player 1 is called "Ann Able"
       And player 1 represents "New Zealand"
@@ -1183,6 +1484,104 @@ Feature: Importing the old sites' team matches
       And player 8 represents "New Zealand"
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
+
+  Rule: A number the old site gave another player of the same team is not taken for theirs
+
+    The old sites also gave a number to two people of the one team, in
+    different team matches of a tournament: in TeamMatches/28995 of the 2022
+    Brisbane Metropolitan Pennants, number 72 was Cecilia Hains of Wynnum in
+    one, and Roy Machen & Trevor O'Hara, also of Wynnum, in another. Taken
+    for the same player, the games of the second were played by the first,
+    and met games they had already played, and were refused. So a number
+    found again as a player of the same team, whose name is not the name the
+    player has here, is not taken for theirs: they are the player of that
+    name in the team, made the first time. Where the name is the same, in
+    any case and with any spaces, they are the same player. In the old
+    sites' data every such number was another person, and none a name spelled
+    another way.
+
+    Ann Able played for New Zealand as number 9, and in the next team match
+    number 9 is Ben Baker, also of New Zealand.
+
+    Scenario: A player whose number another player of their team had is a player of their own
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "Australia"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Ben Baker"
+
+    Scenario: The first player of the number keeps it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "Australia"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 2 players
+
+    Scenario: The game of a player whose number another player of their team had is theirs
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 9 is in the team match
+      And player 9 is called "Ben Baker"
+      And player 9 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "Australia"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the first game of the test kept for "teammatches/51" on "croquetscores.com" was won by "Ben Baker"
+
+    Scenario: A number with the same name in another case is the same player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 9 is in the team match
+      And player 9 is called "Ann Able"
+      And player 9 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 9 is in the team match
+      And player 9 is called "ann  ABLE"
+      And player 9 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Cat Cole"
+      And player 8 represents "Australia"
+      And game 1 was won by player 9
+      And game 1 was lost by player 8
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
 
   Rule: A number the old site gave a player of another team is not taken for theirs
 
@@ -1495,3 +1894,393 @@ Feature: Importing the old sites' team matches
       And game 2 was lost by player 7
       When the team match is imported
       Then the test kept for "teammatches/50" on "croquetscores.com" has 1 game
+
+  Rule: A game between players of one team is said in a note of the tournament
+
+    A test is between a player of each of its teams (`addGame.feature`), and
+    the old sites let a scorer enter a game between two players of one team.
+    Such a game cannot be brought over, so it is said in a note of the
+    tournament's, called Import Errors, which croquetscores@gmail.com writes
+    and is made a manager to write: what could not be brought over, then a
+    section for each team match, headed by its name, with a line for each
+    game, the winner, the loser and each one's team and score. There is one
+    note for the tournament, and each team match with such a game adds its
+    section, and why it could not be added. That is said as corrected
+    (`AcceptedImportErrors.feature`), and is not an error. Where no user was
+    brought over as croquetscores@gmail.com, it is kept as an error as it
+    always was. Any other game the site refuses is said the same way
+    (`importCompetition.feature`).
+
+    Scenario: The tournament has a note called Import Errors
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has a note called "Import Errors"
+
+    Scenario: The note says what could not be brought over
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "The following games could not be added to the new version of Croquet Scores"
+
+    Scenario: The note has a section for the team match
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "### New Zealand vs England"
+
+    Scenario: The note says the game, with each player's team and score
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "Ann Able (New Zealand) 26 beat Ben Baker (New Zealand) 3"
+
+    Scenario: The writer of notes is made a manager of the tournament
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is managed by the account for "croquetscores@gmail.com"
+
+    Scenario: The note is said as corrected for the team match
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.ImportErrorsNoted"
+
+    Scenario: A game said in a note is not an error
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A game said in a note is said as corrected
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then "game 1" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.GameNoted"
+
+    Scenario: A game of players of different teams is not in the note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      And game 2 was won by player 9
+      And game 2's winner scored "26"
+      And game 2 was lost by player 7
+      And game 2's loser scored "1"
+      And game 3 was won by player 8
+      And game 3's winner scored "21"
+      And game 3 was lost by player 7
+      And game 3's loser scored "20"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" does not say "Cat Cole (England) 26 beat Ann Able (New Zealand) 1"
+
+    Scenario: The note says each game of a team match
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      And game 2 was won by player 9
+      And game 2's winner scored "26"
+      And game 2 was lost by player 7
+      And game 2's loser scored "1"
+      And game 3 was won by player 8
+      And game 3's winner scored "21"
+      And game 3 was lost by player 7
+      And game 3's loser scored "20"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "Ben Baker (New Zealand) 21 beat Ann Able (New Zealand) 20"
+
+    Scenario: A team match with no such game adds no note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 9
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has no note
+
+    Scenario: A second team match adds its section to the same note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 8
+      And game 1's winner scored "26"
+      And game 1 was lost by player 7
+      And game 1's loser scored "10"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "### New Zealand vs Australia"
+
+    Scenario: A second team match leaves the section of the first
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 8
+      And game 1's winner scored "26"
+      And game 1 was lost by player 7
+      And game 1's loser scored "10"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "### New Zealand vs England"
+
+    Scenario: A second team match makes no second note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs Australia"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And game 1 was won by player 8
+      And game 1's winner scored "26"
+      And game 1 was lost by player 7
+      And game 1's loser scored "10"
+      When the team match is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" has 1 note
+
+    Scenario: A game between players of one team is kept as an error where nobody writes notes
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And player 8 is in the team match
+      And player 8 is called "Ben Baker"
+      And player 8 represents "New Zealand"
+      And player 9 is in the team match
+      And player 9 is called "Cat Cole"
+      And player 9 represents "England"
+      And game 1 was won by player 7
+      And game 1's winner scored "26"
+      And game 1 was lost by player 8
+      And game 1's loser scored "3"
+      When the team match is imported
+      Then the error kept for "croquetscores.com/teammatches/50" says "Competition.SameTeam"
+
+  Rule: A tournament where a game of a team match could not be added is managed by whoever reads what could not be brought over
+
+    As for any competition (`importCompetition.feature`): after everything
+    else is tried, a game the site still refuses, as one of a player the team
+    match does not list, makes croquetscores@gmail.com a manager of the
+    tournament, and is said in the note, as a game between players of one
+    team is (the rule above).
+
+    Scenario: A tournament where a game of a team match could not be added is managed by croquetscores@gmail.com
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 99
+      When the team match is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" is managed by the account for "croquetscores@gmail.com"
+
+    Scenario: A team match where a game could not be added is said as corrected for the manager
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Ann Able"
+      And player 7 represents "New Zealand"
+      And game 1 was won by player 7
+      And game 1 was lost by player 99
+      When the team match is imported
+      Then "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.ImportErrorsNoted"

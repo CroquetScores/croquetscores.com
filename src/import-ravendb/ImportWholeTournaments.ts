@@ -1,8 +1,10 @@
+import { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import {
   type AcceptedImportErrors,
   oldSitePathOf,
 } from "./AcceptedImportErrors.js";
+import { couldBeATeamMatch, namedForTwoTeams } from "./ImportTeamMatches.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Commentary as OldCommentary } from "./ravendb-models/Commentary.js";
 import type {
@@ -13,6 +15,7 @@ import { isPlayedByTeams } from "./ImportTournaments.js";
 import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
+import type { SeeNotes } from "./SeeNotes.js";
 
 /** One of the old sites' databases, asked for what names a tournament. */
 export interface TournamentDocuments {
@@ -40,6 +43,14 @@ export interface TournamentParts {
 interface Named {
   readonly id: string;
   readonly document: object;
+  /**
+   * What it was before it was tried as a team match: brought over as that
+   * where it is not.
+   */
+  readonly original?: {
+    readonly document: object;
+    readonly importer: Importer<object>;
+  };
   readonly importer: Importer<object>;
 }
 
@@ -73,21 +84,57 @@ const setUpAsPlayedByTeams = (tournament: OldTournament): OldTournament =>
     ? { ...tournament, TournamentType: "teams" }
     : tournament;
 
-// Blocks the old sites kept that were team matches, by the website and the
-// document (ImportWholeTournaments.feature): blocks/100678, Club de Golf Xaz
-// vs Real Club de Golf de La Coruna, a block of a tournament played by teams
-// whose players each represented one of the two clubs.
-const TEAM_MATCHES: ReadonlySet<string> = new Set([
-  "croquetscores.com/blocks/100678",
-]);
-
 // Tournaments the old sites kept as played by teams that were not, by the
 // website and the document (ImportWholeTournaments.feature):
 // tournaments/80204, the Murphy Shield LPG Southport v Chester, with no team
 // match, only a block.
 const STANDARD: ReadonlySet<string> = new Set([
   "croquetscores.com/tournaments/80204",
+  "croquetscores.com/tournaments/74867",
 ]);
+
+// Blocks of a tournament played by teams that are brought over as team
+// matches between the two teams their players represent, though they are not
+// named for them, by the website and the document
+// (ImportWholeTournaments.feature): blocks/109616, Phyllis Court '4+' v
+// Hurlingham, and blocks/110682, the Murphy Shield.
+const AS_TEAM_MATCH: ReadonlySet<string> = new Set([
+  "croquetscores.com/blocks/109616",
+  "croquetscores.com/blocks/110682",
+]);
+
+// Competitions left behind, by the website and the document, with why
+// (ImportWholeTournaments.feature): swisses/28068, the Confirmed Entries of
+// the Park CC Grand Prix Easter Teams Tournament, with no games.
+const LEFT_BEHIND_COMPETITIONS: ReadonlyMap<string, string> = new Map([
+  ["croquetscores.com/swisses/28068", "No games"],
+]);
+
+/**
+ * `document` named "A vs B" for the two teams its players represent, in the
+ * order they first appear; as it is where they do not represent exactly two.
+ */
+const namedForItsPlayersTeams = (document: object): object => {
+  const { Players } = document as {
+    Players?: {
+      _Players?: readonly { Name: string; Representing: string | null }[];
+    };
+  };
+  const teams: string[] = [];
+  for (const player of Players?._Players ?? []) {
+    const team = (player.Representing ?? "").trim();
+    if (
+      team !== "" &&
+      !teams.some((each) => each.toLowerCase() === team.toLowerCase())
+    ) {
+      teams.push(team);
+    }
+  }
+  const [one, other] = teams;
+  return teams.length === 2 && one !== undefined && other !== undefined
+    ? { ...document, Name: `${one} vs ${other}` }
+    : document;
+};
 
 // Tournaments left behind with everything that names them, by the website
 // and the document, with why (ImportWholeTournaments.feature):
@@ -98,16 +145,86 @@ const LEFT_BEHIND: ReadonlyMap<string, string> = new Map([
 ]);
 
 /**
- * A block brought over as a team match: played over its tournament's days,
- * and expected to have as many matches as its games say (ImportTeamMatches.ts).
+ * A block, knockout or Swiss tried as a team match: played over its
+ * tournament's days, the best of what it was kept as or of 1, and expected to
+ * have as many matches as its games say (ImportTeamMatches.ts).
  */
-const asTeamMatch = (block: object, tournament: OldTournament): object => ({
-  ...block,
-  Start: tournament.Start,
-  Finish: tournament.Finish,
-  ExpectedMatches: 1,
-  Group: null,
-});
+const asTeamMatch = (
+  competition: object,
+  tournament: OldTournament,
+): object => {
+  const { BestOf: kept, Name: name } = competition as {
+    BestOf?: unknown;
+    Name?: unknown;
+  };
+  return {
+    ...competition,
+    // Written "A vs B", as a team match is named.
+    Name: typeof name === "string" ? (namedForTwoTeams(name) ?? name) : name,
+    BestOf: typeof kept === "number" && kept > 0 ? kept : 1,
+    Start: tournament.Start,
+    Finish: tournament.Finish,
+    ExpectedMatches: 1,
+    Group: null,
+  };
+};
+
+// Blocks of a tournament played by teams that are brought over as blocks of a
+// Standard tournament of their own, by the website and the document
+// (ImportWholeTournaments.feature): blocks/95635, Eastern, of the 2024
+// Mountain Challenge, a round robin of teams with no players of their own.
+const OWN_TOURNAMENT: ReadonlySet<string> = new Set([
+  "croquetscores.com/blocks/95635",
+  "croquetscores.com/blocks/95636",
+]);
+
+// A score marked in text as a tie: "2 Tied", "5 Draw", "5=" or "6w tie".
+const TIE = /(^|[^a-z])(?:tied|tie|draw)(?![a-z])|=/i;
+
+// Whether any game of `document` has a score marked in text as a tie.
+const hasTieMarked = (document: object): boolean =>
+  (
+    (
+      document as {
+        Games?: {
+          _Games?: readonly {
+            Winner: { Score: { _Score: string } };
+            Loser: { Score: { _Score: string } };
+          }[];
+        };
+      }
+    ).Games?._Games ?? []
+  ).some((game) =>
+    [game.Winner.Score._Score, game.Loser.Score._Score].some((score) =>
+      TIE.test(score),
+    ),
+  );
+
+// Tournaments that started before this keep what could not be brought over in
+// a Swiss, with a note (ImportWholeTournaments.feature).
+const BEFORE_NOTES = "2026-01-01";
+
+// The kinds of competition brought over whole or as a Swiss, not in part, by
+// the collection each is in, and what each is called.
+const TRIED_FIRST: Readonly<Record<string, string>> = {
+  Blocks: "block",
+  Knockouts: "knockout",
+};
+
+// What follows the name of a competition brought over as a Swiss, for the
+// games it could not be brought over with.
+const SEE_NOTES_SUFFIX = " - See Notes";
+
+// What follows the name of a tournament played by teams in the name of the
+// Standard tournament its blocks are brought over into.
+const BLOCK_SUFFIX = " - Block";
+
+// What a kind of competition is called in what is said of it.
+const KINDS: Readonly<Record<string, string>> = {
+  Blocks: "block",
+  Knockouts: "knockout",
+  Swisses: "Swiss",
+};
 
 /**
  * Where the tournament `document` was on its old site, as "2025/gc/rose-bowl":
@@ -163,6 +280,8 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     private readonly parts: TournamentParts,
     private readonly database: ImportDatabase,
     private readonly correcting: AcceptedImportErrors,
+    /** What writes the note of a competition that could not be brought over. */
+    private readonly seeNotes?: SeeNotes,
   ) {}
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
@@ -197,39 +316,61 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       this.#naming(this.parts.commentaries, id),
       ...this.parts.competitions.map((importer) => this.#naming(importer, id)),
     ]);
-    // A block the import names as a team match is brought over by what
-    // brings over team matches.
-    const teamMatches: Importer<object> | undefined =
-      this.parts.competitions.find(
-        ({ collection }) => collection === "TeamMatches",
-      );
-    const named = [
-      ...players,
-      ...this.#inListedOrder(document, competitions.flat()),
-      ...commentaries,
-    ].map((each) =>
-      teamMatches !== undefined &&
-      TEAM_MATCHES.has(`${website}/${each.id}`.toLowerCase())
-        ? {
-            ...each,
-            document: asTeamMatch(each.document, document),
-            importer: teamMatches,
-            asTeamMatch: true,
-          }
-        : each,
-    );
-    await this.database.recordTournamentRead(website, id);
-
     // A tournament the import names as Standard is set up as one, whatever
     // the old site said.
     const standard = STANDARD.has(`${website}/${id}`.toLowerCase());
     const setUp = standard
       ? { ...document, TournamentType: "standard" }
       : setUpAsPlayedByTeams(document);
+
+    // A block, knockout or Swiss of a tournament played by teams, which the
+    // site has no place for, that is named for two teams and whose players
+    // each represent one, is tried as a team match, by what brings over team
+    // matches, and is brought over as what it was where that is refused.
+    const teamMatches: Importer<object> | undefined =
+      this.parts.competitions.find(
+        ({ collection }) => collection === "TeamMatches",
+      );
+    const tried = (each: Named): Named => {
+      if (
+        teamMatches === undefined ||
+        !isPlayedByTeams(setUp.TournamentType) ||
+        !(each.importer.collection in KINDS) ||
+        isArchived(each.document)
+      ) {
+        return each;
+      }
+      // One the import names is named for its players' two teams first.
+      const named = AS_TEAM_MATCH.has(`${website}/${each.id}`.toLowerCase())
+        ? namedForItsPlayersTeams(each.document)
+        : each.document;
+      return couldBeATeamMatch(named as Parameters<typeof couldBeATeamMatch>[0])
+        ? {
+            ...each,
+            document: asTeamMatch(named, document),
+            importer: teamMatches,
+            original: { document: each.document, importer: each.importer },
+          }
+        : each;
+    };
+    const named = [
+      ...players,
+      ...this.#inListedOrder(document, competitions.flat()),
+      ...commentaries,
+    ].map(tried);
+    await this.database.recordTournamentRead(website, id);
+    // A tie marked in text in any of its competitions, which the site keeps
+    // only where the tournament allows drawn games.
+    const drawn = named.some(
+      ({ document: each }) => !isArchived(each) && hasTieMarked(each),
+    );
     try {
       await this.parts.tournament.importDocument({
         ...read,
-        document: heldOverItsTeamMatches(setUp, named),
+        document: {
+          ...heldOverItsTeamMatches(setUp, named),
+          ...(drawn ? { DrawsAllowed: true } : {}),
+        },
       });
     } catch (failure) {
       for (const each of named) {
@@ -240,6 +381,17 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         );
       }
       throw failure;
+    }
+
+    if (drawn) {
+      await this.#corrected(
+        website,
+        id,
+        document,
+        undefined,
+        "ImportWholeTournaments.DrawsAllowed",
+        `${document.Name} had scores marked in text as a tie, as "2 Tied", and is brought over allowing drawn games.`,
+      );
     }
 
     if (standard) {
@@ -253,21 +405,94 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
       );
     }
 
-    for (const each of named) {
-      try {
-        await each.importer.importDocument({
+    // The tournament of its own that the tournament's blocks were brought
+    // over into, made the first time one is.
+    let ownTournamentId: string | undefined;
+    for (const tryAsTeamMatch of named) {
+      let each: Named = tryAsTeamMatch;
+      // Left behind, and said as corrected, with why.
+      const leftBehind = LEFT_BEHIND_COMPETITIONS.get(
+        `${website}/${each.id}`.toLowerCase(),
+      );
+      if (leftBehind !== undefined) {
+        await this.#corrected(
           website,
-          id: each.id,
-          document: each.document,
-        });
-        if ("asTeamMatch" in each) {
+          id,
+          document,
+          each,
+          "ImportWholeTournaments.CompetitionLeftBehind",
+          `${(each.document as { Name?: string }).Name ?? each.id} was left behind: ${leftBehind}.`,
+        );
+        continue;
+      }
+      if (tryAsTeamMatch.original !== undefined) {
+        // Tried as a team match. Where it is refused, whatever it kept is
+        // rolled back with it, and it is brought over as what it was.
+        try {
+          await tryAsTeamMatch.importer.importDocument({
+            website,
+            id: tryAsTeamMatch.id,
+            document: tryAsTeamMatch.document,
+          });
+          const kind = KINDS[tryAsTeamMatch.original.importer.collection];
           await this.#corrected(
             website,
             id,
             document,
+            tryAsTeamMatch,
+            "ImportWholeTournaments.ImportedAsTeamMatch",
+            `${(tryAsTeamMatch.document as { Name?: string }).Name ?? tryAsTeamMatch.id} was kept as a ${kind ?? "competition"} of a tournament played by teams, which the site has no place for, and is brought over as a team match.`,
+          );
+          continue;
+        } catch {
+          each = { ...tryAsTeamMatch, ...tryAsTeamMatch.original };
+        }
+      }
+      // Where it is a block of a tournament played by teams, which the site
+      // has no place for and which was not a team match, it is brought over
+      // into a Standard tournament made for it.
+      let tournamentId = id;
+      try {
+        let toImport = each.document;
+        if (
+          OWN_TOURNAMENT.has(`${website}/${each.id}`.toLowerCase()) &&
+          isPlayedByTeams(setUp.TournamentType) &&
+          !isArchived(each.document)
+        ) {
+          ownTournamentId ??= await this.#ownTournament(read);
+          tournamentId = ownTournamentId;
+          toImport = {
+            ...each.document,
+            Tournament: {
+              ...(each.document as { Tournament: object }).Tournament,
+              Id: ownTournamentId,
+            },
+          };
+        }
+        // A block or knockout whose games are kept in a Swiss where it
+        // cannot be brought over is tried first, and brought over whole or
+        // not at all.
+        const triedFirst = TRIED_FIRST[each.importer.collection];
+        if (
+          triedFirst !== undefined &&
+          tournamentId === id &&
+          (await this.#isForNotes(read, setUp, each))
+        ) {
+          toImport = { ...toImport, AllOrNothingAs: triedFirst };
+        }
+        await each.importer.importDocument({
+          website,
+          id: each.id,
+          document: toImport,
+        });
+        if (tournamentId !== id) {
+          await this.#corrected(
+            website,
+            tournamentId,
+            document,
             each,
-            "ImportWholeTournaments.BlockAsTeamMatch",
-            `${(each.document as { Name?: string }).Name ?? each.id} was kept as a block of a tournament played by teams, which the site has no place for, and is brought over as a team match.`,
+            "ImportWholeTournaments.ImportedInATournamentOfItsOwn",
+            `${(each.document as { Name?: string }).Name ?? each.id} was kept as a block of a tournament played by teams, which the site has no place for, and is brought over as a block of the Standard tournament ${document.Name}${BLOCK_SUFFIX}, made for it.`,
           );
         }
       } catch (failure) {
@@ -275,7 +500,10 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         // competition was called on the old site, since it never became one.
         // On the site, it is the tournament's page that can be read; on the
         // old site, a competition's own.
-        const tournament = await this.database.tournamentOf(website, id);
+        const tournament = await this.database.tournamentOf(
+          website,
+          tournamentId,
+        );
         const { Name: name, Slug: slug } = each.document as {
           Name?: unknown;
           Slug?: unknown;
@@ -301,7 +529,131 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
               },
         );
       }
+      if (tournamentId === id) {
+        await this.#seenInNotes(read, setUp, each);
+      }
     }
+  }
+
+  /**
+   * Where a block, knockout or Swiss of a Standard tournament that started
+   * before 2026 could not be brought over as it was, whether it was refused,
+   * left behind or kept with an error, its games are brought over as a Swiss
+   * called as it was with " - See Notes" after it, the writer of notes is
+   * made a manager of the tournament, and a note says where its games are
+   * (ImportWholeTournaments.feature). Nothing where no user at the writer's
+   * address was brought over.
+   */
+  async #seenInNotes(
+    read: ReadDocument<OldTournament>,
+    setUp: OldTournament,
+    each: Named,
+  ): Promise<void> {
+    const { website, id, document } = read;
+    const kind = KINDS[each.importer.collection];
+    const swisses = this.parts.competitions.find(
+      ({ collection }) => collection === "Swisses",
+    );
+    if (
+      swisses === undefined ||
+      kind === undefined ||
+      !(await this.#isForNotes(read, setUp, each))
+    ) {
+      return;
+    }
+    const cannot =
+      (await this.database.findCompetitionOf(website, each.id)) === undefined ||
+      (await this.database.hasErrorsFor(`${website}/${each.id}`));
+    if (!cannot) return;
+    const writer = await this.seeNotes?.writer();
+    if (this.seeNotes === undefined || writer === undefined) return;
+
+    const name = (each.document as { Name?: string }).Name ?? each.id;
+    const swissId = `${each.id}/see-notes`;
+    try {
+      await swisses.importDocument({
+        website,
+        id: swissId,
+        document: {
+          ...(each.document as OldCompetition),
+          Name: `${name}${SEE_NOTES_SUFFIX}`,
+        },
+      });
+      const made = await this.database.findCompetitionOf(website, swissId);
+      if (made === undefined) return;
+      const path = await this.seeNotes.write(
+        website,
+        id,
+        name,
+        kind,
+        CompetitionId.from(made.competitionId),
+        writer,
+      );
+      // Said at the Swiss's page, which is where the games are.
+      await this.#corrected(
+        website,
+        id,
+        document,
+        each,
+        "ImportWholeTournaments.SeeNotes",
+        `${name} was a ${kind} that could not be brought over as one, and its games are in the Swiss ${name}${SEE_NOTES_SUFFIX}, as a note of the tournament says.`,
+        path,
+      );
+    } catch (failure) {
+      // Not an error: what could not be made is said as corrected.
+      await this.#corrected(
+        website,
+        id,
+        document,
+        each,
+        "ImportWholeTournaments.SeeNotesNotMade",
+        `${name} was a ${kind} that could not be brought over as one, and the Swiss ${name}${SEE_NOTES_SUFFIX} for its games could not be made: ${describedFailure(failure)}`,
+      );
+    }
+  }
+
+  /**
+   * Whether the competition `each` is one whose games are kept in a Swiss with
+   * a note where it cannot be brought over: a block, knockout or Swiss with
+   * games, not archived, of a Standard tournament that started before 2026,
+   * where a user was brought over to write the note.
+   */
+  async #isForNotes(
+    read: ReadDocument<OldTournament>,
+    setUp: OldTournament,
+    each: Named,
+  ): Promise<boolean> {
+    const games =
+      (each.document as { Games?: { _Games?: readonly unknown[] } }).Games
+        ?._Games ?? [];
+    return (
+      this.seeNotes !== undefined &&
+      KINDS[each.importer.collection] !== undefined &&
+      !isArchived(each.document) &&
+      !isPlayedByTeams(setUp.TournamentType) &&
+      read.document.Start < BEFORE_NOTES &&
+      games.length > 0 &&
+      (await this.seeNotes.writer()) !== undefined
+    );
+  }
+
+  // Brings over, as a Standard tournament of its own, the tournament `read`
+  // was, called as it was with " - Block" after it and found at its slug
+  // followed by "-block"; and answers the document id it is kept under, which
+  // is the old tournament's followed by "/block".
+  async #ownTournament(read: ReadDocument<OldTournament>): Promise<string> {
+    const id = `${read.id}/block`;
+    await this.parts.tournament.importDocument({
+      website: read.website,
+      id,
+      document: {
+        ...read.document,
+        Name: `${read.document.Name}${BLOCK_SUFFIX}`,
+        Slug: `${read.document.Slug}-block`,
+        TournamentType: "standard",
+      },
+    });
+    return id;
   }
 
   // Says that `each`, or the tournament `id` itself where it is undefined,
@@ -314,13 +666,15 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     each: Named | undefined,
     code: string,
     description: string,
+    // Where it is on the site where that is not its tournament's page.
+    newSitePath?: string,
   ): Promise<void> {
     const tournament = await this.database.tournamentOf(website, id);
     const slug = (each?.document as { Slug?: unknown } | undefined)?.Slug;
     await this.correcting.accept({
       documentId: `${website}/${each?.id ?? id}`,
       website,
-      newSitePath: tournament?.tournamentAddress,
+      newSitePath: newSitePath ?? tournament?.tournamentAddress,
       oldSitePath: oldSitePathOf(
         oldAddressOf(document),
         typeof slug === "string" ? slug : undefined,
