@@ -28,6 +28,6 @@ Press a note's title, or its **Edit**, to open the panel on that note. Press **S
 
 A note that no longer applies is deleted. A note deleted is gone for good, so **Delete** asks first.
 
-![The question asked before deleting as note](images/delete-note-asks.png)
+![The question asked before deleting a note](images/delete-note-asks.png)
 
 Next: [Managers and scorers](managers-and-scorers.md).

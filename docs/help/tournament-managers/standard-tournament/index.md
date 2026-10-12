@@ -1,6 +1,6 @@
 # Running a standard tournament
 
-A standard tournament is one played between players entered one by one: a club weekend, an open, a championship. Its players are entered into blocks, knockouts and Swisses, and its scores go up as they are played. This guide takes a manager from signing in to a tournament whose results are availabe to the public.
+A standard tournament is one played between players entered one by one: a club weekend, an open, a championship. Its players are entered into blocks, knockouts and Swisses, and its scores go up as they are played. This guide takes a manager from signing in to a tournament whose results are available to the public.
 
 It stands on its own. Nothing in it depends on the guide to a tournament played by teams, which is written separately.
 
