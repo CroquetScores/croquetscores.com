@@ -108,6 +108,7 @@ ESLint enforces all of this (§9); breaking it fails CI.
   /domain /application /infrastructure /web /import-ravendb
 /scripts                   one-off development tooling
 /assets                    css and images served as static files
+/docs/help                 the help, in Markdown, one folder for each language
 ```
 
 Rules across the tree:
@@ -500,7 +501,9 @@ Every application listens on whatever port is free, and never on a fixed one. A 
 
 The admin a `@browser` scenario drives is the one built into `dist/admin/`, not its source, so a scenario run against a stale build tests yesterday's admin and fails, or worse passes, for reasons that are nowhere in the code. Every script that runs scenarios — `test:features`, and through it `test`, as well as `test:nodb`, `test:db`, `test:browser`, `test:nobrowser` and `test:changed` — has a `pre` script that builds the admin first, which npm runs on its own. `test:nodb` needs one as much as the others, since a `@browser` scenario that keeps nothing is not `@postgres` (`admin.feature` among them). The build takes about a second, so it is done every time rather than only when something changed: working out whether anything did would cost more to keep right than it saves. CI builds it twice, once in `npm run build` and once before the scenarios, and a second is what that costs.
 
-Those builds are `build:admin:alongside`, which writes the new build beside the old one rather than emptying `dist/admin/` first, as `build:admin` does. Two runs at once are expected, which is why every application listens on a port of its own, and a run starting while another is under way would otherwise delete the admin that the first one's applications are serving. It does no harm to them: an application reads the page once, when it starts, and lists the assets there are then, and an asset's name changes with its content, so the new build only adds files beside the ones already being served. What it costs is that old assets pile up in `dist/admin/` until the next `npm run build`, which empties it, and is what anything deployed is built with.
+The help is built the same way and for the same reason: `build:help` turns `docs/help` into `dist/help/` (a JSON file of title and HTML for each page of each language, and the pictures once), and is run by the same `pre` scripts and by `npm run build`. It fails where a page links to a page or shows a picture that is not there. The site reads `dist/help/` once, when it starts.
+
+Those builds of the admin are `build:admin:alongside`, which writes the new build beside the old one rather than emptying `dist/admin/` first, as `build:admin` does. Two runs at once are expected, which is why every application listens on a port of its own, and a run starting while another is under way would otherwise delete the admin that the first one's applications are serving. It does no harm to them: an application reads the page once, when it starts, and lists the assets there are then, and an asset's name changes with its content, so the new build only adds files beside the ones already being served. What it costs is that old assets pile up in `dist/admin/` until the next `npm run build`, which empties it, and is what anything deployed is built with.
 
 The `@postgres` hooks have to run before the `@browser` ones, because a scenario's application is built over a database that must already exist. Cucumber runs hooks in the order they were defined, so the browser harness imports the database harness before it defines its own.
 
@@ -652,7 +655,8 @@ Three things beyond the layer rules earn their place. `disableTypeChecked` cover
 ## 10. npm scripts
 
 ```bash
-npm pkg set scripts.build="tsc -p tsconfig.build.json && npm run build:admin"
+npm pkg set scripts.build="tsc -p tsconfig.build.json && npm run build:admin && npm run build:help"
+npm pkg set scripts.build:help="tsx scripts/build-help.mjs"
 npm pkg set scripts.build:admin="vite build"
 npm pkg set scripts.build:admin:alongside="vite build --emptyOutDir=false"
 npm pkg set scripts.dev="tsx watch src/web/server.ts"
@@ -672,13 +676,13 @@ npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
 npm pkg set scripts.db:drop-tables="tsx src/infrastructure/database/drop-tables-cli.ts"
 npm pkg set scripts.import:ravendb="tsx src/import-ravendb/import-ravendb.ts"
-npm pkg set scripts.predev="npm run build:admin:alongside"
-npm pkg set scripts.pretest:features="npm run build:admin:alongside"
-npm pkg set scripts.pretest:nodb="npm run build:admin:alongside"
-npm pkg set scripts.pretest:db="npm run build:admin:alongside"
-npm pkg set scripts.pretest:browser="npm run build:admin:alongside"
-npm pkg set scripts.pretest:nobrowser="npm run build:admin:alongside"
-npm pkg set scripts.pretest:changed="npm run build:admin:alongside"
+npm pkg set scripts.predev="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:features="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:nodb="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:db="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:browser="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:nobrowser="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:changed="npm run build:admin:alongside && npm run build:help"
 ```
 
 Working on one feature:

@@ -2,7 +2,8 @@
   "name": "next-croquetscores",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && npm run build:admin",
+    "build": "tsc -p tsconfig.build.json && npm run build:admin && npm run build:help",
+    "build:help": "tsx scripts/build-help.mjs",
     "build:admin": "vite build",
     "build:admin:alongside": "vite build --emptyOutDir=false",
     "dev": "tsx watch src/web/server.ts",
@@ -25,13 +26,13 @@
     "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile browser",
     "test:nobrowser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nobrowser",
     "import:ravendb": "tsx src/import-ravendb/import-ravendb.ts",
-    "predev": "npm run build:admin:alongside",
-    "pretest:features": "npm run build:admin:alongside",
-    "pretest:nodb": "npm run build:admin:alongside",
-    "pretest:db": "npm run build:admin:alongside",
-    "pretest:browser": "npm run build:admin:alongside",
-    "pretest:nobrowser": "npm run build:admin:alongside",
-    "pretest:changed": "npm run build:admin:alongside"
+    "predev": "npm run build:admin:alongside && npm run build:help",
+    "pretest:features": "npm run build:admin:alongside && npm run build:help",
+    "pretest:nodb": "npm run build:admin:alongside && npm run build:help",
+    "pretest:db": "npm run build:admin:alongside && npm run build:help",
+    "pretest:browser": "npm run build:admin:alongside && npm run build:help",
+    "pretest:nobrowser": "npm run build:admin:alongside && npm run build:help",
+    "pretest:changed": "npm run build:admin:alongside && npm run build:help"
   },
   "repository": {
     "type": "git",
