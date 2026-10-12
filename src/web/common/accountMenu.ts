@@ -101,16 +101,20 @@ const item = (
   return `              <li><a href="${href}"${here}>${escape(speaking.say(words))}</a></li>`;
 };
 
-/** The menu, as the reader of the page it is drawn on sees it. */
-export const accountMenu = ({
+/**
+ * The list items the menu offers, as markup. Drawn once here for both places
+ * the account is offered, the person beside the navigation and the group at
+ * the foot of the navigation's button, so that a page added to one is in the
+ * other.
+ */
+export const accountItems = ({
   speaking,
   signedIn,
   hasPassword,
   currentPath,
-}: AccountMenu): string => {
-  const named = escape(speaking.say("account.menu"));
+}: AccountMenu): string[] => {
   const shown = (each: MenuItem) => item(each, speaking, currentPath);
-  const items = signedIn
+  return signedIn
     ? [
         signOut(speaking),
         ...theAccounts
@@ -118,6 +122,11 @@ export const accountMenu = ({
           .map(shown),
       ]
     : waysIn.map(shown);
+};
+
+/** The menu, as the reader of the page it is drawn on sees it. */
+export const accountMenu = (menu: AccountMenu): string => {
+  const named = escape(menu.speaking.say("account.menu"));
 
   return `        <details class="account-menu">
           <summary>
@@ -126,7 +135,7 @@ export const accountMenu = ({
           </summary>
           <nav class="account-menu-links" aria-label="${named}">
             <ul>
-${items.join("\n")}
+${accountItems(menu).join("\n")}
             </ul>
           </nav>
         </details>`;
