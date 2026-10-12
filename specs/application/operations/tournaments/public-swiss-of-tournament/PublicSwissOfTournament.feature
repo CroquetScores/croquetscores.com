@@ -25,7 +25,9 @@ Feature: A Swiss of a tournament, for anybody to read
   (`ChangeCarryForward.feature`) is counted with what was: their game wins
   and game losses with the games they have played, their game wins with the
   games they have won, and their hoops for less their hoops against with
-  their net hoops.
+  their net hoops. A withdrawn player's carry forward counts for nothing, as
+  the games they played do (`withdrawPlayer.feature`): they have left the
+  Swiss, and what they brought into it goes with them.
 
   The players are ranked as the old site ranked them: by the share of the
   games they have played that they have won, highest first, then by their net
@@ -343,6 +345,39 @@ Feature: A Swiss of a tournament, for anybody to read
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the Swiss "Sam Someone" is answered with net hoops of 10
 
+  Rule: What a withdrawn player carries forward counts for nothing
+
+    Scenario: Game wins carried forward by a withdrawn player are not games played
+      Given "organiser@example.com" has given the player "Sam Someone" in "Zed" of "Spring Open" a carry forward of game wins of 2
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with 0 games played
+
+    Scenario: Game losses carried forward by a withdrawn player are not games played
+      Given "organiser@example.com" has given the player "Sam Someone" in "Zed" of "Spring Open" a carry forward of game losses of 3
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with 0 games played
+
+    Scenario: Game wins carried forward by a withdrawn player are not games won
+      Given "organiser@example.com" has given the player "Sam Someone" in "Zed" of "Spring Open" a carry forward of game wins of 2
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with 0 games won
+
+    Scenario: Hoops carried forward by a withdrawn player are not in net hoops
+      Given "organiser@example.com" has given the player "Sam Someone" in "Zed" of "Spring Open" a carry forward of hoops for of 10
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with net hoops of 0
+
+    Scenario: What is carried forward counts again once the withdrawal is reversed
+      Given "organiser@example.com" has given the player "Sam Someone" in "Zed" of "Spring Open" a carry forward of game wins of 2
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Zed" of "Spring Open"
+      And "organiser@example.com" has reversed the withdrawal of the player "Sam Someone" from "Zed" of "Spring Open"
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the Swiss "Sam Someone" is answered with 2 games won
+
   Rule: The players are ranked by the share of their games they have won, then by their net hoops
 
     Scenario: A player with a greater share of their games won is ranked higher
@@ -361,10 +396,8 @@ Feature: A Swiss of a tournament, for anybody to read
       Then the first player of the Swiss ranked is "Sam Someone"
       And the second player of the Swiss ranked is "Alex Another"
 
-    Scenario: A withdrawn player is ranked after everybody who has not withdrawn
-      Given "organiser@example.com" has given the player "Alex Another" in "Zed" of "Spring Open" a carry forward of game wins of 2
-      And "Sam Someone" has beaten "Chris Third" 7 to 4 in "Zed" of "Spring Open"
-      And "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
+    Scenario: A withdrawn player is ranked after a player who has played no game
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Zed" of "Spring Open"
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then the second player of the Swiss ranked is "Chris Third"
       And the third player of the Swiss ranked is "Alex Another"

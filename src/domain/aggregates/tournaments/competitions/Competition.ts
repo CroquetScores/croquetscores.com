@@ -611,11 +611,18 @@ export class Competition extends AggregateRoot {
    * That the block's or the Swiss's game `id` was played, but no longer
    * counts. Any other competition's game is refused, since there it decides
    * more than the standings. An archived game is refused as the game refuses
-   * changing it. Withdrawing one that is withdrawn records nothing.
+   * changing it. Withdrawing one that is withdrawn records nothing. A game
+   * of a player who has withdrawn is refused too: it counts for nothing
+   * already, with every other game of theirs (`countsForNothing`).
    */
   withdrawGame(id: GameId, told: Told, by: AccountId, at: ReadOnlyDate): void {
     const game = this.#withdrawable(id, told);
     if (game.withdrawn) return;
+    if (this.#hasWithdrawn(game.winner) || this.#hasWithdrawn(game.loser)) {
+      throw new ValidationError<CompetitionPlayerErrorCode>(
+        "CompetitionPlayer.Withdrawn",
+      );
+    }
     this.record(new CompetitionGameWithdrawn(id.value, by, at));
   }
 
@@ -643,7 +650,19 @@ export class Competition extends AggregateRoot {
    */
   canBeWithdrawn(id: GameId, told: Told): boolean {
     const game = this.#gameFound(id);
-    return isBlockOrSwiss(told) && !game.archived && !game.withdrawn;
+    return (
+      isBlockOrSwiss(told) &&
+      !game.archived &&
+      !game.withdrawn &&
+      !this.#hasWithdrawn(game.winner) &&
+      !this.#hasWithdrawn(game.loser)
+    );
+  }
+
+  // Whether the player `id` has withdrawn: not so of one the competition does
+  // not have, such as a game's player since removed.
+  #hasWithdrawn(id: GamePlayerId): boolean {
+    return this.#players.get(id.value)?.withdrawn ?? false;
   }
 
   // The game `id`, where it is a block's or a Swiss's and not archived.
@@ -1004,13 +1023,11 @@ export class Competition extends AggregateRoot {
    * that stands (`KnockoutPlay.feature`), and nothing there is ranked.
    */
   countsForNothing(game: Game, told: Told): boolean {
-    const withdrawn = (id: GamePlayerId): boolean =>
-      this.#players.get(id.value)?.withdrawn ?? false;
     return (
       game.archived ||
       game.withdrawn ||
       (isBlockOrSwiss(told) &&
-        (withdrawn(game.winner) || withdrawn(game.loser)))
+        (this.#hasWithdrawn(game.winner) || this.#hasWithdrawn(game.loser)))
     );
   }
 

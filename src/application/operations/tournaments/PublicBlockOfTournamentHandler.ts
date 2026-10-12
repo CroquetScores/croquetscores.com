@@ -97,9 +97,10 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
       const lost = theirs.filter(
         (game) => !game.drawn && game.loser.equals(entered.id),
       );
-      // What is not carried forward counts as nothing carried.
+      // What is not carried forward counts as nothing carried, and so does
+      // all of it where the player has withdrawn, as their games do.
       const carried = (count: CarryForwardCount): number =>
-        entered.carryForward.of(count) ?? 0;
+        entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
       const hoops = theirs.reduce((net, game) => {
         const margin = game.winnerScore.points - game.loserScore.points;
         return net + (game.winner.equals(entered.id) ? margin : -margin);

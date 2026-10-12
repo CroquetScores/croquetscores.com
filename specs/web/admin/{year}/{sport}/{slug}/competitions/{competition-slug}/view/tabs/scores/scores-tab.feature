@@ -66,7 +66,9 @@ Feature: The scores tab of a competition's page
   other. Unwithdraw is refused where the score could not be added now, as
   where one of its players has withdrawn since, and the refusal is said above
   the list. A knockout's or a test's score is offered neither, since there a
-  score decides more than the standings.
+  score decides more than the standings. Nor is a score of a player who has
+  withdrawn offered Withdraw: it counts for nothing already, as every game of
+  theirs does, and says so on the public pages.
 
   The tab has no address of its own, so a scenario opens the competition's
   page and chooses the tab, which is what opening the scores of a competition
@@ -604,6 +606,12 @@ Feature: The scores tab of a competition's page
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Swiss A" of "Spring Open"
       When the scores of "Swiss A" in "Spring Open" are opened
       Then the score of "Sam Someone" beating "Alex Another" offers "Withdraw"
+
+    Scenario: A score of a player who has withdrawn does not offer Withdraw
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the score of "Sam Someone" beating "Alex Another" does not offer "Withdraw"
 
     Scenario: A score in a knockout does not offer Withdraw
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"

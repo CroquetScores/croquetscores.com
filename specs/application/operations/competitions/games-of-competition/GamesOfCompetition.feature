@@ -162,6 +162,12 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
       When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Open"
       Then the score of "Sam Someone" beating "Alex Another" 26 to 17 is answered as one that cannot be withdrawn
 
+    Scenario: A game of a player who has withdrawn is answered as one that cannot be withdrawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Open"
+      Then the score of "Sam Someone" beating "Alex Another" 26 to 17 is answered as one that cannot be withdrawn
+
     Scenario: An archived game is answered as one that cannot be withdrawn
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"

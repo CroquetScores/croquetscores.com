@@ -102,9 +102,10 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
     const players = competition.players.flatMap((entered): PlayerOfSwiss[] => {
       const player = named.get(entered.id.value);
       if (player === undefined) return [];
-      // What is not carried forward counts as nothing carried.
+      // What is not carried forward counts as nothing carried, and so does
+      // all of it where the player has withdrawn, as their games do.
       const carried = (count: CarryForwardCount): number =>
-        entered.carryForward.of(count) ?? 0;
+        entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
       const results = games.flatMap((game): ResultOfSwiss[] => {
         const won = game.winner.equals(entered.id);
         if (!won && !game.loser.equals(entered.id)) return [];

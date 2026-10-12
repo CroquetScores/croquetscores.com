@@ -23,6 +23,11 @@ Feature: Withdrawing a competition's game, and reversing it
   players have since played their match again without it, and where either of
   them has withdrawn, whose withdrawal is reversed first.
 
+  A game of a player who has withdrawn is not withdrawn on its own: it
+  already counts for nothing, on both sides, with every other game they
+  played (`withdrawPlayer.feature`), so withdrawing it would say nothing a
+  reader could see, and is refused with `CompetitionPlayer.Withdrawn`.
+
   An archived game is set aside, and is neither withdrawn nor has its
   withdrawal reversed: both are refused as the game refuses changing it. A
   withdrawn game entered by mistake is still archived, and is withdrawn still
@@ -139,6 +144,37 @@ Feature: Withdrawing a competition's game, and reversing it
       And the competition is rebuilt from its stream
       When the game of "Pat Fourth" beating "Kim Fifth" 26 to 17 is withdrawn
       Then it is refused with "Competition.NotABlockOrSwiss"
+
+  Rule: A game of a player who has withdrawn is not withdrawn
+
+    Scenario: A game of a player who has withdrawn is refused
+      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the player "Sam Someone" withdrew from it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is withdrawn
+      Then it is refused with "CompetitionPlayer.Withdrawn"
+
+    Scenario: A game against a player who has withdrawn is refused
+      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the player "Alex Another" withdrew from it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is withdrawn
+      Then it is refused with "CompetitionPlayer.Withdrawn"
+
+    Scenario: A game refused is not withdrawn
+      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the player "Sam Someone" withdrew from it
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is withdrawn
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 is not withdrawn
+
+    Scenario: A game is withdrawn again once the player's withdrawal is reversed
+      Given the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the player "Sam Someone" withdrew from it
+      And the withdrawal of the player "Sam Someone" was reversed
+      And the competition is rebuilt from its stream
+      When the game of "Sam Someone" beating "Alex Another" 26 to 17 is withdrawn
+      Then the competition's game of "Sam Someone" beating "Alex Another" 26 to 17 is withdrawn
 
   Rule: An archived game is not withdrawn
 

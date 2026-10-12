@@ -82,6 +82,11 @@ Feature: Withdrawing a score that is not to count
       When the reader signed in to the account for "organiser@example.com" withdraws the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       Then it is refused with "Game.Archived"
 
+    Scenario: A score of a player who has withdrawn is refused as the competition refuses it
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" withdraws the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      Then it is refused with "CompetitionPlayer.Withdrawn"
+
   Rule: Only a competition there is, and one not archived, in a tournament there is and not archived, has a score withdrawn
 
     Scenario: A competition the tournament does not have is refused
