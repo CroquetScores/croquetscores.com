@@ -53,6 +53,10 @@ Feature: The help is read in the language the site is shown in
       When the help page "no-such-page" is opened
       Then the page is not found
 
+    Scenario: A page has one address
+      When the help page "tournament-managers/index" is opened
+      Then the page is not found
+
   Rule: A page not written in the reader's language is shown in English
 
     Scenario: A page missing from a language
@@ -71,26 +75,33 @@ Feature: The help is read in the language the site is shown in
       When the help page "tournament-managers/standard-tournament/scores" is opened
       Then every picture is found
 
-  Rule: A picture shows the site in the language of the page
+  Rule: A picture shows the site in the language the page was written in
 
     The pictures are photographs of the admin and the public pages, and the
     words in them are the site's, so each language has its own, made by
-    npm run help:screenshots. Where a language has not got one, the picture
-    is the English one, since a picture in the wrong language is better than
-    none.
+    npm run help:screenshots. They follow the page rather than the reader: an
+    English page shown to a Welsh reader names English buttons, and a Welsh
+    picture beside it would not match. Where a language has not made a
+    picture, the English one is shown, since a picture in the wrong language
+    is better than none.
 
-    Scenario: A picture made for the reader's language
+    Scenario: A page in the reader's language shows pictures in it
       Given the reader has chosen Welsh
-      When the help picture "tournament-managers/standard-tournament/players-tab.png" is opened
-      Then the picture is the Welsh one
+      When the help page "tournament-managers/standard-tournament/players" is opened
+      Then the first picture on the page is the Welsh one
 
-    Scenario: A picture not made for the reader's language
+    Scenario: A picture not made for the language is the English one
       Given the reader has chosen Welsh
       And the help has no Welsh picture "tournament-managers/standard-tournament/players-tab.png"
-      When the help picture "tournament-managers/standard-tournament/players-tab.png" is opened
-      Then the picture is the English one
+      When the help page "tournament-managers/standard-tournament/players" is opened
+      Then the first picture on the page is the English one
 
-    Scenario: The picture varies by the language the reader has chosen
+    Scenario: A page shown in English shows English pictures
       Given the reader has chosen Welsh
-      When the help picture "tournament-managers/standard-tournament/players-tab.png" is opened
-      Then the picture varies by the language the reader has chosen
+      And the help has no Welsh page "tournament-managers/standard-tournament/players"
+      When the help page "tournament-managers/standard-tournament/players" is opened
+      Then the first picture on the page is the English one
+
+    Scenario: A picture is checked again rather than kept
+      When the help page "tournament-managers/standard-tournament/players" is opened
+      Then the first picture on the page asks to be checked again

@@ -18,7 +18,7 @@
 // Options: --out <directory> writes beneath that directory instead of
 // docs/help, and --only <name,name> takes only the pictures so named.
 import { randomBytes } from "node:crypto";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { URL } from "node:url";
 import { chromium } from "playwright";
@@ -44,10 +44,23 @@ const option = (name) => {
 };
 const out = option("out") ?? join(root, "docs", "help");
 const only = option("only")?.split(",");
-const folders = args.length > 0 ? args : [];
+const folders = args;
 if (folders.length === 0) {
   console.error("Say which language folders, such as: welsh french");
   process.exit(1);
+}
+// Checked before anything is made, so that a mistyped flag or a folder that is
+// not a language is told at once and not after a database and a browser have
+// been made for it. A folder is a language's name and nothing that could climb
+// out of docs/help.
+for (const folder of folders) {
+  if (
+    !/^[a-z]+$/.test(folder) ||
+    !existsSync(join(root, "docs", "help", folder))
+  ) {
+    console.error(`"${folder}" is not a language folder of docs/help.`);
+    process.exit(1);
+  }
 }
 
 const address = "manager@example.com";
@@ -57,34 +70,17 @@ loadEnvFile();
 const config = loadConfig();
 const databaseName = `zzz_delete_me_help_${randomBytes(4).toString("hex")}`;
 const serverPool = createPool(config.databaseUrl);
-await serverPool.query(`create database "${databaseName}"`);
-const databaseUrl = (() => {
-  const url = new URL(config.databaseUrl);
-  url.pathname = `/${databaseName}`;
-  return url.toString();
-})();
-const migrating = createPool(databaseUrl);
-await migrate(migrating);
-await migrating.end();
 
-const application = await buildApplication(
-  { ...config, databaseUrl },
-  {
-    logger: false,
-    sendsTheEmailQueue: false,
-    // Nothing is asked of Have I Been Pwned about the example password.
-    breachedPasswords: { isBreached: () => Promise.resolve(false) },
-  },
-);
-await application.server.listen({ port: 0, host: "127.0.0.1" });
-const site = `http://127.0.0.1:${application.server.addresses()[0].port}`;
-
-const browser = await chromium.launch();
+// Made inside the try below, so that whatever fails after the database exists
+// drops it again.
+let application;
+let browser;
+let site;
 
 const finish = async () => {
-  await browser.close().catch(() => undefined);
-  await application.server.close().catch(() => undefined);
-  await application.pool.end().catch(() => undefined);
+  await browser?.close().catch(() => undefined);
+  await application?.server.close().catch(() => undefined);
+  await application?.pool.end().catch(() => undefined);
   await serverPool
     .query(`drop database if exists "${databaseName}" with (force)`)
     .catch(() => undefined);
@@ -92,23 +88,41 @@ const finish = async () => {
 };
 
 try {
-  await accountsThrough(application, () => ReadOnlyDate.from(new Date())).give(
-    address,
+  await serverPool.query(`create database "${databaseName}"`);
+  const databaseUrl = (() => {
+    const url = new URL(config.databaseUrl);
+    url.pathname = `/${databaseName}`;
+    return url.toString();
+  })();
+  const migrating = createPool(databaseUrl);
+  await migrate(migrating);
+  await migrating.end();
+
+  application = await buildApplication(
+    { ...config, databaseUrl },
     {
-      confirmed: true,
-      name: "Sam Someone",
-      password,
+      logger: false,
+      sendsTheEmailQueue: false,
+      // Nothing is asked of Have I Been Pwned about the example password.
+      breachedPasswords: { isBreached: () => Promise.resolve(false) },
     },
   );
+  await application.server.listen({ port: 0, host: "127.0.0.1" });
+  site = `http://127.0.0.1:${application.server.addresses()[0].port}`;
+  browser = await chromium.launch();
 
+  const now = () => ReadOnlyDate.from(new Date());
   for (const [other, name] of [
+    [address, "Sam Someone"],
     ["alex@example.com", "Alex Another"],
     ["chris@example.com", "Chris Third"],
     ["teams@example.com", "Terry Teams"],
   ]) {
-    await accountsThrough(application, () =>
-      ReadOnlyDate.from(new Date()),
-    ).give(other, { confirmed: true, name, password });
+    await accountsThrough(application, now).give(other, {
+      confirmed: true,
+      name,
+      password,
+    });
   }
 
   for (const folder of folders) {

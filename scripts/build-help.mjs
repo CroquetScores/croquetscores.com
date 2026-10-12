@@ -12,6 +12,7 @@
 // at a time, and nobody else would.
 import {
   cpSync,
+  existsSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -30,9 +31,13 @@ import {
 const root = join(import.meta.dirname, "..");
 const source = join(root, "docs", "help");
 const finished = join(root, "dist", "help");
-// Written beside the finished one and moved into place, so that a site starting
-// while this runs reads a whole help and not half of one.
-const built = join(root, "dist", "help.building");
+// Written beside the finished one, in a directory of this run's own so that two
+// runs at once (two test scripts started together, or a build under a running
+// site) cannot delete each other's half-written tree, and then moved into
+// place. The move is two renames, so there is an instant with no help; a
+// request in it answers 404, which a reader's next click puts right.
+const built = join(root, "dist", `help.building-${process.pid}`);
+const replaced = join(root, "dist", `help.replaced-${process.pid}`);
 
 const filesBelow = (directory, within = "") =>
   readdirSync(join(directory, within), { withFileTypes: true }).flatMap(
@@ -98,6 +103,10 @@ for (const folder of languageFolders) {
         problems.push(`${folder}/${file} shows "${name}", which is not there.`);
     }
 
+    if (page.title === "") {
+      problems.push(`${folder}/${file} has no heading to be called by.`);
+    }
+
     // A folder's index sits as index.json beside its other pages.
     const out = join(built, language.tag, file.replace(/\.md$/, ".json"));
     mkdirSync(dirname(out), { recursive: true });
@@ -106,12 +115,16 @@ for (const folder of languageFolders) {
 }
 
 if (problems.length > 0) {
+  // The tree written so far is not kept: the help that was there stays, and
+  // nothing is left behind to be mistaken for it.
+  rmSync(built, { recursive: true, force: true });
   console.error(problems.join("\n"));
   process.exit(1);
 }
 
-rmSync(finished, { recursive: true, force: true });
+if (existsSync(finished)) renameSync(finished, replaced);
 renameSync(built, finished);
+rmSync(replaced, { recursive: true, force: true });
 
 console.log(
   `Built the help in ${languageFolders.length} languages into ${finished}.`,

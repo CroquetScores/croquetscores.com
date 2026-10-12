@@ -23,6 +23,11 @@ Feature: Help written in markdown becomes pages of the site
       When the help page is converted
       Then the title of the page is "Players"
 
+    Scenario: A page that begins with a lesser heading is called by it
+      Given help page "## Adding a player"
+      When the help page is converted
+      Then the title of the page is "Adding a player"
+
     Scenario: A tag written in the markdown is shown as written
       Given help page "A <script>alert(1)</script> in the text"
       When the help page is converted

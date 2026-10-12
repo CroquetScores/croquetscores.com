@@ -57,6 +57,9 @@ const readIn = async (
  */
 export const helpLibraryIn = (directory: string): HelpLibrary => ({
   page: async (tag, name) => {
+    // The file's own name is not an address: the page of a folder is the
+    // folder's, so that a page has one address and not two.
+    if (name === "index" || name.endsWith("/index")) return undefined;
     const found =
       name === ""
         ? await readIn(directory, [tag, "index.json"])

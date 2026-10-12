@@ -103,9 +103,9 @@ export const convertHelpPage = (
     }
   }
 
-  const heading = tokens.findIndex(
-    (token) => token.type === "heading_open" && token.tag === "h1",
-  );
+  // The first heading of any level, since a page that begins with a second
+  // level heading is still called by it, and the build refuses one with none.
+  const heading = tokens.findIndex((token) => token.type === "heading_open");
   const title = tokens[heading + 1]?.children
     ?.filter((token) => token.type === "text" || token.type === "code_inline")
     .map((token) => token.content)

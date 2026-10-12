@@ -196,11 +196,6 @@ const folders = new Map<Language, string>([
   [egyptian, "egyptian"],
 ]);
 
-const pictures = new WeakMap<
-  SpecWorld,
-  { name: string; bytes: Buffer; headers: Headers }
->();
-
 Given(
   "the help has no {helpLanguage} picture {string}",
   async function (this: SpecWorld, language: Language, name: string) {
@@ -213,25 +208,22 @@ Given(
   },
 );
 
-When(
-  "the help picture {string} is opened",
-  async function (this: SpecWorld, name: string) {
-    const response = await ask(this, `/help/images/${name}`);
-    assert.equal(response.status, 200);
-    pictures.set(this, {
-      name,
-      bytes: Buffer.from(await response.arrayBuffer()),
-      headers: response.headers,
-    });
-  },
-);
+// The picture a page shows first, asked for as the page names it.
+const firstPicture = async (world: SpecWorld): Promise<Response> => {
+  const found = /<img [^>]*src="([^"]+)"/.exec(answer(world).body);
+  assert.ok(found !== null, "The page shows no picture.");
+  return ask(world, found[1]!.replace(/&amp;/g, "&"));
+};
 
 Then(
-  "the picture is the {helpLanguage} one",
-  function (this: SpecWorld, language: Language) {
-    const shown = pictures.get(this);
-    assert.ok(shown !== undefined, "No picture was opened.");
-    const [kind, section, file] = shown.name.split("/");
+  "the first picture on the page is the {helpLanguage} one",
+  async function (this: SpecWorld, language: Language) {
+    const shown = Buffer.from(await (await firstPicture(this)).arrayBuffer());
+    const name = /<img [^>]*src="\/help\/images\/[^/]+\/([^"]+)"/.exec(
+      answer(this).body,
+    )?.[1];
+    assert.ok(name !== undefined);
+    const [kind, section, file] = name.split("/");
     const made = readFileSync(
       join(
         dist,
@@ -246,15 +238,17 @@ Then(
         file!,
       ),
     );
-    assert.ok(shown.bytes.equals(made), "The picture is not that language's.");
+    assert.ok(shown.equals(made), "The picture is not that language's.");
   },
 );
 
 Then(
-  "the picture varies by the language the reader has chosen",
-  function (this: SpecWorld) {
-    const vary = pictures.get(this)?.headers.get("vary") ?? "";
-    assert.ok(vary.includes("Cookie"));
-    assert.ok(vary.includes("Accept-Language"));
+  "the first picture on the page asks to be checked again",
+  async function (this: SpecWorld) {
+    const response = await firstPicture(this);
+    assert.ok(
+      (response.headers.get("cache-control") ?? "").includes("no-cache"),
+    );
+    assert.ok(response.headers.get("etag") !== null);
   },
 );

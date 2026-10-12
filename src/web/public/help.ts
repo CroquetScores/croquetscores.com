@@ -7,6 +7,7 @@
 // A page its language has not got is shown in the site's first language
 // rather than not at all: a reader asking for help has little use for an
 // answer that says there is none.
+import { createHash } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { Assets } from "../common/assets.js";
@@ -32,34 +33,50 @@ const typeOf = (name: string): string =>
   imageTypes[name.slice(name.lastIndexOf(".")).toLowerCase()] ??
   "application/octet-stream";
 
+// The pictures of a page, named by the language the page was written in.
+const pictured = (html: string, tag: string): string =>
+  html.split(`src="${helpImagesPath}/`).join(`src="${helpImagesPath}/${tag}/`);
+
 export const registerHelpPages = (
   server: FastifyInstance,
   assets: Assets,
   library: HelpLibrary,
 ): void => {
-  // A picture shows the site in a language, so it is the reader's language's
-  // where it has been made, and the first language's where it has not, as a
-  // page is. It varies by language for the same reason a page does.
+  // A picture shows the site in a language, and the address says which, so
+  // that the pictures of a page are those of the language the page was written
+  // in and not of the reader's: an English page shown to a Welsh reader names
+  // English buttons. The first language's picture is shown where the language
+  // asked for has none, as a page is.
   server.get<{ Params: { "*": string } }>(
     `${helpImagesPath}/*`,
     async (request, reply) => {
-      const name = request.params["*"];
-      const speaking = speakingOf(request);
+      const asked = request.params["*"];
+      const slash = asked.indexOf("/");
+      const tag = asked.slice(0, slash);
+      const name = asked.slice(slash + 1);
       const fallback = server.languages[0];
+      const offered = server.languages.some((each) => each.tag === tag);
       const image =
-        (await library.image(speaking.language.tag, name)) ??
-        (fallback === undefined
+        slash === -1 || !offered || fallback === undefined
           ? undefined
-          : await library.image(fallback.tag, name));
+          : ((await library.image(tag, name)) ??
+            (await library.image(fallback.tag, name)));
       if (image === undefined) {
         reply.callNotFound();
         return reply;
       }
-      return reply
-        .header("cache-control", "private, max-age=86400")
-        .header("vary", "Cookie, Accept-Language")
-        .type(typeOf(name))
-        .send(image);
+      // Revalidated rather than kept for a day: the pictures are made again
+      // under the same names, and a reader should not see old ones beside new
+      // words.
+      const etag = `"${createHash("sha1").update(image).digest("base64url")}"`;
+      reply
+        .header("cache-control", "public, no-cache")
+        .header("etag", etag)
+        .header("x-content-type-options", "nosniff");
+      if (request.headers["if-none-match"] === etag) {
+        return reply.code(304).send();
+      }
+      return reply.type(typeOf(name)).send(image);
     },
   );
 
@@ -71,16 +88,16 @@ export const registerHelpPages = (
     const speaking = speakingOf(request);
     const fallback = server.languages[0];
     const own = await library.page(speaking.language.tag, name);
-    const page =
-      own ??
-      (fallback === undefined
+    const inFirst =
+      own !== undefined || fallback === undefined
         ? undefined
-        : await library.page(fallback.tag, name));
-    if (page === undefined || fallback === undefined) {
+        : await library.page(fallback.tag, name);
+    const page = own ?? inFirst;
+    const writtenIn = own === undefined ? fallback : speaking.language;
+    if (page === undefined || writtenIn === undefined) {
       reply.callNotFound();
       return reply;
     }
-    const writtenIn = own === undefined ? fallback : speaking.language;
 
     const html = render(assets, {
       title: page.title,
@@ -95,7 +112,7 @@ export const registerHelpPages = (
       // a reader's browser and screen reader read it in the language it is
       // written in even where the site around it is in another.
       body: `          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
-${page.html}
+${pictured(page.html, writtenIn.tag)}
           </article>`,
     });
 
