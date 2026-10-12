@@ -545,6 +545,7 @@ export const dutch: Language = {
     "admin.competition.name": "Naam",
     "admin.competition.kind": "Soort",
     "admin.competition.bestOf": "Beste van",
+    "admin.competition.rounds": "Rondes",
     "admin.competition.places": "Plaatsen",
     "admin.competition.round": "Ronde {number}",
     "admin.competition.bestOfs": "Beste van per ronde",
@@ -567,6 +568,8 @@ export const dutch: Language = {
     "BestOf.NotWhole": "Voer een geheel aantal partijen in.",
     "BestOf.TooSmall":
       "Een wedstrijd moet de beste van minstens 1 partij zijn.",
+    "Rounds.NotWhole": "Voer een geheel aantal rondes in.",
+    "Rounds.TooSmall": "Een blok moet in minstens 1 ronde worden gespeeld.",
     "KnockoutDraw.EvenBestOf":
       "Een wedstrijd in een knock-out moet een winnaar hebben, dus hij is de beste van een oneven aantal partijen.",
     "admin.hover.tournaments.new": "Een nieuw toernooi aanmaken",

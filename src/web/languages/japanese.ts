@@ -542,6 +542,7 @@ export const japanese: Language = {
     "admin.competition.name": "名称",
     "admin.competition.kind": "種類",
     "admin.competition.bestOf": "ゲーム数",
+    "admin.competition.rounds": "ラウンド数",
     "admin.competition.places": "順位数",
     "admin.competition.round": "第{number}ラウンド",
     "admin.competition.bestOfs": "各ラウンドのゲーム数",
@@ -561,6 +562,8 @@ export const japanese: Language = {
       "この大会のほかの部門が、すでにその名称を使っています。",
     "BestOf.NotWhole": "ゲーム数は整数で入力してください。",
     "BestOf.TooSmall": "1回の対戦は、1ゲーム以上にしてください。",
+    "Rounds.NotWhole": "ラウンド数は整数で入力してください。",
+    "Rounds.TooSmall": "ブロックは1ラウンド以上で行ってください。",
     "KnockoutDraw.EvenBestOf":
       "ノックアウト戦の対戦には勝者が必要なので、ゲーム数は奇数にしてください。",
 

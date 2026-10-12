@@ -550,6 +550,7 @@ export const welsh: Language = {
     "admin.competition.name": "Enw",
     "admin.competition.kind": "Math",
     "admin.competition.bestOf": "Y gorau o",
+    "admin.competition.rounds": "Rowndiau",
     "admin.competition.places": "Lleoedd",
     "admin.competition.round": "Rownd {number}",
     "admin.competition.bestOfs": "Y gorau o",
@@ -570,6 +571,8 @@ export const welsh: Language = {
       "Mae gan gystadleuaeth arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
     "BestOf.NotWhole": "Rhowch nifer cyflawn o gemau.",
     "BestOf.TooSmall": "Rhaid i gornest fod y gorau o 1 gêm o leiaf.",
+    "Rounds.NotWhole": "Rhowch nifer cyflawn o rowndiau.",
+    "Rounds.TooSmall": "Rhaid chwarae bloc mewn 1 rownd o leiaf.",
     "KnockoutDraw.EvenBestOf":
       "Rhaid i gornest taro allan gael enillydd, felly mae'n rhaid iddi fod y gorau o odrif o gemau.",
     "admin.hover.tournaments.new": "Creu twrnamaint newydd",

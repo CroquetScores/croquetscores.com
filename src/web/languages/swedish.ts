@@ -544,6 +544,7 @@ export const swedish: Language = {
     "admin.competition.name": "Namn",
     "admin.competition.kind": "Sort",
     "admin.competition.bestOf": "Bäst av",
+    "admin.competition.rounds": "Omgångar",
     "admin.competition.places": "Platser",
     "admin.competition.round": "Omgång {number}",
     "admin.competition.bestOfs": "Bäst av per omgång",
@@ -565,6 +566,8 @@ export const swedish: Language = {
       "En annan tävling i den här turneringen har redan det namnet.",
     "BestOf.NotWhole": "Ange ett helt antal partier.",
     "BestOf.TooSmall": "En match måste spelas bäst av minst 1 parti.",
+    "Rounds.NotWhole": "Ange ett helt antal omgångar.",
+    "Rounds.TooSmall": "Ett block måste spelas i minst 1 omgång.",
     "KnockoutDraw.EvenBestOf":
       "En match i en utslagsturnering måste ha en vinnare, så den spelas bäst av ett udda antal partier.",
     "admin.hover.tournaments.new": "Skapa en ny turnering",

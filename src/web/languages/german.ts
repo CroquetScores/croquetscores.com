@@ -556,6 +556,7 @@ export const german: Language = {
     "admin.competition.name": "Name",
     "admin.competition.kind": "Art",
     "admin.competition.bestOf": "Best of",
+    "admin.competition.rounds": "Runden",
     "admin.competition.places": "Plätze",
     "admin.competition.round": "Runde {number}",
     "admin.competition.bestOfs": "Best of",
@@ -577,6 +578,9 @@ export const german: Language = {
       "Ein anderer Wettbewerb dieses Turniers hat schon diesen Namen.",
     "BestOf.NotWhole": "Gib eine ganze Zahl von Spielen ein.",
     "BestOf.TooSmall": "Eine Begegnung muss mindestens über 1 Spiel gehen.",
+    "Rounds.NotWhole": "Gib eine ganze Zahl an Runden ein.",
+    "Rounds.TooSmall":
+      "Ein Block muss über mindestens 1 Runde gespielt werden.",
     "KnockoutDraw.EvenBestOf":
       "Eine Begegnung in einer K.-o.-Runde braucht einen Sieger, deshalb geht sie über eine ungerade Zahl von Spielen.",
     "admin.hover.tournaments.new": "Ein neues Turnier anlegen",

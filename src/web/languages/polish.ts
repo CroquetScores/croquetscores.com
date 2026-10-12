@@ -550,6 +550,7 @@ export const polish: Language = {
     "admin.competition.name": "Nazwa",
     "admin.competition.kind": "Rodzaj",
     "admin.competition.bestOf": "Najlepszy z",
+    "admin.competition.rounds": "Rundy",
     "admin.competition.places": "Miejsca",
     "admin.competition.round": "Runda {number}",
     "admin.competition.bestOfs": "Najlepszy z, według rund",
@@ -571,6 +572,8 @@ export const polish: Language = {
     "BestOf.NotWhole": "Wpisz całkowitą liczbę partii.",
     "BestOf.TooSmall":
       "Mecz musi być rozgrywany w systemie najlepszy z co najmniej 1 partii.",
+    "Rounds.NotWhole": "Wpisz całkowitą liczbę rund.",
+    "Rounds.TooSmall": "Blok musi być rozgrywany w co najmniej 1 rundzie.",
     "KnockoutDraw.EvenBestOf":
       "Mecz pucharowy musi mieć zwycięzcę, więc rozgrywa się go w systemie najlepszy z nieparzystej liczby partii.",
     "admin.hover.tournaments.new": "Utwórz nowy turniej",

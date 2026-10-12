@@ -552,6 +552,7 @@ export const afrikaans: Language = {
     "admin.competition.name": "Naam",
     "admin.competition.kind": "Soort",
     "admin.competition.bestOf": "Beste van",
+    "admin.competition.rounds": "Rondes",
     "admin.competition.places": "Plekke",
     "admin.competition.round": "Ronde {number}",
     "admin.competition.bestOfs": "Beste van",
@@ -572,6 +573,8 @@ export const afrikaans: Language = {
       "Nog 'n kompetisie in hierdie toernooi het reeds daardie naam.",
     "BestOf.NotWhole": "Voer 'n heelgetal spelle in.",
     "BestOf.TooSmall": "'n Ontmoeting moet die beste van minstens 1 spel wees.",
+    "Rounds.NotWhole": "Voer 'n heelgetal rondes in.",
+    "Rounds.TooSmall": "'n Blok moet in minstens 1 ronde gespeel word.",
     "KnockoutDraw.EvenBestOf":
       "'n Uitskakelingsontmoeting moet 'n wenner hê, so dit is die beste van 'n onewe getal spelle.",
     "admin.hover.tournaments.new": "Skep 'n nuwe toernooi",

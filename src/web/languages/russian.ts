@@ -547,6 +547,7 @@ export const russian: Language = {
     "admin.competition.name": "Название",
     "admin.competition.kind": "Тип",
     "admin.competition.bestOf": "Лучшая из",
+    "admin.competition.rounds": "Туры",
     "admin.competition.places": "Места",
     "admin.competition.round": "Раунд {number}",
     "admin.competition.bestOfs": "Лучшая из",
@@ -569,6 +570,8 @@ export const russian: Language = {
       "У другого соревнования этого турнира уже есть такое название.",
     "BestOf.NotWhole": "Введите целое число партий.",
     "BestOf.TooSmall": "Встреча должна быть лучшей минимум из 1 партии.",
+    "Rounds.NotWhole": "Введите целое число туров.",
+    "Rounds.TooSmall": "Блок должен играться минимум в 1 тур.",
     "KnockoutDraw.EvenBestOf":
       "У встречи на вылет должен быть победитель, поэтому она играется как лучшая из нечётного числа партий.",
     "admin.hover.tournaments.new": "Создать новый турнир",
