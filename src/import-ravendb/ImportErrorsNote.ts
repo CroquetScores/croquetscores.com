@@ -11,7 +11,7 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { tournamentBecome } from "./ImportTournamentPlayers.js";
 import type { SeeNotes } from "./SeeNotes.js";
-import { plainReasonOf } from "./errorSummaries.js";
+import { plainPlayerReasonOf, plainReasonOf } from "./errorSummaries.js";
 import type { Game as OldGame } from "./ravendb-models/Competition.js";
 
 /** What the tournament's note of what could not be brought over is titled. */
@@ -26,6 +26,19 @@ interface PlayerOfGame {
   readonly _Id: number;
   readonly Representing: string | null;
 }
+
+/**
+ * A player who could not be entered as a line of the note: who, with their
+ * team or club where they had one, and why, said for a reader.
+ */
+export const playerNoteLineOf = (
+  name: string,
+  representing: string | null,
+  failure: unknown,
+): string => {
+  const team = (representing ?? "").trim();
+  return `${name}${team === "" ? "" : ` (${team})`} was not entered because ${plainPlayerReasonOf(failure)}.`;
+};
 
 /**
  * A game that could not be added as a line of the note: who beat whom, with

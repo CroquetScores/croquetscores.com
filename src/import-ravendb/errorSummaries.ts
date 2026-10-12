@@ -58,6 +58,27 @@ const PLAIN_REASONS: Readonly<Record<string, string>> = {
     "a player's name has no letter or digit in it",
 };
 
+// Why the site did not enter a player, said for a reader of the tournament, as
+// a clause after "because".
+const PLAIN_PLAYER_REASONS: Readonly<Record<string, string>> = {
+  "ImportTeamMatches.RepresentsNeitherTeam":
+    "they were recorded as representing a team that is not in the match",
+  "PersonName.TooLong": "their name is too long for the new site",
+  "TournamentPlayer.NoLetterOrDigit": "their name has no letter or digit in it",
+  "CompetitionPlayer.Withdrawn": "they had already withdrawn",
+};
+
+/**
+ * Why a player was not entered, said for a reader of the tournament, as the
+ * end of a sentence beginning "because" (ImportCompetition.feature).
+ */
+export const plainPlayerReasonOf = (failure: unknown): string => {
+  const code = (failure as { code?: unknown } | null)?.code;
+  return typeof code === "string" && PLAIN_PLAYER_REASONS[code] !== undefined
+    ? PLAIN_PLAYER_REASONS[code]
+    : "the new site's rules do not allow it";
+};
+
 /**
  * Why `failure` was refused, said for a reader of the tournament, as the end of
  * a sentence beginning "because" (ImportTeamMatches.feature).

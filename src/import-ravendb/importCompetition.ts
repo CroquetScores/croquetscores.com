@@ -25,7 +25,11 @@ import {
   oldSitePathOf,
 } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { type ImportErrorsNote, noteLineOf } from "./ImportErrorsNote.js";
+import {
+  type ImportErrorsNote,
+  noteLineOf,
+  playerNoteLineOf,
+} from "./ImportErrorsNote.js";
 import {
   addOldPlayer,
   isOldBye,
@@ -562,6 +566,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   // a note to say them in, which is said once the competition is brought over.
   const writer = await importing.notes?.writer();
   const noted: { game: OldGame; failure: unknown }[] = [];
+  const notedPlayers: { number: number; failure: unknown }[] = [];
 
   const bringOver = async (dry: DryRun | undefined): Promise<void> => {
     await unitOfWork.inTransaction(async () => {
@@ -602,6 +607,9 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       writer === undefined
         ? undefined
         : (game, failure) => noted.push({ game, failure }),
+      writer === undefined
+        ? undefined
+        : (number, failure) => notedPlayers.push({ number, failure }),
     );
 
     // Done as the tournament's first manager, who created it, when it was
@@ -873,7 +881,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   // Said in a note of the tournament's, which makes croquetscores@gmail.com a
   // manager, and said as corrected, once for the competition.
   if (
-    noted.length > 0 &&
+    noted.length + notedPlayers.length > 0 &&
     importing.notes !== undefined &&
     writer !== undefined
   ) {
@@ -883,9 +891,19 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       website,
       tournamentDocument,
       document.Name,
-      noted.map(({ game, failure }) =>
-        noteLineOf(game, failure, document.Players._Players, nameOf),
-      ),
+      [
+        ...notedPlayers.map(({ number, failure }) =>
+          playerNoteLineOf(
+            nameOf(number),
+            document.Players._Players.find((each) => each._Id === number)
+              ?.Representing ?? null,
+            failure,
+          ),
+        ),
+        ...noted.map(({ game, failure }) =>
+          noteLineOf(game, failure, document.Players._Players, nameOf),
+        ),
+      ],
       writer,
     );
     const where = await database.tournamentOf(website, tournamentDocument);
@@ -896,7 +914,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       oldSitePath: oldSitePathOf(where?.tournamentAddress ?? "", document.Slug),
       what: "",
       code: "ImportCompetition.ImportErrorsNoted",
-      description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
+      description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added and ${String(notedPlayers.length)} ${notedPlayers.length === 1 ? "player" : "players"} that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
     });
   }
 };

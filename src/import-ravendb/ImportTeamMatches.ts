@@ -35,7 +35,7 @@ import type {
   Game as OldGame,
   TeamMatch,
 } from "./ravendb-models/Competition.js";
-import { noteLineOf } from "./ImportErrorsNote.js";
+import { noteLineOf, playerNoteLineOf } from "./ImportErrorsNote.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { bestOfImported } from "./bestOfImported.js";
 import { isOldBye } from "./ImportTournamentPlayers.js";
@@ -278,6 +278,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     // write them; otherwise it is kept as an error.
     const writer = await this.importing.notes?.writer();
     const noted: { game: OldGame; failure: unknown }[] = [];
+    const notedPlayers: { number: number; failure: unknown }[] = [];
 
     await unitOfWork.inTransaction(async () => {
       const tournamentDocument = document.Tournament.Id;
@@ -322,6 +323,9 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         writer === undefined
           ? undefined
           : (game, failure) => noted.push({ game, failure }),
+        writer === undefined
+          ? undefined
+          : (number, failure) => notedPlayers.push({ number, failure }),
       );
 
       // Done as the tournament's first manager, who created it, when it was
@@ -825,15 +829,29 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
     // Said in a note of the tournament's, which makes croquetscores@gmail.com
     // a manager, and said as corrected, once for the team match.
     const { notes } = this.importing;
-    if (notes !== undefined && writer !== undefined && noted.length > 0) {
+    if (
+      notes !== undefined &&
+      writer !== undefined &&
+      noted.length + notedPlayers.length > 0
+    ) {
       const nameOf = nameOfIn(document);
       await notes.add(
         website,
         document.Tournament.Id,
         document.Name,
-        noted.map(({ game, failure }) =>
-          noteLineOf(game, failure, document.Players._Players, nameOf),
-        ),
+        [
+          ...notedPlayers.map(({ number, failure }) =>
+            playerNoteLineOf(
+              nameOf(number),
+              document.Players._Players.find((each) => each._Id === number)
+                ?.Representing ?? null,
+              failure,
+            ),
+          ),
+          ...noted.map(({ game, failure }) =>
+            noteLineOf(game, failure, document.Players._Players, nameOf),
+          ),
+        ],
         writer,
       );
       const where = await database.tournamentOf(
@@ -850,7 +868,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         ),
         what: "",
         code: "ImportCompetition.ImportErrorsNoted",
-        description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
+        description: `${document.Name} had ${String(noted.length)} ${noted.length === 1 ? "game" : "games"} that could not be added and ${String(notedPlayers.length)} ${notedPlayers.length === 1 ? "player" : "players"} that could not be entered, which are said in the note Import Errors of the tournament, and croquetscores@gmail.com is made a manager of the tournament to write it.`,
       });
     }
   }

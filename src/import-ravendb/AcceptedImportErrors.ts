@@ -7,6 +7,7 @@ import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
 import {
   gameSaid,
   placeOf,
+  plainPlayerReasonOf,
   plainReasonOf,
   playerSaid,
   reasonOf,
@@ -332,6 +333,9 @@ export class DocumentErrors {
     // rather than kept as an error (ImportCompetition.feature): given the game
     // and what refused it.
     private readonly noted?: (game: OldGame, failure: unknown) => void,
+    // Where a player who cannot be entered is said in the note too, given the
+    // number the old site gave them and what refused them.
+    private readonly notedPlayer?: (number: number, failure: unknown) => void,
   ) {}
 
   /** That the competition the document was is now `id` of the tournament. */
@@ -463,6 +467,19 @@ export class DocumentErrors {
     failure: unknown,
   ): Promise<void> {
     const said = playerSaid(name, this.place);
+    if (
+      this.notedPlayer !== undefined &&
+      this.dry === undefined &&
+      acceptedErrorOf(this.documentId, failure) === undefined
+    ) {
+      this.notedPlayer(number, failure);
+      await this.corrected(
+        `player ${String(number)}`,
+        "ImportCompetition.PlayerNoted",
+        `${said} was not entered, because ${plainPlayerReasonOf(failure)}, and is said in the note Import Errors of the tournament.`,
+      );
+      return;
+    }
     await this.refused(`player ${String(number)}`, failure, {
       refused: (refusal) =>
         `${said} was not entered because ${reasonOf(refusal)}.`,

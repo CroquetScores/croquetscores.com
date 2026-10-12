@@ -791,6 +791,56 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the error kept for "croquetscores.com/teammatches/50" says "player 7"
 
+  Rule: A player who cannot be entered is said in the note of the tournament too
+
+    A player the site cannot enter, as one recorded as representing a team
+    that is not in the match, whose games say nothing of which team they were
+    on, is said in the note Import Errors of the tournament as the games are
+    (the rule above), with the team or club they represented and why, and is
+    not kept as an error. That is said as corrected
+    (`AcceptedImportErrors.feature`). Where no user was brought over as
+    croquetscores@gmail.com, it is kept as an error as it always was.
+
+    Scenario: A player who cannot be entered is said in the note
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "Sam Someone (Australia) was not entered because they were recorded as representing a team that is not in the match."
+
+    Scenario: A player who cannot be entered is no error
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then no error is kept for "croquetscores.com/teammatches/50"
+
+    Scenario: A player who cannot be entered is said as corrected
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then "player 7" of "croquetscores.com/teammatches/50" is corrected as "ImportCompetition.PlayerNoted"
+
+    Scenario: The note says which team match the player was in
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "Australia"
+      When the team match is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "### New Zealand vs England"
+
   Rule: A game against a player already played is a game against the one not played
 
     The old sites kept many team matches whose two players met again in a
