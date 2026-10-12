@@ -132,6 +132,16 @@ async function photographIn(folder, language) {
   // every picture is drawn in. The site's own stack asks the machine for its
   // system font, which is different on each machine and wide on this one, so
   // text wraps where the English pictures' did not.
+  // The face for the scripts Ubuntu Sans has no letters for. Named, since the
+  // machine's own choice among the CJK faces is the first it finds, which can be
+  // the serif or another country's.
+  const scriptFont =
+    {
+      zh: '"Noto Sans CJK SC"',
+      ja: '"Noto Sans CJK JP"',
+      ko: '"Noto Sans CJK KR"',
+      "ar-EG": '"Noto Sans Arabic"',
+    }[language.tag] ?? '"Noto Sans"';
   const makeContext = async () => {
     const made = await browser.newContext({
       baseURL: site,
@@ -146,7 +156,7 @@ async function photographIn(folder, language) {
     await made.addInitScript({
       content: `document.addEventListener("DOMContentLoaded", () => {
         const style = document.createElement("style");
-        style.textContent = ':root { --font-body: "Ubuntu Sans", system-ui, sans-serif; }';
+        style.textContent = ':root { --font-body: "Ubuntu Sans", ${scriptFont}, system-ui, sans-serif; }';
         document.head.append(style);
       });`,
     });
