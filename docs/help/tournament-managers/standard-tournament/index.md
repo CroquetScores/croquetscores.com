@@ -43,3 +43,5 @@ The dark green bar beneath the header is for moving between pages. It leads to t
 **What is refused is said beside the field it is about.** Nothing refused is kept, and what you typed stays typed, so that it can be put right rather than typed again.
 
 **The admin works on a phone.** Every button is big enough to press with a thumb, and nothing is wider than the screen.
+
+Next: [Creating a tournament](creating-a-tournament.md).
