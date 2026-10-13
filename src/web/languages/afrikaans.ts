@@ -471,6 +471,27 @@ export const afrikaans: Language = {
     "admin.view.managers": "Bestuurders",
     "admin.view.notes": "Notas",
     "admin.view.scorers": "Telers",
+    "admin.view.rankings": "Ranglyste",
+    "admin.rankings.textFile":
+      "Die uitslae van die toernooi word as 'n teksleer aan die wêreldranglys gestuur, wat die webwerf uit die ingevoerde wedstryde skryf.",
+    "admin.rankings.spreadsheet":
+      "Die uitslae van die toernooi word as 'n sigblad aan die wêreldranglys gestuur, wat die webwerf uit die ingevoerde wedstryde skryf.",
+    "admin.rankings.fillInWinners":
+      "Die webwerf kan net raai wie elke kompetisie gewen het, so kontroleer die Wenner-reël van elkeen voordat jy die leer stuur.",
+    "admin.rankings.fillInWinner":
+      "Die webwerf kan nie weet wie die toernooi gewen het nie, so vul dit onderaan die sigblad in voordat jy dit stuur.",
+    "admin.rankings.sendIt":
+      "Stuur dan die leer na die beamptes van die wêreldranglys.",
+    "admin.rankings.download": "Laai ranglyste af",
+    "rankings.notAvailable": "Ranglyste is nie beskikbaar nie",
+    "rankings.notAvailable.sport":
+      "Hierdie toernooi se sportsoort het geen wêreldranglys nie, so daar is geen ranglyste om te stuur nie.",
+    "rankings.notAvailable.handicap":
+      "Hierdie toernooi word met handicap gespeel, so dit tel nie vir die wêreldranglys nie.",
+    "rankings.notAvailable.drawnGames":
+      "Hierdie toernooi laat gelykopwedstryde toe, so dit tel nie vir die wêreldranglys nie.",
+    "rankings.notAvailable.notCounted":
+      "Die bestuurder van hierdie toernooi het gesê dit tel nie vir die wêreldranglys nie.",
     "admin.view.otherwise":
       "Hierdie toernooi kan nie van hier af bestuur word nie.",
     "admin.competitionView.tabs": "Kompetisie",

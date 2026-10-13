@@ -8,8 +8,11 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   they represent, if anything, the flag they fly, if any, and, beneath the
   flag, the name the world rankings know them by, headed "World Ranking Player
   Name" (`WorldRankingName.feature`). Only association croquet and golf
-  croquet have world rankings (`Sport.feature`), so the world ranking name is
-  asked for only in a tournament of one of them.
+  croquet have players the world rankings know by name (`Sport.feature`), so
+  the world ranking name is asked for only in a tournament of one of them.
+  American 6 Wicket is ranked across the world, but its players are known by
+  their own names, so it is never asked for there, and a player's world ranking
+  name is always their name, which it follows when it is corrected.
 
   It is a modal dialog, which is not the dialog a form that is a page's
   purpose is drawn in (`STYLE.md`). That stands on a page of its own, at an
@@ -47,7 +50,8 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   name again. A world ranking name left empty is kept as the player's name.
   A player being changed keeps the world ranking name they have when their
   name is corrected, since the rankings still know them by it, so it follows
-  nothing while a player is changed.
+  nothing while a player is changed. In American 6 Wicket it is the name
+  and nothing else, so it is corrected with it.
   In a tournament of association or golf croquet, the name and the world
   ranking name each offer, as they are typed, the players the world rankings
   know for the tournament's sport whose names the typing may be the start of
@@ -399,7 +403,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Alex Another" is typed as the "Name"
       Then the player dialog says nobody was added
 
-  Rule: Only a tournament of a sport with world rankings asks for a world ranking name
+  Rule: Only a tournament of association or golf croquet asks for a world ranking name
 
     Scenario Outline: A tournament of association or golf croquet asks for a world ranking name
       Given the tournament "Spring Open" is for the sport "<sport>"
@@ -421,8 +425,30 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
 
       Examples:
         | sport |
-        | a6w   |
         | rc    |
+
+    Scenario: A tournament of American 6 Wicket asks for none
+      Given the tournament "Spring Open" is for the sport "a6w"
+      And the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the player dialog does not ask for "World Ranking Player Name"
+
+    Scenario: A player added in American 6 Wicket has their name as their world ranking name
+      Given the tournament "Spring Open" is for the sport "a6w"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Sam Someone"
+
+    Scenario: A player renamed in American 6 Wicket has their new name as their world ranking name
+      Given the tournament "Spring Open" is for the sport "a6w"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      And "Samantha Someone" is typed as the "Name"
+      When "Save" is pressed
+      Then the player "Samantha Someone" of "Spring Open" has the world ranking name "Samantha Someone"
 
     Scenario: A player added in a tournament of another sport has no world ranking name
       Given the tournament "Spring Open" does not count towards the world rankings

@@ -523,6 +523,27 @@ export const english: Language = {
     "admin.view.managers": "Managers",
     "admin.view.notes": "Notes",
     "admin.view.scorers": "Scorers",
+    "admin.view.rankings": "Rankings",
+    "admin.rankings.textFile":
+      "The world rankings are sent the tournament's results as a text file, which the site writes from the games entered.",
+    "admin.rankings.spreadsheet":
+      "The world rankings are sent the tournament's results as a spreadsheet, which the site writes from the games entered.",
+    "admin.rankings.fillInWinners":
+      "The site can only guess who won each competition, so check the Winner line of each one before sending the file.",
+    "admin.rankings.fillInWinner":
+      "The site cannot know who won the tournament, so fill that in at the bottom of the spreadsheet before sending it.",
+    "admin.rankings.sendIt":
+      "Then send the file to the world rankings officers.",
+    "admin.rankings.download": "Download rankings",
+    "rankings.notAvailable": "Rankings are not available",
+    "rankings.notAvailable.sport":
+      "This tournament's sport has no world rankings, so there are no rankings to send.",
+    "rankings.notAvailable.handicap":
+      "This tournament is played under handicap, so it does not count towards the world rankings.",
+    "rankings.notAvailable.drawnGames":
+      "This tournament allows drawn games, so it does not count towards the world rankings.",
+    "rankings.notAvailable.notCounted":
+      "This tournament's manager has said it does not count towards the world rankings.",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
     // A competition's page, and the tabs what there is to run is in.

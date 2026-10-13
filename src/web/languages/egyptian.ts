@@ -458,6 +458,26 @@ export const egyptian: Language = {
     "admin.view.managers": "المديرين",
     "admin.view.notes": "الملاحظات",
     "admin.view.scorers": "مسجّلي النتايج",
+    "admin.view.rankings": "التصنيفات",
+    "admin.rankings.textFile":
+      "نتايج البطولة بتتبعت للتصنيف العالمي كملف نصي، والموقع بيكتبه من المباريات اللي اتسجلت.",
+    "admin.rankings.spreadsheet":
+      "نتايج البطولة بتتبعت للتصنيف العالمي كجدول بيانات، والموقع بيكتبه من المباريات اللي اتسجلت.",
+    "admin.rankings.fillInWinners":
+      "الموقع مش بيقدر غير يخمّن مين كسب كل مسابقة، فراجع سطر الفائز في كل واحدة قبل ما تبعت الملف.",
+    "admin.rankings.fillInWinner":
+      "الموقع مش ممكن يعرف مين كسب البطولة، فاكتبه في آخر جدول البيانات قبل ما تبعته.",
+    "admin.rankings.sendIt": "وبعدين ابعت الملف لمسؤولي التصنيف العالمي.",
+    "admin.rankings.download": "تنزيل التصنيفات",
+    "rankings.notAvailable": "التصنيفات مش متاحة",
+    "rankings.notAvailable.sport":
+      "رياضة البطولة دي مالهاش تصنيف عالمي، فمفيش تصنيفات تتبعت.",
+    "rankings.notAvailable.handicap":
+      "البطولة دي بتتلعب بالهانديكاب، فمش بتتحسب في التصنيف العالمي.",
+    "rankings.notAvailable.drawnGames":
+      "البطولة دي بتسمح بالتعادل، فمش بتتحسب في التصنيف العالمي.",
+    "rankings.notAvailable.notCounted":
+      "مدير البطولة دي قال إنها مش بتتحسب في التصنيف العالمي.",
     "admin.view.otherwise": "البطولة دي مينفعش تتدار من هنا.",
     "admin.competitionView.tabs": "المسابقة",
     "admin.competitionView.players": "اللاعبين",

@@ -147,6 +147,12 @@ Feature: A player is added to a team, or changed, in a modal dialog
       When "Add Player" is pressed
       Then the team player dialog does not ask for "World Ranking Player Name"
 
+    Scenario: A tournament of American 6 Wicket asks for no world ranking name
+      Given the tournament "Spring Tests" is for the sport "a6w"
+      And the page of the team "Australia" in "Spring Tests" is open
+      When "Add Player" is pressed
+      Then the team player dialog does not ask for "World Ranking Player Name"
+
     Scenario: The world ranking name follows the name as it is typed
       Given the page of the team "Australia" in "Spring Tests" is open
       And "Add Player" is pressed

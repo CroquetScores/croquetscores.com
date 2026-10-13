@@ -212,7 +212,7 @@ Feature: Changing what a tournament is
       Given a stream where a tournament was created in the sport "ac"
       And it was created counting towards the world rankings
       And the tournament is rebuilt from the stream
-      And the update plays it in the sport "a6w"
+      And the update plays it in the sport "rc"
       When the tournament is updated
       Then it is refused with "Tournament.NoWorldRankings"
 

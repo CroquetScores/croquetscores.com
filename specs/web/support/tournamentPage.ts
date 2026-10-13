@@ -17,7 +17,8 @@ export type Tab =
   | "tests"
   | "notes"
   | "managers"
-  | "scorers";
+  | "scorers"
+  | "rankings";
 
 /**
  * Where a tab lists what it holds, once it has been asked for, or where a page

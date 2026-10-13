@@ -152,7 +152,8 @@ export class TournamentsByAccount implements Projection, Asked {
   // From the details, as every tournament is, joined to the account's own part
   // where it has one: a tournament it has no part in is one whose rankings it
   // looks after where its sport, the second part of its address, is asked
-  // about, and is left out where it is not.
+  // about and it counts towards the world rankings, and is left out where it
+  // is not. One that does not has no rankings to look after.
   async tournamentsOfRankingOfficer(
     account: AccountId,
     website: Website,
@@ -176,7 +177,9 @@ export class TournamentsByAccount implements Projection, Asked {
          left join tournaments_by_account a
            on a.tournament_id = d.tournament_id and a.account_id = $1
         where d.website = $2 and extract(year from d.starts) = $3
-          and (a.part is not null or split_part(d.address, '/', 2) = any($4))
+          and (a.part is not null
+               or (split_part(d.address, '/', 2) = any($4)
+                   and d.counts_towards_world_rankings))
         order by d.archived, d.starts desc, d.name`,
       [account.value, website.host, year, sports],
     );
@@ -202,7 +205,9 @@ export class TournamentsByAccount implements Projection, Asked {
          left join tournaments_by_account a
            on a.tournament_id = d.tournament_id and a.account_id = $1
         where d.website = $2
-          and (a.part is not null or split_part(d.address, '/', 2) = any($3))
+          and (a.part is not null
+               or (split_part(d.address, '/', 2) = any($3)
+                   and d.counts_towards_world_rankings))
         order by year desc`,
       [account.value, website.host, sports],
     );
@@ -216,11 +221,14 @@ export class TournamentsByAccount implements Projection, Asked {
     if (event instanceof TournamentCreated) {
       await connection.query(
         `insert into tournaments_by_account_details
-           (tournament_id, website, name, starts, finishes, address)
-         values ($1, $2, $3, $4, $5, $6)
+           (tournament_id, website, name, starts, finishes, address,
+            counts_towards_world_rankings)
+         values ($1, $2, $3, $4, $5, $6, $7)
          on conflict (tournament_id) do update
            set name = excluded.name, starts = excluded.starts,
-               finishes = excluded.finishes, address = excluded.address`,
+               finishes = excluded.finishes, address = excluded.address,
+               counts_towards_world_rankings
+                 = excluded.counts_towards_world_rankings`,
         [
           tournament,
           event.website,
@@ -228,15 +236,24 @@ export class TournamentsByAccount implements Projection, Asked {
           event.starts,
           event.finishes,
           event.address,
+          event.worldRankings,
         ],
       );
       await this.#takesPart(tournament, event.createdBy.value, "manager");
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
         `update tournaments_by_account_details
-            set name = $2, starts = $3, finishes = $4, address = $5
+            set name = $2, starts = $3, finishes = $4, address = $5,
+                counts_towards_world_rankings = $6
           where tournament_id = $1`,
-        [tournament, event.name, event.starts, event.finishes, event.address],
+        [
+          tournament,
+          event.name,
+          event.starts,
+          event.finishes,
+          event.address,
+          event.worldRankings,
+        ],
       );
     } else if (event instanceof TournamentArchived) {
       await this.#archived(tournament, true);

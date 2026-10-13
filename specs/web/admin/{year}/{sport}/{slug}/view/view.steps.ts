@@ -82,10 +82,10 @@ Then("no tab is offered", async function (this: SpecWorld) {
   assert.equal(await this.browserPage.getByRole("tab").count(), 0);
 });
 
-const places = ["first", "second", "third", "fourth", "fifth"];
+const places = ["first", "second", "third", "fourth", "fifth", "sixth"];
 
 Then(
-  /^the tab "([^"]*)" is the (first|second|third|fourth|fifth) tab$/,
+  /^the tab "([^"]*)" is the (first|second|third|fourth|fifth|sixth) tab$/,
   async function (this: SpecWorld, tab: string, place: string) {
     await tabCalled(this, tab).waitFor();
     const all = (

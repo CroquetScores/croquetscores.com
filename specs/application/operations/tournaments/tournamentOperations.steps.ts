@@ -43,7 +43,7 @@ import {
   scenarioOf,
   tournamentNamed,
 } from "./aRequest.js";
-import { competitionIn } from "./requests.js";
+import { changePlayerWorldRankingName, competitionIn } from "./requests.js";
 
 // The steps more than one of a tournament's operations uses: what was done
 // before the request the scenario is about, what the request says, and what
@@ -667,6 +667,60 @@ Then(
     assert.ok(
       id.equals(this.answer as TournamentId),
       `It was answered with ${String(this.answer)}.`,
+    );
+  },
+);
+
+// What a tournament's rankings are sent is made of its days and its players'
+// names, which scenarios about the rankings change after a tournament is made.
+Given(
+  "{string} has set the days of the tournament {string} to start on {string} and finish on {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    starts: string,
+    finishes: string,
+  ) {
+    await updated(this, address, tournamentNamed(this, name), {
+      starts: `${starts}T00:00:00Z`,
+      finishes: `${finishes}T00:00:00Z`,
+    });
+  },
+);
+
+// A name of letters alone, as long as the scenario says, to see what is done
+// with one too long for a file name or a worksheet's.
+Given(
+  "{string} has created the tournament with a name of {int} letters",
+  async function (this: SpecWorld, address: string, letters: number) {
+    await createdBefore(
+      this,
+      address,
+      aTournament("Rankings".padEnd(letters, "x").slice(0, letters), {
+        format: this.tournamentFormat?.name ?? "Standard",
+        ...saidOfNext(this),
+      }),
+    );
+  },
+);
+
+Given(
+  "{string} has changed the world ranking name of {string} in {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    player: string,
+    name: string,
+    worldRankingName: string,
+  ) {
+    const account = await accountFor(this, address);
+    await changePlayerWorldRankingName(
+      this,
+      account.value,
+      tournamentNamed(this, name),
+      player,
+      worldRankingName,
     );
   },
 );

@@ -26,11 +26,18 @@ export class Sport {
   readonly #code: string;
   readonly #name: string;
   readonly #hasWorldRankings: boolean;
+  readonly #countsTowardsWorldRankings: boolean;
 
-  private constructor(code: string, name: string, hasWorldRankings = false) {
+  private constructor(
+    code: string,
+    name: string,
+    hasWorldRankings = false,
+    countsTowardsWorldRankings = hasWorldRankings,
+  ) {
     this.#code = code;
     this.#name = name;
     this.#hasWorldRankings = hasWorldRankings;
+    this.#countsTowardsWorldRankings = countsTowardsWorldRankings;
   }
 
   static readonly associationCroquet = new Sport(
@@ -39,7 +46,15 @@ export class Sport {
     true,
   );
   static readonly golfCroquet = new Sport("gc", "Golf Croquet", true);
-  static readonly american6Wicket = new Sport("a6w", "American 6 Wicket");
+  // Ranked as golf croquet is, but its players are known to the rankings by
+  // their own names, so it has no list of players and its players are never
+  // asked for a world ranking name (Sport.feature).
+  static readonly american6Wicket = new Sport(
+    "a6w",
+    "American 6 Wicket",
+    false,
+    true,
+  );
   static readonly ricochet = new Sport("rc", "Ricochet");
   static readonly gateball = new Sport("gb", "Gateball");
 
@@ -49,6 +64,15 @@ export class Sport {
    */
   get hasWorldRankings(): boolean {
     return this.#hasWorldRankings;
+  }
+
+  /**
+   * Whether a tournament of it may count towards the world rankings, and is
+   * sent to them. A sport can be ranked without its players having a name of
+   * their own there, as American 6 Wicket is (Sport.feature).
+   */
+  get countsTowardsWorldRankings(): boolean {
+    return this.#countsTowardsWorldRankings;
   }
 
   /** Every sport there is. */

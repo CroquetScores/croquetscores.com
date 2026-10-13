@@ -130,6 +130,7 @@ import { PublicPlayersOfTournamentHandler } from "../application/operations/tour
 import { PublicPlayerOfTournamentHandler } from "../application/operations/tournaments/PublicPlayerOfTournamentHandler.js";
 import { PublicBlockOfTournamentHandler } from "../application/operations/tournaments/PublicBlockOfTournamentHandler.js";
 import { PublicKnockoutOfTournamentHandler } from "../application/operations/tournaments/PublicKnockoutOfTournamentHandler.js";
+import { PublicRankingsOfTournamentHandler } from "../application/operations/tournaments/PublicRankingsOfTournamentHandler.js";
 import { PublicSwissOfTournamentHandler } from "../application/operations/tournaments/PublicSwissOfTournamentHandler.js";
 import { PublicGroupOfTournamentHandler } from "../application/operations/tournaments/PublicGroupOfTournamentHandler.js";
 import { PublicTeamSummaryOfTournamentHandler } from "../application/operations/tournaments/PublicTeamSummaryOfTournamentHandler.js";
@@ -332,6 +333,7 @@ import { registerYearPage } from "./public/year.js";
 import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
 import { registerPlayersPage } from "./public/players.js";
+import { registerRankings } from "./public/rankings.js";
 import { registerCommentariesPage } from "./public/commentaries.js";
 import { registerNotePage } from "./public/note.js";
 import { registerNotesPage } from "./public/notes.js";
@@ -1150,6 +1152,13 @@ export const buildApplication = async (
     ),
   );
   mediator.handleQuery(
+    new PublicRankingsOfTournamentHandler(
+      tournaments,
+      competitions,
+      tournamentsByAddress,
+    ),
+  );
+  mediator.handleQuery(
     new PublicKnockoutOfTournamentHandler(
       tournaments,
       competitions,
@@ -1363,6 +1372,7 @@ export const buildApplication = async (
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
+  registerRankings(server, assets);
   registerCommentariesPage(server, assets);
   registerNotesPage(server, assets);
   registerNotePage(server, assets);

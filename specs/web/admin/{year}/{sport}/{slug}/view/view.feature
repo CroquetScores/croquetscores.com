@@ -4,16 +4,20 @@ Feature: A tournament's page in the admin
   /admin/{year}/{sport}/{slug} is where a manager runs a tournament, having
   pressed its name or Manage in their list, and where a scorer finds its
   competitions, having pressed Scores (`tournaments.feature`). It is headed by
-  the tournament's name, and what there is to run is in five tabs, in this
-  order: Players, Competitions, Notes, Managers and Scorers. Notes comes
-  after what is played, since a note is written about the players and the
-  competitions, and before who runs the tournament.
+  the tournament's name, and what there is to run is in six tabs, in this
+  order: Players, Competitions, Notes, Managers, Scorers and Rankings. Notes
+  comes after what is played, since a note is written about the players and
+  the competitions, and before who runs the tournament. Rankings is last, as
+  the one thing done once the rest is: it is where the tournament's results
+  are had as the file the world rankings are sent (`rankings-tab.feature`).
+  It is only in the page of a tournament that counts towards the world
+  rankings, the same as the file is (`rankings.feature`).
 
   A scorer enters scores and does nothing else to a tournament
   (`addScorer.feature`), and scores are entered in its competitions. So a
   scorer is offered the Competitions tab alone, and the page opens on it: the
-  players, the notes, the managers and the scorers are the managers' to
-  change, and a
+  players, the notes, the managers, the scorers and the rankings are the
+  managers' to change or send, and a
   tab a scorer could only look at would be a tab of things they cannot use.
 
   The tabs are a tab control in the panel, beneath the tournament's name
@@ -29,13 +33,13 @@ Feature: A tournament's page in the admin
 
   Each tab says what it holds in a feature of its own
   (`players-tab.feature`, `competitions-tab.feature`, `notes-tab.feature`,
-  `managers-tab.feature` and `scorers-tab.feature`).
+  `managers-tab.feature`, `scorers-tab.feature` and `rankings-tab.feature`).
 
   A tournament whose format is played by teams (`TournamentFormat.feature`)
   is found at the same address, and is run in the same page, but has teams
   and tests where a Standard tournament has players and competitions
-  (`addTeam.feature`, `addTest.feature`). So its five tabs are Teams, Tests,
-  Notes, Managers and Scorers, in that order (`teams-tab.feature`,
+  (`addTeam.feature`, `addTest.feature`). So its six tabs are Teams, Tests,
+  Notes, Managers, Scorers and Rankings, in that order (`teams-tab.feature`,
   `tests-tab.feature`), and the page opens on Teams. A scorer is offered
   Tests alone, as they are offered Competitions alone in a Standard
   tournament, and their page opens on it.
@@ -81,7 +85,7 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then the page is headed "Spring Open"
 
-  Rule: What there is to run is in five tabs, in the panel beneath the tournament's name
+  Rule: What there is to run is in six tabs, in the panel beneath the tournament's name
 
     Scenario Outline: The page has each tab
       When the page of "Spring Open" is opened
@@ -94,6 +98,7 @@ Feature: A tournament's page in the admin
         | Notes        |
         | Managers     |
         | Scorers      |
+        | Rankings     |
 
     Scenario Outline: The tabs are in their order
       When the page of "Spring Open" is opened
@@ -106,6 +111,7 @@ Feature: A tournament's page in the admin
         | Notes        | third  |
         | Managers     | fourth |
         | Scorers      | fifth  |
+        | Rankings     | sixth  |
 
     Scenario: The tabs are in the panel
       When the page of "Spring Open" is opened
@@ -182,6 +188,7 @@ Feature: A tournament's page in the admin
         | Notes    |
         | Managers |
         | Scorers  |
+        | Rankings |
 
     Scenario: A scorer's page opens on the Competitions tab
       Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
@@ -197,7 +204,7 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then the page is headed "Spring Open"
 
-  Rule: A tournament played by teams has Teams, Tests, Notes, Managers and Scorers
+  Rule: A tournament played by teams has Teams, Tests, Notes, Managers, Scorers and Rankings
 
     Scenario Outline: The tabs of a tournament played by teams are in their order
       Given the tournament "Spring Open" is played in the format "Teams"
@@ -211,6 +218,7 @@ Feature: A tournament's page in the admin
         | Notes    | third  |
         | Managers | fourth |
         | Scorers  | fifth  |
+        | Rankings | sixth  |
 
     Scenario Outline: A tournament played by teams has no tab of a Standard tournament's own
       Given the tournament "Spring Open" is played in the format "Teams"
@@ -233,6 +241,28 @@ Feature: A tournament's page in the admin
         | Eire Cup                   |
         | Interstate Shield          |
         | GC World Team Championship |
+
+    Scenario Outline: A tournament that counts towards the world rankings has the Rankings tab
+      Given the tournament "Spring Open" is for the sport "<sport>"
+      When the page of "Spring Open" is opened
+      Then the tab "Rankings" is offered
+
+      Examples:
+        | sport |
+        | ac    |
+        | gc    |
+        | a6w   |
+
+    Scenario: A tournament that does not count towards the world rankings has no Rankings tab
+      Given the tournament "Spring Open" does not count towards the world rankings
+      When the page of "Spring Open" is opened
+      Then the tab "Rankings" is not offered
+
+    Scenario: A tournament of a sport with no world rankings has no Rankings tab
+      Given the tournament "Spring Open" does not count towards the world rankings
+      And the tournament "Spring Open" is for the sport "rc"
+      When the page of "Spring Open" is opened
+      Then the tab "Rankings" is not offered
 
     Scenario: A Standard tournament has no Teams tab
       When the page of "Spring Open" is opened
@@ -270,6 +300,7 @@ Feature: A tournament's page in the admin
         | Teams    |
         | Managers |
         | Scorers  |
+        | Rankings |
 
     Scenario: The tabs of a tournament played by teams are named in the reader's language
       Given a browser that asks for "en-XA"
@@ -404,6 +435,7 @@ Feature: A tournament's page in the admin
         | Notes        |
         | Managers     |
         | Scorers      |
+        | Rankings     |
 
     Scenario: A world ranking officer who scores the tournament is offered the Competitions tab
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"

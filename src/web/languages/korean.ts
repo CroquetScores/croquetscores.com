@@ -460,6 +460,26 @@ export const korean: Language = {
     "admin.view.managers": "운영자",
     "admin.view.notes": "공지",
     "admin.view.scorers": "기록원",
+    "admin.view.rankings": "랭킹",
+    "admin.rankings.textFile":
+      "대회 결과는 입력된 경기를 바탕으로 사이트가 작성한 텍스트 파일로 세계 랭킹에 전송됩니다.",
+    "admin.rankings.spreadsheet":
+      "대회 결과는 입력된 경기를 바탕으로 사이트가 작성한 스프레드시트로 세계 랭킹에 전송됩니다.",
+    "admin.rankings.fillInWinners":
+      "사이트는 각 경기 종목의 우승자를 추측할 수만 있으므로, 파일을 보내기 전에 각 항목의 우승자 줄을 확인하세요.",
+    "admin.rankings.fillInWinner":
+      "사이트는 대회 우승자를 알 수 없으므로, 보내기 전에 스프레드시트 맨 아래에 입력하세요.",
+    "admin.rankings.sendIt": "그런 다음 파일을 세계 랭킹 담당자에게 보내세요.",
+    "admin.rankings.download": "랭킹 다운로드",
+    "rankings.notAvailable": "랭킹을 사용할 수 없습니다",
+    "rankings.notAvailable.sport":
+      "이 대회의 종목에는 세계 랭킹이 없으므로 보낼 랭킹이 없습니다.",
+    "rankings.notAvailable.handicap":
+      "이 대회는 핸디캡으로 진행되므로 세계 랭킹에 반영되지 않습니다.",
+    "rankings.notAvailable.drawnGames":
+      "이 대회는 무승부를 허용하므로 세계 랭킹에 반영되지 않습니다.",
+    "rankings.notAvailable.notCounted":
+      "이 대회의 관리자가 세계 랭킹에 반영하지 않기로 설정했습니다.",
     "admin.view.otherwise": "이 대회는 여기서 운영할 수 없어요.",
     "admin.competitionView.tabs": "경기 종목",
     "admin.competitionView.players": "선수",

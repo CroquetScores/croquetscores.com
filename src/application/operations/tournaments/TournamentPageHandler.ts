@@ -71,6 +71,8 @@ export class TournamentPageHandler extends QueryHandler<
         ? tournament.sport.code
         : undefined,
       mayChangeWorldRankingNames,
+      sport: tournament.sport.code,
+      countsTowardsWorldRankings: tournament.worldRankings,
     };
   }
 }

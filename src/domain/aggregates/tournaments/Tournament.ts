@@ -114,6 +114,7 @@ export type TournamentErrorCode =
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
+  | "Tournament.WorldRankingNameIsTheName"
   | "Tournament.LastManager"
   | "Tournament.AlreadyAManager"
   | "Tournament.PlayedByTeams"
@@ -259,12 +260,6 @@ const FORMATS_OFFERED = {
   croquetScores: croquetScoresFormats,
   gateballScores: gateballScoresFormats,
 } as const;
-
-// The world rankings are kept for these alone.
-const SPORTS_WITH_WORLD_RANKINGS: readonly Sport[] = [
-  Sport.associationCroquet,
-  Sport.golfCroquet,
-];
 
 // How far apart competitions and players are put when each is added, so that
 // one can later be put between two others without either of them moving.
@@ -545,6 +540,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessRankingNamesMayChange(by);
     this.#refuseOnceArchived();
+    this.#refuseWhereTheNameIsTheWorldRankingName();
     const found = this.#playerFound(id);
     const player = found.update({
       name: found.name.toString(),
@@ -570,6 +566,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessRankingNamesMayChange(by);
     this.#refuseOnceArchived();
+    this.#refuseWhereTheNameIsTheWorldRankingName();
     const { player: found } = this.#teamPlayerFound(teamId, id);
     const player = found.update({
       name: found.name.toString(),
@@ -718,6 +715,7 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     this.#refuseOncePlayedByTeams();
+    details = this.#withTheirNameKnownInTheRankings(details);
     // Asked what a player is first, so that a name that is no name is refused
     // as one rather than as a slug that cannot be made of it.
     TournamentPlayer.ensureValid(details);
@@ -765,7 +763,7 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     this.#refuseOnceArchived();
     const found = this.#playerFound(id);
-    const player = found.update(details);
+    const player = found.update(this.#withTheirNameKnownInTheRankings(details));
     this.#refuseAPlayerNameTaken(player);
     if (samePlayer(player, found)) return;
     this.record(playerEvent(TournamentPlayerUpdated, player, by, at));
@@ -1271,6 +1269,7 @@ export class Tournament extends AggregateRoot {
     this.#refuseOnceArchived();
     const team = this.#teamFound(teamId);
     team.ensureInUse();
+    details = this.#withTheirNameKnownInTheRankings(details);
     // Asked what a player is first, so that a name that is no name is refused
     // as one rather than as a slug that cannot be made of it.
     TeamPlayer.ensureValid(details);
@@ -1327,7 +1326,7 @@ export class Tournament extends AggregateRoot {
     at: ReadOnlyDate,
   ): void {
     const { team, player: found } = this.#teamPlayerToChange(teamId, id, by);
-    const player = found.update(details);
+    const player = found.update(this.#withTheirNameKnownInTheRankings(details));
     refuseATeamPlayerNameTaken(team, player);
     if (
       player.name.equals(found.name) &&
@@ -1855,9 +1854,7 @@ export class Tournament extends AggregateRoot {
     drawsAllowed: boolean,
     said: boolean | undefined,
   ): boolean {
-    const hasRankings = SPORTS_WITH_WORLD_RANKINGS.some((ranked) =>
-      ranked.equals(sport),
-    );
+    const hasRankings = sport.countsTowardsWorldRankings;
     if (said === true && !hasRankings) {
       refuse("Tournament.NoWorldRankings", "The sport has no world rankings.");
     }
@@ -1958,6 +1955,37 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.NotAManagerOrRankingOfficer",
         "Only a manager or a world ranking officer can change a world ranking name.",
+      );
+    }
+  }
+
+  // A sport that is ranked, but whose players are known to the rankings by
+  // their own names, has no world ranking name apart from the player's name
+  // (Sport.feature, addPlayer.feature).
+  #worldRankingNameIsTheName(): boolean {
+    return (
+      this.sport.countsTowardsWorldRankings && !this.sport.hasWorldRankings
+    );
+  }
+
+  // Whatever a player is added with or updated to, their world ranking name is
+  // their name, so one given is not kept and a corrected name corrects it.
+  #withTheirNameKnownInTheRankings<
+    T extends {
+      readonly name: string;
+      readonly worldRankingName?: string | undefined;
+    },
+  >(details: T): T {
+    return this.#worldRankingNameIsTheName()
+      ? { ...details, worldRankingName: details.name }
+      : details;
+  }
+
+  #refuseWhereTheNameIsTheWorldRankingName(): void {
+    if (this.#worldRankingNameIsTheName()) {
+      refuse(
+        "Tournament.WorldRankingNameIsTheName",
+        "A player's world ranking name there is their name, and is not changed.",
       );
     }
   }

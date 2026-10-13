@@ -9,9 +9,10 @@ Feature: Finding the tournaments an account has a part in
 
   A tournament has a row for each account with a part in it, saying whether
   that account manages it or scores it, and holding what the list shows of it:
-  its name, its dates, where it is found, and whether it is archived. The row
-  follows the tournament: a name, a start, a sport or a website changed is
-  changed in every row of it. It follows the part as well: an account taken
+  its name, its dates, where it is found, whether it is archived, and whether
+  it counts towards the world rankings. The row follows the tournament: a
+  name, a start, a sport, a website or whether it counts changed is changed
+  in every row of it. It follows the part as well: an account taken
   off the tournament's managers or scorers loses its row, and one made a
   manager while it was a scorer keeps one row, as a manager, since that is
   what the tournament does (`addManager.feature`).
@@ -23,8 +24,9 @@ Feature: Finding the tournaments an account has a part in
   anyway is the admin's to decide, not the read model's.
 
   A world ranking officer is listed the tournaments it manages or scores, and
-  every tournament of the sports with world rankings besides, as one whose
-  rankings it looks after, so they can be asked for together, in the same
+  every tournament of the sports with world rankings that counts towards
+  them besides, as one whose rankings it looks after, since one that does
+  not has no rankings to look after, so they can be asked for together, in the same
   order and by the same year, a tournament's sport being the one its address
   says.
 
@@ -389,7 +391,7 @@ Feature: Finding the tournaments an account has a part in
       When the years of every tournament on "croquetscores.com" are looked for
       Then no year is found
 
-  Rule: A world ranking officer's list is its own tournaments and every one of the sports asked about
+  Rule: A world ranking officer's list is its own tournaments and every one of the sports asked about that counts towards the world rankings
 
     Scenario: A tournament of a sport asked about that it has no part in is found
       Given a tournament "Spring Open" to start on "2026-10-03"
@@ -422,6 +424,50 @@ Feature: Finding the tournaments an account has a part in
       And "Spring Open" is created by the account for "organiser@example.com"
       When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
       Then "Spring Open" is not found
+
+    Scenario: A tournament that does not count towards the world rankings it has no part in is not found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to not count towards the world rankings
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is not found
+
+    Scenario: A tournament that does not count towards the world rankings it manages is found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to not count towards the world rankings
+      And "Spring Open" is created by the account for "ranker@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament that does not count towards the world rankings it scores is found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to not count towards the world rankings
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And the account for "ranker@example.com" is made a scorer of "Spring Open"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament changed to count towards the world rankings is found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to not count towards the world rankings
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When "Spring Open" is updated to count towards the world rankings
+      And the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament changed not to count towards the world rankings is no longer found
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When "Spring Open" is updated not to count towards the world rankings
+      And the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is not found
+
+    Scenario: The years of a tournament that does not count towards the world rankings it has no part in are not among them
+      Given a tournament "Spring Open" to start on "2024-10-03"
+      And "Spring Open" to not count towards the world rankings
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the years of the account for "ranker@example.com" as a world ranking officer of association and golf croquet are looked for
+      Then no year is found
 
     Scenario: The years of a sport asked about are among a world ranking officer's
       Given a tournament "Spring Open" to start on "2024-10-03"

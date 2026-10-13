@@ -36,6 +36,12 @@ Feature: Adding a player to a tournament
   An archived tournament can only be restored (`restore.feature`), so adding a
   player to one is refused.
 
+  In American 6 Wicket a player's world ranking name is always their name:
+  its players are known to the world rankings by their own names, so there is
+  no other to keep (`Sport.feature`). Whatever a player is added with or
+  updated to, their world ranking name is their name, and follows it when it
+  is corrected.
+
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
     And the moment "2026-09-26T10:00:00Z"
@@ -107,6 +113,21 @@ Feature: Adding a player to a tournament
       And the player "Sam Someone" was added to it
       When the tournament is rebuilt from the stream
       Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
+  Rule: In American 6 Wicket a player's world ranking name is their name
+
+    Scenario: A player added in American 6 Wicket has their name as their world ranking name
+      Given a stream where a tournament was created in the sport "a6w"
+      And the tournament is rebuilt from the stream
+      When the player "Sam Someone" is added
+      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
+
+    Scenario: The world ranking name a player is added with is not kept
+      Given a stream where a tournament was created in the sport "a6w"
+      And the tournament is rebuilt from the stream
+      And the player is to have the world ranking name "Samuel Someone"
+      When the player "Sam Someone" is added
+      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
 
   Rule: A player is found by a slug of their name that no other player in the tournament has
 

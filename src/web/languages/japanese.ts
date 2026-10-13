@@ -464,6 +464,27 @@ export const japanese: Language = {
     "admin.view.managers": "運営者",
     "admin.view.notes": "お知らせ",
     "admin.view.scorers": "記録係",
+    "admin.view.rankings": "ランキング",
+    "admin.rankings.textFile":
+      "大会の結果は、入力された試合からサイトが作成するテキストファイルとして世界ランキングに送られます。",
+    "admin.rankings.spreadsheet":
+      "大会の結果は、入力された試合からサイトが作成するスプレッドシートとして世界ランキングに送られます。",
+    "admin.rankings.fillInWinners":
+      "サイトは各競技の優勝者を推測することしかできません。ファイルを送る前に、それぞれの「優勝者」の行を確認してください。",
+    "admin.rankings.fillInWinner":
+      "サイトは大会の優勝者を知ることができません。送る前に、スプレッドシートの最下部に記入してください。",
+    "admin.rankings.sendIt":
+      "その後、ファイルを世界ランキングの担当者に送ってください。",
+    "admin.rankings.download": "ランキングをダウンロード",
+    "rankings.notAvailable": "ランキングは利用できません",
+    "rankings.notAvailable.sport":
+      "この大会の競技には世界ランキングがないため、送るランキングはありません。",
+    "rankings.notAvailable.handicap":
+      "この大会はハンディキャップ制で行われるため、世界ランキングの対象になりません。",
+    "rankings.notAvailable.drawnGames":
+      "この大会は引き分けを認めているため、世界ランキングの対象になりません。",
+    "rankings.notAvailable.notCounted":
+      "この大会の運営者が、世界ランキングの対象にしないと設定しています。",
     "admin.view.otherwise": "この大会はここから運営できません。",
     "admin.competitionView.tabs": "部門",
     "admin.competitionView.players": "選手",
