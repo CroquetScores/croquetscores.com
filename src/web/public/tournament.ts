@@ -1,8 +1,9 @@
 // A tournament's page: every game played in it that is in use, the most
 // recently added first, each as the winner on one line and the loser on the
 // next, with the competition it was played in and how long ago it was added
-// beside them. Its sections are the tournament's: Recent, which is this page,
-// then Players, Notes and Commentary, then its competitions.
+// beside them. It has no heading of its own, since the header already names
+// the tournament. Its sections are the tournament's: Recent, which is this
+// page, then Players, Notes and Commentary, then its competitions.
 //
 // It needs no scripting. How long ago is worked out as the page is drawn, by
 // the server's clock, so it is as true as the page is fresh.
@@ -106,8 +107,7 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: `          <h1>${escape(asked.name)}</h1>
-${games}`,
+          body: games,
         }),
       );
     },

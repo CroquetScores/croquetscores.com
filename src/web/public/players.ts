@@ -110,8 +110,9 @@ ${team.players.map((player) => `              <li class="player"><a class="playe
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: `          <h1>${escape(asked.name)}</h1>
-${asked.playedByTeams ? teams : `          <h2 class="players-heading">${escape(say("tournament.players"))}</h2>\n${players}`}`,
+          body: asked.playedByTeams
+            ? teams
+            : `          <h2 class="players-heading">${escape(say("tournament.players"))}</h2>\n${players}`,
         }),
       );
     },
