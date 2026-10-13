@@ -33,6 +33,13 @@ export const spanish: Language = {
     "language.label": "Idioma",
     "language.choose": "Cambiar",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Hay novedades para leer.",
+    "whatsNew.admin.message": "Hay novedades para quienes organizan torneos.",
+    "whatsNew.view": "Ver las novedades",
+    "whatsNew.later": "Recordármelo la próxima vez",
+    "whatsNew.never": "No volver a mostrar este aviso",
+
     "form.otherwise":
       "Algo no está bien. Revisa lo que has introducido y vuelve a intentarlo.",
 

@@ -37,6 +37,14 @@ export const welsh: Language = {
     "language.label": "Iaith",
     "language.choose": "Newid",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Mae rhywbeth newydd i'w ddarllen.",
+    "whatsNew.admin.message":
+      "Mae rhywbeth newydd i bobl sy'n rhedeg twrnameintiau.",
+    "whatsNew.view": "Gweld beth sy'n newydd",
+    "whatsNew.later": "Atgoffa fi y tro nesaf",
+    "whatsNew.never": "Peidio byth â dangos y neges hon",
+
     "form.otherwise":
       "Mae rhywbeth o'i le. Gwiriwch yr hyn a roesoch a rhowch gynnig arall arni.",
 

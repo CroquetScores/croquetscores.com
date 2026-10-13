@@ -21,22 +21,28 @@ export const themeOf = (request: FastifyRequest): Theme => {
 export const parseTheme = (value: unknown): Theme | undefined =>
   typeof value === "string" && isTheme(value) ? value : undefined;
 
-const aYear = 60 * 60 * 24 * 365;
+export const aYear = 60 * 60 * 24 * 365;
+
+/**
+ * How every cookie this site keeps for a reader is set: out of reach of a
+ * script on the page, never sent in the clear, and for this site alone.
+ */
+export const keptByTheServer = {
+  path: "/",
+  httpOnly: true,
+  sameSite: "lax",
+  // Always, rather than worked out from the request. Behind whatever
+  // terminates HTTPS in front of the application, the connection that reaches
+  // it is plain HTTP, so request.protocol says "http" on every request and a
+  // cookie set from it would never be Secure where it most needs to be.
+  // Reading X-Forwarded-Proto instead means trusting a header any client can
+  // send. Browsers treat localhost and 127.0.0.1 as secure contexts, so
+  // development over plain HTTP loses nothing.
+  secure: true,
+} as const;
 
 export const rememberTheme = (reply: FastifyReply, theme: Theme): void => {
-  const options = {
-    path: "/",
-    httpOnly: true,
-    sameSite: "lax",
-    // Always, rather than worked out from the request. Behind whatever
-    // terminates HTTPS in front of the application, the connection that reaches
-    // it is plain HTTP, so request.protocol says "http" on every request and a
-    // cookie set from it would never be Secure where it most needs to be.
-    // Reading X-Forwarded-Proto instead means trusting a header any client can
-    // send. Browsers treat localhost and 127.0.0.1 as secure contexts, so
-    // development over plain HTTP loses nothing.
-    secure: true,
-  } as const;
+  const options = keptByTheServer;
 
   // Choosing "system" is choosing not to have chosen, so the cookie goes rather
   // than recording the absence of a preference.

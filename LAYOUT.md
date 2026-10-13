@@ -82,6 +82,8 @@ Everything in a bar lines up with the text inside that panel — the site name, 
 
 As the window narrows, the bars stay and their contents wrap. The current site wraps its secondary tabs onto two and three rows at `390px` and collapses nothing, which is the behaviour to keep: those tabs are the page's own sections, and hiding them would hide the page.
 
+**An alert says when there is something new to read** (`whatsNew.feature`). It is a bordered box on the panel at the top of the home page, and between the site bar and the admin's content on the admin's first page, and on no other page. It is set in light yellow (`#fff48f`) with near-black text, the same in light and dark, so that it stands out from the panel. Beside the message are the way to read it, a light button, and two outlined buttons: to be reminded next time, and to never be shown it. It wraps beneath the message on a phone, and every one of its controls is at least 44 pixels tall. It is yellow, neither the brand green nor the red of a fault, because it is news.
+
 ---
 
 ## 4. The differences from the current site

@@ -37,6 +37,13 @@ export const russian: Language = {
     "language.label": "Язык",
     "language.choose": "Сменить",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Есть новости, которые стоит прочитать.",
+    "whatsNew.admin.message": "Есть новости для тех, кто проводит турниры.",
+    "whatsNew.view": "Посмотреть, что нового",
+    "whatsNew.later": "Напомнить в следующий раз",
+    "whatsNew.never": "Больше не показывать это уведомление",
+
     "form.otherwise":
       "Что-то не так. Проверьте введённое и попробуйте ещё раз.",
 

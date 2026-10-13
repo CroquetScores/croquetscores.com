@@ -40,6 +40,13 @@ export const japanese: Language = {
     "language.label": "言語",
     "language.choose": "変更",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "新しいお知らせがあります。",
+    "whatsNew.admin.message": "大会運営者向けの新しいお知らせがあります。",
+    "whatsNew.view": "新着情報を見る",
+    "whatsNew.later": "次回また知らせる",
+    "whatsNew.never": "このお知らせを今後表示しない",
+
     "form.otherwise":
       "入力内容に誤りがあります。内容を確認して、もう一度お試しください。",
 

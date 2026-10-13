@@ -41,6 +41,13 @@ export const korean: Language = {
     "language.label": "언어",
     "language.choose": "변경",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "읽어 볼 새 소식이 있어요.",
+    "whatsNew.admin.message": "대회를 운영하는 분들을 위한 새 소식이 있어요.",
+    "whatsNew.view": "새 소식 보기",
+    "whatsNew.later": "다음에 다시 알림",
+    "whatsNew.never": "이 알림을 다시 표시하지 않기",
+
     "form.otherwise":
       "무언가 잘못되었어요. 입력한 내용을 확인하고 다시 시도해 주세요.",
 

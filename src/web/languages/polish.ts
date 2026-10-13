@@ -41,6 +41,13 @@ export const polish: Language = {
     "language.label": "Język",
     "language.choose": "Zmień",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Jest coś nowego do przeczytania.",
+    "whatsNew.admin.message": "Jest coś nowego dla osób prowadzących turnieje.",
+    "whatsNew.view": "Zobacz, co nowego",
+    "whatsNew.later": "Przypomnij mi następnym razem",
+    "whatsNew.never": "Nigdy więcej nie pokazuj tego komunikatu",
+
     "form.otherwise":
       "Coś tu się nie zgadza. Sprawdź wpisane dane i spróbuj ponownie.",
 
