@@ -286,6 +286,13 @@ export const german: Language = {
     "errors.unavailable": "Die Website ist nicht verfügbar",
     "errors.unavailableDetail":
       "Die Website kann im Moment nicht erreichen, was sie braucht. Bitte versuche es später noch einmal.",
+    "errors.maintenance":
+      "Die Seite ist wegen Wartungsarbeiten nicht verfügbar.",
+    "errors.maintenanceMinutes":
+      "Sie sollte in {minutes} Minuten wieder da sein.",
+    "errors.maintenanceMinute": "Sie sollte in 1 Minute wieder da sein.",
+    "errors.maintenanceLonger":
+      "Es dauert länger als erwartet; die Seite ist bald wieder da.",
 
     "home.recentResults": "Aktuelle Ergebnisse",
     "home.recentResults.none":

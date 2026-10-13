@@ -280,6 +280,11 @@ export const japanese: Language = {
     "errors.unavailable": "サイトは現在ご利用いただけません",
     "errors.unavailableDetail":
       "サイトは現在、必要なものに接続できません。しばらくしてからもう一度お試しください。",
+    "errors.maintenance": "サイトはメンテナンス中です。",
+    "errors.maintenanceMinutes": "約 {minutes} 分後に復旧する見込みです。",
+    "errors.maintenanceMinute": "約 1 分後に復旧する見込みです。",
+    "errors.maintenanceLonger":
+      "予定より時間がかかっています。まもなく復旧します。",
 
     "home.recentResults": "最近の結果",
     "home.recentResults.none": "過去7日間に追加された試合はありません。",

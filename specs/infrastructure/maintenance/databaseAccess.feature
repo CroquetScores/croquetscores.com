@@ -199,7 +199,7 @@ Feature: A script turns database access on and off
       Then database access is on
 
     Scenario: Change needs no database
-      Given the database cannot be reached
+      Given the database is not there
       And database access is turned off for 30 minutes
       When the script is run with "change --from-now 45"
       Then the script exits with success
@@ -255,12 +255,12 @@ Feature: A script turns database access on and off
   Rule: The script does not use the database
 
     Scenario: Off needs no database
-      Given the database cannot be reached
+      Given the database is not there
       When the script is run with "off --minutes 30"
       Then the script exits with success
 
     Scenario: On needs no database
-      Given the database cannot be reached
+      Given the database is not there
       And database access is turned off for 30 minutes
       When the script is run with "on"
       Then the script exits with success

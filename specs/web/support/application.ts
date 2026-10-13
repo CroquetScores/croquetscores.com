@@ -8,6 +8,9 @@
 import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { LightMyRequestResponse } from "fastify";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { Writable } from "node:stream";
 
 import {
@@ -111,6 +114,25 @@ export const logOf = (world: SpecWorld): readonly string[] => linesOf(world);
 // The scenarios that were built with the site's own events and read models.
 const ownKinds = new WeakSet<SpecWorld>();
 
+// Where the scenario's database access is kept: a file of its own, so that
+// one scenario turning access off does not turn it off for the others running
+// beside it, and so that none is ever left off for the next run.
+const accessFiles = new WeakMap<SpecWorld, string>();
+
+const accessFileOf = (world: SpecWorld): string => {
+  let found = accessFiles.get(world);
+  if (found === undefined) {
+    const directory = mkdtempSync(join(tmpdir(), "site-database-access-"));
+    world.closeBeforeDropping.push(() => {
+      rmSync(directory, { recursive: true, force: true });
+      return Promise.resolve();
+    });
+    found = join(directory, ".database-access");
+    accessFiles.set(world, found);
+  }
+  return found;
+};
+
 const standUp = async (
   world: SpecWorld,
   first: boolean,
@@ -135,7 +157,11 @@ const standUp = async (
   const lines = linesOf(world);
   const application = await buildApplication(
     {
-      ...loadConfig({ ...process.env, ...settingOf(world) }),
+      ...loadConfig({
+        ...process.env,
+        DATABASE_ACCESS_FILE: accessFileOf(world),
+        ...settingOf(world),
+      }),
       databaseUrl,
     },
     {

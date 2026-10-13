@@ -286,6 +286,11 @@ export const afrikaans: Language = {
     "errors.unavailable": "Die webwerf is nie beskikbaar nie",
     "errors.unavailableDetail":
       "Die webwerf kan nou nie bykom wat dit nodig het nie. Probeer asseblief later weer.",
+    "errors.maintenance": "Die webwerf is af vir instandhouding.",
+    "errors.maintenanceMinutes": "Dit word oor {minutes} minute terug verwag.",
+    "errors.maintenanceMinute": "Dit word oor 1 minuut terug verwag.",
+    "errors.maintenanceLonger":
+      "Dit neem langer as verwag en sal binnekort terug wees.",
 
     "home.recentResults": "Onlangse uitslae",
     "home.recentResults.none":

@@ -280,6 +280,10 @@ export const korean: Language = {
     "errors.unavailable": "사이트를 사용할 수 없어요",
     "errors.unavailableDetail":
       "사이트가 지금 필요한 것에 연결할 수 없어요. 나중에 다시 시도해 주세요.",
+    "errors.maintenance": "사이트가 점검 중입니다.",
+    "errors.maintenanceMinutes": "약 {minutes}분 후에 복구될 예정입니다.",
+    "errors.maintenanceMinute": "약 1분 후에 복구될 예정입니다.",
+    "errors.maintenanceLonger": "예상보다 오래 걸리고 있습니다. 곧 복구됩니다.",
 
     "home.recentResults": "최근 결과",
     "home.recentResults.none": "지난 7일 동안 추가된 경기가 없어요.",

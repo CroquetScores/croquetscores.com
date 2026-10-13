@@ -78,7 +78,7 @@ Feature: The site says so when its database access is turned off for maintenance
       Then the page has the site's header and footer
 
     Scenario: A page's words are in the reader's language
-      Given a browser that asks for "en-XA"
+      Given the reader's browser asks for "en-XA"
       And database access is turned off for 30 minutes
       And an example page that reads from the database
       When the example page is asked for
@@ -169,23 +169,30 @@ Feature: The site says so when its database access is turned off for maintenance
       Then the database was asked nothing
 
     Scenario: A reader with a session is not looked up
-      Given a reader signed in as "someone@example.com"
+      Given "someone@example.com" has an account, confirmed
+      And the reader is signed in as "someone@example.com"
       And database access is turned off for 30 minutes
       And an example page that reads from the database
       When the example page is asked for
       Then the database was asked nothing
 
     Scenario: A reader with a session is neither signed out nor told who they are
-      Given a reader signed in as "someone@example.com"
+      Given "someone@example.com" has an account, confirmed
+      And the reader is signed in as "someone@example.com"
       And database access is turned off for 30 minutes
       And an example page that reads from the database
       When the example page is asked for
-      Then the reader's session cookie is not taken away
-      And the page does not offer the account's own pages
+      Then the answer does not take the session cookie away
+      And the account menu does not offer the account's own pages
 
     Scenario: No request is recorded as handled
-      Given database access is turned off for 30 minutes
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And database access is turned off for 30 minutes
       And an example API route that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      And it ends at 5
       When the example range is sent to the example route
       Then no request is recorded as handled
 
@@ -209,7 +216,7 @@ Feature: The site says so when its database access is turned off for maintenance
       And an example page that reads from the database
       And database access is turned on
       When the example page is asked for
-      Then the page is answered
+      Then the example page is answered
 
     Scenario: A page does not say it is for maintenance once access is turned on
       Given database access is turned off for 30 minutes
@@ -224,7 +231,7 @@ Feature: The site says so when its database access is turned off for maintenance
       And the example page is asked for
       And database access is turned on
       When the example page is asked for
-      Then the page is answered
+      Then the example page is answered
 
   Rule: Moving the expected return changes what is said, counting from then
 
