@@ -115,6 +115,7 @@ import { TournamentsByAddress } from "../../../src/infrastructure/read-models/To
 import { TournamentsByWebsite } from "../../../src/infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../../../src/infrastructure/read-models/SearchByWebsite.js";
 import { SearchHandler } from "../../../src/application/operations/tournaments/SearchHandler.js";
+import { PlayerOfWebsiteHandler } from "../../../src/application/operations/tournaments/PlayerOfWebsiteHandler.js";
 import { SearchPlayersOfWebsiteHandler } from "../../../src/application/operations/tournaments/SearchPlayersOfWebsiteHandler.js";
 import { RecentResultsHandler } from "../../../src/application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
@@ -351,6 +352,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   );
   mediator.handleQuery(new RecentResultsHandler(byWebsite));
   mediator.handleQuery(new SearchHandler(bySearch));
+  mediator.handleQuery(new PlayerOfWebsiteHandler(bySearch));
   mediator.handleQuery(new SearchPlayersOfWebsiteHandler(bySearch));
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));

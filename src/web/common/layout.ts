@@ -84,6 +84,9 @@ export interface Shell {
   readonly currentPath?: string | undefined;
   /** Which theme the reader has asked for, if they have asked. */
   readonly theme: Theme;
+  /** What was typed in the search box of the header, put back in it where a
+      page is the answer to a search. Nothing where a page is not. */
+  readonly searchText?: string | undefined;
   /** Whether the reader is signed in, which the account menu opens on. Asked
       of every page rather than left out, because a page that forgot it would
       show a reader who is signed in the ways in instead of their own pages, and
@@ -142,6 +145,7 @@ const sendAwayWithoutScripting = (path: string | undefined): string =>
 // bar carries one item for an account however many pages an account has.
 const everyone: readonly NavigationLink[] = [
   { href: "/", words: "navigation.home" },
+  { href: "/players", words: "tournament.players" },
   { href: "/help", words: "navigation.help" },
 ];
 
@@ -350,7 +354,25 @@ export type SiteBar = Pick<
   | "hasPassword"
   | "readerKnown"
   | "tournament"
->;
+  | "searchText"
+> & {
+  /** Whether the header has the site's search box, which every public page
+      has and the admin, a page of its own kind, does not. */
+  readonly withSearch?: boolean | undefined;
+};
+
+// The site's search, a form of its own that is sent as any is and so needs no
+// scripting (search.feature). A search type rather than a text one, so that a
+// phone offers what is typed to be cleared.
+const searchBox = (bar: SiteBar): string => {
+  if (bar.withSearch !== true) return "";
+  const label = escape(bar.speaking.say("search.label"));
+  return `          <form class="site-search" role="search" action="/search" method="get">
+            <input type="search" name="q" aria-label="${label}" value="${escape(bar.searchText ?? "")}" />
+            <button type="submit">${label}</button>
+          </form>
+`;
+};
 
 // Said by the admin's page too (adminPage.ts), so that there is one header
 // rather than a copy of it that drifts.
@@ -362,7 +384,7 @@ export const siteBar = (bar: SiteBar): string => `
           <div class="site-names">
             <a class="site-name" href="/">${escape(bar.siteName)}</a>
 ${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}          </div>
-${menu(bar)}
+${searchBox(bar)}${menu(bar)}
 ${accountMenu(bar)}
         </div>
       </div>
@@ -418,7 +440,7 @@ ${shell.styles}
     </style>`
     }
   </head>
-  <body>${siteBar(shell)}${subtitleBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+  <body>${siteBar({ ...shell, withSearch: true })}${subtitleBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${

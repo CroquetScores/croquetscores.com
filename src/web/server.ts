@@ -241,6 +241,7 @@ import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsB
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
 import { SearchHandler } from "../application/operations/tournaments/SearchHandler.js";
+import { PlayerOfWebsiteHandler } from "../application/operations/tournaments/PlayerOfWebsiteHandler.js";
 import { SearchPlayersOfWebsiteHandler } from "../application/operations/tournaments/SearchPlayersOfWebsiteHandler.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
@@ -346,6 +347,9 @@ import { registerYearPage } from "./public/year.js";
 import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
 import { registerPlayersPage } from "./public/players.js";
+import { registerSearchPage } from "./public/search.js";
+import { registerWebsitePlayersPage } from "./public/websitePlayers.js";
+import { registerWebsitePlayerPage } from "./public/websitePlayer.js";
 import { registerRankings } from "./public/rankings.js";
 import { registerCommentariesPage } from "./public/commentaries.js";
 import { registerNotePage } from "./public/note.js";
@@ -1202,6 +1206,7 @@ export const buildApplication = async (
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(tournamentsByWebsite));
   mediator.handleQuery(new SearchHandler(searchByWebsite));
+  mediator.handleQuery(new PlayerOfWebsiteHandler(searchByWebsite));
   mediator.handleQuery(new SearchPlayersOfWebsiteHandler(searchByWebsite));
   mediator.handleQuery(
     new GamesOfTournamentHandler(
@@ -1475,6 +1480,9 @@ export const buildApplication = async (
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);
+  registerSearchPage(server, assets);
+  registerWebsitePlayersPage(server, assets);
+  registerWebsitePlayerPage(server, assets);
   registerRankings(server, assets);
   registerCommentariesPage(server, assets);
   registerNotesPage(server, assets);

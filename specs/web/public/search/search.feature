@@ -65,24 +65,25 @@ Feature: A reader searches the website for tournaments, players and competitions
       Then the header's search button is called "Search"
 
     Scenario: A search is made without scripting
-      Given scripting is off
+      Given the page at "/" is opened with scripting off
       And "spring" is typed as the header's search box
       When the header's search button is pressed
-      Then the address is "/search?q=spring"
+      Then the address is "/search"
+      And the address asks for "spring"
 
   Rule: What was typed is found, in three lists
 
     Scenario: A tournament is found
       When the page at "/search?q=spring" is opened
-      Then "Spring Open" is among the tournaments found
+      Then "Spring Open" is among the tournaments in the results
 
     Scenario: A player is found
       When the page at "/search?q=someone" is opened
-      Then "Sam Someone" is among the players found
+      Then "Sam Someone" is among the players in the results
 
     Scenario: A competition is found
       When the page at "/search?q=block" is opened
-      Then "Block A" is among the competitions found
+      Then "Block A" is among the competitions in the results
 
     Scenario: A competition is shown with its tournament beside it
       When the page at "/search?q=block" is opened
@@ -92,22 +93,22 @@ Feature: A reader searches the website for tournaments, players and competitions
       Given the page at "/" is opened
       And "spring" is typed as the header's search box
       When the header's search button is pressed
-      Then "Spring Open" is among the tournaments found
+      Then "Spring Open" is among the tournaments in the results
 
     Scenario: A search is made from the results page
       Given the page at "/search" is opened
       And "someone" is typed as the header's search box
       When the header's search button is pressed
-      Then "Sam Someone" is among the players found
+      Then "Sam Someone" is among the players in the results
 
     Scenario: A search is made by words in another order
       When the page at "/search?q=open spring" is opened
-      Then "Spring Open" is among the tournaments found
+      Then "Spring Open" is among the tournaments in the results
 
     Scenario: A search is made without the accents
       Given "organiser@example.com" has added the player "José García" to "Spring Open"
       When the page at "/search?q=jose garcia" is opened
-      Then "José García" is among the players found
+      Then "José García" is among the players in the results
 
   Rule: Each list has a heading, and is left out when it has nothing in it
 
@@ -125,7 +126,7 @@ Feature: A reader searches the website for tournaments, players and competitions
 
     Scenario: A list with nothing in it has no heading
       When the page at "/search?q=spring" is opened
-      Then the content does not have the heading "Players"
+      Then the content has no heading "Players"
 
     Scenario: Nothing found says so
       When the page at "/search?q=zzzz" is opened
@@ -137,23 +138,23 @@ Feature: A reader searches the website for tournaments, players and competitions
 
     Scenario: Nothing found has no headings
       When the page at "/search?q=zzzz" is opened
-      Then the content does not have the heading "Tournaments"
+      Then the content has no heading "Tournaments"
 
   Rule: Each thing found leads to its page
 
     Scenario: A tournament leads to its page
       Given the page at "/search?q=spring" is opened
-      When the tournament "Spring Open" is pressed
+      When the found tournament "Spring Open" is pressed
       Then the address is "/2026/ac/spring-open"
 
     Scenario: A player leads to their page
       Given the page at "/search?q=someone" is opened
-      When the player "Sam Someone" is pressed
+      When the found player "Sam Someone" is pressed
       Then the address is "/players/sam-someone"
 
     Scenario: A competition leads to its page
       Given the page at "/search?q=block" is opened
-      When the competition "Block A" is pressed
+      When the found competition "Block A" is pressed
       Then the address is "/2026/ac/spring-open/competitions/block-a"
 
   Rule: A player is found once, however many tournaments they have played in
@@ -162,24 +163,24 @@ Feature: A reader searches the website for tournaments, players and competitions
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
       When the page at "/search?q=someone" is opened
-      Then 1 player is found
+      Then 1 player is in the results
 
   Rule: Nothing archived is found
 
     Scenario: An archived tournament is not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/search?q=spring" is opened
-      Then "Spring Open" is not among the tournaments found
+      Then "Spring Open" is not among the tournaments in the results
 
     Scenario: An archived player is not found
       Given "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       When the page at "/search?q=someone" is opened
-      Then "Sam Someone" is not among the players found
+      Then "Sam Someone" is not among the players in the results
 
     Scenario: An archived competition is not found
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the page at "/search?q=block" is opened
-      Then "Block A" is not among the competitions found
+      Then "Block A" is not among the competitions in the results
 
   Rule: Nothing typed is not a search
 
@@ -204,12 +205,12 @@ Feature: A reader searches the website for tournaments, players and competitions
     Scenario: A reader not signed in can search
       Given nobody is signed in
       When the page at "/search?q=spring" is opened
-      Then "Spring Open" is among the tournaments found
+      Then "Spring Open" is among the tournaments in the results
 
     Scenario: A tournament of another website is not found
       Given a site served as "gateballscores.com"
       When the page at "/search?q=spring" is opened
-      Then "Spring Open" is not among the tournaments found
+      Then "Spring Open" is not among the tournaments in the results
 
   Rule: The page fits a phone
 

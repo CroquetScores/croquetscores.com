@@ -66,9 +66,27 @@ export interface PlayerFound {
 /** A competition found, with the tournament it is in. */
 export interface CompetitionFound {
   readonly name: string;
-  /** Where it is, as "2026/ac/spring-open/block-a". */
+  /** Where it is, as "2026/ac/spring-open/competitions/block-a". */
   readonly address: string;
   readonly tournament: TournamentFound;
+}
+
+/**
+ * One line of a player's page: a competition they are entered in with its
+ * tournament, or the tournament alone where they are in none of its
+ * competitions.
+ */
+export interface PlayerEntry {
+  readonly tournament: TournamentFound;
+  readonly competition?: { readonly name: string; readonly address: string };
+}
+
+/** A player of a website, as their page shows them. */
+export interface PlayerOfWebsiteFound {
+  /** The world ranking name as the tournament that started most recently wrote it. */
+  readonly name: string;
+  /** Where they have played, the tournament that started most recently first. */
+  readonly entries: readonly PlayerEntry[];
 }
 
 /** What a search of a website found, each kind in alphabetical order. */
@@ -103,4 +121,13 @@ export interface SearchByWebsite {
     words: readonly string[],
     most: number,
   ): Promise<readonly CompetitionFound[]>;
+
+  /**
+   * The player whose world ranking name makes `slug`, or nothing where no
+   * player of the website does, none being left once what is archived is.
+   */
+  player(
+    website: Website,
+    slug: string,
+  ): Promise<PlayerOfWebsiteFound | undefined>;
 }

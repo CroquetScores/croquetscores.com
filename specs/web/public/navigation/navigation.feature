@@ -6,7 +6,8 @@ Feature: Finding your way around the public site
   been given no scripting at all, which is what makes the claim a test rather
   than an intention.
 
-  The primary navigation holds the way home and the way to help, and for a
+  The primary navigation holds the way home, the way to the players, which is
+  a search for them (`websitePlayers.feature`), and the way to help, and for a
   reader who is signed in, the way to the admin, which shows nothing to
   anybody else (`tournaments.feature`): offering it to a reader who is not
   signed in would only send them to sign in. Everything to do with an account
@@ -40,17 +41,23 @@ Feature: Finding your way around the public site
       When the home page is opened
       Then the first link in the navigation is "Home"
 
-    Scenario: A reader not signed in is offered help second
+    Scenario: A reader not signed in is offered the players second
       Given a viewport 1200 pixels wide
       And nobody is signed in
       When the home page is opened
-      Then the second link in the navigation is "Help"
+      Then the second link in the navigation is "Players"
+
+    Scenario: A reader not signed in is offered help third
+      Given a viewport 1200 pixels wide
+      And nobody is signed in
+      When the home page is opened
+      Then the third link in the navigation is "Help"
 
     Scenario: A reader not signed in is offered nothing else
       Given a viewport 1200 pixels wide
       And nobody is signed in
       When the home page is opened
-      Then the navigation holds 2 links
+      Then the navigation holds 3 links
 
     Scenario: A reader signed in is offered the way home first
       Given a viewport 1200 pixels wide
@@ -58,23 +65,29 @@ Feature: Finding your way around the public site
       When the home page is opened
       Then the first link in the navigation is "Home"
 
-    Scenario: A reader signed in is offered help second
+    Scenario: A reader signed in is offered the players second
       Given a viewport 1200 pixels wide
       And a reader signed in as "someone@example.com"
       When the home page is opened
-      Then the second link in the navigation is "Help"
+      Then the second link in the navigation is "Players"
 
-    Scenario: A reader signed in is offered the admin third
+    Scenario: A reader signed in is offered help third
       Given a viewport 1200 pixels wide
       And a reader signed in as "someone@example.com"
       When the home page is opened
-      Then the third link in the navigation is "Admin"
+      Then the third link in the navigation is "Help"
+
+    Scenario: A reader signed in is offered the admin fourth
+      Given a viewport 1200 pixels wide
+      And a reader signed in as "someone@example.com"
+      When the home page is opened
+      Then the fourth link in the navigation is "Admin"
 
     Scenario: A reader signed in is offered nothing else
       Given a viewport 1200 pixels wide
       And a reader signed in as "someone@example.com"
       When the home page is opened
-      Then the navigation holds 3 links
+      Then the navigation holds 4 links
 
     Scenario Outline: Each link leads where it says
       Given a viewport 1200 pixels wide
@@ -84,9 +97,10 @@ Feature: Finding your way around the public site
 
       Examples:
         | link  | address |
-        | Home  | /       |
-        | Help  | /help   |
-        | Admin | /admin/ |
+        | Home    | /         |
+        | Players | /players  |
+        | Help    | /help     |
+        | Admin   | /admin/   |
 
     Scenario: The account menu still ends the header for a reader not signed in
       Given a viewport 1200 pixels wide

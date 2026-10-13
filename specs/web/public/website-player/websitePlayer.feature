@@ -23,7 +23,9 @@ Feature: A player's page lists what they have played in
   nobody has on this website is a page that is not there.
 
   The tournament's name is not in the header, since this is no one tournament's
-  page (`layout.feature`).
+  page (`layout.feature`). The page says nothing of its own beyond the names it
+  lists, which are what the managers called things, so there are no words of
+  the site's to be in the reader's language.
 
   Where a scenario says nothing else, a tournament is for the sport "ac", and
   its players represent nothing and fly no flag.
@@ -63,24 +65,24 @@ Feature: A player's page lists what they have played in
 
     Scenario: A competition is a line of the tournament and the competition
       When the page at "/players/sam-someone" is opened
-      Then the first line is "Spring Open - Block A"
+      Then the first entry is "Spring Open - Block A"
 
     Scenario: A competition's line leads to its page
       Given the page at "/players/sam-someone" is opened
-      When the line "Spring Open - Block A" is pressed
+      When the entry "Spring Open - Block A" is pressed
       Then the address is "/2026/ac/spring-open/competitions/block-a"
 
     Scenario: A player in a tournament and in none of its competitions has the tournament alone
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
       When the page at "/players/sam-someone" is opened
-      Then there is a line "Autumn Open"
+      Then there is an entry "Autumn Open"
 
     Scenario: A tournament's line leads to its page
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
       And the page at "/players/sam-someone" is opened
-      When the line "Autumn Open" is pressed
+      When the entry "Autumn Open" is pressed
       Then the address is "/2026/ac/autumn-open"
 
     Scenario: A player in two tournaments has the competitions of both
@@ -89,12 +91,12 @@ Feature: A player's page lists what they have played in
       And "organiser@example.com" has added the block "Block A" to "Autumn Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
       When the page at "/players/sam-someone" is opened
-      Then there are 2 lines
+      Then there are 2 entries
 
     Scenario: A competition the player is not in is not a line
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
       When the page at "/players/sam-someone" is opened
-      Then there is not a line "Spring Open - Block B"
+      Then there is not an entry "Spring Open - Block B"
 
   Rule: The lines are in order, the tournament that started most recently first
 
@@ -106,22 +108,22 @@ Feature: A player's page lists what they have played in
       And "organiser@example.com" has added the block "Block A" to "Autumn Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
       When the page at "/players/sam-someone" is opened
-      Then the first line is "Autumn Open - Block A"
-      And the second line is "Spring Open - Block A"
+      Then the first entry is "Autumn Open - Block A"
+      And the second entry is "Spring Open - Block A"
 
     Scenario: The competitions of a tournament are in its order
       Given "organiser@example.com" has added the block "Block 0" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block 0" of "Spring Open"
       When the page at "/players/sam-someone" is opened
-      Then the first line is "Spring Open - Block A"
-      And the second line is "Spring Open - Block 0"
+      Then the first entry is "Spring Open - Block A"
+      And the second entry is "Spring Open - Block 0"
 
   Rule: What is archived is not there
 
     Scenario: A line of an archived competition is not there
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the page at "/players/sam-someone" is opened
-      Then there is not a line "Spring Open - Block A"
+      Then there is not an entry "Spring Open - Block A"
 
     Scenario: The page of an archived player is not there
       Given "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
@@ -157,14 +159,3 @@ Feature: A player's page lists what they have played in
       And "organiser@example.com" has added the player "Sam Someone" to "Bartholomew Montgomery-Fitzwilliam Memorial Open"
       When the page at "/players/sam-someone" is opened
       Then the page is no wider than the window
-
-  Rule: Every word the page says is in the reader's language
-
-    The test locale shows it (`language.feature`). What is nobody's language
-    is left out: the player's name and the names of the tournaments and
-    competitions, which are what their managers called them.
-
-    Scenario: The page is in the reader's language
-      Given a browser that asks for "en-XA"
-      When the page at "/players/sam-someone" is opened
-      Then every word in the page's content but the names is in the test locale

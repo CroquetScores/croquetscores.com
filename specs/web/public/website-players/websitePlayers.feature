@@ -45,11 +45,11 @@ Feature: A reader searches the website's players by name
 
     Scenario: The page has a search box
       When the page at "/players" is opened
-      Then the page has a search box called "Search players"
+      Then the players' search box is called "Search players"
 
     Scenario: The page has a button
       When the page at "/players" is opened
-      Then the page has a button called "Search players"
+      Then the players' search button is called "Search players"
 
     Scenario: The page lists nobody before a search
       When the page at "/players" is opened
@@ -60,11 +60,11 @@ Feature: A reader searches the website's players by name
       Then the players' search says what it is for
 
     Scenario: A search is made without scripting
-      Given scripting is off
-      And the page at "/players" is opened
-      And "sam" is typed as the "Search players"
-      When "Search players" is pressed
-      Then the address is "/players?search=sam"
+      Given the page at "/players" is opened with scripting off
+      And "sam" is typed as the players' search box
+      When the players' search button is pressed
+      Then the address is "/players"
+      And the address searches players for "sam"
 
     Scenario: A page is for anybody
       Given nobody is signed in
@@ -75,35 +75,35 @@ Feature: A reader searches the website's players by name
 
     Scenario: A player is found
       When the page at "/players?search=someone" is opened
-      Then "Sam Someone" is among the players found
+      Then "Sam Someone" is among the players the page found
 
     Scenario: A player is not found where a word is not in their name
       When the page at "/players?search=someone other" is opened
-      Then "Sam Someone" is not among the players found
+      Then "Sam Someone" is not among the players the page found
 
     Scenario: A player is found by words in another order
       Given "organiser@example.com" has added the player "Pat Player" to "Spring Open"
       When the page at "/players?search=player pat" is opened
-      Then "Pat Player" is among the players found
+      Then "Pat Player" is among the players the page found
 
     Scenario: A player is found by part of a word
       When the page at "/players?search=omeo" is opened
-      Then "Sam Someone" is among the players found
+      Then "Sam Someone" is among the players the page found
 
     Scenario: A player is found without the accents of their name
       Given "organiser@example.com" has added the player "José García" to "Spring Open"
       When the page at "/players?search=jose garcia" is opened
-      Then "José García" is among the players found
+      Then "José García" is among the players the page found
 
     Scenario: A search is made from the page
       Given the page at "/players" is opened
-      And "someone" is typed as the "Search players"
-      When "Search players" is pressed
-      Then "Sam Someone" is among the players found
+      And "someone" is typed as the players' search box
+      When the players' search button is pressed
+      Then "Sam Someone" is among the players the page found
 
     Scenario: What was typed is put back in the box
       When the page at "/players?search=some" is opened
-      Then "Search players" says "some"
+      Then the players' search box says "some"
 
     Scenario: A tournament is not found by this search
       When the page at "/players?search=spring" is opened
@@ -130,30 +130,30 @@ Feature: A reader searches the website's players by name
     Scenario: The players found are in alphabetical order of their names
       Given "organiser@example.com" has added the player "Sam Another" to "Spring Open"
       When the page at "/players?search=sam" is opened
-      Then the first player found is "Sam Another"
-      And the second player found is "Sam Someone"
+      Then the first player the page found is "Sam Another"
+      And the second player the page found is "Sam Someone"
 
     Scenario: A player in two tournaments is found once
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
       When the page at "/players?search=someone" is opened
-      Then 1 player is found
+      Then the page found 1 player
 
     Scenario: An archived player is not found
       Given "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       When the page at "/players?search=someone" is opened
-      Then "Sam Someone" is not among the players found
+      Then "Sam Someone" is not among the players the page found
 
     Scenario: A player is found by the world ranking name they have
       Given "organiser@example.com" has changed the world ranking name of the player "Sam Someone" in "Spring Open" to "Samuel Rankings"
       When the page at "/players?search=rankings" is opened
-      Then "Samuel Rankings" is among the players found
+      Then "Samuel Rankings" is among the players the page found
 
   Rule: Each player found leads to their page
 
     Scenario: A player leads to their page
       Given the page at "/players?search=someone" is opened
-      When the player "Sam Someone" is pressed
+      When the found player "Sam Someone" is pressed
       Then the address is "/players/sam-someone"
 
   Rule: The site's search is on the page as on every other
@@ -166,7 +166,7 @@ Feature: A reader searches the website's players by name
       Given the page at "/players" is opened
       And "spring" is typed as the header's search box
       When the header's search button is pressed
-      Then "Spring Open" is among the tournaments found
+      Then "Spring Open" is among the tournaments in the results
 
   Rule: The navigation leads to the page
 

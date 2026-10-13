@@ -333,6 +333,13 @@ export const english: Language = {
     "teamSummary.against": "Against",
     "teamSummary.net": "Net",
     "tournament.players": "Players",
+    "search.label": "Search",
+    "search.tournaments": "Tournaments",
+    "search.competitions": "Competitions",
+    "search.nothingFound": "Nothing was found.",
+    "players.search.label": "Search players",
+    "players.search.prompt": "Type a player's name to find them.",
+    "players.search.none": "No players were found.",
     // A test in a tournament's sections: its two teams' short names.
     "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notes",

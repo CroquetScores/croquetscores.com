@@ -113,9 +113,9 @@ const offered = (world: SpecWorld): Promise<string[]> =>
   world.browserPage.locator(".menu-links a").allTextContents();
 
 Then(
-  /^the (first|second|third) link in the navigation is "([^"]*)"$/,
+  /^the (first|second|third|fourth) link in the navigation is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, label: string) {
-    const at = ["first", "second", "third"].indexOf(which);
+    const at = ["first", "second", "third", "fourth"].indexOf(which);
     assert.equal((await offered(this))[at], label);
   },
 );

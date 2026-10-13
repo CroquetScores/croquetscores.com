@@ -546,6 +546,62 @@ body > .site-footer {
   margin-inline-start: auto;
 }
 
+/* The site's search, beside the menu on the right of the pinned bar, and
+   wrapping beneath the names on a phone with the rest of the bar rather than
+   pushing it wider than the window. */
+.site-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.site-search + .menu {
+  margin-inline-start: 0;
+}
+
+.site-search input {
+  min-width: 0;
+  width: 10rem;
+  max-width: 100%;
+}
+
+/* The page of players' own search, in the content as the results are. */
+.players-search {
+  display: flex;
+  gap: var(--space-1);
+  max-width: 38rem;
+  margin-block-end: var(--space-4);
+}
+
+.players-search input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* What a search found, a list to each kind under its heading, the competition
+   with the tournament it is in beside it. */
+.search-list ul,
+.players-search-found,
+.player-entries {
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.search-list li,
+.players-search-found li,
+.player-entries li {
+  padding-block: var(--space-1);
+  overflow-wrap: anywhere;
+}
+
+.search-of {
+  color: var(--ink-muted);
+}
+
 /* The account menu: the last thing in the header, a person that opens on what
    a reader can do with their account. A disclosure at every width, unlike the
    primary navigation, because it is a menu rather than navigation that happens
