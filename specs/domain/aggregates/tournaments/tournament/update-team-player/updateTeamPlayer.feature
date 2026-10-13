@@ -57,6 +57,7 @@ Feature: Changing what a player in a tournament's team is
     Scenario: An update that gives no world ranking name makes it the name
       Given the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"
+      And the update gives the player the world ranking name "   "
       When the player "Sam Someone" of the team "Australia" is updated
       Then the team "Australia"'s player "Samantha Someone" has the world ranking name "Samantha Someone"
 

@@ -83,6 +83,7 @@ Feature: Changing what a tournament's player is
       And the player "Sam Someone" was added to it
       And the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"
+      And the update gives the player the world ranking name "   "
       When the player "Sam Someone" is updated
       Then the tournament's player "Samantha Someone" has the world ranking name "Samantha Someone"
 

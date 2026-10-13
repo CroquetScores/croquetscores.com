@@ -114,11 +114,11 @@ Feature: Changing a player's world ranking name alone
       Then it has recorded 1 event
       And the first thing it recorded is a player being updated
 
-    Scenario: A world ranking name left blank is none
+    Scenario: A world ranking name left blank is the player's name
       Given the player "Sam Someone" was updated to be known in the world rankings as "Samuel Someone"
       And the tournament is rebuilt from the stream
       When the world ranking name of the player "Sam Someone" is changed to "   "
-      Then the tournament's player "Sam Someone" has no world ranking name
+      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
 
     Scenario: A world ranking name that breaks a rule is refused
       Given the tournament is rebuilt from the stream

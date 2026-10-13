@@ -36,8 +36,9 @@ Feature: Importing the old sites' team matches
   (`ImportWholeTournaments.feature`).
 
   The old sites kept no world ranking name, so a player is brought over with
-  none (`WorldRankingName.feature`), except in American 6 Wicket, where a
-  player's world ranking name is always their name (`addTeamPlayer.feature`).
+  their name as it, as one added with none is (`addTeamPlayer.feature`), and in
+  a sport without world rankings their world ranking name is always their
+  name.
 
   Background:
     Given the users are imported
@@ -1405,14 +1406,14 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone"
 
-    Scenario: A player of a team is brought over with no world ranking name
+    Scenario: A player of a team with no world ranking name is brought over with their name as it
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
       And the team match is called "New Zealand vs England"
       And player 7 is in the team match
       And player 7 is called "Sam Someone"
       And player 7 represents "New Zealand"
       When the team match is imported
-      Then the player "Sam Someone" of the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has no world ranking name
+      Then the player "Sam Someone" of the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the world ranking name "Sam Someone"
 
     Scenario: A player of a team in American 6 Wicket is brought over with their name as their world ranking name
       Given a tournament "tournaments/14" on "croquetscores.com" of the type "teams" and the sport "a6w" is imported

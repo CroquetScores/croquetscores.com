@@ -29,9 +29,10 @@ Feature: Searching the website for tournaments, players and competitions
 
   What is archived is not found, as it is nowhere on the public site: not an
   archived tournament, nor the players and competitions of one, nor a player
-  or a competition archived on its own. One restored is found again. A person
-  is found for as long as one of their tournaments has them in use. A player
-  of a team is found by their name as a player of a Standard tournament is.
+  or a competition archived on its own, and not the players of an archived
+  team. One restored is found again. A person is found for as long as one of
+  their tournaments has them in use. A player of a team is found by their name
+  as a player of a Standard tournament is.
 
   The answer is of the website asked about, in three lists by what was found,
   each in alphabetical order of the names, each of at most 100, so that a
@@ -139,7 +140,8 @@ Feature: Searching the website for tournaments, players and competitions
       Then the player "José García" is found
 
     Scenario: A player of a team is found by their world ranking name
-      Given "organiser@example.com" has created the tournament "Spring Tests"
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
       And "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
       When the website is searched for "pat player"
@@ -149,25 +151,25 @@ Feature: Searching the website for tournaments, players and competitions
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
       When the website is searched for "someone"
-      Then 1 player is found
+      Then the search found 1 player
 
     Scenario: Two names a player is added with are one player when their world ranking name is the same
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sammy Someone" to "Autumn Open"
       And "organiser@example.com" has changed the world ranking name of the player "Sammy Someone" in "Autumn Open" to "Sam Someone"
       When the website is searched for "someone"
-      Then 1 player is found
+      Then the search found 1 player
 
     Scenario: World ranking names that differ only in case and accents are one player
       Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "SAM SOMÉONE" to "Autumn Open"
       When the website is searched for "someone"
-      Then 1 player is found
+      Then the search found 1 player
 
     Scenario: World ranking names with different words are two players
       Given "organiser@example.com" has added the player "Sam Someone Else" to "Spring Open"
       When the website is searched for "someone"
-      Then 2 players are found
+      Then the search found 2 players
 
     Scenario: A player is shown as the tournament that started most recently wrote their world ranking name
       Given the tournament is to start at "2027-03-20T00:00:00Z"
@@ -192,8 +194,7 @@ Feature: Searching the website for tournaments, players and competitions
       Then the competition "Block A" is found at the address "2026/ac/spring-open/block-a"
 
     Scenario: A competition of each kind is found
-      Given the knockout is to be the best of 3
-      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      Given "organiser@example.com" has added the knockout "Finals" to "Spring Open"
       When the website is searched for "finals"
       Then the competition "Finals" is found
 
@@ -227,15 +228,35 @@ Feature: Searching the website for tournaments, players and competitions
       Then the player "Sam Someone" is found
 
     Scenario: An archived player of a team is not found
-      Given "organiser@example.com" has created the tournament "Spring Tests"
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
       And "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has archived the player "Pat Player" of the team "Australia" of "Spring Tests"
       When the website is searched for "pat"
       Then the player "Pat Player" is not found
 
+    Scenario: The players of an archived team are not found
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has archived the team "Australia" in "Spring Tests"
+      When the website is searched for "pat"
+      Then the player "Pat Player" is not found
+
+    Scenario: The players of a team restored are found again
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has archived the team "Australia" in "Spring Tests"
+      And "organiser@example.com" has restored the team "Australia" in "Spring Tests"
+      When the website is searched for "pat"
+      Then the player "Pat Player" is found
+
     Scenario: An archived competition is not found
-      Given "organiser@example.com" has archived the competition "Block A" of "Spring Open"
+      Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the website is searched for "block"
       Then the competition "Block A" is not found
 
@@ -252,8 +273,8 @@ Feature: Searching the website for tournaments, players and competitions
       Then the player "Sam Someone" is found
 
     Scenario: A competition restored is found again
-      Given "organiser@example.com" has archived the competition "Block A" of "Spring Open"
-      And "organiser@example.com" has restored the competition "Block A" of "Spring Open"
+      Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      And "organiser@example.com" has restored the competition "Block A" in "Spring Open"
       When the website is searched for "block"
       Then the competition "Block A" is found
 
@@ -291,36 +312,36 @@ Feature: Searching the website for tournaments, players and competitions
       Given "organiser@example.com" has created the tournament "Open Zed"
       And "organiser@example.com" has created the tournament "Open Alpha"
       When the website is searched for "open"
-      Then the first tournament found is "Open Alpha"
-      And the second tournament found is "Open Zed"
-      And the third tournament found is "Spring Open"
+      Then the first tournament the search found is "Open Alpha"
+      And the second tournament the search found is "Open Zed"
+      And the third tournament the search found is "Spring Open"
 
     Scenario: Players are in alphabetical order of their names
       Given "organiser@example.com" has added the player "Sam Alpha" to "Spring Open"
       When the website is searched for "sam"
-      Then the first player found is "Sam Alpha"
-      And the second player found is "Sam Someone"
+      Then the first player the search found is "Sam Alpha"
+      And the second player the search found is "Sam Someone"
 
     Scenario: Competitions are in alphabetical order of their names
       Given "organiser@example.com" has added the block "Block 0" to "Spring Open"
       When the website is searched for "block"
-      Then the first competition found is "Block 0"
-      And the second competition found is "Block A"
+      Then the first competition the search found is "Block 0"
+      And the second competition the search found is "Block A"
 
     Scenario: No more than 100 tournaments are found
       Given 101 tournaments are called "Cup" followed by a number
       When the website is searched for "cup"
-      Then 100 tournaments are found
+      Then the search found 100 tournaments
 
     Scenario: No more than 100 players are found
       Given 101 players are called "Pat" followed by a number in "Spring Open"
       When the website is searched for "pat"
-      Then 100 players are found
+      Then the search found 100 players
 
     Scenario: No more than 100 competitions are found
       Given 101 blocks are called "Pool" followed by a number in "Spring Open"
       When the website is searched for "pool"
-      Then 100 competitions are found
+      Then the search found 100 competitions
 
   Rule: The text must be text
 
