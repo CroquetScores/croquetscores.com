@@ -23,8 +23,9 @@ Uma **equipe** é um lado, como a Austrália, com um nome, um nome abreviado com
 5. [Placares](scores.md): inserir os jogos de um teste, corrigi-los e pôr de lado os que foram inseridos por engano.
 6. [Notas](notes.md): dizer aos jogadores o que eles precisam saber enquanto o torneio acontece.
 7. [Organizadores e apontadores](managers-and-scorers.md): compartilhar a administração do torneio, e deixar que alguém insira placares sem poder alterar mais nada.
-8. [Alterar, arquivar e restaurar um torneio](changing-and-archiving.md): corrigir os detalhes do torneio, e pôr um torneio de lado.
-9. [O que o público vê](what-the-public-sees.md): as páginas que os seus jogadores acompanham, e como o que você insere aparece nelas.
+8. [Rankings](rankings.md): o arquivo enviado aos rankings mundiais, e o que fica para você preencher.
+9. [Alterar, arquivar e restaurar um torneio](changing-and-archiving.md): corrigir os detalhes do torneio, e pôr um torneio de lado.
+10. [O que o público vê](what-the-public-sees.md): as páginas que os seus jogadores acompanham, e como o que você insere aparece nelas.
 
 ## Como a administração é organizada
 
@@ -32,7 +33,7 @@ A porta de entrada da administração lista os torneios de que você participa, 
 
 ![A lista de torneios na administração](images/admin-list.png)
 
-Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em cinco abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores** e **Apontadores**. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
+Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores**, **Apontadores** e **Rankings**. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
 
 ![A página de um torneio, na aba Testes](images/tournament-page.png)
 

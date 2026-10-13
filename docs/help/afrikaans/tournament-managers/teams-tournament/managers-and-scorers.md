@@ -22,10 +22,10 @@ Die **Telers**-oortjie is die Bestuurders-oortjie vir telers, en werk op dieself
 
 ![Die Telers-oortjie](images/scorers-tab.png)
 
-'n Teller sien die toernooi in hul eie lys in die administrasie, met **Uitslae** in die plek van Bestuur, en kry net sy toetse aangebied: geen spanne, notas, bestuurders of telers nie. Hulle kan nie 'n span se bladsy oopmaak nie, want wie vir 'n span speel, is die bestuurders se besluit. Op 'n toets se bladsy kan hulle uitslae invoer, regstel, argiveer, herstel en herrangskik soos 'n bestuurder kan.
+'n Teller sien die toernooi in hul eie lys in die administrasie, met **Uitslae** in die plek van Bestuur, en kry net sy toetse aangebied: geen spanne, notas, bestuurders, telers of ranglyste nie. Hulle kan nie 'n span se bladsy oopmaak nie, want wie vir 'n span speel, is die bestuurders se besluit. Op 'n toets se bladsy kan hulle uitslae invoer, regstel, argiveer, herstel en herrangskik soos 'n bestuurder kan.
 
 !['n Teller se aansig van 'n toernooi se bladsy](images/scorer-tournament-page.png)
 
 'n Bestuurder word nie 'n teller gemaak nie, want 'n bestuurder kan reeds alles doen wat 'n teller kan. 'n Toernooi het geen teller nodig nie, so elke teller kan verwyder word, die laaste een ook.
 
-Volgende: [Hoe om 'n toernooi te verander, te argiveer en te herstel](changing-and-archiving.md).
+Volgende: [Ranglyste](rankings.md).

@@ -23,8 +23,9 @@ Eine **Mannschaft** ist eine Seite, etwa Australien, mit einem Namen, einem Kurz
 5. [Ergebnisse](scores.md): die Spiele eines Tests eingeben, korrigieren und die versehentlich eingegebenen beiseitelegen.
 6. [Hinweise](notes.md): den Spielern sagen, was sie im Lauf des Turniers wissen müssen.
 7. [Turnierleitung und Ergebniserfasser](managers-and-scorers.md): die Leitung des Turniers teilen und jemanden Ergebnisse eingeben lassen, ohne dass er sonst etwas ändern kann.
-8. [Ein Turnier ändern, archivieren und wiederherstellen](changing-and-archiving.md): die Angaben zum Turnier korrigieren und ein Turnier beiseitelegen.
-9. [Was die Öffentlichkeit sieht](what-the-public-sees.md): die Seiten, die deine Spieler verfolgen, und wie das, was du eingibst, dort erscheint.
+8. [Ranglisten](rankings.md): die Datei, die an die Weltrangliste geschickt wird, und was für dich noch auszufüllen bleibt.
+9. [Ein Turnier ändern, archivieren und wiederherstellen](changing-and-archiving.md): die Angaben zum Turnier korrigieren und ein Turnier beiseitelegen.
+10. [Was die Öffentlichkeit sieht](what-the-public-sees.md): die Seiten, die deine Spieler verfolgen, und wie das, was du eingibst, dort erscheint.
 
 ## Wie die Verwaltung aufgebaut ist
 
@@ -32,7 +33,7 @@ Die Eingangsseite der Verwaltung listet die Turniere, an denen du beteiligt bist
 
 ![Die Liste der Turniere in der Verwaltung](images/admin-list.png)
 
-Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in fünf Reitern unter seinem Namen: **Mannschaften**, **Tests**, **Hinweise**, **Turnierleitung** und **Ergebniserfasser**. Die Seite öffnet sich auf Mannschaften, weil die Mannschaften als Erstes angelegt werden.
+Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in sechs Reitern unter seinem Namen: **Mannschaften**, **Tests**, **Hinweise**, **Turnierleitung**, **Ergebniserfasser** und **Ranglisten**. Die Seite öffnet sich auf Mannschaften, weil die Mannschaften als Erstes angelegt werden.
 
 ![Die Seite eines Turniers, auf dem Reiter Tests](images/tournament-page.png)
 

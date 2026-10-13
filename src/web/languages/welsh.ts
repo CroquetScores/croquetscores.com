@@ -478,7 +478,7 @@ export const welsh: Language = {
     "admin.rankings.spreadsheet":
       "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel taenlen, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
     "admin.rankings.fillInWinners":
-      "Dim ond dyfalu pwy enillodd bob cystadleuaeth y gall y wefan ei wneud, felly gwiriwch linell yr Enillydd ym mhob un cyn anfon y ffeil.",
+      "Dim ond dyfalu pwy enillodd bob cystadleuaeth y gall y wefan ei wneud, felly gwiriwch linell Winner ym mhob un cyn anfon y ffeil.",
     "admin.rankings.fillInWinner":
       "Ni all y wefan wybod pwy enillodd y twrnamaint, felly llenwch hynny ar waelod y daenlen cyn ei hanfon.",
     "admin.rankings.sendIt":

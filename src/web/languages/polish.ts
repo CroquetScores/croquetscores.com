@@ -475,7 +475,7 @@ export const polish: Language = {
     "admin.rankings.spreadsheet":
       "Wyniki turnieju są wysyłane do rankingu światowego jako arkusz kalkulacyjny, który strona tworzy z wprowadzonych gier.",
     "admin.rankings.fillInWinners":
-      "Strona może tylko zgadywać, kto wygrał każde rozgrywki, więc przed wysłaniem pliku sprawdź wiersz Zwycięzca w każdych z nich.",
+      "Strona może tylko zgadywać, kto wygrał każde rozgrywki, więc przed wysłaniem pliku sprawdź wiersz Winner w każdych z nich.",
     "admin.rankings.fillInWinner":
       "Strona nie może wiedzieć, kto wygrał turniej, więc uzupełnij to na dole arkusza przed jego wysłaniem.",
     "admin.rankings.sendIt":

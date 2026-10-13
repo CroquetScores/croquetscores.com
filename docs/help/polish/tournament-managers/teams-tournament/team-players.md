@@ -16,7 +16,7 @@ Naciśnij **Dodaj zawodnika**, nad listą. Nad stroną otwiera się okno dialogo
 
 **Imię i nazwisko** jest wymagane, od 3 do 254 znaków. Dwóch zawodników w jednej drużynie nie może mieć tej samej nazwy, niezależnie od wielkości liter; zawodnik w innej drużynie może ją mieć.
 
-**Nazwa zawodnika w rankingu światowym** to nazwa, pod którą zawodnika znają rankingi światowe. Pytanie o nią pojawia się tylko w turnieju Association Croquet lub Golf Croquet, dwóch dyscyplin z rankingami światowymi. Podczas dodawania zawodnika podąża ona za nazwą, którą wpisujesz, i przestaje podążać, gdy wpiszesz w nią cokolwiek. Zostawiona pusta, jest zachowywana jako nazwa zawodnika. Gdy wpisujesz, podpowiadani są zawodnicy znani rankingom światowym, których nazwy tak się zaczynają, a obok nazwy w rankingu światowym znacznik mówi, że rankingi znają tę nazwę, a znak zapytania – że nie. To tylko podpowiedź: nazwa nieznana rankingom jest zachowywana tak samo chętnie jak znana.
+**Nazwa zawodnika w rankingu światowym** to nazwa, pod którą zawodnika znają rankingi światowe. Pytanie o nią pojawia się tylko w turnieju Association Croquet lub Golf Croquet, dwóch dyscyplin, których zawodników rankingi światowe mają na liście. Zawodnicy American Six-Wicket są znani rankingom pod własnymi nazwami, więc się o nią tam nie pyta, a nazwą każdego zawodnika w rankingu światowym jest zawsze jego nazwa. Podczas dodawania zawodnika podąża ona za nazwą, którą wpisujesz, i przestaje podążać, gdy wpiszesz w nią cokolwiek. Zostawiona pusta, jest zachowywana jako nazwa zawodnika. Gdy wpisujesz, podpowiadani są zawodnicy znani rankingom światowym, których nazwy tak się zaczynają, a obok nazwy w rankingu światowym znacznik mówi, że rankingi znają tę nazwę, a znak zapytania – że nie. To tylko podpowiedź: nazwa nieznana rankingom jest zachowywana tak samo chętnie jak znana.
 
 Zawodnik nigdy nie nazywa się „Bye" (angielskie słowo na wolny los): nazwa, której pierwszym słowem jest „bye", jest odrzucana.
 
@@ -24,7 +24,7 @@ Naciśnij **Dodaj**. Zawodnik zostaje dodany, okno o tym mówi, a jego pola są 
 
 ## Poprawianie zawodnika
 
-Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Naciśnij **Zapisz**, by zachować zmianę. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał.
+Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Naciśnij **Zapisz**, by zachować zmianę. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał, z wyjątkiem American Six-Wicket, gdzie nazwą zawodnika w rankingu światowym jest zawsze jego nazwa.
 
 ## Kolejność
 

@@ -31,7 +31,7 @@ Standardowy to jedyny format, który nie jest drużynowy, i nie tego tu chcesz. 
 
 **Wyrównane testy kończą się remisem.** Pytanie pojawia się dopiero po wybraniu formatu drużynowego. Test wygrywa drużyna, która wygra więcej jego meczów, a test wyrównany w meczach rozstrzyga bilans partii, a potem bilans bramek – chyba że to jest zaznaczone, bo wtedy test wyrównany w meczach kończy się remisem, jak przyjmują to niektóre wydarzenia drużynowe. Na początku jest odznaczone dla formatu Drużynowy, a zaznaczone dla GC World Team Championship, w którym wyrównany test zawsze był remisem.
 
-**Liczy się do rankingów światowych.** Pytanie pojawia się tylko tam, gdzie może się liczyć: w turnieju Association Croquet lub Golf Croquet, który nie jest rozgrywany z handicapami ani nie dopuszcza remisów. Na początku jest zaznaczone.
+**Liczy się do rankingów światowych.** Pytanie pojawia się tylko tam, gdzie może się liczyć: w turnieju Association Croquet, Golf Croquet lub American Six-Wicket, który nie jest rozgrywany z handicapami ani nie dopuszcza remisów. Na początku jest zaznaczone.
 
 **Wydarzenie rangi krajowej** i **Wydarzenie rangi międzynarodowej.** Turniej może być jednym, drugim albo żadnym, ale nigdy obydwoma: zaznaczenie jednego odznacza drugie.
 

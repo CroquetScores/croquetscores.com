@@ -31,7 +31,7 @@ Standard est le seul format qui ne se joue pas par équipes, et ce n’est pas c
 
 **Les tests à égalité sont nuls.** Demandé seulement une fois qu’un format par équipes est choisi. Un test est gagné par l’équipe qui remporte le plus de ses matchs, et un test à égalité de matchs se décide aux parties nettes, puis aux arceaux nets, sauf si cette case est cochée, auquel cas un test à égalité de matchs est nul, comme le veulent certaines épreuves par équipes. Elle est décochée au départ pour Par équipes, et cochée pour le GC World Team Championship, qui a toujours tenu pour nul un test à égalité.
 
-**Compte pour le classement mondial.** Demandé seulement là où cela peut compter : un tournoi de croquet association ou de croquet golf qui n’est ni joué avec handicap ni ouvert aux matchs nuls. La case est cochée au départ.
+**Compte pour le classement mondial.** Demandé seulement là où cela peut compter : un tournoi de croquet association, de croquet golf ou de croquet américain à 6 arceaux qui n’est ni joué avec handicap ni ouvert aux matchs nuls. La case est cochée au départ.
 
 **Épreuve de niveau national** et **Épreuve de niveau international.** Un tournoi peut être l’un, l’autre, ou aucun des deux, mais jamais les deux : cocher l’un décoche l’autre.
 

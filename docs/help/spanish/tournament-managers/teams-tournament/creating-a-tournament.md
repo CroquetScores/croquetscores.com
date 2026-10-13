@@ -31,7 +31,7 @@ Estándar es el único formato que no es por equipos, y no es el que quieres aqu
 
 **Los tests igualados son empate.** Se pregunta solo una vez elegido un formato por equipos. Un test lo gana el equipo que gana más de sus partidos, y uno igualado en partidos se decide por partidas netas, y después por aros netos, a menos que esto esté marcado, en cuyo caso un test igualado en partidos es empate, como lo tienen algunos eventos por equipos. Empieza sin marcar para Por equipos, y marcado para el GC World Team Championship, que siempre ha dado por empatado un test igualado.
 
-**Cuenta para el ranking mundial.** Se pregunta solo cuando puede contar: un torneo de Croquet Asociación o de Golf Croquet que ni se juega con hándicap ni permite empates. Empieza marcado.
+**Cuenta para el ranking mundial.** Se pregunta solo cuando puede contar: un torneo de Croquet Asociación, de Golf Croquet o de Croquet americano de 6 aros que ni se juega con hándicap ni permite empates. Empieza marcado.
 
 **Evento de nivel nacional** y **Evento de nivel internacional.** Un torneo puede ser lo uno, lo otro o ninguno, pero nunca ambos: marcar uno desmarca el otro.
 

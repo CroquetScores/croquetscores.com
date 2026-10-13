@@ -24,7 +24,7 @@ Formularz pyta o wszystko, z czym turniej się zaczyna. Od turnieju zwyczajnego 
 
 **Dopuszcza remisy.** Zaznacz to tam, gdzie partia może skończyć się bez zwycięzcy. Większość turniejów na to nie pozwala. Gdy jest zaznaczone, wynik wprowadzony z równymi punktami i bez oznaczenia jest zachowywany jako remis; gdy nie jest, partia na równych punktach musi mówić, kto ją wygrał, oznaczeniem po wyniku zwycięzcy, na przykład „6w".
 
-**Liczy się do rankingów światowych.** Pytanie pojawia się tylko tam, gdzie może się liczyć: w turnieju Association Croquet lub Golf Croquet, który nie jest rozgrywany z handicapami ani nie dopuszcza remisów. Na początku jest zaznaczone, więc odznacz je dla turnieju, który nie ma się liczyć.
+**Liczy się do rankingów światowych.** Pytanie pojawia się tylko tam, gdzie może się liczyć: w turnieju Association Croquet, Golf Croquet lub American Six-Wicket, który nie jest rozgrywany z handicapami ani nie dopuszcza remisów. Na początku jest zaznaczone, więc odznacz je dla turnieju, który nie ma się liczyć.
 
 **Wydarzenie rangi krajowej** i **Wydarzenie rangi międzynarodowej.** Turniej może być jednym, drugim albo żadnym, ale nigdy obydwoma: zaznaczenie jednego odznacza drugie.
 

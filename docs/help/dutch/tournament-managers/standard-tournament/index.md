@@ -19,8 +19,9 @@ Alles wat een beheerder doet, gebeurt in het beheergedeelte van de website. De o
 5. [Scores](scores.md): uitslagen invoeren, corrigeren, en de per ongeluk ingevoerde uitslagen opzijzetten.
 6. [Notities](notes.md): de spelers vertellen wat ze moeten weten terwijl het toernooi loopt.
 7. [Beheerders en scorers](managers-and-scorers.md): de leiding van het toernooi delen, en iemand scores laten invoeren zonder dat die verder iets kan veranderen.
-8. [Een toernooi wijzigen, archiveren en herstellen](changing-and-archiving.md): de gegevens van het toernooi corrigeren, en een toernooi opzijzetten.
-9. [Wat het publiek ziet](what-the-public-sees.md): de pagina's die je spelers volgen, en hoe wat jij invoert daarop verschijnt.
+8. [Ranglijsten](rankings.md): het bestand dat naar de wereldranglijst wordt gestuurd, en wat er voor jou nog in te vullen is.
+9. [Een toernooi wijzigen, archiveren en herstellen](changing-and-archiving.md): de gegevens van het toernooi corrigeren, en een toernooi opzijzetten.
+10. [Wat het publiek ziet](what-the-public-sees.md): de pagina's die je spelers volgen, en hoe wat jij invoert daarop verschijnt.
 
 ## Hoe het beheer is ingedeeld
 
@@ -28,7 +29,7 @@ De voordeur van het beheer toont de toernooien waar jij een rol in hebt, één j
 
 ![De lijst met toernooien in het beheer](images/admin-list.png)
 
-Door op de naam van een toernooi te drukken, of op **Beheren**, open je zijn pagina. Alles wat er te leiden valt, zit in vijf tabbladen onder de naam: **Spelers**, **Competities**, **Notities**, **Beheerders** en **Scorers**. De pagina opent op Spelers, omdat de spelers het eerste zijn wat je invoert.
+Door op de naam van een toernooi te drukken, of op **Beheren**, open je zijn pagina. Alles wat er te leiden valt, zit in zes tabbladen onder de naam: **Spelers**, **Competities**, **Notities**, **Beheerders**, **Scorers** en **Ranglijsten**. De pagina opent op Spelers, omdat de spelers het eerste zijn wat je invoert.
 
 ![De pagina van een toernooi, op het tabblad Competities](images/tournament-page.png)
 

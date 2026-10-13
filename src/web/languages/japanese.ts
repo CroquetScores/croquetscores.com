@@ -470,7 +470,7 @@ export const japanese: Language = {
     "admin.rankings.spreadsheet":
       "大会の結果は、入力された試合からサイトが作成するスプレッドシートとして世界ランキングに送られます。",
     "admin.rankings.fillInWinners":
-      "サイトは各競技の優勝者を推測することしかできません。ファイルを送る前に、それぞれの「優勝者」の行を確認してください。",
+      "サイトは各競技の優勝者を推測することしかできません。ファイルを送る前に、それぞれの「Winner」の行を確認してください。",
     "admin.rankings.fillInWinner":
       "サイトは大会の優勝者を知ることができません。送る前に、スプレッドシートの最下部に記入してください。",
     "admin.rankings.sendIt":

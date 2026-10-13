@@ -23,8 +23,9 @@ Una **squadra** è una compagine, come l'Australia, con un nome, un nome breve c
 5. [Punteggi](scores.md): inserire le partite di un test, correggerle e mettere da parte quelle inserite per errore.
 6. [Note](notes.md): dire ai giocatori ciò che devono sapere mentre il torneo va avanti.
 7. [Organizzatori e segnapunti](managers-and-scorers.md): condividere la gestione del torneo, e lasciare che qualcuno inserisca i punteggi senza poter cambiare nient'altro.
-8. [Modificare, archiviare e ripristinare un torneo](changing-and-archiving.md): correggere i dati del torneo, e mettere da parte un torneo.
-9. [Che cosa vede il pubblico](what-the-public-sees.md): le pagine che i tuoi giocatori seguono, e come ciò che inserisci vi compare.
+8. [Classifiche](rankings.md): il file che viene inviato alle classifiche mondiali, e ciò che resta da compilare a te.
+9. [Modificare, archiviare e ripristinare un torneo](changing-and-archiving.md): correggere i dati del torneo, e mettere da parte un torneo.
+10. [Che cosa vede il pubblico](what-the-public-sees.md): le pagine che i tuoi giocatori seguono, e come ciò che inserisci vi compare.
 
 ## Com'è organizzata l'amministrazione
 
@@ -32,7 +33,7 @@ La porta d'ingresso dell'amministrazione elenca i tornei in cui hai un ruolo, un
 
 ![L'elenco dei tornei nell'amministrazione](images/admin-list.png)
 
-Premendo il nome di un torneo, o **Gestisci**, si apre la sua pagina. Tutto ciò che c'è da gestire sta in cinque schede sotto il suo nome: **Squadre**, **Test**, **Note**, **Organizzatori** e **Segnapunti**. La pagina si apre su Squadre, perché le squadre sono la prima cosa che si crea.
+Premendo il nome di un torneo, o **Gestisci**, si apre la sua pagina. Tutto ciò che c'è da gestire sta in sei schede sotto il suo nome: **Squadre**, **Test**, **Note**, **Organizzatori**, **Segnapunti** e **Classifiche**. La pagina si apre su Squadre, perché le squadre sono la prima cosa che si crea.
 
 ![La pagina di un torneo, sulla scheda Test](images/tournament-page.png)
 

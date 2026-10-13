@@ -16,7 +16,7 @@ Drücke **Spieler hinzufügen** über der Liste. Ein Dialog öffnet sich über d
 
 **Name** ist Pflicht, zwischen 3 und 254 Zeichen lang. Zwei Spieler einer Mannschaft können nicht denselben Namen haben, wie auch immer er groß- und kleingeschrieben ist; ein Spieler einer anderen Mannschaft darf ihn teilen.
 
-**Name in der Weltrangliste** ist der Name, unter dem die Weltrangliste den Spieler kennt. Danach wird nur bei einem Turnier im Association Croquet oder Golf Croquet gefragt, den beiden Sportarten mit Weltrangliste. Während du einen Spieler hinzufügst, folgt er dem Namen, während du ihn tippst, und hört auf zu folgen, sobald du in ihm selbst tippst. Bleibt er leer, wird der Name des Spielers gespeichert. Während du tippst, werden die Spieler angeboten, die die Weltrangliste kennt und deren Namen so beginnen, und neben dem Namen in der Weltrangliste sagt ein Haken, dass die Rangliste den Namen kennt, und ein Fragezeichen, dass sie ihn nicht kennt. Das ist nur ein Hinweis: Ein Name, den die Rangliste nicht kennt, wird genauso bereitwillig gespeichert wie einer, den sie kennt.
+**Name in der Weltrangliste** ist der Name, unter dem die Weltrangliste den Spieler kennt. Danach wird nur bei einem Turnier im Association Croquet oder Golf Croquet gefragt, den beiden Sportarten, deren Spieler die Weltrangliste in einer Liste führt. Die Spieler im American 6 Wicket sind der Rangliste unter ihrem eigenen Namen bekannt; danach wird dort also nicht gefragt, und der Name in der Weltrangliste ist bei jedem Spieler immer sein Name. Während du einen Spieler hinzufügst, folgt er dem Namen, während du ihn tippst, und hört auf zu folgen, sobald du in ihm selbst tippst. Bleibt er leer, wird der Name des Spielers gespeichert. Während du tippst, werden die Spieler angeboten, die die Weltrangliste kennt und deren Namen so beginnen, und neben dem Namen in der Weltrangliste sagt ein Haken, dass die Rangliste den Namen kennt, und ein Fragezeichen, dass sie ihn nicht kennt. Das ist nur ein Hinweis: Ein Name, den die Rangliste nicht kennt, wird genauso bereitwillig gespeichert wie einer, den sie kennt.
 
 Ein Spieler heißt nie „Bye“, das englische Wort für Freilos: Ein Name, dessen erstes Wort „bye“ ist, wird abgelehnt.
 
@@ -24,7 +24,7 @@ Drücke **Hinzufügen**. Der Spieler wird hinzugefügt, der Dialog sagt es, und 
 
 ## Einen Spieler korrigieren
 
-Drücke den Namen eines Spielers oder sein **Bearbeiten**, um denselben Dialog für diesen Spieler zu öffnen, mit dem Titel Spieler bearbeiten. Drücke **Speichern**, um die Änderung zu speichern. Ein Spieler, dessen Name korrigiert wird, behält den Namen in der Weltrangliste, den er hatte.
+Drücke den Namen eines Spielers oder sein **Bearbeiten**, um denselben Dialog für diesen Spieler zu öffnen, mit dem Titel Spieler bearbeiten. Drücke **Speichern**, um die Änderung zu speichern. Ein Spieler, dessen Name korrigiert wird, behält den Namen in der Weltrangliste, den er hatte, außer im American 6 Wicket, wo der Name eines Spielers in der Weltrangliste immer sein Name ist.
 
 ## Reihenfolge
 

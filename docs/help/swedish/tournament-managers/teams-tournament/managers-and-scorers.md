@@ -22,10 +22,10 @@ Fliken **Resultatförare** är fliken Turneringsledare för resultatförare, och
 
 ![Fliken Resultatförare](images/scorers-tab.png)
 
-En resultatförare ser turneringen i sin egen lista i administrationen, med **Resultat** i stället för Hantera, och erbjuds bara dess testmatcher: inga lag, anteckningar, turneringsledare eller resultatförare. De kan inte öppna ett lags sida, eftersom vem som spelar för ett lag är turneringsledarnas sak. På en testmatchs sida kan de skriva in, rätta, arkivera, återställa och ordna om resultat som en turneringsledare kan.
+En resultatförare ser turneringen i sin egen lista i administrationen, med **Resultat** i stället för Hantera, och erbjuds bara dess testmatcher: inga lag, anteckningar, turneringsledare, resultatförare eller rankingar. De kan inte öppna ett lags sida, eftersom vem som spelar för ett lag är turneringsledarnas sak. På en testmatchs sida kan de skriva in, rätta, arkivera, återställa och ordna om resultat som en turneringsledare kan.
 
 ![En resultatförares vy av en turnerings sida](images/scorer-tournament-page.png)
 
 En turneringsledare görs inte till resultatförare, eftersom en turneringsledare redan kan göra allt en resultatförare kan. En turnering behöver ingen resultatförare, så varje resultatförare kan tas bort, även den sista.
 
-Nästa: [Ändra, arkivera och återställa en turnering](changing-and-archiving.md).
+Nästa: [Rankingar](rankings.md).

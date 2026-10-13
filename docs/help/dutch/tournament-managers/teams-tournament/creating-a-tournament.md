@@ -31,7 +31,7 @@ Standaard is de enige vorm die niet tussen teams wordt gespeeld, en is niet wat 
 
 **Gelijke testmatches zijn gelijkspel.** Wordt alleen gevraagd zodra een toernooivorm tussen teams is gekozen. Een testmatch wordt gewonnen door het team dat meer van de wedstrijden wint, en een testmatch die gelijk staat in wedstrijden wordt beslist op partijensaldo, dan op poortjessaldo, tenzij dit is aangevinkt, in welk geval een testmatch die gelijk staat in wedstrijden een gelijkspel is, zoals sommige teamevenementen het hebben. Het begint uitgevinkt voor Teams, en aangevinkt voor het GC World Team Championship, dat een gelijke testmatch altijd als gelijkspel heeft geteld.
 
-**Telt mee voor de wereldranglijst.** Wordt alleen gevraagd waar het kan meetellen: een toernooi Associatiecroquet of Golfcroquet dat niet met handicaps wordt gespeeld en geen gelijkspel toestaat. Het staat om te beginnen aangevinkt.
+**Telt mee voor de wereldranglijst.** Wordt alleen gevraagd waar het kan meetellen: een toernooi Associatiecroquet, Golfcroquet of Amerikaans croquet met 6 poortjes dat niet met handicaps wordt gespeeld en geen gelijkspel toestaat. Het staat om te beginnen aangevinkt.
 
 **Evenement op nationaal niveau** en **Evenement op internationaal niveau.** Een toernooi kan het ene zijn, het andere, of geen van beide, maar nooit allebei: het ene aanvinken vinkt het andere uit.
 

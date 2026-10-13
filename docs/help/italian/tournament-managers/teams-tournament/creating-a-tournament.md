@@ -31,7 +31,7 @@ Standard è l'unico formato che non è a squadre, e non è ciò che vuoi qui. Ga
 
 **I test in parità sono pareggiati.** Viene chiesto solo una volta scelto un formato a squadre. Un test lo vince la squadra che vince più incontri, e uno in parità sugli incontri si decide con la differenza partite, poi con la differenza archetti, a meno che questo non sia spuntato, nel qual caso un test in parità sugli incontri è pareggiato, come lo prevedono alcuni eventi a squadre. Comincia senza spunta per A squadre, e con la spunta per il GC World Team Championship, che ha sempre pareggiato un test in parità.
 
-**Vale per le classifiche mondiali.** Viene chiesto solo quando può valere: un torneo di Association Croquet o di Golf Croquet che non si gioca con handicap e non ammette i pareggi. All'inizio è spuntato.
+**Vale per le classifiche mondiali.** Viene chiesto solo quando può valere: un torneo di Association Croquet, di Golf Croquet o di Croquet americano a 6 archetti che non si gioca con handicap e non ammette i pareggi. All'inizio è spuntato.
 
 **Evento di livello nazionale** ed **Evento di livello internazionale.** Un torneo può essere l'uno, l'altro, o nessuno dei due, ma mai entrambi: spuntare l'uno toglie la spunta all'altro.
 

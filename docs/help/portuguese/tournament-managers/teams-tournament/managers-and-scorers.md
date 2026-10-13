@@ -22,10 +22,10 @@ A aba **Apontadores** é a aba Organizadores para apontadores, e funciona do mes
 
 ![A aba Apontadores](images/scorers-tab.png)
 
-Um apontador vê o torneio na sua própria lista na administração, com **Placares** no lugar de Gerenciar, e só recebe os seus testes: nada de equipes, notas, organizadores ou apontadores. Ele não pode abrir a página de uma equipe, porque quem joga por uma equipe é coisa que cabe aos organizadores dizer. Na página de um teste ele pode inserir, corrigir, arquivar, restaurar e reordenar placares como um organizador.
+Um apontador vê o torneio na sua própria lista na administração, com **Placares** no lugar de Gerenciar, e só recebe os seus testes: nada de equipes, notas, organizadores, apontadores ou rankings. Ele não pode abrir a página de uma equipe, porque quem joga por uma equipe é coisa que cabe aos organizadores dizer. Na página de um teste ele pode inserir, corrigir, arquivar, restaurar e reordenar placares como um organizador.
 
 ![A visão de um apontador da página de um torneio](images/scorer-tournament-page.png)
 
 Um organizador não é tornado apontador, porque um organizador já pode fazer tudo o que um apontador pode. Um torneio não precisa de apontador, então todos os apontadores podem ser removidos, inclusive o último.
 
-A seguir: [Alterar, arquivar e restaurar um torneio](changing-and-archiving.md).
+A seguir: [Rankings](rankings.md).

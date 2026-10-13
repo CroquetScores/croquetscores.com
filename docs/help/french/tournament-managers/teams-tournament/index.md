@@ -23,8 +23,9 @@ Une **équipe** est un camp, comme l’Australie, avec un nom, un nom court comm
 5. [Résultats](scores.md) : saisir les parties d’un test, les corriger, et mettre de côté celles saisies par erreur.
 6. [Notes](notes.md) : dire aux joueurs ce qu’ils ont besoin de savoir au fil du tournoi.
 7. [Gestionnaires et marqueurs](managers-and-scorers.md) : partager l’organisation du tournoi, et laisser quelqu’un saisir les résultats sans pouvoir rien changer d’autre.
-8. [Modifier, archiver et restaurer un tournoi](changing-and-archiving.md) : corriger les détails du tournoi, et mettre un tournoi de côté.
-9. [Ce que voit le public](what-the-public-sees.md) : les pages que vos joueurs suivent, et comment ce que vous saisissez y apparaît.
+8. [Classements](rankings.md) : le fichier envoyé au classement mondial, et ce qu’il vous reste à y remplir.
+9. [Modifier, archiver et restaurer un tournoi](changing-and-archiving.md) : corriger les détails du tournoi, et mettre un tournoi de côté.
+10. [Ce que voit le public](what-the-public-sees.md) : les pages que vos joueurs suivent, et comment ce que vous saisissez y apparaît.
 
 ## Comment l’administration est organisée
 
@@ -32,7 +33,7 @@ La page d’entrée de l’administration liste les tournois auxquels vous parti
 
 ![La liste des tournois dans l’administration](images/admin-list.png)
 
-Appuyer sur le nom d’un tournoi, ou sur **Gérer**, ouvre sa page. Tout ce qu’il y a à organiser tient dans cinq onglets sous son nom : **Équipes**, **Tests**, **Notes**, **Gestionnaires** et **Marqueurs**. La page s’ouvre sur Équipes, puisque les équipes sont la première chose que l’on constitue.
+Appuyer sur le nom d’un tournoi, ou sur **Gérer**, ouvre sa page. Tout ce qu’il y a à organiser tient dans six onglets sous son nom : **Équipes**, **Tests**, **Notes**, **Gestionnaires**, **Marqueurs** et **Classements**. La page s’ouvre sur Équipes, puisque les équipes sont la première chose que l’on constitue.
 
 ![La page d’un tournoi, sur son onglet Tests](images/tournament-page.png)
 

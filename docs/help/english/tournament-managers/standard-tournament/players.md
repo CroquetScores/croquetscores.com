@@ -18,7 +18,7 @@ Press **Add Player**, above the list. A dialog opens over the page.
 
 **Flag** is the flag shown beside the player's name. It can be left as none, which most players are. What a player represents and which flag they fly are kept apart, since a player can play for a club in one country and fly the flag of another.
 
-**World Ranking Player Name** is the name the world rankings know the player by. It is asked for only in a tournament of Association Croquet or Golf Croquet, the two sports with world rankings. While you add a player it follows the name as you type it, since most players are known to the rankings by their own name, and stops following once you type in it. Left empty, it is kept as the player's name.
+**World Ranking Player Name** is the name the world rankings know the player by. It is asked for only in a tournament of Association Croquet or Golf Croquet, the two sports whose players the world rankings keep a list of. American 6 Wicket's players are known to the rankings by their own names, so it is not asked for there, and each player's world ranking name is always their name. While you add a player it follows the name as you type it, since most players are known to the rankings by their own name, and stops following once you type in it. Left empty, it is kept as the player's name.
 
 As you type a name, the players the world rankings know whose names begin that way are offered, so that you can take a name as the rankings spell it rather than typing it out. Beside the world ranking name, a tick says the rankings know the name, and a question mark says they do not: the name may be misspelled, or the player may be new to the rankings. It is only advice. A name the rankings do not know is kept as readily as one they do.
 
@@ -30,7 +30,7 @@ A player is never called "Bye". A knockout's byes are added in the knockout itse
 
 ## Correcting a player
 
-Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Change what is wrong and press **Save**, which keeps the change and closes the dialog. A player whose name is corrected keeps the world ranking name they had, since the rankings still know them by it.
+Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Change what is wrong and press **Save**, which keeps the change and closes the dialog. A player whose name is corrected keeps the world ranking name they had, since the rankings still know them by it. In American 6 Wicket a player's world ranking name is always their name, so correcting the name corrects it too.
 
 ![The Edit Player dialog](images/edit-player-dialog.png)
 

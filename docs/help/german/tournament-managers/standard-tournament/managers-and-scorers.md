@@ -24,10 +24,10 @@ Der Reiter **Ergebniserfasser** ist der Reiter Turnierleitung für Ergebniserfas
 
 ![Der Reiter Ergebniserfasser](images/scorers-tab.png)
 
-Ein Ergebniserfasser sieht das Turnier in seiner eigenen Liste in der Verwaltung, mit **Ergebnisse** an der Stelle von Verwalten, und bekommt nur seine Wettbewerbe angeboten: keine Spieler, Hinweise, Turnierleitung oder Ergebniserfasser. Auf der Seite eines Wettbewerbs sieht er nur den Reiter Ergebnisse, auf dem er Ergebnisse eingeben, korrigieren, archivieren und wiederherstellen kann wie ein Turnierleiter. Wer in einem Wettbewerb spielt, entscheidet die Turnierleitung.
+Ein Ergebniserfasser sieht das Turnier in seiner eigenen Liste in der Verwaltung, mit **Ergebnisse** an der Stelle von Verwalten, und bekommt nur seine Wettbewerbe angeboten: keine Spieler, Hinweise, Turnierleitung, Ergebniserfasser oder Ranglisten. Auf der Seite eines Wettbewerbs sieht er nur den Reiter Ergebnisse, auf dem er Ergebnisse eingeben, korrigieren, archivieren und wiederherstellen kann wie ein Turnierleiter. Wer in einem Wettbewerb spielt, entscheidet die Turnierleitung.
 
 ![Die Turnierseite, wie ein Ergebniserfasser sie sieht](images/scorer-tournament-page.png)
 
 Ein Turnierleiter wird nicht zum Ergebniserfasser gemacht, weil ein Turnierleiter schon alles kann, was ein Ergebniserfasser kann. Ein Turnier braucht keinen Ergebniserfasser, deshalb kann jeder Ergebniserfasser entfernt werden, auch der letzte.
 
-Weiter: [Ein Turnier ändern, archivieren und wiederherstellen](changing-and-archiving.md).
+Weiter: [Ranglisten](rankings.md).

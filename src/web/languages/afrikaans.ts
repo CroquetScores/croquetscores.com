@@ -477,7 +477,7 @@ export const afrikaans: Language = {
     "admin.rankings.spreadsheet":
       "Die uitslae van die toernooi word as 'n sigblad aan die wêreldranglys gestuur, wat die webwerf uit die ingevoerde wedstryde skryf.",
     "admin.rankings.fillInWinners":
-      "Die webwerf kan net raai wie elke kompetisie gewen het, so kontroleer die Wenner-reël van elkeen voordat jy die leer stuur.",
+      "Die webwerf kan net raai wie elke kompetisie gewen het, so kontroleer die Winner-reël van elkeen voordat jy die leer stuur.",
     "admin.rankings.fillInWinner":
       "Die webwerf kan nie weet wie die toernooi gewen het nie, so vul dit onderaan die sigblad in voordat jy dit stuur.",
     "admin.rankings.sendIt":

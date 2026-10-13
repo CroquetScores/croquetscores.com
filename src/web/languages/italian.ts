@@ -472,7 +472,7 @@ export const italian: Language = {
     "admin.rankings.spreadsheet":
       "I risultati del torneo vengono inviati alle classifiche mondiali come foglio di calcolo, che il sito scrive a partire dalle partite inserite.",
     "admin.rankings.fillInWinners":
-      "Il sito può solo indovinare chi ha vinto ogni competizione, quindi controlla la riga Vincitore di ciascuna prima di inviare il file.",
+      "Il sito può solo indovinare chi ha vinto ogni competizione, quindi controlla la riga Winner di ciascuna prima di inviare il file.",
     "admin.rankings.fillInWinner":
       "Il sito non può sapere chi ha vinto il torneo, quindi inseriscilo in fondo al foglio di calcolo prima di inviarlo.",
     "admin.rankings.sendIt":

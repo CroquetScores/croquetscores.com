@@ -23,8 +23,9 @@ Ko te **kapa** he taha, pēnei i a Ahitereiria, he ingoa tōna, he ingoa poto p�
 5. [Ngā hua](scores.md): te whakauru i ngā tākaro o tētahi Test, te whakatika i a rātou, me te whakatārewa i ērā i whakaurua hētia.
 6. [Ngā tuhipoka](notes.md): te whakamōhio atu ki ngā kaitākaro i ngā mea e hiahiatia ana e rātou i te haere o te whakataetae.
 7. [Ngā kaiwhakahaere me ngā kaikaute](managers-and-scorers.md): te tohatoha i te whakahaere o te whakataetae, me te tuku i tētahi kia whakauru hua ahakoa kāore e taea e ia te whakarerekē i tētahi atu mea.
-8. [Te whakarerekē, te pūranga me te whakahoki i tētahi whakataetae](changing-and-archiving.md): te whakatika i ngā taipitopito o te whakataetae, me te whakatārewa i tētahi whakataetae.
-9. [Tā te marea e kite ai](what-the-public-sees.md): ngā whārangi e whāia ana e ō kaitākaro, me te āhua e puta ai ki runga i a rātou ngā mea e whakaurua ana e koe.
+8. [Ngā raupapa](rankings.md): te kōnae e tukuna ai ki te raupapa o te ao, me ngā mea ka waiho māu e whakakī.
+9. [Te whakarerekē, te pūranga me te whakahoki i tētahi whakataetae](changing-and-archiving.md): te whakatika i ngā taipitopito o te whakataetae, me te whakatārewa i tētahi whakataetae.
+10. [Tā te marea e kite ai](what-the-public-sees.md): ngā whārangi e whāia ana e ō kaitākaro, me te āhua e puta ai ki runga i a rātou ngā mea e whakaurua ana e koe.
 
 ## Te whakatakotoranga o te Whakahaere
 
@@ -32,7 +33,7 @@ Ko te kuaha o mua o te Whakahaere ka rārangi i ngā whakataetae e whai wāhi an
 
 ![Te rārangi whakataetae i te Whakahaere](images/admin-list.png)
 
-Ina pēhia te ingoa o tētahi whakataetae, **Whakahaere** rānei, ka tuwhera tōna whārangi. Ko ngā mea katoa hei whakahaere kei roto i ngā ripa e rima i raro i tōna ingoa: **Ngā kapa**, **Ngā Test**, **Ngā tuhipoka**, **Ngā kaiwhakahaere** me **Ngā kaikaute**. Ka tuwhera te whārangi ki Ngā kapa, nā te mea ko ngā kapa te mea tuatahi ka whakaritea.
+Ina pēhia te ingoa o tētahi whakataetae, **Whakahaere** rānei, ka tuwhera tōna whārangi. Ko ngā mea katoa hei whakahaere kei roto i ngā ripa e ono i raro i tōna ingoa: **Ngā kapa**, **Ngā Test**, **Ngā tuhipoka**, **Ngā kaiwhakahaere**, **Ngā kaikaute** me **Ngā raupapa**. Ka tuwhera te whārangi ki Ngā kapa, nā te mea ko ngā kapa te mea tuatahi ka whakaritea.
 
 ![Te whārangi o tētahi whakataetae, i tōna ripa Ngā Test](images/tournament-page.png)
 

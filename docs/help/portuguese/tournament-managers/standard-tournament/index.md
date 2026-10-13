@@ -19,8 +19,9 @@ Tudo o que um organizador faz é feito na seção de administração do site. As
 5. [Placares](scores.md): inserir resultados, corrigi-los e pôr de lado os que foram inseridos por engano.
 6. [Notas](notes.md): dizer aos jogadores o que eles precisam saber enquanto o torneio acontece.
 7. [Organizadores e apontadores](managers-and-scorers.md): compartilhar a administração do torneio, e deixar que alguém insira placares sem poder alterar mais nada.
-8. [Alterar, arquivar e restaurar um torneio](changing-and-archiving.md): corrigir os detalhes do torneio, e pôr um torneio de lado.
-9. [O que o público vê](what-the-public-sees.md): as páginas que os seus jogadores acompanham, e como o que você insere aparece nelas.
+8. [Rankings](rankings.md): o arquivo enviado aos rankings mundiais, e o que fica para você preencher.
+9. [Alterar, arquivar e restaurar um torneio](changing-and-archiving.md): corrigir os detalhes do torneio, e pôr um torneio de lado.
+10. [O que o público vê](what-the-public-sees.md): as páginas que os seus jogadores acompanham, e como o que você insere aparece nelas.
 
 ## Como a administração é organizada
 
@@ -28,7 +29,7 @@ A porta de entrada da administração lista os torneios de que você participa, 
 
 ![A lista de torneios na administração](images/admin-list.png)
 
-Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em cinco abas abaixo do nome: **Jogadores**, **Competições**, **Notas**, **Organizadores** e **Apontadores**. A página abre em Jogadores, porque os jogadores são a primeira coisa a inserir.
+Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Jogadores**, **Competições**, **Notas**, **Organizadores**, **Apontadores** e **Rankings**. A página abre em Jogadores, porque os jogadores são a primeira coisa a inserir.
 
 ![A página de um torneio, na aba Competições](images/tournament-page.png)
 

@@ -24,7 +24,7 @@ El formulario pide todo aquello con lo que empieza un torneo. Un torneo de los c
 
 **Permite empates.** Márcalo cuando una partida pueda acabar sin que ninguno de los dos jugadores gane. La mayoría de los torneos no lo permiten. Si está marcado, un resultado introducido con los puntos igualados y sin marca se guarda como empate; si no lo está, una partida con los puntos igualados tiene que decir quién ganó mediante una marca tras los puntos del ganador, como "6w".
 
-**Cuenta para el ranking mundial.** Se pregunta solo cuando puede contar: un torneo de Croquet Asociación o de Golf Croquet que ni se juega con hándicap ni permite empates. Empieza marcado, así que desmárcalo para un torneo que no deba contar.
+**Cuenta para el ranking mundial.** Se pregunta solo cuando puede contar: un torneo de Croquet Asociación, de Golf Croquet o de Croquet americano de 6 aros que ni se juega con hándicap ni permite empates. Empieza marcado, así que desmárcalo para un torneo que no deba contar.
 
 **Evento de nivel nacional** y **Evento de nivel internacional.** Un torneo puede ser lo uno, lo otro o ninguno, pero nunca ambos: marcar uno desmarca el otro.
 

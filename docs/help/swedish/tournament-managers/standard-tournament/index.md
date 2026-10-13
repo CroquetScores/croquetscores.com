@@ -19,8 +19,9 @@ Allt en turneringsledare gör görs i webbplatsens administrationsdel. De offent
 5. [Resultat](scores.md): att skriva in resultat, rätta dem och lägga undan dem som skrevs in av misstag.
 6. [Anteckningar](notes.md): att berätta för spelarna vad de behöver veta medan turneringen pågår.
 7. [Turneringsledare och resultatförare](managers-and-scorers.md): att dela på ledningen av turneringen, och att låta någon skriva in resultat utan att kunna ändra något annat.
-8. [Ändra, arkivera och återställa en turnering](changing-and-archiving.md): att rätta turneringens uppgifter, och att lägga undan en turnering.
-9. [Vad allmänheten ser](what-the-public-sees.md): sidorna dina spelare följer, och hur det du skriver in visas på dem.
+8. [Rankingar](rankings.md): filen som skickas till världsrankingen, och vad som återstår för dig att fylla i.
+9. [Ändra, arkivera och återställa en turnering](changing-and-archiving.md): att rätta turneringens uppgifter, och att lägga undan en turnering.
+10. [Vad allmänheten ser](what-the-public-sees.md): sidorna dina spelare följer, och hur det du skriver in visas på dem.
 
 ## Så är administrationen upplagd
 
@@ -28,7 +29,7 @@ Administrationens startsida listar de turneringar du har en del i, ett år i tag
 
 ![Listan över turneringar i administrationen](images/admin-list.png)
 
-Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i fem flikar under dess namn: **Spelare**, **Tävlingar**, **Anteckningar**, **Turneringsledare** och **Resultatförare**. Sidan öppnas på Spelare, eftersom spelarna är det första som läggs till.
+Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i sex flikar under dess namn: **Spelare**, **Tävlingar**, **Anteckningar**, **Turneringsledare**, **Resultatförare** och **Rankingar**. Sidan öppnas på Spelare, eftersom spelarna är det första som läggs till.
 
 ![En turnerings sida, på fliken Tävlingar](images/tournament-page.png)
 

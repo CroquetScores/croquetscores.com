@@ -18,7 +18,7 @@ Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över s
 
 **Flagga** är den flagga som visas bredvid spelarens namn. Den kan lämnas som ingen, vilket de flesta spelare har. Vad en spelare representerar och vilken flagga spelaren för hålls isär, eftersom en spelare kan spela för en klubb i ett land och föra ett annat lands flagga.
 
-**Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i associationscroquet eller golfcroquet, de två sporter som har världsranking. Medan du lägger till en spelare följer det namnet medan du skriver, eftersom de flesta spelare är kända i rankingen under sitt eget namn, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn.
+**Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i associationscroquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, eftersom de flesta spelare är kända i rankingen under sitt eget namn, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn.
 
 Medan du skriver ett namn erbjuds de spelare världsrankingen känner till vars namn börjar så, så att du kan ta ett namn så som rankingen stavar det i stället för att skriva ut det. Bredvid världsrankingnamnet säger en bock att rankingen känner till namnet, och ett frågetecken att den inte gör det: namnet kan vara felstavat, eller så kan spelaren vara ny i rankingen. Det är bara ett råd. Ett namn rankingen inte känner till sparas lika gärna som ett den känner till.
 
@@ -30,7 +30,7 @@ En spelare heter aldrig "Bye". En utslagsturnerings frilotter läggs till i sjä
 
 ## Rätta en spelare
 
-Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna samma dialogruta på den spelaren, med rubriken Redigera spelare. Ändra det som är fel och tryck på **Spara**, som sparar ändringen och stänger dialogrutan. En spelare vars namn rättas behåller det världsrankingnamn spelaren hade, eftersom rankingen fortfarande känner spelaren under det.
+Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna samma dialogruta på den spelaren, med rubriken Redigera spelare. Ändra det som är fel och tryck på **Spara**, som sparar ändringen och stänger dialogrutan. En spelare vars namn rättas behåller det världsrankingnamn spelaren hade, eftersom rankingen fortfarande känner spelaren under det. I amerikansk 6-bågars croquet är en spelares namn i världsrankingen alltid spelarens namn, så att rätta namnet rättar det också.
 
 ![Dialogrutan Redigera spelare](images/edit-player-dialog.png)
 

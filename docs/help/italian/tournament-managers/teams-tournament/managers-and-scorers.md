@@ -22,10 +22,10 @@ La scheda **Segnapunti** è la scheda Organizzatori per i segnapunti, e funziona
 
 ![La scheda Segnapunti](images/scorers-tab.png)
 
-Un segnapunti vede il torneo nel proprio elenco nell'amministrazione, con **Punteggi** al posto di Gestisci, e gli vengono offerti solo i suoi test: niente squadre, note, organizzatori o segnapunti. Non può aprire la pagina di una squadra, perché chi gioca per una squadra lo decidono gli organizzatori. Sulla pagina di un test può inserire, correggere, archiviare, ripristinare e riordinare i punteggi come un organizzatore.
+Un segnapunti vede il torneo nel proprio elenco nell'amministrazione, con **Punteggi** al posto di Gestisci, e gli vengono offerti solo i suoi test: niente squadre, note, organizzatori, segnapunti o classifiche. Non può aprire la pagina di una squadra, perché chi gioca per una squadra lo decidono gli organizzatori. Sulla pagina di un test può inserire, correggere, archiviare, ripristinare e riordinare i punteggi come un organizzatore.
 
 ![La pagina di un torneo come la vede un segnapunti](images/scorer-tournament-page.png)
 
 Un organizzatore non viene reso segnapunti, perché un organizzatore può già fare tutto ciò che può fare un segnapunti. Un torneo non ha bisogno di nessun segnapunti, quindi ogni segnapunti può essere rimosso, anche l'ultimo.
 
-Avanti: [Modificare, archiviare e ripristinare un torneo](changing-and-archiving.md).
+Avanti: [Classifiche](rankings.md).

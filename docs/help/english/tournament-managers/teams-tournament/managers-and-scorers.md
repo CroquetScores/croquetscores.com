@@ -22,10 +22,10 @@ The **Scorers** tab is the Managers tab for scorers, and works the same way: an 
 
 ![The Scorers tab](images/scorers-tab.png)
 
-A scorer sees the tournament in their own list in the admin, with **Scores** in place of Manage, and is offered its tests alone: no teams, notes, managers or scorers. They cannot open a team's page, since who plays for a team is the managers' to say. On a test's page they can enter, correct, archive, restore and reorder scores as a manager can.
+A scorer sees the tournament in their own list in the admin, with **Scores** in place of Manage, and is offered its tests alone: no teams, notes, managers, scorers or rankings. They cannot open a team's page, since who plays for a team is the managers' to say. On a test's page they can enter, correct, archive, restore and reorder scores as a manager can.
 
 ![A scorer's view of a tournament's page](images/scorer-tournament-page.png)
 
 A manager is not made a scorer, since a manager can already do everything a scorer can. A tournament needs no scorer, so every scorer can be removed, the last among them.
 
-Next: [Changing, archiving and restoring a tournament](changing-and-archiving.md).
+Next: [Rankings](rankings.md).

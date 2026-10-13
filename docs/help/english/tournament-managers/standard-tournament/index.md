@@ -19,8 +19,9 @@ Everything a manager does is done in the admin section of the website. The publi
 5. [Scores](scores.md): entering results, correcting them, and setting aside the ones entered by mistake.
 6. [Notes](notes.md): telling the players what they need to know as the tournament goes on.
 7. [Managers and scorers](managers-and-scorers.md): sharing the running of the tournament, and letting somebody enter scores without being able to change anything else.
-8. [Changing, archiving and restoring a tournament](changing-and-archiving.md): correcting the tournament's details, and setting a tournament aside.
-9. [What the public sees](what-the-public-sees.md): the pages your players follow, and how what you enter appears on them.
+8. [Rankings](rankings.md): the file the world rankings are sent, and what is left for you to fill in.
+9. [Changing, archiving and restoring a tournament](changing-and-archiving.md): correcting the tournament's details, and setting a tournament aside.
+10. [What the public sees](what-the-public-sees.md): the pages your players follow, and how what you enter appears on them.
 
 ## How the admin is laid out
 
@@ -28,7 +29,7 @@ The admin's front door lists the tournaments you have a part in, one year at a t
 
 ![The list of tournaments in the admin](images/admin-list.png)
 
-Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in five tabs beneath its name: **Players**, **Competitions**, **Notes**, **Managers** and **Scorers**. The page opens on Players, since the players are the first thing entered.
+Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in six tabs beneath its name: **Players**, **Competitions**, **Notes**, **Managers**, **Scorers** and **Rankings**. The page opens on Players, since the players are the first thing entered.
 
 ![A tournament's page, on its Competitions tab](images/tournament-page.png)
 

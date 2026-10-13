@@ -24,7 +24,7 @@ Il modulo chiede tutto ciò con cui un torneo comincia. Per un torneo del tipo c
 
 **Ammette i pareggi.** Spuntalo quando una partita può finire senza che nessuno dei due giocatori vinca. La maggior parte dei tornei non lo ammette. Quando è spuntato, un punteggio inserito con punti pari e senza segno viene conservato come pareggio; quando non lo è, una partita a punti pari deve dire chi l'ha vinta con un segno dopo il punteggio del vincitore, come "6w".
 
-**Vale per le classifiche mondiali.** Viene chiesto solo quando può valere: un torneo di Association Croquet o di Golf Croquet che non si gioca con handicap e non ammette i pareggi. All'inizio è spuntato, quindi toglilo per un torneo che non deve valere.
+**Vale per le classifiche mondiali.** Viene chiesto solo quando può valere: un torneo di Association Croquet, di Golf Croquet o di Croquet americano a 6 archetti che non si gioca con handicap e non ammette i pareggi. All'inizio è spuntato, quindi toglilo per un torneo che non deve valere.
 
 **Evento di livello nazionale** ed **Evento di livello internazionale.** Un torneo può essere l'uno, l'altro, o nessuno dei due, ma mai entrambi: spuntare l'uno toglie la spunta all'altro.
 

@@ -31,7 +31,7 @@ Standard ist das einzige Format, das nicht von Mannschaften gespielt wird, und n
 
 **Ausgeglichene Tests gelten als unentschieden.** Wird erst gefragt, wenn ein Format für Mannschaften gewählt ist. Einen Test gewinnt die Mannschaft, die mehr seiner Begegnungen gewinnt, und einer, der nach Begegnungen ausgeglichen ist, wird nach der Spieldifferenz, dann nach der Tordifferenz entschieden, es sei denn, das hier ist angehakt; dann endet ein nach Begegnungen ausgeglichener Test unentschieden, wie es manche Mannschaftsveranstaltungen halten. Es beginnt für Mannschaften ohne Haken und für die GC World Team Championship mit Haken, die einen ausgeglichenen Test immer als unentschieden gewertet hat.
 
-**Zählt für die Weltrangliste.** Wird nur gefragt, wo es zählen kann: bei einem Turnier im Association Croquet oder Golf Croquet, das weder mit Handicap gespielt wird noch Unentschieden erlaubt. Es ist zu Beginn angehakt.
+**Zählt für die Weltrangliste.** Wird nur gefragt, wo es zählen kann: bei einem Turnier im Association Croquet, Golf Croquet oder American 6 Wicket, das weder mit Handicap gespielt wird noch Unentschieden erlaubt. Es ist zu Beginn angehakt.
 
 **Veranstaltung auf nationaler Ebene** und **Veranstaltung auf internationaler Ebene.** Ein Turnier kann das eine, das andere oder keines von beiden sein, aber nie beides: Wer das eine anhakt, nimmt beim anderen den Haken weg.
 

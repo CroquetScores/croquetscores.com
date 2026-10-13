@@ -471,7 +471,7 @@ export const dutch: Language = {
     "admin.rankings.spreadsheet":
       "De uitslagen van het toernooi worden als spreadsheet naar de wereldranglijst gestuurd, die de site schrijft uit de ingevoerde partijen.",
     "admin.rankings.fillInWinners":
-      "De site kan alleen raden wie elke competitie won, dus controleer de regel Winnaar van elk voordat je het bestand verstuurt.",
+      "De site kan alleen raden wie elke competitie won, dus controleer de regel Winner van elk voordat je het bestand verstuurt.",
     "admin.rankings.fillInWinner":
       "De site kan niet weten wie het toernooi won, dus vul dat onderaan de spreadsheet in voordat je die verstuurt.",
     "admin.rankings.sendIt":

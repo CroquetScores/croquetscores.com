@@ -478,7 +478,7 @@ export const german: Language = {
     "admin.rankings.spreadsheet":
       "Die Ergebnisse des Turniers werden der Weltrangliste als Tabelle geschickt, die die Website aus den eingegebenen Spielen erstellt.",
     "admin.rankings.fillInWinners":
-      "Die Website kann nur raten, wer jeden Wettbewerb gewonnen hat. Prüfen Sie daher die Zeile Sieger jedes Wettbewerbs, bevor Sie die Datei senden.",
+      "Die Website kann nur raten, wer jeden Wettbewerb gewonnen hat. Prüfen Sie daher die Zeile Winner jedes Wettbewerbs, bevor Sie die Datei senden.",
     "admin.rankings.fillInWinner":
       "Die Website kann nicht wissen, wer das Turnier gewonnen hat. Tragen Sie es daher unten in der Tabelle ein, bevor Sie sie senden.",
     "admin.rankings.sendIt":

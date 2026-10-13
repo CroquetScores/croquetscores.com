@@ -31,7 +31,7 @@ Standard är det enda format som inte spelas av lag, och är inte det du vill ha
 
 **Lika testmatcher är oavgjorda.** Frågas bara när ett format som spelas av lag har valts. En testmatch vinns av det lag som vinner fler av dess matcher, och en som står lika i matcher avgörs på nettopartier, sedan på nettobågar, såvida inte det här är förbockat, i vilket fall en testmatch som står lika i matcher är oavgjord, som vissa lagevenemang har det. Det börjar avbockat för Lag, och förbockat för GC World Team Championship, som alltid har räknat en lika testmatch som oavgjord.
 
-**Räknas med i världsrankingen.** Frågas bara där det kan räknas: en turnering i associationscroquet eller golfcroquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början.
+**Räknas med i världsrankingen.** Frågas bara där det kan räknas: en turnering i associationscroquet, golfcroquet eller amerikansk 6-bågars croquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början.
 
 **Tävling på nationell nivå** och **Tävling på internationell nivå.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av.
 

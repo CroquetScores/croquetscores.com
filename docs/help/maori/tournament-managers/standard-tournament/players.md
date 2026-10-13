@@ -18,7 +18,7 @@ Ko **E tohu ana i a** te mea e tākaro ai te kaitākaro, he mea tuhi pēnei i t�
 
 Ko **Haki** te haki e whakaaturia ana i te taha o te ingoa o te kaitākaro. Ka taea te waiho hei kore, ko te nuinga o ngā kaitākaro tērā. He mea motuhake te mea e tohu ana te kaitākaro me te haki e kapohia ana e ia, nā te mea ka taea e te kaitākaro te tākaro mō tētahi karapu i tētahi whenua, ā, te kapo i te haki o tētahi atu.
 
-Ko **Ingoa i te raupapa o te ao** te ingoa e mōhiotia ai te kaitākaro e te raupapa o te ao. Ka pātaihia anake i tētahi whakataetae Association Croquet, Golf Croquet rānei, ngā hākinakina e rua he raupapa o te ao tō rāua. Ina tāpiria e koe tētahi kaitākaro, ka whai ia i te ingoa i a koe e tuhi ana, nā te mea e mōhiotia ana te nuinga o ngā kaitākaro e te raupapa mā tō rātou ake ingoa, ā, ka mutu tana whai ina tuhi koe ki roto. Ina waiho hei kau, ka penapenahia hei ingoa o te kaitākaro.
+Ko **Ingoa i te raupapa o te ao** te ingoa e mōhiotia ai te kaitākaro e te raupapa o te ao. Ka pātaihia anake i tētahi whakataetae Association Croquet, Golf Croquet rānei, ngā hākinakina e rua he rārangi kaitākaro tā te raupapa o te ao mō rāua. E mōhiotia ana ngā kaitākaro American 6 Wicket e te raupapa mā tō rātou ake ingoa, nō reira kāore e pātaihia i reira, ā, ko te ingoa o te kaitākaro tonu tōna ingoa i te raupapa o te ao. Ina tāpiria e koe tētahi kaitākaro, ka whai ia i te ingoa i a koe e tuhi ana, nā te mea e mōhiotia ana te nuinga o ngā kaitākaro e te raupapa mā tō rātou ake ingoa, ā, ka mutu tana whai ina tuhi koe ki roto. Ina waiho hei kau, ka penapenahia hei ingoa o te kaitākaro.
 
 Ina tuhi koe i tētahi ingoa, ka tukuna ngā kaitākaro e mōhiotia ana e te raupapa o te ao he rite te tīmatanga o ō rātou ingoa, kia taea ai e koe te tango i tētahi ingoa pēnei i tā te raupapa e tuhi ai, kaua te tuhi katoa. I te taha o te ingoa i te raupapa o te ao, ka kī tētahi tohu tīki e mōhio ana te raupapa ki te ingoa, ā, ka kī tētahi tohu pātai kāore: tērā pea kua hē te tuhi o te ingoa, he hou rānei te kaitākaro ki te raupapa. He tohutohu anake tēnei. Ka penapenahia tētahi ingoa kāore e mōhiotia e te raupapa pēnei i tētahi e mōhiotia ana.
 
@@ -30,7 +30,7 @@ Kāore tētahi kaitākaro e kīia ko "Bye". Ka tāpiria ngā Bye o tētahi whaka
 
 ## Te whakatika i tētahi kaitākaro
 
-Pēhia te ingoa o tētahi kaitākaro, tōna **Whakatika** rānei, hei whakatuwhera i te pouaka kōrero ōrite ki runga i taua kaitākaro, ko Whakatika kaitākaro tōna taitara. Whakarerekētia te mea e hē ana, ka pēhi i **Penapena**, ka penapena i te huringa, ā, ka kati i te pouaka kōrero. Ka mau tonu i te kaitākaro kua whakatikaina tōna ingoa te ingoa i te raupapa o te ao i a ia, nā te mea e mōhio tonu ana te raupapa ki a ia mā tērā.
+Pēhia te ingoa o tētahi kaitākaro, tōna **Whakatika** rānei, hei whakatuwhera i te pouaka kōrero ōrite ki runga i taua kaitākaro, ko Whakatika kaitākaro tōna taitara. Whakarerekētia te mea e hē ana, ka pēhi i **Penapena**, ka penapena i te huringa, ā, ka kati i te pouaka kōrero. Ka mau tonu i te kaitākaro kua whakatikaina tōna ingoa te ingoa i te raupapa o te ao i a ia, nā te mea e mōhio tonu ana te raupapa ki a ia mā tērā. I American 6 Wicket, ko te ingoa o te kaitākaro tonu tōna ingoa i te raupapa o te ao, nō reira ka whakatikaina anō tērā ina whakatikaina tōna ingoa.
 
 ![Te pouaka kōrero Whakatika kaitākaro](images/edit-player-dialog.png)
 

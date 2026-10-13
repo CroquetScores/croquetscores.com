@@ -24,7 +24,7 @@ Die vorm vra vir alles waarmee 'n toernooi begin. 'n Toernooi van die gewone soo
 
 **Laat gelykopuitslae toe.** Merk dit waar 'n spel kan eindig sonder dat een van die spelers die wenner is. Die meeste toernooie laat dit nie toe nie. Waar dit gemerk is, word 'n uitslag wat met gelyke punte en geen merk ingevoer is as gelykop gehou; waar dit nie gemerk is nie, moet 'n spel op gelyke punte sê wie dit gewen het, met 'n merk ná die wenner se punte, soos "6w".
 
-**Tel vir die wêreldranglys.** Word net gevra waar dit getel kan word: 'n toernooi van Association Croquet of Golf Croquet wat nie met voorgee gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk, so ontmerk dit vir 'n toernooi wat nie moet tel nie.
+**Tel vir die wêreldranglys.** Word net gevra waar dit getel kan word: 'n toernooi van Association Croquet, Golf Croquet of Amerikaanse 6-hoepel-croquet wat nie met voorgee gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk, so ontmerk dit vir 'n toernooi wat nie moet tel nie.
 
 **Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander.
 

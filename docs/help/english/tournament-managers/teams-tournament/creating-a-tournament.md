@@ -31,7 +31,7 @@ Standard is the one format not played by teams, and is not what you want here. G
 
 **Level tests are drawn.** Asked only once a format played by teams is chosen. A test is won by the team that wins more of its matches, and one level on matches is decided by net games, then by net hoops, unless this is ticked, in which case a test level on matches is drawn, as some team events have it. It begins unticked for Teams, and ticked for the GC World Team Championship, which has always drawn a level test.
 
-**Counts toward world rankings.** Asked only where it can be counted: a tournament of Association Croquet or Golf Croquet that is neither played with handicaps nor allows drawn results. It is ticked to begin with.
+**Counts toward world rankings.** Asked only where it can be counted: a tournament of Association Croquet, Golf Croquet or American 6 Wicket that is neither played with handicaps nor allows drawn results. It is ticked to begin with.
 
 **National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other.
 

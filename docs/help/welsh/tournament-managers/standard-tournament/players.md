@@ -18,7 +18,7 @@ Mae **Enw** yn ofynnol. Dyma enw'r chwaraewr fel y caiff ei ddangos ar bob tudal
 
 **Baner** yw'r faner a ddangosir wrth ochr enw'r chwaraewr. Gellir ei gadael heb un, fel y mae'r mwyafrif o chwaraewyr. Cedwir yr hyn y mae chwaraewr yn ei gynrychioli a pha faner y mae'n ei chwifio ar wahân, gan y gall chwaraewr chwarae dros glwb mewn un wlad a chwifio baner gwlad arall.
 
-**Enw ar Safleoedd y Byd** yw'r enw y mae safleoedd y byd yn adnabod y chwaraewr wrtho. Gofynnir amdano dim ond mewn twrnamaint Croce Cymdeithas neu Groce Golff, y ddwy gamp sydd â safleoedd y byd. Tra byddwch yn ychwanegu chwaraewr mae'n dilyn yr enw wrth i chi ei deipio, gan fod y mwyafrif o chwaraewyr yn hysbys i'r safleoedd wrth eu henw eu hunain, ac mae'n rhoi'r gorau i ddilyn unwaith y byddwch yn teipio ynddo. Os caiff ei adael yn wag, caiff ei gadw fel enw'r chwaraewr.
+**Enw ar Safleoedd y Byd** yw'r enw y mae safleoedd y byd yn adnabod y chwaraewr wrtho. Gofynnir amdano dim ond mewn twrnamaint Croce Cymdeithas neu Groce Golff, y ddwy gamp y mae safleoedd y byd yn cadw rhestr o'u chwaraewyr. Mae chwaraewyr Croce Americanaidd 6 Chylch yn hysbys i'r safleoedd wrth eu henwau eu hunain, felly ni ofynnir amdano yno, ac enw pob chwaraewr ar Safleoedd y Byd yw ei enw bob amser. Tra byddwch yn ychwanegu chwaraewr mae'n dilyn yr enw wrth i chi ei deipio, gan fod y mwyafrif o chwaraewyr yn hysbys i'r safleoedd wrth eu henw eu hunain, ac mae'n rhoi'r gorau i ddilyn unwaith y byddwch yn teipio ynddo. Os caiff ei adael yn wag, caiff ei gadw fel enw'r chwaraewr.
 
 Wrth i chi deipio enw, cynigir y chwaraewyr y mae safleoedd y byd yn eu hadnabod y mae eu henwau'n dechrau felly, fel y gallwch gymryd enw fel y mae'r safleoedd yn ei sillafu yn hytrach na'i deipio'n llawn. Wrth ochr yr enw ar Safleoedd y Byd, mae tic yn dweud bod y safleoedd yn adnabod yr enw, a marc cwestiwn yn dweud nad ydynt: efallai fod yr enw wedi'i gamsillafu, neu fod y chwaraewr yn newydd i'r safleoedd. Cyngor yn unig yw hyn. Cedwir enw nad yw'r safleoedd yn ei adnabod yr un mor rhwydd ag un y maent yn ei adnabod.
 
@@ -30,7 +30,7 @@ Ni chaiff chwaraewr byth ei alw'n "Bye". Caiff byes cystadleuaeth taro allan eu 
 
 ## Cywiro chwaraewr
 
-Pwyswch enw chwaraewr, neu ei **Golygu**, i agor yr un ddeialog ar y chwaraewr hwnnw, dan y teitl Golygu chwaraewr. Newidiwch beth sydd o'i le a phwyswch **Cadw**, sy'n cadw'r newid ac yn cau'r ddeialog. Mae chwaraewr y caiff ei enw ei gywiro yn cadw'r enw ar Safleoedd y Byd a oedd ganddo, gan fod y safleoedd yn dal i'w adnabod wrtho.
+Pwyswch enw chwaraewr, neu ei **Golygu**, i agor yr un ddeialog ar y chwaraewr hwnnw, dan y teitl Golygu chwaraewr. Newidiwch beth sydd o'i le a phwyswch **Cadw**, sy'n cadw'r newid ac yn cau'r ddeialog. Mae chwaraewr y caiff ei enw ei gywiro yn cadw'r enw ar Safleoedd y Byd a oedd ganddo, gan fod y safleoedd yn dal i'w adnabod wrtho. Mewn Croce Americanaidd 6 Chylch enw chwaraewr ar Safleoedd y Byd yw ei enw bob amser, felly mae cywiro'r enw yn cywiro hwnnw hefyd.
 
 ![Y ddeialog Golygu chwaraewr](images/edit-player-dialog.png)
 

@@ -16,7 +16,7 @@ Appuyez sur **Ajouter un joueur**, au-dessus de la liste. Une boîte de dialogue
 
 **Nom** est obligatoire, entre 3 et 254 caractères. Deux joueurs d’une même équipe ne peuvent pas porter le même nom, quelles qu’en soient les majuscules ; un joueur d’une autre équipe peut le partager.
 
-**Nom dans le classement mondial** est le nom sous lequel le classement mondial connaît le joueur. Il n’est demandé que dans un tournoi de croquet association ou de croquet golf, les deux sports qui ont un classement mondial. Pendant que vous ajoutez un joueur, il suit le nom à mesure que vous le tapez, et cesse de le suivre dès que vous y tapez quelque chose. Laissé vide, il est enregistré comme le nom du joueur. À mesure que vous tapez, les joueurs connus du classement mondial dont le nom commence ainsi vous sont proposés, et à côté du nom dans le classement mondial une coche dit que le classement connaît ce nom, et un point d’interrogation qu’il ne le connaît pas. Ce n’est qu’une indication : un nom inconnu du classement est enregistré aussi volontiers qu’un nom connu.
+**Nom dans le classement mondial** est le nom sous lequel le classement mondial connaît le joueur. Il n’est demandé que dans un tournoi de croquet association ou de croquet golf, les deux sports dont le classement mondial tient une liste de joueurs. Le classement connaît les joueurs de croquet américain à 6 arceaux par leur propre nom ; il n’est donc pas demandé là, et le nom dans le classement mondial de chaque joueur y est toujours son nom. Pendant que vous ajoutez un joueur, il suit le nom à mesure que vous le tapez, et cesse de le suivre dès que vous y tapez quelque chose. Laissé vide, il est enregistré comme le nom du joueur. À mesure que vous tapez, les joueurs connus du classement mondial dont le nom commence ainsi vous sont proposés, et à côté du nom dans le classement mondial une coche dit que le classement connaît ce nom, et un point d’interrogation qu’il ne le connaît pas. Ce n’est qu’une indication : un nom inconnu du classement est enregistré aussi volontiers qu’un nom connu.
 
 Un joueur ne s’appelle jamais « Bye » (le mot anglais pour exempt) : un nom dont le premier mot est « bye » est refusé.
 
@@ -24,7 +24,7 @@ Appuyez sur **Ajouter**. Le joueur est ajouté, la boîte de dialogue le dit, et
 
 ## Corriger un joueur
 
-Appuyez sur le nom d’un joueur, ou sur son **Modifier**, pour ouvrir la même boîte de dialogue sur ce joueur, intitulée Modifier le joueur. Appuyez sur **Enregistrer** pour garder la modification. Un joueur dont le nom est corrigé garde le nom dans le classement mondial qu’il avait.
+Appuyez sur le nom d’un joueur, ou sur son **Modifier**, pour ouvrir la même boîte de dialogue sur ce joueur, intitulée Modifier le joueur. Appuyez sur **Enregistrer** pour garder la modification. Un joueur dont le nom est corrigé garde le nom dans le classement mondial qu’il avait, sauf dans le croquet américain à 6 arceaux, où le nom d’un joueur dans le classement mondial est toujours son nom.
 
 ## Ordre
 

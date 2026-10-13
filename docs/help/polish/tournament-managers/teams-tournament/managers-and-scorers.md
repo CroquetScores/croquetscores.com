@@ -22,10 +22,10 @@ Karta **Wprowadzający wyniki** to karta Organizatorzy dla wprowadzających wyni
 
 ![Karta Wprowadzający wyniki](images/scorers-tab.png)
 
-Wprowadzający wyniki widzi turniej na swojej własnej liście w administracji, z **Wyniki** w miejsce Zarządzaj, i oferowane są mu tylko jego testy: żadnych drużyn, notatek, organizatorów ani wprowadzających wyniki. Nie może otworzyć strony drużyny, bo o tym, kto gra dla drużyny, decydują organizatorzy. Na stronie testu może wprowadzać, poprawiać, archiwizować, przywracać i przestawiać wyniki tak jak organizator.
+Wprowadzający wyniki widzi turniej na swojej własnej liście w administracji, z **Wyniki** w miejsce Zarządzaj, i oferowane są mu tylko jego testy: żadnych drużyn, notatek, organizatorów, wprowadzających wyniki ani rankingów. Nie może otworzyć strony drużyny, bo o tym, kto gra dla drużyny, decydują organizatorzy. Na stronie testu może wprowadzać, poprawiać, archiwizować, przywracać i przestawiać wyniki tak jak organizator.
 
 ![Widok strony turnieju dla wprowadzającego wyniki](images/scorer-tournament-page.png)
 
 Organizatora nie czyni się wprowadzającym wyniki, bo organizator może już robić wszystko to, co wprowadzający wyniki. Turniej nie potrzebuje wprowadzającego wyniki, więc każdego z nich można usunąć, także ostatniego.
 
-Dalej: [Zmiana, archiwizowanie i przywracanie turnieju](changing-and-archiving.md).
+Dalej: [Rankingi](rankings.md).

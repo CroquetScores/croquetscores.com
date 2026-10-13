@@ -24,10 +24,10 @@ La scheda **Segnapunti** è la scheda Organizzatori per i segnapunti, e funziona
 
 ![La scheda Segnapunti](images/scorers-tab.png)
 
-Un segnapunti vede il torneo nel proprio elenco nell'amministrazione, con **Punteggi** al posto di Gestisci, e gli vengono offerte solo le sue competizioni: niente giocatori, note, organizzatori o segnapunti. Sulla pagina di una competizione vede solo la scheda Punteggi, dove può inserire, correggere, archiviare e ripristinare i punteggi come un organizzatore. Chi gioca in una competizione lo decidono gli organizzatori.
+Un segnapunti vede il torneo nel proprio elenco nell'amministrazione, con **Punteggi** al posto di Gestisci, e gli vengono offerte solo le sue competizioni: niente giocatori, note, organizzatori, segnapunti o classifiche. Sulla pagina di una competizione vede solo la scheda Punteggi, dove può inserire, correggere, archiviare e ripristinare i punteggi come un organizzatore. Chi gioca in una competizione lo decidono gli organizzatori.
 
 ![La pagina di un torneo come la vede un segnapunti](images/scorer-tournament-page.png)
 
 Un organizzatore non viene reso segnapunti, perché un organizzatore può già fare tutto ciò che può fare un segnapunti. Un torneo non ha bisogno di nessun segnapunti, quindi ogni segnapunti può essere rimosso, anche l'ultimo.
 
-Avanti: [Modificare, archiviare e ripristinare un torneo](changing-and-archiving.md).
+Avanti: [Classifiche](rankings.md).

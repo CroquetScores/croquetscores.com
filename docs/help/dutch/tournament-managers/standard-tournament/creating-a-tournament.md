@@ -24,7 +24,7 @@ Het formulier vraagt alles waarmee een toernooi begint. Een toernooi van de gewo
 
 **Gelijkspel toegestaan.** Vink dit aan waar een partij kan eindigen zonder dat een van beide spelers heeft gewonnen. De meeste toernooien staan het niet toe. Waar het is aangevinkt, wordt een score met gelijke punten en zonder markering bewaard als gelijkspel; waar het niet is aangevinkt, moet een partij met gelijke punten zeggen wie heeft gewonnen, met een markering achter de score van de winnaar, zoals "6w".
 
-**Telt mee voor de wereldranglijst.** Wordt alleen gevraagd waar het kan meetellen: een toernooi Associatiecroquet of Golfcroquet dat niet met handicaps wordt gespeeld en geen gelijkspel toestaat. Het staat om te beginnen aangevinkt, dus vink het uit voor een toernooi dat niet mag meetellen.
+**Telt mee voor de wereldranglijst.** Wordt alleen gevraagd waar het kan meetellen: een toernooi Associatiecroquet, Golfcroquet of Amerikaans croquet met 6 poortjes dat niet met handicaps wordt gespeeld en geen gelijkspel toestaat. Het staat om te beginnen aangevinkt, dus vink het uit voor een toernooi dat niet mag meetellen.
 
 **Evenement op nationaal niveau** en **Evenement op internationaal niveau.** Een toernooi kan het ene zijn, het andere, of geen van beide, maar nooit allebei: het ene aanvinken vinkt het andere uit.
 

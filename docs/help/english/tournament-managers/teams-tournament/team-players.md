@@ -16,7 +16,7 @@ Press **Add Player**, above the list. A dialog opens over the page.
 
 **Name** is required, between 3 and 254 characters. Two players in one team cannot have the same name, however it is capitalised; a player in another team may share it.
 
-**World Ranking Player Name** is the name the world rankings know the player by. It is asked for only in a tournament of Association Croquet or Golf Croquet, the two sports with world rankings. While you add a player it follows the name as you type it, and stops following once you type in it. Left empty, it is kept as the player's name. As you type, the players the world rankings know whose names begin that way are offered, and beside the world ranking name a tick says the rankings know the name and a question mark says they do not. It is only advice: a name the rankings do not know is kept as readily as one they do.
+**World Ranking Player Name** is the name the world rankings know the player by. It is asked for only in a tournament of Association Croquet or Golf Croquet, the two sports whose players the world rankings keep a list of. American 6 Wicket's players are known to the rankings by their own names, so it is not asked for there, and each player's world ranking name is always their name. While you add a player it follows the name as you type it, and stops following once you type in it. Left empty, it is kept as the player's name. As you type, the players the world rankings know whose names begin that way are offered, and beside the world ranking name a tick says the rankings know the name and a question mark says they do not. It is only advice: a name the rankings do not know is kept as readily as one they do.
 
 A player is never called "Bye": a name whose first word is "bye" is refused.
 
@@ -24,7 +24,7 @@ Press **Add**. The player is added, the dialog says so, and its fields are empti
 
 ## Correcting a player
 
-Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Press **Save** to keep the change. A player whose name is corrected keeps the world ranking name they had.
+Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Press **Save** to keep the change. A player whose name is corrected keeps the world ranking name they had, except in American 6 Wicket, where a player's world ranking name is always their name.
 
 ## Order
 

@@ -24,10 +24,10 @@ Het tabblad **Scorers** is het tabblad Beheerders voor scorers, en werkt op deze
 
 ![Het tabblad Scorers](images/scorers-tab.png)
 
-Een scorer ziet het toernooi in zijn eigen lijst in het beheer, met **Scores** in plaats van Beheren, en krijgt alleen de competities aangeboden: geen spelers, notities, beheerders of scorers. Op de pagina van een competitie ziet die alleen het tabblad Scores, waar die scores kan invoeren, corrigeren, archiveren en herstellen zoals een beheerder. Wie in een competitie speelt, bepalen de beheerders.
+Een scorer ziet het toernooi in zijn eigen lijst in het beheer, met **Scores** in plaats van Beheren, en krijgt alleen de competities aangeboden: geen spelers, notities, beheerders, scorers of ranglijsten. Op de pagina van een competitie ziet die alleen het tabblad Scores, waar die scores kan invoeren, corrigeren, archiveren en herstellen zoals een beheerder. Wie in een competitie speelt, bepalen de beheerders.
 
 ![Hoe een scorer de pagina van een toernooi ziet](images/scorer-tournament-page.png)
 
 Een beheerder wordt geen scorer gemaakt, omdat een beheerder al alles kan wat een scorer kan. Een toernooi heeft geen scorer nodig, dus elke scorer kan worden verwijderd, ook de laatste.
 
-Volgende: [Een toernooi wijzigen, archiveren en herstellen](changing-and-archiving.md).
+Volgende: [Ranglijsten](rankings.md).

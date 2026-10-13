@@ -31,7 +31,7 @@ Safonol yw'r un fformat na chwaraeir gan dimau, ac nid dyna rydych ei eisiau yma
 
 **Mae testau cyfartal yn gyfartal.** Gofynnir amdano dim ond unwaith y dewisir fformat a chwaraeir gan dimau. Enillir test gan y tîm sy'n ennill mwy o'i ornestau, a phenderfynir un sy'n gyfartal ar ornestau yn ôl gemau net, yna yn ôl cylchoedd net, oni bai bod hwn wedi'i dicio, ac yn yr achos hwnnw mae test sy'n gyfartal ar ornestau yn gyfartal, fel y mae rhai digwyddiadau timau'n ei gael. Mae'n dechrau heb ei dicio ar gyfer Timau, ac wedi'i dicio ar gyfer y GC World Team Championship, sydd wedi cael test cyfartal yn gyfartal erioed.
 
-**Yn cyfrif tuag at Safleoedd y Byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: twrnamaint Croce Cymdeithas neu Groce Golff na chaiff ei chwarae gyda handicap ac nad yw'n caniatáu gemau cyfartal. Mae wedi'i dicio i ddechrau.
+**Yn cyfrif tuag at Safleoedd y Byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: twrnamaint Croce Cymdeithas, Croce Golff neu Groce Americanaidd 6 Chylch na chaiff ei chwarae gyda handicap ac nad yw'n caniatáu gemau cyfartal. Mae wedi'i dicio i ddechrau.
 
 **Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol.** Gall twrnamaint fod yn un, y llall, neu'r un o'r ddau, ond byth y ddau: mae ticio un yn dad-dicio'r llall.
 
