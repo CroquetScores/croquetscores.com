@@ -85,6 +85,12 @@ export type Shaped =
 /** Whether a kind of competition keeps what its players carried forward. */
 export interface CompetitionKind<TDocument extends OldCompetition> {
   readonly carriesForward: boolean;
+  /**
+   * The keys of the competitions whose games `document` counted as its own,
+   * which are carried forward by the players who played them
+   * (carriedForwardGames.feature). Left out of a kind that counted none.
+   */
+  countsGamesOf?(document: TDocument): readonly string[];
   shape(
     document: TDocument,
     listed: readonly Listed[],
@@ -118,6 +124,127 @@ const carriedOf = (player: OldCompetitionPlayer) => ({
   hoopsFor: player.CarryForward.ForHoops,
   hoopsAgainst: player.CarryForward.AgainstHoops,
 });
+
+type Counts = Record<keyof ReturnType<typeof carriedOf>, number>;
+
+const noCounts = (): Counts => ({
+  matchWins: 0,
+  matchLosses: 0,
+  gameWins: 0,
+  gameLosses: 0,
+  hoopsFor: 0,
+  hoopsAgainst: 0,
+});
+
+// A score's points, or nothing where it cannot be read, which the competition
+// it was kept in refused or corrected as it was brought over.
+const pointsOf = (typed: string, website: Website): number => {
+  try {
+    return Score.read(typed, website).points;
+  } catch {
+    return 0;
+  }
+};
+
+// Whether `game` names two players and a score for each, which a game the old
+// sites kept half made, as one with no loser, does not.
+const isWhole = (game: unknown): game is OldGame => {
+  const { Winner, Loser } = (game ?? {}) as Partial<OldGame>;
+  return (
+    typeof Winner?.PlayerId === "number" &&
+    typeof Loser?.PlayerId === "number" &&
+    typeof Winner.Score?._Score === "string" &&
+    typeof Loser.Score?._Score === "string"
+  );
+};
+
+/**
+ * What each player, by the number the old sites gave them, came to in the
+ * games of the competitions `keys` name that were played by the tournament
+ * `tournamentDocument` and not archived (carriedForwardGames.feature). Read
+ * as they are when a competition is brought over, so that a game is won by
+ * whoever scored more, and a game against a bye is left out.
+ *
+ * A competition of another tournament is left out, since its players'
+ * numbers are the other tournament's and are no one here. So is `own`, the
+ * competition counting them, whose games are its own and are brought over as
+ * such, and so is a document that is not a competition, since a key can name
+ * anything the old site kept.
+ */
+const carriedForwardFrom = async (
+  keys: readonly string[],
+  load: (key: string) => Promise<object | undefined>,
+  website: string,
+  tournamentDocument: string,
+  own: string,
+): Promise<ReadonlyMap<number, Counts>> => {
+  const counted = new Map<number, Counts>();
+  const countsOf = (number: number): Counts => {
+    const counts = counted.get(number) ?? noCounts();
+    counted.set(number, counts);
+    return counts;
+  };
+  // Named twice, it is counted once, as the old sites loaded it. Asked for
+  // all at once, since none waits on another's answer and each is a round
+  // trip to the old site; the totals are the same in whatever order they are
+  // added.
+  const seen = new Set<string>();
+  const named = keys.filter((key) => {
+    const same = key.toLowerCase();
+    if (same === own.toLowerCase() || seen.has(same)) return false;
+    seen.add(same);
+    return true;
+  });
+  const found = await Promise.all(named.map((key) => load(key)));
+  for (const each of found) {
+    const kept = each as
+      | {
+          Tournament?: { Id?: unknown };
+          IsArchived?: boolean;
+          Players?: { _Players?: unknown };
+          Games?: { _Games?: unknown };
+        }
+      | undefined;
+    if (
+      typeof kept?.Tournament?.Id !== "string" ||
+      kept.Tournament.Id.toLowerCase() !== tournamentDocument.toLowerCase()
+    ) {
+      continue;
+    }
+    const games = Array.isArray(kept.Games?._Games) ? kept.Games._Games : [];
+    const { document } = withWinnersFromScores(
+      withItsLists({
+        ...kept,
+        Games: { _Games: games.filter(isWhole) },
+      } as unknown as OldCompetition),
+      Website.from(website),
+    );
+    if (document.IsArchived) continue;
+    const byes = new Set(
+      document.Players._Players
+        .filter((player) => isOldBye(player.Name))
+        .map((player) => player._Id),
+    );
+    for (const game of document.Games._Games) {
+      if (byes.has(game.Winner.PlayerId) || byes.has(game.Loser.PlayerId)) {
+        continue;
+      }
+      const won = pointsOf(game.Winner.Score._Score, Website.from(website));
+      const lost = pointsOf(game.Loser.Score._Score, Website.from(website));
+      const winner = countsOf(game.Winner.PlayerId);
+      winner.matchWins += 1;
+      winner.gameWins += 1;
+      winner.hoopsFor += won;
+      winner.hoopsAgainst += lost;
+      const loser = countsOf(game.Loser.PlayerId);
+      loser.matchLosses += 1;
+      loser.gameLosses += 1;
+      loser.hoopsFor += lost;
+      loser.hoopsAgainst += won;
+    }
+  }
+  return counted;
+};
 
 /** What is said of a game against a bye, left out as corrected. */
 export const AGAINST_A_BYE = {
@@ -537,7 +664,7 @@ const walkoverWritten = (typed: string, winnerScore: Score): string =>
  */
 export const importCompetition = async <TDocument extends OldCompetition>(
   importing: ImportingCompetitions,
-  { website, id, document: read }: ReadDocument<TDocument>,
+  { website, id, document: read, load }: ReadDocument<TDocument>,
   kind: CompetitionKind<TDocument>,
 ): Promise<void> => {
   const scored = withWinnersFromScores(
@@ -555,6 +682,20 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   } = importing;
   const documentId = `${website}/${id}`;
   if (document.IsArchived) return;
+
+  // Read before the competition is brought over, since what a Swiss counted
+  // is the old documents' and is asked of the old site once.
+  const named = kind.countsGamesOf?.(document) ?? [];
+  const alsoCounted =
+    load === undefined || named.length === 0
+      ? new Map<number, Counts>()
+      : await carriedForwardFrom(
+          named,
+          load,
+          website,
+          document.Tournament.Id,
+          id,
+        );
 
   // Said by a trial that is rolled back, to say it was only a trial.
   class TrialDone extends Error {}
@@ -739,6 +880,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         // A player whose counts were all 0 carried nothing: the old sites
         // kept 0 where nobody typed anything.
         const carried = carriedOf(player);
+        // What the games a Swiss counted came to is carried forward on top of
+        // what was typed, count by count.
+        const counted = alsoCounted.get(player._Id);
+        if (counted !== undefined) {
+          for (const count of Object.keys(carried) as (keyof Counts)[]) {
+            carried[count] += counted[count];
+          }
+        }
         if (
           kind.carriesForward &&
           Object.values(carried).some((count) => count !== 0)

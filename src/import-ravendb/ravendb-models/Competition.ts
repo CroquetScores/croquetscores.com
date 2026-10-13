@@ -73,7 +73,13 @@ export interface Knockout extends Competition {
 }
 
 /** A competition where each round pairs players on similar records. */
-export type Swiss = Competition;
+export interface Swiss extends Competition {
+  /**
+   * The earlier competitions whose games it counted as its own, which the
+   * old sites showed in its standings. Not there where it named none.
+   */
+  readonly CarryForwardCompetitions?: readonly Reference[] | null;
+}
 
 /**
  * A match between two teams, named "Team A vs Team B". A player is on the

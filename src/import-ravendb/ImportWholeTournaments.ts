@@ -28,6 +28,8 @@ export interface TournamentDocuments {
     collection: string,
     tournamentDocumentId: string,
   ): Promise<readonly { readonly id: string; readonly document: TDocument }[]>;
+  /** The document kept under `id`, whatever collection it is in, or nothing. */
+  load(id: string): Promise<object | undefined>;
 }
 
 /** What brings over a tournament, and each kind of document that names one. */
@@ -433,6 +435,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
             website,
             id: tryAsTeamMatch.id,
             document: tryAsTeamMatch.document,
+            load: (key) => this.documents.load(key),
           });
           const kind = KINDS[tryAsTeamMatch.original.importer.collection];
           await this.#corrected(
@@ -484,6 +487,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
           website,
           id: each.id,
           document: toImport,
+          load: (key) => this.documents.load(key),
         });
         if (tournamentId !== id) {
           await this.#corrected(
@@ -578,6 +582,9 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
           ...(each.document as OldCompetition),
           Name: `${name}${SEE_NOTES_SUFFIX}`,
         },
+        // So that a Swiss that counted earlier competitions still carries
+        // their games forward as the Swiss it was.
+        load: (key) => this.documents.load(key),
       });
       const made = await this.database.findCompetitionOf(website, swissId);
       if (made === undefined) return;
