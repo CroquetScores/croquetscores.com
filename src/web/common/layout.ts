@@ -93,6 +93,10 @@ export interface Shell {
       decides whether the account menu offers the pages that ask for it. Asked
       of every page for the reason signedIn is. */
   readonly hasPassword: boolean;
+  /** False where the site could not find out who the reader is, which
+      leaves the account menu out rather than saying either thing about them
+      (accountMenu.ts). Known, unless a page says otherwise. */
+  readonly readerKnown?: boolean | undefined;
   /** The language the page is in, and the others it could be in. */
   readonly speaking: Speaking;
   /** What the site is called, which is the site's own name and in no
@@ -166,6 +170,17 @@ const paypalButton = "AQ432ABTXDPYU";
 // in what the button opens instead (the stylesheet decides which, by width).
 // A group of its own rather than more links in the navigation, so that what the
 // navigation offers is the same at every width.
+const accountGroup = (bar: AccountMenu): string => {
+  if (bar.readerKnown === false) return "";
+  const { speaking } = bar;
+  return `              <nav class="menu-account" aria-label="${escape(speaking.say("account.menu"))}">
+                <p class="menu-account-heading" aria-hidden="true">${escape(speaking.say("account.menu"))}</p>
+                <ul>
+${accountItems(bar).join("\n")}
+                </ul>
+              </nav>`;
+};
+
 const menu = (bar: AccountMenu): string => {
   const { speaking, currentPath, signedIn } = bar;
   const items = navigation(signedIn)
@@ -183,12 +198,7 @@ const menu = (bar: AccountMenu): string => {
 ${items}
                 </ul>
               </nav>
-              <nav class="menu-account" aria-label="${escape(speaking.say("account.menu"))}">
-                <p class="menu-account-heading" aria-hidden="true">${escape(speaking.say("account.menu"))}</p>
-                <ul>
-${accountItems(bar).join("\n")}
-                </ul>
-              </nav>
+${accountGroup(bar)}
             </div>
         </details>`;
 };
@@ -338,6 +348,7 @@ export type SiteBar = Pick<
   | "currentPath"
   | "signedIn"
   | "hasPassword"
+  | "readerKnown"
   | "tournament"
 >;
 

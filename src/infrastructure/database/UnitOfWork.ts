@@ -11,6 +11,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { Pool, PoolClient } from "pg";
 import { Refused } from "../../domain/common/Refused.js";
+import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachable.js";
+import { isUnreachable } from "./unreachable.js";
 
 /** Every reason asking for a connection can be refused. */
 export type UnitOfWorkErrorCode =
@@ -98,11 +100,35 @@ export class UnitOfWork {
     );
   }
 
+  // A connection that could not be had. It is the database being out of
+  // reach unless the pool simply had none free: a pool whose every connection
+  // is in use times out waiting for a slot exactly as one that cannot
+  // connect does, and is the site being busy, not the database being gone.
+  private connectionFailed(failure: unknown): unknown {
+    const waitedForASlot =
+      failure instanceof Error &&
+      /timeout exceeded when trying to connect/i.test(failure.message) &&
+      this.pool.totalCount >= (this.pool.options.max ?? 10);
+    if (waitedForASlot || !isUnreachable(failure)) return failure;
+    return failure instanceof DatabaseUnreachable
+      ? failure
+      : new DatabaseUnreachable(failure);
+  }
+
   private async around<TResult>(
     begin: string,
     serve: () => Promise<TResult>,
   ): Promise<TResult> {
-    const connection = await this.pool.connect();
+    // A database that cannot be reached is said as that, here, rather than
+    // left to be recognised by whatever a page happens to catch: every
+    // request reaches the database through this, so it is the one place that
+    // sees them all.
+    let connection: PoolClient;
+    try {
+      connection = await this.pool.connect();
+    } catch (failure) {
+      throw this.connectionFailed(failure);
+    }
     listenForItsLoss(connection);
     try {
       await connection.query(begin);
@@ -115,7 +141,23 @@ export class UnitOfWork {
       // connection is already gone, which is usually the same thing that failed
       // a moment ago, and reporting that instead would hide the cause behind
       // its own consequence.
-      await connection.query("rollback").catch(() => undefined);
+      const rollbackFailure = await connection.query("rollback").then(
+        () => undefined,
+        (rollbackFailed: unknown) => rollbackFailed ?? new Error("rollback"),
+      );
+      // Only a failure that says the database was lost, on a connection
+      // that cannot even roll back, is the database being unreachable. One
+      // that merely looks like it — an outside service timing out while the
+      // request holds its connection — leaves the connection able to roll
+      // back. And a rollback that fails after some other failure is that
+      // failure's consequence, which is not to hide it (TransactionBehaviour).
+      if (
+        rollbackFailure !== undefined &&
+        !(failure instanceof DatabaseUnreachable) &&
+        isUnreachable(failure)
+      ) {
+        throw new DatabaseUnreachable(failure);
+      }
       throw failure;
     } finally {
       // Before anything else can have it, and whether it committed, rolled back

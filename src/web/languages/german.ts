@@ -275,6 +275,9 @@ export const german: Language = {
     "errors.sorryDetail": "Diese Anfrage konnte nicht bearbeitet werden.",
     "errors.failed": "Etwas ist schiefgegangen",
     "errors.reference": "Referenz {reference}.",
+    "errors.unavailable": "Die Website ist nicht verfügbar",
+    "errors.unavailableDetail":
+      "Die Website kann im Moment nicht erreichen, was sie braucht. Bitte versuche es später noch einmal.",
 
     "home.recentResults": "Aktuelle Ergebnisse",
     "home.recentResults.none":
@@ -1789,6 +1792,29 @@ export const german: Language = {
 <p>
     Solange {service} nicht antwortet, bekommst du dazu höchstens eine E-Mail
     pro Stunde.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} kann seine Datenbank nicht erreichen",
+    "Email.DatabaseUnreachable.body": `
+<p>Hallo,</p>
+
+<p>
+    {siteName} konnte seine Datenbank um {when} nicht erreichen. Bis sie antwortet, sagt jede Seite, die sie braucht, den Lesern, dass die Website nicht verfügbar ist und sie es später noch einmal versuchen sollen.
+</p>
+
+<p>
+    Es muss nichts aufgehoben werden. Jede Anfrage verlangt neu eine Verbindung, und die Website funktioniert wieder, sobald die Datenbank antwortet.
+</p>
+
+<p>
+    Solange die Datenbank nicht erreichbar ist, bekommst du darüber höchstens alle {minutes} Minuten eine E-Mail.
 </p>
 
 <p>

@@ -90,12 +90,13 @@ export const readOtherEvent: ReadBack<OtherEvent> = (
  */
 export const exampleRegistry = ({
   knowsTheOtherKind = true,
-}: { knowsTheOtherKind?: boolean } = {}): EventRegistry => {
-  const registry = new EventRegistry().name(
-    ExampleEvent,
-    "example",
-    readExampleEvent,
-  );
+  on = new EventRegistry(),
+}: {
+  knowsTheOtherKind?: boolean;
+  /** A registry to add the examples to, for a scenario that needs the kinds of a real one beside them. */
+  on?: EventRegistry;
+} = {}): EventRegistry => {
+  const registry = on.name(ExampleEvent, "example", readExampleEvent);
   return knowsTheOtherKind
     ? registry.name(OtherEvent, "other", readOtherEvent)
     : registry;

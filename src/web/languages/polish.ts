@@ -276,6 +276,9 @@ export const polish: Language = {
     "errors.sorryDetail": "Nie udało się obsłużyć tego żądania.",
     "errors.failed": "Coś poszło nie tak",
     "errors.reference": "Numer referencyjny {reference}.",
+    "errors.unavailable": "Serwis jest niedostępny",
+    "errors.unavailableDetail":
+      "Serwis nie może teraz połączyć się z tym, czego potrzebuje. Spróbuj ponownie później.",
 
     "home.recentResults": "Ostatnie wyniki",
     "home.recentResults.none":
@@ -1732,6 +1735,29 @@ export const polish: Language = {
 <p>
     Dopóki {service} nie działa, wiadomość e-mail o tym będzie wysyłana do
     ciebie co najwyżej raz na godzinę.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} nie może połączyć się z bazą danych",
+    "Email.DatabaseUnreachable.body": `
+<p>Cześć,</p>
+
+<p>
+    {siteName} nie mógł połączyć się z bazą danych o {when}. Dopóki nie odpowie, każda strona, która jej potrzebuje, mówi czytelnikom, że serwis jest niedostępny i żeby spróbowali ponownie później.
+</p>
+
+<p>
+    Nic nie trzeba odblokowywać. Każde żądanie prosi o połączenie od nowa, a serwis znów działa, gdy tylko baza danych odpowie.
+</p>
+
+<p>
+    Dopóki baza danych nie odpowiada, dostaniesz o tym e-mail najwyżej raz na {minutes} minut.
 </p>
 
 <p>

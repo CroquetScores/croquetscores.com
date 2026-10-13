@@ -275,6 +275,9 @@ export const french: Language = {
     "errors.sorryDetail": "Cette demande n’a pas pu être traitée.",
     "errors.failed": "Quelque chose s’est mal passé",
     "errors.reference": "Référence {reference}.",
+    "errors.unavailable": "Le site est indisponible",
+    "errors.unavailableDetail":
+      "Le site ne parvient pas à joindre ce dont il a besoin pour le moment. Veuillez réessayer plus tard.",
 
     "home.recentResults": "Résultats récents",
     "home.recentResults.none":
@@ -1756,6 +1759,29 @@ export const french: Language = {
 <p>
     Tant que {service} ne répond pas, vous recevrez au plus un e-mail par
     heure à ce sujet.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} ne peut pas joindre sa base de données",
+    "Email.DatabaseUnreachable.body": `
+<p>Bonjour,</p>
+
+<p>
+    {siteName} n’a pas pu joindre sa base de données à {when}. Tant qu’elle ne répond pas, chaque page qui en a besoin dit aux lecteurs que le site est indisponible et de réessayer plus tard.
+</p>
+
+<p>
+    Il n’y a rien à débloquer. Chaque requête demande une connexion de nouveau, et le site refonctionne dès que la base de données répond.
+</p>
+
+<p>
+    Tant que la base de données ne répond pas, vous recevrez au plus un e-mail à ce sujet toutes les {minutes} minutes.
 </p>
 
 <p>

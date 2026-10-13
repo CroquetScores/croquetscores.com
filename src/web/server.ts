@@ -4,7 +4,10 @@ import { ChangePlayerWorldRankingNameHandler } from "../application/operations/t
 import { ChangePlayerWorldRankingNameValidator } from "../application/operations/tournaments/ChangePlayerWorldRankingNameValidator.js";
 import { ChangeTeamPlayerWorldRankingNameHandler } from "../application/operations/tournaments/ChangeTeamPlayerWorldRankingNameHandler.js";
 import { ChangeTeamPlayerWorldRankingNameValidator } from "../application/operations/tournaments/ChangeTeamPlayerWorldRankingNameValidator.js";
-import Fastify, { type FastifyInstance } from "fastify";
+import Fastify, {
+  type FastifyInstance,
+  type FastifyServerOptions,
+} from "fastify";
 import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
@@ -27,6 +30,7 @@ import { SignInHandler } from "../application/operations/accounts/SignInHandler.
 import { SignInWithGoogleHandler } from "../application/operations/accounts/SignInWithGoogleHandler.js";
 import { ResetPasswordHandler } from "../application/operations/accounts/ResetPasswordHandler.js";
 import { ResetPasswordValidator } from "../application/operations/accounts/ResetPasswordValidator.js";
+import type { EmailSender } from "../application/services/EmailSender.js";
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
@@ -315,6 +319,7 @@ import {
   registerGoogleRoutes,
   type GoogleSignIn,
 } from "./auth/google.js";
+import { tellingTheAdministrator } from "./common/databaseOutage.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
@@ -461,6 +466,12 @@ export interface Application {
    * (scripts/change-site-key.mjs); no route calls it.
    */
   readonly changeSiteKey: (newSiteKey: string) => Promise<void>;
+  /**
+   * Resolves once the administrator has been told, or has failed to be, of
+   * every request that found the database gone. The answer to the reader does
+   * not wait for it, so whatever wants to see the email waits here instead.
+   */
+  readonly databaseOutageTold: () => Promise<void>;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -588,8 +599,19 @@ const registerAdmin = async (
 };
 
 export interface ApplicationOptions {
-  /** Off for the specs, whose output is the scenario list and not a request log. */
-  readonly logger?: boolean;
+  /**
+   * Off for the specs, whose output is the scenario list and not a request
+   * log. Fastify's own word for where the log goes, so that a scenario about
+   * what is logged can say where to.
+   */
+  readonly logger?: FastifyServerOptions["logger"];
+  /**
+   * What takes an email the rest of the way, for the queue and for what the
+   * site must send without it. A file in temp/, unless a scenario says
+   * otherwise: a spec run has nobody to send to, and what it would send is
+   * what a scenario asks about.
+   */
+  readonly emailSender?: EmailSender;
   /**
    * What the admin's build is called, asked afresh for every page and every
    * answer of the API. What the admin was built to, unless a scenario says
@@ -663,7 +685,7 @@ interface RebuildableReadModel {
 
 // Every kind of event the application records, each named once by the name it
 // is kept under, and how it is read back.
-const events = (): EventRegistry =>
+export const applicationEvents = (): EventRegistry =>
   nameManagerNoteEvents(
     nameCommentaryEvents(
       nameCompetitionEvents(
@@ -762,7 +784,7 @@ export const buildApplication = async (
   // in the command's transaction or not at all.
   const keptEvents = new PostgresEventStore(
     unitOfWork,
-    options.events ?? events(),
+    options.events ?? applicationEvents(),
     new AccountEventSealing(accountKeys),
   );
   const eventStore = new ProjectingEventStore(
@@ -795,15 +817,18 @@ export const buildApplication = async (
   // temp/ until there is a mail provider.
   const languages = options.languages ?? offeredLanguages;
   const where = siteAddress(config.canonicalHost, config.port);
+  const writer = emailWriter(languages, {
+    address: where,
+    fromName: config.emailFromName,
+    siteName: config.siteName,
+  });
+  const emailSender =
+    options.emailSender ?? new FileEmailSender(join(repositoryRoot, "temp"));
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,
     accountKeys,
-    emailWriter(languages, {
-      address: where,
-      fromName: config.emailFromName,
-      siteName: config.siteName,
-    }),
-    new FileEmailSender(join(repositoryRoot, "temp")),
+    writer,
+    emailSender,
     config.emailFromAddress,
   );
 
@@ -1281,7 +1306,16 @@ export const buildApplication = async (
   await server.register(cookie, { secret: config.sessionCookieSecret });
   await server.register(formbody);
 
-  registerErrorMapping(server, assets);
+  // The database being down is told to the administrator without the email
+  // queue, which is in it: straight to the sender, and counted in memory.
+  const databaseOutage = tellingTheAdministrator({
+    administrator: config.administratorEmailAddress,
+    from: config.emailFromAddress,
+    intervalMinutes: config.databaseUnreachableEmailIntervalMinutes,
+    writer,
+    sender: emailSender,
+  });
+  registerErrorMapping(server, assets, databaseOutage);
 
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
@@ -1474,6 +1508,7 @@ export const buildApplication = async (
     tournamentsByAccount,
     rebuildReadModels,
     changeSiteKey,
+    databaseOutageTold: () => databaseOutage.settled(),
   };
 };
 

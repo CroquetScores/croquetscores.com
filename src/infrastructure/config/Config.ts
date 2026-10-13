@@ -50,6 +50,11 @@ export interface Config {
   // Who is told when a service the site needs cannot be reached. Absent on a
   // development machine, where nobody needs telling.
   readonly administratorEmailAddress: string | undefined;
+  // How many minutes the site waits between emailing the administrator that
+  // it cannot reach its database. It is counted in the running site's own
+  // memory, there being nowhere else to count it when the database is the
+  // thing that is down.
+  readonly databaseUnreachableEmailIntervalMinutes: number;
   // The host this site answers to, as a browser would name it: "croquetscores.com",
   // or "localhost:3000" in development. Absent means fall back to the Host header
   // of each request, which is right on a machine nothing sits in front of and
@@ -215,6 +220,31 @@ const readPort = (env: NodeJS.ProcessEnv, problems: string[]): number => {
   return port;
 };
 
+const defaultDatabaseUnreachableEmailIntervalMinutes = 30;
+
+// Blank means nobody has filled it in, so the default, and not none: a minute
+// count of zero would email the administrator for every request that failed.
+// Anything that is not a whole number of minutes stops the site starting
+// rather than quietly meaning the default, since whoever wrote "5m" wanted
+// five.
+const readDatabaseUnreachableEmailIntervalMinutes = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): number => {
+  const key = "DATABASE_UNREACHABLE_EMAIL_INTERVAL_MINUTES";
+  const raw = env[key]?.trim() ?? "";
+  if (raw === "") return defaultDatabaseUnreachableEmailIntervalMinutes;
+
+  const minutes = Number(raw);
+  if (!/^\d+$/.test(raw) || !Number.isSafeInteger(minutes) || minutes < 1) {
+    problems.push(
+      `${key} must be a whole number of minutes, one or more, not ${JSON.stringify(raw)}.`,
+    );
+    return defaultDatabaseUnreachableEmailIntervalMinutes;
+  }
+  return minutes;
+};
+
 export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const problems: string[] = [];
 
@@ -237,6 +267,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const port = readPort(env, problems);
   const trustedProxies = readTrustedProxies(env, problems);
   const website = readWebsite(env, problems);
+  const databaseUnreachableEmailIntervalMinutes =
+    readDatabaseUnreachableEmailIntervalMinutes(env, problems);
   if (problems.length > 0 || website === undefined)
     throw new ConfigError(problems);
 
@@ -253,6 +285,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     website,
     administratorEmailAddress:
       env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
+    databaseUnreachableEmailIntervalMinutes,
     canonicalHost: readCanonicalHost(env),
     trustedProxies,
     recaptcha: recaptchaKeys(env),

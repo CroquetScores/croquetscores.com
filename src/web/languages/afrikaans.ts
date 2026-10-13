@@ -275,6 +275,9 @@ export const afrikaans: Language = {
     "errors.sorryDetail": "Daardie versoek kon nie hanteer word nie.",
     "errors.failed": "Iets het skeefgeloop",
     "errors.reference": "Verwysing {reference}.",
+    "errors.unavailable": "Die webwerf is nie beskikbaar nie",
+    "errors.unavailableDetail":
+      "Die webwerf kan nou nie bykom wat dit nodig het nie. Probeer asseblief later weer.",
 
     "home.recentResults": "Onlangse uitslae",
     "home.recentResults.none":
@@ -1748,6 +1751,29 @@ export const afrikaans: Language = {
 <p>
     Solank {service} nie antwoord nie, sal jy hoogstens een e-pos per uur
     daaroor kry.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} kan nie sy databasis bereik nie",
+    "Email.DatabaseUnreachable.body": `
+<p>Hallo,</p>
+
+<p>
+    {siteName} kon om {when} nie sy databasis bereik nie. Totdat dit antwoord, sê elke bladsy wat dit nodig het vir lesers dat die webwerf nie beskikbaar is nie en dat hulle later weer moet probeer.
+</p>
+
+<p>
+    Niks hoef opgehef te word nie. Elke versoek vra opnuut vir ’n verbinding, en die webwerf werk weer sodra die databasis antwoord.
+</p>
+
+<p>
+    Solank die databasis af bly, sal jy hoogstens een keer elke {minutes} minute daaroor ’n e-pos kry.
 </p>
 
 <p>

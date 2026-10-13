@@ -11,6 +11,7 @@
 // database once.
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
+import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachable.js";
 import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 
 /**
@@ -43,6 +44,8 @@ declare module "fastify" {
     readonly readerHasPassword: boolean;
     /** Whether that account is an administrator. Read it through isAdministrator. */
     readonly readerIsAdministrator: boolean;
+    /** Whether finding out who is asking failed. Read it through readerKnown. */
+    readonly readerUnknown: boolean;
   }
 }
 
@@ -54,8 +57,21 @@ export const knowTheReader = (
   server.decorateRequest("readerAccount", undefined);
   server.decorateRequest("readerHasPassword", false);
   server.decorateRequest("readerIsAdministrator", false);
+  server.decorateRequest("readerUnknown", false);
   server.addHook("onRequest", async (request, reply) => {
-    const found = await reader(request, reply);
+    let found: SignedInReader | undefined;
+    try {
+      found = await reader(request, reply);
+    } catch (failure) {
+      // Sessions are in the database, so a database that cannot be reached
+      // leaves the site not knowing who is asking, which is not the same as
+      // nobody. The failure goes on to be answered as it would be anywhere
+      // else; what is kept is that the answer must not say either way.
+      if (failure instanceof DatabaseUnreachable) {
+        (request as { readerUnknown: boolean }).readerUnknown = true;
+      }
+      throw failure;
+    }
     const told = request as {
       readerAccount: AccountId | undefined;
       readerHasPassword: boolean;
@@ -84,6 +100,14 @@ export const hasPassword = (request: FastifyRequest): boolean =>
  */
 export const isAdministrator = (request: FastifyRequest): boolean =>
   request.readerIsAdministrator;
+
+/**
+ * Whether the site found out who is asking. False only where it tried and the
+ * database could not be reached; a request with no session is a reader known
+ * to be nobody.
+ */
+export const readerKnown = (request: FastifyRequest): boolean =>
+  !request.readerUnknown;
 
 /** Whether the reader of `request` is signed in to anything. */
 export const signedIn = (request: FastifyRequest): boolean =>

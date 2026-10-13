@@ -283,6 +283,9 @@ export const english: Language = {
     "errors.sorryDetail": "That request could not be dealt with.",
     "errors.failed": "Something went wrong",
     "errors.reference": "Reference {reference}.",
+    "errors.unavailable": "The site is unavailable",
+    "errors.unavailableDetail":
+      "The site cannot reach what it needs just now. Please try again later.",
 
     // The home page's two lists, what each says when it has nothing in it,
     // and the way beneath them to every tournament this year.
@@ -1593,6 +1596,28 @@ export const english: Language = {
 <p>
     While {service} stays down, you will be emailed about it at most once an
     hour.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject": "{siteName} cannot reach its database",
+    "Email.DatabaseUnreachable.body": `
+<p>Hi,</p>
+
+<p>
+    {siteName} could not reach its database at {when}. Until it answers, every page that needs it tells readers the site is unavailable and to try again later.
+</p>
+
+<p>
+    Nothing needs lifting. Each request asks for a connection afresh, and the site works again the moment the database answers.
+</p>
+
+<p>
+    While the database stays down, you will be emailed about it at most once every {minutes} minutes.
 </p>
 
 <p>

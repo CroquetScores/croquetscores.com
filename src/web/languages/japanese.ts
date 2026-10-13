@@ -270,6 +270,9 @@ export const japanese: Language = {
     "errors.sorryDetail": "そのリクエストは処理できませんでした。",
     "errors.failed": "問題が発生しました",
     "errors.reference": "参照番号 {reference}。",
+    "errors.unavailable": "サイトは現在ご利用いただけません",
+    "errors.unavailableDetail":
+      "サイトは現在、必要なものに接続できません。しばらくしてからもう一度お試しください。",
 
     "home.recentResults": "最近の結果",
     "home.recentResults.none": "過去7日間に追加された試合はありません。",
@@ -1686,6 +1689,29 @@ export const japanese: Language = {
 
 <p>
     {service}が止まっている間は、これについてのメールは1時間に1回までです。
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName}がデータベースに接続できません",
+    "Email.DatabaseUnreachable.body": `
+<p>こんにちは。</p>
+
+<p>
+    {siteName}は{when}にデータベースに接続できませんでした。応答するまでの間、データベースが必要なページはすべて、サイトが利用できないこととしばらくしてから再度お試しいただくことを読者にお伝えします。
+</p>
+
+<p>
+    解除する必要のあるものはありません。各リクエストは毎回あらためて接続を求め、データベースが応答した時点でサイトは再び動作します。
+</p>
+
+<p>
+    データベースが停止している間、これについてのメールは{minutes}分に最大1通お送りします。
 </p>
 
 <p>

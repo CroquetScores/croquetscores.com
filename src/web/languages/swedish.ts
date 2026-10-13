@@ -272,6 +272,9 @@ export const swedish: Language = {
     "errors.sorryDetail": "Den begäran kunde inte hanteras.",
     "errors.failed": "Något gick fel",
     "errors.reference": "Referens {reference}.",
+    "errors.unavailable": "Webbplatsen är inte tillgänglig",
+    "errors.unavailableDetail":
+      "Webbplatsen kan just nu inte nå det den behöver. Försök igen senare.",
 
     "home.recentResults": "Senaste resultat",
     "home.recentResults.none":
@@ -1729,6 +1732,28 @@ export const swedish: Language = {
 
 <p>
     Medan {service} ligger nere får du e-post om det högst en gång i timmen.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject": "{siteName} kan inte nå sin databas",
+    "Email.DatabaseUnreachable.body": `
+<p>Hej,</p>
+
+<p>
+    {siteName} kunde inte nå sin databas {when}. Tills den svarar säger varje sida som behöver den till läsarna att webbplatsen inte är tillgänglig och att de ska försöka igen senare.
+</p>
+
+<p>
+    Inget behöver hävas. Varje förfrågan ber om en anslutning på nytt, och webbplatsen fungerar igen i samma stund som databasen svarar.
+</p>
+
+<p>
+    Så länge databasen är nere får du högst ett e-postmeddelande om det per {minutes} minuter.
 </p>
 
 <p>

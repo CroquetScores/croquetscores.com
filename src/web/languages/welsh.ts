@@ -277,6 +277,9 @@ export const welsh: Language = {
     "errors.sorryDetail": "Ni ellid ateb y cais hwnnw.",
     "errors.failed": "Aeth rhywbeth o'i le",
     "errors.reference": "Cyfeirnod {reference}.",
+    "errors.unavailable": "Nid yw’r wefan ar gael",
+    "errors.unavailableDetail":
+      "Ni all y wefan gyrraedd yr hyn sydd ei angen arni ar hyn o bryd. Rhowch gynnig arni eto yn nes ymlaen.",
 
     "home.recentResults": "Canlyniadau diweddar",
     "home.recentResults.none":
@@ -1751,6 +1754,29 @@ export const welsh: Language = {
 <p>
     Tra bydd {service} yn dal i beidio ag ymateb, ni chewch fwy nag un e-bost yr
     awr amdano.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "Ni all {siteName} gyrraedd ei gronfa ddata",
+    "Email.DatabaseUnreachable.body": `
+<p>Helo,</p>
+
+<p>
+    Ni allai {siteName} gyrraedd ei gronfa ddata am {when}. Nes ei bod yn ateb, mae pob tudalen sydd ei hangen yn dweud wrth ddarllenwyr nad yw’r wefan ar gael ac i roi cynnig arni eto yn nes ymlaen.
+</p>
+
+<p>
+    Nid oes angen dadflocio dim. Mae pob cais yn gofyn am gysylltiad o’r newydd, ac mae’r wefan yn gweithio eto’r eiliad y mae’r gronfa ddata’n ateb.
+</p>
+
+<p>
+    Tra bydd y gronfa ddata i lawr, byddwch yn cael e-bost amdani unwaith bob {minutes} munud ar y mwyaf.
 </p>
 
 <p>
