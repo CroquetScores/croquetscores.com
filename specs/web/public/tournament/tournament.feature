@@ -3,10 +3,14 @@ Feature: A tournament's page lists its games, the most recent first
 
   A tournament's page is where a reader follows it, at its year, its sport
   and its name, as "/2026/ac/spring-open", which is where the home page's
-  lists and a year's lead (`home.feature`, `year.feature`). It is headed by
-  the tournament's name, and lists every game played in it that is in use,
-  the most recently added first (`GamesOfTournament.feature`), so that a
-  reader who comes back sees what has happened since without looking for it.
+  lists and a year's lead (`home.feature`, `year.feature`). The tournament's
+  name is in the header, where every page of the tournament has it, so the
+  content does not repeat it above the games: it is the list of every game
+  played in it that is in use, the most recently added first
+  (`GamesOfTournament.feature`), so that a reader who comes back sees what
+  has happened since without looking for it. The list is headed "Recent" and
+  drawn as the players' page draws its players, in the section bar's colours
+  with every other game on a tint (`players.feature`).
 
   A game takes two lines. The first is the winner: their name, what they
   represent in brackets, the flag they fly, their score, and "beat". The
@@ -76,9 +80,17 @@ Feature: A tournament's page lists its games, the most recent first
 
   Rule: The page is the tournament's, for anybody
 
-    Scenario: The page is headed by the tournament's name
+    Scenario: The tournament's name is in the header
       When the page at "/2026/ac/spring-open" is opened
-      Then the page is headed "Spring Open"
+      Then the header names the tournament "Spring Open"
+
+    Scenario: The content does not begin with the tournament's name
+      When the page at "/2026/ac/spring-open" is opened
+      Then the page's content has no main heading
+
+    Scenario: The games are under a heading of their own
+      When the page at "/2026/ac/spring-open" is opened
+      Then the content has the heading "Recent"
 
     Scenario: A reader not signed in is shown the games
       Given nobody is signed in
@@ -121,13 +133,13 @@ Feature: A tournament's page lists its games, the most recent first
     Scenario: The tournament is shown at its address now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
       When the page at "/2026/ac/spring-open" is opened
-      Then the page is headed "Spring Open"
+      Then the header names the tournament "Spring Open"
 
     Scenario: An old address in another script leads to the tournament's address now
       Given "organiser@example.com" has created the tournament "Кубок"
       And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
       When the page at "/2026/ac/кубок" is opened
-      Then the page is headed "Кубок"
+      Then the header names the tournament "Кубок"
 
   Rule: Every game in use is listed, the most recently added first
 

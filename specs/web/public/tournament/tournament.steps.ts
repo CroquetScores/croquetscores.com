@@ -52,6 +52,14 @@ Then("the page says there are no games", async function (this: SpecWorld) {
 });
 
 Then(
+  "the page's content has no main heading",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("main").waitFor();
+    assert.equal(await this.browserPage.locator("main h1").count(), 0);
+  },
+);
+
+Then(
   "the page does not say there are no games",
   async function (this: SpecWorld) {
     assert.equal(await this.browserPage.locator("main .games-none").count(), 0);

@@ -13,8 +13,8 @@ Feature: A tournament's players' page lists its players by name
   (`addPlayer.feature`), which does not exist yet and so answers `404` until
   the feature that provides it lands.
 
-  It is headed by the tournament's name, with the players under a heading of
-  their own, and its sections are the tournament's, with Players marked as
+  The tournament's name is in the header, so the content does not repeat it:
+  the players are under a heading of their own, and its sections are the tournament's, with Players marked as
   the section being read.
 
   A tournament played by teams has no players of its own, only its teams', so
@@ -41,9 +41,13 @@ Feature: A tournament's players' page lists its players by name
 
   Rule: The page is the tournament's players, for anybody
 
-    Scenario: The page is headed by the tournament's name
+    Scenario: The tournament's name is in the header
       When the page at "/2026/ac/spring-open/players" is opened
-      Then the page is headed "Spring Open"
+      Then the header names the tournament "Spring Open"
+
+    Scenario: The content does not begin with the tournament's name
+      When the page at "/2026/ac/spring-open/players" is opened
+      Then the page's content has no main heading
 
     Scenario: The players are under a heading of their own
       When the page at "/2026/ac/spring-open/players" is opened
@@ -182,7 +186,7 @@ Feature: A tournament's players' page lists its players by name
       Given "organiser@example.com" has created the tournament "Кубок"
       And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
       When the page at "/2026/ac/кубок/players" is opened
-      Then the page is headed "Кубок"
+      Then the header names the tournament "Кубок"
 
   Rule: The page fits a phone
 
