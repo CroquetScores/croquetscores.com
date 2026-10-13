@@ -118,7 +118,7 @@ export const registerErrorMapping = (
         { err: error, code: error.code },
         "The database could not be reached.",
       );
-      await databaseOutage(request);
+      databaseOutage.tell(request);
       reply.header("retry-after", retryAfterSeconds);
       if (wantsJson(request)) {
         return sendJson(reply.code(503), { error: error.code });

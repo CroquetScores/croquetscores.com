@@ -16,9 +16,21 @@ const networkCodes = new Set([
 
 // What Postgres says when it is there and will not take the connection, or
 // ended the one it had: shutting down or restarting (57P01, 57P02), not
-// accepting connections yet or at all (57P03), and out of connections
-// (53300). The whole of class 08 is a connection failing.
-const sqlStates = new Set(["57P01", "57P02", "57P03", "53300"]);
+// accepting connections yet or at all (57P03), out of connections (53300),
+// and a connection that failed, was refused or was lost (08001, 08003, 08004,
+// 08006, 08007). Not the rest of class 08: 08P01 is a protocol violation,
+// which is something the site sent, and trying again will not mend it.
+const sqlStates = new Set([
+  "57P01",
+  "57P02",
+  "57P03",
+  "53300",
+  "08001",
+  "08003",
+  "08004",
+  "08006",
+  "08007",
+]);
 
 // What Postgres says, under a code too general to be taken for this on its
 // own: 55000 is any object not being in the state a statement needs, and
@@ -60,7 +72,6 @@ export const isUnreachable = (failure: unknown): boolean => {
   const code = reasonCodeOf(failure);
   if (code !== undefined) {
     if (networkCodes.has(code) || sqlStates.has(code)) return true;
-    if (code.startsWith("08")) return true;
   }
 
   // Connecting to a name that has several addresses fails with one failure
@@ -77,12 +88,3 @@ export const isUnreachable = (failure: unknown): boolean => {
     code !== undefined && postgresSayings.some((saying) => saying.test(message))
   );
 };
-
-/**
- * What `failure` is to the caller: the database being out of reach where it
- * is, and itself where it is not.
- */
-export const becauseOf = (failure: unknown): unknown =>
-  failure instanceof DatabaseUnreachable || !isUnreachable(failure)
-    ? failure
-    : new DatabaseUnreachable(failure);

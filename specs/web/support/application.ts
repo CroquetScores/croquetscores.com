@@ -255,6 +255,9 @@ export const mount = (
  */
 export const restart = async (world: SpecWorld): Promise<void> => {
   const entry = builtFor(world);
+  // What the site was telling the administrator is finished first, so that a
+  // restart does not leave a send half done to be counted by nobody.
+  await entry.application.databaseOutageTold();
   world.mediator = undefined;
   world.validation = undefined;
   entry.application = await standUp(world, false);

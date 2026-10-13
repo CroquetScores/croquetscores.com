@@ -462,6 +462,12 @@ export interface Application {
    * (scripts/change-site-key.mjs); no route calls it.
    */
   readonly changeSiteKey: (newSiteKey: string) => Promise<void>;
+  /**
+   * Resolves once the administrator has been told, or has failed to be, of
+   * every request that found the database gone. The answer to the reader does
+   * not wait for it, so whatever wants to see the email waits here instead.
+   */
+  readonly databaseOutageTold: () => Promise<void>;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -1258,17 +1264,14 @@ export const buildApplication = async (
 
   // The database being down is told to the administrator without the email
   // queue, which is in it: straight to the sender, and counted in memory.
-  registerErrorMapping(
-    server,
-    assets,
-    tellingTheAdministrator({
-      administrator: config.administratorEmailAddress,
-      from: config.emailFromAddress,
-      intervalMinutes: config.databaseUnreachableEmailIntervalMinutes,
-      writer,
-      sender: emailSender,
-    }),
-  );
+  const databaseOutage = tellingTheAdministrator({
+    administrator: config.administratorEmailAddress,
+    from: config.emailFromAddress,
+    intervalMinutes: config.databaseUnreachableEmailIntervalMinutes,
+    writer,
+    sender: emailSender,
+  });
+  registerErrorMapping(server, assets, databaseOutage);
 
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
@@ -1455,6 +1458,7 @@ export const buildApplication = async (
     tournamentsByAccount,
     rebuildReadModels,
     changeSiteKey,
+    databaseOutageTold: () => databaseOutage.settled(),
   };
 };
 

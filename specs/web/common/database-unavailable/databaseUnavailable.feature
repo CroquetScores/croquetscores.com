@@ -14,6 +14,12 @@ Feature: The site says so when it cannot reach its database
   so that it can wait and ask again rather than give up or report a fault in
   what it sent.
 
+  Only the database being gone is the database being unreachable. A call to
+  another service that fails while a request holds its connection is that
+  service failing, and a request that is merely waiting for a connection
+  because every one is busy is the site being busy: neither is the reader told
+  the database is down, nor the administrator emailed that it is.
+
   Nothing about the database is told to the reader. What went wrong, and where
   the database is, is for whoever reads the log.
 
@@ -277,6 +283,26 @@ Feature: The site says so when it cannot reach its database
       When the example API route is asked for
       Then 1 email is sent to "administrator@example.com"
 
+    Scenario: Requests stamped a moment apart and out of order tell once
+      Given the server's clock reads "2026-09-19T10:05:00Z"
+      And the site's administrator's email address is "administrator@example.com"
+      And the database cannot be reached
+      And an example page that reads from the database
+      And the example page is asked for
+      And the server's clock reads "2026-09-19T10:00:00Z"
+      When the example page is asked for
+      Then 1 email is sent to "administrator@example.com"
+
+    Scenario: A request stamped far ahead does not silence the site
+      Given the server's clock reads "2026-09-20T10:00:00Z"
+      And the site's administrator's email address is "administrator@example.com"
+      And the database cannot be reached
+      And an example page that reads from the database
+      And the example page is asked for
+      And the server's clock reads "2026-09-19T10:00:00Z"
+      When the example page is asked for
+      Then 2 emails are sent to "administrator@example.com"
+
     Scenario: A site restarted in the middle of an outage may tell the administrator again
       Given the site's administrator's email address is "administrator@example.com"
       And the database cannot be reached
@@ -352,6 +378,33 @@ Feature: The site says so when it cannot reach its database
         | 2.5     |
         | 5m      |
         | soon    |
+
+  Rule: The reader is answered without waiting for the administrator to be told
+
+    A mail provider that is slow, or does not answer, must not be what the
+    reader waits on while the site is already unable to do what they asked.
+
+    Scenario: A page is answered while the email is still being sent
+      Given the site's administrator's email address is "administrator@example.com"
+      And emails are held up
+      And the database cannot be reached
+      And an example page that reads from the database
+      When the example page is asked for
+      Then the reader is told the site is unavailable
+
+  Rule: A failure that only looks like the database is not told as the database
+
+    Scenario: A call to another service that fails inside a request is still the server failing
+      Given an example page that fails reaching another service while it holds the database
+      When the example page is asked for
+      Then the page says the server failed
+      And the page does not say the site is unavailable
+
+    Scenario: It is not told to the administrator as the database being down
+      Given the site's administrator's email address is "administrator@example.com"
+      And an example page that fails reaching another service while it holds the database
+      When the example page is asked for
+      Then no email is sent
 
   Rule: A failure to email the administrator is not the reader's to meet
 

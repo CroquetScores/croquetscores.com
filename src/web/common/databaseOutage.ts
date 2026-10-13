@@ -36,8 +36,18 @@ export interface TellingTheAdministrator {
   readonly sender: EmailSender;
 }
 
-/** Tells the administrator of the request that found the database gone. */
-export type DatabaseOutage = (request: FastifyRequest) => Promise<void>;
+/** What the error mapping asks of it, and what a scenario waits on. */
+export interface DatabaseOutage {
+  /**
+   * Tells the administrator of the request that found the database gone, if
+   * it is time. Does not wait: it returns at once, so that a mail provider
+   * that is slow or hanging cannot hold up the answer the reader is owed,
+   * which is the very thing the site is trying to give quickly.
+   */
+  tell(request: FastifyRequest): void;
+  /** Resolves once everything told so far has been sent or has failed. */
+  settled(): Promise<void>;
+}
 
 export const tellingTheAdministrator = ({
   administrator,
@@ -47,21 +57,11 @@ export const tellingTheAdministrator = ({
   sender,
 }: TellingTheAdministrator): DatabaseOutage => {
   let toldAt: number | undefined;
+  const sending = new Set<Promise<void>>();
 
-  return async (request) => {
+  const send = async (request: FastifyRequest, now: number): Promise<void> => {
     if (administrator === undefined) return;
-
-    const now = request.requestedAt.toDate().getTime();
-    // A clock that has gone backwards is not a reason to stay quiet for as
-    // long as it went back.
-    if (toldAt !== undefined) {
-      const since = now - toldAt;
-      if (since >= 0 && since < intervalMinutes * A_MINUTE) return;
-    }
-    // Before the first await, so that requests turned away at the same
-    // moment tell the administrator once between them.
-    toldAt = now;
-
+    const at = request.requestedAt;
     try {
       const written = writer.write({
         kind: "Email.DatabaseUnreachable",
@@ -69,7 +69,7 @@ export const tellingTheAdministrator = ({
         // written in, not whatever the reader who was turned away asked for.
         language: "en",
         fill: {
-          when: request.requestedAt.toDate().toISOString(),
+          when: new Date(now).toISOString(),
           minutes: String(intervalMinutes),
         },
       });
@@ -80,7 +80,7 @@ export const tellingTheAdministrator = ({
           subject: written.subject,
           body: written.body,
         },
-        request.requestedAt,
+        at,
       );
     } catch (failure) {
       request.log.error(
@@ -88,5 +88,45 @@ export const tellingTheAdministrator = ({
         "Could not tell the administrator the database cannot be reached.",
       );
     }
+  };
+
+  return {
+    tell: (request) => {
+      if (administrator === undefined) return;
+
+      // Inside the try as well: a request whose moment was never stamped,
+      // because an earlier hook failed, is still owed its answer.
+      let now: number;
+      try {
+        now = request.requestedAt.toDate().getTime();
+      } catch (failure) {
+        request.log.error(
+          failure,
+          "Could not tell the administrator the database cannot be reached.",
+        );
+        return;
+      }
+
+      // Within the interval either side of the last telling, so that two
+      // requests stamped a moment apart and out of order tell once, and a
+      // stamp far in the future does not silence the site for as long as it
+      // is ahead: the next request, being more than an interval before it,
+      // tells and begins again from its own moment.
+      if (
+        toldAt !== undefined &&
+        Math.abs(now - toldAt) < intervalMinutes * A_MINUTE
+      ) {
+        return;
+      }
+      // Before anything is awaited, so that requests turned away at the same
+      // moment tell the administrator once between them.
+      toldAt = now;
+
+      const sent = send(request, now).finally(() => sending.delete(sent));
+      sending.add(sent);
+    },
+    settled: async () => {
+      while (sending.size > 0) await Promise.all([...sending]);
+    },
   };
 };

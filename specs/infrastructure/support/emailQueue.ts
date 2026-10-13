@@ -51,8 +51,11 @@ export class RecordingWriter implements EmailWriter {
 export class RecordingSender implements EmailSender {
   readonly sent: OutgoingEmail[] = [];
   failing = false;
+  /** Where a scenario holds every send up until it lets it go. */
+  holdsUntil: Promise<void> | undefined;
 
   async send(email: OutgoingEmail): Promise<void> {
+    if (this.holdsUntil !== undefined) await this.holdsUntil;
     // Long enough that two senders at once are sending at the same time.
     await new Promise((resolve) => setTimeout(resolve, 50));
     if (this.failing) throw new Error("The mail provider did not take it.");

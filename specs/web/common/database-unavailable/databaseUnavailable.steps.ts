@@ -456,45 +456,84 @@ Given("emails cannot be sent", function (this: SpecWorld) {
   senderOf(this).failing = true;
 });
 
-Given("emails can be sent again", function (this: SpecWorld) {
+// After what is being sent has failed: a send still under way would otherwise
+// find the sender mended, and the try the scenario is about would not have
+// failed at all.
+Given("emails can be sent again", async function (this: SpecWorld) {
+  await afterTheAdministratorIsTold(this);
   senderOf(this).failing = false;
 });
+
+// Held for good: the scenario is about the reader being answered, and what is
+// held never finishes, so nothing here waits for it.
+Given("emails are held up", function (this: SpecWorld) {
+  senderOf(this).holdsUntil = new Promise<void>(() => undefined);
+});
+
+Given(
+  "an example page that fails reaching another service while it holds the database",
+  function (this: SpecWorld) {
+    mount(this, (application) => {
+      application.server.get(pagePath, async () => {
+        await application.unitOfWork.inReadOnlyTransaction(() => {
+          // What a service that is not there says, as node says it, thrown
+          // while the request holds its connection: not the database's.
+          throw Object.assign(new Error("connect ETIMEDOUT 203.0.113.1:443"), {
+            code: "ETIMEDOUT",
+          });
+        });
+        return examplePage;
+      });
+    });
+    builtFor(this).route = { method: "GET", url: pagePath };
+  },
+);
 
 Given("the site is restarted", async function (this: SpecWorld) {
   await restart(this);
 });
+
+// The answer to a reader does not wait for the administrator to be told, so
+// whatever looks at what was sent, or logged, waits for it here.
+const afterTheAdministratorIsTold = (world: SpecWorld): Promise<void> =>
+  builtFor(world).application.databaseOutageTold();
 
 const sentTo = (world: SpecWorld, address: string) =>
   senderOf(world).sent.filter((email) => email.to === address);
 
 Then(
   "an email is sent to {string}",
-  function (this: SpecWorld, address: string) {
+  async function (this: SpecWorld, address: string) {
+    await afterTheAdministratorIsTold(this);
     assert.ok(sentTo(this, address).length > 0, `${address} was sent nothing.`);
   },
 );
 
 Then(
   "{int} email is sent to {string}",
-  function (this: SpecWorld, count: number, address: string) {
+  async function (this: SpecWorld, count: number, address: string) {
+    await afterTheAdministratorIsTold(this);
     assert.equal(sentTo(this, address).length, count);
   },
 );
 
 Then(
   "{int} emails are sent to {string}",
-  function (this: SpecWorld, count: number, address: string) {
+  async function (this: SpecWorld, count: number, address: string) {
+    await afterTheAdministratorIsTold(this);
     assert.equal(sentTo(this, address).length, count);
   },
 );
 
-Then("no email is sent", function (this: SpecWorld) {
+Then("no email is sent", async function (this: SpecWorld) {
+  await afterTheAdministratorIsTold(this);
   assert.deepEqual(senderOf(this).sent, []);
 });
 
 Then(
   "the email sent to {string} says the database cannot be reached",
-  function (this: SpecWorld, address: string) {
+  async function (this: SpecWorld, address: string) {
+    await afterTheAdministratorIsTold(this);
     const email = sentTo(this, address)[0];
     assert.ok(email !== undefined, `${address} was sent nothing.`);
     assert.match(unmarked(email.subject), /database/i);
@@ -503,14 +542,16 @@ Then(
 
 Then(
   "the email sent to {string} names the moment {string}",
-  function (this: SpecWorld, address: string, moment: string) {
+  async function (this: SpecWorld, address: string, moment: string) {
+    await afterTheAdministratorIsTold(this);
     const email = sentTo(this, address)[0];
     assert.ok(email !== undefined, `${address} was sent nothing.`);
     assert.ok(email.body.includes(new Date(moment).toISOString()));
   },
 );
 
-Then("the log says {string}", function (this: SpecWorld, code: string) {
+Then("the log says {string}", async function (this: SpecWorld, code: string) {
+  await afterTheAdministratorIsTold(this);
   assert.ok(
     logOf(this).some((line) => line.includes(code)),
     `The log does not say ${code}.`,
