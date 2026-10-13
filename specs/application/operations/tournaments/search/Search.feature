@@ -191,7 +191,7 @@ Feature: Searching the website for tournaments, players and competitions
 
     Scenario: A competition is answered with where its page is
       When the website is searched for "block"
-      Then the competition "Block A" is found at the address "2026/ac/spring-open/block-a"
+      Then the competition "Block A" is found at the address "2026/ac/spring-open/competitions/block-a"
 
     Scenario: A competition of each kind is found
       Given "organiser@example.com" has added the knockout "Finals" to "Spring Open"
