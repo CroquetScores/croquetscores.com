@@ -17,6 +17,10 @@ Feature: Changing what a tournament's player is
   archived tournament only restored (`restore.feature`), so updating a player
   who is archived, or a player in a tournament that is, is refused.
 
+  A player always has a world ranking name (`addPlayer.feature`), so an update
+  that gives none makes it the player's name as it is then, and not what it was
+  before.
+
   An update that changes nothing records nothing, because nothing happened.
 
   Background:
@@ -73,6 +77,14 @@ Feature: Changing what a tournament's player is
       And the update gives the player the world ranking name "Samuel Someone"
       When the player "Sam Someone" is updated
       Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
+
+    Scenario: An update that gives no world ranking name makes it the name
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      When the player "Sam Someone" is updated
+      Then the tournament's player "Samantha Someone" has the world ranking name "Samantha Someone"
 
     Scenario: An update of the world ranking name alone records it
       Given a stream where a tournament was created as "Spring Open"
@@ -207,7 +219,7 @@ Feature: Changing what a tournament's player is
       When the player "Sam Someone" is updated
       Then it is refused with "Tournament.Archived"
 
-  Rule: In American 6 Wicket a player's world ranking name is their name
+  Rule: Where the sport has no world rankings a player's world ranking name is their name
 
     A player's world ranking name is always their name there
     (`addPlayer.feature`), so correcting the name corrects it, and a world
@@ -215,6 +227,14 @@ Feature: Changing what a tournament's player is
 
     Scenario: A corrected name is the world ranking name
       Given a stream where a tournament was created in the sport "a6w"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      When the player "Sam Someone" is updated
+      Then the tournament's player "Samantha Someone" has the world ranking name "Samantha Someone"
+
+    Scenario: A corrected name is the world ranking name in a sport that is not ranked
+      Given a stream where a tournament was created in the sport "rc"
       And the player "Sam Someone" was added to it
       And the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"

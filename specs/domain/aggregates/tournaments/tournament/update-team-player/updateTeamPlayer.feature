@@ -54,6 +54,12 @@ Feature: Changing what a player in a tournament's team is
       When the player "Sam Someone" of the team "Australia" is updated
       Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
 
+    Scenario: An update that gives no world ranking name makes it the name
+      Given the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      When the player "Sam Someone" of the team "Australia" is updated
+      Then the team "Australia"'s player "Samantha Someone" has the world ranking name "Samantha Someone"
+
     Scenario: An update of the world ranking name alone records it
       Given the tournament is rebuilt from the stream
       And the update gives the player the world ranking name "Samuel Someone"
@@ -191,7 +197,7 @@ Feature: Changing what a player in a tournament's team is
       When the player "Sam Someone" of the team "Australia" is updated
       Then it is refused with "Tournament.Archived"
 
-  Rule: In American 6 Wicket a team player's world ranking name is their name
+  Rule: Where the sport has no world rankings a team player's world ranking name is their name
 
     A player in a team is known to the world rankings there by their own name
     (`addTeamPlayer.feature`), so correcting the name corrects it, and a world
