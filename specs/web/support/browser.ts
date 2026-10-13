@@ -26,6 +26,7 @@ import {
 import { CheckRefused } from "../../../src/application/services/BreachedPasswords.js";
 import { ListRefused } from "../../../src/application/services/WorldRankingLists.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
+import type { HelpLibrary } from "../../../src/web/common/helpLibrary.js";
 import type { Language } from "../../../src/web/common/language.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -133,6 +134,16 @@ export const anApplicationOfferingItsOwnLanguages = (
   world: SpecWorld,
 ): Promise<string> => anApplicationWith(world, {}, "its own");
 
+/**
+ * An application of this scenario's own reading the help it is given instead
+ * of the one the build wrote, offering the site's own languages, and otherwise
+ * as {@link anApplicationCalled}.
+ */
+export const anApplicationWithHelp = (
+  world: SpecWorld,
+  help: HelpLibrary,
+): Promise<string> => anApplicationWith(world, {}, "its own", help);
+
 // Which languages a scenario's application offers: the scenarios', or the
 // site's own. Named rather than left as undefined for the second, because an
 // undefined argument takes a parameter's default, which is the first.
@@ -151,20 +162,27 @@ const offered = (
 // them, rather than whatever website the settings name.
 const askedOf = new WeakMap<
   SpecWorld,
-  { changed: Partial<Config>; languages: Offering | undefined }
+  {
+    changed: Partial<Config>;
+    languages: Offering | undefined;
+    help: HelpLibrary | undefined;
+  }
 >();
 
 const anApplicationWith = async (
   world: SpecWorld,
   asked: Partial<Config>,
   asking?: Offering,
+  askingForHelp?: HelpLibrary,
 ): Promise<string> => {
   const before = askedOf.get(world);
   const changed = { ...before?.changed, ...asked };
   const languages = asking ?? before?.languages;
-  askedOf.set(world, { changed, languages });
+  const help = askingForHelp ?? before?.help;
+  askedOf.set(world, { changed, languages, help });
+  const helpGiven = help === undefined ? {} : { help };
   if (world.pool !== undefined) {
-    return itsOwn(world, changed, languages ?? scenarioLanguages);
+    return itsOwn(world, changed, languages ?? scenarioLanguages, help);
   }
 
   loadEnvFile();
@@ -173,6 +191,7 @@ const anApplicationWith = async (
     {
       logger: false,
       ...offered(languages ?? scenarioLanguages),
+      ...helpGiven,
       reader: readerTheScenariosSet,
       sendsTheEmailQueue: false,
     },
@@ -228,6 +247,7 @@ const itsOwn = async (
   world: SpecWorld,
   changed: Partial<Config> = {},
   languages: Offering = scenarioLanguages,
+  help?: HelpLibrary,
 ): Promise<string> => {
   const databaseUrl = world.database.options.connectionString;
   if (databaseUrl === undefined) {
@@ -263,6 +283,7 @@ const itsOwn = async (
     {
       logger: false,
       ...offered(languages),
+      ...(help === undefined ? {} : { help }),
       clock: () => new Date(clock.now.getTime()),
       // What the admin's build is called, which a scenario changes to deploy
       // the site again (newerBuild.feature).

@@ -357,6 +357,8 @@ import { registerTeamSummaryPage } from "./public/teamSummary.js";
 import { knockoutView } from "./public/knockout.js";
 import { knockoutSummaryView } from "./public/knockoutSummary.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
+import { helpLibraryIn, type HelpLibrary } from "./common/helpLibrary.js";
+import { registerHelpPages } from "./public/help.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
@@ -599,6 +601,11 @@ export interface ApplicationOptions {
    * English and Spanish, unless a scenario offers others.
    */
   readonly languages?: readonly Language[];
+  /**
+   * The help, as built from docs/help. What the build wrote under dist/help,
+   * unless a scenario gives a help with pages missing.
+   */
+  readonly help?: HelpLibrary;
   /**
    * The kinds of event the store knows how to read back, and the projections
    * that keep the read models. The application's own, unless a scenario gives
@@ -1358,6 +1365,11 @@ export const buildApplication = async (
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);
   registerJavaScriptRequiredPage(server, assets);
+  registerHelpPages(
+    server,
+    assets,
+    options.help ?? helpLibraryIn(join(repositoryRoot, "dist", "help")),
+  );
   registerHomePage(server, assets);
   registerYearPage(server, assets);
   registerYearSportPage(server, assets);
