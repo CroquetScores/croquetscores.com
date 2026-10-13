@@ -31,7 +31,7 @@ Standaard is die een formaat wat nie tussen spanne gespeel word nie, en is nie w
 
 **Gelyke toetse is gelykop.** Word eers gevra sodra 'n formaat tussen spanne gekies is. 'n Toets word gewen deur die span wat meer van sy wedstryde wen, en een wat gelyk is op wedstryde word deur netto spelle beslis, dan deur netto hoepels, tensy dit gemerk is, in welke geval 'n toets wat gelyk is op wedstryde gelykop is, soos sommige spanbyeenkomste dit het. Dit begin ongemerk vir Spanne, en gemerk vir die GC World Team Championship, wat 'n gelyke toets nog altyd as gelykop beskou het.
 
-**Tel vir die wêreldranglys.** Word net gevra waar dit getel kan word: 'n toernooi van Association Croquet of Golf Croquet wat nie met voorgee gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk.
+**Tel vir die wêreldranglys.** Word net gevra waar dit getel kan word: 'n toernooi van Association Croquet, Golf Croquet of Amerikaanse 6-hoepel-croquet wat nie met voorgee gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk.
 
 **Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander.
 

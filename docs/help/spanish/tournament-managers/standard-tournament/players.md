@@ -18,7 +18,7 @@ Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la pág
 
 **Bandera** es la bandera que se muestra junto al nombre del jugador. Puede dejarse en ninguna, como la mayoría de los jugadores. A qué representa un jugador y qué bandera lleva se guardan por separado, porque un jugador puede jugar por un club de un país y llevar la bandera de otro.
 
-**Nombre en el ranking mundial** es el nombre por el que el ranking mundial conoce al jugador. Se pide solo en un torneo de Croquet Asociación o de Golf Croquet, los dos deportes con ranking mundial. Mientras añades a un jugador, sigue al nombre según lo escribes, porque la mayoría de los jugadores son conocidos en el ranking por su propio nombre, y deja de seguirlo en cuanto escribes en él. Si se deja vacío, se guarda como el nombre del jugador.
+**Nombre en el ranking mundial** es el nombre por el que el ranking mundial conoce al jugador. Se pide solo en un torneo de Croquet Asociación o de Golf Croquet, los dos deportes de cuyos jugadores el ranking mundial lleva una lista. Los jugadores de Croquet americano de 6 aros son conocidos en el ranking por su propio nombre, así que ahí no se pide, y el nombre en el ranking mundial de cada jugador es siempre su nombre. Mientras añades a un jugador, sigue al nombre según lo escribes, porque la mayoría de los jugadores son conocidos en el ranking por su propio nombre, y deja de seguirlo en cuanto escribes en él. Si se deja vacío, se guarda como el nombre del jugador.
 
 Según escribes un nombre, se ofrecen los jugadores que el ranking mundial conoce cuyos nombres empiezan así, para que puedas tomar un nombre tal como lo escribe el ranking en vez de teclearlo entero. Junto al nombre en el ranking mundial, una marca de verificación dice que el ranking conoce el nombre, y un signo de interrogación dice que no: puede que el nombre esté mal escrito, o que el jugador sea nuevo en el ranking. Es solo un aviso. Un nombre que el ranking no conoce se guarda igual que uno que sí.
 
@@ -30,7 +30,7 @@ Un jugador nunca se llama "Bye". Los byes de una eliminatoria se añaden en la p
 
 ## Corregir un jugador
 
-Pulsa el nombre de un jugador, o su **Editar**, para abrir el mismo diálogo sobre ese jugador, titulado Editar jugador. Cambia lo que esté mal y pulsa **Guardar**, que guarda el cambio y cierra el diálogo. Un jugador cuyo nombre se corrige conserva el nombre en el ranking mundial que tenía, porque el ranking sigue conociéndolo por él.
+Pulsa el nombre de un jugador, o su **Editar**, para abrir el mismo diálogo sobre ese jugador, titulado Editar jugador. Cambia lo que esté mal y pulsa **Guardar**, que guarda el cambio y cierra el diálogo. Un jugador cuyo nombre se corrige conserva el nombre en el ranking mundial que tenía, porque el ranking sigue conociéndolo por él. En Croquet americano de 6 aros el nombre de un jugador en el ranking mundial es siempre su nombre, así que corregir el nombre lo corrige también.
 
 ![El diálogo Editar jugador](images/edit-player-dialog.png)
 

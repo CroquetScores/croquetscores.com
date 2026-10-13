@@ -22,10 +22,10 @@ La pestaña **Anotadores** es la pestaña Gestores para los anotadores, y funcio
 
 ![La pestaña Anotadores](images/scorers-tab.png)
 
-Un anotador ve el torneo en su propia lista de la administración, con **Resultados** en lugar de Gestionar, y se le ofrecen solo sus tests: ni equipos, ni notas, ni gestores, ni anotadores. No puede abrir la página de un equipo, porque quién juega por un equipo lo deciden los gestores. En la página de un test puede introducir, corregir, archivar, restaurar y reordenar resultados como un gestor.
+Un anotador ve el torneo en su propia lista de la administración, con **Resultados** en lugar de Gestionar, y se le ofrecen solo sus tests: ni equipos, ni notas, ni gestores, ni anotadores, ni rankings. No puede abrir la página de un equipo, porque quién juega por un equipo lo deciden los gestores. En la página de un test puede introducir, corregir, archivar, restaurar y reordenar resultados como un gestor.
 
 ![La página de un torneo tal como la ve un anotador](images/scorer-tournament-page.png)
 
 A un gestor no se le hace anotador, porque un gestor ya puede hacer todo lo que hace un anotador. Un torneo no necesita anotadores, así que todos pueden quitarse, incluido el último.
 
-Siguiente: [Cambiar, archivar y restaurar un torneo](changing-and-archiving.md).
+Siguiente: [Rankings](rankings.md).

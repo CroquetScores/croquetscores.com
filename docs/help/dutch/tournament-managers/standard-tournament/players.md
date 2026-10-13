@@ -18,7 +18,7 @@ Druk op **Speler toevoegen**, boven de lijst. Er opent een dialoogvenster over d
 
 **Vlag** is de vlag die naast de naam van de speler wordt getoond. Ze mag op geen blijven staan, zoals bij de meeste spelers. Wat een speler vertegenwoordigt en welke vlag die voert, worden apart gehouden, omdat een speler voor een club in het ene land kan spelen en de vlag van een ander land kan voeren.
 
-**Naam van de speler op de wereldranglijst** is de naam waaronder de wereldranglijst de speler kent. Ze wordt alleen gevraagd in een toernooi Associatiecroquet of Golfcroquet, de twee sporten met een wereldranglijst. Terwijl je een speler toevoegt, volgt ze de naam zoals je die typt, omdat de meeste spelers op de ranglijst onder hun eigen naam bekend zijn, en ze houdt op met volgen zodra je erin typt. Leeg gelaten wordt ze bewaard als de naam van de speler.
+**Naam van de speler op de wereldranglijst** is de naam waaronder de wereldranglijst de speler kent. Ze wordt alleen gevraagd in een toernooi Associatiecroquet of Golfcroquet, de twee sporten waarvan de wereldranglijst de spelers bijhoudt. De spelers van Amerikaans croquet met 6 poortjes zijn op de ranglijst onder hun eigen naam bekend, dus daar wordt ze niet gevraagd, en de naam van elke speler op de wereldranglijst is altijd gewoon zijn naam. Terwijl je een speler toevoegt, volgt ze de naam zoals je die typt, omdat de meeste spelers op de ranglijst onder hun eigen naam bekend zijn, en ze houdt op met volgen zodra je erin typt. Leeg gelaten wordt ze bewaard als de naam van de speler.
 
 Terwijl je een naam typt, worden de spelers die de wereldranglijst kent en van wie de naam zo begint aangeboden, zodat je een naam kunt overnemen zoals de ranglijst hem spelt in plaats van hem uit te typen. Naast de naam op de wereldranglijst zegt een vinkje dat de ranglijst de naam kent, en een vraagteken dat die hem niet kent: de naam kan verkeerd gespeld zijn, of de speler kan nieuw zijn op de ranglijst. Het is alleen advies. Een naam die de ranglijst niet kent, wordt net zo goed bewaard als een die ze wel kent.
 
@@ -30,7 +30,7 @@ Een speler heet nooit "Bye". De vrijlotingen van een knock-out worden in de knoc
 
 ## Een speler corrigeren
 
-Druk op de naam van een speler, of op **Bewerken**, om hetzelfde dialoogvenster op die speler te openen, met de titel Speler bewerken. Verander wat fout is en druk op **Opslaan**, wat de wijziging bewaart en het dialoogvenster sluit. Een speler van wie de naam wordt gecorrigeerd, houdt de naam op de wereldranglijst die die had, omdat de ranglijst hem nog onder die naam kent.
+Druk op de naam van een speler, of op **Bewerken**, om hetzelfde dialoogvenster op die speler te openen, met de titel Speler bewerken. Verander wat fout is en druk op **Opslaan**, wat de wijziging bewaart en het dialoogvenster sluit. Een speler van wie de naam wordt gecorrigeerd, houdt de naam op de wereldranglijst die die had, omdat de ranglijst hem nog onder die naam kent. In Amerikaans croquet met 6 poortjes is de naam van een speler op de wereldranglijst altijd zijn naam, dus als je de naam corrigeert, corrigeer je die ook.
 
 ![Het dialoogvenster Speler bewerken](images/edit-player-dialog.png)
 

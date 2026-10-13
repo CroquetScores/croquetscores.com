@@ -24,7 +24,7 @@ O formulário pede tudo com que um torneio começa. Um torneio do tipo comum est
 
 **Permite resultados empatados.** Marque quando um jogo pode terminar sem que nenhum dos jogadores seja o vencedor. A maioria dos torneios não permite. Quando está marcado, um placar inserido com pontos iguais e sem marca é guardado como empate; quando não está, um jogo com pontos iguais precisa dizer quem o ganhou com uma marca depois do placar do vencedor, como "6w".
 
-**Vale para os rankings mundiais.** Só é pedido quando pode valer: um torneio de Croquet de Associação ou de Golf Croquet que não é disputado com handicaps nem permite resultados empatados. Começa marcado, então desmarque-o para um torneio que não deve valer.
+**Vale para os rankings mundiais.** Só é pedido quando pode valer: um torneio de Croquet de Associação, de Golf Croquet ou de Croquet Americano de 6 Arcos que não é disputado com handicaps nem permite resultados empatados. Começa marcado, então desmarque-o para um torneio que não deve valer.
 
 **Evento de nível nacional** e **Evento de nível internacional.** Um torneio pode ser um, o outro, ou nenhum, mas nunca os dois: marcar um desmarca o outro.
 

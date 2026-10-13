@@ -24,7 +24,7 @@ Le formulaire demande tout ce avec quoi un tournoi commence. Un tournoi de la so
 
 **Matchs nuls autorisés.** Cochez cette case là où une partie peut finir sans qu’aucun joueur ne gagne. La plupart des tournois ne l’autorisent pas. Quand elle est cochée, un résultat saisi à points égaux et sans marque est gardé comme un match nul ; quand elle ne l’est pas, une partie à points égaux doit dire qui l’a gagnée par une marque après les points du vainqueur, comme « 6w ».
 
-**Compte pour le classement mondial.** Demandé seulement là où cela peut compter : un tournoi de croquet association ou de croquet golf qui n’est ni joué avec handicap ni ouvert aux matchs nuls. La case est cochée au départ ; décochez-la pour un tournoi qui ne doit pas compter.
+**Compte pour le classement mondial.** Demandé seulement là où cela peut compter : un tournoi de croquet association, de croquet golf ou de croquet américain à 6 arceaux qui n’est ni joué avec handicap ni ouvert aux matchs nuls. La case est cochée au départ ; décochez-la pour un tournoi qui ne doit pas compter.
 
 **Épreuve de niveau national** et **Épreuve de niveau international.** Un tournoi peut être l’un, l’autre, ou aucun des deux, mais jamais les deux : cocher l’un décoche l’autre.
 

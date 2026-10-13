@@ -19,8 +19,9 @@ Alles wat 'n bestuurder doen, word in die administrasie-afdeling van die werf ge
 5. [Uitslae](scores.md): hoe om uitslae in te voer, hulle reg te stel, en dié wat per ongeluk ingevoer is eenkant te sit.
 6. [Notas](notes.md): hoe om die spelers te vertel wat hulle moet weet terwyl die toernooi aan die gang is.
 7. [Bestuurders en telers](managers-and-scorers.md): hoe om die bestuur van die toernooi te deel, en iemand uitslae te laat invoer sonder dat hulle enigiets anders kan verander.
-8. [Hoe om 'n toernooi te verander, te argiveer en te herstel](changing-and-archiving.md): hoe om die toernooi se besonderhede reg te stel, en 'n toernooi eenkant te sit.
-9. [Wat die publiek sien](what-the-public-sees.md): die bladsye wat jou spelers volg, en hoe wat jy invoer daarop verskyn.
+8. [Ranglyste](rankings.md): die leer wat na die wêreldranglys gestuur word, en wat vir jou oorbly om in te vul.
+9. [Hoe om 'n toernooi te verander, te argiveer en te herstel](changing-and-archiving.md): hoe om die toernooi se besonderhede reg te stel, en 'n toernooi eenkant te sit.
+10. [Wat die publiek sien](what-the-public-sees.md): die bladsye wat jou spelers volg, en hoe wat jy invoer daarop verskyn.
 
 ## Hoe die administrasie uitgelê is
 
@@ -28,7 +29,7 @@ Die voordeur van die administrasie lys die toernooie waarby jy betrokke is, een 
 
 ![Die lys toernooie in die administrasie](images/admin-list.png)
 
-Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in vyf oortjies onder sy naam: **Spelers**, **Kompetisies**, **Notas**, **Bestuurders** en **Telers**. Die bladsy maak op Spelers oop, want die spelers is die eerste ding wat ingeskryf word.
+Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in ses oortjies onder sy naam: **Spelers**, **Kompetisies**, **Notas**, **Bestuurders**, **Telers** en **Ranglyste**. Die bladsy maak op Spelers oop, want die spelers is die eerste ding wat ingeskryf word.
 
 !['n Toernooi se bladsy, op sy Kompetisies-oortjie](images/tournament-page.png)
 

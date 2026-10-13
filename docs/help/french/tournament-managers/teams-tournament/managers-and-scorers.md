@@ -22,10 +22,10 @@ L’onglet **Marqueurs** est l’onglet Gestionnaires des marqueurs, et fonction
 
 ![L’onglet Marqueurs](images/scorers-tab.png)
 
-Un marqueur voit le tournoi dans sa propre liste dans l’administration, avec **Résultats** à la place de Gérer, et on ne lui propose que ses tests : ni équipes, ni notes, ni gestionnaires, ni marqueurs. Il ne peut pas ouvrir la page d’une équipe, puisque qui joue pour une équipe, c’est aux gestionnaires d’en décider. Sur la page d’un test, il peut saisir, corriger, archiver, restaurer et réordonner les résultats comme un gestionnaire.
+Un marqueur voit le tournoi dans sa propre liste dans l’administration, avec **Résultats** à la place de Gérer, et on ne lui propose que ses tests : ni équipes, ni notes, ni gestionnaires, ni marqueurs, ni classements. Il ne peut pas ouvrir la page d’une équipe, puisque qui joue pour une équipe, c’est aux gestionnaires d’en décider. Sur la page d’un test, il peut saisir, corriger, archiver, restaurer et réordonner les résultats comme un gestionnaire.
 
 ![La page d’un tournoi vue par un marqueur](images/scorer-tournament-page.png)
 
 Un gestionnaire ne devient pas marqueur, puisqu’un gestionnaire peut déjà faire tout ce qu’un marqueur peut faire. Un tournoi n’a pas besoin de marqueur ; chaque marqueur peut donc être retiré, le dernier y compris.
 
-Suite : [Modifier, archiver et restaurer un tournoi](changing-and-archiving.md).
+Suite : [Classements](rankings.md).

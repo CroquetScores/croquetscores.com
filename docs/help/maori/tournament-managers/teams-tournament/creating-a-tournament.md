@@ -31,7 +31,7 @@ Ko Paerewa te hōputu kotahi kāore e tākarohia ana e ngā kapa, ā, ehara i te
 
 **He taurite ngā Test ōrite.** Ka pātaihia anake ina kōwhiria he hōputu e tākarohia ana e ngā kapa. Ka toa tētahi Test i te kapa e toa ake ana i ōna tukinga, ā, ko tētahi e ōrite ana i ngā tukinga ka whakatauhia mā ngā tapeke tākaro, kātahi mā ngā tapeke hupa, ki te kore e tīkina tēnei, ā, ina tīkina, ka taurite tētahi Test e ōrite ana i ngā tukinga, pērā i tā ētahi whakataetae kapa. Kāore i tīkina i te tīmatanga mō Ā-kapa, ā, kua tīkina mō te GC World Team Championship, he taurite tonu tana Test ōrite.
 
-**Ka whakaarohia mō te raupapa o te ao.** Ka pātaihia anake ina taea te kaute: he whakataetae Association Croquet, Golf Croquet rānei kāore i tākarohia ki te hanikapa, kāore hoki e whakaae ki ngā taurite. Kua tīkina i te tīmatanga.
+**Ka whakaarohia mō te raupapa o te ao.** Ka pātaihia anake ina taea te kaute: he whakataetae Association Croquet, Golf Croquet, American 6 Wicket rānei kāore i tākarohia ki te hanikapa, kāore hoki e whakaae ki ngā taurite. Kua tīkina i te tīmatanga.
 
 **Takunetanga ā-motu** me **Takunetanga ā-ao.** Ka taea e tētahi whakataetae te noho hei tētahi, hei tētahi atu, hei kore rānei, engari kāore e taea te rua: ina tīkina tētahi ka tangohia te tīki o tērā atu.
 

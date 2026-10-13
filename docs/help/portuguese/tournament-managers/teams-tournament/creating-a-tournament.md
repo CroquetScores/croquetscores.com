@@ -31,7 +31,7 @@ Padrão é o único formato não disputado por equipes, e não é o que você qu
 
 **Testes empatados em pontos são empates.** Só é pedido depois que um formato disputado por equipes é escolhido. Um teste é ganho pela equipe que vence mais das suas partidas, e um teste igualado em partidas é decidido pelo saldo de jogos, depois pelo saldo de arcos, a menos que isto esteja marcado, caso em que um teste igualado em partidas é um empate, como alguns eventos por equipes têm. Começa desmarcado para Por equipes, e marcado para o GC World Team Championship, que sempre deu um teste igualado como empate.
 
-**Vale para os rankings mundiais.** Só é pedido quando pode valer: um torneio de Croquet de Associação ou de Golf Croquet que não é disputado com handicaps nem permite resultados empatados. Começa marcado.
+**Vale para os rankings mundiais.** Só é pedido quando pode valer: um torneio de Croquet de Associação, de Golf Croquet ou de Croquet Americano de 6 Arcos que não é disputado com handicaps nem permite resultados empatados. Começa marcado.
 
 **Evento de nível nacional** e **Evento de nível internacional.** Um torneio pode ser um, o outro, ou nenhum, mas nunca os dois: marcar um desmarca o outro.
 

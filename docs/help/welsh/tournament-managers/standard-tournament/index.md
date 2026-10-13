@@ -19,8 +19,9 @@ Gwneir popeth a wna rheolwr yn adran weinyddu'r wefan. Caiff y tudalennau cyhoed
 5. [Canlyniadau](scores.md): rhoi canlyniadau i mewn, eu cywiro, a rhoi'r rhai a roddwyd i mewn trwy gamgymeriad o'r neilltu.
 6. [Nodiadau](notes.md): dweud wrth y chwaraewyr beth sydd angen iddynt ei wybod wrth i'r twrnamaint fynd rhagddo.
 7. [Rheolwyr a sgorwyr](managers-and-scorers.md): rhannu'r gwaith o redeg y twrnamaint, a gadael i rywun roi canlyniadau i mewn heb allu newid dim arall.
-8. [Newid, archifo ac adfer twrnamaint](changing-and-archiving.md): cywiro manylion y twrnamaint, a rhoi twrnamaint o'r neilltu.
-9. [Beth mae'r cyhoedd yn ei weld](what-the-public-sees.md): y tudalennau y mae eich chwaraewyr yn eu dilyn, a sut mae'r hyn a roddwch i mewn yn ymddangos arnynt.
+8. [Safleoedd](rankings.md): y ffeil a anfonir at Safleoedd y Byd, a'r hyn sydd ar ôl i chi ei lenwi.
+9. [Newid, archifo ac adfer twrnamaint](changing-and-archiving.md): cywiro manylion y twrnamaint, a rhoi twrnamaint o'r neilltu.
+10. [Beth mae'r cyhoedd yn ei weld](what-the-public-sees.md): y tudalennau y mae eich chwaraewyr yn eu dilyn, a sut mae'r hyn a roddwch i mewn yn ymddangos arnynt.
 
 ## Sut mae'r adran weinyddu wedi'i gosod
 
@@ -28,7 +29,7 @@ Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran y
 
 ![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
-Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn pum tab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr** a **Sgorwyr**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
+Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Safleoedd**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
 
 ![Tudalen twrnamaint, ar ei thab Cystadlaethau](images/tournament-page.png)
 

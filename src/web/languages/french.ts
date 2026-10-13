@@ -477,7 +477,7 @@ export const french: Language = {
     "admin.rankings.spreadsheet":
       "Les résultats du tournoi sont envoyés au classement mondial sous forme de tableur, que le site écrit à partir des parties saisies.",
     "admin.rankings.fillInWinners":
-      "Le site ne peut que deviner qui a gagné chaque compétition ; vérifiez donc la ligne Vainqueur de chacune avant d'envoyer le fichier.",
+      "Le site ne peut que deviner qui a gagné chaque compétition ; vérifiez donc la ligne Winner de chacune avant d'envoyer le fichier.",
     "admin.rankings.fillInWinner":
       "Le site ne peut pas savoir qui a gagné le tournoi ; indiquez-le donc en bas du tableur avant de l'envoyer.",
     "admin.rankings.sendIt":

@@ -471,7 +471,7 @@ export const swedish: Language = {
     "admin.rankings.spreadsheet":
       "Turneringens resultat skickas till världsrankingen som ett kalkylblad, som webbplatsen skriver utifrån de inmatade matcherna.",
     "admin.rankings.fillInWinners":
-      "Webbplatsen kan bara gissa vem som vann varje tävling, så kontrollera raden Vinnare för var och en innan du skickar filen.",
+      "Webbplatsen kan bara gissa vem som vann varje tävling, så kontrollera raden Winner för var och en innan du skickar filen.",
     "admin.rankings.fillInWinner":
       "Webbplatsen kan inte veta vem som vann turneringen, så fyll i det längst ned i kalkylbladet innan du skickar det.",
     "admin.rankings.sendIt":

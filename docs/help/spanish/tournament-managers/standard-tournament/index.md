@@ -19,8 +19,9 @@ Todo lo que hace un gestor se hace en la sección de administración del sitio w
 5. [Resultados](scores.md): introducir resultados, corregirlos y apartar los introducidos por error.
 6. [Notas](notes.md): contar a los jugadores lo que necesitan saber según avanza el torneo.
 7. [Gestores y anotadores](managers-and-scorers.md): compartir la gestión del torneo, y dejar que alguien introduzca resultados sin poder cambiar nada más.
-8. [Cambiar, archivar y restaurar un torneo](changing-and-archiving.md): corregir los datos del torneo y apartar un torneo.
-9. [Lo que ve el público](what-the-public-sees.md): las páginas que siguen tus jugadores, y cómo aparece en ellas lo que introduces.
+8. [Rankings](rankings.md): el archivo que se envía al ranking mundial, y lo que te queda por rellenar.
+9. [Cambiar, archivar y restaurar un torneo](changing-and-archiving.md): corregir los datos del torneo y apartar un torneo.
+10. [Lo que ve el público](what-the-public-sees.md): las páginas que siguen tus jugadores, y cómo aparece en ellas lo que introduces.
 
 ## Cómo está organizada la administración
 
@@ -28,7 +29,7 @@ La puerta de entrada de la administración lista los torneos en los que particip
 
 ![La lista de torneos en la administración](images/admin-list.png)
 
-Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en cinco pestañas bajo su nombre: **Jugadores**, **Competiciones**, **Notas**, **Gestores** y **Anotadores**. La página se abre en Jugadores, porque los jugadores son lo primero que se introduce.
+Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en seis pestañas bajo su nombre: **Jugadores**, **Competiciones**, **Notas**, **Gestores**, **Anotadores** y **Rankings**. La página se abre en Jugadores, porque los jugadores son lo primero que se introduce.
 
 ![La página de un torneo, en su pestaña Competiciones](images/tournament-page.png)
 

@@ -16,7 +16,7 @@ Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la pág
 
 **Nombre** es obligatorio, de entre 3 y 254 caracteres. Dos jugadores de un mismo equipo no pueden tener el mismo nombre, sea cual sea su uso de mayúsculas; un jugador de otro equipo sí puede compartirlo.
 
-**Nombre en el ranking mundial** es el nombre por el que el ranking mundial conoce al jugador. Se pide solo en un torneo de Croquet Asociación o de Golf Croquet, los dos deportes con ranking mundial. Mientras añades a un jugador, sigue al nombre según lo escribes, y deja de seguirlo en cuanto escribes en él. Si se deja vacío, se guarda como el nombre del jugador. Según escribes, se ofrecen los jugadores que el ranking mundial conoce cuyos nombres empiezan así, y junto al nombre en el ranking mundial una marca de verificación dice que el ranking conoce el nombre y un signo de interrogación dice que no. Es solo un aviso: un nombre que el ranking no conoce se guarda igual que uno que sí.
+**Nombre en el ranking mundial** es el nombre por el que el ranking mundial conoce al jugador. Se pide solo en un torneo de Croquet Asociación o de Golf Croquet, los dos deportes de cuyos jugadores el ranking mundial lleva una lista. Los jugadores de Croquet americano de 6 aros son conocidos en el ranking por su propio nombre, así que ahí no se pide, y el nombre en el ranking mundial de cada jugador es siempre su nombre. Mientras añades a un jugador, sigue al nombre según lo escribes, y deja de seguirlo en cuanto escribes en él. Si se deja vacío, se guarda como el nombre del jugador. Según escribes, se ofrecen los jugadores que el ranking mundial conoce cuyos nombres empiezan así, y junto al nombre en el ranking mundial una marca de verificación dice que el ranking conoce el nombre y un signo de interrogación dice que no. Es solo un aviso: un nombre que el ranking no conoce se guarda igual que uno que sí.
 
 Un jugador nunca se llama "Bye": un nombre cuya primera palabra sea "bye" (la palabra inglesa) se rechaza.
 
@@ -24,7 +24,7 @@ Pulsa **Añadir**. El jugador se añade, el diálogo lo dice y sus campos se vac
 
 ## Corregir un jugador
 
-Pulsa el nombre de un jugador, o su **Editar**, para abrir el mismo diálogo sobre ese jugador, titulado Editar jugador. Pulsa **Guardar** para guardar el cambio. Un jugador cuyo nombre se corrige conserva el nombre en el ranking mundial que tenía.
+Pulsa el nombre de un jugador, o su **Editar**, para abrir el mismo diálogo sobre ese jugador, titulado Editar jugador. Pulsa **Guardar** para guardar el cambio. Un jugador cuyo nombre se corrige conserva el nombre en el ranking mundial que tenía, salvo en Croquet americano de 6 aros, donde el nombre de un jugador en el ranking mundial es siempre su nombre.
 
 ## Orden
 

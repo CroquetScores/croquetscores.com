@@ -454,7 +454,7 @@ export const chinese: Language = {
     "admin.rankings.spreadsheet":
       "世界排名收到的是以电子表格形式发送的比赛结果，由网站根据已录入的比赛生成。",
     "admin.rankings.fillInWinners":
-      "网站只能推测每项比赛的获胜者，因此发送文件前请检查每项比赛的“获胜者”一行。",
+      "网站只能推测每项比赛的获胜者，因此发送文件前请检查每项比赛的“Winner”一行。",
     "admin.rankings.fillInWinner":
       "网站无法知道谁赢得了锦标赛，因此发送前请在电子表格底部填写。",
     "admin.rankings.sendIt": "然后将文件发送给世界排名负责人。",

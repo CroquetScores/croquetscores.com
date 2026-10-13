@@ -19,8 +19,9 @@ Wszystko, co robi organizator, robi w sekcji administracji strony. Strony public
 5. [Wyniki](scores.md): wprowadzanie rezultatów, poprawianie ich i odkładanie na bok tych, które wprowadzono przez pomyłkę.
 6. [Notatki](notes.md): przekazywanie zawodnikom tego, co muszą wiedzieć w trakcie turnieju.
 7. [Organizatorzy i wprowadzający wyniki](managers-and-scorers.md): dzielenie się prowadzeniem turnieju i pozwalanie komuś na wprowadzanie wyników bez możliwości zmiany czegokolwiek innego.
-8. [Zmiana, archiwizowanie i przywracanie turnieju](changing-and-archiving.md): poprawianie szczegółów turnieju i odkładanie turnieju na bok.
-9. [Co widzą odbiorcy](what-the-public-sees.md): strony, które śledzą twoi zawodnicy, i to, jak pojawia się na nich to, co wprowadzasz.
+8. [Rankingi](rankings.md): plik, który wysyła się do rankingów światowych, i to, co zostaje do uzupełnienia.
+9. [Zmiana, archiwizowanie i przywracanie turnieju](changing-and-archiving.md): poprawianie szczegółów turnieju i odkładanie turnieju na bok.
+10. [Co widzą odbiorcy](what-the-public-sees.md): strony, które śledzą twoi zawodnicy, i to, jak pojawia się na nich to, co wprowadzasz.
 
 ## Jak zbudowana jest administracja
 
@@ -28,7 +29,7 @@ Strona wejściowa administracji wymienia turnieje, w których masz jakąś rolę
 
 ![Lista turniejów w administracji](images/admin-list.png)
 
-Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w pięciu kartach pod jego nazwą: **Zawodnicy**, **Konkurencje**, **Notatki**, **Organizatorzy** i **Wprowadzający wyniki**. Strona otwiera się na karcie Zawodnicy, bo zawodnicy są pierwszą rzeczą, którą się wprowadza.
+Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w sześciu kartach pod jego nazwą: **Zawodnicy**, **Konkurencje**, **Notatki**, **Organizatorzy**, **Wprowadzający wyniki** i **Rankingi**. Strona otwiera się na karcie Zawodnicy, bo zawodnicy są pierwszą rzeczą, którą się wprowadza.
 
 ![Strona turnieju, na karcie Konkurencje](images/tournament-page.png)
 

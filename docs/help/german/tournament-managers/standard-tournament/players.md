@@ -18,7 +18,7 @@ Drücke **Spieler hinzufügen** über der Liste. Ein Dialog öffnet sich über d
 
 **Flagge** ist die Flagge, die neben dem Namen des Spielers gezeigt wird. Sie kann auf „keine“ bleiben, was bei den meisten Spielern so ist. Was ein Spieler vertritt und welche Flagge er führt, wird getrennt gehalten, weil ein Spieler für einen Verein in einem Land spielen und die Flagge eines anderen führen kann.
 
-**Name in der Weltrangliste** ist der Name, unter dem die Weltrangliste den Spieler kennt. Danach wird nur bei einem Turnier im Association Croquet oder Golf Croquet gefragt, den beiden Sportarten mit Weltrangliste. Während du einen Spieler hinzufügst, folgt er dem Namen, während du ihn tippst, weil die meisten Spieler der Rangliste unter ihrem eigenen Namen bekannt sind, und hört auf zu folgen, sobald du in ihm selbst tippst. Bleibt er leer, wird der Name des Spielers gespeichert.
+**Name in der Weltrangliste** ist der Name, unter dem die Weltrangliste den Spieler kennt. Danach wird nur bei einem Turnier im Association Croquet oder Golf Croquet gefragt, den beiden Sportarten, deren Spieler die Weltrangliste in einer Liste führt. Die Spieler im American 6 Wicket sind der Rangliste unter ihrem eigenen Namen bekannt; danach wird dort also nicht gefragt, und der Name in der Weltrangliste ist bei jedem Spieler immer sein Name. Während du einen Spieler hinzufügst, folgt er dem Namen, während du ihn tippst, weil die meisten Spieler der Rangliste unter ihrem eigenen Namen bekannt sind, und hört auf zu folgen, sobald du in ihm selbst tippst. Bleibt er leer, wird der Name des Spielers gespeichert.
 
 Während du einen Namen tippst, werden die Spieler angeboten, die die Weltrangliste kennt und deren Namen so beginnen, damit du einen Namen so übernehmen kannst, wie die Rangliste ihn schreibt, statt ihn auszutippen. Neben dem Namen in der Weltrangliste sagt ein Haken, dass die Rangliste den Namen kennt, und ein Fragezeichen, dass sie ihn nicht kennt: Vielleicht ist er falsch geschrieben, oder der Spieler ist neu in der Rangliste. Das ist nur ein Hinweis. Ein Name, den die Rangliste nicht kennt, wird genauso bereitwillig gespeichert wie einer, den sie kennt.
 
@@ -30,7 +30,7 @@ Ein Spieler heißt nie „Bye“, das englische Wort für Freilos. Die Freilose 
 
 ## Einen Spieler korrigieren
 
-Drücke den Namen eines Spielers oder sein **Bearbeiten**, um denselben Dialog für diesen Spieler zu öffnen, mit dem Titel Spieler bearbeiten. Ändere, was falsch ist, und drücke **Speichern**, was die Änderung speichert und den Dialog schließt. Ein Spieler, dessen Name korrigiert wird, behält den Namen in der Weltrangliste, den er hatte, weil die Rangliste ihn weiterhin unter ihm kennt.
+Drücke den Namen eines Spielers oder sein **Bearbeiten**, um denselben Dialog für diesen Spieler zu öffnen, mit dem Titel Spieler bearbeiten. Ändere, was falsch ist, und drücke **Speichern**, was die Änderung speichert und den Dialog schließt. Ein Spieler, dessen Name korrigiert wird, behält den Namen in der Weltrangliste, den er hatte, weil die Rangliste ihn weiterhin unter ihm kennt. Im American 6 Wicket ist der Name eines Spielers in der Weltrangliste immer sein Name, daher wird er mit dem Namen auch korrigiert.
 
 ![Der Dialog Spieler bearbeiten](images/edit-player-dialog.png)
 

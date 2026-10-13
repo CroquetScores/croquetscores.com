@@ -24,7 +24,7 @@ Das Formular fragt nach allem, womit ein Turnier beginnt. Für ein gewöhnliches
 
 **Unentschieden erlaubt.** Hake das an, wenn ein Spiel enden kann, ohne dass einer der Spieler gewinnt. Die meisten Turniere erlauben das nicht. Ist es angehakt, wird ein Ergebnis mit gleichen Punkten und ohne Markierung als Unentschieden gespeichert; ist es nicht angehakt, muss ein Spiel mit gleichen Punkten durch eine Markierung hinter den Punkten des Siegers sagen, wer gewonnen hat, etwa „6w“.
 
-**Zählt für die Weltrangliste.** Wird nur gefragt, wo es zählen kann: bei einem Turnier im Association Croquet oder Golf Croquet, das weder mit Handicap gespielt wird noch Unentschieden erlaubt. Es ist zu Beginn angehakt, nimm den Haken also weg bei einem Turnier, das nicht zählen soll.
+**Zählt für die Weltrangliste.** Wird nur gefragt, wo es zählen kann: bei einem Turnier im Association Croquet, Golf Croquet oder American 6 Wicket, das weder mit Handicap gespielt wird noch Unentschieden erlaubt. Es ist zu Beginn angehakt, nimm den Haken also weg bei einem Turnier, das nicht zählen soll.
 
 **Veranstaltung auf nationaler Ebene** und **Veranstaltung auf internationaler Ebene.** Ein Turnier kann das eine, das andere oder keines von beiden sein, aber nie beides: Wer das eine anhakt, nimmt beim anderen den Haken weg.
 

@@ -24,7 +24,7 @@ The form asks for everything a tournament begins with. A tournament of the ordin
 
 **Allows drawn results.** Tick this where a game can end with neither player the winner. Most tournaments do not allow it. Where it is ticked, a score entered with equal points and no mark is kept as a draw; where it is not, a game on equal points has to say who won it by a mark after the winner's score, such as "6w".
 
-**Counts toward world rankings.** Asked only where it can be counted: a tournament of Association Croquet or Golf Croquet that is neither played with handicaps nor allows drawn results. It is ticked to begin with, so untick it for a tournament that is not to count.
+**Counts toward world rankings.** Asked only where it can be counted: a tournament of Association Croquet, Golf Croquet or American 6 Wicket that is neither played with handicaps nor allows drawn results. It is ticked to begin with, so untick it for a tournament that is not to count.
 
 **National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other.
 

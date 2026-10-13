@@ -22,10 +22,10 @@ Der Reiter **Ergebniserfasser** ist der Reiter Turnierleitung für Ergebniserfas
 
 ![Der Reiter Ergebniserfasser](images/scorers-tab.png)
 
-Ein Ergebniserfasser sieht das Turnier in seiner eigenen Liste in der Verwaltung, mit **Ergebnisse** an der Stelle von Verwalten, und bekommt nur seine Tests angeboten: keine Mannschaften, Hinweise, Turnierleitung oder Ergebniserfasser. Die Seite einer Mannschaft kann er nicht öffnen, weil die Turnierleitung entscheidet, wer für eine Mannschaft spielt. Auf der Seite eines Tests kann er Ergebnisse eingeben, korrigieren, archivieren, wiederherstellen und ordnen wie ein Turnierleiter.
+Ein Ergebniserfasser sieht das Turnier in seiner eigenen Liste in der Verwaltung, mit **Ergebnisse** an der Stelle von Verwalten, und bekommt nur seine Tests angeboten: keine Mannschaften, Hinweise, Turnierleitung, Ergebniserfasser oder Ranglisten. Die Seite einer Mannschaft kann er nicht öffnen, weil die Turnierleitung entscheidet, wer für eine Mannschaft spielt. Auf der Seite eines Tests kann er Ergebnisse eingeben, korrigieren, archivieren, wiederherstellen und ordnen wie ein Turnierleiter.
 
 ![Die Turnierseite, wie ein Ergebniserfasser sie sieht](images/scorer-tournament-page.png)
 
 Ein Turnierleiter wird nicht zum Ergebniserfasser gemacht, weil ein Turnierleiter schon alles kann, was ein Ergebniserfasser kann. Ein Turnier braucht keinen Ergebniserfasser, deshalb kann jeder Ergebniserfasser entfernt werden, auch der letzte.
 
-Weiter: [Ein Turnier ändern, archivieren und wiederherstellen](changing-and-archiving.md).
+Weiter: [Ranglisten](rankings.md).

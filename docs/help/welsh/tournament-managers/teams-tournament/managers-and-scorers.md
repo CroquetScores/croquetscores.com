@@ -22,10 +22,10 @@ Y tab **Sgorwyr** yw'r tab Rheolwyr ar gyfer sgorwyr, ac mae'n gweithio yn yr un
 
 ![Y tab Sgorwyr](images/scorers-tab.png)
 
-Mae sgoriwr yn gweld y twrnamaint yn ei restr ei hun yn yr adran weinyddu, â **Canlyniadau** yn lle Rheoli, a dim ond ei destau a gynigir iddo: dim timau, nodiadau, rheolwyr na sgorwyr. Ni all agor tudalen tîm, gan mai'r rheolwyr sy'n dweud pwy sy'n chwarae dros dîm. Ar dudalen test gall roi canlyniadau i mewn, eu cywiro, eu harchifo, eu hadfer a'u haildrefnu fel y gall rheolwr.
+Mae sgoriwr yn gweld y twrnamaint yn ei restr ei hun yn yr adran weinyddu, â **Canlyniadau** yn lle Rheoli, a dim ond ei destau a gynigir iddo: dim timau, nodiadau, rheolwyr, sgorwyr na safleoedd. Ni all agor tudalen tîm, gan mai'r rheolwyr sy'n dweud pwy sy'n chwarae dros dîm. Ar dudalen test gall roi canlyniadau i mewn, eu cywiro, eu harchifo, eu hadfer a'u haildrefnu fel y gall rheolwr.
 
 ![Golwg sgoriwr ar dudalen twrnamaint](images/scorer-tournament-page.png)
 
 Ni wneir rheolwr yn sgoriwr, gan y gall rheolwr eisoes wneud popeth y gall sgoriwr ei wneud. Nid oes angen sgoriwr ar dwrnamaint, felly gellir tynnu pob sgoriwr, yr olaf yn eu plith.
 
-Nesaf: [Newid, archifo ac adfer twrnamaint](changing-and-archiving.md).
+Nesaf: [Safleoedd](rankings.md).

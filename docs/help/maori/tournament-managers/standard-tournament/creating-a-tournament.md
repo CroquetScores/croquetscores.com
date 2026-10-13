@@ -24,7 +24,7 @@ Ka pātai te puka mō ngā mea katoa e tīmata ai tētahi whakataetae. Mō tēta
 
 **Ka whakaaetia ngā taurite.** Tīkina tēnei ina taea e tētahi tākaro te mutu me te kore he toa o tētahi o ngā kaitākaro. Kāore te nuinga o ngā whakataetae e whakaae. Ina tīkina, ka mau tonu hei taurite tētahi hua i whakaurua me ngā tohu ōrite, ā, kāore he tohu; ina kāore i tīkina, me kī te tākaro i whai ngā tohu ōrite ko wai te toa mā te tohu i muri i te hua a te toa, pēnei i te "6w".
 
-**Ka whakaarohia mō te raupapa o te ao.** Ka pātaihia anake ina taea te kaute: he whakataetae Association Croquet, Golf Croquet rānei kāore i tākarohia ki te hanikapa, kāore hoki e whakaae ki ngā taurite. Kua tīkina i te tīmatanga, nō reira me tango te tīki mō tētahi whakataetae kāore e kaute.
+**Ka whakaarohia mō te raupapa o te ao.** Ka pātaihia anake ina taea te kaute: he whakataetae Association Croquet, Golf Croquet, American 6 Wicket rānei kāore i tākarohia ki te hanikapa, kāore hoki e whakaae ki ngā taurite. Kua tīkina i te tīmatanga, nō reira me tango te tīki mō tētahi whakataetae kāore e kaute.
 
 **Takunetanga ā-motu** me **Takunetanga ā-ao.** Ka taea e tētahi whakataetae te noho hei tētahi, hei tētahi atu, hei kore rānei, engari kāore e taea te rua: ina tīkina tētahi ka tangohia te tīki o tērā atu.
 

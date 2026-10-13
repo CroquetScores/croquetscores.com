@@ -471,7 +471,7 @@ export const spanish: Language = {
     "admin.rankings.spreadsheet":
       "Los resultados del torneo se envían al ranking mundial como una hoja de cálculo, que el sitio escribe a partir de las partidas introducidas.",
     "admin.rankings.fillInWinners":
-      "El sitio solo puede adivinar quién ganó cada competición, así que revise la línea Ganador de cada una antes de enviar el archivo.",
+      "El sitio solo puede adivinar quién ganó cada competición, así que revise la línea Winner de cada una antes de enviar el archivo.",
     "admin.rankings.fillInWinner":
       "El sitio no puede saber quién ganó el torneo, así que anótelo al final de la hoja de cálculo antes de enviarla.",
     "admin.rankings.sendIt":

@@ -24,10 +24,10 @@ Ko te ripa **Ngā kaikaute** te ripa Ngā kaiwhakahaere mō ngā kaikaute, ā, h
 
 ![Te ripa Ngā kaikaute](images/scorers-tab.png)
 
-Ka kite te kaikaute i te whakataetae i tōna ake rārangi i te Whakahaere, me **Ngā hua** hei whakakapi mō Whakahaere, ā, ka tukuna ki a ia ōna tauwhāinga anake: kāore he kaitākaro, tuhipoka, kaiwhakahaere, kaikaute rānei. I te whārangi o tētahi tauwhāinga ka kite ia i te ripa Ngā hua anake, ka taea e ia te whakauru, te whakatika, te pūranga me te whakahoki i ngā hua pēnei i te kaiwhakahaere. Ko ngā kaiwhakahaere anake e kī ai ko wai ka tākaro i tētahi tauwhāinga.
+Ka kite te kaikaute i te whakataetae i tōna ake rārangi i te Whakahaere, me **Ngā hua** hei whakakapi mō Whakahaere, ā, ka tukuna ki a ia ōna tauwhāinga anake: kāore he kaitākaro, tuhipoka, kaiwhakahaere, kaikaute, raupapa rānei. I te whārangi o tētahi tauwhāinga ka kite ia i te ripa Ngā hua anake, ka taea e ia te whakauru, te whakatika, te pūranga me te whakahoki i ngā hua pēnei i te kaiwhakahaere. Ko ngā kaiwhakahaere anake e kī ai ko wai ka tākaro i tētahi tauwhāinga.
 
 ![Te tirohanga a te kaikaute ki te whārangi o tētahi whakataetae](images/scorer-tournament-page.png)
 
 Kāore te kaiwhakahaere e meinga hei kaikaute, nā te mea ka taea e te kaiwhakahaere ngā mea katoa e taea ana e te kaikaute. Kāore tētahi whakataetae e hiahia kaikaute, nō reira ka taea te tango i ngā kaikaute katoa, tae atu ki te whakamutunga o rātou.
 
-E whai ake nei: [Te whakarerekē, te pūranga me te whakahoki i tētahi whakataetae](changing-and-archiving.md).
+E whai ake nei: [Ngā raupapa](rankings.md).

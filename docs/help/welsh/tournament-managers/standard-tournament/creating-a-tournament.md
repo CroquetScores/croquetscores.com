@@ -24,7 +24,7 @@ Mae'r ffurflen yn gofyn am bopeth y mae twrnamaint yn dechrau ag ef. Nid yw twrn
 
 **Caniatáu gemau cyfartal.** Ticiwch hwn lle gall gêm orffen heb i'r un o'r ddau chwaraewr fod yn enillydd. Nid yw'r mwyafrif o dwrnameintiau'n ei ganiatáu. Lle mae wedi'i dicio, caiff sgôr a roddir i mewn â phwyntiau cyfartal a dim marc ei chadw fel gêm gyfartal; lle nad yw, rhaid i gêm ar bwyntiau cyfartal ddweud pwy a'i henillodd â marc ar ôl sgôr yr enillydd, fel "6w".
 
-**Yn cyfrif tuag at Safleoedd y Byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: twrnamaint Croce Cymdeithas neu Groce Golff na chaiff ei chwarae gyda handicap ac nad yw'n caniatáu gemau cyfartal. Mae wedi'i dicio i ddechrau, felly dad-diciwch ef ar gyfer twrnamaint nad yw i gyfrif.
+**Yn cyfrif tuag at Safleoedd y Byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: twrnamaint Croce Cymdeithas, Croce Golff neu Groce Americanaidd 6 Chylch na chaiff ei chwarae gyda handicap ac nad yw'n caniatáu gemau cyfartal. Mae wedi'i dicio i ddechrau, felly dad-diciwch ef ar gyfer twrnamaint nad yw i gyfrif.
 
 **Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol.** Gall twrnamaint fod yn un, y llall, neu'r un o'r ddau, ond byth y ddau: mae ticio un yn dad-dicio'r llall.
 

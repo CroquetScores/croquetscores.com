@@ -24,7 +24,7 @@ Formuläret frågar efter allt en turnering börjar med. En turnering av det van
 
 **Tillåter oavgjorda resultat.** Bocka för det här där ett parti kan sluta utan att någon av spelarna vinner. De flesta turneringar tillåter det inte. Där det är förbockat sparas ett resultat med lika poäng och utan markering som oavgjort; där det inte är det måste ett parti med lika poäng säga vem som vann genom en markering efter vinnarens resultat, till exempel "6w".
 
-**Räknas med i världsrankingen.** Frågas bara där det kan räknas: en turnering i associationscroquet eller golfcroquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början, så bocka av det för en turnering som inte ska räknas.
+**Räknas med i världsrankingen.** Frågas bara där det kan räknas: en turnering i associationscroquet, golfcroquet eller amerikansk 6-bågars croquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början, så bocka av det för en turnering som inte ska räknas.
 
 **Tävling på nationell nivå** och **Tävling på internationell nivå.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av.
 
