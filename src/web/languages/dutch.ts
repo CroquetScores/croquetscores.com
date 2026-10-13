@@ -35,6 +35,13 @@ export const dutch: Language = {
     "language.label": "Taal",
     "language.choose": "Wijzigen",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Er is iets nieuws om te lezen.",
+    "whatsNew.admin.message": "Er is iets nieuws voor wie toernooien beheert.",
+    "whatsNew.view": "Bekijk wat er nieuw is",
+    "whatsNew.later": "Herinner me de volgende keer",
+    "whatsNew.never": "Toon me deze melding nooit meer",
+
     "form.otherwise":
       "Er klopt hier iets niet. Controleer wat je hebt ingevoerd en probeer het opnieuw.",
 

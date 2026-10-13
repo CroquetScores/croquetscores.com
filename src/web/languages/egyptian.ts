@@ -43,6 +43,13 @@ export const egyptian: Language = {
     "language.label": "اللغة",
     "language.choose": "غيّر",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "في حاجة جديدة تقراها.",
+    "whatsNew.admin.message": "في حاجة جديدة لمدراء البطولات.",
+    "whatsNew.view": "شوف الجديد",
+    "whatsNew.later": "فكّرني المرة الجاية",
+    "whatsNew.never": "ما تورّينيش التنبيه ده تاني",
+
     "form.otherwise": "في حاجة مش مظبوطة. راجع اللي كتبته وجرّب تاني.",
 
     "account.menu": "الحساب",

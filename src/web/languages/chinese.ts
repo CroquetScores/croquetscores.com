@@ -40,6 +40,13 @@ export const chinese: Language = {
     "language.label": "语言",
     "language.choose": "更改",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "有新内容可以阅读。",
+    "whatsNew.admin.message": "有适用于赛事管理者的新内容。",
+    "whatsNew.view": "查看新内容",
+    "whatsNew.later": "下次再提醒我",
+    "whatsNew.never": "不再显示此提示",
+
     "form.otherwise": "有些地方不对。请检查输入的内容，然后再试一次。",
 
     "account.menu": "账户",

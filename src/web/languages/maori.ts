@@ -40,6 +40,13 @@ export const maori: Language = {
     "language.label": "Reo",
     "language.choose": "Whakarerekē",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "He mea hou hei pānui.",
+    "whatsNew.admin.message": "He mea hou mō ngā kaiwhakahaere whakataetae.",
+    "whatsNew.view": "Tirohia ngā mea hou",
+    "whatsNew.later": "Whakamahara mai a muri ake",
+    "whatsNew.never": "Kaua rawa e whakaatu anō i tēnei whakamōhiotanga",
+
     "form.otherwise":
       "He hē tētahi mea. Tirohia ngā mea i whakauru ai koe, ka whakamātau anō.",
 

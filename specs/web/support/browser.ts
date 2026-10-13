@@ -144,6 +144,17 @@ export const anApplicationWithHelp = (
   help: HelpLibrary,
 ): Promise<string> => anApplicationWith(world, {}, "its own", help);
 
+/**
+ * An application of this scenario's own reading the help it is given, and
+ * otherwise as {@link anApplicationCalled}: offering the scenarios' English and
+ * test locale, for a scenario that holds the words of a page to the test locale
+ * as well as giving it help of its own.
+ */
+export const anApplicationWithHelpInTheScenariosLanguages = (
+  world: SpecWorld,
+  help: HelpLibrary,
+): Promise<string> => anApplicationWith(world, {}, undefined, help);
+
 // Which languages a scenario's application offers: the scenarios', or the
 // site's own. Named rather than left as undefined for the second, because an
 // undefined argument takes a parameter's default, which is the first.

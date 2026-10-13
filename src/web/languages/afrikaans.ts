@@ -38,6 +38,14 @@ export const afrikaans: Language = {
     "language.label": "Taal",
     "language.choose": "Verander",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Daar is iets nuuts om te lees.",
+    "whatsNew.admin.message":
+      "Daar is iets nuuts vir mense wat toernooie bestuur.",
+    "whatsNew.view": "Kyk wat is nuut",
+    "whatsNew.later": "Herinner my volgende keer",
+    "whatsNew.never": "Moet my nooit hierdie kennisgewing wys nie",
+
     "form.otherwise":
       "Iets is nie reg nie. Gaan na wat jy ingevoer het en probeer weer.",
 

@@ -6,6 +6,7 @@ import { ChangeTeamPlayerWorldRankingNameHandler } from "../application/operatio
 import { ChangeTeamPlayerWorldRankingNameValidator } from "../application/operations/tournaments/ChangeTeamPlayerWorldRankingNameValidator.js";
 import Fastify, {
   type FastifyInstance,
+  type FastifyRequest,
   type FastifyServerOptions,
 } from "fastify";
 import cookie from "@fastify/cookie";
@@ -264,7 +265,11 @@ import {
 } from "./common/reader.js";
 import type { InTransaction } from "./common/database.js";
 import { readerFromSessions, registerSignOut } from "./common/session.js";
-import { speakToRequests, type Language } from "./common/language.js";
+import {
+  speakingOf,
+  speakToRequests,
+  type Language,
+} from "./common/language.js";
 import { sendersBelieved } from "./common/trustedProxy.js";
 import { nameTheSite } from "./common/site.js";
 import {
@@ -369,6 +374,8 @@ import { registerHelpPages } from "./public/help.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
+import { registerWhatsNewRoute } from "./public/whatsNew.js";
+import { releaseOf, whatsNewAlert } from "./common/whatsNew.js";
 import { registerWelcomePage } from "./public/welcome.js";
 
 const repositoryRoot = join(import.meta.dirname, "..", "..");
@@ -549,6 +556,7 @@ const registerAdmin = async (
   adminRoot: string,
   page: string | undefined,
   build: () => string,
+  help: HelpLibrary,
 ): Promise<void> => {
   if (page === undefined) {
     // A fresh clone has not built the SPA yet. Say so, rather than 404ing as
@@ -573,6 +581,18 @@ const registerAdmin = async (
     wildcard: false,
   });
   const built = builtAdminPage(page);
+  // Only the admin's first page tells a reader of what's new: a reader going
+  // somewhere deeper has said where they are going.
+  const alertFor = async (request: FastifyRequest): Promise<string> =>
+    new URL(request.url, "http://admin.invalid").pathname === "/admin/"
+      ? whatsNewAlert(
+          request,
+          speakingOf(request),
+          "admin",
+          await releaseOf(help, server.languages[0]?.tag, "admin"),
+          request.url,
+        )
+      : "";
   server.get("/admin", (_request, reply) => reply.redirect("/admin/", 308));
   // What every other page is sent with, for the same reason: the page is now
   // drawn from the reader's cookies and the languages their browser asks for.
@@ -585,7 +605,7 @@ const registerAdmin = async (
   // that they do not announce themselves to whoever may not open them. A
   // reader not signed in is still sent to sign in, since they may be an
   // administrator who has not said so yet.
-  server.get("/admin/*", (request, reply) => {
+  server.get("/admin/*", async (request, reply) => {
     if (!signedIn(request)) return toSignIn(request, reply);
     if (administratorsOnly.test(request.url) && !isAdministrator(request)) {
       return reply.callNotFound();
@@ -594,7 +614,7 @@ const registerAdmin = async (
       .header("cache-control", "private, no-cache")
       .header("vary", "Cookie, Accept-Language")
       .type("text/html; charset=utf-8")
-      .send(adminPage(built, request, build()));
+      .send(adminPage(built, request, build(), await alertFor(request)));
   });
 };
 
@@ -1364,7 +1384,12 @@ export const buildApplication = async (
 
   registerAssets(server, assets);
 
-  await registerAdmin(server, adminRoot, adminPageBuilt, build);
+  // The help, read for the pages of it and for what's new, which the alerts go
+  // by.
+  const help =
+    options.help ?? helpLibraryIn(join(repositoryRoot, "dist", "help"));
+
+  await registerAdmin(server, adminRoot, adminPageBuilt, build, help);
 
   registerThemeRoute(server);
   registerLanguageRoute(server);
@@ -1436,12 +1461,9 @@ export const buildApplication = async (
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);
   registerJavaScriptRequiredPage(server, assets);
-  registerHelpPages(
-    server,
-    assets,
-    options.help ?? helpLibraryIn(join(repositoryRoot, "dist", "help")),
-  );
-  registerHomePage(server, assets);
+  registerHelpPages(server, assets, help);
+  registerWhatsNewRoute(server, help);
+  registerHomePage(server, assets, help);
   registerYearPage(server, assets);
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);

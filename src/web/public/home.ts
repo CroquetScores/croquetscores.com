@@ -16,6 +16,8 @@ import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
+import type { HelpLibrary } from "../common/helpLibrary.js";
+import { releaseOf, whatsNewAlert } from "../common/whatsNew.js";
 import {
   askedOf,
   filter,
@@ -31,6 +33,7 @@ export const homePath = "/";
 export const registerHomePage = (
   server: FastifyInstance,
   assets: Assets,
+  help: HelpLibrary,
 ): void => {
   server.get(homePath, async (request, reply) => {
     const website = websiteOf(request);
@@ -77,7 +80,14 @@ export const registerHomePage = (
       render(assets, {
         ...shell,
         ...yearsOf(years, speaking),
-        body: `${filter(request, asked, speaking)}
+        body: `${whatsNewAlert(
+          request,
+          speaking,
+          "public",
+          await releaseOf(help, server.languages[0]?.tag, "public"),
+          request.url,
+        )}
+${filter(request, asked, speaking)}
           <div class="home-lists">
 ${table(
   {

@@ -9,6 +9,8 @@ import { resolve, sep } from "node:path";
 export interface HelpPage {
   readonly title: string;
   readonly html: string;
+  /** When a page of what's new was released, as "2026-10-13". */
+  readonly released?: string | undefined;
 }
 
 export interface HelpLibrary {

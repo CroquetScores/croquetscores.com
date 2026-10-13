@@ -90,6 +90,13 @@ const adminBuild = (build: string): string =>
     build,
   ).replace(/</g, "\\u003c")}</script>`;
 
+// Set in the page's width, as the try website's banner is, since nothing
+// around it is a panel.
+const alertBar = (alert: string): string =>
+  alert === ""
+    ? ""
+    : `<div class="whats-new-bar"><div class="page">${alert}</div></div>`;
+
 /**
  * The admin's page as it is sent to whoever `request` is from, naming `build`
  * as the build it is.
@@ -98,6 +105,8 @@ export const adminPage = (
   built: string,
   request: FastifyRequest,
   build: string,
+  // The alert about what's new, already drawn, where the reader is to be told.
+  alert = "",
 ): string => {
   const siteName = siteNameOf(request);
   const theme = themeOf(request);
@@ -141,7 +150,7 @@ export const adminPage = (
           currentPath: "/admin/",
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
-        })}${banner}${adminWords(speaking)}${adminBuild(build)}`;
+        })}${banner}${alertBar(alert)}${adminWords(speaking)}${adminBuild(build)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.

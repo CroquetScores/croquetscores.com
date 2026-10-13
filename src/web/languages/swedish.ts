@@ -37,6 +37,14 @@ export const swedish: Language = {
     "language.label": "Språk",
     "language.choose": "Byt",
 
+    // The alert that tells a reader there is something new to read.
+    "whatsNew.public.message": "Det finns något nytt att läsa.",
+    "whatsNew.admin.message":
+      "Det finns något nytt för dig som arrangerar turneringar.",
+    "whatsNew.view": "Se vad som är nytt",
+    "whatsNew.later": "Påminn mig nästa gång",
+    "whatsNew.never": "Visa aldrig det här meddelandet igen",
+
     "form.otherwise":
       "Något stämmer inte här. Kontrollera det du skrev in och försök igen.",
 

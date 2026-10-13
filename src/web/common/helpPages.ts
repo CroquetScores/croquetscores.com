@@ -23,6 +23,11 @@ export interface ConvertedHelpPage {
   readonly pagesLinkedTo: readonly string[];
   /** Where the pictures it shows are, as {@link helpImageName} names them. */
   readonly imagesShown: readonly string[];
+  /**
+   * The date, as 2026-10-13, a page of what's new says it was released, by a
+   * second level heading "Released 2026-10-13"; nothing where it says none.
+   */
+  readonly released: string | undefined;
 }
 
 // Pictures are kept once, among the English pages, and the other languages
@@ -68,6 +73,20 @@ const markdown = (): MarkdownIt =>
 
 const inlineTokens = (tokens: readonly Token[]): Token[] =>
   tokens.flatMap((token) => [token, ...inlineTokens(token.children ?? [])]);
+
+const releasedHeading = /^Released (\d{4}-\d{2}-\d{2})$/;
+
+// Read from a heading rather than from a line of its own, so that the date is
+// on the page for a reader as well as for the alert: the page says what it is,
+// and the alert goes by what the page says.
+const releasedOf = (tokens: readonly Token[]): string | undefined => {
+  for (const [index, token] of tokens.entries()) {
+    if (token.type !== "heading_open" || token.tag !== "h2") continue;
+    const found = releasedHeading.exec(tokens[index + 1]?.content ?? "");
+    if (found !== null) return found[1];
+  }
+  return undefined;
+};
 
 /**
  * `markdown` of the page at `pagePath`, which is where it is among its
@@ -116,5 +135,6 @@ export const convertHelpPage = (
     html: reader.renderer.render(tokens, reader.options, {}),
     pagesLinkedTo,
     imagesShown,
+    released: releasedOf(tokens),
   };
 };

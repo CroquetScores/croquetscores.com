@@ -19,6 +19,11 @@ import { directionAttribute, speakingOf } from "../common/language.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
+import {
+  alertKindOfPage,
+  rememberRead,
+  releaseOf,
+} from "../common/whatsNew.js";
 
 const imageTypes: Readonly<Record<string, string>> = {
   ".png": "image/png",
@@ -97,6 +102,15 @@ export const registerHelpPages = (
     if (page === undefined || writtenIn === undefined) {
       reply.callNotFound();
       return reply;
+    }
+
+    // Being shown a page of what's new is what has the alert go quiet, however
+    // the reader came to it. By the release the first language's page names,
+    // which is the one the alert goes by.
+    const kind = alertKindOfPage(name);
+    if (kind !== undefined) {
+      const released = await releaseOf(library, fallback?.tag, kind);
+      if (released !== undefined) rememberRead(request, reply, kind, released);
     }
 
     const html = render(assets, {

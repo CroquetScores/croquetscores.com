@@ -107,10 +107,30 @@ for (const folder of languageFolders) {
       problems.push(`${folder}/${file} has no heading to be called by.`);
     }
 
+    // The English page of what's new is what the alert goes by
+    // (whatsNew.ts), so one that does not say when it was released would
+    // silently never be announced.
+    if (
+      folder === "english" &&
+      /(^|\/)whats-new\.md$/.test(file) &&
+      page.released === undefined
+    ) {
+      problems.push(
+        `${folder}/${file} does not say when it was released, by a heading "## Released 2026-10-13".`,
+      );
+    }
+
     // A folder's index sits as index.json beside its other pages.
     const out = join(built, language.tag, file.replace(/\.md$/, ".json"));
     mkdirSync(dirname(out), { recursive: true });
-    writeFileSync(out, JSON.stringify({ title: page.title, html: page.html }));
+    writeFileSync(
+      out,
+      JSON.stringify({
+        title: page.title,
+        html: page.html,
+        released: page.released,
+      }),
+    );
   }
 }
 
