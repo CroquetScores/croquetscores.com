@@ -465,6 +465,27 @@ export const dutch: Language = {
     "admin.view.managers": "Beheerders",
     "admin.view.notes": "Notities",
     "admin.view.scorers": "Scorers",
+    "admin.view.rankings": "Ranglijsten",
+    "admin.rankings.textFile":
+      "De uitslagen van het toernooi worden als tekstbestand naar de wereldranglijst gestuurd, dat de site schrijft uit de ingevoerde partijen.",
+    "admin.rankings.spreadsheet":
+      "De uitslagen van het toernooi worden als spreadsheet naar de wereldranglijst gestuurd, die de site schrijft uit de ingevoerde partijen.",
+    "admin.rankings.fillInWinners":
+      "De site kan alleen raden wie elke competitie won, dus controleer de regel Winnaar van elk voordat je het bestand verstuurt.",
+    "admin.rankings.fillInWinner":
+      "De site kan niet weten wie het toernooi won, dus vul dat onderaan de spreadsheet in voordat je die verstuurt.",
+    "admin.rankings.sendIt":
+      "Stuur het bestand daarna naar de functionarissen van de wereldranglijst.",
+    "admin.rankings.download": "Ranglijsten downloaden",
+    "rankings.notAvailable": "Ranglijsten zijn niet beschikbaar",
+    "rankings.notAvailable.sport":
+      "De sport van dit toernooi heeft geen wereldranglijst, dus er zijn geen ranglijsten om te versturen.",
+    "rankings.notAvailable.handicap":
+      "Dit toernooi wordt met handicap gespeeld, dus het telt niet mee voor de wereldranglijst.",
+    "rankings.notAvailable.drawnGames":
+      "Dit toernooi staat gelijkspel toe, dus het telt niet mee voor de wereldranglijst.",
+    "rankings.notAvailable.notCounted":
+      "De beheerder van dit toernooi heeft aangegeven dat het niet meetelt voor de wereldranglijst.",
     "admin.view.otherwise": "Dit toernooi kan van hieruit niet worden beheerd.",
     "admin.competitionView.tabs": "Competitie",
     "admin.competitionView.players": "Spelers",

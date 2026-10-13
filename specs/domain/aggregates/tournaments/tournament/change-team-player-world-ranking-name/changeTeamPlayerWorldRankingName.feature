@@ -92,3 +92,16 @@ Feature: Changing a player in a team's world ranking name alone
       And the tournament is rebuilt from the stream
       When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
       Then it is refused for breaking "TeamPlayer.Archived"
+
+  Rule: In American 6 Wicket a team player's world ranking name is not changed
+
+    A player in a team has their name as their world ranking name there, so it
+    is nobody's to change, a manager's among them
+    (`changeWorldRankingName.feature`). It is refused with
+    `Tournament.WorldRankingNameIsTheName`.
+
+    Scenario: A manager's change is refused
+      Given it was updated with the sport "a6w"
+      And the tournament is rebuilt from the stream
+      When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
+      Then it is refused with "Tournament.WorldRankingNameIsTheName"

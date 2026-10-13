@@ -471,6 +471,27 @@ export const french: Language = {
     "admin.view.managers": "Gestionnaires",
     "admin.view.notes": "Notes",
     "admin.view.scorers": "Marqueurs",
+    "admin.view.rankings": "Classements",
+    "admin.rankings.textFile":
+      "Les résultats du tournoi sont envoyés au classement mondial sous forme de fichier texte, que le site écrit à partir des parties saisies.",
+    "admin.rankings.spreadsheet":
+      "Les résultats du tournoi sont envoyés au classement mondial sous forme de tableur, que le site écrit à partir des parties saisies.",
+    "admin.rankings.fillInWinners":
+      "Le site ne peut que deviner qui a gagné chaque compétition ; vérifiez donc la ligne Vainqueur de chacune avant d'envoyer le fichier.",
+    "admin.rankings.fillInWinner":
+      "Le site ne peut pas savoir qui a gagné le tournoi ; indiquez-le donc en bas du tableur avant de l'envoyer.",
+    "admin.rankings.sendIt":
+      "Envoyez ensuite le fichier aux responsables du classement mondial.",
+    "admin.rankings.download": "Télécharger les classements",
+    "rankings.notAvailable": "Les classements ne sont pas disponibles",
+    "rankings.notAvailable.sport":
+      "Le sport de ce tournoi n'a pas de classement mondial, il n'y a donc aucun classement à envoyer.",
+    "rankings.notAvailable.handicap":
+      "Ce tournoi se joue avec handicap, il ne compte donc pas pour le classement mondial.",
+    "rankings.notAvailable.drawnGames":
+      "Ce tournoi autorise les parties nulles, il ne compte donc pas pour le classement mondial.",
+    "rankings.notAvailable.notCounted":
+      "L'organisateur de ce tournoi a indiqué qu'il ne compte pas pour le classement mondial.",
     "admin.view.otherwise": "Ce tournoi ne peut pas être géré d’ici.",
     "admin.competitionView.tabs": "Compétition",
     "admin.competitionView.players": "Joueurs",

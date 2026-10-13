@@ -35,8 +35,8 @@ Feature: Creating a tournament
   Handicap, world ranking, national and international are each said or left
   unsaid. A tournament created without saying is not played under handicap,
   and is neither a national event nor an international one. The world
-  rankings are kept for Association Croquet and Golf Croquet alone, so a
-  tournament in either counts towards them unless it is said not to, it is
+  rankings are kept for Association Croquet, Golf Croquet and American 6
+  Wicket alone, so a tournament in any of them counts towards them unless it is said not to, it is
   played under handicap, or it allows drawn games: a handicap result says
   nothing about who is better, and neither does a drawn one.
   A tournament in any other sport never counts towards them. Saying one does
@@ -468,11 +468,10 @@ Feature: Creating a tournament
 
       Examples:
         | sport |
-        | a6w   |
         | rc    |
 
     Scenario: A tournament in a sport without world rankings said to count towards them is refused
-      Given the sport "a6w"
+      Given the sport "rc"
       And the tournament is said to count towards the world rankings
       When a tournament is created
       Then it is refused with "Tournament.NoWorldRankings"

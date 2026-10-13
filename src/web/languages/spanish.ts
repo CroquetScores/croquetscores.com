@@ -465,6 +465,27 @@ export const spanish: Language = {
     "admin.view.managers": "Gestores",
     "admin.view.notes": "Notas",
     "admin.view.scorers": "Anotadores",
+    "admin.view.rankings": "Rankings",
+    "admin.rankings.textFile":
+      "Los resultados del torneo se envían al ranking mundial como un archivo de texto, que el sitio escribe a partir de las partidas introducidas.",
+    "admin.rankings.spreadsheet":
+      "Los resultados del torneo se envían al ranking mundial como una hoja de cálculo, que el sitio escribe a partir de las partidas introducidas.",
+    "admin.rankings.fillInWinners":
+      "El sitio solo puede adivinar quién ganó cada competición, así que revise la línea Ganador de cada una antes de enviar el archivo.",
+    "admin.rankings.fillInWinner":
+      "El sitio no puede saber quién ganó el torneo, así que anótelo al final de la hoja de cálculo antes de enviarla.",
+    "admin.rankings.sendIt":
+      "Después envíe el archivo a los responsables del ranking mundial.",
+    "admin.rankings.download": "Descargar rankings",
+    "rankings.notAvailable": "Los rankings no están disponibles",
+    "rankings.notAvailable.sport":
+      "El deporte de este torneo no tiene ranking mundial, así que no hay rankings que enviar.",
+    "rankings.notAvailable.handicap":
+      "Este torneo se juega con hándicap, así que no cuenta para el ranking mundial.",
+    "rankings.notAvailable.drawnGames":
+      "Este torneo permite partidas empatadas, así que no cuenta para el ranking mundial.",
+    "rankings.notAvailable.notCounted":
+      "El organizador de este torneo ha indicado que no cuenta para el ranking mundial.",
     "admin.view.otherwise": "Este torneo no se puede gestionar desde aquí.",
     "admin.competitionView.tabs": "Competición",
     "admin.competitionView.players": "Jugadores",

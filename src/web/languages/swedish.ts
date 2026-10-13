@@ -465,6 +465,27 @@ export const swedish: Language = {
     "admin.view.managers": "Turneringsledare",
     "admin.view.notes": "Anteckningar",
     "admin.view.scorers": "Resultatförare",
+    "admin.view.rankings": "Rankingar",
+    "admin.rankings.textFile":
+      "Turneringens resultat skickas till världsrankingen som en textfil, som webbplatsen skriver utifrån de inmatade matcherna.",
+    "admin.rankings.spreadsheet":
+      "Turneringens resultat skickas till världsrankingen som ett kalkylblad, som webbplatsen skriver utifrån de inmatade matcherna.",
+    "admin.rankings.fillInWinners":
+      "Webbplatsen kan bara gissa vem som vann varje tävling, så kontrollera raden Vinnare för var och en innan du skickar filen.",
+    "admin.rankings.fillInWinner":
+      "Webbplatsen kan inte veta vem som vann turneringen, så fyll i det längst ned i kalkylbladet innan du skickar det.",
+    "admin.rankings.sendIt":
+      "Skicka sedan filen till världsrankingens funktionärer.",
+    "admin.rankings.download": "Ladda ned rankingar",
+    "rankings.notAvailable": "Rankingar är inte tillgängliga",
+    "rankings.notAvailable.sport":
+      "Turneringens sport har ingen världsranking, så det finns inga rankingar att skicka.",
+    "rankings.notAvailable.handicap":
+      "Den här turneringen spelas med handicap och räknas därför inte med i världsrankingen.",
+    "rankings.notAvailable.drawnGames":
+      "Den här turneringen tillåter oavgjorda matcher och räknas därför inte med i världsrankingen.",
+    "rankings.notAvailable.notCounted":
+      "Turneringens arrangör har angett att den inte räknas med i världsrankingen.",
     "admin.view.otherwise": "Den här turneringen kan inte skötas härifrån.",
     "admin.competitionView.tabs": "Tävling",
     "admin.competitionView.players": "Spelare",

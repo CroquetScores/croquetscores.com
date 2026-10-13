@@ -206,3 +206,25 @@ Feature: Changing what a tournament's player is
       And the update calls the player "Samantha Someone"
       When the player "Sam Someone" is updated
       Then it is refused with "Tournament.Archived"
+
+  Rule: In American 6 Wicket a player's world ranking name is their name
+
+    A player's world ranking name is always their name there
+    (`addPlayer.feature`), so correcting the name corrects it, and a world
+    ranking name an update gives is not kept.
+
+    Scenario: A corrected name is the world ranking name
+      Given a stream where a tournament was created in the sport "a6w"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      When the player "Sam Someone" is updated
+      Then the tournament's player "Samantha Someone" has the world ranking name "Samantha Someone"
+
+    Scenario: A world ranking name an update gives is not kept
+      Given a stream where a tournament was created in the sport "a6w"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update gives the player the world ranking name "Samuel Someone"
+      When the player "Sam Someone" is updated
+      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"

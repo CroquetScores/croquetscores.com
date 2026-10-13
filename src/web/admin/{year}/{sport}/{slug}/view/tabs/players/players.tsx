@@ -8,6 +8,7 @@ import {
 } from "../../modal-dialogs/player/player.js";
 import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
+import { go } from "../../../../../../navigation.js";
 import "../../../../../../listed.css";
 
 // The Players tab (players-tab.feature): the players in use in the
@@ -22,6 +23,8 @@ import "../../../../../../listed.css";
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
+  /** Where it is found, as "2026/ac/spring-open", for editing it. */
+  readonly address: string;
   /**
    * The tournament's sport, by its code, where it has world rankings, for
    * the dialog. Nothing where it has none.
@@ -48,6 +51,7 @@ interface Listed extends PlayerAsTheyAre {
 
 export const PlayersTab = ({
   tournament,
+  address,
   worldRankingSport,
   manages,
 }: Props): React.JSX.Element => {
@@ -234,6 +238,18 @@ export const PlayersTab = ({
             }}
           >
             {say("admin.players.add")}
+          </button>
+          {/* After Add Player, so that a manager who has just entered the
+              players and sees something wrong with the tournament can change
+              it from here (players-tab.feature). */}{" "}
+          <button
+            type="button"
+            className="button"
+            onClick={() => {
+              go(`/admin/${address}/edit`);
+            }}
+          >
+            {say("admin.editTournament.title")}
           </button>
         </p>
       ) : null}

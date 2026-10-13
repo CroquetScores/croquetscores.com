@@ -54,3 +54,13 @@ Then(
     assert.equal(sportOfWorld(this).hasWorldRankings, has === "has");
   },
 );
+
+Then(
+  /^the sport (counts|does not count) towards the world rankings$/,
+  function (this: SpecWorld, counts: string) {
+    assert.equal(
+      sportOfWorld(this).countsTowardsWorldRankings,
+      counts === "counts",
+    );
+  },
+);

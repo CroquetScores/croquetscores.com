@@ -502,6 +502,28 @@ Then(
   },
 );
 
+// Beside it in the same row of what the tab offers, and after it.
+Then(
+  "{string} is after {string}",
+  async function (this: SpecWorld, option: string, before: string) {
+    await eventually(this, async () => {
+      const first = await tabOffers(this, before).elementHandle();
+      const second = await tabOffers(this, option).elementHandle();
+      assert.ok(first !== null && second !== null, "One is not offered.");
+      // Where the second is after the first in the page, by the order of the
+      // two in the document, which is the order they are read and tabbed in.
+      const follows = await this.browserPage.evaluate(
+        ([one, other]) =>
+          (
+            one as unknown as { compareDocumentPosition(o: unknown): number }
+          ).compareDocumentPosition(other) & 4,
+        [first, second],
+      );
+      assert.ok(follows, `${option} does not come after ${before}.`);
+    });
+  },
+);
+
 // Above whichever the tab lists: its players, its teams, its competitions or
 // its tests.
 Then(

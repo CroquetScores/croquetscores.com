@@ -34,6 +34,13 @@ export interface TournamentAsPaged {
    * world ranking players. Nothing where they are not asked.
    */
   readonly worldRankingSport: string | undefined;
+  /** Its sport, by its code, as "ac". */
+  readonly sport: string;
+  /**
+   * Whether it counts towards the world rankings, and so has the rankings
+   * file its Rankings tab leads to (rankings-tab.feature).
+   */
+  readonly countsTowardsWorldRankings: boolean;
 }
 
 /**

@@ -1,0 +1,182 @@
+import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
+import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import { Website } from "../../../domain/common/Website.js";
+import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { RequestType } from "../../common/Mediator.js";
+import { QueryHandler } from "../../common/QueryHandler.js";
+import {
+  type Competitions,
+  competitionOf,
+  toldOf,
+} from "../competitions/competitionOperations.js";
+import {
+  type CompetitionOfRanking,
+  PublicRankingsOfTournament,
+  type RankingsToRead,
+  type ResultOfRanking,
+  type WhyNoRankings,
+} from "./PublicRankingsOfTournament.js";
+import { tournamentForReaders } from "./tournamentForReaders.js";
+import type { TournamentAddresses } from "./tournamentOperations.js";
+
+export class PublicRankingsOfTournamentHandler extends QueryHandler<
+  PublicRankingsOfTournament,
+  RankingsToRead
+> {
+  readonly handles: RequestType<PublicRankingsOfTournament> =
+    PublicRankingsOfTournament;
+
+  constructor(
+    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
+    private readonly competitions: Competitions,
+    private readonly addresses: TournamentAddresses,
+  ) {
+    super();
+  }
+
+  async handle(query: PublicRankingsOfTournament): Promise<RankingsToRead> {
+    const tournament = await tournamentForReaders(
+      this.tournaments,
+      this.addresses,
+      Website.from(query.website),
+      query.address,
+      "PublicRankingsOfTournament",
+    );
+    const answered = {
+      name: tournament.name.toString(),
+      address: tournament.address.toString(),
+      sport: tournament.sport.code,
+      starts: tournament.starts.toISOString().slice(0, 10),
+      finishes: tournament.finishes.toISOString().slice(0, 10),
+    };
+    if (!tournament.worldRankings) {
+      return {
+        ...answered,
+        rankings: { is: "not available", because: whyNot(tournament) },
+      };
+    }
+
+    // Each player by the name the world rankings know them by, which is their
+    // name where none was given, under the id a game names them by: a
+    // tournament player's, and a team player's in a test.
+    const known = new Map<string, string>([
+      ...tournament.players.map(
+        (player) =>
+          [
+            player.id.value,
+            (player.worldRankingName ?? player.name).toString(),
+          ] as const,
+      ),
+      ...tournament.teams.flatMap((team) =>
+        team.players.map(
+          (player) =>
+            [
+              player.id.value,
+              (player.worldRankingName ?? player.name).toString(),
+            ] as const,
+        ),
+      ),
+    ]);
+
+    const competitions: CompetitionOfRanking[] = [];
+    for (const { reference, shape } of tournament.competitions) {
+      if (reference.archived) continue;
+      const competition = await competitionOf(this.competitions, reference.id);
+      // A competition's player by their name, through the tournament player
+      // they were entered as.
+      const nameOf = (written: string): string => {
+        const entered = competition.players.find(
+          (player) => player.id.value === written,
+        );
+        return known.get(entered?.tournamentPlayerId.value ?? written) ?? "";
+      };
+      // A game of a block, a Swiss or a test, or one a knockout has no match
+      // for, is a result of one game.
+      const gameAsResult = (game: Game): ResultOfRanking => ({
+        winner: nameOf(game.winner.value),
+        loser: nameOf(game.loser.value),
+        games: [
+          {
+            winnerScore: game.winnerScore.toString(),
+            loserScore: game.loserScore.toString(),
+            wonByWinner: true,
+          },
+        ],
+      });
+      const results: ResultOfRanking[] = [];
+      if (shape.kind === "knockout") {
+        const matches = competition.knockoutMatches(
+          toldOf(tournament, reference.id),
+        );
+        for (const match of matches) {
+          const [one, other] = match.sides;
+          if (
+            match.games.length === 0 ||
+            one.is !== "player" ||
+            other.is !== "player"
+          ) {
+            continue;
+          }
+          // The match's winner where it is decided, and otherwise whoever
+          // has won more of what has been played, the first game's winner
+          // where they are level.
+          const won = (id: string): number =>
+            match.games.filter((game) => game.winner.value === id).length;
+          const oneWon = won(one.player.id.value);
+          const otherWon = won(other.player.id.value);
+          const first = match.games[0]!;
+          const oneWins =
+            match.winner.is === "player"
+              ? match.winner.player.id.equals(one.player.id)
+              : oneWon === otherWon
+                ? first.winner.equals(one.player.id)
+                : oneWon > otherWon;
+          const [winner, loser] = oneWins ? [one, other] : [other, one];
+          results.push({
+            winner: nameOf(winner.player.id.value),
+            loser: nameOf(loser.player.id.value),
+            games: match.games.map((game) =>
+              game.winner.equals(winner.player.id)
+                ? {
+                    winnerScore: game.winnerScore.toString(),
+                    loserScore: game.loserScore.toString(),
+                    wonByWinner: true,
+                  }
+                : {
+                    winnerScore: game.loserScore.toString(),
+                    loserScore: game.winnerScore.toString(),
+                    wonByWinner: false,
+                  },
+            ),
+          });
+        }
+      } else {
+        for (const game of competition.games) {
+          if (!game.archived) results.push(gameAsResult(game));
+        }
+      }
+      if (results.length > 0) {
+        competitions.push({ name: reference.name.toString(), results });
+      }
+    }
+    return {
+      ...answered,
+      rankings: {
+        is: "available",
+        competitions,
+        competitionCount: tournament.competitions.filter(
+          ({ reference }) => !reference.archived,
+        ).length,
+      },
+    };
+  }
+}
+
+// The first reason that applies, in the order the tournament refuses them in.
+const whyNot = (tournament: Tournament): WhyNoRankings => {
+  if (!tournament.sport.countsTowardsWorldRankings) return "sport";
+  if (tournament.handicap) return "handicap";
+  if (tournament.drawsAllowed) return "drawnGames";
+  return "notCounted";
+};

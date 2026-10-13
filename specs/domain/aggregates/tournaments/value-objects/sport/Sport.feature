@@ -78,9 +78,13 @@ Feature: The sport a tournament is played in
 
   Rule: Association and golf croquet have world rankings
 
-    Of the sports there are, only association croquet and golf croquet are
-    ranked across the world, so only a player of one of them has a name the
-    world rankings know them by to ask for (`WorldRankingName.feature`).
+    Of the sports there are, only association croquet and golf croquet keep
+    a list of players across the world, so only a player of one of them has a
+    name the world rankings know them by to ask for
+    (`WorldRankingName.feature`). Wherever a feature says a sport has world
+    rankings, as the world ranking officers' lists do, it means this: that its
+    players are known to them by name. Whether a tournament counts towards
+    them is the next rule's.
 
     Scenario Outline: A sport has world rankings, or not
       When the sport "<code>" is made
@@ -93,3 +97,24 @@ Feature: The sport a tournament is played in
         | a6w  | does not have |
         | rc   | does not have |
         | gb   | does not have |
+
+  Rule: Association croquet, golf croquet and American 6 Wicket count towards the world rankings
+
+    American 6 Wicket is ranked across the world as golf croquet is, and the
+    old site sent its results to the rankings as golf croquet's were
+    (`rankings.feature`), but its players are known to them by their own
+    names, so it keeps no list of players to match them against and its
+    players are never asked for a world ranking name. A tournament counts
+    towards the world rankings only in a sport that does (`create.feature`).
+
+    Scenario Outline: A sport's tournaments count towards the world rankings, or not
+      When the sport "<code>" is made
+      Then the sport <counts> towards the world rankings
+
+      Examples:
+        | code | counts         |
+        | ac   | counts         |
+        | gc   | counts         |
+        | a6w  | counts         |
+        | rc   | does not count |
+        | gb   | does not count |

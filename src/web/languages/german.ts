@@ -472,6 +472,27 @@ export const german: Language = {
     "admin.view.managers": "Turnierleitung",
     "admin.view.notes": "Hinweise",
     "admin.view.scorers": "Ergebniserfasser",
+    "admin.view.rankings": "Ranglisten",
+    "admin.rankings.textFile":
+      "Die Ergebnisse des Turniers werden der Weltrangliste als Textdatei geschickt, die die Website aus den eingegebenen Spielen erstellt.",
+    "admin.rankings.spreadsheet":
+      "Die Ergebnisse des Turniers werden der Weltrangliste als Tabelle geschickt, die die Website aus den eingegebenen Spielen erstellt.",
+    "admin.rankings.fillInWinners":
+      "Die Website kann nur raten, wer jeden Wettbewerb gewonnen hat. Prüfen Sie daher die Zeile Sieger jedes Wettbewerbs, bevor Sie die Datei senden.",
+    "admin.rankings.fillInWinner":
+      "Die Website kann nicht wissen, wer das Turnier gewonnen hat. Tragen Sie es daher unten in der Tabelle ein, bevor Sie sie senden.",
+    "admin.rankings.sendIt":
+      "Senden Sie die Datei dann an die Verantwortlichen der Weltrangliste.",
+    "admin.rankings.download": "Ranglisten herunterladen",
+    "rankings.notAvailable": "Ranglisten sind nicht verfügbar",
+    "rankings.notAvailable.sport":
+      "Die Sportart dieses Turniers hat keine Weltrangliste, daher gibt es keine Ranglisten zu senden.",
+    "rankings.notAvailable.handicap":
+      "Dieses Turnier wird mit Vorgabe gespielt und zählt daher nicht für die Weltrangliste.",
+    "rankings.notAvailable.drawnGames":
+      "Dieses Turnier erlaubt Unentschieden und zählt daher nicht für die Weltrangliste.",
+    "rankings.notAvailable.notCounted":
+      "Der Veranstalter dieses Turniers hat festgelegt, dass es nicht für die Weltrangliste zählt.",
     "admin.view.otherwise": "Dieses Turnier kann hier nicht verwaltet werden.",
     "admin.competitionView.tabs": "Wettbewerb",
     "admin.competitionView.players": "Spieler",

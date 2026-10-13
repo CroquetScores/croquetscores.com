@@ -313,6 +313,7 @@ Then(
       ".test-score",
       ".players-team-name",
       ".player-game-team",
+      ".rankings-tournament",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

@@ -466,6 +466,27 @@ export const italian: Language = {
     "admin.view.managers": "Organizzatori",
     "admin.view.notes": "Note",
     "admin.view.scorers": "Segnapunti",
+    "admin.view.rankings": "Classifiche",
+    "admin.rankings.textFile":
+      "I risultati del torneo vengono inviati alle classifiche mondiali come file di testo, che il sito scrive a partire dalle partite inserite.",
+    "admin.rankings.spreadsheet":
+      "I risultati del torneo vengono inviati alle classifiche mondiali come foglio di calcolo, che il sito scrive a partire dalle partite inserite.",
+    "admin.rankings.fillInWinners":
+      "Il sito può solo indovinare chi ha vinto ogni competizione, quindi controlla la riga Vincitore di ciascuna prima di inviare il file.",
+    "admin.rankings.fillInWinner":
+      "Il sito non può sapere chi ha vinto il torneo, quindi inseriscilo in fondo al foglio di calcolo prima di inviarlo.",
+    "admin.rankings.sendIt":
+      "Poi invia il file ai responsabili delle classifiche mondiali.",
+    "admin.rankings.download": "Scarica le classifiche",
+    "rankings.notAvailable": "Le classifiche non sono disponibili",
+    "rankings.notAvailable.sport":
+      "Lo sport di questo torneo non ha classifiche mondiali, quindi non ci sono classifiche da inviare.",
+    "rankings.notAvailable.handicap":
+      "Questo torneo si gioca con handicap, quindi non vale per le classifiche mondiali.",
+    "rankings.notAvailable.drawnGames":
+      "Questo torneo ammette le partite pari, quindi non vale per le classifiche mondiali.",
+    "rankings.notAvailable.notCounted":
+      "L'organizzatore di questo torneo ha stabilito che non vale per le classifiche mondiali.",
     "admin.view.otherwise": "Questo torneo non può essere gestito da qui.",
     "admin.competitionView.tabs": "Competizione",
     "admin.competitionView.players": "Giocatori",

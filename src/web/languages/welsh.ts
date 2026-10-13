@@ -472,6 +472,27 @@ export const welsh: Language = {
     "admin.view.managers": "Rheolwyr",
     "admin.view.notes": "Nodiadau",
     "admin.view.scorers": "Sgorwyr",
+    "admin.view.rankings": "Safleoedd",
+    "admin.rankings.textFile":
+      "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel ffeil destun, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
+    "admin.rankings.spreadsheet":
+      "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel taenlen, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
+    "admin.rankings.fillInWinners":
+      "Dim ond dyfalu pwy enillodd bob cystadleuaeth y gall y wefan ei wneud, felly gwiriwch linell yr Enillydd ym mhob un cyn anfon y ffeil.",
+    "admin.rankings.fillInWinner":
+      "Ni all y wefan wybod pwy enillodd y twrnamaint, felly llenwch hynny ar waelod y daenlen cyn ei hanfon.",
+    "admin.rankings.sendIt":
+      "Yna anfonwch y ffeil at swyddogion Safleoedd y Byd.",
+    "admin.rankings.download": "Lawrlwytho safleoedd",
+    "rankings.notAvailable": "Nid yw safleoedd ar gael",
+    "rankings.notAvailable.sport":
+      "Does gan chwaraeon y twrnamaint hwn ddim safleoedd y byd, felly does dim safleoedd i'w hanfon.",
+    "rankings.notAvailable.handicap":
+      "Mae'r twrnamaint hwn yn cael ei chwarae gyda handicap, felly nid yw'n cyfrif tuag at Safleoedd y Byd.",
+    "rankings.notAvailable.drawnGames":
+      "Mae'r twrnamaint hwn yn caniatáu gemau cyfartal, felly nid yw'n cyfrif tuag at Safleoedd y Byd.",
+    "rankings.notAvailable.notCounted":
+      "Mae rheolwr y twrnamaint hwn wedi dweud nad yw'n cyfrif tuag at Safleoedd y Byd.",
     "admin.view.otherwise": "Ni ellir rheoli'r twrnamaint hwn o'r fan hon.",
     "admin.competitionView.tabs": "Cystadleuaeth",
     "admin.competitionView.players": "Chwaraewyr",

@@ -469,6 +469,27 @@ export const polish: Language = {
     "admin.view.managers": "Organizatorzy",
     "admin.view.notes": "Notatki",
     "admin.view.scorers": "Wprowadzający wyniki",
+    "admin.view.rankings": "Rankingi",
+    "admin.rankings.textFile":
+      "Wyniki turnieju są wysyłane do rankingu światowego jako plik tekstowy, który strona tworzy z wprowadzonych gier.",
+    "admin.rankings.spreadsheet":
+      "Wyniki turnieju są wysyłane do rankingu światowego jako arkusz kalkulacyjny, który strona tworzy z wprowadzonych gier.",
+    "admin.rankings.fillInWinners":
+      "Strona może tylko zgadywać, kto wygrał każde rozgrywki, więc przed wysłaniem pliku sprawdź wiersz Zwycięzca w każdych z nich.",
+    "admin.rankings.fillInWinner":
+      "Strona nie może wiedzieć, kto wygrał turniej, więc uzupełnij to na dole arkusza przed jego wysłaniem.",
+    "admin.rankings.sendIt":
+      "Następnie wyślij plik do osób odpowiedzialnych za ranking światowy.",
+    "admin.rankings.download": "Pobierz rankingi",
+    "rankings.notAvailable": "Rankingi są niedostępne",
+    "rankings.notAvailable.sport":
+      "Dyscyplina tego turnieju nie ma rankingu światowego, więc nie ma rankingów do wysłania.",
+    "rankings.notAvailable.handicap":
+      "Ten turniej rozgrywany jest z handicapem, więc nie liczy się do rankingu światowego.",
+    "rankings.notAvailable.drawnGames":
+      "Ten turniej dopuszcza remisy, więc nie liczy się do rankingu światowego.",
+    "rankings.notAvailable.notCounted":
+      "Organizator tego turnieju zdecydował, że nie liczy się on do rankingu światowego.",
     "admin.view.otherwise": "Tym turniejem nie można stąd zarządzać.",
     "admin.competitionView.tabs": "Konkurencja",
     "admin.competitionView.players": "Zawodnicy",

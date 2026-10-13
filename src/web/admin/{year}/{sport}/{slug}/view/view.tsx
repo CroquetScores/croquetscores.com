@@ -9,21 +9,24 @@ import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
 import { NotesTab } from "./tabs/notes/notes.js";
 import { PlayersTab } from "./tabs/players/players.js";
+import { RankingsTab } from "./tabs/rankings/rankings.js";
 import { ScorersTab } from "./tabs/scorers/scorers.js";
 import { TeamsTab } from "./tabs/teams/teams.js";
 import { TestsTab } from "./tabs/tests/tests.js";
 import { refusalOf } from "../../../../api.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
-// to run in five tabs beneath it, and the section bar leading to its
+// to run in six tabs beneath it, and the section bar leading to its
 // competitions' pages above (TournamentSections.feature). The tabs are parts
 // of the one page
 // rather than pages of their own, so they have no addresses: the page opens on
 // the first the reader is offered, and choosing another leaves the address as
-// it was. A manager is offered all five, and a scorer the Competitions tab
-// alone. A tournament played by teams has teams and tests where a Standard
+// it was. A manager is offered all six, where the tournament counts towards
+// the world rankings, and one fewer where it does not, since only one that
+// counts has a rankings file (rankings-tab.feature). A scorer is offered the
+// Competitions tab alone. A tournament played by teams has teams and tests where a Standard
 // one has players and competitions, so its tabs are Teams, Tests, Notes,
-// Managers and Scorers, and a scorer is offered Tests alone. Each tab says
+// Managers, Scorers and Rankings, and a scorer is offered Tests alone. Each tab says
 // what it holds in a feature of its own.
 
 interface Props {
@@ -44,6 +47,10 @@ interface Found {
   readonly playedByTeams: boolean;
   /** Its sport, by its code, where it has world rankings, for its players' dialog. */
   readonly worldRankingSport?: string | undefined;
+  /** Its sport, by its code, which says which kind of rankings file it has. */
+  readonly sport: string;
+  /** Whether it counts towards the world rankings, and so has a file. */
+  readonly countsTowardsWorldRankings: boolean;
 }
 
 type Asked =
@@ -57,8 +64,16 @@ const standardTabs = [
   "notes",
   "managers",
   "scorers",
+  "rankings",
 ] as const;
-const teamTabs = ["teams", "tests", "notes", "managers", "scorers"] as const;
+const teamTabs = [
+  "teams",
+  "tests",
+  "notes",
+  "managers",
+  "scorers",
+  "rankings",
+] as const;
 type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
 
 // What a reader is offered: every tab to a manager, and the competitions
@@ -71,11 +86,21 @@ const offeredTo = ({
   part,
   playedByTeams,
   mayChangeWorldRankingNames,
+  countsTowardsWorldRankings,
 }: Pick<
   Found,
-  "part" | "playedByTeams" | "mayChangeWorldRankingNames"
+  | "part"
+  | "playedByTeams"
+  | "mayChangeWorldRankingNames"
+  | "countsTowardsWorldRankings"
 >): readonly Tab[] => {
-  if (part === "manager") return playedByTeams ? teamTabs : standardTabs;
+  if (part === "manager") {
+    // The rankings file is only for a tournament that counts, so a manager of
+    // one that does not is offered no tab to say so.
+    return (playedByTeams ? teamTabs : standardTabs).filter(
+      (tab) => tab !== "rankings" || countsTowardsWorldRankings,
+    );
+  }
   const players: readonly Tab[] = mayChangeWorldRankingNames
     ? [playedByTeams ? "teams" : "players"]
     : [];
@@ -161,6 +186,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               {chosen === "players" ? (
                 <PlayersTab
                   tournament={asked.tournament.id}
+                  address={asked.tournament.address}
                   worldRankingSport={asked.tournament.worldRankingSport}
                   manages={asked.tournament.part === "manager"}
                 />
@@ -197,6 +223,12 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               ) : null}
               {chosen === "scorers" ? (
                 <ScorersTab tournament={asked.tournament.id} />
+              ) : null}
+              {chosen === "rankings" ? (
+                <RankingsTab
+                  address={asked.tournament.address}
+                  sport={asked.tournament.sport}
+                />
               ) : null}
             </TabControl>
           </div>
