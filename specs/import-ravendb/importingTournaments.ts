@@ -816,6 +816,29 @@ Given(
 );
 
 Given(
+  "a tournament {string} on {string} of the sport {string} is imported",
+  async function (this: SpecWorld, id: string, website: string, sport: string) {
+    await tournamentImported(this, id, website, { SportType: sport });
+  },
+);
+
+Given(
+  "a tournament {string} on {string} of the type {string} and the sport {string} is imported",
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    type: string,
+    sport: string,
+  ) {
+    await tournamentImported(this, id, website, {
+      TournamentType: type,
+      SportType: sport,
+    });
+  },
+);
+
+Given(
   "a tournament {string} on {string} of the type {string} is imported",
   async function (this: SpecWorld, id: string, website: string, type: string) {
     await tournamentImported(this, id, website, { TournamentType: type });
