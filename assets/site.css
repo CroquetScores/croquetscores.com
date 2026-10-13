@@ -741,24 +741,23 @@ a:hover {
 .site-sections ul {
   display: flex;
   flex-wrap: wrap;
-  /* No row gap and no block padding, so the bar is exactly as tall as its tabs
-     and the black of the current one runs edge to edge. Green showing above or
-     below it would read as a gap rather than as a selection. */
+  /* 8px of the bar's green above and below the tabs, so that the current
+     one is a tile in the bar and not the bar's whole height. There is still no
+     row gap, so the black of a tab runs between wrapped rows. */
   gap: 0 var(--space-2);
   margin: 0;
-  padding-block: 0;
+  padding-block: 8px;
   padding-inline: var(--panel-inset);
   list-style: none;
 }
 
-/* Half the scale's smallest step above and below its words, so that the bar
-   takes as little of a phone's height as it can and is still pointed at
-   easily. */
+/* 10px on every side of a tab's words, competitions' tiles included, so that
+   the tabs are as easy to point at as they are to read. */
 .site-sections a {
   display: flex;
   align-items: center;
   align-self: stretch;
-  padding: calc(var(--space-1) / 2) var(--space-3);
+  padding: 10px;
   color: var(--accent-ink);
   text-decoration: none;
 }
@@ -781,7 +780,6 @@ a:hover {
   /* No shorter than a pointer can be sure of pressing, as every tab is asked
      to be (TournamentSections.feature), though its words are set tight. */
   min-height: 24px;
-  padding-inline: var(--space-2);
   line-height: var(--leading-tight);
 }
 
