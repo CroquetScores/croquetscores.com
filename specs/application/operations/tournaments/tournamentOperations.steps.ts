@@ -9,6 +9,7 @@ import { AddScorer } from "../../../../src/application/operations/tournaments/Ad
 import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
 import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
 import { ArchivePlayer } from "../../../../src/application/operations/tournaments/ArchivePlayer.js";
+import { RestoreCompetition } from "../../../../src/application/operations/tournaments/RestoreCompetition.js";
 import { RestorePlayer } from "../../../../src/application/operations/tournaments/RestorePlayer.js";
 import { MoveCompetition } from "../../../../src/application/operations/tournaments/MoveCompetition.js";
 import { UpdatePlayer } from "../../../../src/application/operations/tournaments/UpdatePlayer.js";
@@ -242,6 +243,22 @@ const updated = async (
   await lookAt(world, tournament);
 };
 
+// Called what it is called now and nothing else about it changed, since an
+// update says everything again.
+Given(
+  "{string} has renamed the tournament {string} to {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    renamed: string,
+  ) {
+    await updated(this, address, tournamentNamed(this, name), {
+      name: renamed,
+    });
+  },
+);
+
 Given(
   "{string} has moved the tournament {string} to the sport {string}",
   async function (
@@ -472,6 +489,26 @@ Given(
     await doneTo(this, address, name, async (account, tournament) => {
       const id = await competitionIn(this, tournament, competition);
       return new ArchiveCompetition(
+        account,
+        tournament.value,
+        id.value,
+        momentOf(this),
+      );
+    });
+  },
+);
+
+Given(
+  "{string} has restored the competition {string} in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    competition: string,
+    name: string,
+  ) {
+    await doneTo(this, address, name, async (account, tournament) => {
+      const id = await competitionIn(this, tournament, competition);
+      return new RestoreCompetition(
         account,
         tournament.value,
         id.value,

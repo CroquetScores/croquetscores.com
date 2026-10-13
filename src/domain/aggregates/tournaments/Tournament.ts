@@ -527,7 +527,7 @@ export class Tournament extends AggregateRoot {
 
   /**
    * That the player `id`'s world ranking name is now `worldRankingName`,
-   * none where it is blank, and nothing else about them changed. Refused
+   * their name where it is blank, and nothing else about them changed. Refused
    * unless `by` may change world ranking names, as an update is for the rest,
    * and recorded as the player being updated. Changing it to what it is
    * records nothing.
@@ -546,7 +546,10 @@ export class Tournament extends AggregateRoot {
       name: found.name.toString(),
       representing: found.representing,
       flag: found.flag === undefined ? undefined : String(found.flag),
-      worldRankingName,
+      worldRankingName: this.#orTheName({
+        name: found.name.toString(),
+        worldRankingName,
+      }).worldRankingName,
     });
     if (samePlayer(player, found)) return;
     this.record(playerEvent(TournamentPlayerUpdated, player, by, at));
@@ -570,7 +573,10 @@ export class Tournament extends AggregateRoot {
     const { player: found } = this.#teamPlayerFound(teamId, id);
     const player = found.update({
       name: found.name.toString(),
-      worldRankingName,
+      worldRankingName: this.#orTheName({
+        name: found.name.toString(),
+        worldRankingName,
+      }).worldRankingName,
     });
     if (sameWorldRankingName(player.worldRankingName, found.worldRankingName))
       return;
@@ -1959,24 +1965,37 @@ export class Tournament extends AggregateRoot {
     }
   }
 
-  // A sport that is ranked, but whose players are known to the rankings by
-  // their own names, has no world ranking name apart from the player's name
-  // (Sport.feature, addPlayer.feature).
+  // A sport with no world rankings of its own has no world ranking name apart
+  // from the player's name, whether it is ranked across the world, as American
+  // 6 Wicket is, or not at all (Sport.feature, addPlayer.feature).
   #worldRankingNameIsTheName(): boolean {
-    return (
-      this.sport.countsTowardsWorldRankings && !this.sport.hasWorldRankings
-    );
+    return !this.sport.hasWorldRankings;
   }
 
-  // Whatever a player is added with or updated to, their world ranking name is
-  // their name, so one given is not kept and a corrected name corrects it.
+  // Whatever a player is added with or updated to, they have a world ranking
+  // name, since it is what the public site knows a player by from one
+  // tournament to the next (addPlayer.feature). Where the sport has none of its
+  // own it is their name, so one given is not kept and a corrected name
+  // corrects it; elsewhere it is the one given, or their name where none was.
   #withTheirNameKnownInTheRankings<
     T extends {
       readonly name: string;
       readonly worldRankingName?: string | undefined;
     },
   >(details: T): T {
-    return this.#worldRankingNameIsTheName()
+    if (this.#worldRankingNameIsTheName()) {
+      return { ...details, worldRankingName: details.name };
+    }
+    return this.#orTheName(details);
+  }
+
+  #orTheName<
+    T extends {
+      readonly name: string;
+      readonly worldRankingName?: string | undefined;
+    },
+  >(details: T): T {
+    return (details.worldRankingName ?? "").trim() === ""
       ? { ...details, worldRankingName: details.name }
       : details;
   }

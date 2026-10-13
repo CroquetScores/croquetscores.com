@@ -54,6 +54,7 @@ import type {
 import { TournamentsByAccount } from "../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByAddress } from "../../src/infrastructure/read-models/TournamentsByAddress.js";
 import { TournamentsByWebsite } from "../../src/infrastructure/read-models/TournamentsByWebsite.js";
+import { SearchByWebsite } from "../../src/infrastructure/read-models/SearchByWebsite.js";
 import { accountsOf } from "../infrastructure/support/accounts.js";
 import { unitOfWorkOf } from "../infrastructure/support/transactions.js";
 import type { SpecWorld } from "../support/world.js";
@@ -292,6 +293,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     // Where an error of a document refused whole finds its tournament's name
     // and address, as it does in the import.
     new TournamentsByWebsite(unitOfWork),
+    new SearchByWebsite(unitOfWork),
     commentariesByTournament,
     managerNotesByTournament,
   ]);

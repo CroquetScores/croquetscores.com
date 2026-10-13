@@ -239,6 +239,9 @@ import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsB
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
+import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
+import { SearchHandler } from "../application/operations/tournaments/SearchHandler.js";
+import { SearchPlayersOfWebsiteHandler } from "../application/operations/tournaments/SearchPlayersOfWebsiteHandler.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
@@ -782,6 +785,7 @@ export const buildApplication = async (
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
+  const searchByWebsite = new SearchByWebsite(unitOfWork);
   const managerNotesByTournament = new ManagerNotesByTournament(unitOfWork);
   const commentariesByTournament = new CommentariesByTournament(unitOfWork);
 
@@ -795,6 +799,7 @@ export const buildApplication = async (
     tournamentsByAddress,
     tournamentsByAccount,
     tournamentsByWebsite,
+    searchByWebsite,
     managerNotesByTournament,
     commentariesByTournament,
   ];
@@ -1196,6 +1201,8 @@ export const buildApplication = async (
   mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(tournamentsByWebsite));
+  mediator.handleQuery(new SearchHandler(searchByWebsite));
+  mediator.handleQuery(new SearchPlayersOfWebsiteHandler(searchByWebsite));
   mediator.handleQuery(
     new GamesOfTournamentHandler(
       tournaments,

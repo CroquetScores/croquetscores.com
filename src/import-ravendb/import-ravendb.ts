@@ -50,6 +50,7 @@ import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsB
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
+import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
@@ -209,6 +210,7 @@ try {
       new TournamentsByAddress(unitOfWork),
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
+      new SearchByWebsite(unitOfWork),
       managerNotesByTournament,
       commentariesByTournament,
     ],
