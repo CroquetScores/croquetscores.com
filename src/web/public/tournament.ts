@@ -108,7 +108,7 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: `          <h2 class="players-heading">${escape(say("tournament.recent"))}</h2>
+          body: `          <h2 class="games-heading">${escape(say("tournament.recent"))}</h2>
 ${games}`,
         }),
       );

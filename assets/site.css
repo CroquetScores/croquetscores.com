@@ -1549,6 +1549,7 @@ main {
    rather than apart from it, so that the two read as one table; where there
    are no players, what says so keeps its place beneath. */
 .players-heading,
+.games-heading,
 .player-games > h2,
 .player-competitions > h2 {
   padding: var(--space-1) var(--space-2);
@@ -1594,15 +1595,15 @@ main {
   border-top: 0;
 }
 
-.games-recent > .game {
+.games.games-recent > .game {
   padding: var(--space-2);
 }
 
-.games-recent > .game + .game {
+.games.games-recent > .game + .game {
   border-top: 1px solid var(--border);
 }
 
-.games-recent > .game:nth-child(even) {
+.games.games-recent > .game:nth-child(even) {
   background: var(--surface);
 }
 

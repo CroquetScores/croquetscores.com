@@ -35,7 +35,7 @@ Feature: The read models are made again from the events
       Given every read model is emptied
       When the read models are rebuilt from the events
       And the page at "/2026/ac/spring-open" is opened
-      Then the page is headed "Spring Open"
+      Then the header names the tournament "Spring Open"
 
     Scenario: A tournament is found for the account that manages it again
       Given every read model is emptied
@@ -72,7 +72,7 @@ Feature: The read models are made again from the events
       When the read models are rebuilt from the events
       And the read models are rebuilt from the events
       And the page at "/2026/ac/spring-open" is opened
-      Then the page is headed "Spring Open"
+      Then the header names the tournament "Spring Open"
 
     Scenario: An account holds its role once after two rebuilds
       Given every read model is emptied
