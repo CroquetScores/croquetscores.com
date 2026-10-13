@@ -264,6 +264,8 @@ export const chinese: Language = {
     "errors.sorryDetail": "无法处理该请求。",
     "errors.failed": "出了点问题",
     "errors.reference": "参考编号 {reference}。",
+    "errors.unavailable": "网站暂时无法使用",
+    "errors.unavailableDetail": "网站暂时无法连接到所需的内容。请稍后再试。",
 
     "home.recentResults": "近期结果",
     "home.recentResults.none": "最近七天没有添加任何比赛。",
@@ -1590,6 +1592,28 @@ export const chinese: Language = {
 
 <p>
     在 {service} 持续不可用期间，我们最多每小时给你发一封关于此事的电子邮件。
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject": "{siteName} 无法连接数据库",
+    "Email.DatabaseUnreachable.body": `
+<p>你好，</p>
+
+<p>
+    {siteName} 在 {when} 无法连接数据库。在数据库恢复响应之前，每个需要它的页面都会告诉读者网站暂时无法使用，请稍后再试。
+</p>
+
+<p>
+    无需任何操作。每个请求都会重新申请连接，数据库一恢复响应，网站就会恢复正常。
+</p>
+
+<p>
+    在数据库持续无法连接期间，每隔 {minutes} 分钟最多会就此给你发送一封电子邮件。
 </p>
 
 <p>

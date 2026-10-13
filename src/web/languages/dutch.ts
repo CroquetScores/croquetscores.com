@@ -269,6 +269,9 @@ export const dutch: Language = {
     "errors.sorryDetail": "Dat verzoek kon niet worden afgehandeld.",
     "errors.failed": "Er is iets misgegaan",
     "errors.reference": "Referentie {reference}.",
+    "errors.unavailable": "De site is niet beschikbaar",
+    "errors.unavailableDetail":
+      "De site kan op dit moment niet bij wat hij nodig heeft. Probeer het later opnieuw.",
 
     "home.recentResults": "Recente uitslagen",
     "home.recentResults.none":
@@ -1726,6 +1729,29 @@ export const dutch: Language = {
 <p>
     Zolang {service} onbereikbaar blijft, ontvang je hierover hoogstens eenmaal per
     uur een e-mail.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} kan zijn database niet bereiken",
+    "Email.DatabaseUnreachable.body": `
+<p>Hallo,</p>
+
+<p>
+    {siteName} kon om {when} zijn database niet bereiken. Totdat die antwoordt, zegt elke pagina die hem nodig heeft tegen lezers dat de site niet beschikbaar is en dat ze het later opnieuw moeten proberen.
+</p>
+
+<p>
+    Er hoeft niets opgeheven te worden. Elk verzoek vraagt opnieuw om een verbinding, en de site werkt weer zodra de database antwoordt.
+</p>
+
+<p>
+    Zolang de database niet bereikbaar is, krijg je hierover hooguit eens per {minutes} minuten een e-mail.
 </p>
 
 <p>

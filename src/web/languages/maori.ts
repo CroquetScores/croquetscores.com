@@ -274,6 +274,9 @@ export const maori: Language = {
     "errors.sorryDetail": "Kāore i taea te whakaoti taua tono.",
     "errors.failed": "I hē tētahi mea",
     "errors.reference": "Tohutoro {reference}.",
+    "errors.unavailable": "Kāore te pae e wātea ana",
+    "errors.unavailableDetail":
+      "Kāore e taea e te pae te whakapā atu ki ana mea e hiahiatia ana i tēnei wā. Tēnā koa, whakamātauria anō a muri ake.",
 
     "home.recentResults": "Ngā hua tata nei",
     "home.recentResults.none":
@@ -1746,6 +1749,29 @@ export const maori: Language = {
 <p>
     I te wā e kore tonu ana a {service} e whakahoki kupu, kotahi anake te īmēra mō
     tēnei ia hāora ka tae atu ki a koe.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "Kāore e taea e {siteName} te whakapā atu ki tāna pātengi raraunga",
+    "Email.DatabaseUnreachable.body": `
+<p>Tēnā koe:</p>
+
+<p>
+    Kāore i taea e {siteName} te whakapā atu ki tāna pātengi raraunga i {when}. Kia tae rā anō ki tana whakautu, ka kī ia whārangi e hiahia ana ki a ia ki ngā kaipānui kāore te pae e wātea ana, me whakamātau anō a muri ake.
+</p>
+
+<p>
+    Kāore he mea hei tuku. Ia tono, ka tono anō i tētahi hononga, ā, ka mahi anō te pae i te wā ka whakautu te pātengi raraunga.
+</p>
+
+<p>
+    I te wā e kore ana te pātengi raraunga, ka whiwhi īmēra koe mō tēnei kia kotahi noa iho i ia {minutes} meneti.
 </p>
 
 <p>

@@ -270,6 +270,9 @@ export const italian: Language = {
     "errors.sorryDetail": "Non è stato possibile gestire quella richiesta.",
     "errors.failed": "Qualcosa è andato storto",
     "errors.reference": "Riferimento {reference}.",
+    "errors.unavailable": "Il sito non è disponibile",
+    "errors.unavailableDetail":
+      "Il sito non riesce a raggiungere ciò che gli serve in questo momento. Riprova più tardi.",
 
     "home.recentResults": "Risultati recenti",
     "home.recentResults.none":
@@ -1734,6 +1737,29 @@ export const italian: Language = {
 <p>
     Finché {service} resta fuori uso, riceverai un'email in proposito al massimo una volta
     all'ora.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} non riesce a raggiungere il suo database",
+    "Email.DatabaseUnreachable.body": `
+<p>Ciao,</p>
+
+<p>
+    {siteName} non è riuscito a raggiungere il suo database alle {when}. Finché non risponde, ogni pagina che ne ha bisogno dice ai lettori che il sito non è disponibile e di riprovare più tardi.
+</p>
+
+<p>
+    Non c’è nulla da sbloccare. Ogni richiesta chiede di nuovo una connessione, e il sito torna a funzionare nel momento in cui il database risponde.
+</p>
+
+<p>
+    Finché il database resta irraggiungibile, riceverai al massimo un’email al riguardo ogni {minutes} minuti.
 </p>
 
 <p>

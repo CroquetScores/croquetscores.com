@@ -270,6 +270,9 @@ export const korean: Language = {
     "errors.sorryDetail": "그 요청을 처리할 수 없었어요.",
     "errors.failed": "문제가 생겼어요",
     "errors.reference": "참조 번호 {reference}.",
+    "errors.unavailable": "사이트를 사용할 수 없어요",
+    "errors.unavailableDetail":
+      "사이트가 지금 필요한 것에 연결할 수 없어요. 나중에 다시 시도해 주세요.",
 
     "home.recentResults": "최근 결과",
     "home.recentResults.none": "지난 7일 동안 추가된 경기가 없어요.",
@@ -1664,6 +1667,29 @@ export const korean: Language = {
 <p>
     {service}이(가) 계속 멈춰 있는 동안, 이에 관한 이메일은 한 시간에 최대
     한 번만 보내 드려요.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName}이(가) 데이터베이스에 연결할 수 없어요",
+    "Email.DatabaseUnreachable.body": `
+<p>안녕하세요.</p>
+
+<p>
+    {siteName}이(가) {when}에 데이터베이스에 연결하지 못했어요. 데이터베이스가 응답할 때까지, 이를 필요로 하는 모든 페이지는 방문자에게 사이트를 사용할 수 없으니 나중에 다시 시도해 달라고 안내해요.
+</p>
+
+<p>
+    따로 풀어야 할 것은 없어요. 요청할 때마다 연결을 새로 요청하고, 데이터베이스가 응답하는 순간 사이트는 다시 작동해요.
+</p>
+
+<p>
+    데이터베이스가 계속 멈춰 있는 동안에는 이에 대한 이메일을 {minutes}분에 최대 한 번만 보내 드려요.
 </p>
 
 <p>

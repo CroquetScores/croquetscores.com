@@ -8,6 +8,7 @@ import type {
 } from "fastify";
 import { randomUUID } from "node:crypto";
 
+import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachable.js";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { RoleOperationRefused } from "../../application/operations/accounts/roleOperations.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
@@ -23,7 +24,8 @@ import { siteNameOf, websiteOf } from "./site.js";
 import { escape } from "./escape.js";
 import { render } from "./layout.js";
 import { themeOf } from "./theme.js";
-import { hasPassword, signedIn } from "./reader.js";
+import type { DatabaseOutage } from "./databaseOutage.js";
+import { hasPassword, readerKnown, signedIn } from "./reader.js";
 
 // The API answers JSON and the public pages answer HTML, including when they
 // fail. A browser should not be handed a JSON body for a page it asked for.
@@ -47,6 +49,7 @@ const page = (
     theme: themeOf(request),
     signedIn: signedIn(request),
     hasPassword: hasPassword(request),
+    readerKnown: readerKnown(request),
     speaking,
     siteName: siteNameOf(request),
     tryWebsite: websiteOf(request).isTry,
@@ -87,9 +90,15 @@ const sendPage = (
 const sendJson = (reply: FastifyReply, body: unknown): FastifyReply =>
   reply.header("cache-control", "no-store").send(body);
 
+// How long a program is told to wait before asking again. A guess at how
+// long it takes a database to come back from a restart, said in seconds as
+// Retry-After wants it; nothing waits on it being right.
+const retryAfterSeconds = "30";
+
 export const registerErrorMapping = (
   server: FastifyInstance,
   assets: Assets,
+  databaseOutage: DatabaseOutage,
 ): void => {
   server.setNotFoundHandler((request, reply) => {
     if (wantsJson(request)) {
@@ -98,7 +107,31 @@ export const registerErrorMapping = (
     return sendPage(reply.code(404), assets, request, "errors.notFound");
   });
 
-  server.setErrorHandler((error: FastifyError, request, reply) => {
+  server.setErrorHandler(async (error: FastifyError, request, reply) => {
+    // The database being out of reach is the site being unable to answer, and
+    // is said as that: not the caller's mistake, and not the server having
+    // been built wrongly, which is what falling through would say. It is
+    // answered the same for a page and for the API, with what to do about it,
+    // and without where the database is, which is for the log.
+    if (error instanceof DatabaseUnreachable) {
+      request.log.error(
+        { err: error, code: error.code },
+        "The database could not be reached.",
+      );
+      await databaseOutage(request);
+      reply.header("retry-after", retryAfterSeconds);
+      if (wantsJson(request)) {
+        return sendJson(reply.code(503), { error: error.code });
+      }
+      return sendPage(
+        reply.code(503),
+        assets,
+        request,
+        "errors.unavailable",
+        "errors.unavailableDetail",
+      );
+    }
+
     // A request that broke its rules is the caller's mistake, not the server's,
     // and is neither answered nor logged as the server failing. The caller is
     // owed every rule it broke, by code, so that it can say so to whoever typed

@@ -11,6 +11,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { Pool, PoolClient } from "pg";
 import { Refused } from "../../domain/common/Refused.js";
+import { becauseOf } from "./unreachable.js";
 
 /** Every reason asking for a connection can be refused. */
 export type UnitOfWorkErrorCode =
@@ -102,7 +103,16 @@ export class UnitOfWork {
     begin: string,
     serve: () => Promise<TResult>,
   ): Promise<TResult> {
-    const connection = await this.pool.connect();
+    // A database that cannot be reached is said as that, here, rather than
+    // left to be recognised by whatever a page happens to catch: every
+    // request reaches the database through this, so it is the one place that
+    // sees them all.
+    let connection: PoolClient;
+    try {
+      connection = await this.pool.connect();
+    } catch (failure) {
+      throw becauseOf(failure);
+    }
     listenForItsLoss(connection);
     try {
       await connection.query(begin);
@@ -116,7 +126,7 @@ export class UnitOfWork {
       // a moment ago, and reporting that instead would hide the cause behind
       // its own consequence.
       await connection.query("rollback").catch(() => undefined);
-      throw failure;
+      throw becauseOf(failure);
     } finally {
       // Before anything else can have it, and whether it committed, rolled back
       // or never got as far as either. Enough connections never given back is a

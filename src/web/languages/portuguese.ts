@@ -271,6 +271,9 @@ export const portuguese: Language = {
     "errors.sorryDetail": "Não foi possível atender a esse pedido.",
     "errors.failed": "Algo deu errado",
     "errors.reference": "Referência {reference}.",
+    "errors.unavailable": "O site está indisponível",
+    "errors.unavailableDetail":
+      "O site não consegue acessar o que precisa neste momento. Tente novamente mais tarde.",
 
     "home.recentResults": "Resultados recentes",
     "home.recentResults.none":
@@ -1712,6 +1715,29 @@ export const portuguese: Language = {
 <p>
     Enquanto {service} continuar fora do ar, você receberá um email sobre isso
     no máximo uma vez por hora.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} não consegue acessar o banco de dados",
+    "Email.DatabaseUnreachable.body": `
+<p>Olá,</p>
+
+<p>
+    {siteName} não conseguiu acessar o banco de dados às {when}. Até que ele responda, cada página que precisa dele diz aos leitores que o site está indisponível e para tentarem novamente mais tarde.
+</p>
+
+<p>
+    Não há nada a desbloquear. Cada requisição pede uma conexão de novo, e o site volta a funcionar assim que o banco de dados responde.
+</p>
+
+<p>
+    Enquanto o banco de dados continuar fora do ar, você receberá no máximo um e-mail sobre isso a cada {minutes} minutos.
 </p>
 
 <p>

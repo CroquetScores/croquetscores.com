@@ -271,6 +271,9 @@ export const egyptian: Language = {
     "errors.sorryDetail": "مقدرناش ننفّذ الطلب ده.",
     "errors.failed": "حصلت مشكلة",
     "errors.reference": "الرقم المرجعي {reference}.",
+    "errors.unavailable": "الموقع مش متاح",
+    "errors.unavailableDetail":
+      "الموقع مش قادر يوصل للي محتاجه دلوقتي. جرّب تاني بعدين.",
 
     "home.recentResults": "آخر النتايج",
     "home.recentResults.none": "مفيش أي جيم اتضاف في آخر سبعة أيام.",
@@ -1651,6 +1654,29 @@ export const egyptian: Language = {
 <p dir="rtl">
     وطول ما {service} مش بيردّ، هتوصلك رسالة واحدة بس في الساعة
     في الأكتر عن الموضوع ده.
+</p>
+
+<p dir="rtl">
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} مش قادر يوصل لقاعدة البيانات",
+    "Email.DatabaseUnreachable.body": `
+<p dir="rtl">أهلاً،</p>
+
+<p dir="rtl">
+    {siteName} ما قدرش يوصل لقاعدة البيانات الساعة {when}. لحد ما ترد، كل صفحة محتاجاها بتقول للقرّاء إن الموقع مش متاح وإنهم يجرّبوا تاني بعدين.
+</p>
+
+<p dir="rtl">
+    مفيش حاجة محتاجة تتفك. كل طلب بيطلب اتصال من جديد، والموقع بيشتغل تاني أول ما قاعدة البيانات ترد.
+</p>
+
+<p dir="rtl">
+    طول ما قاعدة البيانات واقعة، هتوصلك رسالة عنها مرة واحدة على الأكتر كل {minutes} دقيقة.
 </p>
 
 <p dir="rtl">

@@ -270,6 +270,9 @@ export const spanish: Language = {
     "errors.sorryDetail": "No se ha podido atender esa petición.",
     "errors.failed": "Algo ha ido mal",
     "errors.reference": "Referencia {reference}.",
+    "errors.unavailable": "El sitio no está disponible",
+    "errors.unavailableDetail":
+      "El sitio no puede acceder ahora a lo que necesita. Inténtalo de nuevo más tarde.",
 
     "home.recentResults": "Resultados recientes",
     "home.recentResults.none":
@@ -1724,6 +1727,29 @@ export const spanish: Language = {
 <p>
     Mientras {service} siga sin responder, recibirás como mucho un correo por
     hora sobre ello.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    "Email.DatabaseUnreachable.subject":
+      "{siteName} no puede acceder a su base de datos",
+    "Email.DatabaseUnreachable.body": `
+<p>Hola:</p>
+
+<p>
+    {siteName} no pudo acceder a su base de datos a las {when}. Hasta que responda, cada página que la necesita dice a los lectores que el sitio no está disponible y que lo intenten de nuevo más tarde.
+</p>
+
+<p>
+    No hay nada que levantar. Cada petición pide una conexión de nuevo, y el sitio vuelve a funcionar en cuanto la base de datos responde.
+</p>
+
+<p>
+    Mientras la base de datos siga caída, recibirás un correo sobre ello como máximo una vez cada {minutes} minutos.
 </p>
 
 <p>

@@ -14,7 +14,15 @@ export const createPool = (
   connectionString: string,
   onIdleError: (error: Error) => void = () => {},
 ): pg.Pool => {
-  const pool = new pg.Pool({ connectionString });
+  // Left to itself the pool waits for a connection for as long as it takes,
+  // which for a database that drops what it is sent is as long as the
+  // operating system takes to give up. A request that is still waiting is no
+  // use to the reader, who would rather be told the site cannot answer, and
+  // every one of them holds a connection slot until it does.
+  const pool = new pg.Pool({
+    connectionString,
+    connectionTimeoutMillis: 10_000,
+  });
   pool.on("error", onIdleError);
   return pool;
 };

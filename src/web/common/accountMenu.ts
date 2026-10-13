@@ -67,6 +67,14 @@ export interface AccountMenu {
   readonly signedIn: boolean;
   /** Whether the account signed in to has a password. */
   readonly hasPassword: boolean;
+  /**
+   * False where the site could not find out who the reader is, which is not
+   * the same as nobody: the menu then offers neither the ways in nor an
+   * account's pages, since either would be a claim about the reader that the
+   * site cannot make. Left out, it is known, as it is on every page that can
+   * read the session.
+   */
+  readonly readerKnown?: boolean | undefined;
   /** Where in the menu the reader is, if anywhere. */
   readonly currentPath?: string | undefined;
 }
@@ -126,6 +134,7 @@ export const accountItems = ({
 
 /** The menu, as the reader of the page it is drawn on sees it. */
 export const accountMenu = (menu: AccountMenu): string => {
+  if (menu.readerKnown === false) return "";
   const named = escape(menu.speaking.say("account.menu"));
 
   return `        <details class="account-menu">
