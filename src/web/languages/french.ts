@@ -286,6 +286,12 @@ export const french: Language = {
     "errors.unavailable": "Le site est indisponible",
     "errors.unavailableDetail":
       "Le site ne parvient pas à joindre ce dont il a besoin pour le moment. Veuillez réessayer plus tard.",
+    "errors.maintenance": "Le site est en maintenance.",
+    "errors.maintenanceMinutes":
+      "Il devrait être de retour dans {minutes} minutes.",
+    "errors.maintenanceMinute": "Il devrait être de retour dans 1 minute.",
+    "errors.maintenanceLonger":
+      "Cela prend plus de temps que prévu ; le site sera bientôt de retour.",
 
     "home.recentResults": "Résultats récents",
     "home.recentResults.none":

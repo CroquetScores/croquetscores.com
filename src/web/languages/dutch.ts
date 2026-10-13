@@ -279,6 +279,13 @@ export const dutch: Language = {
     "errors.unavailable": "De site is niet beschikbaar",
     "errors.unavailableDetail":
       "De site kan op dit moment niet bij wat hij nodig heeft. Probeer het later opnieuw.",
+    "errors.maintenance": "De site ligt stil voor onderhoud.",
+    "errors.maintenanceMinutes":
+      "Hij is naar verwachting over {minutes} minuten weer terug.",
+    "errors.maintenanceMinute":
+      "Hij is naar verwachting over 1 minuut weer terug.",
+    "errors.maintenanceLonger":
+      "Het duurt langer dan verwacht en de site is snel weer terug.",
 
     "home.recentResults": "Recente uitslagen",
     "home.recentResults.none":

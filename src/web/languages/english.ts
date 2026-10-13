@@ -294,6 +294,11 @@ export const english: Language = {
     "errors.unavailable": "The site is unavailable",
     "errors.unavailableDetail":
       "The site cannot reach what it needs just now. Please try again later.",
+    "errors.maintenance": "The site is down for maintenance.",
+    "errors.maintenanceMinutes": "It is expected back in {minutes} minutes.",
+    "errors.maintenanceMinute": "It is expected back in 1 minute.",
+    "errors.maintenanceLonger":
+      "It is taking longer than expected and will be back soon.",
 
     // The home page's two lists, what each says when it has nothing in it,
     // and the way beneath them to every tournament this year.

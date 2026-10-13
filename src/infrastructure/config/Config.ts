@@ -55,6 +55,10 @@ export interface Config {
   // memory, there being nowhere else to count it when the database is the
   // thing that is down.
   readonly databaseUnreachableEmailIntervalMinutes: number;
+  // Where the switch that turns the site's database access off for maintenance
+  // is kept, which is a file because the database cannot say whether it may be
+  // asked (FileDatabaseAccess.feature). Relative to where the site is run.
+  readonly databaseAccessFile: string;
   // The host this site answers to, as a browser would name it: "croquetscores.com",
   // or "localhost:3000" in development. Absent means fall back to the Host header
   // of each request, which is right on a machine nothing sits in front of and
@@ -286,6 +290,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     administratorEmailAddress:
       env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     databaseUnreachableEmailIntervalMinutes,
+    databaseAccessFile:
+      env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",
     canonicalHost: readCanonicalHost(env),
     trustedProxies,
     recaptcha: recaptchaKeys(env),
