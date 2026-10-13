@@ -278,6 +278,11 @@ yesOrNo(
   false,
 );
 yesOrNo(
+  "the tournament kept for {string} on {string} counts towards the world rankings",
+  (t) => t.worldRankings,
+  true,
+);
+yesOrNo(
   "the tournament kept for {string} on {string} is not a national event",
   (t) => t.national,
   false,

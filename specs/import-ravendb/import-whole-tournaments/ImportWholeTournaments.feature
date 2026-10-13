@@ -1361,6 +1361,48 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the tournament kept for "tournaments/13" on "croquetscores.com" does not allow drawn games
 
+    Scenario Outline: A tournament of a ranked sport with a tie marked in text does not count towards the world rankings
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is in the sport "<sport>"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "2 Tied"
+      And game 1 was lost by player 2
+      And game 1's loser scored "2 Tied"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" does not count towards the world rankings
+
+      Examples:
+        | sport |
+        | ac    |
+        | gc    |
+        | a6w   |
+
+    Scenario Outline: A tournament of a ranked sport with no tie marked in text counts towards the world rankings
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is in the sport "<sport>"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "26tp"
+      And game 1 was lost by player 2
+      And game 1's loser scored "3"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the tournament kept for "tournaments/13" on "croquetscores.com" counts towards the world rankings
+
+      Examples:
+        | sport |
+        | ac    |
+        | gc    |
+        | a6w   |
+
     Scenario: A tournament that allows drawn games for a tie marked in text is said as corrected
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing

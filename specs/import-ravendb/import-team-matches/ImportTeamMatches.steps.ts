@@ -268,6 +268,25 @@ Then(
 );
 
 Then(
+  "the player {string} of the team {string} of the tournament kept for {string} on {string} has the world ranking name {string}",
+  async function (
+    this: SpecWorld,
+    player: string,
+    name: string,
+    id: string,
+    website: string,
+    worldRankingName: string,
+  ) {
+    const tournament = await tournamentKeptFor(this, id, website);
+    const found = teamNamed(tournament, name).players.find(
+      (each) => each.name.toString() === player,
+    );
+    assert.ok(found !== undefined, `The team has no player ${player}.`);
+    assert.equal(String(found.worldRankingName), worldRankingName);
+  },
+);
+
+Then(
   "the player {string} of the team {string} of the tournament kept for {string} on {string} has no world ranking name",
   async function (
     this: SpecWorld,
