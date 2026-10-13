@@ -57,7 +57,7 @@ Feature: The site can be read in Spanish
     Scenario: A browser asking for neither still gets English
       Given a viewport 1200 pixels wide
       And a site offering the languages it is served with
-      And a browser that asks for "fr"
+      And a browser that asks for "ga"
       When the home page is opened
       Then the page is in "en"
 

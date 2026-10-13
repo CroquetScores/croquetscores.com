@@ -672,12 +672,40 @@ const events = (): EventRegistry =>
     ),
   );
 
+// Each segment of an admin address that will not decode, written as text.
+const withEscapesThatWillDecode = (url: string): string => {
+  if (!url.startsWith("/admin")) return url;
+  const at = url.search(/[?#]/);
+  const path = at < 0 ? url : url.slice(0, at);
+  const rest = at < 0 ? "" : url.slice(at);
+  return (
+    path
+      .split("/")
+      .map((segment) => {
+        try {
+          decodeURIComponent(segment);
+          return segment;
+        } catch {
+          return encodeURIComponent(segment);
+        }
+      })
+      .join("/") + rest
+  );
+};
+
 export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
 ): Promise<Application> => {
   const server = Fastify({
     logger: options.logger ?? true,
+    // An admin address with a malformed escape, as "%E0%A4%A", is refused by
+    // the router before any handler is asked, with a 400 that is no page of
+    // the admin's. It is the admin's to say there is no such document, as it
+    // does for any other address nothing was kept against, so what will not
+    // decode is routed as the text it is, with its percent sign escaped. What
+    // the browser shows, and the admin reads, is the address as it was.
+    rewriteUrl: (request) => withEscapesThatWillDecode(request.url ?? ""),
     // Which senders' word for where a request came from is believed, from
     // the setting that names what forwards to this site (trustedProxy.ts).
     trustProxy: sendersBelieved(config.trustedProxies),
