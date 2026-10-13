@@ -1,9 +1,10 @@
 // A tournament's page: every game played in it that is in use, the most
 // recently added first, each as the winner on one line and the loser on the
 // next, with the competition it was played in and how long ago it was added
-// beside them. It has no heading of its own, since the header already names
-// the tournament. Its sections are the tournament's: Recent, which is this
-// page, then Players, Notes and Commentary, then its competitions.
+// beside them, under a heading of "Recent" drawn as the players' page draws
+// its own. It does not name the tournament, since the header already does.
+// Its sections are the tournament's: Recent, which is this page, then
+// Players, Notes and Commentary, then its competitions.
 //
 // It needs no scripting. How long ago is worked out as the page is drawn, by
 // the server's clock, so it is as true as the page is fresh.
@@ -84,7 +85,7 @@ export const registerTournamentPage = (
       const games =
         asked.games.length === 0
           ? `          <p class="games-none">${escape(say("tournament.none"))}</p>`
-          : `          <ol class="games">
+          : `          <ol class="games games-recent">
 ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
           </ol>`;
 
@@ -107,7 +108,8 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: games,
+          body: `          <h2 class="players-heading">${escape(say("tournament.recent"))}</h2>
+${games}`,
         }),
       );
     },

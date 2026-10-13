@@ -1583,6 +1583,31 @@ main {
   background: var(--surface);
 }
 
+/* A tournament's page lists its games as its players' page lists its players:
+   drawn up against the heading in the section bar's colours, the full width of
+   the panel, and banded, every other game on the page's tint, so that a long
+   list is read a game at a time. This is the page's own list and not the
+   games of a block's order of play, which keep to the narrow column. */
+.games-recent {
+  max-width: none;
+  gap: 0;
+  margin: calc(-1 * var(--space-4)) 0 0;
+  border: 1px solid var(--border);
+  border-top: 0;
+}
+
+.games-recent > .game {
+  padding: var(--space-2);
+}
+
+.games-recent > .game + .game {
+  border-top: 1px solid var(--border);
+}
+
+.games-recent > .game:nth-child(even) {
+  background: var(--surface);
+}
+
 /* A tournament played by teams lists its players team by team, each team's
    name headed in the section bar's colours as a tournament's own players are,
    with its players drawn up against it so that the two read as one table. */

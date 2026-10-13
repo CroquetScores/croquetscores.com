@@ -6,8 +6,11 @@ Feature: A tournament's page lists its games, the most recent first
   lists and a year's lead (`home.feature`, `year.feature`). The tournament's
   name is in the header, where every page of the tournament has it, so the
   content does not repeat it above the games: it is the list of every game
-  played in it that is in use, the most recently added first (`GamesOfTournament.feature`), so that a
-  reader who comes back sees what has happened since without looking for it.
+  played in it that is in use, the most recently added first
+  (`GamesOfTournament.feature`), so that a reader who comes back sees what
+  has happened since without looking for it. The list is headed "Recent" and
+  drawn as the players' page draws its players, in the section bar's colours
+  with every other game on a tint (`players.feature`).
 
   A game takes two lines. The first is the winner: their name, what they
   represent in brackets, the flag they fly, their score, and "beat". The
@@ -84,6 +87,10 @@ Feature: A tournament's page lists its games, the most recent first
     Scenario: The content does not begin with the tournament's name
       When the page at "/2026/ac/spring-open" is opened
       Then the page's content has no main heading
+
+    Scenario: The games are under a heading of their own
+      When the page at "/2026/ac/spring-open" is opened
+      Then the content has the heading "Recent"
 
     Scenario: A reader not signed in is shown the games
       Given nobody is signed in
