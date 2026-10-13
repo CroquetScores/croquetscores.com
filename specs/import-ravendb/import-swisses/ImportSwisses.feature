@@ -10,8 +10,9 @@ Feature: Importing the old sites' Swisses
   shows it in a Swiss's standings as it does in a block's.
 
   The old sites could also name earlier competitions whose games a Swiss
-  counted as its own. Nothing on them ever set it, so it was only ever set in
-  the database by hand, and the site has nothing like it. It is left behind.
+  counted as its own. The site has nothing like it, so the games are not
+  brought over into the Swiss: what they came to is carried forward by the
+  players who played them (`carriedForwardGames.feature`).
 
   Background:
     Given the users are imported

@@ -99,6 +99,8 @@ export interface WrittenCompetition {
   Players: { _Players: WrittenCompetitionPlayer[] };
   Games: { _Games: WrittenGame[] };
   IsArchived: boolean;
+  /** Only a Swiss names any. */
+  CarryForwardCompetitions?: { Id: string }[];
   BestOf: number;
   Size: number;
   Start: string;
@@ -196,6 +198,10 @@ export class WrittenSite implements DocumentSource, TournamentDocuments {
         document: TDocument;
       }[],
     );
+  }
+
+  load(id: string): Promise<object | undefined> {
+    return Promise.resolve(this.find(id));
   }
 
   // In any case, as RavenDB compares them.
@@ -593,6 +599,7 @@ const importWriting = async (
         website: writing.website,
         id: writing.id,
         document: writing.document,
+        load: (key) => siteOf(state.sites, writing.website).load(key),
       });
     }
   } catch (failure) {

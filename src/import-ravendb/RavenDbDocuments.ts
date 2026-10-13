@@ -88,6 +88,14 @@ export class RavenDbDocuments implements DocumentSource, TournamentDocuments {
     }));
   }
 
+  async load(id: string): Promise<object | undefined> {
+    const session = this.#store.openSession();
+    const document = await session.load<object>(id);
+    return document === null || document === undefined
+      ? undefined
+      : withoutNullCharacters(document);
+  }
+
   /** Closes the connection to RavenDB. */
   dispose(): void {
     this.#store.dispose();

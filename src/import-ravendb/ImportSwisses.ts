@@ -12,8 +12,9 @@ const SINGLE_GAMES = 1;
 /**
  * Brings the old sites' Swisses over as Swisses of single games, with what
  * each player carried forward into it (ImportSwisses.feature). The earlier
- * competitions a Swiss could be said to count, which only the database ever
- * said, are left behind.
+ * competitions a Swiss counted as its own are not brought over into it: what
+ * their games came to is carried forward by the players who played them
+ * (carriedForwardGames.feature).
  */
 export class ImportSwisses implements Importer<Swiss> {
   readonly collection = "Swisses";
@@ -23,6 +24,8 @@ export class ImportSwisses implements Importer<Swiss> {
   async importDocument(read: ReadDocument<Swiss>): Promise<void> {
     await importCompetition(this.importing, read, {
       carriesForward: true,
+      countsGamesOf: (document) =>
+        (document.CarryForwardCompetitions ?? []).map(({ Id }) => Id),
       // A bye has no place in a Swiss, which has no draw: the site has byes
       // only in a knockout, so one the old sites listed here is left out.
       shape: (_document, listed) => ({

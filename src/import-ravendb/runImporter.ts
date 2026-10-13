@@ -11,6 +11,13 @@ export interface ReadDocument<TDocument> {
   /** Its key, such as `users/1`. */
   readonly id: string;
   readonly document: TDocument;
+  /**
+   * Reads another document of the same old site by its key, or nothing where
+   * the site keeps none by it. Given to whatever may name another document,
+   * as a Swiss names the competitions whose games it counted; left out where
+   * nothing is to be read.
+   */
+  readonly load?: (id: string) => Promise<object | undefined>;
 }
 
 /** What one importer reads, and what it does with each document. */
