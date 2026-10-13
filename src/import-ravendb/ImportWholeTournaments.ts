@@ -582,6 +582,9 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
           ...(each.document as OldCompetition),
           Name: `${name}${SEE_NOTES_SUFFIX}`,
         },
+        // So that a Swiss that counted earlier competitions still carries
+        // their games forward as the Swiss it was.
+        load: (key) => this.documents.load(key),
       });
       const made = await this.database.findCompetitionOf(website, swissId);
       if (made === undefined) return;

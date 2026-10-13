@@ -146,6 +146,18 @@ const pointsOf = (typed: string, website: Website): number => {
   }
 };
 
+// Whether `game` names two players and a score for each, which a game the old
+// sites kept half made, as one with no loser, does not.
+const isWhole = (game: unknown): game is OldGame => {
+  const { Winner, Loser } = (game ?? {}) as Partial<OldGame>;
+  return (
+    typeof Winner?.PlayerId === "number" &&
+    typeof Loser?.PlayerId === "number" &&
+    typeof Winner.Score?._Score === "string" &&
+    typeof Loser.Score?._Score === "string"
+  );
+};
+
 /**
  * What each player, by the number the old sites gave them, came to in the
  * games of the competitions `keys` name that were played by the tournament
@@ -154,13 +166,17 @@ const pointsOf = (typed: string, website: Website): number => {
  * whoever scored more, and a game against a bye is left out.
  *
  * A competition of another tournament is left out, since its players'
- * numbers are the other tournament's and are no one here.
+ * numbers are the other tournament's and are no one here. So is `own`, the
+ * competition counting them, whose games are its own and are brought over as
+ * such, and so is a document that is not a competition, since a key can name
+ * anything the old site kept.
  */
 const carriedForwardFrom = async (
   keys: readonly string[],
   load: (key: string) => Promise<object | undefined>,
   website: string,
   tournamentDocument: string,
+  own: string,
 ): Promise<ReadonlyMap<number, Counts>> => {
   const counted = new Map<number, Counts>();
   const countsOf = (number: number): Counts => {
@@ -168,20 +184,42 @@ const carriedForwardFrom = async (
     counted.set(number, counts);
     return counts;
   };
-  // Named twice, it is counted once, as the old sites loaded it.
-  for (const key of new Set(keys)) {
-    const found = await load(key);
-    if (found === undefined) continue;
-    const { document } = withWinnersFromScores(
-      withItsLists(found as OldCompetition),
-      Website.from(website),
-    );
+  // Named twice, it is counted once, as the old sites loaded it. Asked for
+  // all at once, since none waits on another's answer and each is a round
+  // trip to the old site; the totals are the same in whatever order they are
+  // added.
+  const seen = new Set<string>();
+  const named = keys.filter((key) => {
+    const same = key.toLowerCase();
+    if (same === own.toLowerCase() || seen.has(same)) return false;
+    seen.add(same);
+    return true;
+  });
+  const found = await Promise.all(named.map((key) => load(key)));
+  for (const each of found) {
+    const kept = each as
+      | {
+          Tournament?: { Id?: unknown };
+          IsArchived?: boolean;
+          Players?: { _Players?: unknown };
+          Games?: { _Games?: unknown };
+        }
+      | undefined;
     if (
-      document.IsArchived ||
-      document.Tournament.Id.toLowerCase() !== tournamentDocument.toLowerCase()
+      typeof kept?.Tournament?.Id !== "string" ||
+      kept.Tournament.Id.toLowerCase() !== tournamentDocument.toLowerCase()
     ) {
       continue;
     }
+    const games = Array.isArray(kept.Games?._Games) ? kept.Games._Games : [];
+    const { document } = withWinnersFromScores(
+      withItsLists({
+        ...kept,
+        Games: { _Games: games.filter(isWhole) },
+      } as unknown as OldCompetition),
+      Website.from(website),
+    );
+    if (document.IsArchived) continue;
     const byes = new Set(
       document.Players._Players
         .filter((player) => isOldBye(player.Name))
@@ -651,7 +689,13 @@ export const importCompetition = async <TDocument extends OldCompetition>(
   const alsoCounted =
     load === undefined || named.length === 0
       ? new Map<number, Counts>()
-      : await carriedForwardFrom(named, load, website, document.Tournament.Id);
+      : await carriedForwardFrom(
+          named,
+          load,
+          website,
+          document.Tournament.Id,
+          id,
+        );
 
   // Said by a trial that is rolled back, to say it was only a trial.
   class TrialDone extends Error {}

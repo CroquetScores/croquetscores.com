@@ -234,6 +234,23 @@ Feature: Importing the games a Swiss counted as its own as what its players carr
       When the competition is imported
       Then importing the competition is not refused
 
+    Scenario: A document that is not a competition counts for nothing
+      Given the Swiss "swisses/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And the Swiss counts the games of "tournaments/12" as its own
+      When the competition is imported
+      Then importing the competition is not refused
+
+    Scenario: A Swiss that counts itself does not count its own games a second time
+      Given the Swiss "swisses/30" of "tournaments/12" on "croquetscores.com"
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And the Swiss counts the games of "swisses/30" as its own
+      When the competition is imported
+      Then "Sam Someone" carries nothing forward in the competition kept for "swisses/30" on "croquetscores.com"
+
   Rule: A game on equal points is won by whoever the old site said won it
 
     The old sites kept who won a game as well as its scores, and the site
