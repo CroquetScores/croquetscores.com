@@ -136,6 +136,21 @@ export const anApplicationServedAs = (
 ): Promise<string> => anApplicationWith(world, { website });
 
 /**
+ * An application of this scenario's own told who administers it, offering the
+ * languages the site is served with, and otherwise as
+ * {@link anApplicationCalled}.
+ */
+export const anApplicationAdministeredBy = (
+  world: SpecWorld,
+  emailAddress: string,
+): Promise<string> =>
+  anApplicationWith(
+    world,
+    { administratorEmailAddress: emailAddress },
+    "its own",
+  );
+
+/**
  * An application of this scenario's own offering the languages the site is
  * served with rather than the scenarios' English and test locale, and
  * otherwise as {@link anApplicationCalled}. Given none, so that it is the

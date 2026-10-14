@@ -47,6 +47,11 @@ Feature: A reader can see what the site keeps about them
       When the privacy statement is opened
       Then the statement links to send email to the administrator
 
+    Scenario: An address with characters that mean something is linked as written
+      Given the site is told its administrator is "a$&b@example.com"
+      When the privacy statement is opened
+      Then the statement links to send email to "a$&b@example.com"
+
   Rule: Every page links to it
 
     Scenario Outline: The footer links to the statement

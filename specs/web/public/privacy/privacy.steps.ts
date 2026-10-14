@@ -8,6 +8,7 @@ import {
 } from "../../../../src/web/common/helpLibrary.js";
 import type { SpecWorld } from "../../../support/world.js";
 import {
+  anApplicationAdministeredBy,
   anApplicationOfferingItsOwnLanguages,
   anApplicationWithHelp,
 } from "../../support/browser.js";
@@ -25,6 +26,13 @@ Given(
   async function (this: SpecWorld) {
     const without = helpLibraryWithout(helpLibraryIn(dist), "cy", "privacy");
     sites.set(this, await anApplicationWithHelp(this, without));
+  },
+);
+
+Given(
+  "the site is told its administrator is {string}",
+  async function (this: SpecWorld, emailAddress: string) {
+    sites.set(this, await anApplicationAdministeredBy(this, emailAddress));
   },
 );
 
@@ -98,3 +106,17 @@ Then("the footer links to the privacy statement", function (this: SpecWorld) {
     /<footer[\s\S]*<a href="\/privacy">[\s\S]*<\/footer>/,
   );
 });
+
+// As the page writes it, which is escaped: the address is text in a page and
+// a value in an attribute, and what is asked is that neither is broken by
+// what is in it.
+Then(
+  "the statement links to send email to {string}",
+  function (this: SpecWorld, emailAddress: string) {
+    const written = emailAddress.replaceAll("&", "&amp;");
+    assert.ok(
+      body(this).includes(`<a href="mailto:${written}">${written}</a>`),
+      "The address is not linked as written.",
+    );
+  },
+);

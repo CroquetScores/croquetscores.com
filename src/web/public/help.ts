@@ -52,9 +52,11 @@ const privacyName = "privacy";
 // found in them after they are escaped, which is how it was put there.
 const asking = (said: string, emailAddress: string): string => {
   const address = escape(emailAddress);
+  // A function, so that what is in the address is not read as a replacement
+  // pattern: "$&" is a valid thing to find in the local part of one.
   return escape(said).replace(
     address,
-    `<a href="mailto:${address}">${address}</a>`,
+    () => `<a href="mailto:${address}">${address}</a>`,
   );
 };
 
