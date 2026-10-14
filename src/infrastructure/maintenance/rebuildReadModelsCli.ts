@@ -123,7 +123,7 @@ export const runRebuildReadModels = async (
         began = now().getTime();
         lastUpdate = began;
       },
-      streamDone: async (completed) => {
+      streamDone: (completed) => {
         // Not when everything is done: the next line says how long it took.
         if (completed >= total) return;
         const at = now().getTime();
@@ -142,9 +142,7 @@ export const runRebuildReadModels = async (
           wholeMinutesLeft(left) + IN_HAND,
           MOST_MINUTES_OFF,
         );
-        try {
-          await access.moveReturn(back, new Date(at));
-        } catch (failure) {
+        return access.moveReturn(back, new Date(at)).catch((failure) => {
           // Somebody turned access on while this ran: there is no return to
           // move, and it is theirs to have turned on, so it is left on.
           if (
@@ -161,7 +159,7 @@ export const runRebuildReadModels = async (
               `The site's expected return could not be moved: ${failureSaid(failure)}`,
             );
           }
-        }
+        });
       },
     });
     const took = now().getTime() - began;
