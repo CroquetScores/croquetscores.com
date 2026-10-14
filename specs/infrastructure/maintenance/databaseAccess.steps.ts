@@ -1,4 +1,4 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { After, Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import {
@@ -22,14 +22,23 @@ const outcomeOf = (world: SpecWorld): DatabaseAccessOutcome => {
 
 // The database being nowhere is said by pointing the setting at nothing for
 // the scenario: the script reads no such setting, and so is unmoved by it.
+// Put back by a hook of this file, and not by the scenario's own list of what
+// to close, which a scenario with no database of its own never runs: a setting
+// left pointing at nothing would be inherited by every scenario the same worker
+// runs next, and take their database away from them.
+const settingWas = new WeakMap<SpecWorld, string | undefined>();
+
 Given("the database is not there", function (this: SpecWorld) {
-  const was = process.env["DATABASE_URL"];
+  settingWas.set(this, process.env["DATABASE_URL"]);
   process.env["DATABASE_URL"] = "postgres://nobody@127.0.0.1:1/nothing";
-  this.closeBeforeDropping.push(() => {
-    if (was === undefined) delete process.env["DATABASE_URL"];
-    else process.env["DATABASE_URL"] = was;
-    return Promise.resolve();
-  });
+});
+
+After(function (this: SpecWorld) {
+  if (!settingWas.has(this)) return;
+  const was = settingWas.get(this);
+  if (was === undefined) delete process.env["DATABASE_URL"];
+  else process.env["DATABASE_URL"] = was;
+  settingWas.delete(this);
 });
 
 // Said as a Given and as a When alike.
