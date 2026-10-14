@@ -152,7 +152,8 @@ When(
           for (let done = 1; done <= rebuild.streams; done += 1) {
             this.moment = new Date(startedAt + each * done);
             const saidBefore = rebuild.happened.length;
-            await progress.streamDone(done);
+            const completion = progress.streamDone(done);
+            if (completion !== undefined) await completion;
             // What a reader would be told now, kept where it changes, and
             // looked at only when something was said, since nothing else can
             // have moved it.
