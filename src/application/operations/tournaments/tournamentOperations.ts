@@ -34,6 +34,7 @@ export type TournamentOperationErrorCode =
   | "UpcomingTournaments.NoSuchCountry"
   | "TournamentsInYear.NoSuchCountry"
   | "TournamentYears.SportNotOffered"
+  | "PlayerOfWebsite.NoSuchPlayer"
   | "PublicPlayerOfTournament.NoSuchPlayer"
   | "PublicBlockOfTournament.NoSuchCompetition"
   | "PublicBlockOfTournament.NotABlock"

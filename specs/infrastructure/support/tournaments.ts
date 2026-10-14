@@ -113,6 +113,10 @@ import { ReadOnlyTransactionBehaviour } from "../../../src/infrastructure/databa
 import { TransactionBehaviour } from "../../../src/infrastructure/database/TransactionBehaviour.js";
 import { TournamentsByAddress } from "../../../src/infrastructure/read-models/TournamentsByAddress.js";
 import { TournamentsByWebsite } from "../../../src/infrastructure/read-models/TournamentsByWebsite.js";
+import { SearchByWebsite } from "../../../src/infrastructure/read-models/SearchByWebsite.js";
+import { SearchHandler } from "../../../src/application/operations/tournaments/SearchHandler.js";
+import { PlayerOfWebsiteHandler } from "../../../src/application/operations/tournaments/PlayerOfWebsiteHandler.js";
+import { SearchPlayersOfWebsiteHandler } from "../../../src/application/operations/tournaments/SearchPlayersOfWebsiteHandler.js";
 import { RecentResultsHandler } from "../../../src/application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../../../src/application/operations/tournaments/TournamentYearsHandler.js";
@@ -164,11 +168,13 @@ Given("the application's tournaments", function (this: SpecWorld) {
   const accounts = accountsOf(this);
   const byAddress = new TournamentsByAddress(unitOfWork);
   const byWebsite = new TournamentsByWebsite(unitOfWork);
+  const bySearch = new SearchByWebsite(unitOfWork);
   const byNotes = new ManagerNotesByTournament(unitOfWork);
   const byCommentaries = new CommentariesByTournament(unitOfWork);
   const store = new ProjectingEventStore(accounts.store, [
     byAddress,
     byWebsite,
+    bySearch,
     byNotes,
     byCommentaries,
   ]);
@@ -345,6 +351,9 @@ Given("the application's tournaments", function (this: SpecWorld) {
     ),
   );
   mediator.handleQuery(new RecentResultsHandler(byWebsite));
+  mediator.handleQuery(new SearchHandler(bySearch));
+  mediator.handleQuery(new PlayerOfWebsiteHandler(bySearch));
+  mediator.handleQuery(new SearchPlayersOfWebsiteHandler(bySearch));
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(byWebsite));

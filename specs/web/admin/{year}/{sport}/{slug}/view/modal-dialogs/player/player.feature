@@ -450,14 +450,14 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Save" is pressed
       Then the player "Samantha Someone" of "Spring Open" has the world ranking name "Samantha Someone"
 
-    Scenario: A player added in a tournament of another sport has no world ranking name
+    Scenario: A player added in a tournament of another sport has their name as their world ranking name
       Given the tournament "Spring Open" does not count towards the world rankings
       And the tournament "Spring Open" is for the sport "rc"
       And the page of "Spring Open" is open
       And "Add Player" is pressed
       And "Sam Someone" is typed as the "Name"
       When "Add" is pressed
-      Then the player "Sam Someone" of "Spring Open" has no world ranking name
+      Then the player "Sam Someone" of "Spring Open" has the world ranking name "Sam Someone"
 
   Rule: While a player is added, their world ranking name follows their name until it is typed in
 

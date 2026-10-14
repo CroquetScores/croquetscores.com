@@ -326,6 +326,17 @@ export const german: Language = {
     "teamSummary.against": "Gegen",
     "teamSummary.net": "Differenz",
     "tournament.players": "Spieler",
+    "search.label": "Suchen",
+    "search.tournaments": "Turniere",
+    "search.competitions": "Wettbewerbe",
+    "search.nothingFound": "Nichts gefunden.",
+    "players.search.label": "Spieler suchen",
+    "players.search.prompt":
+      "Gib den Namen eines Spielers ein, um ihn zu finden.",
+    "players.search.none": "Keine Spieler gefunden.",
+    "search.more":
+      "Es werden nur die ersten {count} angezeigt. Gib mehr vom Namen ein, um die Suche einzugrenzen.",
+    "websitePlayer.tournament": "Turnier",
     "tournament.test": "{first} gegen {second}",
     "tournament.notes": "Hinweise",
     "tournament.commentary": "Kommentare",

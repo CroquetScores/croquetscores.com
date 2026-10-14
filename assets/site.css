@@ -355,15 +355,16 @@ a:hover {
   color: var(--accent-ink);
 }
 
-/* Along the top rather than centred, so that where the bar is taller for a
-   tournament's name beneath the site's, the navigation stays at the top of the
-   window rather than sinking to the middle of the bar. */
+/* Centred in the height of the bar, so that where it is taller for a
+   tournament's name beneath the site's, the search, the menu and the account
+   stand level with the middle of the names rather than at the top of them. */
 .site-bar-inner {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+  padding-block: 10px;
   padding-inline: var(--panel-inset);
 }
 
@@ -503,7 +504,8 @@ body > .site-footer {
 }
 
 .site-name,
-.site-tournament {
+.site-tournament,
+.site-page {
   color: var(--accent-ink);
   font-size: var(--text-lg);
   font-weight: 700;
@@ -514,15 +516,16 @@ body > .site-footer {
 /* Close beneath the site's name, so that the two read as one title rather
    than as two things in the bar: nothing between them but the lines
    themselves, set tight. */
-.site-names:has(.site-tournament) .site-name {
+.site-names:has(.site-tournament, .site-page) .site-name {
   padding-bottom: 0;
 }
 
-.site-names:has(.site-tournament) {
+.site-names:has(.site-tournament, .site-page) {
   line-height: var(--leading-tight);
 }
 
-.site-tournament {
+.site-tournament,
+.site-page {
   padding-top: 0;
 }
 
@@ -544,6 +547,147 @@ body > .site-footer {
    would sit in the middle once the menu joined it. */
 .site-bar-inner > .menu {
   margin-inline-start: auto;
+}
+
+/* The site's search, beside the menu on the right of the pinned bar, and
+   wrapping beneath the names on a phone with the rest of the bar rather than
+   pushing it wider than the window. */
+.site-search {
+  display: flex;
+  align-items: center;
+  /* Centred in the height of the bar, which is taller where a tournament's
+     name is beneath the site's, rather than left at the top with the menu. */
+  align-self: center;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.site-search + .menu {
+  margin-inline-start: 0;
+}
+
+/* Read against the page's own surface and ink, as a field is everywhere, and
+   not against the bar's green: the field inherits the bar's white ink, which
+   on a white field is not there. */
+.site-search input {
+  min-width: 0;
+  width: 10rem;
+  max-width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  background: var(--panel);
+  color: var(--ink);
+}
+
+/* In the secondary navigation's colours, and filled as its tab being read is
+   when it is hovered, since a hover in the bar's own green would be nothing. */
+.site-search button {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.site-search button:hover {
+  background: var(--current);
+  color: var(--current-ink);
+}
+
+/* The page of players' own search, in the content as the results are. */
+.players-search {
+  display: flex;
+  gap: var(--space-1);
+  max-width: 38rem;
+  margin-block-end: var(--space-4);
+}
+
+.players-search input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* What a search found, a list to each kind under its heading, drawn as the
+   games of a tournament's Recent page are: headed in the section bar's colours
+   and banded, drawn up against the heading as one table. The competition has
+   the tournament it is in beside it. */
+.search-list {
+  margin-block-end: var(--space-4);
+}
+
+/* Against the heading by having no margin of its own and the heading none
+   beneath it, and not by being pulled up over a margin that the heading may
+   not have, which is what left the heading on the first row. */
+.search-list > h2,
+.players-search-heading {
+  margin: 0;
+}
+
+.search-list ul,
+.players-search-found {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-top: 0;
+}
+
+.search-list li,
+.players-search-found li {
+  padding: var(--space-2);
+  overflow-wrap: anywhere;
+}
+
+.search-list li + li,
+.players-search-found li + li {
+  border-top: 1px solid var(--border);
+}
+
+.search-list li:nth-child(even),
+.players-search-found li:nth-child(even) {
+  background: var(--surface);
+}
+
+/* A player's tournaments, drawn as the other lists of the public site are:
+   headed in the section bar's colours, bordered and banded. */
+.player-tournaments {
+  width: 100%;
+  max-width: 38rem;
+  border-collapse: collapse;
+  margin-block-end: var(--space-4);
+}
+
+.player-tournaments th {
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+  text-align: start;
+}
+
+.player-tournaments th a {
+  color: inherit;
+}
+
+.player-tournaments td {
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-top: 0;
+  overflow-wrap: anywhere;
+}
+
+.player-tournaments tbody tr:nth-child(even) td {
+  background: var(--surface);
+}
+
+.search-of {
+  color: var(--ink-muted);
 }
 
 /* The account menu: the last thing in the header, a person that opens on what
@@ -1628,6 +1772,8 @@ main {
    are no players, what says so keeps its place beneath. */
 .players-heading,
 .games-heading,
+.search-list > h2,
+.players-search-heading,
 .player-games > h2,
 .player-competitions > h2 {
   padding: var(--space-1) var(--space-2);

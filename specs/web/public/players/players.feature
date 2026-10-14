@@ -14,8 +14,8 @@ Feature: A tournament's players' page lists its players by name
   the feature that provides it lands.
 
   The tournament's name is in the header, so the content does not repeat it:
-  the players are under a heading of their own, and its sections are the tournament's, with Players marked as
-  the section being read.
+  the players are under a heading of their own, and its sections are the
+  tournament's, with Players marked as the section being read.
 
   A tournament played by teams has no players of its own, only its teams', so
   its players' page lists them team by team: each team under a heading of its
