@@ -30,6 +30,8 @@ export const dutch: Language = {
       "Bevalt {siteName} je? Doneer dan om de verdere ontwikkeling te helpen betalen.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
+    "beta.banner":
+      "Dit is een bètawebsite. Gegevens kunnen op elk moment worden gereset.",
     "privacy.contact":
       "Vragen over deze pagina, of over wat er van je wordt bewaard: {emailAddress}",
     "tryWebsite.banner":

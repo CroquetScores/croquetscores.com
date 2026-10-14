@@ -261,6 +261,7 @@ import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter, siteAddress } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
+import { registerBetaBanner } from "./common/betaSite.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
 import {
   isAdministrator,
@@ -1418,6 +1419,7 @@ export const buildApplication = async (
   // another site by forgetting to ask.
   refuseCrossSite(server, config.canonicalHost);
   registerSearchEngines(server, config.searchEnginesWelcome);
+  registerBetaBanner(server);
 
   // Every answer of the API names the build the site is serving, so that an
   // admin left open across a deploy learns of it (newerBuild.feature).

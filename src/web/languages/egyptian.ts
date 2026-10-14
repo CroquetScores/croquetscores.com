@@ -38,6 +38,8 @@ export const egyptian: Language = {
     "footer.plea": "عجبك {siteName}؟ تبرّع علشان نكمّل نطوّره.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "الخصوصية",
+    "beta.banner":
+      "ده موقع تجريبي (بيتا). البيانات ممكن تتمسح وتبدأ من الأول في أي وقت.",
     "privacy.contact":
       "لو عندك أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",
     "tryWebsite.banner":

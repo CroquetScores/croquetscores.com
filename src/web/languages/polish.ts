@@ -36,6 +36,8 @@ export const polish: Language = {
       "Podoba ci się {siteName}? Wesprzyj nas darowizną, by pomóc w dalszym rozwoju.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Prywatność",
+    "beta.banner":
+      "To jest strona w wersji beta. Dane mogą zostać zresetowane w dowolnej chwili.",
     "privacy.contact":
       "Pytania o tę stronę lub o to, co jest o tobie przechowywane: {emailAddress}",
     "tryWebsite.banner":

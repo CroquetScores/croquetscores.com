@@ -407,6 +407,24 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Above everything, where the site is served from an address that is not one of
+   the two websites: the site is a beta and what is entered may be thrown away.
+   Black on bright yellow in both themes, because it is a warning and has to
+   look like one rather than like part of the page; the pairing is 17:1. */
+.beta-banner {
+  background: #ffeb3b;
+  color: #000;
+  text-align: center;
+}
+
+.beta-banner p {
+  margin: 0;
+  max-width: none;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  font-weight: 700;
+}
+
 /* On a try website, the line saying it is somewhere to learn. Body text on the
    panel, a pairing the palette is already measured for, rather than a warning
    colour of its own: it is news the reader needs, not a fault they caused. */

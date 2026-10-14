@@ -30,6 +30,8 @@ export const german: Language = {
       "Gefällt dir {siteName}? Bitte spende, damit es weiterentwickelt werden kann.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Datenschutz",
+    "beta.banner":
+      "Dies ist eine Beta-Website. Daten können jederzeit zurückgesetzt werden.",
     "privacy.contact":
       "Fragen zu dieser Seite oder dazu, was über dich gespeichert ist: {emailAddress}",
     "tryWebsite.banner":

@@ -29,6 +29,7 @@ export const english: Language = {
       "Are you enjoying {siteName}? Please donate to help further development.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
+    "beta.banner": "This is a beta site. Data may be reset at any time.",
     "privacy.contact":
       "Questions about this page, or about what is kept about you: {emailAddress}",
     // Said on every page of a try website, beneath the site bar.

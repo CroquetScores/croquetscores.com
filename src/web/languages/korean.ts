@@ -36,6 +36,8 @@ export const korean: Language = {
       "{siteName}이(가) 마음에 드시나요? 앞으로의 개발을 위해 후원해 주세요.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "개인정보",
+    "beta.banner":
+      "이곳은 베타 사이트예요. 데이터는 언제든 초기화될 수 있어요.",
     "privacy.contact":
       "이 페이지나 보관 중인 회원님의 정보에 대한 문의: {emailAddress}",
     "tryWebsite.banner":

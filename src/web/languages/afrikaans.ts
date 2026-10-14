@@ -33,6 +33,8 @@ export const afrikaans: Language = {
       "Hou jy van {siteName}? Maak 'n skenking om te help dat dit verder ontwikkel word.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privaatheid",
+    "beta.banner":
+      "Dit is 'n beta-webwerf. Data kan enige tyd teruggestel word.",
     "privacy.contact":
       "Vrae oor hierdie bladsy, of oor wat oor jou bewaar word: {emailAddress}",
     "tryWebsite.banner":

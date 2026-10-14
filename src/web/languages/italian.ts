@@ -30,6 +30,8 @@ export const italian: Language = {
       "Ti piace {siteName}? Fai una donazione per aiutarci a continuare a svilupparlo.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
+    "beta.banner":
+      "Questo è un sito beta. I dati possono essere azzerati in qualsiasi momento.",
     "privacy.contact":
       "Domande su questa pagina, o su ciò che viene conservato su di te: {emailAddress}",
     "tryWebsite.banner":
