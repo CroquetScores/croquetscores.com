@@ -485,6 +485,27 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
               `The player represents ${String(player.Representing)}, which is neither team.`,
             );
           }
+          // The old sites gave a person another number in another team match
+          // of the tournament, so a name the team already has is that player,
+          // however it was numbered. Taken for a new player it was numbered
+          // apart, as "John Hutchison (2)", and the team had the one person
+          // twice. Not one this team match has used for a player already: two
+          // people of the one name in one team match are two people, and the
+          // second takes the next of the team's players of the name, or is
+          // numbered apart where it has none.
+          const used = [...players.values()];
+          const theirs = tournament.teams
+            .find((each) => each.id.equals(team.id))
+            ?.players.find(
+              (one) =>
+                sameBaseName(one.name.toString(), nameToImport(player.Name)) &&
+                !used.some((taken) => taken.equals(one.id)),
+            );
+          if (theirs !== undefined) {
+            players.set(player._Id, theirs.id);
+            if (numbered) made.push({ number: player._Id, id: theirs.id });
+            continue;
+          }
           const playerId = TeamPlayerId.create();
           tournament.addTeamPlayer(
             team.id,

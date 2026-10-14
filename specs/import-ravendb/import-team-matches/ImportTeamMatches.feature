@@ -26,7 +26,10 @@ Feature: Importing the old sites' team matches
   A player of a team match is a player of the team they represented, made
   the first time a team match of the tournament has them. The old sites
   numbered a tournament's players once for all its team matches, so a player
-  with the same number in two of them is the same team player in both.
+  with the same number in two of them is the same team player in both. They
+  did not always: the same name was given another number in another team
+  match, and a team's player of that name is the same player whatever number
+  they had.
 
   A test is brought over a player and a game at a time, as a competition is
   (`importCompetition.feature`), and is created by whoever the tournament
@@ -1496,6 +1499,120 @@ Feature: Importing the old sites' team matches
       And player 8 represents "New Zealand"
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
+
+  Rule: A name a team already has is its player, whatever number the old site gave it
+
+    The old sites gave the same person another number in another team match
+    of the one tournament: in the 2025 Australia - Eire Cup, John Hutchison of
+    Tasmania was number 15 in four of its tests and number 102 and 111 in two
+    others. Taken for new players, each was numbered apart from the first, as
+    "John Hutchison (2)", and the team had the same person three times. So a
+    player of a team whose name is the name of one the team already has, in
+    any case and with any spaces and without the number a name is given to
+    tell it apart, is that player.
+
+    Two people of the same name in one team match are two people, though, and
+    so are two of the same name in different teams. Only a name met again, in
+    another team match, is the same player.
+
+    Scenario: A name the team already has under another number is the same player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Sam Someone"
+      And player 12 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
+
+    Scenario: The name is kept as it was, with no number put after it
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Sam Someone"
+      And player 12 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone"
+
+    Scenario: A name in another case is the same player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "sam  SOMEONE"
+      And player 12 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
+
+    Scenario: The number the second team match gave is found again as the same player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Sam Someone"
+      And player 12 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/52" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Sam Someone"
+      And player 12 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
+
+    Scenario: A name of the same team in the same team match twice is two players
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Sam Someone"
+      And player 12 represents "New Zealand"
+      And player 13 is in the team match
+      And player 13 is called "Sam Someone"
+      And player 13 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 2 players
+
+    Scenario: A name of another team is another player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Sam Someone"
+      And player 12 represents "England"
+      When the team match is imported
+      Then the team "England" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
 
   Rule: A number the old site gave another player of the same team is not taken for theirs
 
