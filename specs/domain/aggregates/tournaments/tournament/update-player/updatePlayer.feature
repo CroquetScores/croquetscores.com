@@ -220,32 +220,43 @@ Feature: Changing what a tournament's player is
       When the player "Sam Someone" is updated
       Then it is refused with "Tournament.Archived"
 
-  Rule: Where the sport has no world rankings a player's world ranking name is their name
+  Rule: Where the sport has no world rankings a player's world ranking name is the one given, or their name where none is
 
-    A player's world ranking name is always their name there
-    (`addPlayer.feature`), so correcting the name corrects it, and a world
-    ranking name an update gives is not kept.
+    A player is known by their own name there unless another is given
+    (`addPlayer.feature`), so a world ranking name an update gives is kept,
+    the one the player already has among them, and correcting the name
+    corrects it only where the update gives none.
 
-    Scenario: A corrected name is the world ranking name
+    Scenario: A corrected name leaves the world ranking name the update carries
       Given a stream where a tournament was created in the sport "a6w"
       And the player "Sam Someone" was added to it
       And the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"
       When the player "Sam Someone" is updated
+      Then the tournament's player "Samantha Someone" has the world ranking name "Sam Someone"
+
+    Scenario: A corrected name is the world ranking name where the update gives none
+      Given a stream where a tournament was created in the sport "a6w"
+      And the player "Sam Someone" was added to it
+      And the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      And the update gives the player the world ranking name "   "
+      When the player "Sam Someone" is updated
       Then the tournament's player "Samantha Someone" has the world ranking name "Samantha Someone"
 
-    Scenario: A corrected name is the world ranking name in a sport that is not ranked
+    Scenario: A corrected name is the world ranking name where the update gives none in a sport that is not ranked
       Given a stream where a tournament was created in the sport "rc"
       And the player "Sam Someone" was added to it
       And the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"
+      And the update gives the player the world ranking name "   "
       When the player "Sam Someone" is updated
       Then the tournament's player "Samantha Someone" has the world ranking name "Samantha Someone"
 
-    Scenario: A world ranking name an update gives is not kept
+    Scenario: A world ranking name an update gives is kept
       Given a stream where a tournament was created in the sport "a6w"
       And the player "Sam Someone" was added to it
       And the tournament is rebuilt from the stream
       And the update gives the player the world ranking name "Samuel Someone"
       When the player "Sam Someone" is updated
-      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"

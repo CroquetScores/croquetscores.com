@@ -39,9 +39,9 @@ Feature: Importing the old sites' team matches
   (`ImportWholeTournaments.feature`).
 
   The old sites kept no world ranking name, so a player is brought over with
-  their name as it, as one added with none is (`addTeamPlayer.feature`), and in
-  a sport without world rankings their world ranking name is always their
-  name.
+  their name as it, as one added with none is (`addTeamPlayer.feature`), less
+  the brackets that end it (see below). That is so in a sport without world
+  rankings as well, where a world ranking name given is kept as it is anywhere.
 
   Background:
     Given the users are imported
@@ -1499,6 +1499,50 @@ Feature: Importing the old sites' team matches
       And player 8 represents "New Zealand"
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
+
+  Rule: A player's world ranking name is their name without the brackets that end it
+
+    As a tournament's players are (`ImportTournamentPlayers.feature`): what is
+    in brackets at the end of a name, as "(NZ)" or "(2)", is not part of the
+    name the world rankings know a person by, so it is taken off the world
+    ranking name and left on the name.
+
+    Scenario: A country in brackets is not part of the world ranking name
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone (NZ)"
+      And player 7 represents "New Zealand"
+      When the team match is imported
+      Then the player "Sam Someone (NZ)" of the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: Every group of brackets that ends the name is taken off
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone (NZ) (2)"
+      And player 7 represents "New Zealand"
+      When the team match is imported
+      Then the player "Sam Someone (NZ) (2)" of the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: A name too short without its brackets says it was imported
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Al (NZ)"
+      And player 7 represents "New Zealand"
+      When the team match is imported
+      Then the player "Al (NZ)" of the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the world ranking name "Al - Imported"
+
+    Scenario: A team of a sport with no world rankings has the name without the brackets as the world ranking name
+      Given a tournament "tournaments/14" on "croquetscores.com" of the type "teams" and the sport "a6w" is imported
+      And the team match "teammatches/51" of "tournaments/14" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Sam Someone (NZ)"
+      And player 7 represents "New Zealand"
+      When the team match is imported
+      Then the player "Sam Someone (NZ)" of the team "New Zealand" of the tournament kept for "tournaments/14" on "croquetscores.com" has the world ranking name "Sam Someone"
 
   Rule: A name a team already has is its player, whatever number the old site gave it
 

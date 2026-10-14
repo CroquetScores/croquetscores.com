@@ -28,7 +28,11 @@ import {
 } from "./importCompetition.js";
 import { ImportRefused } from "./ImportRefused.js";
 import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
-import { nameToImport, numberedApart } from "./names.js";
+import {
+  nameToImport,
+  numberedApart,
+  worldRankingNameToImport,
+} from "./names.js";
 import { dayOf } from "./newtonsoft.js";
 import { oldShortNameOf, stateNamed } from "./oldSites.js";
 import type {
@@ -507,18 +511,17 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             continue;
           }
           const playerId = TeamPlayerId.create();
+          const name = numberedApart(
+            nameToImport(player.Name),
+            (
+              tournament.teams.find((each) => each.id.equals(team.id))
+                ?.players ?? []
+            ).map((each) => each.name.toString()),
+          );
           tournament.addTeamPlayer(
             team.id,
             playerId,
-            {
-              name: numberedApart(
-                nameToImport(player.Name),
-                (
-                  tournament.teams.find((each) => each.id.equals(team.id))
-                    ?.players ?? []
-                ).map((each) => each.name.toString()),
-              ),
-            },
+            { name, worldRankingName: worldRankingNameToImport(name) },
             by,
             at,
           );
@@ -778,16 +781,18 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
         const team = teamOfPlayer(loserId);
         if (team === undefined) return Promise.resolve(false);
         const madeId = TeamPlayerId.create();
+        const meetingAgain = numberedApart(
+          meetingAgainName(loser),
+          (teamOfPlayer(loserId)?.players ?? []).map((each) =>
+            each.name.toString(),
+          ),
+        );
         tournament.addTeamPlayer(
           team.id,
           madeId,
           {
-            name: numberedApart(
-              meetingAgainName(loser),
-              (teamOfPlayer(loserId)?.players ?? []).map((each) =>
-                each.name.toString(),
-              ),
-            ),
+            name: meetingAgain,
+            worldRankingName: worldRankingNameToImport(meetingAgain),
           },
           by,
           at,
