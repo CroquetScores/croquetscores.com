@@ -29,6 +29,9 @@ export const german: Language = {
     "footer.plea":
       "Gefällt dir {siteName}? Bitte spende, damit es weiterentwickelt werden kann.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Datenschutz",
+    "privacy.contact":
+      "Fragen zu dieser Seite oder dazu, was über dich gespeichert ist: {emailAddress}",
     "tryWebsite.banner":
       "Das hier ist ein geschützter Ort, um {siteName} kennenzulernen. Alles, was du hier eingibst, kann jederzeit gelöscht werden.",
 

@@ -1518,7 +1518,7 @@ export const buildApplication = async (
   registerNewConfirmationLinkPage(server, assets, links);
   registerWelcomePage(server, assets);
   registerJavaScriptRequiredPage(server, assets);
-  registerHelpPages(server, assets, help);
+  registerHelpPages(server, assets, help, config.administratorEmailAddress);
   registerWhatsNewRoute(server, help);
   registerHomePage(server, assets, help);
   registerYearPage(server, assets);

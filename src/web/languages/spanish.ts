@@ -27,6 +27,9 @@ export const spanish: Language = {
     "footer.plea":
       "¿Te está gustando {siteName}? Haz un donativo para ayudar a seguir desarrollándolo.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Privacidad",
+    "privacy.contact":
+      "Preguntas sobre esta página, o sobre lo que se guarda de ti: {emailAddress}",
     "tryWebsite.banner":
       "Este es un lugar seguro para aprender {siteName}. Todo lo que introduzcas aquí puede borrarse en cualquier momento.",
 

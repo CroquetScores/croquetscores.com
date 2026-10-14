@@ -34,6 +34,9 @@ export const japanese: Language = {
     "footer.plea":
       "{siteName}をお楽しみいただけていますか？今後の開発を支えるため、ぜひご寄付をお願いします。",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "プライバシー",
+    "privacy.contact":
+      "このページや、保管されているあなたの情報についてのご質問は：{emailAddress}",
     "tryWebsite.banner":
       "ここは{siteName}を安心して試せる場所です。ここに入力した内容は、いつでも削除されることがあります。",
 

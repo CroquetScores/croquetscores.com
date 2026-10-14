@@ -42,10 +42,27 @@ const typeOf = (name: string): string =>
 const pictured = (html: string, tag: string): string =>
   html.split(`src="${helpImagesPath}/`).join(`src="${helpImagesPath}/${tag}/`);
 
+// The address of the privacy statement, a page of the help's library that has
+// an address of its own so that it can be linked to from every page.
+export const privacyPath = "/privacy";
+const privacyName = "privacy";
+
+// The sentence that says who to ask, with the address in it made a link that
+// opens a new message to it. The words are the catalogue's, so the address is
+// found in them after they are escaped, which is how it was put there.
+const asking = (said: string, emailAddress: string): string => {
+  const address = escape(emailAddress);
+  return escape(said).replace(
+    address,
+    `<a href="mailto:${address}">${address}</a>`,
+  );
+};
+
 export const registerHelpPages = (
   server: FastifyInstance,
   assets: Assets,
   library: HelpLibrary,
+  administrator: string | undefined,
 ): void => {
   // A picture shows the site in a language, and the address says which, so
   // that the pictures of a page are those of the language the page was written
@@ -89,7 +106,13 @@ export const registerHelpPages = (
     request: FastifyRequest,
     reply: FastifyReply,
     name: string,
+    atItsOwnAddress = false,
   ): Promise<FastifyReply> => {
+    // The statement has one address, which is its own and not the help's.
+    if (name === privacyName && !atItsOwnAddress) {
+      reply.callNotFound();
+      return reply;
+    }
     const speaking = speakingOf(request);
     const fallback = server.languages[0];
     const own = await library.page(speaking.language.tag, name);
@@ -121,13 +144,18 @@ export const registerHelpPages = (
       speaking,
       siteName: siteNameOf(request),
       tryWebsite: websiteOf(request).isTry,
-      path: helpPath,
+      path: name === privacyName ? privacyPath : helpPath,
       // The article says which language it is in and which page it is, so that
       // a reader's browser and screen reader read it in the language it is
       // written in even where the site around it is in another.
       body: `          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
 ${pictured(page.html, writtenIn.tag)}
-          </article>`,
+          </article>${
+            name === privacyName && administrator !== undefined
+              ? `
+          <p>${asking(speaking.say("privacy.contact", { emailAddress: administrator }), administrator)}</p>`
+              : ""
+          }`,
     });
 
     return reply
@@ -137,6 +165,9 @@ ${pictured(page.html, writtenIn.tag)}
       .send(html);
   };
 
+  server.get(privacyPath, (request, reply) =>
+    show(request, reply, privacyName, true),
+  );
   server.get(helpPath, (request, reply) => show(request, reply, ""));
   server.get<{ Params: { "*": string } }>(`${helpPath}/*`, (request, reply) => {
     const name = request.params["*"].replace(/\/+$/, "");

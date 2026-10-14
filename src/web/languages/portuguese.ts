@@ -31,6 +31,9 @@ export const portuguese: Language = {
     "footer.plea":
       "Está gostando do {siteName}? Faça uma doação para ajudar a continuar o desenvolvimento.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Privacidade",
+    "privacy.contact":
+      "Dúvidas sobre esta página, ou sobre o que é guardado sobre você: {emailAddress}",
     "tryWebsite.banner":
       "Este é um lugar seguro para aprender a usar o {siteName}. Tudo o que for inserido aqui pode ser removido a qualquer momento.",
 

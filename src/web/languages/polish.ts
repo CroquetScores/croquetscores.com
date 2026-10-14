@@ -35,6 +35,9 @@ export const polish: Language = {
     "footer.plea":
       "Podoba ci się {siteName}? Wesprzyj nas darowizną, by pomóc w dalszym rozwoju.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Prywatność",
+    "privacy.contact":
+      "Pytania o tę stronę lub o to, co jest o tobie przechowywane: {emailAddress}",
     "tryWebsite.banner":
       "To bezpieczne miejsce do nauki {siteName}. Wszystko, co tu wpiszesz, może zostać usunięte w dowolnej chwili.",
 

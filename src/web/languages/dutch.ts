@@ -29,6 +29,9 @@ export const dutch: Language = {
     "footer.plea":
       "Bevalt {siteName} je? Doneer dan om de verdere ontwikkeling te helpen betalen.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Privacy",
+    "privacy.contact":
+      "Vragen over deze pagina, of over wat er van je wordt bewaard: {emailAddress}",
     "tryWebsite.banner":
       "Dit is een veilige plek om {siteName} te leren kennen. Alles wat je hier invoert, kan op elk moment worden verwijderd.",
 

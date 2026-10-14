@@ -34,6 +34,9 @@ export const chinese: Language = {
     "footer.donate": "捐赠",
     "footer.plea": "喜欢 {siteName} 吗？请捐赠，帮助我们继续开发。",
     "footer.copyright": "© 版权所有 {years}，{owner}",
+    "footer.privacy": "隐私",
+    "privacy.contact":
+      "关于本页，或关于我们保存的您的信息，如有疑问请联系：{emailAddress}",
     "tryWebsite.banner":
       "这里是学习 {siteName} 的安全场所。在这里输入的任何内容都可能随时被删除。",
 

@@ -37,6 +37,9 @@ export const egyptian: Language = {
     "footer.donate": "تبرّع",
     "footer.plea": "عجبك {siteName}؟ تبرّع علشان نكمّل نطوّره.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "الخصوصية",
+    "privacy.contact":
+      "لو عندك أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",
     "tryWebsite.banner":
       "ده مكان آمن تتعلّم فيه {siteName}. أي حاجة تكتبها هنا ممكن تتمسح في أي وقت.",
 
