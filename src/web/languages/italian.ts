@@ -280,6 +280,11 @@ export const italian: Language = {
     "errors.unavailable": "Il sito non è disponibile",
     "errors.unavailableDetail":
       "Il sito non riesce a raggiungere ciò che gli serve in questo momento. Riprova più tardi.",
+    "errors.maintenance": "Il sito è in manutenzione.",
+    "errors.maintenanceMinutes": "Dovrebbe tornare tra {minutes} minuti.",
+    "errors.maintenanceMinute": "Dovrebbe tornare tra 1 minuto.",
+    "errors.maintenanceLonger":
+      "Ci vuole più tempo del previsto; il sito tornerà presto.",
 
     "home.recentResults": "Risultati recenti",
     "home.recentResults.none":

@@ -283,6 +283,11 @@ export const russian: Language = {
     "errors.unavailable": "Сайт недоступен",
     "errors.unavailableDetail":
       "Сайт сейчас не может получить доступ к тому, что ему нужно. Пожалуйста, попробуйте позже.",
+    "errors.maintenance": "Сайт закрыт на техническое обслуживание.",
+    "errors.maintenanceMinutes": "Он вернётся примерно через {minutes} мин.",
+    "errors.maintenanceMinute": "Он вернётся примерно через 1 мин.",
+    "errors.maintenanceLonger":
+      "Это занимает больше времени, чем ожидалось; сайт скоро вернётся.",
 
     "home.recentResults": "Последние результаты",
     "home.recentResults.none":

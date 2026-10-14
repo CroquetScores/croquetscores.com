@@ -288,6 +288,12 @@ export const welsh: Language = {
     "errors.unavailable": "Nid yw’r wefan ar gael",
     "errors.unavailableDetail":
       "Ni all y wefan gyrraedd yr hyn sydd ei angen arni ar hyn o bryd. Rhowch gynnig arni eto yn nes ymlaen.",
+    "errors.maintenance": "Mae'r safle i lawr ar gyfer gwaith cynnal a chadw.",
+    "errors.maintenanceMinutes":
+      "Disgwylir iddo ddychwelyd ymhen {minutes} munud.",
+    "errors.maintenanceMinute": "Disgwylir iddo ddychwelyd ymhen 1 munud.",
+    "errors.maintenanceLonger":
+      "Mae'n cymryd mwy o amser na'r disgwyl a bydd yn ôl cyn bo hir.",
 
     "home.recentResults": "Canlyniadau diweddar",
     "home.recentResults.none":

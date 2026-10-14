@@ -286,6 +286,12 @@ export const polish: Language = {
     "errors.unavailable": "Serwis jest niedostępny",
     "errors.unavailableDetail":
       "Serwis nie może teraz połączyć się z tym, czego potrzebuje. Spróbuj ponownie później.",
+    "errors.maintenance":
+      "Serwis jest wyłączony z powodu prac konserwacyjnych.",
+    "errors.maintenanceMinutes": "Powinien wrócić za {minutes} min.",
+    "errors.maintenanceMinute": "Powinien wrócić za 1 min.",
+    "errors.maintenanceLonger":
+      "Trwa to dłużej, niż oczekiwano; serwis wróci wkrótce.",
 
     "home.recentResults": "Ostatnie wyniki",
     "home.recentResults.none":

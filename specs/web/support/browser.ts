@@ -12,6 +12,8 @@
 // or fail by the order they ran in, and a scenario that has to move the clock
 // cannot move one the next scenario is reading.
 import { AfterAll, Before, After } from "@cucumber/cucumber";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 
 // Loaded here so that whatever loads this has already registered the hooks that
@@ -55,6 +57,12 @@ export const deployAgain = (world: SpecWorld): void => {
   deployedAs.set(world, "built-again-by-the-scenario");
 };
 
+// Where the switch for maintenance is kept for every site a scenario here
+// stands up: nowhere, so that the site is never found down because whoever runs
+// the scenarios has turned access off in the file their own site reads
+// (maintenance.feature is about that, in its own scenarios).
+const noSwitch = join(tmpdir(), "specs-database-access-is-never-off");
+
 // The one browser, launched by the first scenario that needs one.
 const theBrowser = async (): Promise<Browser> => {
   browser ??= await chromium.launch();
@@ -65,17 +73,20 @@ const theBrowser = async (): Promise<Browser> => {
 const theSharedOne = async (): Promise<string> => {
   if (application === undefined) {
     loadEnvFile();
-    application = await buildApplication(loadConfig(), {
-      logger: false,
-      languages: scenarioLanguages,
-      // Who a scenario's reader is, which it says with a cookie of its own:
-      // there are no sessions to read without a database to keep them in.
-      reader: readerTheScenariosSet,
-      // This application listens, over the database in .env rather than a
-      // scenario's own, and would otherwise send whatever is queued there
-      // every 10 seconds for as long as the run lasts.
-      sendsTheEmailQueue: false,
-    });
+    application = await buildApplication(
+      loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
+      {
+        logger: false,
+        languages: scenarioLanguages,
+        // Who a scenario's reader is, which it says with a cookie of its own:
+        // there are no sessions to read without a database to keep them in.
+        reader: readerTheScenariosSet,
+        // This application listens, over the database in .env rather than a
+        // scenario's own, and would otherwise send whatever is queued there
+        // every 10 seconds for as long as the run lasts.
+        sendsTheEmailQueue: false,
+      },
+    );
     addExampleForm(application);
     addExampleFailures(application);
 
@@ -198,7 +209,10 @@ const anApplicationWith = async (
 
   loadEnvFile();
   const named = await buildApplication(
-    { ...loadConfig(), ...changed },
+    {
+      ...loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
+      ...changed,
+    },
     {
       logger: false,
       ...offered(languages ?? scenarioLanguages),
@@ -270,7 +284,7 @@ const itsOwn = async (
   const google = await standInGoogleFor(world);
   const scenario = await buildApplication(
     {
-      ...loadConfig(),
+      ...loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
       databaseUrl,
       // The scenarios' own, so that an account brought over from the old site
       // can be made and signed in to whether or not whoever runs them has the

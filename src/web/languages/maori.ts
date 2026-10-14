@@ -284,6 +284,13 @@ export const maori: Language = {
     "errors.unavailable": "Kāore te pae e wātea ana",
     "errors.unavailableDetail":
       "Kāore e taea e te pae te whakapā atu ki ana mea e hiahiatia ana i tēnei wā. Tēnā koa, whakamātauria anō a muri ake.",
+    "errors.maintenance": "Kei te whakahaeretia te pae mō te whakatika.",
+    "errors.maintenanceMinutes":
+      "E tūmanakohia ana kia hoki mai i roto i te {minutes} meneti.",
+    "errors.maintenanceMinute":
+      "E tūmanakohia ana kia hoki mai i roto i te 1 meneti.",
+    "errors.maintenanceLonger":
+      "Kei te roa ake i te mea i whakaarohia, ā, ka hoki mai a muri ake nei.",
 
     "home.recentResults": "Ngā hua tata nei",
     "home.recentResults.none":

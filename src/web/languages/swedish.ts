@@ -283,6 +283,12 @@ export const swedish: Language = {
     "errors.unavailable": "Webbplatsen är inte tillgänglig",
     "errors.unavailableDetail":
       "Webbplatsen kan just nu inte nå det den behöver. Försök igen senare.",
+    "errors.maintenance": "Webbplatsen är nere för underhåll.",
+    "errors.maintenanceMinutes":
+      "Den väntas vara tillbaka om {minutes} minuter.",
+    "errors.maintenanceMinute": "Den väntas vara tillbaka om 1 minut.",
+    "errors.maintenanceLonger":
+      "Det tar längre tid än väntat och den är snart tillbaka.",
 
     "home.recentResults": "Senaste resultat",
     "home.recentResults.none":

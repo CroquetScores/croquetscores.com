@@ -330,6 +330,9 @@ import {
 } from "./auth/google.js";
 import { tellingTheAdministrator } from "./common/databaseOutage.js";
 import { registerErrorMapping } from "./common/errors.js";
+import { refuseWhileDatabaseAccessIsOff } from "./common/maintenance.js";
+import type { DatabaseAccess } from "../application/common/DatabaseAccess.js";
+import { FileDatabaseAccess } from "../infrastructure/maintenance/FileDatabaseAccess.js";
 import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
 import { registerNewConfirmationLinkPage } from "./public/newConfirmationLink.js";
 import { registerForgotPasswordPage } from "./public/forgotPassword.js";
@@ -486,6 +489,8 @@ export interface Application {
    * not wait for it, so whatever wants to see the email waits here instead.
    */
   readonly databaseOutageTold: () => Promise<void>;
+  /** The switch that turns the database off for maintenance. */
+  readonly databaseAccess: DatabaseAccess;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -647,6 +652,8 @@ export interface ApplicationOptions {
   readonly build?: () => string | undefined;
   /** Where the time comes from. The machine's clock, unless a scenario sets one. */
   readonly clock?: Clock;
+  /** Where the switch for maintenance is kept, in place of the file. */
+  readonly databaseAccess?: DatabaseAccess;
   /**
    * The languages the site offers, the first being the one it falls back to.
    * English and Spanish, unless a scenario offers others.
@@ -1353,6 +1360,21 @@ export const buildApplication = async (
   stampRequests(server, clock);
   speakToRequests(server, languages);
   nameTheSite(server, config.siteName, config.website);
+  // Whether the database may be used at all, asked before anything that would
+  // use it, and kept outside it (maintenance.feature).
+  const databaseAccess: DatabaseAccess =
+    options.databaseAccess ??
+    new FileDatabaseAccess({
+      // The site's own folder's where it is not absolute, so that the script,
+      // run from anywhere, writes the file the site reads.
+      path: resolve(repositoryRoot, config.databaseAccessFile),
+      now: () => clock(),
+      log: {
+        error: (details, message) =>
+          server.log.error({ err: details }, message),
+      },
+    });
+  refuseWhileDatabaseAccessIsOff(server, assets, databaseAccess);
   // A page reads and writes through this, and knows nothing else of the
   // database.
   const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);
@@ -1546,6 +1568,7 @@ export const buildApplication = async (
     rebuildReadModels,
     changeSiteKey,
     databaseOutageTold: () => databaseOutage.settled(),
+    databaseAccess,
   };
 };
 

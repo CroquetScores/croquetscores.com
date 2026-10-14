@@ -273,6 +273,10 @@ export const chinese: Language = {
     "errors.reference": "参考编号 {reference}。",
     "errors.unavailable": "网站暂时无法使用",
     "errors.unavailableDetail": "网站暂时无法连接到所需的内容。请稍后再试。",
+    "errors.maintenance": "网站正在维护中。",
+    "errors.maintenanceMinutes": "预计 {minutes} 分钟后恢复。",
+    "errors.maintenanceMinute": "预计 1 分钟后恢复。",
+    "errors.maintenanceLonger": "耗时比预期更长，很快就会恢复。",
 
     "home.recentResults": "近期结果",
     "home.recentResults.none": "最近七天没有添加任何比赛。",

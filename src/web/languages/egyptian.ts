@@ -281,6 +281,10 @@ export const egyptian: Language = {
     "errors.unavailable": "الموقع مش متاح",
     "errors.unavailableDetail":
       "الموقع مش قادر يوصل للي محتاجه دلوقتي. جرّب تاني بعدين.",
+    "errors.maintenance": "الموقع واقف للصيانة.",
+    "errors.maintenanceMinutes": "متوقع يرجع بعد {minutes} دقيقة.",
+    "errors.maintenanceMinute": "متوقع يرجع بعد دقيقة.",
+    "errors.maintenanceLonger": "الموضوع واخد وقت أطول من المتوقع وهيرجع قريب.",
 
     "home.recentResults": "آخر النتايج",
     "home.recentResults.none": "مفيش أي جيم اتضاف في آخر سبعة أيام.",
