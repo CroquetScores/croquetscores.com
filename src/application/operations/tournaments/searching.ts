@@ -76,8 +76,6 @@ export interface PlayerTournament {
   readonly name: string;
   /** Where it is found, as "2026/ac/spring-open". */
   readonly address: string;
-  /** The day it started, written as the year, the month and the day. */
-  readonly startedOn: string;
   /** Where the player's own page in it is, as "2026/ac/spring-open/players/sam-someone". */
   readonly playerAddress: string;
 }

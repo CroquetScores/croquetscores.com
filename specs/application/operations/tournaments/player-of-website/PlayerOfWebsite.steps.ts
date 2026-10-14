@@ -102,13 +102,6 @@ Then(
 );
 
 Then(
-  "the player's tournament {string} started on {string}",
-  function (this: SpecWorld, tournament: string, day: string) {
-    assert.equal(named(this, tournament)?.startedOn, day);
-  },
-);
-
-Then(
   /^the (first|second) tournament of the player is "([^"]*)"$/,
   function (this: SpecWorld, which: string, tournament: string) {
     const place = ["first", "second"].indexOf(which);

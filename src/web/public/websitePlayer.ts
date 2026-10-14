@@ -28,10 +28,13 @@ export const registerWebsitePlayerPage = (
     Querystring: { sort?: unknown; order?: unknown };
   }>("/players/:slug", async (request, reply) => {
     const website = websiteOf(request);
+    // A slug is the same in any case, since a link that is typed or shared is
+    // not always written as the slug is.
+    const slug = request.params.slug.toLowerCase();
     let asked;
     try {
       asked = await request.server.mediator.query(
-        new PlayerOfWebsite(website.host, request.params.slug),
+        new PlayerOfWebsite(website.host, slug),
       );
     } catch (failure) {
       // No player the website has at the slug is a page that is not there.
@@ -62,7 +65,7 @@ export const registerWebsitePlayerPage = (
 
     // Pressing the heading the table is sorted by sorts it the other way.
     const headingOrder: Order = sorted && order === "asc" ? "desc" : "asc";
-    const here = `/players/${encodeURIComponent(request.params.slug)}`;
+    const here = `/players/${encodeURIComponent(slug)}`;
     const aria = sorted
       ? ` aria-sort="${order === "asc" ? "ascending" : "descending"}"`
       : "";
@@ -79,6 +82,9 @@ export const registerWebsitePlayerPage = (
       request,
       render(assets, {
         title: asked.name,
+        // Of the players, as the page of them is, so that the navigation says
+        // where a reader is.
+        currentPath: "/players",
         theme: themeOf(request),
         signedIn: signedIn(request),
         hasPassword: hasPassword(request),

@@ -137,6 +137,11 @@ export class SearchByWebsite implements Projection, Asked {
              on team.team_id = p.team_id
           where t.website = $1 and not t.archived and not p.archived
             and not coalesce(team.archived, false)
+            -- Only the people with some spelling that has the words, which
+            -- is no more than the people the latest spelling can have them
+            -- for, so that the one pass is over them and not over everybody.
+            and p.person in (select person from search_by_website_players
+                              where folded_name like all($2))
           order by p.person, t.starts desc, t.tournament_id desc,
                    p.player_id desc)
        select name, person
@@ -203,13 +208,11 @@ export class SearchByWebsite implements Projection, Asked {
       name: string;
       tournament_name: string;
       address: string;
-      started_on: string;
       player_slug: string;
     }>(
       `select distinct on (t.starts, t.tournament_id)
               p.world_ranking_name as name, t.name as tournament_name,
-              t.address, to_char(t.starts, 'YYYY-MM-DD') as started_on,
-              p.slug as player_slug
+              t.address, p.slug as player_slug
          from search_by_website_players p
          join search_by_website_tournaments t
            on t.tournament_id = p.tournament_id
@@ -224,7 +227,6 @@ export class SearchByWebsite implements Projection, Asked {
     const tournaments: PlayerTournament[] = rows.map((row) => ({
       name: row.tournament_name,
       address: row.address,
-      startedOn: row.started_on,
       playerAddress: `${row.address}/players/${row.player_slug}`,
     }));
     return { name: first.name, tournaments };
@@ -392,7 +394,11 @@ export class SearchByWebsite implements Projection, Asked {
     team: string | undefined,
     slug: string | undefined,
   ): Promise<void> {
-    const known = worldRankingName ?? name;
+    // A blank one is none, as the domain reads it.
+    const known =
+      worldRankingName === undefined || worldRankingName.trim() === ""
+        ? name
+        : worldRankingName;
     await this.unitOfWork.connection().query(
       `insert into search_by_website_players
          (player_id, tournament_id, team_id, name, world_ranking_name,

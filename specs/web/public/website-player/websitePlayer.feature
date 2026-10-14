@@ -30,6 +30,9 @@ Feature: A player's page lists the tournaments they have played in
   is the page's own address, with no sort. A sort or an order the page does
   not have is that order, and is not a page that is not there.
 
+  A slug is the same in any case, since a link that is typed or shared is not
+  always written as the slug is.
+
   What is archived is not there, as it is nowhere on the public site: an
   archived tournament, a player archived in it. A slug nobody has on this
   website is a page that is not there.
@@ -65,6 +68,14 @@ Feature: A player's page lists the tournaments they have played in
     Scenario: The header names no tournament
       When the page at "/players/sam-someone" is opened
       Then the header names no tournament
+
+    Scenario: A slug in capitals is the same page
+      When the page at "/players/SAM-SOMEONE" is opened
+      Then the page is headed "Sam Someone"
+
+    Scenario: The heading leads to the slug in lower case
+      When the page at "/players/Sam-Someone" is opened
+      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=asc"
 
     Scenario: The page is headed by the world ranking name
       Given "organiser@example.com" has changed the world ranking name of the player "Sam Someone" in "Spring Open" to "Samuel Rankings"

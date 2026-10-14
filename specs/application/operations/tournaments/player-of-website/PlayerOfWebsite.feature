@@ -12,8 +12,8 @@ Feature: A player of the website, with the tournaments they have played in
   tournaments is one player, and is answered with all of them. The name is the
   world ranking name as the tournament that started most recently wrote it.
 
-  Each tournament is answered once, with its name, where it is found, the day
-  it started, and where the player's own page in it is found, which is the
+  Each tournament is answered once, with its name, where it is found, and
+  where the player's own page in it is found, which is the
   tournament's address followed by "players" and their slug there
   (`addPlayer.feature`), so that the page can lead to it. How many of its
   competitions the player is in does not matter and is not answered: a
@@ -85,10 +85,6 @@ Feature: A player of the website, with the tournaments they have played in
     Scenario: A tournament is answered with where the player's page in it is
       When the player "sam-someone" of the website is asked for
       Then the player's page in the tournament "Spring Open" is found at the address "2026/ac/spring-open/players/sam-someone"
-
-    Scenario: A tournament is answered with the day it started
-      When the player "sam-someone" of the website is asked for
-      Then the player's tournament "Spring Open" started on "2026-09-20"
 
     Scenario: A tournament is answered once however many of its competitions the player is in
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
