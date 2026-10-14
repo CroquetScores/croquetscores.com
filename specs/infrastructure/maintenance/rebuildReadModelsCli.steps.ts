@@ -29,6 +29,8 @@ interface Rebuild {
   expectedBackAt: string | undefined;
   /** Each different moment the site was expected back at, as it was found. */
   returns: string[];
+  /** How many streams were done when the return was first moved. */
+  firstMovedAtDone: number | undefined;
   /** Whether somebody is to turn access on at the first update. */
   somebodyTurnsItOn: boolean;
   readonly happened: Happened[];
@@ -49,6 +51,7 @@ const rebuildOf = (world: SpecWorld): Rebuild => {
       accessWasOff: undefined,
       expectedBackAt: undefined,
       returns: [],
+      firstMovedAtDone: undefined,
       somebodyTurnsItOn: false,
       happened: [],
       exitCode: undefined,
@@ -133,6 +136,10 @@ When(
                 : undefined;
               if (back !== undefined && rebuild.returns.at(-1) !== back) {
                 rebuild.returns.push(back);
+                // The first is what it was turned off with, not a move.
+                if (rebuild.returns.length === 2) {
+                  rebuild.firstMovedAtDone = done;
+                }
               }
             }
             if (rebuild.somebodyTurnsItOn && done === 150) {
@@ -332,5 +339,12 @@ Then(
       Math.max(0, rebuildOf(this).returns.length - 1),
       Number(count),
     );
+  },
+);
+
+Then(
+  "the expected return was first moved when {int} streams were done",
+  function (this: SpecWorld, done: number) {
+    assert.equal(rebuildOf(this).firstMovedAtDone, done);
   },
 );
