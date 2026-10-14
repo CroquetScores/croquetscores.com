@@ -9,10 +9,12 @@ Feature: The read models are made again from the events
   Rebuilding is a deliberate act and a maintenance script's, run by whoever
   looks after the site, and nothing the running site serves can start one: it
   needs every event there is, which no command or query has any business
-  reading. The script empties every read model and replays what has been kept
-  through all of them in one transaction, so that a rebuild that fails leaves
-  the read models as they were, and the site goes on being served from them
-  meanwhile. It changes no event, and it can be run twice without harm.
+  reading. The script empties every read model, once, and then reads the
+  streams one at a time and hands each, whole, to every read model, in one
+  transaction, so that a rebuild that fails leaves the read models as they
+  were, and the site goes on being served from them meanwhile. It says how
+  many streams there are before it begins and how many are done as each is,
+  which is what lets it say how far it has got (`rebuildReadModelsCli.feature`). It changes no event, and it can be run twice without harm.
 
   The scenarios here empty every read model by hand first, which is the worst
   there is to put right, and ask for the rebuild as the script does.
@@ -56,6 +58,21 @@ Feature: The read models are made again from the events
       Given every read model is emptied
       When the read models are rebuilt from the events
       Then the account for "organiser@example.com" is found by its Google account
+
+  Rule: A rebuild says how many streams there are and how many are done
+
+    Scenario: It is told how many streams there are
+      Given the streams kept are counted
+      When the read models are rebuilt from the events, watched
+      Then the rebuild was told there are as many streams as were counted
+
+    Scenario: It is told each stream was done in turn
+      When the read models are rebuilt from the events, watched
+      Then the rebuild was told each stream was done in turn
+
+    Scenario: It is told how many streams there are before any is done
+      When the read models are rebuilt from the events, watched
+      Then the rebuild was told how many streams there are before any was done
 
   Rule: A rebuild keeps every event
 
