@@ -28,6 +28,22 @@ const lengthened = (trimmed: string, added = IMPORTED): string =>
  */
 export const nameToImport = (name: string): string => lengthened(name.trim());
 
+// Every group of brackets that ends a name, with the space before each.
+const TRAILING_BRACKETS = /(?:\s*\([^()]*\))+\s*$/;
+
+/**
+ * The name the world rankings know a person by, of the name the old sites
+ * gave them: that name with what is in brackets at the end of it taken off,
+ * as "(NZ)" or "(2)", which is no part of it. Brackets elsewhere in the name
+ * are part of it, and a name that is nothing but brackets is left as it is.
+ * One too short without them says it was imported, as a name does.
+ */
+export const worldRankingNameToImport = (name: string): string => {
+  const trimmed = name.trim();
+  const without = trimmed.replace(TRAILING_BRACKETS, "").trim();
+  return nameToImport(without === "" ? trimmed : without);
+};
+
 // A letter has a case when its capital and its small form differ.
 const hasCase = (text: string): boolean =>
   text.toLowerCase() !== text.toUpperCase();

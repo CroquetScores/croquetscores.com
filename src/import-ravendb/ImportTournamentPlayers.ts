@@ -9,7 +9,11 @@ import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import { errorOf } from "./AcceptedImportErrors.js";
 import { describedFailure } from "./ImportRefused.js";
-import { nameToImport, numberedApart } from "./names.js";
+import {
+  nameToImport,
+  numberedApart,
+  worldRankingNameToImport,
+} from "./names.js";
 import { oldFlagOf } from "./oldSites.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
@@ -47,13 +51,19 @@ export const addOldPlayer = (
   at: ReadOnlyDate,
 ): TournamentPlayerId => {
   const playerId = TournamentPlayerId.create();
+  const name = numberedApart(
+    nameToImport(player.Name),
+    tournament.players.map((each) => each.name.toString()),
+  );
   tournament.addPlayer(
     playerId,
     {
-      name: numberedApart(
-        nameToImport(player.Name),
-        tournament.players.map((each) => each.name.toString()),
-      ),
+      name,
+      // Known in the rankings without the brackets that end the name, which
+      // the old sites used to tell people apart and the rankings do not.
+      // Where the sport has no world rankings the tournament keeps their name
+      // whatever is given.
+      worldRankingName: worldRankingNameToImport(name),
       representing: player.Representing ?? undefined,
       flag: flagOf(player.Representing),
     },

@@ -23,8 +23,9 @@ Feature: Importing the players of the old sites' tournaments
   such a tournament are left here for its team matches to bring over.
 
   The old sites kept no world ranking name, so a player is brought over with
-  their name as it, as one added with none is (`addPlayer.feature`), and in a
-  sport without world rankings their world ranking name is always their name.
+  their name as it, as one added with none is (`addPlayer.feature`), less
+  the brackets that end it (see below). That is so in a sport without world
+  rankings as well, where a world ranking name given is kept as it is anywhere.
 
   Background:
     Given the users are imported
@@ -179,6 +180,59 @@ Feature: Importing the players of the old sites' tournaments
       And player 1 is called "Sam"
       When the players are imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Sam"
+
+  Rule: A player's world ranking name is their name without the brackets that end it
+
+    The old sites let a name end in brackets, as "Sam Someone (NZ)" or
+    "Sam Someone (2)", which is not part of the name the world rankings know
+    a person by. So a player's world ranking name is their name with what is
+    in brackets at the end of it taken off, each group of them, and the space
+    before. Their name is left as it was. What is in brackets elsewhere in
+    the name is part of it, a name that is nothing but brackets is left, and
+    one that is too short without them says it was imported, as a name does.
+
+    Scenario: A country in brackets is not part of the world ranking name
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone (NZ)"
+      When the players are imported
+      Then "Sam Someone (NZ)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: A number in brackets is not part of the world ranking name
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone (2)"
+      When the players are imported
+      Then "Sam Someone (2)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: Every group of brackets that ends the name is taken off
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone (NZ) (2)"
+      When the players are imported
+      Then "Sam Someone (NZ) (2)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: Brackets in the middle of a name are part of it
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam (Sammy) Someone"
+      When the players are imported
+      Then "Sam (Sammy) Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam (Sammy) Someone"
+
+    Scenario: A name that is only brackets is left
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "(NZ)"
+      When the players are imported
+      Then "(NZ)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "(NZ)"
+
+    Scenario: A name too short without its brackets says it was imported
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Al (NZ)"
+      When the players are imported
+      Then "Al (NZ)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Al - Imported"
+
+    Scenario: A sport with no world rankings has the name without the brackets as the world ranking name
+      Given a tournament "tournaments/14" on "croquetscores.com" of the sport "a6w" is imported
+      And the players "tournamentplayers/43" of "tournaments/14" on "croquetscores.com"
+      And player 1 is called "Sam Someone (NZ)"
+      When the players are imported
+      Then "Sam Someone (NZ)" in the tournament kept for "tournaments/14" on "croquetscores.com" has the world ranking name "Sam Someone"
 
   Rule: Two players with the same name are told apart by a number
 

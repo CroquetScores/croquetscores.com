@@ -43,10 +43,10 @@ Feature: Adding a player to a tournament
   (`Search.feature`, `SearchPlayersOfWebsite.feature`).
 
   Only association croquet and golf croquet have world rankings of their own
-  to take a name from (`Sport.feature`). In every other sport a player's world
-  ranking name is always their name: its players are known by their own names,
-  so there is no other to keep. Whatever a player is added with or updated to,
-  their world ranking name is their name, and follows it when it is corrected.
+  to take a name from (`Sport.feature`). In every other sport a player is
+  known by their own name unless another is given: a world ranking name a
+  player is added with or updated to is kept there as it is here, and where
+  none is given it is their name, and follows it when it is corrected.
 
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
@@ -121,33 +121,33 @@ Feature: Adding a player to a tournament
       When the tournament is rebuilt from the stream
       Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
 
-  Rule: Where the sport has no world rankings a player's world ranking name is their name
+  Rule: Where the sport has no world rankings a player's world ranking name is the one given, or their name where none is
 
-    Scenario: A player added in American 6 Wicket has their name as their world ranking name
+    Scenario: A player added in American 6 Wicket with none has their name as their world ranking name
       Given a stream where a tournament was created in the sport "a6w"
       And the tournament is rebuilt from the stream
       When the player "Sam Someone" is added
       Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
 
-    Scenario: A player added in a sport that is not ranked has their name as their world ranking name
+    Scenario: A player added in a sport that is not ranked with none has their name as their world ranking name
       Given a stream where a tournament was created in the sport "rc"
       And the tournament is rebuilt from the stream
       When the player "Sam Someone" is added
       Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
 
-    Scenario: The world ranking name a player is added with is not kept in a sport that is not ranked
+    Scenario: The world ranking name a player is added with is kept in a sport that is not ranked
       Given a stream where a tournament was created in the sport "rc"
       And the tournament is rebuilt from the stream
       And the player is to have the world ranking name "Samuel Someone"
       When the player "Sam Someone" is added
-      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
 
-    Scenario: The world ranking name a player is added with is not kept
+    Scenario: The world ranking name a player is added with is kept in American 6 Wicket
       Given a stream where a tournament was created in the sport "a6w"
       And the tournament is rebuilt from the stream
       And the player is to have the world ranking name "Samuel Someone"
       When the player "Sam Someone" is added
-      Then the tournament's player "Sam Someone" has the world ranking name "Sam Someone"
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
 
   Rule: A player is found by a slug of their name that no other player in the tournament has
 

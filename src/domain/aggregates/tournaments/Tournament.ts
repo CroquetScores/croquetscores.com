@@ -114,7 +114,6 @@ export type TournamentErrorCode =
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
-  | "Tournament.WorldRankingNameIsTheName"
   | "Tournament.LastManager"
   | "Tournament.AlreadyAManager"
   | "Tournament.PlayedByTeams"
@@ -540,7 +539,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessRankingNamesMayChange(by);
     this.#refuseOnceArchived();
-    this.#refuseWhereTheNameIsTheWorldRankingName();
+    this.#refuseWhereThereAreNoWorldRankings();
     const found = this.#playerFound(id);
     const player = found.update({
       name: found.name.toString(),
@@ -569,7 +568,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessRankingNamesMayChange(by);
     this.#refuseOnceArchived();
-    this.#refuseWhereTheNameIsTheWorldRankingName();
+    this.#refuseWhereThereAreNoWorldRankings();
     const { player: found } = this.#teamPlayerFound(teamId, id);
     const player = found.update({
       name: found.name.toString(),
@@ -1965,27 +1964,28 @@ export class Tournament extends AggregateRoot {
     }
   }
 
-  // A sport with no world rankings of its own has no world ranking name apart
-  // from the player's name, whether it is ranked across the world, as American
-  // 6 Wicket is, or not at all (Sport.feature, addPlayer.feature).
-  #worldRankingNameIsTheName(): boolean {
+  // A sport with no world rankings of its own has no world ranking name to
+  // change, whether it is ranked across the world, as American 6 Wicket is, or
+  // not at all (Sport.feature, changeWorldRankingName.feature). One given when
+  // a player is added or updated is kept, but there is no officer to say
+  // another is better.
+  #hasNoWorldRankings(): boolean {
     return !this.sport.hasWorldRankings;
   }
 
   // Whatever a player is added with or updated to, they have a world ranking
   // name, since it is what the public site knows a player by from one
-  // tournament to the next (addPlayer.feature). Where the sport has none of its
-  // own it is their name, so one given is not kept and a corrected name
-  // corrects it; elsewhere it is the one given, or their name where none was.
+  // tournament to the next (addPlayer.feature): the one given, or their name
+  // where none was, in every sport. It was once their name always where the
+  // sport has no world rankings of its own, and one given was not kept; but
+  // the import takes the brackets off a name a person had been told apart by,
+  // and a sport with no rankings is as entitled to know a person by that.
   #withTheirNameKnownInTheRankings<
     T extends {
       readonly name: string;
       readonly worldRankingName?: string | undefined;
     },
   >(details: T): T {
-    if (this.#worldRankingNameIsTheName()) {
-      return { ...details, worldRankingName: details.name };
-    }
     return this.#orTheName(details);
   }
 
@@ -2000,11 +2000,11 @@ export class Tournament extends AggregateRoot {
       : details;
   }
 
-  #refuseWhereTheNameIsTheWorldRankingName(): void {
-    if (this.#worldRankingNameIsTheName()) {
+  #refuseWhereThereAreNoWorldRankings(): void {
+    if (this.#hasNoWorldRankings()) {
       refuse(
-        "Tournament.WorldRankingNameIsTheName",
-        "A player's world ranking name there is their name, and is not changed.",
+        "Tournament.NoWorldRankings",
+        "A sport with no world rankings has no world ranking name to change.",
       );
     }
   }

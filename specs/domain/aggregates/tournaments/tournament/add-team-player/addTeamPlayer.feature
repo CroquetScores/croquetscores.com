@@ -255,11 +255,12 @@ Feature: Adding a player to a tournament's team
       When the player "Sam Someone" is added to the team "Australia"
       Then it is refused with "Tournament.Archived"
 
-  Rule: Where the sport has no world rankings a team player's world ranking name is their name
+  Rule: Where the sport has no world rankings a team player's world ranking name is the one given, or their name where none is
 
-    A player in a team is known to the world rankings there by their own name,
-    as a tournament's player is (`addPlayer.feature`), so whatever they are
-    added with, their world ranking name is their name.
+    A player in a team is known to the world rankings there by their own name
+    unless another is given, as a tournament's player is
+    (`addPlayer.feature`), so a world ranking name they are added with is
+    kept, and where none is given it is their name.
 
     Scenario: A player added to a team in American 6 Wicket has their name as their world ranking name
       Given it was updated with the sport "a6w"
@@ -273,9 +274,9 @@ Feature: Adding a player to a tournament's team
       When the player "Sam Someone" is added to the team "Australia"
       Then the team "Australia"'s player "Sam Someone" has the world ranking name "Sam Someone"
 
-    Scenario: The world ranking name a team player is added with is not kept
+    Scenario: The world ranking name a team player is added with is kept
       Given it was updated with the sport "a6w"
       And the tournament is rebuilt from the stream
       And the player is to have the world ranking name "Samuel Someone"
       When the player "Sam Someone" is added to the team "Australia"
-      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Sam Someone"
+      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"

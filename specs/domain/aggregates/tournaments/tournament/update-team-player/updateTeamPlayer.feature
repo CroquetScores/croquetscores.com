@@ -198,22 +198,31 @@ Feature: Changing what a player in a tournament's team is
       When the player "Sam Someone" of the team "Australia" is updated
       Then it is refused with "Tournament.Archived"
 
-  Rule: Where the sport has no world rankings a team player's world ranking name is their name
+  Rule: Where the sport has no world rankings a team player's world ranking name is the one given, or their name where none is
 
     A player in a team is known to the world rankings there by their own name
-    (`addTeamPlayer.feature`), so correcting the name corrects it, and a world
-    ranking name an update gives is not kept.
+    unless another is given (`addTeamPlayer.feature`), so a world ranking name
+    an update gives is kept, the one the player already has among them, and
+    correcting the name corrects it only where the update gives none.
 
-    Scenario: A corrected name is the world ranking name
+    Scenario: A corrected name leaves the world ranking name the update carries
       Given it was updated with the sport "a6w"
       And the tournament is rebuilt from the stream
       And the update calls the player "Samantha Someone"
       When the player "Sam Someone" of the team "Australia" is updated
+      Then the team "Australia"'s player "Samantha Someone" has the world ranking name "Sam Someone"
+
+    Scenario: A corrected name is the world ranking name where the update gives none
+      Given it was updated with the sport "a6w"
+      And the tournament is rebuilt from the stream
+      And the update calls the player "Samantha Someone"
+      And the update gives the player the world ranking name "   "
+      When the player "Sam Someone" of the team "Australia" is updated
       Then the team "Australia"'s player "Samantha Someone" has the world ranking name "Samantha Someone"
 
-    Scenario: A world ranking name an update gives is not kept
+    Scenario: A world ranking name an update gives is kept
       Given it was updated with the sport "a6w"
       And the tournament is rebuilt from the stream
       And the update gives the player the world ranking name "Samuel Someone"
       When the player "Sam Someone" of the team "Australia" is updated
-      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Sam Someone"
+      Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
