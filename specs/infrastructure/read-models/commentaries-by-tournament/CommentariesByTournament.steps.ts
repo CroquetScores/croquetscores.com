@@ -28,6 +28,7 @@ import {
 } from "../../../../src/infrastructure/event-store/PostgresEventStore.js";
 import { CommentariesByTournament } from "../../../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { ProjectingEventStore } from "../../../../src/application/common/ProjectingEventStore.js";
+import { rebuildFromEvents } from "../../support/rebuild.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { rebuildsWith } from "../../support/projections.js";
 import { unitOfWorkOf } from "../../support/transactions.js";
@@ -145,7 +146,8 @@ Given("the commentaries by tournament read model", function (this: SpecWorld) {
         : read;
       const isFirst = ({ stream }: StoredEvent): boolean =>
         scenario.first !== undefined && stream.startsWith(scenario.first);
-      await readModel.rebuildFrom(
+      await rebuildFromEvents(
+        readModel,
         scenario.first === undefined
           ? events
           : [

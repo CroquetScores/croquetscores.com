@@ -62,19 +62,24 @@ export class AccountsByGoogleAccount implements Projection, Finding {
     }
   }
 
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
+    await this.unitOfWork
+      .connection()
+      .query(`truncate accounts_by_google_account`);
+  }
+
   /**
-   * Makes the table again from `events`, every event there is, each projected
+   * Makes the table again from the streams it is handed, one at a time, each projected
    * as it was when it was appended. A link and the forgetting of its account
    * are both in that account's own stream, so which stream is read first
    * changes nothing.
    */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(`truncate accounts_by_google_account`);
-    for (const { stream, event } of events) {
-      await this.#project(stream, [event]);
-    }
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    for (const { event } of events) await this.#project(stream, [event]);
   }
 
   /** The account the Google account `subject` is linked to, if any. */

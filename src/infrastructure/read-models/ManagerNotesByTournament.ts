@@ -33,17 +33,24 @@ export class ManagerNotesByTournament
     for (const event of events) await this.#project(stream.value, event);
   }
 
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
+    await this.unitOfWork
+      .connection()
+      .query(`truncate manager_notes_by_tournament`);
+  }
+
   /**
-   * The table made again from `events`, every one there is. A note's row
+   * The table made again from the streams it is handed, one at a time. A note's row
    * depends on its own stream alone, and two notes written at the same moment
    * are listed by their ids, so the streams can come in any order, as long as
    * each stream's own events come in the order they were kept.
    */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(`truncate manager_notes_by_tournament`);
-    for (const { stream, event } of events) await this.#project(stream, event);
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    for (const { event } of events) await this.#project(stream, event);
   }
 
   async of(tournament: TournamentId): Promise<readonly ManagerNoteHeading[]> {

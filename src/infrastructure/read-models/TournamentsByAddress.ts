@@ -60,16 +60,21 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
     }
   }
 
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
+    await this.unitOfWork.connection().query(`truncate tournaments_by_address`);
+  }
+
   /**
-   * Makes the table again from `events`, every event there is, each projected
+   * Makes the table again from the streams it is handed, one at a time, each projected
    * as it was when it was appended. An address once held is held for good, so
    * the tournament that holds it is the same whichever stream is read first.
    */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
-    await this.unitOfWork.connection().query(`truncate tournaments_by_address`);
-    for (const { stream, event } of events) {
-      await this.#project(stream, [event]);
-    }
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    for (const { event } of events) await this.#project(stream, [event]);
   }
 
   async tournamentAt(address: string): Promise<TournamentId | undefined> {
