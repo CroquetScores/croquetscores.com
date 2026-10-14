@@ -101,6 +101,12 @@ export class SpecWorld extends World {
   // What came of starting the site with that setting: nothing, or the refusal.
   public startingFailed: unknown;
 
+  // What the site was told about search engines, as written in its settings,
+  // and the last thing it answered when asked for something.
+  public searchEnginesSetting: string | undefined;
+  public answeredWith:
+    { headers: Record<string, unknown>; body: string } | undefined;
+
   // A page on some other site, served into the browser by the scenario.
   public elsewhere: string | undefined;
 
