@@ -114,7 +114,6 @@ export type TournamentErrorCode =
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
-  | "Tournament.WorldRankingNameIsTheName"
   | "Tournament.LastManager"
   | "Tournament.AlreadyAManager"
   | "Tournament.PlayedByTeams"
@@ -540,7 +539,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessRankingNamesMayChange(by);
     this.#refuseOnceArchived();
-    this.#refuseWhereTheNameIsTheWorldRankingName();
+    this.#refuseWhereThereAreNoWorldRankings();
     const found = this.#playerFound(id);
     const player = found.update({
       name: found.name.toString(),
@@ -569,7 +568,7 @@ export class Tournament extends AggregateRoot {
   ): void {
     this.#refuseUnlessRankingNamesMayChange(by);
     this.#refuseOnceArchived();
-    this.#refuseWhereTheNameIsTheWorldRankingName();
+    this.#refuseWhereThereAreNoWorldRankings();
     const { player: found } = this.#teamPlayerFound(teamId, id);
     const player = found.update({
       name: found.name.toString(),
@@ -1970,7 +1969,7 @@ export class Tournament extends AggregateRoot {
   // not at all (Sport.feature, changeWorldRankingName.feature). One given when
   // a player is added or updated is kept, but there is no officer to say
   // another is better.
-  #worldRankingNameIsTheName(): boolean {
+  #hasNoWorldRankings(): boolean {
     return !this.sport.hasWorldRankings;
   }
 
@@ -2001,11 +2000,11 @@ export class Tournament extends AggregateRoot {
       : details;
   }
 
-  #refuseWhereTheNameIsTheWorldRankingName(): void {
-    if (this.#worldRankingNameIsTheName()) {
+  #refuseWhereThereAreNoWorldRankings(): void {
+    if (this.#hasNoWorldRankings()) {
       refuse(
-        "Tournament.WorldRankingNameIsTheName",
-        "A player's world ranking name there is their name, and is not changed.",
+        "Tournament.NoWorldRankings",
+        "A sport with no world rankings has no world ranking name to change.",
       );
     }
   }

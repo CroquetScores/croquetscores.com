@@ -152,12 +152,13 @@ Feature: Changing a player's world ranking name alone
 
   Rule: In American 6 Wicket a player's world ranking name is not changed
 
-    A player's world ranking name there is their name, so it is nobody's to
-    change, a manager's among them (`addPlayer.feature`). It is refused with
-    `Tournament.WorldRankingNameIsTheName`.
+    A sport with no world rankings of its own has no officer to say a name is
+    better, so a world ranking name there is only given as a player is added
+    or updated (`addPlayer.feature`) and is nobody's to change by itself, a
+    manager's among them. It is refused with `Tournament.NoWorldRankings`.
 
     Scenario: A manager's change is refused
       Given it was updated with the sport "a6w"
       And the tournament is rebuilt from the stream
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
-      Then it is refused with "Tournament.WorldRankingNameIsTheName"
+      Then it is refused with "Tournament.NoWorldRankings"
