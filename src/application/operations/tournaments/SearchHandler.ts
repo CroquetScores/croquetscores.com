@@ -20,7 +20,12 @@ export class SearchHandler extends QueryHandler<Search, SearchFound> {
     const words = wordsOfSearch(query.text);
     // Nothing to find by is nothing found, rather than everything.
     if (words.length === 0) {
-      return { tournaments: [], players: [], competitions: [] };
+      return {
+        tournaments: [],
+        players: [],
+        competitions: [],
+        more: { tournaments: false, players: false, competitions: false },
+      };
     }
     const website = Website.from(query.website);
     const [tournaments, players, competitions] = await Promise.all([
@@ -28,6 +33,15 @@ export class SearchHandler extends QueryHandler<Search, SearchFound> {
       this.searched.players(website, words, MOST_FOUND),
       this.searched.competitions(website, words, MOST_FOUND),
     ]);
-    return { tournaments, players, competitions };
+    return {
+      tournaments: tournaments.found,
+      players: players.found,
+      competitions: competitions.found,
+      more: {
+        tournaments: tournaments.more,
+        players: players.more,
+        competitions: competitions.more,
+      },
+    };
   }
 }

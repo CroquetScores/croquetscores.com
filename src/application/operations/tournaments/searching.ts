@@ -89,11 +89,33 @@ export interface PlayerOfWebsiteFound {
   readonly entries: readonly PlayerEntry[];
 }
 
+/**
+ * The most that was asked for of a kind, and whether there were more than
+ * that, so that a hundred is not taken for all there is.
+ */
+export interface Limited<T> {
+  readonly found: readonly T[];
+  readonly more: boolean;
+}
+
 /** What a search of a website found, each kind in alphabetical order. */
 export interface SearchFound {
   readonly tournaments: readonly TournamentFound[];
   readonly players: readonly PlayerFound[];
   readonly competitions: readonly CompetitionFound[];
+  /** Of which kinds there were more than were answered. */
+  readonly more: {
+    readonly tournaments: boolean;
+    readonly players: boolean;
+    readonly competitions: boolean;
+  };
+}
+
+/** What a search of a website's players found. */
+export interface PlayersFound {
+  readonly players: readonly PlayerFound[];
+  /** Whether there were more than were answered. */
+  readonly more: boolean;
 }
 
 /**
@@ -107,20 +129,20 @@ export interface SearchByWebsite {
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<readonly TournamentFound[]>;
+  ): Promise<Limited<TournamentFound>>;
 
   /** By world ranking name, each person once (SearchPlayersOfWebsite.feature). */
   players(
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<readonly PlayerFound[]>;
+  ): Promise<Limited<PlayerFound>>;
 
   competitions(
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<readonly CompetitionFound[]>;
+  ): Promise<Limited<CompetitionFound>>;
 
   /**
    * The player whose world ranking name makes `slug`, or nothing where no

@@ -25,11 +25,12 @@ export const registerWebsitePlayersPage = (
       const speaking = speakingOf(request);
       const { say } = speaking;
       const searched = typed.trim() !== "";
-      const found = searched
+      const asked = searched
         ? await request.server.mediator.query(
             new SearchPlayersOfWebsite(website.host, typed),
           )
-        : [];
+        : { players: [], more: false };
+      const found = asked.players;
       const label = escape(say("players.search.label"));
 
       const results = !searched
@@ -43,7 +44,11 @@ ${found
       `            <li class="player"><a class="player-name" href="/${escape(each.address)}">${escape(each.name)}</a></li>`,
   )
   .join("\n")}
-          </ul>`;
+          </ul>${
+            asked.more
+              ? `\n          <p class="search-more">${escape(say("search.more", { count: String(found.length) }))}</p>`
+              : ""
+          }`;
 
       return sendPage(
         reply,
@@ -63,7 +68,7 @@ ${found
             <input type="search" name="search" aria-label="${label}" value="${escape(typed)}" />
             <button type="submit">${label}</button>
           </form>
-          <h2 class="games-heading">${escape(say("tournament.players"))}</h2>
+          <h2 class="players-search-heading">${escape(say("tournament.players"))}</h2>
 ${results}`,
         }),
       );

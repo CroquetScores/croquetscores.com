@@ -274,7 +274,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) (tournament|player|competition) the search found is "(.*)"$/,
+  /^the (first|second|third|fourth) (tournament|player|competition) the search found is "(.*)"$/,
   function (this: SpecWorld, which: string, kind: string, name: string) {
     const lists = found(this);
     const list =
@@ -283,7 +283,10 @@ Then(
         : kind === "player"
           ? lists.players
           : lists.competitions;
-    assert.equal(list[["first", "second", "third"].indexOf(which)]?.name, name);
+    assert.equal(
+      list[["first", "second", "third", "fourth"].indexOf(which)]?.name,
+      name,
+    );
   },
 );
 
@@ -292,5 +295,19 @@ Then(
   function (this: SpecWorld, code: string) {
     assert.ok(this.failure !== undefined, "The search was not refused.");
     assert.equal((this.failure as { code?: string }).code, code);
+  },
+);
+
+// Whether there were more of a kind than were answered, which is said of each
+// kind apart.
+Then(
+  /^the search (said|did not say) there are more (tournaments|players|competitions)$/,
+  function (this: SpecWorld, which: string, kind: string) {
+    const more = found(this).more;
+    assert.equal(
+      more[kind as keyof typeof more],
+      which === "said",
+      `The search ${which === "said" ? "did not say" : "said"} there are more ${kind}.`,
+    );
   },
 );

@@ -619,11 +619,19 @@ body > .site-footer {
   margin-block-end: var(--space-4);
 }
 
+/* Against the heading by having no margin of its own and the heading none
+   beneath it, and not by being pulled up over a margin that the heading may
+   not have, which is what left the heading on the first row. */
+.search-list > h2,
+.players-search-heading {
+  margin: 0;
+}
+
 .search-list ul,
 .players-search-found {
   display: flex;
   flex-direction: column;
-  margin: calc(-1 * var(--space-4)) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
   border: 1px solid var(--border);
@@ -655,6 +663,14 @@ body > .site-footer {
 .player-entries li {
   padding-block: var(--space-1);
   overflow-wrap: anywhere;
+}
+
+/* Beneath the end of a list that was cut, in the page's own words and drawn
+   as the line that says there is nothing is, since it too is said of the list
+   above it. */
+.search-more {
+  margin: var(--space-2) 0 0;
+  color: var(--ink-muted);
 }
 
 .search-of {
@@ -1744,6 +1760,7 @@ main {
 .players-heading,
 .games-heading,
 .search-list > h2,
+.players-search-heading,
 .player-games > h2,
 .player-competitions > h2 {
   padding: var(--space-1) var(--space-2);

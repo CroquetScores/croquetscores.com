@@ -326,6 +326,7 @@ export const egyptian: Language = {
     "players.search.label": "ابحث عن لاعبين",
     "players.search.prompt": "اكتب اسم اللاعب علشان تلاقيه.",
     "players.search.none": "ما اتلقاش لاعبين.",
+    "search.more": "بيتعرض بس أول {count}. زوّد من الاسم علشان تضيّق البحث.",
     "tournament.test": "{first} ضد {second}",
     "tournament.notes": "الملاحظات",
     "tournament.commentary": "التعليقات",

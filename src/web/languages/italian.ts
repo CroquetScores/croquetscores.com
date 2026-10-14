@@ -317,6 +317,8 @@ export const italian: Language = {
     "players.search.label": "Cerca giocatori",
     "players.search.prompt": "Digita il nome di un giocatore per trovarlo.",
     "players.search.none": "Nessun giocatore trovato.",
+    "search.more":
+      "Sono mostrati solo i primi {count}. Aggiungi altro del nome per restringere la ricerca.",
     "tournament.test": "{first} contro {second}",
     "tournament.notes": "Note",
     "tournament.commentary": "Cronaca",

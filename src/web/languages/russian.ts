@@ -331,6 +331,8 @@ export const russian: Language = {
     "players.search.label": "Поиск игроков",
     "players.search.prompt": "Введите имя игрока, чтобы найти его.",
     "players.search.none": "Игроки не найдены.",
+    "search.more":
+      "Показаны только первые {count}. Введите больше из названия, чтобы сузить поиск.",
     "tournament.test": "{first} против {second}",
     "tournament.notes": "Заметки",
     "tournament.commentary": "Комментарии",

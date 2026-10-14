@@ -10,7 +10,8 @@ Feature: A reader searches the website for tournaments, players and competitions
   as the rest of the public site does not.
 
   The results are three lists, each under a heading of its own: "Tournaments",
-  "Players" and "Competitions". A list with nothing in it is left out, with
+  "Competitions" and "Players", in that order, since a tournament and what is
+  in it are what a reader is most often after, and there are most players. A list with nothing in it is left out, with
   its heading, so that a reader is not shown headings with nothing under them.
   A tournament is shown by its name and leads to its page. A player is shown
   by their world ranking name and leads to their page at
@@ -27,6 +28,12 @@ Feature: A reader searches the website for tournaments, players and competitions
   A reader who is on the page of players has a search of players alone beside
   the players, which finds players and nothing else (`websitePlayers.feature`);
   this one is the site's and finds all three.
+
+  Where there are more than a hundred of a kind the hundred are shown, and
+  beneath them, after the end of that list, the page says there are more and
+  to refine the search, so that a reader is not left to take a hundred for
+  everything there is. It is said of the list that was cut and not of the
+  others, and not where there are exactly a hundred.
 
   Where a scenario says nothing else, a tournament is for the sport "ac" and
   its players represent nothing and fly no flag.
@@ -125,6 +132,10 @@ Feature: A reader searches the website for tournaments, players and competitions
 
   Rule: Each list has a heading, and is left out when it has nothing in it
 
+    Scenario: The competitions are before the players
+      When the page at "/search?q=o" is opened
+      Then the competitions found are before the players found
+
     Scenario: The tournaments have a heading of their own
       When the page at "/search?q=spring" is opened
       Then the content has the heading "Tournaments"
@@ -152,6 +163,38 @@ Feature: A reader searches the website for tournaments, players and competitions
     Scenario: Nothing found has no headings
       When the page at "/search?q=zzzz" is opened
       Then the content has no heading "Tournaments"
+
+  Rule: A list of more than a hundred says so, after its end
+
+    Scenario: More than 100 tournaments says there are more
+      Given 101 tournaments are called "Big Cup" followed by a number
+      When the page at "/search?q=cup" is opened
+      Then the tournaments found say there are more
+
+    Scenario: The blurb is after the last tournament
+      Given 101 tournaments are called "Big Cup" followed by a number
+      When the page at "/search?q=cup" is opened
+      Then the blurb to refine the search is after the last tournament found
+
+    Scenario: Exactly 100 tournaments says nothing
+      Given 100 tournaments are called "Big Cup" followed by a number
+      When the page at "/search?q=cup" is opened
+      Then the tournaments found do not say there are more
+
+    Scenario: Fewer says nothing
+      When the page at "/search?q=spring" is opened
+      Then the tournaments found do not say there are more
+
+    Scenario: A list that was not cut does not say so when another was
+      Given 101 tournaments are called "Big Cup" followed by a number
+      When the page at "/search?q=cup" is opened
+      Then the players found do not say there are more
+
+    Scenario: The blurb is in the reader's language
+      Given a browser that asks for "en-XA"
+      And 101 tournaments are called "Big Cup" followed by a number
+      When the page at "/search?q=cup" is opened
+      Then every word in the page's content but the names found is in the test locale
 
   Rule: Each thing found leads to its page
 

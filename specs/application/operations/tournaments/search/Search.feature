@@ -35,10 +35,18 @@ Feature: Searching the website for tournaments, players and competitions
   as a player of a Standard tournament is.
 
   The answer is of the website asked about, in three lists by what was found,
-  each in alphabetical order of the names, each of at most 100, so that a
+  each with the names that begin with the text typed first, as "Tim Murphy"
+  is before "Alison & Tim Murphy" for "tim", and each of those two groups in
+  alphabetical order of the names, each list of at most 100, so that a
   single letter typed is answered with a page and not with the whole of the
   website. Nothing typed, or nothing but what separates words, is answered
   with nothing rather than with everything.
+
+  Where there are more than a hundred of a kind, the hundred are answered and
+  it is said that there are more, so that a reader who sees a hundred knows
+  that it is not all there is, and is not left to take it for the whole. Said
+  of each kind apart, since one may be cut and not another, and not said where
+  there are exactly a hundred, since then nothing is left out.
 
   Searching is for anybody, so nobody need be signed in to ask, and every
   scenario here asks with nobody signed in.
@@ -306,7 +314,76 @@ Feature: Searching the website for tournaments, players and competitions
       When the website is searched for "   "
       Then the competition "Block A" is not found
 
-  Rule: Each list is in alphabetical order and no longer than 100
+  Rule: Names that begin with the text come first, and each group is in alphabetical order
+
+    A name begins with the text when, with the accents off and in lower case,
+    it begins with the words as they were typed, in the order they were typed
+    and one space apart. Where there is more than one word it is the whole of
+    what was typed that the name must begin with, and not only the first word.
+    The names that do not begin with it follow, since they are found all the
+    same, and they are the ones a reader is least likely to be looking for.
+
+    Scenario: A tournament that begins with the text is before one that only has it
+      Given "organiser@example.com" has created the tournament "Alison & Tim Open"
+      And "organiser@example.com" has created the tournament "Tim Open"
+      When the website is searched for "tim"
+      Then the first tournament the search found is "Tim Open"
+      And the second tournament the search found is "Alison & Tim Open"
+
+    Scenario: A player that begins with the text is before one that only has it
+      Given "organiser@example.com" has added the player "Alison & Tim Murphy" to "Spring Open"
+      And "organiser@example.com" has added the player "Tim Murphy" to "Spring Open"
+      When the website is searched for "tim"
+      Then the first player the search found is "Tim Murphy"
+      And the second player the search found is "Alison & Tim Murphy"
+
+    Scenario: A competition that begins with the text is before one that only has it
+      Given "organiser@example.com" has added the block "Alpha Tim Block" to "Spring Open"
+      And "organiser@example.com" has added the block "Tim Block" to "Spring Open"
+      When the website is searched for "tim"
+      Then the first competition the search found is "Tim Block"
+      And the second competition the search found is "Alpha Tim Block"
+
+    Scenario: Each group is in alphabetical order
+      Given "organiser@example.com" has created the tournament "Tim Zed"
+      And "organiser@example.com" has created the tournament "Zed Tim"
+      And "organiser@example.com" has created the tournament "Tim Alpha"
+      And "organiser@example.com" has created the tournament "Alpha Tim"
+      When the website is searched for "tim"
+      Then the first tournament the search found is "Tim Alpha"
+      And the second tournament the search found is "Tim Zed"
+      And the third tournament the search found is "Alpha Tim"
+      And the fourth tournament the search found is "Zed Tim"
+
+    Scenario: The text is begun with in any case
+      Given "organiser@example.com" has created the tournament "Alison & Tim Open"
+      And "organiser@example.com" has created the tournament "Tim Open"
+      When the website is searched for "TIM"
+      Then the first tournament the search found is "Tim Open"
+
+    Scenario: The text is begun with without its accents
+      Given "organiser@example.com" has created the tournament "Alison & José Open"
+      And "organiser@example.com" has created the tournament "José Open"
+      When the website is searched for "jose"
+      Then the first tournament the search found is "José Open"
+
+    Scenario: A name must begin with the whole of the text and not its first word
+      Given "organiser@example.com" has created the tournament "Murphy Tim Open"
+      And "organiser@example.com" has created the tournament "Tim Murphy Open"
+      When the website is searched for "tim murphy"
+      Then the first tournament the search found is "Tim Murphy Open"
+
+    Scenario: The words are begun with in the order they were typed
+      Given "organiser@example.com" has created the tournament "Murphy Tim Open"
+      And "organiser@example.com" has created the tournament "Tim Murphy Open"
+      When the website is searched for "murphy tim"
+      Then the first tournament the search found is "Murphy Tim Open"
+
+    Scenario: A name that begins with the text is not kept out by the limit
+      Given 100 tournaments are called "Big Cup" followed by a number
+      And "organiser@example.com" has created the tournament "Cup Zed"
+      When the website is searched for "cup"
+      Then the first tournament the search found is "Cup Zed"
 
     Scenario: Tournaments are in alphabetical order of their names
       Given "organiser@example.com" has created the tournament "Open Zed"
@@ -337,6 +414,41 @@ Feature: Searching the website for tournaments, players and competitions
       Given 101 players are called "Pat" followed by a number in "Spring Open"
       When the website is searched for "pat"
       Then the search found 100 players
+
+    Scenario: More than 100 tournaments is said
+      Given 101 tournaments are called "Cup" followed by a number
+      When the website is searched for "cup"
+      Then the search said there are more tournaments
+
+    Scenario: Exactly 100 tournaments is not said to be more
+      Given 100 tournaments are called "Cup" followed by a number
+      When the website is searched for "cup"
+      Then the search did not say there are more tournaments
+
+    Scenario: More than 100 players is said
+      Given 101 players are called "Pat" followed by a number in "Spring Open"
+      When the website is searched for "pat"
+      Then the search said there are more players
+
+    Scenario: Exactly 100 players is not said to be more
+      Given 100 players are called "Pat" followed by a number in "Spring Open"
+      When the website is searched for "pat"
+      Then the search did not say there are more players
+
+    Scenario: More than 100 competitions is said
+      Given 101 blocks are called "Pool" followed by a number in "Spring Open"
+      When the website is searched for "pool"
+      Then the search said there are more competitions
+
+    Scenario: Exactly 100 competitions is not said to be more
+      Given 100 blocks are called "Pool" followed by a number in "Spring Open"
+      When the website is searched for "pool"
+      Then the search did not say there are more competitions
+
+    Scenario: One kind cut does not say another is
+      Given 101 tournaments are called "Cup" followed by a number
+      When the website is searched for "cup"
+      Then the search did not say there are more players
 
     Scenario: No more than 100 competitions are found
       Given 101 blocks are called "Pool" followed by a number in "Spring Open"

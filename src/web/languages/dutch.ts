@@ -316,6 +316,8 @@ export const dutch: Language = {
     "players.search.label": "Spelers zoeken",
     "players.search.prompt": "Typ de naam van een speler om die te vinden.",
     "players.search.none": "Er zijn geen spelers gevonden.",
+    "search.more":
+      "Alleen de eerste {count} worden getoond. Voeg meer van de naam toe om de zoekopdracht te verfijnen.",
     "tournament.test": "{first} tegen {second}",
     "tournament.notes": "Notities",
     "tournament.commentary": "Commentaar",

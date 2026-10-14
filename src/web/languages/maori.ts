@@ -331,6 +331,8 @@ export const maori: Language = {
     "players.search.label": "Rapua ngā kaitākaro",
     "players.search.prompt": "Patohia te ingoa o te kaitākaro hei kimi i a ia.",
     "players.search.none": "Kāore ngā kaitākaro i kitea.",
+    "search.more":
+      "Ko ngā {count} tuatahi anake e whakaatuhia ana. Tāpirihia ētahi atu o te ingoa hei whakatika i te rapunga.",
     "tournament.test": "{first} ki {second}",
     "tournament.notes": "Ngā tuhipoka",
     "tournament.commentary": "Ngā kōrero",

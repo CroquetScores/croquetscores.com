@@ -320,6 +320,8 @@ export const swedish: Language = {
     "players.search.label": "Sök spelare",
     "players.search.prompt": "Skriv en spelares namn för att hitta dem.",
     "players.search.none": "Inga spelare hittades.",
+    "search.more":
+      "Bara de första {count} visas. Skriv mer av namnet för att begränsa sökningen.",
     "tournament.test": "{first} mot {second}",
     "tournament.notes": "Anteckningar",
     "tournament.commentary": "Livekommentarer",

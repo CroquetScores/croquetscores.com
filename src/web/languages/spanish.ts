@@ -328,6 +328,8 @@ export const spanish: Language = {
     "players.search.prompt":
       "Escribe el nombre de un jugador para encontrarlo.",
     "players.search.none": "No se encontraron jugadores.",
+    "search.more":
+      "Solo se muestran los primeros {count}. Añade más del nombre para acotar la búsqueda.",
     "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notas",
     "tournament.commentary": "Comentarios",

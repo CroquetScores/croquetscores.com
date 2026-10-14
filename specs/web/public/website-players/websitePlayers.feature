@@ -25,6 +25,10 @@ Feature: A reader searches the website's players by name
   "Players", so that a reader who comes for a player is not made to find a
   tournament first.
 
+  Where there are more than a hundred players found the hundred are shown,
+  and after the end of them the page says there are more and to refine the
+  search, so that a hundred is not taken for everybody there is.
+
   Where a scenario says nothing else, a tournament is for the sport "ac" and
   its players represent nothing and fly no flag.
 
@@ -154,6 +158,29 @@ Feature: A reader searches the website's players by name
       Given "organiser@example.com" has changed the world ranking name of the player "Sam Someone" in "Spring Open" to "Samuel Rankings"
       When the page at "/players?search=rankings" is opened
       Then "Samuel Rankings" is among the players the page found
+
+  Rule: More than a hundred says so, after the end of the players
+
+    Scenario: More than 100 players says there are more
+      Given 101 players are called "Pat" followed by a number in "Spring Open"
+      When the page at "/players?search=pat" is opened
+      Then the page says there are more players than it shows
+
+    Scenario: The blurb is after the last player
+      Given 101 players are called "Pat" followed by a number in "Spring Open"
+      When the page at "/players?search=pat" is opened
+      Then the blurb to refine the search is after the last player shown
+
+    Scenario: Exactly 100 players says nothing
+      Given 100 players are called "Pat" followed by a number in "Spring Open"
+      When the page at "/players?search=pat" is opened
+      Then the page does not say there are more players than it shows
+
+    Scenario: The blurb is in the reader's language
+      Given a browser that asks for "en-XA"
+      And 101 players are called "Pat" followed by a number in "Spring Open"
+      When the page at "/players?search=pat" is opened
+      Then every word in the page's content but the players' names is in the test locale
 
   Rule: Each player found leads to their page
 

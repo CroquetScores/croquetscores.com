@@ -4,14 +4,14 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import { SearchPlayersOfWebsite } from "./SearchPlayersOfWebsite.js";
 import {
   MOST_FOUND,
-  type PlayerFound,
+  type PlayersFound,
   type SearchByWebsite,
   wordsOfSearch,
 } from "./searching.js";
 
 export class SearchPlayersOfWebsiteHandler extends QueryHandler<
   SearchPlayersOfWebsite,
-  readonly PlayerFound[]
+  PlayersFound
 > {
   readonly handles: RequestType<SearchPlayersOfWebsite> =
     SearchPlayersOfWebsite;
@@ -20,14 +20,15 @@ export class SearchPlayersOfWebsiteHandler extends QueryHandler<
     super();
   }
 
-  handle(query: SearchPlayersOfWebsite): Promise<readonly PlayerFound[]> {
+  async handle(query: SearchPlayersOfWebsite): Promise<PlayersFound> {
     const words = wordsOfSearch(query.text);
     // Nothing to find by is nobody, rather than everybody.
-    if (words.length === 0) return Promise.resolve([]);
-    return this.searched.players(
+    if (words.length === 0) return { players: [], more: false };
+    const found = await this.searched.players(
       Website.from(query.website),
       words,
       MOST_FOUND,
     );
+    return { players: found.found, more: found.more };
   }
 }

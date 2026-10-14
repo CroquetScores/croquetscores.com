@@ -146,3 +146,25 @@ Then(
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },
 );
+
+Then(
+  /^the page (says|does not say) there are more players than it shows$/,
+  async function (this: SpecWorld, which: string) {
+    assert.equal(
+      await this.browserPage.locator("main .search-more").count(),
+      which === "says" ? 1 : 0,
+    );
+  },
+);
+
+Then(
+  "the blurb to refine the search is after the last player shown",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await this.browserPage
+        .locator("main .players-search-found + .search-more")
+        .count(),
+      1,
+    );
+  },
+);

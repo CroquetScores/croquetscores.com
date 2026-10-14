@@ -340,6 +340,8 @@ export const english: Language = {
     "players.search.label": "Search players",
     "players.search.prompt": "Type a player's name to find them.",
     "players.search.none": "No players were found.",
+    "search.more":
+      "Only the first {count} are shown. Add more of the name to narrow the search.",
     // A test in a tournament's sections: its two teams' short names.
     "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notes",

@@ -315,6 +315,8 @@ export const japanese: Language = {
     "players.search.label": "選手を検索",
     "players.search.prompt": "選手の名前を入力して探してください。",
     "players.search.none": "選手が見つかりませんでした。",
+    "search.more":
+      "最初の {count} 件のみ表示しています。名前をさらに入力して検索を絞り込んでください。",
     "tournament.test": "{first}対{second}",
     "tournament.notes": "お知らせ",
     "tournament.commentary": "実況",

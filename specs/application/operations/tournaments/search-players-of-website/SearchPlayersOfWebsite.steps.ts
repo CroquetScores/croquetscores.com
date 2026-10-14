@@ -3,7 +3,10 @@ import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
 import { SearchPlayersOfWebsite } from "../../../../../src/application/operations/tournaments/SearchPlayersOfWebsite.js";
-import type { PlayerFound } from "../../../../../src/application/operations/tournaments/searching.js";
+import type {
+  PlayerFound,
+  PlayersFound,
+} from "../../../../../src/application/operations/tournaments/searching.js";
 import type { SpecWorld } from "../../../../support/world.js";
 import { inHandOf } from "../aRequest.js";
 
@@ -24,13 +27,16 @@ const searched = async (
   }
 };
 
-const listed = (world: SpecWorld): readonly PlayerFound[] => {
+const answeredBy = (world: SpecWorld): PlayersFound => {
   assert.ok(
-    Array.isArray(world.answer),
+    world.answer !== undefined,
     `Nothing was answered: ${inspect(world.failure)}`,
   );
-  return world.answer as readonly PlayerFound[];
+  return world.answer as PlayersFound;
 };
+
+const listed = (world: SpecWorld): readonly PlayerFound[] =>
+  answeredBy(world).players;
 
 When(
   "the players of the website matching {string} are asked for",
@@ -89,5 +95,12 @@ Then(
       listed(this)[["first", "second", "third"].indexOf(which)]?.name,
       name,
     );
+  },
+);
+
+Then(
+  /^the search of players (said|did not say) there are more$/,
+  function (this: SpecWorld, which: string) {
+    assert.equal(answeredBy(this).more, which === "said");
   },
 );

@@ -308,6 +308,7 @@ export const chinese: Language = {
     "players.search.label": "搜索球员",
     "players.search.prompt": "输入球员姓名以查找。",
     "players.search.none": "没有找到球员。",
+    "search.more": "仅显示前 {count} 项。请输入更多名称以缩小搜索范围。",
     "tournament.test": "{first} 对 {second}",
     "tournament.notes": "备注",
     "tournament.commentary": "评论",

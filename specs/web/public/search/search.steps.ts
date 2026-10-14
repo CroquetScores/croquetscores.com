@@ -199,3 +199,39 @@ Then(
     assert.deepEqual(stray, [], "Words in the box came from elsewhere.");
   },
 );
+
+// The blurb to refine the search, beneath the end of a list that was cut.
+const blurbOf = (world: SpecWorld, kind: string): Locator =>
+  world.browserPage.locator(
+    `main .search-list:has(.search-${kinds[kind]!}) .search-more`,
+  );
+
+Then(
+  /^the (tournaments|players|competitions) found (say|do not say) there are more$/,
+  async function (this: SpecWorld, kind: string, which: string) {
+    assert.equal(await blurbOf(this, kind).count(), which === "say" ? 1 : 0);
+  },
+);
+
+Then(
+  /^the blurb to refine the search is after the last (tournament|player|competition) found$/,
+  async function (this: SpecWorld, kind: string) {
+    const after = this.browserPage.locator(
+      `main .search-list:has(.search-${kind}) > ul + .search-more`,
+    );
+    assert.equal(await after.count(), 1);
+  },
+);
+
+Then(
+  "the competitions found are before the players found",
+  async function (this: SpecWorld) {
+    const headings = await this.browserPage
+      .locator("main .search-list > h2")
+      .allInnerTexts();
+    const competitions = headings.indexOf("Competitions");
+    const players = headings.indexOf("Players");
+    assert.ok(competitions >= 0 && players >= 0, headings.join(", "));
+    assert.ok(competitions < players, headings.join(", "));
+  },
+);

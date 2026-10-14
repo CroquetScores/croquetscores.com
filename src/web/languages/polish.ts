@@ -323,6 +323,8 @@ export const polish: Language = {
     "players.search.label": "Szukaj zawodników",
     "players.search.prompt": "Wpisz nazwisko zawodnika, aby go znaleźć.",
     "players.search.none": "Nie znaleziono zawodników.",
+    "search.more":
+      "Wyświetlono tylko pierwsze {count}. Wpisz więcej nazwy, aby zawęzić wyszukiwanie.",
     "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notatki",
     "tournament.commentary": "Relacja",

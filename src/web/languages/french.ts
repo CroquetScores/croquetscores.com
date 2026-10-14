@@ -333,6 +333,8 @@ export const french: Language = {
     "players.search.label": "Rechercher des joueurs",
     "players.search.prompt": "Saisissez le nom d'un joueur pour le trouver.",
     "players.search.none": "Aucun joueur n'a été trouvé.",
+    "search.more":
+      "Seuls les {count} premiers sont affichés. Ajoutez une partie du nom pour affiner la recherche.",
     "tournament.test": "{first} contre {second}",
     "tournament.notes": "Notes",
     "tournament.commentary": "Commentaires",

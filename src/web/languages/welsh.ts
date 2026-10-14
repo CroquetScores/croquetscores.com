@@ -335,6 +335,8 @@ export const welsh: Language = {
     "players.search.label": "Chwilio am chwaraewyr",
     "players.search.prompt": "Teipiwch enw chwaraewr i ddod o hyd iddo.",
     "players.search.none": "Ni chanfuwyd unrhyw chwaraewyr.",
+    "search.more":
+      "Dim ond y {count} cyntaf a ddangosir. Ychwanegwch fwy o'r enw i gyfyngu'r chwilio.",
     "tournament.test": "{first} v {second}",
     "tournament.notes": "Nodiadau",
     "tournament.commentary": "Sylwebaeth",

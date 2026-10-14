@@ -38,14 +38,24 @@ export const registerSearchPage = (
         found.players.length === 0 &&
         found.competitions.length === 0;
 
-      const list = (heading: string, items: readonly string[]): string =>
+      // The blurb is beneath the end of the list that was cut, and not
+      // beneath the ones that were not.
+      const list = (
+        heading: string,
+        items: readonly string[],
+        more: boolean,
+      ): string =>
         items.length === 0
           ? ""
           : `          <section class="search-list">
             <h2>${escape(heading)}</h2>
             <ul>
 ${items.join("\n")}
-            </ul>
+            </ul>${
+              more
+                ? `\n            <p class="search-more">${escape(say("search.more", { count: String(items.length) }))}</p>`
+                : ""
+            }
           </section>
 `;
       const results = !searched
@@ -59,13 +69,7 @@ ${items.join("\n")}
                   (each) =>
                     `              <li class="search-tournament"><a href="/${escape(each.address)}">${escape(each.name)}</a></li>`,
                 ),
-              ),
-              list(
-                say("tournament.players"),
-                found.players.map(
-                  (each) =>
-                    `              <li class="search-player"><a href="/${escape(each.address)}">${escape(each.name)}</a></li>`,
-                ),
+                found.more.tournaments,
               ),
               list(
                 say("search.competitions"),
@@ -73,6 +77,15 @@ ${items.join("\n")}
                   (each) =>
                     `              <li class="search-competition"><a href="/${escape(each.address)}">${escape(each.name)}</a> <a class="search-of" href="/${escape(each.tournament.address)}">${escape(each.tournament.name)}</a></li>`,
                 ),
+                found.more.competitions,
+              ),
+              list(
+                say("tournament.players"),
+                found.players.map(
+                  (each) =>
+                    `              <li class="search-player"><a href="/${escape(each.address)}">${escape(each.name)}</a></li>`,
+                ),
+                found.more.players,
               ),
             ].join("");
 

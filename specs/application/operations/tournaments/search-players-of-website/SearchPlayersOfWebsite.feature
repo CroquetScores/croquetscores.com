@@ -36,12 +36,17 @@ Feature: Searching the players of the website, for anybody
   with or without accents, and as part of a word. It is the player's world
   ranking name that is looked in, and not the name of a tournament or of a
   competition they are in. Nothing typed, or nothing but what separates words,
-  is answered with nothing rather than with everybody. At most 100 are found,
+  is answered with nothing rather than with everybody. At most 100 are found, and it is said when there are more, so that a hundred
+  is not taken for all there is,
   so that a single letter typed is answered with a page and not with the whole
   of the website.
 
-  The players are in alphabetical order of their names, by their letters with
-  case and accents set aside. Players whose names read the same that way keep
+  The players whose names begin with the text typed come first, as "Tim
+  Murphy" is before "Alison & Tim Murphy" for "tim": a name begins with the
+  text when, with the accents off and in lower case, it begins with the words
+  as they were typed, in the order they were typed and one space apart
+  (`Search.feature`). Each of those two groups is in alphabetical order of
+  the names, by their letters with case and accents set aside. Players whose names read the same that way keep
   the order of their names as written.
 
   A player is listed for as long as one of their tournaments has them in use:
@@ -142,6 +147,29 @@ Feature: Searching the players of the website, for anybody
       When the players of the website matching "someone" are asked for
       Then the search finds the player "Sam Someone" at the address "players/sam-someone"
 
+    Scenario: A player that begins with the text is before one that only has it
+      Given "organiser@example.com" has added the player "Alison & Tim Murphy" to "Spring Open"
+      And "organiser@example.com" has added the player "Tim Murphy" to "Spring Open"
+      When the players of the website matching "tim" are asked for
+      Then the first player the search finds is "Tim Murphy"
+      And the second player the search finds is "Alison & Tim Murphy"
+
+    Scenario: Each group is in alphabetical order
+      Given "organiser@example.com" has added the player "Tim Zed" to "Spring Open"
+      And "organiser@example.com" has added the player "Zed Tim" to "Spring Open"
+      And "organiser@example.com" has added the player "Tim Alpha" to "Spring Open"
+      And "organiser@example.com" has added the player "Alpha Tim" to "Spring Open"
+      When the players of the website matching "tim" are asked for
+      Then the first player the search finds is "Tim Alpha"
+      And the second player the search finds is "Tim Zed"
+      And the third player the search finds is "Alpha Tim"
+
+    Scenario: A name must begin with the whole of the text and not its first word
+      Given "organiser@example.com" has added the player "Murphy Tim" to "Spring Open"
+      And "organiser@example.com" has added the player "Tim Murphy" to "Spring Open"
+      When the players of the website matching "tim murphy" are asked for
+      Then the first player the search finds is "Tim Murphy"
+
     Scenario: The players found are in alphabetical order of their names
       Given "organiser@example.com" has added the player "Tom Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
@@ -193,6 +221,16 @@ Feature: Searching the players of the website, for anybody
       Given "organiser@example.com" has added the player "Лев Толстой" to "Spring Open"
       When the players of the website matching "толстой" are asked for
       Then the search finds the player "Лев Толстой"
+
+    Scenario: More than 100 players is said
+      Given 101 players are called "Pat" followed by a number in "Spring Open"
+      When the players of the website matching "pat" are asked for
+      Then the search of players said there are more
+
+    Scenario: Exactly 100 players is not said to be more
+      Given 100 players are called "Pat" followed by a number in "Spring Open"
+      When the players of the website matching "pat" are asked for
+      Then the search of players did not say there are more
 
     Scenario: No more than 100 players are found
       Given 101 players are called "Pat" followed by a number in "Spring Open"

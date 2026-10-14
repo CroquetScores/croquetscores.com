@@ -2,6 +2,7 @@ import type { Projection } from "../../application/common/Projection.js";
 import {
   type CompetitionFound,
   foldedForSearch,
+  type Limited,
   type PlayerEntry,
   type PlayerFound,
   type PlayerOfWebsiteFound,
@@ -48,6 +49,19 @@ import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 const patterns = (words: readonly string[]): string[] =>
   words.map((word) => `%${word}%`);
 
+// The words as they were typed, folded and one space apart, which a name that
+// is a reader's first choice begins with. What orders the names that are found
+// before the limit is applied, so that one is never cut for being late in the
+// alphabet when it is the one asked for (Search.feature).
+const beginning = (words: readonly string[]): string => words.join(" ");
+
+// One more than was wanted is asked for, which is how it is known there were
+// more: the one over is not answered.
+const limited = <T>(rows: readonly T[], most: number): Limited<T> => ({
+  found: rows.slice(0, most),
+  more: rows.length > most,
+});
+
 // What makes two players one person is the address their world ranking name
 // makes, as a tournament's players are told apart by theirs. A name that
 // makes none, as one of nothing but punctuation, is the player's own name's
@@ -93,23 +107,24 @@ export class SearchByWebsite implements Projection, Asked {
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<readonly TournamentFound[]> {
+  ): Promise<Limited<TournamentFound>> {
     const { rows } = await this.unitOfWork.connection().query<TournamentFound>(
       `select name, address
            from search_by_website_tournaments
           where website = $1 and not archived and folded_name like all($2)
-          order by folded_name, name, tournament_id
+          order by starts_with(folded_name, $4) desc, folded_name, name,
+                   tournament_id
           limit $3`,
-      [website.host, patterns(words), most],
+      [website.host, patterns(words), most + 1, beginning(words)],
     );
-    return rows;
+    return limited(rows, most);
   }
 
   async players(
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<readonly PlayerFound[]> {
+  ): Promise<Limited<PlayerFound>> {
     // Each person is the spelling of the tournament that started most
     // recently, chosen before the words are looked for in it, so that the name
     // shown is the same whatever was typed.
@@ -132,21 +147,24 @@ export class SearchByWebsite implements Projection, Asked {
        select name, person
          from shown
         where folded_name like all($2)
-        order by folded_name, name, person
+        order by starts_with(folded_name, $4) desc, folded_name, name, person
         limit $3`,
-      [website.host, patterns(words), most],
+      [website.host, patterns(words), most + 1, beginning(words)],
     );
-    return rows.map(({ name, person }) => ({
-      name,
-      address: `players/${person}`,
-    }));
+    return limited(
+      rows.map(({ name, person }) => ({
+        name,
+        address: `players/${person}`,
+      })),
+      most,
+    );
   }
 
   async competitions(
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<readonly CompetitionFound[]> {
+  ): Promise<Limited<CompetitionFound>> {
     const { rows } = await this.unitOfWork.connection().query<{
       name: string;
       slug: string;
@@ -160,18 +178,22 @@ export class SearchByWebsite implements Projection, Asked {
            on t.tournament_id = c.tournament_id
         where t.website = $1 and not t.archived and not c.archived
           and c.folded_name like all($2)
-        order by c.folded_name, c.name, c.competition_id
+        order by starts_with(c.folded_name, $4) desc, c.folded_name, c.name,
+                 c.competition_id
         limit $3`,
-      [website.host, patterns(words), most],
+      [website.host, patterns(words), most + 1, beginning(words)],
     );
-    return rows.map((row) => ({
-      name: row.name,
-      address: `${row.tournament_address}/competitions/${row.slug}`,
-      tournament: {
-        name: row.tournament_name,
-        address: row.tournament_address,
-      },
-    }));
+    return limited(
+      rows.map((row) => ({
+        name: row.name,
+        address: `${row.tournament_address}/competitions/${row.slug}`,
+        tournament: {
+          name: row.tournament_name,
+          address: row.tournament_address,
+        },
+      })),
+      most,
+    );
   }
 
   async player(
