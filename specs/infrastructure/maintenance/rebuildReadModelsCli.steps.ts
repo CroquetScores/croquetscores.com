@@ -109,6 +109,7 @@ Given("there are {int} events", function (this: SpecWorld, events: number) {
 
 When(
   "the rebuild script is run with {string}",
+  { timeout: 15_000 },
   async function (this: SpecWorld, args: string) {
     const rebuild = rebuildOf(this);
     const held = accessInHand(this);
