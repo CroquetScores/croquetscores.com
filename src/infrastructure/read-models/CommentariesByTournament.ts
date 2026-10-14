@@ -47,10 +47,18 @@ export class CommentariesByTournament
     for (const event of events) await this.#project(stream.value, event);
   }
 
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
+    await this.unitOfWork.connection().query(
+      `truncate commentaries_by_tournament,
+                  commentaries_by_tournament_forgotten`,
+    );
+  }
+
   /**
-   * The tables made again from `events`, every one there is. The streams can
-   * come in any order, as long as each stream's own events come in the order
-   * they were kept, since the store keeps no order between them.
+   * The tables made again from the streams it is handed, which can come in any
+   * order, as long as each stream's own events come in the order they were
+   * kept, since the store keeps no order between them.
    *
    * Each commentary's row is worked out from its whole stream before any is
    * written, rather than written event by event as `project` does. A title can
@@ -59,27 +67,25 @@ export class CommentariesByTournament
    * to the second while the first still held it, and the table refuses that.
    * Each as its stream leaves it, no two hold one title.
    */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
     const connection = this.unitOfWork.connection();
-    await connection.query(
-      `truncate commentaries_by_tournament,
-                  commentaries_by_tournament_forgotten`,
-    );
-    const rows = new Map<string, Row>();
-    const forgotten = new Set<string>();
-    for (const { stream, event } of events) {
-      const row = rows.get(stream);
+    let row: Row | undefined;
+    let forgotten = false;
+    for (const { event } of events) {
       if (event instanceof CommentaryStarted) {
         if (row !== undefined) continue;
         const at = event.occurredAt.toDate();
-        rows.set(stream, {
+        row = {
           tournamentId: event.tournamentId,
           title: event.title,
           slug: event.slug,
           writerId: event.writer,
           startedAt: at,
           changedAt: at,
-        });
+        };
       } else if (event instanceof CommentaryTitleChanged) {
         if (row !== undefined) row.title = event.title;
       } else if (
@@ -89,17 +95,17 @@ export class CommentariesByTournament
         const at = event.occurredAt.toDate();
         if (row !== undefined && at > row.changedAt) row.changedAt = at;
       } else if (event instanceof AccountForgotten) {
-        forgotten.add(stream);
+        forgotten = true;
       }
     }
-    for (const [commentaryId, row] of rows) {
+    if (row !== undefined) {
       await connection.query(
         `insert into commentaries_by_tournament
                 (commentary_id, tournament_id, title, slug, writer_id,
                  started_at, changed_at)
          values ($1, $2, $3, $4, $5, $6, $7)`,
         [
-          commentaryId,
+          stream,
           row.tournamentId,
           row.title,
           row.slug,
@@ -109,11 +115,11 @@ export class CommentariesByTournament
         ],
       );
     }
-    for (const accountId of forgotten) {
+    if (forgotten) {
       await connection.query(
         `insert into commentaries_by_tournament_forgotten (account_id)
          values ($1)`,
-        [accountId],
+        [stream],
       );
     }
   }

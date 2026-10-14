@@ -86,16 +86,24 @@ export class SearchByWebsite implements Projection, Asked {
     for (const event of events) await this.#project(stream.value, event);
   }
 
-  /**
-   * The tables made again from `events`, every one there is. Nothing one
-   * stream writes depends on another's having been written first.
-   */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
     await this.unitOfWork.connection().query(
       `truncate search_by_website_tournaments, search_by_website_competitions,
                   search_by_website_players, search_by_website_teams`,
     );
-    for (const { stream, event } of events) await this.#project(stream, event);
+  }
+
+  /**
+   * The tables made again from the streams it is handed, one at a time.
+   * Nothing one stream writes depends on another's having been written
+   * first.
+   */
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    for (const { event } of events) await this.#project(stream, event);
   }
 
   async tournaments(

@@ -169,63 +169,66 @@ export class AccountsByEmailAddress implements Projection {
       : { id: AccountId.from(row.account_id), confirmed: row.confirmed };
   }
 
+  /** Empties its table, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
+    await this.unitOfWork
+      .connection()
+      .query(`truncate accounts_by_email_address`);
+  }
+
   /**
-   * Makes the table again from `events`, every event there is. It needs no
-   * account's key: the hash is in the event, and a forgotten account's events
-   * read back without one.
+   * Makes the table again from the streams it is handed, one at a time. It
+   * needs no account's key: the hash is in the event, and a forgotten
+   * account's events read back without one.
    *
-   * Which accounts were forgotten is worked out before a single row is
-   * written, and each row is written once, already marked. Replaying instead
+   * Whether the account was forgotten is worked out from its own stream
+   * before its row is written, and the row is written once, already marked.
+   * Replaying instead
    * — a row inserted when the registering is read and marked when the
    * forgetting is — would depend on reading one stream before another, which
    * nothing gives: an address given up by one account and registered by
    * another would be refused as taken whenever the newer account's stream came
    * first.
    */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
-    const connection = this.unitOfWork.connection();
-    await connection.query(`truncate accounts_by_email_address`);
-    // Which accounts were forgotten, which are confirmed, and where each
-    // ended up, all in one reading before any row is written. Where each
-    // ended up, since a row written at an address its account later moved
-    // from would take that address from whichever account has it now, if that
-    // account's stream were read first; a stream's events come in the order
-    // they were kept, so the last move read is the last made. Confirmed by
-    // its address being confirmed, or by arriving from the old site, where
-    // every account was.
-    const forgotten = new Set<string>();
-    const confirmed = new Set<string>();
-    const movedTo = new Map<string, string>();
-    for (const { stream, event } of events) {
-      if (event instanceof AccountForgotten) forgotten.add(stream);
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    // Which of its own events say the account was forgotten, is confirmed, and
+    // where it ended up, all read before its row is written, so that the row
+    // is written once, already as the stream leaves it: at the address it
+    // moved to last, since a row written at one it later moved from would
+    // take that address from whichever account has it now, if that account's
+    // stream were handed over first. Confirmed by its address being
+    // confirmed, or by arriving from the old site, where every account was.
+    let forgotten = false;
+    let confirmed = false;
+    let movedTo: string | undefined;
+    for (const { event } of events) {
+      if (event instanceof AccountForgotten) forgotten = true;
       if (
         event instanceof EmailAddressConfirmed ||
         event instanceof AccountBroughtOver
       ) {
-        confirmed.add(stream);
+        confirmed = true;
       }
       if (event instanceof EmailAddressChanged) {
-        movedTo.set(stream, event.emailAddressHash);
+        movedTo = event.emailAddressHash;
       }
     }
-    for (const { stream, event } of events) {
+    for (const { event } of events) {
       if (
         !(event instanceof AccountRegistered) &&
         !(event instanceof AccountBroughtOver)
       ) {
         continue;
       }
-      await connection.query(
+      await this.unitOfWork.connection().query(
         `insert into accounts_by_email_address
            (account_id, email_address_hash, forgotten, confirmed)
          values ($1, $2, $3, $4)
          on conflict (account_id) do nothing`,
-        [
-          stream,
-          movedTo.get(stream) ?? event.emailAddressHash,
-          forgotten.has(stream),
-          confirmed.has(stream),
-        ],
+        [stream, movedTo ?? event.emailAddressHash, forgotten, confirmed],
       );
     }
   }

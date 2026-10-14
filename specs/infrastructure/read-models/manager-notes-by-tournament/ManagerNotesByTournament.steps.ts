@@ -18,6 +18,7 @@ import { PostgresEventStore } from "../../../../src/infrastructure/event-store/P
 import { ManagerNotesByTournament } from "../../../../src/infrastructure/read-models/ManagerNotesByTournament.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { rebuildsWith } from "../../support/projections.js";
+import { rebuildFromEvents } from "../../support/rebuild.js";
 import { unitOfWorkOf } from "../../support/transactions.js";
 
 // The read model in front of the Postgres store, with the notes the scenario
@@ -98,7 +99,8 @@ Given("the manager notes by tournament read model", function (this: SpecWorld) {
       // The store reads them by their ids, which says nothing of when each
       // was added, so the order a scenario names is put on them here.
       const added = [...scenario.byTitle.values()].map((id) => id.value);
-      await readModel.rebuildFrom(
+      await rebuildFromEvents(
+        readModel,
         scenario.latestFirst
           ? [...read].sort(
               (one, other) =>

@@ -131,6 +131,43 @@ export class PostgresEventStore implements EventStore {
   }
 
   /**
+   * Every stream there is, by its name, in the order of the names, which says
+   * nothing of when it was begun (a stream's name is a random uuid). What
+   * rebuilding a read model counts its work in.
+   */
+  async streamIds(): Promise<readonly string[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ stream_id: string }>(
+        `select distinct stream_id from events order by stream_id`,
+      );
+    return rows.map((row) => row.stream_id);
+  }
+
+  /** The events of one stream, in the order they were kept. */
+  async readStream(streamId: string): Promise<readonly StoredEvent[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<KeptEvent & { version: number }>(
+        `select version, name, data
+           from events
+          where stream_id = $1
+          order by version`,
+        [streamId],
+      );
+    const stored: StoredEvent[] = [];
+    for (const row of rows) {
+      const kept = await this.sealing.open(streamId, row);
+      stored.push({
+        stream: streamId,
+        version: row.version,
+        event: this.readBack(kept),
+      });
+    }
+    return stored;
+  }
+
+  /**
    * Every event kept, stream by stream and each stream in order, as rebuilding
    * a read model from the beginning reads them.
    *

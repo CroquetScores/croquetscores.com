@@ -97,18 +97,25 @@ export class TournamentsByWebsite implements Projection, Asked {
     for (const event of events) await this.#project(stream.value, event);
   }
 
-  /**
-   * The tables made again from `events`, every one there is. Nothing one
-   * stream writes depends on another's having been written first, so the
-   * streams can come in any order, as long as each stream's own events come
-   * in the order they were kept, which reading them back gives.
-   */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
     await this.unitOfWork.connection().query(
       `truncate tournaments_by_website, tournaments_by_website_competitions,
                   tournaments_by_website_games`,
     );
-    for (const { stream, event } of events) await this.#project(stream, event);
+  }
+
+  /**
+   * The tables made again from the streams it is handed, one at a time.
+   * Nothing one stream writes depends on another's having been written first,
+   * so the streams can come in any order, as long as each stream's own events
+   * come in the order they were kept, which reading them back gives.
+   */
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    for (const { event } of events) await this.#project(stream, event);
   }
 
   async playedSince(

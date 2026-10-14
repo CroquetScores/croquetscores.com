@@ -331,6 +331,7 @@ import {
 import { tellingTheAdministrator } from "./common/databaseOutage.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { refuseWhileDatabaseAccessIsOff } from "./common/maintenance.js";
+import type { RebuildProgress } from "../application/common/RebuildProgress.js";
 import type { DatabaseAccess } from "../application/common/DatabaseAccess.js";
 import { FileDatabaseAccess } from "../infrastructure/maintenance/FileDatabaseAccess.js";
 import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
@@ -475,7 +476,7 @@ export interface Application {
    * and answers how many events that was. For the maintenance script that
    * rebuilds them (scripts/rebuild-read-models.mjs); no route calls it.
    */
-  readonly rebuildReadModels: () => Promise<number>;
+  readonly rebuildReadModels: (progress?: RebuildProgress) => Promise<number>;
   /**
    * Re-encrypts every account's key, and every email waiting with no account,
    * with `newSiteKey`, in one transaction, and rewrites no event. For the
@@ -712,9 +713,17 @@ export interface ApplicationOptions {
   readonly googleEndpoints?: GoogleEndpoints;
 }
 
-/** A read model that can be made again from every event kept. */
+/**
+ * A read model that can be made again from every event kept: emptied once,
+ * and then handed each stream, whole, one at a time (rebuildReadModels.feature).
+ * Which stream comes first says nothing, so it has to work whichever it is.
+ */
 interface RebuildableReadModel {
-  rebuildFrom(events: readonly StoredEvent[]): Promise<void>;
+  clear(): Promise<void>;
+  rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void>;
 }
 
 // Every kind of event the application records, each named once by the name it
@@ -839,13 +848,25 @@ export const buildApplication = async (
   // a scenario's stand-in projections, which are examples rather than read
   // models. One transaction, so that a rebuild that fails leaves every read
   // model as it was, and one that is running is not seen half done.
-  const rebuildReadModels = (): Promise<number> =>
+  //
+  // A stream at a time, read when its turn comes and handed to every read
+  // model, so that how far it has got is a thing that can be said, and so that
+  // the whole of the event store is never held at once.
+  const rebuildReadModels = (progress?: RebuildProgress): Promise<number> =>
     unitOfWork.inTransaction(async () => {
-      const everyEvent = await keptEvents.readAll();
-      for (const readModel of readModels) {
-        await readModel.rebuildFrom(everyEvent);
+      const streams = await keptEvents.streamIds();
+      progress?.streams(streams.length);
+      for (const readModel of readModels) await readModel.clear();
+      let events = 0;
+      for (const [index, stream] of streams.entries()) {
+        const kept = await keptEvents.readStream(stream);
+        for (const readModel of readModels) {
+          await readModel.rebuildFromStream(stream, kept);
+        }
+        events += kept.length;
+        await progress?.streamDone(index + 1);
       }
-      return everyEvent.length;
+      return events;
     });
 
   // Emails are written from the site's catalogues, with links made from the

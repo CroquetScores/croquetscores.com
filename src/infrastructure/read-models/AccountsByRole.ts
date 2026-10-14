@@ -56,17 +56,22 @@ export class AccountsByRole implements Projection, Finding {
     }
   }
 
+  /** Empties its tables, so that every stream can be handed to it again. */
+  async clear(): Promise<void> {
+    await this.unitOfWork.connection().query(`truncate accounts_by_role`);
+  }
+
   /**
-   * Makes the table again from `events`, every event there is. Each is
+   * Makes the table again from the streams it is handed, one at a time. Each is
    * projected as it was when it was appended, which gives the same table
    * whichever stream is read first: a role belongs to one account, and only
    * that account's own events give it or take it.
    */
-  async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
-    await this.unitOfWork.connection().query(`truncate accounts_by_role`);
-    for (const { stream, event } of events) {
-      await this.#project(stream, [event]);
-    }
+  async rebuildFromStream(
+    stream: string,
+    events: readonly StoredEvent[],
+  ): Promise<void> {
+    for (const { event } of events) await this.#project(stream, [event]);
   }
 
   /**

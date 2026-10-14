@@ -4,7 +4,8 @@ import { Refused } from "../../domain/common/Refused.js";
 export type DatabaseAccessErrorCode =
   | "DatabaseAccess.MinutesOutOfRange"
   | "DatabaseAccess.MinutesNotWhole"
-  | "DatabaseAccess.NotOff";
+  | "DatabaseAccess.NotOff"
+  | "DatabaseAccess.AlreadyOff";
 
 /** Database access was asked to be what it cannot be (databaseAccess.feature). */
 export class DatabaseAccessRefused extends Refused<DatabaseAccessErrorCode> {}
@@ -37,6 +38,14 @@ export interface DatabaseAccess {
    * `DatabaseAccess.MinutesNotWhole` or `DatabaseAccess.MinutesOutOfRange`.
    */
   turnOff(minutes: number, at: Date): Promise<void>;
+
+  /**
+   * Turns access off as `turnOff` does, but only where it is on, which is
+   * decided in one step with the writing and not by asking first: two that
+   * begin at once are not both let, and somebody else's maintenance is not
+   * replaced. Refused as `DatabaseAccess.AlreadyOff` where it is off.
+   */
+  turnOffIfOn(minutes: number, at: Date): Promise<void>;
 
   /**
    * Moves the expected return to `minutes` from `at`, keeping when access was

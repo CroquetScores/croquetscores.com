@@ -12,6 +12,7 @@ import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import type { DomainEvent } from "../../../../src/domain/common/DomainEvent.js";
 import type { StoredEvent } from "../../../../src/infrastructure/event-store/PostgresEventStore.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { rebuildFromEvents } from "../../support/rebuild.js";
 import {
   accountsOf,
   aSiteKey,
@@ -49,7 +50,7 @@ Given(
     rebuildsWith(this, async () => {
       const { readModel, store } = accountsOf(this);
       await this.asARequest(async () =>
-        readModel.rebuildFrom(await store.readAll()),
+        rebuildFromEvents(readModel, await store.readAll()),
       );
     });
   },
@@ -169,7 +170,7 @@ const rebuild = async (
   const { readModel, store } = accountsOf(world);
   try {
     await world.asARequest(async () =>
-      readModel.rebuildFrom(inOrder(await store.readAll())),
+      rebuildFromEvents(readModel, inOrder(await store.readAll())),
     );
   } catch (failure) {
     world.failure = failure;
