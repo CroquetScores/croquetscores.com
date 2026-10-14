@@ -85,6 +85,10 @@ export interface Config {
   // without it: only checking a password against a hash imported from the old
   // site needs it, and without it those match nothing and importing is refused.
   readonly oldSitePasswordSalt: string | undefined;
+  // Whether search engines are asked to index the site. False unless the
+  // setting says so, because a site found before it was meant to be is
+  // noticed by nobody, and one that is hard to find is noticed at once.
+  readonly searchEnginesWelcome: boolean;
 }
 
 export class ConfigError extends Error {
@@ -205,6 +209,23 @@ const readWebsite = (
   }
 };
 
+// Yes or no and nothing else, because a misspelling left to mean one of them
+// would have to mean the one that lets the site be found, or else a site that
+// was meant to be would never be.
+const readSearchEnginesWelcome = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): boolean => {
+  const key = "SEARCH_ENGINES_WELCOME";
+  const raw = env[key]?.trim().toLowerCase() ?? "";
+  if (raw === "" || raw === "false") return false;
+  if (raw === "true") return true;
+  problems.push(
+    `${key} must be true or false, not ${JSON.stringify(env[key]?.trim())}.`,
+  );
+  return false;
+};
+
 const defaultPort = 3000;
 
 // A blank value is what .env holds for a key nobody has filled in, so it means
@@ -271,6 +292,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const port = readPort(env, problems);
   const trustedProxies = readTrustedProxies(env, problems);
   const website = readWebsite(env, problems);
+  const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
   if (problems.length > 0 || website === undefined)
@@ -298,6 +320,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
     oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
+    searchEnginesWelcome,
   };
 };
 

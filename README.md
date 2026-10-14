@@ -39,6 +39,7 @@ and an event store written here rather than installed.
 | `STYLE.md`  | What things are called, and what the scales are                   |
 | `LAYOUT.md` | What the site looks like                                          |
 | `TODO.md`   | What is known to be wrong, and what to do about it when it bites  |
+| `BETA.md`   | How the beta is run, and what its testers are asked to do         |
 
 ## Licence
 
