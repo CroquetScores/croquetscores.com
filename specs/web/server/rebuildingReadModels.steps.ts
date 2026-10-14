@@ -88,6 +88,69 @@ When(
   },
 );
 
+// What a rebuild says of how far it has got, kept as it is said.
+const told = new WeakMap<SpecWorld, string[]>();
+const streamsCounted = new WeakMap<SpecWorld, number>();
+
+const streamsKept = async (world: SpecWorld): Promise<number> => {
+  const { rows } = await world.database.query<{ count: string }>(
+    "select count(distinct stream_id) from events",
+  );
+  return Number(rows[0]?.count);
+};
+
+Given("the streams kept are counted", async function (this: SpecWorld) {
+  streamsCounted.set(this, await streamsKept(this));
+});
+
+When(
+  "the read models are rebuilt from the events, watched",
+  async function (this: SpecWorld) {
+    const said: string[] = [];
+    told.set(this, said);
+    await applicationFor(this).rebuildReadModels({
+      streams: (total) => {
+        said.push(`streams ${String(total)}`);
+      },
+      streamDone: (completed) => {
+        said.push(`done ${String(completed)}`);
+      },
+    });
+  },
+);
+
+Then(
+  "the rebuild was told there are as many streams as were counted",
+  function (this: SpecWorld) {
+    const said = told.get(this) ?? [];
+    assert.equal(said[0], `streams ${String(streamsCounted.get(this))}`);
+  },
+);
+
+Then(
+  "the rebuild was told each stream was done in turn",
+  async function (this: SpecWorld) {
+    const said = (told.get(this) ?? []).filter((each) =>
+      each.startsWith("done "),
+    );
+    const total = await streamsKept(this);
+    assert.ok(total > 0);
+    assert.deepEqual(
+      said,
+      Array.from({ length: total }, (_, index) => `done ${String(index + 1)}`),
+    );
+  },
+);
+
+Then(
+  "the rebuild was told how many streams there are before any was done",
+  function (this: SpecWorld) {
+    const said = told.get(this) ?? [];
+    assert.ok(said[0]?.startsWith("streams "));
+    assert.ok(said.slice(1).every((each) => each.startsWith("done ")));
+  },
+);
+
 Then(
   "the events kept are as many as were counted",
   async function (this: SpecWorld) {

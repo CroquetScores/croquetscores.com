@@ -4,7 +4,8 @@ import { Refused } from "../../domain/common/Refused.js";
 export type DatabaseAccessErrorCode =
   | "DatabaseAccess.MinutesOutOfRange"
   | "DatabaseAccess.MinutesNotWhole"
-  | "DatabaseAccess.NotOff";
+  | "DatabaseAccess.NotOff"
+  | "DatabaseAccess.AlreadyOff";
 
 /** Database access was asked to be what it cannot be (databaseAccess.feature). */
 export class DatabaseAccessRefused extends Refused<DatabaseAccessErrorCode> {}

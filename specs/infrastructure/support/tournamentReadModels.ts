@@ -33,6 +33,7 @@ import {
 } from "../../../src/infrastructure/event-store/PostgresEventStore.js";
 import type { SpecWorld } from "../../support/world.js";
 import { rebuildsWith } from "./projections.js";
+import { rebuildFromEvents, type Rebuildable } from "./rebuild.js";
 import { unitOfWorkOf } from "./transactions.js";
 
 /** What every read model of tournaments finds of one. */
@@ -45,9 +46,7 @@ export interface Found {
 }
 
 /** A read model of tournaments, as its scenarios stand it up. */
-export interface TournamentReadModel extends Projection {
-  rebuildFrom(events: readonly StoredEvent[]): Promise<void>;
-}
+export interface TournamentReadModel extends Projection, Rebuildable {}
 
 /** What a tournament is to be when it is created, as it is asked for. */
 export type ToBe = TournamentRequest & { readonly website: string };
@@ -131,7 +130,8 @@ export const standUp = (
       const events = await store.readAll();
       const isTournaments = ({ stream }: StoredEvent): boolean =>
         stream.startsWith("tournament/");
-      await readModel.rebuildFrom(
+      await rebuildFromEvents(
+        readModel,
         scenario.competitionsFirst
           ? [
               ...events.filter((each) => !isTournaments(each)),
