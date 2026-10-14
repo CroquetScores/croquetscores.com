@@ -24,6 +24,10 @@ export interface AccessInHand {
   reads: () => number;
   /** What the reader last read. */
   state: DatabaseAccessState | undefined;
+  /** Holds the next reading of the file for the reader after it has read it. */
+  hold: () => void;
+  /** Lets a held reading go, and waits for it to be done. */
+  release: () => Promise<void>;
 }
 
 const inHand = new WeakMap<SpecWorld, AccessInHand>();
@@ -41,6 +45,11 @@ export const aFileThatIsNotThere = (world: SpecWorld): AccessInHand => {
   const path = join(directory, ".database-access");
   const faults: unknown[] = [];
   let reads = 0;
+  // A reading that has read the file and is waiting to say so, which is how a
+  // change is made while one is in flight.
+  let gate: Promise<void> | undefined;
+  let open: (() => void) | undefined;
+  let held: Promise<unknown> | undefined;
   const options = {
     path,
     now: () => momentIn(world),
@@ -51,11 +60,36 @@ export const aFileThatIsNotThere = (world: SpecWorld): AccessInHand => {
     faults,
     reads: () => reads,
     state: undefined,
+    hold: () => {
+      gate = new Promise<void>((resolve) => {
+        open = resolve;
+      });
+      // Begun and not waited for: it is in flight, and is the reading the
+      // scenario then makes a change under.
+      held = found.reader.current();
+      // Let it get as far as reading the file before the change is made.
+      held.catch(() => undefined);
+    },
+    release: async () => {
+      open?.();
+      await held;
+    },
     reader: new FileDatabaseAccess({
       ...options,
-      readFile: (from: string) => {
+      readFile: async (from: string) => {
         reads += 1;
-        return readFile(from, "utf8");
+        // What the file said, or why it could not be read, either of which is
+        // held the same way: the reading is waiting to say it.
+        const read = readFile(from, "utf8").then(
+          (text) => ({ text }),
+          (failure: NodeJS.ErrnoException) => ({ failure }),
+        );
+        const result = await read;
+        const waits = gate;
+        gate = undefined;
+        if (waits !== undefined) await waits;
+        if ("failure" in result) return Promise.reject(result.failure);
+        return result.text;
       },
     }),
     writer: new FileDatabaseAccess(options),

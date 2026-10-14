@@ -5,13 +5,21 @@
 // It writes the switch the running site reads, and nothing else: it does not
 // stop the site and does not touch the database, so it works whether the
 // database is there or not. Run under tsx, as the package script does.
+import { resolve } from "node:path";
+import { fileURLToPath, URL } from "node:url";
+
 import { loadEnvFile } from "../src/infrastructure/config/Config.js";
 import { FileDatabaseAccess } from "../src/infrastructure/maintenance/FileDatabaseAccess.js";
 import { runDatabaseAccess } from "../src/infrastructure/maintenance/databaseAccessCli.js";
 
 loadEnvFile();
 const access = new FileDatabaseAccess({
-  path: process.env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",
+  // The site's own folder's where it is not absolute, as the site reads it,
+  // whichever folder this is run from.
+  path: resolve(
+    fileURLToPath(new URL("..", import.meta.url)),
+    process.env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",
+  ),
   now: () => new Date(),
   log: { error: (details, message) => console.error(message, details) },
 });

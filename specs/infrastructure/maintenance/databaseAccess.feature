@@ -70,6 +70,14 @@ Feature: A script turns database access on and off
       When the script is run with "off"
       Then database access is on
 
+    Scenario: Off with the flag and no minutes says they are needed
+      When the script is run with "off --minutes"
+      Then the script says the minutes are needed
+
+    Scenario: Minutes that are not whole say they must be
+      When the script is run with "off --minutes 2.5"
+      Then the script says the minutes must be a whole number
+
     Scenario: Minutes that are not a number are refused
       When the script is run with "off --minutes soon"
       Then the script exits with failure

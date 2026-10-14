@@ -260,3 +260,17 @@ Then("the stylesheet is served", function (this: SpecWorld) {
   assert.equal(response.statusCode, 200);
   assert.match(String(response.headers["content-type"]), /text\/css/);
 });
+
+When("the site's health check is asked for", async function (this: SpecWorld) {
+  builtFor(this).response = await builtFor(this).application.server.inject({
+    method: "GET",
+    url: "/api/v1/health",
+  });
+});
+
+Then("the health check says the site is well", function (this: SpecWorld) {
+  const response = answered(this);
+  assert.equal(response.statusCode, 200, response.body);
+  const said: { status?: unknown } = response.json();
+  assert.equal(said.status, "ok");
+});

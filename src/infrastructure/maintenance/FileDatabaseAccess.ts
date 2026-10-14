@@ -61,6 +61,12 @@ export class FileDatabaseAccess implements DatabaseAccess {
   #cached:
     { readonly at: number; readonly state: DatabaseAccessState } | undefined;
   #reading: Promise<DatabaseAccessState> | undefined;
+  // Changed by every write, so that a reading begun before one is not kept
+  // after it as though it were what is there.
+  #generation = 0;
+  // The fault last logged, so that the same one is not logged again at every
+  // reading, which is once a second for as long as it is there.
+  #lastFault: string | undefined;
 
   constructor(options: FileDatabaseAccessOptions) {
     this.#options = options;
@@ -74,11 +80,17 @@ export class FileDatabaseAccess implements DatabaseAccess {
     if (cached !== undefined && Math.abs(now - cached.at) < A_SECOND) {
       return cached.state;
     }
-    this.#reading ??= this.#read().finally(() => {
-      this.#reading = undefined;
-    });
-    const state = await this.#reading;
-    this.#cached = { at: now, state };
+    const generation = this.#generation;
+    const reading =
+      this.#reading ??
+      this.#read().finally(() => {
+        // Only its own: a later reading is not for this to clear.
+        if (this.#reading === reading) this.#reading = undefined;
+      });
+    this.#reading = reading;
+    const state = await reading;
+    // Not kept where a change was made while it was being read.
+    if (generation === this.#generation) this.#cached = { at: now, state };
     return state;
   }
 
@@ -110,6 +122,13 @@ export class FileDatabaseAccess implements DatabaseAccess {
     } catch (failure) {
       if ((failure as NodeJS.ErrnoException).code !== "ENOENT") throw failure;
     }
+    this.#changed();
+  }
+
+  // What was read before now is not what is there.
+  #changed(): void {
+    this.#generation += 1;
+    this.#reading = undefined;
     this.#cached = undefined;
   }
 
@@ -118,25 +137,34 @@ export class FileDatabaseAccess implements DatabaseAccess {
     await mkdir(dirname(path), { recursive: true });
     // Beside it, so that the move is within one directory and is atomic.
     const beside = `${path}.${String(process.pid)}.tmp`;
-    await writeFile(
-      beside,
-      JSON.stringify({
-        turnedOffAt: turnedOffAt.toISOString(),
-        expectedBackAt: expectedBackAt.toISOString(),
-      }),
-    );
-    await rename(beside, path);
-    this.#cached = undefined;
+    try {
+      await writeFile(
+        beside,
+        JSON.stringify({
+          turnedOffAt: turnedOffAt.toISOString(),
+          expectedBackAt: expectedBackAt.toISOString(),
+        }),
+      );
+      await rename(beside, path);
+    } catch (failure) {
+      // Not left to be found beside it, one for every process that tried.
+      await unlink(beside).catch(() => undefined);
+      throw failure;
+    }
+    this.#changed();
   }
 
   async #read(): Promise<DatabaseAccessState> {
-    const { path, log } = this.#options;
+    const { path } = this.#options;
     let text: string;
     try {
       text = await (this.#options.readFile ?? defaultRead)(path);
     } catch (failure) {
-      if ((failure as NodeJS.ErrnoException).code === "ENOENT") return on;
-      log.error(failure, "Could not read the database access file.");
+      if ((failure as NodeJS.ErrnoException).code === "ENOENT") {
+        this.#lastFault = undefined;
+        return on;
+      }
+      this.#fault(failure, "Could not read the database access file.");
       return on;
     }
     try {
@@ -151,14 +179,22 @@ export class FileDatabaseAccess implements DatabaseAccess {
       ) {
         throw new Error("The file does not say when access was turned off.");
       }
+      this.#lastFault = undefined;
       return { off: true, turnedOffAt, expectedBackAt };
     } catch (failure) {
-      log.error(
+      this.#fault(
         failure,
         "The database access file is not what it should be, so access is on.",
       );
       return on;
     }
+  }
+
+  #fault(failure: unknown, message: string): void {
+    const key = `${message} ${failure instanceof Error ? failure.message : String(failure)}`;
+    if (key === this.#lastFault) return;
+    this.#lastFault = key;
+    this.#options.log.error(failure, message);
   }
 }
 

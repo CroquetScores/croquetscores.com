@@ -32,16 +32,18 @@ const flagsOf = (
   let given = false;
   for (let index = 0; index < words.length; index += 2) {
     if (words[index] !== allowed || given) return undefined;
-    const next = words[index + 1];
-    if (next === undefined) return undefined;
+    // The flag with nothing after it is a flag given and no value, which is
+    // the same as the flag not being given: the minutes are needed.
     given = true;
-    value = next;
+    value = words[index + 1];
   }
   return { value };
 };
 
-const wholeMinutes = (text: string): number =>
-  /^-?\d+(\.\d+)?$/.test(text) ? Number(text) : Number.NaN;
+// What is not a number is not a whole number, which is the switch's to say
+// (FileDatabaseAccess.feature), so the rules are in one place.
+const minutesOf = (text: string): number =>
+  text.trim() === "" ? Number.NaN : Number(text);
 
 /**
  * The script's work, with the arguments as the command line gives them
@@ -74,7 +76,7 @@ export const runDatabaseAccess = async (
     );
   }
 
-  const minutes = wholeMinutes(flags.value);
+  const minutes = minutesOf(flags.value);
   try {
     if (command === "off") await access.turnOff(minutes, now());
     else await access.moveReturn(minutes, now());
@@ -83,8 +85,11 @@ export const runDatabaseAccess = async (
       if (failure.code === "DatabaseAccess.NotOff") {
         return failed("Database access is not off.");
       }
+      if (failure.code === "DatabaseAccess.MinutesNotWhole") {
+        return failed("The minutes must be a whole number.");
+      }
       return failed(
-        `The minutes must be a whole number from 1 to ${String(MOST_MINUTES_OFF)}.`,
+        `The minutes must be from 1 to ${String(MOST_MINUTES_OFF)}.`,
       );
     }
     throw failure;

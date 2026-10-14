@@ -6,6 +6,7 @@ import {
   accessInHand,
   aFileThatIsNotThere,
   holding,
+  momentIn,
 } from "./databaseAccessInHand.js";
 
 // The switch the site reads and the script writes (`FileDatabaseAccess.feature`
@@ -33,6 +34,40 @@ Given("a database access file holding no minutes", function (this: SpecWorld) {
 // maintenance.steps.ts, which does them to the application's own switch where
 // the scenario built the application and to this file's where it did not: the
 // same words, since they are the same thing done.
+
+Given(
+  "the database access file is made to hold {string}",
+  function (this: SpecWorld, text: string) {
+    holding(this, text);
+  },
+);
+
+Given(
+  "a reading of the file is held after it has read it",
+  async function (this: SpecWorld) {
+    accessInHand(this).hold();
+    // Long enough for it to have read the file, and no longer.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  },
+);
+
+When(
+  "database access is turned on through the switch that is reading",
+  async function (this: SpecWorld) {
+    await accessInHand(this).reader.turnOn();
+  },
+);
+
+When(
+  "database access is turned off through the switch that is reading",
+  async function (this: SpecWorld) {
+    await accessInHand(this).reader.turnOff(30, momentIn(this));
+  },
+);
+
+When("the held reading is let go", async function (this: SpecWorld) {
+  await accessInHand(this).release();
+});
 
 When("database access is read", async function (this: SpecWorld) {
   const held = accessInHand(this);
@@ -86,3 +121,10 @@ Then("a fault is logged", function (this: SpecWorld) {
 Then("the file was read once", function (this: SpecWorld) {
   assert.equal(accessInHand(this).reads(), 1);
 });
+
+Then(
+  /^(\d+) faults? (?:is|are) logged$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(accessInHand(this).faults.length, Number(count));
+  },
+);

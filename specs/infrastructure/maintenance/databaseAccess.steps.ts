@@ -106,6 +106,13 @@ Then(
 );
 
 Then(
+  "the script says the minutes must be a whole number",
+  function (this: SpecWorld) {
+    says(this, "must be a whole number");
+  },
+);
+
+Then(
   "the script says the minutes must be from 1 to 1440",
   function (this: SpecWorld) {
     says(this, "from 1 to 1440");

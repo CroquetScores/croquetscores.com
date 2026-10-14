@@ -7,6 +7,11 @@ Feature: Database access is switched in a file the site can read without the dat
   can write it and a running site can read it with no more than the
   filesystem between them.
 
+  A path that is not absolute is the site's own folder's, whichever folder the
+  site and the script are run from, since a site started by a service manager
+  and a script run by a person are not run from the same one, and a switch each
+  wrote to its own would never be seen by the other.
+
   The file holds when access was turned off and when it is expected back, and
   does not exist while access is on. It is the moment that is kept and not the
   minutes it was said in, so that the expected return can be moved from now,
@@ -215,6 +220,45 @@ Feature: Database access is switched in a file the site can read without the dat
       Given a database access file holding ""
       When database access is read
       Then database access is on
+
+  Rule: A reading begun before a change does not outlast it
+
+    Scenario: A reading begun before access is turned on does not say it is off
+      Given database access is turned off for 30 minutes
+      And a reading of the file is held after it has read it
+      When database access is turned on through the switch that is reading
+      And the held reading is let go
+      And database access is read
+      Then database access is on
+
+    Scenario: A reading begun before access is turned off does not say it is on
+      Given a reading of the file is held after it has read it
+      When database access is turned off through the switch that is reading
+      And the held reading is let go
+      And database access is read
+      Then database access is off
+
+  Rule: A fault in the file is logged once and not at every reading
+
+    Scenario: The same fault read again in a later second is logged once
+      Given the moment "2026-10-13T10:00:00Z"
+      And a database access file holding "not what it should be"
+      And database access is read
+      And the moment "2026-10-13T10:00:05Z"
+      When database access is read
+      Then 1 fault is logged
+
+    Scenario: A fault that is mended and happens again is logged again
+      Given the moment "2026-10-13T10:00:00Z"
+      And a database access file holding "not what it should be"
+      And database access is read
+      And database access is turned off for 30 minutes
+      And the moment "2026-10-13T10:00:05Z"
+      And database access is read
+      And the database access file is made to hold "not what it should be again"
+      And the moment "2026-10-13T10:00:10Z"
+      When database access is read
+      Then 2 faults are logged
 
   Rule: The file is read once in a second at most
 

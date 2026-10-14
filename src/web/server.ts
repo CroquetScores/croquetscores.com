@@ -1365,7 +1365,9 @@ export const buildApplication = async (
   const databaseAccess: DatabaseAccess =
     options.databaseAccess ??
     new FileDatabaseAccess({
-      path: config.databaseAccessFile,
+      // The site's own folder's where it is not absolute, so that the script,
+      // run from anywhere, writes the file the site reads.
+      path: resolve(repositoryRoot, config.databaseAccessFile),
       now: () => clock(),
       log: {
         error: (details, message) =>

@@ -209,6 +209,17 @@ Feature: The site says so when its database access is turned off for maintenance
       When the site's stylesheet is asked for
       Then the stylesheet is served
 
+  Rule: The health check is still answered
+
+    The process is well and uses no database to say so, and a balancer or a
+    monitor that was told otherwise for the whole of the maintenance would
+    take it out of service or page somebody for what was done on purpose.
+
+    Scenario: The health check says the site is well
+      Given database access is turned off for 30 minutes
+      When the site's health check is asked for
+      Then the health check says the site is well
+
   Rule: The site works again the moment access is turned on
 
     Scenario: A page is answered once access is turned on

@@ -29,6 +29,11 @@ const ASK_AGAIN_AFTER_THE_ESTIMATE_SECONDS = 300;
 // the page the site's own.
 const filesServed: readonly string[] = [assetsPath, "/admin/assets/"];
 
+// The health check, which says the process is well and uses no database to
+// say so: a balancer or a monitor told otherwise for the whole of the
+// maintenance would take the site out of service for what was done on purpose.
+const healthCheck = "/api/v1/health";
+
 const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");
 
@@ -54,6 +59,7 @@ export const refuseWhileDatabaseAccessIsOff = (
 ): void => {
   server.addHook("onRequest", async (request, reply) => {
     if (filesServed.some((prefix) => request.url.startsWith(prefix))) return;
+    if (request.url === healthCheck) return;
     const state = await access.current();
     if (!state.off) return;
 
