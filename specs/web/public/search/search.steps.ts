@@ -37,6 +37,14 @@ Then("the header has a search box", async function (this: SpecWorld) {
 });
 
 Then(
+  "the header names the page {string}",
+  async function (this: SpecWorld, name: string) {
+    const named = this.browserPage.locator("header.site-bar .site-page");
+    assert.equal((await named.innerText()).trim(), name);
+  },
+);
+
+Then(
   "the header's search box is called {string}",
   async function (this: SpecWorld, name: string) {
     assert.equal(await box(this).getAttribute("aria-label"), name);

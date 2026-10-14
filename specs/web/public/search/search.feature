@@ -71,6 +71,19 @@ Feature: A reader searches the website for tournaments, players and competitions
       Then the address is "/search"
       And the address asks for "spring"
 
+  Rule: The page names itself in the header, beneath the site's name
+
+    As a tournament's pages name it there (`layout.feature`), and not in the
+    content, which begins with what was found.
+
+    Scenario: The header names the page
+      When the page at "/search" is opened
+      Then the header names the page "Search"
+
+    Scenario: The content does not begin with the page's name
+      When the page at "/search?q=spring" is opened
+      Then the page's content has no main heading
+
   Rule: What was typed is found, in three lists
 
     Scenario: A tournament is found

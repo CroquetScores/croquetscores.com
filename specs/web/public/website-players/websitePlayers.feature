@@ -71,6 +71,12 @@ Feature: A reader searches the website's players by name
       When the page at "/players" is opened
       Then the content has the heading "Players"
 
+  Rule: The page names itself in the header, beneath the site's name
+
+    Scenario: The header names the page
+      When the page at "/players" is opened
+      Then the header names the page "Players"
+
   Rule: The players whose names the words are found in are listed
 
     Scenario: A player is found

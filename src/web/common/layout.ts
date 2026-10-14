@@ -84,6 +84,11 @@ export interface Shell {
   readonly currentPath?: string | undefined;
   /** Which theme the reader has asked for, if they have asked. */
   readonly theme: Theme;
+  /** The name of a page that is of no one tournament, beneath the site's
+      name in the pinned bar and leading to itself, as a tournament's is: the
+      search's and the players'. */
+  readonly pageName?:
+    { readonly name: string; readonly href: string } | undefined;
   /** What was typed in the search box of the header, put back in it where a
       page is the answer to a search. Nothing where a page is not. */
   readonly searchText?: string | undefined;
@@ -354,6 +359,7 @@ export type SiteBar = Pick<
   | "hasPassword"
   | "readerKnown"
   | "tournament"
+  | "pageName"
   | "searchText"
 > & {
   /** Whether the header has the site's search box, which every public page
@@ -383,7 +389,7 @@ export const siteBar = (bar: SiteBar): string => `
         <div class="site-bar-inner">
           <div class="site-names">
             <a class="site-name" href="/">${escape(bar.siteName)}</a>
-${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}          </div>
+${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}${bar.pageName === undefined ? "" : `            <a class="site-page" href="${escape(bar.pageName.href)}">${escape(bar.pageName.name)}</a>\n`}          </div>
 ${searchBox(bar)}${menu(bar)}
 ${accountMenu(bar)}
         </div>

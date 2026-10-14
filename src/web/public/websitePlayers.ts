@@ -51,6 +51,7 @@ ${found
         render(assets, {
           title: say("tournament.players"),
           currentPath: "/players",
+          pageName: { name: say("tournament.players"), href: "/players" },
           theme: themeOf(request),
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
@@ -58,11 +59,11 @@ ${found
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: `          <h1>${escape(say("tournament.players"))}</h1>
-          <form class="players-search" role="search" action="/players" method="get">
+          body: `          <form class="players-search" role="search" action="/players" method="get">
             <input type="search" name="search" aria-label="${label}" value="${escape(typed)}" />
             <button type="submit">${label}</button>
           </form>
+          <h2 class="games-heading">${escape(say("tournament.players"))}</h2>
 ${results}`,
         }),
       );

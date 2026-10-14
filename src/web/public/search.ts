@@ -81,6 +81,7 @@ ${items.join("\n")}
         request,
         render(assets, {
           title: say("search.label"),
+          pageName: { name: say("search.label"), href: "/search" },
           searchText: typed,
           theme: themeOf(request),
           signedIn: signedIn(request),
@@ -89,8 +90,7 @@ ${items.join("\n")}
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: `          <h1>${escape(say("search.label"))}</h1>
-${results}`,
+          body: results,
         }),
       );
     },
