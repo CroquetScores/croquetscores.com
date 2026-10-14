@@ -37,6 +37,9 @@ const AN_UPDATE_EVERY = 10 * 1000;
 // Minutes added to what is estimated to be left, when the site is told when it
 // is expected back.
 const IN_HAND = 5;
+// How many times the streams done are to be fewer than the streams there are,
+// for the estimate to be told to readers: a tenth.
+const ENOUGH_TO_GO_BY = 10;
 const A_MINUTE = 60 * 1000;
 // How long the site is given to see that access is off: it reads the switch at
 // most once in a second (FileDatabaseAccess.feature).
@@ -137,6 +140,9 @@ export const runRebuildReadModels = async (
         say(
           `${commas(completed)} of ${commas(total)} streams completed, approximately ${minutesLeftSaid(left)} minutes to complete.`,
         );
+        // The first streams say little of the rest, so what a reader is told
+        // is left as it was said until a tenth of them are done.
+        if (completed * ENOUGH_TO_GO_BY < total) return;
         // What a reader is told follows what the rebuild has found out, with
         // five minutes in hand, and never more than can be said.
         const back = Math.min(

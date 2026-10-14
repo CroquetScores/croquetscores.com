@@ -43,7 +43,13 @@ Feature: Rebuilding the read models turns database access off while it runs
   done, since the script says how long it took in the next line, and a rebuild
   that is done within ten seconds has none.
 
-  What the page tells a reader is kept as true as the estimate is. Each time
+  What the page tells a reader is kept as true as the estimate is, once there
+  is something to make it from. The first streams of a rebuild say little of
+  the rest, as they may be the small ones or the large ones, and a reader
+  told "about 5 minutes" at the start of a rebuild that takes an hour has been
+  told something worse than what the administrator guessed. So the site's
+  expected return is left as it was said until a tenth of the streams are done.
+  The updates the script says go on being said from the first. Each time
   an update is said, the site's expected return is moved to the minutes
   estimated to be left, rounded up to a whole minute, and five more, from now
   (`databaseAccess.feature`),
@@ -231,19 +237,39 @@ Feature: Rebuilding the read models turns database access off while it runs
       When the rebuild script is run with "--minutes 20"
       Then the updates were said while the read models were being made again
 
-  Rule: The expected return follows the estimate, with five minutes in hand
+  Rule: The expected return follows the estimate, with five minutes in hand, once a tenth is done
 
-    Scenario: The first update moves the return to the minutes left and five
+    Scenario: Before a tenth of the streams are done the return is not moved
       Given the rebuild takes 20 minutes over 12000 streams
       When the rebuild script is run with "--minutes 30"
-      Then the expected return was moved to "2026-10-13T10:25:11Z"
+      Then the expected return was first moved when 1200 streams were done
 
-    Scenario: A later update moves it again
+    Scenario: Updates before a tenth are done still say how far it has got
+      Given the rebuild takes 20 minutes over 12000 streams
+      When the rebuild script is run with "--minutes 30"
+      Then the rebuild script says 100 of 12,000 streams completed, approximately 19.833 minutes to complete
+
+    Scenario: The first move is to the minutes left and five
       Given the rebuild takes 20 minutes over 12000 streams
       When the rebuild script is run with "--minutes 30"
       Then the expected return was moved to "2026-10-13T10:25:01Z"
 
-    Scenario: It is moved at each update and no oftener
+    Scenario: A tenth exactly is enough
+      Given the rebuild takes 100 seconds over 1000 streams
+      When the rebuild script is run with "--minutes 20"
+      Then the expected return was first moved when 100 streams were done
+
+    Scenario: Less than a tenth done at an update is not enough
+      Given the rebuild takes 400 seconds over 2000 streams
+      When the rebuild script is run with "--minutes 20"
+      Then the expected return was first moved when 200 streams were done
+
+    Scenario: A rebuild that is a tenth done at its first update moves it then
+      Given the rebuild takes 35 seconds over 350 streams
+      When the rebuild script is run with "--minutes 20"
+      Then the expected return was first moved when 100 streams were done
+
+    Scenario: It is moved at each update from then and no oftener
       Given the rebuild takes 35 seconds over 350 streams
       When the rebuild script is run with "--minutes 20"
       Then the expected return was moved 3 times
@@ -261,7 +287,7 @@ Feature: Rebuilding the read models turns database access off while it runs
     Scenario: It is never more than a day
       Given the rebuild takes 2000 minutes over 200 streams
       When the rebuild script is run with "--minutes 1440"
-      Then the expected return was moved to "2026-10-14T10:10:01Z"
+      Then the expected return was moved to "2026-10-14T13:20:01Z"
 
     Scenario: Access turned on by somebody else is not turned off again
       Given the rebuild takes 35 seconds over 350 streams
