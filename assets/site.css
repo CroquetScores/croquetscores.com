@@ -654,23 +654,36 @@ body > .site-footer {
   background: var(--surface);
 }
 
-.player-entries {
-  margin: 0 0 var(--space-4);
-  padding: 0;
-  list-style: none;
+/* A player's tournaments, drawn as the other lists of the public site are:
+   headed in the section bar's colours, bordered and banded. */
+.player-tournaments {
+  width: 100%;
+  max-width: 38rem;
+  border-collapse: collapse;
+  margin-block-end: var(--space-4);
 }
 
-.player-entries li {
-  padding-block: var(--space-1);
+.player-tournaments th {
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-size: var(--text-lg);
+  text-align: start;
+}
+
+.player-tournaments th a {
+  color: inherit;
+}
+
+.player-tournaments td {
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-top: 0;
   overflow-wrap: anywhere;
 }
 
-/* Beneath the end of a list that was cut, in the page's own words and drawn
-   as the line that says there is nothing is, since it too is said of the list
-   above it. */
-.search-more {
-  margin: var(--space-2) 0 0;
-  color: var(--ink-muted);
+.player-tournaments tbody tr:nth-child(even) td {
+  background: var(--surface);
 }
 
 .search-of {

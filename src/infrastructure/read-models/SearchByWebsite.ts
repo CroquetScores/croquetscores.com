@@ -3,18 +3,14 @@ import {
   type CompetitionFound,
   foldedForSearch,
   type Limited,
-  type PlayerEntry,
   type PlayerFound,
   type PlayerOfWebsiteFound,
+  type PlayerTournament,
   type SearchByWebsite as Asked,
   type TournamentFound,
 } from "../../application/operations/tournaments/searching.js";
 import { BlockAdded } from "../../domain/aggregates/tournaments/events/BlockAdded.js";
 import { BlockUpdated } from "../../domain/aggregates/tournaments/events/BlockUpdated.js";
-import { CompetitionMoved } from "../../domain/aggregates/tournaments/events/CompetitionMoved.js";
-import { CompetitionsSpacedOut } from "../../domain/aggregates/tournaments/events/CompetitionsSpacedOut.js";
-import { CompetitionPlayerEntered } from "../../domain/aggregates/tournaments/competitions/events/CompetitionPlayerEntered.js";
-import { CompetitionPlayerRemoved } from "../../domain/aggregates/tournaments/competitions/events/CompetitionPlayerRemoved.js";
 import { CompetitionArchived } from "../../domain/aggregates/tournaments/events/CompetitionArchived.js";
 import { CompetitionRestored } from "../../domain/aggregates/tournaments/events/CompetitionRestored.js";
 import { KnockoutAdded } from "../../domain/aggregates/tournaments/events/KnockoutAdded.js";
@@ -97,8 +93,7 @@ export class SearchByWebsite implements Projection, Asked {
   async rebuildFrom(events: readonly StoredEvent[]): Promise<void> {
     await this.unitOfWork.connection().query(
       `truncate search_by_website_tournaments, search_by_website_competitions,
-                  search_by_website_players, search_by_website_teams,
-                  search_by_website_entries`,
+                  search_by_website_players, search_by_website_teams`,
     );
     for (const { stream, event } of events) await this.#project(stream, event);
   }
@@ -200,18 +195,21 @@ export class SearchByWebsite implements Projection, Asked {
     website: Website,
     slug: string,
   ): Promise<PlayerOfWebsiteFound | undefined> {
-    const connection = this.unitOfWork.connection();
     // Every player of the person that is in use, the tournament that started
-    // most recently first, so that the first is the one that names them.
-    const { rows: players } = await connection.query<{
-      player_id: string;
+    // most recently first, so that the first is the one that names them and
+    // the order is the order the page begins with. A tournament a person is
+    // twice in, under one world ranking name, is listed once.
+    const { rows } = await this.unitOfWork.connection().query<{
       name: string;
-      tournament_id: string;
       tournament_name: string;
       address: string;
+      started_on: string;
+      player_slug: string;
     }>(
-      `select p.player_id, p.world_ranking_name as name, t.tournament_id,
-              t.name as tournament_name, t.address
+      `select distinct on (t.starts, t.tournament_id)
+              p.world_ranking_name as name, t.name as tournament_name,
+              t.address, to_char(t.starts, 'YYYY-MM-DD') as started_on,
+              p.slug as player_slug
          from search_by_website_players p
          join search_by_website_tournaments t
            on t.tournament_id = p.tournament_id
@@ -221,46 +219,15 @@ export class SearchByWebsite implements Projection, Asked {
         order by t.starts desc, t.tournament_id desc, p.player_id desc`,
       [website.host, slug],
     );
-    const first = players[0];
+    const first = rows[0];
     if (first === undefined) return undefined;
-
-    const { rows: entered } = await connection.query<{
-      player_id: string;
-      name: string;
-      slug: string;
-    }>(
-      `select e.player_id, c.name, c.slug
-         from search_by_website_entries e
-         join search_by_website_competitions c
-           on c.competition_id = e.competition_id
-        where e.player_id = any($1) and not c.archived
-        order by c.competition_order, c.competition_id`,
-      [players.map(({ player_id }) => player_id)],
-    );
-    const entries: PlayerEntry[] = [];
-    for (const player of players) {
-      const tournament = {
-        name: player.tournament_name,
-        address: player.address,
-      };
-      const there = entered.filter(
-        (each) => each.player_id === player.player_id,
-      );
-      if (there.length === 0) {
-        entries.push({ tournament });
-        continue;
-      }
-      for (const competition of there) {
-        entries.push({
-          tournament,
-          competition: {
-            name: competition.name,
-            address: `${player.address}/competitions/${competition.slug}`,
-          },
-        });
-      }
-    }
-    return { name: first.name, entries };
+    const tournaments: PlayerTournament[] = rows.map((row) => ({
+      name: row.tournament_name,
+      address: row.address,
+      startedOn: row.started_on,
+      playerAddress: `${row.address}/players/${row.player_slug}`,
+    }));
+    return { name: first.name, tournaments };
   }
 
   // Each written so that writing it twice leaves what writing it once did,
@@ -314,20 +281,17 @@ export class SearchByWebsite implements Projection, Asked {
     ) {
       await connection.query(
         `insert into search_by_website_competitions
-           (competition_id, tournament_id, name, folded_name, slug,
-            competition_order)
-         values ($1, $2, $3, $4, $5, $6)
+           (competition_id, tournament_id, name, folded_name, slug)
+         values ($1, $2, $3, $4, $5)
          on conflict (competition_id) do update
            set name = excluded.name, folded_name = excluded.folded_name,
-               slug = excluded.slug,
-               competition_order = excluded.competition_order`,
+               slug = excluded.slug`,
         [
           event.competitionId,
           stream,
           event.name,
           foldedForSearch(event.name),
           event.slug,
-          event.order,
         ],
       );
     } else if (
@@ -340,38 +304,6 @@ export class SearchByWebsite implements Projection, Asked {
             set name = $2, folded_name = $3
           where competition_id = $1`,
         [event.competitionId, event.name, foldedForSearch(event.name)],
-      );
-    } else if (event instanceof CompetitionMoved) {
-      await connection.query(
-        `update search_by_website_competitions
-            set competition_order = $2
-          where competition_id = $1`,
-        [event.competitionId, event.order],
-      );
-    } else if (event instanceof CompetitionsSpacedOut) {
-      // As the tournament spaces them: each a step further than the last, in
-      // the order written.
-      for (const [index, competition] of event.competitionIds.entries()) {
-        await connection.query(
-          `update search_by_website_competitions
-              set competition_order = $2
-            where competition_id = $1`,
-          [competition, (index + 1) * 10_000],
-        );
-      }
-    } else if (event instanceof CompetitionPlayerEntered) {
-      await connection.query(
-        `insert into search_by_website_entries
-           (competition_player_id, competition_id, player_id)
-         values ($1, $2, $3)
-         on conflict (competition_player_id) do nothing`,
-        [event.playerId, stream, event.tournamentPlayerId],
-      );
-    } else if (event instanceof CompetitionPlayerRemoved) {
-      await connection.query(
-        `delete from search_by_website_entries
-          where competition_player_id = $1`,
-        [event.playerId],
       );
     } else if (event instanceof CompetitionArchived) {
       await this.#archived("search_by_website_competitions", "competition_id", [
@@ -408,6 +340,7 @@ export class SearchByWebsite implements Projection, Asked {
         event.name,
         event.worldRankingName,
         event.teamId,
+        event.slug,
       );
     } else if (event instanceof TournamentPlayerAdded) {
       await this.#playerKept(
@@ -416,6 +349,7 @@ export class SearchByWebsite implements Projection, Asked {
         event.name,
         event.worldRankingName,
         undefined,
+        event.slug,
       );
     } else if (
       event instanceof TournamentPlayerUpdated ||
@@ -427,6 +361,7 @@ export class SearchByWebsite implements Projection, Asked {
         event.name,
         event.worldRankingName,
         event instanceof TeamPlayerUpdated ? event.teamId : undefined,
+        undefined,
       );
     } else if (
       event instanceof TournamentPlayerArchived ||
@@ -455,18 +390,23 @@ export class SearchByWebsite implements Projection, Asked {
     name: string,
     worldRankingName: string | undefined,
     team: string | undefined,
+    slug: string | undefined,
   ): Promise<void> {
     const known = worldRankingName ?? name;
     await this.unitOfWork.connection().query(
       `insert into search_by_website_players
          (player_id, tournament_id, team_id, name, world_ranking_name,
-          folded_name, person)
-       values ($1, $2, $7, $3, $4, $5, $6)
+          folded_name, person, slug)
+       values ($1, $2, $7, $3, $4, $5, $6, $8)
        on conflict (player_id) do update
          set name = excluded.name,
              world_ranking_name = excluded.world_ranking_name,
              folded_name = excluded.folded_name,
-             person = excluded.person`,
+             person = excluded.person,
+             -- A player keeps the slug they were given when their name is
+             -- corrected, which an update does not say.
+             slug = case when excluded.slug <> '' then excluded.slug
+                         else search_by_website_players.slug end`,
       [
         player,
         tournament,
@@ -475,6 +415,7 @@ export class SearchByWebsite implements Projection, Asked {
         foldedForSearch(known),
         personOf(known, name),
         team ?? null,
+        slug ?? "",
       ],
     );
   }

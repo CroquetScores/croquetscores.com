@@ -335,6 +335,7 @@ export const french: Language = {
     "players.search.none": "Aucun joueur n'a été trouvé.",
     "search.more":
       "Seuls les {count} premiers sont affichés. Ajoutez une partie du nom pour affiner la recherche.",
+    "websitePlayer.tournament": "Tournoi",
     "tournament.test": "{first} contre {second}",
     "tournament.notes": "Notes",
     "tournament.commentary": "Commentaires",

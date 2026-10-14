@@ -335,6 +335,7 @@ export const afrikaans: Language = {
     "players.search.none": "Geen spelers is gevind nie.",
     "search.more":
       "Slegs die eerste {count} word gewys. Voeg meer van die naam by om die soektog te verfyn.",
+    "websitePlayer.tournament": "Toernooi",
     "tournament.test": "{first} teen {second}",
     "tournament.notes": "Notas",
     "tournament.commentary": "Kommentaar",

@@ -319,6 +319,7 @@ export const italian: Language = {
     "players.search.none": "Nessun giocatore trovato.",
     "search.more":
       "Sono mostrati solo i primi {count}. Aggiungi altro del nome per restringere la ricerca.",
+    "websitePlayer.tournament": "Torneo",
     "tournament.test": "{first} contro {second}",
     "tournament.notes": "Note",
     "tournament.commentary": "Cronaca",

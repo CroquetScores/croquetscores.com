@@ -333,6 +333,7 @@ export const maori: Language = {
     "players.search.none": "Kāore ngā kaitākaro i kitea.",
     "search.more":
       "Ko ngā {count} tuatahi anake e whakaatuhia ana. Tāpirihia ētahi atu o te ingoa hei whakatika i te rapunga.",
+    "websitePlayer.tournament": "Whakataetae nui",
     "tournament.test": "{first} ki {second}",
     "tournament.notes": "Ngā tuhipoka",
     "tournament.commentary": "Ngā kōrero",

@@ -337,6 +337,7 @@ export const welsh: Language = {
     "players.search.none": "Ni chanfuwyd unrhyw chwaraewyr.",
     "search.more":
       "Dim ond y {count} cyntaf a ddangosir. Ychwanegwch fwy o'r enw i gyfyngu'r chwilio.",
+    "websitePlayer.tournament": "Twrnamaint",
     "tournament.test": "{first} v {second}",
     "tournament.notes": "Nodiadau",
     "tournament.commentary": "Sylwebaeth",

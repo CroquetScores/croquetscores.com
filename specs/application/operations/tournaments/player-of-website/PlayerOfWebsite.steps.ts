@@ -32,10 +32,6 @@ const player = (world: SpecWorld): PlayerOfWebsiteFound => {
   return world.answer as PlayerOfWebsiteFound;
 };
 
-// The lines that are of a competition, in the order answered.
-const competitions = (world: SpecWorld) =>
-  player(world).entries.filter((entry) => entry.competition !== undefined);
-
 When(
   "the player {string} of the website is asked for",
   async function (this: SpecWorld, slug: string) {
@@ -61,87 +57,61 @@ Then("the player is called {string}", function (this: SpecWorld, name: string) {
   assert.equal(player(this).name, name);
 });
 
+const named = (world: SpecWorld, name: string) =>
+  player(world).tournaments.find((each) => each.name === name);
+
 Then(
-  "the player is in the competition {string} of the tournament {string}",
-  function (this: SpecWorld, competition: string, tournament: string) {
+  "the player is in the tournament {string}",
+  function (this: SpecWorld, tournament: string) {
     assert.ok(
-      competitions(this).some(
-        (entry) =>
-          entry.competition?.name === competition &&
-          entry.tournament.name === tournament,
-      ),
-      `${competition} of ${tournament} is not answered.`,
+      named(this, tournament) !== undefined,
+      `${tournament} is not answered.`,
     );
   },
 );
 
 Then(
-  "the player is not in the competition {string} of the tournament {string}",
-  function (this: SpecWorld, competition: string, tournament: string) {
+  "the player is not in the tournament {string}",
+  function (this: SpecWorld, tournament: string) {
     assert.ok(
-      !competitions(this).some(
-        (entry) =>
-          entry.competition?.name === competition &&
-          entry.tournament.name === tournament,
-      ),
-      `${competition} of ${tournament} is answered.`,
+      named(this, tournament) === undefined,
+      `${tournament} is answered.`,
     );
   },
 );
 
 Then(
-  "the player's competition {string} is found at the address {string}",
-  function (this: SpecWorld, competition: string, address: string) {
-    const found = competitions(this).find(
-      (entry) => entry.competition?.name === competition,
-    );
-    assert.ok(found !== undefined, `${competition} is not answered.`);
-    assert.equal(found.competition?.address, address);
+  /^the player is in (\d+) tournaments?$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(player(this).tournaments.length, Number(count));
   },
 );
 
 Then(
   "the player's tournament {string} is found at the address {string}",
   function (this: SpecWorld, tournament: string, address: string) {
-    const found = player(this).entries.find(
-      (entry) => entry.tournament.name === tournament,
-    );
-    assert.ok(found !== undefined, `${tournament} is not answered.`);
-    assert.equal(found.tournament.address, address);
+    assert.equal(named(this, tournament)?.address, address);
   },
 );
 
 Then(
-  /^the player is in (\d+) competitions$/,
-  function (this: SpecWorld, count: string) {
-    assert.equal(competitions(this).length, Number(count));
+  "the player's page in the tournament {string} is found at the address {string}",
+  function (this: SpecWorld, tournament: string, address: string) {
+    assert.equal(named(this, tournament)?.playerAddress, address);
   },
 );
 
 Then(
-  "the player is in the tournament {string} and in none of its competitions",
-  function (this: SpecWorld, tournament: string) {
-    const there = player(this).entries.filter(
-      (entry) => entry.tournament.name === tournament,
-    );
-    assert.ok(there.length > 0, `${tournament} is not answered.`);
-    assert.ok(
-      there.every((entry) => entry.competition === undefined),
-      `${tournament} is answered with a competition.`,
-    );
+  "the player's tournament {string} started on {string}",
+  function (this: SpecWorld, tournament: string, day: string) {
+    assert.equal(named(this, tournament)?.startedOn, day);
   },
 );
 
 Then(
-  /^the (first|second) competition answered is "([^"]*)" of the tournament "([^"]*)"$/,
-  function (
-    this: SpecWorld,
-    which: string,
-    competition: string,
-    tournament: string,
-  ) {
-    const entry = competitions(this)[["first", "second"].indexOf(which)];
-    assert.equal(entry?.competition?.name, competition);
-    assert.equal(entry?.tournament.name, tournament);
+  /^the (first|second) tournament of the player is "([^"]*)"$/,
+  function (this: SpecWorld, which: string, tournament: string) {
+    const place = ["first", "second"].indexOf(which);
+    assert.equal(player(this).tournaments[place]?.name, tournament);
   },
 );

@@ -318,6 +318,7 @@ export const dutch: Language = {
     "players.search.none": "Er zijn geen spelers gevonden.",
     "search.more":
       "Alleen de eerste {count} worden getoond. Voeg meer van de naam toe om de zoekopdracht te verfijnen.",
+    "websitePlayer.tournament": "Toernooi",
     "tournament.test": "{first} tegen {second}",
     "tournament.notes": "Notities",
     "tournament.commentary": "Commentaar",

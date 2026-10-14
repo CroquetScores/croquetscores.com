@@ -322,6 +322,7 @@ export const swedish: Language = {
     "players.search.none": "Inga spelare hittades.",
     "search.more":
       "Bara de första {count} visas. Skriv mer av namnet för att begränsa sökningen.",
+    "websitePlayer.tournament": "Turnering",
     "tournament.test": "{first} mot {second}",
     "tournament.notes": "Anteckningar",
     "tournament.commentary": "Livekommentarer",

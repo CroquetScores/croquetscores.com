@@ -333,6 +333,7 @@ export const russian: Language = {
     "players.search.none": "Игроки не найдены.",
     "search.more":
       "Показаны только первые {count}. Введите больше из названия, чтобы сузить поиск.",
+    "websitePlayer.tournament": "Турнир",
     "tournament.test": "{first} против {second}",
     "tournament.notes": "Заметки",
     "tournament.commentary": "Комментарии",

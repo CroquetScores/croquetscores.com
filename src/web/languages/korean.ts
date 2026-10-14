@@ -317,6 +317,7 @@ export const korean: Language = {
     "players.search.none": "선수를 찾지 못했습니다.",
     "search.more":
       "처음 {count}개만 표시됩니다. 이름을 더 입력해 검색을 좁혀 보세요.",
+    "websitePlayer.tournament": "대회",
     "tournament.test": "{first} 대 {second}",
     "tournament.notes": "공지",
     "tournament.commentary": "해설",

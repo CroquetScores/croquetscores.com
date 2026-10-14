@@ -71,22 +71,23 @@ export interface CompetitionFound {
   readonly tournament: TournamentFound;
 }
 
-/**
- * One line of a player's page: a competition they are entered in with its
- * tournament, or the tournament alone where they are in none of its
- * competitions.
- */
-export interface PlayerEntry {
-  readonly tournament: TournamentFound;
-  readonly competition?: { readonly name: string; readonly address: string };
+/** A tournament a player is in, as their page lists it and leads to it. */
+export interface PlayerTournament {
+  readonly name: string;
+  /** Where it is found, as "2026/ac/spring-open". */
+  readonly address: string;
+  /** The day it started, written as the year, the month and the day. */
+  readonly startedOn: string;
+  /** Where the player's own page in it is, as "2026/ac/spring-open/players/sam-someone". */
+  readonly playerAddress: string;
 }
 
 /** A player of a website, as their page shows them. */
 export interface PlayerOfWebsiteFound {
   /** The world ranking name as the tournament that started most recently wrote it. */
   readonly name: string;
-  /** Where they have played, the tournament that started most recently first. */
-  readonly entries: readonly PlayerEntry[];
+  /** The tournaments they are in, once each, the most recently started first. */
+  readonly tournaments: readonly PlayerTournament[];
 }
 
 /**

@@ -330,6 +330,7 @@ export const spanish: Language = {
     "players.search.none": "No se encontraron jugadores.",
     "search.more":
       "Solo se muestran los primeros {count}. Añade más del nombre para acotar la búsqueda.",
+    "websitePlayer.tournament": "Torneo",
     "tournament.test": "{first} vs {second}",
     "tournament.notes": "Notas",
     "tournament.commentary": "Comentarios",
