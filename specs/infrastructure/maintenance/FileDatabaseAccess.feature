@@ -104,6 +104,39 @@ Feature: Database access is switched in a file the site can read without the dat
       And database access is read
       Then database access is on
 
+  Rule: Turning access off can be refused where it is off already
+
+    Somebody else's maintenance is not to be ended by one that began after it
+    and finished first, so a stretch of maintenance that is begun asks for
+    access to be turned off only where it is on. It is asked of the file and
+    not of what was read a moment ago, and decided in one step, so that two
+    that begin at once are not both let.
+
+    Scenario: Access is turned off where it is on
+      When database access is turned off for 30 minutes unless it is off already
+      And database access is read
+      Then database access is off
+
+    Scenario: Access is refused where it is off
+      Given database access is turned off for 30 minutes
+      When database access is turned off for 90 minutes unless it is off already
+      Then it is refused with "DatabaseAccess.AlreadyOff"
+
+    Scenario: What was there is left as it was
+      Given the moment "2026-10-13T10:00:00Z"
+      And database access is turned off for 30 minutes
+      When database access is turned off for 90 minutes unless it is off already
+      And database access is read
+      Then access is expected back at "2026-10-13T10:30:00Z"
+
+    Scenario: Two that begin at once are not both let
+      When database access is turned off for 30 and for 90 minutes at once unless it is off already
+      Then one of the two is refused with "DatabaseAccess.AlreadyOff"
+
+    Scenario: Minutes outside what is allowed are refused as they are elsewhere
+      When database access is turned off for 0 minutes unless it is off already
+      Then it is refused with "DatabaseAccess.MinutesOutOfRange"
+
   Rule: The expected return can be moved from now, as often as it is wrong
 
     Moving it is not turning access off again: the moment it was turned off is

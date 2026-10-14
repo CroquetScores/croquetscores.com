@@ -1,4 +1,11 @@
-import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import {
+  link,
+  mkdir,
+  readFile,
+  rename,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
 import { dirname } from "node:path";
 
 import {
@@ -97,6 +104,44 @@ export class FileDatabaseAccess implements DatabaseAccess {
   async turnOff(minutes: number, at: Date): Promise<void> {
     ensureMinutes(minutes);
     await this.#write(at, new Date(at.getTime() + minutes * A_MINUTE));
+  }
+
+  async turnOffIfOn(minutes: number, at: Date): Promise<void> {
+    ensureMinutes(minutes);
+    const { path } = this.#options;
+    await mkdir(dirname(path), { recursive: true });
+    const beside = `${path}.${String(process.pid)}.tmp`;
+    try {
+      await writeFile(
+        beside,
+        JSON.stringify({
+          turnedOffAt: at.toISOString(),
+          expectedBackAt: new Date(
+            at.getTime() + minutes * A_MINUTE,
+          ).toISOString(),
+        }),
+      );
+      try {
+        // Made as a link, which is refused where the file is there, in the one
+        // step that decides: two that begin at once are not both let.
+        await link(beside, path);
+      } catch (failure) {
+        if ((failure as NodeJS.ErrnoException).code !== "EEXIST") throw failure;
+        // There is a file. A file that is access off is somebody's
+        // maintenance. One that cannot be read as that is access on, as the
+        // site reads it, and is replaced.
+        if ((await this.#read()).off) {
+          throw new DatabaseAccessRefused(
+            "DatabaseAccess.AlreadyOff",
+            "Database access is off already.",
+          );
+        }
+        await rename(beside, path);
+      }
+    } finally {
+      await unlink(beside).catch(() => undefined);
+    }
+    this.#changed();
   }
 
   async moveReturn(minutes: number, at: Date): Promise<void> {

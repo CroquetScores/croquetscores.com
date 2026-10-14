@@ -3,17 +3,8 @@ import {
   DatabaseAccessRefused,
   MOST_MINUTES_OFF,
 } from "../../application/common/DatabaseAccess.js";
-
-/** What a rebuild says of how far it has got, as it goes. */
-export interface RebuildProgress {
-  /** Told how many streams there are, before any read model is touched. */
-  streams(total: number): void;
-  /**
-   * Told, as each stream is done, how many are done. Waited for, so that
-   * what it does is done before the next stream is begun.
-   */
-  streamDone(completed: number): void | Promise<void>;
-}
+import type { RebuildProgress } from "../../application/common/RebuildProgress.js";
+import { minutesRefusalSaid } from "./databaseAccessCli.js";
 
 /** What the script makes the read models again with, and how many events it read. */
 export interface Rebuilding {
@@ -95,21 +86,20 @@ export const runRebuildReadModels = async (
   if (args.length !== 2 || args[0] !== "--minutes") {
     return refuse("Usage: db:rebuild-read-models --minutes <minutes>");
   }
-  const minutes = /^-?\d+(\.\d+)?$/.test(args[1] ?? "")
-    ? Number(args[1])
-    : Number.NaN;
+  // What is not a number is not a whole number, which the switch says.
+  const minutes = args[1]?.trim() === "" ? Number.NaN : Number(args[1]);
 
-  // Somebody else's maintenance is not ended by this one finishing.
-  if ((await access.current()).off) {
-    return refuse("Database access is already off.");
-  }
-
+  // Turned off only where it is on, in one step with looking, so that somebody
+  // else's maintenance is not ended by this one finishing, nor two begun at
+  // once both let.
   try {
-    await access.turnOff(minutes, now());
+    await access.turnOffIfOn(minutes, now());
   } catch (failure) {
     if (failure instanceof DatabaseAccessRefused) {
       return refuse(
-        `The minutes must be a whole number from 1 to ${String(MOST_MINUTES_OFF)}.`,
+        failure.code === "DatabaseAccess.AlreadyOff"
+          ? "Database access is already off."
+          : minutesRefusalSaid(failure.code),
       );
     }
     throw failure;
@@ -117,6 +107,9 @@ export const runRebuildReadModels = async (
   say(`Database access is off for ${String(minutes)} minutes.`);
   await wait(FOR_THE_SITE_TO_NOTICE);
 
+  // What a reader is told is a convenience: it is said once that it could not
+  // be moved and the rebuild goes on.
+  let saidItCouldNotMove = false;
   let total = 0;
   let began = now().getTime();
   let lastUpdate = began;
@@ -155,10 +148,18 @@ export const runRebuildReadModels = async (
           // Somebody turned access on while this ran: there is no return to
           // move, and it is theirs to have turned on, so it is left on.
           if (
-            !(failure instanceof DatabaseAccessRefused) ||
-            failure.code !== "DatabaseAccess.NotOff"
+            failure instanceof DatabaseAccessRefused &&
+            failure.code === "DatabaseAccess.NotOff"
           ) {
-            throw failure;
+            return;
+          }
+          // Any other is not worth the rebuild, which is most of an hour's
+          // work, for a figure on a page.
+          if (!saidItCouldNotMove) {
+            saidItCouldNotMove = true;
+            say(
+              `The site's expected return could not be moved: ${failureSaid(failure)}`,
+            );
           }
         }
       },
@@ -169,15 +170,33 @@ export const runRebuildReadModels = async (
   } catch (failure) {
     // Every read model is as it was, being one transaction, so the site is
     // safe to serve and is not left down by a failure nobody is watching.
-    await access.turnOn();
-    say(
-      `The rebuild failed: ${failure instanceof Error ? failure.message : String(failure)}`,
-    );
-    say("Database access is on.");
+    say(`The rebuild failed: ${failureSaid(failure)}`);
+    await turnedOn(access, say);
     return { exitCode: 1 };
   }
 
-  await access.turnOn();
+  // The rebuild is done and committed, so a failure to turn access on is the
+  // one thing the administrator must be told, and how to put right.
+  return { exitCode: (await turnedOn(access, say)) ? 0 : 1 };
+};
+
+const failureSaid = (failure: unknown): string =>
+  failure instanceof Error ? failure.message : String(failure);
+
+// Turns access on and says so, or says it could not be and how to, rather than
+// stopping with a trace over the one fact that matters.
+const turnedOn = async (
+  access: DatabaseAccess,
+  say: (line: string) => void,
+): Promise<boolean> => {
+  try {
+    await access.turnOn();
+  } catch (failure) {
+    say(
+      `Database access could not be turned on: ${failureSaid(failure)} Turn it on with: npm run db:access -- on`,
+    );
+    return false;
+  }
   say("Database access is on.");
-  return { exitCode: 0 };
+  return true;
 };

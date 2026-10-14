@@ -66,9 +66,10 @@ export class TournamentsByAddress implements Projection, TournamentAddresses {
   }
 
   /**
-   * Makes the table again from the streams it is handed, one at a time, each projected
-   * as it was when it was appended. An address once held is held for good, so
-   * the tournament that holds it is the same whichever stream is read first.
+   * Makes the table again from the streams it is handed, one at a time, each
+   * event projected as it was when it was appended. An address once held is
+   * held for good, so the tournament that holds it is the same whichever
+   * stream is read first.
    */
   async rebuildFromStream(
     stream: string,

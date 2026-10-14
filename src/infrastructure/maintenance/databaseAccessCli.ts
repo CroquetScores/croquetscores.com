@@ -45,6 +45,12 @@ const flagsOf = (
 const minutesOf = (text: string): number =>
   text.trim() === "" ? Number.NaN : Number(text);
 
+/** What is said to an administrator of minutes the switch refused. */
+export const minutesRefusalSaid = (code: string): string =>
+  code === "DatabaseAccess.MinutesNotWhole"
+    ? "The minutes must be a whole number."
+    : `The minutes must be from 1 to ${String(MOST_MINUTES_OFF)}.`;
+
 /**
  * The script's work, with the arguments as the command line gives them
  * (databaseAccess.feature). It uses the switch and nothing else: no database,
@@ -85,12 +91,7 @@ export const runDatabaseAccess = async (
       if (failure.code === "DatabaseAccess.NotOff") {
         return failed("Database access is not off.");
       }
-      if (failure.code === "DatabaseAccess.MinutesNotWhole") {
-        return failed("The minutes must be a whole number.");
-      }
-      return failed(
-        `The minutes must be from 1 to ${String(MOST_MINUTES_OFF)}.`,
-      );
+      return failed(minutesRefusalSaid(failure.code));
     }
     throw failure;
   }

@@ -177,12 +177,13 @@ export class AccountsByEmailAddress implements Projection {
   }
 
   /**
-   * Makes the table again from the streams it is handed, every event there is. It needs no
-   * account's key: the hash is in the event, and a forgotten account's events
-   * read back without one.
+   * Makes the table again from the streams it is handed, one at a time. It
+   * needs no account's key: the hash is in the event, and a forgotten
+   * account's events read back without one.
    *
-   * Which accounts were forgotten is worked out before a single row is
-   * written, and each row is written once, already marked. Replaying instead
+   * Whether the account was forgotten is worked out from its own stream
+   * before its row is written, and the row is written once, already marked.
+   * Replaying instead
    * — a row inserted when the registering is read and marked when the
    * forgetting is — would depend on reading one stream before another, which
    * nothing gives: an address given up by one account and registered by

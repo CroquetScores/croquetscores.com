@@ -70,10 +70,10 @@ export class AccountsByGoogleAccount implements Projection, Finding {
   }
 
   /**
-   * Makes the table again from the streams it is handed, one at a time, each projected
-   * as it was when it was appended. A link and the forgetting of its account
-   * are both in that account's own stream, so which stream is read first
-   * changes nothing.
+   * Makes the table again from the streams it is handed, one at a time, each
+   * event projected as it was when it was appended. A link and the forgetting
+   * of its account are both in that account's own stream, so which stream is
+   * read first changes nothing.
    */
   async rebuildFromStream(
     stream: string,

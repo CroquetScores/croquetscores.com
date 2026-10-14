@@ -69,6 +69,53 @@ When("the held reading is let go", async function (this: SpecWorld) {
   await accessInHand(this).release();
 });
 
+When(
+  /^database access is turned off for (-?[\d.]+) minutes unless it is off already$/,
+  async function (this: SpecWorld, minutes: string) {
+    this.failure = undefined;
+    try {
+      await accessInHand(this).writer.turnOffIfOn(
+        Number(minutes),
+        momentIn(this),
+      );
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
+// Both asked of the file at once, as two people begin at the same moment, and
+// what each was refused with kept.
+const bothRefusals = new WeakMap<SpecWorld, unknown[]>();
+
+When(
+  /^database access is turned off for (\d+) and for (\d+) minutes at once unless it is off already$/,
+  async function (this: SpecWorld, first: string, second: string) {
+    const { writer } = accessInHand(this);
+    const results = await Promise.allSettled([
+      writer.turnOffIfOn(Number(first), momentIn(this)),
+      writer.turnOffIfOn(Number(second), momentIn(this)),
+    ]);
+    bothRefusals.set(
+      this,
+      results.map((each): unknown =>
+        each.status === "rejected" ? (each.reason as unknown) : undefined,
+      ),
+    );
+  },
+);
+
+Then(
+  "one of the two is refused with {string}",
+  function (this: SpecWorld, code: string) {
+    const refusals = (bothRefusals.get(this) ?? []).filter(
+      (each) => each !== undefined,
+    );
+    assert.equal(refusals.length, 1, "Not exactly one was refused.");
+    assert.equal((refusals[0] as { code?: string }).code, code);
+  },
+);
+
 When("database access is read", async function (this: SpecWorld) {
   const held = accessInHand(this);
   held.state = await held.reader.current();

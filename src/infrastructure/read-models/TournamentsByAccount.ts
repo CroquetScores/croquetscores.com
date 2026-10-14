@@ -46,10 +46,11 @@ export class TournamentsByAccount implements Projection, Asked {
   }
 
   /**
-   * The table made again from the streams it is handed, one at a time. Each tournament is
-   * one stream and nothing in one tournament's rows depends on another's, so
-   * the streams can come in any order, as long as each stream's own events
-   * come in the order they were kept, which reading them back gives.
+   * The table made again from the streams it is handed, one at a time. Each
+   * tournament is one stream and nothing in one tournament's rows depends on
+   * another's, so the streams can come in any order, as long as each stream's
+   * own events come in the order they were kept, which reading them back
+   * gives.
    */
   async rebuildFromStream(
     stream: string,

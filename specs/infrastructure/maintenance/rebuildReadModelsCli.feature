@@ -74,7 +74,17 @@ Feature: Rebuilding the read models turns database access off while it runs
 
   Where access is already off somebody else is doing maintenance, and a
   rebuild that turned it on again at the end would end theirs. So it is
-  refused, as `DatabaseAccess.AlreadyOff`, and nothing is changed.
+  refused, and nothing is changed. It is decided in one step with turning
+  access off (`FileDatabaseAccess.feature`), so that two rebuilds begun at once
+  are not both let.
+
+  What is told to readers is a convenience, and is not worth a rebuild. Where
+  the site's expected return cannot be moved, the script says so and goes on
+  with the rebuild, rather than rolling back what may be most of an hour's
+  work for a figure on a page. Where access cannot be turned on at the end,
+  the script says so, and says how to, rather than stopping with a trace: it is
+  the one thing the administrator must know, and the rebuild itself, if it is
+  done, is committed.
 
   These scenarios run the script's own function, with the arguments as the
   command line gives them, a switch the scenario can read, a clock it can
@@ -389,6 +399,66 @@ Feature: Rebuilding the read models turns database access off while it runs
       Given the rebuild fails
       When the rebuild script is run with "--minutes 20"
       Then the rebuild script does not say how long it took
+
+  Rule: A failure to tell readers does not stop the rebuild
+
+    Scenario: A return that cannot be moved does not stop the rebuild
+      Given the rebuild takes 35 seconds over 350 streams
+      And writing the expected return fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script exits with success
+
+    Scenario: A return that cannot be moved is said
+      Given the rebuild takes 35 seconds over 350 streams
+      And writing the expected return fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says expected return could not be moved
+
+    Scenario: A return that cannot be moved is said once
+      Given the rebuild takes 35 seconds over 350 streams
+      And writing the expected return fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script said the expected return could not be moved 1 time
+
+    Scenario: The read models are made again all the same
+      Given the rebuild takes 35 seconds over 350 streams
+      And writing the expected return fails
+      When the rebuild script is run with "--minutes 20"
+      Then the read models were made again
+
+  Rule: Access that cannot be turned on again is said
+
+    Scenario: A rebuild that is done and cannot turn access on exits with failure
+      Given the rebuild takes 10 minutes
+      And turning access on fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script exits with failure
+
+    Scenario: It says it could not be turned on, and how to
+      Given the rebuild takes 10 minutes
+      And turning access on fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says access could not be turned on
+      And the rebuild script says Turn it on with: npm run db:access -- on
+
+    Scenario: It still says how long the rebuild took
+      Given the rebuild takes 10 minutes
+      And turning access on fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says the rebuild took 10.0 minutes
+
+    Scenario: A rebuild that failed and cannot turn access on says what failed
+      Given the rebuild fails
+      And turning access on fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says the rebuild failed
+
+    Scenario: A rebuild that failed and cannot turn access on says how to
+      Given the rebuild fails
+      And turning access on fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says access could not be turned on
+      And the rebuild script says Turn it on with: npm run db:access -- on
 
   Rule: Maintenance already under way is not ended
 

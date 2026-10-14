@@ -106,10 +106,10 @@ export class TournamentsByWebsite implements Projection, Asked {
   }
 
   /**
-   * The tables made again from the streams it is handed, one at a time. Nothing one
-   * stream writes depends on another's having been written first, so the
-   * streams can come in any order, as long as each stream's own events come
-   * in the order they were kept, which reading them back gives.
+   * The tables made again from the streams it is handed, one at a time.
+   * Nothing one stream writes depends on another's having been written first,
+   * so the streams can come in any order, as long as each stream's own events
+   * come in the order they were kept, which reading them back gives.
    */
   async rebuildFromStream(
     stream: string,

@@ -1,10 +1,9 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  type RebuildProgress,
-  runRebuildReadModels,
-} from "../../../src/infrastructure/maintenance/rebuildReadModelsCli.js";
+import type { DatabaseAccess } from "../../../src/application/common/DatabaseAccess.js";
+import type { RebuildProgress } from "../../../src/application/common/RebuildProgress.js";
+import { runRebuildReadModels } from "../../../src/infrastructure/maintenance/rebuildReadModelsCli.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accessInHand, momentIn } from "./databaseAccessInHand.js";
 
@@ -31,6 +30,9 @@ interface Rebuild {
   returns: string[];
   /** How many streams were done when the return was first moved. */
   firstMovedAtDone: number | undefined;
+  /** Whether writing the expected return, or turning access on, fails. */
+  writingTheReturnFails: boolean;
+  turningOnFails: boolean;
   /** Whether somebody is to turn access on at the first update. */
   somebodyTurnsItOn: boolean;
   readonly happened: Happened[];
@@ -53,6 +55,8 @@ const rebuildOf = (world: SpecWorld): Rebuild => {
       returns: [],
       firstMovedAtDone: undefined,
       somebodyTurnsItOn: false,
+      writingTheReturnFails: false,
+      turningOnFails: false,
       happened: [],
       exitCode: undefined,
     };
@@ -87,6 +91,14 @@ Given(
   },
 );
 
+Given("writing the expected return fails", function (this: SpecWorld) {
+  rebuildOf(this).writingTheReturnFails = true;
+});
+
+Given("turning access on fails", function (this: SpecWorld) {
+  rebuildOf(this).turningOnFails = true;
+});
+
 Given("the rebuild fails", function (this: SpecWorld) {
   rebuildOf(this).fails = true;
 });
@@ -104,9 +116,24 @@ When(
       this.moment = new Date(momentIn(this).getTime() + milliseconds);
     };
 
+    // The switch as the script is given it, failing where the scenario says.
+    const access: DatabaseAccess = {
+      current: () => held.writer.current(),
+      turnOff: (minutes, at) => held.writer.turnOff(minutes, at),
+      turnOffIfOn: (minutes, at) => held.writer.turnOffIfOn(minutes, at),
+      moveReturn: (minutes, at) =>
+        rebuild.writingTheReturnFails
+          ? Promise.reject(new Error("The disk is full."))
+          : held.writer.moveReturn(minutes, at),
+      turnOn: () =>
+        rebuild.turningOnFails
+          ? Promise.reject(new Error("The file could not be removed."))
+          : held.writer.turnOn(),
+    };
+
     const outcome = await runRebuildReadModels(
       args.split(/\s+/).filter((word) => word !== ""),
-      held.writer,
+      access,
       {
         rebuild: async (progress: RebuildProgress) => {
           rebuild.calls += 1;
@@ -346,5 +373,15 @@ Then(
   "the expected return was first moved when {int} streams were done",
   function (this: SpecWorld, done: number) {
     assert.equal(rebuildOf(this).firstMovedAtDone, done);
+  },
+);
+
+Then(
+  /^the rebuild script said the expected return could not be moved (\d+) times?$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(
+      said(this).filter((line) => /could not be moved/.test(line)).length,
+      Number(count),
+    );
   },
 );

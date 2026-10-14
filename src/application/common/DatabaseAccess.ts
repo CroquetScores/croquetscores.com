@@ -40,6 +40,14 @@ export interface DatabaseAccess {
   turnOff(minutes: number, at: Date): Promise<void>;
 
   /**
+   * Turns access off as `turnOff` does, but only where it is on, which is
+   * decided in one step with the writing and not by asking first: two that
+   * begin at once are not both let, and somebody else's maintenance is not
+   * replaced. Refused as `DatabaseAccess.AlreadyOff` where it is off.
+   */
+  turnOffIfOn(minutes: number, at: Date): Promise<void>;
+
+  /**
    * Moves the expected return to `minutes` from `at`, keeping when access was
    * turned off. Refused as above, and as `DatabaseAccess.NotOff` where access
    * is on, since there is no return to move.

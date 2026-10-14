@@ -331,6 +331,7 @@ import {
 import { tellingTheAdministrator } from "./common/databaseOutage.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { refuseWhileDatabaseAccessIsOff } from "./common/maintenance.js";
+import type { RebuildProgress } from "../application/common/RebuildProgress.js";
 import type { DatabaseAccess } from "../application/common/DatabaseAccess.js";
 import { FileDatabaseAccess } from "../infrastructure/maintenance/FileDatabaseAccess.js";
 import { registerConfirmEmailAddressPage } from "./public/confirmEmailAddress.js";
@@ -723,17 +724,6 @@ interface RebuildableReadModel {
     stream: string,
     events: readonly StoredEvent[],
   ): Promise<void>;
-}
-
-/** What a rebuild says of how far it has got, as it goes. */
-export interface RebuildProgress {
-  /** Told how many streams there are, before any read model is touched. */
-  streams(total: number): void;
-  /**
-   * Told, as each stream has been handed to every read model, how many are
-   * done, and waited for before the next is begun.
-   */
-  streamDone(completed: number): void | Promise<void>;
 }
 
 // Every kind of event the application records, each named once by the name it

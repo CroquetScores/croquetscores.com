@@ -41,10 +41,10 @@ export class ManagerNotesByTournament
   }
 
   /**
-   * The table made again from the streams it is handed, one at a time. A note's row
-   * depends on its own stream alone, and two notes written at the same moment
-   * are listed by their ids, so the streams can come in any order, as long as
-   * each stream's own events come in the order they were kept.
+   * The table made again from the streams it is handed, one at a time. A
+   * note's row depends on its own stream alone, and two notes written at the
+   * same moment are listed by their ids, so the streams can come in any order,
+   * as long as each stream's own events come in the order they were kept.
    */
   async rebuildFromStream(
     stream: string,

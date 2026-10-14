@@ -95,8 +95,9 @@ export class SearchByWebsite implements Projection, Asked {
   }
 
   /**
-   * The tables made again from the streams it is handed, one at a time. Nothing one
-   * stream writes depends on another's having been written first.
+   * The tables made again from the streams it is handed, one at a time.
+   * Nothing one stream writes depends on another's having been written
+   * first.
    */
   async rebuildFromStream(
     stream: string,
