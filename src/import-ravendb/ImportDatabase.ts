@@ -63,7 +63,7 @@ export class ImportDatabase implements ImportErrors {
     await migrate(this.#pool);
 
     // The table of errors is the site's own, made by the migrations
-    // (0023-import-errors.sql), so that the administrator's page for it finds
+    // (0001-initial.sql), so that the administrator's page for it finds
     // it on a site the import has never run on.
 
     // Which account each user became, so that a user on both old sites is one

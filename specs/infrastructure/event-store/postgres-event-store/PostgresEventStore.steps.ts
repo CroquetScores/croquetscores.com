@@ -278,3 +278,34 @@ Then(
     );
   },
 );
+
+// The number the database gave the event of the scenario's stream at
+// `version`, which the store does not hand back: it is the database's.
+const numberOf = async (
+  world: SpecWorld,
+  version: number,
+): Promise<number | undefined> => {
+  const { rows } = await world.database.query<{ id: string | null }>(
+    `select id from events where stream_id = $1 and version = $2`,
+    [theStream(world).value, version],
+  );
+  const id = rows[0]?.id;
+  return id === null || id === undefined ? undefined : Number(id);
+};
+
+Then(
+  "the first event of the stream is numbered",
+  async function (this: SpecWorld) {
+    assert.ok((await numberOf(this, 1)) !== undefined, "It has no number.");
+  },
+);
+
+Then(
+  "the second event of the stream is numbered after the first",
+  async function (this: SpecWorld) {
+    const first = await numberOf(this, 1);
+    const second = await numberOf(this, 2);
+    assert.ok(first !== undefined && second !== undefined, "No number.");
+    assert.ok(second > first, `${second} is not after ${first}.`);
+  },
+);

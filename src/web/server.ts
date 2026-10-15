@@ -494,6 +494,12 @@ export interface Application {
   readonly databaseOutageTold: () => Promise<void>;
   /** The switch that turns the database off for maintenance. */
   readonly databaseAccess: DatabaseAccess;
+  /**
+   * What takes an email the rest of the way, for the maintenance script that
+   * tells the administrator how a backup went (scripts/backup.mjs): not the
+   * queue, which is in the database it is reporting on.
+   */
+  readonly emailSender: EmailSender;
 }
 
 // The one mediator, and the order its behaviours run in. Validation stands
@@ -1594,6 +1600,7 @@ export const buildApplication = async (
     changeSiteKey,
     databaseOutageTold: () => databaseOutage.settled(),
     databaseAccess,
+    emailSender,
   };
 };
 
