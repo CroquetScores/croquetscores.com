@@ -89,6 +89,9 @@ export interface Config {
   // setting says so, because a site found before it was meant to be is
   // noticed by nobody, and one that is hard to find is noticed at once.
   readonly searchEnginesWelcome: boolean;
+  // The website's database, which only the backup reads, from the
+  // administrator's own computer (backupCli.feature). Absent everywhere else.
+  readonly websiteDatabaseUrl: string | undefined;
 }
 
 export class ConfigError extends Error {
@@ -321,6 +324,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
     oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
     searchEnginesWelcome,
+    websiteDatabaseUrl: env["WEBSITE_DATABASE_URL"]?.trim() || undefined,
   };
 };
 

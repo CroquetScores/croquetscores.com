@@ -42,6 +42,17 @@ const TAG_BYTES = 16;
 // mark is only ever compared with another made the same way.
 const MARKED = "croquet-scores:account-keys";
 
+/**
+ * The mark the site key `siteKey` makes, which every account key kept with it
+ * carries, so that a key made with another is known for it without being
+ * opened (AccountKeys.feature). Said here for what has to know the site key is
+ * the one a database's keys were made with and has nothing to open them for.
+ */
+export const siteKeyMarkOf = (siteKey: string): string => {
+  const key = createHash("sha256").update(siteKey).digest();
+  return createHmac("sha256", key).update(MARKED).digest("hex");
+};
+
 // What is encrypted with the site's key is bound to this rather than to an
 // account, so that nothing encrypted for an account can be read as the site's.
 const SITE = "croquet-scores:site";
@@ -96,9 +107,7 @@ export class AccountKeys {
     // written however its maker wrote it; the one dev-setup writes is 32
     // random bytes already.
     this.#siteKey = createHash("sha256").update(siteKey).digest();
-    this.#mark = createHmac("sha256", this.#siteKey)
-      .update(MARKED)
-      .digest("hex");
+    this.#mark = siteKeyMarkOf(siteKey);
   }
 
   /** Makes `account` a key of its own. */
