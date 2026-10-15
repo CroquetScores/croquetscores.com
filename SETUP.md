@@ -253,9 +253,9 @@ services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: croquet_scores
-      POSTGRES_USER: croquet_scores
-      POSTGRES_PASSWORD: croquet_scores
+      POSTGRES_DB: croquetscores-dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     # Nothing written here is kept past npm run db:down, so none of it is worth
     # waiting on the disk for. Making and dropping a database for every
     # @postgres scenario is mostly that waiting: with these off, dropping one
@@ -273,7 +273,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U croquet_scores"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 2s
       timeout: 3s
       retries: 30
@@ -288,7 +288,7 @@ Postgres is told not to wait for the disk: `fsync`, `synchronous_commit` and `fu
 Settings are read once, at startup, by `src/infrastructure/config/`, which validates them and hands out a typed object. Nothing else reads the environment. Values come from environment variables, with a `.env` file — git-ignored — for development:
 
 ```
-DATABASE_URL=postgres://croquet_scores:croquet_scores@localhost:5432/croquet_scores
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/croquetscores-dev
 SESSION_COOKIE_SECRET=
 TOKEN_SIGNING_KEY=
 SITE_NAME=Croquet Scores
