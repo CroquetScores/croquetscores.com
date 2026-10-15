@@ -1,72 +1,31 @@
-// "npm run db:backup" or "npm run db:backup -- --all". Copies the events and the
-// accounts' keys the website has and this computer's database has not, makes
-// this database's read models again, and emails ADMINISTRATOR_EMAIL_ADDRESS how
-// it went (backupCli.feature). Run from a scheduled task on the administrator's
-// own computer, with BACKUP_DATABASE_URL naming where the copy is written and
-// WEBSITE_DATABASE_URL the website's database, which is only read. Run under tsx, as the package script
-// does, since the application is TypeScript.
-import { spawn } from "node:child_process";
-
+// "npm run db:backup". Has pg_dump write the events and the accounts' keys of
+// the website's database (WEBSITE_DATABASE_URL, which is only read) to a file
+// of DATABASE_BACKUP_FOLDER, named for the moment it began, and emails
+// ADMINISTRATOR_EMAIL_ADDRESS how it went (backupCli.feature). Run from a
+// scheduled task on the administrator's own computer. Run under tsx, as the
+// package script does, since the application is TypeScript.
 import {
   loadConfig,
   loadEnvFile,
 } from "../src/infrastructure/config/Config.js";
-import { createPool } from "../src/infrastructure/database/pool.js";
-import { siteKeyMarkOf } from "../src/infrastructure/encryption/AccountKeys.js";
 import { runBackup } from "../src/infrastructure/maintenance/backupCli.js";
-import { PostgresBackup } from "../src/infrastructure/maintenance/PostgresBackup.js";
+import { runPgDump } from "../src/infrastructure/maintenance/pgDump.js";
 import { ReadOnlyDate } from "../src/domain/common/ReadOnlyDate.js";
 import { buildApplication } from "../src/web/server.js";
-
-// Run as the package script is, so that the rebuild is the one the
-// administrator would run by hand, with its own words. It is of the backup
-// database, and does not turn the site's database access off.
-const rebuild = () =>
-  new Promise((resolve, reject) => {
-    const child = spawn("npm", ["run", "db:rebuild-backup-read-models"], {
-      shell: true,
-      stdio: ["ignore", "pipe", "pipe"],
-    });
-    let said = "";
-    child.stdout.on("data", (chunk) => {
-      said += chunk;
-      process.stdout.write(chunk);
-    });
-    child.stderr.on("data", (chunk) => {
-      said += chunk;
-      process.stderr.write(chunk);
-    });
-    child.on("error", reject);
-    child.on("close", (code) =>
-      code === 0
-        ? resolve()
-        : reject(
-            new Error(
-              `The rebuild exited with ${String(code)}: ${said.trim().split("\n").slice(-3).join(" ")}`,
-            ),
-          ),
-    );
-  });
 
 loadEnvFile();
 const config = loadConfig();
 const application = await buildApplication(config, { logger: false });
-const pools = [];
 try {
   const outcome = await runBackup(process.argv.slice(2), {
     settings: {
       administrator: config.administratorEmailAddress,
-      siteKey: config.accountEncryptionKey,
       websiteDatabase: config.websiteDatabaseUrl,
-      backupDatabase: config.backupDatabaseUrl,
+      folder: config.databaseBackupFolder,
+      program: config.pgDumpPath,
     },
-    copying: (siteKey) => {
-      const website = createPool(config.websiteDatabaseUrl);
-      const backup = createPool(config.backupDatabaseUrl);
-      pools.push(website, backup);
-      return new PostgresBackup(website, backup, siteKeyMarkOf(siteKey));
-    },
-    rebuild,
+    dump: ({ database, file, tables, program }) =>
+      runPgDump({ address: database, file, tables, program }),
     send: (email) =>
       application.emailSender.send(
         { ...email, from: config.emailFromAddress },
@@ -77,7 +36,6 @@ try {
   });
   process.exitCode = outcome.exitCode;
 } finally {
-  await Promise.all(pools.map((pool) => pool.end()));
   await application.server.close();
   await application.pool.end();
 }

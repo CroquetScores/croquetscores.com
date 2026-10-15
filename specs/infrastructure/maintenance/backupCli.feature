@@ -1,487 +1,269 @@
-@postgres
-Feature: Backing up the website's events to a database on another machine
+Feature: Backing up the website's events and accounts' keys to a file
 
   The events are everything the website knows: every read model is made from
-  them, and nothing else is kept that cannot be made again. So a copy of the
-  events is a copy of the website, and a copy kept on another machine is one
-  that a failure of the website's machine does not take with it. The personal
-  parts of an event are sealed with a key of the account's own, which is kept
-  in a table of its own and not in the events (`AccountKeys.feature`), so the
-  copy is of those keys as well, or it could not read a name or an email
-  address from any account.
+  them, and nothing else is kept that cannot be made again. The personal parts
+  of an event are sealed with a key of the account's own, which is kept in a
+  table of its own and not in the events (`AccountKeys.feature`), so a copy of
+  the events is of no use without those keys. So the backup is of two tables,
+  `events` and `account_keys`, and of nothing else: not a read model, nor a
+  session, nor an email waiting to be sent, which can all be made again or
+  are not worth keeping.
 
   The backup is run by "npm run db:backup" on the administrator's own
   computer, from a task the operating system's scheduler starts, and not by
-  the website. It is told two databases: the website's, which it only reads
-  (`WEBSITE_DATABASE_URL`), and the computer's own backup database, which it writes
-  (`BACKUP_DATABASE_URL`). It is told who is to hear how it went
-  (`ADMINISTRATOR_EMAIL_ADDRESS`), and the site key the accounts' keys are
-  sealed with (`ACCOUNT_ENCRYPTION_KEY`), which is the website's own. The
-  accounts' keys are copied as they are, sealed, and are no more readable to
-  the backup than to anybody. The site key is wanted for two things: to know
-  that what is copied is readable with it, and for the read models to be made
-  again from events with the personal parts in them.
+  the website. It is told the website's database, which it only reads
+  (`WEBSITE_DATABASE_URL`), the folder the copies are kept in
+  (`DATABASE_BACKUP_FOLDER`), and who is to hear how it went
+  (`ADMINISTRATOR_EMAIL_ADDRESS`).
 
-  What it copies of the events is the events the website has and the
-  computer's database has not. Each event is given a number by the database
-  as it is kept, which only goes up (`PostgresEventStore.feature`), and the
-  copy keeps the number it was given. So the backup asks the website only for
-  what is numbered after the highest number the computer's database has,
-  rather than comparing every stream, which is what makes it quick. That alone
-  would miss an event whose number was given before a later one's but which
-  was kept after it, as two commands appending at once can leave them. So it
-  also asks for what is numbered within the last 10,000 numbers before the
-  highest, and copies any it has not. Asked to, with "--all", it compares every
-  event there is, which is slow, and is how a copy that has been left out of
-  step is put right.
+  Each run writes one file to the folder: those two tables as pg_dump makes
+  them (`pgDump.feature`), in the form pg_restore reads. pg_dump reads both
+  at one moment, so the keys in a copy are the keys of the events in it.
+  The file is named for the moment the run began, as
+  2026-10-13-10-00-00.dump: the year, month, day, hour, minute and second,
+  each of the last five with two digits. The moment is written in UTC, so
+  that the names sort in the order the files were made whatever the
+  computer's own time is doing, and the clocks going back an hour do not make
+  one name twice.
 
-  It copies events as they are, in the order they were kept, and changes
-  nothing else: not an event already there, and nothing of the website's. An
-  event is the same event where it has the same stream and version, whatever
-  its number.
+  A file is written to a name of its own while pg_dump is making it and given
+  its name only once pg_dump has finished, so that a folder never holds half
+  a copy under the name of a whole one. A file is never replaced and never
+  appended to, and a file already there is never removed: how many copies to
+  keep is the administrator's to say, and a backup that removes its own
+  earlier copies is one that a fault in it can leave with none.
 
-  The accounts' keys are made to be the website's: a key the website has and
-  the computer's database has not is added, and one the website has changed
-  (the site key is changed by `db:change-site-key`) replaces the copy. One the
-  website no longer has is taken away, which is the one thing it takes from
-  the computer's database: an account that was forgotten is forgotten by
-  deleting its key, for good, and a copy that kept it would keep the account
-  readable for as long as the copy was.
+  That has a cost, which is why it is said here. An account that is forgotten
+  is forgotten by deleting its key from the website, for good, and a file
+  written before then still has it. The account stays readable in every file
+  made before it was forgotten, for as long as the file is kept.
 
-  The website is not turned off for it (`databaseAccess.feature`). It only
-  reads, an event once written is never changed, and a copy that has every
-  event up to some number is a true copy of the website at that moment whether
-  or not events were being added as it was made. What was added since is for
-  the next run.
+  The website is not turned off for it (`databaseAccess.feature`). pg_dump
+  reads the tables as they were at one moment, so a copy is a true copy of
+  them at that moment whether or not they were being written to as the copy
+  was made.
 
-  After the events and the keys are copied the read models of the computer's
-  database are made again, by running
-
-      npm run db:rebuild-backup-read-models
-
-  (`rebuildBackupReadModelsCli.feature`), so that the copy can be looked at
-  and not only restored. It is the rebuild of the backup database, which turns
-  nothing off: the site's own (`rebuildReadModelsCli.feature`) would turn off
-  access for whatever site is running on this computer. It is run every time the events were
-  copied, and also when there were none to copy, since a run that copied
-  events and then failed to rebuild them would otherwise leave the read models
-  behind until the website next had an event to copy. It is not run where the
-  events could not be copied.
-
-  Whoever is named is told how every run went, by email, whether it
-  worked or not: a backup that is only heard of when it fails is one nobody
-  can tell has stopped running. A success says how many events and keys were
-  copied and that the read models were rebuilt, and how long it took. A
-  failure says which step failed and why, so that it can be put right. Neither
-  says the address or password of either database, or the site key.
+  Whoever is named is told how every run went, by email, whether it worked or
+  not: a backup that is only heard of when it fails is one nobody can tell
+  has stopped running. A success says what the file is called, how big it is
+  and how long it took. A failure says which step failed and why, so that it
+  can be put right. Neither says the address or the password of the website's
+  database.
 
   It exits with success where everything worked, and with failure where
   anything did not, so that the scheduler can show it, whatever the email did.
 
-  These scenarios run the script's own function against two databases of the
-  scenario's own, a mail sender the scenario can read and take down, and a
-  rebuild of the read models that the scenario can make succeed or fail,
-  and a site key of their own.
+  These scenarios run the script's own function, over a folder of the
+  scenario's own, a pg_dump that the scenario can make write a file or fail,
+  a mail sender the scenario can read and take down, and a clock the scenario
+  sets.
 
   Background:
-    Given a website database
-    And a backup database
+    Given a folder for the backups
+    And the website's database is named
     And the administrator is "administrator@example.com"
-    And the site key is the website's
     And the moment "2026-10-13T10:00:00Z"
 
-  Rule: What the website has and the backup database has not is copied
+  Rule: A dump of the events and the accounts' keys is written to the folder
 
-    Scenario: An event the backup database has not is copied
-      Given the website has the event 1 of the stream "tournament/spring"
+    Scenario: The dump is written to the folder
       When the backup is run
-      Then the backup database now has the event 1 of the stream "tournament/spring"
+      Then the folder has 1 file
 
-    Scenario: Every event the backup database has not is copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the website has the event 2 of the stream "tournament/spring"
-      And the website has the event 1 of the stream "account/sam"
+    Scenario: The file is named for the moment the run began
       When the backup is run
-      Then the backup database has 3 events
+      Then the folder has the file "2026-10-13-10-00-00.dump"
 
-    Scenario: The events of a stream are in the order they were added
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the website has the event 2 of the stream "tournament/spring"
+    Scenario: A moment with single digits is written with two
+      Given the moment "2026-01-02T03:04:05Z"
       When the backup is run
-      Then the second event of the stream "tournament/spring" in the backup database is event 2
+      Then the folder has the file "2026-01-02-03-04-05.dump"
 
-    Scenario: An event is copied as it is
-      Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
+    Scenario: The name is the moment the run began and not the moment it ended
+      Given the dump takes 90 seconds
       When the backup is run
-      Then the event 1 of the stream "tournament/spring" in the backup database says "Spring Open"
+      Then the folder has the file "2026-10-13-10-00-00.dump"
 
-    Scenario: An event the backup database has already is not copied again
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the backup database has the event 1 of the stream "tournament/spring"
+    Scenario: The file holds what pg_dump made
+      Given pg_dump makes "the tables as they were"
       When the backup is run
-      Then the backup says it copied 0 events
+      Then the file "2026-10-13-10-00-00.dump" holds "the tables as they were"
 
-    Scenario: Only what is new is copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the website has the event 2 of the stream "tournament/spring"
-      And the backup database has the event 1 of the stream "tournament/spring"
+    Scenario: The dump is of the website's database
       When the backup is run
-      Then the backup says it copied 1 event
+      Then the dump was of the website's database
 
-    Scenario: Running it twice copies nothing the second time
-      Given the website has the event 1 of the stream "tournament/spring"
+    Scenario: The events are dumped
+      When the backup is run
+      Then the dump was of the table "events"
+
+    Scenario: The accounts' keys are dumped
+      When the backup is run
+      Then the dump was of the table "account_keys"
+
+    Scenario: Nothing else is dumped
+      When the backup is run
+      Then the dump was of 2 tables
+
+    Scenario: The dump is written to a file of its own while it is made
+      When the backup is run
+      Then the dump was written to a name that is not the file's
+
+    Scenario: The program is the one the settings name
+      Given the settings name the program "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      When the backup is run
+      Then the dump was made by "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+
+    Scenario: The program is pg_dump where the settings name none
+      When the backup is run
+      Then the dump was made by "pg_dump"
+
+    Scenario: Two runs at different moments make two files
+      Given the backup is run
+      And the moment "2026-10-14T10:00:00Z"
+      When the backup is run
+      Then the folder has 2 files
+
+    Scenario: The first file is as it was after the second run
+      Given pg_dump makes "the first"
       And the backup is run
+      And pg_dump makes "the second"
+      And the moment "2026-10-14T10:00:00Z"
       When the backup is run
-      Then the backup says it copied 0 events
+      Then the file "2026-10-13-10-00-00.dump" holds "the first"
 
-    Scenario: What the website added since the last run is copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the backup is run
-      And the website has the event 2 of the stream "tournament/spring"
+    Scenario: Files already there are left alone
+      Given the folder has the file "2026-10-12-10-00-00.dump" holding "an earlier dump"
       When the backup is run
-      Then the backup database now has the event 2 of the stream "tournament/spring"
+      Then the file "2026-10-12-10-00-00.dump" holds "an earlier dump"
 
-  Rule: An event is located by the number the database gave it
-
-    Scenario: An event is copied with the number the website gave it
-      Given the website has the event 1 of the stream "tournament/spring" numbered 41
+    Scenario: Files already there are kept
+      Given the folder has the file "2026-10-12-10-00-00.dump" holding "an earlier dump"
       When the backup is run
-      Then the event 1 of the stream "tournament/spring" in the backup database is numbered 41
+      Then the folder has 2 files
 
-    Scenario: An event numbered after the highest the backup database has is copied
-      Given the backup database has the event 1 of the stream "tournament/old" numbered 10
-      And the website has the event 1 of the stream "tournament/spring" numbered 11
+  Rule: A file is never replaced
+
+    Scenario: A dump of a moment that has a file is not written over it
+      Given the folder has the file "2026-10-13-10-00-00.dump" holding "an earlier dump"
       When the backup is run
-      Then the backup database now has the event 1 of the stream "tournament/spring"
+      Then the file "2026-10-13-10-00-00.dump" holds "an earlier dump"
 
-    Scenario: An event numbered before the highest, kept after it, is copied
-      Given the backup database has the event 1 of the stream "tournament/old" numbered 20
-      And the website has the event 1 of the stream "tournament/spring" numbered 19
-      When the backup is run
-      Then the backup database now has the event 1 of the stream "tournament/spring"
-
-    Scenario: Only what is within the last 10,000 numbers is looked for
-      Given the backup database has the event 1 of the stream "tournament/old" numbered 20000
-      And the website has the event 1 of the stream "tournament/spring" numbered 1
-      When the backup is run
-      Then the backup database has 1 event
-
-    Scenario: Asked for all of them, every event is looked for
-      Given the backup database has the event 1 of the stream "tournament/old" numbered 20000
-      And the website has the event 1 of the stream "tournament/spring" numbered 1
-      When the backup is run with "--all"
-      Then the backup database now has the event 1 of the stream "tournament/spring"
-
-    Scenario: An event of another number but the same stream and version is the same event
-      Given the website has the event 1 of the stream "tournament/spring" numbered 5
-      And the backup database has the event 1 of the stream "tournament/spring" numbered 9
-      When the backup is run
-      Then the backup says it copied 0 events
-
-    Scenario: An event with a number another event has is a failure
-      Given the website has the event 1 of the stream "tournament/spring" numbered 5
-      And the backup database has the event 1 of the stream "tournament/old" numbered 5
+    Scenario: A dump of a moment that has a file is a failure
+      Given the folder has the file "2026-10-13-10-00-00.dump" holding "an earlier dump"
       When the backup is run
       Then the backup exits with failure
 
-  Rule: The accounts' keys are copied with the events
-
-    Scenario: A key the backup database has not is copied
-      Given the website has a key for the account "sam"
+    Scenario: A dump of a moment that has a file says so
+      Given the folder has the file "2026-10-13-10-00-00.dump" holding "an earlier dump"
       When the backup is run
-      Then the backup database now has a key for the account "sam"
+      Then the email says a file of that name was already there
 
-    Scenario: A key is copied as it is
-      Given the website has a key for the account "sam"
+  Rule: A dump that fails leaves no file
+
+    Scenario: A dump that fails leaves the folder as it was
+      Given pg_dump fails
       When the backup is run
-      Then the key of the account "sam" in the backup database is the website's
+      Then the folder has 0 files
 
-    Scenario: A key the website has changed is copied over the old
-      Given the website has a key for the account "sam"
-      And the backup database has an older key for the account "sam"
+    Scenario: A dump that fails part way leaves no half of one
+      Given pg_dump fails part way
       When the backup is run
-      Then the key of the account "sam" in the backup database is the website's
+      Then the folder has 0 files
 
-    Scenario: A key the website no longer has is taken away
-      Given the backup database has a key for the account "sam"
+    Scenario: A dump that fails leaves the earlier files
+      Given the folder has the file "2026-10-12-10-00-00.dump" holding "an earlier dump"
+      And pg_dump fails
       When the backup is run
-      Then the backup database has no key for the account "sam"
+      Then the folder has 1 file
 
-    Scenario: A forgotten account is forgotten in the copy
-      Given the website has a key for the account "pat"
-      And the backup is run
-      And the website has forgotten the account "pat"
-      When the backup is run
-      Then the backup database has no key for the account "pat"
-
-    Scenario: Keys are copied or none are, with the events
-      Given the website has a key for the account "sam"
-      And the website has the event 1 of the stream "tournament/spring"
-      And writing the first event to the backup database fails
-      When the backup is run
-      Then the backup database has no key for the account "sam"
-
-    Scenario: A key the website has not changed is not copied again
-      Given the website has a key for the account "sam"
-      And the backup is run
-      When the backup is run
-      Then the backup says it copied 0 keys
-
-    Scenario: The keys copied are said
-      Given the website has a key for the account "sam"
-      When the backup is run
-      Then the backup says it copied 1 key
-
-  Rule: The site key is the one the website's keys are sealed with
-
-    Scenario: Without the site key it is refused
-      Given no site key is named
-      When the backup is run
-      Then the backup says the site key is needed
-
-    Scenario: Without the site key nothing is copied
-      Given no site key is named
-      And the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the backup database has 0 events
-
-    Scenario: A site key that is not the website's is refused
-      Given the site key is not the website's
-      And the website has a key for the account "sam"
+    Scenario: A dump that fails is a failure
+      Given pg_dump fails
       When the backup is run
       Then the backup exits with failure
-
-    Scenario: A site key that is not the website's copies nothing
-      Given the site key is not the website's
-      And the website has the event 1 of the stream "tournament/spring"
-      And the website has a key for the account "sam"
-      When the backup is run
-      Then the backup database has 0 events
-
-    Scenario: A site key that is not the website's is said, by the email
-      Given the site key is not the website's
-      And the website has a key for the account "sam"
-      When the backup is run
-      Then the email says the failure was that the site key is not the website's
-
-    Scenario: The site key is not in the email
-      Given the site key is not the website's
-      And the website has a key for the account "sam"
-      When the backup is run
-      Then the email does not say the site key
-
-  Rule: Nothing of the website is changed
-
-    Scenario: The website's events are as they were
-      Given the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the website has 1 event
-
-    Scenario: The website is not turned off for it
-      Given the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then database access was never turned off
-
-  Rule: What the backup database has of the events is never changed or taken away
-
-    Scenario: An event only the backup database has is kept
-      Given the backup database has the event 1 of the stream "tournament/old"
-      When the backup is run
-      Then the backup database now has the event 1 of the stream "tournament/old"
-
-    Scenario: An event that is not the website's is not copied over
-      Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
-      And the backup database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
-      When the backup is run
-      Then the event 1 of the stream "tournament/spring" in the backup database says "Autumn Open"
-
-    Scenario: An event that is not the website's is a failure
-      Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
-      And the backup database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
-      When the backup is run
-      Then the backup exits with failure
-
-    Scenario: An event that is not the website's is said, in the failure
-      Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
-      And the backup database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
-      When the backup is run
-      Then the failure says the event 1 of the stream "tournament/spring" is not the same in both
-
-  Rule: Every event is copied or none is
-
-    The copy is one transaction of the backup database, so a run that fails
-    part way leaves the database as it was, and the next run copies what this
-    one meant to. A stream is not left with some of its events and the rest
-    missing from the middle.
-
-    Scenario: A copy that fails part way copies nothing
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the website has the event 2 of the stream "tournament/spring"
-      And writing the second event to the backup database fails
-      When the backup is run
-      Then the backup database has 0 events
-
-    Scenario: A copy that failed is copied in full by the next run
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the website has the event 2 of the stream "tournament/spring"
-      And writing the second event to the backup database fails
-      And the backup is run
-      And writing to the backup database works again
-      When the backup is run
-      Then the backup database has 2 events
-
-  Rule: The read models are made again after the events are copied
-
-    Scenario: The read models rebuilt are the backup database's
-      Given the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the read models of the backup database were rebuilt
-
-    Scenario: The read models are rebuilt after the events are copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the read models were rebuilt after the events were copied
-
-    Scenario: The read models are rebuilt where there were no events to copy
-      When the backup is run
-      Then the read models of the backup database were rebuilt
-
-    Scenario: The read models are not rebuilt where the events could not be copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And writing the first event to the backup database fails
-      When the backup is run
-      Then the read models were not rebuilt
-
-    Scenario: A rebuild that fails is a failure
-      Given the read models cannot be rebuilt
-      When the backup is run
-      Then the backup exits with failure
-
-    Scenario: A rebuild that fails leaves the events copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the read models cannot be rebuilt
-      When the backup is run
-      Then the backup database now has the event 1 of the stream "tournament/spring"
 
   Rule: The administrator is told how it went
 
     Scenario: A success is emailed to the administrator
-      Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
       Then an email was sent to "administrator@example.com"
 
     Scenario: A success says it worked
-      Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
       Then the email says the backup worked
 
-    Scenario: A success says how many events were copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the website has the event 2 of the stream "tournament/spring"
+    Scenario: A success says what the file is called
       When the backup is run
-      Then the email says 2 events were copied
+      Then the email says the file is called "2026-10-13-10-00-00.dump"
 
-    Scenario: A success where nothing was new says so
+    Scenario: A success says how big the file is
+      Given pg_dump makes "twenty-one bytes long"
       When the backup is run
-      Then the email says 0 events were copied
-
-    Scenario: A success says how many keys were copied
-      Given the website has a key for the account "sam"
-      When the backup is run
-      Then the email says 1 key was copied
-
-    Scenario: A success says the read models were rebuilt
-      Given the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the email says the read models were rebuilt
+      Then the email says the file is 21 bytes
 
     Scenario: A success says how long it took
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the run takes 3 minutes
+      Given the dump takes 90 seconds
       When the backup is run
-      Then the email says it took 3 minutes
+      Then the email says it took 1.5 minutes
+
+    Scenario: A quick run says it took less than a tenth of a minute
+      When the backup is run
+      Then the email says it took less than 0.1 minutes
 
     Scenario: A failure is emailed to the administrator
-      Given the website cannot be reached
+      Given pg_dump fails
       When the backup is run
       Then an email was sent to "administrator@example.com"
 
     Scenario: A failure says it failed
-      Given the website cannot be reached
+      Given pg_dump fails
       When the backup is run
       Then the email says the backup failed
 
-    Scenario: A failure says the website could not be reached
-      Given the website cannot be reached
+    Scenario: A failure says the dump could not be made
+      Given pg_dump fails
       When the backup is run
-      Then the email says the failure was reading the website's events
-
-    Scenario: A failure copying says it was copying the events
-      Given the website has the event 1 of the stream "tournament/spring"
-      And writing the first event to the backup database fails
-      When the backup is run
-      Then the email says the failure was copying the events
-
-    Scenario: A failure rebuilding the read models says so
-      Given the read models cannot be rebuilt
-      When the backup is run
-      Then the email says the failure was rebuilding the read models
-
-    Scenario: A failure rebuilding the read models says the events were copied
-      Given the website has the event 1 of the stream "tournament/spring"
-      And the read models cannot be rebuilt
-      When the backup is run
-      Then the email says 1 event was copied
+      Then the email says the failure was making the dump
 
     Scenario: A failure says why
-      Given the website cannot be reached
+      Given pg_dump fails saying "the server closed the connection"
       When the backup is run
-      Then the email says why the website could not be reached
+      Then the email says why: "the server closed the connection"
 
-    Scenario: The backup database cannot be reached is a failure said so
-      Given the backup database cannot be reached
+    Scenario: The website's address is not in the email of a success
       When the backup is run
-      Then the email says the failure was reaching the backup database
+      Then the email does not say the website's address
 
-    Scenario: Neither database's address is in the email of a success
-      Given the website has the event 1 of the stream "tournament/spring"
+    Scenario: The website's address is not in the email of a failure
+      Given pg_dump fails saying "could not connect to the server at the website's address"
       When the backup is run
-      Then the email does not say the address of either database
+      Then the email does not say the website's address
 
-    Scenario: Neither database's address is in the email of a failure
-      Given the website cannot be reached
+    Scenario: The website's password is not in the email of a failure
+      Given pg_dump fails saying "could not connect to the server at the website's address"
       When the backup is run
-      Then the email does not say the address of either database
+      Then the email does not say the website's password
 
     Scenario: A success exits with success
-      Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
       Then the backup exits with success
 
-    Scenario: A failure exits with failure
-      Given the website cannot be reached
+    Scenario: An email that cannot be sent is a failure
+      Given email cannot be sent
       When the backup is run
       Then the backup exits with failure
 
-    Scenario: An email that cannot be sent is a failure, said on the screen
-      Given the website has the event 1 of the stream "tournament/spring"
-      And email cannot be sent
-      When the backup is run
-      Then the backup exits with failure
-
-    Scenario: An email that cannot be sent is said
-      Given the website has the event 1 of the stream "tournament/spring"
-      And email cannot be sent
+    Scenario: An email that cannot be sent is said on the screen
+      Given email cannot be sent
       When the backup is run
       Then the backup says the administrator could not be told
 
     Scenario: An email that cannot be sent does not undo the copy
-      Given the website has the event 1 of the stream "tournament/spring"
-      And email cannot be sent
+      Given email cannot be sent
       When the backup is run
-      Then the backup database now has the event 1 of the stream "tournament/spring"
+      Then the folder has the file "2026-10-13-10-00-00.dump"
 
-  Rule: It is told who to tell, and both databases, before it does anything
+  Rule: It is told who to tell, the database and the folder, before it does anything
 
     Scenario: Without an administrator it is refused
       Given no administrator is named
@@ -493,54 +275,76 @@ Feature: Backing up the website's events to a database on another machine
       When the backup is run
       Then the backup says an administrator is needed
 
-    Scenario: Without an administrator nothing is copied
+    Scenario: Without an administrator nothing is written
       Given no administrator is named
-      And the website has the event 1 of the stream "tournament/spring"
       When the backup is run
-      Then the backup database has 0 events
+      Then the folder has 0 files
 
-    Scenario: Without the website's database it is refused, and tells the administrator
+    Scenario: Without the website's database it is refused
+      Given the website's database is not named
+      When the backup is run
+      Then the backup exits with failure
+
+    Scenario: Without the website's database it tells the administrator
       Given the website's database is not named
       When the backup is run
       Then the email says the failure was that the website's database is not named
 
-    Scenario: Without the backup database it is refused, and tells the administrator
-      Given the backup database is not named
+    Scenario: Without the website's database nothing is written
+      Given the website's database is not named
       When the backup is run
-      Then the email says the failure was that the backup database is not named
+      Then the folder has 0 files
 
-    Scenario: Without the backup database nothing is copied
-      Given the backup database is not named
-      And the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the backup database has 0 events
-
-    Scenario: The website and the backup database must not be the same database
-      Given the website's database is the backup database
+    Scenario: Without a folder it is refused
+      Given no folder is named
       When the backup is run
       Then the backup exits with failure
 
-    Scenario: The same database named twice says so
-      Given the website's database is the backup database
+    Scenario: Without a folder it tells the administrator
+      Given no folder is named
       When the backup is run
-      Then the backup says the website and the backup database are the same
+      Then the email says the failure was that the folder is not named
+
+    Scenario: A folder that is not there is refused
+      Given the folder is not there
+      When the backup is run
+      Then the backup exits with failure
+
+    Scenario: A folder that is not there tells the administrator
+      Given the folder is not there
+      When the backup is run
+      Then the email says the failure was that the folder is not there
+
+    Scenario: A folder that is not there is not made
+      Given the folder is not there
+      When the backup is run
+      Then the folder is still not there
+
+    Scenario: A folder that is not there does not ask pg_dump for anything
+      Given the folder is not there
+      When the backup is run
+      Then pg_dump was not run
+
+    Scenario: An argument is refused
+      When the backup is run with "--all"
+      Then the backup exits with failure
+
+    Scenario: An argument is refused without running pg_dump
+      When the backup is run with "--all"
+      Then pg_dump was not run
 
   Rule: What it says on the screen is what the email says
 
-    A scheduled task's output is the first place somebody looks when the email
-    did not come, so the same things are said there as are emailed.
-
-    Scenario: The count of events is said
-      Given the website has the event 1 of the stream "tournament/spring"
+    Scenario: The file is said
       When the backup is run
-      Then the backup says it copied 1 event
+      Then the backup says the file is called "2026-10-13-10-00-00.dump"
 
-    Scenario: That the read models were rebuilt is said
-      Given the website has the event 1 of the stream "tournament/spring"
+    Scenario: The size is said
+      Given pg_dump makes "twenty-one bytes long"
       When the backup is run
-      Then the backup says the read models were rebuilt
+      Then the backup says the file is 21 bytes
 
     Scenario: A failure is said
-      Given the website cannot be reached
+      Given pg_dump fails
       When the backup is run
       Then the backup says it failed

@@ -1,47 +1,51 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { After, Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import pg from "pg";
+import {
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
-import { siteKeyMarkOf } from "../../../src/infrastructure/encryption/AccountKeys.js";
 import {
   type BackupOutcome,
   runBackup,
 } from "../../../src/infrastructure/maintenance/backupCli.js";
-import { PostgresBackup } from "../../../src/infrastructure/maintenance/PostgresBackup.js";
 import type { SpecWorld } from "../../support/world.js";
 
-// The backup script, run as its own function (`backupCli.feature`) over two
-// databases of the scenario's own. The website's is a schema of the scenario's
-// database with the same tables, read through a pool whose search path is that
-// schema, and the backup database is the scenario's own: two places that look
-// exactly alike to what copies between them, without a second database to make
-// for each scenario. The mail sender, the rebuild of the read models and the
-// clock are the scenario's, so that what was sent and in what order is read
-// rather than waited for.
+// The backup script, run as its own function (`backupCli.feature`) over a
+// folder of the scenario's own. pg_dump is the scenario's, so that what was
+// asked of it is read and it can be made to write a file or to fail; the mail
+// sender is the scenario's for the same reason, and the clock is the moment
+// the shared step gives the world (`ReadOnlyDate.steps.ts`).
 
-const WEBSITES_SITE_KEY = "the website's site key";
-const SOMETHING_ELSE = "a site key that is not the website's";
-const A_REFUSED_ADDRESS = "postgres://nobody:secret-word@127.0.0.1:1/nothing";
-
-type Fault = "website" | "backup";
+const WEBSITES_ADDRESS =
+  "postgres://backup:secret-word@website.example:5432/croquetscores";
 
 interface Backup {
+  folder: string | undefined;
+  folderIsNamed: boolean;
   administrator: string | undefined;
-  siteKey: string | undefined;
   websiteNamed: boolean;
-  websiteIsLocal: boolean;
-  unreachable: Set<Fault>;
-  rebuildFails: boolean;
+  program: string | undefined;
+  dumpWrites: string;
+  dumpFails: boolean;
+  dumpFailsPartWay: boolean;
+  failureWords: string;
+  takesSeconds: number;
   emailFails: boolean;
-  takes: number;
-  websitePool: pg.Pool | undefined;
-  // Everything that happened, in order, as a short word each.
-  readonly happened: string[];
+  dumps: {
+    database: string;
+    file: string;
+    tables: readonly string[];
+    program: string | undefined;
+  }[];
   readonly said: string[];
   readonly emails: { to: string; subject: string; body: string }[];
-  rebuilt: boolean;
-  backupNamed: boolean;
-  accessTurnedOff: boolean;
   exitCode: 0 | 1 | undefined;
 }
 
@@ -51,21 +55,20 @@ const backupOf = (world: SpecWorld): Backup => {
   let found = backups.get(world);
   if (found === undefined) {
     found = {
+      folder: undefined,
+      folderIsNamed: true,
       administrator: undefined,
-      siteKey: WEBSITES_SITE_KEY,
       websiteNamed: true,
-      websiteIsLocal: false,
-      unreachable: new Set(),
-      rebuildFails: false,
+      program: undefined,
+      dumpWrites: "a dump",
+      dumpFails: false,
+      dumpFailsPartWay: false,
+      failureWords: "pg_dump ended with 1",
+      takesSeconds: 0,
       emailFails: false,
-      takes: 0,
-      websitePool: undefined,
-      happened: [],
+      dumps: [],
       said: [],
       emails: [],
-      rebuilt: false,
-      backupNamed: true,
-      accessTurnedOff: false,
       exitCode: undefined,
     };
     backups.set(world, found);
@@ -73,85 +76,46 @@ const backupOf = (world: SpecWorld): Backup => {
   return found;
 };
 
-const websiteOf = (world: SpecWorld): pg.Pool => {
-  const pool = backupOf(world).websitePool;
-  assert.ok(pool !== undefined, "No website database was given.");
-  return pool;
+const folderOf = (world: SpecWorld): string => {
+  const { folder } = backupOf(world);
+  assert.ok(folder !== undefined, "No folder was made for the backups.");
+  return folder;
 };
 
-const urlOf = (world: SpecWorld): string => {
-  const url = world.database.options.connectionString;
-  assert.ok(url !== undefined, "The scenario's database has no URL.");
-  return url;
+const momentOf = (world: SpecWorld): Date => {
+  assert.ok(world.moment !== undefined, "No moment was given.");
+  return world.moment;
 };
 
-const keyOf = (account: string, version = "current"): Buffer =>
-  Buffer.from(`key of ${account} (${version})`);
-
-// The events -------------------------------------------------------------
-
-const SOMETHING = "something that happened";
-
-const putEvent = async (
-  pool: pg.Pool,
-  stream: string,
-  version: number,
-  says: string | undefined,
-  number: number | undefined,
-): Promise<void> => {
-  const data = JSON.stringify({ says: says ?? SOMETHING });
-  if (number === undefined) {
-    await pool.query(
-      `insert into events (stream_id, version, name, data)
-       values ($1, $2, 'ExampleEvent', $3)`,
-      [stream, version, data],
-    );
-    return;
-  }
-  await pool.query(
-    `insert into events (id, stream_id, version, name, data)
-     overriding system value
-     values ($1, $2, $3, 'ExampleEvent', $4)`,
-    [number, stream, version, data],
-  );
-};
-
-// The databases ----------------------------------------------------------
-
-Given("a website database", async function (this: SpecWorld) {
-  await this.database.query(`create schema website`);
-  // Written out and not copied from the others with LIKE, so that the table
-  // the backup reads is the one the migration makes and not what LIKE keeps of
-  // it.
-  await this.database.query(
-    `create table website.events (
-       id        bigint generated by default as identity,
-       stream_id text    not null,
-       version   integer not null,
-       name      text    not null,
-       data      jsonb   not null,
-       constraint one_event_per_version primary key (stream_id, version)
-     )`,
-  );
-  await this.database.query(
-    `create table website.account_keys (
-       account_id    text  primary key,
-       key           bytea not null,
-       site_key_mark text  not null
-     )`,
-  );
-  const pool = new pg.Pool({
-    connectionString: urlOf(this),
-    options: "-c search_path=website",
-  });
-  pool.on("error", () => undefined);
-  this.closeBeforeDropping.push(() => pool.end());
-  backupOf(this).websitePool = pool;
+// The folder made for the scenario is its own and goes with it.
+After(async function (this: SpecWorld) {
+  const { folder } = backupOf(this);
+  if (folder !== undefined) await rm(folder, { recursive: true, force: true });
 });
 
-Given("a backup database", function (this: SpecWorld) {
-  // The scenario's own database, which every @postgres scenario has.
-  assert.ok(this.database !== undefined);
+const filesIn = async (world: SpecWorld): Promise<string[]> =>
+  (await readdir(folderOf(world))).sort();
+
+// The folder, the database and the people ----------------------------------
+
+Given("a folder for the backups", async function (this: SpecWorld) {
+  backupOf(this).folder = await mkdtemp(join(tmpdir(), "backups-"));
+});
+
+Given("the website's database is named", function (this: SpecWorld) {
+  backupOf(this).websiteNamed = true;
+});
+
+Given("the website's database is not named", function (this: SpecWorld) {
+  backupOf(this).websiteNamed = false;
+});
+
+Given("no folder is named", function (this: SpecWorld) {
+  backupOf(this).folderIsNamed = false;
+});
+
+Given("the folder is not there", async function (this: SpecWorld) {
+  await rm(folderOf(this), { recursive: true, force: true });
 });
 
 Given(
@@ -165,153 +129,53 @@ Given("no administrator is named", function (this: SpecWorld) {
   backupOf(this).administrator = undefined;
 });
 
-Given("the site key is the website's", function (this: SpecWorld) {
-  backupOf(this).siteKey = WEBSITES_SITE_KEY;
-});
-
-Given("the site key is not the website's", function (this: SpecWorld) {
-  backupOf(this).siteKey = SOMETHING_ELSE;
-});
-
-Given("no site key is named", function (this: SpecWorld) {
-  backupOf(this).siteKey = undefined;
-});
-
-Given("the backup database is not named", function (this: SpecWorld) {
-  backupOf(this).backupNamed = false;
-});
-
-Given("the website's database is not named", function (this: SpecWorld) {
-  backupOf(this).websiteNamed = false;
-});
-
 Given(
-  "the website's database is the backup database",
-  function (this: SpecWorld) {
-    backupOf(this).websiteIsLocal = true;
+  "the settings name the program {string}",
+  function (this: SpecWorld, program: string) {
+    backupOf(this).program = program;
   },
 );
 
-Given("the website cannot be reached", function (this: SpecWorld) {
-  backupOf(this).unreachable.add("website");
+// What pg_dump does --------------------------------------------------------
+
+Given("pg_dump makes {string}", function (this: SpecWorld, content: string) {
+  backupOf(this).dumpWrites = content;
 });
 
-Given("the backup database cannot be reached", function (this: SpecWorld) {
-  backupOf(this).unreachable.add("backup");
+Given("pg_dump fails", function (this: SpecWorld) {
+  backupOf(this).dumpFails = true;
 });
 
-// What the scenarios put in the databases --------------------------------
+Given("pg_dump fails part way", function (this: SpecWorld) {
+  const backup = backupOf(this);
+  backup.dumpFails = true;
+  backup.dumpFailsPartWay = true;
+});
 
 Given(
-  /^the (website|backup database) has the event (\d+) of the stream "([^"]*)"(?: saying "([^"]*)")?(?: numbered (\d+))?$/,
-  async function (
-    this: SpecWorld,
-    where: string,
-    version: string,
-    stream: string,
-    says: string | null | undefined,
-    number: string | null | undefined,
-  ) {
-    const pool = where === "website" ? websiteOf(this) : this.database;
-    // A group the step did not match is handed over as null, which is not a
-    // number to be written as 0.
-    await putEvent(
-      pool,
-      stream,
-      Number(version),
-      says ?? undefined,
-      number === null || number === undefined ? undefined : Number(number),
-    );
+  "pg_dump fails saying {string}",
+  function (this: SpecWorld, words: string) {
+    const backup = backupOf(this);
+    backup.dumpFails = true;
+    backup.failureWords = words;
   },
 );
 
 Given(
-  /^the (website|backup database) has (a|an older) key for the account "([^"]*)"$/,
-  async function (
-    this: SpecWorld,
-    where: string,
-    which: string,
-    account: string,
-  ) {
-    const pool = where === "website" ? websiteOf(this) : this.database;
-    await pool.query(
-      `insert into account_keys (account_id, key, site_key_mark)
-       values ($1, $2, $3)`,
-      [
-        account,
-        keyOf(account, which === "a" ? "current" : "older"),
-        siteKeyMarkOf(WEBSITES_SITE_KEY),
-      ],
-    );
+  "the dump takes {int} seconds",
+  function (this: SpecWorld, seconds: number) {
+    backupOf(this).takesSeconds = seconds;
   },
 );
-
-Given(
-  "the website has forgotten the account {string}",
-  async function (this: SpecWorld, account: string) {
-    await websiteOf(this).query(
-      `delete from account_keys where account_id = $1`,
-      [account],
-    );
-  },
-);
-
-// Writing to the backup database fails where the scenario says. A trigger of
-// the database's own, so that what is refused is what the copy really writes.
-const failing = async (world: SpecWorld, version: number): Promise<void> => {
-  await world.database.query(
-    `create or replace function backup_spec_refuses() returns trigger as $$
-     begin
-       raise exception 'the scenario will not have this event written';
-     end;
-     $$ language plpgsql`,
-  );
-  await world.database.query(
-    `create trigger backup_spec_refuses_${String(version)}
-       before insert on public.events
-       for each row when (new.version = ${String(version)})
-       execute function backup_spec_refuses()`,
-  );
-};
-
-Given(
-  "writing the first event to the backup database fails",
-  async function (this: SpecWorld) {
-    await failing(this, 1);
-  },
-);
-
-Given(
-  "writing the second event to the backup database fails",
-  async function (this: SpecWorld) {
-    await failing(this, 2);
-  },
-);
-
-Given(
-  "writing to the backup database works again",
-  async function (this: SpecWorld) {
-    for (const version of [1, 2]) {
-      await this.database.query(
-        `drop trigger if exists backup_spec_refuses_${String(version)}
-           on public.events`,
-      );
-    }
-  },
-);
-
-Given("the read models cannot be rebuilt", function (this: SpecWorld) {
-  backupOf(this).rebuildFails = true;
-});
 
 Given("email cannot be sent", function (this: SpecWorld) {
   backupOf(this).emailFails = true;
 });
 
 Given(
-  "the run takes {int} minutes",
-  function (this: SpecWorld, minutes: number) {
-    backupOf(this).takes = minutes;
+  "the folder has the file {string} holding {string}",
+  async function (this: SpecWorld, name: string, content: string) {
+    await writeFile(join(folderOf(this), name), content);
   },
 );
 
@@ -320,68 +184,48 @@ Given(
 const run = async (
   world: SpecWorld,
   args: readonly string[],
-): Promise<void> => {
+): Promise<BackupOutcome> => {
   const backup = backupOf(world);
-  let clock = Date.parse("2026-10-13T10:00:00Z");
-
-  const refused = (): pg.Pool => {
-    const pool = new pg.Pool({
-      connectionString: A_REFUSED_ADDRESS,
-      connectionTimeoutMillis: 2000,
-    });
-    pool.on("error", () => undefined);
-    world.closeBeforeDropping.push(() => pool.end());
-    return pool;
-  };
-
-  const websiteUrl = `${urlOf(world)}?options=-c%20search_path%3Dwebsite`;
-  const outcome: BackupOutcome = await runBackup(args, {
+  // Where the website's address is wanted in a failure's own words, as
+  // pg_dump says where it could not reach.
+  const words = backup.failureWords.replace(
+    "the website's address",
+    WEBSITES_ADDRESS,
+  );
+  const outcome = await runBackup(args, {
     settings: {
       administrator: backup.administrator,
-      siteKey: backup.siteKey,
-      // What a pool that is refused was told, so that what is said of it is
-      // held to not saying where it was.
-      websiteDatabase: backup.websiteNamed
-        ? backup.unreachable.has("website")
-          ? A_REFUSED_ADDRESS
-          : backup.websiteIsLocal
-            ? urlOf(world)
-            : websiteUrl
-        : undefined,
-      backupDatabase: !backup.backupNamed
-        ? undefined
-        : backup.unreachable.has("backup")
-          ? A_REFUSED_ADDRESS
-          : urlOf(world),
+      websiteDatabase: backup.websiteNamed ? WEBSITES_ADDRESS : undefined,
+      folder: backup.folderIsNamed ? backup.folder : undefined,
+      program: backup.program,
     },
-    copying: (siteKey) => {
-      backup.happened.push("copying");
-      return new PostgresBackup(
-        backup.unreachable.has("website") ? refused() : websiteOf(world),
-        backup.unreachable.has("backup") ? refused() : world.database,
-        siteKeyMarkOf(siteKey),
-      );
-    },
-    rebuild: () => {
-      backup.happened.push("rebuild");
-      backup.rebuilt = true;
-      clock += backup.takes * 60 * 1000;
-      if (backup.rebuildFails) {
-        return Promise.reject(new Error("The rebuild was refused."));
+    dump: async (request) => {
+      backup.dumps.push(request);
+      if (backup.dumpFails) {
+        if (backup.dumpFailsPartWay) {
+          await writeFile(request.file, "half of a du");
+        }
+        throw new Error(words);
       }
-      return Promise.resolve();
+      await writeFile(request.file, backup.dumpWrites);
+      world.moment = new Date(
+        momentOf(world).getTime() + backup.takesSeconds * 1000,
+      );
     },
     send: (email) => {
       if (backup.emailFails) {
-        return Promise.reject(new Error("The mail server is not there."));
+        return Promise.reject(new Error("The mail sender is down."));
       }
       backup.emails.push(email);
       return Promise.resolve();
     },
-    now: () => new Date(clock),
-    say: (line) => backup.said.push(line),
+    now: () => momentOf(world),
+    say: (line) => {
+      backup.said.push(line);
+    },
   });
   backup.exitCode = outcome.exitCode;
+  return outcome;
 };
 
 When("the backup is run", async function (this: SpecWorld) {
@@ -391,135 +235,88 @@ When("the backup is run", async function (this: SpecWorld) {
 When(
   "the backup is run with {string}",
   async function (this: SpecWorld, argument: string) {
-    await run(
-      this,
-      argument.split(" ").filter((each) => each !== ""),
-    );
+    await run(this, [argument]);
   },
 );
 
-// What came of it ----------------------------------------------------------
+// What was made ------------------------------------------------------------
 
-const locally = async (
-  world: SpecWorld,
-  sql: string,
-  values: unknown[] = [],
-): Promise<Record<string, unknown>[]> =>
-  (await world.database.query<Record<string, unknown>>(sql, values)).rows;
+Then("the folder has {int} file", async function (this: SpecWorld, n: number) {
+  assert.equal((await filesIn(this)).length, n);
+});
+
+Then("the folder has {int} files", async function (this: SpecWorld, n: number) {
+  assert.equal((await filesIn(this)).length, n);
+});
 
 Then(
-  /^the backup database now has the event (\d+) of the stream "([^"]*)"$/,
-  async function (this: SpecWorld, version: string, stream: string) {
-    const rows = await locally(
-      this,
-      `select 1 from events where stream_id = $1 and version = $2`,
-      [stream, Number(version)],
-    );
-    assert.equal(
-      rows.length,
-      1,
-      `The event ${version} of ${stream} is not there.`,
-    );
+  "the folder has the file {string}",
+  async function (this: SpecWorld, name: string) {
+    const files = await filesIn(this);
+    assert.ok(files.includes(name), `The folder has ${files.join(", ")}.`);
   },
 );
 
 Then(
-  /^the backup database has (\d+) events?$/,
-  async function (this: SpecWorld, count: string) {
-    const [row] = await locally(this, `select count(*)::int as n from events`);
-    assert.equal(row?.["n"], Number(count));
+  "the file {string} holds {string}",
+  async function (this: SpecWorld, name: string, content: string) {
+    assert.equal(await readFile(join(folderOf(this), name), "utf8"), content);
+  },
+);
+
+Then("the folder is still not there", async function (this: SpecWorld) {
+  await assert.rejects(stat(folderOf(this)));
+});
+
+Then("the dump was of the website's database", function (this: SpecWorld) {
+  const { dumps } = backupOf(this);
+  assert.equal(dumps.length, 1);
+  assert.equal(dumps[0]?.database, WEBSITES_ADDRESS);
+});
+
+Then(
+  "the dump was of the table {string}",
+  function (this: SpecWorld, table: string) {
+    const { dumps } = backupOf(this);
+    assert.equal(dumps.length, 1);
+    assert.ok(dumps[0]?.tables.includes(table) === true);
+  },
+);
+
+Then("the dump was of {int} tables", function (this: SpecWorld, n: number) {
+  const { dumps } = backupOf(this);
+  assert.equal(dumps.length, 1);
+  assert.equal(dumps[0]?.tables.length, n);
+});
+
+Then(
+  "the dump was written to a name that is not the file's",
+  function (this: SpecWorld) {
+    const { dumps } = backupOf(this);
+    assert.equal(dumps.length, 1);
+    assert.ok(
+      dumps[0]?.file.endsWith(".dump.partial") === true,
+      `It was written to ${dumps[0]?.file ?? "nothing"}.`,
+    );
   },
 );
 
 Then(
-  /^the website has (\d+) events?$/,
-  async function (this: SpecWorld, count: string) {
-    const { rows } = await websiteOf(this).query<{ n: number }>(
-      `select count(*)::int as n from events`,
-    );
-    assert.equal(rows[0]?.n, Number(count));
+  "the dump was made by {string}",
+  function (this: SpecWorld, program: string) {
+    const { dumps } = backupOf(this);
+    assert.equal(dumps.length, 1);
+    // The script is told the program by its settings, which name none where
+    // pg_dump of the computer's own is to be used.
+    assert.equal(dumps[0]?.program ?? "pg_dump", program);
   },
 );
 
-Then(
-  /^the event (\d+) of the stream "([^"]*)" in the backup database says "([^"]*)"$/,
-  async function (
-    this: SpecWorld,
-    version: string,
-    stream: string,
-    says: string,
-  ) {
-    const [row] = await locally(
-      this,
-      `select data->>'says' as says from events
-        where stream_id = $1 and version = $2`,
-      [stream, Number(version)],
-    );
-    assert.equal(row?.["says"], says);
-  },
-);
+Then("pg_dump was not run", function (this: SpecWorld) {
+  assert.equal(backupOf(this).dumps.length, 0);
+});
 
-Then(
-  /^the event (\d+) of the stream "([^"]*)" in the backup database is numbered (\d+)$/,
-  async function (
-    this: SpecWorld,
-    version: string,
-    stream: string,
-    number: string,
-  ) {
-    const [row] = await locally(
-      this,
-      `select id::text as id from events where stream_id = $1 and version = $2`,
-      [stream, Number(version)],
-    );
-    assert.equal(String(row?.["id"]), String(number));
-  },
-);
-
-Then(
-  /^the second event of the stream "([^"]*)" in the backup database is event (\d+)$/,
-  async function (this: SpecWorld, stream: string, version: string) {
-    const rows = await locally(
-      this,
-      `select version from events where stream_id = $1 order by id`,
-      [stream],
-    );
-    assert.equal(rows[1]?.["version"], Number(version));
-  },
-);
-
-Then(
-  /^the backup database (now has a|has no) key for the account "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, account: string) {
-    const rows = await locally(
-      this,
-      `select 1 from account_keys where account_id = $1`,
-      [account],
-    );
-    assert.equal(rows.length, which === "now has a" ? 1 : 0);
-  },
-);
-
-Then(
-  /^the key of the account "([^"]*)" in the backup database is the website's$/,
-  async function (this: SpecWorld, account: string) {
-    const [local] = await locally(
-      this,
-      `select key from account_keys where account_id = $1`,
-      [account],
-    );
-    const { rows } = await websiteOf(this).query<{ key: Buffer }>(
-      `select key from account_keys where account_id = $1`,
-      [account],
-    );
-    assert.ok(local !== undefined && rows[0] !== undefined, "No key.");
-    assert.equal(
-      Buffer.compare(local["key"] as Buffer, rows[0].key),
-      0,
-      "The keys are not the same.",
-    );
-  },
-);
+// How it went --------------------------------------------------------------
 
 Then("the backup exits with failure", function (this: SpecWorld) {
   assert.equal(backupOf(this).exitCode, 1);
@@ -529,215 +326,158 @@ Then("the backup exits with success", function (this: SpecWorld) {
   assert.equal(backupOf(this).exitCode, 0);
 });
 
-const said = (world: SpecWorld): string => backupOf(world).said.join("\n");
-
-Then(
-  /^the backup says it copied (\d+) (event|events|key|keys)$/,
-  function (this: SpecWorld, count: string, kind: string) {
-    const word = kind.startsWith("event") ? "event" : "key";
-    const words = Number(count) === 1 ? word : `${word}s`;
-    assert.ok(
-      said(this).includes(`Copied ${count} ${words}.`),
-      `It said: ${said(this)}`,
-    );
-  },
-);
-
-Then("the backup says it failed", function (this: SpecWorld) {
-  assert.ok(said(this).includes("The backup failed."), said(this));
-});
-
-Then("the backup says an administrator is needed", function (this: SpecWorld) {
-  assert.ok(said(this).includes("An administrator is needed"), said(this));
-});
-
-Then("the backup says the site key is needed", function (this: SpecWorld) {
-  assert.ok(said(this).includes("The site key is needed"), said(this));
-});
-
-Then(
-  "the backup says the website and the backup database are the same",
-  function (this: SpecWorld) {
-    assert.ok(said(this).includes("are the same database"), said(this));
-  },
-);
-
-Then(
-  "the backup says the read models were rebuilt",
-  function (this: SpecWorld) {
-    assert.ok(said(this).includes("The read models were rebuilt."), said(this));
-  },
-);
-
-Then(
-  "the backup says the administrator could not be told",
-  function (this: SpecWorld) {
-    assert.ok(
-      said(this).includes("The administrator could not be told"),
-      said(this),
-    );
-  },
-);
-
-// The failure, as the script says it on the screen.
-Then(
-  /^the failure says the event (\d+) of the stream "([^"]*)" is not the same in both$/,
-  function (this: SpecWorld, version: string, stream: string) {
-    assert.ok(
-      said(this).includes(
-        `The event ${version} of the stream ${stream} is not the same in both`,
-      ),
-      said(this),
-    );
-  },
-);
-
-// The read models ----------------------------------------------------------
-
-Then(
-  "the read models were rebuilt after the events were copied",
-  function (this: SpecWorld) {
-    const { happened } = backupOf(this);
-    assert.deepEqual(happened, ["copying", "rebuild"]);
-  },
-);
-
-Then(
-  "the read models of the backup database were rebuilt",
-  function (this: SpecWorld) {
-    assert.equal(backupOf(this).rebuilt, true);
-  },
-);
-
-Then(
-  "the email says the failure was that the backup database is not named",
-  function (this: SpecWorld) {
-    says(this, "The failure was that the backup database is not named.");
-  },
-);
-
-Then("the read models were not rebuilt", function (this: SpecWorld) {
-  assert.equal(backupOf(this).rebuilt, false);
-});
-
-// The website is only read, and is never turned off. The script is given no
-// way to turn it off, so what is asserted is that nothing in it did.
-Then("database access was never turned off", function (this: SpecWorld) {
-  assert.equal(backupOf(this).accessTurnedOff, false);
-});
-
-// The email ------------------------------------------------------------------
-
-const email = (
+const lastEmail = (
   world: SpecWorld,
 ): { to: string; subject: string; body: string } => {
-  const [first] = backupOf(world).emails;
-  assert.ok(first !== undefined, "No email was sent.");
-  return first;
+  const email = backupOf(world).emails.at(-1);
+  assert.ok(email !== undefined, "No email was sent.");
+  return email;
 };
 
-const says = (world: SpecWorld, text: string): void => {
-  assert.ok(
-    email(world).body.includes(text),
-    `The email says: ${email(world).body}`,
-  );
+const emailText = (world: SpecWorld): string => {
+  const email = lastEmail(world);
+  return `${email.subject}\n${email.body}`;
 };
+
+const saidOnTheScreen = (world: SpecWorld): string =>
+  backupOf(world).said.join("\n");
 
 Then("an email was sent to {string}", function (this: SpecWorld, to: string) {
-  assert.equal(email(this).to, to);
+  assert.equal(lastEmail(this).to, to);
 });
 
 Then("the email says the backup worked", function (this: SpecWorld) {
-  says(this, "The backup worked.");
+  assert.match(emailText(this), /The backup worked\./);
 });
 
 Then("the email says the backup failed", function (this: SpecWorld) {
-  says(this, "The backup failed.");
+  assert.match(emailText(this), /The backup failed\./);
 });
 
 Then(
-  /^the email says (\d+) (event was|events were|key was|keys were) copied$/,
-  function (this: SpecWorld, count: string, words: string) {
-    says(this, `${count} ${words} copied`);
-  },
-);
-
-Then("the email says the read models were rebuilt", function (this: SpecWorld) {
-  says(this, "The read models were rebuilt.");
-});
-
-Then(
-  /^the email says it took (\d+) minutes$/,
-  function (this: SpecWorld, minutes: string) {
-    says(this, `It took ${minutes} minutes.`);
+  "the email says the file is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.ok(emailText(this).includes(`The file is called ${name}.`));
   },
 );
 
 Then(
-  "the email says the failure was reading the website's events",
+  "the email says the file is {int} bytes",
+  function (this: SpecWorld, bytes: number) {
+    assert.ok(emailText(this).includes(`The file is ${String(bytes)} bytes.`));
+  },
+);
+
+Then(
+  "the email says it took {float} minutes",
+  function (this: SpecWorld, minutes: number) {
+    assert.ok(
+      emailText(this).includes(`It took ${minutes.toFixed(1)} minutes.`),
+    );
+  },
+);
+
+Then(
+  "the email says it took less than 0.1 minutes",
   function (this: SpecWorld) {
-    says(this, "The failure was reading the website's events.");
+    assert.ok(emailText(this).includes("It took less than 0.1 minutes."));
   },
 );
 
 Then(
-  "the email says the failure was copying the events",
+  "the email says the failure was making the dump",
   function (this: SpecWorld) {
-    says(this, "The failure was copying the events.");
-  },
-);
-
-Then(
-  "the email says the failure was rebuilding the read models",
-  function (this: SpecWorld) {
-    says(this, "The failure was rebuilding the read models.");
-  },
-);
-
-Then(
-  "the email says the failure was reaching the backup database",
-  function (this: SpecWorld) {
-    says(this, "The failure was reaching the backup database.");
+    assert.ok(emailText(this).includes("The failure was making the dump"));
   },
 );
 
 Then(
   "the email says the failure was that the website's database is not named",
   function (this: SpecWorld) {
-    says(this, "The failure was that the website's database is not named.");
+    assert.ok(
+      emailText(this).includes(
+        "The failure was that the website's database is not named.",
+      ),
+    );
   },
 );
 
 Then(
-  "the email says the failure was that the site key is not the website's",
+  "the email says the failure was that the folder is not named",
   function (this: SpecWorld) {
-    says(this, "The failure was that the site key is not the website's.");
+    assert.ok(
+      emailText(this).includes("The failure was that the folder is not named."),
+    );
   },
 );
 
 Then(
-  "the email says why the website could not be reached",
+  "the email says the failure was that the folder is not there",
   function (this: SpecWorld) {
-    assert.match(email(this).body, /Why: \S+/);
+    assert.ok(
+      emailText(this).includes("The failure was that the folder is not there."),
+    );
   },
 );
 
 Then(
-  "the email does not say the address of either database",
+  "the email says a file of that name was already there",
   function (this: SpecWorld) {
-    const { body } = email(this);
-    for (const hidden of [
-      urlOf(this),
-      A_REFUSED_ADDRESS,
-      "secret-word",
-      "127.0.0.1",
-    ]) {
-      assert.ok(!body.includes(hidden), `The email says ${hidden}: ${body}`);
-    }
+    assert.ok(
+      emailText(this).includes("a file of that name was already there"),
+    );
   },
 );
 
-Then("the email does not say the site key", function (this: SpecWorld) {
-  assert.ok(!email(this).body.includes(WEBSITES_SITE_KEY));
-  assert.ok(!email(this).body.includes(SOMETHING_ELSE));
+Then("the email says why: {string}", function (this: SpecWorld, why: string) {
+  assert.ok(emailText(this).includes(`Why: ${why}`));
 });
+
+Then(
+  "the email does not say the website's address",
+  function (this: SpecWorld) {
+    const text = emailText(this);
+    assert.ok(!text.includes("website.example"));
+    assert.ok(!text.includes(WEBSITES_ADDRESS));
+  },
+);
+
+Then(
+  "the email does not say the website's password",
+  function (this: SpecWorld) {
+    assert.ok(!emailText(this).includes("secret-word"));
+  },
+);
+
+// What it says on the screen -----------------------------------------------
+
+Then("the backup says it failed", function (this: SpecWorld) {
+  assert.match(saidOnTheScreen(this), /The backup failed\./);
+});
+
+Then("the backup says an administrator is needed", function (this: SpecWorld) {
+  assert.match(saidOnTheScreen(this), /An administrator is needed/);
+});
+
+Then(
+  "the backup says the file is called {string}",
+  function (this: SpecWorld, name: string) {
+    assert.ok(saidOnTheScreen(this).includes(`The file is called ${name}.`));
+  },
+);
+
+Then(
+  "the backup says the file is {int} bytes",
+  function (this: SpecWorld, bytes: number) {
+    assert.ok(
+      saidOnTheScreen(this).includes(`The file is ${String(bytes)} bytes.`),
+    );
+  },
+);
+
+Then(
+  "the backup says the administrator could not be told",
+  function (this: SpecWorld) {
+    assert.match(saidOnTheScreen(this), /The administrator could not be told/);
+  },
+);

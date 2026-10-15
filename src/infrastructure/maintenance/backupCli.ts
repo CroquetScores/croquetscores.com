@@ -1,37 +1,42 @@
-import { BackupRefused, type Copied } from "./PostgresBackup.js";
-
-/** What the script copies with. */
-export interface Copying {
-  copy(all: boolean): Promise<Copied>;
-}
+import { rename, rm, stat } from "node:fs/promises";
+import { join } from "node:path";
 
 export interface BackupOutcome {
   readonly exitCode: 0 | 1;
 }
 
+/**
+ * The tables the backup is of, and no other: the events, and the keys of the
+ * accounts that their personal parts are sealed with (backupCli.feature).
+ */
+export const TABLES_BACKED_UP: readonly string[] = ["events", "account_keys"];
+
 /** What the script is told, as its settings give it (Config.ts). */
 export interface BackupSettings {
   /** Who is told how it went. */
   readonly administrator: string | undefined;
-  /** The key the website's accounts' keys are sealed with. */
-  readonly siteKey: string | undefined;
+  /** The website's database, which is only read. */
   readonly websiteDatabase: string | undefined;
-  readonly backupDatabase: string | undefined;
+  /** The folder the copies are kept in. */
+  readonly folder: string | undefined;
+  /** The program that dumps, where it is not pg_dump of the computer's own. */
+  readonly program: string | undefined;
 }
 
 /** What the script is given of the world it runs in. */
 export interface BackupWorld {
   readonly settings: BackupSettings;
   /**
-   * Copies with the databases named, opened as it is asked to copy, so that
-   * one that cannot be reached is a failure of the copy and not of starting.
+   * Has `tables` of the website's database `database` dumped into `file`,
+   * by `program`. Throws, with what went wrong as its message, where it could
+   * not (pgDump.feature).
    */
-  readonly copying: (siteKey: string) => Copying;
-  /**
-   * Makes the read models of the backup database again, which is where the
-   * events were copied to (rebuildBackupReadModelsCli.feature).
-   */
-  readonly rebuild: () => Promise<void>;
+  readonly dump: (request: {
+    readonly database: string;
+    readonly file: string;
+    readonly tables: readonly string[];
+    readonly program: string | undefined;
+  }) => Promise<void>;
   /** Sends the email. Throws where it cannot. */
   readonly send: (email: {
     to: string;
@@ -44,11 +49,8 @@ export interface BackupWorld {
 
 const A_MINUTE = 60 * 1000;
 
-const plural = (count: number, one: string, many: string): string =>
-  `${String(count)} ${count === 1 ? one : many}`;
-
-// As the rebuild says how long it took: under a twentieth of a minute is not
-// "0.0 minutes", which says nothing was done.
+// Under a twentieth of a minute is not "0.0 minutes", which says nothing was
+// done.
 const tookSaid = (milliseconds: number): string => {
   if (milliseconds < 0.05 * A_MINUTE) return "less than 0.1 minutes";
   const minutes = milliseconds / A_MINUTE;
@@ -57,28 +59,40 @@ const tookSaid = (milliseconds: number): string => {
     : `${minutes.toFixed(1)} minutes`;
 };
 
-// Neither database's address or password is said anywhere, whatever the
-// failure's own words were: a connection that is refused names where it was
-// trying to reach.
-const withoutAddresses = (
-  text: string,
-  addresses: readonly (string | undefined)[],
-): string => {
+const twoDigits = (number: number): string => String(number).padStart(2, "0");
+
+/**
+ * What a dump made at `moment` is called, as 2026-10-13-10-00-00.dump. In UTC,
+ * so that the names sort in the order the files were made whatever the
+ * computer's own time does (backupCli.feature).
+ */
+export const dumpNameOf = (moment: Date): string =>
+  [
+    String(moment.getUTCFullYear()).padStart(4, "0"),
+    twoDigits(moment.getUTCMonth() + 1),
+    twoDigits(moment.getUTCDate()),
+    twoDigits(moment.getUTCHours()),
+    twoDigits(moment.getUTCMinutes()),
+    twoDigits(moment.getUTCSeconds()),
+  ].join("-") + ".dump";
+
+// Neither the database's address nor its password is said anywhere, whatever
+// the failure's own words were: a connection that is refused names where it
+// was trying to reach.
+const withoutAddress = (text: string, address: string | undefined): string => {
+  if (address === undefined || address === "") return text;
+  const hidden = new Set<string>([address]);
+  try {
+    const url = new URL(address);
+    for (const part of [url.password, url.host, url.hostname, url.username]) {
+      if (part !== "") hidden.add(decodeURIComponent(part));
+    }
+  } catch {
+    // Not an address, and so said as it is.
+  }
   let said = text;
-  for (const address of addresses) {
-    if (address === undefined || address === "") continue;
-    const hidden = new Set<string>([address]);
-    try {
-      const url = new URL(address);
-      for (const part of [url.password, url.host, url.hostname, url.username]) {
-        if (part !== "") hidden.add(decodeURIComponent(part));
-      }
-    } catch {
-      // Not an address, and so said as it is.
-    }
-    for (const part of [...hidden].sort((a, b) => b.length - a.length)) {
-      said = said.split(part).join("(a database)");
-    }
+  for (const part of [...hidden].sort((a, b) => b.length - a.length)) {
+    said = said.split(part).join("(a database)");
   }
   return said;
 };
@@ -88,31 +102,37 @@ const withoutAddresses = (
 const escaped = (text: string): string =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+const exists = async (path: string): Promise<boolean> => {
+  try {
+    await stat(path);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const isAFolder = async (path: string): Promise<boolean> => {
+  try {
+    return (await stat(path)).isDirectory();
+  } catch {
+    return false;
+  }
+};
+
 /**
  * The script's work, with the arguments as the command line gives them
- * (backupCli.feature): copies what the website has and the other database has
- * not, makes the read models again, and tells the administrator how it went.
+ * (backupCli.feature): has the events and the accounts' keys of the website's
+ * database dumped to a file of the folder, named for the moment it began, and
+ * tells the administrator how it went.
  */
 export const runBackup = async (
   args: readonly string[],
   world: BackupWorld,
 ): Promise<BackupOutcome> => {
   const { settings, now, say } = world;
-  const began = now().getTime();
-
-  let copied: Copied = { events: 0, keys: 0 };
-  const lines: string[] = [];
-  const addresses = [settings.websiteDatabase, settings.backupDatabase];
-  const safe = (text: string): string => withoutAddresses(text, addresses);
-  const siteKey = settings.siteKey;
-
-  // What was copied is said wherever it is known, in the email and on the
-  // screen alike, so that a task whose email did not come is read from its
-  // output.
-  const tell = (line: string): void => {
-    lines.push(line);
-    say(line);
-  };
+  const began = now();
+  const safe = (text: string): string =>
+    withoutAddress(text, settings.websiteDatabase);
 
   const tellTheAdministrator = async (
     worked: boolean,
@@ -123,7 +143,7 @@ export const runBackup = async (
     try {
       await world.send({
         to: administrator,
-        subject: `Backup of the website's events: ${worked ? "worked" : "failed"}`,
+        subject: `Backup of the website: ${worked ? "worked" : "failed"}`,
         body: paragraphs.map((each) => `<p>${escaped(each)}</p>`).join("\n"),
       });
     } catch (failure) {
@@ -147,7 +167,6 @@ export const runBackup = async (
       "The backup failed.",
       `The failure was ${step}.`,
       ...(reason === undefined ? [] : [`Why: ${reason}`]),
-      `${plural(copied.events, "event was", "events were")} copied and ${plural(copied.keys, "key was", "keys were")} copied.`,
     ]);
     // A failure, whether or not the administrator could be told of it.
     return { exitCode: 1 };
@@ -157,74 +176,67 @@ export const runBackup = async (
     say("An administrator is needed: ADMINISTRATOR_EMAIL_ADDRESS.");
     return { exitCode: 1 };
   }
-  if (args.length > 1 || (args.length === 1 && args[0] !== "--all")) {
-    say("Usage: db:backup [--all]");
+  if (args.length > 0) {
+    say("Usage: db:backup");
     return { exitCode: 1 };
   }
-  const all = args.length === 1;
-
-  if (siteKey === undefined || siteKey.trim() === "") {
-    say("The site key is needed: ACCOUNT_ENCRYPTION_KEY.");
-    return failed("that the site key is not named", undefined);
-  }
-  if (
-    settings.websiteDatabase === undefined ||
-    settings.websiteDatabase === ""
-  ) {
+  const { websiteDatabase, folder } = settings;
+  if (websiteDatabase === undefined || websiteDatabase === "") {
     return failed("that the website's database is not named", undefined);
   }
-  if (settings.backupDatabase === undefined || settings.backupDatabase === "") {
-    return failed("that the backup database is not named", undefined);
+  if (folder === undefined || folder === "") {
+    return failed("that the folder is not named", undefined);
   }
-  if (settings.websiteDatabase === settings.backupDatabase) {
-    say("The website and the backup database are the same database.");
+  // Not made where it is not there: a backup written to a folder that was
+  // made for it under the wrong drive's name, as a disk that was not plugged
+  // in, is a backup nobody will look for there.
+  if (!(await isAFolder(folder))) {
+    return failed("that the folder is not there", undefined);
+  }
+
+  const name = dumpNameOf(began);
+  const file = join(folder, name);
+  // A name of its own while it is made, so that the folder never holds half a
+  // copy under the name of a whole one.
+  const partial = `${file}.partial`;
+
+  if (await exists(file)) {
     return failed(
-      "that the website and the backup database are the same",
+      `making the dump, since a file of that name was already there: ${name}`,
       undefined,
     );
   }
 
   try {
-    copied = await world.copying(siteKey).copy(all);
+    await rm(partial, { force: true });
+    await world.dump({
+      database: websiteDatabase,
+      file: partial,
+      tables: TABLES_BACKED_UP,
+      program: settings.program,
+    });
+    await rename(partial, file);
   } catch (failure) {
-    if (failure instanceof BackupRefused) {
-      const step: Record<BackupRefused["code"], string> = {
-        "Backup.WebsiteUnreachable": "reading the website's events",
-        "Backup.BackupDatabaseUnreachable": "reaching the backup database",
-        "Backup.CouldNotCopy": "copying the events",
-        "Backup.SiteKeyIsNotTheWebsites":
-          "that the site key is not the website's",
-        "Backup.EventsDiffer": "copying the events",
-        "Backup.NumberTaken": "copying the events",
-      };
-      // The one thing the administrator is to be able to find in it: which
-      // event, as the failure says it.
-      return failed(step[failure.code], failure.message);
-    }
+    await rm(partial, { force: true });
     return failed(
-      "copying the events",
+      "making the dump",
       failure instanceof Error ? failure.message : String(failure),
     );
   }
-  tell(`Copied ${plural(copied.events, "event", "events")}.`);
-  tell(`Copied ${plural(copied.keys, "key", "keys")}.`);
 
-  try {
-    await world.rebuild();
-  } catch (failure) {
-    return failed(
-      "rebuilding the read models",
-      failure instanceof Error ? failure.message : String(failure),
-    );
-  }
-  tell("The read models were rebuilt.");
-
-  const took = tookSaid(now().getTime() - began);
+  const { size } = await stat(file);
+  const took = tookSaid(now().getTime() - began.getTime());
+  // What was written is said wherever it is known, in the email and on the
+  // screen alike, so that a task whose email did not come is read from its
+  // output.
+  say("The backup worked.");
+  say(`The file is called ${name}.`);
+  say(`The file is ${String(size)} bytes.`);
   say(`It took ${took}.`);
   return tellTheAdministrator(true, [
     "The backup worked.",
-    `${plural(copied.events, "event was", "events were")} copied and ${plural(copied.keys, "key was", "keys were")} copied.`,
-    "The read models were rebuilt.",
+    `The file is called ${name}.`,
+    `The file is ${String(size)} bytes.`,
     `It took ${took}.`,
   ]);
 };
