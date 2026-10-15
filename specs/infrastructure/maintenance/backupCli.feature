@@ -93,7 +93,7 @@ Feature: Backing up the website's events to a database on another machine
     Scenario: An event the local database has not is copied
       Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
-      Then the local database has the event 1 of the stream "tournament/spring"
+      Then the local database now has the event 1 of the stream "tournament/spring"
 
     Scenario: Every event the local database has not is copied
       Given the website has the event 1 of the stream "tournament/spring"
@@ -137,7 +137,7 @@ Feature: Backing up the website's events to a database on another machine
       And the backup is run
       And the website has the event 2 of the stream "tournament/spring"
       When the backup is run
-      Then the local database has the event 2 of the stream "tournament/spring"
+      Then the local database now has the event 2 of the stream "tournament/spring"
 
   Rule: An event is located by the number the database gave it
 
@@ -150,13 +150,13 @@ Feature: Backing up the website's events to a database on another machine
       Given the local database has the event 1 of the stream "tournament/old" numbered 10
       And the website has the event 1 of the stream "tournament/spring" numbered 11
       When the backup is run
-      Then the local database has the event 1 of the stream "tournament/spring"
+      Then the local database now has the event 1 of the stream "tournament/spring"
 
     Scenario: An event numbered before the highest, kept after it, is copied
       Given the local database has the event 1 of the stream "tournament/old" numbered 20
       And the website has the event 1 of the stream "tournament/spring" numbered 19
       When the backup is run
-      Then the local database has the event 1 of the stream "tournament/spring"
+      Then the local database now has the event 1 of the stream "tournament/spring"
 
     Scenario: Only what is within the last 10,000 numbers is looked for
       Given the local database has the event 1 of the stream "tournament/old" numbered 20000
@@ -168,7 +168,7 @@ Feature: Backing up the website's events to a database on another machine
       Given the local database has the event 1 of the stream "tournament/old" numbered 20000
       And the website has the event 1 of the stream "tournament/spring" numbered 1
       When the backup is run with "--all"
-      Then the local database has the event 1 of the stream "tournament/spring"
+      Then the local database now has the event 1 of the stream "tournament/spring"
 
     Scenario: An event of another number but the same stream and version is the same event
       Given the website has the event 1 of the stream "tournament/spring" numbered 5
@@ -187,7 +187,7 @@ Feature: Backing up the website's events to a database on another machine
     Scenario: A key the local database has not is copied
       Given the website has a key for the account "sam"
       When the backup is run
-      Then the local database has a key for the account "sam"
+      Then the local database now has a key for the account "sam"
 
     Scenario: A key is copied as it is
       Given the website has a key for the account "sam"
@@ -285,7 +285,7 @@ Feature: Backing up the website's events to a database on another machine
     Scenario: An event only the local database has is kept
       Given the local database has the event 1 of the stream "tournament/old"
       When the backup is run
-      Then the local database has the event 1 of the stream "tournament/old"
+      Then the local database now has the event 1 of the stream "tournament/old"
 
     Scenario: An event that is not the website's is not copied over
       Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
@@ -359,7 +359,7 @@ Feature: Backing up the website's events to a database on another machine
       Given the website has the event 1 of the stream "tournament/spring"
       And the read models cannot be rebuilt
       When the backup is run
-      Then the local database has the event 1 of the stream "tournament/spring"
+      Then the local database now has the event 1 of the stream "tournament/spring"
 
   Rule: The administrator is told how it went
 
@@ -477,7 +477,7 @@ Feature: Backing up the website's events to a database on another machine
       Given the website has the event 1 of the stream "tournament/spring"
       And email cannot be sent
       When the backup is run
-      Then the local database has the event 1 of the stream "tournament/spring"
+      Then the local database now has the event 1 of the stream "tournament/spring"
 
   Rule: It is told who to tell, and both databases, before it does anything
 
