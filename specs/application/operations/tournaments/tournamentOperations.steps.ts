@@ -271,6 +271,22 @@ Given(
   },
 );
 
+Given(
+  "{string} has moved the tournament {string} to start at {string} and finish at {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    starts: string,
+    finishes: string,
+  ) {
+    await updated(this, address, tournamentNamed(this, name), {
+      starts,
+      finishes,
+    });
+  },
+);
+
 // Something done to the tournament `name` as the account for `address`.
 const doneTo = async (
   world: SpecWorld,

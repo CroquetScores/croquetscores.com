@@ -11,24 +11,30 @@ Feature: A player's page lists the tournaments they have played in
 
   The page is headed by the player's name, as the tournament that started most
   recently wrote their world ranking name, and has a table of the tournaments
-  they have played in (`PlayerOfWebsite.feature`): one column, "Tournament",
-  with a row for each tournament, once, however many of its competitions they
-  are in. The tournament's name leads to the player's own page in that
-  tournament, at the tournament's address followed by "players" and the
-  player's slug there, as "/2026/ac/spring-open/players/sam-someone".
+  they have played in (`PlayerOfWebsite.feature`): two columns, "Date" and
+  "Tournament", with a row for each tournament, once, however many of its
+  competitions they are in. The date is the days the tournament runs, written
+  as the home page's lists write them with the year after, as "03-05 Oct 2026",
+  since a player's tournaments are of several years. The tournament's name
+  leads to the player's own page in that tournament, at the tournament's
+  address followed by "players" and the player's slug there, as
+  "/2026/ac/spring-open/players/sam-someone".
 
-  The rows are in the order of their tournaments, the one that started most
-  recently first. That is the order the page has until the reader asks for
-  another.
-
-  The heading is a link that sorts the table by tournament name, as
-  "/players/sam-someone?sort=tournament&order=asc": a form of the page's own,
-  so that it needs no scripting and can be kept or sent. Pressing it sorts
-  from A to Z; pressing it again sorts from Z to A. Names are put in order by
-  their letters with case and accents set aside. The heading says which way the
-  table is sorted, to a reader who cannot see it. The order the page begins with
-  is the page's own address, with no sort. A sort or an order the page does
-  not have is that order, and is not a page that is not there.
+  The rows begin with the tournament that started most recently first, which
+  is the table sorted by its dates from the newest to the oldest, and says so.
+  The headings are links that sort the table, as
+  "/players/sam-someone?sort=tournament&order=asc" and
+  "/players/sam-someone?sort=date&order=asc": forms of the page's own, so that
+  they need no scripting and can be kept or sent. A heading the table is not
+  sorted by sorts it its way first: Tournament from A to Z, and Date from the
+  newest to the oldest. The heading the table is sorted by sorts it the other
+  way. Names are put in order by their letters with case and accents set
+  aside; tournaments are put in order by the day they start and then by the
+  day they finish. The headings say which way the table is sorted, to a reader
+  who cannot see it, and show an arrow beside the one it is sorted by. The
+  order the page begins with is the page's own address, with no sort. A sort
+  the page does not have is that order, and is not a page that is not there. An
+  order that is not one is ascending.
 
   A slug is the same in any case, since a link that is typed or shared is not
   always written as the slug is.
@@ -84,9 +90,9 @@ Feature: A player's page lists the tournaments they have played in
 
   Rule: The table has a row for each tournament, once
 
-    Scenario: The one column is the tournament
+    Scenario: The columns are the date and the tournament
       When the page at "/players/sam-someone" is opened
-      Then the table's heading is "Tournament"
+      Then the table's headings are "Date" and "Tournament"
 
     Scenario: A tournament is a row
       When the page at "/players/sam-someone" is opened
@@ -115,9 +121,31 @@ Feature: A player's page lists the tournaments they have played in
       When the page at "/players/sam-someone" is opened
       Then there is not a row of "Autumn Open"
 
-    Scenario: Nothing but the tournament's name is in a row
+    Scenario: Nothing but the dates and the tournament's name is in a row
       When the page at "/players/sam-someone" is opened
-      Then the first row says nothing but "Spring Open"
+      Then the first row says nothing but its dates and "Spring Open"
+
+  Rule: Each tournament is dated by the days it runs
+
+    Scenario: A tournament is dated by its days and the year
+      When the page at "/players/sam-someone" is opened
+      Then the first row is dated "03-05 Oct 2026"
+
+    Scenario: A tournament of one day is dated by that day
+      Given the tournament is to start at "2027-03-20T00:00:00Z"
+      And the tournament is to finish at "2027-03-20T00:00:00Z"
+      And "organiser@example.com" has created the tournament "One Day Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "One Day Open"
+      When the page at "/players/sam-someone" is opened
+      Then the first row is dated "20 Mar 2027"
+
+    Scenario: A tournament over a new year is dated by both years
+      Given the tournament is to start at "2026-12-30T00:00:00Z"
+      And the tournament is to finish at "2027-01-02T00:00:00Z"
+      And "organiser@example.com" has created the tournament "New Year Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "New Year Open"
+      When the page at "/players/sam-someone" is opened
+      Then the first row is dated "30 Dec 2026-02 Jan 2027"
 
   Rule: The tournament leads to the player's page in it
 
@@ -148,11 +176,15 @@ Feature: A player's page lists the tournaments they have played in
       Then the first row is "Autumn Open"
       And the second row is "Spring Open"
 
-    Scenario: The order the page begins with is not said to be a sort of the name
+    Scenario: The order the page begins with is said to be the dates, newest first
       When the page at "/players/sam-someone" is opened
-      Then the table is not said to be sorted
+      Then the table is sorted by "Date", from newest to oldest
 
-  Rule: The heading sorts the table by tournament name
+    Scenario: The heading of the dates leads to oldest first
+      When the page at "/players/sam-someone" is opened
+      Then the heading "Date" leads to "/players/sam-someone?sort=date&order=asc"
+
+  Rule: The headings sort the table
 
     Background:
       Given the tournament is to start at "2027-03-20T00:00:00Z"
@@ -183,12 +215,46 @@ Feature: A player's page lists the tournaments they have played in
       When the heading "Tournament" is pressed
       Then the table is sorted by "Tournament", from Z to A
 
+    Scenario: Pressing Date, which it begins sorted by, sorts it oldest first
+      Given the page at "/players/sam-someone" is opened
+      When the heading "Date" is pressed
+      Then the first row is "Spring Open"
+      And the second row is "Zed Open"
+
+    Scenario: Pressing Date says it is sorted from oldest to newest
+      Given the page at "/players/sam-someone" is opened
+      When the heading "Date" is pressed
+      Then the table is sorted by "Date", from oldest to newest
+
+    Scenario: Pressing Date again sorts it newest first
+      Given the page at "/players/sam-someone" is opened
+      And the heading "Date" is pressed
+      When the heading "Date" is pressed
+      Then the first row is "Zed Open"
+      And the second row is "Spring Open"
+
+    Scenario: Pressing Date after Tournament sorts it newest first
+      Given the page at "/players/sam-someone?sort=tournament&order=asc" is opened
+      When the heading "Date" is pressed
+      Then the table is sorted by "Date", from newest to oldest
+
     Scenario: Names are put in order without their case
       Given "organiser@example.com" has created the tournament "alpha Open"
       And "organiser@example.com" has added the player "Sam Someone" to "alpha Open"
       And the page at "/players/sam-someone" is opened
       When the heading "Tournament" is pressed
       Then the first row is "alpha Open"
+
+    Scenario: Tournaments that start alike are put in order by when they finish
+      Given the tournament is to finish at "2027-03-25T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Long Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Long Open"
+      And the tournament is to finish at "2027-03-21T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Short Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Short Open"
+      When the page at "/players/sam-someone?sort=date&order=asc" is opened
+      Then the third row is "Short Open"
+      And the fourth row is "Long Open"
 
     Scenario: The heading is a link of the page's own
       When the page at "/players/sam-someone" is opened
@@ -197,6 +263,10 @@ Feature: A player's page lists the tournaments they have played in
     Scenario: The heading the table is sorted by leads to the other way
       When the page at "/players/sam-someone?sort=tournament&order=asc" is opened
       Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=desc"
+
+    Scenario: A heading the table is not sorted by leads to the way it is sorted first
+      When the page at "/players/sam-someone?sort=tournament&order=asc" is opened
+      Then the heading "Date" leads to "/players/sam-someone?sort=date&order=desc"
 
     Scenario: A sort is kept in the address
       When the page at "/players/sam-someone?sort=tournament&order=desc" is opened

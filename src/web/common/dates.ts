@@ -40,3 +40,21 @@ export const dated = (
  */
 export const dayWritten = (day: string, language: string): string =>
   dated(day, day, language);
+
+/**
+ * The days from `starts` to `finishes` with their year, as "03-05 Oct 2026" or
+ * "30 Dec 2027-02 Jan 2028", for a list that is of tournaments of more than one
+ * year, where the home page's lists are of one.
+ */
+export const datedWithYear = (
+  starts: string,
+  finishes: string,
+  language: string,
+): string => {
+  const startYear = starts.slice(0, 4);
+  const finishYear = finishes.slice(0, 4);
+  if (startYear === finishYear) {
+    return `${dated(starts, finishes, language)} ${finishYear}`;
+  }
+  return `${dayWritten(starts, language)} ${startYear}-${dayWritten(finishes, language)} ${finishYear}`;
+};

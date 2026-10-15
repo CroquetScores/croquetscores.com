@@ -61,6 +61,20 @@ const named = (world: SpecWorld, name: string) =>
   player(world).tournaments.find((each) => each.name === name);
 
 Then(
+  "the player's tournament {string} starts on {string}",
+  function (this: SpecWorld, tournament: string, day: string) {
+    assert.equal(named(this, tournament)?.starts, day);
+  },
+);
+
+Then(
+  "the player's tournament {string} finishes on {string}",
+  function (this: SpecWorld, tournament: string, day: string) {
+    assert.equal(named(this, tournament)?.finishes, day);
+  },
+);
+
+Then(
   "the player is in the tournament {string}",
   function (this: SpecWorld, tournament: string) {
     assert.ok(
