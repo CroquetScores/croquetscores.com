@@ -212,7 +212,7 @@ Feature: Restoring the website's events and accounts' keys from a backup file
         | name             |
         | has a space      |
         | semi;colon       |
-        | quote"d          |
+        | single'quote     |
         | dot.ted          |
         | back\slash       |
 
