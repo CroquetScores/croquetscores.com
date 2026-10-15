@@ -44,6 +44,7 @@ Feature: A reader can see what the site keeps about them
   Rule: The statement says who to ask
 
     Scenario: The administrator is named, as a link to send them email
+      Given the site is told its administrator is "administrator@example.com"
       When the privacy statement is opened
       Then the statement links to send email to the administrator
 
