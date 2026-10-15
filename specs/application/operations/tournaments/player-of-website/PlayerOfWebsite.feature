@@ -12,8 +12,8 @@ Feature: A player of the website, with the tournaments they have played in
   tournaments is one player, and is answered with all of them. The name is the
   world ranking name as the tournament that started most recently wrote it.
 
-  Each tournament is answered once, with its name, where it is found, and
-  where the player's own page in it is found, which is the
+  Each tournament is answered once, with its name, the days it runs, where it
+  is found, and where the player's own page in it is found, which is the
   tournament's address followed by "players" and their slug there
   (`addPlayer.feature`), so that the page can lead to it. How many of its
   competitions the player is in does not matter and is not answered: a
@@ -81,6 +81,20 @@ Feature: A player of the website, with the tournaments they have played in
     Scenario: A tournament is answered with where it is found
       When the player "sam-someone" of the website is asked for
       Then the player's tournament "Spring Open" is found at the address "2026/ac/spring-open"
+
+    Scenario: A tournament is answered with the day it starts
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" starts on "2026-09-20"
+
+    Scenario: A tournament is answered with the day it finishes
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" finishes on "2026-10-04"
+
+    Scenario: A tournament moved to other days is answered with them
+      Given "organiser@example.com" has moved the tournament "Spring Open" to start at "2026-11-01T00:00:00Z" and finish at "2026-11-03T00:00:00Z"
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" starts on "2026-11-01"
+      And the player's tournament "Spring Open" finishes on "2026-11-03"
 
     Scenario: A tournament is answered with where the player's page in it is
       When the player "sam-someone" of the website is asked for

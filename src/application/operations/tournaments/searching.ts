@@ -74,6 +74,10 @@ export interface CompetitionFound {
 /** A tournament a player is in, as their page lists it and leads to it. */
 export interface PlayerTournament {
   readonly name: string;
+  /** The day it starts, as "2026-10-03". */
+  readonly starts: string;
+  /** The day it finishes, as "2026-10-05". */
+  readonly finishes: string;
   /** Where it is found, as "2026/ac/spring-open". */
   readonly address: string;
   /** Where the player's own page in it is, as "2026/ac/spring-open/players/sam-someone". */

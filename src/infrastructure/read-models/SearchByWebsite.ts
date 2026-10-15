@@ -215,11 +215,15 @@ export class SearchByWebsite implements Projection, Asked {
     const { rows } = await this.unitOfWork.connection().query<{
       name: string;
       tournament_name: string;
+      starts: string;
+      finishes: string;
       address: string;
       player_slug: string;
     }>(
       `select distinct on (t.starts, t.tournament_id)
               p.world_ranking_name as name, t.name as tournament_name,
+              to_char(t.starts, 'YYYY-MM-DD') as starts,
+              to_char(t.finishes, 'YYYY-MM-DD') as finishes,
               t.address, p.slug as player_slug
          from search_by_website_players p
          join search_by_website_tournaments t
@@ -234,6 +238,8 @@ export class SearchByWebsite implements Projection, Asked {
     if (first === undefined) return undefined;
     const tournaments: PlayerTournament[] = rows.map((row) => ({
       name: row.tournament_name,
+      starts: row.starts,
+      finishes: row.finishes,
       address: row.address,
       playerAddress: `${row.address}/players/${row.player_slug}`,
     }));
@@ -247,11 +253,13 @@ export class SearchByWebsite implements Projection, Asked {
     if (event instanceof TournamentCreated) {
       await connection.query(
         `insert into search_by_website_tournaments
-           (tournament_id, website, name, folded_name, address, starts)
-         values ($1, $2, $3, $4, $5, $6)
+           (tournament_id, website, name, folded_name, address, starts,
+            finishes)
+         values ($1, $2, $3, $4, $5, $6, $7)
          on conflict (tournament_id) do update
            set name = excluded.name, folded_name = excluded.folded_name,
-               address = excluded.address, starts = excluded.starts`,
+               address = excluded.address, starts = excluded.starts,
+               finishes = excluded.finishes`,
         [
           stream,
           event.website,
@@ -259,12 +267,14 @@ export class SearchByWebsite implements Projection, Asked {
           foldedForSearch(event.name),
           event.address,
           event.starts,
+          event.finishes,
         ],
       );
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
         `update search_by_website_tournaments
-            set name = $2, folded_name = $3, address = $4, starts = $5
+            set name = $2, folded_name = $3, address = $4, starts = $5,
+                finishes = $6
           where tournament_id = $1`,
         [
           stream,
@@ -272,6 +282,7 @@ export class SearchByWebsite implements Projection, Asked {
           foldedForSearch(event.name),
           event.address,
           event.starts,
+          event.finishes,
         ],
       );
     } else if (event instanceof TournamentArchived) {
