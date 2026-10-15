@@ -24,7 +24,7 @@ export interface RebuildReadModelsWorld {
   readonly say: (line: string) => void;
 }
 
-const AN_UPDATE_EVERY = 10 * 1000;
+export const AN_UPDATE_EVERY = 10 * 1000;
 // Minutes added to what is estimated to be left, when the site is told when it
 // is expected back.
 const IN_HAND = 5;
@@ -39,13 +39,13 @@ const FOR_THE_SITE_TO_NOTICE = 1000;
 // done.
 const UNDER_A_TENTH = 0.05 * A_MINUTE;
 
-const commas = (count: number): string => count.toLocaleString("en-US");
+export const commas = (count: number): string => count.toLocaleString("en-US");
 
-const streamsSaid = (count: number): string =>
+export const streamsSaid = (count: number): string =>
   `${commas(count)} stream${count === 1 ? "" : "s"}`;
 
 // Minutes, to three decimal places and with commas, as the estimate is said.
-const minutesLeftSaid = (milliseconds: number): string =>
+export const minutesLeftSaid = (milliseconds: number): string =>
   (milliseconds / A_MINUTE).toLocaleString("en-US", {
     minimumFractionDigits: 3,
     maximumFractionDigits: 3,
@@ -57,7 +57,7 @@ const minutesLeftSaid = (milliseconds: number): string =>
 const wholeMinutesLeft = (milliseconds: number): number =>
   Math.max(1, Math.ceil(milliseconds / A_MINUTE));
 
-const tookSaid = (milliseconds: number): string =>
+export const tookSaid = (milliseconds: number): string =>
   milliseconds < UNDER_A_TENTH
     ? "less than 0.1 minutes"
     : `${(milliseconds / A_MINUTE).toFixed(1)} minutes`;
@@ -178,7 +178,7 @@ export const runRebuildReadModels = async (
   return { exitCode: (await turnedOn(access, say)) ? 0 : 1 };
 };
 
-const failureSaid = (failure: unknown): string =>
+export const failureSaid = (failure: unknown): string =>
   failure instanceof Error ? failure.message : String(failure);
 
 // Turns access on and says so, or says it could not be and how to, rather than

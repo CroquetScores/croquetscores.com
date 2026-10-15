@@ -25,7 +25,7 @@ The events hold names and email addresses sealed with a key of each account's ow
 
 1. Reads the website's database. It never changes it, and does not turn the website off.
 2. Copies the events the website has and the backup database has not, **in one transaction**, with the accounts' keys. If anything goes wrong nothing is copied, and the next run copies it all.
-3. Makes the backup database's read models again (`npm run db:rebuild-read-models -- --minutes 20`).
+3. Makes the backup database's read models again (`npm run db:rebuild-backup-read-models`), which turns nothing off and is not the site's own rebuild.
 4. Emails `ADMINISTRATOR_EMAIL_ADDRESS` how it went: that it worked, and how many events and keys were copied and how long it took, or which step failed and why.
 
 It exits with failure whenever anything failed, so the scheduler can show it, and says on the screen what the email says.
@@ -103,7 +103,7 @@ The email, and the screen, say which step failed and why.
 | reaching the backup database             | The computer's own Postgres is not running. `npm run db:up`                                                                                                    |
 | copying the events                       | Read the reason. Nothing was copied. If it says an event **is not the same in both**, or **a number is another event's**, **stop and do not force it** (below) |
 | that the site key is not the website's   | `ACCOUNT_ENCRYPTION_KEY` here is not the website's. Fix `.env`. The website may have had its key changed (`db:change-site-key`): see §4                        |
-| rebuilding the read models               | The events and keys were copied; only the read models are behind. Run `npm run db:rebuild-read-models -- --minutes 20` by hand and read what it says           |
+| rebuilding the read models               | The events and keys were copied; only the read models are behind. Run `npm run db:rebuild-backup-read-models` by hand and read what it says                    |
 | that the backup database is not named    | `BACKUP_DATABASE_URL` is blank                                                                                                                                 |
 | that the website's database is not named | `WEBSITE_DATABASE_URL` is blank                                                                                                                                |
 

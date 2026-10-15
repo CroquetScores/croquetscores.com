@@ -19,21 +19,14 @@ import { ReadOnlyDate } from "../src/domain/common/ReadOnlyDate.js";
 import { buildApplication } from "../src/web/server.js";
 
 // Run as the package script is, so that the rebuild is the one the
-// administrator would run by hand, with its own words and its own switch.
-// Of the backup database, which is what the rebuild rebuilds whatever
-// DATABASE_URL is: it is given that as its own, and a setting already in the
-// environment is not replaced by the file the rebuild reads.
-const rebuild = (minutes, database) =>
+// administrator would run by hand, with its own words. It is of the backup
+// database, and does not turn the site's database access off.
+const rebuild = () =>
   new Promise((resolve, reject) => {
-    const child = spawn(
-      "npm",
-      ["run", "db:rebuild-read-models", "--", "--minutes", String(minutes)],
-      {
-        shell: true,
-        stdio: ["ignore", "pipe", "pipe"],
-        env: { ...process.env, DATABASE_URL: database },
-      },
-    );
+    const child = spawn("npm", ["run", "db:rebuild-backup-read-models"], {
+      shell: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     let said = "";
     child.stdout.on("data", (chunk) => {
       said += chunk;

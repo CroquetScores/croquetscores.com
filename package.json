@@ -22,6 +22,7 @@
     "db:drop-tables": "tsx src/infrastructure/database/drop-tables-cli.ts",
     "db:rebuild-read-models": "tsx scripts/rebuild-read-models.mjs",
     "db:backup": "tsx scripts/backup.mjs",
+    "db:rebuild-backup-read-models": "tsx scripts/rebuild-backup-read-models.mjs",
     "db:create-container": "tsx scripts/create-postgres-container.mjs",
     "db:change-site-key": "tsx scripts/change-site-key.mjs",
     "db:access": "tsx scripts/database-access.mjs",

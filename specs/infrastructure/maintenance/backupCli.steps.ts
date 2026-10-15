@@ -39,8 +39,7 @@ interface Backup {
   readonly happened: string[];
   readonly said: string[];
   readonly emails: { to: string; subject: string; body: string }[];
-  rebuiltFor: number | undefined;
-  rebuiltDatabase: string | undefined;
+  rebuilt: boolean;
   backupNamed: boolean;
   accessTurnedOff: boolean;
   exitCode: 0 | 1 | undefined;
@@ -64,8 +63,7 @@ const backupOf = (world: SpecWorld): Backup => {
       happened: [],
       said: [],
       emails: [],
-      rebuiltFor: undefined,
-      rebuiltDatabase: undefined,
+      rebuilt: false,
       backupNamed: true,
       accessTurnedOff: false,
       exitCode: undefined,
@@ -364,10 +362,9 @@ const run = async (
         siteKeyMarkOf(siteKey),
       );
     },
-    rebuild: (minutes, database) => {
+    rebuild: () => {
       backup.happened.push("rebuild");
-      backup.rebuiltFor = minutes;
-      backup.rebuiltDatabase = database;
+      backup.rebuilt = true;
       clock += backup.takes * 60 * 1000;
       if (backup.rebuildFails) {
         return Promise.reject(new Error("The rebuild was refused."));
@@ -598,13 +595,6 @@ Then(
 // The read models ----------------------------------------------------------
 
 Then(
-  /^the read models were rebuilt, expected to take (\d+) minutes$/,
-  function (this: SpecWorld, minutes: string) {
-    assert.equal(backupOf(this).rebuiltFor, Number(minutes));
-  },
-);
-
-Then(
   "the read models were rebuilt after the events were copied",
   function (this: SpecWorld) {
     const { happened } = backupOf(this);
@@ -615,7 +605,7 @@ Then(
 Then(
   "the read models of the backup database were rebuilt",
   function (this: SpecWorld) {
-    assert.equal(backupOf(this).rebuiltDatabase, urlOf(this));
+    assert.equal(backupOf(this).rebuilt, true);
   },
 );
 
@@ -627,7 +617,7 @@ Then(
 );
 
 Then("the read models were not rebuilt", function (this: SpecWorld) {
-  assert.equal(backupOf(this).rebuiltFor, undefined);
+  assert.equal(backupOf(this).rebuilt, false);
 });
 
 // The website is only read, and is never turned off. The script is given no

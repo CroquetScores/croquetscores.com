@@ -1,8 +1,5 @@
 import { BackupRefused, type Copied } from "./PostgresBackup.js";
 
-/** How long the read models are expected to take to be made again. */
-export const REBUILD_MINUTES = 20;
-
 /** What the script copies with. */
 export interface Copying {
   copy(all: boolean): Promise<Copied>;
@@ -31,10 +28,10 @@ export interface BackupWorld {
    */
   readonly copying: (siteKey: string) => Copying;
   /**
-   * Makes the read models of `database` again, expected to take `minutes`:
-   * the backup database's, which is where the events were copied to.
+   * Makes the read models of the backup database again, which is where the
+   * events were copied to (rebuildBackupReadModelsCli.feature).
    */
-  readonly rebuild: (minutes: number, database: string) => Promise<void>;
+  readonly rebuild: () => Promise<void>;
   /** Sends the email. Throws where it cannot. */
   readonly send: (email: {
     to: string;
@@ -213,7 +210,7 @@ export const runBackup = async (
   tell(`Copied ${plural(copied.keys, "key", "keys")}.`);
 
   try {
-    await world.rebuild(REBUILD_MINUTES, settings.backupDatabase);
+    await world.rebuild();
   } catch (failure) {
     return failed(
       "rebuilding the read models",

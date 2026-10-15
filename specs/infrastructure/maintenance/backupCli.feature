@@ -57,10 +57,12 @@ Feature: Backing up the website's events to a database on another machine
   After the events and the keys are copied the read models of the computer's
   database are made again, by running
 
-      npm run db:rebuild-read-models -- --minutes 20
+      npm run db:rebuild-backup-read-models
 
-  as the rebuild is run (`rebuildReadModelsCli.feature`), so that the copy can
-  be looked at and not only restored. It is run every time the events were
+  (`rebuildBackupReadModelsCli.feature`), so that the copy can be looked at
+  and not only restored. It is the rebuild of the backup database, which turns
+  nothing off: the site's own (`rebuildReadModelsCli.feature`) would turn off
+  access for whatever site is running on this computer. It is run every time the events were
   copied, and also when there were none to copy, since a run that copied
   events and then failed to rebuild them would otherwise leave the read models
   behind until the website next had an event to copy. It is not run where the
@@ -330,11 +332,6 @@ Feature: Backing up the website's events to a database on another machine
 
   Rule: The read models are made again after the events are copied
 
-    Scenario: The read models are rebuilt for 20 minutes
-      Given the website has the event 1 of the stream "tournament/spring"
-      When the backup is run
-      Then the read models were rebuilt, expected to take 20 minutes
-
     Scenario: The read models rebuilt are the backup database's
       Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
@@ -347,7 +344,7 @@ Feature: Backing up the website's events to a database on another machine
 
     Scenario: The read models are rebuilt where there were no events to copy
       When the backup is run
-      Then the read models were rebuilt, expected to take 20 minutes
+      Then the read models of the backup database were rebuilt
 
     Scenario: The read models are not rebuilt where the events could not be copied
       Given the website has the event 1 of the stream "tournament/spring"
