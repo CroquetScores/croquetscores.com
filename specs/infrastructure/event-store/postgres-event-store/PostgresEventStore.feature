@@ -194,3 +194,27 @@ Feature: Keeping events in Postgres
       And the stream is read back
       Then the third event is "raced"
       And there are no more events
+
+  Rule: Each event is given a number by the database, in the order it was kept
+
+    A stream and a version say which event it is, and say nothing of where it
+    is among every event the store has. A number the database gives each event
+    as it is kept, which only goes up, does: somebody who has read as far as
+    a number can ask for what came after it, without comparing every stream.
+    It is the database's, and not the store's, so that it is given in whatever
+    order the events are really kept in, whichever process kept them.
+
+    Scenario: An event kept is given a number
+      Given an event store in Postgres
+      And a stream nobody has written to
+      And an event called "opened"
+      When the events are appended expecting version 0
+      Then the first event of the stream is numbered
+
+    Scenario: Events are numbered in the order they were kept
+      Given an event store in Postgres
+      And a stream nobody has written to
+      And an event called "opened"
+      And an event of the other kind called "moved"
+      When the events are appended expecting version 0
+      Then the second event of the stream is numbered after the first
