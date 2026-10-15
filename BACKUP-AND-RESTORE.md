@@ -122,12 +122,25 @@ What you need: the copy (the backup database), the two keys of §4, and a Postgr
    pg_dump --format=custom --file=website-copy.dump "$BACKUP_DATABASE_URL"
    ```
 
+Or if running Postgres in Docker then:
+
+```bash
+docker exec -it croquetscores pg_dump --format=custom --file=website-copy.dump "$BACKUP_DATABASE_URL"
+```
+
 3. **Make the new database** and restore into it, under the name the new website's `DATABASE_URL` will give it (step 4):
 
    ```bash
    createdb <database-name>
    pg_restore --no-owner --dbname=<database-name> website-copy.dump
    ```
+
+Or if running Postgres in Docker then:
+
+```bash
+docker exec -it croquetscores createdb -U postgres <database-name>
+docker exec -it croquetscores pg_restore -U postgres --no-owner --dbname=<database-name> website-copy.dump
+```
 
 4. **Settings of the new website.** In its `.env` or environment: `DATABASE_URL` the new database, and `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` the same as the lost website's, as kept in §4. The others as the deployment needs.
 5. **Migrate**, so that the database is at the migrations the code expects: `npm run db:migrate`.
