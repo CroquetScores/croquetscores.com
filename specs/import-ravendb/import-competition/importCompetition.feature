@@ -226,6 +226,42 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
 
+    Scenario: Two players the tournament did not list of one name are one player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
+
+    Scenario: The second of two of one name is kept as the same player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then player 10 of "tournaments/12" on "croquetscores.com" is kept as "Pat Missing"
+
+    Scenario: Two of one name are entered in the competition once
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 1 player
+
+    Scenario: Entering the second of two of one name is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
     Scenario: Bringing over a player the tournament did not list is not an error
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition

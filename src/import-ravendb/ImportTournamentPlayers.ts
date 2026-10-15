@@ -43,6 +43,14 @@ export const flagOf = (representing: string | null): string | undefined => {
  * any the tournament's players have, and flying the flag of whatever they
  * represent. The player's id, or the refusal thrown where the site refuses
  * them.
+ *
+ * A player whose name is exactly the name one of the tournament's players
+ * has is that player and is not added again, as a team's player of a name the
+ * team has is (ImportTeamMatches.feature): the old sites could list one
+ * person more than once, and told them apart by what they represented, which
+ * the site does not. The first of them stays as they were. Only the name
+ * as it is kept is compared, so a name another case, or numbered apart
+ * before, is not found and is numbered apart as it was.
  */
 export const addOldPlayer = (
   tournament: Tournament,
@@ -50,9 +58,15 @@ export const addOldPlayer = (
   by: AccountId,
   at: ReadOnlyDate,
 ): TournamentPlayerId => {
+  const imported = nameToImport(player.Name);
+  const already = tournament.players.find(
+    (each) => each.name.toString() === imported,
+  );
+  if (already !== undefined) return already.id;
+
   const playerId = TournamentPlayerId.create();
   const name = numberedApart(
-    nameToImport(player.Name),
+    imported,
     tournament.players.map((each) => each.name.toString()),
   );
   tournament.addPlayer(

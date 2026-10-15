@@ -844,6 +844,8 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const competition = Competition.rebuiltFrom(competitionId, []);
     const told = toldOf(tournament, competitionId);
     const entered = new Map<number, CompetitionPlayerId>();
+    // The same, by the tournament's player each became.
+    const enteredAs = new Map<string, CompetitionPlayerId>();
     // Each player who withdrew, by the number the old sites gave them.
     const withdrew = new Map<number, CompetitionPlayerId>();
 
@@ -868,6 +870,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
             "The player was not brought over to the tournament.",
           );
         }
+        // Another number of a player already entered is that player: the old
+        // sites could list one person twice, and the tournament's players
+        // take players of exactly one name as one (addOldPlayer).
+        const again = enteredAs.get(became);
+        if (again !== undefined) {
+          entered.set(player._Id, again);
+          continue;
+        }
         const playerId = competition.enterPlayer(
           TournamentPlayerId.from(became),
           CompetitionPlayer.orderAfter(competition.players),
@@ -875,6 +885,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
           by,
           at,
         );
+        enteredAs.set(became, playerId);
         entered.set(player._Id, playerId);
         if (player.IsWithdrawn) withdrew.set(player._Id, playerId);
         // A player whose counts were all 0 carried nothing: the old sites

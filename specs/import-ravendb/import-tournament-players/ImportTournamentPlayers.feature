@@ -234,46 +234,83 @@ Feature: Importing the players of the old sites' tournaments
       When the players are imported
       Then "Sam Someone (NZ)" in the tournament kept for "tournaments/14" on "croquetscores.com" has the world ranking name "Sam Someone"
 
-  Rule: Two players with the same name are told apart by a number
+  Rule: Players of exactly one name are one player
 
     The old sites told players apart by their name and what they
-    represented together, so two players of one name representing different
-    clubs were two players. The site tells them apart by name alone, in any
-    case. So the second player of a name is given the name followed by "(2)",
-    the third by "(3)", and so on, and a manager can name them better.
+    represented together, and a tournament's list could hold one person
+    more than once: the same name entered again, often for another club. The
+    site tells players apart by name alone, and a tournament played by teams
+    already takes a name a team has again as the player it was
+    (`ImportTeamMatches.feature`). So players whose names are exactly the same
+    are one player, the first of them, and every number the old site gave
+    them is kept as that one player. What the first represented is what the
+    player represents.
 
-    Scenario: The first player of a name keeps it
+    A name in another case, or with a number in brackets after it, is not
+    exactly the same name. The site refuses a name another player has in any
+    case, so the second player of a name in another case is given the name
+    followed by "(2)", the third by "(3)", and so on, and a manager can name
+    them better.
+
+    Scenario: Two players of one name are one player
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
       And player 1 is called "Sam Someone"
-      And player 1 represents "Canterbury"
       And player 2 is called "Sam Someone"
-      And player 2 represents "Otago"
+      When the players are imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 player
+
+    Scenario: The first number is kept as the player
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "Sam Someone"
       When the players are imported
       Then player 1 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone"
 
-    Scenario: The second player of a name is numbered
+    Scenario: The second number is kept as the same player
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "Sam Someone"
+      When the players are imported
+      Then player 2 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone"
+
+    Scenario: Players of one name representing different clubs are one player
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
       And player 1 is called "Sam Someone"
       And player 1 represents "Canterbury"
       And player 2 is called "Sam Someone"
       And player 2 represents "Otago"
       When the players are imported
-      Then player 2 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone (2)"
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
 
-    Scenario: A player of a name in another case is numbered
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      And player 2 is called "sam someone"
-      When the players are imported
-      Then player 2 of "tournaments/12" on "croquetscores.com" is kept as "sam someone (2)"
-
-    Scenario: The third player of a name is numbered after the second
+    Scenario: Three players of one name are one player
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
       And player 1 is called "Sam Someone"
       And player 2 is called "Sam Someone"
       And player 3 is called "Sam Someone"
       When the players are imported
-      Then player 3 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone (3)"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 player
+
+    Scenario: A player between two of one name is another player
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "Alex Another"
+      And player 3 is called "Sam Someone"
+      When the players are imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 2 players
+
+    Scenario: A name with a number after it is another player
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "Sam Someone (2)"
+      When the players are imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 2 players
+
+    Scenario: A name in another case is another player, numbered
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "sam someone"
+      When the players are imported
+      Then player 2 of "tournaments/12" on "croquetscores.com" is kept as "sam someone (2)"
 
   Rule: A player the site refuses is kept as an error, and the other players are added
 
