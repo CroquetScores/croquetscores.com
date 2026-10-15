@@ -28,6 +28,8 @@ export const spanish: Language = {
       "¿Te está gustando {siteName}? Haz un donativo para ayudar a seguir desarrollándolo.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacidad",
+    "beta.banner":
+      "Este es un sitio beta. Los datos pueden restablecerse en cualquier momento.",
     "privacy.contact":
       "Preguntas sobre esta página, o sobre lo que se guarda de ti: {emailAddress}",
     "tryWebsite.banner":

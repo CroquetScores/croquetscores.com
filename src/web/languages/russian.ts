@@ -32,6 +32,7 @@ export const russian: Language = {
       "Нравится {siteName}? Сделайте пожертвование, чтобы помочь развивать сайт дальше.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Конфиденциальность",
+    "beta.banner": "Это бета-сайт. Данные могут быть сброшены в любой момент.",
     "privacy.contact":
       "Вопросы об этой странице или о том, что хранится о вас: {emailAddress}",
     "tryWebsite.banner":
