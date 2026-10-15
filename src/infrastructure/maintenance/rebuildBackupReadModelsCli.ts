@@ -1,12 +1,8 @@
 import {
-  AN_UPDATE_EVERY,
-  commas,
   failureSaid,
-  minutesLeftSaid,
   type Rebuilding,
-  streamsSaid,
-  tookSaid,
-} from "./rebuildReadModelsCli.js";
+  rebuildSaying,
+} from "./rebuildWithProgress.js";
 
 export interface RebuildBackupReadModelsOutcome {
   readonly exitCode: 0 | 1;
@@ -55,34 +51,8 @@ export const runRebuildBackupReadModels = async (
   }
 
   say("Making the read models of the backup database again.");
-  let total = 0;
-  let began = now().getTime();
-  let lastUpdate = began;
   try {
-    const events = await rebuilding.rebuild({
-      streams: (count) => {
-        total = count;
-        say(
-          `There ${count === 1 ? "is" : "are"} ${streamsSaid(count)} in the event store.`,
-        );
-        began = now().getTime();
-        lastUpdate = began;
-      },
-      streamDone: (completed) => {
-        // Not when everything is done: the next line says how long it took.
-        if (completed >= total) return;
-        const at = now().getTime();
-        if (at - lastUpdate < AN_UPDATE_EVERY) return;
-        lastUpdate = at;
-        const left = ((at - began) / completed) * (total - completed);
-        say(
-          `${commas(completed)} of ${commas(total)} streams completed, approximately ${minutesLeftSaid(left)} minutes to complete.`,
-        );
-      },
-    });
-    const took = now().getTime() - began;
-    say(`Every read model is made again from ${commas(events)} events.`);
-    say(`The rebuild took ${tookSaid(took)}.`);
+    await rebuildSaying(rebuilding, { now, say });
   } catch (failure) {
     // One transaction, so every read model is as it was.
     say(`The rebuild failed: ${failureSaid(failure)}`);
