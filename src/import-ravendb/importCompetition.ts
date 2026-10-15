@@ -32,6 +32,7 @@ import {
 } from "./ImportErrorsNote.js";
 import {
   addOldPlayer,
+  playerNamed,
   isOldBye,
   tournamentBecome,
 } from "./ImportTournamentPlayers.js";
@@ -767,6 +768,9 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     // tournament is, so that every competition listing them finds the one
     // player. One the site refuses is kept as an error once, here.
     const broughtOver = new Map<number, string>();
+    // Of them, the numbers of players the tournament had by the same name, which
+    // were not added again (addOldPlayer).
+    const listedAgain = new Set<number>();
     const refused = new Set<number>();
     for (const player of document.Players._Players) {
       let became =
@@ -778,6 +782,12 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         !tournament.format.isTeamFormat
       ) {
         try {
+          if (
+            !isOldBye(player.Name) &&
+            playerNamed(tournament, player.Name) !== undefined
+          ) {
+            listedAgain.add(player._Id);
+          }
           became = isOldBye(player.Name)
             ? bye
             : addOldPlayer(tournament, player, by, at).value;
@@ -834,6 +844,14 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         number,
         playerId,
       );
+      if (listedAgain.has(number)) {
+        await errors.corrected(
+          `player ${String(number)}`,
+          "ImportCompetition.PlayerListedAgain",
+          `Player ${nameOfIn(document)(number)} in ${errors.place} has the name of a player the tournament already had, and is brought over as that player.`,
+        );
+        continue;
+      }
       await errors.corrected(
         `player ${String(number)}`,
         "ImportCompetition.PlayerNotInTournament",
@@ -844,6 +862,11 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const competition = Competition.rebuiltFrom(competitionId, []);
     const told = toldOf(tournament, competitionId);
     const entered = new Map<number, CompetitionPlayerId>();
+    // The same, by the tournament's player each became.
+    const enteredAs = new Map<string, CompetitionPlayerId>();
+    // What each carried forward in all, by the competition player's id, which
+    // is what the numbers listing one player add up to.
+    const carriedBy = new Map<string, Counts>();
     // Each player who withdrew, by the number the old sites gave them.
     const withdrew = new Map<number, CompetitionPlayerId>();
 
@@ -868,15 +891,25 @@ export const importCompetition = async <TDocument extends OldCompetition>(
             "The player was not brought over to the tournament.",
           );
         }
-        const playerId = competition.enterPlayer(
-          TournamentPlayerId.from(became),
-          CompetitionPlayer.orderAfter(competition.players),
-          told,
-          by,
-          at,
-        );
+        // Another number of a player already entered is that player: the old
+        // sites could list one person twice, and the tournament's players
+        // take players of exactly one name as one (addOldPlayer). What they
+        // carried forward is added to what the first carried.
+        const again = enteredAs.get(became);
+        const playerId =
+          again ??
+          competition.enterPlayer(
+            TournamentPlayerId.from(became),
+            CompetitionPlayer.orderAfter(competition.players),
+            told,
+            by,
+            at,
+          );
+        if (again === undefined) {
+          enteredAs.set(became, playerId);
+          if (player.IsWithdrawn) withdrew.set(player._Id, playerId);
+        }
         entered.set(player._Id, playerId);
-        if (player.IsWithdrawn) withdrew.set(player._Id, playerId);
         // A player whose counts were all 0 carried nothing: the old sites
         // kept 0 where nobody typed anything.
         const carried = carriedOf(player);
@@ -888,11 +921,16 @@ export const importCompetition = async <TDocument extends OldCompetition>(
             carried[count] += counted[count];
           }
         }
+        const total = carriedBy.get(playerId.value) ?? noCounts();
+        for (const count of Object.keys(carried) as (keyof Counts)[]) {
+          total[count] += carried[count];
+        }
+        carriedBy.set(playerId.value, total);
         if (
           kind.carriesForward &&
           Object.values(carried).some((count) => count !== 0)
         ) {
-          competition.changeCarryForward(playerId, carried, told, by, at);
+          competition.changeCarryForward(playerId, total, told, by, at);
         }
       } catch (failure) {
         await errors.playerRefused(player._Id, player.Name, failure);

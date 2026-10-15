@@ -226,6 +226,75 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
 
+    Scenario: Two players the tournament did not list of one name are one player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
+
+    Scenario: The second of two of one name is kept as the same player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then player 10 of "tournaments/12" on "croquetscores.com" is kept as "Pat Missing"
+
+    Scenario: Two of one name are entered in the competition once
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 1 player
+
+    Scenario: The second of two of one name is said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then "player 10" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.PlayerListedAgain"
+
+    Scenario: A player another competition brought over under another number is said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then "player 10" of "croquetscores.com/blocks/31" is corrected as "ImportCompetition.PlayerListedAgain"
+
+    Scenario: A player brought over under another number is not said to be missing from the tournament
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then "player 10" of "croquetscores.com/blocks/31" is not corrected as "ImportCompetition.PlayerNotInTournament"
+
+    Scenario: Entering the second of two of one name is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
     Scenario: Bringing over a player the tournament did not list is not an error
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition

@@ -354,6 +354,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     unitOfWork,
     tournaments,
     database,
+    corrected,
   );
   const blocks = new ImportBlocks(importing);
   const knockouts = new ImportKnockouts(importing);
@@ -1251,6 +1252,19 @@ Then(
         (corrected) => corrected.what === what && corrected.code === code,
       ),
       `${what} of ${documentId} is not corrected as ${code}: ${inspect(said)}`,
+    );
+  },
+);
+
+Then(
+  "{string} of {string} is not corrected as {string}",
+  function (this: SpecWorld, what: string, documentId: string, code: string) {
+    const said = correctedOf(this, documentId);
+    assert.ok(
+      !said.some(
+        (corrected) => corrected.what === what && corrected.code === code,
+      ),
+      `${what} of ${documentId} is corrected as ${code}: ${inspect(said)}`,
     );
   },
 );
