@@ -18,7 +18,7 @@ import type pg from "pg";
 /** Why a copy was refused, as the script says it. */
 export type BackupRefusedCode =
   | "Backup.WebsiteUnreachable"
-  | "Backup.LocalUnreachable"
+  | "Backup.BackupDatabaseUnreachable"
   | "Backup.CouldNotCopy"
   | "Backup.SiteKeyIsNotTheWebsites"
   | "Backup.EventsDiffer"
@@ -86,7 +86,7 @@ export class PostgresBackup {
     try {
       const writing = await this.#connect(
         this.local,
-        "Backup.LocalUnreachable",
+        "Backup.BackupDatabaseUnreachable",
       );
       try {
         return await this.#copyBetween(reading, writing, all);
@@ -100,7 +100,7 @@ export class PostgresBackup {
 
   async #connect(
     pool: pg.Pool,
-    code: "Backup.WebsiteUnreachable" | "Backup.LocalUnreachable",
+    code: "Backup.WebsiteUnreachable" | "Backup.BackupDatabaseUnreachable",
   ): Promise<pg.PoolClient> {
     try {
       return await pool.connect();

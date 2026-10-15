@@ -19,7 +19,7 @@ export interface BackupSettings {
   /** The key the website's accounts' keys are sealed with. */
   readonly siteKey: string | undefined;
   readonly websiteDatabase: string | undefined;
-  readonly localDatabase: string | undefined;
+  readonly backupDatabase: string | undefined;
 }
 
 /** What the script is given of the world it runs in. */
@@ -30,8 +30,11 @@ export interface BackupWorld {
    * one that cannot be reached is a failure of the copy and not of starting.
    */
   readonly copying: (siteKey: string) => Copying;
-  /** Makes the read models again, expected to take `minutes`. */
-  readonly rebuild: (minutes: number) => Promise<void>;
+  /**
+   * Makes the read models of `database` again, expected to take `minutes`:
+   * the backup database's, which is where the events were copied to.
+   */
+  readonly rebuild: (minutes: number, database: string) => Promise<void>;
   /** Sends the email. Throws where it cannot. */
   readonly send: (email: {
     to: string;
@@ -102,7 +105,7 @@ export const runBackup = async (
 
   let copied: Copied = { events: 0, keys: 0 };
   const lines: string[] = [];
-  const addresses = [settings.websiteDatabase, settings.localDatabase];
+  const addresses = [settings.websiteDatabase, settings.backupDatabase];
   const safe = (text: string): string => withoutAddresses(text, addresses);
   const siteKey = settings.siteKey;
 
@@ -173,10 +176,13 @@ export const runBackup = async (
   ) {
     return failed("that the website's database is not named", undefined);
   }
-  if (settings.websiteDatabase === settings.localDatabase) {
-    say("The website and the local database are the same database.");
+  if (settings.backupDatabase === undefined || settings.backupDatabase === "") {
+    return failed("that the backup database is not named", undefined);
+  }
+  if (settings.websiteDatabase === settings.backupDatabase) {
+    say("The website and the backup database are the same database.");
     return failed(
-      "that the website and the local database are the same",
+      "that the website and the backup database are the same",
       undefined,
     );
   }
@@ -187,7 +193,7 @@ export const runBackup = async (
     if (failure instanceof BackupRefused) {
       const step: Record<BackupRefused["code"], string> = {
         "Backup.WebsiteUnreachable": "reading the website's events",
-        "Backup.LocalUnreachable": "reaching the local database",
+        "Backup.BackupDatabaseUnreachable": "reaching the backup database",
         "Backup.CouldNotCopy": "copying the events",
         "Backup.SiteKeyIsNotTheWebsites":
           "that the site key is not the website's",
@@ -207,7 +213,7 @@ export const runBackup = async (
   tell(`Copied ${plural(copied.keys, "key", "keys")}.`);
 
   try {
-    await world.rebuild(REBUILD_MINUTES);
+    await world.rebuild(REBUILD_MINUTES, settings.backupDatabase);
   } catch (failure) {
     return failed(
       "rebuilding the read models",

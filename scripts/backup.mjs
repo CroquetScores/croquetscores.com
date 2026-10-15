@@ -2,8 +2,8 @@
 // accounts' keys the website has and this computer's database has not, makes
 // this database's read models again, and emails ADMINISTRATOR_EMAIL_ADDRESS how
 // it went (backupCli.feature). Run from a scheduled task on the administrator's
-// own computer, with DATABASE_URL naming the copy and WEBSITE_DATABASE_URL the
-// website's database, which is only read. Run under tsx, as the package script
+// own computer, with BACKUP_DATABASE_URL naming where the copy is written and
+// WEBSITE_DATABASE_URL the website's database, which is only read. Run under tsx, as the package script
 // does, since the application is TypeScript.
 import { spawn } from "node:child_process";
 
@@ -20,12 +20,19 @@ import { buildApplication } from "../src/web/server.js";
 
 // Run as the package script is, so that the rebuild is the one the
 // administrator would run by hand, with its own words and its own switch.
-const rebuild = (minutes) =>
+// Of the backup database, which is what the rebuild rebuilds whatever
+// DATABASE_URL is: it is given that as its own, and a setting already in the
+// environment is not replaced by the file the rebuild reads.
+const rebuild = (minutes, database) =>
   new Promise((resolve, reject) => {
     const child = spawn(
       "npm",
       ["run", "db:rebuild-read-models", "--", "--minutes", String(minutes)],
-      { shell: true, stdio: ["ignore", "pipe", "pipe"] },
+      {
+        shell: true,
+        stdio: ["ignore", "pipe", "pipe"],
+        env: { ...process.env, DATABASE_URL: database },
+      },
     );
     let said = "";
     child.stdout.on("data", (chunk) => {
@@ -58,13 +65,13 @@ try {
       administrator: config.administratorEmailAddress,
       siteKey: config.accountEncryptionKey,
       websiteDatabase: config.websiteDatabaseUrl,
-      localDatabase: config.databaseUrl,
+      backupDatabase: config.backupDatabaseUrl,
     },
     copying: (siteKey) => {
       const website = createPool(config.websiteDatabaseUrl);
-      const local = createPool(config.databaseUrl);
-      pools.push(website, local);
-      return new PostgresBackup(website, local, siteKeyMarkOf(siteKey));
+      const backup = createPool(config.backupDatabaseUrl);
+      pools.push(website, backup);
+      return new PostgresBackup(website, backup, siteKeyMarkOf(siteKey));
     },
     rebuild,
     send: (email) =>

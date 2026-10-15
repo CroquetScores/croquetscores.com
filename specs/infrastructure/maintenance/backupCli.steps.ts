@@ -13,7 +13,7 @@ import type { SpecWorld } from "../../support/world.js";
 // The backup script, run as its own function (`backupCli.feature`) over two
 // databases of the scenario's own. The website's is a schema of the scenario's
 // database with the same tables, read through a pool whose search path is that
-// schema, and the local database is the scenario's own: two places that look
+// schema, and the backup database is the scenario's own: two places that look
 // exactly alike to what copies between them, without a second database to make
 // for each scenario. The mail sender, the rebuild of the read models and the
 // clock are the scenario's, so that what was sent and in what order is read
@@ -23,7 +23,7 @@ const WEBSITES_SITE_KEY = "the website's site key";
 const SOMETHING_ELSE = "a site key that is not the website's";
 const A_REFUSED_ADDRESS = "postgres://nobody:secret-word@127.0.0.1:1/nothing";
 
-type Fault = "website" | "local";
+type Fault = "website" | "backup";
 
 interface Backup {
   administrator: string | undefined;
@@ -40,6 +40,8 @@ interface Backup {
   readonly said: string[];
   readonly emails: { to: string; subject: string; body: string }[];
   rebuiltFor: number | undefined;
+  rebuiltDatabase: string | undefined;
+  backupNamed: boolean;
   accessTurnedOff: boolean;
   exitCode: 0 | 1 | undefined;
 }
@@ -63,6 +65,8 @@ const backupOf = (world: SpecWorld): Backup => {
       said: [],
       emails: [],
       rebuiltFor: undefined,
+      rebuiltDatabase: undefined,
+      backupNamed: true,
       accessTurnedOff: false,
       exitCode: undefined,
     };
@@ -147,7 +151,7 @@ Given("a website database", async function (this: SpecWorld) {
   backupOf(this).websitePool = pool;
 });
 
-Given("a local database", function (this: SpecWorld) {
+Given("a backup database", function (this: SpecWorld) {
   // The scenario's own database, which every @postgres scenario has.
   assert.ok(this.database !== undefined);
 });
@@ -175,12 +179,16 @@ Given("no site key is named", function (this: SpecWorld) {
   backupOf(this).siteKey = undefined;
 });
 
+Given("the backup database is not named", function (this: SpecWorld) {
+  backupOf(this).backupNamed = false;
+});
+
 Given("the website's database is not named", function (this: SpecWorld) {
   backupOf(this).websiteNamed = false;
 });
 
 Given(
-  "the website's database is the local database",
+  "the website's database is the backup database",
   function (this: SpecWorld) {
     backupOf(this).websiteIsLocal = true;
   },
@@ -190,14 +198,14 @@ Given("the website cannot be reached", function (this: SpecWorld) {
   backupOf(this).unreachable.add("website");
 });
 
-Given("the local database cannot be reached", function (this: SpecWorld) {
-  backupOf(this).unreachable.add("local");
+Given("the backup database cannot be reached", function (this: SpecWorld) {
+  backupOf(this).unreachable.add("backup");
 });
 
 // What the scenarios put in the databases --------------------------------
 
 Given(
-  /^the (website|local database) has the event (\d+) of the stream "([^"]*)"(?: saying "([^"]*)")?(?: numbered (\d+))?$/,
+  /^the (website|backup database) has the event (\d+) of the stream "([^"]*)"(?: saying "([^"]*)")?(?: numbered (\d+))?$/,
   async function (
     this: SpecWorld,
     where: string,
@@ -220,7 +228,7 @@ Given(
 );
 
 Given(
-  /^the (website|local database) has (a|an older) key for the account "([^"]*)"$/,
+  /^the (website|backup database) has (a|an older) key for the account "([^"]*)"$/,
   async function (
     this: SpecWorld,
     where: string,
@@ -250,7 +258,7 @@ Given(
   },
 );
 
-// Writing to the local database fails where the scenario says. A trigger of
+// Writing to the backup database fails where the scenario says. A trigger of
 // the database's own, so that what is refused is what the copy really writes.
 const failing = async (world: SpecWorld, version: number): Promise<void> => {
   await world.database.query(
@@ -269,21 +277,21 @@ const failing = async (world: SpecWorld, version: number): Promise<void> => {
 };
 
 Given(
-  "writing the first event to the local database fails",
+  "writing the first event to the backup database fails",
   async function (this: SpecWorld) {
     await failing(this, 1);
   },
 );
 
 Given(
-  "writing the second event to the local database fails",
+  "writing the second event to the backup database fails",
   async function (this: SpecWorld) {
     await failing(this, 2);
   },
 );
 
 Given(
-  "writing to the local database works again",
+  "writing to the backup database works again",
   async function (this: SpecWorld) {
     for (const version of [1, 2]) {
       await this.database.query(
@@ -342,21 +350,24 @@ const run = async (
             ? urlOf(world)
             : websiteUrl
         : undefined,
-      localDatabase: backup.unreachable.has("local")
-        ? A_REFUSED_ADDRESS
-        : urlOf(world),
+      backupDatabase: !backup.backupNamed
+        ? undefined
+        : backup.unreachable.has("backup")
+          ? A_REFUSED_ADDRESS
+          : urlOf(world),
     },
     copying: (siteKey) => {
       backup.happened.push("copying");
       return new PostgresBackup(
         backup.unreachable.has("website") ? refused() : websiteOf(world),
-        backup.unreachable.has("local") ? refused() : world.database,
+        backup.unreachable.has("backup") ? refused() : world.database,
         siteKeyMarkOf(siteKey),
       );
     },
-    rebuild: (minutes) => {
+    rebuild: (minutes, database) => {
       backup.happened.push("rebuild");
       backup.rebuiltFor = minutes;
+      backup.rebuiltDatabase = database;
       clock += backup.takes * 60 * 1000;
       if (backup.rebuildFails) {
         return Promise.reject(new Error("The rebuild was refused."));
@@ -400,7 +411,7 @@ const locally = async (
   (await world.database.query<Record<string, unknown>>(sql, values)).rows;
 
 Then(
-  /^the local database now has the event (\d+) of the stream "([^"]*)"$/,
+  /^the backup database now has the event (\d+) of the stream "([^"]*)"$/,
   async function (this: SpecWorld, version: string, stream: string) {
     const rows = await locally(
       this,
@@ -416,7 +427,7 @@ Then(
 );
 
 Then(
-  /^the local database has (\d+) events?$/,
+  /^the backup database has (\d+) events?$/,
   async function (this: SpecWorld, count: string) {
     const [row] = await locally(this, `select count(*)::int as n from events`);
     assert.equal(row?.["n"], Number(count));
@@ -434,7 +445,7 @@ Then(
 );
 
 Then(
-  /^the event (\d+) of the stream "([^"]*)" in the local database says "([^"]*)"$/,
+  /^the event (\d+) of the stream "([^"]*)" in the backup database says "([^"]*)"$/,
   async function (
     this: SpecWorld,
     version: string,
@@ -452,7 +463,7 @@ Then(
 );
 
 Then(
-  /^the event (\d+) of the stream "([^"]*)" in the local database is numbered (\d+)$/,
+  /^the event (\d+) of the stream "([^"]*)" in the backup database is numbered (\d+)$/,
   async function (
     this: SpecWorld,
     version: string,
@@ -469,7 +480,7 @@ Then(
 );
 
 Then(
-  /^the second event of the stream "([^"]*)" in the local database is event (\d+)$/,
+  /^the second event of the stream "([^"]*)" in the backup database is event (\d+)$/,
   async function (this: SpecWorld, stream: string, version: string) {
     const rows = await locally(
       this,
@@ -481,7 +492,7 @@ Then(
 );
 
 Then(
-  /^the local database (now has a|has no) key for the account "([^"]*)"$/,
+  /^the backup database (now has a|has no) key for the account "([^"]*)"$/,
   async function (this: SpecWorld, which: string, account: string) {
     const rows = await locally(
       this,
@@ -493,7 +504,7 @@ Then(
 );
 
 Then(
-  /^the key of the account "([^"]*)" in the local database is the website's$/,
+  /^the key of the account "([^"]*)" in the backup database is the website's$/,
   async function (this: SpecWorld, account: string) {
     const [local] = await locally(
       this,
@@ -548,7 +559,7 @@ Then("the backup says the site key is needed", function (this: SpecWorld) {
 });
 
 Then(
-  "the backup says the website and the local database are the same",
+  "the backup says the website and the backup database are the same",
   function (this: SpecWorld) {
     assert.ok(said(this).includes("are the same database"), said(this));
   },
@@ -598,6 +609,20 @@ Then(
   function (this: SpecWorld) {
     const { happened } = backupOf(this);
     assert.deepEqual(happened, ["copying", "rebuild"]);
+  },
+);
+
+Then(
+  "the read models of the backup database were rebuilt",
+  function (this: SpecWorld) {
+    assert.equal(backupOf(this).rebuiltDatabase, urlOf(this));
+  },
+);
+
+Then(
+  "the email says the failure was that the backup database is not named",
+  function (this: SpecWorld) {
+    says(this, "The failure was that the backup database is not named.");
   },
 );
 
@@ -680,9 +705,9 @@ Then(
 );
 
 Then(
-  "the email says the failure was reaching the local database",
+  "the email says the failure was reaching the backup database",
   function (this: SpecWorld) {
-    says(this, "The failure was reaching the local database.");
+    says(this, "The failure was reaching the backup database.");
   },
 );
 

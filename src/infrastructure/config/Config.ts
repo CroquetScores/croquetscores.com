@@ -92,6 +92,9 @@ export interface Config {
   // The website's database, which only the backup reads, from the
   // administrator's own computer (backupCli.feature). Absent everywhere else.
   readonly websiteDatabaseUrl: string | undefined;
+  // Where the backup writes its copy: a database of its own, and not
+  // DATABASE_URL, which on the computer it is run from may be one it works on.
+  readonly backupDatabaseUrl: string | undefined;
 }
 
 export class ConfigError extends Error {
@@ -325,6 +328,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
     searchEnginesWelcome,
     websiteDatabaseUrl: env["WEBSITE_DATABASE_URL"]?.trim() || undefined,
+    backupDatabaseUrl: env["BACKUP_DATABASE_URL"]?.trim() || undefined,
   };
 };
 

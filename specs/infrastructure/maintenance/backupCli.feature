@@ -13,8 +13,8 @@ Feature: Backing up the website's events to a database on another machine
   The backup is run by "npm run db:backup" on the administrator's own
   computer, from a task the operating system's scheduler starts, and not by
   the website. It is told two databases: the website's, which it only reads
-  (`WEBSITE_DATABASE_URL`), and the computer's own, which it writes
-  (`DATABASE_URL`). It is told who is to hear how it went
+  (`WEBSITE_DATABASE_URL`), and the computer's own backup database, which it writes
+  (`BACKUP_DATABASE_URL`). It is told who is to hear how it went
   (`ADMINISTRATOR_EMAIL_ADDRESS`), and the site key the accounts' keys are
   sealed with (`ACCOUNT_ENCRYPTION_KEY`), which is the website's own. The
   accounts' keys are copied as they are, sealed, and are no more readable to
@@ -83,46 +83,46 @@ Feature: Backing up the website's events to a database on another machine
 
   Background:
     Given a website database
-    And a local database
+    And a backup database
     And the administrator is "administrator@example.com"
     And the site key is the website's
     And the moment "2026-10-13T10:00:00Z"
 
-  Rule: What the website has and the local database has not is copied
+  Rule: What the website has and the backup database has not is copied
 
-    Scenario: An event the local database has not is copied
+    Scenario: An event the backup database has not is copied
       Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
-      Then the local database now has the event 1 of the stream "tournament/spring"
+      Then the backup database now has the event 1 of the stream "tournament/spring"
 
-    Scenario: Every event the local database has not is copied
+    Scenario: Every event the backup database has not is copied
       Given the website has the event 1 of the stream "tournament/spring"
       And the website has the event 2 of the stream "tournament/spring"
       And the website has the event 1 of the stream "account/sam"
       When the backup is run
-      Then the local database has 3 events
+      Then the backup database has 3 events
 
     Scenario: The events of a stream are in the order they were added
       Given the website has the event 1 of the stream "tournament/spring"
       And the website has the event 2 of the stream "tournament/spring"
       When the backup is run
-      Then the second event of the stream "tournament/spring" in the local database is event 2
+      Then the second event of the stream "tournament/spring" in the backup database is event 2
 
     Scenario: An event is copied as it is
       Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
       When the backup is run
-      Then the event 1 of the stream "tournament/spring" in the local database says "Spring Open"
+      Then the event 1 of the stream "tournament/spring" in the backup database says "Spring Open"
 
-    Scenario: An event the local database has already is not copied again
+    Scenario: An event the backup database has already is not copied again
       Given the website has the event 1 of the stream "tournament/spring"
-      And the local database has the event 1 of the stream "tournament/spring"
+      And the backup database has the event 1 of the stream "tournament/spring"
       When the backup is run
       Then the backup says it copied 0 events
 
     Scenario: Only what is new is copied
       Given the website has the event 1 of the stream "tournament/spring"
       And the website has the event 2 of the stream "tournament/spring"
-      And the local database has the event 1 of the stream "tournament/spring"
+      And the backup database has the event 1 of the stream "tournament/spring"
       When the backup is run
       Then the backup says it copied 1 event
 
@@ -137,87 +137,87 @@ Feature: Backing up the website's events to a database on another machine
       And the backup is run
       And the website has the event 2 of the stream "tournament/spring"
       When the backup is run
-      Then the local database now has the event 2 of the stream "tournament/spring"
+      Then the backup database now has the event 2 of the stream "tournament/spring"
 
   Rule: An event is located by the number the database gave it
 
     Scenario: An event is copied with the number the website gave it
       Given the website has the event 1 of the stream "tournament/spring" numbered 41
       When the backup is run
-      Then the event 1 of the stream "tournament/spring" in the local database is numbered 41
+      Then the event 1 of the stream "tournament/spring" in the backup database is numbered 41
 
-    Scenario: An event numbered after the highest the local database has is copied
-      Given the local database has the event 1 of the stream "tournament/old" numbered 10
+    Scenario: An event numbered after the highest the backup database has is copied
+      Given the backup database has the event 1 of the stream "tournament/old" numbered 10
       And the website has the event 1 of the stream "tournament/spring" numbered 11
       When the backup is run
-      Then the local database now has the event 1 of the stream "tournament/spring"
+      Then the backup database now has the event 1 of the stream "tournament/spring"
 
     Scenario: An event numbered before the highest, kept after it, is copied
-      Given the local database has the event 1 of the stream "tournament/old" numbered 20
+      Given the backup database has the event 1 of the stream "tournament/old" numbered 20
       And the website has the event 1 of the stream "tournament/spring" numbered 19
       When the backup is run
-      Then the local database now has the event 1 of the stream "tournament/spring"
+      Then the backup database now has the event 1 of the stream "tournament/spring"
 
     Scenario: Only what is within the last 10,000 numbers is looked for
-      Given the local database has the event 1 of the stream "tournament/old" numbered 20000
+      Given the backup database has the event 1 of the stream "tournament/old" numbered 20000
       And the website has the event 1 of the stream "tournament/spring" numbered 1
       When the backup is run
-      Then the local database has 1 event
+      Then the backup database has 1 event
 
     Scenario: Asked for all of them, every event is looked for
-      Given the local database has the event 1 of the stream "tournament/old" numbered 20000
+      Given the backup database has the event 1 of the stream "tournament/old" numbered 20000
       And the website has the event 1 of the stream "tournament/spring" numbered 1
       When the backup is run with "--all"
-      Then the local database now has the event 1 of the stream "tournament/spring"
+      Then the backup database now has the event 1 of the stream "tournament/spring"
 
     Scenario: An event of another number but the same stream and version is the same event
       Given the website has the event 1 of the stream "tournament/spring" numbered 5
-      And the local database has the event 1 of the stream "tournament/spring" numbered 9
+      And the backup database has the event 1 of the stream "tournament/spring" numbered 9
       When the backup is run
       Then the backup says it copied 0 events
 
     Scenario: An event with a number another event has is a failure
       Given the website has the event 1 of the stream "tournament/spring" numbered 5
-      And the local database has the event 1 of the stream "tournament/old" numbered 5
+      And the backup database has the event 1 of the stream "tournament/old" numbered 5
       When the backup is run
       Then the backup exits with failure
 
   Rule: The accounts' keys are copied with the events
 
-    Scenario: A key the local database has not is copied
+    Scenario: A key the backup database has not is copied
       Given the website has a key for the account "sam"
       When the backup is run
-      Then the local database now has a key for the account "sam"
+      Then the backup database now has a key for the account "sam"
 
     Scenario: A key is copied as it is
       Given the website has a key for the account "sam"
       When the backup is run
-      Then the key of the account "sam" in the local database is the website's
+      Then the key of the account "sam" in the backup database is the website's
 
     Scenario: A key the website has changed is copied over the old
       Given the website has a key for the account "sam"
-      And the local database has an older key for the account "sam"
+      And the backup database has an older key for the account "sam"
       When the backup is run
-      Then the key of the account "sam" in the local database is the website's
+      Then the key of the account "sam" in the backup database is the website's
 
     Scenario: A key the website no longer has is taken away
-      Given the local database has a key for the account "sam"
+      Given the backup database has a key for the account "sam"
       When the backup is run
-      Then the local database has no key for the account "sam"
+      Then the backup database has no key for the account "sam"
 
     Scenario: A forgotten account is forgotten in the copy
       Given the website has a key for the account "pat"
       And the backup is run
       And the website has forgotten the account "pat"
       When the backup is run
-      Then the local database has no key for the account "pat"
+      Then the backup database has no key for the account "pat"
 
     Scenario: Keys are copied or none are, with the events
       Given the website has a key for the account "sam"
       And the website has the event 1 of the stream "tournament/spring"
-      And writing the first event to the local database fails
+      And writing the first event to the backup database fails
       When the backup is run
-      Then the local database has no key for the account "sam"
+      Then the backup database has no key for the account "sam"
 
     Scenario: A key the website has not changed is not copied again
       Given the website has a key for the account "sam"
@@ -241,7 +241,7 @@ Feature: Backing up the website's events to a database on another machine
       Given no site key is named
       And the website has the event 1 of the stream "tournament/spring"
       When the backup is run
-      Then the local database has 0 events
+      Then the backup database has 0 events
 
     Scenario: A site key that is not the website's is refused
       Given the site key is not the website's
@@ -254,7 +254,7 @@ Feature: Backing up the website's events to a database on another machine
       And the website has the event 1 of the stream "tournament/spring"
       And the website has a key for the account "sam"
       When the backup is run
-      Then the local database has 0 events
+      Then the backup database has 0 events
 
     Scenario: A site key that is not the website's is said, by the email
       Given the site key is not the website's
@@ -280,34 +280,34 @@ Feature: Backing up the website's events to a database on another machine
       When the backup is run
       Then database access was never turned off
 
-  Rule: What the local database has of the events is never changed or taken away
+  Rule: What the backup database has of the events is never changed or taken away
 
-    Scenario: An event only the local database has is kept
-      Given the local database has the event 1 of the stream "tournament/old"
+    Scenario: An event only the backup database has is kept
+      Given the backup database has the event 1 of the stream "tournament/old"
       When the backup is run
-      Then the local database now has the event 1 of the stream "tournament/old"
+      Then the backup database now has the event 1 of the stream "tournament/old"
 
     Scenario: An event that is not the website's is not copied over
       Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
-      And the local database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
+      And the backup database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
       When the backup is run
-      Then the event 1 of the stream "tournament/spring" in the local database says "Autumn Open"
+      Then the event 1 of the stream "tournament/spring" in the backup database says "Autumn Open"
 
     Scenario: An event that is not the website's is a failure
       Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
-      And the local database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
+      And the backup database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
       When the backup is run
       Then the backup exits with failure
 
     Scenario: An event that is not the website's is said, in the failure
       Given the website has the event 1 of the stream "tournament/spring" saying "Spring Open"
-      And the local database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
+      And the backup database has the event 1 of the stream "tournament/spring" saying "Autumn Open"
       When the backup is run
       Then the failure says the event 1 of the stream "tournament/spring" is not the same in both
 
   Rule: Every event is copied or none is
 
-    The copy is one transaction of the local database, so a run that fails
+    The copy is one transaction of the backup database, so a run that fails
     part way leaves the database as it was, and the next run copies what this
     one meant to. A stream is not left with some of its events and the rest
     missing from the middle.
@@ -315,18 +315,18 @@ Feature: Backing up the website's events to a database on another machine
     Scenario: A copy that fails part way copies nothing
       Given the website has the event 1 of the stream "tournament/spring"
       And the website has the event 2 of the stream "tournament/spring"
-      And writing the second event to the local database fails
+      And writing the second event to the backup database fails
       When the backup is run
-      Then the local database has 0 events
+      Then the backup database has 0 events
 
     Scenario: A copy that failed is copied in full by the next run
       Given the website has the event 1 of the stream "tournament/spring"
       And the website has the event 2 of the stream "tournament/spring"
-      And writing the second event to the local database fails
+      And writing the second event to the backup database fails
       And the backup is run
-      And writing to the local database works again
+      And writing to the backup database works again
       When the backup is run
-      Then the local database has 2 events
+      Then the backup database has 2 events
 
   Rule: The read models are made again after the events are copied
 
@@ -334,6 +334,11 @@ Feature: Backing up the website's events to a database on another machine
       Given the website has the event 1 of the stream "tournament/spring"
       When the backup is run
       Then the read models were rebuilt, expected to take 20 minutes
+
+    Scenario: The read models rebuilt are the backup database's
+      Given the website has the event 1 of the stream "tournament/spring"
+      When the backup is run
+      Then the read models of the backup database were rebuilt
 
     Scenario: The read models are rebuilt after the events are copied
       Given the website has the event 1 of the stream "tournament/spring"
@@ -346,7 +351,7 @@ Feature: Backing up the website's events to a database on another machine
 
     Scenario: The read models are not rebuilt where the events could not be copied
       Given the website has the event 1 of the stream "tournament/spring"
-      And writing the first event to the local database fails
+      And writing the first event to the backup database fails
       When the backup is run
       Then the read models were not rebuilt
 
@@ -359,7 +364,7 @@ Feature: Backing up the website's events to a database on another machine
       Given the website has the event 1 of the stream "tournament/spring"
       And the read models cannot be rebuilt
       When the backup is run
-      Then the local database now has the event 1 of the stream "tournament/spring"
+      Then the backup database now has the event 1 of the stream "tournament/spring"
 
   Rule: The administrator is told how it went
 
@@ -416,7 +421,7 @@ Feature: Backing up the website's events to a database on another machine
 
     Scenario: A failure copying says it was copying the events
       Given the website has the event 1 of the stream "tournament/spring"
-      And writing the first event to the local database fails
+      And writing the first event to the backup database fails
       When the backup is run
       Then the email says the failure was copying the events
 
@@ -436,10 +441,10 @@ Feature: Backing up the website's events to a database on another machine
       When the backup is run
       Then the email says why the website could not be reached
 
-    Scenario: The local database cannot be reached is a failure said so
-      Given the local database cannot be reached
+    Scenario: The backup database cannot be reached is a failure said so
+      Given the backup database cannot be reached
       When the backup is run
-      Then the email says the failure was reaching the local database
+      Then the email says the failure was reaching the backup database
 
     Scenario: Neither database's address is in the email of a success
       Given the website has the event 1 of the stream "tournament/spring"
@@ -477,7 +482,7 @@ Feature: Backing up the website's events to a database on another machine
       Given the website has the event 1 of the stream "tournament/spring"
       And email cannot be sent
       When the backup is run
-      Then the local database now has the event 1 of the stream "tournament/spring"
+      Then the backup database now has the event 1 of the stream "tournament/spring"
 
   Rule: It is told who to tell, and both databases, before it does anything
 
@@ -495,22 +500,33 @@ Feature: Backing up the website's events to a database on another machine
       Given no administrator is named
       And the website has the event 1 of the stream "tournament/spring"
       When the backup is run
-      Then the local database has 0 events
+      Then the backup database has 0 events
 
     Scenario: Without the website's database it is refused, and tells the administrator
       Given the website's database is not named
       When the backup is run
       Then the email says the failure was that the website's database is not named
 
-    Scenario: The website and the local database must not be the same database
-      Given the website's database is the local database
+    Scenario: Without the backup database it is refused, and tells the administrator
+      Given the backup database is not named
+      When the backup is run
+      Then the email says the failure was that the backup database is not named
+
+    Scenario: Without the backup database nothing is copied
+      Given the backup database is not named
+      And the website has the event 1 of the stream "tournament/spring"
+      When the backup is run
+      Then the backup database has 0 events
+
+    Scenario: The website and the backup database must not be the same database
+      Given the website's database is the backup database
       When the backup is run
       Then the backup exits with failure
 
     Scenario: The same database named twice says so
-      Given the website's database is the local database
+      Given the website's database is the backup database
       When the backup is run
-      Then the backup says the website and the local database are the same
+      Then the backup says the website and the backup database are the same
 
   Rule: What it says on the screen is what the email says
 

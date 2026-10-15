@@ -24,8 +24,8 @@ The events hold names and email addresses sealed with a key of each account's ow
 `npm run db:backup`, from the folder of this repository on Tim's computer:
 
 1. Reads the website's database. It never changes it, and does not turn the website off.
-2. Copies the events the website has and the local database has not, **in one transaction**, with the accounts' keys. If anything goes wrong nothing is copied, and the next run copies it all.
-3. Makes the local database's read models again (`npm run db:rebuild-read-models -- --minutes 20`).
+2. Copies the events the website has and the backup database has not, **in one transaction**, with the accounts' keys. If anything goes wrong nothing is copied, and the next run copies it all.
+3. Makes the backup database's read models again (`npm run db:rebuild-read-models -- --minutes 20`).
 4. Emails `ADMINISTRATOR_EMAIL_ADDRESS` how it went: that it worked, and how many events and keys were copied and how long it took, or which step failed and why.
 
 It exits with failure whenever anything failed, so the scheduler can show it, and says on the screen what the email says.
@@ -44,17 +44,17 @@ compares every event there is. It is slow, and worth running now and then, say o
 
 On Tim's computer, in `.env`:
 
-| Setting                        | What it is                                                                                                   |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| `WEBSITE_DATABASE_URL`         | The website's database. Only ever read                                                                       |
-| `DATABASE_URL`                 | The computer's own database, where the copy is kept. **Not the website's**: the script refuses if they match |
-| `ACCOUNT_ENCRYPTION_KEY`       | The website's own. The backup refuses if it is not the one the website's keys were sealed with               |
-| `ADMINISTRATOR_EMAIL_ADDRESS`  | Who is told how every run went: `croquetscores@gmail.com`                                                    |
-| `EMAIL_FROM_ADDRESS`, the rest | As the site needs them (`.env.example`): the script is started as the site is                                |
+| Setting                        | What it is                                                                                                                    |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `WEBSITE_DATABASE_URL`         | The website's database. Only ever read                                                                                        |
+| `BACKUP_DATABASE_URL`          | The database the copy is written to: its own, and not `DATABASE_URL`. **Not the website's**: the script refuses if they match |
+| `ACCOUNT_ENCRYPTION_KEY`       | The website's own. The backup refuses if it is not the one the website's keys were sealed with                                |
+| `ADMINISTRATOR_EMAIL_ADDRESS`  | Who is told how every run went: `croquetscores@gmail.com`                                                                     |
+| `EMAIL_FROM_ADDRESS`, the rest | As the site needs them (`.env.example`): the script is started as the site is                                                 |
 
 The computer needs to reach the website's database, which the website's host decides how: the database's port opened to this computer only, or a tunnel. That is not settled until the host is (TODO.md, Hosting). A database open to the world is not the answer.
 
-The local database is made as development's is (`npm run db:up`), and migrated (`npm run db:migrate`) to the same migrations as the website's before the first backup, and again after every deploy that adds one. A backup to a database that is behind the website's will fail naming what is missing.
+The backup database is made as development's is (`npm run db:up`), and migrated (`npm run db:migrate`) to the same migrations as the website's before the first backup, and again after every deploy that adds one. A backup to a database that is behind the website's will fail naming what is missing.
 
 Then ask the operating system's scheduler to run it. On Windows, Task Scheduler: a task that runs **daily**, with
 
@@ -91,7 +91,7 @@ Check it once: that the copy of both is the one the website is running with, not
   select count(*) from events;
   ```
 
-  on each. The local one may be behind by what the website has had since, and must never be ahead.
+  on each. The backup one may be behind by what the website has had since, and must never be ahead.
 
 ## 6. When a run fails
 
@@ -100,10 +100,11 @@ The email, and the screen, say which step failed and why.
 | It says the failure was…                 | What it means, and what to do                                                                                                                                  |
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | reading the website's events             | The website's database could not be reached from this computer. Is the website up? Is the tunnel up? Try again; nothing was copied                             |
-| reaching the local database              | The computer's own Postgres is not running. `npm run db:up`                                                                                                    |
+| reaching the backup database             | The computer's own Postgres is not running. `npm run db:up`                                                                                                    |
 | copying the events                       | Read the reason. Nothing was copied. If it says an event **is not the same in both**, or **a number is another event's**, **stop and do not force it** (below) |
 | that the site key is not the website's   | `ACCOUNT_ENCRYPTION_KEY` here is not the website's. Fix `.env`. The website may have had its key changed (`db:change-site-key`): see §4                        |
 | rebuilding the read models               | The events and keys were copied; only the read models are behind. Run `npm run db:rebuild-read-models -- --minutes 20` by hand and read what it says           |
+| that the backup database is not named    | `BACKUP_DATABASE_URL` is blank                                                                                                                                 |
 | that the website's database is not named | `WEBSITE_DATABASE_URL` is blank                                                                                                                                |
 
 **An event that is not the same in both** means the copy and the website have gone different ways, which events are never supposed to do. The backup will not overwrite either, on purpose. Do not delete the copy to make it go away: it may be the one that is right. Tell Tim (croquetscores@gmail.com), keep both databases as they are, and work out which is wrong before anything is changed.
@@ -112,13 +113,13 @@ The email, and the screen, say which step failed and why.
 
 A restore is making a new website's database from the copy. It is done when the website's database is lost or ruined; it is not how to undo something somebody did on the site, which the website's own events already say.
 
-What you need: the copy (the local database, §1), the two keys of §4, and a Postgres for the new website to use.
+What you need: the copy (the backup database), the two keys of §4, and a Postgres for the new website to use.
 
 1. **Stop the site**, if anything is still running against the old database.
-2. **Take the copy out of the local database.** Bring it up to date first if the website is still there to copy from: `npm run db:backup`. Then:
+2. **Take the copy out of the backup database.** Bring it up to date first if the website is still there to copy from: `npm run db:backup`. Then:
 
    ```bash
-   pg_dump --format=custom --file=website-copy.dump "$DATABASE_URL"
+   pg_dump --format=custom --file=website-copy.dump "$BACKUP_DATABASE_URL"
    ```
 
 3. **Make the new database** and restore into it:
