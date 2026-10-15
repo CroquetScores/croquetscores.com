@@ -23,7 +23,9 @@ export const registerSearchEngines = (
 ): void => {
   server.get("/robots.txt", (_request, reply) =>
     reply
-      .header("cache-control", "public, max-age=3600")
+      // Asked again each time, since the file is small and a site that has just
+      // been told it is welcome should not be kept out by a copy of this one.
+      .header("cache-control", "public, no-cache")
       .type("text/plain; charset=utf-8")
       .send(searchEnginesWelcome ? welcome : keepAway),
   );

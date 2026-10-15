@@ -31,6 +31,9 @@ export const swedish: Language = {
     "footer.plea":
       "Gillar du {siteName}? Donera gärna för att hjälpa till med den fortsatta utvecklingen.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Integritet",
+    "privacy.contact":
+      "Frågor om den här sidan, eller om vad som sparas om dig: {emailAddress}",
     "tryWebsite.banner":
       "Det här är en trygg plats att lära sig {siteName} på. Allt som skrivs in här kan tas bort när som helst.",
 

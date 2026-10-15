@@ -34,6 +34,9 @@ export const maori: Language = {
     "footer.plea":
       "E pai ana koe ki a {siteName}? Hoatu he koha hei āwhina i te whakawhanake tonu i a ia.",
     "footer.copyright": "© Manatā tuhi {years}, {owner}",
+    "footer.privacy": "Matatapu",
+    "privacy.contact":
+      "He pātai mō tēnei whārangi, mō ngā mea e puritia ana mōu rānei: {emailAddress}",
     "tryWebsite.banner":
       "He wāhi haumaru tēnei hei ako i a {siteName}. Ka taea te muku i ngā mea katoa e whakauru ai koe ki konei i ngā wā katoa.",
 

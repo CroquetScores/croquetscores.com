@@ -31,6 +31,9 @@ export const russian: Language = {
     "footer.plea":
       "Нравится {siteName}? Сделайте пожертвование, чтобы помочь развивать сайт дальше.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Конфиденциальность",
+    "privacy.contact":
+      "Вопросы об этой странице или о том, что хранится о вас: {emailAddress}",
     "tryWebsite.banner":
       "Это безопасное место, чтобы освоить {siteName}. Всё, что вы здесь введёте, может быть удалено в любой момент.",
 

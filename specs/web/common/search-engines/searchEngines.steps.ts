@@ -94,6 +94,10 @@ Then("it does not disallow {string}", function (this: SpecWorld, path: string) {
   assert.ok(!disallowed(this).includes(path), `${path} is disallowed.`);
 });
 
+Then("it is checked again before it is used", function (this: SpecWorld) {
+  assert.match(String(answer(this).headers["cache-control"]), /no-cache/);
+});
+
 Then("it asks not to be indexed", function (this: SpecWorld) {
   assert.match(String(answer(this).headers["x-robots-tag"]), /noindex/);
 });

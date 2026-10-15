@@ -31,6 +31,9 @@ export const welsh: Language = {
     "footer.plea":
       "Ydych chi'n mwynhau {siteName}? Rhowch rodd i helpu i'w ddatblygu ymhellach.",
     "footer.copyright": "© Hawlfraint {years}, {owner}",
+    "footer.privacy": "Preifatrwydd",
+    "privacy.contact":
+      "Cwestiynau am y dudalen hon, neu am yr hyn a gedwir amdanoch chi: {emailAddress}",
     "tryWebsite.banner":
       "Mae hwn yn lle diogel i ddysgu {siteName}. Gellir dileu popeth a roddwch yma ar unrhyw adeg.",
 

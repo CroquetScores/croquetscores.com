@@ -33,6 +33,11 @@ Feature: Search engines are kept away until the site is told they are welcome
       When the robots file is asked for
       Then it disallows "/"
 
+    Scenario: The robots file is asked for again each time
+      Given the site is told nothing about search engines
+      When the robots file is asked for
+      Then it is checked again before it is used
+
     Scenario: A page asks not to be indexed
       Given the site is told nothing about search engines
       When a page is asked for

@@ -32,6 +32,9 @@ export const afrikaans: Language = {
     "footer.plea":
       "Hou jy van {siteName}? Maak 'n skenking om te help dat dit verder ontwikkel word.",
     "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.privacy": "Privaatheid",
+    "privacy.contact":
+      "Vrae oor hierdie bladsy, of oor wat oor jou bewaar word: {emailAddress}",
     "tryWebsite.banner":
       "Dit is 'n veilige plek om {siteName} te leer ken. Alles wat jy hier invoer, kan enige tyd uitgevee word.",
 
