@@ -294,7 +294,12 @@ try {
       importedAccounts,
       database,
     ),
-    players: new ImportTournamentPlayers(unitOfWork, tournaments, database),
+    players: new ImportTournamentPlayers(
+      unitOfWork,
+      tournaments,
+      database,
+      correcting,
+    ),
     competitions: [
       new ImportBlocks(importing),
       new ImportKnockouts(importing),

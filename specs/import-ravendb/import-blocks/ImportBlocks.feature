@@ -719,6 +719,17 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then "Sam Someone" carries forward 2 match wins in the competition kept for "blocks/30" on "croquetscores.com"
 
+    Scenario: What a player listed twice carried forward is added together
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 9 carried forward 2 match wins
+      And player 10 is in the competition
+      And player 10 is called "Pat Missing"
+      And player 10 carried forward 3 match wins
+      When the competition is imported
+      Then "Pat Missing" carries forward 5 match wins in the competition kept for "blocks/30" on "croquetscores.com"
+
     Scenario: A count of 0 beside one that is not is carried forward as 0
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition

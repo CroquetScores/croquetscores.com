@@ -273,6 +273,20 @@ Feature: Importing the players of the old sites' tournaments
       When the players are imported
       Then player 2 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone"
 
+    Scenario: A player listed again is said as corrected
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "Sam Someone"
+      When the players are imported
+      Then "player 2" of "croquetscores.com/tournamentplayers/40" is corrected as "ImportTournamentPlayers.PlayerListedAgain"
+
+    Scenario: A player listed once is not said as corrected
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 2 is called "Alex Another"
+      When the players are imported
+      Then nothing is corrected of "croquetscores.com/tournamentplayers/40"
+
     Scenario: Players of one name representing different clubs are one player
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
       And player 1 is called "Sam Someone"

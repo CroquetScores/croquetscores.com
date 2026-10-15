@@ -7,7 +7,7 @@ import { Flags } from "../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { errorOf } from "./AcceptedImportErrors.js";
+import { type AcceptedImportErrors, errorOf } from "./AcceptedImportErrors.js";
 import { describedFailure } from "./ImportRefused.js";
 import {
   nameToImport,
@@ -52,17 +52,29 @@ export const flagOf = (representing: string | null): string | undefined => {
  * as it is kept is compared, so a name another case, or numbered apart
  * before, is not found and is numbered apart as it was.
  */
+/**
+ * The player of `tournament` the old sites' player called `name` is, where it
+ * has one named exactly as they are: the one that is kept in place of adding
+ * them again.
+ */
+export const playerNamed = (
+  tournament: Tournament,
+  name: string,
+): TournamentPlayerId | undefined => {
+  const imported = nameToImport(name);
+  return tournament.players.find((each) => each.name.toString() === imported)
+    ?.id;
+};
+
 export const addOldPlayer = (
   tournament: Tournament,
   player: { readonly Name: string; readonly Representing: string | null },
   by: AccountId,
   at: ReadOnlyDate,
 ): TournamentPlayerId => {
+  const already = playerNamed(tournament, player.Name);
+  if (already !== undefined) return already;
   const imported = nameToImport(player.Name);
-  const already = tournament.players.find(
-    (each) => each.name.toString() === imported,
-  );
-  if (already !== undefined) return already.id;
 
   const playerId = TournamentPlayerId.create();
   const name = numberedApart(
@@ -127,6 +139,8 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
     private readonly unitOfWork: UnitOfWork,
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly database: ImportDatabase,
+    /** Where what the import corrected is said (AcceptedImportErrors.feature). */
+    private readonly correcting: AcceptedImportErrors,
   ) {}
 
   async importDocument({
@@ -160,8 +174,24 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
           continue;
         }
         try {
+          const listedAgain = playerNamed(tournament, player.Name);
           const playerId = addOldPlayer(tournament, player, by, at);
           added.push({ number: player._Id, id: playerId.value });
+          // One person listed twice is brought over once, which is said, since
+          // what the second was is not kept: what they represented, and their
+          // flag.
+          if (listedAgain !== undefined) {
+            const where = errorOf(tournament);
+            await this.correcting.accept({
+              documentId: `${website}/${id}`,
+              website,
+              newSitePath: where.newSitePath,
+              oldSitePath: where.oldSitePath,
+              what: `player ${String(player._Id)}`,
+              code: "ImportTournamentPlayers.PlayerListedAgain",
+              description: `Player ${player.Name.trim()} in ${tournament.name.toString()} has the name of a player the tournament already had, and is brought over as that player.`,
+            });
+          }
         } catch (failure) {
           await this.database.recordError(
             `${website}/${id}`,
