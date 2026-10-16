@@ -63,7 +63,8 @@ Feature: The website a site is served as
     One server answers for all four domains, so which website a request is for
     is read from the host it was addressed to, one request at a time, and not
     set once for the whole server. A request is for the website whose host it
-    names, however that is capitalised.
+    names, however that is capitalised, and with or without the dot that ends
+    a fully qualified name, which a browser, a monitor or a proxy may write.
 
     Development is the exception that makes working here possible: it is
     reached as localhost or 127.0.0.1 on whatever port is free, by the
@@ -81,6 +82,7 @@ Feature: The website a site is served as
         | host                   | website                |
         | croquetscores.com      | croquetscores.com      |
         | CroquetScores.com      | croquetscores.com      |
+        | croquetscores.com.     | croquetscores.com      |
         | try.croquetscores.com  | try.croquetscores.com  |
         | gateballscores.com     | gateballscores.com     |
         | try.gateballscores.com | try.gateballscores.com |

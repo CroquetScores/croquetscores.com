@@ -104,7 +104,8 @@ export class Website {
    * name and not by its port. Nothing else is taken for it.
    */
   static addressedTo(host: string): Website {
-    const lowered = host.toLowerCase();
+    // The dot that ends a fully qualified name names the same host.
+    const lowered = host.toLowerCase().replace(/\.(?=:\d+$|$)/, "");
     hosts.ensureValid(lowered);
     const name = lowered.replace(/:\d+$/, "");
     if (name === "localhost" || name === "127.0.0.1")
