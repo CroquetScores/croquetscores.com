@@ -39,7 +39,7 @@ export interface Config {
   // each request says which it is for by the host it was addressed to
   // (Website.ts).
   readonly emailFromAddress: string;
-  readonly emailFromName: string;
+  readonly administratorEmailFromName: string;
   // Who is told when a service the site needs cannot be reached. Absent on a
   // development machine, where nobody needs telling.
   readonly administratorEmailAddress: string | undefined;
@@ -282,7 +282,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     "ACCOUNT_ENCRYPTION_KEY",
     "ACCOUNT_EMAIL_ADDRESS_HASH_KEY",
     "EMAIL_FROM_ADDRESS",
-    "EMAIL_FROM_NAME",
+    "ADMINISTRATOR_EMAIL_FROM_NAME",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
   if (missing.length > 0) problems.push(`Missing: ${missing.join(", ")}.`);
@@ -305,7 +305,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
     emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
-    emailFromName: env["EMAIL_FROM_NAME"]!.trim(),
+    administratorEmailFromName: env["ADMINISTRATOR_EMAIL_FROM_NAME"]!.trim(),
     administratorEmailAddress:
       env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
     databaseUnreachableEmailIntervalMinutes,

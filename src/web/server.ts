@@ -882,7 +882,9 @@ export const buildApplication = async (
   // address of the website each is for and never a request's host, and written
   // to files in temp/ unless a mail server is set (SMTP_HOST).
   const languages = options.languages ?? offeredLanguages;
-  const writer = emailWriter(languages, { fromName: config.emailFromName });
+  const writer = emailWriter(languages, {
+    fromName: config.administratorEmailFromName,
+  });
   const emailSender =
     options.emailSender ??
     (config.smtp === undefined

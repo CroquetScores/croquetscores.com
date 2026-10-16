@@ -15,7 +15,7 @@ const settingsWith = (searchEngines: string): NodeJS.ProcessEnv => ({
   ACCOUNT_ENCRYPTION_KEY: "not a key",
   ACCOUNT_EMAIL_ADDRESS_HASH_KEY: "not a key",
   EMAIL_FROM_ADDRESS: "nobody@example.com",
-  EMAIL_FROM_NAME: "Nobody",
+  ADMINISTRATOR_EMAIL_FROM_NAME: "Nobody",
   SEARCH_ENGINES_WELCOME: searchEngines,
 });
 
