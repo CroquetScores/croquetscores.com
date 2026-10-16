@@ -67,6 +67,18 @@ Feature: Refusing a request addressed to a website nobody set up
       When a form is posted as "example.com"
       Then the site answers "421"
 
+  Rule: The health check answers whoever asks
+
+    A load balancer or an uptime probe calls the instance by its address or an
+    internal name, which is no website's, and an instance that answers it 421
+    is taken for one that is down. The health check says the process is well
+    and reads no website, so it is answered whatever it was addressed to.
+
+    Scenario: The health check is answered to a host that is no website's
+      Given a site
+      When the health check is asked for as "203.0.113.5"
+      Then the site answers "200"
+
   Rule: The same server answers each website as itself
 
     Scenario: A try website carries the banner

@@ -23,6 +23,9 @@ declare module "fastify" {
   }
 }
 
+// Where the health check is (maintenance.ts says why it is let through).
+const healthCheck = "/api/v1/health";
+
 const names: Readonly<Record<Site, string>> = {
   croquetScores: "Croquet Scores",
   gateballScores: "Gateball Scores",
@@ -77,6 +80,9 @@ export const placeRequests = (server: FastifyInstance): void => {
     } catch (refusal) {
       if (!(refusal instanceof ValidationError)) throw refusal;
     }
+    // Answered whoever asks and placed on nothing: it reads no website, and a
+    // probe that calls the instance by its address is not misdirected.
+    if (request.url === healthCheck) return;
     reply.header("cache-control", "no-store").code(421);
     if (request.url.startsWith("/api/")) {
       return reply.send({ error: "Request.Misdirected" });

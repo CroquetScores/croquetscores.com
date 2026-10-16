@@ -83,6 +83,7 @@ Feature: The website a site is served as
         | croquetscores.com      | croquetscores.com      |
         | CroquetScores.com      | croquetscores.com      |
         | croquetscores.com.     | croquetscores.com      |
+        | croquetscores.com:443  | croquetscores.com      |
         | try.croquetscores.com  | try.croquetscores.com  |
         | gateballscores.com     | gateballscores.com     |
         | try.gateballscores.com | try.gateballscores.com |
@@ -98,6 +99,8 @@ Feature: The website a site is served as
         | localhost:5173  |
         | 127.0.0.1       |
         | 127.0.0.1:41873 |
+        | [::1]           |
+        | [::1]:5173      |
 
     Scenario Outline: A request addressed to anywhere else is refused
       When a request addressed to "<host>" is placed

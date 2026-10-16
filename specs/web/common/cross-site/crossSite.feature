@@ -82,6 +82,8 @@ Feature: Refusing changes asked for by another site
         | try.croquetscores.com  | https://try.croquetscores.com |
         | gateballscores.com     | https://gateballscores.com    |
         | localhost:5173         | http://localhost:5173         |
+        | croquetscores.com.     | https://croquetscores.com.    |
+        | croquetscores.com:443  | https://croquetscores.com     |
 
     Scenario Outline: An origin of another website is refused
       Given a POST request addressed to "<host>"

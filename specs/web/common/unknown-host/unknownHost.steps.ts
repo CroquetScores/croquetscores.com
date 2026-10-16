@@ -91,6 +91,17 @@ When(
 );
 
 When(
+  "the health check is asked for as {string}",
+  async function (this: SpecWorld, host: string) {
+    const response = await this.browserPage.request.get(
+      `${this.baseUrl!}/api/v1/health`,
+      { headers: forwardedFor(host), failOnStatusCode: false },
+    );
+    answers.set(this, await readFrom(response));
+  },
+);
+
+When(
   "a form is posted as {string}",
   async function (this: SpecWorld, host: string) {
     const response = await this.browserPage.request.post(

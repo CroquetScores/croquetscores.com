@@ -105,12 +105,24 @@ export class Website {
    */
   static addressedTo(host: string): Website {
     // The dot that ends a fully qualified name names the same host.
-    const lowered = host.toLowerCase().replace(/\.(?=:\d+$|$)/, "");
+    const lowered = Website.spelled(host);
     hosts.ensureValid(lowered);
     const name = lowered.replace(/:\d+$/, "");
-    if (name === "localhost" || name === "127.0.0.1")
+    if (name === "localhost" || name === "127.0.0.1" || name === "[::1]")
       return Website.development;
     return Website.from(lowered);
+  }
+
+  /**
+   * `host` as one spelling of it: lower case, without the dot that ends a
+   * fully qualified name and without the port a browser leaves off, so that
+   * every way of writing a host is the one way it is compared.
+   */
+  static spelled(host: string): string {
+    return host
+      .toLowerCase()
+      .replace(/\.(?=:\d+$|$)/, "")
+      .replace(/:443$/, "");
   }
 
   /** How it is known: its host, as a browser's address bar writes it. */

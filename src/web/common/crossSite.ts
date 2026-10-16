@@ -16,6 +16,7 @@
 // caught. Held against a token on every form, on a site whose readers are on
 // browsers of this decade, that is a risk worth carrying; it is written down
 // here so it is carried knowingly.
+import { Website } from "../../domain/common/Website.js";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 
 export interface Provenance {
@@ -57,7 +58,8 @@ export const isRefused = (request: Provenance): boolean => {
 
     try {
       return (
-        new URL(request.origin).host.toLowerCase() !== expected.toLowerCase()
+        Website.spelled(new URL(request.origin).host) !==
+        Website.spelled(expected)
       );
     } catch {
       return true;
