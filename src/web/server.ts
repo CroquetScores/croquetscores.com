@@ -212,6 +212,7 @@ import { ReadOnlyTransactionBehaviour } from "../infrastructure/database/ReadOnl
 import { TransactionBehaviour } from "../infrastructure/database/TransactionBehaviour.js";
 import { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { FileEmailSender } from "../infrastructure/email/FileEmailSender.js";
+import { SmtpEmailSender } from "../infrastructure/email/SmtpEmailSender.js";
 import { PostgresEmailQueue } from "../infrastructure/email/PostgresEmailQueue.js";
 import { AccountEventSealing } from "../infrastructure/encryption/AccountEventSealing.js";
 import { AccountKeys } from "../infrastructure/encryption/AccountKeys.js";
@@ -879,7 +880,7 @@ export const buildApplication = async (
 
   // Emails are written from the site's catalogues, with links made from the
   // site's configured address and never a request's, and written to files in
-  // temp/ until there is a mail provider.
+  // temp/ unless a mail server is set (SMTP_HOST).
   const languages = options.languages ?? offeredLanguages;
   const where = siteAddress(config.canonicalHost, config.port);
   const writer = emailWriter(languages, {
@@ -888,7 +889,10 @@ export const buildApplication = async (
     siteName: config.siteName,
   });
   const emailSender =
-    options.emailSender ?? new FileEmailSender(join(repositoryRoot, "temp"));
+    options.emailSender ??
+    (config.smtp === undefined
+      ? new FileEmailSender(join(repositoryRoot, "temp"))
+      : new SmtpEmailSender(config.smtp));
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,
     accountKeys,

@@ -7,6 +7,7 @@ import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
 import { Website } from "../../domain/common/Website.js";
+import type { SmtpSettings } from "../email/SmtpEmailSender.js";
 
 /** What reCAPTCHA needs: the key the page shows, and the one only the site has. */
 export interface RecaptchaKeys {
@@ -80,6 +81,9 @@ export interface Config {
   // production site without it has an open form that emails whoever it is told
   // to (TODO.md says more).
   readonly recaptcha: RecaptchaKeys | undefined;
+  // The mail server the site's emails are handed to. Absent in development,
+  // where an email is written to a file instead and nothing leaves the machine.
+  readonly smtp: SmtpSettings | undefined;
   // The salt the old site added to every password before hashing it. Absent
   // until whoever runs the site sets it, and optional, because the site runs
   // without it: only checking a password against a hash imported from the old
@@ -236,6 +240,39 @@ const readSearchEnginesWelcome = (
   return false;
 };
 
+// All four or none. Set in part, the site would quietly write its emails to
+// files on a machine meant to send them, and nobody would be told; so a
+// part-set server stops the site starting instead.
+const readSmtp = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): SmtpSettings | undefined => {
+  const keys = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER_NAME", "SMTP_PASSWORD"];
+  const given = keys.filter((key) => (env[key]?.trim() ?? "") !== "");
+  if (given.length === 0) return undefined;
+  if (given.length < keys.length) {
+    problems.push(
+      `${keys.filter((key) => !given.includes(key)).join(", ")} must be set when ${given.join(", ")} is, or none of them.`,
+    );
+    return undefined;
+  }
+  const raw = env["SMTP_PORT"]!.trim();
+  const port = Number(raw);
+  if (!/^\d+$/.test(raw) || port < 1 || port > 65535) {
+    problems.push(
+      `SMTP_PORT must be a whole number between 1 and 65535, not ${JSON.stringify(raw)}.`,
+    );
+    return undefined;
+  }
+  return {
+    host: env["SMTP_HOST"]!.trim(),
+    port,
+    userName: env["SMTP_USER_NAME"]!.trim(),
+    // Not trimmed: a password may end in a space.
+    password: env["SMTP_PASSWORD"]!,
+  };
+};
+
 const defaultPort = 3000;
 
 // A blank value is what .env holds for a key nobody has filled in, so it means
@@ -303,6 +340,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const trustedProxies = readTrustedProxies(env, problems);
   const website = readWebsite(env, problems);
   const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
+  const smtp = readSmtp(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
   if (problems.length > 0 || website === undefined)
@@ -327,6 +365,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     canonicalHost: readCanonicalHost(env),
     trustedProxies,
     recaptcha: recaptchaKeys(env),
+    smtp,
     google: optional(env, "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"),
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
     oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
